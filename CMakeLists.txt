@@ -3,7 +3,6 @@ project(logging-yeah)
 
 find_package(spdlog CONFIG REQUIRED)
 
-add_subdirectory(library)
 add_subdirectory(Sprocket)
 
 add_executable(logging-yeah main.cpp)
