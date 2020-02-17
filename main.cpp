@@ -1,11 +1,9 @@
 #include <iostream>
 
-#include <spdlog/spdlog.h>
-#include <library.h>
+#include <Sprocket.h>
 
 int main(int argc, char* argv[])
 {
-    spdlog::warn("Format my log message {} {}", "WITH THINGS", 234);
-    std::cout << foosticles(42) << std::endl;
+    Sprocket::begin(argc, argv);
     return 0;
 }
