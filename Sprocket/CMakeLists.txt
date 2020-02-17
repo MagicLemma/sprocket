@@ -10,6 +10,8 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 add_library(Sprocket STATIC
             Application.cpp
             Entry.cpp
+            Layer.cpp
+            LayerStack.cpp     
             Log.cpp
             Window.cpp
             Events/Event.cpp

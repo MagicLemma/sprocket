@@ -1,9 +1,9 @@
 #pragma once
 #include "Window.h"
 #include "Events/WindowEvent.h"
-//#include "Layer.h"
+#include "Layer.h"
 #include "Log.h"
-//#include "LayerStack.h"
+#include "LayerStack.h"
 
 #include <memory>
 
@@ -12,7 +12,7 @@ namespace Sprocket {
 class Application
 {
 	std::unique_ptr<Window> d_window;
-	//LayerStack              d_layers;
+	LayerStack              d_layers;
 
 	bool                    d_running;
 
@@ -26,8 +26,8 @@ public:
 
 	void onEvent(Event& event);
 
-	//void pushLayer(LayerPtr layer);
-	//void pushOverlay(LayerPtr layer);
+	void pushLayer(LayerPtr layer);
+	void pushOverlay(LayerPtr layer);
 };
 
 }
