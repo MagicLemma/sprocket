@@ -4,6 +4,7 @@ project(Sprocket)
 
 find_package(spdlog CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
@@ -11,10 +12,11 @@ add_library(Sprocket STATIC
             Log.cpp
             Vendor/STB_Image.cpp)
 
-target_link_libraries(Sprocket PUBLIC
+target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog
                       spdlog::spdlog_header_only
-                      glfw)
+                      glfw
+                      glad::glad)
 
 target_include_directories(Sprocket PUBLIC
                            .
