@@ -8,8 +8,14 @@ find_package(glad CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
+            Application.cpp
             Entry.cpp
             Log.cpp
+            Window.cpp
+            Events/Event.cpp
+            Events/WindowEvent.cpp
+            Events/KeyboardEvent.cpp
+            Events/MouseEvent.cpp
             Vendor/STB_Image.cpp)
 
 target_link_libraries(Sprocket PRIVATE

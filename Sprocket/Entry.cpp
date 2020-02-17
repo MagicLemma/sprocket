@@ -1,4 +1,6 @@
 #include "Entry.h"
+#include "Application.h"
+#include "Log.h"
 
 #include <iostream>
 
@@ -6,11 +8,12 @@
 
 namespace Sprocket {
 
-int begin(int argc, char** argv)
+int begin(int argc, char** argv, Application* app)
 {
-    std::cout << "In begin\n" << std::flush;
-    spdlog::warn("Library log {}", 100);
-    return 5;
+    Sprocket::Log::init();
+    SPKT_LOG_CORE_INFO("Version {}.{}.{}", 0, 0, 1);
+    app->run();
+    return 0;
 }
 
 }

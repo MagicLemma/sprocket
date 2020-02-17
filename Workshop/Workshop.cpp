@@ -1,11 +1,27 @@
 #include <iostream>
+#include <memory>
 
 #include <Sprocket.h>
+/*
+class ExampleLayer : public Sprocket::Layer
+{
+public:
+	ExampleLayer() : Layer("Example") {};
+
+	void onEvent(Sprocket::Event& event) override
+	{
+		//Sprocket::Event& e2 = event;
+		//std::string str = event.toString();
+		//SPKT_LOG_INFO("Got event {}", event.toString());
+	}
+};
+*/
+class Workshop : public Sprocket::Application
+{
+};
 
 int main(int argc, char* argv[])
 {
-    Sprocket::begin(argc, argv);
-    Sprocket::Log::init();
-    SPKT_LOG_WARN("LOGGING IS WORKING YEAHHHHHH");
-    return 0;
+    Workshop w;
+    return Sprocket::begin(argc, argv, &w);
 }
