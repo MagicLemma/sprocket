@@ -1,5 +1,6 @@
 #include "Loader.h"
 #include "Vertex.h"
+#include "Log.h"
 
 #include <vector>
 #include <cstddef>
@@ -7,11 +8,18 @@
 
 namespace Sprocket {
 
+Loader::~Loader()
+{
+    SPKT_LOG_INFO("Cleaning up VAOs and VBOs");
+    glDeleteVertexArrays(d_vaoList.size(), d_vaoList.data());
+    glDeleteBuffers(d_vboList.size(), d_vboList.data());
+}
+
 unsigned int Loader::createVAO()
 {
     unsigned int vaoId;
-    glBindVertexArray(0);
     glGenVertexArrays(1, &vaoId);
+    d_vaoList.push_back(vaoId);
     glBindVertexArray(vaoId);
     return vaoId;
 }
@@ -21,6 +29,7 @@ RawModel Loader::load(const std::vector<Vertex>& positions)
     unsigned int vaoId = createVAO();
     unsigned int vboId;
     glGenBuffers(1, &vboId);
+    d_vboList.push_back(vboId);
 
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glBufferData(GL_ARRAY_BUFFER,

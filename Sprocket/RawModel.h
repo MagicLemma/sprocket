@@ -11,7 +11,7 @@ public:
     RawModel(unsigned int vaoId, int vertexCount);
 
     unsigned int vaoId() const { return d_vaoId; }
-    size_t vertexCount() const { return d_vertexCount; }
+    int vertexCount() const { return d_vertexCount; }
 
 };
 

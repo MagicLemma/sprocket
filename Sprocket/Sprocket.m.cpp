@@ -1,15 +1,13 @@
 #include "Log.h"
-#include "RawModel.h"
-#include "Vertex.h"
 #include "Window.h"
 #include "Loader.h"
 #include "Renderer.h"
-#include "Events/Event.h"
+#include "RawModel.h"
 
 int main(int argc, char* argv[])
 {
     Sprocket::Log::init();
-    SPKT_LOG_CORE_INFO("Version {}.{}.{}", 0, 0, 1);
+    SPKT_LOG_INFO("Version {}.{}.{}", 0, 0, 1);
 
     Sprocket::Window window;
     Sprocket::Loader loader;
@@ -31,7 +29,6 @@ int main(int argc, char* argv[])
 
         renderer.render(quad);
     }
-
 
     return 0;
 }
