@@ -43,12 +43,12 @@ void Loader::bindVertexBuffer(const std::vector<Vertex>& vertexBuffer)
                           sizeof(Vertex),
                           reinterpret_cast<void*>(offsetof(Vertex, position)));
                           
-    glVertexAttribPointer(Sprocket::Vertex::texAttr,
-                          Vertex::texCount,
+    glVertexAttribPointer(Sprocket::Vertex::colAttr,
+                          Vertex::colCount,
                           GL_FLOAT,
                           GL_FALSE,
                           sizeof(Vertex),
-                          reinterpret_cast<void*>(offsetof(Vertex, texture)));
+                          reinterpret_cast<void*>(offsetof(Vertex, colour)));
 }
 
 void Loader::bindIndexBuffer(const std::vector<unsigned int>& indexBuffer)
