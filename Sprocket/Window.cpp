@@ -4,6 +4,7 @@
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Sprocket {
@@ -33,7 +34,7 @@ Window::Window(
 	};
 
 	if (!s_GLFWInitialised) {
-		int success = glfwInit();
+		int initGlfw = glfwInit();
 		// TODO: SPKT_CORE_ASSERT(success == 0, "Could not initialise GLFW!");
 		s_GLFWInitialised = true;
 	}
@@ -49,6 +50,7 @@ Window::Window(
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
 	glfwSwapInterval(1);  // Set VSync to be true
+	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
@@ -161,6 +163,7 @@ void Window::onEvent(Event& event)
 
 void Window::clear()
 {
+	glClearColor(1, 0, 0, 1);
 }
 
 }

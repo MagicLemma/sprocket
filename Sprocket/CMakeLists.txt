@@ -9,12 +9,16 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_executable(Sprocket
                Sprocket.m.cpp
+               Loader.cpp
                Log.cpp
+               Renderer.cpp
                Window.cpp
                Events/Event.cpp
                Events/WindowEvent.cpp
                Events/KeyboardEvent.cpp
                Events/MouseEvent.cpp
+               RawModel.cpp
+               Vertex.cpp
                Vendor/STB_Image.cpp)
 
 target_link_libraries(Sprocket PRIVATE
