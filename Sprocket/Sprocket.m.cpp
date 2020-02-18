@@ -1,11 +1,20 @@
-#include "Entry.h"
 #include "Log.h"
-#include "Application.h"
+#include "Window.h"
 #include "Events/Event.h"
 
 int main(int argc, char* argv[])
 {
-    Sprocket::Application app;
-    return Sprocket::begin(argc, argv, &app);
+    Sprocket::Log::init();
+    SPKT_LOG_CORE_INFO("Version {}.{}.{}", 0, 0, 1);
 
+    Sprocket::Window window;
+
+    while(window.running())
+    {
+        window.clear();
+        window.onUpdate();
+    }
+
+
+    return 0;
 }
