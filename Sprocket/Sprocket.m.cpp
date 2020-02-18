@@ -1,5 +1,4 @@
 #include "Entry.h"
-#include "Layer.h"
 #include "Log.h"
 #include "Application.h"
 #include "Events/Event.h"

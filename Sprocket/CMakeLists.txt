@@ -10,9 +10,7 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 add_executable(Sprocket
                Sprocket.m.cpp
                Application.cpp
-               Entry.cpp
-               Layer.cpp
-               LayerStack.cpp     
+               Entry.cpp  
                Log.cpp
                Window.cpp
                Events/Event.cpp
