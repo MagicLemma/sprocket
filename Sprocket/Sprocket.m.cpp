@@ -13,21 +13,26 @@ int main(int argc, char* argv[])
     Sprocket::Loader loader;
     Sprocket::Renderer renderer;
 
-    Sprocket::RawModel quad = loader.load({
+    Sprocket::Loader::VertexBuffer vb{
         {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f}},
         {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}},
         {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}},
+        {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f}}
+    };
 
-        {{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f}},
-        {{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f}},
-    });
+    Sprocket::Loader::IndexBuffer ib{
+         0, 1, 3,
+        3, 1, 2
+    };
+
+    Sprocket::RawModel quad = loader.load(vb, ib);
 
     while(window.running()) {
         window.clear();
-        window.onUpdate();
 
         renderer.render(quad);
+
+        window.onUpdate();
     }
 
     return 0;

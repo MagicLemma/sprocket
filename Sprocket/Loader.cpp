@@ -24,17 +24,16 @@ unsigned int Loader::createVAO()
     return vaoId;
 }
 
-RawModel Loader::load(const std::vector<Vertex>& positions)
+void Loader::bindVertexBuffer(const std::vector<Vertex>& vertexBuffer)
 {
-    unsigned int vaoId = createVAO();
     unsigned int vboId;
     glGenBuffers(1, &vboId);
     d_vboList.push_back(vboId);
 
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glBufferData(GL_ARRAY_BUFFER,
-                 sizeof(Vertex) * positions.size(),
-                 positions.data(),
+                 sizeof(Vertex) * vertexBuffer.size(),
+                 vertexBuffer.data(),
                  GL_STATIC_DRAW);
 
     glVertexAttribPointer(Sprocket::Vertex::posAttr,
@@ -50,9 +49,31 @@ RawModel Loader::load(const std::vector<Vertex>& positions)
                           GL_FALSE,
                           sizeof(Vertex),
                           reinterpret_cast<void*>(offsetof(Vertex, texture)));
+}
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    return RawModel(vaoId, positions.size());
+void Loader::bindIndexBuffer(const std::vector<unsigned int>& indexBuffer)
+{
+    unsigned int vboId;
+    glGenBuffers(1, &vboId);
+    d_vboList.push_back(vboId);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 sizeof(unsigned int) * indexBuffer.size(),
+                 indexBuffer.data(),
+                 GL_STATIC_DRAW);
+}
+
+RawModel Loader::load(const VertexBuffer& vertexBuffer,
+                      const IndexBuffer& indexBuffer)
+{
+    unsigned int vaoId = createVAO();
+
+    bindVertexBuffer(vertexBuffer);
+    bindIndexBuffer(indexBuffer);
+
+    unbind();
+    return RawModel(vaoId, indexBuffer.size());
 }
 
 void Loader::unbind()
