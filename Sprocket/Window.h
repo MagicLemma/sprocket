@@ -12,18 +12,24 @@ using EventCallback = std::function<void(Event&)>;
 
 struct WindowImpl;
 
+struct WindowData
+{
+	std::string   name;
+	unsigned int  width;
+	unsigned int  height;
+
+	bool          running;
+	bool          focused;
+
+	EventCallback callback;
+};
+
 class Window
 {
 	std::shared_ptr<WindowImpl> d_impl;
+	WindowData                  d_data;
 
-	std::string   d_name;
-	unsigned int  d_width;
-	unsigned int  d_height;
-
-	bool          d_running;
-	bool          d_focused;
-
-	std::vector<EventCallback> d_callbacks;
+	std::vector<EventCallback>  d_extraCallbacks;
 
 	// Deleted Constructors
 	Window(Window&&) = delete;
@@ -40,20 +46,13 @@ public:
 
 	void onUpdate();
 
-	unsigned int height() const { return d_height; }
-	void height(unsigned int newHeight) { d_height = newHeight; }
-
-	unsigned int width() const { return d_width; }
-	void width(unsigned int newWidth) { d_width = newWidth; }
-
-	bool running() const { return d_running; }
-	void running(bool isRunning) { d_running = isRunning; }
-
-	bool focused() const { return d_focused; }
-	void focused(bool isFocused) { d_focused = isFocused; }
+	unsigned int height() const { return d_data.height; }
+	unsigned int width() const { return d_data.width; }
+	bool running() const { return d_data.running; }
+	bool focused() const { return d_data.focused; }
 
 	// Register additional objects that may want to act on events.
-	void registerCallback(EventCallback cb) { d_callbacks.push_back(cb); }
+	void registerCallback(EventCallback cb) { d_extraCallbacks.push_back(cb); }
 
 	void clear();
 };

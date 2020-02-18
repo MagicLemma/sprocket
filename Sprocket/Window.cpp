@@ -25,12 +25,13 @@ Window::Window(
 	unsigned int height
 )
 	: d_impl(std::make_shared<WindowImpl>())
-	, d_name(name)
-	, d_width(width)
-	, d_height(height)
-	, d_running(true)
-	, d_focused(true)
+	, d_data({name, width, height, true, true})
+	, d_extraCallbacks()
 {
+	d_data.callback = [&](Event& event) {
+		onEvent(event);
+	};
+
 	if (!s_GLFWInitialised) {
 		int success = glfwInit();
 		// TODO: SPKT_CORE_ASSERT(success == 0, "Could not initialise GLFW!");
@@ -38,97 +39,97 @@ Window::Window(
 	}
 
 	d_impl->window = glfwCreateWindow(
-		d_width,
-		d_height,
-		d_name.c_str(),
+		d_data.width,
+		d_data.height,
+		d_data.name.c_str(),
 		nullptr,
 		nullptr
 	);
 
 	glfwMakeContextCurrent(d_impl->window);
-	glfwSetWindowUserPointer(d_impl->window, this);
+	glfwSetWindowUserPointer(d_impl->window, &d_data);
 	glfwSwapInterval(1);  // Set VSync to be true
 
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
 	{
-		Window* w = (Window*)glfwGetWindowUserPointer(window);
-		if (!w->focused()) return;
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (!data->focused) return;
 		WindowResizeEvent event(width, height);
-		w->width(width);
-		w->height(height);
-		w->onEvent(event);
+		data->width = width;
+		data->height = height;
+		data->callback(event);
 	});
 
 	glfwSetWindowCloseCallback(d_impl->window, [](GLFWwindow* window)
 	{
-		Window* w = (Window*)glfwGetWindowUserPointer(window);
-		if (!w->focused()) return;
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (!data->focused) return;
 		WindowClosedEvent event;
-		w->onEvent(event);
+		data->callback(event);
 	});
 
 	glfwSetKeyCallback(d_impl->window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-		Window* w = (Window*)glfwGetWindowUserPointer(window);
-		if (!w->focused()) return;
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (!data->focused) return;
 		switch (action)
 		{
 			case GLFW_PRESS: {
 				KeyboardButtonPressedEvent event(key, scancode, mods);
-				w->onEvent(event);
+				data->callback(event);
 			} break;
 			case GLFW_RELEASE: {
 				KeyboardButtonReleasedEvent event(key, scancode, mods);
-				w->onEvent(event);
+				data->callback(event);
 			} break;
 			case GLFW_REPEAT: {
 				KeyboardButtonHeldEvent event(key, scancode, mods);
-				w->onEvent(event);
+				data->callback(event);
 			} break;
 		}
 	});
 
 	glfwSetMouseButtonCallback(d_impl->window, [](GLFWwindow* window, int button, int action, int mods) {
-		Window* w = (Window*)glfwGetWindowUserPointer(window);
-		if (!w->focused()) return;
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (!data->focused) return;
 		switch (action)
 		{
 		case GLFW_PRESS: {
 			MouseButtonPressedEvent event(button, action, mods);
-			w->onEvent(event);
+			data->callback(event);
 		} break;
 		case GLFW_RELEASE: {
 			MouseButtonReleasedEvent event(button, action, mods);
-			w->onEvent(event);
+			data->callback(event);
 		} break;
 		}
 	});
 
 	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double xPos, double yPos) {
-		Window* w = (Window*)glfwGetWindowUserPointer(window);
-		if (!w->focused()) return;
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (!data->focused) return;
 		MouseMovedEvent event(xPos, yPos);
-		w->onEvent(event);
+		data->callback(event);
 	});
 
 	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double xOffset, double yOffset) {
-		Window* w = (Window*)glfwGetWindowUserPointer(window);
-		if (!w->focused()) return;
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (!data->focused) return;
 		MouseScrolledEvent event(xOffset, yOffset);
-		w->onEvent(event);
+		data->callback(event);
 	});
 
 	glfwSetWindowFocusCallback(d_impl->window, [](GLFWwindow* window, int focused) {
-		Window* w = (Window*)glfwGetWindowUserPointer(window);
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (focused) {
 			WindowGotFocusEvent event;
-			w->focused(true);
-			w->onEvent(event);
+			data->focused = true;
+			data->callback(event);
 		}
 		else {
 			WindowLostFocusEvent event;
-			w->focused(false);
-			w->onEvent(event);
+			data->focused = false;
+			data->callback(event);
 		}
 	});
 }
@@ -146,13 +147,13 @@ void Window::onUpdate()
 
 void Window::onEvent(Event& event)
 {
-	SPKT_LOG_CORE_INFO("Dispatching {}", event.toString());
+	SPKT_LOG_CORE_INFO("dispatching {}", event.toString());
 	if (auto e = dynamic_cast<WindowClosedEvent*>(&event))
 	{
-		d_running = false;
+		d_data.running = false;
 		return;
 	}
-	for (auto callback: d_callbacks)
+	for (auto callback: d_extraCallbacks)
 	{
 		callback(event);
 	}
