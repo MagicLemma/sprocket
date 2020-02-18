@@ -12,6 +12,7 @@ add_executable(Sprocket
                Loader.cpp
                Log.cpp
                Renderer.cpp
+               Shader.cpp
                Window.cpp
                Events/Event.cpp
                Events/WindowEvent.cpp

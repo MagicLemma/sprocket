@@ -3,6 +3,7 @@
 #include "Loader.h"
 #include "Renderer.h"
 #include "RawModel.h"
+#include "Shader.h"
 
 int main(int argc, char* argv[])
 {
@@ -21,16 +22,21 @@ int main(int argc, char* argv[])
     };
 
     Sprocket::Loader::IndexBuffer ib{
-         0, 1, 3,
+        0, 1, 3,
         3, 1, 2
     };
+
+    Sprocket::Shader shader("Sprocket/Shaders/Basic.vert",
+                            "Sprocket/Shaders/Basic.frag");
 
     Sprocket::RawModel quad = loader.load(vb, ib);
 
     while(window.running()) {
         window.clear();
 
+        shader.start();
         renderer.render(quad);
+        shader.stop();
 
         window.onUpdate();
     }

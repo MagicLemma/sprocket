@@ -143,13 +143,13 @@ Window::~Window()
 
 void Window::onUpdate()
 {
-	glfwPollEvents();
 	glfwSwapBuffers(d_impl->window);
+	glfwPollEvents();
 }
 
 void Window::onEvent(Event& event)
 {
-	SPKT_LOG_INFO("dispatching {}", event.toString());
+	//SPKT_LOG_INFO("dispatching {}", event.toString());
 	if (auto e = dynamic_cast<WindowClosedEvent*>(&event))
 	{
 		d_data.running = false;
