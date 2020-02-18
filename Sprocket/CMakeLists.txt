@@ -7,18 +7,19 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
-add_library(Sprocket STATIC
-            Application.cpp
-            Entry.cpp
-            Layer.cpp
-            LayerStack.cpp     
-            Log.cpp
-            Window.cpp
-            Events/Event.cpp
-            Events/WindowEvent.cpp
-            Events/KeyboardEvent.cpp
-            Events/MouseEvent.cpp
-            Vendor/STB_Image.cpp)
+add_executable(Sprocket
+               Sprocket.m.cpp
+               Application.cpp
+               Entry.cpp
+               Layer.cpp
+               LayerStack.cpp     
+               Log.cpp
+               Window.cpp
+               Events/Event.cpp
+               Events/WindowEvent.cpp
+               Events/KeyboardEvent.cpp
+               Events/MouseEvent.cpp
+               Vendor/STB_Image.cpp)
 
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog
