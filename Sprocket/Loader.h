@@ -1,5 +1,5 @@
 #pragma once
-#include "Models/RawModel.h"
+#include "RawModel.h"
 #include "Vertex.h"
 #include "Texture.h"
 

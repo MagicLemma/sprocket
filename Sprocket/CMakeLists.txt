@@ -14,6 +14,7 @@ add_executable(Sprocket
                Loader.cpp
                Log.cpp
                Maths.cpp
+               RawModel.cpp
                Renderer.cpp
                Shader.cpp
                Window.cpp
@@ -22,9 +23,7 @@ add_executable(Sprocket
                Events/Event.cpp
                Events/WindowEvent.cpp
                Events/KeyboardEvent.cpp
-               Events/MouseEvent.cpp
-               Models/RawModel.cpp
-               Models/TexturedModel.cpp)
+               Events/MouseEvent.cpp)
 
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog

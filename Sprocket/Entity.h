@@ -1,4 +1,5 @@
 #pragma once
+#include "RawModel.h"
 
 namespace Sprocket {
 

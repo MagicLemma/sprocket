@@ -2,8 +2,8 @@
 #include "Window.h"
 #include "Loader.h"
 #include "Renderer.h"
-#include "Models/RawModel.h"
-#include "Models/TexturedModel.h"
+#include "RawModel.h"
+#include "Texture.h"
 #include "Shader.h"
 
 int main(int argc, char* argv[])
@@ -35,13 +35,11 @@ int main(int argc, char* argv[])
     Sprocket::RawModel quad = loader.load(vb, ib);
     Sprocket::Texture texture = loader.loadTexture(tex);
 
-    Sprocket::TexturedModel texQuad(quad, texture);
-
     while(window.running()) {
         window.clear();
 
         shader.start();
-        renderer.render(texQuad);
+        renderer.render(quad, texture);
         shader.stop();
 
         window.onUpdate();

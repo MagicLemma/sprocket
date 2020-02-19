@@ -3,16 +3,13 @@
 
 namespace Sprocket {
 
-void Renderer::render(const TexturedModel& texturedModel)
+void Renderer::render(const RawModel& rawModel, const Texture& texture)
 {
-    RawModel model = texturedModel.rawModel();
-    Texture tex = texturedModel.texture();
-
-    model.bind();
-    tex.bind();
-    glDrawElements(GL_TRIANGLES, model.vertexCount(), GL_UNSIGNED_INT, nullptr);
-    tex.unbind();
-    model.unbind();
+    rawModel.bind();
+    texture.bind();
+    glDrawElements(GL_TRIANGLES, rawModel.vertexCount(), GL_UNSIGNED_INT, nullptr);
+    texture.unbind();
+    rawModel.unbind();
 }
 
 }
