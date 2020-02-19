@@ -12,6 +12,7 @@ add_executable(Sprocket
                Sprocket.m.cpp
                Camera.cpp
                Entity.cpp
+               Keyboard.cpp
                Loader.cpp
                Log.cpp
                Maths.cpp
