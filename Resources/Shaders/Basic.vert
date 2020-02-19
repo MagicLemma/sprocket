@@ -1,14 +1,14 @@
 #version 400 core
 
 layout(location = 0) in vec4 position;
-layout(location = 1) in vec3 colour;
+layout(location = 1) in vec2 texture;
 
-out vec3 d_colour;
+out vec2 d_texture;
 
 uniform mat4 transformMatrix;
 
 void main()
 {
     gl_Position = position;
-    d_colour = colour;
+    d_texture = texture;
 }

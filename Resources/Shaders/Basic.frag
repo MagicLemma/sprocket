@@ -1,10 +1,12 @@
 #version 400 core
 
-in vec3 d_colour;
+in vec2 d_texture;
 
 layout(location = 0) out vec4 out_Colour;
 
+uniform sampler2D textureSampler;
+
 void main()
 {
-    out_Colour = vec4(d_colour, 1.0);
+    out_Colour = texture(textureSampler, d_texture);
 }
