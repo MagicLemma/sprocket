@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include <glm/glm.hpp>
+
 namespace Sprocket {
 
 class Shader
@@ -14,6 +16,8 @@ class Shader
 
     unsigned int compileShader(unsigned int type, const std::string& source);
 
+    unsigned int getUniformLocation(const std::string& name) const;
+
 public:
     Shader(const std::string& vertShaderFile,
            const std::string& fragShaderFile);
@@ -23,7 +27,9 @@ public:
     void start();
     void stop();
 
-    void bindAttribute(unsigned int attribute, const std::string& name);
+    void loadFloat(const std::string& name, float value);
+    void loadVector3f(const std::string& name, const glm::vec3& vector);
+    void loadMatrix4f(const std::string& name, const glm::mat4& matrix);
 
 };
 
