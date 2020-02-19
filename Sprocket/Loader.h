@@ -1,5 +1,5 @@
 #pragma once
-#include "RawModel.h"
+#include "Model.h"
 #include "Vertex.h"
 #include "Texture.h"
 
@@ -29,8 +29,8 @@ private:
 public:
     ~Loader();
 
-    RawModel load(const VertexBuffer& vertexBuffer,
-                  const IndexBuffer& indexBuffer);
+    Model load(const VertexBuffer& vertexBuffer,
+               const IndexBuffer& indexBuffer);
 
     Texture loadTexture(const TextureFile& textureFile);
 };

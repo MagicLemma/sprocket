@@ -68,8 +68,8 @@ void Loader::bindIndexBuffer(const std::vector<unsigned int>& indexBuffer)
                  GL_STATIC_DRAW);
 }
 
-RawModel Loader::load(const VertexBuffer& vertexBuffer,
-                      const IndexBuffer& indexBuffer)
+Model Loader::load(const VertexBuffer& vertexBuffer,
+                   const IndexBuffer& indexBuffer)
 {
     unsigned int vaoId = createVAO();
 
@@ -77,7 +77,7 @@ RawModel Loader::load(const VertexBuffer& vertexBuffer,
     bindIndexBuffer(indexBuffer);
 
     unbindVAO();
-    return RawModel(vaoId, indexBuffer.size());
+    return Model(vaoId, indexBuffer.size());
 }
 
 Texture Loader::loadTexture(const TextureFile& textureFile)

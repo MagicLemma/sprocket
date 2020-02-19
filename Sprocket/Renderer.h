@@ -1,5 +1,5 @@
 #pragma once
-#include "RawModel.h"
+#include "Model.h"
 #include "Texture.h"
 
 namespace Sprocket {
@@ -7,7 +7,7 @@ namespace Sprocket {
 class Renderer
 {
 public:
-    void render(const RawModel& rawModel, const Texture& texture);
+    void render(const Model& rawModel, const Texture& texture);
 };
 
 }

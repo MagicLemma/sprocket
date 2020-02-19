@@ -2,7 +2,7 @@
 #include "Window.h"
 #include "Loader.h"
 #include "Renderer.h"
-#include "RawModel.h"
+#include "Model.h"
 #include "Texture.h"
 #include "Shader.h"
 
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     Sprocket::Shader shader("Resources/Shaders/Basic.vert",
                             "Resources/Shaders/Basic.frag");
 
-    Sprocket::RawModel quad = loader.load(vb, ib);
+    Sprocket::Model quad = loader.load(vb, ib);
     Sprocket::Texture texture = loader.loadTexture(tex);
 
     while(window.running()) {

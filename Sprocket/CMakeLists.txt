@@ -14,7 +14,7 @@ add_executable(Sprocket
                Loader.cpp
                Log.cpp
                Maths.cpp
-               RawModel.cpp
+               Model.cpp
                Renderer.cpp
                Shader.cpp
                Window.cpp
