@@ -6,7 +6,6 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "Maths.h"
 
 int main(int argc, char* argv[])
 {
@@ -34,22 +33,21 @@ int main(int argc, char* argv[])
     Sprocket::Shader shader("Resources/Shaders/Basic.vert",
                             "Resources/Shaders/Basic.frag");
 
-    shader.loadProjectionMatrix(Sprocket::Maths::createProjectionMatrix(
-        window.aspectRatio(),
-        70.0f,
-        0.1f,
-        1000.0f));
+    shader.loadProjectionMatrix(window.aspectRatio(), 70.0f, 0.1f, 1000.0f);
 
     Sprocket::Model quad = loader.load(vb, ib);
     Sprocket::Texture texture = loader.loadTexture(tex);
 
-    Sprocket::Entity entity(quad, texture, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0), 1);
+    Sprocket::Entity entity(quad,
+                            texture,
+                            glm::vec3(0.0f, 0.0f, -1.0f),
+                            glm::vec3(0.0),
+                            1);
 
     while(window.running()) {
         window.clear();
 
         entity.increaseRotation(0.5f, 0.0f, 0.0f);
-        SPKT_LOG_INFO("{}", entity.position().z);
         renderer.render(entity, shader);
 
         window.onUpdate();

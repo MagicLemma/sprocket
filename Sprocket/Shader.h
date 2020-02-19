@@ -31,7 +31,10 @@ public:
     void loadVector3f(const std::string& name, const glm::vec3& vector) const;
     void loadMatrix4f(const std::string& name, const glm::mat4& matrix) const;
 
-    void loadProjectionMatrix(const glm::mat4& matrix) const;
+    void loadProjectionMatrix(float aspectRatio,
+                              float fov,
+                              float nearPlane,
+                              float farPlane) const;
 };
 
 }

@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "Log.h"
+#include "Maths.h"
 
 #include <fstream>
 #include <string>
@@ -105,8 +106,13 @@ void Shader::loadMatrix4f(const std::string& name, const glm::mat4& matrix) cons
 	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 }
 
-void Shader::loadProjectionMatrix(const glm::mat4& matrix) const
+void Shader::loadProjectionMatrix(float aspectRatio, float fov, float nearPlane, float farPlane) const
 {
+	glm::mat4 matrix = Sprocket::Maths::createProjectionMatrix(
+        aspectRatio,
+		fov,
+		nearPlane,
+		farPlane);
 	bind();
 	loadMatrix4f("projectionMatrix", matrix);
 	unbind();
