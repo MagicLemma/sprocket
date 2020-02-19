@@ -9,6 +9,6 @@ uniform mat4 transformMatrix;
 
 void main()
 {
-    gl_Position = position;
+    gl_Position = transformMatrix * position;
     d_texture = texture;
 }

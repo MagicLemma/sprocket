@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     Sprocket::Model quad = loader.load(vb, ib);
     Sprocket::Texture texture = loader.loadTexture(tex);
 
-    Sprocket::Entity entity(quad, texture, glm::vec3(0.0), glm::vec3(0.0), 1);
+    Sprocket::Entity entity(quad, texture, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0), 1);
 
     while(window.running()) {
         window.clear();

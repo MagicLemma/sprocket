@@ -27,9 +27,9 @@ public:
     void bind() const;
     void unbind() const;
 
-    void loadFloat(const std::string& name, float value);
-    void loadVector3f(const std::string& name, const glm::vec3& vector);
-    void loadMatrix4f(const std::string& name, const glm::mat4& matrix);
+    void loadFloat(const std::string& name, float value) const;
+    void loadVector3f(const std::string& name, const glm::vec3& vector) const;
+    void loadMatrix4f(const std::string& name, const glm::mat4& matrix) const;
 
 };
 

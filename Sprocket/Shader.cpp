@@ -90,17 +90,17 @@ unsigned int Shader::getUniformLocation(const std::string& name) const
 	return glGetUniformLocation(d_programId, name.c_str());
 }
 
-void Shader::loadFloat(const std::string& name, float value)
+void Shader::loadFloat(const std::string& name, float value) const
 {
 	glUniform1f(getUniformLocation(name), value);
 }
 
-void Shader::loadVector3f(const std::string& name, const glm::vec3& vector)
+void Shader::loadVector3f(const std::string& name, const glm::vec3& vector) const
 {
 	glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::loadMatrix4f(const std::string& name, const glm::mat4& matrix)
+void Shader::loadMatrix4f(const std::string& name, const glm::mat4& matrix) const
 {
 	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 }
