@@ -2,7 +2,7 @@
 #include "Window.h"
 #include "Loader.h"
 #include "Renderer.h"
-#include "RawModel.h"
+#include "Models/RawModel.h"
 #include "Shader.h"
 
 int main(int argc, char* argv[])

@@ -17,13 +17,13 @@ add_executable(Sprocket
                Renderer.cpp
                Shader.cpp
                Window.cpp
-               RawModel.cpp
+               Texture.cpp
                Vertex.cpp
                Events/Event.cpp
                Events/WindowEvent.cpp
                Events/KeyboardEvent.cpp
                Events/MouseEvent.cpp
-               Vendor/STB_Image.cpp)
+               Models/RawModel.cpp)
 
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog

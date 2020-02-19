@@ -10,9 +10,10 @@ namespace Sprocket {
 
 Loader::~Loader()
 {
-    SPKT_LOG_INFO("Cleaning up VAOs and VBOs");
+    SPKT_LOG_INFO("Cleaning up VAOs, VBOs and textures");
     glDeleteVertexArrays(d_vaoList.size(), d_vaoList.data());
     glDeleteBuffers(d_vboList.size(), d_vboList.data());
+    glDeleteTextures(d_texList.size(), d_texList.data());
 }
 
 unsigned int Loader::createVAO()
@@ -62,6 +63,30 @@ void Loader::bindIndexBuffer(const std::vector<unsigned int>& indexBuffer)
                  sizeof(unsigned int) * indexBuffer.size(),
                  indexBuffer.data(),
                  GL_STATIC_DRAW);
+}
+
+void Loader::bindTexture(const Texture& texture)
+{
+    unsigned int texId;
+    glGenTextures(1, &texId);
+    d_texList.push_back(texId);
+
+    glBindTexture(GL_TEXTURE_2D, texId);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 GL_RGBA8,
+                 texture.width(),
+                 texture.height(),
+                 0,
+                 GL_RGBA,
+                 GL_UNSIGNED_BYTE,
+                 texture.data());
+
 }
 
 RawModel Loader::load(const VertexBuffer& vertexBuffer,
