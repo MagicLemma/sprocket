@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
                             "Resources/Shaders/Basic.frag");
 
     shader.loadProjectionMatrix(Sprocket::Maths::createProjectionMatrix(
-        window.width() / window.height(),
+        window.aspectRatio(),
         70.0f,
         0.1f,
         1000.0f));
@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
         window.clear();
 
         entity.increaseRotation(0.5f, 0.0f, 0.0f);
+        SPKT_LOG_INFO("{}", entity.position().z);
         renderer.render(entity, shader);
 
         window.onUpdate();

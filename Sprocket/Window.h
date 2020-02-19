@@ -48,6 +48,7 @@ public:
 
 	unsigned int height() const { return d_data.height; }
 	unsigned int width() const { return d_data.width; }
+	float aspectRatio() const { return (float)d_data.width / (float)d_data.height; }
 	bool running() const { return d_data.running; }
 	bool focused() const { return d_data.focused; }
 
