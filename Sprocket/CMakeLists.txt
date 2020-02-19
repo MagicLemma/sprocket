@@ -23,7 +23,8 @@ add_executable(Sprocket
                Events/WindowEvent.cpp
                Events/KeyboardEvent.cpp
                Events/MouseEvent.cpp
-               Models/RawModel.cpp)
+               Models/RawModel.cpp
+               Models/TexturedModel.cpp)
 
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog

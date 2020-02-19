@@ -6,6 +6,9 @@
 #include <cstddef>
 #include <glad/glad.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 namespace Sprocket {
 
 Loader::~Loader()
@@ -65,30 +68,6 @@ void Loader::bindIndexBuffer(const std::vector<unsigned int>& indexBuffer)
                  GL_STATIC_DRAW);
 }
 
-void Loader::bindTexture(const Texture& texture)
-{
-    unsigned int texId;
-    glGenTextures(1, &texId);
-    d_texList.push_back(texId);
-
-    glBindTexture(GL_TEXTURE_2D, texId);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 GL_RGBA8,
-                 texture.width(),
-                 texture.height(),
-                 0,
-                 GL_RGBA,
-                 GL_UNSIGNED_BYTE,
-                 texture.data());
-
-}
-
 RawModel Loader::load(const VertexBuffer& vertexBuffer,
                       const IndexBuffer& indexBuffer)
 {
@@ -97,11 +76,36 @@ RawModel Loader::load(const VertexBuffer& vertexBuffer,
     bindVertexBuffer(vertexBuffer);
     bindIndexBuffer(indexBuffer);
 
-    unbind();
+    unbindVAO();
     return RawModel(vaoId, indexBuffer.size());
 }
 
-void Loader::unbind()
+Texture Loader::loadTexture(const TextureFile& textureFile)
+{
+    unsigned int texId;
+    glGenTextures(1, &texId);
+    d_texList.push_back(texId);
+
+    stbi_set_flip_vertically_on_load(1);
+    int width, height, bpp;
+    unsigned char* data = stbi_load(textureFile.c_str(), &width, &height, &bpp, 4);
+
+    glBindTexture(GL_TEXTURE_2D, texId);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexImage2D(GL_TEXTURE_2D,
+                 0, GL_RGBA8, width, height,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    
+    stbi_image_free(data);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    return Texture(texId);
+}
+
+void Loader::unbindVAO()
 {
     glBindVertexArray(0);
 }

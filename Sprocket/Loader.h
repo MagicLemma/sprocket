@@ -4,6 +4,7 @@
 #include "Texture.h"
 
 #include <vector>
+#include <string>
 
 namespace Sprocket {
 
@@ -12,6 +13,7 @@ class Loader
 public:
     using VertexBuffer = std::vector<Vertex>;
     using IndexBuffer = std::vector<unsigned int>;
+    using TextureFile = std::string;
 
 private:
     std::vector<unsigned int> d_vaoList;
@@ -19,10 +21,10 @@ private:
     std::vector<unsigned int> d_texList;
     
     unsigned int createVAO();
+    void unbindVAO();
     
     void bindVertexBuffer(const VertexBuffer& vertexBuffer);
     void bindIndexBuffer(const IndexBuffer& indexBuffer);
-    void bindTexture(const Texture& texture);
 
 public:
     ~Loader();
@@ -30,7 +32,7 @@ public:
     RawModel load(const VertexBuffer& vertexBuffer,
                   const IndexBuffer& indexBuffer);
 
-    void unbind();
+    Texture loadTexture(const TextureFile& textureFile);
 };
 
 }
