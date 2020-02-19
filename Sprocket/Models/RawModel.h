@@ -13,6 +13,8 @@ public:
     unsigned int vaoId() const { return d_vaoId; }
     int vertexCount() const { return d_vertexCount; }
 
+    void bind() const;
+    void unbind() const;
 };
 
 }
