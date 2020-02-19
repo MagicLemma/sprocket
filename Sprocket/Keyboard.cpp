@@ -35,7 +35,7 @@ void init(Window* window)
     s_initialised = true;
 }
 
-bool isKeyPressed(int key)
+bool isKeyDown(int key)
 {
     if (!s_initialised) {
         SPKT_LOG_ERROR("Keyboard not initalised! Tried to check key {}", key);

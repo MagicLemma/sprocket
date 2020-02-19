@@ -47,12 +47,16 @@ int main(int argc, char* argv[])
                             glm::vec3(0.0),
                             1);
 
+    Sprocket::Camera camera;
+
     while(window.running()) {
         window.clear();
 
         entity.increaseRotation(0.5f, 0.0f, 0.0f);
-        renderer.render(entity, shader);
+        camera.move();
 
+        renderer.render(entity, camera, shader);
+        
         window.onUpdate();
     }
 

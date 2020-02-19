@@ -8,6 +8,7 @@
 namespace Sprocket {
 
 void Renderer::render(const Entity& entity,
+                      const Camera& camera,
                       const Shader& shader)
 {
     entity.model().bind();
@@ -18,8 +19,16 @@ void Renderer::render(const Entity& entity,
         entity.rotation(),
         entity.scale());
 
+    glm::mat4 view = Maths::createViewMatrix(
+        camera.position(),
+        camera.pitch(),
+        camera.yaw(),
+        camera.roll()
+    );
+
     shader.bind();
     shader.loadMatrix4f("transformMatrix", transform);
+    shader.loadMatrix4f("viewMatrix", view);
 
     glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     

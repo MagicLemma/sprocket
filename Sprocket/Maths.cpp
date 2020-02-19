@@ -1,4 +1,5 @@
 #include "Maths.h"
+#include "Log.h"
 
 #include <cmath>
 
@@ -37,8 +38,20 @@ glm::mat4 createProjectionMatrix(float aspectRatio,
     matrix[2][3] = -1;
     matrix[3][2] = - ((2 * nearPlane * farPlane) / frustumLength);
     matrix[3][3] = 0;
+    return matrix;   
+}
+
+glm::mat4 createViewMatrix(const glm::vec3& position,
+                           float pitch,
+                           float yaw,
+                           float roll)
+{
+    glm::mat4 matrix(1.0);
+    matrix = glm::rotate(matrix, glm::radians(pitch), glm::vec3(1, 0, 0));
+    matrix = glm::rotate(matrix, glm::radians(yaw), glm::vec3(0, 1, 0));
+    matrix = glm::rotate(matrix, glm::radians(roll), glm::vec3(0, 0, 1));
+    matrix = glm::translate(matrix, -position);
     return matrix;
-    
 }
 
 }

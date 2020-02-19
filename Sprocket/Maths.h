@@ -13,6 +13,11 @@ glm::mat4 createProjectionMatrix(float aspectRatio,
                                  float nearPlane,
                                  float farPlane);
 
+glm::mat4 createViewMatrix(const glm::vec3& position,
+                           float pitch,
+                           float yaw,
+                           float roll);
+
 
 }
 }

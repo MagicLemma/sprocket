@@ -8,13 +8,15 @@ namespace Sprocket {
 
 class Camera
 {
-    glm::vec3 d_position = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 d_position;
     float     d_pitch;
     float     d_yaw;
     float     d_roll;
 
 public:
-    Camera() {}
+    Camera();
+
+    void move();
 
     glm::vec3 position() const { return d_position; }
     float pitch() const { return d_pitch; }
