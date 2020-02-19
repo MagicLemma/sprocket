@@ -22,7 +22,10 @@ public:
            float scale);
 
     void increasePosition(const glm::vec3 ds);
+    void increasePosition(float dx, float dy, float dz);
+
     void increaseRotation(const glm::vec3 dr);
+    void increaseRotation(float dx, float dy, float dz);
 
     // Getters / Setters
     Model model() const;

@@ -20,10 +20,21 @@ void Entity::increasePosition(const glm::vec3 ds)
     d_position += ds;
 }
 
+void Entity::increasePosition(float dx, float dy, float dz)
+{
+    increasePosition(glm::vec3(dx, dy, dz));
+}
+
 void Entity::increaseRotation(const glm::vec3 dr)
 {
     d_rotation += dr;
 }
+
+void Entity::increaseRotation(float dx, float dy, float dz)
+{
+    increaseRotation(glm::vec3(dx, dy, dz));
+}
+
 
 Model Entity::model() const
 { 

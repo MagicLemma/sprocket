@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
     while(window.running()) {
         window.clear();
 
+        entity.increasePosition(0.0f, 0.0f, 0.002f);
         renderer.render(entity, shader);
 
         window.onUpdate();
