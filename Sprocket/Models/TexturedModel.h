@@ -11,6 +11,9 @@ class TexturedModel
 
 public:
     TexturedModel(const RawModel& rawModel, const Texture& texture);
+
+    RawModel rawModel() const { return d_rawModel; }
+    Texture texture() const { return d_texture; }
 };
 
 }

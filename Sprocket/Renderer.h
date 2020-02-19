@@ -1,12 +1,12 @@
 #pragma once
-#include "Models/RawModel.h"
+#include "Models/TexturedModel.h"
 
 namespace Sprocket {
 
 class Renderer
 {
 public:
-    void render(const RawModel& model);
+    void render(const TexturedModel& texturedModel);
 };
 
 }
