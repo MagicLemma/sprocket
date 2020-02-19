@@ -1,5 +1,7 @@
 #include "Maths.h"
 
+#include <cmath>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
@@ -17,6 +19,26 @@ glm::mat4 createTransformationMatrix(const glm::vec3& translation,
     matrix = glm::rotate(matrix, glm::radians(rotation.z), glm::vec3(0, 0, 1));
     matrix = glm::scale(matrix, glm::vec3(scale, scale, scale));
     return matrix;
+}
+
+glm::mat4 createProjectionMatrix(float aspectRatio,
+                                 float fov,
+                                 float nearPlane,
+                                 float farPlane)
+{
+    glm::mat4 matrix(1.0);
+    float xScale = (1.0f / std::tan(glm::radians(fov / 2.0f)));
+    float yScale = xScale * aspectRatio;
+    float frustumLength = farPlane - nearPlane;
+
+    matrix[0][0] = xScale;
+    matrix[1][1] = yScale;
+    matrix[2][2] = -((farPlane + nearPlane) / frustumLength);
+    matrix[2][3] = -1;
+    matrix[3][2] = - ((2 * nearPlane * farPlane) / frustumLength);
+    matrix[3][3] = 0;
+    return matrix;
+    
 }
 
 }

@@ -10,6 +10,7 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_executable(Sprocket
                Sprocket.m.cpp
+               Camera.cpp
                Entity.cpp
                Loader.cpp
                Log.cpp

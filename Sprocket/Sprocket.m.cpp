@@ -5,6 +5,7 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Camera.h"
 
 int main(int argc, char* argv[])
 {
@@ -35,13 +36,15 @@ int main(int argc, char* argv[])
     Sprocket::Model quad = loader.load(vb, ib);
     Sprocket::Texture texture = loader.loadTexture(tex);
 
-    Sprocket::Entity entity(quad, texture, glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0), 1);
+    Sprocket::Entity entity(quad, texture, glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0), 1);
+
+    Sprocket::Camera camera(&window);
 
     while(window.running()) {
         window.clear();
 
-        entity.increasePosition(0.0f, 0.0f, 0.002f);
-        renderer.render(entity, shader);
+        entity.increaseRotation(0.5f, 0.0f, 0.0f);
+        renderer.render(entity, camera, shader);
 
         window.onUpdate();
     }
