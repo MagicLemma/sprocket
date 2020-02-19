@@ -105,5 +105,12 @@ void Shader::loadMatrix4f(const std::string& name, const glm::mat4& matrix) cons
 	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 }
 
+void Shader::loadProjectionMatrix(const glm::mat4& matrix) const
+{
+	bind();
+	loadMatrix4f("projectionMatrix", matrix);
+	unbind();
+}
+
 
 }
