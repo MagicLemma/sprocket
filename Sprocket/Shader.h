@@ -24,8 +24,8 @@ public:
 
     ~Shader();
 
-    void start();
-    void stop();
+    void bind() const;
+    void unbind() const;
 
     void loadFloat(const std::string& name, float value);
     void loadVector3f(const std::string& name, const glm::vec3& vector);

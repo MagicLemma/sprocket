@@ -34,7 +34,7 @@ Shader::Shader(const std::string& vertShaderFile,
 
 Shader::~Shader()
 {
-    stop();
+    unbind();
     glDetachShader(d_programId, d_vertShaderId);
     glDetachShader(d_programId, d_fragShaderId);
     glDeleteShader(d_vertShaderId);
@@ -75,12 +75,12 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
 	return id;
 }
 
-void Shader::start()
+void Shader::bind() const
 {
     glUseProgram(d_programId);
 }
 
-void Shader::stop()
+void Shader::unbind() const
 {
     glUseProgram(0);
 }
