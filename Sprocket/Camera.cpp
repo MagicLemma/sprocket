@@ -1,6 +1,9 @@
 #include "Camera.h"
 #include "Keyboard.h"
 
+#include <cmath>
+#include <glm/glm.hpp>
+
 namespace Sprocket {
 
 Camera::Camera()
@@ -15,27 +18,31 @@ void Camera::move()
 {
     if (Keyboard::isKeyDown(Keyboard::W))
     {
-        d_position.z -= 0.02f;
+        d_position.z -= std::cos(glm::radians(d_yaw)) * 0.02f;
+        d_position.x += std::sin(glm::radians(d_yaw)) * 0.02f;
     }
     if (Keyboard::isKeyDown(Keyboard::D))
     {
-        d_position.x += 0.02f;
+        d_position.z += std::sin(glm::radians(d_yaw)) * 0.02f;
+        d_position.x += std::cos(glm::radians(d_yaw)) * 0.02f;
     }
     if (Keyboard::isKeyDown(Keyboard::A))
     {
-        d_position.x -= 0.02f;
+        d_position.z -= std::sin(glm::radians(d_yaw)) * 0.02f;
+        d_position.x -= std::cos(glm::radians(d_yaw)) * 0.02f;
     }
     if (Keyboard::isKeyDown(Keyboard::S))
     {
-        d_position.z += 0.02f;
+        d_position.z += std::cos(glm::radians(d_yaw)) * 0.02f;
+        d_position.x -= std::sin(glm::radians(d_yaw)) * 0.02f;
     }
     if (Keyboard::isKeyDown(Keyboard::Z))
     {
-        d_yaw += 1.0f;
+        d_yaw -= 1.0f;
     }
     if (Keyboard::isKeyDown(Keyboard::C))
     {
-        d_yaw -= 1.0f;
+        d_yaw += 1.0f;
     }
 }
 
