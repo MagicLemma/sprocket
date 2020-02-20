@@ -2,6 +2,7 @@
 #include "Keyboard.h"
 
 #include <cmath>
+#include <algorithm>
 #include <glm/glm.hpp>
 
 namespace Sprocket {
@@ -21,12 +22,12 @@ void Camera::move()
         d_position.z += -std::cos(glm::radians(d_yaw)) * 0.02f;
         d_position.x += std::sin(glm::radians(d_yaw)) * 0.02f;
     }
-    if (Keyboard::isKeyDown(Keyboard::D))
+    if (Keyboard::isKeyDown(Keyboard::E))
     {
         d_position.z += std::sin(glm::radians(d_yaw)) * 0.02f;
         d_position.x += std::cos(glm::radians(d_yaw)) * 0.02f;
     }
-    if (Keyboard::isKeyDown(Keyboard::A))
+    if (Keyboard::isKeyDown(Keyboard::Q))
     {
         d_position.z += -std::sin(glm::radians(d_yaw)) * 0.02f;
         d_position.x += -std::cos(glm::radians(d_yaw)) * 0.02f;
@@ -36,13 +37,29 @@ void Camera::move()
         d_position.z += std::cos(glm::radians(d_yaw)) * 0.02f;
         d_position.x += -std::sin(glm::radians(d_yaw)) * 0.02f;
     }
-    if (Keyboard::isKeyDown(Keyboard::Z))
+    if (Keyboard::isKeyDown(Keyboard::A))
     {
         d_yaw -= 1.0f;
     }
-    if (Keyboard::isKeyDown(Keyboard::C))
+    if (Keyboard::isKeyDown(Keyboard::D))
     {
         d_yaw += 1.0f;
+    }
+    if (Keyboard::isKeyDown(Keyboard::R))
+    {
+        d_pitch = std::min(std::max(d_pitch - 1.0f, -90.0f), 90.0f);
+    }
+    if (Keyboard::isKeyDown(Keyboard::F))
+    {
+        d_pitch = std::min(std::max(d_pitch + 1.0f, -90.0f), 90.0f);
+    }
+    if (Keyboard::isKeyDown(Keyboard::SPACE))
+    {
+        d_position.y += 0.02f;
+    }
+    if (Keyboard::isKeyDown(Keyboard::LSHIFT))
+    {
+        d_position.y -= 0.02f;
     }
 }
 

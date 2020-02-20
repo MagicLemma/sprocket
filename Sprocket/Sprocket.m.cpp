@@ -84,6 +84,12 @@ int main(int argc, char* argv[])
                             glm::vec3(0.0),
                             1);
 
+    Sprocket::Entity entity2(quad,
+                             texture,
+                             glm::vec3(0.0f, -12.0f, 0.0f),
+                             glm::vec3(0.0),
+                             20);
+
     Sprocket::Camera camera;
 
     while(window.running()) {
@@ -93,6 +99,8 @@ int main(int argc, char* argv[])
         camera.move();
 
         renderer.render(entity, camera, shader);
+        renderer.render(entity2, camera, shader);
+        SPKT_LOG_INFO("Pitch: {}", camera.pitch());
         
         window.onUpdate();
     }
