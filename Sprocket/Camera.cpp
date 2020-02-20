@@ -18,7 +18,7 @@ void Camera::move()
 {
     if (Keyboard::isKeyDown(Keyboard::W))
     {
-        d_position.z -= std::cos(glm::radians(d_yaw)) * 0.02f;
+        d_position.z += -std::cos(glm::radians(d_yaw)) * 0.02f;
         d_position.x += std::sin(glm::radians(d_yaw)) * 0.02f;
     }
     if (Keyboard::isKeyDown(Keyboard::D))
@@ -28,13 +28,13 @@ void Camera::move()
     }
     if (Keyboard::isKeyDown(Keyboard::A))
     {
-        d_position.z -= std::sin(glm::radians(d_yaw)) * 0.02f;
-        d_position.x -= std::cos(glm::radians(d_yaw)) * 0.02f;
+        d_position.z += -std::sin(glm::radians(d_yaw)) * 0.02f;
+        d_position.x += -std::cos(glm::radians(d_yaw)) * 0.02f;
     }
     if (Keyboard::isKeyDown(Keyboard::S))
     {
         d_position.z += std::cos(glm::radians(d_yaw)) * 0.02f;
-        d_position.x -= std::sin(glm::radians(d_yaw)) * 0.02f;
+        d_position.x += -std::sin(glm::radians(d_yaw)) * 0.02f;
     }
     if (Keyboard::isKeyDown(Keyboard::Z))
     {
