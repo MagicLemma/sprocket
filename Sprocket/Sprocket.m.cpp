@@ -100,7 +100,6 @@ int main(int argc, char* argv[])
 
         renderer.render(entity, camera, shader);
         renderer.render(entity2, camera, shader);
-        SPKT_LOG_INFO("Pitch: {}", camera.pitch());
         
         window.onUpdate();
     }
