@@ -10,11 +10,6 @@ namespace Sprocket {
 
 class Loader
 {
-public:
-    using VertexBuffer = std::vector<Vertex>;
-    using IndexBuffer = std::vector<unsigned int>;
-    using TextureFile = std::string;
-
 private:
     std::vector<unsigned int> d_vaoList;
     std::vector<unsigned int> d_vboList;
@@ -29,10 +24,8 @@ private:
 public:
     ~Loader();
 
-    Model load(const VertexBuffer& vertexBuffer,
-               const IndexBuffer& indexBuffer);
-
-    Texture loadTexture(const TextureFile& textureFile);
+    Model   loadModel(const std::string& objFile);
+    Texture loadTexture(const std::string& textureFile);
 };
 
 }

@@ -11,9 +11,6 @@ void Renderer::render(const Entity& entity,
                       const Camera& camera,
                       const Shader& shader)
 {
-    entity.model().bind();
-    entity.texture().bind();
-
     glm::mat4 transform = Maths::createTransformationMatrix(
         entity.position(),
         entity.rotation(),
@@ -26,6 +23,7 @@ void Renderer::render(const Entity& entity,
         camera.roll()
     );
 
+    entity.bind();
     shader.bind();
     shader.loadMatrix4f("transformMatrix", transform);
     shader.loadMatrix4f("viewMatrix", view);
@@ -33,8 +31,7 @@ void Renderer::render(const Entity& entity,
     glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     
     shader.unbind();
-    entity.texture().unbind();
-    entity.model().unbind();
+    entity.unbind();
 }
 
 }

@@ -15,6 +15,18 @@ Entity::Entity(const Model& model,
 {    
 }
 
+void Entity::bind() const
+{
+    d_model.bind();
+    d_texture.bind();
+}
+
+void Entity::unbind() const
+{
+    d_texture.unbind();
+    d_model.unbind();
+}
+
 void Entity::increasePosition(const glm::vec3 ds)
 {
     d_position += ds;

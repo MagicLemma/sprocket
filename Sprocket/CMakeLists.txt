@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 
 project(Sprocket)
 
+set(CMAKE_CXX_STANDARD 17)
+
 find_package(spdlog CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
@@ -17,6 +19,7 @@ add_executable(Sprocket
                Log.cpp
                Maths.cpp
                Model.cpp
+               ObjParser.cpp
                Renderer.cpp
                Shader.cpp
                Window.cpp

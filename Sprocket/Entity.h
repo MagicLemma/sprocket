@@ -21,6 +21,9 @@ public:
            const glm::vec3& rotation,
            float scale);
 
+    void bind() const;
+    void unbind() const;
+
     void increasePosition(const glm::vec3 ds);
     void increasePosition(float dx, float dy, float dz);
 
