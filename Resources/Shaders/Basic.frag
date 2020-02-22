@@ -3,21 +3,40 @@
 in vec2 d_texture;
 in vec3 surfaceNormal;
 in vec3 toLightVector;
+in vec3 toCameraVector;
 
 layout(location = 0) out vec4 out_Colour;
 
 uniform sampler2D textureSampler;
+
+// Lighting Information
 uniform vec3 lightColour;
+
+// Texture/Lighting Information
+uniform float shineDamper;
+uniform float reflectivity;
 
 void main()
 {
+    // Surface information
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitToLight = normalize(toLightVector);
+    vec3 unitToCamera = normalize(toCameraVector);
+    vec3 reflectedLightDirection = reflect(-unitToLight, unitNormal);
 
-    float dotProd = dot(unitToLight, unitNormal);
-    float brightness = max(dotProd, 0.2);
+    // Colour prior to lighting
+    vec4 colour = texture(textureSampler, d_texture);
 
-    vec3 diffuse = brightness * lightColour;
+    // Diffuse lighting calculation
+    float diffuseFactor = dot(unitToLight, unitNormal);
+    diffuseFactor = max(diffuseFactor, 0.2);
+    vec4 diffuseLight = vec4(diffuseFactor * lightColour, 1.0);
 
-    out_Colour = vec4(diffuse, 1.0) * texture(textureSampler, d_texture);
+    // Specular lighting calculation
+    float specularFactor = dot(reflectedLightDirection, unitToCamera);
+    specularFactor = max(specularFactor, 0.0);
+    specularFactor = pow(specularFactor, shineDamper);
+    vec4 specularLight = vec4(specularFactor * reflectivity * lightColour, 1.0);
+
+    out_Colour = diffuseLight * colour + specularLight;
 }

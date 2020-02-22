@@ -6,6 +6,8 @@ namespace Sprocket {
 
 Texture::Texture(unsigned int textureId)
     : d_textureId(textureId)
+    , d_shineDamper(1.0f)
+    , d_reflectivity(0.0f)
 {
 }
 

@@ -100,15 +100,21 @@ void Shader::loadCamera(const Camera& camera) const
 
 void Shader::loadEntity(const Entity& entity) const
 {
+	// Entity Position
 	glm::mat4 transform = Maths::createTransformationMatrix(
 		entity.position(),
 		entity.rotation(),
 		entity.scale());
     loadMatrix4f("transformMatrix", transform);
+
+	// Specular Lighting (based on Texture)
+	loadFloat("shineDamper", entity.texture().shineDamper());
+	loadFloat("reflectivity", entity.texture().reflectivity());
 }
 
 void Shader::loadLight(const Light& light) const
 {
+	// Diffuse Lighting
 	loadVector3f("lightPosition", light.position);
 	loadVector3f("lightColour", light.colour);
 }
