@@ -4,6 +4,7 @@
 #include "Entity.h"
 
 #include <string>
+#include <vector>
 
 #include <glm/glm.hpp>
 
@@ -11,6 +12,9 @@ namespace Sprocket {
 
 class Shader
 {
+    // Constants
+    static constexpr int MAX_NUM_LIGHTS = 5;
+
     // Shader IDs
     unsigned int d_programId;
     unsigned int d_vertShaderId;
@@ -42,7 +46,7 @@ public:
     // Load Object Data
     void loadCamera(const Camera& camera) const;
     void loadEntity(const Entity& entity) const;
-    void loadLight(const Light& light) const;
+    void loadLights(const std::vector<Light>& lights) const;
 
     void loadProjectionMatrix(float aspectRatio,
                               float fov,

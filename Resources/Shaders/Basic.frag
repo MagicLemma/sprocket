@@ -2,7 +2,7 @@
 
 in vec2 d_texture;
 in vec3 surfaceNormal;
-in vec3 toLightVector;
+in vec3 toLightVectors[5];
 in vec3 toCameraVector;
 
 layout(location = 0) out vec4 out_Colour;
@@ -10,8 +10,8 @@ layout(location = 0) out vec4 out_Colour;
 uniform sampler2D textureSampler;
 
 // Lighting Information
-uniform vec3 lightColour;
-uniform vec3 lightAttenuation;
+uniform vec3 lightColours[5];
+uniform vec3 lightAttenuations[5];
 
 // Texture/Lighting Information
 uniform float shineDamper;
@@ -21,27 +21,37 @@ void main()
 {
     // Surface information
     vec3 unitNormal = normalize(surfaceNormal);
-    vec3 unitToLight = normalize(toLightVector);
     vec3 unitToCamera = normalize(toCameraVector);
-    vec3 reflectedLightDirection = reflect(-unitToLight, unitNormal);
 
     // Colour prior to lighting
     vec4 colour = texture(textureSampler, d_texture);
 
-    // Attenuation calculation
-    float d = length(toLightVector);
-    float attenuation = lightAttenuation.x + lightAttenuation.y * d + lightAttenuation.z * d * d;
+    // Lighting calculation
+    vec4 totalDiffuse = vec4(0.0);
+    vec4 totalSpecular = vec4(0.0);
 
-    // Diffuse lighting calculation
-    float diffuseFactor = dot(unitToLight, unitNormal);
-    diffuseFactor = max(diffuseFactor, 0.05);
-    vec4 diffuseLight = vec4(diffuseFactor * lightColour, 1.0);
+    for (int i = 0; i != 5; i++) {
+        vec3 unitToLight = normalize(toLightVectors[i]);
+        vec3 reflectedLightDirection = reflect(-unitToLight, unitNormal);
 
-    // Specular lighting calculation
-    float specularFactor = dot(reflectedLightDirection, unitToCamera);
-    specularFactor = max(specularFactor, 0.0);
-    specularFactor = pow(specularFactor, shineDamper);
-    vec4 specularLight = vec4(specularFactor * reflectivity * lightColour, 1.0);
+        // Attenuation calculation
+        float d = length(toLightVectors[i]);
+        float attenuation = lightAttenuations[i].x + lightAttenuations[i].y * d + lightAttenuations[i].z * d * d;
 
-    out_Colour = (diffuseLight * colour + specularLight) / attenuation;
+        // Diffuse lighting calculation
+        float diffuseFactor = dot(unitToLight, unitNormal);
+        diffuseFactor = max(diffuseFactor, 0.0) / attenuation;
+        totalDiffuse = totalDiffuse + vec4(diffuseFactor * lightColours[i], 1.0);
+
+        // Specular lighting calculation
+        float specularFactor = dot(reflectedLightDirection, unitToCamera);
+        specularFactor = max(specularFactor, 0.0);
+        specularFactor = pow(specularFactor, shineDamper) / attenuation;
+        totalSpecular = totalSpecular + vec4(specularFactor * reflectivity * lightColours[i], 1.0);
+    }
+
+    // Ambient lighting calculation
+    totalDiffuse = max(totalDiffuse, 0.05);
+
+    out_Colour = totalDiffuse * colour + totalSpecular;
 }

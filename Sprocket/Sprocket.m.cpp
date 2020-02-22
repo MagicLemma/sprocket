@@ -30,14 +30,18 @@ int main(int argc, char* argv[])
 
     Sprocket::Texture space = loader.loadTexture("Resources/Textures/Space.PNG");
     Sprocket::Texture gray = loader.loadTexture("Resources/Textures/PlainGray.PNG");
-    gray.reflectivity(1);
-    gray.shineDamper(10);
+    gray.reflectivity(3);
+    gray.shineDamper(5);
 
     Sprocket::Entity dragon(dragonModel, gray, {0.0f, 0.0f, -1.0f}, glm::vec3(0.0f), 0.1f);
     Sprocket::Entity quad(quadModel, space, {0.0f, -1.0f, 0.0f}, glm::vec3(0.0f), 20);
 
-    Sprocket::Light sun{{0.0f, 50.0f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}};
-    Sprocket::Light light{{0.0f, 1.0f, 0.0f}, {0.8f, 0.8f, 0.9f}, {1.0f, 0.0f, 0.0f}};
+    Sprocket::Light sun{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}};
+    Sprocket::Light light1{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}};
+    Sprocket::Light light2{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}};
+    Sprocket::Light light3{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}};
+    std::vector<Sprocket::Light> lights = {sun, light1, light2, light3};
+
 
     Sprocket::Camera camera;
 
@@ -46,14 +50,13 @@ int main(int argc, char* argv[])
         window.clear();
         camera.move();
 
-        light.position = glm::vec3(3*std::sin(r), 1.0f, 3*std::cos(r));
-        dragon.increaseRotation(0.0f, 0.5f, 0.0f);
+        //dragon.increaseRotation(0.0f, 0.5f, 0.0f);
 
-        renderer.render(dragon, sun, camera, shader);
-        renderer.render(quad, sun, camera, shader);
+        renderer.render(dragon, lights, camera, shader);
+        renderer.render(quad, lights, camera, shader);
 
         window.onUpdate();
-        r += 0.1f ;
+        r += 0.05f;
     }
 
     return 0;

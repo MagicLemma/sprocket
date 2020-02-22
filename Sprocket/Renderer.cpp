@@ -2,6 +2,8 @@
 #include "Maths.h"
 #include "Log.h"
 
+#include <vector>
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
@@ -14,13 +16,13 @@ Renderer::Renderer()
 }
 
 void Renderer::render(const Entity& entity,
-                      const Light& light,
+                      const std::vector<Light>& lights,
                       const Camera& camera,
                       const Shader& shader)
 {
     shader.bind();
     shader.loadEntity(entity);
-    shader.loadLight(light);
+    shader.loadLights(lights);
     shader.loadCamera(camera);
 
     entity.bind();
