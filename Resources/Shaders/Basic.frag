@@ -11,6 +11,7 @@ uniform sampler2D textureSampler;
 
 // Lighting Information
 uniform vec3 lightColour;
+uniform vec3 lightAttenuation;
 
 // Texture/Lighting Information
 uniform float shineDamper;
@@ -27,6 +28,10 @@ void main()
     // Colour prior to lighting
     vec4 colour = texture(textureSampler, d_texture);
 
+    // Attenuation calculation
+    float d = length(toLightVector);
+    float attenuation = lightAttenuation.x + lightAttenuation.y * d + lightAttenuation.z * d * d;
+
     // Diffuse lighting calculation
     float diffuseFactor = dot(unitToLight, unitNormal);
     diffuseFactor = max(diffuseFactor, 0.2);
@@ -38,5 +43,5 @@ void main()
     specularFactor = pow(specularFactor, shineDamper);
     vec4 specularLight = vec4(specularFactor * reflectivity * lightColour, 1.0);
 
-    out_Colour = diffuseLight * colour + specularLight;
+    out_Colour = (diffuseLight * colour + specularLight) / attenuation;
 }

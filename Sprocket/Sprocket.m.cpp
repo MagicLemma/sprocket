@@ -36,22 +36,23 @@ int main(int argc, char* argv[])
     Sprocket::Entity dragon(dragonModel, gray, {0.0f, 0.0f, -1.0f}, glm::vec3(0.0f), 0.1f);
     Sprocket::Entity quad(quadModel, space, {0.0f, -1.0f, 0.0f}, glm::vec3(0.0f), 20);
 
-    Sprocket::Light light{{0.0f, 1.0f, 0.0f}, {0.8f, 0.8f, 0.9f}};
+    Sprocket::Light light{{0.0f, 1.0f, 0.0f}, {0.8f, 0.8f, 0.9f}, {1.0f, 0.0f, 0.0f}};
     Sprocket::Camera camera;
 
-    //float r = 0.0f;
+    float r = 0.0f;
     while (window.running()) {
         window.clear();
         camera.move();
 
-        //light.position = glm::vec3(3*std::sin(r), 1.0f, 3*std::cos(r));
+        //light.position.y += 0.02f;
+        light.position = glm::vec3(3*std::sin(r), 1.0f, 3*std::cos(r));
         //dragon.increaseRotation(0.0f, -1.5f, 0.0f);
 
         renderer.render(dragon, light, camera, shader);
         renderer.render(quad, light, camera, shader);
 
         window.onUpdate();
-        //r += 0.1f ;
+        r += 0.1f ;
     }
 
     return 0;

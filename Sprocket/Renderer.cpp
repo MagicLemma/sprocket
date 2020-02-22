@@ -7,6 +7,12 @@
 
 namespace Sprocket {
 
+Renderer::Renderer()
+{
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+}
+
 void Renderer::render(const Entity& entity,
                       const Light& light,
                       const Camera& camera,

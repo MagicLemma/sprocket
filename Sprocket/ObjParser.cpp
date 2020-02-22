@@ -124,9 +124,9 @@ std::pair<VertexBuffer, IndexBuffer> parseObjFile(const std::string& objFile)
                         {normal.x, normal.y, normal.z}
                     };
 
-                    size_t newVertexIdx = vertices.size();
+                    unsigned int newVertexIdx = (unsigned int)vertices.size();
 
-                    indices.push_back(vertices.size());
+                    indices.push_back(newVertexIdx);
                     vertices.push_back(newVertex);
                     seenFaces[vertex] = newVertexIdx;
                 }

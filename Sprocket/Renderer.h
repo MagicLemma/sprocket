@@ -9,6 +9,8 @@ namespace Sprocket {
 class Renderer
 {
 public:
+    Renderer();
+    
     void render(const Entity& entity,
                 const Light& light,
                 const Camera& camera,

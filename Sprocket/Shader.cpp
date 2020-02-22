@@ -117,6 +117,7 @@ void Shader::loadLight(const Light& light) const
 	// Diffuse Lighting
 	loadVector3f("lightPosition", light.position);
 	loadVector3f("lightColour", light.colour);
+	loadVector3f("lightAttenuation", light.attenuation);
 }
 
 void Shader::loadProjectionMatrix(float aspectRatio, float fov, float nearPlane, float farPlane) const
