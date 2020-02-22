@@ -19,7 +19,7 @@ void Renderer::render(const Entity& entity,
                       const std::vector<Light>& lights,
                       const Camera& camera,
                       const Shader& shader)
-{
+{   
     shader.bind();
     shader.loadEntity(entity);
     shader.loadLights(lights);

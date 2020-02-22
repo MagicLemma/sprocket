@@ -8,6 +8,106 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Layer.h"
+#include "LayerStack.h"
+
+#include <vector>
+#include <memory>
+
+namespace Sprocket {
+
+class GameLayer : public Layer
+{
+    Loader   d_loader;
+    Renderer d_renderer;
+    Camera   d_camera;
+    Shader   d_shader;
+
+    std::vector<Entity> d_entities;
+    std::vector<Light>  d_lights;
+
+public:
+    GameLayer(Window* window) 
+        : Layer(true) 
+        , d_loader()
+        , d_renderer()
+        , d_camera()
+        , d_shader("Resources/Shaders/Basic.vert",
+                   "Resources/Shaders/Basic.frag")
+        , d_entities()
+        , d_lights()
+    {
+        d_shader.loadProjectionMatrix(window->aspectRatio(), 70.0f, 0.1f, 1000.0f);
+        
+        Model quadModel = d_loader.loadModel("Resources/Models/Plane.obj");
+        Model dragonModel = d_loader.loadModel("Resources/Models/Dragon.obj");
+
+        Texture space = d_loader.loadTexture("Resources/Textures/PlainGray.PNG");
+        Texture gray = d_loader.loadTexture("Resources/Textures/PlainGray.PNG");
+        gray.reflectivity(3);
+        gray.shineDamper(5);
+        //space.reflectivity(3);
+        //space.shineDamper(5);
+
+        d_entities.push_back(Entity(dragonModel, gray, {0.0f, 0.0f, -1.0f}, glm::vec3(0.0f), 0.1f));
+        d_entities.push_back(Entity(quadModel, space, {0.0f, -1.0f, 0.0f}, glm::vec3(0.0f), 20));
+    
+        d_lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
+        d_lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
+        d_lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
+        d_lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
+    }
+
+    bool handleEvent(Event& event) override
+    {
+        return false;
+    }
+
+    bool update(float tick) override
+    {
+        d_lights[1].position.z = 5 * std::sin(tick);
+        d_lights[1].position.x = 5 * std::cos(tick);
+
+        d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
+        d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
+
+        d_lights[3].position.z = 6 * std::sin(8.0f * tick);
+        d_lights[3].position.x = 6 * std::cos(8.0f * tick);
+
+        d_camera.move();
+        return true;
+    }
+
+    void draw() override
+    {
+        for (const auto& entity: d_entities) {
+            d_renderer.render(entity, d_lights, d_camera, d_shader);
+        }
+    }
+};
+
+class UILayer : public Layer
+{
+public:
+    UILayer() : Layer(false) {}
+
+    bool handleEvent(Event& event) override
+    {
+        return false;
+    }
+
+    bool update(float tick) override
+    {
+        return false;
+    }
+
+    void draw() override
+    {
+
+    }
+};
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -15,48 +115,19 @@ int main(int argc, char* argv[])
     SPKT_LOG_INFO("Version {}.{}.{}", 0, 0, 1);
 
     Sprocket::Window window;
-    Sprocket::Loader loader;
-    Sprocket::Renderer renderer;
-
     Sprocket::Keyboard::init(&window);
 
-    Sprocket::Shader shader("Resources/Shaders/Basic.vert",
-                            "Resources/Shaders/Basic.frag");
+    Sprocket::LayerStack layerStack(&window);
+    layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(&window));
+    layerStack.pushLayer(std::make_shared<Sprocket::UILayer>());
 
-    shader.loadProjectionMatrix(window.aspectRatio(), 70.0f, 0.1f, 1000.0f);
-
-    Sprocket::Model quadModel = loader.loadModel("Resources/Models/Plane.obj");
-    Sprocket::Model dragonModel = loader.loadModel("Resources/Models/Dragon.obj");
-
-    Sprocket::Texture space = loader.loadTexture("Resources/Textures/Space.PNG");
-    Sprocket::Texture gray = loader.loadTexture("Resources/Textures/PlainGray.PNG");
-    gray.reflectivity(3);
-    gray.shineDamper(5);
-
-    Sprocket::Entity dragon(dragonModel, gray, {0.0f, 0.0f, -1.0f}, glm::vec3(0.0f), 0.1f);
-    Sprocket::Entity quad(quadModel, space, {0.0f, -1.0f, 0.0f}, glm::vec3(0.0f), 20);
-
-    Sprocket::Light sun{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}};
-    Sprocket::Light light1{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}};
-    Sprocket::Light light2{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}};
-    Sprocket::Light light3{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}};
-    std::vector<Sprocket::Light> lights = {sun, light1, light2, light3};
-
-
-    Sprocket::Camera camera;
-
-    float r = 0.0f;
     while (window.running()) {
         window.clear();
-        camera.move();
 
-        //dragon.increaseRotation(0.0f, 0.5f, 0.0f);
-
-        renderer.render(dragon, lights, camera, shader);
-        renderer.render(quad, lights, camera, shader);
+        layerStack.update();
+        layerStack.draw();
 
         window.onUpdate();
-        r += 0.05f;
     }
 
     return 0;
