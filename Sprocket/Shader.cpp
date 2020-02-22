@@ -6,6 +6,7 @@
 #include <string>
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 namespace Sprocket {
 
@@ -86,6 +87,44 @@ void Shader::unbind() const
     glUseProgram(0);
 }
 
+void Shader::loadCamera(const Camera& camera) const
+{
+	glm::mat4 view = Maths::createViewMatrix(
+        camera.position(),
+        camera.pitch(),
+        camera.yaw(),
+        camera.roll()
+    );
+    loadMatrix4f("viewMatrix", view);
+}
+
+void Shader::loadEntity(const Entity& entity) const
+{
+	glm::mat4 transform = Maths::createTransformationMatrix(
+		entity.position(),
+		entity.rotation(),
+		entity.scale());
+    loadMatrix4f("transformMatrix", transform);
+}
+
+void Shader::loadLight(const Light& light) const
+{
+	loadVector3f("lightPosition", light.position);
+	loadVector3f("lightColour", light.colour);
+}
+
+void Shader::loadProjectionMatrix(float aspectRatio, float fov, float nearPlane, float farPlane) const
+{
+	glm::mat4 matrix = Sprocket::Maths::createProjectionMatrix(
+        aspectRatio,
+		fov,
+		nearPlane,
+		farPlane);
+	bind();
+	loadMatrix4f("projectionMatrix", matrix);
+	unbind();
+}
+
 unsigned int Shader::getUniformLocation(const std::string& name) const
 {
 	return glGetUniformLocation(d_programId, name.c_str());
@@ -104,27 +143,6 @@ void Shader::loadVector3f(const std::string& name, const glm::vec3& vector) cons
 void Shader::loadMatrix4f(const std::string& name, const glm::mat4& matrix) const
 {
 	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
-}
-
-void Shader::loadProjectionMatrix(float aspectRatio, float fov, float nearPlane, float farPlane) const
-{
-	glm::mat4 matrix = Sprocket::Maths::createProjectionMatrix(
-        aspectRatio,
-		fov,
-		nearPlane,
-		farPlane);
-	bind();
-	loadMatrix4f("projectionMatrix", matrix);
-	unbind();
-}
-
-void Shader::loadLight(const Light& light)
-{
-	//bind();
-
-	loadVector3f("lightPosition", light.position);
-	loadVector3f("lightColour", light.colour);
-	//unbind();
 }
 
 }
