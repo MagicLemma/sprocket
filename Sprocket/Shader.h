@@ -1,4 +1,6 @@
 #pragma once
+#include "Light.h"
+
 #include <string>
 
 #include <glm/glm.hpp>
@@ -35,6 +37,8 @@ public:
                               float fov,
                               float nearPlane,
                               float farPlane) const;
+
+    void loadLight(const Light& light);
 };
 
 }

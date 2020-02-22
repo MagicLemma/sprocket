@@ -24,13 +24,13 @@ void Renderer::render(const Entity& entity,
     );
 
     entity.bind();
-    shader.bind();
+    //shader.bind();
     shader.loadMatrix4f("transformMatrix", transform);
     shader.loadMatrix4f("viewMatrix", view);
 
     glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     
-    shader.unbind();
+    //shader.unbind();
     entity.unbind();
 }
 

@@ -118,5 +118,13 @@ void Shader::loadProjectionMatrix(float aspectRatio, float fov, float nearPlane,
 	unbind();
 }
 
+void Shader::loadLight(const Light& light)
+{
+	//bind();
+
+	loadVector3f("lightPosition", light.position);
+	loadVector3f("lightColour", light.colour);
+	//unbind();
+}
 
 }
