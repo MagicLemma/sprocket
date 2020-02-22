@@ -114,7 +114,6 @@ void Shader::loadEntity(const Entity& entity) const
 
 void Shader::loadLight(const Light& light) const
 {
-	// Diffuse Lighting
 	loadVector3f("lightPosition", light.position);
 	loadVector3f("lightColour", light.colour);
 	loadVector3f("lightAttenuation", light.attenuation);

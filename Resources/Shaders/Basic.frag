@@ -34,7 +34,7 @@ void main()
 
     // Diffuse lighting calculation
     float diffuseFactor = dot(unitToLight, unitNormal);
-    diffuseFactor = max(diffuseFactor, 0.2);
+    diffuseFactor = max(diffuseFactor, 0.05);
     vec4 diffuseLight = vec4(diffuseFactor * lightColour, 1.0);
 
     // Specular lighting calculation
