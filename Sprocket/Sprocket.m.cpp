@@ -25,14 +25,14 @@ int main(int argc, char* argv[])
 
     shader.loadProjectionMatrix(window.aspectRatio(), 70.0f, 0.1f, 1000.0f);
 
-    Sprocket::Model plane = loader.loadModel("Resources/Models/Plane.obj");
-    Sprocket::Model dragon = loader.loadModel("Resources/Models/Dragon.obj");
+    Sprocket::Model quadModel = loader.loadModel("Resources/Models/Plane.obj");
+    Sprocket::Model dragonModel = loader.loadModel("Resources/Models/Dragon.obj");
 
-    Sprocket::Texture texture = loader.loadTexture("Resources/Textures/Space.PNG");
-    Sprocket::Texture steel = loader.loadTexture("Resources/Textures/PlainGray.PNG");
+    Sprocket::Texture space = loader.loadTexture("Resources/Textures/Space.PNG");
+    Sprocket::Texture gray = loader.loadTexture("Resources/Textures/PlainGray.PNG");
 
-    Sprocket::Entity pistol(dragon, steel, {0.0f, 0.0f, -1.0f}, glm::vec3(0.0f), 0.1f);
-    Sprocket::Entity floor(plane, steel, {0.0f, -1.0f, 0.0f}, glm::vec3(0.0f), 20);
+    Sprocket::Entity dragon(dragonModel, gray, {0.0f, 0.0f, -1.0f}, glm::vec3(0.0f), 0.1f);
+    Sprocket::Entity quad(quadModel, space, {0.0f, -1.0f, 0.0f}, glm::vec3(0.0f), 20);
 
     Sprocket::Light light{{0.0f, 1.0f, 0.0f}, {0.8f, 0.8f, 0.9f}};
     Sprocket::Camera camera;
@@ -43,10 +43,10 @@ int main(int argc, char* argv[])
         camera.move();
 
         light.position = glm::vec3(3*std::sin(r), 1.0f, 3*std::cos(r));
-        pistol.increaseRotation(0.0f, -1.5f, 0.0f);
+        dragon.increaseRotation(0.0f, -1.5f, 0.0f);
 
-        renderer.render(pistol, light, camera, shader);
-        renderer.render(floor, light, camera, shader);
+        renderer.render(dragon, light, camera, shader);
+        renderer.render(quad, light, camera, shader);
 
         window.onUpdate();
         r += 0.1f ;

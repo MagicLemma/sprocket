@@ -21,9 +21,11 @@ class Shader
                       const std::string& fragShader);
 
     unsigned int compileShader(unsigned int type, const std::string& source);
+
+    // Shader Uniform Getter
     unsigned int getUniformLocation(const std::string& name) const;
 
-    // Shader Uniforms
+    // Shader Uniform Setters
     void loadFloat(const std::string& name, float value) const;
     void loadVector3f(const std::string& name, const glm::vec3& vector) const;
     void loadMatrix4f(const std::string& name, const glm::mat4& matrix) const;
