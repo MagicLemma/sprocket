@@ -58,7 +58,7 @@ public:
         d_lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
     }
 
-    bool handleEvent(Event& event) override
+    bool handleEvent(const Event& event) override
     {
         return false;
     }
@@ -91,7 +91,7 @@ class UILayer : public Layer
 public:
     UILayer() : Layer(false) {}
 
-    bool handleEvent(Event& event) override
+    bool handleEvent(const Event& event) override
     {
         return false;
     }

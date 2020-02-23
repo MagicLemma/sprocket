@@ -8,7 +8,7 @@
 
 namespace Sprocket {
 
-using EventCallback = std::function<void(Event&)>;
+using EventCallback = std::function<void(const Event&)>;
 
 struct WindowImpl;
 
@@ -36,7 +36,7 @@ class Window
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 
-	void onEvent(Event& event);
+	void onEvent(const Event& event);
 
 public:
 	Window(const std::string& name = "Window",

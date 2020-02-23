@@ -17,20 +17,21 @@ enum EventCategory
 
 class Event
 {
-	bool d_consumed = false;
-
 public:
 	virtual int categoryFlags() const = 0;
-	virtual const char* name() const = 0;
-	virtual std::string toString() const { return "Event"; }
+	virtual std::string toString() const = 0;
 
-	inline bool isInCategory(EventCategory category)
+	inline bool isInCategory(EventCategory category) const
 	{
 		return categoryFlags() & category;
 	}
 
-	void consume() { d_consumed = true; }
-	bool handled() { return d_consumed; }
+	// Returns a const* to this object as Type if the original
+	// type of this object is Type, and nullptr otherwise.
+	template <typename Type> Type const* as() const
+	{
+		return dynamic_cast<Type const*>(this);
+	}
 };
 
 }

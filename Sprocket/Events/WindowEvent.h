@@ -11,7 +11,6 @@ class WindowResizeEvent : public Event
 public:
 	WindowResizeEvent(unsigned int width, unsigned int height);
 	virtual int categoryFlags() const override { return WINDOW; }
-	virtual const char* name() const override { return "WINDOW_RESIZED"; }
 	std::string toString() const override;
 
 	unsigned int width() const { return d_width; }
@@ -23,7 +22,6 @@ class WindowClosedEvent : public Event
 public:
 	WindowClosedEvent();
 	virtual int categoryFlags() const override { return WINDOW; }
-	virtual const char* name() const override { return "WINDOW_CLOSED"; }
 	std::string toString() const override;
 };
 
@@ -32,7 +30,6 @@ class WindowGotFocusEvent : public Event
 public:
 	WindowGotFocusEvent();
 	virtual int categoryFlags() const override { return WINDOW; }
-	virtual const char* name() const override { return "WINDOW_GOT_FOCUS"; }
 	std::string toString() const override;
 };
 
@@ -41,7 +38,6 @@ class WindowLostFocusEvent : public Event
 public:
 	WindowLostFocusEvent();
 	virtual int categoryFlags() const override { return WINDOW; }
-	virtual const char* name() const override { return "WINDOW_LOST_FOCUS"; }
 	std::string toString() const override;
 };
 

@@ -12,7 +12,6 @@ class MouseButtonPressedEvent : public Event
 public:
 	MouseButtonPressedEvent(int button, int action, int mods);
 	virtual int categoryFlags() const override { return MOUSE | MOUSE_BUTTON | INPUT; }
-	virtual const char* name() const override { return "MOUSE_BUTTON_PRESSED"; }
 	std::string toString() const override;
 
 	int button() const { return d_button; }
@@ -29,7 +28,6 @@ class MouseButtonReleasedEvent : public Event
 public:
 	MouseButtonReleasedEvent(int button, int action, int mods);
 	virtual int categoryFlags() const override { return MOUSE | MOUSE_BUTTON; }
-	virtual const char* name() const override { return "MOUSE_BUTTON_RELEASED"; }
 	std::string toString() const override;
 
 	int button() const { return d_button; }
@@ -45,7 +43,6 @@ class MouseMovedEvent : public Event
 public:
 	MouseMovedEvent(double xPos, double yPos);
 	virtual int categoryFlags() const override { return MOUSE; }
-	virtual const char* name() const override { return "MOUSE_MOVED"; }
 	std::string toString() const override;
 
 	double xPos() const { return d_xPos; }
@@ -60,7 +57,6 @@ class MouseScrolledEvent : public Event
 public:
 	MouseScrolledEvent(double xOffset, double yOffset);
 	virtual int categoryFlags() const override { return MOUSE | INPUT; }
-	virtual const char* name() const override { return "MOUSE_SCROLLED"; }
 	std::string toString() const override;
 
 	double xOffset() const { return d_xOffset; }

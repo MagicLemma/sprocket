@@ -13,7 +13,7 @@ class LayerStack
 {
     std::vector<LayerPtr> d_layers;
 
-    void handleEvent(Event& event);
+    void handleEvent(const Event& event);
         // Called on every event. This propagates the event to
         // every layer in the stack, starting at the top. If a layer
         // returns True, the event is not propagated to any lower

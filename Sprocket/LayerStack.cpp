@@ -6,7 +6,7 @@ namespace Sprocket {
     
 LayerStack::LayerStack(Window* window)
 {
-    window->registerCallback([&](Event& event) {
+    window->registerCallback([&](const Event& event) {
         handleEvent(event);
     });
 }
@@ -23,7 +23,7 @@ LayerPtr LayerStack::popLayer()
     return layer;
 }
 
-void LayerStack::handleEvent(Event& event)
+void LayerStack::handleEvent(const Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;

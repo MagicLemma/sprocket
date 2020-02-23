@@ -29,7 +29,7 @@ Window::Window(
 	, d_data({name, width, height, true, true})
 	, d_extraCallbacks()
 {
-	d_data.callback = [&](Event& event) {
+	d_data.callback = [&](const Event& event) {
 		onEvent(event);
 	};
 
@@ -147,10 +147,9 @@ void Window::onUpdate()
 	glfwPollEvents();
 }
 
-void Window::onEvent(Event& event)
+void Window::onEvent(const Event& event)
 {
-	//SPKT_LOG_INFO("dispatching {}", event.toString());
-	if (auto e = dynamic_cast<WindowClosedEvent*>(&event))
+	if (auto e = event.as<WindowClosedEvent>())
 	{
 		d_data.running = false;
 		return;

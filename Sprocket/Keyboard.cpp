@@ -12,15 +12,15 @@ bool s_initialised = false;
 
 std::unordered_map<int, bool> s_pressedState;
 
-void handleEvent(Event& event)
+void handleEvent(const Event& event)
 {
-    if (auto pressedEvent = dynamic_cast<KeyboardButtonPressedEvent*>(&event)) {
+    if (auto pressedEvent = event.as<KeyboardButtonPressedEvent>()) {
         s_pressedState[pressedEvent->key()] = true;
         SPKT_LOG_INFO("Key {} pressed", pressedEvent->key());
     }
-    else if (auto releasedEvent = dynamic_cast<KeyboardButtonReleasedEvent*>(&event)) {
-         s_pressedState[releasedEvent->key()] = false;
-         SPKT_LOG_INFO("Key {} released", releasedEvent->key());
+    else if (auto releasedEvent = event.as<KeyboardButtonReleasedEvent>()) {
+        s_pressedState[releasedEvent->key()] = false;
+        SPKT_LOG_INFO("Key {} released", releasedEvent->key());
     }
 }
 
@@ -28,7 +28,7 @@ void handleEvent(Event& event)
 
 void init(Window* window)
 {
-    window->registerCallback([&](Event& event) {
+    window->registerCallback([&](const Event& event) {
         handleEvent(event);
     });
     SPKT_LOG_INFO("Initialised Keyboard");

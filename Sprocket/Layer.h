@@ -19,7 +19,7 @@ public:
     Layer(bool initialActivation = true);
 
     // Virtual Interface
-    virtual bool handleEvent(Event& event) = 0;
+    virtual bool handleEvent(const Event& event) = 0;
         // Called whenever an event happens. This function should return
         // True if the layer "consumed" the Event, and False otherwise.
         // Consuming the event means that the Event will not be propagated
