@@ -18,7 +18,7 @@ class Camera
 public:
     Camera();
 
-    void move();
+    void move(bool active);
 
     glm::vec3 position() const { return d_position; }
     float pitch() const { return d_pitch; }

@@ -27,9 +27,7 @@ bool Layer::callHandleEvent(const Event& event)
 
 void Layer::callUpdate(float tick)
 {
-    if (d_status == Layer::Status::NORMAL) {
-        update(tick);
-    }
+    update(tick);
 }
 
 void Layer::callDraw()

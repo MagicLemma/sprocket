@@ -30,7 +30,7 @@ class GameLayer : public Layer
 
 public:
     GameLayer(Window* window) 
-        : Layer(Layer::Status::NORMAL, false) 
+        : Layer(Status::NORMAL, false) 
         , d_loader()
         , d_renderer()
         , d_camera()
@@ -77,16 +77,18 @@ public:
 
     void update(float tick) override
     {
-        d_lights[1].position.z = 5 * std::sin(tick);
-        d_lights[1].position.x = 5 * std::cos(tick);
+        if (d_status == Status::NORMAL) {
+            d_lights[1].position.z = 5 * std::sin(tick);
+            d_lights[1].position.x = 5 * std::cos(tick);
 
-        d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
-        d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
+            d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
+            d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
 
-        d_lights[3].position.z = 6 * std::sin(8.0f * tick);
-        d_lights[3].position.x = 6 * std::cos(8.0f * tick);
-    
-        d_camera.move();
+            d_lights[3].position.z = 6 * std::sin(8.0f * tick);
+            d_lights[3].position.x = 6 * std::cos(8.0f * tick);
+        }
+
+        d_camera.move(d_status == Status::NORMAL);
     }
 
     void draw() override
@@ -100,7 +102,7 @@ public:
 class UILayer : public Layer
 {
 public:
-    UILayer() : Layer(Layer::Status::INACTIVE, true) {}
+    UILayer() : Layer(Status::INACTIVE, true) {}
 
     bool handleEvent(const Event& event) override
     {
