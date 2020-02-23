@@ -30,7 +30,7 @@ class GameLayer : public Layer
 
 public:
     GameLayer(Window* window) 
-        : Layer(true, false, false) 
+        : Layer(Layer::Status::NORMAL, false) 
         , d_loader()
         , d_renderer()
         , d_camera()
@@ -64,7 +64,12 @@ public:
     {
         if (auto e = event.as<KeyboardButtonPressedEvent>()) {
             if (e->key() == Keyboard::ESC) {
-                d_paused = !d_paused;
+                if (d_status == Layer::Status::NORMAL) {
+                    d_status = Layer::Status::PAUSED;
+                }
+                else if (d_status == Layer::Status::PAUSED) {
+                    d_status = Layer::Status::NORMAL;
+                }
             }
         }
         return false;
@@ -72,18 +77,16 @@ public:
 
     void update(float tick) override
     {
-        if (!d_paused) {
-            d_lights[1].position.z = 5 * std::sin(tick);
-            d_lights[1].position.x = 5 * std::cos(tick);
+        d_lights[1].position.z = 5 * std::sin(tick);
+        d_lights[1].position.x = 5 * std::cos(tick);
 
-            d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
-            d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
+        d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
+        d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
 
-            d_lights[3].position.z = 6 * std::sin(8.0f * tick);
-            d_lights[3].position.x = 6 * std::cos(8.0f * tick);
-        
-            d_camera.move();
-        }
+        d_lights[3].position.z = 6 * std::sin(8.0f * tick);
+        d_lights[3].position.x = 6 * std::cos(8.0f * tick);
+    
+        d_camera.move();
     }
 
     void draw() override
@@ -97,14 +100,18 @@ public:
 class UILayer : public Layer
 {
 public:
-    UILayer() : Layer(false, true, false) {}
+    UILayer() : Layer(Layer::Status::INACTIVE, true) {}
 
     bool handleEvent(const Event& event) override
     {
         if (auto e = event.as<KeyboardButtonPressedEvent>()) {
             if (e->key() == Keyboard::ESC) {
-                SPKT_LOG_INFO("Key toggled! {} {}", d_active, e->key());
-                d_active = !d_active;
+                if (d_status == Layer::Status::NORMAL) {
+                    d_status = Layer::Status::INACTIVE;
+                }
+                else if (d_status == Layer::Status::INACTIVE) {
+                    d_status = Layer::Status::NORMAL;
+                }
             }
         }
         return false;
@@ -116,7 +123,6 @@ public:
 
     void draw() override
     {
-
     }
 };
 

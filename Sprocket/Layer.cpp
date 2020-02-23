@@ -4,21 +4,39 @@
 
 namespace Sprocket {
 
-Layer::Layer(bool isActive, bool cursorVisible, bool isPaused)
-    : d_active(isActive)
+Layer::Layer(Status status, bool cursorVisible)
+    : d_status(status)
     , d_cursorEnabled(cursorVisible)
-    , d_paused(isPaused)
 {
 }
 
 bool Layer::isActive() const
 {
-    return d_active;
+    return d_status == Status::NORMAL;
 }
 
 bool Layer::isCursorVisible() const
 {
     return d_cursorEnabled;
+}
+
+bool Layer::callHandleEvent(const Event& event)
+{
+    return handleEvent(event);
+}
+
+void Layer::callUpdate(float tick)
+{
+    if (d_status == Layer::Status::NORMAL) {
+        update(tick);
+    }
+}
+
+void Layer::callDraw()
+{
+    if (d_status != Layer::Status::INACTIVE) {
+        draw();
+    }
 }
 
 }

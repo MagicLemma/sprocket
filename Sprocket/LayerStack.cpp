@@ -30,7 +30,7 @@ void LayerStack::handleEvent(const Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        if (d_layers[i]->handleEvent(event)) {
+        if (d_layers[i]->callHandleEvent(event)) {
             break;
         }
     }
@@ -47,7 +47,7 @@ void LayerStack::update()
 
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        d_layers[i]->update(tick);
+        d_layers[i]->callUpdate(tick);
     }
 
     for (size_t i = d_layers.size(); i != 0;) {
@@ -67,7 +67,7 @@ void LayerStack::update()
 void LayerStack::draw()
 {
     for (size_t i = 0; i != d_layers.size(); ++i) {
-        d_layers[i]->draw();
+        d_layers[i]->callDraw();
     }
 }
 
