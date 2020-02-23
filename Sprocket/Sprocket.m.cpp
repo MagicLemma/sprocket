@@ -1,6 +1,7 @@
 #include "Log.h"
 #include "Window.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 #include "Loader.h"
 #include "Renderer.h"
 #include "Model.h"
@@ -116,6 +117,7 @@ int main(int argc, char* argv[])
 
     Sprocket::Window window;
     Sprocket::Keyboard::init(&window);
+    Sprocket::Mouse::init(&window);
 
     Sprocket::LayerStack layerStack(&window);
     layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(&window));

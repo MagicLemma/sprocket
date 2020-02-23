@@ -14,13 +14,13 @@ std::unordered_map<int, bool> s_pressedState;
 
 void handleEvent(const Event& event)
 {
-    if (auto pressedEvent = event.as<KeyboardButtonPressedEvent>()) {
-        s_pressedState[pressedEvent->key()] = true;
-        SPKT_LOG_INFO("Key {} pressed", pressedEvent->key());
+    if (auto e = event.as<KeyboardButtonPressedEvent>()) {
+        s_pressedState[e->key()] = true;
+        SPKT_LOG_INFO("Key {} pressed", e->key());
     }
-    else if (auto releasedEvent = event.as<KeyboardButtonReleasedEvent>()) {
-        s_pressedState[releasedEvent->key()] = false;
-        SPKT_LOG_INFO("Key {} released", releasedEvent->key());
+    else if (auto e = event.as<KeyboardButtonReleasedEvent>()) {
+        s_pressedState[e->key()] = false;
+        SPKT_LOG_INFO("Key {} released", e->key());
     }
 }
 

@@ -22,6 +22,7 @@ add_executable(Sprocket
                Log.cpp
                Maths.cpp
                Model.cpp
+               Mouse.cpp
                ObjParser.cpp
                Renderer.cpp
                Shader.cpp
