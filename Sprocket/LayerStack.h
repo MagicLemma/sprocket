@@ -13,10 +13,10 @@ class LayerStack
 {
     Window*               d_window;
     std::vector<LayerPtr> d_layers;
-    bool                  d_isCursorVisible;
+    bool                  d_showCursor;
         // This should be true if we want the mouse cursor to be
-        // visible and false otherwise. We set this to true if the
-        // top active layer in the stack needs the mouse to be visible.
+        // visible and false otherwise. We set this to true if
+        // any active layer needs the mouse to be visible.
 
     void handleEvent(const Event& event);
         // Called on every event. This propagates the event to

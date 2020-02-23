@@ -5,6 +5,9 @@ namespace Sprocket {
 
 class Layer
 {
+    float d_ticker;
+        // Steadily increasing ticker. Bound to the framerate. 
+
 protected:
 
     enum class Status {
@@ -24,12 +27,12 @@ private:
     Layer& operator=(const Layer&) = delete;
         // Layers are non-copyable and non-moveable.
 
-protected:
+    // Virtual Interface
     virtual bool handleEvent(const Event& event) = 0;
         // This function should contain all logic to handle Events being
         // sent to the layer.
 
-    virtual void update(float tick) = 0;
+    virtual void update() = 0;
         // This function should contain all logic to be run on every tick
         // of the application.
 
@@ -40,7 +43,6 @@ protected:
 public:
     Layer(Status status, bool cursorVisible = true);
 
-    // Virtual Interface
     bool callHandleEvent(const Event& event);
         // Called whenever an event happens. This function should return
         // True if the layer "consumed" the Event, and False otherwise.
@@ -48,19 +50,22 @@ public:
         // down to lower layers. Layers will receive Events even if they
         // are inactive.
 
-    void callUpdate(float tick);
-        // Called in every tick of the game loop. The 'tick' argument is the
-        // number of seconds elapsed since the start of the program.
+    void callUpdate();
+        // Called in every tick of the game loop.
 
     void callDraw();
         // Called in every tick of the game loop. Within a layer stack, these
         // are called in reverse order, starting at the bottom of the stack
-        // and working upwards. If the layer is active, this function will
-        // call "draw", otherwise it is not.
+        // and working upwards. It will only call "draw" if the layer is
+        // active.
 
     // Helper Functions
     bool isActive() const;
     bool isCursorVisible() const;
+
+    float layerTicker() const;
+        // Returns d_ticker, a steadily increasing value bound to the
+        // framerate.
 };
 
 }

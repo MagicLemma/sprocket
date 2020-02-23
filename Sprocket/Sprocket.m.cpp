@@ -75,9 +75,11 @@ public:
         return false;
     }
 
-    void update(float tick) override
+    void update() override
     {
         if (d_status == Status::NORMAL) {
+            float tick = layerTicker();
+
             d_lights[1].position.z = 5 * std::sin(tick);
             d_lights[1].position.x = 5 * std::cos(tick);
 
@@ -119,7 +121,7 @@ public:
         return false;
     }
 
-    void update(float tick) override
+    void update() override
     {
     }
 

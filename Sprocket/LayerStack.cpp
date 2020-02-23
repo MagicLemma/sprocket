@@ -1,13 +1,11 @@
 #include "LayerStack.h"
 
-#include <chrono>
-
 namespace Sprocket {
 
 LayerStack::LayerStack(Window* window)
     : d_window(window)
     , d_layers()
-    , d_isCursorVisible(true)
+    , d_showCursor(true)
 {
     window->registerCallback([&](const Event& event) {
         handleEvent(event);
@@ -38,30 +36,21 @@ void LayerStack::handleEvent(const Event& event)
 
 void LayerStack::update()
 { 
-    // First calculate the number of seconds since the start of the
-    // program as a float to pass to each layer. This can be used for
-    // updating positions in a way that does not depend on the framerate.
-    using namespace std::chrono;
-    static const steady_clock::time_point d_start = high_resolution_clock::now();
-    float tick = duration<float>(high_resolution_clock::now() - d_start).count();
+    bool showCursor = false;
 
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        d_layers[i]->callUpdate(tick);
-    }
-
-    for (size_t i = d_layers.size(); i != 0;) {
-        --i;
-        if (d_layers[i]->isActive()) {
-            bool isCursorVisible = d_layers[i]->isCursorVisible();
-            if (d_isCursorVisible != isCursorVisible)
-                {
-                    d_window->setCursorVisibility(isCursorVisible);
-                    d_isCursorVisible = isCursorVisible;
-                }
-            break;
+        d_layers[i]->callUpdate();
+        if (d_layers[i]->isActive() && d_layers[i]->isCursorVisible()) {
+            showCursor = true;
         }
     }
+
+    if (d_showCursor != showCursor){
+        d_window->setCursorVisibility(showCursor);
+        d_showCursor = showCursor;
+    }
+
 }
 
 void LayerStack::draw()
