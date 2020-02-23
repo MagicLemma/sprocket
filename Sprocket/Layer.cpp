@@ -4,9 +4,10 @@
 
 namespace Sprocket {
 
-Layer::Layer(bool initialActivation, bool cursorVisible)
-    : d_active(initialActivation)
+Layer::Layer(bool isActive, bool cursorVisible, bool isPaused)
+    : d_active(isActive)
     , d_cursorEnabled(cursorVisible)
+    , d_paused(isPaused)
 {
 }
 

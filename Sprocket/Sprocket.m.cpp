@@ -30,7 +30,7 @@ class GameLayer : public Layer
 
 public:
     GameLayer(Window* window) 
-        : Layer(true, false) 
+        : Layer(true, false, false) 
         , d_loader()
         , d_renderer()
         , d_camera()
@@ -62,22 +62,28 @@ public:
 
     bool handleEvent(const Event& event) override
     {
+        if (auto e = event.as<KeyboardButtonPressedEvent>()) {
+            if (e->key() == Keyboard::ESC) {
+                d_paused = !d_paused;
+            }
+        }
         return false;
     }
 
-    bool update(float tick) override
+    void update(float tick) override
     {
-        d_lights[1].position.z = 5 * std::sin(tick);
-        d_lights[1].position.x = 5 * std::cos(tick);
+        if (!d_paused) {
+            d_lights[1].position.z = 5 * std::sin(tick);
+            d_lights[1].position.x = 5 * std::cos(tick);
 
-        d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
-        d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
+            d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
+            d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
 
-        d_lights[3].position.z = 6 * std::sin(8.0f * tick);
-        d_lights[3].position.x = 6 * std::cos(8.0f * tick);
-
-        d_camera.move();
-        return true;
+            d_lights[3].position.z = 6 * std::sin(8.0f * tick);
+            d_lights[3].position.x = 6 * std::cos(8.0f * tick);
+        
+            d_camera.move();
+        }
     }
 
     void draw() override
@@ -91,7 +97,7 @@ public:
 class UILayer : public Layer
 {
 public:
-    UILayer() : Layer(false, true) {}
+    UILayer() : Layer(false, true, false) {}
 
     bool handleEvent(const Event& event) override
     {
@@ -104,9 +110,8 @@ public:
         return false;
     }
 
-    bool update(float tick) override
+    void update(float tick) override
     {
-        return d_active;
     }
 
     void draw() override

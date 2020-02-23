@@ -47,9 +47,7 @@ void LayerStack::update()
 
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        if (d_layers[i]->update(tick)) {
-            break;
-        }
+        d_layers[i]->update(tick);
     }
 
     for (size_t i = d_layers.size(); i != 0;) {
