@@ -3,8 +3,11 @@
 #include <chrono>
 
 namespace Sprocket {
-    
+
 LayerStack::LayerStack(Window* window)
+    : d_window(window)
+    , d_layers()
+    , d_isCursorVisible(true)
 {
     window->registerCallback([&](const Event& event) {
         handleEvent(event);
@@ -45,6 +48,19 @@ void LayerStack::update()
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
         if (d_layers[i]->update(tick)) {
+            break;
+        }
+    }
+
+    for (size_t i = d_layers.size(); i != 0;) {
+        --i;
+        if (d_layers[i]->isActive()) {
+            bool isCursorVisible = d_layers[i]->isCursorVisible();
+            if (d_isCursorVisible != isCursorVisible)
+                {
+                    d_window->setCursorVisibility(isCursorVisible);
+                    d_isCursorVisible = isCursorVisible;
+                }
             break;
         }
     }

@@ -6,8 +6,11 @@ namespace Sprocket {
 class Layer
 {
 protected:
-    bool    d_active;
+    bool d_active;
         // True if the window is "active" and False otherwise.
+
+    bool d_cursorEnabled;
+        // True if the cursor needs to be visible and false otherwise.
 
 private:
     Layer(Layer&&) = delete;
@@ -16,7 +19,7 @@ private:
         // Layers are non-copyable and non-moveable.
 
 public:
-    Layer(bool initialActivation = true);
+    Layer(bool initialActivation = true, bool cursorVisible = true);
 
     // Virtual Interface
     virtual bool handleEvent(const Event& event) = 0;
@@ -37,6 +40,7 @@ public:
 
     // Helper Functions
     bool isActive() const;
+    bool isCursorVisible() const;
 };
 
 }

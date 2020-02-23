@@ -11,6 +11,7 @@
 #include "Light.h"
 #include "Layer.h"
 #include "LayerStack.h"
+#include "Events/KeyboardEvent.h"
 
 #include <vector>
 #include <memory>
@@ -29,7 +30,7 @@ class GameLayer : public Layer
 
 public:
     GameLayer(Window* window) 
-        : Layer(true) 
+        : Layer(true, false) 
         , d_loader()
         , d_renderer()
         , d_camera()
@@ -90,16 +91,22 @@ public:
 class UILayer : public Layer
 {
 public:
-    UILayer() : Layer(false) {}
+    UILayer() : Layer(false, true) {}
 
     bool handleEvent(const Event& event) override
     {
+        if (auto e = event.as<KeyboardButtonPressedEvent>()) {
+            if (e->key() == Keyboard::ESC) {
+                SPKT_LOG_INFO("Key toggled! {} {}", d_active, e->key());
+                d_active = !d_active;
+            }
+        }
         return false;
     }
 
     bool update(float tick) override
     {
-        return false;
+        return d_active;
     }
 
     void draw() override

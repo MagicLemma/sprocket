@@ -50,6 +50,7 @@ Window::Window(
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
 	glfwSwapInterval(1);  // Set VSync to be true
+	glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
 	// Set GLFW callbacks
@@ -165,6 +166,16 @@ void Window::clear()
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0, 0, 0, 1);
+}
+
+void Window::setCursorVisibility(bool visibility)
+{
+	if (visibility) {
+		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+	else {
+		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
 }
 
 }

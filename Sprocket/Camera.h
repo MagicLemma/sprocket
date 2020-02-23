@@ -13,6 +13,8 @@ class Camera
     float     d_yaw;
     float     d_roll;
 
+    float     d_sensitivity; // Mouse sensitivity
+
 public:
     Camera();
 

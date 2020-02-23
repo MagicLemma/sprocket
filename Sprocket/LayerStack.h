@@ -11,7 +11,12 @@ using LayerPtr = std::shared_ptr<Layer>;
 
 class LayerStack
 {
+    Window*               d_window;
     std::vector<LayerPtr> d_layers;
+    bool                  d_isCursorVisible;
+        // This should be true if we want the mouse cursor to be
+        // visible and false otherwise. We set this to true if the
+        // top active layer in the stack needs the mouse to be visible.
 
     void handleEvent(const Event& event);
         // Called on every event. This propagates the event to
@@ -21,9 +26,6 @@ class LayerStack
 
 public:
     LayerStack(Window* window);
-        // We do not store the window pointer, this is only
-        // passed in to register the LayerStack so it can receive
-        // events.
 
     void pushLayer(LayerPtr layer);
     LayerPtr popLayer();

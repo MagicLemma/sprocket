@@ -55,6 +55,8 @@ public:
 	// Register additional objects that may want to act on events.
 	void registerCallback(EventCallback cb) { d_extraCallbacks.push_back(cb); }
 
+	void setCursorVisibility(bool visibility);
+
 	void clear();
 };
 

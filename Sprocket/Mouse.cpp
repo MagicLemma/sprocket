@@ -3,6 +3,8 @@
 #include "Events/Event.h"
 #include "Events/MouseEvent.h"
 
+#include <glm/glm.hpp>
+
 namespace Sprocket {
 namespace Mouse {
 
@@ -10,8 +12,8 @@ namespace {
 
 bool s_initialised = false;
 
-double s_currentMouseX = 0;
-double s_currentMouseY = 0;
+float s_currentMouseX = 0;
+float s_currentMouseY = 0;
 
 std::unordered_map<int, bool> s_pressedState;
 
@@ -42,7 +44,7 @@ void init(Window* window)
     s_initialised = true;
 }
 
-std::pair<double, double> getMousePos()
+glm::vec2 getMousePos()
 {
     if (!s_initialised) {
         SPKT_LOG_ERROR("Mouse not initalised! Returned value will not be accurate!");

@@ -2,6 +2,7 @@
 #include "Window.h"
 
 #include <utility>
+#include <glm/glm.hpp>
 
 namespace Sprocket {
 namespace Mouse {
@@ -10,7 +11,7 @@ void init(Window* window);
     // Initialises the Keyboard module by reigstering a callback with the
     // window. This is how the Keyboard module will get updated.
 
-std::pair<double, double> getMousePos();
+glm::vec2 getMousePos();
     // Returns the (x, y) of where the mouse is currently on the screen.
 
 bool isButtonDown(int button);

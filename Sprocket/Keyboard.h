@@ -23,7 +23,8 @@ enum Key {
     R = 82,
     F = 70,
     SPACE = 32,
-    LSHIFT = 340
+    LSHIFT = 340,
+    ESC = 256
 };
 
 }
