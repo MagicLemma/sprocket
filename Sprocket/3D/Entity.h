@@ -37,7 +37,7 @@ public:
     void texture(const Texture& newTexture);
 
     Maths::vec3 position() const;
-    void position(const glm::vec3& newPosition);
+    void position(const Maths::vec3& newPosition);
 
     Maths::vec3 rotation() const;
     void rotation(const Maths::vec3& newRotation);

@@ -53,8 +53,8 @@ public:
         //space.reflectivity(3);
         //space.shineDamper(5);
 
-        d_entities.push_back(Entity(dragonModel, gray, {0.0f, 0.0f, -1.0f}, glm::vec3(0.0f), 0.1f));
-        d_entities.push_back(Entity(quadModel, space, {0.0f, -1.0f, 0.0f}, glm::vec3(0.0f), 20));
+        d_entities.push_back(Entity(dragonModel, gray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
+        d_entities.push_back(Entity(quadModel, space, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
     
         d_lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
         d_lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});

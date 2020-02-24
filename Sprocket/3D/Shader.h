@@ -2,11 +2,10 @@
 #include "3D/Light.h"
 #include "3D/Camera.h"
 #include "3D/Entity.h"
+#include "Utility/Maths.h"
 
 #include <string>
 #include <vector>
-
-#include <glm/glm.hpp>
 
 namespace Sprocket {
 
@@ -31,8 +30,8 @@ class Shader
 
     // Shader Uniform Setters
     void loadFloat(const std::string& name, float value) const;
-    void loadVector3f(const std::string& name, const glm::vec3& vector) const;
-    void loadMatrix4f(const std::string& name, const glm::mat4& matrix) const;
+    void loadVector3f(const std::string& name, const Maths::vec3& vector) const;
+    void loadMatrix4f(const std::string& name, const Maths::mat4& matrix) const;
 
 public:
     Shader(const std::string& vertShaderFile,

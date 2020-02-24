@@ -4,8 +4,8 @@ namespace Sprocket {
 
 Entity::Entity(const Model& model,
                const Texture& texture,
-               const glm::vec3& position,
-               const glm::vec3& rotation,
+               const Maths::vec3& position,
+               const Maths::vec3& rotation,
                float scale)
     : d_model(model)
     , d_texture(texture)

@@ -23,5 +23,7 @@ mat4 createViewMatrix(const vec3& position,
                       float yaw,
                       float roll);
 
+float radians(float degrees);
+
 }
 }

@@ -7,8 +7,6 @@
 #include <unordered_map>
 #include <string>
 
-#include <glm/glm.hpp>
-
 namespace Sprocket {
 
 namespace {
@@ -41,7 +39,7 @@ Maths::vec2 loadVec2(const std::string& line)
     std::istringstream iss(line);
     float x, y;
     iss >> x >> y;
-    return glm::vec2(x, y);
+    return Maths::vec2(x, y);
 }
 
 Maths::vec3 loadVec3(const std::string& line)
@@ -49,7 +47,7 @@ Maths::vec3 loadVec3(const std::string& line)
     std::istringstream iss(line);
     float x, y, z;
     iss >> x >> y >> z;
-    return glm::vec3(x, y, z);
+    return Maths::vec3(x, y, z);
 }
 
 std::tuple<int, int, int> parseObjVertex(const std::string& vertex)
