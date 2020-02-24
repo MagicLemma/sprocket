@@ -12,29 +12,33 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_executable(Sprocket
                Sprocket.m.cpp
-               Camera.cpp
-               Entity.cpp
-               Keyboard.cpp
-               Layer.cpp
-               LayerStack.cpp
-               Light.cpp
-               Loader.cpp
-               Log.cpp
-               Maths.cpp
-               Model.cpp
-               Mouse.cpp
-               ObjParser.cpp
-               Renderer.cpp
-               Scene.cpp
-               SceneData.cpp
-               Shader.cpp
-               Window.cpp
-               Texture.cpp
-               Vertex.cpp
+               
+               3D/Camera.cpp
+               3D/Entity.cpp
+               3D/Light.cpp
+               3D/Loader.cpp
+               3D/Model.cpp
+               3D/ObjParser.cpp
+               3D/Renderer.cpp
+               3D/Shader.cpp
+               3D/Texture.cpp
+               3D/Vertex.cpp
+
+               Core/Layer.cpp
+               Core/LayerStack.cpp
+               Core/Scene.cpp
+               Core/SceneData.cpp
+               Core/Window.cpp
+
                Events/Event.cpp
                Events/WindowEvent.cpp
                Events/KeyboardEvent.cpp
-               Events/MouseEvent.cpp)
+               Events/MouseEvent.cpp
+               
+               Utility/Keyboard.cpp
+               Utility/Log.cpp
+               Utility/Maths.cpp
+               Utility/Mouse.cpp)
 
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog
@@ -45,6 +49,9 @@ target_link_libraries(Sprocket PRIVATE
 
 target_include_directories(Sprocket PUBLIC
                            .
+                           ./2D
+                           ./3D
+                           ./Core
                            ./Events
-                           ./Vendor
+                           ./Utility
                            ${STB_INCLUDE_DIR})
