@@ -25,6 +25,8 @@ add_executable(Sprocket
                Mouse.cpp
                ObjParser.cpp
                Renderer.cpp
+               Scene.cpp
+               SceneData.cpp
                Shader.cpp
                Window.cpp
                Texture.cpp

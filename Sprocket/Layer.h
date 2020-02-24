@@ -1,4 +1,5 @@
 #pragma once
+#include "SceneData.h"
 #include "Event.h"
 
 namespace Sprocket {
@@ -9,7 +10,6 @@ class Layer
         // Steadily increasing ticker. Bound to the framerate. 
 
 protected:
-
     enum class Status {
         INACTIVE = 0,
         PAUSED = 1,
@@ -17,9 +17,6 @@ protected:
     };
 
     Status d_status;
-
-    bool   d_cursorEnabled;
-        // True if the cursor needs to be visible and false otherwise.
 
 private:
     Layer(Layer&&) = delete;
@@ -32,7 +29,7 @@ private:
         // This function should contain all logic to handle Events being
         // sent to the layer.
 
-    virtual void update() = 0;
+    virtual void update(SceneData* data) = 0;
         // This function should contain all logic to be run on every tick
         // of the application.
 
@@ -50,7 +47,7 @@ public:
         // down to lower layers. Layers will receive Events even if they
         // are inactive.
 
-    void callUpdate();
+    void callUpdate(SceneData* data);
         // Called in every tick of the game loop.
 
     void callDraw();
@@ -61,7 +58,6 @@ public:
 
     // Helper Functions
     bool isActive() const;
-    bool isCursorVisible() const;
 
     float layerTicker() const;
         // Returns d_ticker, a steadily increasing value bound to the

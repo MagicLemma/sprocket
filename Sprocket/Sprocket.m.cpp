@@ -10,6 +10,8 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Layer.h"
+#include "Scene.h"
+#include "SceneData.h"
 #include "LayerStack.h"
 #include "Events/KeyboardEvent.h"
 
@@ -75,8 +77,10 @@ public:
         return false;
     }
 
-    void update() override
+    void update(SceneData* data) override
     {
+        d_status = data->paused ? Status::PAUSED : Status::NORMAL;
+
         if (d_status == Status::NORMAL) {
             float tick = layerTicker();
 
@@ -108,21 +112,12 @@ public:
 
     bool handleEvent(const Event& event) override
     {
-        if (auto e = event.as<KeyboardButtonPressedEvent>()) {
-            if (e->key() == Keyboard::ESC) {
-                if (d_status == Layer::Status::NORMAL) {
-                    d_status = Layer::Status::INACTIVE;
-                }
-                else if (d_status == Layer::Status::INACTIVE) {
-                    d_status = Layer::Status::NORMAL;
-                }
-            }
-        }
         return false;
     }
 
-    void update() override
+    void update(SceneData* data) override
     {
+        d_status = data->paused ? Status::NORMAL : Status::INACTIVE;
     }
 
     void draw() override
@@ -141,15 +136,30 @@ int main(int argc, char* argv[])
     Sprocket::Keyboard::init(&window);
     Sprocket::Mouse::init(&window);
 
-    Sprocket::LayerStack layerStack(&window);
+    Sprocket::LayerStack layerStack;
     layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(&window));
     layerStack.pushLayer(std::make_shared<Sprocket::UILayer>());
+
+    Sprocket::SceneData sceneData;
+    sceneData.name = "Sprocket";
+    sceneData.window = &window;
+    sceneData.type = Sprocket::SceneType::STAGE;
+    sceneData.paused = false;
+
+    Sprocket::Scene scene(sceneData, layerStack,
+        [](const Sprocket::Event& event, Sprocket::SceneData* data){
+            if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
+                if (e->key() == Sprocket::Keyboard::ESC) {
+                    data->paused = !data->paused;
+                    data->window->setCursorVisibility(data->paused);
+                }
+            }
+        });
 
     while (window.running()) {
         window.clear();
 
-        layerStack.update();
-        layerStack.draw();
+        scene.tick();
 
         window.onUpdate();
     }

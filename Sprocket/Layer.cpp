@@ -7,7 +7,6 @@ namespace Sprocket {
 
 Layer::Layer(Status status, bool cursorVisible)
     : d_status(status)
-    , d_cursorEnabled(cursorVisible)
     , d_ticker(0.0f)
 {
 }
@@ -17,10 +16,6 @@ bool Layer::isActive() const
     return d_status == Status::NORMAL;
 }
 
-bool Layer::isCursorVisible() const
-{
-    return d_cursorEnabled;
-}
 
 float Layer::layerTicker() const
 {
@@ -32,12 +27,12 @@ bool Layer::callHandleEvent(const Event& event)
     return handleEvent(event);
 }
 
-void Layer::callUpdate()
+void Layer::callUpdate(SceneData* data)
 {
     if (d_status == Status::NORMAL) {
         d_ticker += 0.01f;
     }
-    update();
+    update(data);
 }
 
 void Layer::callDraw()

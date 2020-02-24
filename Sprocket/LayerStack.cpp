@@ -2,14 +2,9 @@
 
 namespace Sprocket {
 
-LayerStack::LayerStack(Window* window)
-    : d_window(window)
-    , d_layers()
-    , d_showCursor(true)
+LayerStack::LayerStack()
+    : d_layers()
 {
-    window->registerCallback([&](const Event& event) {
-        handleEvent(event);
-    });
 }
 
 void LayerStack::pushLayer(LayerPtr layer)
@@ -34,23 +29,12 @@ void LayerStack::handleEvent(const Event& event)
     }
 }
 
-void LayerStack::update()
+void LayerStack::update(SceneData* data)
 { 
-    bool showCursor = false;
-
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        d_layers[i]->callUpdate();
-        if (d_layers[i]->isActive() && d_layers[i]->isCursorVisible()) {
-            showCursor = true;
-        }
+        d_layers[i]->callUpdate(data);
     }
-
-    if (d_showCursor != showCursor){
-        d_window->setCursorVisibility(showCursor);
-        d_showCursor = showCursor;
-    }
-
 }
 
 void LayerStack::draw()
