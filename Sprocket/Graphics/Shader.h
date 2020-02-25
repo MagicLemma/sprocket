@@ -1,19 +1,14 @@
 #pragma once
-#include "Graphics/Light.h"
-#include "Graphics/Camera.h"
-#include "Graphics/Entity.h"
 #include "Utility/Maths.h"
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 namespace Sprocket {
 
 class Shader
 {
-    // Constants
-    static constexpr int MAX_NUM_LIGHTS = 5;
-
     // Shader IDs
     unsigned int d_programId;
     unsigned int d_vertShaderId;
@@ -28,11 +23,6 @@ class Shader
     // Shader Uniform Getter
     unsigned int getUniformLocation(const std::string& name) const;
 
-    // Shader Uniform Setters
-    void loadFloat(const std::string& name, float value) const;
-    void loadVector3f(const std::string& name, const Maths::vec3& vector) const;
-    void loadMatrix4f(const std::string& name, const Maths::mat4& matrix) const;
-
 public:
     Shader(const std::string& vertShaderFile,
            const std::string& fragShaderFile);
@@ -42,17 +32,17 @@ public:
     void bind() const;
     void unbind() const;
 
-    // Load Object Data
-    void loadCamera(const Camera& camera) const;
-    void loadEntity(const Entity& entity) const;
-    void loadLights(const std::vector<Light>& lights) const;
-
-    void loadProjectionMatrix(float aspectRatio,
-                              float fov,
-                              float nearPlane,
-                              float farPlane) const;
-
-
+    // Shader Uniform Setters
+    void loadUniform(const std::string& name, float value) const;
+    void loadUniform(const std::string& name, const Maths::vec2& vector) const;
+    void loadUniform(const std::string& name, const Maths::vec3& vector) const;
+    void loadUniform(const std::string& name, const Maths::vec4& vector) const;
+    void loadUniform(const std::string& name, const Maths::mat4& matrix) const;
 };
+
+// HELPER FUNCTIONS
+std::string arrayName(const std::string& uniformName, size_t index);
+    // Give a name for a uniform that is an array, return the accessor
+    // name for the given index.
 
 }

@@ -21,15 +21,6 @@ std::string parseShader(const std::string& filepath)
 	return shader;
 }
 
-// Give a name for a uniform that is an array, return the accessor
-// name for the given index.
-std::string arrayName(const std::string& uniformName, size_t index)
-{
-	std::stringstream ss;
-	ss << uniformName << "[" << index << "]";
-	return ss.str();
-}
-
 }
 
 Shader::Shader(const std::string& vertShaderFile,
@@ -97,78 +88,42 @@ void Shader::unbind() const
     glUseProgram(0);
 }
 
-void Shader::loadCamera(const Camera& camera) const
-{
-	Maths::mat4 view = Maths::createViewMatrix(
-        camera.position(),
-        camera.pitch(),
-        camera.yaw(),
-        camera.roll()
-    );
-    loadMatrix4f("viewMatrix", view);
-}
-
-void Shader::loadEntity(const Entity& entity) const
-{
-	// Entity Position
-	Maths::mat4 transform = Maths::createTransformationMatrix(
-		entity.position(),
-		entity.rotation(),
-		entity.scale());
-    loadMatrix4f("transformMatrix", transform);
-
-	// Specular Lighting (based on Texture)
-	loadFloat("shineDamper", entity.texture().shineDamper());
-	loadFloat("reflectivity", entity.texture().reflectivity());
-}
-
-void Shader::loadLights(const std::vector<Light>& lights) const
-{
-	for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
-		if (i < lights.size()) {
-			loadVector3f(arrayName("lightPositions", i), lights[i].position);
-			loadVector3f(arrayName("lightColours", i), lights[i].colour);
-			loadVector3f(arrayName("lightAttenuations", i), lights[i].attenuation);
-		}
-		else {  // "Empty" lights to pad the array
-			loadVector3f(arrayName("lightPositions", i), {0.0f, 0.0f, 0.0f});
-			loadVector3f(arrayName("lightColours", i), {0.0f, 0.0f, 0.0f});
-			loadVector3f(arrayName("lightAttenuations", i), {1.0f, 0.0f, 0.0f});
-		}
-	}
-	
-}
-
-void Shader::loadProjectionMatrix(float aspectRatio, float fov, float nearPlane, float farPlane) const
-{
-	Maths::mat4 matrix = Sprocket::Maths::createProjectionMatrix(
-        aspectRatio,
-		fov,
-		nearPlane,
-		farPlane);
-	bind();
-	loadMatrix4f("projectionMatrix", matrix);
-	unbind();
-}
-
 unsigned int Shader::getUniformLocation(const std::string& name) const
 {
 	return glGetUniformLocation(d_programId, name.c_str());
 }
 
-void Shader::loadFloat(const std::string& name, float value) const
+void Shader::loadUniform(const std::string& name, float value) const
 {
 	glUniform1f(getUniformLocation(name), value);
 }
 
-void Shader::loadVector3f(const std::string& name, const Maths::vec3& vector) const
+void Shader::loadUniform(const std::string& name, const Maths::vec2& vector) const
+{
+	glUniform2f(getUniformLocation(name), vector.x, vector.y);
+}
+
+void Shader::loadUniform(const std::string& name, const Maths::vec3& vector) const
 {
 	glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::loadMatrix4f(const std::string& name, const Maths::mat4& matrix) const
+void Shader::loadUniform(const std::string& name, const Maths::vec4& vector) const
+{
+	glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
+}
+
+
+void Shader::loadUniform(const std::string& name, const Maths::mat4& matrix) const
 {
 	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
+}
+
+std::string arrayName(const std::string& uniformName, size_t index)
+{
+	std::stringstream ss;
+	ss << uniformName << "[" << index << "]";
+	return ss.str();
 }
 
 }

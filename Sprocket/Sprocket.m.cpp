@@ -19,7 +19,6 @@
 #include "Model2D.h"
 #include "Loader2D.h"
 #include "Renderer2D.h"
-#include "Shader2D.h"
 #include "Vertex2D.h"
 
 #include <vector>
@@ -48,8 +47,16 @@ public:
         , d_entities()
         , d_lights()
     {
-        d_shader.loadProjectionMatrix(window->aspectRatio(), 70.0f, 0.1f, 1000.0f);
-        
+        Maths::mat4 matrix = Sprocket::Maths::createProjectionMatrix(
+            window->aspectRatio(),
+		    70.0f,
+            0.1f,
+            1000.0f);
+
+	    d_shader.bind();
+	    d_shader.loadUniform("projectionMatrix", matrix);
+	    d_shader.unbind();
+
         Model quadModel = d_loader.loadModel("Resources/Models/Plane.obj");
         Model dragonModel = d_loader.loadModel("Resources/Models/Dragon.obj");
 
@@ -106,7 +113,7 @@ class UILayer : public Layer
 {
     Loader2D   d_loader;
     Renderer2D d_renderer;
-    Shader2D   d_shader;
+    Shader     d_shader;
 
     std::vector<Model2D> d_models;
 

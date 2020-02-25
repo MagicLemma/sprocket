@@ -20,9 +20,39 @@ void Renderer::render(const Entity& entity,
                       const Shader& shader)
 {   
     shader.bind();
-    shader.loadEntity(entity);
-    shader.loadLights(lights);
-    shader.loadCamera(camera);
+    unsigned int MAX_NUM_LIGHTS = 5;
+
+    // Load entity to shader
+	Maths::mat4 transform = Maths::createTransformationMatrix(
+		entity.position(),
+		entity.rotation(),
+		entity.scale());
+    shader.loadUniform("transformMatrix", transform);
+	shader.loadUniform("shineDamper", entity.texture().shineDamper());
+	shader.loadUniform("reflectivity", entity.texture().reflectivity());
+
+    // Load lights to shader
+    for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
+		if (i < lights.size()) {
+			shader.loadUniform(arrayName("lightPositions", i), lights[i].position);
+			shader.loadUniform(arrayName("lightColours", i), lights[i].colour);
+			shader.loadUniform(arrayName("lightAttenuations", i), lights[i].attenuation);
+		}
+		else {  // "Empty" lights to pad the array
+			shader.loadUniform(arrayName("lightPositions", i), {0.0f, 0.0f, 0.0f});
+			shader.loadUniform(arrayName("lightColours", i), {0.0f, 0.0f, 0.0f});
+			shader.loadUniform(arrayName("lightAttenuations", i), {1.0f, 0.0f, 0.0f});
+		}
+	}
+
+    // Load camera to shader
+    Maths::mat4 view = Maths::createViewMatrix(
+        camera.position(),
+        camera.pitch(),
+        camera.yaw(),
+        camera.roll()
+    );
+    shader.loadUniform("viewMatrix", view);
 
     entity.bind();
     glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);

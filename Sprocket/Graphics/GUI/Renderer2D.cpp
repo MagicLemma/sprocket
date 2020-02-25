@@ -3,7 +3,7 @@
 
 namespace Sprocket {
 
-void Renderer2D::render(const Model2D& model, const Shader2D& shader)
+void Renderer2D::render(const Model2D& model, const Shader& shader)
 {   
     shader.bind();
     model.bind();
