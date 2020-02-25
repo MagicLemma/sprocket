@@ -11,7 +11,7 @@ class MouseButtonPressedEvent : public Event
 
 public:
 	MouseButtonPressedEvent(int button, int action, int mods);
-	virtual int categoryFlags() const override { return MOUSE | MOUSE_BUTTON | INPUT; }
+	virtual int categoryFlags() const override { return MOUSE | INPUT; }
 	std::string toString() const override;
 
 	int button() const { return d_button; }
@@ -27,7 +27,7 @@ class MouseButtonReleasedEvent : public Event
 
 public:
 	MouseButtonReleasedEvent(int button, int action, int mods);
-	virtual int categoryFlags() const override { return MOUSE | MOUSE_BUTTON; }
+	virtual int categoryFlags() const override { return MOUSE; }
 	std::string toString() const override;
 
 	int button() const { return d_button; }

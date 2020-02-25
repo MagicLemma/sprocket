@@ -10,9 +10,8 @@ enum EventCategory
 
 	WINDOW             = 1 << 1,
 	INPUT              = 1 << 2,
-	KEYBOARD_BUTTON    = 1 << 3,
-	MOUSE_BUTTON       = 1 << 4,
-	MOUSE              = 1 << 5
+	KEYBOARD           = 1 << 3,
+	MOUSE              = 1 << 4
 };
 
 class Event

@@ -27,10 +27,28 @@ Window::Window(
 )
 	: d_impl(std::make_shared<WindowImpl>())
 	, d_data({name, width, height, true, true})
+	, d_keyboardCallback([](const Event&){})
+	, d_mouseCallback([](const Event&){})
 	, d_extraCallbacks()
 {
+	// Set the callback that will get called by GLFW. This just
+	// forwards all events on to the keyboard/mouse and any
+	// registered objects.
 	d_data.callback = [&](const Event& event) {
-		onEvent(event);
+		if (auto e = event.as<WindowClosedEvent>()) {
+			d_data.running = false;
+			return;
+		}
+		if (event.isInCategory(EventCategory::KEYBOARD)) {
+			d_keyboardCallback(event);
+		}
+		if (event.isInCategory(EventCategory::MOUSE)) {
+			d_mouseCallback(event);
+		}
+		for (auto [name, callback]: d_extraCallbacks)
+		{
+			callback(event);
+		}
 	};
 
 	if (!s_GLFWInitialised) {
@@ -148,19 +166,6 @@ void Window::onUpdate()
 	glfwPollEvents();
 }
 
-void Window::onEvent(const Event& event)
-{
-	if (auto e = event.as<WindowClosedEvent>())
-	{
-		d_data.running = false;
-		return;
-	}
-	for (auto callback: d_extraCallbacks)
-	{
-		callback(event);
-	}
-}
-
 void Window::clear()
 {
 	glEnable(GL_DEPTH_TEST);
@@ -175,6 +180,29 @@ void Window::setCursorVisibility(bool visibility)
 	}
 	else {
 		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+}
+
+void Window::registerKeyboardCallback(EventCallback cb)
+{
+	d_keyboardCallback = cb;
+}
+
+void Window::registerMouseCallback(EventCallback cb)
+{
+	d_mouseCallback = cb;
+}
+
+void Window::registerCallback(const std::string& name, EventCallback cb)
+{
+	d_extraCallbacks[name] = cb;
+}
+
+void Window::deregisterCallback(const std::string& name)
+{
+	auto it = d_extraCallbacks.find(name);
+	if (it != d_extraCallbacks.end()) {
+		d_extraCallbacks.erase(it);
 	}
 }
 

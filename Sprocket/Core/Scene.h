@@ -36,6 +36,12 @@ public:
     Scene(const SceneData&  data,
           const LayerStack& layers,
           EventHandler      eventHandler = [](const Event&, SceneData*){});
+        // Additionally registers the Scene with the window speified in
+        // the SceneData. Events from the window will be processed with
+        // handleEvent.
+
+    ~Scene();
+        // Deregisters the Scene with the window that it is in.
 
     void tick();
         // Should be called on every tick of the game loop. Updates the

@@ -11,7 +11,7 @@ class KeyboardButtonPressedEvent : public Event
 
 public:
 	KeyboardButtonPressedEvent(int key, int scancode, int mods);
-	virtual int categoryFlags() const override { return KEYBOARD_BUTTON | INPUT; }
+	virtual int categoryFlags() const override { return KEYBOARD | INPUT; }
 	std::string toString() const override;
 
 	int key() const { return d_key; }
@@ -27,7 +27,7 @@ class KeyboardButtonReleasedEvent : public Event
 
 public:
 	KeyboardButtonReleasedEvent(int key, int scancode, int mods);
-	virtual int categoryFlags() const override { return KEYBOARD_BUTTON; }
+	virtual int categoryFlags() const override { return KEYBOARD; }
 	std::string toString() const override;
 
 	int key() const { return d_key; }
@@ -43,7 +43,7 @@ class KeyboardButtonHeldEvent : public Event
 
 public:
 	KeyboardButtonHeldEvent(int key, int scancode, int mods);
-	virtual int categoryFlags() const override { return KEYBOARD_BUTTON | INPUT; }
+	virtual int categoryFlags() const override { return KEYBOARD | INPUT; }
 	std::string toString() const override;
 
 	int key() const { return d_key; }

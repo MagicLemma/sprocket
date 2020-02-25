@@ -36,7 +36,7 @@ void handleEvent(const Event& event)
 
 void init(Window* window)
 {
-    window->registerCallback([&](const Event& event) {
+    window->registerMouseCallback([&](const Event& event) {
         handleEvent(event);
     });
     SPKT_LOG_INFO("Initialised Mouse");

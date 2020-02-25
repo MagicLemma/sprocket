@@ -9,9 +9,14 @@ Scene::Scene(const SceneData&  data,
     , d_layers(layers)
     , d_eventHandler(eventHandler)
 {
-    data.window->registerCallback([&](const Event& event) {
+    data.window()->registerCallback(data.name(), [&](const Event& event) {
         handleEvent(event);
     });
+}
+
+Scene::~Scene()
+{
+    d_data.window()->deregisterCallback(d_data.name());
 }
 
 void Scene::tick()

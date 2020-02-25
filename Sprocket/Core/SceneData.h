@@ -11,12 +11,28 @@ enum class SceneType
     STAGE = 2      // Generic 3D world type.
 };
 
-struct SceneData
+class SceneData
 {
-    std::string name;
-    SceneType   type;
-    Window*     window;
-    bool        paused;
+    // Core data
+    std::string d_name;
+    SceneType   d_type;
+    Window*     d_window;
+
+    // Extra attributes
+    bool        d_paused;
+
+public:
+    SceneData(const std::string& name, SceneType type, Window* window);
+
+    // Core data getters
+    std::string name() const { return d_name;}
+    SceneType type() const { return d_type; }
+    Window* window() const { return d_window; }
+
+    // Extra attributes are modifiable
+    bool paused() const { return d_paused; }
+    void paused(bool value) { d_paused = value; }
+
 };
 
 }

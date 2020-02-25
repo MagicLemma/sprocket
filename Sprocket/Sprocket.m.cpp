@@ -64,22 +64,12 @@ public:
 
     bool handleEvent(const Event& event) override
     {
-        if (auto e = event.as<KeyboardButtonPressedEvent>()) {
-            if (e->key() == Keyboard::ESC) {
-                if (d_status == Layer::Status::NORMAL) {
-                    d_status = Layer::Status::PAUSED;
-                }
-                else if (d_status == Layer::Status::PAUSED) {
-                    d_status = Layer::Status::NORMAL;
-                }
-            }
-        }
         return false;
     }
 
     void update(SceneData* data) override
     {
-        d_status = data->paused ? Status::PAUSED : Status::NORMAL;
+        d_status = data->paused() ? Status::PAUSED : Status::NORMAL;
 
         if (d_status == Status::NORMAL) {
             float tick = layerTicker();
@@ -117,7 +107,7 @@ public:
 
     void update(SceneData* data) override
     {
-        d_status = data->paused ? Status::NORMAL : Status::INACTIVE;
+        d_status = data->paused() ? Status::NORMAL : Status::INACTIVE;
     }
 
     void draw() override
@@ -140,18 +130,17 @@ int main(int argc, char* argv[])
     layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(&window));
     layerStack.pushLayer(std::make_shared<Sprocket::UILayer>());
 
-    Sprocket::SceneData sceneData;
-    sceneData.name = "Sprocket";
-    sceneData.window = &window;
-    sceneData.type = Sprocket::SceneType::STAGE;
-    sceneData.paused = false;
+    Sprocket::SceneData sceneData(
+        "Sprocket",
+        Sprocket::SceneType::STAGE,
+        &window);
 
     Sprocket::Scene scene(sceneData, layerStack,
         [](const Sprocket::Event& event, Sprocket::SceneData* data){
             if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
                 if (e->key() == Sprocket::Keyboard::ESC) {
-                    data->paused = !data->paused;
-                    data->window->setCursorVisibility(data->paused);
+                    data->paused(!data->paused());
+                    data->window()->setCursorVisibility(data->paused());
                 }
             }
         });
