@@ -25,8 +25,7 @@ private:
         // Layers are non-copyable and non-moveable.
 
     // Virtual Interface
-    virtual bool handleEventImpl(const Event& event,
-                                 SceneData* data) = 0;
+    virtual bool handleEventImpl(SceneData* data,  const Event& event) = 0;
         // This function should contain all logic to handle Events being
         // sent to the layer.
 
@@ -34,14 +33,14 @@ private:
         // This function should contain all logic to be run on every tick
         // of the application.
 
-    virtual void drawImpl() = 0;
+    virtual void drawImpl(SceneData* data) = 0;
         // This function should contain all logic to render the Layer to
         // the screen.
 
 public:
     Layer(Status status, bool cursorVisible = true);
 
-    bool handleEvent(const Event& event, SceneData* data);
+    bool handleEvent(SceneData* data, const Event& event);
         // Called whenever an event happens. This function should return
         // True if the layer "consumed" the Event, and False otherwise.
         // Consuming the event means that the Event will not be propagated
@@ -51,7 +50,7 @@ public:
     void update(SceneData* data);
         // Called in every tick of the game loop.
 
-    void draw();
+    void draw(SceneData* data);
         // Called in every tick of the game loop. Within a layer stack, these
         // are called in reverse order, starting at the bottom of the stack
         // and working upwards. It will only call "drawImpl" if the layer is

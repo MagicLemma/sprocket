@@ -19,11 +19,11 @@ LayerPtr LayerStack::popLayer()
     return layer;
 }
 
-void LayerStack::handleEvent(const Event& event, SceneData* data)
+void LayerStack::handleEvent(SceneData* data, const Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        if (d_layers[i]->handleEvent(event, data)) {
+        if (d_layers[i]->handleEvent(data, event)) {
             break;
         }
     }
@@ -37,10 +37,10 @@ void LayerStack::update(SceneData* data)
     }
 }
 
-void LayerStack::draw()
+void LayerStack::draw(SceneData* data)
 {
     for (size_t i = 0; i != d_layers.size(); ++i) {
-        d_layers[i]->draw();
+        d_layers[i]->draw(data);
     }
 }
 

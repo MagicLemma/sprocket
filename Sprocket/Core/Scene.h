@@ -8,7 +8,7 @@
 
 namespace Sprocket {
 
-using EventHandler = std::function<void(const Event&, SceneData*)>;
+using EventHandler = std::function<void(SceneData*, const Event&)>;
 
 class Scene
 {
@@ -35,7 +35,7 @@ private:
 public:
     Scene(const SceneData&  data,
           const LayerStack& layers,
-          EventHandler      eventHandler = [](const Event&, SceneData*){});
+          EventHandler      eventHandler = [](SceneData*, const Event&){});
         // Additionally registers the Scene with the window speified in
         // the SceneData. Events from the window will be processed with
         // handleEvent.

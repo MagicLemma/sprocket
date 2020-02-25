@@ -22,13 +22,13 @@ Scene::~Scene()
 void Scene::tick()
 {
     d_layers.update(&d_data);
-    d_layers.draw();
+    d_layers.draw(&d_data);
 }
 
 void Scene::handleEvent(const Event& event)
 {
-    d_eventHandler(event, &d_data);
-    d_layers.handleEvent(event, &d_data);
+    d_eventHandler(&d_data, event);
+    d_layers.handleEvent(&d_data, event);
 }
 
 }

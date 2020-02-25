@@ -22,9 +22,9 @@ float Layer::layerTicker() const
     return d_ticker;
 }
 
-bool Layer::handleEvent(const Event& event, SceneData* data)
+bool Layer::handleEvent(SceneData* data, const Event& event)
 {
-    return handleEventImpl(event, data);
+    return handleEventImpl(data, event);
 }
 
 void Layer::update(SceneData* data)
@@ -35,10 +35,10 @@ void Layer::update(SceneData* data)
     updateImpl(data);
 }
 
-void Layer::draw()
+void Layer::draw(SceneData* data)
 {
     if (d_status != Layer::Status::INACTIVE) {
-        drawImpl();
+        drawImpl(data);
     }
 }
 

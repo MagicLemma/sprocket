@@ -19,7 +19,7 @@ public:
     void pushLayer(LayerPtr layer);
     LayerPtr popLayer();
 
-    void handleEvent(const Event& event, SceneData* data);
+    void handleEvent(SceneData* data, const Event& event);
         // Called on every event. This propagates the event to
         // every layer in the stack, starting at the top. If a layer
         // returns True, the event is not propagated to any lower
@@ -30,7 +30,7 @@ public:
         // from the top and updates each layer. If a layer
         // returns True, none of the lower layers are updated.
 
-    void draw();
+    void draw(SceneData* data);
         // Called on every tick. This does through the stack
         // from the bottom and draws each layer.
 };

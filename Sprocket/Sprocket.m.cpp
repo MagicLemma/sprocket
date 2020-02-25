@@ -69,7 +69,7 @@ public:
         d_lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
     }
 
-    bool handleEventImpl(const Event& event, SceneData* data) override
+    bool handleEventImpl(SceneData* data, const Event& event) override
     {
         return false;
     }
@@ -94,7 +94,7 @@ public:
         d_camera.move(d_status == Status::NORMAL);
     }
 
-    void drawImpl() override
+    void drawImpl(SceneData* data) override
     {
         for (const auto& entity: d_entities) {
             d_renderer.render(entity, d_lights, d_camera, d_shader);
@@ -124,7 +124,7 @@ public:
         d_models.push_back(tri);
     }
 
-    bool handleEventImpl(const Event& event, SceneData* data) override
+    bool handleEventImpl(SceneData* data, const Event& event) override
     {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             auto pos = Mouse::getMousePos();
@@ -142,7 +142,7 @@ public:
 
     }
 
-    void drawImpl() override
+    void drawImpl(SceneData* data) override
     {
         for (const auto& model: d_models) {
             d_renderer.render(model, d_shader);
@@ -171,7 +171,7 @@ int main(int argc, char* argv[])
         &window);
 
     Sprocket::Scene scene(sceneData, layerStack,
-        [](const Sprocket::Event& event, Sprocket::SceneData* data){
+        [](Sprocket::SceneData* data, const Sprocket::Event& event){
             if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
                 if (e->key() == Sprocket::Keyboard::ESC) {
                     data->paused(!data->paused());
