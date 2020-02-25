@@ -28,7 +28,7 @@ void Scene::tick()
 void Scene::handleEvent(const Event& event)
 {
     d_eventHandler(event, &d_data);
-    d_layers.handleEvent(event);
+    d_layers.handleEvent(event, &d_data);
 }
 
 }

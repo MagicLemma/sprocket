@@ -19,11 +19,11 @@ LayerPtr LayerStack::popLayer()
     return layer;
 }
 
-void LayerStack::handleEvent(const Event& event)
+void LayerStack::handleEvent(const Event& event, SceneData* data)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        if (d_layers[i]->handleEvent(event)) {
+        if (d_layers[i]->handleEvent(event, data)) {
             break;
         }
     }

@@ -22,9 +22,9 @@ float Layer::layerTicker() const
     return d_ticker;
 }
 
-bool Layer::handleEvent(const Event& event)
+bool Layer::handleEvent(const Event& event, SceneData* data)
 {
-    return handleEventImpl(event);
+    return handleEventImpl(event, data);
 }
 
 void Layer::update(SceneData* data)

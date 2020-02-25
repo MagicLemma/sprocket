@@ -25,7 +25,8 @@ private:
         // Layers are non-copyable and non-moveable.
 
     // Virtual Interface
-    virtual bool handleEventImpl(const Event& event) = 0;
+    virtual bool handleEventImpl(const Event& event,
+                                 SceneData* data) = 0;
         // This function should contain all logic to handle Events being
         // sent to the layer.
 
@@ -40,7 +41,7 @@ private:
 public:
     Layer(Status status, bool cursorVisible = true);
 
-    bool handleEvent(const Event& event);
+    bool handleEvent(const Event& event, SceneData* data);
         // Called whenever an event happens. This function should return
         // True if the layer "consumed" the Event, and False otherwise.
         // Consuming the event means that the Event will not be propagated

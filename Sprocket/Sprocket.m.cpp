@@ -14,6 +14,7 @@
 #include "SceneData.h"
 #include "LayerStack.h"
 #include "Events/KeyboardEvent.h"
+#include "Events/MouseEvent.h"
 
 #include "Model2D.h"
 #include "Loader2D.h"
@@ -68,7 +69,7 @@ public:
         d_lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
     }
 
-    bool handleEventImpl(const Event& event) override
+    bool handleEventImpl(const Event& event, SceneData* data) override
     {
         return false;
     }
@@ -117,19 +118,28 @@ public:
         , d_shader("Resources/Shaders/GUI.vert",
                    "Resources/Shaders/GUI.frag")
     {
-        Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, 0.5f}, {-0.5f, -0.5f}};
+        Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, 0.5f}, {-0.5f, -0.5f},
+                        {0.5f, 0.5f}, {-0.5f, -0.5f}, {0.5f, -0.5f}};
         Model2D tri = d_loader.load2DModel(v);
         d_models.push_back(tri);
     }
 
-    bool handleEventImpl(const Event& event) override
+    bool handleEventImpl(const Event& event, SceneData* data) override
     {
+        if (auto e = event.as<MouseButtonPressedEvent>()) {
+            auto pos = Mouse::getMousePos();
+            if (pos.x < 50) {
+                data->paused(false);
+                data->window()->setCursorVisibility(false);
+            }
+        }
         return false;
     }
 
     void updateImpl(SceneData* data) override
     {
         d_status = data->paused() ? Status::NORMAL : Status::INACTIVE;
+
     }
 
     void drawImpl() override
