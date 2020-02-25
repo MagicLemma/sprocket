@@ -22,23 +22,23 @@ float Layer::layerTicker() const
     return d_ticker;
 }
 
-bool Layer::callHandleEvent(const Event& event)
+bool Layer::handleEvent(const Event& event)
 {
-    return handleEvent(event);
+    return handleEventImpl(event);
 }
 
-void Layer::callUpdate(SceneData* data)
+void Layer::update(SceneData* data)
 {
     if (d_status == Status::NORMAL) {
         d_ticker += 0.01f;
     }
-    update(data);
+    updateImpl(data);
 }
 
-void Layer::callDraw()
+void Layer::draw()
 {
     if (d_status != Layer::Status::INACTIVE) {
-        draw();
+        drawImpl();
     }
 }
 

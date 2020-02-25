@@ -25,7 +25,7 @@ class Scene
 
     EventHandler d_eventHandler;
         // Function that gets called on handleEvent, before sending the
-        // evnt to the LayerStack. This is used to update the SceneData.
+        // event to the LayerStack. This is used to update the SceneData.
 
 private:
     void handleEvent(const Event& event);

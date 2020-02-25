@@ -23,7 +23,7 @@ void LayerStack::handleEvent(const Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        if (d_layers[i]->callHandleEvent(event)) {
+        if (d_layers[i]->handleEvent(event)) {
             break;
         }
     }
@@ -33,14 +33,14 @@ void LayerStack::update(SceneData* data)
 { 
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        d_layers[i]->callUpdate(data);
+        d_layers[i]->update(data);
     }
 }
 
 void LayerStack::draw()
 {
     for (size_t i = 0; i != d_layers.size(); ++i) {
-        d_layers[i]->callDraw();
+        d_layers[i]->draw();
     }
 }
 

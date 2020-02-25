@@ -62,12 +62,12 @@ public:
         d_lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
     }
 
-    bool handleEvent(const Event& event) override
+    bool handleEventImpl(const Event& event) override
     {
         return false;
     }
 
-    void update(SceneData* data) override
+    void updateImpl(SceneData* data) override
     {
         d_status = data->paused() ? Status::PAUSED : Status::NORMAL;
 
@@ -87,7 +87,7 @@ public:
         d_camera.move(d_status == Status::NORMAL);
     }
 
-    void draw() override
+    void drawImpl() override
     {
         for (const auto& entity: d_entities) {
             d_renderer.render(entity, d_lights, d_camera, d_shader);
@@ -100,17 +100,17 @@ class UILayer : public Layer
 public:
     UILayer() : Layer(Status::INACTIVE, true) {}
 
-    bool handleEvent(const Event& event) override
+    bool handleEventImpl(const Event& event) override
     {
         return false;
     }
 
-    void update(SceneData* data) override
+    void updateImpl(SceneData* data) override
     {
         d_status = data->paused() ? Status::NORMAL : Status::INACTIVE;
     }
 
-    void draw() override
+    void drawImpl() override
     {
     }
 };
@@ -147,9 +147,7 @@ int main(int argc, char* argv[])
 
     while (window.running()) {
         window.clear();
-
         scene.tick();
-
         window.onUpdate();
     }
 
