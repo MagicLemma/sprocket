@@ -26,7 +26,6 @@ add_executable(Sprocket
 
                Graphics/GUI/Loader2D.cpp
                Graphics/GUI/Model2D.cpp
-               Graphics/GUI/Renderer2D.cpp
                Graphics/GUI/Vertex2D.cpp
 
                Core/Layer.cpp

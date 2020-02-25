@@ -18,7 +18,6 @@
 
 #include "Model2D.h"
 #include "Loader2D.h"
-#include "Renderer2D.h"
 #include "Vertex2D.h"
 
 #include <vector>
@@ -29,7 +28,6 @@ namespace Sprocket {
 class GameLayer : public Layer
 {
     Loader   d_loader;
-    Renderer d_renderer;
     Camera   d_camera;
     Shader   d_shader;
 
@@ -40,7 +38,6 @@ public:
     GameLayer(Window* window) 
         : Layer(Status::NORMAL, false) 
         , d_loader()
-        , d_renderer()
         , d_camera()
         , d_shader("Resources/Shaders/Basic.vert",
                    "Resources/Shaders/Basic.frag")
@@ -104,7 +101,7 @@ public:
     void drawImpl(SceneData* data) override
     {
         for (const auto& entity: d_entities) {
-            d_renderer.render(entity, d_lights, d_camera, d_shader);
+            Renderer::render(entity, d_lights, d_camera, d_shader);
         }
     }
 };
@@ -112,7 +109,6 @@ public:
 class UILayer : public Layer
 {
     Loader2D   d_loader;
-    Renderer2D d_renderer;
     Shader     d_shader;
 
     std::vector<Model2D> d_models;
@@ -121,7 +117,6 @@ public:
     UILayer() 
         : Layer(Status::INACTIVE, true)
         , d_loader()
-        , d_renderer()
         , d_shader("Resources/Shaders/GUI.vert",
                    "Resources/Shaders/GUI.frag")
     {
@@ -152,7 +147,7 @@ public:
     void drawImpl(SceneData* data) override
     {
         for (const auto& model: d_models) {
-            d_renderer.render(model, d_shader);
+            Renderer::render(model, d_shader);
         }
     }
 };

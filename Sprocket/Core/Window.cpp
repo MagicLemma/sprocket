@@ -68,8 +68,14 @@ Window::Window(
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
 	glfwSwapInterval(1);  // Set VSync to be true
-	glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// Initialise GLAD
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+	// Don't render backs of triangles.
+	glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)

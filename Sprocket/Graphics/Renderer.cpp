@@ -7,17 +7,12 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
+namespace Renderer {
 
-Renderer::Renderer()
-{
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-}
-
-void Renderer::render(const Entity& entity,
-                      const std::vector<Light>& lights,
-                      const Camera& camera,
-                      const Shader& shader)
+void render(const Entity& entity,
+            const std::vector<Light>& lights,
+            const Camera& camera,
+            const Shader& shader)
 {   
     shader.bind();
     unsigned int MAX_NUM_LIGHTS = 5;
@@ -61,4 +56,14 @@ void Renderer::render(const Entity& entity,
     shader.unbind();
 }
 
+void render(const Model2D& model, const Shader& shader)
+{   
+    shader.bind();
+    model.bind();
+    glDrawArrays(GL_TRIANGLES, 0, model.vertexCount());
+    model.unbind();
+    shader.unbind();
+}
+
+}
 }
