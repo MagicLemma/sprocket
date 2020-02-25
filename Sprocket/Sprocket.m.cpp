@@ -15,6 +15,12 @@
 #include "LayerStack.h"
 #include "Events/KeyboardEvent.h"
 
+#include "Model2D.h"
+#include "Loader2D.h"
+#include "Renderer2D.h"
+#include "Shader2D.h"
+#include "Vertex2D.h"
+
 #include <vector>
 #include <memory>
 
@@ -97,8 +103,24 @@ public:
 
 class UILayer : public Layer
 {
+    Loader2D   d_loader;
+    Renderer2D d_renderer;
+    Shader2D   d_shader;
+
+    std::vector<Model2D> d_models;
+
 public:
-    UILayer() : Layer(Status::INACTIVE, true) {}
+    UILayer() 
+        : Layer(Status::INACTIVE, true)
+        , d_loader()
+        , d_renderer()
+        , d_shader("Resources/Shaders/GUI.vert",
+                   "Resources/Shaders/GUI.frag")
+    {
+        Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, 0.5f}, {-0.5f, -0.5f}};
+        Model2D tri = d_loader.load2DModel(v);
+        d_models.push_back(tri);
+    }
 
     bool handleEventImpl(const Event& event) override
     {
@@ -112,6 +134,9 @@ public:
 
     void drawImpl() override
     {
+        for (const auto& model: d_models) {
+            d_renderer.render(model, d_shader);
+        }
     }
 };
 

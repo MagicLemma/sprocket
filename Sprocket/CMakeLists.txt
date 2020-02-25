@@ -24,6 +24,12 @@ add_executable(Sprocket
                Graphics/Texture.cpp
                Graphics/Vertex.cpp
 
+               Graphics/GUI/Loader2D.cpp
+               Graphics/GUI/Model2D.cpp
+               Graphics/GUI/Renderer2D.cpp
+               Graphics/GUI/Shader2D.cpp
+               Graphics/GUI/Vertex2D.cpp
+
                Core/Layer.cpp
                Core/LayerStack.cpp
                Core/Scene.cpp
@@ -52,5 +58,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Core
                            ./Events
                            ./Graphics
+                           ./Graphics/GUI
                            ./Utility
                            ${STB_INCLUDE_DIR})

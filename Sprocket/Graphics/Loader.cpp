@@ -33,7 +33,7 @@ unsigned int Loader::createVAO()
     return vaoId;
 }
 
-void Loader::bindVertexBuffer(const std::vector<Vertex>& vertexBuffer)
+void Loader::bindVertexBuffer(const VertexBuffer& vertexBuffer)
 {
     unsigned int vboId;
     glGenBuffers(1, &vboId);
@@ -53,7 +53,7 @@ void Loader::bindVertexBuffer(const std::vector<Vertex>& vertexBuffer)
                           reinterpret_cast<void*>(offsetof(Vertex, normal)));
 }
 
-void Loader::bindIndexBuffer(const std::vector<unsigned int>& indexBuffer)
+void Loader::bindIndexBuffer(const IndexBuffer& indexBuffer)
 {
     unsigned int vboId;
     glGenBuffers(1, &vboId);
