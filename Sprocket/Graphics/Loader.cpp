@@ -1,6 +1,6 @@
-#include "3D/Loader.h"
-#include "3D/Vertex.h"
-#include "3D/ObjParser.h"
+#include "Graphics/Loader.h"
+#include "Graphics/Vertex.h"
+#include "Graphics/ObjParser.h"
 #include "Utility/Log.h"
 
 #include <vector>

@@ -1,5 +1,5 @@
 #pragma once
-#include "3D/Vertex.h"
+#include "Graphics/Vertex.h"
 
 #include <utility>
 #include <string>

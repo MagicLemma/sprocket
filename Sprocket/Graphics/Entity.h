@@ -1,6 +1,6 @@
 #pragma once
-#include "3D/Model.h"
-#include "3D/Texture.h"
+#include "Graphics/Model.h"
+#include "Graphics/Texture.h"
 #include "Utility/Maths.h"
 
 namespace Sprocket {

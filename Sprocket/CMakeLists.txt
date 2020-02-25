@@ -13,16 +13,16 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 add_executable(Sprocket
                Sprocket.m.cpp
                
-               3D/Camera.cpp
-               3D/Entity.cpp
-               3D/Light.cpp
-               3D/Loader.cpp
-               3D/Model.cpp
-               3D/ObjParser.cpp
-               3D/Renderer.cpp
-               3D/Shader.cpp
-               3D/Texture.cpp
-               3D/Vertex.cpp
+               Graphics/Camera.cpp
+               Graphics/Entity.cpp
+               Graphics/Light.cpp
+               Graphics/Loader.cpp
+               Graphics/Model.cpp
+               Graphics/ObjParser.cpp
+               Graphics/Renderer.cpp
+               Graphics/Shader.cpp
+               Graphics/Texture.cpp
+               Graphics/Vertex.cpp
 
                Core/Layer.cpp
                Core/LayerStack.cpp
@@ -49,9 +49,8 @@ target_link_libraries(Sprocket PRIVATE
 
 target_include_directories(Sprocket PUBLIC
                            .
-                           ./2D
-                           ./3D
                            ./Core
                            ./Events
+                           ./Graphics
                            ./Utility
                            ${STB_INCLUDE_DIR})

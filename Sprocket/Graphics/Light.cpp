@@ -1,4 +1,4 @@
-#include "3D/Light.h"
+#include "Graphics/Light.h"
 
 namespace Sprocket {
     

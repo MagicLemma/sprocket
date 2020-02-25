@@ -1,4 +1,4 @@
-#include "3D/Camera.h"
+#include "Graphics/Camera.h"
 #include "Utility/Keyboard.h"
 #include "Utility/Mouse.h"
 

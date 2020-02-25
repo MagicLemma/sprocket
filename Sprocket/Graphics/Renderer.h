@@ -1,8 +1,8 @@
 #pragma once
-#include "3D/Entity.h"
-#include "3D/Camera.h"
-#include "3D/Shader.h"
-#include "3D/Light.h"
+#include "Graphics/Entity.h"
+#include "Graphics/Camera.h"
+#include "Graphics/Shader.h"
+#include "Graphics/Light.h"
 
 #include <vector>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "3D/Camera.h"
+#include "Graphics/Camera.h"
 #include "Events/Event.h"
 #include "Utility/Maths.h"
 

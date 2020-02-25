@@ -1,7 +1,7 @@
 #pragma once
-#include "3D/Model.h"
-#include "3D/Vertex.h"
-#include "3D/Texture.h"
+#include "Graphics/Model.h"
+#include "Graphics/Vertex.h"
+#include "Graphics/Texture.h"
 
 #include <vector>
 #include <string>

@@ -1,4 +1,4 @@
-#include "3D/ObjParser.h"
+#include "Graphics/ObjParser.h"
 #include "Utility/Maths.h"
 
 #include <fstream>

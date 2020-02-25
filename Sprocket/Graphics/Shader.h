@@ -1,7 +1,7 @@
 #pragma once
-#include "3D/Light.h"
-#include "3D/Camera.h"
-#include "3D/Entity.h"
+#include "Graphics/Light.h"
+#include "Graphics/Camera.h"
+#include "Graphics/Entity.h"
 #include "Utility/Maths.h"
 
 #include <string>
