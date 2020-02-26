@@ -100,6 +100,7 @@ public:
 
     void drawImpl(SceneData* data) override
     {
+        data->window()->setFaceCulling(true);
         for (const auto& entity: d_entities) {
             Renderer::render(entity, d_lights, d_camera, d_shader);
         }
@@ -120,8 +121,8 @@ public:
         , d_shader("Resources/Shaders/GUI.vert",
                    "Resources/Shaders/GUI.frag")
     {
-        Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, 0.5f}, {-0.5f, -0.5f},
-                        {0.5f, 0.5f}, {-0.5f, -0.5f}, {0.5f, -0.5f}};
+        Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, -0.5f}, {-0.5f, 0.5f},
+                        {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
         Model2D tri = d_loader.load2DModel(v);
         d_models.push_back(tri);
     }
@@ -146,6 +147,7 @@ public:
 
     void drawImpl(SceneData* data) override
     {
+        data->window()->setFaceCulling(false);
         for (const auto& model: d_models) {
             Renderer::render(model, d_shader);
         }

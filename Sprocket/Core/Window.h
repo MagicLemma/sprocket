@@ -83,6 +83,7 @@ public:
 		// callback exists for the given name, this is a noop.
 
 	void setCursorVisibility(bool visibility);
+	void setFaceCulling(bool culling);
 
 	void clear();
 };

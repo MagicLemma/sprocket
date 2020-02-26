@@ -73,10 +73,6 @@ Window::Window(
 	// Initialise GLAD
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-	// Don't render backs of triangles.
-	glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
 	{
@@ -187,6 +183,17 @@ void Window::setCursorVisibility(bool visibility)
 	else {
 		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
+}
+
+void Window::setFaceCulling(bool culling)
+{
+    if (culling) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+    else {
+        glDisable(GL_CULL_FACE);
+    }
 }
 
 void Window::registerKeyboardCallback(EventCallback cb)
