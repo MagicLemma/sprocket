@@ -24,11 +24,9 @@ void handleEvent(const Event& event)
     }
     else if (auto e = event.as<MouseButtonPressedEvent>()) {
         s_pressedState[e->button()] = true;
-        SPKT_LOG_INFO("Mouse button {} pressed", e->button());
     }
     else if (auto e = event.as<MouseButtonReleasedEvent>()) {
         s_pressedState[e->button()] = false;
-        SPKT_LOG_INFO("Mouse button {} released", e->button());
     }
 }
 

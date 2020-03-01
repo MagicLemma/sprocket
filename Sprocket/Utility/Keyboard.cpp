@@ -16,11 +16,9 @@ void handleEvent(const Event& event)
 {
     if (auto e = event.as<KeyboardButtonPressedEvent>()) {
         s_pressedState[e->key()] = true;
-        SPKT_LOG_INFO("Key {} pressed", e->key());
     }
     else if (auto e = event.as<KeyboardButtonReleasedEvent>()) {
         s_pressedState[e->key()] = false;
-        SPKT_LOG_INFO("Key {} released", e->key());
     }
 }
 
