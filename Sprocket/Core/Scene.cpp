@@ -2,33 +2,32 @@
 
 namespace Sprocket {
 
-Scene::Scene(const SceneData&  data,
+Scene::Scene(const std::string& name,
              const LayerStack& layers,
-             EventHandler      eventHandler)
-    : d_data(data)
+             Window*           window)
+    : d_name(name)
     , d_layers(layers)
-    , d_eventHandler(eventHandler)
+    , d_window(window)
 {
-    data.window()->registerCallback(data.name(), [&](const Event& event) {
+    d_window->registerCallback(d_name, [&](const Event& event) {
         handleEvent(event);
     });
 }
 
 Scene::~Scene()
 {
-    d_data.window()->deregisterCallback(d_data.name());
+    d_window->deregisterCallback(d_name);
 }
 
 void Scene::tick()
 {
-    d_layers.update(&d_data);
-    d_layers.draw(&d_data);
+    d_layers.update(d_window);
+    d_layers.draw(d_window);
 }
 
 void Scene::handleEvent(const Event& event)
 {
-    d_eventHandler(&d_data, event);
-    d_layers.handleEvent(&d_data, event);
+    d_layers.handleEvent(d_window, event);
 }
 
 }

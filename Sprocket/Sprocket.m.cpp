@@ -11,38 +11,50 @@
 #include "Light.h"
 #include "Layer.h"
 #include "Scene.h"
-#include "SceneData.h"
 #include "LayerStack.h"
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
-
-#include "Model2D.h"
-#include "Loader2D.h"
-#include "Vertex2D.h"
 
 #include <vector>
 #include <memory>
 
 namespace Sprocket {
 
+struct BasicSceneInfo
+{
+    Loader   loader;
+    Camera   camera;
+    Shader   shader;
+    Shader   shaderMenu;
+
+    std::vector<Entity> entities;
+    std::vector<Light>  lights;
+    std::vector<Model>  models;
+
+    bool paused;
+
+    BasicSceneInfo(const std::string& vertShader,
+                   const std::string& fragShader,
+                   const std::string& vertShaderMenu,
+                   const std::string& fragShaderMenu)
+        : loader()
+        , camera()
+        , shader(vertShader, fragShader)
+        , shaderMenu(vertShaderMenu, fragShaderMenu)
+        , entities()
+        , lights()
+        , models()
+        , paused(false) {}
+};
+
 class GameLayer : public Layer
 {
-    Loader   d_loader;
-    Camera   d_camera;
-    Shader   d_shader;
-
-    std::vector<Entity> d_entities;
-    std::vector<Light>  d_lights;
+    std::shared_ptr<BasicSceneInfo> d_info;
 
 public:
-    GameLayer(Window* window) 
+    GameLayer(std::shared_ptr<BasicSceneInfo> info, Window* window) 
         : Layer(Status::NORMAL, false) 
-        , d_loader()
-        , d_camera()
-        , d_shader("Resources/Shaders/Basic.vert",
-                   "Resources/Shaders/Basic.frag")
-        , d_entities()
-        , d_lights()
+        , d_info(info)
     {
         Maths::mat4 matrix = Sprocket::Maths::createProjectionMatrix(
             window->aspectRatio(),
@@ -50,106 +62,105 @@ public:
             0.1f,
             1000.0f);
 
-	    d_shader.bind();
-	    d_shader.loadUniform("projectionMatrix", matrix);
-	    d_shader.unbind();
+	    d_info->shader.bind();
+	    d_info->shader.loadUniform("projectionMatrix", matrix);
+	    d_info->shader.unbind();
 
-        Model quadModel = d_loader.loadModel("Resources/Models/Plane.obj");
-        Model dragonModel = d_loader.loadModel("Resources/Models/Dragon.obj");
+        Model quadModel = d_info->loader.loadModel("Resources/Models/Plane.obj");
+        Model dragonModel = d_info->loader.loadModel("Resources/Models/Dragon.obj");
 
-        Texture space = d_loader.loadTexture("Resources/Textures/PlainGray.PNG");
-        Texture gray = d_loader.loadTexture("Resources/Textures/PlainGray.PNG");
+        Texture space = d_info->loader.loadTexture("Resources/Textures/PlainGray.PNG");
+        Texture gray = d_info->loader.loadTexture("Resources/Textures/PlainGray.PNG");
         gray.reflectivity(3);
         gray.shineDamper(5);
-        //space.reflectivity(3);
-        //space.shineDamper(5);
 
-        d_entities.push_back(Entity(dragonModel, gray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
-        d_entities.push_back(Entity(quadModel, space, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
+        d_info->entities.push_back(Entity(dragonModel, gray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
+        d_info->entities.push_back(Entity(quadModel, space, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
     
-        d_lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
-        d_lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
-        d_lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
-        d_lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
+        d_info->lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
+        d_info->lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
+        d_info->lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
+        d_info->lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
     }
 
-    bool handleEventImpl(SceneData* data, const Event& event) override
+    bool handleEventImpl(Window* window, const Event& event) override
     {
         return false;
     }
 
-    void updateImpl(SceneData* data) override
+    void updateImpl(Window* window) override
     {
-        d_status = data->paused() ? Status::PAUSED : Status::NORMAL;
+        d_status = d_info->paused ? Status::PAUSED : Status::NORMAL;
 
         if (d_status == Status::NORMAL) {
             float tick = layerTicker();
 
-            d_lights[1].position.z = 5 * std::sin(tick);
-            d_lights[1].position.x = 5 * std::cos(tick);
+            d_info->lights[1].position.z = 5 * std::sin(tick);
+            d_info->lights[1].position.x = 5 * std::cos(tick);
 
-            d_lights[2].position.z = 6 * std::sin(-1.5f * tick);
-            d_lights[2].position.x = 6 * std::cos(-1.5f * tick);
+            d_info->lights[2].position.z = 6 * std::sin(-1.5f * tick);
+            d_info->lights[2].position.x = 6 * std::cos(-1.5f * tick);
 
-            d_lights[3].position.z = 6 * std::sin(8.0f * tick);
-            d_lights[3].position.x = 6 * std::cos(8.0f * tick);
+            d_info->lights[3].position.z = 6 * std::sin(8.0f * tick);
+            d_info->lights[3].position.x = 6 * std::cos(8.0f * tick);
         }
 
-        d_camera.move(d_status == Status::NORMAL);
+        d_info->camera.move(d_status == Status::NORMAL);
     }
 
-    void drawImpl(SceneData* data) override
+    void drawImpl(Window* window) override
     {
-        data->window()->setFaceCulling(true);
-        for (const auto& entity: d_entities) {
-            Renderer::render(entity, d_lights, d_camera, d_shader);
+        window->setFaceCulling(true);
+        for (const auto& entity: d_info->entities) {
+            Renderer::render(entity, d_info->lights, d_info->camera, d_info->shader);
         }
     }
 };
 
 class UILayer : public Layer
 {
-    Loader2D   d_loader;
-    Shader     d_shader;
-
-    std::vector<Model2D> d_models;
+    std::shared_ptr<BasicSceneInfo> d_info;
 
 public:
-    UILayer() 
+    UILayer(std::shared_ptr<BasicSceneInfo> info) 
         : Layer(Status::INACTIVE, true)
-        , d_loader()
-        , d_shader("Resources/Shaders/GUI.vert",
-                   "Resources/Shaders/GUI.frag")
+        , d_info(info)
     {
         Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, -0.5f}, {-0.5f, 0.5f},
                         {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
-        Model2D tri = d_loader.load2DModel(v);
-        d_models.push_back(tri);
+        Model tri = d_info->loader.load2DModel(v);
+        d_info->models.push_back(tri);
     }
 
-    bool handleEventImpl(SceneData* data, const Event& event) override
+    bool handleEventImpl(Window* window, const Event& event) override
     {
-        if (auto e = event.as<MouseButtonPressedEvent>()) {
+        if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
+            if (e->key() == Sprocket::Keyboard::ESC) {
+                d_info->paused = !d_info->paused;
+                window->setCursorVisibility(d_info->paused);
+                return true;
+            }
+        }
+        else if (auto e = event.as<MouseButtonPressedEvent>()) {
             auto pos = Mouse::getMousePos();
             if (pos.x < 50) {
-                data->paused(false);
-                data->window()->setCursorVisibility(false);
+                d_info->paused = false;
+                window->setCursorVisibility(false);
             }
         }
         return false;
     }
 
-    void updateImpl(SceneData* data) override
+    void updateImpl(Window* window) override
     {
-        d_status = data->paused() ? Status::NORMAL : Status::INACTIVE;
-
+        d_status = d_info->paused ? Status::NORMAL : Status::INACTIVE;
     }
 
-    void drawImpl(SceneData* data) override
+    void drawImpl(Window* window) override
     {
-        data->window()->setFaceCulling(false);
-        for (const auto& model: d_models) {
-            Renderer::render(model, d_shader);
+        window->setFaceCulling(false);
+        for (const auto& model: d_info->models) {
+            Renderer::render(model, d_info->shaderMenu);
         }
     }
 };
@@ -165,24 +176,18 @@ int main(int argc, char* argv[])
     Sprocket::Keyboard::init(&window);
     Sprocket::Mouse::init(&window);
 
+    auto info = std::make_shared<Sprocket::BasicSceneInfo>(
+        "Resources/Shaders/Basic.vert",
+        "Resources/Shaders/Basic.frag",
+        "Resources/Shaders/GUI.vert",
+        "Resources/Shaders/GUI.frag"
+    );
+
     Sprocket::LayerStack layerStack;
-    layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(&window));
-    layerStack.pushLayer(std::make_shared<Sprocket::UILayer>());
+    layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(info, &window));
+    layerStack.pushLayer(std::make_shared<Sprocket::UILayer>(info));
 
-    Sprocket::SceneData sceneData(
-        "Sprocket",
-        Sprocket::SceneType::STAGE,
-        &window);
-
-    Sprocket::Scene scene(sceneData, layerStack,
-        [](Sprocket::SceneData* data, const Sprocket::Event& event){
-            if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
-                if (e->key() == Sprocket::Keyboard::ESC) {
-                    data->paused(!data->paused());
-                    data->window()->setCursorVisibility(data->paused());
-                }
-            }
-        });
+    Sprocket::Scene scene("Scene", layerStack, &window);
 
     while (window.running()) {
         window.clear();

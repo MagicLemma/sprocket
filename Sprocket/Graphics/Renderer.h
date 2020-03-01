@@ -3,7 +3,6 @@
 #include "Graphics/Camera.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Light.h"
-#include "Graphics/GUI/Model2D.h"
 
 #include <vector>
 
@@ -15,7 +14,7 @@ void render(const Entity& entity,
             const Camera& camera,
             const Shader& shader);
 
-void render(const Model2D& model,
+void render(const Model& model,
             const Shader& shader);
 
 }

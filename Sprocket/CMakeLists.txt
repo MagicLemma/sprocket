@@ -24,14 +24,9 @@ add_executable(Sprocket
                Graphics/Texture.cpp
                Graphics/Vertex.cpp
 
-               Graphics/GUI/Loader2D.cpp
-               Graphics/GUI/Model2D.cpp
-               Graphics/GUI/Vertex2D.cpp
-
                Core/Layer.cpp
                Core/LayerStack.cpp
                Core/Scene.cpp
-               Core/SceneData.cpp
                Core/Window.cpp
 
                Events/Event.cpp

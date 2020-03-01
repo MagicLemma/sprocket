@@ -21,11 +21,15 @@ private:
     void bindVertexBuffer(const VertexBuffer& vertexBuffer);
     void bindIndexBuffer(const IndexBuffer& indexBuffer);
 
+    void bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer);
+
 public:
     ~Loader();
 
     Model   loadModel(const std::string& objFile);
     Texture loadTexture(const std::string& textureFile);
+
+    Model   load2DModel(const Vertex2DBuffer& vertex2DBuffer);
 };
 
 }

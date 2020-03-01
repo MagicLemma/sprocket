@@ -64,6 +64,20 @@ void Loader::bindIndexBuffer(const IndexBuffer& indexBuffer)
                  GL_STATIC_DRAW);
 }
 
+void Loader::bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer)
+{
+    unsigned int vboId;
+    glGenBuffers(1, &vboId);
+    d_vboList.push_back(vboId);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboId);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2D) * vertex2DBuffer.size(), vertex2DBuffer.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(Vertex2D::posAttr, Vertex2D::posCount, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+                          reinterpret_cast<void*>(offsetof(Vertex2D, position)));
+}
+
 Model Loader::loadModel(const std::string& objFile)
 {
     auto [vertices, indices] = parseObjFile(objFile);
@@ -73,7 +87,7 @@ Model Loader::loadModel(const std::string& objFile)
     bindIndexBuffer(indices);
     unbindVAO();
 
-    return Model(vaoId, indices.size());
+    return Model(vaoId, indices.size(), ModelType::ENTITY);
 }
 
 Texture Loader::loadTexture(const std::string& textureFile)
@@ -99,6 +113,15 @@ Texture Loader::loadTexture(const std::string& textureFile)
     stbi_image_free(data);
     glBindTexture(GL_TEXTURE_2D, 0);
     return Texture(texId);
+}
+
+Model Loader::load2DModel(const Vertex2DBuffer& vertex2DBuffer)
+{
+    unsigned int vaoId = createVAO();
+    bindVertex2DBuffer(vertex2DBuffer);
+    unbindVAO();
+
+    return Model(vaoId, vertex2DBuffer.size(), ModelType::FLAT);
 }
 
 void Loader::unbindVAO()

@@ -1,5 +1,4 @@
 #pragma once
-#include "Core/SceneData.h"
 #include "Core/LayerStack.h"
 #include "Core/Window.h"
 #include "Events/Event.h"
@@ -8,24 +7,21 @@
 
 namespace Sprocket {
 
-using EventHandler = std::function<void(SceneData*, const Event&)>;
+using EventHandler = std::function<void(Window*, const Event&)>;
 
 class Scene
 {
-    SceneData d_data;
-        // Global data for this scene. A pointer to this will be passed
-        // to each layer on every tick of the game. This can also be
-        // modified by the event system by implementing custom logic
-        // via d_eventHandler.
+    std::string d_name;
+        // Name of the scene. This should be a unique identifier.
 
     LayerStack d_layers;
         // The LayerStack for the scene. Layers are the main building
         // blocks for a scene and are responsible for creating everything
         // in the scene.
 
-    EventHandler d_eventHandler;
-        // Function that gets called on handleEvent, before sending the
-        // event to the LayerStack. This is used to update the SceneData.
+    Window* d_window;
+        // Non-owning pointer to the window that the scene wants to receive
+        // events from.
 
 private:
     void handleEvent(const Event& event);
@@ -33,9 +29,7 @@ private:
         // event handler and then dispatches the event to the layer stack.
 
 public:
-    Scene(const SceneData&  data,
-          const LayerStack& layers,
-          EventHandler      eventHandler = [](SceneData*, const Event&){});
+    Scene(const std::string& name, const LayerStack& layers, Window* window);
         // Additionally registers the Scene with the window speified in
         // the SceneData. Events from the window will be processed with
         // handleEvent.
@@ -46,9 +40,6 @@ public:
     void tick();
         // Should be called on every tick of the game loop. Updates the
         // layer stack and then draws it.
-    
-    void setEventHandler(EventHandler handler) { d_eventHandler = handler; }
-        // Changes the event handler to the new one provided.
 };
 
 }

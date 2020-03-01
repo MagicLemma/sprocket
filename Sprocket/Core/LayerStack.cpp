@@ -19,28 +19,28 @@ LayerPtr LayerStack::popLayer()
     return layer;
 }
 
-void LayerStack::handleEvent(SceneData* data, const Event& event)
+void LayerStack::handleEvent(Window* window, const Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        if (d_layers[i]->handleEvent(data, event)) {
+        if (d_layers[i]->handleEvent(window, event)) {
             break;
         }
     }
 }
 
-void LayerStack::update(SceneData* data)
+void LayerStack::update(Window* window)
 { 
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        d_layers[i]->update(data);
+        d_layers[i]->update(window);
     }
 }
 
-void LayerStack::draw(SceneData* data)
+void LayerStack::draw(Window* window)
 {
     for (size_t i = 0; i != d_layers.size(); ++i) {
-        d_layers[i]->draw(data);
+        d_layers[i]->draw(window);
     }
 }
 

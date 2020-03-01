@@ -56,7 +56,7 @@ void render(const Entity& entity,
     shader.unbind();
 }
 
-void render(const Model2D& model, const Shader& shader)
+void render(const Model& model, const Shader& shader)
 {   
     shader.bind();
     model.bind();
