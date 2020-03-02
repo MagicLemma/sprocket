@@ -76,6 +76,8 @@ Window::Window(
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
 	{
+		glViewport(0, 0, width, height); // Update the viewport
+
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		WindowResizeEvent event(width, height);

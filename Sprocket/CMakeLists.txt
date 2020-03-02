@@ -19,6 +19,7 @@ add_executable(Sprocket
                Graphics/Loader.cpp
                Graphics/Model.cpp
                Graphics/ObjParser.cpp
+               Graphics/Quad.cpp
                Graphics/Renderer.cpp
                Graphics/Shader.cpp
                Graphics/Texture.cpp

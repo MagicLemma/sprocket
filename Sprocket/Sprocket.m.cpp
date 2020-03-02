@@ -52,20 +52,10 @@ class GameLayer : public Layer
     std::shared_ptr<BasicSceneInfo> d_info;
 
 public:
-    GameLayer(std::shared_ptr<BasicSceneInfo> info, Window* window) 
+    GameLayer(std::shared_ptr<BasicSceneInfo> info) 
         : Layer(Status::NORMAL, false) 
         , d_info(info)
     {
-        Maths::mat4 matrix = Sprocket::Maths::createProjectionMatrix(
-            window->aspectRatio(),
-		    70.0f,
-            0.1f,
-            1000.0f);
-
-	    d_info->shader.bind();
-	    d_info->shader.loadUniform("projectionMatrix", matrix);
-	    d_info->shader.unbind();
-
         Model quadModel = d_info->loader.loadModel("Resources/Models/Plane.obj");
         Model dragonModel = d_info->loader.loadModel("Resources/Models/Dragon.obj");
 
@@ -112,7 +102,7 @@ public:
     {
         window->setFaceCulling(true);
         for (const auto& entity: d_info->entities) {
-            Renderer::render(entity, d_info->lights, d_info->camera, d_info->shader);
+            Renderer::render(entity, d_info->lights, d_info->camera, d_info->shader, window);
         }
     }
 };
@@ -184,7 +174,7 @@ int main(int argc, char* argv[])
     );
 
     Sprocket::LayerStack layerStack;
-    layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(info, &window));
+    layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(info));
     layerStack.pushLayer(std::make_shared<Sprocket::UILayer>(info));
 
     Sprocket::Scene scene("Scene", layerStack, &window);
