@@ -71,6 +71,7 @@ public:
 	~Window();
 
 	void onUpdate();
+	void clear();
 
 	// Getters
 	unsigned int height() const { return d_data.height; }
@@ -88,11 +89,11 @@ public:
 		// Removes the callback corresponding to the given name. If no
 		// callback exists for the given name, this is a noop.
 
+	// Window Utilities
 	void setCursorVisibility(bool visibility);
 	void setFaceCulling(bool culling);
 
-	void clear();
-
+	// Keyboard/Mouse Utilities
 	bool isKeyDown(int key);
 	bool isMouseButtonDown(int button);
 	Maths::vec2 getMousePos();
