@@ -53,7 +53,7 @@ class Window
 	WindowData                  d_data;
 
 	std::map<std::string, EventCallback> d_callbacks;
-		// A name -> callback map for anything else that may be
+		// A name -> callback map for anything that may be
 		// interested in events. Other objects can register themselves
 		// by providing callbacks of their own. Objects may also
 		// deregister themselves to stop receiving events.
