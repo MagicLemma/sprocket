@@ -35,10 +35,8 @@ add_executable(Sprocket
                Events/KeyboardEvent.cpp
                Events/MouseEvent.cpp
                
-               Utility/Keyboard.cpp
                Utility/Log.cpp
-               Utility/Maths.cpp
-               Utility/Mouse.cpp)
+               Utility/Maths.cpp)
 
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog

@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Window.h"
 #include "Graphics/Camera.h"
 #include "Events/Event.h"
 #include "Utility/Maths.h"
@@ -17,7 +18,7 @@ class Camera
 public:
     Camera();
 
-    void move(bool active);
+    void move(Window* window, bool active);
 
     Maths::vec3 position() const { return d_position; }
     float pitch() const { return d_pitch; }

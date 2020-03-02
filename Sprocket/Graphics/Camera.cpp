@@ -1,6 +1,4 @@
 #include "Graphics/Camera.h"
-#include "Utility/Keyboard.h"
-#include "Utility/Mouse.h"
 
 #include <cmath>
 #include <algorithm>
@@ -16,38 +14,38 @@ Camera::Camera()
 {
 }
 
-void Camera::move(bool active)
+void Camera::move(Window* window, bool active)
 {
     // Updated at the end of the function.
-    static Maths::vec2 prevMousePos = Mouse::getMousePos();
-    Maths::vec2 mousePos = Mouse::getMousePos();
+    static Maths::vec2 prevMousePos = window->getMousePos();
+    Maths::vec2 mousePos = window->getMousePos();
 
     if (active) {
-        if (Keyboard::isKeyDown(Keyboard::W))
+        if (window->isKeyDown(Keyboard::W))
         {
             d_position.z += -std::cos(Maths::radians(d_yaw)) * 0.02f;
             d_position.x += std::sin(Maths::radians(d_yaw)) * 0.02f;
         }
-        if (Keyboard::isKeyDown(Keyboard::D))
+        if (window->isKeyDown(Keyboard::D))
         {
             d_position.z += std::sin(Maths::radians(d_yaw)) * 0.02f;
             d_position.x += std::cos(Maths::radians(d_yaw)) * 0.02f;
         }
-        if (Keyboard::isKeyDown(Keyboard::A))
+        if (window->isKeyDown(Keyboard::A))
         {
             d_position.z += -std::sin(Maths::radians(d_yaw)) * 0.02f;
             d_position.x += -std::cos(Maths::radians(d_yaw)) * 0.02f;
         }
-        if (Keyboard::isKeyDown(Keyboard::S))
+        if (window->isKeyDown(Keyboard::S))
         {
             d_position.z += std::cos(Maths::radians(d_yaw)) * 0.02f;
             d_position.x += -std::sin(Maths::radians(d_yaw)) * 0.02f;
         }
-        if (Keyboard::isKeyDown(Keyboard::SPACE))
+        if (window->isKeyDown(Keyboard::SPACE))
         {
             d_position.y += 0.02f;
         }
-        if (Keyboard::isKeyDown(Keyboard::LSHIFT))
+        if (window->isKeyDown(Keyboard::LSHIFT))
         {
             d_position.y -= 0.02f;
         }
@@ -57,7 +55,7 @@ void Camera::move(bool active)
         d_yaw += d_sensitivity * (mousePos.x - prevMousePos.x);
     }
 
-    prevMousePos = Mouse::getMousePos();
+    prevMousePos = window->getMousePos();
 }
 
 }

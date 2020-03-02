@@ -27,9 +27,7 @@ Window::Window(
 )
 	: d_impl(std::make_shared<WindowImpl>())
 	, d_data({name, width, height, true, true})
-	, d_keyboardCallback([](const Event&){})
-	, d_mouseCallback([](const Event&){})
-	, d_extraCallbacks()
+	, d_callbacks()
 {
 	// Set the callback that will get called by GLFW. This just
 	// forwards all events on to the keyboard/mouse and any
@@ -39,13 +37,7 @@ Window::Window(
 			d_data.running = false;
 			return;
 		}
-		if (event.isInCategory(EventCategory::KEYBOARD)) {
-			d_keyboardCallback(event);
-		}
-		if (event.isInCategory(EventCategory::MOUSE)) {
-			d_mouseCallback(event);
-		}
-		for (auto [name, callback]: d_extraCallbacks)
+		for (auto [name, callback]: d_callbacks)
 		{
 			callback(event);
 		}
@@ -198,27 +190,36 @@ void Window::setFaceCulling(bool culling)
     }
 }
 
-void Window::registerKeyboardCallback(EventCallback cb)
-{
-	d_keyboardCallback = cb;
-}
-
-void Window::registerMouseCallback(EventCallback cb)
-{
-	d_mouseCallback = cb;
-}
-
 void Window::registerCallback(const std::string& name, EventCallback cb)
 {
-	d_extraCallbacks[name] = cb;
+	d_callbacks[name] = cb;
 }
 
 void Window::deregisterCallback(const std::string& name)
 {
-	auto it = d_extraCallbacks.find(name);
-	if (it != d_extraCallbacks.end()) {
-		d_extraCallbacks.erase(it);
+	auto it = d_callbacks.find(name);
+	if (it != d_callbacks.end()) {
+		d_callbacks.erase(it);
 	}
+}
+
+bool Window::isKeyDown(int key)
+{
+	int status = glfwGetKey(d_impl->window, key);
+	return status == GLFW_PRESS || status == GLFW_REPEAT;
+}
+
+bool Window::isMouseButtonDown(int button)
+{
+	int status = glfwGetMouseButton(d_impl->window, button);
+	return status == GLFW_PRESS;
+}
+
+Maths::vec2 Window::getMousePos()
+{
+	double x, y;
+	glfwGetCursorPos(d_impl->window, &x, &y);
+	return {x, y};
 }
 
 }

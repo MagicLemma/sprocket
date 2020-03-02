@@ -1,7 +1,5 @@
 #include "Log.h"
 #include "Window.h"
-#include "Keyboard.h"
-#include "Mouse.h"
 #include "Loader.h"
 #include "Renderer.h"
 #include "Model.h"
@@ -95,7 +93,7 @@ public:
             d_info->lights[3].position.x = 6 * std::cos(8.0f * tick);
         }
 
-        d_info->camera.move(d_status == Status::NORMAL);
+        d_info->camera.move(window, d_status == Status::NORMAL);
     }
 
     void drawImpl(Window* window) override
@@ -132,7 +130,7 @@ public:
             }
         }
         else if (auto e = event.as<MouseButtonPressedEvent>()) {
-            auto pos = Mouse::getMousePos();
+            auto pos = window->getMousePos();
             if (pos.x < 50) {
                 d_info->paused = false;
                 window->setCursorVisibility(false);
@@ -163,8 +161,6 @@ int main(int argc, char* argv[])
     SPKT_LOG_INFO("Version {}.{}.{}", 0, 0, 1);
 
     Sprocket::Window window;
-    Sprocket::Keyboard::init(&window);
-    Sprocket::Mouse::init(&window);
 
     auto info = std::make_shared<Sprocket::BasicSceneInfo>(
         "Resources/Shaders/Basic.vert",

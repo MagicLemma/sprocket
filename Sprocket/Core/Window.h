@@ -1,5 +1,6 @@
 #pragma once
 #include "Events/Event.h"
+#include "Utility/Maths.h"
 
 #include <string>
 #include <functional>
@@ -7,6 +8,28 @@
 #include <map>
 
 namespace Sprocket {
+
+enum Mouse {
+    LEFT = 0,
+    RIGHT = 1,
+    MIDDLE = 2
+};
+
+enum Keyboard {
+    W = 87,
+    A = 65,
+    S = 83,
+    D = 68,
+    Z = 90,
+    C = 67,
+    Q = 81,
+    E = 69,
+    R = 82,
+    F = 70,
+    SPACE = 32,
+    LSHIFT = 340,
+    ESC = 256
+};
 
 using EventCallback = std::function<void(const Event&)>;
 
@@ -29,16 +52,7 @@ class Window
 	std::shared_ptr<WindowImpl> d_impl;
 	WindowData                  d_data;
 
-	// Callbacks for window events.
-	EventCallback                        d_keyboardCallback;
-		// Callback specifically for the keyboard. This will only
-		// be called for keyboard events.
-
-	EventCallback                        d_mouseCallback;
-		// Callback specifically for the mouse. This will only be
-		// called for mouse events.
-
-	std::map<std::string, EventCallback> d_extraCallbacks;
+	std::map<std::string, EventCallback> d_callbacks;
 		// A name -> callback map for anything else that may be
 		// interested in events. Other objects can register themselves
 		// by providing callbacks of their own. Objects may also
@@ -66,14 +80,6 @@ public:
 	bool focused() const { return d_data.focused; }
 
 	// Callback Utilities
-	void registerKeyboardCallback(EventCallback cb);
-		// Register the callback for the Keyboard. This callback will only
-		// be called with Keyboard events.
-
-	void registerMouseCallback(EventCallback cb);
-		// Register the callback for the mouse/ This willback will only be
-		// called with Mouse events.
-
 	void registerCallback(const std::string& name, EventCallback cb);
 		// Registers an additional callback with the given name. If a
 		// callback for the given name is already provided, it is overwritten.
@@ -86,6 +92,10 @@ public:
 	void setFaceCulling(bool culling);
 
 	void clear();
+
+	bool isKeyDown(int key);
+	bool isMouseButtonDown(int button);
+	Maths::vec2 getMousePos();
 };
 
 }
