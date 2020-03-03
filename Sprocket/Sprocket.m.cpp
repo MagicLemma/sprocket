@@ -21,7 +21,6 @@ namespace Sprocket {
 
 struct BasicSceneInfo
 {
-    Loader   loader;
     Camera   camera;
     Shader   shader;
     Shader   shaderMenu;
@@ -36,8 +35,7 @@ struct BasicSceneInfo
                    const std::string& fragShader,
                    const std::string& vertShaderMenu,
                    const std::string& fragShaderMenu)
-        : loader()
-        , camera()
+        : camera()
         , shader(vertShader, fragShader)
         , shaderMenu(vertShaderMenu, fragShaderMenu)
         , entities()
@@ -55,11 +53,11 @@ public:
         : Layer(Status::NORMAL, false) 
         , d_info(info)
     {
-        Model quadModel = d_info->loader.loadModel("Resources/Models/Plane.obj");
-        Model dragonModel = d_info->loader.loadModel("Resources/Models/Dragon.obj");
+        Model quadModel = Loader::loadModel("Resources/Models/Plane.obj");
+        Model dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
 
-        Texture space = d_info->loader.loadTexture("Resources/Textures/PlainGray.PNG");
-        Texture gray = d_info->loader.loadTexture("Resources/Textures/PlainGray.PNG");
+        Texture space = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
+        Texture gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
         gray.reflectivity(3);
         gray.shineDamper(5);
 
@@ -117,7 +115,7 @@ public:
     {
         Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, -0.5f}, {-0.5f, 0.5f},
                         {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
-        Model tri = d_info->loader.load2DModel(v);
+        Model tri = Loader::load2DModel(v);
         d_info->models.push_back(tri);
     }
 

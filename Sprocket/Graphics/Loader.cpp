@@ -15,29 +15,33 @@
 #include <stb_image.h>
 
 namespace Sprocket {
+namespace Loader {
 
-Loader::~Loader()
-{
-    SPKT_LOG_INFO("Cleaning up VAOs, VBOs and textures");
-    glDeleteVertexArrays(d_vaoList.size(), d_vaoList.data());
-    glDeleteBuffers(d_vboList.size(), d_vboList.data());
-    glDeleteTextures(d_texList.size(), d_texList.data());
-}
+namespace {
 
-unsigned int Loader::createVAO()
+std::vector<unsigned int> s_vaoList;
+std::vector<unsigned int> s_vboList;
+std::vector<unsigned int> s_texList;
+
+unsigned int createVAO()
 {
     unsigned int vaoId;
     glGenVertexArrays(1, &vaoId);
-    d_vaoList.push_back(vaoId);
+    s_vaoList.push_back(vaoId);
     glBindVertexArray(vaoId);
     return vaoId;
 }
 
-void Loader::bindVertexBuffer(const VertexBuffer& vertexBuffer)
+void unbindVAO()
+{
+    glBindVertexArray(0);
+}
+
+void bindVertexBuffer(const VertexBuffer& vertexBuffer)
 {
     unsigned int vboId;
     glGenBuffers(1, &vboId);
-    d_vboList.push_back(vboId);
+    s_vboList.push_back(vboId);
 
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexBuffer.size(), vertexBuffer.data(),
@@ -53,22 +57,22 @@ void Loader::bindVertexBuffer(const VertexBuffer& vertexBuffer)
                           reinterpret_cast<void*>(offsetof(Vertex, normal)));
 }
 
-void Loader::bindIndexBuffer(const IndexBuffer& indexBuffer)
+void bindIndexBuffer(const IndexBuffer& indexBuffer)
 {
     unsigned int vboId;
     glGenBuffers(1, &vboId);
-    d_vboList.push_back(vboId);
+    s_vboList.push_back(vboId);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexBuffer.size(), indexBuffer.data(),
                  GL_STATIC_DRAW);
 }
 
-void Loader::bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer)
+void bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer)
 {
     unsigned int vboId;
     glGenBuffers(1, &vboId);
-    d_vboList.push_back(vboId);
+    s_vboList.push_back(vboId);
 
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2D) * vertex2DBuffer.size(), vertex2DBuffer.data(),
@@ -78,7 +82,22 @@ void Loader::bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer)
                           reinterpret_cast<void*>(offsetof(Vertex2D, position)));
 }
 
-Model Loader::loadModel(const std::string& objFile)
+}
+
+void init()
+{
+    SPKT_LOG_INFO("Initialised Loader");
+}
+
+void deinit()
+{
+    SPKT_LOG_INFO("Deinitialised Loader: Cleaning up VAOs, VBOs and textures");
+    glDeleteVertexArrays(s_vaoList.size(), s_vaoList.data());
+    glDeleteBuffers(s_vboList.size(), s_vboList.data());
+    glDeleteTextures(s_texList.size(), s_texList.data());
+}
+
+Model loadModel(const std::string& objFile)
 {
     auto [vertices, indices] = parseObjFile(objFile);
 
@@ -90,11 +109,11 @@ Model Loader::loadModel(const std::string& objFile)
     return Model(vaoId, indices.size(), ModelType::ENTITY);
 }
 
-Texture Loader::loadTexture(const std::string& textureFile)
+Texture loadTexture(const std::string& textureFile)
 {
     unsigned int texId;
     glGenTextures(1, &texId);
-    d_texList.push_back(texId);
+    s_texList.push_back(texId);
 
     stbi_set_flip_vertically_on_load(1);
     int width, height, bpp;
@@ -115,7 +134,7 @@ Texture Loader::loadTexture(const std::string& textureFile)
     return Texture(texId);
 }
 
-Model Loader::load2DModel(const Vertex2DBuffer& vertex2DBuffer)
+Model load2DModel(const Vertex2DBuffer& vertex2DBuffer)
 {
     unsigned int vaoId = createVAO();
     bindVertex2DBuffer(vertex2DBuffer);
@@ -124,9 +143,5 @@ Model Loader::load2DModel(const Vertex2DBuffer& vertex2DBuffer)
     return Model(vaoId, vertex2DBuffer.size(), ModelType::FLAT);
 }
 
-void Loader::unbindVAO()
-{
-    glBindVertexArray(0);
 }
-
 }

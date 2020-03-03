@@ -1,5 +1,6 @@
 #include "Core/Initialiser.h"
 #include "Utility/Log.h"
+#include "Graphics/Loader.h"
 
 #include <GLFW/glfw3.h>
 
@@ -12,10 +13,15 @@ Initialiser::Initialiser()
 
     // Initialise GLFW
 	glfwInit();
+
+    // Initialise Loader
+    Loader::init();
 }
 
 Initialiser::~Initialiser()
 {
+    Loader::deinit();
+
     glfwTerminate();
 }    
 
