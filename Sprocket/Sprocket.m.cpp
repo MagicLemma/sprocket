@@ -12,6 +12,7 @@
 #include "LayerStack.h"
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
+#include "Core/Initialiser.h"
 
 #include <vector>
 #include <memory>
@@ -157,8 +158,7 @@ public:
 
 int main(int argc, char* argv[])
 {
-    Sprocket::Log::init();
-    SPKT_LOG_INFO("Version {}.{}.{}", 0, 0, 1);
+    Sprocket::Initialiser init;
 
     Sprocket::Window window;
 

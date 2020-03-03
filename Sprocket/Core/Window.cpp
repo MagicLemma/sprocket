@@ -43,12 +43,6 @@ Window::Window(
 		}
 	};
 
-	if (!s_GLFWInitialised) {
-		int initGlfw = glfwInit();
-		// TODO: SPKT_CORE_ASSERT(success == 0, "Could not initialise GLFW!");
-		s_GLFWInitialised = true;
-	}
-
 	d_impl->window = glfwCreateWindow(
 		d_data.width,
 		d_data.height,

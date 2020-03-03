@@ -25,6 +25,7 @@ add_executable(Sprocket
                Graphics/Texture.cpp
                Graphics/Vertex.cpp
 
+               Core/Initialiser.cpp
                Core/Layer.cpp
                Core/LayerStack.cpp
                Core/Scene.cpp
