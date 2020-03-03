@@ -97,9 +97,12 @@ public:
 
     void drawImpl(Window* window) override
     {
-        window->setFaceCulling(true);
         for (const auto& entity: d_info->entities) {
-            Renderer::render(entity, d_info->lights, d_info->camera, d_info->shader, window);
+            Renderer::render(entity,
+                             d_info->lights,
+                             d_info->camera,
+                             d_info->shader,
+                             window);
         }
     }
 };
@@ -145,9 +148,10 @@ public:
 
     void drawImpl(Window* window) override
     {
-        window->setFaceCulling(false);
+        Sprocket::RenderOptions options;
+        options.faceCulling = false;
         for (const auto& model: d_info->models) {
-            Renderer::render(model, d_info->shaderMenu);
+            Renderer::render(model, d_info->shaderMenu, options);
         }
     }
 };

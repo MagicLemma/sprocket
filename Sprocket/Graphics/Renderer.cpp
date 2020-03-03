@@ -9,12 +9,29 @@
 namespace Sprocket {
 namespace Renderer {
 
+namespace {
+
+void handleRenderOptions(const RenderOptions& options)
+{
+    if (options.faceCulling) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+    else {
+        glDisable(GL_CULL_FACE);
+    }
+}
+
+}
+
 void render(const Entity& entity,
             const std::vector<Light>& lights,
             const Camera& camera,
             const Shader& shader,
-            Window* window)
+            Window* window,
+            const RenderOptions& options)
 {   
+    handleRenderOptions(options);
     shader.bind();
     unsigned int MAX_NUM_LIGHTS = 5;
 
@@ -67,8 +84,9 @@ void render(const Entity& entity,
     shader.unbind();
 }
 
-void render(const Model& model, const Shader& shader)
+void render(const Model& model, const Shader& shader, const RenderOptions& options)
 {   
+    handleRenderOptions(options);
     shader.bind();
     model.bind();
     glDrawArrays(GL_TRIANGLES, 0, model.vertexCount());

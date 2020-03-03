@@ -91,7 +91,6 @@ public:
 
 	// Window Utilities
 	void setCursorVisibility(bool visibility);
-	void setFaceCulling(bool culling);
 	float getTime();
 
 	// Keyboard/Mouse Utilities

@@ -173,17 +173,6 @@ void Window::setCursorVisibility(bool visibility)
 	}
 }
 
-void Window::setFaceCulling(bool culling)
-{
-    if (culling) {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    }
-    else {
-        glDisable(GL_CULL_FACE);
-    }
-}
-
 void Window::registerCallback(const std::string& name, EventCallback cb)
 {
 	d_callbacks[name] = cb;
