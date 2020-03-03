@@ -24,6 +24,14 @@ mat4 createViewMatrix(const vec3& position,
                       float roll);
 
 float radians(float degrees);
+float sind(float degrees);
+float cosd(float degrees);
+void clamp(float& value, float min, float max);
+
+vec3 cross(const vec3& lhs, const vec3& rhs);
+void normalise(vec3& vec);
+
+
 
 }
 }

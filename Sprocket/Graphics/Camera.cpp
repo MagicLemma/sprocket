@@ -7,6 +7,7 @@ namespace Sprocket {
 
 Camera::Camera()
     : d_position(Maths::vec3(0.0f, 0.0f, 0.0f))
+    , d_direction(Maths::vec3(0.0f, 0.0f, -1.0f))
     , d_pitch(0)
     , d_yaw(0)
     , d_roll(0)
@@ -16,46 +17,52 @@ Camera::Camera()
 
 void Camera::move(Window* window, bool active)
 {
+    using namespace Maths;
     // Updated at the end of the function.
-    static Maths::vec2 prevMousePos = window->getMousePos();
-    Maths::vec2 mousePos = window->getMousePos();
+    static vec2 prevMousePos = window->getMousePos();
+    vec2 mousePos = window->getMousePos();
+    vec2 offset = mousePos - prevMousePos;
+
+    float speed = 0.02f;
 
     if (active) {
-        if (window->isKeyDown(Keyboard::W))
-        {
-            d_position.z += -std::cos(Maths::radians(d_yaw)) * 0.02f;
-            d_position.x += std::sin(Maths::radians(d_yaw)) * 0.02f;
+        vec3 forwards = d_direction;
+        forwards.y = 0;
+        normalise(forwards);
+
+        vec3 up = {0.0f, 1.0f, 0.0f};
+        vec3 right = cross(forwards, up);
+        
+        if (window->isKeyDown(Keyboard::W)){
+            d_position += speed * forwards;
         }
-        if (window->isKeyDown(Keyboard::D))
-        {
-            d_position.z += std::sin(Maths::radians(d_yaw)) * 0.02f;
-            d_position.x += std::cos(Maths::radians(d_yaw)) * 0.02f;
+        if (window->isKeyDown(Keyboard::D)){
+            d_position += speed * right;
         }
-        if (window->isKeyDown(Keyboard::A))
-        {
-            d_position.z += -std::sin(Maths::radians(d_yaw)) * 0.02f;
-            d_position.x += -std::cos(Maths::radians(d_yaw)) * 0.02f;
+        if (window->isKeyDown(Keyboard::A)){
+            d_position -= speed * right;
         }
-        if (window->isKeyDown(Keyboard::S))
-        {
-            d_position.z += std::cos(Maths::radians(d_yaw)) * 0.02f;
-            d_position.x += -std::sin(Maths::radians(d_yaw)) * 0.02f;
+        if (window->isKeyDown(Keyboard::S)){
+            d_position -= speed * forwards;
         }
-        if (window->isKeyDown(Keyboard::SPACE))
-        {
-            d_position.y += 0.02f;
+        if (window->isKeyDown(Keyboard::SPACE)){
+            d_position += speed * up;
         }
-        if (window->isKeyDown(Keyboard::LSHIFT))
-        {
-            d_position.y -= 0.02f;
+        if (window->isKeyDown(Keyboard::LSHIFT)){
+            d_position -= speed * up;
         }
 
-        float pitchDiff = d_sensitivity * (mousePos.y - prevMousePos.y);
-        d_pitch = std::min(std::max(d_pitch + pitchDiff, -90.0f), 90.0f);
-        d_yaw += d_sensitivity * (mousePos.x - prevMousePos.x);
+        d_yaw += d_sensitivity * offset.x;
+        d_pitch += d_sensitivity * offset.y;
+        clamp(d_pitch, -89.0, 89.0);
+
+        d_direction.x = sind(d_yaw) * cosd(d_pitch);
+        d_direction.y = -sind(d_pitch);
+        d_direction.z = -cosd(d_yaw) * cosd(d_pitch);
+        normalise(d_direction);
     }
 
-    prevMousePos = window->getMousePos();
+    prevMousePos = mousePos;
 }
 
 }
