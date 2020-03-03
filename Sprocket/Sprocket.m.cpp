@@ -81,7 +81,7 @@ public:
         d_status = d_info->paused ? Status::PAUSED : Status::NORMAL;
 
         if (d_status == Status::NORMAL) {
-            float tick = layerTicker();
+            double tick = layerTicker();
 
             d_info->lights[1].position.z = 5 * std::sin(tick);
             d_info->lights[1].position.x = 5 * std::cos(tick);

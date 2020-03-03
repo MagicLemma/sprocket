@@ -1,8 +1,6 @@
 #include "Core/Layer.h"
 #include "Utility/Log.h"
 
-#include <chrono>
-
 namespace Sprocket {
 
 Layer::Layer(Status status, bool cursorVisible)
@@ -17,7 +15,7 @@ bool Layer::isActive() const
 }
 
 
-float Layer::layerTicker() const
+double Layer::layerTicker() const
 {
     return d_ticker;
 }
@@ -29,8 +27,11 @@ bool Layer::handleEvent(Window* window, const Event& event)
 
 void Layer::update(Window* window)
 {
+    float currentFrame = window->getTime();
+    d_deltaTime = currentFrame - d_lastFrame;
+    d_lastFrame = currentFrame;
     if (d_status == Status::NORMAL) {
-        d_ticker += 0.01f;
+        d_ticker += d_deltaTime;
     }
     updateImpl(window);
 }

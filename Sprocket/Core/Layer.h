@@ -6,8 +6,14 @@ namespace Sprocket {
 
 class Layer
 {
-    float d_ticker;
-        // Steadily increasing ticker. Bound to the framerate. 
+    double d_ticker;
+        // A steadily increasing ticker. Increases in the same
+        // way as d_lastFrame but only when the layer status
+        // is NORMAL.
+    float d_lastFrame;
+        // Time of the last frame. 
+    float d_deltaTime;
+        // Time elapsed between now and the previous frame.
 
 protected:
     enum class Status {
@@ -59,7 +65,7 @@ public:
     // Helper Functions
     bool isActive() const;
 
-    float layerTicker() const;
+    double layerTicker() const;
         // Returns d_ticker, a steadily increasing value bound to the
         // framerate.
 };

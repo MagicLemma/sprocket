@@ -222,4 +222,9 @@ Maths::vec2 Window::getMousePos()
 	return {x, y};
 }
 
+float Window::getTime()
+{
+	return glfwGetTime();
+}
+
 }
