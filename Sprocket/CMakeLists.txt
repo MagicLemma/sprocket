@@ -22,6 +22,7 @@ add_executable(Sprocket
                Graphics/Quad.cpp
                Graphics/Renderer.cpp
                Graphics/Shader.cpp
+               Graphics/Terrain.cpp
                Graphics/Texture.cpp
                Graphics/Vertex.cpp
 
