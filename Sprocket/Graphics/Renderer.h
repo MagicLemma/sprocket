@@ -4,6 +4,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Light.h"
 #include "Core/Window.h"
+#include "Graphics/Terrain.h"
 
 #include <vector>
 
@@ -27,6 +28,13 @@ void render(const Entity& entity,
 
 void render(const Model& model,
             const Shader& shader,
+            const RenderOptions& options = RenderOptions());
+
+void render(const Terrain& entity,
+            const std::vector<Light>& lights,
+            const Camera& camera,
+            const Shader& shader,
+            Window* window,
             const RenderOptions& options = RenderOptions());
 
 }

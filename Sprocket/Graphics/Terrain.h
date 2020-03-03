@@ -6,17 +6,17 @@ namespace Sprocket {
 
 class Terrain
 {
-    float d_size;
-    int   d_vertexCount;
+    int   d_edge;
+    float d_distance;
 
-    float d_x;
-    float d_z;
-
-    Model d_model;
-    Texture d_texture;
+    ModelPtr d_model;
+    TexturePtr d_texture;
 
 public:
-    Terrain(float gridX, float gridZ, const Model& model, const Texture& texture);
+    Terrain(float gridX, float gridZ, TexturePtr texture);
+
+    ModelPtr model() const { return d_model; }
+    TexturePtr texture() const { return d_texture; }
 };
 
 }

@@ -104,7 +104,11 @@ void deinit()
 ModelPtr loadModel(const std::string& objFile)
 {
     auto [vertices, indices] = parseObjFile(objFile);
+    return loadBuffers(vertices, indices);
+}
 
+ModelPtr loadBuffers(const VertexBuffer& vertices, const IndexBuffer& indices)
+{
     unsigned int vaoId = createVAO();
     bindVertexBuffer(vertices);
     bindIndexBuffer(indices);

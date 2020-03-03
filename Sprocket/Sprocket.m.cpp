@@ -13,6 +13,7 @@
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
 #include "Core/Initialiser.h"
+#include "Terrain.h"
 
 #include <vector>
 #include <memory>
@@ -24,6 +25,7 @@ struct BasicSceneInfo
     Camera   camera;
     Shader   shader;
     Shader   shaderMenu;
+    Terrain  terrain;
 
     std::vector<Entity> entities;
     std::vector<Light>  lights;
@@ -38,6 +40,7 @@ struct BasicSceneInfo
         : camera()
         , shader(vertShader, fragShader)
         , shaderMenu(vertShaderMenu, fragShaderMenu)
+        , terrain(100, 100, Loader::loadTexture("Resources/Textures/Space.PNG"))
         , entities()
         , lights()
         , models()
@@ -109,6 +112,12 @@ public:
                              window,
                              options);
         }
+        Renderer::render(d_info->terrain,
+                             d_info->lights,
+                             d_info->camera,
+                             d_info->shader,
+                             window,
+                             options);
     }
 };
 

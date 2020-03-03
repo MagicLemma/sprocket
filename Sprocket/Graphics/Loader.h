@@ -15,6 +15,8 @@ void deinit();
 
 // Basic loaders. No caching takes place.
 ModelPtr   loadModel(const std::string& objFile);
+ModelPtr   loadBuffers(const VertexBuffer& vertices, const IndexBuffer& indices);
+
 TexturePtr loadTexture(const std::string& textureFile);
 ModelPtr   load2DModel(const Vertex2DBuffer& vertex2DBuffer);
 
