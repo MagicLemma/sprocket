@@ -97,12 +97,16 @@ public:
 
     void drawImpl(Window* window) override
     {
+        RenderOptions options;
+        options.wireframe = window->isKeyDown(Keyboard::F);
+
         for (const auto& entity: d_info->entities) {
             Renderer::render(entity,
                              d_info->lights,
                              d_info->camera,
                              d_info->shader,
-                             window);
+                             window,
+                             options);
         }
     }
 };

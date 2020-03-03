@@ -12,6 +12,7 @@ namespace Sprocket {
 struct RenderOptions
 {
     bool faceCulling = true;
+    bool wireframe = false;
 };
 
 namespace Renderer {

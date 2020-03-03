@@ -16,10 +16,11 @@ void handleRenderOptions(const RenderOptions& options)
     if (options.faceCulling) {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-    }
-    else {
+    } else {
         glDisable(GL_CULL_FACE);
     }
+
+    glPolygonMode(GL_FRONT_AND_BACK, options.wireframe ? GL_LINE : GL_FILL);
 }
 
 }
