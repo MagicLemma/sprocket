@@ -23,6 +23,9 @@ std::vector<unsigned int> s_vaoList;
 std::vector<unsigned int> s_vboList;
 std::vector<unsigned int> s_texList;
 
+std::unordered_map<std::string, Model> s_models;
+std::unordered_map<std::string, Texture> s_textures;
+
 unsigned int createVAO()
 {
     unsigned int vaoId;
@@ -131,6 +134,7 @@ Texture loadTexture(const std::string& textureFile)
     
     stbi_image_free(data);
     glBindTexture(GL_TEXTURE_2D, 0);
+
     return Texture(texId);
 }
 
@@ -141,6 +145,47 @@ Model load2DModel(const Vertex2DBuffer& vertex2DBuffer)
     unbindVAO();
 
     return Model(vaoId, vertex2DBuffer.size(), ModelType::FLAT);
+}
+
+Model loadModel(const std::string& name, const std::string& objFile)
+{
+    auto model = loadModel(objFile);
+    s_models.insert(std::make_pair(name, model));
+    return model;
+}
+
+Texture loadTexture(const std::string& name, const std::string& textureFile)
+{
+    auto texture = loadTexture(textureFile);
+    s_textures.insert(std::make_pair(name, texture));
+    return texture;
+}
+
+Model load2DModel(const std::string& name, const Vertex2DBuffer& vertex2DBuffer)
+{
+    auto model = load2DModel(vertex2DBuffer);
+    s_models.insert(std::make_pair(name, model));
+    return model;
+}
+
+Model getModel(const std::string& name)
+{
+    return s_models.find(name)->second;
+}
+
+Texture getTexture(const std::string& name)
+{
+    return s_textures.find(name)->second;
+}
+
+bool doesModelExist(const std::string& name)
+{
+    return s_models.find(name) != s_models.end();
+}
+
+bool doesTextureExist(const std::string& name)
+{
+    return s_textures.find(name) != s_textures.end();
 }
 
 }

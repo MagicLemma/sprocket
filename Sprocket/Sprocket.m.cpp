@@ -98,7 +98,8 @@ public:
     void drawImpl(Window* window) override
     {
         RenderOptions options;
-        options.wireframe = window->isKeyDown(Keyboard::F);
+        options.wireframe = window->isKeyDown(Keyboard::F) &&
+                            d_status == Status::NORMAL;
 
         for (const auto& entity: d_info->entities) {
             Renderer::render(entity,
