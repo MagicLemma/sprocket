@@ -154,6 +154,7 @@ public:
     {
         Sprocket::RenderOptions options;
         options.faceCulling = false;
+        options.depthTest = false;
         for (const auto& model: d_info->models) {
             Renderer::render(model, d_info->shaderMenu, options);
         }

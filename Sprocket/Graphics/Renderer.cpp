@@ -23,6 +23,12 @@ void handleRenderOptions(const RenderOptions& options)
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, options.wireframe ? GL_LINE : GL_FILL);
+
+    if (options.depthTest) {
+        glEnable(GL_DEPTH_TEST);
+    } else {
+        glDisable(GL_DEPTH_TEST);
+    }
 }
 
 }

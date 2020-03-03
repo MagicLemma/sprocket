@@ -13,6 +13,7 @@ struct RenderOptions
 {
     bool faceCulling = true;
     bool wireframe = false;
+    bool depthTest = true;
 };
 
 namespace Renderer {
