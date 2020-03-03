@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 namespace Sprocket {
 
@@ -27,5 +28,7 @@ public:
     void bind() const;
     void unbind() const;
 };
+
+using ModelPtr = std::shared_ptr<Model>;
 
 }

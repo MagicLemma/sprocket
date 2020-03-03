@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 namespace Sprocket {
 
@@ -22,5 +23,7 @@ public:
     float reflectivity() const { return d_reflectivity; }
     void reflectivity(float newReflectivity) { d_reflectivity = newReflectivity; } 
 };
+
+using TexturePtr = std::shared_ptr<Texture>;
 
 }

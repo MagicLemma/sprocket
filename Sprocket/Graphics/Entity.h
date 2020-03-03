@@ -7,15 +7,15 @@ namespace Sprocket {
 
 class Entity
 {
-    Model       d_model;
-    Texture     d_texture;
+    ModelPtr    d_model;
+    TexturePtr  d_texture;
     Maths::vec3 d_position;
     Maths::vec3 d_rotation;
     float       d_scale;
 
 public:
-    Entity(const Model& model,
-           const Texture& texture,
+    Entity(ModelPtr model,
+           TexturePtr texture,
            const Maths::vec3& position,
            const Maths::vec3& rotation,
            float scale);
@@ -30,11 +30,11 @@ public:
     void increaseRotation(float dx, float dy, float dz);
 
     // Getters / Setters
-    Model model() const;
-    void model(const Model& newModel);
+    ModelPtr model() const;
+    void model(const ModelPtr& newModel);
 
-    Texture texture() const;
-    void texture(const Texture& newTexture);
+    TexturePtr texture() const;
+    void texture(const TexturePtr& newTexture);
 
     Maths::vec3 position() const;
     void position(const Maths::vec3& newPosition);

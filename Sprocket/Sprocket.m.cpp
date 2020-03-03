@@ -27,7 +27,7 @@ struct BasicSceneInfo
 
     std::vector<Entity> entities;
     std::vector<Light>  lights;
-    std::vector<Model>  models;
+    std::vector<ModelPtr>  models;
 
     bool paused;
 
@@ -53,13 +53,13 @@ public:
         : Layer(Status::NORMAL, false) 
         , d_info(info)
     {
-        Model quadModel = Loader::loadModel("Resources/Models/Plane.obj");
-        Model dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
+        auto quadModel = Loader::loadModel("Resources/Models/Plane.obj");
+        auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
 
-        Texture space = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
-        Texture gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
-        gray.reflectivity(3);
-        gray.shineDamper(5);
+        auto space = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
+        auto gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
+        gray->reflectivity(3);
+        gray->shineDamper(5);
 
         d_info->entities.push_back(Entity(dragonModel, gray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
         d_info->entities.push_back(Entity(quadModel, space, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
@@ -123,7 +123,7 @@ public:
     {
         Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, -0.5f}, {-0.5f, 0.5f},
                         {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
-        Model tri = Loader::load2DModel(v);
+        auto tri = Loader::load2DModel(v);
         d_info->models.push_back(tri);
     }
 
@@ -157,7 +157,7 @@ public:
         options.faceCulling = false;
         options.depthTest = false;
         for (const auto& model: d_info->models) {
-            Renderer::render(model, d_info->shaderMenu, options);
+            Renderer::render(*model, d_info->shaderMenu, options);
         }
     }
 };

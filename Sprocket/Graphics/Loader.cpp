@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include <cstddef>
 #include <unordered_map>
 
@@ -23,8 +24,8 @@ std::vector<unsigned int> s_vaoList;
 std::vector<unsigned int> s_vboList;
 std::vector<unsigned int> s_texList;
 
-std::unordered_map<std::string, Model> s_models;
-std::unordered_map<std::string, Texture> s_textures;
+std::unordered_map<std::string, ModelPtr> s_models;
+std::unordered_map<std::string, TexturePtr> s_textures;
 
 unsigned int createVAO()
 {
@@ -100,7 +101,7 @@ void deinit()
     glDeleteTextures(s_texList.size(), s_texList.data());
 }
 
-Model loadModel(const std::string& objFile)
+ModelPtr loadModel(const std::string& objFile)
 {
     auto [vertices, indices] = parseObjFile(objFile);
 
@@ -109,10 +110,10 @@ Model loadModel(const std::string& objFile)
     bindIndexBuffer(indices);
     unbindVAO();
 
-    return Model(vaoId, indices.size(), ModelType::ENTITY);
+    return std::make_shared<Model>(vaoId, indices.size(), ModelType::ENTITY);
 }
 
-Texture loadTexture(const std::string& textureFile)
+TexturePtr loadTexture(const std::string& textureFile)
 {
     unsigned int texId;
     glGenTextures(1, &texId);
@@ -135,45 +136,45 @@ Texture loadTexture(const std::string& textureFile)
     stbi_image_free(data);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    return Texture(texId);
+    return std::make_shared<Texture>(texId);
 }
 
-Model load2DModel(const Vertex2DBuffer& vertex2DBuffer)
+ModelPtr load2DModel(const Vertex2DBuffer& vertex2DBuffer)
 {
     unsigned int vaoId = createVAO();
     bindVertex2DBuffer(vertex2DBuffer);
     unbindVAO();
 
-    return Model(vaoId, vertex2DBuffer.size(), ModelType::FLAT);
+    return std::make_shared<Model>(vaoId, vertex2DBuffer.size(), ModelType::FLAT);
 }
 
-Model loadModel(const std::string& name, const std::string& objFile)
+ModelPtr loadModel(const std::string& name, const std::string& objFile)
 {
     auto model = loadModel(objFile);
-    s_models.insert(std::make_pair(name, model));
+    s_models[name] = model;
     return model;
 }
 
-Texture loadTexture(const std::string& name, const std::string& textureFile)
+TexturePtr loadTexture(const std::string& name, const std::string& textureFile)
 {
     auto texture = loadTexture(textureFile);
-    s_textures.insert(std::make_pair(name, texture));
+    s_textures[name] = texture;
     return texture;
 }
 
-Model load2DModel(const std::string& name, const Vertex2DBuffer& vertex2DBuffer)
+ModelPtr load2DModel(const std::string& name, const Vertex2DBuffer& vertex2DBuffer)
 {
     auto model = load2DModel(vertex2DBuffer);
-    s_models.insert(std::make_pair(name, model));
+    s_models[name] = model;
     return model;
 }
 
-Model getModel(const std::string& name)
+ModelPtr getModel(const std::string& name)
 {
     return s_models.find(name)->second;
 }
 
-Texture getTexture(const std::string& name)
+TexturePtr getTexture(const std::string& name)
 {
     return s_textures.find(name)->second;
 }

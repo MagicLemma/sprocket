@@ -68,8 +68,8 @@ void render(const Entity& entity,
     shader.loadUniform("viewMatrix", view);
 
     // Load remaining entity to shader
-	shader.loadUniform("shineDamper", entity.texture().shineDamper());
-	shader.loadUniform("reflectivity", entity.texture().reflectivity());
+	shader.loadUniform("shineDamper", entity.texture()->shineDamper());
+	shader.loadUniform("reflectivity", entity.texture()->reflectivity());
 
     // Load lights to shader
     for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
@@ -87,7 +87,7 @@ void render(const Entity& entity,
     
 
     entity.bind();
-    glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, entity.model()->vertexCount(), GL_UNSIGNED_INT, nullptr);
     entity.unbind();
 
     shader.unbind();
