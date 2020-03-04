@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <filesystem>
 
 #include <glad/glad.h>
 
@@ -15,6 +16,9 @@ namespace {
 // Parses a shader source code into a string ready to be compiled.
 std::string parseShader(const std::string& filepath)
 {
+	if (!std::filesystem::exists(filepath)) {
+		SPKT_LOG_FATAL("Shader file '{}' does not exist!", filepath);
+	}
 	std::ifstream stream(filepath);
 	std::string shader((std::istreambuf_iterator<char>(stream)),
 		std::istreambuf_iterator<char>());

@@ -14,17 +14,23 @@ add_executable(Sprocket
                Sprocket.m.cpp
                
                Graphics/Camera.cpp
-               Graphics/Entity.cpp
                Graphics/Light.cpp
                Graphics/Loader.cpp
                Graphics/Model.cpp
                Graphics/ObjParser.cpp
-               Graphics/Quad.cpp
                Graphics/Renderer.cpp
+               Graphics/RenderOptions.cpp
                Graphics/Shader.cpp
-               Graphics/Terrain.cpp
                Graphics/Texture.cpp
                Graphics/Vertex.cpp
+
+               Graphics/Displays/DisplayRenderer.cpp
+
+               Graphics/Entities/Entity.cpp
+               Graphics/Entities/EntityRenderer.cpp
+
+               Graphics/Terrains/Terrain.cpp
+               Graphics/Terrains/TerrainRenderer.cpp
 
                Core/Initialiser.cpp
                Core/Layer.cpp
@@ -52,6 +58,8 @@ target_include_directories(Sprocket PUBLIC
                            ./Core
                            ./Events
                            ./Graphics
-                           ./Graphics/GUI
+                           ./Graphics/Displays
+                           ./Graphics/Entities
+                           ./Graphics/Terrains
                            ./Utility
                            ${STB_INCLUDE_DIR})

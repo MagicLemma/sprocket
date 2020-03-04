@@ -1,6 +1,7 @@
-#include "Graphics/Terrain.h"
+#include "Graphics/Terrains/Terrain.h"
 #include "Graphics/Vertex.h"
 #include "Graphics/Loader.h"
+#include "Utility/Log.h"
 
 #include <cstdlib>
 
@@ -41,13 +42,25 @@ ModelPtr generateTerrain(int edge, float distance)
 
 }
 
-Terrain::Terrain(float gridX, float gridZ, TexturePtr texture)
-    : d_edge(100)
-    , d_distance(0.5f)
-    , d_model(generateTerrain(d_edge, d_distance))
+Terrain::Terrain(TexturePtr texture)
+    : d_model(generateTerrain(100, 0.5f))
     , d_texture(texture)
+    , d_position({0.0f, 0.0f, 0.0f})
+    , d_edge(10)
+    , d_distance(10)
 {
+}
 
+void Terrain::bind() const
+{
+    d_model->bind();
+    d_texture->bind();
+}
+
+void Terrain::unbind() const
+{
+    d_texture->unbind();
+    d_model->unbind();
 }
 
 }

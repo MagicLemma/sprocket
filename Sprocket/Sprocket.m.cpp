@@ -4,7 +4,6 @@
 #include "Renderer.h"
 #include "Model.h"
 #include "Texture.h"
-#include "Shader.h"
 #include "Camera.h"
 #include "Light.h"
 #include "Layer.h"
@@ -14,6 +13,9 @@
 #include "Events/MouseEvent.h"
 #include "Core/Initialiser.h"
 #include "Terrain.h"
+#include "EntityRenderer.h"
+#include "TerrainRenderer.h"
+#include "DisplayRenderer.h"
 
 #include <vector>
 #include <memory>
@@ -22,50 +24,50 @@ namespace Sprocket {
 
 struct BasicSceneInfo
 {
-    Camera   camera;
-    Shader   shader;
-    Shader   shaderMenu;
-    Terrain  terrain;
-
-    std::vector<Entity> entities;
-    std::vector<Light>  lights;
-    std::vector<ModelPtr>  models;
-
     bool paused;
 
-    BasicSceneInfo(const std::string& vertShader,
-                   const std::string& fragShader,
-                   const std::string& vertShaderMenu,
-                   const std::string& fragShaderMenu)
-        : camera()
-        , shader(vertShader, fragShader)
-        , shaderMenu(vertShaderMenu, fragShaderMenu)
-        , terrain(100, 100, Loader::loadTexture("Resources/Textures/Space.PNG"))
-        , entities()
-        , lights()
-        , models()
-        , paused(false) {}
+    Window*  window;
+    Camera   camera;
+ 
+    std::vector<Entity>   entities;
+    std::vector<Terrain>  terrains;
+    std::vector<Light>    lights;
+    std::vector<ModelPtr> models;
+
+    BasicSceneInfo(Window* window)
+        : window(window)
+        , paused(false)
+    {}
 };
 
 class GameLayer : public Layer
 {
     std::shared_ptr<BasicSceneInfo> d_info;
 
+    EntityRenderer  d_entityRenderer;
+    TerrainRenderer d_terrainRenderer;
+
 public:
     GameLayer(std::shared_ptr<BasicSceneInfo> info) 
         : Layer(Status::NORMAL, false) 
         , d_info(info)
+        , d_entityRenderer(info->window)
+        , d_terrainRenderer(info->window)
     {
         auto quadModel = Loader::loadModel("Resources/Models/Plane.obj");
         auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
 
-        auto space = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
+        auto space = Loader::loadTexture("Resources/Textures/Space.PNG");
         auto gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
-        gray->reflectivity(3);
-        gray->shineDamper(5);
+        auto shinyGray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
+        
+        shinyGray->reflectivity(3);
+        shinyGray->shineDamper(5);
 
-        d_info->entities.push_back(Entity(dragonModel, gray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
-        d_info->entities.push_back(Entity(quadModel, space, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
+        d_info->terrains.push_back(Terrain(space));
+
+        d_info->entities.push_back(Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
+        d_info->entities.push_back(Entity(quadModel, gray, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
     
         d_info->lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
         d_info->lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
@@ -105,19 +107,17 @@ public:
                             d_status == Status::NORMAL;
 
         for (const auto& entity: d_info->entities) {
-            Renderer::render(entity,
-                             d_info->lights,
-                             d_info->camera,
-                             d_info->shader,
-                             window,
-                             options);
+            d_entityRenderer.draw(entity,
+                                  d_info->camera,
+                                  d_info->lights,
+                                  options);
         }
-        Renderer::render(d_info->terrain,
-                             d_info->lights,
-                             d_info->camera,
-                             d_info->shader,
-                             window,
-                             options);
+        for (const auto& terrain: d_info->terrains) {
+            d_terrainRenderer.draw(terrain,
+                                   d_info->camera,
+                                   d_info->lights,
+                                   options);
+        }
     }
 };
 
@@ -125,10 +125,13 @@ class UILayer : public Layer
 {
     std::shared_ptr<BasicSceneInfo> d_info;
 
+    DisplayRenderer d_displayRenderer;
+
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info) 
         : Layer(Status::INACTIVE, true)
         , d_info(info)
+        , d_displayRenderer(info->window)
     {
         Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, -0.5f}, {-0.5f, 0.5f},
                         {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
@@ -166,7 +169,7 @@ public:
         options.faceCulling = false;
         options.depthTest = false;
         for (const auto& model: d_info->models) {
-            Renderer::render(*model, d_info->shaderMenu, options);
+            d_displayRenderer.draw(model, options);
         }
     }
 };
@@ -176,14 +179,10 @@ public:
 int main(int argc, char* argv[])
 {
     Sprocket::Initialiser init;
-
     Sprocket::Window window;
 
     auto info = std::make_shared<Sprocket::BasicSceneInfo>(
-        "Resources/Shaders/Basic.vert",
-        "Resources/Shaders/Basic.frag",
-        "Resources/Shaders/GUI.vert",
-        "Resources/Shaders/GUI.frag"
+        &window
     );
 
     Sprocket::LayerStack layerStack;

@@ -1,4 +1,4 @@
-#include "Graphics/Entity.h"
+#include "Graphics/Entities/Entity.h"
 
 namespace Sprocket {
 
@@ -45,26 +45,6 @@ void Entity::increaseRotation(const Maths::vec3 dr)
 void Entity::increaseRotation(float dx, float dy, float dz)
 {
     increaseRotation(Maths::vec3(dx, dy, dz));
-}
-
-
-ModelPtr Entity::model() const
-{ 
-    return d_model;
-}
-
-void Entity::model(const ModelPtr& newModel)
-{
-    d_model = newModel;
-}
-
-TexturePtr Entity::texture() const {
-    return d_texture;
-}
-
-void Entity::texture(const TexturePtr& newTexture)
-{
-    d_texture = newTexture;
 }
 
 Maths::vec3 Entity::position() const

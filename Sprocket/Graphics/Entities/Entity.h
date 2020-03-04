@@ -9,6 +9,7 @@ class Entity
 {
     ModelPtr    d_model;
     TexturePtr  d_texture;
+
     Maths::vec3 d_position;
     Maths::vec3 d_rotation;
     float       d_scale;
@@ -23,6 +24,7 @@ public:
     void bind() const;
     void unbind() const;
 
+    // Mutators
     void increasePosition(const Maths::vec3 ds);
     void increasePosition(float dx, float dy, float dz);
 
@@ -30,11 +32,8 @@ public:
     void increaseRotation(float dx, float dy, float dz);
 
     // Getters / Setters
-    ModelPtr model() const;
-    void model(const ModelPtr& newModel);
-
-    TexturePtr texture() const;
-    void texture(const TexturePtr& newTexture);
+    ModelPtr model() const { return d_model; }
+    TexturePtr texture() const { return d_texture; }
 
     Maths::vec3 position() const;
     void position(const Maths::vec3& newPosition);
