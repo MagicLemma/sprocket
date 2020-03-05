@@ -6,8 +6,8 @@ namespace Sprocket {
     
 SkyboxRenderer::SkyboxRenderer(Window* window)
     : d_window(window)
-    , d_shader("Resources/Shaders/SkyboxShader.vert",
-               "Resources/Shaders/SkyboxShader.frag")
+    , d_shader("Resources/Shaders/Skybox.vert",
+               "Resources/Shaders/Skybox.frag")
 {
 }
 

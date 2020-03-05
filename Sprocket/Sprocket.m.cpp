@@ -67,7 +67,8 @@ public:
         , d_skyboxRenderer(info->window)
     {
         auto quadModel = Loader::loadModel("Resources/Models/Plane.obj");
-        auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
+        //auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
+        auto deagleModel = Loader::loadModel("Resources/Models/Deagle.obj");
 
         auto space = Loader::loadTexture("Resources/Textures/Space.PNG");
         auto gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
@@ -78,9 +79,10 @@ public:
 
         d_info->terrains.push_back(Terrain(space));
 
-        d_info->entities.push_back(Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
+        //d_info->entities.push_back(Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
         d_info->entities.push_back(Entity(quadModel, gray, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
-    
+        d_info->entities.push_back(Entity(deagleModel, shinyGray, {0.0f, 0.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1));
+
         d_info->lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
         d_info->lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
         d_info->lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
@@ -120,9 +122,10 @@ public:
 
         
         for (const auto& entity: d_info->entities) {
-            d_entityRenderer.draw(entity,
+            d_entityRenderer.drawMirror(entity,
                                   d_info->camera,
                                   d_info->lights,
+                                  d_info->skybox,
                                   options);
         }
         for (const auto& terrain: d_info->terrains) {

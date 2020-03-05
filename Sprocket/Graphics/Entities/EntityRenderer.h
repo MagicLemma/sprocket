@@ -4,6 +4,7 @@
 #include "Graphics/Light.h"
 #include "Graphics/Camera.h"
 #include "Graphics/Shader.h"
+#include "Graphics/Skyboxes/Skybox.h"
 #include "Graphics/RenderOptions.h"
 
 namespace Sprocket {
@@ -14,7 +15,10 @@ class EntityRenderer
         // Non-owning pointer to the window to draw in.
 
     Shader d_shader;
-        // Shader used to draw entities.
+        // Basic shader used to draw entities.
+
+    Shader d_mirrorShader;
+        // Shader used to mirror-like entities.
 
 public:
     EntityRenderer(Window* window);
@@ -23,6 +27,12 @@ public:
               const Camera& camera,
               const Lights& lights,
               const RenderOptions& options = RenderOptions());
+
+    void drawMirror(const Entity& entity,
+                    const Camera& camera,
+                    const Lights& lights,
+                    const Skybox& skybox,
+                    const RenderOptions& options = RenderOptions());
 };
 
 }

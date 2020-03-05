@@ -7,8 +7,8 @@ namespace Sprocket {
 
 TerrainRenderer::TerrainRenderer(Window* window)
     : d_window(window)
-    , d_shader("Resources/Shaders/TerrainShader.vert",
-               "Resources/Shaders/TerrainShader.frag")
+    , d_shader("Resources/Shaders/Terrain.vert",
+               "Resources/Shaders/Terrain.frag")
 {
 
 }

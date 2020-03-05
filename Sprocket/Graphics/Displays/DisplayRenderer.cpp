@@ -7,8 +7,8 @@ namespace Sprocket {
 
 DisplayRenderer::DisplayRenderer(Window* window)
     : d_window(window)
-    , d_shader("Resources/Shaders/DisplayShader.vert",
-               "Resources/Shaders/DisplayShader.frag")
+    , d_shader("Resources/Shaders/Display.vert",
+               "Resources/Shaders/Display.frag")
 {
 
 }
