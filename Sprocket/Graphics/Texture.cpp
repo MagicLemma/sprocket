@@ -21,5 +21,21 @@ void Texture::unbind() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+TextureCube::TextureCube(unsigned int textureId)
+    : d_textureId(textureId)
+{
+}
+
+void TextureCube::bind() const
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, d_textureId);
+}
+
+void TextureCube::unbind() const
+{
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
     
 }

@@ -16,6 +16,7 @@
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
 #include "DisplayRenderer.h"
+#include "SkyboxRenderer.h"
 
 #include <vector>
 #include <memory>
@@ -24,19 +25,28 @@ namespace Sprocket {
 
 struct BasicSceneInfo
 {
-    bool paused;
+    Window* window;
+    Camera  camera;
 
-    Window*  window;
-    Camera   camera;
+    Skybox skybox;
  
     std::vector<Entity>   entities;
     std::vector<Terrain>  terrains;
     std::vector<Light>    lights;
     std::vector<ModelPtr> models;
-
+    
+    bool paused = false;
+    
     BasicSceneInfo(Window* window)
         : window(window)
-        , paused(false)
+        , skybox(Loader::loadCubeMap({
+            "Resources/Textures/Skybox/Skybox_X_Pos.png",
+            "Resources/Textures/Skybox/Skybox_X_Neg.png",
+            "Resources/Textures/Skybox/Skybox_Y_Pos.png",
+            "Resources/Textures/Skybox/Skybox_Y_Neg.png",
+            "Resources/Textures/Skybox/Skybox_Z_Pos.png",
+            "Resources/Textures/Skybox/Skybox_Z_Neg.png"
+        }))
     {}
 };
 
@@ -46,6 +56,7 @@ class GameLayer : public Layer
 
     EntityRenderer  d_entityRenderer;
     TerrainRenderer d_terrainRenderer;
+    SkyboxRenderer  d_skyboxRenderer;
 
 public:
     GameLayer(std::shared_ptr<BasicSceneInfo> info) 
@@ -53,6 +64,7 @@ public:
         , d_info(info)
         , d_entityRenderer(info->window)
         , d_terrainRenderer(info->window)
+        , d_skyboxRenderer(info->window)
     {
         auto quadModel = Loader::loadModel("Resources/Models/Plane.obj");
         auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
@@ -106,6 +118,7 @@ public:
         options.wireframe = window->isKeyDown(Keyboard::F) &&
                             d_status == Status::NORMAL;
 
+        
         for (const auto& entity: d_info->entities) {
             d_entityRenderer.draw(entity,
                                   d_info->camera,
@@ -118,6 +131,8 @@ public:
                                    d_info->lights,
                                    options);
         }
+        d_skyboxRenderer.draw(d_info->skybox,
+                              d_info->camera);
     }
 };
 
@@ -181,9 +196,7 @@ int main(int argc, char* argv[])
     Sprocket::Initialiser init;
     Sprocket::Window window;
 
-    auto info = std::make_shared<Sprocket::BasicSceneInfo>(
-        &window
-    );
+    auto info = std::make_shared<Sprocket::BasicSceneInfo>(&window);
 
     Sprocket::LayerStack layerStack;
     layerStack.pushLayer(std::make_shared<Sprocket::GameLayer>(info));

@@ -30,9 +30,21 @@ struct Vertex2D
     GLfloat position[posCount];
 };
 
+struct VertexSkybox
+{
+    static constexpr int posAttr = 0;
+    
+    static constexpr int posCount = 3;
+
+    GLfloat position[posCount];
+
+};
+
 using VertexBuffer = std::vector<Vertex>;
 using IndexBuffer = std::vector<unsigned int>;
 
 using Vertex2DBuffer = std::vector<Vertex2D>;
+
+using VertexSkyboxBuffer = std::vector<VertexSkybox>;
 
 }

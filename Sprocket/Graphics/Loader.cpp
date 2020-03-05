@@ -86,6 +86,20 @@ void bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer)
                           reinterpret_cast<void*>(offsetof(Vertex2D, position)));
 }
 
+void bindVertexSkyboxBuffer(const VertexSkyboxBuffer& vertexSkyboxBuffer)
+{
+    unsigned int vboId;
+    glGenBuffers(1, &vboId);
+    s_vboList.push_back(vboId);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboId);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexSkybox) * vertexSkyboxBuffer.size(), vertexSkyboxBuffer.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(VertexSkybox::posAttr, VertexSkybox::posCount, GL_FLOAT, GL_FALSE, sizeof(VertexSkybox),
+                          reinterpret_cast<void*>(offsetof(VertexSkybox, position)));
+}
+
 }
 
 void init()
@@ -114,7 +128,25 @@ ModelPtr loadBuffers(const VertexBuffer& vertices, const IndexBuffer& indices)
     bindIndexBuffer(indices);
     unbindVAO();
 
-    return std::make_shared<Model>(vaoId, indices.size(), ModelType::ENTITY);
+    return std::make_shared<Model>(vaoId, indices.size(), 3);
+}
+
+ModelPtr load2DModel(const Vertex2DBuffer& vertex2DBuffer)
+{
+    unsigned int vaoId = createVAO();
+    bindVertex2DBuffer(vertex2DBuffer);
+    unbindVAO();
+
+    return std::make_shared<Model>(vaoId, vertex2DBuffer.size(), 1);
+}
+
+ModelPtr loadCube(const VertexSkyboxBuffer& vertexSkyboxBuffer)
+{
+    unsigned int vaoId = createVAO();
+    bindVertexSkyboxBuffer(vertexSkyboxBuffer);
+    unbindVAO();
+
+    return std::make_shared<Model>(vaoId, vertexSkyboxBuffer.size(), 1);
 }
 
 TexturePtr loadTexture(const std::string& textureFile)
@@ -143,54 +175,31 @@ TexturePtr loadTexture(const std::string& textureFile)
     return std::make_shared<Texture>(texId);
 }
 
-ModelPtr load2DModel(const Vertex2DBuffer& vertex2DBuffer)
+TextureCubePtr loadCubeMap(const std::array<std::string, 6>& faceFiles)
 {
-    unsigned int vaoId = createVAO();
-    bindVertex2DBuffer(vertex2DBuffer);
-    unbindVAO();
+    unsigned int texId;
+    glGenTextures(1, &texId);
+    s_texList.push_back(texId);
 
-    return std::make_shared<Model>(vaoId, vertex2DBuffer.size(), ModelType::FLAT);
-}
+    int width, height, bpp;
 
-ModelPtr loadModel(const std::string& name, const std::string& objFile)
-{
-    auto model = loadModel(objFile);
-    s_models[name] = model;
-    return model;
-}
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
 
-TexturePtr loadTexture(const std::string& name, const std::string& textureFile)
-{
-    auto texture = loadTexture(textureFile);
-    s_textures[name] = texture;
-    return texture;
-}
+    for (unsigned int i = 0; i != faceFiles.size(); ++i) {
+        unsigned char* data = stbi_load(faceFiles[i].c_str(), &width, &height, &bpp, 0);
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                     0, GL_RGB, width, height,
+                     0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        stbi_image_free(data);
+    }
+    
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-ModelPtr load2DModel(const std::string& name, const Vertex2DBuffer& vertex2DBuffer)
-{
-    auto model = load2DModel(vertex2DBuffer);
-    s_models[name] = model;
-    return model;
-}
-
-ModelPtr getModel(const std::string& name)
-{
-    return s_models.find(name)->second;
-}
-
-TexturePtr getTexture(const std::string& name)
-{
-    return s_textures.find(name)->second;
-}
-
-bool doesModelExist(const std::string& name)
-{
-    return s_models.find(name) != s_models.end();
-}
-
-bool doesTextureExist(const std::string& name)
-{
-    return s_textures.find(name) != s_textures.end();
+    return std::make_shared<TextureCube>(texId);
 }
 
 }

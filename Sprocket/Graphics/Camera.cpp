@@ -36,14 +36,14 @@ void Camera::move(Window* window, bool active)
         if (window->isKeyDown(Keyboard::W)){
             d_position += speed * forwards;
         }
+        if (window->isKeyDown(Keyboard::S)){
+            d_position -= speed * forwards;
+        }
         if (window->isKeyDown(Keyboard::D)){
             d_position += speed * right;
         }
         if (window->isKeyDown(Keyboard::A)){
             d_position -= speed * right;
-        }
-        if (window->isKeyDown(Keyboard::S)){
-            d_position -= speed * forwards;
         }
         if (window->isKeyDown(Keyboard::SPACE)){
             d_position += speed * up;

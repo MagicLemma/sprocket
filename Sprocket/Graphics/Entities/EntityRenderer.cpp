@@ -10,7 +10,6 @@ EntityRenderer::EntityRenderer(Window* window)
     , d_shader("Resources/Shaders/EntityShader.vert",
                "Resources/Shaders/EntityShader.frag")
 {
-
 }
 
 void EntityRenderer::draw(const Entity& entity,

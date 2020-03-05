@@ -29,6 +29,9 @@ add_executable(Sprocket
                Graphics/Entities/Entity.cpp
                Graphics/Entities/EntityRenderer.cpp
 
+               Graphics/Skyboxes/Skybox.cpp
+               Graphics/Skyboxes/SkyboxRenderer.cpp
+
                Graphics/Terrains/Terrain.cpp
                Graphics/Terrains/TerrainRenderer.cpp
 
@@ -60,6 +63,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics
                            ./Graphics/Displays
                            ./Graphics/Entities
+                           ./Graphics/Skyboxes
                            ./Graphics/Terrains
                            ./Utility
                            ${STB_INCLUDE_DIR})

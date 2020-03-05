@@ -21,7 +21,7 @@ std::string parseShader(const std::string& filepath)
 	}
 	std::ifstream stream(filepath);
 	std::string shader((std::istreambuf_iterator<char>(stream)),
-		std::istreambuf_iterator<char>());
+		                std::istreambuf_iterator<char>());
 	return shader;
 }
 
