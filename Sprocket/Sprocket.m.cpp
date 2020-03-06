@@ -122,10 +122,9 @@ public:
 
         
         for (const auto& entity: d_info->entities) {
-            d_entityRenderer.drawMirror(entity,
+            d_entityRenderer.draw(entity,
                                   d_info->camera,
                                   d_info->lights,
-                                  d_info->skybox,
                                   options);
         }
         for (const auto& terrain: d_info->terrains) {
