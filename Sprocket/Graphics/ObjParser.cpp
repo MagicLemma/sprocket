@@ -61,7 +61,7 @@ std::tuple<int, int, int> parseObjVertex(const std::string& vertex)
 
 }
 
-std::pair<VertexBuffer, IndexBuffer> parseObjFile(const std::string& objFile)
+std::pair<Vertex3DBuffer, IndexBuffer> parseObjFile(const std::string& objFile)
 {
     std::ifstream file;
     file.open(objFile);
@@ -74,7 +74,7 @@ std::pair<VertexBuffer, IndexBuffer> parseObjFile(const std::string& objFile)
     std::vector<Maths::vec2> tempTexCoords;
     std::vector<Maths::vec3> tempNormals;
     
-    VertexBuffer vertices;
+    Vertex3DBuffer vertices;
     IndexBuffer  indices;
     
     // Maps pos/tex/nor strings to the index of the corresponding
@@ -117,7 +117,7 @@ std::pair<VertexBuffer, IndexBuffer> parseObjFile(const std::string& objFile)
                     Maths::vec2 texCoord = tempTexCoords[texIdx];
                     Maths::vec3 normal   = tempNormals[norIdx];
 
-                    Vertex newVertex = {
+                    Vertex3D newVertex = {
                         {position.x, position.y, position.z},
                         {texCoord.x, texCoord.y},
                         {normal.x, normal.y, normal.z}

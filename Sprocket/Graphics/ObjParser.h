@@ -1,11 +1,11 @@
 #pragma once
-#include "Graphics/Vertex.h"
+#include "Graphics/Modelling/Model3D.h"
 
 #include <utility>
 #include <string>
 
 namespace Sprocket {
 
-std::pair<VertexBuffer, IndexBuffer> parseObjFile(const std::string& objFile);
+std::pair<Vertex3DBuffer, IndexBuffer> parseObjFile(const std::string& objFile);
 
 }

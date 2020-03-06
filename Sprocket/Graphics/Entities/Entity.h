@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Model.h"
+#include "Graphics/Modelling/Model3D.h"
 #include "Graphics/Texture.h"
 #include "Utility/Maths.h"
 
@@ -7,15 +7,15 @@ namespace Sprocket {
 
 class Entity
 {
-    ModelPtr    d_model;
-    TexturePtr  d_texture;
+    std::shared_ptr<Model3D> d_model;
+    TexturePtr               d_texture;
 
     Maths::vec3 d_position;
     Maths::vec3 d_rotation;
     float       d_scale;
 
 public:
-    Entity(ModelPtr model,
+    Entity(std::shared_ptr<Model3D> model,
            TexturePtr texture,
            const Maths::vec3& position,
            const Maths::vec3& rotation,
@@ -32,7 +32,7 @@ public:
     void increaseRotation(float dx, float dy, float dz);
 
     // Getters / Setters
-    ModelPtr model() const { return d_model; }
+    std::shared_ptr<Model3D> model() const { return d_model; }
     TexturePtr texture() const { return d_texture; }
 
     Maths::vec3 position() const;

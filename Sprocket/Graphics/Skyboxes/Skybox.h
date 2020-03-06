@@ -1,13 +1,15 @@
 #pragma once
-#include "Graphics/Model.h"
+#include "Graphics/Modelling/ModelSkybox.h"
 #include "Graphics/Texture.h"
 
 namespace Sprocket {
 
+VertexSkyboxBuffer getCubeBuffer();
+
 class Skybox
 {
+    std::shared_ptr<ModelSkybox> d_model;
     TextureCubePtr d_texture;
-    ModelPtr       d_model;
 
 public:
     Skybox(TextureCubePtr texture);
@@ -16,7 +18,7 @@ public:
     void unbind() const;
 
     // Getters / Setters
-    ModelPtr model() const { return d_model; }
+    std::shared_ptr<ModelSkybox> model() const { return d_model; }
     TextureCubePtr texture() const { return d_texture; }
 };
 

@@ -2,7 +2,7 @@
 
 namespace Sprocket {
 
-Entity::Entity(ModelPtr model,
+Entity::Entity(std::shared_ptr<Model3D> model,
                TexturePtr texture,
                const Maths::vec3& position,
                const Maths::vec3& rotation,

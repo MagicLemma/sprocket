@@ -1,6 +1,7 @@
 #include "Graphics/Loader.h"
-#include "Graphics/Vertex.h"
 #include "Graphics/ObjParser.h"
+
+#include "Graphics/Skyboxes/Skybox.h"
 #include "Utility/Log.h"
 
 #include <vector>
@@ -8,7 +9,6 @@
 #include <sstream>
 #include <memory>
 #include <cstddef>
-#include <unordered_map>
 
 #include <glad/glad.h>
 
@@ -24,9 +24,6 @@ std::vector<unsigned int> s_vaoList;
 std::vector<unsigned int> s_vboList;
 std::vector<unsigned int> s_texList;
 
-std::unordered_map<std::string, ModelPtr> s_models;
-std::unordered_map<std::string, TexturePtr> s_textures;
-
 unsigned int createVAO()
 {
     unsigned int vaoId;
@@ -41,24 +38,24 @@ void unbindVAO()
     glBindVertexArray(0);
 }
 
-void bindVertexBuffer(const VertexBuffer& vertexBuffer)
+void bindVertex3DBuffer(const Vertex3DBuffer& vertex3DBuffer)
 {
     unsigned int vboId;
     glGenBuffers(1, &vboId);
     s_vboList.push_back(vboId);
 
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexBuffer.size(), vertexBuffer.data(),
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * vertex3DBuffer.size(), vertex3DBuffer.data(),
                  GL_STATIC_DRAW);
 
-    glVertexAttribPointer(Vertex::posAttr, Vertex::posCount, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void*>(offsetof(Vertex, position)));
+    glVertexAttribPointer(Vertex3D::posAttr, Vertex3D::posCount, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          reinterpret_cast<void*>(offsetof(Vertex3D, position)));
                                            
-    glVertexAttribPointer(Vertex::texAttr, Vertex::texCount, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void*>(offsetof(Vertex, texture)));
+    glVertexAttribPointer(Vertex3D::texAttr, Vertex3D::texCount, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          reinterpret_cast<void*>(offsetof(Vertex3D, texture)));
 
-    glVertexAttribPointer(Vertex::norAttr, Vertex::norCount, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          reinterpret_cast<void*>(offsetof(Vertex, normal)));
+    glVertexAttribPointer(Vertex3D::norAttr, Vertex3D::norCount, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          reinterpret_cast<void*>(offsetof(Vertex3D, normal)));
 }
 
 void bindIndexBuffer(const IndexBuffer& indexBuffer)
@@ -84,6 +81,9 @@ void bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer)
 
     glVertexAttribPointer(Vertex2D::posAttr, Vertex2D::posCount, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
                           reinterpret_cast<void*>(offsetof(Vertex2D, position)));
+
+    glVertexAttribPointer(Vertex2D::texAttr, Vertex2D::texCount, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+                          reinterpret_cast<void*>(offsetof(Vertex2D, texture)));
 }
 
 void bindVertexSkyboxBuffer(const VertexSkyboxBuffer& vertexSkyboxBuffer)
@@ -115,38 +115,41 @@ void deinit()
     glDeleteTextures(s_texList.size(), s_texList.data());
 }
 
-ModelPtr loadModel(const std::string& objFile)
-{
-    auto [vertices, indices] = parseObjFile(objFile);
-    return loadBuffers(vertices, indices);
-}
-
-ModelPtr loadBuffers(const VertexBuffer& vertices, const IndexBuffer& indices)
-{
-    unsigned int vaoId = createVAO();
-    bindVertexBuffer(vertices);
-    bindIndexBuffer(indices);
-    unbindVAO();
-
-    return std::make_shared<Model>(vaoId, indices.size(), 3);
-}
-
-ModelPtr load2DModel(const Vertex2DBuffer& vertex2DBuffer)
+std::shared_ptr<Model2D> loadModel2D(const Vertex2DBuffer& vertex2DBuffer)
 {
     unsigned int vaoId = createVAO();
     bindVertex2DBuffer(vertex2DBuffer);
     unbindVAO();
 
-    return std::make_shared<Model>(vaoId, vertex2DBuffer.size(), 1);
+    return std::make_shared<Model2D>(vaoId, vertex2DBuffer.size());
 }
 
-ModelPtr loadCube(const VertexSkyboxBuffer& vertexSkyboxBuffer)
+std::shared_ptr<Model3D> loadModel3D(const std::string& objFile)
 {
+    auto [vertices, indices] = parseObjFile(objFile);
+    return loadModel3D(vertices, indices);
+}
+
+std::shared_ptr<Model3D> loadModel3D(const Vertex3DBuffer& vertices,
+                                     const IndexBuffer& indices)
+{
+    unsigned int vaoId = createVAO();
+    bindVertex3DBuffer(vertices);
+    bindIndexBuffer(indices);
+    unbindVAO();
+
+    return std::make_shared<Model3D>(vaoId, indices.size());   
+}
+
+std::shared_ptr<ModelSkybox> loadSkybox()
+{
+    auto vertexSkyboxBuffer = getCubeBuffer();
+
     unsigned int vaoId = createVAO();
     bindVertexSkyboxBuffer(vertexSkyboxBuffer);
     unbindVAO();
 
-    return std::make_shared<Model>(vaoId, vertexSkyboxBuffer.size(), 1);
+    return std::make_shared<ModelSkybox>(vaoId, vertexSkyboxBuffer.size());
 }
 
 TexturePtr loadTexture(const std::string& textureFile)

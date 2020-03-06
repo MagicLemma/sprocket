@@ -1,9 +1,7 @@
 #include "Graphics/Skyboxes/Skybox.h"
-#include "Graphics/Vertex.h"
 #include "Graphics/Loader.h"
 
 namespace Sprocket {
-namespace {
 
 VertexSkyboxBuffer getCubeBuffer()
 {
@@ -59,11 +57,9 @@ VertexSkyboxBuffer getCubeBuffer()
     return v;
 }
 
-}
-
 Skybox::Skybox(TextureCubePtr texture)
     : d_texture(texture)
-    , d_model(Loader::loadCube(getCubeBuffer()))
+    , d_model(Loader::loadSkybox())
 {    
 }
 

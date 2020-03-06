@@ -1,8 +1,8 @@
 #include "Log.h"
 #include "Window.h"
 #include "Loader.h"
-#include "Renderer.h"
-#include "Model.h"
+#include "Graphics/Modelling/Model2D.h"
+#include "Graphics/Modelling/Model3D.h"
 #include "Texture.h"
 #include "Camera.h"
 #include "Light.h"
@@ -33,7 +33,8 @@ struct BasicSceneInfo
     std::vector<Entity>   entities;
     std::vector<Terrain>  terrains;
     std::vector<Light>    lights;
-    std::vector<ModelPtr> models;
+
+    std::vector<std::shared_ptr<Model2D>> models;
     
     bool paused = false;
     
@@ -66,9 +67,9 @@ public:
         , d_terrainRenderer(info->window)
         , d_skyboxRenderer(info->window)
     {
-        auto quadModel = Loader::loadModel("Resources/Models/Plane.obj");
+        auto quadModel = Loader::loadModel3D("Resources/Models/Plane.obj");
         //auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
-        auto deagleModel = Loader::loadModel("Resources/Models/Deagle.obj");
+        auto deagleModel = Loader::loadModel3D("Resources/Models/Deagle.obj");
 
         auto space = Loader::loadTexture("Resources/Textures/Space.PNG");
         auto gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
@@ -152,7 +153,7 @@ public:
     {
         Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, -0.5f}, {-0.5f, 0.5f},
                         {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
-        auto tri = Loader::load2DModel(v);
+        auto tri = Loader::loadModel2D(v);
         d_info->models.push_back(tri);
     }
 

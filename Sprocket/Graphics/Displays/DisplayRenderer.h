@@ -1,8 +1,10 @@
 #pragma once
 #include "Core/Window.h"
-#include "Graphics/Model.h"
+#include "Graphics/Modelling/Model2D.h"
 #include "Graphics/Shader.h"
 #include "Graphics/RenderOptions.h"
+
+#include <memory>
 
 namespace Sprocket {
 
@@ -17,7 +19,7 @@ class DisplayRenderer
 public:
     DisplayRenderer(Window* window);
 
-    void draw(ModelPtr model,
+    void draw(std::shared_ptr<Model2D> model,
               const RenderOptions& options = RenderOptions());
 };
 

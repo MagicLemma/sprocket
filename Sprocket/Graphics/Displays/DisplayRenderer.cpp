@@ -14,7 +14,7 @@ DisplayRenderer::DisplayRenderer(Window* window)
 }
 
 void DisplayRenderer::draw(
-    ModelPtr model,
+    std::shared_ptr<Model2D> model,
     const RenderOptions& options)
 {
     handleRenderOptions(options);

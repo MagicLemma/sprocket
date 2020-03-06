@@ -1,5 +1,4 @@
 #include "Graphics/Terrains/Terrain.h"
-#include "Graphics/Vertex.h"
 #include "Graphics/Loader.h"
 #include "Utility/Log.h"
 
@@ -8,14 +7,14 @@
 namespace Sprocket {
 namespace {
 
-ModelPtr generateTerrain(int edge, float distance)
+std::shared_ptr<Model3D> generateTerrain(int edge, float distance)
 {
-    VertexBuffer vertices;
+    Vertex3DBuffer vertices;
     vertices.reserve(edge * edge);
     IndexBuffer indices;
     for (int i = 0; i < edge; ++i) {
         for (int j = 0; j < edge; ++j) {
-            Vertex v{
+            Vertex3D v{
                 {distance * i, 0, distance * j},
                 {(float)i / ((float)edge - 1), (float)j / ((float)edge - 1)},
                 {0.0f, 1.0f, 0.0f}
@@ -37,7 +36,7 @@ ModelPtr generateTerrain(int edge, float distance)
         }
         
     }
-    return Loader::loadBuffers(vertices, indices);
+    return Loader::loadModel3D(vertices, indices);
 }
 
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Model.h"
+#include "Graphics/Modelling/Model3D.h"
 #include "Graphics/Texture.h"
 #include "Utility/Maths.h"
 
@@ -7,8 +7,8 @@ namespace Sprocket {
 
 class Terrain
 {
-    ModelPtr    d_model;
-    TexturePtr  d_texture;
+    std::shared_ptr<Model3D> d_model;
+    TexturePtr               d_texture;
 
     Maths::vec3 d_position;
 
@@ -22,7 +22,7 @@ public:
     void unbind() const;
 
     // Getters / Setters
-    ModelPtr model() const { return d_model; }
+    std::shared_ptr<Model3D> model() const { return d_model; }
     TexturePtr texture() const { return d_texture; }
 
     

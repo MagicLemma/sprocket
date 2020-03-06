@@ -16,18 +16,19 @@ add_executable(Sprocket
                Graphics/Camera.cpp
                Graphics/Light.cpp
                Graphics/Loader.cpp
-               Graphics/Model.cpp
                Graphics/ObjParser.cpp
-               Graphics/Renderer.cpp
                Graphics/RenderOptions.cpp
                Graphics/Shader.cpp
                Graphics/Texture.cpp
-               Graphics/Vertex.cpp
 
                Graphics/Displays/DisplayRenderer.cpp
 
                Graphics/Entities/Entity.cpp
                Graphics/Entities/EntityRenderer.cpp
+
+               Graphics/Modelling/Model2D.cpp
+               Graphics/Modelling/Model3D.cpp
+               Graphics/Modelling/ModelSkybox.cpp
 
                Graphics/Skyboxes/Skybox.cpp
                Graphics/Skyboxes/SkyboxRenderer.cpp
@@ -63,6 +64,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics
                            ./Graphics/Displays
                            ./Graphics/Entities
+                           ./Graphics/Modelling
                            ./Graphics/Skyboxes
                            ./Graphics/Terrains
                            ./Utility
