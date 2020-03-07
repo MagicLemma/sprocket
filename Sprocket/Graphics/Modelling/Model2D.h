@@ -7,14 +7,8 @@ namespace Sprocket {
 
 struct Vertex2D
 {
-    static constexpr int posAttr = 0;
-    static constexpr int texAttr = 1;
-
-    static constexpr int posCount = 2;
-    static constexpr int texCount = 2;
-
-    GLfloat position[posCount];
-    GLfloat texture[texCount];
+    GLfloat position[2];
+    GLfloat texture[2];
 };
 
 using Vertex2DBuffer = std::vector<Vertex2D>;

@@ -21,8 +21,12 @@ namespace Loader {
 namespace {
 
 std::vector<unsigned int> s_vaoList;
+std::vector<unsigned int> s_rboList;
 std::vector<unsigned int> s_vboList;
+std::vector<unsigned int> s_fboList;
 std::vector<unsigned int> s_texList;
+
+}
 
 unsigned int createVAO()
 {
@@ -33,73 +37,81 @@ unsigned int createVAO()
     return vaoId;
 }
 
-void unbindVAO()
-{
-    glBindVertexArray(0);
-}
-
-void bindVertex3DBuffer(const Vertex3DBuffer& vertex3DBuffer)
+unsigned int createVBO(VBOType type)
 {
     unsigned int vboId;
     glGenBuffers(1, &vboId);
     s_vboList.push_back(vboId);
+    if (type == VBOType::VERTEX_BUFFER) {
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+    } else if (type == VBOType::INDEX_BUFFER) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
+    }
+    return vboId;
+}
 
-    glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * vertex3DBuffer.size(), vertex3DBuffer.data(),
-                 GL_STATIC_DRAW);
+unsigned int createTEX(TextureType type)
+{
+    unsigned int texId;
+    glGenTextures(1, &texId);
+    s_texList.push_back(texId);
+    if (type == TextureType::FLAT) {
+        glBindTexture(GL_TEXTURE_2D, texId);
+    } else if (type == TextureType::CUBE) {
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texId);    
+    }
+    return texId;
+}
 
-    glVertexAttribPointer(Vertex3D::posAttr, Vertex3D::posCount, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          reinterpret_cast<void*>(offsetof(Vertex3D, position)));
+unsigned int createFBO()
+{
+    unsigned int fboId;
+    glGenFramebuffers(1, &fboId);
+    s_fboList.push_back(fboId);
+    glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+    return fboId;
+}
+
+unsigned int createRBO()
+{
+    unsigned int rboId;
+    glGenRenderbuffers(1, &rboId);
+    s_rboList.push_back(rboId);
+    glBindRenderbuffer(GL_RENDERBUFFER, rboId);
+    return rboId;
+}
+
+void bindVertex2DBuffer(const Vertex2DBuffer& buffer)
+{
+    createVBO(VBOType::VERTEX_BUFFER);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2D) * buffer.size(), buffer.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+                          (void*)offsetof(Vertex2D, position));
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+                          (void*)offsetof(Vertex2D, texture));
+}
+
+void bindVertex3DBuffer(const Vertex3DBuffer& buffer)
+{
+    createVBO(VBOType::VERTEX_BUFFER);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * buffer.size(), buffer.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, position));
                                            
-    glVertexAttribPointer(Vertex3D::texAttr, Vertex3D::texCount, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          reinterpret_cast<void*>(offsetof(Vertex3D, texture)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, texture));
 
-    glVertexAttribPointer(Vertex3D::norAttr, Vertex3D::norCount, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          reinterpret_cast<void*>(offsetof(Vertex3D, normal)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, normal));
 }
 
-void bindIndexBuffer(const IndexBuffer& indexBuffer)
+void bindIndexBuffer(const IndexBuffer& buffer)
 {
-    unsigned int vboId;
-    glGenBuffers(1, &vboId);
-    s_vboList.push_back(vboId);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexBuffer.size(), indexBuffer.data(),
-                 GL_STATIC_DRAW);
-}
-
-void bindVertex2DBuffer(const Vertex2DBuffer& vertex2DBuffer)
-{
-    unsigned int vboId;
-    glGenBuffers(1, &vboId);
-    s_vboList.push_back(vboId);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2D) * vertex2DBuffer.size(), vertex2DBuffer.data(),
-                 GL_STATIC_DRAW);
-
-    glVertexAttribPointer(Vertex2D::posAttr, Vertex2D::posCount, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
-                          reinterpret_cast<void*>(offsetof(Vertex2D, position)));
-
-    glVertexAttribPointer(Vertex2D::texAttr, Vertex2D::texCount, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
-                          reinterpret_cast<void*>(offsetof(Vertex2D, texture)));
-}
-
-void bindVertexSkyboxBuffer(const VertexSkyboxBuffer& vertexSkyboxBuffer)
-{
-    unsigned int vboId;
-    glGenBuffers(1, &vboId);
-    s_vboList.push_back(vboId);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexSkybox) * vertexSkyboxBuffer.size(), vertexSkyboxBuffer.data(),
-                 GL_STATIC_DRAW);
-
-    glVertexAttribPointer(VertexSkybox::posAttr, VertexSkybox::posCount, GL_FLOAT, GL_FALSE, sizeof(VertexSkybox),
-                          reinterpret_cast<void*>(offsetof(VertexSkybox, position)));
-}
-
+    createVBO(VBOType::INDEX_BUFFER);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * buffer.size(), buffer.data(), GL_STATIC_DRAW);
 }
 
 void init()
@@ -109,9 +121,11 @@ void init()
 
 void deinit()
 {
-    SPKT_LOG_INFO("Deinitialised Loader: Cleaning up VAOs, VBOs and textures");
+    SPKT_LOG_INFO("Deinitialised Loader: Cleaning up VAOs, VBOs, FBOs, RBOs and textures");
     glDeleteVertexArrays(s_vaoList.size(), s_vaoList.data());
+    glDeleteRenderbuffers(s_rboList.size(), s_rboList.data());
     glDeleteBuffers(s_vboList.size(), s_vboList.data());
+    glDeleteFramebuffers(s_fboList.size(), s_fboList.data());
     glDeleteTextures(s_texList.size(), s_texList.data());
 }
 
@@ -119,7 +133,7 @@ std::shared_ptr<Model2D> loadModel2D(const Vertex2DBuffer& vertex2DBuffer)
 {
     unsigned int vaoId = createVAO();
     bindVertex2DBuffer(vertex2DBuffer);
-    unbindVAO();
+    glBindVertexArray(0);
 
     return std::make_shared<Model2D>(vaoId, vertex2DBuffer.size());
 }
@@ -136,33 +150,19 @@ std::shared_ptr<Model3D> loadModel3D(const Vertex3DBuffer& vertices,
     unsigned int vaoId = createVAO();
     bindVertex3DBuffer(vertices);
     bindIndexBuffer(indices);
-    unbindVAO();
+    glBindVertexArray(0);
 
     return std::make_shared<Model3D>(vaoId, indices.size());   
 }
 
-std::shared_ptr<ModelSkybox> loadSkybox()
-{
-    auto vertexSkyboxBuffer = getCubeBuffer();
-
-    unsigned int vaoId = createVAO();
-    bindVertexSkyboxBuffer(vertexSkyboxBuffer);
-    unbindVAO();
-
-    return std::make_shared<ModelSkybox>(vaoId, vertexSkyboxBuffer.size());
-}
-
 TexturePtr loadTexture(const std::string& textureFile)
 {
-    unsigned int texId;
-    glGenTextures(1, &texId);
-    s_texList.push_back(texId);
+    unsigned int texId = createTEX(TextureType::FLAT);
 
     stbi_set_flip_vertically_on_load(1);
     int width, height, bpp;
     unsigned char* data = stbi_load(textureFile.c_str(), &width, &height, &bpp, 4);
-
-    glBindTexture(GL_TEXTURE_2D, texId);
+;
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -176,33 +176,6 @@ TexturePtr loadTexture(const std::string& textureFile)
     glBindTexture(GL_TEXTURE_2D, 0);
 
     return std::make_shared<Texture>(texId);
-}
-
-TextureCubePtr loadCubeMap(const std::array<std::string, 6>& faceFiles)
-{
-    unsigned int texId;
-    glGenTextures(1, &texId);
-    s_texList.push_back(texId);
-
-    int width, height, bpp;
-
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texId);
-
-    for (unsigned int i = 0; i != faceFiles.size(); ++i) {
-        unsigned char* data = stbi_load(faceFiles[i].c_str(), &width, &height, &bpp, 0);
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-                     0, GL_RGB, width, height,
-                     0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        stbi_image_free(data);
-    }
-    
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    return std::make_shared<TextureCube>(texId);
 }
 
 }

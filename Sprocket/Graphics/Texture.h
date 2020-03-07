@@ -24,18 +24,6 @@ public:
     void reflectivity(float newReflectivity) { d_reflectivity = newReflectivity; } 
 };
 
-class TextureCube
-{
-    unsigned int d_textureId;
-
-public:
-    TextureCube(unsigned int textureId);
-
-    void bind() const;
-    void unbind() const;
-};
-
 using TexturePtr = std::shared_ptr<Texture>;
-using TextureCubePtr = std::shared_ptr<TextureCube>;
 
 }

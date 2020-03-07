@@ -11,12 +11,18 @@
 #include "LayerStack.h"
 #include "Events/KeyboardEvent.h"
 #include "Events/MouseEvent.h"
+#include "Events/WindowEvent.h"
 #include "Core/Initialiser.h"
 #include "Terrain.h"
 #include "EntityRenderer.h"
 #include "TerrainRenderer.h"
 #include "DisplayRenderer.h"
 #include "SkyboxRenderer.h"
+
+#include "PostProcessor.h"
+#include "Effect.h"
+#include "GaussianBlur.h"
+#include "Contrast.h"
 
 #include <vector>
 #include <memory>
@@ -40,14 +46,12 @@ struct BasicSceneInfo
     
     BasicSceneInfo(Window* window)
         : window(window)
-        , skybox(Loader::loadCubeMap({
-            "Resources/Textures/Skybox/Skybox_X_Pos.png",
-            "Resources/Textures/Skybox/Skybox_X_Neg.png",
-            "Resources/Textures/Skybox/Skybox_Y_Pos.png",
-            "Resources/Textures/Skybox/Skybox_Y_Neg.png",
-            "Resources/Textures/Skybox/Skybox_Z_Pos.png",
-            "Resources/Textures/Skybox/Skybox_Z_Neg.png"
-        }))
+        , skybox({"Resources/Textures/Skybox/Skybox_X_Pos.png",
+                  "Resources/Textures/Skybox/Skybox_X_Neg.png",
+                  "Resources/Textures/Skybox/Skybox_Y_Pos.png",
+                  "Resources/Textures/Skybox/Skybox_Y_Neg.png",
+                  "Resources/Textures/Skybox/Skybox_Z_Pos.png",
+                  "Resources/Textures/Skybox/Skybox_Z_Neg.png"})
     {}
 };
 
@@ -59,6 +63,8 @@ class GameLayer : public Layer
     TerrainRenderer d_terrainRenderer;
     SkyboxRenderer  d_skyboxRenderer;
 
+    PostProcessor d_postProcessor;
+
 public:
     GameLayer(std::shared_ptr<BasicSceneInfo> info) 
         : Layer(Status::NORMAL, false) 
@@ -66,6 +72,7 @@ public:
         , d_entityRenderer(info->window)
         , d_terrainRenderer(info->window)
         , d_skyboxRenderer(info->window)
+        , d_postProcessor()
     {
         auto quadModel = Loader::loadModel3D("Resources/Models/Plane.obj");
         //auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
@@ -88,10 +95,18 @@ public:
         d_info->lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
         d_info->lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
         d_info->lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
+    
+        d_postProcessor.addEffect(std::make_shared<Contrast>(d_info->window->width(),
+                                                             d_info->window->height()));
+        //d_postProcessor.addEffect(std::make_shared<GaussianVert>(d_info->window->width(),
+          //                                                       d_info->window->height()));
     }
 
     bool handleEventImpl(Window* window, const Event& event) override
     {
+        if (auto e = event.as<WindowResizeEvent>()) {
+            d_postProcessor.setScreenSize(e->width(), e->height());
+        }
         return false;
     }
 
@@ -117,6 +132,7 @@ public:
 
     void drawImpl(Window* window) override
     {
+        d_postProcessor.bind();
         RenderOptions options;
         options.wireframe = window->isKeyDown(Keyboard::F) &&
                             d_status == Status::NORMAL;
@@ -136,6 +152,8 @@ public:
         }
         d_skyboxRenderer.draw(d_info->skybox,
                               d_info->camera);
+        d_postProcessor.unbind();
+        d_postProcessor.draw();
     }
 };
 

@@ -30,12 +30,8 @@ std::string parseShader(const std::string& filepath)
 Shader::Shader(const std::string& vertShaderFile,
                const std::string& fragShaderFile)
 {
-    SPKT_LOG_TRACE("Building shader: {}", vertShaderFile);
 	std::string vertShader = parseShader(vertShaderFile);
-
-    SPKT_LOG_TRACE("Building shader: {}", fragShaderFile);
 	std::string fragShader = parseShader(fragShaderFile);
-
 	createShader(vertShader, fragShader);
 }
 

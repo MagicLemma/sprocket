@@ -28,7 +28,11 @@ add_executable(Sprocket
 
                Graphics/Modelling/Model2D.cpp
                Graphics/Modelling/Model3D.cpp
-               Graphics/Modelling/ModelSkybox.cpp
+
+               Graphics/PostProcessing/Effect.cpp
+               Graphics/PostProcessing/Contrast.cpp
+               Graphics/PostProcessing/GaussianBlur.cpp
+               Graphics/PostProcessing/PostProcessor.cpp
 
                Graphics/Skyboxes/Skybox.cpp
                Graphics/Skyboxes/SkyboxRenderer.cpp
@@ -65,6 +69,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics/Displays
                            ./Graphics/Entities
                            ./Graphics/Modelling
+                           ./Graphics/PostProcessing
                            ./Graphics/Skyboxes
                            ./Graphics/Terrains
                            ./Utility

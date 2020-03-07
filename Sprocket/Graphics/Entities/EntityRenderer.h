@@ -27,12 +27,6 @@ public:
               const Camera& camera,
               const Lights& lights,
               const RenderOptions& options = RenderOptions());
-
-    void drawMirror(const Entity& entity,
-                    const Camera& camera,
-                    const Lights& lights,
-                    const Skybox& skybox,
-                    const RenderOptions& options = RenderOptions());
 };
 
 }

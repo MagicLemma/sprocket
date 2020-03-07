@@ -1,25 +1,24 @@
 #pragma once
-#include "Graphics/Modelling/ModelSkybox.h"
 #include "Graphics/Texture.h"
+
+#include <array>
 
 namespace Sprocket {
 
-VertexSkyboxBuffer getCubeBuffer();
-
 class Skybox
 {
-    std::shared_ptr<ModelSkybox> d_model;
-    TextureCubePtr d_texture;
+    unsigned int d_vaoId;
+    unsigned int d_texId;
 
 public:
-    Skybox(TextureCubePtr texture);
+    Skybox(const std::array<std::string, 6>& faceFiles);
 
     void bind() const;
     void unbind() const;
 
     // Getters / Setters
-    std::shared_ptr<ModelSkybox> model() const { return d_model; }
-    TextureCubePtr texture() const { return d_texture; }
+    unsigned int model() const { return d_vaoId; }
+    unsigned int texture() const { return d_texId; }
 };
 
 }

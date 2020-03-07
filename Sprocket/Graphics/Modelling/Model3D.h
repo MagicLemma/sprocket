@@ -7,17 +7,9 @@ namespace Sprocket {
 
 struct Vertex3D
 {
-    static constexpr int posAttr = 0;
-    static constexpr int texAttr = 1;
-    static constexpr int norAttr = 2;
-
-    static constexpr int posCount = 3;
-    static constexpr int texCount = 2;
-    static constexpr int norCount = 3;
-
-    GLfloat position[posCount];
-    GLfloat texture[texCount];
-    GLfloat normal[norCount];
+    GLfloat position[3];
+    GLfloat texture[2];
+    GLfloat normal[3];
 };
 
 using Vertex3DBuffer = std::vector<Vertex3D>;
