@@ -3,10 +3,10 @@
 
 namespace Sprocket {
 
-class Contrast : public Effect
+class Negative : public Effect
 {
 public:
-    Contrast(int width, int height);
+    Negative(int width, int height);
 };
     
 }

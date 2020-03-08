@@ -19,6 +19,11 @@ std::shared_ptr<Model2D> getQuad()
 
 }
 
+PostProcessor::PostProcessor(int width, int height)
+    : d_width(width)
+    , d_height(height)
+{}
+
 void PostProcessor::addEffect(std::shared_ptr<Effect> effect)
 {
     d_effects.push_back(effect);
@@ -49,6 +54,8 @@ void PostProcessor::draw()
 
 void PostProcessor::setScreenSize(int width, int height)
 {
+    d_width = width;
+    d_height = height;
     for (auto& effect : d_effects) {
         effect->setScreenSize(width, height);
     }

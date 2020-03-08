@@ -9,9 +9,15 @@ using EffectPipeline = std::vector<std::shared_ptr<Effect>>;
 
 class PostProcessor
 {
+    int d_width;
+    int d_height;
+        // Dimensions of the screen.
+
     EffectPipeline d_effects;
 
 public:
+    PostProcessor(int width, int height);
+
     void addEffect(std::shared_ptr<Effect> effect);
 
     void bind() const;
@@ -22,6 +28,11 @@ public:
     void draw();
 
     void setScreenSize(int width, int height);
+
+    template <typename T>
+    void addEffect() {
+        d_effects.push_back(std::make_shared<T>(d_width, d_height));
+    }
 };
 
 }

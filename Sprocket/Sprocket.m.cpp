@@ -22,7 +22,7 @@
 #include "PostProcessor.h"
 #include "Effect.h"
 #include "GaussianBlur.h"
-#include "Contrast.h"
+#include "Negative.h"
 
 #include <vector>
 #include <memory>
@@ -72,10 +72,10 @@ public:
         , d_entityRenderer(info->window)
         , d_terrainRenderer(info->window)
         , d_skyboxRenderer(info->window)
-        , d_postProcessor()
+        , d_postProcessor(info->window->width(), info->window->height())
     {
         auto quadModel = Loader::loadModel3D("Resources/Models/Plane.obj");
-        //auto dragonModel = Loader::loadModel("Resources/Models/Dragon.obj");
+        auto dragonModel = Loader::loadModel3D("Resources/Models/Dragon.obj");
         auto deagleModel = Loader::loadModel3D("Resources/Models/Deagle.obj");
 
         auto space = Loader::loadTexture("Resources/Textures/Space.PNG");
@@ -87,7 +87,7 @@ public:
 
         d_info->terrains.push_back(Terrain(space));
 
-        //d_info->entities.push_back(Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
+        d_info->entities.push_back(Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
         d_info->entities.push_back(Entity(quadModel, gray, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
         d_info->entities.push_back(Entity(deagleModel, shinyGray, {0.0f, 0.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1));
 
@@ -96,8 +96,9 @@ public:
         d_info->lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
         d_info->lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
     
-        d_postProcessor.addEffect(std::make_shared<Contrast>(d_info->window->width(),
-                                                             d_info->window->height()));
+        d_postProcessor.addEffect<Negative>();
+        d_postProcessor.addEffect<GaussianVert>();
+        d_postProcessor.addEffect<GaussianHoriz>();
         //d_postProcessor.addEffect(std::make_shared<GaussianVert>(d_info->window->width(),
           //                                                       d_info->window->height()));
     }
@@ -132,7 +133,10 @@ public:
 
     void drawImpl(Window* window) override
     {
-        d_postProcessor.bind();
+        //if(d_info->paused) {
+        //    d_postProcessor.bind();
+       // }
+        
         RenderOptions options;
         options.wireframe = window->isKeyDown(Keyboard::F) &&
                             d_status == Status::NORMAL;
@@ -152,8 +156,12 @@ public:
         }
         d_skyboxRenderer.draw(d_info->skybox,
                               d_info->camera);
-        d_postProcessor.unbind();
-        d_postProcessor.draw();
+        
+        
+        //if (d_info->paused) {
+        //    d_postProcessor.unbind();
+        //    d_postProcessor.draw();
+        //}
     }
 };
 

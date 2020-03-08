@@ -30,7 +30,7 @@ add_executable(Sprocket
                Graphics/Modelling/Model3D.cpp
 
                Graphics/PostProcessing/Effect.cpp
-               Graphics/PostProcessing/Contrast.cpp
+               Graphics/PostProcessing/Negative.cpp
                Graphics/PostProcessing/GaussianBlur.cpp
                Graphics/PostProcessing/PostProcessor.cpp
 
