@@ -1,6 +1,7 @@
 #include "Graphics/Skyboxes/Skybox.h"
 #include "Graphics/Loader.h"
 
+#include <glad/glad.h>
 #include <stb_image.h>
 
 namespace Sprocket {

@@ -41,8 +41,8 @@ struct WindowData
 	unsigned int  width;
 	unsigned int  height;
 
-	bool          running;
-	bool          focused;
+	bool running   = true;
+	bool focused   = true;
 
 	EventCallback callback;
 };
@@ -57,6 +57,10 @@ class Window
 		// interested in events. Other objects can register themselves
 		// by providing callbacks of their own. Objects may also
 		// deregister themselves to stop receiving events.
+
+	Maths::vec2 d_mouseOffset;
+		// Updated every frame. This is the mouse offset between the
+		// current frame and the one before it.
 
 private:
 	// Deleted Constructors
@@ -97,6 +101,7 @@ public:
 	bool isKeyDown(int key);
 	bool isMouseButtonDown(int button);
 	Maths::vec2 getMousePos();
+	Maths::vec2 getMouseOffset();
 };
 
 }

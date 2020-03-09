@@ -1,5 +1,7 @@
 #include "Graphics/Modelling/Model3D.h"
 
+#include <glad/glad.h>
+
 namespace Sprocket {
 
 Model3D::Model3D(unsigned int vaoId, int vertexCount)

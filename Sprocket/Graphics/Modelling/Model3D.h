@@ -1,15 +1,15 @@
 #pragma once
+#include "Maths.h"
 
 #include <vector>
-#include <glad/glad.h>
 
 namespace Sprocket {
 
 struct Vertex3D
 {
-    GLfloat position[3];
-    GLfloat texture[2];
-    GLfloat normal[3];
+    Maths::vec3 position;
+    Maths::vec2 texture;
+    Maths::vec3 normal;
 };
 
 using Vertex3DBuffer = std::vector<Vertex3D>;

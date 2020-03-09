@@ -23,13 +23,16 @@ void TerrainRenderer::draw(const Terrain& terrain,
     unsigned int MAX_NUM_LIGHTS = 5;
 
     // Load up the transform/projection/view matrices.
-	Maths::mat4 transform(1.0f);
+	Maths::mat4 transform = Maths::createTransformationMatrix(
+        terrain.position(),               
+        Maths::vec3(0.0f),
+        1.0f);
 
-    Maths::mat4 projection = Sprocket::Maths::createProjectionMatrix(
+    Maths::mat4 projection = Maths::createProjectionMatrix(
         d_window->aspectRatio(),
-        70.0f,
-        0.1f,
-        1000.0f);
+        camera.fov(),
+        camera.nearPlane(),
+        camera.farPlane());
 
     Maths::mat4 view = Maths::createViewMatrix(
         camera.position(),

@@ -2,7 +2,7 @@
 #include "Core/Window.h"
 #include "Graphics/Terrains/Terrain.h"
 #include "Graphics/Light.h"
-#include "Graphics/Camera.h"
+#include "Camera.h"
 #include "Graphics/Shader.h"
 #include "Graphics/RenderOptions.h"
 

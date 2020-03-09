@@ -7,6 +7,9 @@
 #include <unordered_map>
 #include <string>
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
 namespace Sprocket {
 
 namespace {
@@ -118,9 +121,9 @@ std::pair<Vertex3DBuffer, IndexBuffer> parseObjFile(const std::string& objFile)
                     Maths::vec3 normal   = tempNormals[norIdx];
 
                     Vertex3D newVertex = {
-                        {position.x, position.y, position.z},
-                        {texCoord.x, texCoord.y},
-                        {normal.x, normal.y, normal.z}
+                        Maths::vec3{position.x, position.y, position.z},
+                        Maths::vec2{texCoord.x, texCoord.y},
+                        Maths::vec3{normal.x, normal.y, normal.z}
                     };
 
                     unsigned int newVertexIdx = (unsigned int)vertices.size();

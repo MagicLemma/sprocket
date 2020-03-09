@@ -1,5 +1,7 @@
 #include "Graphics/Modelling/Model2D.h"
 
+#include <glad/glad.h>
+
 namespace Sprocket {
 
 Model2D::Model2D(unsigned int vaoId, int vertexCount)

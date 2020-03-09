@@ -12,7 +12,7 @@ SkyboxRenderer::SkyboxRenderer(Window* window)
 }
 
 void SkyboxRenderer::draw(const Skybox& skybox,
-                          const Camera& camera,
+                          const FirstPersonCamera& camera,
                           const RenderOptions& options)
 {
     handleRenderOptions(options);

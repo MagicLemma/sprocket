@@ -4,7 +4,7 @@
 #include "Graphics/Modelling/Model2D.h"
 #include "Graphics/Modelling/Model3D.h"
 #include "Texture.h"
-#include "Camera.h"
+#include "FirstPersonCamera.h"
 #include "Light.h"
 #include "Layer.h"
 #include "Scene.h"
@@ -32,7 +32,7 @@ namespace Sprocket {
 struct BasicSceneInfo
 {
     Window* window;
-    Camera  camera;
+    FirstPersonCamera  camera;
 
     Skybox skybox;
  
@@ -77,7 +77,9 @@ public:
         auto quadModel = Loader::loadModel3D("Resources/Models/Plane.obj");
         auto dragonModel = Loader::loadModel3D("Resources/Models/Dragon.obj");
         auto deagleModel = Loader::loadModel3D("Resources/Models/Deagle.obj");
+        auto cube = Loader::loadModel3D("Resources/Models/Cube.obj");
 
+        auto green = Loader::loadTexture("Resources/Textures/Green.PNG");
         auto space = Loader::loadTexture("Resources/Textures/Space.PNG");
         auto gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
         auto shinyGray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
@@ -85,22 +87,24 @@ public:
         shinyGray->reflectivity(3);
         shinyGray->shineDamper(5);
 
-        d_info->terrains.push_back(Terrain(space));
+        d_info->terrains.push_back(Terrain(green, {0.0f, -2.0f, 0.0f}));
+        d_info->terrains.push_back(Terrain(green, {-50.0f, -2.0f, 0.0f}));
+        d_info->terrains.push_back(Terrain(green, {0.0f, -2.0f, -50.0f}));
+        d_info->terrains.push_back(Terrain(green, {-50.0f, -2.0f, -50.0f}));
 
         d_info->entities.push_back(Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
-        d_info->entities.push_back(Entity(quadModel, gray, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 20));
+        //d_info->entities.push_back(Entity(quadModel, gray, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 1));
         d_info->entities.push_back(Entity(deagleModel, shinyGray, {0.0f, 0.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1));
+        d_info->entities.push_back(Entity(cube, space, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1));
 
         d_info->lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
         d_info->lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
         d_info->lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
         d_info->lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
     
-        d_postProcessor.addEffect<Negative>();
+        //d_postProcessor.addEffect<Negative>();
         d_postProcessor.addEffect<GaussianVert>();
         d_postProcessor.addEffect<GaussianHoriz>();
-        //d_postProcessor.addEffect(std::make_shared<GaussianVert>(d_info->window->width(),
-          //                                                       d_info->window->height()));
     }
 
     bool handleEventImpl(Window* window, const Event& event) override
@@ -126,16 +130,22 @@ public:
 
             d_info->lights[3].position.z = 6 * std::sin(8.0f * tick);
             d_info->lights[3].position.x = 6 * std::cos(8.0f * tick);
-        }
 
-        d_info->camera.move(window, d_status == Status::NORMAL);
+            d_info->camera.update(window);
+
+            window->setCursorVisibility(false);
+        }
+        else {
+            window->setCursorVisibility(true);
+        }
+        
     }
 
     void drawImpl(Window* window) override
     {
-        //if(d_info->paused) {
-        //    d_postProcessor.bind();
-       // }
+        if(d_info->paused) {
+            d_postProcessor.bind();
+        }
         
         RenderOptions options;
         options.wireframe = window->isKeyDown(Keyboard::F) &&
@@ -158,10 +168,10 @@ public:
                               d_info->camera);
         
         
-        //if (d_info->paused) {
-        //    d_postProcessor.unbind();
-        //    d_postProcessor.draw();
-        //}
+        if (d_info->paused) {
+            d_postProcessor.unbind();
+            d_postProcessor.draw();
+        }
     }
 };
 
@@ -177,8 +187,14 @@ public:
         , d_info(info)
         , d_displayRenderer(info->window)
     {
-        Vertex2DBuffer v = {{0.5f, 0.5f}, {-0.5f, -0.5f}, {-0.5f, 0.5f},
-                        {0.5f, 0.5f}, {0.5f, -0.5f}, {-0.5f, -0.5f}};
+        Vertex2DBuffer v = {
+            {Maths::vec2{0.5f, 0.5f}, Maths::vec2{1.0f, 1.0f}},
+            {Maths::vec2{-0.5f, -0.5f}, Maths::vec2{0.0f, 0.0f}},
+            {Maths::vec2{-0.5f, 0.5f}, Maths::vec2{0.0f, 1.0f}},
+            {Maths::vec2{0.5f, 0.5f}, Maths::vec2{1.0f, 1.0f}},
+            {Maths::vec2{0.5f, -0.5f}, Maths::vec2{1.0f, 0.0f}},
+            {Maths::vec2{-0.5f, -0.5f}, Maths::vec2{0.0f, 0.0f}}
+        };
         auto tri = Loader::loadModel2D(v);
         d_info->models.push_back(tri);
     }

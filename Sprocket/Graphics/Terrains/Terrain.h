@@ -7,16 +7,17 @@ namespace Sprocket {
 
 class Terrain
 {
-    std::shared_ptr<Model3D> d_model;
     TexturePtr               d_texture;
 
     Maths::vec3 d_position;
 
-    int         d_edge;
-    float       d_distance;
+    int                      d_edge;
+    float                    d_distance;
+    std::shared_ptr<Model3D> d_model;
 
 public:
-    Terrain(TexturePtr texture);
+    Terrain(TexturePtr texture,
+            const Maths::vec3& postition = Maths::vec3{0.0f});
 
     void bind() const;
     void unbind() const;
@@ -25,7 +26,7 @@ public:
     std::shared_ptr<Model3D> model() const { return d_model; }
     TexturePtr texture() const { return d_texture; }
 
-    
+    Maths::vec3 position() const { return d_position; }
 };
 
 }

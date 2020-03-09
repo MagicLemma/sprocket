@@ -32,9 +32,9 @@ void EntityRenderer::draw(const Entity& entity,
 
     Maths::mat4 projection = Sprocket::Maths::createProjectionMatrix(
         d_window->aspectRatio(),
-        70.0f,
-        0.1f,
-        1000.0f);
+        camera.fov(),
+        camera.nearPlane(),
+        camera.farPlane());
 
     Maths::mat4 view = Maths::createViewMatrix(
         camera.position(),

@@ -1,6 +1,7 @@
 #include "Graphics/Terrains/Terrain.h"
 #include "Graphics/Loader.h"
 #include "Utility/Log.h"
+#include "Maths.h"
 
 #include <cstdlib>
 
@@ -15,9 +16,9 @@ std::shared_ptr<Model3D> generateTerrain(int edge, float distance)
     for (int i = 0; i < edge; ++i) {
         for (int j = 0; j < edge; ++j) {
             Vertex3D v{
-                {distance * i, 0, distance * j},
-                {(float)i / ((float)edge - 1), (float)j / ((float)edge - 1)},
-                {0.0f, 1.0f, 0.0f}
+                Maths::vec3{distance * i, 0, distance * j},
+                Maths::vec2{(float)i / ((float)edge - 1), (float)j / ((float)edge - 1)},
+                Maths::vec3{0.0f, 1.0f, 0.0f}
             };
             vertices.push_back(v);
         }
@@ -41,12 +42,12 @@ std::shared_ptr<Model3D> generateTerrain(int edge, float distance)
 
 }
 
-Terrain::Terrain(TexturePtr texture)
-    : d_model(generateTerrain(100, 0.5f))
-    , d_texture(texture)
-    , d_position({0.0f, 0.0f, 0.0f})
-    , d_edge(10)
-    , d_distance(10)
+Terrain::Terrain(TexturePtr texture, const Maths::vec3& postition)
+    : d_texture(texture)
+    , d_position(postition)
+    , d_edge(101)
+    , d_distance(0.5f)
+    , d_model(generateTerrain(d_edge, d_distance))
 {
 }
 

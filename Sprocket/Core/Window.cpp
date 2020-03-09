@@ -26,7 +26,7 @@ Window::Window(
 	unsigned int height
 )
 	: d_impl(std::make_shared<WindowImpl>())
-	, d_data({name, width, height, true, true})
+	, d_data({name, width, height})
 	, d_callbacks()
 {
 	// Set the callback that will get called by GLFW. This just
@@ -51,10 +51,11 @@ Window::Window(
 		nullptr
 	);
 
+	d_mouseOffset = getMousePos();
+
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
 	glfwSwapInterval(1);  // Set VSync to be true
-	glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Initialise GLAD
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -154,6 +155,11 @@ void Window::onUpdate()
 {
 	glfwSwapBuffers(d_impl->window);
 	glfwPollEvents();
+
+	static Maths::vec2 prevMousePos = getMousePos();
+	Maths::vec2 mousePos = getMousePos();
+	d_mouseOffset = mousePos - prevMousePos;
+	prevMousePos = mousePos;
 }
 
 void Window::clear()
@@ -202,6 +208,11 @@ Maths::vec2 Window::getMousePos()
 	double x, y;
 	glfwGetCursorPos(d_impl->window, &x, &y);
 	return {x, y};
+}
+
+Maths::vec2 Window::getMouseOffset()
+{
+	return d_mouseOffset;
 }
 
 float Window::getTime()

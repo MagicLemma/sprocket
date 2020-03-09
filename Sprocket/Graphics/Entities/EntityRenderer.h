@@ -2,7 +2,7 @@
 #include "Core/Window.h"
 #include "Graphics/Entities/Entity.h"
 #include "Graphics/Light.h"
-#include "Graphics/Camera.h"
+#include "Camera.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Skyboxes/Skybox.h"
 #include "Graphics/RenderOptions.h"

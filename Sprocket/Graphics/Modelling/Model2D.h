@@ -1,14 +1,14 @@
 #pragma once
+#include "Maths.h"
 
 #include <vector>
-#include <glad/glad.h>
 
 namespace Sprocket {
 
 struct Vertex2D
 {
-    GLfloat position[2];
-    GLfloat texture[2];
+    Maths::vec2 position[2];
+    Maths::vec2 texture[2];
 };
 
 using Vertex2DBuffer = std::vector<Vertex2D>;

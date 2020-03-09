@@ -8,18 +8,21 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(tinyobjloader CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_executable(Sprocket
                Sprocket.m.cpp
                
-               Graphics/Camera.cpp
                Graphics/Light.cpp
                Graphics/Loader.cpp
                Graphics/ObjParser.cpp
                Graphics/RenderOptions.cpp
                Graphics/Shader.cpp
                Graphics/Texture.cpp
+
+               Graphics/Cameras/Camera.cpp
+               Graphics/Cameras/FirstPersonCamera.cpp
 
                Graphics/Displays/DisplayRenderer.cpp
 
@@ -57,6 +60,7 @@ add_executable(Sprocket
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog
                       spdlog::spdlog_header_only
+                      tinyobjloader::tinyobjloader
                       glfw
                       glad::glad
                       glm)
@@ -66,6 +70,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Core
                            ./Events
                            ./Graphics
+                           ./Graphics/Cameras
                            ./Graphics/Displays
                            ./Graphics/Entities
                            ./Graphics/Modelling
