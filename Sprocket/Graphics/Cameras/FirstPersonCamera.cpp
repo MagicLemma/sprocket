@@ -11,9 +11,9 @@ FirstPersonCamera::FirstPersonCamera()
 {
 }
 
-void FirstPersonCamera::update(Window* window)
+void FirstPersonCamera::update(Window* window, float timeDelta)
 {
-    float speed = 0.06f;
+    float speed = 10.0f * timeDelta;
 
     Maths::vec3 forwards = d_direction;
     forwards.y = 0;
@@ -40,6 +40,7 @@ void FirstPersonCamera::update(Window* window)
     if (window->isKeyDown(Keyboard::LSHIFT)){
         d_position -= speed * up;
     }
+#if 0
     if (window->isKeyDown(Keyboard::R)) {
         d_fov += 5.0f;
         Maths::clamp(d_fov, 60, 120);
@@ -47,6 +48,7 @@ void FirstPersonCamera::update(Window* window)
     if (window->isKeyDown(Keyboard::F)) {
         d_fov -= 5.0f;
     }
+#endif
 
     Maths::clamp(d_fov, 60, 120);
 

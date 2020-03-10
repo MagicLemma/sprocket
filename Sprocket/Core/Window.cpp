@@ -55,7 +55,7 @@ Window::Window(
 
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
-	glfwSwapInterval(1);  // Set VSync to be true
+	//glfwSwapInterval(1);  // Set VSync to be true
 
 	// Initialise GLAD
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);

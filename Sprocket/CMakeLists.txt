@@ -8,7 +8,6 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-find_package(tinyobjloader CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_executable(Sprocket
@@ -60,7 +59,6 @@ add_executable(Sprocket
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog
                       spdlog::spdlog_header_only
-                      tinyobjloader::tinyobjloader
                       glfw
                       glad::glad
                       glm)

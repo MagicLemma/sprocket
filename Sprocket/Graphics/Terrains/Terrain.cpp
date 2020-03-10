@@ -45,8 +45,8 @@ std::shared_ptr<Model3D> generateTerrain(int edge, float distance)
 Terrain::Terrain(TexturePtr texture, const Maths::vec3& postition)
     : d_texture(texture)
     , d_position(postition)
-    , d_edge(101)
-    , d_distance(0.5f)
+    , d_edge(51)
+    , d_distance(1.0f)
     , d_model(generateTerrain(d_edge, d_distance))
 {
 }

@@ -27,7 +27,7 @@ protected:
 public:
     Camera();
 
-    virtual void update(Window* window) = 0;
+    virtual void update(Window* window, float timeDelta) = 0;
 
     Maths::vec3 position() const { return d_position; }
     Maths::vec3 direction() const { return d_direction; }

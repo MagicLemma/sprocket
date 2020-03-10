@@ -68,6 +68,8 @@ public:
     double layerTicker() const;
         // Returns d_ticker, a steadily increasing value bound to the
         // framerate.
+
+    float  deltaTime() const { return d_deltaTime; }
 };
 
 }

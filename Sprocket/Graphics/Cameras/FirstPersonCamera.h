@@ -14,7 +14,7 @@ class FirstPersonCamera : public Camera
 public:
     FirstPersonCamera();
 
-    virtual void update(Window* window) override;
+    virtual void update(Window* window, float timeDelta) override;
 };
 
 }

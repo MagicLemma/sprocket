@@ -19,10 +19,11 @@ class TerrainRenderer
 public:
     TerrainRenderer(Window* window);
 
-    void draw(const Terrain& entity,
-              const Camera& camera,
-              const Lights& lights,
-              const RenderOptions& options = RenderOptions());
+    void update(const Camera& camera,
+                const Lights& lights,
+                const RenderOptions& options = RenderOptions());
+
+    void draw(const Terrain& terrain);
 };
 
 }

@@ -24,6 +24,10 @@
 #include "GaussianBlur.h"
 #include "Negative.h"
 
+#include <GLFW/glfw3.h>
+
+#include <random>
+
 #include <vector>
 #include <memory>
 
@@ -87,21 +91,42 @@ public:
         shinyGray->reflectivity(3);
         shinyGray->shineDamper(5);
 
-        d_info->terrains.push_back(Terrain(green, {0.0f, -2.0f, 0.0f}));
-        d_info->terrains.push_back(Terrain(green, {-50.0f, -2.0f, 0.0f}));
-        d_info->terrains.push_back(Terrain(green, {0.0f, -2.0f, -50.0f}));
-        d_info->terrains.push_back(Terrain(green, {-50.0f, -2.0f, -50.0f}));
+        // Make the huge terrain.
+        d_info->terrains.push_back(Terrain(green, {0.0f, 0.0f, 0.0f}));
+        d_info->terrains.push_back(Terrain(green, {-50.0f, 0.0f, 0.0f}));
+        d_info->terrains.push_back(Terrain(green, {0.0f, 0.0f, -50.0f}));
+        d_info->terrains.push_back(Terrain(green, {-50.0f, 0.0f, -50.0f}));
 
+        // Load complex models
         d_info->entities.push_back(Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Maths::vec3(0.0f), 0.1f));
-        //d_info->entities.push_back(Entity(quadModel, gray, {0.0f, -1.0f, 0.0f}, Maths::vec3(0.0f), 1));
-        d_info->entities.push_back(Entity(deagleModel, shinyGray, {0.0f, 0.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1));
-        d_info->entities.push_back(Entity(cube, space, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1));
+        d_info->entities.push_back(Entity(deagleModel, shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1));
+        
+        // Load cubes to show the grid.
+        d_info->entities.push_back(Entity(cube, space, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
+        d_info->entities.push_back(Entity(cube, space, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
+        d_info->entities.push_back(Entity(cube, space, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
+        d_info->entities.push_back(Entity(cube, space, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
+
+        // Seed with a real random value, if available
+        std::random_device r;
+    
+        // Choose a random mean between 1 and 6
+        std::default_random_engine e1(r());
+        std::uniform_real_distribution<float> udist(-50, 50);
+        std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
+
+        // Load a bunch of random cubes/
+        for (int i = 0; i != 50; ++i) {
+            d_info->entities.push_back(Entity{cube, shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
+        }
+
+        d_info->window->setCursorVisibility(false);
 
         d_info->lights.push_back(Light{{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
-        d_info->lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.3f, 0.0f}});
-        d_info->lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.3f, 0.0f}});
-        d_info->lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.3f, 0.0f}});
-    
+        d_info->lights.push_back(Light{{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
+        d_info->lights.push_back(Light{{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
+        d_info->lights.push_back(Light{{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
+
         //d_postProcessor.addEffect<Negative>();
         d_postProcessor.addEffect<GaussianVert>();
         d_postProcessor.addEffect<GaussianHoriz>();
@@ -122,16 +147,16 @@ public:
         if (d_status == Status::NORMAL) {
             double tick = layerTicker();
 
-            d_info->lights[1].position.z = 5 * std::sin(tick);
-            d_info->lights[1].position.x = 5 * std::cos(tick);
+            d_info->lights[1].position.z = 50 * std::sin(tick);
+            d_info->lights[1].position.x = 50 * std::cos(tick);
 
-            d_info->lights[2].position.z = 6 * std::sin(-1.5f * tick);
-            d_info->lights[2].position.x = 6 * std::cos(-1.5f * tick);
+            d_info->lights[2].position.z = 60 * std::sin(-1.5f * tick);
+            d_info->lights[2].position.x = 60 * std::cos(-1.5f * tick);
 
-            d_info->lights[3].position.z = 6 * std::sin(8.0f * tick);
-            d_info->lights[3].position.x = 6 * std::cos(8.0f * tick);
+            d_info->lights[3].position.z = 60 * std::sin(8.0f * tick);
+            d_info->lights[3].position.x = 60 * std::cos(8.0f * tick);
 
-            d_info->camera.update(window);
+            d_info->camera.update(window, deltaTime());
 
             window->setCursorVisibility(false);
         }
@@ -152,17 +177,15 @@ public:
                             d_status == Status::NORMAL;
 
         
+        d_entityRenderer.update(d_info->camera, d_info->lights, options);
+        d_terrainRenderer.update(d_info->camera, d_info->lights, options);
+
         for (const auto& entity: d_info->entities) {
-            d_entityRenderer.draw(entity,
-                                  d_info->camera,
-                                  d_info->lights,
-                                  options);
+            d_entityRenderer.draw(entity);
         }
+
         for (const auto& terrain: d_info->terrains) {
-            d_terrainRenderer.draw(terrain,
-                                   d_info->camera,
-                                   d_info->lights,
-                                   options);
+            d_terrainRenderer.draw(terrain);
         }
         d_skyboxRenderer.draw(d_info->skybox,
                               d_info->camera);
@@ -249,10 +272,26 @@ int main(int argc, char* argv[])
 
     Sprocket::Scene scene("Scene", layerStack, &window);
 
+    double previousTime = glfwGetTime();
+    int frameCount = 0;
+
     while (window.running()) {
         window.clear();
         scene.tick();
         window.onUpdate();
+
+        // Print framerate
+        double currentTime = glfwGetTime();
+        frameCount++;
+        // If a second has passed.
+        if ( currentTime - previousTime >= 1.0 )
+        {
+            // Display the frame count here any way you want.
+            SPKT_LOG_INFO("{}", frameCount);
+
+            frameCount = 0;
+            previousTime = currentTime;
+        }
     }
 
     return 0;

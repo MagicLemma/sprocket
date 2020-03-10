@@ -23,10 +23,13 @@ class EntityRenderer
 public:
     EntityRenderer(Window* window);
 
-    void draw(const Entity& entity,
-              const Camera& camera,
-              const Lights& lights,
-              const RenderOptions& options = RenderOptions());
+    void update(const Camera& camera,
+                const Lights& lights,
+                const RenderOptions& options = RenderOptions());
+        // To be called on every frame, all non-entity updates of the
+        // shader should be carried out here.
+
+    void draw(const Entity& entity);
 };
 
 }
