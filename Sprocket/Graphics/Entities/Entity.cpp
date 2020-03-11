@@ -12,7 +12,17 @@ Entity::Entity(std::shared_ptr<Model3D> model,
     , d_position(position)
     , d_rotation(rotation)
     , d_scale(scale)
+    , d_transform(Maths::createTransformationMatrix(position, rotation, scale))
 {    
+}
+
+void Entity::updateTransform()
+{
+    d_transform = Maths::createTransformationMatrix(
+        d_position,
+        d_rotation,
+        d_scale
+    );
 }
 
 void Entity::bind() const
@@ -30,6 +40,7 @@ void Entity::unbind() const
 void Entity::increasePosition(const Maths::vec3 ds)
 {
     d_position += ds;
+    updateTransform();
 }
 
 void Entity::increasePosition(float dx, float dy, float dz)
@@ -40,6 +51,7 @@ void Entity::increasePosition(float dx, float dy, float dz)
 void Entity::increaseRotation(const Maths::vec3 dr)
 {
     d_rotation += dr;
+    updateTransform();
 }
 
 void Entity::increaseRotation(float dx, float dy, float dz)
@@ -55,6 +67,7 @@ Maths::vec3 Entity::position() const
 void Entity::position(const Maths::vec3& newPosition)
 {
     d_position = newPosition;
+    updateTransform();
 }
 
 Maths::vec3 Entity::rotation() const
@@ -65,6 +78,7 @@ Maths::vec3 Entity::rotation() const
 void Entity::rotation(const Maths::vec3& newRotation)
 {
     d_rotation = newRotation;
+    updateTransform();
 }
 
 float Entity::scale() const
@@ -75,6 +89,7 @@ float Entity::scale() const
 void Entity::scale(float newScale)
 {
     d_scale = newScale;
+    updateTransform();
 }
 
 }

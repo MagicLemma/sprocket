@@ -58,11 +58,8 @@ void EntityRenderer::draw(const Entity& entity)
 {
     d_shader.bind();
 
-    // Load up the transform/projection/view matrices.
-	Maths::mat4 transform = Maths::createTransformationMatrix(
-        entity.position(),               
-        entity.rotation(),
-        entity.scale());
+    // Load up the transform matrix.
+	Maths::mat4 transform = entity.transform();
     
     d_shader.loadUniform("transformMatrix", transform);
 

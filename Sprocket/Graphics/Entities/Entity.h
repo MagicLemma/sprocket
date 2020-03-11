@@ -10,9 +10,15 @@ class Entity
     std::shared_ptr<Model3D> d_model;
     TexturePtr               d_texture;
 
+    // Transform Attributes
     Maths::vec3 d_position;
     Maths::vec3 d_rotation;
     float       d_scale;
+
+    Maths::mat4 d_transform;
+
+    void updateTransform();
+        // Recalculates the transform matrix.
 
 public:
     Entity(std::shared_ptr<Model3D> model,
@@ -34,6 +40,8 @@ public:
     // Getters / Setters
     std::shared_ptr<Model3D> model() const { return d_model; }
     TexturePtr texture() const { return d_texture; }
+
+    Maths::mat4 transform() const { return d_transform; }
 
     Maths::vec3 position() const;
     void position(const Maths::vec3& newPosition);
