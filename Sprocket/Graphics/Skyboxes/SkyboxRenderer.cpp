@@ -22,15 +22,10 @@ void SkyboxRenderer::draw(const Skybox& skybox,
     d_shader.bind();
     Maths::mat4 projection = lens.projection();
 
-    Maths::mat4 view = Maths::createViewMatrix(
-        camera.position(),
-        camera.pitch(),
-        camera.yaw(),
-        camera.roll()
-    );
+    Maths::mat4 view = camera.view();
     view = Maths::mat4(Maths::mat3(view));
     
-    d_shader.loadUniform("projectionMatrix", projection);
+    d_shader.loadUniform("projectionMatrix", lens.projection());
     d_shader.loadUniform("viewMatrix", view);
 
     skybox.bind();

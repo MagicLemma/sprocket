@@ -22,6 +22,7 @@ add_executable(Sprocket
 
                Graphics/Cameras/Camera.cpp
                Graphics/Cameras/FirstPersonCamera.cpp
+               Graphics/Cameras/ThirdPersonCamera.cpp
 
                Graphics/Displays/DisplayRenderer.cpp
 

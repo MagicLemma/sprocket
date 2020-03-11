@@ -8,8 +8,18 @@ namespace Sprocket {
 
 FirstPersonCamera::FirstPersonCamera()
     : Camera()
+    , d_position(Maths::vec3(0.0f, 0.0f, 0.0f))
+    , d_direction(Maths::vec3(0.0f, 0.0f, -1.0f))
+    , d_pitch(0)
+    , d_yaw(0)
+    , d_roll(0)
     , d_sensitivity(0.15f)
 {
+}
+
+Maths::mat4 FirstPersonCamera::view() const
+{
+    return Maths::createViewMatrix(d_position, d_pitch, d_yaw, d_roll);
 }
 
 void FirstPersonCamera::update(Window* window, float timeDelta)
@@ -35,6 +45,7 @@ void FirstPersonCamera::update(Window* window, float timeDelta)
     if (window->isKeyDown(Keyboard::A)){
         d_position -= speed * right;
     }
+    
     if (window->isKeyDown(Keyboard::SPACE)){
         d_position += speed * up;
     }

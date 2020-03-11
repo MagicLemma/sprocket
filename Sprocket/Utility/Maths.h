@@ -24,6 +24,10 @@ mat4 createViewMatrix(const vec3& position,
                       float yaw,
                       float roll);
 
+mat4 lookAt(const vec3& position,
+            const vec3& target,
+            const vec3& up = vec3{0.0f, 1.0f, 0.0f});
+
 float radians(float degrees);
 float sind(float degrees);
 float cosd(float degrees);

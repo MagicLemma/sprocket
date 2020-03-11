@@ -5,6 +5,7 @@
 #include "Graphics/Modelling/Model3D.h"
 #include "Texture.h"
 #include "FirstPersonCamera.h"
+#include "ThirdPersonCamera.h"
 #include "Light.h"
 #include "Layer.h"
 #include "Scene.h"
@@ -37,7 +38,7 @@ namespace Sprocket {
 struct BasicSceneInfo
 {
     Window* window;
-    FirstPersonCamera camera;
+    ThirdPersonCamera camera;
     PerspectiveLens   lens;
 
     Skybox skybox;
@@ -141,7 +142,8 @@ public:
             d_postProcessor.setScreenSize(e->width(), e->height());
         }
 
-        d_info->lens.handleEvent(window, event);
+        d_info->camera.handleEvent(window, event);
+        d_info->lens.handleEvent(window, event);    
         return false;
     }
 
@@ -163,7 +165,7 @@ public:
 
             d_info->camera.update(window, deltaTime());
 
-            window->setCursorVisibility(false);
+            window->setCursorVisibility(true);
         }
         else {
             window->setCursorVisibility(true);

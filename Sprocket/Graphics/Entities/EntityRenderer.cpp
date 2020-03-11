@@ -23,17 +23,8 @@ void EntityRenderer::update(const Camera& camera,
     d_shader.bind();
     unsigned int MAX_NUM_LIGHTS = 5;
 
-    Maths::mat4 projection = lens.projection();
-
-    Maths::mat4 view = Maths::createViewMatrix(
-        camera.position(),
-        camera.pitch(),
-        camera.yaw(),
-        camera.roll()
-    );
-    
-    d_shader.loadUniform("projectionMatrix", projection);
-    d_shader.loadUniform("viewMatrix", view);
+    d_shader.loadUniform("projectionMatrix", lens.projection());
+    d_shader.loadUniform("viewMatrix", camera.view());
 
     // Load lights to shader
     for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
@@ -55,12 +46,7 @@ void EntityRenderer::draw(const Entity& entity)
 {
     d_shader.bind();
 
-    // Load up the transform matrix.
-	Maths::mat4 transform = entity.transform();
-    
-    d_shader.loadUniform("transformMatrix", transform);
-
-     // Load remaining entity to shader
+    d_shader.loadUniform("transformMatrix", entity.transform());
 	d_shader.loadUniform("shineDamper", entity.texture().shineDamper());
 	d_shader.loadUniform("reflectivity", entity.texture().reflectivity());
 
