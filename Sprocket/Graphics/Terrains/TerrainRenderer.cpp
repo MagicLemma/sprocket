@@ -22,11 +22,7 @@ void TerrainRenderer::update(const Camera& camera,
     unsigned int MAX_NUM_LIGHTS = 5;
 
     // Load up the projection/view matrices.
-    Maths::mat4 projection = Maths::createProjectionMatrix(
-        d_window->aspectRatio(),
-        camera.fov(),
-        camera.nearPlane(),
-        camera.farPlane());
+    Maths::mat4 projection = camera.projectionMatrix();
 
     Maths::mat4 view = Maths::createViewMatrix(
         camera.position(),

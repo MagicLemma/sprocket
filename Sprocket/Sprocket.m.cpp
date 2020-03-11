@@ -50,6 +50,7 @@ struct BasicSceneInfo
     
     BasicSceneInfo(Window* window)
         : window(window)
+        , camera(window->aspectRatio())
         , skybox({"Resources/Textures/Skybox/Skybox_X_Pos.png",
                   "Resources/Textures/Skybox/Skybox_X_Neg.png",
                   "Resources/Textures/Skybox/Skybox_Y_Pos.png",
@@ -136,6 +137,7 @@ public:
     {
         if (auto e = event.as<WindowResizeEvent>()) {
             d_postProcessor.setScreenSize(e->width(), e->height());
+            d_info->camera.handleEvent(window, event);
         }
         return false;
     }

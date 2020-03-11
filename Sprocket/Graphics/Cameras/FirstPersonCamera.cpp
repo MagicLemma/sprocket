@@ -1,13 +1,18 @@
 #include "FirstPersonCamera.h"
+#include "WindowEvent.h"
 
 #include <cmath>
 #include <algorithm>
 
 namespace Sprocket {
 
-FirstPersonCamera::FirstPersonCamera()
+FirstPersonCamera::FirstPersonCamera(float aspectRatio)
     : Camera()
     , d_sensitivity(0.15f)
+    , d_fov(70.0f)
+    , d_nearPlane(0.1f)
+    , d_farPlane(1000.0f)
+    , d_projectionMatrix(Maths::createProjectionMatrix(aspectRatio, d_fov, d_nearPlane, d_farPlane))
 {
 }
 
@@ -61,6 +66,18 @@ void FirstPersonCamera::update(Window* window, float timeDelta)
     d_direction.y = -Maths::sind(d_pitch);
     d_direction.z = -Maths::cosd(d_yaw) * Maths::cosd(d_pitch);
     Maths::normalise(d_direction);
+}
+
+void FirstPersonCamera::handleEvent(Window* window, const Event& event)
+{
+    if (auto e = event.as<WindowResizeEvent>()) {
+        d_projectionMatrix = Maths::createProjectionMatrix(
+            window->aspectRatio(),
+            d_fov,
+            d_nearPlane,
+            d_farPlane
+        );
+    }
 }
 
 }

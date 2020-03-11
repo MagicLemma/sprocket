@@ -22,11 +22,7 @@ void EntityRenderer::update(const Camera& camera,
     d_shader.bind();
     unsigned int MAX_NUM_LIGHTS = 5;
 
-    Maths::mat4 projection = Sprocket::Maths::createProjectionMatrix(
-        d_window->aspectRatio(),
-        camera.fov(),
-        camera.nearPlane(),
-        camera.farPlane());
+    Maths::mat4 projection = camera.projectionMatrix();
 
     Maths::mat4 view = Maths::createViewMatrix(
         camera.position(),
