@@ -1,10 +1,11 @@
 #pragma once
-#include "Core/Window.h"
-#include "Graphics/Terrains/Terrain.h"
-#include "Graphics/Light.h"
+#include "Window.h"
+#include "Terrain.h"
+#include "Light.h"
 #include "Camera.h"
-#include "Graphics/Shader.h"
-#include "Graphics/RenderOptions.h"
+#include "Lens.h"
+#include "Shader.h"
+#include "RenderOptions.h"
 
 namespace Sprocket {
 
@@ -20,6 +21,7 @@ public:
     TerrainRenderer(Window* window);
 
     void update(const Camera& camera,
+                const Lens& lens,
                 const Lights& lights,
                 const RenderOptions& options = RenderOptions());
 

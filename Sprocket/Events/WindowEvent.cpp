@@ -17,17 +17,9 @@ std::string WindowResizeEvent::toString() const
 	return ss.str();
 }
 
-WindowClosedEvent::WindowClosedEvent()
-{
-}
-
 std::string WindowClosedEvent::toString() const
 {
 	return "WindowClosedEvent";
-}
-
-WindowGotFocusEvent::WindowGotFocusEvent()
-{
 }
 
 std::string WindowGotFocusEvent::toString() const
@@ -35,13 +27,18 @@ std::string WindowGotFocusEvent::toString() const
 	return "WindowGotFocus";
 }
 
-WindowLostFocusEvent::WindowLostFocusEvent()
-{
-}
-
 std::string WindowLostFocusEvent::toString() const
 {
 	return "WindowLostFocus";
+}
+std::string WindowMaximizeEvent::toString() const
+{
+	return "WindowMaximizeEvent";
+}
+
+std::string WindowMinimizeEvent::toString() const
+{
+	return "WindowMinimizeEvent";
 }
 
 }

@@ -12,18 +12,15 @@ SkyboxRenderer::SkyboxRenderer(Window* window)
 }
 
 void SkyboxRenderer::draw(const Skybox& skybox,
-                          const FirstPersonCamera& camera,
+                          const Camera& camera,
+                          const Lens& lens,
                           const RenderOptions& options)
 {
     handleRenderOptions(options);
     glDepthMask(true);
 
     d_shader.bind();
-    Maths::mat4 projection = Sprocket::Maths::createProjectionMatrix(
-        d_window->aspectRatio(),
-        70.0f,
-        0.1f,
-        1000.0f);
+    Maths::mat4 projection = lens.projection();
 
     Maths::mat4 view = Maths::createViewMatrix(
         camera.position(),

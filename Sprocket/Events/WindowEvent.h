@@ -20,7 +20,6 @@ public:
 class WindowClosedEvent : public Event
 {
 public:
-	WindowClosedEvent();
 	virtual int categoryFlags() const override { return WINDOW; }
 	std::string toString() const override;
 };
@@ -28,7 +27,6 @@ public:
 class WindowGotFocusEvent : public Event
 {
 public:
-	WindowGotFocusEvent();
 	virtual int categoryFlags() const override { return WINDOW; }
 	std::string toString() const override;
 };
@@ -36,7 +34,20 @@ public:
 class WindowLostFocusEvent : public Event
 {
 public:
-	WindowLostFocusEvent();
+	virtual int categoryFlags() const override { return WINDOW; }
+	std::string toString() const override;
+};
+
+class WindowMaximizeEvent : public Event
+{
+public:
+	virtual int categoryFlags() const override { return WINDOW; }
+	std::string toString() const override;
+};
+
+class WindowMinimizeEvent : public Event
+{
+public:
 	virtual int categoryFlags() const override { return WINDOW; }
 	std::string toString() const override;
 };

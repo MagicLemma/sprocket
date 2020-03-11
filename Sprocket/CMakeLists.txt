@@ -28,6 +28,9 @@ add_executable(Sprocket
                Graphics/Entities/Entity.cpp
                Graphics/Entities/EntityRenderer.cpp
 
+               Graphics/Lenses/Lens.cpp
+               Graphics/Lenses/PerspectiveLens.cpp
+
                Graphics/Modelling/Model2D.cpp
                Graphics/Modelling/Model3D.cpp
 
@@ -71,6 +74,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics/Cameras
                            ./Graphics/Displays
                            ./Graphics/Entities
+                           ./Graphics/Lenses
                            ./Graphics/Modelling
                            ./Graphics/PostProcessing
                            ./Graphics/Skyboxes

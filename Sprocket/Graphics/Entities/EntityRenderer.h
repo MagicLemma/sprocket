@@ -1,11 +1,11 @@
 #pragma once
-#include "Core/Window.h"
-#include "Graphics/Entities/Entity.h"
-#include "Graphics/Light.h"
+#include "Window.h"
+#include "Entity.h"
+#include "Light.h"
 #include "Camera.h"
-#include "Graphics/Shader.h"
-#include "Graphics/Skyboxes/Skybox.h"
-#include "Graphics/RenderOptions.h"
+#include "Lens.h"
+#include "Shader.h"
+#include "RenderOptions.h"
 
 namespace Sprocket {
 
@@ -24,6 +24,7 @@ public:
     EntityRenderer(Window* window);
 
     void update(const Camera& camera,
+                const Lens& lens,
                 const Lights& lights,
                 const RenderOptions& options = RenderOptions());
         // To be called on every frame, all non-entity updates of the

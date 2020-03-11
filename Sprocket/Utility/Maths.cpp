@@ -22,23 +22,12 @@ mat4 createTransformationMatrix(const vec3& translation,
     return matrix;
 }
 
-mat4 createProjectionMatrix(float aspectRatio,
-                            float fov,
-                            float nearPlane,
-                            float farPlane)
+mat4 perspective(float aspectRatio,
+                 float fov,
+                 float nearPlane,
+                 float farPlane)
 {
-    mat4 matrix(1.0);
-    float xScale = (1.0f / std::tan(radians(fov / 2.0f)));
-    float yScale = xScale * aspectRatio;
-    float frustumLength = farPlane - nearPlane;
-
-    matrix[0][0] = xScale;
-    matrix[1][1] = yScale;
-    matrix[2][2] = -((farPlane + nearPlane) / frustumLength);
-    matrix[2][3] = -1;
-    matrix[3][2] = - ((2 * nearPlane * farPlane) / frustumLength);
-    matrix[3][3] = 0;
-    return matrix;   
+    return glm::perspective(fov, aspectRatio, nearPlane, farPlane);  
 }
 
 mat4 createViewMatrix(const vec3& position,

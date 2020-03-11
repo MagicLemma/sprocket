@@ -144,6 +144,18 @@ Window::Window(
 			data->callback(event);
 		}
 	});
+
+	glfwSetWindowMaximizeCallback(d_impl->window, [](GLFWwindow* window, int maximized) {
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (maximized) {
+			WindowMaximizeEvent event;
+			data->callback(event);
+		}
+		else {
+			WindowMinimizeEvent event;
+			data->callback(event);
+		}
+	});
 }
 
 Window::~Window()

@@ -15,6 +15,7 @@ EntityRenderer::EntityRenderer(Window* window)
 }
 
 void EntityRenderer::update(const Camera& camera,
+                            const Lens& lens,
                             const Lights& lights,
                             const RenderOptions& options)
 {
@@ -22,7 +23,7 @@ void EntityRenderer::update(const Camera& camera,
     d_shader.bind();
     unsigned int MAX_NUM_LIGHTS = 5;
 
-    Maths::mat4 projection = camera.projectionMatrix();
+    Maths::mat4 projection = lens.projection();
 
     Maths::mat4 view = Maths::createViewMatrix(
         camera.position(),

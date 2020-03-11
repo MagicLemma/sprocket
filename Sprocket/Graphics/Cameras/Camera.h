@@ -29,9 +29,6 @@ public:
     virtual void handleEvent(Window* window, const Event& event) {}
         // Optional override to handle events.
 
-    virtual Maths::mat4 projectionMatrix() const = 0;
-        // To be implemented, should the return the projection matrix.
-
     Maths::vec3 position() const { return d_position; }
     Maths::vec3 direction() const { return d_direction; }
 

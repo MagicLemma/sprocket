@@ -14,10 +14,10 @@ mat4 createTransformationMatrix(const vec3& translation,
                                 const vec3& rotation,
                                 float scale);
 
-mat4 createProjectionMatrix(float aspectRatio,
-                            float fov,
-                            float nearPlane,
-                            float farPlane);
+mat4 perspective(float aspectRatio,
+                 float fov,
+                 float nearPlane,
+                 float farPlane);
 
 mat4 createViewMatrix(const vec3& position,
                       float pitch,

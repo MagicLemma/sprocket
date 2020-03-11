@@ -18,6 +18,7 @@
 #include "TerrainRenderer.h"
 #include "DisplayRenderer.h"
 #include "SkyboxRenderer.h"
+#include "PerspectiveLens.h"
 
 #include "PostProcessor.h"
 #include "Effect.h"
@@ -36,7 +37,8 @@ namespace Sprocket {
 struct BasicSceneInfo
 {
     Window* window;
-    FirstPersonCamera  camera;
+    FirstPersonCamera camera;
+    PerspectiveLens   lens;
 
     Skybox skybox;
  
@@ -50,7 +52,7 @@ struct BasicSceneInfo
     
     BasicSceneInfo(Window* window)
         : window(window)
-        , camera(window->aspectRatio())
+        , lens(window->aspectRatio())
         , skybox({"Resources/Textures/Skybox/Skybox_X_Pos.png",
                   "Resources/Textures/Skybox/Skybox_X_Neg.png",
                   "Resources/Textures/Skybox/Skybox_Y_Pos.png",
@@ -137,8 +139,9 @@ public:
     {
         if (auto e = event.as<WindowResizeEvent>()) {
             d_postProcessor.setScreenSize(e->width(), e->height());
-            d_info->camera.handleEvent(window, event);
         }
+
+        d_info->lens.handleEvent(window, event);
         return false;
     }
 
@@ -179,8 +182,8 @@ public:
                             d_status == Status::NORMAL;
 
         
-        d_entityRenderer.update(d_info->camera, d_info->lights, options);
-        d_terrainRenderer.update(d_info->camera, d_info->lights, options);
+        d_entityRenderer.update(d_info->camera, d_info->lens, d_info->lights, options);
+        d_terrainRenderer.update(d_info->camera, d_info->lens, d_info->lights, options);
 
         for (const auto& entity: d_info->entities) {
             d_entityRenderer.draw(entity);
@@ -190,7 +193,8 @@ public:
             d_terrainRenderer.draw(terrain);
         }
         d_skyboxRenderer.draw(d_info->skybox,
-                              d_info->camera);
+                              d_info->camera,
+                              d_info->lens);
         
         
         if (d_info->paused) {

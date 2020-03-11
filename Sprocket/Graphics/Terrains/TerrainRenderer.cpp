@@ -14,6 +14,7 @@ TerrainRenderer::TerrainRenderer(Window* window)
 }
 
 void TerrainRenderer::update(const Camera& camera,
+                             const Lens& lens,
                              const Lights& lights,
                              const RenderOptions& options)
 {
@@ -22,7 +23,7 @@ void TerrainRenderer::update(const Camera& camera,
     unsigned int MAX_NUM_LIGHTS = 5;
 
     // Load up the projection/view matrices.
-    Maths::mat4 projection = camera.projectionMatrix();
+    Maths::mat4 projection = lens.projection();
 
     Maths::mat4 view = Maths::createViewMatrix(
         camera.position(),

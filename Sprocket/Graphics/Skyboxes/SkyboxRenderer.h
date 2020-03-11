@@ -1,7 +1,8 @@
 #pragma once
 #include "Core/Window.h"
 #include "Graphics/Skyboxes/Skybox.h"
-#include "FirstPersonCamera.h"
+#include "Camera.h"
+#include "Lens.h"
 #include "Graphics/Shader.h"
 #include "Graphics/RenderOptions.h"
 
@@ -20,7 +21,8 @@ public:
     SkyboxRenderer(Window* window);
 
     void draw(const Skybox& entity,
-              const FirstPersonCamera& camera,
+              const Camera& camera,
+              const Lens& lens,
               const RenderOptions& options = RenderOptions());
 };
 
