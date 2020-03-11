@@ -21,10 +21,10 @@ class FirstPersonCamera : public Camera
 public:
     FirstPersonCamera(float aspectRatio);
 
-    virtual void update(Window* window, float timeDelta) override;
+    void update(Window* window, float timeDelta) override;
     void handleEvent(Window* window, const Event& event) override;
 
-    virtual Maths::mat4 projectionMatrix() const override { return d_projectionMatrix; }
+    Maths::mat4 projectionMatrix() const override { return d_projectionMatrix; }
 
     float fov() const { return d_fov; }
     float nearPlane() const { return d_nearPlane; }
