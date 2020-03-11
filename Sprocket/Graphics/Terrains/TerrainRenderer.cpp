@@ -63,11 +63,11 @@ void TerrainRenderer::draw(const Terrain& terrain)
     d_shader.loadUniform("transformMatrix", transform);
 
     // Load remaining entity to shader
-	d_shader.loadUniform("shineDamper", terrain.texture()->shineDamper());
-	d_shader.loadUniform("reflectivity", terrain.texture()->reflectivity());
+	d_shader.loadUniform("shineDamper", terrain.texture().shineDamper());
+	d_shader.loadUniform("reflectivity", terrain.texture().reflectivity());
     
     terrain.bind();
-    glDrawElements(GL_TRIANGLES, terrain.model()->vertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, terrain.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     terrain.unbind();
 
     d_shader.unbind();

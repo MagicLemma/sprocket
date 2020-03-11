@@ -13,7 +13,7 @@ class Effect
     unsigned int d_texture;
     unsigned int d_depth;
 
-    std::shared_ptr<Model2D> d_quad;
+    Model2D      d_quad;
 
 protected:
     int          d_width;

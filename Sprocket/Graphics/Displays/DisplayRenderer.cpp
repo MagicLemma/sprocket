@@ -14,14 +14,14 @@ DisplayRenderer::DisplayRenderer(Window* window)
 }
 
 void DisplayRenderer::draw(
-    std::shared_ptr<Model2D> model,
+    const Model2D& model,
     const RenderOptions& options)
 {
     handleRenderOptions(options);
     d_shader.bind();
-    model->bind();
-    glDrawArrays(GL_TRIANGLES, 0, model->vertexCount());
-    model->unbind();
+    model.bind();
+    glDrawArrays(GL_TRIANGLES, 0, model.vertexCount());
+    model.unbind();
     d_shader.unbind();
 }
 

@@ -129,22 +129,22 @@ void deinit()
     glDeleteTextures(s_texList.size(), s_texList.data());
 }
 
-std::shared_ptr<Model2D> loadModel2D(const Vertex2DBuffer& vertex2DBuffer)
+Model2D loadModel2D(const Vertex2DBuffer& vertex2DBuffer)
 {
     unsigned int vaoId = createVAO();
     bindVertex2DBuffer(vertex2DBuffer);
     glBindVertexArray(0);
 
-    return std::make_shared<Model2D>(vaoId, vertex2DBuffer.size());
+    return Model2D(vaoId, vertex2DBuffer.size());
 }
 
-std::shared_ptr<Model3D> loadModel3D(const std::string& objFile)
+Model3D loadModel3D(const std::string& objFile)
 {
     auto [vertices, indices] = parseObjFile(objFile);
     return loadModel3D(vertices, indices);
 }
 
-std::shared_ptr<Model3D> loadModel3D(const Vertex3DBuffer& vertices,
+Model3D loadModel3D(const Vertex3DBuffer& vertices,
                                      const IndexBuffer& indices)
 {
     unsigned int vaoId = createVAO();
@@ -152,10 +152,10 @@ std::shared_ptr<Model3D> loadModel3D(const Vertex3DBuffer& vertices,
     bindIndexBuffer(indices);
     glBindVertexArray(0);
 
-    return std::make_shared<Model3D>(vaoId, indices.size());   
+    return Model3D(vaoId, indices.size());   
 }
 
-TexturePtr loadTexture(const std::string& textureFile)
+Texture loadTexture(const std::string& textureFile)
 {
     unsigned int texId = createTEX(TextureType::FLAT);
 
@@ -175,7 +175,7 @@ TexturePtr loadTexture(const std::string& textureFile)
     stbi_image_free(data);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    return std::make_shared<Texture>(texId);
+    return Texture(texId);
 }
 
 }

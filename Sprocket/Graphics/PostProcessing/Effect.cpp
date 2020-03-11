@@ -7,7 +7,7 @@
 namespace Sprocket {
 namespace {
 
-std::shared_ptr<Model2D> getQuad()
+Model2D getQuad()
 {
     Vertex2DBuffer v{
         {Maths::vec2{-1.0f, -1.0f}, Maths::vec2{0.0f, 0.0f}},
@@ -76,7 +76,7 @@ void Effect::unbindForWrite() const
 void Effect::bindForRead() const
 {
     d_shader.bind();
-    d_quad->bind();
+    d_quad.bind();
     setUniforms();
     glBindTexture(GL_TEXTURE_2D, d_texture);
 }
@@ -84,7 +84,7 @@ void Effect::bindForRead() const
 void Effect::unbindForRead() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);
-    d_quad->unbind();
+    d_quad.unbind();
     d_shader.unbind();
 }
 

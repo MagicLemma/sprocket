@@ -8,7 +8,7 @@
 namespace Sprocket {
 namespace {
 
-std::shared_ptr<Model3D> generateTerrain(int edge, float distance)
+Model3D generateTerrain(int edge, float distance)
 {
     Vertex3DBuffer vertices;
     vertices.reserve(edge * edge);
@@ -42,7 +42,7 @@ std::shared_ptr<Model3D> generateTerrain(int edge, float distance)
 
 }
 
-Terrain::Terrain(TexturePtr texture, const Maths::vec3& postition)
+Terrain::Terrain(const Texture& texture, const Maths::vec3& postition)
     : d_texture(texture)
     , d_position(postition)
     , d_edge(51)
@@ -53,14 +53,14 @@ Terrain::Terrain(TexturePtr texture, const Maths::vec3& postition)
 
 void Terrain::bind() const
 {
-    d_model->bind();
-    d_texture->bind();
+    d_model.bind();
+    d_texture.bind();
 }
 
 void Terrain::unbind() const
 {
-    d_texture->unbind();
-    d_model->unbind();
+    d_texture.unbind();
+    d_model.unbind();
 }
 
 }

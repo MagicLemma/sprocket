@@ -60,11 +60,11 @@ void EntityRenderer::draw(const Entity& entity)
     d_shader.loadUniform("transformMatrix", transform);
 
      // Load remaining entity to shader
-	d_shader.loadUniform("shineDamper", entity.texture()->shineDamper());
-	d_shader.loadUniform("reflectivity", entity.texture()->reflectivity());
+	d_shader.loadUniform("shineDamper", entity.texture().shineDamper());
+	d_shader.loadUniform("reflectivity", entity.texture().reflectivity());
 
     entity.bind();
-    glDrawElements(GL_TRIANGLES, entity.model()->vertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     entity.unbind();
 
     d_shader.unbind();

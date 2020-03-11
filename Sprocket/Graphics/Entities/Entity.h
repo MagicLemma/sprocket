@@ -7,8 +7,8 @@ namespace Sprocket {
 
 class Entity
 {
-    std::shared_ptr<Model3D> d_model;
-    TexturePtr               d_texture;
+    Model3D d_model;
+    Texture d_texture;
 
     // Transform Attributes
     Maths::vec3 d_position;
@@ -21,8 +21,8 @@ class Entity
         // Recalculates the transform matrix.
 
 public:
-    Entity(std::shared_ptr<Model3D> model,
-           TexturePtr texture,
+    Entity(const Model3D& model,
+           const Texture& texture,
            const Maths::vec3& position,
            const Maths::vec3& rotation,
            float scale);
@@ -38,8 +38,8 @@ public:
     void increaseRotation(float dx, float dy, float dz);
 
     // Getters / Setters
-    std::shared_ptr<Model3D> model() const { return d_model; }
-    TexturePtr texture() const { return d_texture; }
+    Model3D model() const { return d_model; }
+    Texture texture() const { return d_texture; }
 
     Maths::mat4 transform() const { return d_transform; }
 

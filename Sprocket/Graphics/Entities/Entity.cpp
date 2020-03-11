@@ -2,8 +2,8 @@
 
 namespace Sprocket {
 
-Entity::Entity(std::shared_ptr<Model3D> model,
-               TexturePtr texture,
+Entity::Entity(const Model3D& model,
+               const Texture& texture,
                const Maths::vec3& position,
                const Maths::vec3& rotation,
                float scale)
@@ -27,14 +27,14 @@ void Entity::updateTransform()
 
 void Entity::bind() const
 {
-    d_model->bind();
-    d_texture->bind();
+    d_model.bind();
+    d_texture.bind();
 }
 
 void Entity::unbind() const
 {
-    d_texture->unbind();
-    d_model->unbind();
+    d_texture.unbind();
+    d_model.unbind();
 }
 
 void Entity::increasePosition(const Maths::vec3 ds)

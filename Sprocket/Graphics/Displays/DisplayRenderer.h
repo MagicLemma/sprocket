@@ -19,7 +19,7 @@ class DisplayRenderer
 public:
     DisplayRenderer(Window* window);
 
-    void draw(std::shared_ptr<Model2D> model,
+    void draw(const Model2D& model,
               const RenderOptions& options = RenderOptions());
 };
 

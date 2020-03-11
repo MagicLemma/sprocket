@@ -44,7 +44,7 @@ struct BasicSceneInfo
     std::vector<Terrain>  terrains;
     std::vector<Light>    lights;
 
-    std::vector<std::shared_ptr<Model2D>> models;
+    std::vector<Model2D> models;
     
     bool paused = false;
     
@@ -89,8 +89,8 @@ public:
         auto gray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
         auto shinyGray = Loader::loadTexture("Resources/Textures/PlainGray.PNG");
         
-        shinyGray->reflectivity(3);
-        shinyGray->shineDamper(5);
+        shinyGray.reflectivity(3);
+        shinyGray.shineDamper(5);
 
         // Make the huge terrain.
         d_info->terrains.push_back(Terrain(green, {0.0f, 0.0f, 0.0f}));
