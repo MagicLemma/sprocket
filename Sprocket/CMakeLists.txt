@@ -60,7 +60,7 @@ add_library(Sprocket STATIC
             Utility/Log.cpp
             Utility/Maths.cpp)
 
-target_link_libraries(Sprocket PRIVATE
+target_link_libraries(Sprocket PUBLIC
                       spdlog::spdlog
                       spdlog::spdlog_header_only
                       glfw
