@@ -1,5 +1,6 @@
 #include "PerspectiveLens.h"
 #include "WindowEvent.h"
+#include "Log.h"
 
 namespace Sprocket {
 
@@ -27,7 +28,7 @@ Maths::mat4 PerspectiveLens::projection() const
 void PerspectiveLens::handleEvent(Window* window, const Event& event)
 {
     if (auto e = event.as<WindowResizeEvent>()) {
-        d_aspectRatio = e->width() / e->height();
+        d_aspectRatio = e->aspectRatio();
         d_projection = Maths::perspective(d_aspectRatio,
                                           d_fov,
                                           d_nearPlane,

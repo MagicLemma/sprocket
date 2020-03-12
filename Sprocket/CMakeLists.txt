@@ -10,55 +10,55 @@ find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
-add_executable(Sprocket
-               Sprocket.m.cpp
-               
-               Graphics/Light.cpp
-               Graphics/Loader.cpp
-               Graphics/ObjParser.cpp
-               Graphics/RenderOptions.cpp
-               Graphics/Shader.cpp
-               Graphics/Texture.cpp
+add_library(Sprocket STATIC
 
-               Graphics/Cameras/Camera.cpp
-               Graphics/Cameras/FirstPersonCamera.cpp
-               Graphics/Cameras/ThirdPersonCamera.cpp
+            Graphics/Light.cpp
+            Graphics/Loader.cpp
+            Graphics/ObjParser.cpp
+            Graphics/RenderOptions.cpp
+            Graphics/Shader.cpp
+            Graphics/Texture.cpp
 
-               Graphics/Displays/DisplayRenderer.cpp
+            Graphics/Cameras/Camera.cpp
+            Graphics/Cameras/FirstPersonCamera.cpp
+            Graphics/Cameras/ThirdPersonCamera.cpp
 
-               Graphics/Entities/Entity.cpp
-               Graphics/Entities/EntityRenderer.cpp
+            Graphics/Displays/DisplayRenderer.cpp
 
-               Graphics/Lenses/Lens.cpp
-               Graphics/Lenses/PerspectiveLens.cpp
+            Graphics/Entities/Entity.cpp
+            Graphics/Entities/EntityRenderer.cpp
 
-               Graphics/Modelling/Model2D.cpp
-               Graphics/Modelling/Model3D.cpp
+            Graphics/Lenses/Lens.cpp
+            Graphics/Lenses/PerspectiveLens.cpp
 
-               Graphics/PostProcessing/Effect.cpp
-               Graphics/PostProcessing/Negative.cpp
-               Graphics/PostProcessing/GaussianBlur.cpp
-               Graphics/PostProcessing/PostProcessor.cpp
+            Graphics/Modelling/Model2D.cpp
+            Graphics/Modelling/Model3D.cpp
 
-               Graphics/Skyboxes/Skybox.cpp
-               Graphics/Skyboxes/SkyboxRenderer.cpp
+            Graphics/PostProcessing/Effect.cpp
+            Graphics/PostProcessing/Negative.cpp
+            Graphics/PostProcessing/GaussianBlur.cpp
+            Graphics/PostProcessing/PostProcessor.cpp
 
-               Graphics/Terrains/Terrain.cpp
-               Graphics/Terrains/TerrainRenderer.cpp
+            Graphics/Skyboxes/Skybox.cpp
+            Graphics/Skyboxes/SkyboxRenderer.cpp
 
-               Core/Initialiser.cpp
-               Core/Layer.cpp
-               Core/LayerStack.cpp
-               Core/Scene.cpp
-               Core/Window.cpp
+            Graphics/Terrains/Terrain.cpp
+            Graphics/Terrains/TerrainRenderer.cpp
 
-               Events/Event.cpp
-               Events/WindowEvent.cpp
-               Events/KeyboardEvent.cpp
-               Events/MouseEvent.cpp
-               
-               Utility/Log.cpp
-               Utility/Maths.cpp)
+            Core/Initialiser.cpp
+            Core/Layer.cpp
+            Core/LayerStack.cpp
+            Core/Scene.cpp
+            Core/Window.cpp
+
+            Events/Event.cpp
+            Events/WindowEvent.cpp
+            Events/KeyboardEvent.cpp
+            Events/MouseEvent.cpp
+            
+            Utility/FramerateTimer.cpp
+            Utility/Log.cpp
+            Utility/Maths.cpp)
 
 target_link_libraries(Sprocket PRIVATE
                       spdlog::spdlog

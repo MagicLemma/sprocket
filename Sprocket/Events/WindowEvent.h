@@ -15,6 +15,7 @@ public:
 
 	unsigned int width() const { return d_width; }
 	unsigned int height() const { return d_height; }
+	float aspectRatio() const { return (float)d_width / (float)d_height; }
 };
 
 class WindowClosedEvent : public Event
