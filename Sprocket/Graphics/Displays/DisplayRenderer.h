@@ -3,6 +3,8 @@
 #include "Graphics/Modelling/Model2D.h"
 #include "Graphics/Shader.h"
 #include "Graphics/RenderOptions.h"
+#include "Quad.h"
+#include "Slider.h"
 
 #include <memory>
 
@@ -16,11 +18,14 @@ class DisplayRenderer
     Shader d_shader;
         // Shader used to draw entities.
 
+    Model2D d_quadModel;
+        // A basic quad for rendering UI.
+
 public:
     DisplayRenderer(Window* window);
 
-    void draw(const Model2D& model,
-              const RenderOptions& options = RenderOptions());
+    void draw(const Quad& quad) const;
+    void draw(const Slider& slider) const;
 };
 
 }

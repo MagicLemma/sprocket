@@ -24,6 +24,8 @@ add_library(Sprocket STATIC
             Graphics/Cameras/ThirdPersonCamera.cpp
 
             Graphics/Displays/DisplayRenderer.cpp
+            Graphics/Displays/Quad.cpp
+            Graphics/Displays/Slider.cpp
 
             Graphics/Entities/Entity.cpp
             Graphics/Entities/EntityRenderer.cpp

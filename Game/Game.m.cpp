@@ -17,14 +17,14 @@ int main()
 
     Sprocket::Scene scene("Scene", layerStack, &window);
 
-    Sprocket::FramerateTimer fps; // Helper class to log the fps.
+    //Sprocket::FramerateTimer fps; // Helper class to log the fps.
 
     while (window.running()) {
         window.clear();
         scene.tick();
         window.onUpdate();
 
-        fps.update();
+        //fps.update();
     }
 
     return 0;

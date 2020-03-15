@@ -26,3 +26,5 @@
 #include "GaussianBlur.h"
 #include "Negative.h"
 #include "FramerateTimer.h"
+#include "Quad.h"
+#include "Slider.h"

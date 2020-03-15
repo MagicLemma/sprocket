@@ -12,17 +12,13 @@ Entity::Entity(const Model3D& model,
     , d_position(position)
     , d_rotation(rotation)
     , d_scale(scale)
-    , d_transform(Maths::createTransformationMatrix(position, rotation, scale))
+    , d_transform(Maths::transform(position, rotation, scale))
 {    
 }
 
 void Entity::updateTransform()
 {
-    d_transform = Maths::createTransformationMatrix(
-        d_position,
-        d_rotation,
-        d_scale
-    );
+    d_transform = Maths::transform(d_position, d_rotation, d_scale);
 }
 
 void Entity::bind() const

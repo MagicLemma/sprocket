@@ -46,7 +46,7 @@ void TerrainRenderer::draw(const Terrain& terrain)
     d_shader.bind();
 
     // Load up the transform matrix.
-	Maths::mat4 transform = Maths::createTransformationMatrix(
+	Maths::mat4 transform = Maths::transform(
         terrain.position(),               
         Maths::vec3(0.0f),
         1.0f);

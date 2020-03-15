@@ -11,6 +11,9 @@ class UILayer : public Sprocket::Layer
 
     Sprocket::DisplayRenderer d_displayRenderer;
 
+    Sprocket::Slider d_slider;
+    Sprocket::Slider d_slider2;
+
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info);
 

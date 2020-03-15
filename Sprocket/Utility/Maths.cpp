@@ -9,18 +9,22 @@
 namespace Sprocket {
 namespace Maths {
 
-mat4 createTransformationMatrix(const vec3& translation,
-                                const vec3& rotation,
-                                float scale)
+mat4 transform(const vec3& translation, const vec3& rotation, const vec3& scale)
 {
     mat4 matrix(1.0);
     matrix = glm::translate(matrix, translation);
     matrix = glm::rotate(matrix, radians(rotation.x), vec3(1, 0, 0));
     matrix = glm::rotate(matrix, radians(rotation.y), vec3(0, 1, 0));
     matrix = glm::rotate(matrix, radians(rotation.z), vec3(0, 0, 1));
-    matrix = glm::scale(matrix, vec3(scale, scale, scale));
+    matrix = glm::scale(matrix, scale);
     return matrix;
 }
+
+mat4 transform(const vec3& translation, const vec3& rotation, float scale)
+{
+    return transform(translation, rotation, {scale, scale, scale});
+}
+
 
 mat4 perspective(float aspectRatio,
                  float fov,
@@ -48,6 +52,11 @@ mat4 lookAt(const vec3& position,
             const vec3& up)
 {
     return glm::lookAt(position, target, up);
+}
+
+mat4 ortho(float left, float right, float bottom, float top)
+{
+    return glm::ortho(left, right, bottom, top);   
 }
 
 float radians(float degrees)

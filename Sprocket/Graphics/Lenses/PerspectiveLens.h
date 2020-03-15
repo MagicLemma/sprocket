@@ -27,6 +27,9 @@ public:
     void handleEvent(Window* window, const Event& event) override;
         // This function may be overriden if the Lens needs to
         // response to events.
+
+    float fov() const { return d_fov; }
+    void fov(float newFov);
 };
 
 }

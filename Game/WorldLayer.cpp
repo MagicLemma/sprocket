@@ -9,7 +9,7 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
     , d_postProcessor(info->window->width(), info->window->height())
 {
     auto quadModel = Sprocket::Loader::loadModel3D("Resources/Models/Plane.obj");
-    auto dragonModel = Sprocket::Loader::loadModel3D("Resources/Models/Dragon.obj");
+    //auto dragonModel = Sprocket::Loader::loadModel3D("Resources/Models/Dragon.obj");
     auto deagleModel = Sprocket::Loader::loadModel3D("Resources/Models/Deagle.obj");
     auto cube = Sprocket::Loader::loadModel3D("Resources/Models/Cube.obj");
 
@@ -28,7 +28,7 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
     d_info->terrains.push_back(Sprocket::Terrain(green, {-50.0f, 0.0f, -50.0f}));
 
     // Load complex models
-    d_info->entities.push_back(Sprocket::Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Sprocket::Maths::vec3(0.0f), 0.1f));
+    //d_info->entities.push_back(Sprocket::Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Sprocket::Maths::vec3(0.0f), 0.1f));
     d_info->entities.push_back(Sprocket::Entity(deagleModel, shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1));
     
     // Load cubes to show the grid.
@@ -46,7 +46,7 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
     std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
 
     // Load a bunch of random cubes/
-    for (int i = 0; i != 1000; ++i) {
+    for (int i = 0; i != 50; ++i) {
         d_info->entities.push_back(Sprocket::Entity{cube, shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
     }
 
@@ -65,12 +65,12 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
 bool WorldLayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::WindowResizeEvent>()) {
-        d_postProcessor.setScreenSize(e->width(), e->height());
-        d_info->camera.handleEvent(window, event);
-        d_info->lens.handleEvent(window, event);  
+        d_postProcessor.setScreenSize(e->width(), e->height()); 
         SPKT_LOG_INFO("Resizing!");
     }
 
+    d_info->camera.handleEvent(window, event);
+    d_info->lens.handleEvent(window, event); 
       
     return false;
 }
