@@ -6,7 +6,10 @@
 struct BasicSceneInfo
 {
     Sprocket::Window* window;
-    Sprocket::FirstPersonCamera camera;
+    Sprocket::FirstPersonCamera firstCamera;
+    Sprocket::ThirdPersonCamera thirdCamera;
+    Sprocket::Camera* camera;
+    
     Sprocket::PerspectiveLens   lens;
 
     Sprocket::Skybox skybox;
@@ -15,6 +18,7 @@ struct BasicSceneInfo
     std::vector<Sprocket::Terrain>  terrains;
     std::vector<Sprocket::Light>    lights;
     
+    bool cameraIsFirst = true;
     bool paused = false;
     
     BasicSceneInfo(Sprocket::Window* window);

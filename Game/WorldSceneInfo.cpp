@@ -3,6 +3,7 @@
 BasicSceneInfo::BasicSceneInfo(Sprocket::Window* window)
     : window(window)
     , lens(window->aspectRatio())
+    , camera(&firstCamera)
     , skybox({"Resources/Textures/Skybox/Skybox_X_Pos.png",
                 "Resources/Textures/Skybox/Skybox_X_Neg.png",
                 "Resources/Textures/Skybox/Skybox_Y_Pos.png",

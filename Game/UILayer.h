@@ -13,6 +13,8 @@ class UILayer : public Sprocket::Layer
 
     Sprocket::Slider d_slider;
     Sprocket::Slider d_slider2;
+    Sprocket::Button d_button;
+    Sprocket::Button d_button2;
 
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info);

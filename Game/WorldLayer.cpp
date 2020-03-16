@@ -69,7 +69,7 @@ bool WorldLayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_info->camera.handleEvent(window, event);
+    d_info->camera->handleEvent(window, event);
     d_info->lens.handleEvent(window, event); 
       
     return false;
@@ -91,9 +91,9 @@ void WorldLayer::updateImpl(Sprocket::Window* window)
         d_info->lights[3].position.z = 60 * std::sin(8.0f * tick);
         d_info->lights[3].position.x = 60 * std::cos(8.0f * tick);
 
-        d_info->camera.update(window, deltaTime());
+        d_info->camera->update(window, deltaTime());
 
-        window->setCursorVisibility(false);
+        window->setCursorVisibility(!d_info->cameraIsFirst);
     }
     else {
         window->setCursorVisibility(true);
@@ -112,8 +112,8 @@ void WorldLayer::drawImpl(Sprocket::Window* window)
                         d_status == Status::NORMAL;
 
     
-    d_entityRenderer.update(d_info->camera, d_info->lens, d_info->lights, options);
-    d_terrainRenderer.update(d_info->camera, d_info->lens, d_info->lights, options);
+    d_entityRenderer.update(*d_info->camera, d_info->lens, d_info->lights, options);
+    d_terrainRenderer.update(*d_info->camera, d_info->lens, d_info->lights, options);
 
     for (const auto& entity: d_info->entities) {
         d_entityRenderer.draw(entity);
@@ -123,7 +123,7 @@ void WorldLayer::drawImpl(Sprocket::Window* window)
         d_terrainRenderer.draw(terrain);
     }
     d_skyboxRenderer.draw(d_info->skybox,
-                            d_info->camera,
+                            *d_info->camera,
                             d_info->lens);
     
     

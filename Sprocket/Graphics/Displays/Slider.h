@@ -1,5 +1,6 @@
 #pragma once
 #include "Quad.h"
+#include "UiComponent.h"
 #include "Window.h"
 #include "Event.h"
 
@@ -24,7 +25,7 @@ struct SliderAttributes
     Maths::vec3 pickerColour = {1.0f, 1.0f, 1.0f};
 };
 
-class Slider
+class Slider : public UiComponent
 {
     SliderAttributes d_attributes;
 
@@ -54,8 +55,8 @@ public:
     const SliderAttributes& attributes() const { return d_attributes; }
     SliderAttributes& attributes() { return d_attributes; }
 
-    void update(Window* window);
-    void handleEvent(Window* window, const Event& event);
+    void update(Window* window) override;
+    void handleEvent(Window* window, const Event& event) override;
 
     float value() const;
 

@@ -5,6 +5,7 @@
 #include "Graphics/RenderOptions.h"
 #include "Quad.h"
 #include "Slider.h"
+#include "Button.h"
 
 #include <memory>
 
@@ -26,6 +27,7 @@ public:
 
     void draw(const Quad& quad) const;
     void draw(const Slider& slider) const;
+    void draw(const Button& button) const;
 };
 
 }
