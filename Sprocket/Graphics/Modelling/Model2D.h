@@ -7,8 +7,8 @@ namespace Sprocket {
 
 struct Vertex2D
 {
-    Maths::vec2 position[2];
-    Maths::vec2 texture[2];
+    Maths::vec2 position;
+    Maths::vec2 texture;
 };
 
 using Vertex2DBuffer = std::vector<Vertex2D>;
