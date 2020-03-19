@@ -1,6 +1,5 @@
 #include "Graphics/Displays/DisplayRenderer.h"
 #include "Utility/Maths.h"
-#include "Loader.h"
 #include "Log.h"
 
 #include <glad/glad.h>
@@ -12,7 +11,7 @@ DisplayRenderer::DisplayRenderer(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/Display.vert",
                "Resources/Shaders/Display.frag")
-    , d_quadModel(Loader::loadModel2D({
+    , d_quadModel(Model2D({
         {Sprocket::Maths::vec2{0.0f, 1.0f}, Sprocket::Maths::vec2{1.0f, 1.0f}},
         {Sprocket::Maths::vec2{1.0f, 1.0f}, Sprocket::Maths::vec2{1.0f, 0.0f}},
         {Sprocket::Maths::vec2{0.0f, 0.0f}, Sprocket::Maths::vec2{0.0f, 1.0f}},

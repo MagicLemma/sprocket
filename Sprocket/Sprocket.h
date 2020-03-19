@@ -29,3 +29,4 @@
 #include "Quad.h"
 #include "Slider.h"
 #include "Button.h"
+#include "Material.h"

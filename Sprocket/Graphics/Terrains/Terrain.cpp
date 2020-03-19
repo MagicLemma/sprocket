@@ -1,5 +1,4 @@
 #include "Graphics/Terrains/Terrain.h"
-#include "Graphics/Loader.h"
 #include "Utility/Log.h"
 #include "Maths.h"
 
@@ -37,13 +36,13 @@ Model3D generateTerrain(int edge, float distance)
         }
         
     }
-    return Loader::loadModel3D(vertices, indices);
+    return Model3D(vertices, indices);
 }
 
 }
 
-Terrain::Terrain(const Texture& texture, const Maths::vec3& postition)
-    : d_texture(texture)
+Terrain::Terrain(const Material& material, const Maths::vec3& postition)
+    : d_material(material)
     , d_position(postition)
     , d_edge(51)
     , d_distance(1.0f)
@@ -54,12 +53,12 @@ Terrain::Terrain(const Texture& texture, const Maths::vec3& postition)
 void Terrain::bind() const
 {
     d_model.bind();
-    d_texture.bind();
+    d_material.bind();
 }
 
 void Terrain::unbind() const
 {
-    d_texture.unbind();
+    d_material.unbind();
     d_model.unbind();
 }
 

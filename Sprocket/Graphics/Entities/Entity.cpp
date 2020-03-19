@@ -3,12 +3,12 @@
 namespace Sprocket {
 
 Entity::Entity(const Model3D& model,
-               const Texture& texture,
+               const Material& material,
                const Maths::vec3& position,
                const Maths::vec3& rotation,
                float scale)
     : d_model(model)
-    , d_texture(texture)
+    , d_material(material)
     , d_position(position)
     , d_rotation(rotation)
     , d_scale(scale)
@@ -24,12 +24,12 @@ void Entity::updateTransform()
 void Entity::bind() const
 {
     d_model.bind();
-    d_texture.bind();
+    d_material.bind();
 }
 
 void Entity::unbind() const
 {
-    d_texture.unbind();
+    d_material.unbind();
     d_model.unbind();
 }
 

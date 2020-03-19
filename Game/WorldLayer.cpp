@@ -8,34 +8,40 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
     , d_skyboxRenderer(info->window)
     , d_postProcessor(info->window->width(), info->window->height())
 {
-    auto quadModel = Sprocket::Loader::loadModel3D("Resources/Models/Plane.obj");
-    //auto dragonModel = Sprocket::Loader::loadModel3D("Resources/Models/Dragon.obj");
-    auto deagleModel = Sprocket::Loader::loadModel3D("Resources/Models/Deagle.obj");
-    auto cube = Sprocket::Loader::loadModel3D("Resources/Models/Cube.obj");
+    using namespace Sprocket;
 
-    auto green = Sprocket::Loader::loadTexture("Resources/Textures/Green.PNG");
-    auto space = Sprocket::Loader::loadTexture("Resources/Textures/Space.PNG");
-    auto gray = Sprocket::Loader::loadTexture("Resources/Textures/PlainGray.PNG");
-    auto shinyGray = Sprocket::Loader::loadTexture("Resources/Textures/PlainGray.PNG");
+    Model3D quadModel("Resources/Models/Plane.obj");
+    //Model3D dragonModel("Resources/Models/Dragon.obj");
+    Model3D deagleModel("Resources/Models/Deagle.obj");
+    Model3D cube("Resources/Models/Cube.obj");
+
+    Texture green("Resources/Textures/Green.PNG");
+    Texture space("Resources/Textures/Space.PNG");
+    Texture gray("Resources/Textures/PlainGray.PNG");
+
+    Material dullGray{gray};
+    Material shinyGray{gray};
+    Material field{green};
+    Material galaxy{space};
     
     shinyGray.reflectivity(3);
     shinyGray.shineDamper(5);
 
     // Make the huge terrain.
-    d_info->terrains.push_back(Sprocket::Terrain(green, {0.0f, 0.0f, 0.0f}));
-    d_info->terrains.push_back(Sprocket::Terrain(green, {-50.0f, 0.0f, 0.0f}));
-    d_info->terrains.push_back(Sprocket::Terrain(green, {0.0f, 0.0f, -50.0f}));
-    d_info->terrains.push_back(Sprocket::Terrain(green, {-50.0f, 0.0f, -50.0f}));
+    d_info->terrains.push_back(Sprocket::Terrain(field, {0.0f, 0.0f, 0.0f}));
+    d_info->terrains.push_back(Sprocket::Terrain(field, {-50.0f, 0.0f, 0.0f}));
+    d_info->terrains.push_back(Sprocket::Terrain(field, {0.0f, 0.0f, -50.0f}));
+    d_info->terrains.push_back(Sprocket::Terrain(field, {-50.0f, 0.0f, -50.0f}));
 
     // Load complex models
     //d_info->entities.push_back(Sprocket::Entity(dragonModel, shinyGray, {0.0f, 0.0f, -1.0f}, Sprocket::Maths::vec3(0.0f), 0.1f));
     d_info->entities.push_back(Sprocket::Entity(deagleModel, shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1));
     
     // Load cubes to show the grid.
-    d_info->entities.push_back(Sprocket::Entity(cube, space, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
-    d_info->entities.push_back(Sprocket::Entity(cube, space, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
-    d_info->entities.push_back(Sprocket::Entity(cube, space, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
-    d_info->entities.push_back(Sprocket::Entity(cube, space, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2));
+    d_info->entities.push_back(Sprocket::Entity(cube, galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f));
+    d_info->entities.push_back(Sprocket::Entity(cube, galaxy, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f));
+    d_info->entities.push_back(Sprocket::Entity(cube, galaxy, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f));
+    d_info->entities.push_back(Sprocket::Entity(cube, galaxy, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f));
 
     // Seed with a real random value, if available
     std::random_device r;

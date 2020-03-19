@@ -15,6 +15,7 @@ add_library(Sprocket STATIC
             Graphics/Light.cpp
             Graphics/Loader.cpp
             Graphics/ObjParser.cpp
+            Graphics/Material.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
             Graphics/Texture.cpp

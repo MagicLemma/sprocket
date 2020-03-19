@@ -1,14 +1,14 @@
 #pragma once
 #include "Graphics/Modelling/Model3D.h"
-#include "Graphics/Texture.h"
+#include "Material.h"
 #include "Utility/Maths.h"
 
 namespace Sprocket {
 
 class Entity
 {
-    Model3D d_model;
-    Texture d_texture;
+    Model3D  d_model;
+    Material d_material;
 
     // Transform Attributes
     Maths::vec3 d_position;
@@ -22,7 +22,7 @@ class Entity
 
 public:
     Entity(const Model3D& model,
-           const Texture& texture,
+           const Material& material,
            const Maths::vec3& position,
            const Maths::vec3& rotation,
            float scale);
@@ -39,7 +39,7 @@ public:
 
     // Getters / Setters
     Model3D model() const { return d_model; }
-    Texture texture() const { return d_texture; }
+    Material material() const { return d_material; }
 
     Maths::mat4 transform() const { return d_transform; }
 

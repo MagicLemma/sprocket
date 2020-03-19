@@ -1,13 +1,13 @@
 #pragma once
 #include "Graphics/Modelling/Model3D.h"
-#include "Graphics/Texture.h"
+#include "Material.h"
 #include "Utility/Maths.h"
 
 namespace Sprocket {
 
 class Terrain
 {
-    Texture     d_texture;
+    Material     d_material;
 
     Maths::vec3 d_position;
 
@@ -16,7 +16,7 @@ class Terrain
     Model3D     d_model;
 
 public:
-    Terrain(const Texture& texture,
+    Terrain(const Material& material,
             const Maths::vec3& postition = Maths::vec3{0.0f});
 
     void bind() const;
@@ -24,7 +24,7 @@ public:
 
     // Getters / Setters
     Model3D model() const { return d_model; }
-    Texture texture() const { return d_texture; }
+    Material material() const { return d_material; }
 
     Maths::vec3 position() const { return d_position; }
 };

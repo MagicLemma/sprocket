@@ -9,15 +9,14 @@ namespace {
 
 Model2D getQuad()
 {
-    Vertex2DBuffer v{
+    return Model2D({
         {Maths::vec2{-1.0f, -1.0f}, Maths::vec2{0.0f, 0.0f}},
         {Maths::vec2{1.0f, -1.0f}, Maths::vec2{1.0f, 0.0f}},
         {Maths::vec2{1.0f, 1.0f}, Maths::vec2{1.0f, 1.0f}},
         {Maths::vec2{1.0f, 1.0f}, Maths::vec2{1.0f, 1.0f}},
         {Maths::vec2{-1.0f, 1.0f}, Maths::vec2{0.0f, 1.0f}},
         {Maths::vec2{-1.0f, -1.0f}, Maths::vec2{0.0f, 0.0f}}
-    };
-    return Loader::loadModel2D(v);
+    });
 }
 
 }

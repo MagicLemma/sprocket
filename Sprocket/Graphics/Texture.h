@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 
 namespace Sprocket {
 
@@ -7,23 +8,20 @@ class Texture
 {
     unsigned int d_textureId;
 
-    // Properties for specular lighting.
-    float        d_shineDamper;
-    float        d_reflectivity;
+    int d_width;
+    int d_height;
+    int d_bpp;
 
 public:
-    Texture(unsigned int textureId);
+    Texture(unsigned int textureId, int width, int height, int bpp);
+    Texture(const std::string& pngFile);
 
     void bind() const;
     void unbind() const;
 
-    float shineDamper() const { return d_shineDamper; }
-    void shineDamper(float newShineDamper) { d_shineDamper = newShineDamper; }
-
-    float reflectivity() const { return d_reflectivity; }
-    void reflectivity(float newReflectivity) { d_reflectivity = newReflectivity; } 
+    int width() const { return d_width; }
+    int height() const { return d_height; }
+    int bpp() const { return d_bpp; }
 };
-
-using TexturePtr = std::shared_ptr<Texture>;
 
 }
