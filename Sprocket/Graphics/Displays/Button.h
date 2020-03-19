@@ -61,6 +61,7 @@ public:
 
     void update(Window* window) override;
     void handleEvent(Window* window, const Event& event) override;
+    std::vector<Quad> quads() const override { return {d_background, d_button}; }
 
     void setHoverCallback(ButtonCallback cb) { d_hoverCallback = cb; }
     void setUnhoverCallback(ButtonCallback cb) { d_unhoverCallback = cb; }

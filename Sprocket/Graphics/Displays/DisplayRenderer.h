@@ -6,6 +6,7 @@
 #include "Quad.h"
 #include "Slider.h"
 #include "Button.h"
+#include "UiComponent.h"
 
 #include <memory>
 
@@ -26,8 +27,7 @@ public:
     DisplayRenderer(Window* window);
 
     void draw(const Quad& quad) const;
-    void draw(const Slider& slider) const;
-    void draw(const Button& button) const;
+    void draw(const UiComponent& button) const;
 };
 
 }

@@ -57,6 +57,7 @@ public:
 
     void update(Window* window) override;
     void handleEvent(Window* window, const Event& event) override;
+    std::vector<Quad> quads() const override { return {d_background, d_bar, d_picker}; }
 
     float value() const;
 

@@ -40,7 +40,7 @@ void DisplayRenderer::draw(const Quad& quad) const
     d_shader.unbind();   
 }
 
-void DisplayRenderer::draw(const Slider& slider) const
+void DisplayRenderer::draw(const UiComponent& component) const
 {
     handleRenderOptions({false, false, false});
     d_shader.bind();
@@ -51,53 +51,12 @@ void DisplayRenderer::draw(const Slider& slider) const
     d_shader.loadUniform("projection", projection);
 
     // Background quad
-    auto quad = slider.background();
-    Maths::mat4 transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
-    d_shader.loadUniform("transform", transform);
-    d_shader.loadUniform("colour", quad.colour());
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    // Bar quad
-    quad = slider.bar();
-    transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
-    d_shader.loadUniform("transform", transform);
-    d_shader.loadUniform("colour", quad.colour());
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    // Picker quad
-    quad = slider.picker();
-    transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
-    d_shader.loadUniform("transform", transform);
-    d_shader.loadUniform("colour", quad.colour());
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    d_quadModel.unbind();
-    d_shader.unbind();
-}
-
-void DisplayRenderer::draw(const Button& button) const
-{
-    handleRenderOptions({false, false, false});
-    d_shader.bind();
-    d_quadModel.bind();
-
-    Maths::mat4 projection = Maths::ortho(0, (float)d_window->width(),
-                                          (float)d_window->height(), 0);
-    d_shader.loadUniform("projection", projection);
-
-    // Background quad
-    auto quad = button.background();
-    Maths::mat4 transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
-    d_shader.loadUniform("transform", transform);
-    d_shader.loadUniform("colour", quad.colour());
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    // Button quad
-    quad = button.button();
-    transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
-    d_shader.loadUniform("transform", transform);
-    d_shader.loadUniform("colour", quad.colour());
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    for (const auto& quad : component.quads()) {
+        Maths::mat4 transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
+        d_shader.loadUniform("transform", transform);
+        d_shader.loadUniform("colour", quad.colour());
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
 
     d_quadModel.unbind();
     d_shader.unbind();
