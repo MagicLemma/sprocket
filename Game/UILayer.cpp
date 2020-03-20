@@ -1,7 +1,4 @@
 #include "UILayer.h"
-#include "Slider.h"
-#include "Log.h"
-#include "PerspectiveLens.h"
 
 Sprocket::SliderAttributes getSliderAttrs()
 {

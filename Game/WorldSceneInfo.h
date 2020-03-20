@@ -1,5 +1,5 @@
 #pragma once
-#include "Sprocket.h"
+#include <Sprocket.h>
 
 #include <vector>
 
