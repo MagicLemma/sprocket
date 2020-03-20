@@ -1,6 +1,6 @@
 #pragma once
-#include "Core/Window.h"
-#include "Graphics/Skyboxes/Skybox.h"
+#include "Window.h"
+#include "Skybox.h"
 #include "Camera.h"
 #include "Lens.h"
 #include "Graphics/Shader.h"

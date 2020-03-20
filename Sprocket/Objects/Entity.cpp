@@ -1,4 +1,4 @@
-#include "Graphics/Entities/Entity.h"
+#include "Entity.h"
 
 namespace Sprocket {
 

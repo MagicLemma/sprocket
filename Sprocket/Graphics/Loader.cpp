@@ -1,15 +1,7 @@
-#include "Graphics/Loader.h"
-#include "Graphics/ObjParser.h"
-
-#include "Graphics/Skyboxes/Skybox.h"
-#include "Utility/Log.h"
+#include "Loader.h"
+#include "Log.h"
 
 #include <vector>
-#include <fstream>
-#include <sstream>
-#include <memory>
-#include <cstddef>
-
 #include <glad/glad.h>
 
 namespace Sprocket {

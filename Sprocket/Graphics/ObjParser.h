@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Modelling/Model3D.h"
+#include "Model3D.h"
 
 #include <utility>
 #include <string>

@@ -1,4 +1,4 @@
-#include "Graphics/Skyboxes/SkyboxRenderer.h"
+#include "SkyboxRenderer.h"
 
 #include <glad/glad.h>
 

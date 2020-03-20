@@ -1,6 +1,4 @@
 #pragma once
-#include "Graphics/Texture.h"
-
 #include <array>
 
 namespace Sprocket {

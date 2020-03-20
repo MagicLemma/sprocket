@@ -1,5 +1,5 @@
-#include "Graphics/Terrains/Terrain.h"
-#include "Utility/Log.h"
+#include "Terrain.h"
+#include "Log.h"
 #include "Maths.h"
 
 #include <cstdlib>

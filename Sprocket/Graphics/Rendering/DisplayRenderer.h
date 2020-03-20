@@ -1,11 +1,9 @@
 #pragma once
-#include "Core/Window.h"
-#include "Graphics/Modelling/Model2D.h"
-#include "Graphics/Shader.h"
-#include "Graphics/RenderOptions.h"
+#include "Window.h"
+#include "Model2D.h"
+#include "Shader.h"
+#include "RenderOptions.h"
 #include "Quad.h"
-#include "Slider.h"
-#include "Button.h"
 #include "UiComponent.h"
 
 #include <memory>

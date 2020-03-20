@@ -1,23 +1,22 @@
-#include "Graphics/Entities/EntityRenderer.h"
-#include "Utility/Maths.h"
+#include "TerrainRenderer.h"
+#include "Maths.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
 
-EntityRenderer::EntityRenderer(Window* window)
+TerrainRenderer::TerrainRenderer(Window* window)
     : d_window(window)
-    , d_shader("Resources/Shaders/Entity.vert",
-               "Resources/Shaders/Entity.frag")
-    , d_mirrorShader("Resources/Shaders/EntityMirror.vert",
-                     "Resources/Shaders/EntityMirror.frag")
+    , d_shader("Resources/Shaders/Terrain.vert",
+               "Resources/Shaders/Terrain.frag")
 {
+
 }
 
-void EntityRenderer::update(const Camera& camera,
-                            const Lens& lens,
-                            const Lights& lights,
-                            const RenderOptions& options)
+void TerrainRenderer::update(const Camera& camera,
+                             const Lens& lens,
+                             const Lights& lights,
+                             const RenderOptions& options)
 {
     handleRenderOptions(options);
     d_shader.bind();
@@ -42,17 +41,23 @@ void EntityRenderer::update(const Camera& camera,
     d_shader.unbind();
 }
 
-void EntityRenderer::draw(const Entity& entity)
+void TerrainRenderer::draw(const Terrain& terrain)
 {
     d_shader.bind();
 
-    d_shader.loadUniform("transformMatrix", entity.transform());
-	d_shader.loadUniform("shineDamper", entity.material().shineDamper());
-	d_shader.loadUniform("reflectivity", entity.material().reflectivity());
-
-    entity.bind();
-    glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
-    entity.unbind();
+    // Load up the transform matrix.
+	Maths::mat4 transform = Maths::transform(
+        terrain.position(),               
+        Maths::vec3(0.0f),
+        1.0f);
+    
+    d_shader.loadUniform("transformMatrix", transform);
+	d_shader.loadUniform("shineDamper", terrain.material().shineDamper());
+	d_shader.loadUniform("reflectivity", terrain.material().reflectivity());
+    
+    terrain.bind();
+    glDrawElements(GL_TRIANGLES, terrain.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
+    terrain.unbind();
 
     d_shader.unbind();
 }

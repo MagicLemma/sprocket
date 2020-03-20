@@ -1,4 +1,4 @@
-#include "Graphics/Modelling/Model3D.h"
+#include "Model3D.h"
 #include "Loader.h"
 #include "ObjParser.h"
 

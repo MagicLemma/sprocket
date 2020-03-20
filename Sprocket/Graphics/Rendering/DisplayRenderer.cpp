@@ -1,5 +1,5 @@
-#include "Graphics/Displays/DisplayRenderer.h"
-#include "Utility/Maths.h"
+#include "DisplayRenderer.h"
+#include "Maths.h"
 #include "Log.h"
 
 #include <glad/glad.h>

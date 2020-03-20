@@ -12,44 +12,42 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
 
-            Graphics/Light.cpp
             Graphics/Loader.cpp
             Graphics/ObjParser.cpp
-            Graphics/Material.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
-            Graphics/Texture.cpp
 
-            Graphics/Cameras/Camera.cpp
-            Graphics/Cameras/FirstPersonCamera.cpp
-            Graphics/Cameras/ThirdPersonCamera.cpp
+            Graphics/Primitives/Model2D.cpp
+            Graphics/Primitives/Model3D.cpp
+            Graphics/Primitives/Texture.cpp
 
-            Graphics/Displays/Container.cpp
-            Graphics/Displays/DisplayRenderer.cpp
-            Graphics/Displays/Quad.cpp
-            Graphics/Displays/UiComponent.cpp
-            Graphics/Displays/Slider.cpp
-            Graphics/Displays/Button.cpp
-
-            Graphics/Entities/Entity.cpp
-            Graphics/Entities/EntityRenderer.cpp
-
-            Graphics/Lenses/Lens.cpp
-            Graphics/Lenses/PerspectiveLens.cpp
-
-            Graphics/Modelling/Model2D.cpp
-            Graphics/Modelling/Model3D.cpp
+            Graphics/Rendering/DisplayRenderer.cpp
+            Graphics/Rendering/EntityRenderer.cpp
+            Graphics/Rendering/SkyboxRenderer.cpp
+            Graphics/Rendering/TerrainRenderer.cpp
 
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
 
-            Graphics/Skyboxes/Skybox.cpp
-            Graphics/Skyboxes/SkyboxRenderer.cpp
+            Display/Quad.cpp
+            Display/UiComponent.cpp
+            Display/Slider.cpp
+            Display/Button.cpp
 
-            Graphics/Terrains/Terrain.cpp
-            Graphics/Terrains/TerrainRenderer.cpp
+            Objects/Cameras/Camera.cpp
+            Objects/Cameras/FirstPersonCamera.cpp
+            Objects/Cameras/ThirdPersonCamera.cpp
+
+            Objects/Lenses/Lens.cpp
+            Objects/Lenses/PerspectiveLens.cpp
+
+            Objects/Entity.cpp
+            Objects/Light.cpp
+            Objects/Material.cpp
+            Objects/Skybox.cpp
+            Objects/Terrain.cpp
 
             Core/Initialiser.cpp
             Core/Layer.cpp
@@ -76,15 +74,14 @@ target_link_libraries(Sprocket PUBLIC
 target_include_directories(Sprocket PUBLIC
                            .
                            ./Core
+                           ./Display
                            ./Events
                            ./Graphics
-                           ./Graphics/Cameras
-                           ./Graphics/Displays
-                           ./Graphics/Entities
-                           ./Graphics/Lenses
-                           ./Graphics/Modelling
+                           ./Graphics/Primitives
+                           ./Graphics/Rendering
                            ./Graphics/PostProcessing
-                           ./Graphics/Skyboxes
-                           ./Graphics/Terrains
+                           ./Objects
+                           ./Objects/Cameras
+                           ./Objects/Lenses
                            ./Utility
                            ${STB_INCLUDE_DIR})

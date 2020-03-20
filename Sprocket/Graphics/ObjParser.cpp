@@ -1,5 +1,5 @@
-#include "Graphics/ObjParser.h"
-#include "Utility/Maths.h"
+#include "ObjParser.h"
+#include "Maths.h"
 
 #include <fstream>
 #include <vector>

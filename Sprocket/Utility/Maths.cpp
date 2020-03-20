@@ -1,4 +1,4 @@
-#include "Utility/Maths.h"
+#include "Maths.h"
 
 #include <algorithm>
 #include <cmath>

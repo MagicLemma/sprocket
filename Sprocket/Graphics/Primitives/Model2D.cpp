@@ -1,4 +1,4 @@
-#include "Graphics/Modelling/Model2D.h"
+#include "Model2D.h"
 #include "Loader.h"
 
 #include <glad/glad.h>
