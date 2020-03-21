@@ -29,9 +29,9 @@ public:
 
     void setScreenSize(int width, int height);
 
-    template <typename T>
-    void addEffect() {
-        d_effects.push_back(std::make_shared<T>(d_width, d_height));
+    template <typename T, typename... Args>
+    void addEffect(Args&&... args) {
+        d_effects.push_back(std::make_shared<T>(d_width, d_height, args...));
     }
 };
 

@@ -5,6 +5,11 @@
 #include "RenderOptions.h"
 #include "Quad.h"
 #include "UiComponent.h"
+#include "Image.h"
+
+// Remove after finding the bug with Image
+#include "Model2D.h"
+#include "Texture.h"
 
 #include <memory>
 
@@ -15,17 +20,20 @@ class DisplayRenderer
     Window* d_window;
         // Non-owning pointer to the window to draw in.
 
-    Shader d_shader;
-        // Shader used to draw entities.
+    Shader d_quadShader;
+        // Shader used to draw simple quads.
 
-    Model2D d_quadModel;
-        // A basic quad for rendering UI.
+    Shader d_imageShader;
+        // Shader used to draw images (textured quads).
+
+    Model2D d_quad;
 
 public:
     DisplayRenderer(Window* window);
 
     void draw(const Quad& quad) const;
     void draw(const UiComponent& button) const;
+    void draw(const Image& image) const;
 };
 
 }

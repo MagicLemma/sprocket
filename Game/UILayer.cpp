@@ -38,7 +38,13 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     , d_slider2({50.0f, 100.0f}, 300.0f, 50.0f, 0.0f, getSliderAttrs())
     , d_button({50.0f, 200.0f}, 50.0f, 50.0f, getButtonAttrs())
     , d_button2({100.0f, 200.0f}, 50.0f, 50.0f, getButtonAttrs())
+    , d_image("Resources/Textures/Space.PNG", Sprocket::Maths::vec2(500.0, 50.0))
+    , d_hconstraint(Sprocket::HorizontalConstraint::Type::CENTRE, 25.0f)
+    , d_vconstraint(Sprocket::VerticalConstraint::Type::CENTRE, 25.0f)
+    , d_aconstraint(Sprocket::AspectConstraint::Base::HEIGHT, 2.0)
 {
+    d_image.opacity(0.5f);
+
     d_slider.setCallback([&](float val){
         d_info->lens.fov(70.0f + 50.0f * val);
     });
@@ -72,18 +78,22 @@ bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& e
             return true;
         }
     }
+
     if (d_status == Status::NORMAL) {
         d_slider.handleEvent(window, event);
         d_slider2.handleEvent(window, event);
         d_button.handleEvent(window, event);
         d_button2.handleEvent(window, event);
     }
+
     return false;
 }
 
 void UILayer::updateImpl(Sprocket::Window* window)
 {
     d_status = d_info->paused ? Status::NORMAL : Status::INACTIVE;
+    d_hconstraint.apply(window, d_image);
+    d_vconstraint.apply(window, d_image);
 
     if (d_status == Status::NORMAL) {
         d_slider.update(window);
@@ -95,6 +105,7 @@ void UILayer::updateImpl(Sprocket::Window* window)
 
 void UILayer::drawImpl(Sprocket::Window* window)
 {
+    d_displayRenderer.draw(d_image);
     d_displayRenderer.draw(d_slider);
     d_displayRenderer.draw(d_slider2);
     d_displayRenderer.draw(d_button);

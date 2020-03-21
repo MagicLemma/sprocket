@@ -32,4 +32,10 @@ bool Quad::containsPoint(const Maths::vec2& pos) const
     return containsPoint(pos.x, pos.y);
 }
 
+void Quad::scale(float scaleFactor)
+{
+    d_width *= scaleFactor;
+    d_height *= scaleFactor;
+}
+
 }

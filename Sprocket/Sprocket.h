@@ -40,9 +40,15 @@
 #include "Graphics/Rendering/SkyboxRenderer.h"
 #include "Graphics/Rendering/TerrainRenderer.h"
 
+#include "Graphics/Rendering/Constraints/AspectConstraint.h"
+#include "Graphics/Rendering/Constraints/HorizontalConstraint.h"
+#include "Graphics/Rendering/Constraints/VerticalConstraint.h"
+
 // OBJECTS
 #include "Objects/Entity.h"
+#include "Objects/Image.h"
 #include "Objects/Material.h"
+#include "Objects/Quad.h"
 #include "Objects/Light.h"
 #include "Objects/Terrain.h"
 #include "Objects/Skybox.h"
@@ -55,7 +61,6 @@
 #include "Objects/Lenses/PerspectiveLens.h"
 
 // DISPLAY
-#include "Display/Quad.h"
 #include "Display/UiComponent.h"
 #include "Display/Button.h"
 #include "Display/Slider.h"

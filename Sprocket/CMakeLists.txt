@@ -26,12 +26,15 @@ add_library(Sprocket STATIC
             Graphics/Rendering/SkyboxRenderer.cpp
             Graphics/Rendering/TerrainRenderer.cpp
 
+            Graphics/Rendering/Constraints/AspectConstraint.cpp
+            Graphics/Rendering/Constraints/HorizontalConstraint.cpp
+            Graphics/Rendering/Constraints/VerticalConstraint.cpp
+
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
 
-            Display/Quad.cpp
             Display/UiComponent.cpp
             Display/Slider.cpp
             Display/Button.cpp
@@ -44,8 +47,10 @@ add_library(Sprocket STATIC
             Objects/Lenses/PerspectiveLens.cpp
 
             Objects/Entity.cpp
+            Objects/Image.cpp
             Objects/Light.cpp
             Objects/Material.cpp
+            Objects/Quad.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
 

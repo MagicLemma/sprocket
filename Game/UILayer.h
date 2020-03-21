@@ -16,6 +16,12 @@ class UILayer : public Sprocket::Layer
     Sprocket::Button d_button;
     Sprocket::Button d_button2;
 
+    Sprocket::Image d_image;
+    
+    Sprocket::HorizontalConstraint d_hconstraint;
+    Sprocket::VerticalConstraint d_vconstraint;
+    Sprocket::AspectConstraint d_aconstraint;
+
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info);
 

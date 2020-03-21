@@ -25,6 +25,8 @@ public:
     void xCoord(float x) { d_topLeft.x = x; }
     void yCoord(float y) { d_topLeft.y = y; }
 
+    void scale(float scaleFactor);
+
     // Getters
     Maths::vec2 topLeft() const { return d_topLeft; }
     Maths::vec3 topLeftV3() const { return {d_topLeft.x, d_topLeft.y, 0.0f}; }

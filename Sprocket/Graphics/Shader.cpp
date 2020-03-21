@@ -98,6 +98,12 @@ void Shader::loadUniform(const std::string& name, float value) const
 	glUniform1f(getUniformLocation(name), value);
 }
 
+void Shader::loadUniformInt(const std::string& name, int value) const
+{
+	glUniform1i(getUniformLocation(name), value);
+}
+
+
 void Shader::loadUniform(const std::string& name, const Maths::vec2& vector) const
 {
 	glUniform2f(getUniformLocation(name), vector.x, vector.y);

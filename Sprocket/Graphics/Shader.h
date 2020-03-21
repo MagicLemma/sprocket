@@ -33,6 +33,7 @@ public:
     void unbind() const;
 
     // Shader Uniform Setters
+    void loadUniformInt(const std::string& name, int value) const;
     void loadUniform(const std::string& name, float value) const;
     void loadUniform(const std::string& name, const Maths::vec2& vector) const;
     void loadUniform(const std::string& name, const Maths::vec3& vector) const;

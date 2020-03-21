@@ -17,12 +17,13 @@ Texture::Texture(unsigned int textureId, int width, int height, int bpp)
 }
 
 Texture::Texture(const std::string& pngFile)
-    : d_textureId(Loader::createTEX(Loader::TextureType::FLAT))
+    : d_textureId(0)
     , d_width(0)
     , d_height(0)
     , d_bpp(0)
 {
-    stbi_set_flip_vertically_on_load(1);
+    d_textureId = Loader::createTEX(Loader::TextureType::FLAT);
+
     unsigned char* data = stbi_load(pngFile.c_str(), &d_width, &d_height, &d_bpp, 4);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
