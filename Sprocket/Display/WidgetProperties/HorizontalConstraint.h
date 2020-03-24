@@ -1,11 +1,13 @@
 #pragma once
 #include "Window.h"
 #include "Quad.h"
-#include "Image.h"
+#include "WidgetProperty.h"
 
 namespace Sprocket {
 
-class HorizontalConstraint
+class Widget;
+
+class HorizontalConstraint : public WidgetProperty
 {
 public:
     enum class Type
@@ -25,8 +27,11 @@ private:
 public:
     HorizontalConstraint(Type type, float offset);
 
-    void apply(Window* window, Quad& quad);
-    void apply(Window* window, Image& image);
+    virtual void update(Widget* widget, Window* window) override;
+
+    virtual bool handleEvent(Widget* widget,
+                             Window* window,
+                             const Event& event) override;
 };
 
 }

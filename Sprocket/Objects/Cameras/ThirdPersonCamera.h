@@ -34,7 +34,7 @@ public:
 
     Maths::mat4 view() const override;
     void update(Window* window, float timeDelta) override;
-    void handleEvent(Window* window, const Event& event) override;
+    bool handleEvent(Window* window, const Event& event) override;
 
     Maths::vec3 target() const { return d_target; }
 };

@@ -5,73 +5,84 @@
 namespace Sprocket {
 namespace {
 
-Quad makeButtonQuad(const Quad& quad, const ButtonAttributes& attributes)
+Maths::vec2 makeButtonOffset(float width, float height, const ButtonAttributes& attrs)
 {
-    float x = quad.left() + quad.width() * (1 - attributes.buttonWidth) / 2;
-    float y = quad.top() + quad.height() * (1 - attributes.buttonHeight) / 2;
-    float width = attributes.buttonWidth * quad.width();
-    float height = attributes.buttonHeight * quad.height();
-    return {{x, y}, width, height};
+    return {
+        width * (1 - attrs.buttonWidth) / 2,
+        height * (1 - attrs.buttonHeight) / 2
+    };
 }
 
 }
     
-Button::Button(const Maths::vec2& topLeft,
-               float width,
+Button::Button(float width,
                float height,
-               const ButtonAttributes& attributes)
-    : d_attributes(attributes)
-    , d_background({topLeft, width, height})
-    , d_button(makeButtonQuad(d_background, attributes))
+               const ButtonAttributes& attrs)
+    : Widget(width, height)
+    , d_attributes(attrs)
     , d_hovered(false)
     , d_clicked(false)
 {
-    d_background.colour(attributes.backgroundColour);
-    d_button.colour(attributes.buttonColour);
+    d_quads.push_back({
+        {{0.0, 0.0}, width, height},
+        attrs.backgroundColour
+    });
+
+    d_quads.push_back({
+        makeButtonOffset(width, height, attrs),
+        width * attrs.buttonWidth,
+        height * attrs.buttonHeight,
+        attrs.buttonColour
+    });
 }
 
-void Button::update(Window* window)
+void Button::updateImpl(Window* window)
 {
     if (d_clicked) {
-        d_background.colour(d_attributes.backgroundColourClicked);
-        d_button.colour(d_attributes.buttonColourClicked);
+        background().skin = d_attributes.backgroundColourClicked;
+        button().skin = d_attributes.buttonColourClicked;
     }
     else if (d_hovered) {
-        d_background.colour(d_attributes.backgroundColourHovered);
-        d_button.colour(d_attributes.buttonColourHovered);
+        background().skin = d_attributes.backgroundColourHovered;
+        button().skin = d_attributes.buttonColourHovered;
     }
     else {
-        d_background.colour(d_attributes.backgroundColour);
-        d_button.colour(d_attributes.buttonColour);
+        background().skin = d_attributes.backgroundColour;
+        button().skin = d_attributes.buttonColour;
     }
 }
 
-void Button::handleEvent(Window* window, const Event& event)
+bool Button::handleEventImpl(Window* window, const Event& event)
 {
     if (auto e = event.as<MouseMovedEvent>()) {
-        bool mouseOnButton = d_button.containsPoint(window->getMousePos());
+        bool mouseOnButton = containsPoint(button(), toLocalCoords(window->getMousePos()));
         if (!d_hovered && mouseOnButton) {
             d_hovered = true;
             d_hoverCallback();
+            return false;
         }
         else if (d_hovered && !mouseOnButton) {
             d_hovered = false;
             d_unhoverCallback();
+            return false;
         }
     }
     else if (auto e = event.as<MouseButtonPressedEvent>()) {
         if (e->button() == Mouse::LEFT) {
-            if (d_button.containsPoint(window->getMousePos())) {
+            if (containsPoint(button(), toLocalCoords(window->getMousePos()))) {
                 d_clicked = true;
                 d_clickCallback();
+                return true;
             }
         }   
     } else if (auto e = event.as<MouseButtonReleasedEvent>()) {
         if (d_clicked) {
             d_clicked = false;
             d_unclickCallback();
+            return false;
         }
     }
+    return containsPoint(background(), toLocalCoords(window->getMousePos()));
 }
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "Quad.h"
-#include "UiComponent.h"
+#include "Widget.h"
 #include "Window.h"
 #include "Event.h"
 
@@ -25,39 +25,38 @@ struct SliderAttributes
     Maths::vec3 pickerColour = {1.0f, 1.0f, 1.0f};
 };
 
-class Slider : public UiComponent
+class Slider : public Widget
 {
     SliderAttributes d_attributes;
-
-    Quad d_background;
-    Quad d_bar;
-    Quad d_picker;
-
-    float d_left;
-    float d_right;
-        // Values in pixels of how far the slider can move.
     
     bool d_updating;
 
     SliderCallback d_callback = [](float){};
 
+    float left() const;
+    float right() const;
+        // Maximum left and right positions of the picker in
+        // Local Coordinates.
+
+    void updateImpl(Window* window) override;
+    bool handleEventImpl(Window* window, const Event& event) override;
+
 public:
-    Slider(const Maths::vec2& topLeft,
-           float width,
+    Slider(float width,
            float height,
-           float initialValue = 0.0f,
+           float initialValue,
            const SliderAttributes& attrs = {});
 
-    Quad background() const { return d_background; }
-    Quad bar() const { return d_bar; }
-    Quad picker() const { return d_picker; }
+    VisualQuad& background() { return d_quads[0]; }
+    VisualQuad& bar() { return d_quads[1]; }
+    VisualQuad& picker() { return d_quads[2]; }
 
-    const SliderAttributes& attributes() const { return d_attributes; }
+    const VisualQuad& background() const { return d_quads[0]; }
+    const VisualQuad& bar() const { return d_quads[1]; }
+    const VisualQuad& picker() const { return d_quads[2]; }
+
     SliderAttributes& attributes() { return d_attributes; }
-
-    void update(Window* window) override;
-    void handleEvent(Window* window, const Event& event) override;
-    std::vector<Quad> quads() const override { return {d_background, d_bar, d_picker}; }
+    const SliderAttributes& attributes() const { return d_attributes; }
 
     float value() const;
 

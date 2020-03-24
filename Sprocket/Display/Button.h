@@ -1,5 +1,5 @@
 #pragma once
-#include "UiComponent.h"
+#include "Widget.h"
 #include "Quad.h"
 #include "Maths.h"
 
@@ -33,12 +33,9 @@ struct ButtonAttributes
 
 using ButtonCallback = std::function<void()>;
 
-class Button : public UiComponent
+class Button : public Widget
 {
     ButtonAttributes d_attributes;
-
-    Quad d_background;
-    Quad d_button;
 
     bool d_hovered;
     bool d_clicked;
@@ -48,20 +45,20 @@ class Button : public UiComponent
     ButtonCallback d_clickCallback = [](){};
     ButtonCallback d_unclickCallback = [](){};
 
+    void updateImpl(Window* window) override;
+    bool handleEventImpl(Window* window, const Event& event) override;
+
 public:
-    Button(const Maths::vec2& topLeft,
-           float width,
-           float height,
-           const ButtonAttributes& attrs = {});
+    Button(float width, float height, const ButtonAttributes& attrs = {});
 
-    Quad background() const { return d_background; }
-    Quad button() const { return d_button; }
+    VisualQuad& background() { return d_quads[0]; }
+    VisualQuad& button() { return d_quads[1]; }
+    
+    const VisualQuad& background() const { return d_quads[0]; }
+    const VisualQuad& button() const { return d_quads[1]; }
 
-    ButtonAttributes attributes() const { return d_attributes; }
-
-    void update(Window* window) override;
-    void handleEvent(Window* window, const Event& event) override;
-    std::vector<Quad> quads() const override { return {d_background, d_button}; }
+    ButtonAttributes& attributes() { return d_attributes; }
+    const ButtonAttributes& attributes() const { return d_attributes; }
 
     void setHoverCallback(ButtonCallback cb) { d_hoverCallback = cb; }
     void setUnhoverCallback(ButtonCallback cb) { d_unhoverCallback = cb; }

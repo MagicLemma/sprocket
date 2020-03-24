@@ -30,6 +30,8 @@ public:
            const std::string& vertShader,
            const std::string& fragShader);
 
+    virtual ~Effect() {}
+
     void bindForWrite() const;
     void unbindForWrite() const;
         // Bind/unbind for writing. Any render calls while this is

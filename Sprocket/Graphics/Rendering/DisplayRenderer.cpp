@@ -9,10 +9,10 @@ namespace Sprocket {
 
 DisplayRenderer::DisplayRenderer(Window* window)
     : d_window(window)
-    , d_quadShader("Resources/Shaders/DisplayQuad.vert",
-                   "Resources/Shaders/DisplayQuad.frag")
-    , d_imageShader("Resources/Shaders/DisplayImage.vert",
-                    "Resources/Shaders/DisplayImage.frag")
+    , d_colourShader("Resources/Shaders/DisplayColoured.vert",
+                     "Resources/Shaders/DisplayColoured.frag")
+    , d_textureShader("Resources/Shaders/DisplayTextured.vert",
+                      "Resources/Shaders/DisplayTextured.frag")
     , d_quad({{{1.0f, 1.0f}, {1.0f, 1.0f}},
               {{1.0f, 0.0f}, {1.0f, 0.0f}},
               {{0.0f, 1.0f}, {0.0f, 1.0f}},
@@ -20,82 +20,116 @@ DisplayRenderer::DisplayRenderer(Window* window)
 {
 }
 
-void DisplayRenderer::draw(const Quad& quad) const
+void DisplayRenderer::update() const
 {
-    handleRenderOptions({false, false, false});
+    float width = (float)d_window->width();
+    float height = (float)d_window->height();
+    Maths::mat4 projection = Maths::ortho(0, width, height, 0);
 
-    d_quadShader.bind();
-    d_quad.bind();
+    d_colourShader.bind();
+    d_colourShader.loadUniform("projection", projection);
 
-    Maths::mat4 projection = Maths::ortho(0, (float)d_window->width(),
-                                          (float)d_window->height(), 0);
-
-    Maths::mat4 transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
-
-    d_quadShader.loadUniform("projection", projection);
-    d_quadShader.loadUniform("transform", transform);
-    d_quadShader.loadUniform("colour", quad.colour());
-
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    d_quad.unbind();
-    d_quadShader.unbind();   
+    d_textureShader.bind();
+    d_textureShader.loadUniform("projection", projection);
+    d_textureShader.unbind();
 }
 
-void DisplayRenderer::draw(const UiComponent& component) const
+void DisplayRenderer::draw(const Widget& widget) const
 {
-    handleRenderOptions({false, false, false});
-
-    d_quadShader.bind();
-    d_quad.bind();
-
-    Maths::mat4 projection = Maths::ortho(0, (float)d_window->width(),
-                                          (float)d_window->height(), 0);
-    d_quadShader.loadUniform("projection", projection);
-
-    // Background quad
-    for (const auto& quad : component.quads()) {
-        Maths::mat4 transform = Maths::transform(quad.topLeftV3(), {0.0, 0.0, 0.0}, {quad.width(), quad.height(), 0.0});
-        d_quadShader.loadUniform("transform", transform);
-        d_quadShader.loadUniform("colour", quad.colour());
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    for (const auto& quad : widget.quads()) {
+        draw(widget, quad);
     }
 
-    d_quad.unbind();
-    d_quadShader.unbind();
+    for (const auto& child : widget.children()) {
+        draw(*child.get());
+    }
 }
 
-void DisplayRenderer::draw(const Image& image) const
+void DisplayRenderer::draw(const Widget& widget, const VisualQuad& quad) const
 {
     handleRenderOptions({false, false, false});
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    auto texture = image.texture();
-    auto quad = image.quad();
+    auto position3D = Maths::vec3{quad.body.position.x, quad.body.position.y, 0.0f};
+    auto transform = Maths::transform(position3D, {0.0, 0.0, 0.0}, {quad.body.width, quad.body.height, 0.0});
 
-    d_imageShader.bind();
+    // Find the appropriate shader and bind the colour/texture.
+    const Shader* shader;
+    if (std::holds_alternative<Colour>(quad.skin)) {
+        shader = &d_colourShader;
+        shader->bind();
+        shader->loadUniform("colour", std::get<Colour>(quad.skin));
+    }
+    else if (std::holds_alternative<Texture>(quad.skin)) {
+        shader = &d_textureShader;
+        shader->bind();
+        std::get<Texture>(quad.skin).bind();
+    }
+    else {
+        SPKT_LOG_ERROR("Quad has unknown skin!");
+        return;
+    }
+
+    shader->loadUniform("transform", transform);
+    shader->loadUniform("opacity", quad.opacity);
+    shader->loadUniform("roundness", quad.roundness);
+    shader->loadUniform("greyscale", widget.active() ? 0.0f : 1.0f);
+
     d_quad.bind();
-
-    float width = (float)d_window->width();
-    float height = (float)d_window->height();
-
-    Maths::mat4 projection = Maths::ortho(0, width, height, 0);
-    d_imageShader.loadUniform("projection", projection);
-
-    Maths::mat4 transform = Maths::transform(image.quad().topLeftV3(),
-                                            {0.0, 0.0, 0.0},
-                                            {quad.width(), quad.height(), 1.0});
-
-    d_imageShader.loadUniform("transform", transform);
-    d_imageShader.loadUniform("opacity", image.opacity());
-    
-    texture.bind();
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    texture.unbind();
-
     d_quad.unbind();
-    d_imageShader.unbind();
 
+    // If it was a textured Quad, unbind the texture.
+    if (std::holds_alternative<Texture>(quad.skin)) {
+        std::get<Texture>(quad.skin).unbind();
+    }
+
+    shader->unbind();
+    glDisable(GL_BLEND);
+}
+
+void DisplayRenderer::draw(const VisualQuad& quad) const
+{
+    handleRenderOptions({false, false, false});
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    auto position3D = Maths::vec3{quad.body.position.x, quad.body.position.y, 0.0f};
+    auto transform = Maths::transform(position3D, {0.0, 0.0, 0.0}, {quad.body.width, quad.body.height, 0.0});
+
+    // Find the appropriate shader and bind the colour/texture.
+    const Shader* shader;
+    if (std::holds_alternative<Colour>(quad.skin)) {
+        shader = &d_colourShader;
+        shader->bind();
+        shader->loadUniform("colour", std::get<Colour>(quad.skin));
+    }
+    else if (std::holds_alternative<Texture>(quad.skin)) {
+        shader = &d_textureShader;
+        shader->bind();
+        std::get<Texture>(quad.skin).bind();
+    }
+    else {
+        SPKT_LOG_ERROR("Quad has unknown skin!");
+        return;
+    }
+
+    shader->loadUniform("transform", transform);
+    shader->loadUniform("opacity", quad.opacity);
+    shader->loadUniform("roundness", quad.roundness);
+    shader->loadUniform("greyscale", 0.0f);
+
+    d_quad.bind();
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    d_quad.unbind();
+
+    // If it was a textured Quad, unbind the texture.
+    if (std::holds_alternative<Texture>(quad.skin)) {
+        std::get<Texture>(quad.skin).unbind();
+    }
+
+    shader->unbind();
     glDisable(GL_BLEND);
 }
 

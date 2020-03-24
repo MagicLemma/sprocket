@@ -1,7 +1,6 @@
 #pragma once
 #include "Window.h"
 #include "Quad.h"
-#include "Image.h"
 
 namespace Sprocket {
 
@@ -22,7 +21,6 @@ public:
     AspectConstraint(Base base, float aspectRatio);
 
     void apply(Window* window, Quad& quad);
-    void apply(Window* window, Image& image);
 };
 
 }

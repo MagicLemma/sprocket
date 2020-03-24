@@ -27,17 +27,22 @@ add_library(Sprocket STATIC
             Graphics/Rendering/TerrainRenderer.cpp
 
             Graphics/Rendering/Constraints/AspectConstraint.cpp
-            Graphics/Rendering/Constraints/HorizontalConstraint.cpp
-            Graphics/Rendering/Constraints/VerticalConstraint.cpp
-
+            
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
 
-            Display/UiComponent.cpp
+            Display/Widget.cpp
+            Display/Container.cpp
             Display/Slider.cpp
             Display/Button.cpp
+            Display/Image.cpp
+
+            Display/WidgetProperties/WidgetProperty.cpp
+            Display/WidgetProperties/Draggable.cpp
+            Display/WidgetProperties/HorizontalConstraint.cpp
+            Display/WidgetProperties/VerticalConstraint.cpp
 
             Objects/Cameras/Camera.cpp
             Objects/Cameras/FirstPersonCamera.cpp
@@ -47,7 +52,6 @@ add_library(Sprocket STATIC
             Objects/Lenses/PerspectiveLens.cpp
 
             Objects/Entity.cpp
-            Objects/Image.cpp
             Objects/Light.cpp
             Objects/Material.cpp
             Objects/Quad.cpp
@@ -80,6 +84,7 @@ target_include_directories(Sprocket PUBLIC
                            .
                            ./Core
                            ./Display
+                           ./Display/WidgetProperties
                            ./Events
                            ./Graphics
                            ./Graphics/Primitives

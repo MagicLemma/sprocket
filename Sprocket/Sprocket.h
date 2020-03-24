@@ -41,12 +41,10 @@
 #include "Graphics/Rendering/TerrainRenderer.h"
 
 #include "Graphics/Rendering/Constraints/AspectConstraint.h"
-#include "Graphics/Rendering/Constraints/HorizontalConstraint.h"
-#include "Graphics/Rendering/Constraints/VerticalConstraint.h"
+
 
 // OBJECTS
 #include "Objects/Entity.h"
-#include "Objects/Image.h"
 #include "Objects/Material.h"
 #include "Objects/Quad.h"
 #include "Objects/Light.h"
@@ -61,6 +59,13 @@
 #include "Objects/Lenses/PerspectiveLens.h"
 
 // DISPLAY
-#include "Display/UiComponent.h"
+#include "Display/Widget.h"
+#include "Display/Container.h"
 #include "Display/Button.h"
 #include "Display/Slider.h"
+#include "Display/Image.h"
+
+#include "Display/WidgetProperties/WidgetProperty.h"
+#include "Display/WidgetProperties/Draggable.h"
+#include "Display/WidgetProperties/HorizontalConstraint.h"
+#include "Display/WidgetProperties/VerticalConstraint.h"

@@ -11,16 +11,9 @@ class UILayer : public Sprocket::Layer
 
     Sprocket::DisplayRenderer d_displayRenderer;
 
-    Sprocket::Slider d_slider;
-    Sprocket::Slider d_slider2;
-    Sprocket::Button d_button;
-    Sprocket::Button d_button2;
+    Sprocket::Container d_container;
 
     Sprocket::Image d_image;
-    
-    Sprocket::HorizontalConstraint d_hconstraint;
-    Sprocket::VerticalConstraint d_vconstraint;
-    Sprocket::AspectConstraint d_aconstraint;
 
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info);

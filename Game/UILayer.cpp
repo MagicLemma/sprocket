@@ -30,35 +30,69 @@ Sprocket::ButtonAttributes getButtonAttrs()
     return attrs;
 }
 
+Sprocket::ContainerAttributes getContainerAttrs()
+{
+    Sprocket::ContainerAttributes attrs;
+    attrs.backgroundColour = {0.07f, 0.07f, 0.07f};
+
+    return attrs;
+}
+
 UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info) 
     : Layer(Status::INACTIVE, true)
     , d_info(info)
     , d_displayRenderer(info->window)
-    , d_slider({50.0f, 50.0f}, 300.0f, 50.0f, 0.0f, getSliderAttrs())
-    , d_slider2({50.0f, 100.0f}, 300.0f, 50.0f, 0.0f, getSliderAttrs())
-    , d_button({50.0f, 200.0f}, 50.0f, 50.0f, getButtonAttrs())
-    , d_button2({100.0f, 200.0f}, 50.0f, 50.0f, getButtonAttrs())
-    , d_image("Resources/Textures/Space.PNG", Sprocket::Maths::vec2(500.0, 50.0))
-    , d_hconstraint(Sprocket::HorizontalConstraint::Type::CENTRE, 25.0f)
-    , d_vconstraint(Sprocket::VerticalConstraint::Type::CENTRE, 25.0f)
-    , d_aconstraint(Sprocket::AspectConstraint::Base::HEIGHT, 2.0)
+    , d_container(
+        (float)info->window->width()/4.0f,
+        {10.0, 10.0},
+        10.0f,
+        getContainerAttrs()
+    )
+    , d_image(Sprocket::Texture("Resources/Textures/Space.PNG"))
 {
-    d_image.opacity(0.5f);
+    using namespace Sprocket;
 
-    d_slider.setCallback([&](float val){
+    d_container.position({10.0f, 10.0f});
+    d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
+    d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
+
+    d_image.position({500.0f, 100.0f});
+    d_image.addProperty<Draggable>();
+
+    d_container.background().roundness = 0.081f;
+
+    auto fovSlider = d_container.add<Slider>(
+        300.0f, 50.0f, 0.0f, getSliderAttrs()
+    );
+
+    fovSlider->addProperty<Draggable>();
+
+    fovSlider->setCallback([&](float val) {
         d_info->lens.fov(70.0f + 50.0f * val);
     });
 
-    d_slider2.setCallback([](float val) {
-        SPKT_LOG_INFO("Slider 2 set to {}!", val);
+    auto roundnessSlider = d_container.add<Slider>(
+        300.0f, 50.0f, 0.0f, getSliderAttrs()
+    );
+
+    roundnessSlider->setCallback([&](float val) {
+        d_image.background().roundness = val;
     });
 
-    d_button.setUnclickCallback([&]() {
-        d_info->paused = !d_info->paused;
-        d_info->window->setCursorVisibility(d_info->paused);
+    auto chattyButton = d_container.add<Button>(
+        50.0f, 50.0f, getButtonAttrs()
+    );
+
+    chattyButton->setUnclickCallback([&]() {
+        SPKT_LOG_WARN("Have a great day!");
+        d_image.active(!d_image.active());
     });
 
-    d_button2.setUnclickCallback([&]() {
+    auto cameraSwitchButton = d_container.add<Button>(
+        50.0f, 50.0f, getButtonAttrs()
+    );
+
+    cameraSwitchButton->setUnclickCallback([&]() {  //unclick
         if (d_info->cameraIsFirst) {
             d_info->camera = &d_info->thirdCamera;
         }
@@ -67,6 +101,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
         }
         d_info->cameraIsFirst = !d_info->cameraIsFirst;
     });
+
 }
 
 bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event)
@@ -77,13 +112,20 @@ bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& e
             window->setCursorVisibility(d_info->paused);
             return true;
         }
+        else if (e->key() == Sprocket::Keyboard::E) {
+            d_image.active(!d_image.active());
+            return true;
+        }
     }
 
     if (d_status == Status::NORMAL) {
-        d_slider.handleEvent(window, event);
-        d_slider2.handleEvent(window, event);
-        d_button.handleEvent(window, event);
-        d_button2.handleEvent(window, event);
+        if (d_image.handleEvent(window, event)) {
+            return true;
+        }
+        if (d_container.handleEvent(window, event)) {
+            return true;
+        }
+        
     }
 
     return false;
@@ -92,22 +134,16 @@ bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& e
 void UILayer::updateImpl(Sprocket::Window* window)
 {
     d_status = d_info->paused ? Status::NORMAL : Status::INACTIVE;
-    d_hconstraint.apply(window, d_image);
-    d_vconstraint.apply(window, d_image);
+    d_displayRenderer.update();
 
     if (d_status == Status::NORMAL) {
-        d_slider.update(window);
-        d_slider2.update(window);
-        d_button.update(window);
-        d_button2.update(window);
+        d_container.update(window);
+        d_image.update(window);
     }
 }
 
 void UILayer::drawImpl(Sprocket::Window* window)
 {
+    d_displayRenderer.draw(d_container);
     d_displayRenderer.draw(d_image);
-    d_displayRenderer.draw(d_slider);
-    d_displayRenderer.draw(d_slider2);
-    d_displayRenderer.draw(d_button);
-    d_displayRenderer.draw(d_button2);
 }

@@ -4,38 +4,17 @@
 
 namespace Sprocket {
 
-Quad::Quad(const Maths::vec2& topLeft, float width, float height)
-    : d_topLeft(topLeft)
-    , d_width(width)
-    , d_height(height)
-    , d_colour({1.0f, 1.0f, 1.0f})
+bool containsPoint(const Quad& quad, const Maths::vec2& point)
 {
+    return point.x >= quad.position.x
+        && point.x <= quad.position.x + quad.width
+        && point.y >= quad.position.y
+        && point.y <= quad.position.y + quad.height;
 }
 
-Maths::vec2 Quad::centre() const {
-    return {
-        d_topLeft.x + d_width/2,
-        d_topLeft.y + d_height/2
-    };
-}
-
-bool Quad::containsPoint(float x, float y) const
+bool containsPoint(const VisualQuad& quad, const Maths::vec2& point)
 {
-    return x >= d_topLeft.x
-        && x <= d_topLeft.x + d_width
-        && y >= d_topLeft.y
-        && y <= d_topLeft.y + d_height;
-}
-
-bool Quad::containsPoint(const Maths::vec2& pos) const
-{
-    return containsPoint(pos.x, pos.y);
-}
-
-void Quad::scale(float scaleFactor)
-{
-    d_width *= scaleFactor;
-    d_height *= scaleFactor;
+    return containsPoint(quad.body, point);
 }
 
 }

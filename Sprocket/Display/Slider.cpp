@@ -6,75 +6,91 @@
 namespace Sprocket {
 namespace {
 
-Quad makeBarQuad(const Quad& quad, const SliderAttributes& attributes)
+Maths::vec2 makeBarOffset(float width, float height, const SliderAttributes& attrs)
 {
-    float x = quad.left() + quad.width() * (1 - attributes.barWidth) / 2;
-    float y = quad.top() + quad.height() * (1 - attributes.barHeight) / 2;
-    float width = attributes.barWidth * quad.width();
-    float height = attributes.barHeight * quad.height();
-    return {{x, y}, width, height};
+    return {
+        width * (1 - attrs.barWidth) / 2,
+        height * (1 - attrs.barHeight) / 2
+    };
 }
 
-Quad makePickerQuad(const Quad& quad, const SliderAttributes& attributes)
+Maths::vec2 makePickerOffset(float width, float height, const SliderAttributes& attrs)
 {
-    float x = quad.left() + quad.width() * (1 - attributes.pickerWidth) / 2;
-    float y = quad.top() + quad.height() * (1 - attributes.pickerHeight) / 2;
-    float width = attributes.pickerWidth * quad.width();
-    float height = attributes.pickerHeight * quad.height();
-    return {{x, y}, width, height};
+    return {
+        width * (1 - attrs.pickerWidth) / 2,
+        height * (1 - attrs.pickerHeight) / 2
+    };
 }
 
 }
     
-Slider::Slider(const Maths::vec2& topLeft,
-               float width,
+Slider::Slider(float width,
                float height,
                float initialValue,
-               const SliderAttributes& attributes)
-    : d_attributes(attributes)
-    , d_background({topLeft, width, height})
-    , d_bar(makeBarQuad(d_background, attributes))
-    , d_picker(makePickerQuad(d_background, attributes))
-    , d_left(d_bar.left())
-    , d_right(d_bar.right() - d_picker.width())
+               const SliderAttributes& attrs)
+    : Widget(width, height)
+    , d_attributes(attrs)
     , d_updating(false)
 {
+    d_quads.push_back({
+        {{0.0, 0.0}, width, height},
+        attrs.backgroundColour
+    });
+
+    d_quads.push_back({
+        {
+            makeBarOffset(width, height, attrs), 
+            attrs.barWidth * width,
+            attrs.barHeight * height
+        },
+        attrs.barColour
+    });
+
+    d_quads.push_back({
+        {
+            makePickerOffset(width, height, attrs),
+            attrs.pickerWidth * width,
+            attrs.pickerHeight * height,
+        },
+        attrs.pickerColour
+    });
+
     Maths::clamp(initialValue, 0.0f, 1.0f);
-    d_picker.xCoord(d_left + initialValue * (d_right - d_left));
-    
-    d_background.colour(attributes.backgroundColour);
-    d_bar.colour(attributes.barColour);
-    d_picker.colour(attributes.pickerColour);
+    picker().body.position.x = left() + initialValue * (right() - left());    
 }
 
-void Slider::update(Window* window)
+void Slider::updateImpl(Window* window)
 {
     if (d_updating) {
         if (window->getMouseOffset().x != 0) {
-            float newHorizPos = window->getMousePos().x - d_picker.width()/2;
-            Maths::clamp(newHorizPos, d_left, d_right);
-            d_picker.xCoord(newHorizPos);
+            float newHorizPos = toLocalCoords(window->getMousePos()).x - picker().body.width/2;
+            auto& offset = picker().body.position;
+            Maths::clamp(newHorizPos, left(), right());
+            offset.x = newHorizPos;
             d_callback(value());
         }
     }
 }
 
-void Slider::handleEvent(Window* window, const Event& event)
+bool Slider::handleEventImpl(Window* window, const Event& event)
 {
-    if (d_picker.containsPoint(window->getMousePos())) {
+    if (containsPoint(picker(), toLocalCoords(window->getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             if (e->button() == Mouse::LEFT) {
                 d_updating = true;
+                return true;
             }
         }       
-    } else if (d_bar.containsPoint(window->getMousePos())) {
+    } else if (containsPoint(bar(), toLocalCoords(window->getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             if (e->button() == Mouse::LEFT) {
                 d_updating = true;
-                float newHorizPos = window->getMousePos().x - d_picker.width()/2;
-                Maths::clamp(newHorizPos, d_left, d_right);
-                d_picker.xCoord(newHorizPos);
+                float newHorizPos = toLocalCoords(window->getMousePos()).x - picker().body.width/2;
+                auto& offset = picker().body.position;
+                Maths::clamp(newHorizPos, left(), right());
+                offset.x = newHorizPos;
                 d_callback(value());
+                return true;
             }
         }
     }
@@ -82,13 +98,25 @@ void Slider::handleEvent(Window* window, const Event& event)
     if (auto e = event.as<MouseButtonReleasedEvent>()) {
         if (e->button() == Mouse::LEFT) {
             d_updating = false;
+            return false;
         }
     }
+    return false;
 }
 
 float Slider::value() const
 {
-    return (d_picker.topLeft().x - d_left) / (d_right - d_left);
+    return (picker().body.position.x - left()) / (right() - left());
+}
+
+float Slider::left() const
+{
+    return bar().body.position.x;
+}
+
+float Slider::right() const
+{
+    return bar().body.position.x + bar().body.width - picker().body.width;
 }
 
 }
