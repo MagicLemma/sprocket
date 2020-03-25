@@ -49,6 +49,8 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
         getContainerAttrs()
     )
     , d_image(Sprocket::Texture("Resources/Textures/Space.PNG"))
+    , d_arial(Sprocket::loadFont("Resources/Fonts/Arial.fnt",
+                                 "Resources/Fonts/Arial.png"))
 {
     using namespace Sprocket;
 
@@ -56,7 +58,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
     d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
 
-    d_image.position({500.0f, 100.0f});
+    d_image.position({0.0f, 100.0f});
     d_image.addProperty<Draggable>();
 
     d_container.background().roundness = 0.081f;
@@ -146,4 +148,6 @@ void UILayer::drawImpl(Sprocket::Window* window)
 {
     d_displayRenderer.draw(d_container);
     d_displayRenderer.draw(d_image);
+    d_displayRenderer.draw("A a!\"#$%&\'*+,-./:;<=>?@^_`~", d_arial, {0.0, 100.0}, 1.0f, {0.9, 0.9, 0.9});
+    d_displayRenderer.draw("ABCDEFGHIJKLMNOPQ", d_arial, d_image.position(), 1.0f, {0.9, 0.9, 0.9});
 }

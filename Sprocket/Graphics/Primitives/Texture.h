@@ -22,6 +22,8 @@ public:
     int width() const { return d_width; }
     int height() const { return d_height; }
     int bpp() const { return d_bpp; }
+
+    static Texture& empty();
 };
 
 }

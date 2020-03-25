@@ -39,6 +39,10 @@ add_library(Sprocket STATIC
             Display/Button.cpp
             Display/Image.cpp
 
+            Display/Fonts/Character.cpp
+            Display/Fonts/Font.cpp
+            Display/Fonts/FontLoader.cpp
+
             Display/WidgetProperties/WidgetProperty.cpp
             Display/WidgetProperties/Draggable.cpp
             Display/WidgetProperties/HorizontalConstraint.cpp
@@ -71,7 +75,8 @@ add_library(Sprocket STATIC
             
             Utility/FramerateTimer.cpp
             Utility/Log.cpp
-            Utility/Maths.cpp)
+            Utility/Maths.cpp
+            Utility/Tokenize.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       spdlog::spdlog
@@ -84,6 +89,7 @@ target_include_directories(Sprocket PUBLIC
                            .
                            ./Core
                            ./Display
+                           ./Display/Fonts
                            ./Display/WidgetProperties
                            ./Events
                            ./Graphics

@@ -19,6 +19,7 @@
 #include "Utility/Log.h"
 #include "Utility/Maths.h"
 #include "Utility/FramerateTimer.h"
+#include "Utility/Tokenize.h"
 
 // GRAPHICS
 #include "Graphics/Loader.h"
@@ -42,7 +43,6 @@
 
 #include "Graphics/Rendering/Constraints/AspectConstraint.h"
 
-
 // OBJECTS
 #include "Objects/Entity.h"
 #include "Objects/Material.h"
@@ -64,6 +64,10 @@
 #include "Display/Button.h"
 #include "Display/Slider.h"
 #include "Display/Image.h"
+
+#include "Display/Fonts/Character.h"
+#include "Display/Fonts/Font.h"
+#include "Display/Fonts/FontLoader.h"
 
 #include "Display/WidgetProperties/WidgetProperty.h"
 #include "Display/WidgetProperties/Draggable.h"

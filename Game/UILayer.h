@@ -8,12 +8,11 @@
 class UILayer : public Sprocket::Layer
 {
     std::shared_ptr<BasicSceneInfo> d_info;
-
     Sprocket::DisplayRenderer d_displayRenderer;
-
     Sprocket::Container d_container;
-
     Sprocket::Image d_image;
+
+    Sprocket::Font d_arial;
 
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info);

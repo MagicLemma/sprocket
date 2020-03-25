@@ -49,5 +49,11 @@ void Texture::unbind() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-    
+
+Texture& Texture::empty()
+{
+    static Texture white{"Resources/Textures/White.PNG"};
+    return white;
+}
+
 }

@@ -5,6 +5,7 @@
 #include "RenderOptions.h"
 #include "Quad.h"
 #include "Widget.h"
+#include "Font.h"
 
 // Remove after finding the bug with Image
 #include "Model2D.h"
@@ -25,6 +26,9 @@ class DisplayRenderer
     Shader d_textureShader;
         // Shader used to draw a textured Quad.
 
+    Shader d_characterShader;
+        // Shader used to draw characters.
+
     Model2D d_quad;
 
 public:
@@ -36,6 +40,19 @@ public:
     void draw(const Widget& widget, const VisualQuad& quad) const;
 
     void draw(const VisualQuad& quad) const;
+
+    void draw(int character,
+              const Font& font,
+              const Maths::vec2& position,
+              float size,
+              const Maths::vec3& colour) const;
+
+    void draw(const std::string& sentence,
+              const Font& font,
+              const Maths::vec2& position,
+              float size,
+              const Maths::vec3& colour) const;
 };
+
 
 }
