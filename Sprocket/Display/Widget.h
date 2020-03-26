@@ -3,6 +3,7 @@
 #include "Event.h"
 #include "Quad.h"
 #include "WidgetProperty.h"
+#include "DisplayRenderer.h"
 
 #include <variant>
 #include <vector>
@@ -34,21 +35,20 @@ class Widget
 
     virtual void updateImpl(Window* window) = 0;
     virtual bool handleEventImpl(Window* window, const Event& event) = 0;
+    virtual void drawImpl(DisplayRenderer* renderer) const = 0;
+        // Recurses down through all children and draws them too.
 
     bool d_active;
         // Stores whether this widget should be active. If it is inactive,
-        // it is rendered in greyscale, and does not update or receive events.
-        // They can only be reactivated by external means. Widgets are also
-        // inactive if their parents are inactive.
+        // it does not update or receive events. They can only be reactivated
+        // by external means. Widgets are also inactive if their parents are
+        // inactive.
 
 protected:
     Quad d_base;
         // A Quad that represents the position and size of this Widget
         // with respect to its parent, or the screen if this Widget has no
         // parent.
-
-    std::vector<VisualQuad> d_quads;
-        // The quads that make up this Widget.
 
     void makeChild(std::shared_ptr<Widget> child);
         // Sets the given widget to be a child of the current widget.
@@ -61,6 +61,7 @@ public:
 
     void update(Window* window);
     bool handleEvent(Window* window, const Event& event);
+    void draw(DisplayRenderer* renderer);
 
     Maths::vec2 position() const { return d_base.position; }
         // Returns the offset of this Widget relative to it's parent.
@@ -68,10 +69,6 @@ public:
     
     void position(const Maths::vec2& newPosition) { d_base.position = newPosition; }
         // Set the offset of this Widget with respect to its parent.
-
-    std::vector<VisualQuad> quads() const;
-        // Returns the Quads that make up this Widget transformed into their
-        // screen positions.
     
     const std::vector<std::shared_ptr<Widget>>& children() const { return d_children; }
 
@@ -97,11 +94,11 @@ public:
 
 public:
     // Helper Functions
-    VisualQuad toLocalCoords(const VisualQuad& screenQuad) const;
-    VisualQuad toScreenCoords(const VisualQuad& localQuad) const;
-
     Maths::vec2 toLocalCoords(const Maths::vec2& screenCoords) const;
     Maths::vec2 toScreenCoords(const Maths::vec2& localCoords) const;
+
+    Quad toLocalCoords(const Quad& screenQuad) const;
+    Quad toScreenCoords(const Quad& localQuad) const;
 };
 
 }

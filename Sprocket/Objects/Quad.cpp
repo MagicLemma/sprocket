@@ -12,9 +12,4 @@ bool containsPoint(const Quad& quad, const Maths::vec2& point)
         && point.y <= quad.position.y + quad.height;
 }
 
-bool containsPoint(const VisualQuad& quad, const Maths::vec2& point)
-{
-    return containsPoint(quad.body, point);
-}
-
 }

@@ -61,7 +61,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     d_image.position({0.0f, 100.0f});
     d_image.addProperty<Draggable>();
 
-    d_container.background().roundness = 0.081f;
+    d_container.backgroundVisuals().roundness = 0.081f;
 
     auto fovSlider = d_container.add<Slider>(
         300.0f, 50.0f, 0.0f, getSliderAttrs()
@@ -78,7 +78,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     );
 
     roundnessSlider->setCallback([&](float val) {
-        d_image.background().roundness = val;
+        d_image.backgroundVisuals().roundness = val;
     });
 
     auto chattyButton = d_container.add<Button>(
@@ -88,6 +88,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     chattyButton->setUnclickCallback([&]() {
         SPKT_LOG_WARN("Have a great day!");
         d_image.active(!d_image.active());
+        d_image.backgroundVisuals().greyscale = !d_image.backgroundVisuals().greyscale;
     });
 
     auto cameraSwitchButton = d_container.add<Button>(
@@ -146,8 +147,8 @@ void UILayer::updateImpl(Sprocket::Window* window)
 
 void UILayer::drawImpl(Sprocket::Window* window)
 {
-    d_displayRenderer.draw(d_container);
-    d_displayRenderer.draw(d_image);
+    d_container.draw(&d_displayRenderer);
+    d_image.draw(&d_displayRenderer);
     d_displayRenderer.draw("A a!\"#$%&\'*+,-./:;<=>?@^_`~", d_arial, {0.0, 100.0}, 1.0f, {0.9, 0.9, 0.9});
     d_displayRenderer.draw("ABCDEFGHIJKLMNOPQ", d_arial, d_image.position(), 1.0f, {0.9, 0.9, 0.9});
 }

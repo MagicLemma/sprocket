@@ -1,12 +1,14 @@
 #version 400 core
 out vec4 out_Colour;
 
+uniform sampler2D textureSampler;
 uniform vec3 colour;
 uniform float opacity;
 uniform float roundness;
 uniform float greyscale;
 
 in vec2 pass_position;
+in vec2 pass_textureCoord;
 in float width;
 in float height;
 
@@ -50,9 +52,9 @@ void main()
 
     float alpha = getAlpha(r);
 
-    vec3 finalColour = colour;
+    vec3 finalColour = colour * texture(textureSampler, pass_textureCoord).xyz;
     if (greyscale != 0) {
-        float grey = colour.r * 0.3 + colour.g * 0.59 + colour.b * 0.11;
+        float grey = finalColour.r * 0.3 + finalColour.g * 0.59 + finalColour.b * 0.11;
         finalColour = vec3(grey, grey, grey);
     }
     out_Colour = vec4(finalColour, opacity * alpha);

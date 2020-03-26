@@ -35,6 +35,12 @@ using ButtonCallback = std::function<void()>;
 
 class Button : public Widget
 {
+    Quad        d_background;
+    QuadVisuals d_backgroundVisuals;
+
+    Quad        d_button;
+    QuadVisuals d_buttonVisuals;
+
     ButtonAttributes d_attributes;
 
     bool d_hovered;
@@ -47,17 +53,21 @@ class Button : public Widget
 
     void updateImpl(Window* window) override;
     bool handleEventImpl(Window* window, const Event& event) override;
+    void drawImpl(DisplayRenderer* renderer) const override;
 
 public:
     Button(float width, float height, const ButtonAttributes& attrs = {});
 
-    VisualQuad& background() { return d_quads[0]; }
-    VisualQuad& button() { return d_quads[1]; }
-    
-    const VisualQuad& background() const { return d_quads[0]; }
-    const VisualQuad& button() const { return d_quads[1]; }
+    Quad& background() { return d_background; }
+    Quad& button() { return d_background; }
+    const Quad& background() const { return d_button; }
+    const Quad& button() const { return d_button; }
 
-    ButtonAttributes& attributes() { return d_attributes; }
+    QuadVisuals& backgroundVisuals() { return d_backgroundVisuals; }
+    QuadVisuals& buttonVisuals() { return d_backgroundVisuals; }
+    const QuadVisuals& backgroundVisuals() const { return d_buttonVisuals; }
+    const QuadVisuals& buttonVisuals() const { return d_buttonVisuals; }
+
     const ButtonAttributes& attributes() const { return d_attributes; }
 
     void setHoverCallback(ButtonCallback cb) { d_hoverCallback = cb; }

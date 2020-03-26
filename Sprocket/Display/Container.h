@@ -14,13 +14,15 @@ struct ContainerAttributes
 
 class Container : public Widget
 {
-    ContainerAttributes d_attributes;
+    Quad        d_background;
+    QuadVisuals d_backgroundVisuals;
 
     Maths::vec2 d_placementPtr;
     float       d_spacing;
 
     void updateImpl(Window* window) override;
     bool handleEventImpl(Window* window, const Event& event) override;
+    void drawImpl(DisplayRenderer* renderer) const override;
 
 public:
     Container(float width,
@@ -28,12 +30,11 @@ public:
               float spacing,
               const ContainerAttributes& attrs = {});
 
-    VisualQuad& background() { return d_quads[0]; }
-    
-    const VisualQuad& background() const { return d_quads[0]; }
+    Quad& background() { return d_background; }
+    const Quad& background() const { return d_background; }
 
-    ContainerAttributes& attributes() { return d_attributes; }
-    const ContainerAttributes& attributes() const { return d_attributes; }
+    QuadVisuals& backgroundVisuals() { return d_backgroundVisuals; }
+    const QuadVisuals& backgroundVisuals() const { return d_backgroundVisuals; }
 
     template <typename T, typename... Args>
     std::shared_ptr<T> add(Args&&... args)
@@ -45,7 +46,7 @@ public:
         makeChild(newWidget);
 
         d_placementPtr.y += d_spacing + newWidget->height();
-        background().body.height += d_spacing + newWidget->height();
+        d_background.height += d_spacing + newWidget->height();
         d_base.height += d_spacing + newWidget->height();
         return newWidget;
     }

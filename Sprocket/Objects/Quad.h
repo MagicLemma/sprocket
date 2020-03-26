@@ -3,11 +3,11 @@
 #include "Texture.h"
 
 #include <variant>
+#include <utility>
 
 namespace Sprocket {
 
 using Colour = Maths::vec3;
-using Skin = std::variant<Colour, Texture>;
 
 struct Quad
 {
@@ -16,15 +16,15 @@ struct Quad
     float       height;   
 };
 
-struct VisualQuad
+struct QuadVisuals
 {
-    Quad  body;
-    Skin  skin;
+    Texture texture = Texture::empty();
+    Colour colour = Colour{1.0, 1.0, 1.0};
     float opacity = 1.0f;
     float roundness = 0.0f;
+    bool greyscale = false;
 };
 
 bool containsPoint(const Quad& quad, const Maths::vec2& point);
-bool containsPoint(const VisualQuad& quad, const Maths::vec2& point);
 
 }

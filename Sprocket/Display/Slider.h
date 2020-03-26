@@ -27,7 +27,14 @@ struct SliderAttributes
 
 class Slider : public Widget
 {
-    SliderAttributes d_attributes;
+    Quad        d_background;
+    QuadVisuals d_backgroundVisuals;
+
+    Quad        d_bar;
+    QuadVisuals d_barVisuals;
+
+    Quad        d_picker;
+    QuadVisuals d_pickerVisuals;
     
     bool d_updating;
 
@@ -40,23 +47,27 @@ class Slider : public Widget
 
     void updateImpl(Window* window) override;
     bool handleEventImpl(Window* window, const Event& event) override;
-
+    void drawImpl(DisplayRenderer* renderer) const override;
+    
 public:
     Slider(float width,
            float height,
            float initialValue,
            const SliderAttributes& attrs = {});
 
-    VisualQuad& background() { return d_quads[0]; }
-    VisualQuad& bar() { return d_quads[1]; }
-    VisualQuad& picker() { return d_quads[2]; }
+    Quad& background() { return d_background; }
+    Quad& bar() { return d_bar; }
+    Quad& picker() { return d_picker; }
+    const Quad& background() const { return d_background; }
+    const Quad& bar() const { return d_bar; }
+    const Quad& picker() const { return d_picker; }
 
-    const VisualQuad& background() const { return d_quads[0]; }
-    const VisualQuad& bar() const { return d_quads[1]; }
-    const VisualQuad& picker() const { return d_quads[2]; }
-
-    SliderAttributes& attributes() { return d_attributes; }
-    const SliderAttributes& attributes() const { return d_attributes; }
+    QuadVisuals& backgroundVisuals() { return d_backgroundVisuals; }
+    QuadVisuals& barVisuals() { return d_barVisuals; }
+    QuadVisuals& pickerVisuals() { return d_pickerVisuals; }
+    const QuadVisuals& backgroundVisuals() const { return d_backgroundVisuals; }
+    const QuadVisuals& barVisuals() const { return d_barVisuals; }
+    const QuadVisuals& pickerVisuals() const { return d_pickerVisuals; }
 
     float value() const;
 

@@ -8,14 +8,18 @@ Container::Container(float width,
                      float spacing,
                      const ContainerAttributes& attrs)
     : Widget(width, spacing)
-    , d_attributes(attrs)
+    , d_background({
+        {0.0, 0.0},
+        width,
+        spacing
+    })
+    , d_backgroundVisuals({
+        Texture::empty(),
+        attrs.backgroundColour
+    })
     , d_placementPtr(placementPtr)
     , d_spacing(spacing)
 {
-    d_quads.push_back({
-        {{0.0, 0.0}, width, spacing},
-        attrs.backgroundColour
-    });
 }
 
 void Container::updateImpl(Window* window)
@@ -25,6 +29,11 @@ void Container::updateImpl(Window* window)
 bool Container::handleEventImpl(Window* window, const Event& event)
 {
     return false;
+}
+
+void Container::drawImpl(DisplayRenderer* renderer) const
+{
+    renderer->draw(toScreenCoords(d_background), d_backgroundVisuals);
 }
 
 }

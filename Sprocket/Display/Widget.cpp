@@ -9,7 +9,6 @@ Widget::Widget(float width, float height)
     , d_children()
     , d_base({{0.0, 0.0}, width, height})
     , d_active(true)
-    , d_quads()
 {
 }
 
@@ -25,20 +24,6 @@ Maths::vec2 Widget::absolutePosition() const
     return d_base.position;
 }
 
-VisualQuad Widget::toLocalCoords(const VisualQuad& screenQuad) const
-{
-    VisualQuad localQuad = screenQuad;
-    localQuad.body.position -= absolutePosition();
-    return localQuad;
-}
-
-VisualQuad Widget::toScreenCoords(const VisualQuad& localQuad) const
-{
-    VisualQuad screenQuad = localQuad;
-    screenQuad.body.position += absolutePosition();
-    return screenQuad;
-}
-
 Maths::vec2 Widget::toLocalCoords(const Maths::vec2& screenCoords) const
 {
     return screenCoords - absolutePosition();
@@ -49,13 +34,18 @@ Maths::vec2 Widget::toScreenCoords(const Maths::vec2& localCoords) const
     return localCoords + absolutePosition();
 }
 
-std::vector<VisualQuad> Widget::quads() const
+Quad Widget::toLocalCoords(const Quad& screenQuad) const
 {
-    std::vector<VisualQuad> ret;
-    for (const auto& quad : d_quads) {
-        ret.push_back(toScreenCoords(quad));
-    }
-    return ret;
+    Quad localQuad = screenQuad;
+    localQuad.position -= absolutePosition();
+    return localQuad;
+}
+
+Quad Widget::toScreenCoords(const Quad& localQuad) const
+{
+    Quad screenQuad = localQuad;
+    screenQuad.position += absolutePosition();
+    return screenQuad;
 }
 
 void Widget::makeChild(std::shared_ptr<Widget> child)
@@ -109,6 +99,15 @@ bool Widget::handleEvent(Window* window, const Event& event)
     }
     
     return false; 
+}
+
+void Widget::draw(DisplayRenderer* renderer)
+{
+    drawImpl(renderer);
+
+    for (const auto& child : d_children) {
+        child->draw(renderer);
+    }
 }
 
 bool Widget::active() const

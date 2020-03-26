@@ -4,7 +4,6 @@
 #include "Shader.h"
 #include "RenderOptions.h"
 #include "Quad.h"
-#include "Widget.h"
 #include "Font.h"
 
 // Remove after finding the bug with Image
@@ -23,9 +22,6 @@ class DisplayRenderer
     Shader d_colourShader;
         // Shader used to draw a coloured Quad.
 
-    Shader d_textureShader;
-        // Shader used to draw a textured Quad.
-
     Shader d_characterShader;
         // Shader used to draw characters.
 
@@ -36,10 +32,7 @@ public:
 
     void update() const;
 
-    void draw(const Widget& widget) const;
-    void draw(const Widget& widget, const VisualQuad& quad) const;
-
-    void draw(const VisualQuad& quad) const;
+    void draw(const Quad& quad, const QuadVisuals& visuals) const;
 
     void draw(int character,
               const Font& font,
