@@ -11,8 +11,7 @@ class UILayer : public Sprocket::Layer
     Sprocket::DisplayRenderer d_displayRenderer;
     Sprocket::Container d_container;
     Sprocket::Image d_image;
-
-    Sprocket::Font d_arial;
+    Sprocket::Text d_text;
 
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info);

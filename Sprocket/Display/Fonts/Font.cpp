@@ -1,16 +1,25 @@
 #include "Font.h"
+#include "FontLoader.h"
 
 namespace Sprocket {
 
-Font::Font(const CharacterMap& characters, const Texture& atlas)
-    : d_characters(characters)
-    , d_atlas(atlas)
+FontPackage::FontPackage(const std::string& fntFile, const std::string& texFile)
+    : d_atlas(texFile)
+    , d_glyphs()
+    , d_size(0.0f)
 {
+    auto [glyphs, size] = parseFntFile(fntFile, d_atlas);
+    d_glyphs = glyphs;
+    d_size = size;
 }
 
-Character Font::get(int id) const
+Character FontPackage::get(int id) const
 {
-    return d_characters.find(id)->second;
+    auto it = d_glyphs.find(id);
+    if (it == d_glyphs.end()) {
+        return d_glyphs.find(0)->second;
+    }
+    return it->second;
 }
     
 }

@@ -4,13 +4,10 @@
 #include "Shader.h"
 #include "RenderOptions.h"
 #include "Quad.h"
-#include "Font.h"
-
-// Remove after finding the bug with Image
-#include "Model2D.h"
-#include "Texture.h"
+#include "Text.h"
 
 #include <memory>
+#include <unordered_map>
 
 namespace Sprocket {
 
@@ -26,6 +23,16 @@ class DisplayRenderer
         // Shader used to draw characters.
 
     Model2D d_quad;
+        // Model that is bound to render quads.
+
+    std::unordered_map<Font, std::pair<std::string, std::string>> d_availableFonts;
+        // A map of all available fonts. If a requested font is not in d_fonts,
+        // the renderer will check here.
+
+    std::unordered_map<Font, FontPackage> d_fonts;
+        // Map of all loaded fonts to be accessible via the Font enum.
+
+    FontPackage getFont(Font font);
 
 public:
     DisplayRenderer(Window* window);
@@ -33,18 +40,7 @@ public:
     void update() const;
 
     void draw(const Quad& quad, const QuadVisuals& visuals) const;
-
-    void draw(int character,
-              const Font& font,
-              const Maths::vec2& position,
-              float size,
-              const Maths::vec3& colour) const;
-
-    void draw(const std::string& sentence,
-              const Font& font,
-              const Maths::vec2& position,
-              float size,
-              const Maths::vec3& colour) const;
+    void draw(const Text& text);
 };
 
 

@@ -6,19 +6,28 @@
 
 namespace Sprocket {
 
-using CharacterMap = std::unordered_map<int, Character>;
+using GlyphMap = std::unordered_map<int, Character>;
 
-class Font
+enum class Font
 {
-    CharacterMap d_characters;
-    Texture      d_atlas;
+    ARIAL,
+    GEORGIA,
+    CALIBRI
+};
+
+class FontPackage
+{
+    Texture  d_atlas;
+    GlyphMap d_glyphs; 
+    float    d_size;
 
 public:
-    Font(const CharacterMap& characters, const Texture& atlas);
+    FontPackage(const std::string& fntFile, const std::string& texFile);
 
     Character get(int id) const;
 
     Texture atlas() const { return d_atlas; }
+    float size() const { return d_size; }
 };
 
 }

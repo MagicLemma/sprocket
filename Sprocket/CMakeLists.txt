@@ -8,6 +8,7 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(freetype CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
@@ -38,10 +39,12 @@ add_library(Sprocket STATIC
             Display/Slider.cpp
             Display/Button.cpp
             Display/Image.cpp
+            Display/TextBox.cpp
 
             Display/Fonts/Character.cpp
             Display/Fonts/Font.cpp
             Display/Fonts/FontLoader.cpp
+            Display/Fonts/Text.cpp
 
             Display/WidgetProperties/WidgetProperty.cpp
             Display/WidgetProperties/Draggable.cpp
@@ -83,7 +86,8 @@ target_link_libraries(Sprocket PUBLIC
                       spdlog::spdlog_header_only
                       glfw
                       glad::glad
-                      glm)
+                      glm
+                      freetype)
 
 target_include_directories(Sprocket PUBLIC
                            .

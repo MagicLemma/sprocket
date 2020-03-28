@@ -59,13 +59,13 @@ public:
     Button(float width, float height, const ButtonAttributes& attrs = {});
 
     Quad& background() { return d_background; }
-    Quad& button() { return d_background; }
-    const Quad& background() const { return d_button; }
+    Quad& button() { return d_button; }
+    const Quad& background() const { return d_background; }
     const Quad& button() const { return d_button; }
 
     QuadVisuals& backgroundVisuals() { return d_backgroundVisuals; }
-    QuadVisuals& buttonVisuals() { return d_backgroundVisuals; }
-    const QuadVisuals& backgroundVisuals() const { return d_buttonVisuals; }
+    QuadVisuals& buttonVisuals() { return d_buttonVisuals; }
+    const QuadVisuals& backgroundVisuals() const { return d_backgroundVisuals; }
     const QuadVisuals& buttonVisuals() const { return d_buttonVisuals; }
 
     const ButtonAttributes& attributes() const { return d_attributes; }

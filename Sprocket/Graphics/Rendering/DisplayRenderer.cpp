@@ -18,6 +18,29 @@ DisplayRenderer::DisplayRenderer(Window* window)
               {{0.0f, 1.0f}, {0.0f, 1.0f}},
               {{0.0f, 0.0f}, {0.0f, 0.0f}}})
 {
+    d_availableFonts.insert({Font::ARIAL, {"Resources/Fonts/Arial.fnt",
+                                           "Resources/Fonts/Arial.png"}});
+    d_availableFonts.insert({Font::GEORGIA, {"Resources/Fonts/Georgia.fnt",
+                                             "Resources/Fonts/Georgia.png"}});
+    d_availableFonts.insert({Font::CALIBRI, {"Resources/Fonts/Calibri.fnt",
+                                             "Resources/Fonts/Calibri.png"}});
+}
+
+FontPackage DisplayRenderer::getFont(Font font)
+{
+    auto it = d_fonts.find(font);
+    if (it != d_fonts.end()) {
+        return it->second;
+    }
+
+    auto it2 = d_availableFonts.find(font);
+    if (it2 == d_availableFonts.end()) {
+        SPKT_LOG_ERROR("Font is not available!");
+    }
+
+    SPKT_LOG_INFO("Loading a font!");
+    auto val = d_fonts.emplace(font, FontPackage(it2->second.first, it2->second.second));
+    return val.first->second;
 }
 
 void DisplayRenderer::update() const
@@ -62,65 +85,38 @@ void DisplayRenderer::draw(const Quad& quad, const QuadVisuals& visuals) const
     glDisable(GL_BLEND);
 }
 
-void DisplayRenderer::draw(int character,
-                           const Font& font,
-                           const Maths::vec2& lineStart,
-                           float size,
-                           const Maths::vec3& colour) const
+void DisplayRenderer::draw(const Text& text)
 {
     handleRenderOptions({false, false, false});
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Character c = font.get(character);
+    FontPackage fontPack = getFont(text.font);
+    float fontSize = text.size / fontPack.size();
+
+    Maths::vec3 pointer = {text.position.x, text.position.y, 0.0f};
 
     d_characterShader.bind();
+    d_characterShader.loadUniform("colour", text.colour);
 
-    auto transform = Maths::transform(
-        {lineStart.x + c.xOffset(), lineStart.y - c.yOffset(), 0.0f},
-        {0.0, 0.0, 0.0},
-        {1.0, 1.0, 0.0});
+    for (int character : text.message) {
+        Character c = fontPack.get(character);
 
-    d_characterShader.loadUniform("transform", transform);
-    d_characterShader.loadUniform("colour", colour);
-
-    c.bind();
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    c.unbind();
-    d_characterShader.bind();
-}
-
-void DisplayRenderer::draw(const std::string& sentence,
-                           const Font& font,
-                           const Maths::vec2& lineStart,
-                           float size,
-                           const Maths::vec3& colour) const
-{
-    handleRenderOptions({false, false, false});
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    Maths::vec3 pointer = {lineStart.x, lineStart.y, 0.0f};
-
-    d_characterShader.bind();
-    d_characterShader.loadUniform("colour", colour);
-
-    for (int character : sentence) {
-        Character c = font.get(character);
+        float xPos = pointer.x + c.xOffset() * fontSize;
+        float yPos = pointer.y - (c.height() - c.yOffset()) * fontSize;
 
         auto transform = Maths::transform(
-            pointer + c.offset(),
+            Maths::vec3{xPos, yPos, 0.0f},
             {0.0, 0.0, 0.0},
-            {1.0, 1.0, 0.0});
+            fontSize);
 
-        d_characterShader.loadUniform("transform", transform);
-        d_characterShader.loadUniform("colour", colour);
+        d_characterShader.loadUniform("transform", transform);;
 
         c.bind();
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         c.unbind();
 
-        pointer.x += c.advance();
+        pointer.x += c.advance() * fontSize;
     }
 
     d_characterShader.bind();

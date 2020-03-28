@@ -7,19 +7,40 @@
 #include <fstream>
 #include <exception>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 namespace Sprocket {
 
-CharacterMap parseFntFile(const std::string& fntFile, const Texture& atlas)
+std::pair<GlyphMap, float> parseFntFile(const std::string& fntFile, const Texture& atlas)
 {
     std::ifstream file;
     file.open(fntFile);
 
     bool error = false;
 
-    CharacterMap characters;
+    GlyphMap glyphs;
+    float size;
 
     std::string line;
     while (std::getline(file, line)) {
+        if (line.substr(0, 5) == "info ") {
+            std::vector<std::string> charAttrs = tokenize(line.substr(5));
+            for (const auto& attr : charAttrs) {
+                std::vector<std::string> keyVal = tokenize(attr, "=");
+                if (keyVal.size() != 2) {
+                    SPKT_LOG_WARN("Failed to parse font attr '{}'", attr);
+                    throw std::exception("Bad Font Parse");
+                }
+
+                if (keyVal[0] == "size") {
+                    size = std::stof(keyVal[1]);
+                    break;
+                }
+            }
+            continue;
+        }
+
         if (line.substr(0, 5) != "char ") {
             continue;
         }
@@ -83,18 +104,11 @@ CharacterMap parseFntFile(const std::string& fntFile, const Texture& atlas)
             throw std::exception("Bad Font Parse");
         }
 
-        characters.insert(std::make_pair(id, Character(
+        glyphs.insert(std::make_pair(id, Character(
             atlas, id, texTopLeft, width, height, xOffset, yOffset, advance)));
     }
 
-    return characters;
-}
-
-Font loadFont(const std::string& fntFile, const std::string& texFile)
-{
-    Texture atlas{texFile};
-    CharacterMap characters = parseFntFile(fntFile, atlas);
-    return Font(characters, atlas);
+    return {glyphs, size};
 }
     
 }

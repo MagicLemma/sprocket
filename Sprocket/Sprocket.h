@@ -64,10 +64,12 @@
 #include "Display/Button.h"
 #include "Display/Slider.h"
 #include "Display/Image.h"
+#include "Display/TextBox.h"
 
 #include "Display/Fonts/Character.h"
 #include "Display/Fonts/Font.h"
 #include "Display/Fonts/FontLoader.h"
+#include "Display/Fonts/Text.h"
 
 #include "Display/WidgetProperties/WidgetProperty.h"
 #include "Display/WidgetProperties/Draggable.h"

@@ -38,6 +38,13 @@ Sprocket::ContainerAttributes getContainerAttrs()
     return attrs;
 }
 
+Sprocket::TextBoxAttributes getTextBoxAttrs()
+{
+    Sprocket::TextBoxAttributes attrs{};
+    attrs.backgroundColour = {0.15625f, 0.15625f, 0.15625f};
+    return attrs;
+}
+
 UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info) 
     : Layer(Status::INACTIVE, true)
     , d_info(info)
@@ -49,8 +56,13 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
         getContainerAttrs()
     )
     , d_image(Sprocket::Texture("Resources/Textures/Space.PNG"))
-    , d_arial(Sprocket::loadFont("Resources/Fonts/Arial.fnt",
-                                 "Resources/Fonts/Arial.png"))
+    , d_text({
+        "Sprocket, now only $20!",
+        Sprocket::Font::CALIBRI,
+        24.0f,
+        Sprocket::Maths::vec3{0.9f, 0.6f, 0.3f},
+        Sprocket::Maths::vec2{100.f, 100.0f}
+    })
 {
     using namespace Sprocket;
 
@@ -63,14 +75,12 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
 
     d_container.backgroundVisuals().roundness = 0.081f;
 
-    auto fovSlider = d_container.add<Slider>(
+    auto topSlider = d_container.add<Slider>(
         300.0f, 50.0f, 0.0f, getSliderAttrs()
     );
 
-    fovSlider->addProperty<Draggable>();
-
-    fovSlider->setCallback([&](float val) {
-        d_info->lens.fov(70.0f + 50.0f * val);
+    topSlider->setCallback([&](float val) {
+        d_text.size = 24.0f + val * 60.0f;
     });
 
     auto roundnessSlider = d_container.add<Slider>(
@@ -104,6 +114,10 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
         }
         d_info->cameraIsFirst = !d_info->cameraIsFirst;
     });
+
+    auto textBox = d_container.add<TextBox>(
+        300.0f, 50.0f, "Text box!", getTextBoxAttrs()
+    );
 
 }
 
@@ -149,6 +163,5 @@ void UILayer::drawImpl(Sprocket::Window* window)
 {
     d_container.draw(&d_displayRenderer);
     d_image.draw(&d_displayRenderer);
-    d_displayRenderer.draw("A a!\"#$%&\'*+,-./:;<=>?@^_`~", d_arial, {0.0, 100.0}, 1.0f, {0.9, 0.9, 0.9});
-    d_displayRenderer.draw("ABCDEFGHIJKLMNOPQ", d_arial, d_image.position(), 1.0f, {0.9, 0.9, 0.9});
+    d_displayRenderer.draw(d_text);
 }
