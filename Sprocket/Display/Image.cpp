@@ -8,9 +8,9 @@ Image::Image(const Texture& texture)
     , d_background({
         {0.0, 0.0},
         (float)texture.width(),
-        (float)texture.height()
+        (float)texture.height(),
+        texture
     })
-    , d_backgroundVisuals({texture})
 {
 }
 
@@ -25,7 +25,7 @@ bool Image::handleEventImpl(Window* window, const Event& event)
 
 void Image::drawImpl(DisplayRenderer* renderer) const
 {
-    renderer->draw(toScreenCoords(d_background), d_backgroundVisuals);
+    renderer->draw(toScreenCoords(d_background));
 }
 
 }

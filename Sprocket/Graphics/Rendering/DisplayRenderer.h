@@ -39,7 +39,7 @@ public:
 
     void update() const;
 
-    void draw(const Quad& quad, const QuadVisuals& visuals) const;
+    void draw(const Quad& quad) const;
     void draw(const Text& text);
 };
 

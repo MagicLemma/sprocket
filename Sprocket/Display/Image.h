@@ -10,7 +10,6 @@ namespace Sprocket {
 class Image : public Widget
 {
     Quad        d_background;
-    QuadVisuals d_backgroundVisuals;
 
     void updateImpl(Window* window) override;
     bool handleEventImpl(Window* window, const Event& event) override;
@@ -21,9 +20,6 @@ public:
 
     Quad& background() { return d_background; }
     const Quad& background() const { return d_background; }
-
-    QuadVisuals& backgroundVisuals() { return d_backgroundVisuals; }
-    const QuadVisuals& backgroundVisuals() const { return d_backgroundVisuals; }
 };
 
 }

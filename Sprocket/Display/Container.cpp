@@ -5,17 +5,13 @@ namespace Sprocket {
 
 Container::Container(float width,
                      const Maths::vec2& placementPtr,
-                     float spacing,
-                     const ContainerAttributes& attrs)
+                     float spacing)
     : Widget(width, spacing)
     , d_background({
         {0.0, 0.0},
         width,
-        spacing
-    })
-    , d_backgroundVisuals({
-        Texture::empty(),
-        attrs.backgroundColour
+        spacing,
+        Texture::empty()
     })
     , d_placementPtr(placementPtr)
     , d_spacing(spacing)
@@ -33,7 +29,7 @@ bool Container::handleEventImpl(Window* window, const Event& event)
 
 void Container::drawImpl(DisplayRenderer* renderer) const
 {
-    renderer->draw(toScreenCoords(d_background), d_backgroundVisuals);
+    renderer->draw(toScreenCoords(d_background));
 }
 
 }

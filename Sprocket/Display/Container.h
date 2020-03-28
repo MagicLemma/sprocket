@@ -7,15 +7,9 @@
 
 namespace Sprocket {
 
-struct ContainerAttributes
-{
-    Maths::vec3 backgroundColour = {0.0f, 0.0f, 0.0f};   
-};
-
 class Container : public Widget
 {
     Quad        d_background;
-    QuadVisuals d_backgroundVisuals;
 
     Maths::vec2 d_placementPtr;
     float       d_spacing;
@@ -27,14 +21,10 @@ class Container : public Widget
 public:
     Container(float width,
               const Maths::vec2& placementPtr,
-              float spacing,
-              const ContainerAttributes& attrs = {});
+              float spacing);
 
     Quad& background() { return d_background; }
     const Quad& background() const { return d_background; }
-
-    QuadVisuals& backgroundVisuals() { return d_backgroundVisuals; }
-    const QuadVisuals& backgroundVisuals() const { return d_backgroundVisuals; }
 
     template <typename T, typename... Args>
     std::shared_ptr<T> add(Args&&... args)

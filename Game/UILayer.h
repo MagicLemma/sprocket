@@ -13,6 +13,8 @@ class UILayer : public Sprocket::Layer
     Sprocket::Image d_image;
     Sprocket::Text d_text;
 
+    Sprocket::InteractiveQuad d_quad;
+
 public:
     UILayer(std::shared_ptr<BasicSceneInfo> info);
 

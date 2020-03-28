@@ -7,15 +7,6 @@ namespace Sprocket {
 
 struct ButtonAttributes
 {
-    Maths::vec3 backgroundColour = {0.0f, 0.0f, 0.0f};
-    Maths::vec3 buttonColour = {1.0f, 1.0f, 1.0f};
-
-    Maths::vec3 backgroundColourHovered = {0.0f, 0.0f, 0.0f};
-    Maths::vec3 buttonColourHovered = {1.0f, 1.0f, 1.0f};
-
-    Maths::vec3 backgroundColourClicked = {0.0f, 0.0f, 0.0f};
-    Maths::vec3 buttonColourClicked = {1.0f, 1.0f, 1.0f};
-
     float buttonWidth = 0.9f;
     float buttonHeight = 0.9f;
         // Width and height of button as percentage of the background size.
@@ -35,13 +26,15 @@ using ButtonCallback = std::function<void()>;
 
 class Button : public Widget
 {
-    Quad        d_background;
-    QuadVisuals d_backgroundVisuals;
+    Quad  d_background;
+    Quad  d_backgroundHovered;
+    Quad  d_backgroundClicked;
+    Quad* d_activeBackground;
 
-    Quad        d_button;
-    QuadVisuals d_buttonVisuals;
-
-    ButtonAttributes d_attributes;
+    Quad  d_button;
+    Quad  d_buttonHovered;
+    Quad  d_buttonClicked;
+    Quad* d_activeButton;
 
     bool d_hovered;
     bool d_clicked;
@@ -56,19 +49,27 @@ class Button : public Widget
     void drawImpl(DisplayRenderer* renderer) const override;
 
 public:
-    Button(float width, float height, const ButtonAttributes& attrs = {});
+    Button(float width,
+           float height,
+           float buttonScale = 0.5f,
+           float buttonHoveredScale = 0.5f,
+           float buttonClickedScale = 0.5f);
 
     Quad& background() { return d_background; }
+    Quad& backgroundHovered() { return d_backgroundHovered; }
+    Quad& backgroundClicked() { return d_backgroundClicked; }
+
     Quad& button() { return d_button; }
+    Quad& buttonHovered() { return d_buttonHovered; }
+    Quad& buttonClicked() { return d_buttonClicked; }
+
     const Quad& background() const { return d_background; }
+    const Quad& backgroundHovered() const { return d_backgroundHovered; }
+    const Quad& backgroundClicked() const { return d_backgroundClicked; }
+
     const Quad& button() const { return d_button; }
-
-    QuadVisuals& backgroundVisuals() { return d_backgroundVisuals; }
-    QuadVisuals& buttonVisuals() { return d_buttonVisuals; }
-    const QuadVisuals& backgroundVisuals() const { return d_backgroundVisuals; }
-    const QuadVisuals& buttonVisuals() const { return d_buttonVisuals; }
-
-    const ButtonAttributes& attributes() const { return d_attributes; }
+    const Quad& buttonHovered() const { return d_buttonHovered; }
+    const Quad& buttonClicked() const { return d_buttonClicked; }
 
     void setHoverCallback(ButtonCallback cb) { d_hoverCallback = cb; }
     void setUnhoverCallback(ButtonCallback cb) { d_unhoverCallback = cb; }

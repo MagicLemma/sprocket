@@ -4,62 +4,14 @@
 #include "Log.h"
 
 namespace Sprocket {
-namespace {
-
-Maths::vec2 makeBarOffset(float width, float height, const SliderAttributes& attrs)
-{
-    return {
-        width * (1 - attrs.barWidth) / 2,
-        height * (1 - attrs.barHeight) / 2
-    };
-}
-
-Maths::vec2 makePickerOffset(float width, float height, const SliderAttributes& attrs)
-{
-    return {
-        width * (1 - attrs.pickerWidth) / 2,
-        height * (1 - attrs.pickerHeight) / 2
-    };
-}
-
-}
     
-Slider::Slider(float width,
-               float height,
-               float initialValue,
-               const SliderAttributes& attrs)
+Slider::Slider(float width, float height)
     : Widget(width, height)
-    , d_background({
-        {0.0, 0.0},
-        width,
-        height
-    })
-    , d_backgroundVisuals({
-        Texture::empty(),
-        attrs.backgroundColour
-    })
-    , d_bar({
-        makeBarOffset(width, height, attrs), 
-        attrs.barWidth * width,
-        attrs.barHeight * height
-    })
-    , d_barVisuals({
-        Texture::empty(),
-        attrs.barColour
-    })
-    , d_picker({
-        makePickerOffset(width, height, attrs),
-        attrs.pickerWidth * width,
-        attrs.pickerHeight * height
-    })
-    , d_pickerVisuals({
-        Texture::empty(),
-        attrs.pickerColour
-    })
+    , d_background({{0.0, 0.0}, width, height})
+    , d_bar({{0.0, 0.0}, 1.0f, 1.0f})
+    , d_picker({{0.0, 0.0}, 1.0f, 1.0f})
     , d_updating(false)
 {
-    Maths::clamp(initialValue, 0.0f, 1.0f);
-    d_picker.position.x = left() + initialValue * (right() - left());    
 }
 
 void Slider::updateImpl(Window* window)
@@ -109,9 +61,9 @@ bool Slider::handleEventImpl(Window* window, const Event& event)
 
 void Slider::drawImpl(DisplayRenderer* renderer) const
 {
-    renderer->draw(toScreenCoords(d_background), d_backgroundVisuals);
-    renderer->draw(toScreenCoords(d_bar), d_barVisuals);
-    renderer->draw(toScreenCoords(d_picker), d_pickerVisuals);
+    renderer->draw(toScreenCoords(d_background));
+    renderer->draw(toScreenCoords(d_bar));
+    renderer->draw(toScreenCoords(d_picker));
 }
 
 float Slider::value() const
@@ -127,6 +79,13 @@ float Slider::left() const
 float Slider::right() const
 {
     return d_bar.position.x + d_bar.width - d_picker.width;
+}
+
+void Slider::setValue(float val)
+{
+    Maths::clamp(val, 0.0f, 1.0f);
+    d_picker.position.x = left() + val * (right() - left());
+    d_callback(val);
 }
 
 }

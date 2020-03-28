@@ -5,11 +5,11 @@
 namespace Sprocket {
 namespace {
 
-Maths::vec2 makeButtonOffset(float width, float height, const ButtonAttributes& attrs)
+Maths::vec2 makeButtonOffset(float width, float height, float buttonScale)
 {
     return {
-        width * (1 - attrs.buttonWidth) / 2,
-        height * (1 - attrs.buttonHeight) / 2
+        width * (1 - buttonScale) / 2,
+        height * (1 - buttonScale) / 2
     };
 }
 
@@ -17,45 +17,56 @@ Maths::vec2 makeButtonOffset(float width, float height, const ButtonAttributes& 
     
 Button::Button(float width,
                float height,
-               const ButtonAttributes& attrs)
+               float buttonScale,
+               float buttonHoveredScale,
+               float buttonClickedScale)
     : Widget(width, height)
     , d_background({
         {0.0, 0.0},
         width,
-        height
+        height,
+        Texture::empty()
     })
-    , d_backgroundVisuals({
-        Texture::empty(),
-        attrs.backgroundColour
-    })
+    , d_backgroundHovered(d_background)
+    , d_backgroundClicked(d_background)
     , d_button({
-        makeButtonOffset(width, height, attrs),
-        width * attrs.buttonWidth,
-        height * attrs.buttonHeight
+        makeButtonOffset(width, height, buttonScale),
+        width * buttonScale,
+        height * buttonScale,
+        Texture::empty()
     })
-    , d_buttonVisuals({
-        Texture::empty(),
-        attrs.buttonColour
+    , d_buttonHovered({
+        makeButtonOffset(width, height, buttonHoveredScale),
+        width * buttonHoveredScale,
+        height * buttonHoveredScale,
+        Texture::empty()
     })
-    , d_attributes(attrs)
+    , d_buttonClicked({
+        makeButtonOffset(width, height, buttonClickedScale),
+        width * buttonClickedScale,
+        height * buttonClickedScale,
+        Texture::empty()
+    })
     , d_hovered(false)
     , d_clicked(false)
 {
+    d_activeBackground = &d_background;
+    d_activeButton = &d_button;
 }
 
 void Button::updateImpl(Window* window)
 {
     if (d_clicked) {
-        d_backgroundVisuals.colour = d_attributes.backgroundColourClicked;
-        d_buttonVisuals.colour = d_attributes.buttonColourClicked;
+        d_activeBackground = &d_backgroundClicked;
+        d_activeButton = &d_buttonClicked;
     }
     else if (d_hovered) {
-        d_backgroundVisuals.colour = d_attributes.backgroundColourHovered;
-        d_buttonVisuals.colour = d_attributes.buttonColourHovered;
+        d_activeBackground = &d_backgroundHovered;
+        d_activeButton = &d_buttonHovered;
     }
     else {
-        d_backgroundVisuals.colour = d_attributes.backgroundColour;
-        d_buttonVisuals.colour = d_attributes.buttonColour;
+        d_activeBackground = &d_background;
+        d_activeButton = &d_button;
     }
 }
 
@@ -94,8 +105,8 @@ bool Button::handleEventImpl(Window* window, const Event& event)
 
 void Button::drawImpl(DisplayRenderer* renderer) const
 {
-    renderer->draw(toScreenCoords(d_background), d_backgroundVisuals);
-    renderer->draw(toScreenCoords(d_button), d_buttonVisuals);
+    renderer->draw(toScreenCoords(*d_activeBackground));
+    renderer->draw(toScreenCoords(*d_activeButton));
 }
 
 }

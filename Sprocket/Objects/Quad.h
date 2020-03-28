@@ -11,18 +11,17 @@ using Colour = Maths::vec3;
 
 struct Quad
 {
+    // Dimensions
     Maths::vec2 position;
     float       width;
-    float       height;   
-};
+    float       height;
 
-struct QuadVisuals
-{
+    // Visuals
     Texture texture = Texture::empty();
     Colour colour = Colour{1.0, 1.0, 1.0};
     float opacity = 1.0f;
     float roundness = 0.0f;
-    bool greyscale = false;
+    bool greyscale = false; 
 };
 
 bool containsPoint(const Quad& quad, const Maths::vec2& point);

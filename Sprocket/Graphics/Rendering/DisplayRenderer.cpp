@@ -57,7 +57,7 @@ void DisplayRenderer::update() const
     d_characterShader.unbind();
 }
 
-void DisplayRenderer::draw(const Quad& quad, const QuadVisuals& visuals) const
+void DisplayRenderer::draw(const Quad& quad) const
 {
     handleRenderOptions({false, false, false});
     glEnable(GL_BLEND);
@@ -69,17 +69,17 @@ void DisplayRenderer::draw(const Quad& quad, const QuadVisuals& visuals) const
     // Find the appropriate shader and bind the colour/texture.
     d_colourShader.bind();
 
-    d_colourShader.loadUniform("colour", visuals.colour);
+    d_colourShader.loadUniform("colour", quad.colour);
     d_colourShader.loadUniform("transform", transform);
-    d_colourShader.loadUniform("opacity", visuals.opacity);
-    d_colourShader.loadUniform("roundness", visuals.roundness);
-    d_colourShader.loadUniform("greyscale", visuals.greyscale ? 1.0f : 0.0f);
+    d_colourShader.loadUniform("opacity", quad.opacity);
+    d_colourShader.loadUniform("roundness", quad.roundness);
+    d_colourShader.loadUniform("greyscale", quad.greyscale ? 1.0f : 0.0f);
 
-    visuals.texture.bind();
+    quad.texture.bind();
     d_quad.bind();
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     d_quad.unbind();
-    visuals.texture.unbind();
+    quad.texture.unbind();
 
     d_colourShader.unbind();
     glDisable(GL_BLEND);

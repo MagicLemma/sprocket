@@ -1,48 +1,31 @@
 #include "UILayer.h"
 
-Sprocket::SliderAttributes getSliderAttrs()
+void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
 {
-    Sprocket::SliderAttributes attrs;
-    attrs.backgroundColour = {0.15625f, 0.15625f, 0.15625f};
-    attrs.barColour = {0.3f, 0.3f, 0.3f};
-    attrs.pickerColour = {0.926f, 0.496f, 0.0f};
+    button->background().colour = {0.15625f, 0.15625f, 0.15625f};
+    button->backgroundHovered().colour = {0.15625f, 0.15625f, 0.15625f};
+    button->backgroundClicked().colour = {0.15625f, 0.15625f, 0.15625f};
 
-    attrs.barHeight = 0.1f;
-    attrs.pickerWidth = 0.025f;
-
-    return attrs;
+    button->button().colour = {0.926f, 0.496f, 0.0f};
+    button->buttonHovered().colour = {0.926f, 0.63281f, 0.3242f};
+    button->buttonClicked().colour = {0.324f, 0.90625f, 0.5352f};
 }
 
-Sprocket::ButtonAttributes getButtonAttrs()
+void setSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
 {
-    Sprocket::ButtonAttributes attrs;
-    attrs.backgroundColour = {0.15625f, 0.15625f, 0.15625f};
-    attrs.backgroundColourHovered = {0.15625f, 0.15625f, 0.15625f};
-    attrs.backgroundColourClicked = {0.15625f, 0.15625f, 0.15625f};
+    slider->background().colour = {0.15625f, 0.15625f, 0.15625f};
+    slider->bar().colour = {0.3f, 0.3f, 0.3f};
+    slider->picker().colour = {0.926f, 0.496f, 0.0f};
 
-    attrs.buttonColour = {0.926f, 0.496f, 0.0f};
-    attrs.buttonColourHovered = {0.926f, 0.63281f, 0.3242f};
-    attrs.buttonColourClicked = {0.324f, 0.90625f, 0.5352f};
+    slider->bar().width = slider->background().width * 0.9f;
+    slider->bar().height = slider->background().height * 0.1f;
+    slider->bar().position.x = slider->background().width * (1.0f - 0.9f) / 2.0f;
+    slider->bar().position.y = slider->background().height * (1.0f - 0.1f) / 2.0f;
 
-    attrs.buttonWidth = 0.5f;
-    attrs.buttonHeight = 0.5f;
-
-    return attrs;
-}
-
-Sprocket::ContainerAttributes getContainerAttrs()
-{
-    Sprocket::ContainerAttributes attrs;
-    attrs.backgroundColour = {0.07f, 0.07f, 0.07f};
-
-    return attrs;
-}
-
-Sprocket::TextBoxAttributes getTextBoxAttrs()
-{
-    Sprocket::TextBoxAttributes attrs{};
-    attrs.backgroundColour = {0.15625f, 0.15625f, 0.15625f};
-    return attrs;
+    slider->picker().width = slider->background().width * 0.02f;
+    slider->picker().height = slider->background().height * 0.8f;
+    slider->picker().position.x = slider->background().width * (1.0f - 0.02f) / 2.0f;
+    slider->picker().position.y = slider->background().height * (1.0f - 0.8f) / 2.0f;
 }
 
 UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info) 
@@ -52,58 +35,64 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     , d_container(
         (float)info->window->width()/4.0f,
         {10.0, 10.0},
-        10.0f,
-        getContainerAttrs()
+        10.0f
     )
     , d_image(Sprocket::Texture("Resources/Textures/Space.PNG"))
-    , d_text({
-        "Sprocket, now only $20!",
-        Sprocket::Font::CALIBRI,
-        24.0f,
-        Sprocket::Maths::vec3{0.9f, 0.6f, 0.3f},
-        Sprocket::Maths::vec2{100.f, 100.0f}
+    , d_text({"Sprocket, now only $20!"})
+    , d_quad({
+        {50.0f, 50.0f}, 50.0f, 50.0f,
+        Sprocket::Texture::empty(),
+        {1.0, 0.0, 0.0}
+    }, {
+        {75.0f, 50.0f}, 50.0f, 50.0f,
+        Sprocket::Texture::empty(),
+        {0.0, 1.0, 0.0}
+    }, {
+        {50.0f, 50.0f}, 50.0f, 50.0f,
+        Sprocket::Texture::empty(),
+        {0.0, 0.0, 1.0}
     })
 {
     using namespace Sprocket;
 
     d_container.position({10.0f, 10.0f});
+    d_container.background().colour = {0.07f, 0.07f, 0.07f};
+    d_container.background().roundness = 0.081f;
+
     d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
     d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
 
     d_image.position({0.0f, 100.0f});
     d_image.addProperty<Draggable>();
 
-    d_container.backgroundVisuals().roundness = 0.081f;
+    auto topSlider = d_container.add<Slider>(300.0f, 50.0f);
+    setSliderAttrs(topSlider);
 
-    auto topSlider = d_container.add<Slider>(
-        300.0f, 50.0f, 0.0f, getSliderAttrs()
-    );
-
-    topSlider->setCallback([&](float val) {
-        d_text.size = 24.0f + val * 60.0f;
-    });
-
-    auto roundnessSlider = d_container.add<Slider>(
-        300.0f, 50.0f, 0.0f, getSliderAttrs()
-    );
+    auto roundnessSlider = d_container.add<Slider>(300.0f, 50.0f);
+    setSliderAttrs(roundnessSlider);
 
     roundnessSlider->setCallback([&](float val) {
-        d_image.backgroundVisuals().roundness = val;
+        d_image.background().roundness = val;
     });
+    roundnessSlider->setValue(0.6f);
 
     auto chattyButton = d_container.add<Button>(
-        50.0f, 50.0f, getButtonAttrs()
+        50.0f, 50.0f, 0.5f, 0.55f, 0.45f
     );
+
+    setButtonAttrs(chattyButton);
 
     chattyButton->setUnclickCallback([&]() {
         SPKT_LOG_WARN("Have a great day!");
         d_image.active(!d_image.active());
-        d_image.backgroundVisuals().greyscale = !d_image.backgroundVisuals().greyscale;
+        d_image.background().greyscale = !d_image.background().greyscale;
     });
 
     auto cameraSwitchButton = d_container.add<Button>(
-        50.0f, 50.0f, getButtonAttrs()
+        50.0f, 50.0f, 0.5f, 0.55f, 0.45f
     );
+
+    setButtonAttrs(cameraSwitchButton);
 
     cameraSwitchButton->setUnclickCallback([&]() {  //unclick
         if (d_info->cameraIsFirst) {
@@ -116,9 +105,17 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     });
 
     auto textBox = d_container.add<TextBox>(
-        300.0f, 50.0f, "Text box!", getTextBoxAttrs()
+        300.0f, 50.0f, "Text box!"
     );
+    
+    textBox->background().colour = {0.15625f, 0.15625f, 0.15625f};
+    textBox->text().font = Sprocket::Font::GEORGIA;
 
+    topSlider->setCallback([textBox](float val) {
+        textBox->text().size = 24.0f + val * 60.0f;
+    });
+
+    topSlider->setValue(0.8f);
 }
 
 bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event)
@@ -136,6 +133,9 @@ bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& e
     }
 
     if (d_status == Status::NORMAL) {
+        if (d_quad.handleEvent(window, event)) {
+            return true;
+        }
         if (d_image.handleEvent(window, event)) {
             return true;
         }
@@ -154,6 +154,7 @@ void UILayer::updateImpl(Sprocket::Window* window)
     d_displayRenderer.update();
 
     if (d_status == Status::NORMAL) {
+        d_quad.update(window);
         d_container.update(window);
         d_image.update(window);
     }
@@ -164,4 +165,5 @@ void UILayer::drawImpl(Sprocket::Window* window)
     d_container.draw(&d_displayRenderer);
     d_image.draw(&d_displayRenderer);
     d_displayRenderer.draw(d_text);
+    d_quad.draw(&d_displayRenderer);
 }
