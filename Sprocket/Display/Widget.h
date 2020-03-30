@@ -45,10 +45,15 @@ class Widget
         // inactive.
 
 protected:
+    Maths::vec2 d_offset;
+        // Offset of the top left of this Widget with respect to its parent.
+        // If this widget has no parent, this is relative to the top left of
+        // the screen. This is the origin of the Widgets "local coordinates".
+
     Quad d_base;
-        // A Quad that represents the position and size of this Widget
-        // with respect to its parent, or the screen if this Widget has no
-        // parent.
+        // A Quad that represents the position and size of this Widget, with
+        // the position being in local coordinates; (0, 0) is the top left of
+        // this widget.
 
     void makeChild(std::shared_ptr<Widget> child);
         // Sets the given widget to be a child of the current widget.
@@ -57,17 +62,21 @@ protected:
 
 public:
     Widget(float width, float height);
+
     virtual ~Widget();
 
     void update(Window* window);
     bool handleEvent(Window* window, const Event& event);
     void draw(DisplayRenderer* renderer);
 
-    Maths::vec2 position() const { return d_base.position; }
+    Quad& base() { return d_base; }
+    const Quad& base() const { return d_base; }
+
+    Maths::vec2 position() const { return d_offset; }
         // Returns the offset of this Widget relative to it's parent.
         // This is the offset from the screen if the Widget has no parent.
     
-    void position(const Maths::vec2& newPosition) { d_base.position = newPosition; }
+    void position(const Maths::vec2& newPosition) { d_offset = newPosition; }
         // Set the offset of this Widget with respect to its parent.
     
     const std::vector<std::shared_ptr<Widget>>& children() const { return d_children; }
@@ -89,8 +98,6 @@ public:
         d_properties.push_back(newProperty);
         return newProperty;
     }
-
-    Quad getScreenQuad() const;
 
 public:
     // Helper Functions

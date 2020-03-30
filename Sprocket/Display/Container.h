@@ -9,8 +9,6 @@ namespace Sprocket {
 
 class Container : public Widget
 {
-    Quad        d_background;
-
     Maths::vec2 d_placementPtr;
     float       d_spacing;
 
@@ -23,9 +21,6 @@ public:
               const Maths::vec2& placementPtr,
               float spacing);
 
-    Quad& background() { return d_background; }
-    const Quad& background() const { return d_background; }
-
     template <typename T, typename... Args>
     std::shared_ptr<T> add(Args&&... args)
     {
@@ -36,7 +31,6 @@ public:
         makeChild(newWidget);
 
         d_placementPtr.y += d_spacing + newWidget->height();
-        d_background.height += d_spacing + newWidget->height();
         d_base.height += d_spacing + newWidget->height();
         return newWidget;
     }

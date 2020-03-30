@@ -6,7 +6,6 @@ TextBox::TextBox(float width,
                  float height,
                  const std::string& message)
     : Widget(width, height)
-    , d_background({{0.0, 0.0}, width, height})
     , d_text({message})
 {
 }
@@ -22,9 +21,8 @@ bool TextBox::handleEventImpl(Window* window, const Event& event)
 
 void TextBox::drawImpl(DisplayRenderer* renderer) const
 {
-    renderer->draw(toScreenCoords(d_background));
     Text text = d_text;
-    text.position = toScreenCoords(text.position + Maths::vec2{0.0, 0.5 * d_background.height});
+    text.position = toScreenCoords(text.position + Maths::vec2{0.0, 0.5 * d_base.height});
     renderer->draw(text);
 }
 

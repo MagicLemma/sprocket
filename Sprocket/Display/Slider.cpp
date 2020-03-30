@@ -7,7 +7,6 @@ namespace Sprocket {
     
 Slider::Slider(float width, float height)
     : Widget(width, height)
-    , d_background({{0.0, 0.0}, width, height})
     , d_bar({{0.0, 0.0}, 1.0f, 1.0f})
     , d_picker({{0.0, 0.0}, 1.0f, 1.0f})
     , d_updating(false)
@@ -61,7 +60,6 @@ bool Slider::handleEventImpl(Window* window, const Event& event)
 
 void Slider::drawImpl(DisplayRenderer* renderer) const
 {
-    renderer->draw(toScreenCoords(d_background));
     renderer->draw(toScreenCoords(d_bar));
     renderer->draw(toScreenCoords(d_picker));
 }

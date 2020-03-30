@@ -12,7 +12,6 @@ using SliderCallback = std::function<void(float)>;
 
 class Slider : public Widget
 {
-    Quad d_background;
     Quad d_bar;
     Quad d_picker;
     
@@ -32,10 +31,8 @@ class Slider : public Widget
 public:
     Slider(float width, float height);
 
-    Quad& background() { return d_background; }
     Quad& bar() { return d_bar; }
     Quad& picker() { return d_picker; }
-    const Quad& background() const { return d_background; }
     const Quad& bar() const { return d_bar; }
     const Quad& picker() const { return d_picker; }
 

@@ -7,8 +7,9 @@ namespace Sprocket {
 Widget::Widget(float width, float height)
     : d_parent(nullptr)
     , d_children()
-    , d_base({{0.0, 0.0}, width, height})
     , d_active(true)
+    , d_base({{0.0, 0.0}, width, height})
+    , d_offset({0.0, 0.0})
 {
 }
 
@@ -19,9 +20,9 @@ Widget::~Widget()
 Maths::vec2 Widget::absolutePosition() const
 {
     if (d_parent != nullptr) {
-        return d_base.position + d_parent->absolutePosition();
+        return d_offset + d_parent->absolutePosition();
     }
-    return d_base.position;
+    return d_offset;
 }
 
 Maths::vec2 Widget::toLocalCoords(const Maths::vec2& screenCoords) const
@@ -94,7 +95,7 @@ bool Widget::handleEvent(Window* window, const Event& event)
 
         if (event.isInCategory(EventCategory::MOUSE)
             && event.isInCategory(EventCategory::INPUT)) {
-            return containsPoint(getScreenQuad(), window->getMousePos());
+            return containsPoint(toScreenCoords(d_base), window->getMousePos());
         }
     }
     
@@ -103,6 +104,8 @@ bool Widget::handleEvent(Window* window, const Event& event)
 
 void Widget::draw(DisplayRenderer* renderer)
 {
+    renderer->draw(toScreenCoords(d_base));
+
     drawImpl(renderer);
 
     for (const auto& child : d_children) {
@@ -116,13 +119,6 @@ bool Widget::active() const
         return d_active && d_parent->active();
     }
     return d_active;
-}
-
-Quad Widget::getScreenQuad() const
-{
-    Quad base = d_base;
-    base.position = absolutePosition();
-    return base;
 }
 
 }

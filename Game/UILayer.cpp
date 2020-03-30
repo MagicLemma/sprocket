@@ -2,9 +2,7 @@
 
 void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
 {
-    button->background().colour = {0.15625f, 0.15625f, 0.15625f};
-    button->backgroundHovered().colour = {0.15625f, 0.15625f, 0.15625f};
-    button->backgroundClicked().colour = {0.15625f, 0.15625f, 0.15625f};
+    button->base().colour = {0.15625f, 0.15625f, 0.15625f};
 
     button->button().colour = {0.926f, 0.496f, 0.0f};
     button->buttonHovered().colour = {0.926f, 0.63281f, 0.3242f};
@@ -13,19 +11,19 @@ void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
 
 void setSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
 {
-    slider->background().colour = {0.15625f, 0.15625f, 0.15625f};
+    slider->base().colour = {0.15625f, 0.15625f, 0.15625f};
     slider->bar().colour = {0.3f, 0.3f, 0.3f};
     slider->picker().colour = {0.926f, 0.496f, 0.0f};
 
-    slider->bar().width = slider->background().width * 0.9f;
-    slider->bar().height = slider->background().height * 0.1f;
-    slider->bar().position.x = slider->background().width * (1.0f - 0.9f) / 2.0f;
-    slider->bar().position.y = slider->background().height * (1.0f - 0.1f) / 2.0f;
+    slider->bar().width = slider->base().width * 0.9f;
+    slider->bar().height = slider->base().height * 0.1f;
+    slider->bar().position.x = slider->base().width * (1.0f - 0.9f) / 2.0f;
+    slider->bar().position.y = slider->base().height * (1.0f - 0.1f) / 2.0f;
 
-    slider->picker().width = slider->background().width * 0.02f;
-    slider->picker().height = slider->background().height * 0.8f;
-    slider->picker().position.x = slider->background().width * (1.0f - 0.02f) / 2.0f;
-    slider->picker().position.y = slider->background().height * (1.0f - 0.8f) / 2.0f;
+    slider->picker().width = slider->base().width * 0.02f;
+    slider->picker().height = slider->base().height * 0.8f;
+    slider->picker().position.x = slider->base().width * (1.0f - 0.02f) / 2.0f;
+    slider->picker().position.y = slider->base().height * (1.0f - 0.8f) / 2.0f;
 }
 
 UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info) 
@@ -56,8 +54,8 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     using namespace Sprocket;
 
     d_container.position({10.0f, 10.0f});
-    d_container.background().colour = {0.07f, 0.07f, 0.07f};
-    d_container.background().roundness = 0.081f;
+    d_container.base().colour = {0.07f, 0.07f, 0.07f};
+    d_container.base().roundness = 0.081f;
 
     d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
     d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
@@ -72,7 +70,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     setSliderAttrs(roundnessSlider);
 
     roundnessSlider->setCallback([&](float val) {
-        d_image.background().roundness = val;
+        d_image.base().roundness = val;
     });
     roundnessSlider->setValue(0.6f);
 
@@ -85,7 +83,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     chattyButton->setUnclickCallback([&]() {
         SPKT_LOG_WARN("Have a great day!");
         d_image.active(!d_image.active());
-        d_image.background().greyscale = !d_image.background().greyscale;
+        d_image.base().greyscale = !d_image.base().greyscale;
     });
 
     auto cameraSwitchButton = d_container.add<Button>(
@@ -108,7 +106,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
         300.0f, 50.0f, "Text box!"
     );
     
-    textBox->background().colour = {0.15625f, 0.15625f, 0.15625f};
+    textBox->base().colour = {0.15625f, 0.15625f, 0.15625f};
     textBox->text().font = Sprocket::Font::GEORGIA;
 
     topSlider->setCallback([textBox](float val) {
