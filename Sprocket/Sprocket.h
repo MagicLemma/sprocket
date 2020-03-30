@@ -47,7 +47,6 @@
 #include "Objects/Entity.h"
 #include "Objects/Material.h"
 #include "Objects/Quad.h"
-#include "Objects/InteractiveQuad.h"
 #include "Objects/Light.h"
 #include "Objects/Terrain.h"
 #include "Objects/Skybox.h"

@@ -26,10 +26,11 @@ using ButtonCallback = std::function<void()>;
 
 class Button : public Widget
 {
-    Quad  d_button;
-    Quad  d_buttonHovered;
-    Quad  d_buttonClicked;
-    Quad* d_activeButton;
+    Quad d_actual;
+
+    Quad d_buttonNormal;
+    Quad d_buttonHovered;
+    Quad d_buttonClicked;
 
     bool d_hovered;
     bool d_clicked;
@@ -50,11 +51,11 @@ public:
            float buttonHoveredScale = 0.5f,
            float buttonClickedScale = 0.5f);
 
-    Quad& button() { return d_button; }
+    Quad& buttonNormal() { return d_buttonNormal; }
     Quad& buttonHovered() { return d_buttonHovered; }
     Quad& buttonClicked() { return d_buttonClicked; }
 
-    const Quad& button() const { return d_button; }
+    const Quad& buttonNormal() const { return d_buttonNormal; }
     const Quad& buttonHovered() const { return d_buttonHovered; }
     const Quad& buttonClicked() const { return d_buttonClicked; }
 

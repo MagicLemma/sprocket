@@ -4,7 +4,7 @@ void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
 {
     button->base().colour = {0.15625f, 0.15625f, 0.15625f};
 
-    button->button().colour = {0.926f, 0.496f, 0.0f};
+    button->buttonNormal().colour = {0.926f, 0.496f, 0.0f};
     button->buttonHovered().colour = {0.926f, 0.63281f, 0.3242f};
     button->buttonClicked().colour = {0.324f, 0.90625f, 0.5352f};
 }
@@ -37,19 +37,6 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     )
     , d_image(Sprocket::Texture("Resources/Textures/Space.PNG"))
     , d_text({"Sprocket, now only $20!"})
-    , d_quad({
-        {50.0f, 50.0f}, 50.0f, 50.0f,
-        Sprocket::Texture::empty(),
-        {1.0, 0.0, 0.0}
-    }, {
-        {75.0f, 50.0f}, 50.0f, 50.0f,
-        Sprocket::Texture::empty(),
-        {0.0, 1.0, 0.0}
-    }, {
-        {50.0f, 50.0f}, 50.0f, 50.0f,
-        Sprocket::Texture::empty(),
-        {0.0, 0.0, 1.0}
-    })
 {
     using namespace Sprocket;
 
@@ -131,9 +118,6 @@ bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& e
     }
 
     if (d_status == Status::NORMAL) {
-        if (d_quad.handleEvent(window, event)) {
-            return true;
-        }
         if (d_image.handleEvent(window, event)) {
             return true;
         }
@@ -152,7 +136,6 @@ void UILayer::updateImpl(Sprocket::Window* window)
     d_displayRenderer.update();
 
     if (d_status == Status::NORMAL) {
-        d_quad.update(window);
         d_container.update(window);
         d_image.update(window);
     }
@@ -163,5 +146,4 @@ void UILayer::drawImpl(Sprocket::Window* window)
     d_container.draw(&d_displayRenderer);
     d_image.draw(&d_displayRenderer);
     d_displayRenderer.draw(d_text);
-    d_quad.draw(&d_displayRenderer);
 }
