@@ -13,10 +13,10 @@ DisplayRenderer::DisplayRenderer(Window* window)
                      "Resources/Shaders/DisplayQuad.frag")
     , d_characterShader("Resources/Shaders/DisplayCharacter.vert",
                         "Resources/Shaders/DisplayCharacter.frag")
-    , d_quad({{{1.0f, 1.0f}, {1.0f, 1.0f}},
-              {{1.0f, 0.0f}, {1.0f, 0.0f}},
-              {{0.0f, 1.0f}, {0.0f, 1.0f}},
-              {{0.0f, 0.0f}, {0.0f, 0.0f}}})
+    , d_quad({{{1.0f, 1.0f}, {1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}},
+              {{1.0f, 0.0f}, {1.0f, 0.0f}, {-1.0f, 1.0f, 1.0f}},
+              {{0.0f, 1.0f}, {0.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}},
+              {{0.0f, 0.0f}, {0.0f, 0.0f}, {-1.0f, 1.0f, 1.0f}}})
 {
     d_availableFonts.insert({Font::ARIAL, {"Resources/Fonts/Arial.fnt",
                                            "Resources/Fonts/Arial.png"}});
@@ -59,6 +59,11 @@ void DisplayRenderer::update() const
 
 void DisplayRenderer::draw(const Quad& quad) const
 {
+    draw(quad, d_quad);
+}
+
+void DisplayRenderer::draw(const Quad& quad, const Model2D& model) const
+{
     handleRenderOptions({false, false, false});
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -76,9 +81,9 @@ void DisplayRenderer::draw(const Quad& quad) const
     d_colourShader.loadUniform("greyscale", quad.greyscale ? 1.0f : 0.0f);
 
     quad.texture.bind();
-    d_quad.bind();
+    model.bind();
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    d_quad.unbind();
+    model.unbind();
     quad.texture.unbind();
 
     d_colourShader.unbind();

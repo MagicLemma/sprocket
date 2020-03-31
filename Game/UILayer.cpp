@@ -43,9 +43,10 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     d_container.position({10.0f, 10.0f});
     d_container.base().colour = {0.07f, 0.07f, 0.07f};
     d_container.base().roundness = 0.081f;
+    d_container.addProperty<Draggable>();
 
-    d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
-    d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
+    //d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
+    //d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
 
     d_image.position({0.0f, 100.0f});
     d_image.addProperty<Draggable>();
@@ -94,13 +95,21 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     );
     
     textBox->base().colour = {0.15625f, 0.15625f, 0.15625f};
-    textBox->text().font = Sprocket::Font::GEORGIA;
+    textBox->text().font = Sprocket::Font::CALIBRI;
 
     topSlider->setCallback([textBox](float val) {
         textBox->text().size = 24.0f + val * 60.0f;
     });
 
-    topSlider->setValue(0.8f);
+    topSlider->setValue(0.0f);
+
+    auto palette = d_container.add<ColourPalette>(300.0f, 300.0f);
+    palette->base().colour = {0.15625f, 0.15625f, 0.15625f};
+    palette->setCallback([&](const Maths::vec3& colour) {
+        for (auto& light : d_info->lights) {
+            light.colour = colour;
+        }
+    });
 }
 
 bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event)

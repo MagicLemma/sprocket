@@ -89,5 +89,10 @@ void normalise(vec3& vec)
     vec = glm::normalize(vec);
 }
 
+float distance(const Maths::vec2& A, const Maths::vec2& B)
+{
+    return glm::distance(A, B);
+}
+
 }
 }

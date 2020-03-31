@@ -38,6 +38,7 @@ add_library(Sprocket STATIC
             Display/Container.cpp
             Display/Slider.cpp
             Display/Button.cpp
+            Display/ColourPalette.cpp
             Display/Image.cpp
             Display/TextBox.cpp
 

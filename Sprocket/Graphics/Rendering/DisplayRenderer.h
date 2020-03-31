@@ -40,6 +40,8 @@ public:
     void update() const;
 
     void draw(const Quad& quad) const;
+    void draw(const Quad& quad, const Model2D& model) const;
+
     void draw(const Text& text);
 };
 

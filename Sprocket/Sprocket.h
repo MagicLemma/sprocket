@@ -62,6 +62,7 @@
 #include "Display/Widget.h"
 #include "Display/Container.h"
 #include "Display/Button.h"
+#include "Display/ColourPalette.h"
 #include "Display/Slider.h"
 #include "Display/Image.h"
 #include "Display/TextBox.h"

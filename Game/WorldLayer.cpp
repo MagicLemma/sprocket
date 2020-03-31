@@ -48,7 +48,7 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
     std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
 
     // Load a bunch of random cubes/
-    for (int i = 0; i != 50; ++i) {
+    for (int i = 0; i != 100; ++i) {
         d_info->entities.push_back({cube, shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
     }
 

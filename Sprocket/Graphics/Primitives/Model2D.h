@@ -9,6 +9,7 @@ struct Vertex2D
 {
     Maths::vec2 position;
     Maths::vec2 texture;
+    Maths::vec3 colour;
 };
 
 using Vertex2DBuffer = std::vector<Vertex2D>;

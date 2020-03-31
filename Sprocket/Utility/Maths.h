@@ -38,7 +38,7 @@ void clamp(float& value, float min, float max);
 vec3 cross(const vec3& lhs, const vec3& rhs);
 void normalise(vec3& vec);
 
-
+float distance(const Maths::vec2& A, const Maths::vec2& B);
 
 }
 }

@@ -20,6 +20,9 @@ Model2D::Model2D(const Vertex2DBuffer& buffer)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
                           (void*)offsetof(Vertex2D, texture));
 
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+                          (void*)offsetof(Vertex2D, colour));
+
     // Unbind the VAO
     glBindVertexArray(0);
 }
@@ -29,12 +32,14 @@ void Model2D::bind() const
     glBindVertexArray(d_vaoId);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 }
 
 void Model2D::unbind() const
 {
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
     glBindVertexArray(0);
 }
 
