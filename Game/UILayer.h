@@ -14,9 +14,9 @@ class UILayer : public Sprocket::Layer
     Sprocket::Text d_text;
 
 public:
-    UILayer(std::shared_ptr<BasicSceneInfo> info);
+    UILayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneInfo> info);
 
-    bool handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event) override;
-    void updateImpl(Sprocket::Window* window) override;
-    void drawImpl(Sprocket::Window* window) override;
+    bool handleEventImpl(const Sprocket::Event& event) override;
+    void updateImpl() override;
+    void drawImpl() override;
 };

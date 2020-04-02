@@ -27,7 +27,7 @@ Window::Window(
 )
 	: d_impl(std::make_shared<WindowImpl>())
 	, d_data({name, width, height})
-	, d_callbacks()
+	, d_callback([](const Event&) {})
 {
 	// Set the callback that will get called by GLFW. This just
 	// forwards all events on to the keyboard/mouse and any
@@ -37,10 +37,7 @@ Window::Window(
 			d_data.running = false;
 			return;
 		}
-		for (auto [name, callback]: d_callbacks)
-		{
-			callback(event);
-		}
+		d_callback(event);
 	};
 
 	d_impl->window = glfwCreateWindow(
@@ -190,17 +187,9 @@ void Window::setCursorVisibility(bool visibility)
 	}
 }
 
-void Window::registerCallback(const std::string& name, EventCallback cb)
+void Window::setCallback(EventCallback cb)
 {
-	d_callbacks[name] = cb;
-}
-
-void Window::deregisterCallback(const std::string& name)
-{
-	auto it = d_callbacks.find(name);
-	if (it != d_callbacks.end()) {
-		d_callbacks.erase(it);
-	}
+	d_callback = cb;
 }
 
 bool Window::isKeyDown(int key)

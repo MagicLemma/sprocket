@@ -17,9 +17,9 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::PostProcessor   d_postProcessor;
 
 public:
-    WorldLayer(std::shared_ptr<BasicSceneInfo> info);
+    WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneInfo> info);
 
-    bool handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event) override;
-    void updateImpl(Sprocket::Window* window) override;
-    void drawImpl(Sprocket::Window* window) override;
+    bool handleEventImpl(const Sprocket::Event& event) override;
+    void updateImpl() override;
+    void drawImpl() override;
 };

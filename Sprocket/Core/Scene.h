@@ -1,45 +1,47 @@
 #pragma once
-#include "Core/LayerStack.h"
-#include "Core/Window.h"
-#include "Events/Event.h"
+#include "Layer.h"
 
-#include <functional>
+#include <vector>
+#include <memory>
 
 namespace Sprocket {
 
-using EventHandler = std::function<void(Window*, const Event&)>;
+using LayerPtr = std::shared_ptr<Layer>;
 
 class Scene
 {
-    std::string d_name;
-        // Name of the scene. This should be a unique identifier.
-
-    LayerStack d_layers;
-        // The LayerStack for the scene. Layers are the main building
-        // blocks for a scene and are responsible for creating everything
-        // in the scene.
-
-    Window* d_window;
-        // Non-owning pointer to the window that the scene wants to receive
-        // events from.
-
-private:
-    void handleEvent(const Event& event);
-        // Called whenever an event happens. First calls the internal
-        // event handler and then dispatches the event to the layer stack.
+    std::vector<LayerPtr> d_layers;
 
 public:
-    Scene(const std::string& name, const LayerStack& layers, Window* window);
-        // Additionally registers the Scene with the window speified in
-        // the SceneData. Events from the window will be processed with
-        // handleEvent.
+    template <typename T, typename... Args>
+    std::shared_ptr<T> add(Args&&... args);
+        // Constructs and returns a shared pointer to a new layer.
+        // Also adds to the internal stack.
 
-    ~Scene();
-        // Deregisters the Scene with the window that it is in.
+    LayerPtr popLayer();
 
-    void tick();
-        // Should be called on every tick of the game loop. Updates the
-        // layer stack and then draws it.
+    void handleEvent(const Event& event);
+        // Called on every event. This propagates the event to
+        // every layer in the stack, starting at the top. If a layer
+        // returns True, the event is not propagated to any lower
+        // layers.
+
+    void update();
+        // Called on every tick. This goes through the stack
+        // from the top and updates each layer. If a layer
+        // returns True, none of the lower layers are updated.
+
+    void draw();
+        // Called on every tick. This does through the stack
+        // from the bottom and draws each layer.
 };
+
+template <typename T, typename... Args>
+std::shared_ptr<T> Scene::add(Args&&... args)
+{
+    auto layer = std::make_shared<T>(std::forward<Args>(args)...);
+    d_layers.push_back(layer);
+    return layer;
+}
 
 }

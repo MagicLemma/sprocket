@@ -5,7 +5,6 @@
 
 struct BasicSceneInfo
 {
-    Sprocket::Window* window;
     Sprocket::FirstPersonCamera firstCamera;
     Sprocket::ThirdPersonCamera thirdCamera;
     Sprocket::Camera* camera;
@@ -21,5 +20,5 @@ struct BasicSceneInfo
     bool cameraIsFirst = true;
     bool paused = false;
     
-    BasicSceneInfo(Sprocket::Window* window);
+    BasicSceneInfo(Sprocket::Accessor& accessor);
 };

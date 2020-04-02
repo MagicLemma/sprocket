@@ -60,6 +60,12 @@ Model3D::Model3D(const Vertex3DBuffer& vertices,
     glBindVertexArray(0);
 }
 
+Model3D::Model3D(const Model3D& model)
+    : d_vaoId(model.d_vaoId)
+    , d_vertexCount(model.d_vertexCount)
+{
+}
+
 void Model3D::bind() const
 {
     glBindVertexArray(d_vaoId);

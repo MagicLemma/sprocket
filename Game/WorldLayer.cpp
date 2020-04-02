@@ -1,18 +1,19 @@
 #include "WorldLayer.h"
 
-WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info) 
-    : Sprocket::Layer(Status::NORMAL, false) 
+WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneInfo> info) 
+    : Sprocket::Layer(accessor, Status::NORMAL, false) 
     , d_info(info)
-    , d_entityRenderer(info->window)
-    , d_terrainRenderer(info->window)
-    , d_skyboxRenderer(info->window)
-    , d_postProcessor(info->window->width(), info->window->height())
+    , d_entityRenderer(accessor.window())
+    , d_terrainRenderer(accessor.window())
+    , d_skyboxRenderer(accessor.window())
+    , d_postProcessor(accessor.window()->width(), accessor.window()->height())
 {
     using namespace Sprocket;
 
-    Model3D quadModel("Resources/Models/Plane.obj");
-    Model3D deagleModel("Resources/Models/Deagle.obj");
-    Model3D cube("Resources/Models/Cube.obj");
+    Model3D plain = d_accessor.getModel3D("Plane");
+    Model3D deagleModel = d_accessor.getModel3D("Deagle");
+    Model3D cube = d_accessor.getModel3D("Cube");
+    Model3D dragon = d_accessor.getModel3D("Dragon");
 
     Texture green("Resources/Textures/Green.PNG");
     Texture space("Resources/Textures/Space.PNG");
@@ -34,6 +35,7 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
 
     // Load complex models
     d_info->entities.push_back({deagleModel, shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1});
+    d_info->entities.push_back({dragon, shinyGray, {50.0f, 2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 3.0f});
     
     // Load cubes to show the grid.
     d_info->entities.push_back({cube, galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
@@ -52,7 +54,7 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
         d_info->entities.push_back({cube, shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
     }
 
-    d_info->window->setCursorVisibility(false);
+    accessor.window()->setCursorVisibility(false);
 
     d_info->lights.push_back({{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
     d_info->lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
@@ -64,20 +66,20 @@ WorldLayer::WorldLayer(std::shared_ptr<BasicSceneInfo> info)
     d_postProcessor.addEffect<GaussianHoriz>();
 }
 
-bool WorldLayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event)
+bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::WindowResizeEvent>()) {
         d_postProcessor.setScreenSize(e->width(), e->height()); 
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_info->camera->handleEvent(window, event);
-    d_info->lens.handleEvent(window, event); 
+    d_info->camera->handleEvent(d_accessor.window(), event);
+    d_info->lens.handleEvent(d_accessor.window(), event); 
       
     return false;
 }
 
-void WorldLayer::updateImpl(Sprocket::Window* window)
+void WorldLayer::updateImpl()
 {
     d_status = d_info->paused ? Status::PAUSED : Status::NORMAL;
 
@@ -93,24 +95,24 @@ void WorldLayer::updateImpl(Sprocket::Window* window)
         d_info->lights[3].position.z = 60 * std::sin(8.0f * tick);
         d_info->lights[3].position.x = 60 * std::cos(8.0f * tick);
 
-        d_info->camera->update(window, deltaTime());
+        d_info->camera->update(d_accessor.window(), deltaTime());
 
-        window->setCursorVisibility(!d_info->cameraIsFirst);
+        d_accessor.window()->setCursorVisibility(!d_info->cameraIsFirst);
     }
     else {
-        window->setCursorVisibility(true);
+        d_accessor.window()->setCursorVisibility(true);
     }
     
 }
 
-void WorldLayer::drawImpl(Sprocket::Window* window)
+void WorldLayer::drawImpl()
 {
     if(d_info->paused) {
         d_postProcessor.bind();
     }
     
     Sprocket::RenderOptions options;
-    options.wireframe = window->isKeyDown(Sprocket::Keyboard::F) &&
+    options.wireframe = d_accessor.window()->isKeyDown(Sprocket::Keyboard::F) &&
                         d_status == Status::NORMAL;
     
     d_entityRenderer.update(*d_info->camera, d_info->lens, d_info->lights, options);
@@ -126,7 +128,6 @@ void WorldLayer::drawImpl(Sprocket::Window* window)
     d_skyboxRenderer.draw(d_info->skybox,
                             *d_info->camera,
                             d_info->lens);
-    
     
     if (d_info->paused) {
         d_postProcessor.unbind();

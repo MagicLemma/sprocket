@@ -66,10 +66,12 @@ add_library(Sprocket STATIC
             Objects/Skybox.cpp
             Objects/Terrain.cpp
 
+            Core/Accessor.cpp
             Core/Initialiser.cpp
             Core/Layer.cpp
-            Core/LayerStack.cpp
             Core/Scene.cpp
+            Core/SceneManager.cpp
+            Core/ResourceManager.cpp
             Core/Window.cpp
 
             Events/Event.cpp

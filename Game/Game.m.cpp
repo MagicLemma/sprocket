@@ -1,29 +1,34 @@
 #include <Sprocket.h>
 
-#include "WorldSceneInfo.h"
-#include "WorldLayer.h"
 #include "UILayer.h"
+#include "MainMenu.h"
 
 int main()
 {
     Sprocket::Initialiser init;
     Sprocket::Window window;
+    Sprocket::ResourceManager resourceManager;
+    Sprocket::SceneManager sceneManager;
 
-    auto info = std::make_shared<BasicSceneInfo>(&window);
+    window.setCallback([&sceneManager](const Sprocket::Event& event) {
+        sceneManager.handleEvent(event);
+    });
 
-    Sprocket::LayerStack layerStack;
-    layerStack.pushLayer(std::make_shared<WorldLayer>(info));
-    layerStack.pushLayer(std::make_shared<UILayer>(info));
+    Sprocket::Accessor accessor(&sceneManager, &resourceManager, &window);
 
-    Sprocket::Scene scene("Scene", layerStack, &window);
+    auto mainMenu = sceneManager.addScene("Main Menu");
+    mainMenu->add<MainMenu>(accessor);
+    sceneManager.setActiveScene("Main Menu");
 
     Sprocket::FramerateTimer fps; // Helper class to log the fps.
 
     while (window.running()) {
         window.clear();
-        scene.tick();
-        window.onUpdate();
 
+        sceneManager.update();
+        sceneManager.draw();
+
+        window.onUpdate();
         fps.update();
     }
 

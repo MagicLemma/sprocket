@@ -52,11 +52,8 @@ class Window
 	std::shared_ptr<WindowImpl> d_impl;
 	WindowData                  d_data;
 
-	std::map<std::string, EventCallback> d_callbacks;
-		// A name -> callback map for anything that may be
-		// interested in events. Other objects can register themselves
-		// by providing callbacks of their own. Objects may also
-		// deregister themselves to stop receiving events.
+	EventCallback d_callback;
+		// A callback to be called with every event from the window.
 
 	Maths::vec2 d_mouseOffset;
 		// Updated every frame. This is the mouse offset between the
@@ -85,13 +82,9 @@ public:
 	bool focused() const { return d_data.focused; }
 
 	// Callback Utilities
-	void registerCallback(const std::string& name, EventCallback cb);
-		// Registers an additional callback with the given name. If a
-		// callback for the given name is already provided, it is overwritten.
-
-	void deregisterCallback(const std::string& name);
-		// Removes the callback corresponding to the given name. If no
-		// callback exists for the given name, this is a noop.
+	void setCallback(EventCallback cb);
+		// Sets the callback to be given events. If a callback is already
+		// provided, it is overwritten.
 
 	// Window Utilities
 	void setCursorVisibility(bool visibility);

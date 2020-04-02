@@ -26,12 +26,13 @@ void setSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
     slider->picker().position.y = slider->base().height * (1.0f - 0.8f) / 2.0f;
 }
 
-UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info) 
-    : Layer(Status::INACTIVE, true)
+UILayer::UILayer(Sprocket::Accessor& accessor,
+                 std::shared_ptr<BasicSceneInfo> info) 
+    : Layer(accessor, Status::INACTIVE, true)
     , d_info(info)
-    , d_displayRenderer(info->window)
+    , d_displayRenderer(accessor.window())
     , d_container(
-        (float)info->window->width()/4.0f,
+        (float)accessor.window()->width()/4.0f,
         {10.0, 10.0},
         10.0f
     )
@@ -70,8 +71,7 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
 
     chattyButton->setUnclickCallback([&]() {
         SPKT_LOG_WARN("Have a great day!");
-        d_image.active(!d_image.active());
-        d_image.base().greyscale = !d_image.base().greyscale;
+        d_accessor.setActiveScene("Main Menu");
     });
 
     auto cameraSwitchButton = d_container.add<Button>(
@@ -112,12 +112,12 @@ UILayer::UILayer(std::shared_ptr<BasicSceneInfo> info)
     });
 }
 
-bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& event)
+bool UILayer::handleEventImpl(const Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
         if (e->key() == Sprocket::Keyboard::ESC) {
             d_info->paused = !d_info->paused;
-            window->setCursorVisibility(d_info->paused);
+            d_accessor.window()->setCursorVisibility(d_info->paused);
             return true;
         }
         else if (e->key() == Sprocket::Keyboard::E) {
@@ -127,10 +127,10 @@ bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& e
     }
 
     if (d_status == Status::NORMAL) {
-        if (d_image.handleEvent(window, event)) {
+        if (d_image.handleEvent(d_accessor.window(), event)) {
             return true;
         }
-        if (d_container.handleEvent(window, event)) {
+        if (d_container.handleEvent(d_accessor.window(), event)) {
             return true;
         }
         
@@ -139,18 +139,18 @@ bool UILayer::handleEventImpl(Sprocket::Window* window, const Sprocket::Event& e
     return false;
 }
 
-void UILayer::updateImpl(Sprocket::Window* window)
+void UILayer::updateImpl()
 {
     d_status = d_info->paused ? Status::NORMAL : Status::INACTIVE;
     d_displayRenderer.update();
 
     if (d_status == Status::NORMAL) {
-        d_container.update(window);
-        d_image.update(window);
+        d_container.update(d_accessor.window());
+        d_image.update(d_accessor.window());
     }
 }
 
-void UILayer::drawImpl(Sprocket::Window* window)
+void UILayer::drawImpl()
 {
     d_container.draw(&d_displayRenderer);
     d_image.draw(&d_displayRenderer);
