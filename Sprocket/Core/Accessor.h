@@ -28,8 +28,7 @@ public:
     bool doesSceneExist(const std::string& name) const;
 
     // ResourceManager functionality
-    Model3D loadModel3D(const std::string& name, const std::string& objFile);
-    Model3D getModel3D(const std::string& name) const;
+    ResourceManager* resourceManager() { return d_resourceManager; }
 
     // Window functionality
     Window* window() const { return d_window; }

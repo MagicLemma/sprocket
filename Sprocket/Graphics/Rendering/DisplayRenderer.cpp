@@ -6,17 +6,42 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Sprocket {
+namespace {
 
-DisplayRenderer::DisplayRenderer(Window* window)
+Vertex2DBuffer getQuad()
+{
+    return Vertex2DBuffer{
+        {
+            Maths::vec2{1.0f, 1.0f},
+            Maths::vec2{1.0f, 1.0f},
+            Maths::vec3{-1.0f, 1.0f, 1.0f}
+        }, {
+             Maths::vec2{1.0f, 0.0f},
+             Maths::vec2{1.0f, 0.0f},
+             Maths::vec3{-1.0f, 1.0f, 1.0f}
+        }, {
+             Maths::vec2{0.0f, 1.0f},
+             Maths::vec2{0.0f, 1.0f},
+             Maths::vec3{-1.0f, 1.0f, 1.0f}
+        }, {
+             Maths::vec2{0.0f, 0.0f},
+             Maths::vec2{0.0f, 0.0f},
+             Maths::vec3{-1.0f, 1.0f, 1.0f}
+        }
+    };
+}
+
+}
+
+DisplayRenderer::DisplayRenderer(Window* window, ResourceManager* resourceManager)
     : d_window(window)
+    , d_resourceManager(resourceManager)
     , d_colourShader("Resources/Shaders/DisplayQuad.vert",
                      "Resources/Shaders/DisplayQuad.frag")
     , d_characterShader("Resources/Shaders/DisplayCharacter.vert",
                         "Resources/Shaders/DisplayCharacter.frag")
-    , d_quad({{{1.0f, 1.0f}, {1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}},
-              {{1.0f, 0.0f}, {1.0f, 0.0f}, {-1.0f, 1.0f, 1.0f}},
-              {{0.0f, 1.0f}, {0.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}},
-              {{0.0f, 0.0f}, {0.0f, 0.0f}, {-1.0f, 1.0f, 1.0f}}})
+    , d_quad(resourceManager->loadModel2D(getQuad()))
+    , d_whiteTexture(resourceManager->loadTexture("Resources/Textures/White.png"))
 {
     d_availableFonts.insert({Font::ARIAL, {"Resources/Fonts/Arial.fnt",
                                            "Resources/Fonts/Arial.png"}});
@@ -39,7 +64,7 @@ FontPackage DisplayRenderer::getFont(Font font)
     }
 
     SPKT_LOG_INFO("Loading a font!");
-    auto val = d_fonts.emplace(font, FontPackage(it2->second.first, it2->second.second));
+    auto val = d_fonts.emplace(font, FontPackage(d_resourceManager, getFontName(font), it2->second.first, it2->second.second));
     return val.first->second;
 }
 
@@ -80,11 +105,12 @@ void DisplayRenderer::draw(const Quad& quad, const Model2D& model) const
     d_colourShader.loadUniform("roundness", quad.roundness);
     d_colourShader.loadUniform("greyscale", quad.greyscale ? 1.0f : 0.0f);
 
-    quad.texture.bind();
+    quad.texture.value_or(d_whiteTexture).bind();
     model.bind();
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP
+    , 0, 4);
     model.unbind();
-    quad.texture.unbind();
+    quad.texture.value_or(d_whiteTexture).unbind();
 
     d_colourShader.unbind();
     glDisable(GL_BLEND);

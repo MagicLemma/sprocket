@@ -16,7 +16,9 @@ void SkyboxRenderer::draw(const Skybox& skybox,
                           const Lens& lens,
                           const RenderOptions& options)
 {
-    handleRenderOptions(options);
+    RenderOptions ops = options;
+    ops.faceCulling = false;
+    handleRenderOptions(ops);
     glDepthMask(true);
 
     d_shader.bind();
@@ -29,7 +31,7 @@ void SkyboxRenderer::draw(const Skybox& skybox,
     d_shader.loadUniform("viewMatrix", view);
 
     skybox.bind();
-    glDrawArrays(GL_TRIANGLES, 0, 36/*skybox.model()->vertexCount()*/);
+    glDrawElements(GL_TRIANGLES, skybox.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     skybox.unbind();
 
     d_shader.unbind();

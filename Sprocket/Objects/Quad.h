@@ -4,6 +4,7 @@
 
 #include <variant>
 #include <utility>
+#include <optional>
 
 namespace Sprocket {
 
@@ -17,7 +18,9 @@ struct Quad
     float       height;
 
     // Visuals
-    Texture texture = Texture::empty();
+    std::optional<Texture> texture = {};
+        // If no texture is provided, a plain white texture is used.
+        
     Colour colour = Colour{1.0, 1.0, 1.0};
     float opacity = 1.0f;
     float roundness = 0.0f;

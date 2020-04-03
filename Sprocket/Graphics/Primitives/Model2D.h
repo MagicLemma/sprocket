@@ -20,7 +20,7 @@ class Model2D
     int          d_vertexCount;
 
 public:
-    Model2D(const Vertex2DBuffer& vertices);
+    Model2D(unsigned int vaoId, int vertexCount);
 
     unsigned int vaoId() const { return d_vaoId; }
     int vertexCount() const { return d_vertexCount; }

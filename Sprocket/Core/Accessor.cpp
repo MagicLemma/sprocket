@@ -34,15 +34,4 @@ bool Accessor::doesSceneExist(const std::string& name) const
     return d_sceneManager->doesSceneExist(name);
 }
 
-Model3D Accessor::loadModel3D(const std::string& name,
-                                          const std::string& objFile)
-{
-    return d_resourceManager->loadModel3D(name, objFile);
-}
-
-Model3D Accessor::getModel3D(const std::string& name) const
-{
-    return d_resourceManager->getModel3D(name);
-}
-
 }

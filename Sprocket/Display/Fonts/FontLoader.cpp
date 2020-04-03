@@ -2,7 +2,6 @@
 #include "Character.h"
 #include "Tokenize.h"
 #include "Log.h"
-#include "Loader.h"
 
 #include <fstream>
 #include <exception>
@@ -12,7 +11,10 @@
 
 namespace Sprocket {
 
-std::pair<GlyphMap, float> parseFntFile(const std::string& fntFile, const Texture& atlas)
+std::pair<GlyphMap, float> parseFntFile(
+    ResourceManager* resourceManager,
+    const std::string& fntFile,
+    const Texture& atlas)
 {
     std::ifstream file;
     file.open(fntFile);
@@ -105,7 +107,7 @@ std::pair<GlyphMap, float> parseFntFile(const std::string& fntFile, const Textur
         }
 
         glyphs.insert(std::make_pair(id, Character(
-            atlas, id, texTopLeft, width, height, xOffset, yOffset, advance)));
+            resourceManager, atlas, id, texTopLeft, width, height, xOffset, yOffset, advance)));
     }
 
     return {glyphs, size};

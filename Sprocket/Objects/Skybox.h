@@ -1,22 +1,26 @@
 #pragma once
+#include "Model3D.h"
+#include "CubeMap.h"
+
 #include <array>
 
 namespace Sprocket {
 
 class Skybox
 {
-    unsigned int d_vaoId;
-    unsigned int d_texId;
+    Model3D d_model;
+    CubeMap d_texture;
 
 public:
-    Skybox(const std::array<std::string, 6>& faceFiles);
+    Skybox(const Model3D& model,
+           const CubeMap& texture);
 
     void bind() const;
     void unbind() const;
 
     // Getters / Setters
-    unsigned int model() const { return d_vaoId; }
-    unsigned int texture() const { return d_texId; }
+    Model3D model() const { return d_model; }
+    CubeMap texture() const { return d_texture; }
 };
 
 }

@@ -2,6 +2,8 @@
 #include "Effect.h"
 #include "Shader.h"
 #include "Model2D.h"
+#include "FrameBuffer.h"
+#include "ResourceManager.h"
 
 #include <vector>
 
@@ -9,16 +11,10 @@ namespace Sprocket {
 
 class Effect
 {
-    unsigned int d_fboId;
-    unsigned int d_texture;
-    unsigned int d_depth;
-
-    Model2D      d_quad;
+    FrameBuffer d_frameBuffer;
+    Model2D     d_quad;
 
 protected:
-    int          d_width;
-    int          d_height;
-    float        d_scale;
 
     Shader       d_shader;
 
@@ -26,7 +22,8 @@ protected:
         // Override this function to set any uniforms in the shader.
 
 public:
-    Effect(int width, int height, float scale,
+    Effect(ResourceManager* resourceManager,
+           int width, int height, float scale,
            const std::string& vertShader,
            const std::string& fragShader);
 
@@ -50,6 +47,9 @@ public:
 
     void setScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
+
+    int width() const { return d_frameBuffer.width(); }
+    int height() const { return d_frameBuffer.height(); }
 };
 
 }

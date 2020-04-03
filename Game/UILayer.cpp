@@ -30,16 +30,17 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
                  std::shared_ptr<BasicSceneInfo> info) 
     : Layer(accessor, Status::INACTIVE, true)
     , d_info(info)
-    , d_displayRenderer(accessor.window())
+    , d_displayRenderer(accessor.window(), accessor.resourceManager())
     , d_container(
         (float)accessor.window()->width()/4.0f,
         {10.0, 10.0},
         10.0f
     )
-    , d_image(Sprocket::Texture("Resources/Textures/Space.PNG"))
+    , d_image(accessor.resourceManager()->loadTexture("Resources/Textures/Space.PNG"))
     , d_text({"Sprocket, now only $20!"})
 {
     using namespace Sprocket;
+    auto resourceManager = accessor.resourceManager();
 
     d_container.position({10.0f, 10.0f});
     d_container.base().colour = {0.07f, 0.07f, 0.07f};
@@ -103,7 +104,7 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
 
     topSlider->setValue(0.0f);
 
-    auto palette = d_container.add<ColourPalette>(300.0f, 300.0f);
+    auto palette = d_container.add<ColourPalette>(resourceManager, 300.0f, 300.0f);
     palette->base().colour = {0.15625f, 0.15625f, 0.15625f};
     palette->setCallback([&](const Maths::vec3& colour) {
         for (auto& light : d_info->lights) {

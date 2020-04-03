@@ -1,10 +1,8 @@
 #pragma once
-#include <memory>
-#include <string>
 
 namespace Sprocket {
 
-class Texture
+class CubeMap
 {
     unsigned int d_textureId;
 
@@ -13,7 +11,7 @@ class Texture
     int d_bpp;
 
 public:
-    Texture(unsigned int textureId, int width, int height, int bpp);
+    CubeMap(unsigned int textureId, int width, int height, int bpp);
 
     void bind() const;
     void unbind() const;

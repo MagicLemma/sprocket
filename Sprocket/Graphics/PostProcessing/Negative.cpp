@@ -2,9 +2,10 @@
 
 namespace Sprocket {
 
-Negative::Negative(int width, int height)
-    : Effect(width, height, 1, "Resources/Shaders/Negative.vert",
-                               "Resources/Shaders/Negative.frag")
+Negative::Negative(ResourceManager* resourceManager, int width, int height)
+    : Effect(resourceManager, width, height, 1,
+             "Resources/Shaders/Negative.vert",
+             "Resources/Shaders/Negative.frag")
 {
 
 }

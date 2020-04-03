@@ -22,8 +22,7 @@ class Model3D
     int          d_vertexCount;
 
 public:
-    Model3D(const std::string& objFile);
-    Model3D(const Vertex3DBuffer& vertices, const IndexBuffer& indices);
+    Model3D(unsigned int vaoId, int vertexCount);
     Model3D(const Model3D& model);
 
     unsigned int vaoId() const { return d_vaoId; }

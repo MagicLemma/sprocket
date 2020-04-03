@@ -72,7 +72,10 @@
 			"map": "cpp",
 			"filesystem": "cpp",
 			"iomanip": "cpp",
-			"random": "cpp"
+			"random": "cpp",
+			"resumable": "cpp",
+			"future": "cpp",
+			"optional": "cpp"
 		}
 	}
 }

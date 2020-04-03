@@ -24,20 +24,17 @@ Button::Button(float width,
     , d_buttonNormal({
         makeButtonOffset(width, height, buttonScale),
         width * buttonScale,
-        height * buttonScale,
-        Texture::empty()
+        height * buttonScale
     })
     , d_buttonHovered({
         makeButtonOffset(width, height, buttonHoveredScale),
         width * buttonHoveredScale,
-        height * buttonHoveredScale,
-        Texture::empty()
+        height * buttonHoveredScale
     })
     , d_buttonClicked({
         makeButtonOffset(width, height, buttonClickedScale),
         width * buttonClickedScale,
-        height * buttonClickedScale,
-        Texture::empty()
+        height * buttonClickedScale
     })
     , d_hovered(false)
     , d_clicked(false)

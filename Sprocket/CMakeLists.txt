@@ -13,7 +13,7 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
 
-            Graphics/Loader.cpp
+            Graphics/ResourceManager.cpp
             Graphics/ObjParser.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
@@ -21,6 +21,8 @@ add_library(Sprocket STATIC
             Graphics/Primitives/Model2D.cpp
             Graphics/Primitives/Model3D.cpp
             Graphics/Primitives/Texture.cpp
+            Graphics/Primitives/CubeMap.cpp
+            Graphics/Primitives/FrameBuffer.cpp
 
             Graphics/Rendering/DisplayRenderer.cpp
             Graphics/Rendering/EntityRenderer.cpp
@@ -71,7 +73,6 @@ add_library(Sprocket STATIC
             Core/Layer.cpp
             Core/Scene.cpp
             Core/SceneManager.cpp
-            Core/ResourceManager.cpp
             Core/Window.cpp
 
             Events/Event.cpp

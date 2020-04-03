@@ -1,11 +1,11 @@
 #include "PostProcessor.h"
-#include "Loader.h"
 
 namespace Sprocket {
 
-PostProcessor::PostProcessor(int width, int height)
+PostProcessor::PostProcessor(ResourceManager* resourceManager, int width, int height)
     : d_width(width)
     , d_height(height)
+    , d_resourceManager(resourceManager)
 {}
 
 void PostProcessor::addEffect(std::shared_ptr<Effect> effect)

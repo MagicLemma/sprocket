@@ -2,6 +2,7 @@
 #include "Maths.h"
 #include "Quad.h"
 #include "Model2D.h"
+#include "ResourceManager.h"
 
 namespace Sprocket {
 
@@ -27,7 +28,8 @@ class Character
         // Texture atlas that holds this character
 
 public:
-    Character(const Texture& atlas,
+    Character(ResourceManager* resourceManager,
+              const Texture& atlas,
               int id,
               const Maths::vec2& texTopLeft,
               float width,

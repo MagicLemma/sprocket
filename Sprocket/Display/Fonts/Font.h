@@ -1,6 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "Texture.h"
+#include "ResourceManager.h"
 
 #include <unordered_map>
 
@@ -15,14 +16,21 @@ enum class Font
     CALIBRI
 };
 
+std::string getFontName(Font font);
+
 class FontPackage
 {
+    std::string d_name;
+
     Texture  d_atlas;
     GlyphMap d_glyphs; 
     float    d_size;
 
 public:
-    FontPackage(const std::string& fntFile, const std::string& texFile);
+    FontPackage(ResourceManager* resourceManager,
+                const std::string& name,
+                const std::string& fntFile,
+                const std::string& texFile);
 
     Character get(int id) const;
 

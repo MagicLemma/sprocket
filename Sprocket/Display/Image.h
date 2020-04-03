@@ -2,6 +2,7 @@
 #include "Widget.h"
 #include "Quad.h"
 #include "Maths.h"
+#include "Texture.h"
 
 #include <string>
 

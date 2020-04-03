@@ -8,7 +8,7 @@ class GaussianVert : public Effect
     void setUniforms() const override;
 
 public:
-    GaussianVert(int width, int height);
+    GaussianVert(ResourceManager* resourceManager, int width, int height);
 };
 
 class GaussianHoriz : public Effect
@@ -16,7 +16,7 @@ class GaussianHoriz : public Effect
     void setUniforms() const override;
 
 public:
-    GaussianHoriz(int width, int height);
+    GaussianHoriz(ResourceManager* resourceManager, int width, int height);
 };
     
 }

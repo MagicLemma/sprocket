@@ -1,5 +1,6 @@
 #pragma once
 #include "Effect.h"
+#include "ResourceManager.h"
 
 #include <vector>
 
@@ -15,8 +16,10 @@ class PostProcessor
 
     EffectPipeline d_effects;
 
+    ResourceManager* d_resourceManager;
+
 public:
-    PostProcessor(int width, int height);
+    PostProcessor(ResourceManager* resourceManager, int width, int height);
 
     void addEffect(std::shared_ptr<Effect> effect);
 
@@ -31,7 +34,7 @@ public:
 
     template <typename T, typename... Args>
     void addEffect(Args&&... args) {
-        d_effects.push_back(std::make_shared<T>(d_width, d_height, args...));
+        d_effects.push_back(std::make_shared<T>(d_resourceManager, d_width, d_height, args...));
     }
 };
 

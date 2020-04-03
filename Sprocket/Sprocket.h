@@ -8,7 +8,6 @@
 #include "Core/Layer.h"
 #include "Core/Scene.h"
 #include "Core/SceneManager.h"
-#include "Core/ResourceManager.h"
 #include "Core/Window.h"
 
 // EVENTS
@@ -24,7 +23,7 @@
 #include "Utility/Tokenize.h"
 
 // GRAPHICS
-#include "Graphics/Loader.h"
+#include "Graphics/ResourceManager.h"
 #include "Graphics/ObjParser.h"
 #include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
@@ -37,6 +36,8 @@
 #include "Graphics/Primitives/Model2D.h"
 #include "Graphics/Primitives/Model3D.h"
 #include "Graphics/Primitives/Texture.h"
+#include "Graphics/Primitives/CubeMap.h"
+#include "Graphics/Primitives/FrameBuffer.h"
 
 #include "Graphics/Rendering/DisplayRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
