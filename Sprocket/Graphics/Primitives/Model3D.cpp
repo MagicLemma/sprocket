@@ -38,17 +38,14 @@ void Model3D::bind() const
 {
     if (d_vao) {
         glBindVertexArray(d_vao->value());
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
     }
     else {
-        SPKT_LOG_WARN("Tried to bind an empty Model3D!");
         glBindVertexArray(0);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
     }
+    
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 }
 
 void Model3D::unbind() const

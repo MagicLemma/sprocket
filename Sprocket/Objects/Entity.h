@@ -2,12 +2,15 @@
 #include "Model3D.h"
 #include "Material.h"
 #include "Maths.h"
+#include "Model3DLoader.h"
 
 namespace Sprocket {
 
 class Entity
 {
-    Model3D  d_model;
+    Model3DLoader d_modelLoader;
+    Model3D d_model;
+    bool d_loading;
     Material d_material;
 
     // Transform Attributes
@@ -21,11 +24,13 @@ class Entity
         // Recalculates the transform matrix.
 
 public:
-    Entity(const Model3D& model,
+    Entity(const std::string& model,
            const Material& material,
            const Maths::vec3& position,
            const Maths::vec3& rotation,
            float scale);
+
+    void update();
 
     void bind() const;
     void unbind() const;

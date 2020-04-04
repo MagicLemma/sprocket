@@ -8,7 +8,6 @@
 #include "Core/Layer.h"
 #include "Core/Scene.h"
 #include "Core/SceneManager.h"
-#include "Core/SceneLoader.h"
 #include "Core/Window.h"
 
 // EVENTS
@@ -27,6 +26,7 @@
 #include "Graphics/ObjParser.h"
 #include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
+#include "Graphics/Model3DLoader.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"

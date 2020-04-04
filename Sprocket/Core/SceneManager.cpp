@@ -47,17 +47,4 @@ void SceneManager::draw()
     d_scenes[d_activeSceneName]->draw();
 }
 
-void SceneManager::addJob(SceneManagerJob job)
-{
-    d_jobs.push_back(job);
-}
-
-void SceneManager::flushJobs()
-{
-    for (const auto& job : d_jobs) {
-        job(this);
-    }
-    d_jobs.clear();
-}
-
 }

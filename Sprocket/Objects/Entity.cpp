@@ -2,18 +2,21 @@
 
 namespace Sprocket {
 
-Entity::Entity(const Model3D& model,
+Entity::Entity(const std::string& model,
                const Material& material,
                const Maths::vec3& position,
                const Maths::vec3& rotation,
                float scale)
-    : d_model(model)
+    : d_modelLoader()
+    , d_model()
+    , d_loading(true)
     , d_material(material)
     , d_position(position)
     , d_rotation(rotation)
     , d_scale(scale)
     , d_transform(Maths::transform(position, rotation, scale))
-{    
+{   
+    d_modelLoader.load(model);
 }
 
 void Entity::updateTransform()
@@ -86,6 +89,14 @@ void Entity::scale(float newScale)
 {
     d_scale = newScale;
     updateTransform();
+}
+
+void Entity::update()
+{
+    if (d_loading && d_modelLoader.completed()) {
+        d_model = d_modelLoader.get();
+        d_loading = false;
+    }
 }
 
 }

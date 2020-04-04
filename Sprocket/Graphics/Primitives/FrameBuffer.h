@@ -29,10 +29,6 @@ public:
     void setScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
 
-    std::shared_ptr<FBO> fbo() const { return d_fbo; }
-    std::shared_ptr<TEX> texture() const { return d_texture; }
-    std::shared_ptr<RBO> depthBuffer() const { return d_depthBuffer; }
-
     int width() const { return d_width; }
     int height() const { return d_height; }
     float scale() const { return d_scale; }

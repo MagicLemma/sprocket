@@ -10,11 +10,6 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneI
 {
     using namespace Sprocket;
 
-    Model3D plain("Resources/Models/Plane.obj");
-    Model3D deagleModel("Resources/Models/Deagle.obj");
-    Model3D cube("Resources/Models/Cube.obj");
-    Model3D dragon("Resources/Models/Dragon.obj");
-
     Texture green("Resources/Textures/Green.PNG");
     Texture space("Resources/Textures/Space.PNG");
     Texture gray("Resources/Textures/PlainGray.PNG");
@@ -34,25 +29,25 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneI
     d_info->terrains.push_back({field, {-50.0f, 0.0f, -50.0f}});
 
     // Load complex models
-    d_info->entities.push_back({deagleModel, shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1});
-    d_info->entities.push_back({dragon, shinyGray, {50.0f, 2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 3.0f});
+    d_info->entities.push_back({"Resources/Models/Deagle.obj", shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1});
+    d_info->entities.push_back({"Resources/Models/Dragon.obj", shinyGray, {50.0f, 2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 3.0f});
     
     // Load cubes to show the grid.
-    d_info->entities.push_back({cube, galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    d_info->entities.push_back({cube, galaxy, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    d_info->entities.push_back({cube, galaxy, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    d_info->entities.push_back({cube, galaxy, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
 
     // Seed with a real random value, if available
-    std::random_device r;
-    std::default_random_engine e1(r());
-    std::uniform_real_distribution<float> udist(-50, 50);
-    std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
-
-    // Load a bunch of random cubes/
-    for (int i = 0; i != 100; ++i) {
-        d_info->entities.push_back({cube, shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
-    }
+    //std::random_device r;
+    //std::default_random_engine e1(r());
+    //std::uniform_real_distribution<float> udist(-50, 50);
+    //std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
+//
+    //// Load a bunch of random cubes/
+    //for (int i = 0; i != 100; ++i) {
+    //    d_info->entities.push_back({"Resources/Models/Cube.obj", shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
+    //}
 
     accessor.window()->setCursorVisibility(false);
 
@@ -98,6 +93,10 @@ void WorldLayer::updateImpl()
         d_info->camera->update(d_accessor.window(), deltaTime());
 
         d_accessor.window()->setCursorVisibility(!d_info->cameraIsFirst);
+
+        for (auto& entity : d_info->entities) {
+            entity.update();
+        }
     }
     else {
         d_accessor.window()->setCursorVisibility(true);

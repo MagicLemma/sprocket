@@ -13,9 +13,17 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
 
+            Core/Accessor.cpp
+            Core/Initialiser.cpp
+            Core/Layer.cpp
+            Core/Scene.cpp
+            Core/SceneManager.cpp
+            Core/Window.cpp
+
             Graphics/ObjParser.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
+            Graphics/Model3DLoader.cpp
 
             Graphics/Primitives/Resources.cpp
             Graphics/Primitives/Model2D.cpp
@@ -67,14 +75,6 @@ add_library(Sprocket STATIC
             Objects/Quad.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
-
-            Core/Accessor.cpp
-            Core/Initialiser.cpp
-            Core/Layer.cpp
-            Core/Scene.cpp
-            Core/SceneManager.cpp
-            Core/SceneLoader.cpp
-            Core/Window.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp

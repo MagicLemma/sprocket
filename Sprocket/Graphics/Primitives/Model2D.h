@@ -25,7 +25,6 @@ class Model2D
 public:
     Model2D(const Vertex2DBuffer& vertices);
 
-    std::shared_ptr<VAO> vao() const { return d_vao; }
     int vertexCount() const { return d_vertexCount; }
 
     void bind() const;
