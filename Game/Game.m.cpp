@@ -8,14 +8,13 @@ int main()
 {
     Sprocket::Initialiser init;
     Sprocket::Window window;
-    Sprocket::ResourceManager resourceManager;
     Sprocket::SceneManager sceneManager;
 
     window.setCallback([&sceneManager](const Sprocket::Event& event) {
         sceneManager.handleEvent(event);
     });
 
-    Sprocket::Accessor accessor(&sceneManager, &resourceManager, &window);
+    Sprocket::Accessor accessor(&sceneManager, &window);
 
     auto world = sceneManager.addScene("World");
     auto info = std::make_shared<BasicSceneInfo>(accessor);

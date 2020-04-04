@@ -1,20 +1,20 @@
 #pragma once
+#include "Resources.h"
 
 namespace Sprocket {
 
 class FrameBuffer
 {
-    unsigned int d_fboId;
-    unsigned int d_textureId;
-    unsigned int d_depthId;
+    std::shared_ptr<FBO> d_fbo;
+    std::shared_ptr<TEX> d_texture;
+    std::shared_ptr<RBO> d_depthBuffer;
 
     int d_width;
     int d_height;
     float d_scale;
 
 public:
-    FrameBuffer(unsigned int fboId, unsigned int texture, unsigned int depth,
-                int width, int height, float scale);
+    FrameBuffer(int width, int height, float scale);
 
     void bind() const;
     void unbind() const;
@@ -29,9 +29,9 @@ public:
     void setScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
 
-    unsigned int fboId() const { return d_fboId; }
-    unsigned int texture() const { return d_textureId; }
-    unsigned int depth() const { return d_depthId; }
+    std::shared_ptr<FBO> fbo() const { return d_fbo; }
+    std::shared_ptr<TEX> texture() const { return d_texture; }
+    std::shared_ptr<RBO> depthBuffer() const { return d_depthBuffer; }
 
     int width() const { return d_width; }
     int height() const { return d_height; }

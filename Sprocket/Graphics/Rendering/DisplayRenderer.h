@@ -5,7 +5,6 @@
 #include "RenderOptions.h"
 #include "Quad.h"
 #include "Text.h"
-#include "ResourceManager.h"
 
 #include <memory>
 #include <unordered_map>
@@ -16,9 +15,6 @@ class DisplayRenderer
 {
     Window* d_window;
         // Non-owning pointer to the window to draw in.
-
-    ResourceManager* d_resourceManager;
-        // Non-owning reference to the resource mananger.
 
     Shader d_colourShader;
         // Shader used to draw a coloured Quad.
@@ -42,7 +38,7 @@ class DisplayRenderer
     FontPackage getFont(Font font);
 
 public:
-    DisplayRenderer(Window* window, ResourceManager* resourceManager);
+    DisplayRenderer(Window* window);
 
     void update() const;
 

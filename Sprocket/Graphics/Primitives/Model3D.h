@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Resources.h"
 
 #include <vector>
 #include <string>
@@ -18,14 +19,20 @@ using IndexBuffer = std::vector<unsigned int>;
 
 class Model3D
 {
-    unsigned int d_vaoId;
-    int          d_vertexCount;
+    std::shared_ptr<VAO> d_vao;
+    std::shared_ptr<VBO> d_vertexBuffer;
+    std::shared_ptr<VBO> d_indexBuffer;
+
+    int                  d_vertexCount;
+
+    std::shared_ptr<VBO> loadVertexBuffer(const Vertex3DBuffer& vertices);
+    std::shared_ptr<VBO> loadIndexBuffer(const IndexBuffer& indices);
 
 public:
-    Model3D(unsigned int vaoId, int vertexCount);
-    Model3D(const Model3D& model);
+    Model3D(const std::string& objFile);
+    Model3D(const Vertex3DBuffer& vertices, const IndexBuffer& indices);
+    Model3D(); // Empty model
 
-    unsigned int vaoId() const { return d_vaoId; }
     int vertexCount() const { return d_vertexCount; }
 
     void bind() const;

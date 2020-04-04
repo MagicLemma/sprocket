@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Resources.h"
 
 #include <vector>
 
@@ -16,13 +17,15 @@ using Vertex2DBuffer = std::vector<Vertex2D>;
 
 class Model2D 
 {
-    unsigned int d_vaoId;
-    int          d_vertexCount;
+    std::shared_ptr<VAO> d_vao;
+    std::shared_ptr<VBO> d_vertexBuffer;
+
+    int                  d_vertexCount;
 
 public:
-    Model2D(unsigned int vaoId, int vertexCount);
+    Model2D(const Vertex2DBuffer& vertices);
 
-    unsigned int vaoId() const { return d_vaoId; }
+    std::shared_ptr<VAO> vao() const { return d_vao; }
     int vertexCount() const { return d_vertexCount; }
 
     void bind() const;

@@ -3,7 +3,6 @@
 #include "Quad.h"
 #include "Model2D.h"
 #include "Maths.h"
-#include "ResourceManager.h"
 
 #include <functional>
 #include <vector>
@@ -44,7 +43,7 @@ class ColourPalette : public Widget
     void drawImpl(DisplayRenderer* renderer) const override;
 
 public:
-    ColourPalette(ResourceManager* resourceManager, float width, float height);
+    ColourPalette(float width, float height);
 
     void setCallback(ColourPaletteCallback cb) { d_callback = cb; }
 };

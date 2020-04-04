@@ -33,15 +33,14 @@ Vertex2DBuffer getQuad()
 
 }
 
-DisplayRenderer::DisplayRenderer(Window* window, ResourceManager* resourceManager)
+DisplayRenderer::DisplayRenderer(Window* window)
     : d_window(window)
-    , d_resourceManager(resourceManager)
     , d_colourShader("Resources/Shaders/DisplayQuad.vert",
                      "Resources/Shaders/DisplayQuad.frag")
     , d_characterShader("Resources/Shaders/DisplayCharacter.vert",
                         "Resources/Shaders/DisplayCharacter.frag")
-    , d_quad(resourceManager->loadModel2D(getQuad()))
-    , d_whiteTexture(resourceManager->loadTexture("Resources/Textures/White.png"))
+    , d_quad(getQuad())
+    , d_whiteTexture("Resources/Textures/White.png")
 {
     d_availableFonts.insert({Font::ARIAL, {"Resources/Fonts/Arial.fnt",
                                            "Resources/Fonts/Arial.png"}});
@@ -64,7 +63,7 @@ FontPackage DisplayRenderer::getFont(Font font)
     }
 
     SPKT_LOG_INFO("Loading a font!");
-    auto val = d_fonts.emplace(font, FontPackage(d_resourceManager, getFontName(font), it2->second.first, it2->second.second));
+    auto val = d_fonts.emplace(font, FontPackage(it2->second.first, it2->second.second));
     return val.first->second;
 }
 

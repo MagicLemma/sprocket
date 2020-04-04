@@ -16,8 +16,7 @@ Vertex2DBuffer getBuffer(const Texture& atlas,
     };
 }
     
-Character::Character(ResourceManager* resourceManager,
-                     const Texture& atlas,
+Character::Character(const Texture& atlas,
                      int id,
                      const Maths::vec2& texTopLeft,
                      float width,
@@ -30,7 +29,7 @@ Character::Character(ResourceManager* resourceManager,
     , d_xOffset(xOffset)
     , d_yOffset(yOffset)
     , d_advance(advance)
-    , d_model(resourceManager->loadModel2D(getBuffer(atlas, texTopLeft, width, height)))
+    , d_model(getBuffer(atlas, texTopLeft, width, height))
     , d_atlas(atlas)
 {
 }

@@ -13,11 +13,11 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
 
-            Graphics/ResourceManager.cpp
             Graphics/ObjParser.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
 
+            Graphics/Primitives/Resources.cpp
             Graphics/Primitives/Model2D.cpp
             Graphics/Primitives/Model3D.cpp
             Graphics/Primitives/Texture.cpp

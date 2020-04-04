@@ -5,15 +5,14 @@
 namespace Sprocket {
 namespace {
 
-Model2D getSegment(ResourceManager* resourceManager,
-                   const Maths::vec3& left, const Maths::vec3& right)
+Model2D getSegment(const Maths::vec3& left, const Maths::vec3& right)
 {
-    return resourceManager->loadModel2D({{
+    return {{
         {{1.0f, 1.0f}, {1.0f, 1.0f}, {0.5f, 0.5f, 0.5f}},
         {{1.0f, 0.0f}, {1.0f, 0.0f}, right},
         {{0.0f, 1.0f}, {0.0f, 1.0f}, {0.5f, 0.5f, 0.5f}},
         {{0.0f, 0.0f}, {0.0f, 0.0f}, left}
-    }});
+    }};
 }
 
 Maths::vec3 interpolateColour(const Maths::vec2& pos)
@@ -49,8 +48,7 @@ Maths::vec3 interpolateColour(const Maths::vec2& pos)
 
 }
 
-ColourPalette::ColourPalette(ResourceManager* resourceManager,
-                             float width, float height)
+ColourPalette::ColourPalette(float width, float height)
     : Widget(width, height)
     , d_paletteColour({0.0, 1.0, 1.0})
     , d_overallColour({1.0, 0.0, 0.0})
@@ -60,12 +58,12 @@ ColourPalette::ColourPalette(ResourceManager* resourceManager,
         6 * (width - 3 * s_border) / 7
     })
     , d_segments({
-        getSegment(resourceManager, {1.0, 0.0, 0.0}, {1.0, 1.0, 0.0}),
-        getSegment(resourceManager, {1.0, 1.0, 0.0}, {0.0, 1.0, 0.0}),
-        getSegment(resourceManager, {0.0, 1.0, 0.0}, {0.0, 1.0, 1.0}),
-        getSegment(resourceManager, {0.0, 1.0, 1.0}, {0.0, 0.0, 1.0}),
-        getSegment(resourceManager, {0.0, 0.0, 1.0}, {1.0, 0.0, 1.0}),
-        getSegment(resourceManager, {1.0, 0.0, 1.0}, {1.0, 0.0, 0.0})
+        getSegment({1.0, 0.0, 0.0}, {1.0, 1.0, 0.0}),
+        getSegment({1.0, 1.0, 0.0}, {0.0, 1.0, 0.0}),
+        getSegment({0.0, 1.0, 0.0}, {0.0, 1.0, 1.0}),
+        getSegment({0.0, 1.0, 1.0}, {0.0, 0.0, 1.0}),
+        getSegment({0.0, 0.0, 1.0}, {1.0, 0.0, 1.0}),
+        getSegment({1.0, 0.0, 1.0}, {1.0, 0.0, 0.0})
     })
     , d_palettePickerPosition({0.0, 0.0})
     , d_palettePicker({
@@ -78,18 +76,18 @@ ColourPalette::ColourPalette(ResourceManager* resourceManager,
         (width - 3 * s_border) / 7,
         6 * (width - 3 * s_border) / 7
     })
-    , d_top(resourceManager->loadModel2D({{
+    , d_top({{
         {{1.0f, 1.0f}, {1.0f, 1.0f}, {-1.0, 1.0, 0.0}},
         {{1.0f, 0.0f}, {1.0f, 0.0f}, {1.0, 1.0, 1.0}},
         {{0.0f, 1.0f}, {0.0f, 1.0f}, {-1.0, 1.0, 0.0}},
         {{0.0f, 0.0f}, {0.0f, 0.0f}, {1.0, 1.0, 1.0}}
-    }}))
-    , d_bottom(resourceManager->loadModel2D({{
+    }})
+    , d_bottom({{
         {{1.0f, 1.0f}, {1.0f, 1.0f}, {0.0, 0.0, 0.0}},
         {{1.0f, 0.0f}, {1.0f, 0.0f}, {-1.0, 1.0, 0.0}},
         {{0.0f, 1.0f}, {0.0f, 1.0f}, {0.0, 0.0, 0.0}},
         {{0.0f, 0.0f}, {0.0f, 0.0f}, {-1.0, 1.0, 0.0}}
-    }}))
+    }})
     , d_sliderPicker({
         {2 * s_border + 6 * (width - 3 * s_border) / 7 - (s_border / 2), s_border},
         (width - 3 * s_border) / 7 + s_border,

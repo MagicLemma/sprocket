@@ -1,17 +1,20 @@
 #pragma once
+#include "Resources.h"
+
+#include <array>
 
 namespace Sprocket {
 
 class CubeMap
 {
-    unsigned int d_textureId;
+    std::shared_ptr<TEX> d_texture;
 
     int d_width;
     int d_height;
     int d_bpp;
 
 public:
-    CubeMap(unsigned int textureId, int width, int height, int bpp);
+    CubeMap(const std::array<std::string, 6>& faceFiles);
 
     void bind() const;
     void unbind() const;

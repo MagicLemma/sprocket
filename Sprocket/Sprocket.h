@@ -24,7 +24,6 @@
 #include "Utility/Tokenize.h"
 
 // GRAPHICS
-#include "Graphics/ResourceManager.h"
 #include "Graphics/ObjParser.h"
 #include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
@@ -34,6 +33,7 @@
 #include "Graphics/PostProcessing/GaussianBlur.h"
 #include "Graphics/PostProcessing/Negative.h"
 
+#include "Graphics/Primitives/Resources.h"
 #include "Graphics/Primitives/Model2D.h"
 #include "Graphics/Primitives/Model3D.h"
 #include "Graphics/Primitives/Texture.h"

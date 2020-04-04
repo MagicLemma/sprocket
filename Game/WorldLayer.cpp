@@ -6,19 +6,18 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneI
     , d_entityRenderer(accessor.window())
     , d_terrainRenderer(accessor.window())
     , d_skyboxRenderer(accessor.window())
-    , d_postProcessor(accessor.resourceManager(), accessor.window()->width(), accessor.window()->height())
+    , d_postProcessor(accessor.window()->width(), accessor.window()->height())
 {
     using namespace Sprocket;
-    auto resourceManager = d_accessor.resourceManager();
 
-    Model3D plain = resourceManager->loadModel3D("Resources/Models/Plane.obj");
-    Model3D deagleModel = resourceManager->loadModel3D("Resources/Models/Deagle.obj");
-    Model3D cube = resourceManager->loadModel3D("Resources/Models/Cube.obj");
-    Model3D dragon = resourceManager->loadModel3D("Resources/Models/Dragon.obj");
+    Model3D plain("Resources/Models/Plane.obj");
+    Model3D deagleModel("Resources/Models/Deagle.obj");
+    Model3D cube("Resources/Models/Cube.obj");
+    Model3D dragon("Resources/Models/Dragon.obj");
 
-    Texture green = resourceManager->loadTexture("Resources/Textures/Green.PNG");
-    Texture space = resourceManager->loadTexture("Resources/Textures/Space.PNG");
-    Texture gray = resourceManager->loadTexture("Resources/Textures/PlainGray.PNG");
+    Texture green("Resources/Textures/Green.PNG");
+    Texture space("Resources/Textures/Space.PNG");
+    Texture gray("Resources/Textures/PlainGray.PNG");
 
     Material dullGray(gray);
     Material shinyGray(gray);
@@ -29,10 +28,10 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneI
     shinyGray.shineDamper(5);
 
     // Make the huge terrain.
-    d_info->terrains.push_back({resourceManager, field, {0.0f, 0.0f, 0.0f}});
-    d_info->terrains.push_back({resourceManager, field, {-50.0f, 0.0f, 0.0f}});
-    d_info->terrains.push_back({resourceManager, field, {0.0f, 0.0f, -50.0f}});
-    d_info->terrains.push_back({resourceManager, field, {-50.0f, 0.0f, -50.0f}});
+    d_info->terrains.push_back({field, {0.0f, 0.0f, 0.0f}});
+    d_info->terrains.push_back({field, {-50.0f, 0.0f, 0.0f}});
+    d_info->terrains.push_back({field, {0.0f, 0.0f, -50.0f}});
+    d_info->terrains.push_back({field, {-50.0f, 0.0f, -50.0f}});
 
     // Load complex models
     d_info->entities.push_back({deagleModel, shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1});

@@ -28,7 +28,7 @@ MainMenu::MainMenu(Sprocket::Accessor& accessor)
         {10.0, 10.0},
         10.0f
     )
-    , d_renderer(accessor.window(), accessor.resourceManager())
+    , d_renderer(accessor.window())
 {
     accessor.window()->setCursorVisibility(true);
 

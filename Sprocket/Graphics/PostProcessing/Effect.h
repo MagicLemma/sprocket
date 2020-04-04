@@ -3,7 +3,6 @@
 #include "Shader.h"
 #include "Model2D.h"
 #include "FrameBuffer.h"
-#include "ResourceManager.h"
 
 #include <vector>
 
@@ -22,8 +21,7 @@ protected:
         // Override this function to set any uniforms in the shader.
 
 public:
-    Effect(ResourceManager* resourceManager,
-           int width, int height, float scale,
+    Effect(int width, int height, float scale,
            const std::string& vertShader,
            const std::string& fragShader);
 

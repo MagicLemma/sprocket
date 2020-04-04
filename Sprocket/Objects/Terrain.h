@@ -2,7 +2,6 @@
 #include "Model3D.h"
 #include "Material.h"
 #include "Maths.h"
-#include "ResourceManager.h"
 
 namespace Sprocket {
 
@@ -17,8 +16,7 @@ class Terrain
     Model3D     d_model;
 
 public:
-    Terrain(ResourceManager* resourceManager,
-            const Material& material,
+    Terrain(const Material& material,
             const Maths::vec3& postition = Maths::vec3{0.0f});
 
     void bind() const;

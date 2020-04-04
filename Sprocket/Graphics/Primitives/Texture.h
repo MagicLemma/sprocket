@@ -1,4 +1,6 @@
 #pragma once
+#include "Resources.h"
+
 #include <memory>
 #include <string>
 
@@ -6,14 +8,14 @@ namespace Sprocket {
 
 class Texture
 {
-    unsigned int d_textureId;
+    std::shared_ptr<TEX> d_texture;
 
     int d_width;
     int d_height;
     int d_bpp;
 
 public:
-    Texture(unsigned int textureId, int width, int height, int bpp);
+    Texture(const std::string& pngFile);
 
     void bind() const;
     void unbind() const;

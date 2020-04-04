@@ -1,7 +1,6 @@
 #include "Terrain.h"
 #include "Log.h"
 #include "Maths.h"
-#include "ResourceManager.h"
 
 #include <cstdlib>
 
@@ -43,17 +42,15 @@ std::pair<Vertex3DBuffer, IndexBuffer> generateTerrain(
 
 }
 
-Terrain::Terrain(ResourceManager* resourceManager,
-                 const Material& material,
+Terrain::Terrain(const Material& material,
                  const Maths::vec3& postition)
     : d_material(material)
     , d_position(postition)
     , d_edge(51)
     , d_distance(1.0f)
-    , d_model(0, 0)
 {
     auto [vertices, indices] = generateTerrain(d_edge, d_distance);
-    d_model = resourceManager->loadModel3D(vertices, indices);
+    d_model = Model3D(vertices, indices);
 }
 
 void Terrain::bind() const

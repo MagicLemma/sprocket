@@ -6,8 +6,7 @@ namespace Sprocket {
 class Negative : public Effect
 {
 public:
-    Negative(ResourceManager* resourceManager,
-             int width, int height);
+    Negative(int width, int height);
 };
     
 }
