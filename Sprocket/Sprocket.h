@@ -8,6 +8,7 @@
 #include "Core/Layer.h"
 #include "Core/Scene.h"
 #include "Core/SceneManager.h"
+#include "Core/SceneLoader.h"
 #include "Core/Window.h"
 
 // EVENTS

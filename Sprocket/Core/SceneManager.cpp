@@ -5,7 +5,6 @@ namespace Sprocket {
 
 SceneManager::SceneManager()
     : d_scenes()
-    , d_activeScene(nullptr)
 {
 
 }
@@ -24,13 +23,8 @@ Scene* SceneManager::addScene(const std::string& name)
 
 bool SceneManager::setActiveScene(const std::string& name)
 {
-    auto scene = d_scenes.find(name);
-    if (scene == d_scenes.end()) {
-        SPKT_LOG_FATAL("Could not set {} as the scene as it does not exist!");
-        return false;
-    }
-
-    d_activeScene = scene->second.get();
+    d_activeSceneName = name;
+    return true;
 }
 
 bool SceneManager::doesSceneExist(const std::string& name) const
@@ -40,29 +34,30 @@ bool SceneManager::doesSceneExist(const std::string& name) const
 
 void SceneManager::update()
 {
-    if (!d_activeScene) {
-        SPKT_LOG_FATAL("No active scene to update!");
-        return;
-    }
-
-    d_activeScene->update();
+    d_scenes[d_activeSceneName]->update();
 }
 
 void SceneManager::handleEvent(const Event& event)
 {
-    if (d_activeScene) {
-        d_activeScene->handleEvent(event);
-    }
+    d_scenes[d_activeSceneName]->handleEvent(event);
 }
 
 void SceneManager::draw()
 {
-    if (!d_activeScene) {
-        SPKT_LOG_FATAL("No active scene to draw!");
-        return;
-    }
+    d_scenes[d_activeSceneName]->draw();
+}
 
-    d_activeScene->draw();
+void SceneManager::addJob(SceneManagerJob job)
+{
+    d_jobs.push_back(job);
+}
+
+void SceneManager::flushJobs()
+{
+    for (const auto& job : d_jobs) {
+        job(this);
+    }
+    d_jobs.clear();
 }
 
 }

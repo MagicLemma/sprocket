@@ -73,6 +73,7 @@ add_library(Sprocket STATIC
             Core/Layer.cpp
             Core/Scene.cpp
             Core/SceneManager.cpp
+            Core/SceneLoader.cpp
             Core/Window.cpp
 
             Events/Event.cpp

@@ -1,27 +1,10 @@
-#include "MainMenu.h"
+#include "LoadingScreen.h"
 
 #include "WorldSceneInfo.h"
 #include "WorldLayer.h"
 #include "UILayer.h"
 
-#include "LoadingScreen.h"
-
-#include <future>
-
-namespace {
-
-void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
-{
-    button->base().colour = {0.15625f, 0.15625f, 0.15625f};
-
-    button->buttonNormal().colour = {0.926f, 0.496f, 0.0f};
-    button->buttonHovered().colour = {0.926f, 0.63281f, 0.3242f};
-    button->buttonClicked().colour = {0.324f, 0.90625f, 0.5352f};
-}
-
-}
-
-MainMenu::MainMenu(Sprocket::Accessor& accessor)
+LoadingScreen::LoadingScreen(Sprocket::Accessor& accessor)
     : Layer(accessor, Status::NORMAL, true)
     , d_container(
         accessor.window()->width()/4.0f,
@@ -38,27 +21,23 @@ MainMenu::MainMenu(Sprocket::Accessor& accessor)
     d_container.addProperty<Sprocket::HorizontalConstraint>(Sprocket::HorizontalConstraint::Type::CENTRE, 1.0f);
     d_container.addProperty<Sprocket::VerticalConstraint>(Sprocket::VerticalConstraint::Type::CENTRE, 1.0f);
 
-    auto button = d_container.add<Sprocket::Button>(300.0f, 300.0f, 0.5f, 0.55f, 0.45f);
-    setButtonAttrs(button);
-
-    button->setUnclickCallback([&]() {
-        
-    });
+    auto text = d_container.add<Sprocket::TextBox>(300.0f, 300.0f, "Loading...");
+    text->base().colour = {0.15625f, 0.15625f, 0.15625f};
 }
 
-bool MainMenu::handleEventImpl(const Sprocket::Event& event)
+bool LoadingScreen::handleEventImpl(const Sprocket::Event& event)
 {
     return d_container.handleEvent(d_accessor.window(), event);
 }
 
-void MainMenu::updateImpl()
+void LoadingScreen::updateImpl()
 {
     d_accessor.window()->setCursorVisibility(true);
     d_renderer.update();
     d_container.update(d_accessor.window());
 }
 
-void MainMenu::drawImpl()
+void LoadingScreen::drawImpl()
 {
     d_container.draw(&d_renderer);
 }

@@ -72,7 +72,6 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
 
     chattyButton->setUnclickCallback([&]() {
         SPKT_LOG_WARN("Have a great day!");
-        d_accessor.setActiveScene("Main Menu");
     });
 
     auto cameraSwitchButton = d_container.add<Button>(
