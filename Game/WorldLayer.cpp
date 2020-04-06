@@ -1,14 +1,25 @@
 #include "WorldLayer.h"
 
-WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneInfo> info) 
-    : Sprocket::Layer(accessor, Status::NORMAL, false) 
-    , d_info(info)
+WorldLayer::WorldLayer(Sprocket::Accessor& accessor) 
+    : Sprocket::Layer(accessor, Status::NORMAL, false)
     , d_entityRenderer(accessor.window())
     , d_terrainRenderer(accessor.window())
     , d_skyboxRenderer(accessor.window())
     , d_postProcessor(accessor.window()->width(), accessor.window()->height())
+    , d_lens(accessor.window()->aspectRatio())
+    , d_camera(&d_firstCamera)
+    , d_skybox(Sprocket::Model3D("Resources/Models/Skybox.obj"),
+             Sprocket::CubeMap(
+                 {"Resources/Textures/Skybox/Skybox_X_Pos.png",
+                 "Resources/Textures/Skybox/Skybox_X_Neg.png",
+                 "Resources/Textures/Skybox/Skybox_Y_Pos.png",
+                 "Resources/Textures/Skybox/Skybox_Y_Neg.png",
+                 "Resources/Textures/Skybox/Skybox_Z_Pos.png",
+                 "Resources/Textures/Skybox/Skybox_Z_Neg.png"}))
 {
     using namespace Sprocket;
+
+    auto& entityManager = d_entityManager;
 
     Texture green("Resources/Textures/Green.PNG");
     Texture space("Resources/Textures/Space.PNG");
@@ -23,20 +34,38 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneI
     shinyGray.shineDamper(5);
 
     // Make the huge terrain.
-    d_info->terrains.push_back({field, {0.0f, 0.0f, 0.0f}});
-    d_info->terrains.push_back({field, {-50.0f, 0.0f, 0.0f}});
-    d_info->terrains.push_back({field, {0.0f, 0.0f, -50.0f}});
-    d_info->terrains.push_back({field, {-50.0f, 0.0f, -50.0f}});
+    d_terrains.push_back({field, {0.0f, 0.0f, 0.0f}});
+    d_terrains.push_back({field, {-50.0f, 0.0f, 0.0f}});
+    d_terrains.push_back({field, {0.0f, 0.0f, -50.0f}});
+    d_terrains.push_back({field, {-50.0f, 0.0f, -50.0f}});
 
     // Load complex models
-    d_info->entities.push_back({"Resources/Models/Deagle.obj", shinyGray, {0.0f, 2.0f, 0.0f}, {180.0f, 0.0f, 0.0f}, 1});
-    d_info->entities.push_back({"Resources/Models/Dragon.obj", shinyGray, {50.0f, 2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 3.0f});
-    
+    auto deagle = entityManager.addEntity();
+    auto comp = deagle->addComponent<ModelComponent>();
+    comp->model(Model3D("Resources/Models/Deagle.obj"));
+    comp->material(shinyGray);
+
+    auto pos = deagle->addComponent<PositionComponent>();
+    pos->position(Maths::vec3{0.0f, 2.0f, 0.0f});
+    pos->rotation(Maths::vec3{180.0f, 0.0f, 0.0f});
+    pos->scale(1.0f);
+
+    auto dragon = entityManager.addEntity();
+    dragon->addComponent<Sprocket::ModelComponent>(
+        Sprocket::Model3D("Resources/Models/Dragon.obj"),
+        shinyGray
+    );
+    dragon->addComponent<Sprocket::PositionComponent>(
+        Maths::vec3{50.0f, 2.0f, 0.0f},
+        Maths::vec3{0.0f, 0.0f, 0.0f},
+        3.0f
+    );
+
     // Load cubes to show the grid.
-    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    //d_info->entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
+    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
 
     // Seed with a real random value, if available
     //std::random_device r;
@@ -46,15 +75,15 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor, std::shared_ptr<BasicSceneI
 //
     //// Load a bunch of random cubes/
     //for (int i = 0; i != 100; ++i) {
-    //    d_info->entities.push_back({"Resources/Models/Cube.obj", shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
+    //    d_entities.push_back({"Resources/Models/Cube.obj", shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
     //}
 
     accessor.window()->setCursorVisibility(false);
 
-    d_info->lights.push_back({{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
-    d_info->lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
-    d_info->lights.push_back({{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
-    d_info->lights.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.push_back({{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.push_back({{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
 
     //d_postProcessor.addEffect<Negative>();
     d_postProcessor.addEffect<GaussianVert>();
@@ -68,35 +97,37 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_info->camera->handleEvent(d_accessor.window(), event);
-    d_info->lens.handleEvent(d_accessor.window(), event); 
+    if (d_entityManager.handleEvent(event)) {
+        return true;
+    }
+
+    d_camera->handleEvent(d_accessor.window(), event);
+    d_lens.handleEvent(d_accessor.window(), event); 
       
     return false;
 }
 
 void WorldLayer::updateImpl()
 {
-    d_status = d_info->paused ? Status::PAUSED : Status::NORMAL;
+    d_status = d_paused ? Status::PAUSED : Status::NORMAL;
 
     if (d_status == Status::NORMAL) {
         double tick = layerTicker();
 
-        d_info->lights[1].position.z = 50 * std::sin(tick);
-        d_info->lights[1].position.x = 50 * std::cos(tick);
+        d_entityManager.update();
 
-        d_info->lights[2].position.z = 60 * std::sin(-1.5f * tick);
-        d_info->lights[2].position.x = 60 * std::cos(-1.5f * tick);
+        d_lights[1].position.z = 50 * std::sin(tick);
+        d_lights[1].position.x = 50 * std::cos(tick);
 
-        d_info->lights[3].position.z = 60 * std::sin(8.0f * tick);
-        d_info->lights[3].position.x = 60 * std::cos(8.0f * tick);
+        d_lights[2].position.z = 60 * std::sin(-1.5f * tick);
+        d_lights[2].position.x = 60 * std::cos(-1.5f * tick);
 
-        d_info->camera->update(d_accessor.window(), deltaTime());
+        d_lights[3].position.z = 60 * std::sin(8.0f * tick);
+        d_lights[3].position.x = 60 * std::cos(8.0f * tick);
 
-        d_accessor.window()->setCursorVisibility(!d_info->cameraIsFirst);
+        d_camera->update(d_accessor.window(), deltaTime());
 
-        for (auto& entity : d_info->entities) {
-            entity.update();
-        }
+        d_accessor.window()->setCursorVisibility(!d_cameraIsFirst);
     }
     else {
         d_accessor.window()->setCursorVisibility(true);
@@ -106,7 +137,7 @@ void WorldLayer::updateImpl()
 
 void WorldLayer::drawImpl()
 {
-    if(d_info->paused) {
+    if(d_paused) {
         d_postProcessor.bind();
     }
     
@@ -114,21 +145,21 @@ void WorldLayer::drawImpl()
     options.wireframe = d_accessor.window()->isKeyDown(Sprocket::Keyboard::F) &&
                         d_status == Status::NORMAL;
     
-    d_entityRenderer.update(*d_info->camera, d_info->lens, d_info->lights, options);
-    d_terrainRenderer.update(*d_info->camera, d_info->lens, d_info->lights, options);
+    d_entityRenderer.update(*d_camera, d_lens, d_lights, options);
+    d_terrainRenderer.update(*d_camera, d_lens, d_lights, options);
 
-    for (const auto& entity: d_info->entities) {
+    for (auto entity: d_entityManager.entities()) {
         d_entityRenderer.draw(entity);
     }
 
-    for (const auto& terrain: d_info->terrains) {
+    for (const auto& terrain: d_terrains) {
         d_terrainRenderer.draw(terrain);
     }
-    d_skyboxRenderer.draw(d_info->skybox,
-                          *d_info->camera,
-                          d_info->lens);
+    d_skyboxRenderer.draw(d_skybox,
+                          *d_camera,
+                          d_lens);
     
-    if (d_info->paused) {
+    if (d_paused) {
         d_postProcessor.unbind();
         d_postProcessor.draw();
     }

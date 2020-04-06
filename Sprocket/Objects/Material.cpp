@@ -9,6 +9,14 @@ Material::Material(const Texture& texture)
 {
 }
 
+Material::Material()
+    : d_texture()
+    , d_shineDamper(1.0f)
+    , d_reflectivity(0.0f)
+{
+}
+
+
 void Material::bind() const
 {
     d_texture.bind();

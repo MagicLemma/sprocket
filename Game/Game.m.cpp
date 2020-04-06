@@ -1,6 +1,5 @@
 #include <Sprocket.h>
 #include "MainMenu.h"
-#include "WorldSceneInfo.h"
 #include "UILayer.h"
 #include "WorldLayer.h"
 
@@ -17,9 +16,8 @@ int main()
     Sprocket::Accessor accessor(&sceneManager, &window);
 
     auto world = sceneManager.addScene("World");
-    auto info = std::make_shared<BasicSceneInfo>(accessor);
-    world->add<WorldLayer>(accessor, info);
-    world->add<UILayer>(accessor, info);
+    auto worldLayer = world->add<WorldLayer>(accessor);
+    world->add<UILayer>(accessor, worldLayer.get());
     sceneManager.setActiveScene("World");
 
     Sprocket::FramerateTimer fps; // Helper class to log the fps.

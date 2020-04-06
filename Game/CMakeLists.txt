@@ -9,8 +9,7 @@ add_executable(Game
                LoadingScreen.cpp
                MainMenu.cpp
                WorldLayer.cpp
-               UILayer.cpp
-               WorldSceneInfo.cpp)
+               UILayer.cpp)
 
 target_link_libraries(Game PRIVATE Sprocket)
 target_include_directories(Game PUBLIC .)

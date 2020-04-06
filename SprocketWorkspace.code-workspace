@@ -75,7 +75,8 @@
 			"random": "cpp",
 			"resumable": "cpp",
 			"future": "cpp",
-			"optional": "cpp"
+			"optional": "cpp",
+			"bitset": "cpp"
 		}
 	}
 }

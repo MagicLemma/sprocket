@@ -16,6 +16,7 @@ class Texture
 
 public:
     Texture(const std::string& pngFile);
+    Texture();
 
     void bind() const;
     void unbind() const;

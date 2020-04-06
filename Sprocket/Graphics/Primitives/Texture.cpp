@@ -30,6 +30,11 @@ Texture::Texture(const std::string& pngFile)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+Texture::Texture()
+    : d_texture(nullptr)
+{
+}
+
 void Texture::bind() const
 {
     glActiveTexture(GL_TEXTURE0);

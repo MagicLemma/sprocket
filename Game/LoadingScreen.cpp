@@ -1,6 +1,5 @@
 #include "LoadingScreen.h"
 
-#include "WorldSceneInfo.h"
 #include "WorldLayer.h"
 #include "UILayer.h"
 

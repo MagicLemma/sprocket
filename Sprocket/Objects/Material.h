@@ -12,7 +12,8 @@ class Material
     float        d_reflectivity;
 
 public:
-    explicit Material(const Texture& texture);
+    Material(const Texture& texture);
+    Material();
 
     void bind() const;
     void unbind() const;

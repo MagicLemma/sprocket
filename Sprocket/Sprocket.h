@@ -48,12 +48,17 @@
 #include "Graphics/Rendering/Constraints/AspectConstraint.h"
 
 // OBJECTS
-#include "Objects/Entity.h"
 #include "Objects/Material.h"
 #include "Objects/Quad.h"
 #include "Objects/Light.h"
 #include "Objects/Terrain.h"
 #include "Objects/Skybox.h"
+
+#include "Objects/Entities/Entity.h"
+#include "Objects/Entities/EntityManager.h"
+#include "Objects/Entities/Component.h"
+#include "Objects/Entities/PositionComponent.h"
+#include "Objects/Entities/ModelComponent.h"
 
 #include "Objects/Cameras/Camera.h"
 #include "Objects/Cameras/FirstPersonCamera.h"

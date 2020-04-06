@@ -27,9 +27,9 @@ void setSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
 }
 
 UILayer::UILayer(Sprocket::Accessor& accessor,
-                 std::shared_ptr<BasicSceneInfo> info) 
+                 WorldLayer* worldLayer) 
     : Layer(accessor, Status::INACTIVE, true)
-    , d_info(info)
+    , d_worldLayer(worldLayer)
     , d_displayRenderer(accessor.window())
     , d_container(
         (float)accessor.window()->width()/4.0f,
@@ -80,13 +80,13 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
     setButtonAttrs(cameraSwitchButton);
 
     cameraSwitchButton->setUnclickCallback([&]() {  //unclick
-        if (d_info->cameraIsFirst) {
-            d_info->camera = &d_info->thirdCamera;
+        if (d_worldLayer->d_cameraIsFirst) {
+            d_worldLayer->d_camera = &d_worldLayer->d_thirdCamera;
         }
         else {
-            d_info->camera = &d_info->firstCamera;
+            d_worldLayer->d_camera = &d_worldLayer->d_firstCamera;
         }
-        d_info->cameraIsFirst = !d_info->cameraIsFirst;
+        d_worldLayer->d_cameraIsFirst = !d_worldLayer->d_cameraIsFirst;
     });
 
     auto textBox = d_container.add<TextBox>(
@@ -105,7 +105,7 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
     auto palette = d_container.add<ColourPalette>(300.0f, 300.0f);
     palette->base().colour = {0.15625f, 0.15625f, 0.15625f};
     palette->setCallback([&](const Maths::vec3& colour) {
-        for (auto& light : d_info->lights) {
+        for (auto& light : d_worldLayer->d_lights) {
             light.colour = colour;
         }
     });
@@ -115,8 +115,8 @@ bool UILayer::handleEventImpl(const Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
         if (e->key() == Sprocket::Keyboard::ESC) {
-            d_info->paused = !d_info->paused;
-            d_accessor.window()->setCursorVisibility(d_info->paused);
+            d_worldLayer->d_paused = !d_worldLayer->d_paused;
+            d_accessor.window()->setCursorVisibility(d_worldLayer->d_paused);
             return true;
         }
         else if (e->key() == Sprocket::Keyboard::E) {
@@ -140,7 +140,7 @@ bool UILayer::handleEventImpl(const Sprocket::Event& event)
 
 void UILayer::updateImpl()
 {
-    d_status = d_info->paused ? Status::NORMAL : Status::INACTIVE;
+    d_status = d_worldLayer->d_paused ? Status::NORMAL : Status::INACTIVE;
     d_displayRenderer.update();
 
     if (d_status == Status::NORMAL) {

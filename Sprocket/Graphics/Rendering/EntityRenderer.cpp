@@ -42,17 +42,26 @@ void EntityRenderer::update(const Camera& camera,
     d_shader.unbind();
 }
 
-void EntityRenderer::draw(const Entity& entity)
+void EntityRenderer::draw(std::shared_ptr<Entity> entity)
 {
+    if (!entity->hasComponent<ModelComponent>() || !entity->hasComponent<PositionComponent>()) {
+        return;
+    }
+
     d_shader.bind();
 
-    d_shader.loadUniform("transformMatrix", entity.transform());
-	d_shader.loadUniform("shineDamper", entity.material().shineDamper());
-	d_shader.loadUniform("reflectivity", entity.material().reflectivity());
+    auto modelComp = entity->getComponent<ModelComponent>();
+    auto posComp = entity->getComponent<PositionComponent>();
 
-    entity.bind();
-    glDrawElements(GL_TRIANGLES, entity.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
-    entity.unbind();
+    d_shader.loadUniform("transformMatrix", posComp.transform());
+	d_shader.loadUniform("shineDamper", modelComp.material().shineDamper());
+	d_shader.loadUniform("reflectivity", modelComp.material().reflectivity());
+
+    modelComp.material().bind();
+    modelComp.model().bind();
+    glDrawElements(GL_TRIANGLES, modelComp.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
+    modelComp.model().unbind();
+    modelComp.material().unbind();
 
     d_shader.unbind();
 }
