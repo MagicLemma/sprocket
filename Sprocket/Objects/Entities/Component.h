@@ -5,23 +5,20 @@
 
 namespace Sprocket {
 
-class Entity;
-class Component;
-
-using ComponentId = std::size_t;
-
-inline ComponentId idGenerator()
+inline std::size_t counter()
 {
-    static ComponentId id = 0;
+    static std::size_t id = 0;
     return ++id;
 }
 
 template <typename T>
-inline ComponentId getComponentTypeId() noexcept
+inline std::size_t getComponentTypeId() noexcept
 {
-    static ComponentId id = idGenerator();
+    static std::size_t id = counter();
     return id;
 }
+
+class Entity;
 
 class Component
 {
