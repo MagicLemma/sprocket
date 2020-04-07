@@ -61,6 +61,19 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         3.0f
     );
 
+    StaticBatcher sb("Resources/Models/Cube.obj");
+    sb.addTransform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
+    sb.addTransform({5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
+    sb.addTransform({10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
+    sb.addTransform({0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
+    
+    auto cubes = entityManager.addEntity();
+    cubes->addComponent<ModelComponent>(
+        sb.getModel3D(),
+        galaxy
+    );
+
+
     // Load cubes to show the grid.
     //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
     //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});

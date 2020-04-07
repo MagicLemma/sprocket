@@ -46,16 +46,22 @@ void EntityRenderer::update(const Camera& camera,
 
 void EntityRenderer::draw(std::shared_ptr<Entity> entity)
 {
-    if (!entity->hasComponent<ModelComponent>() || !entity->hasComponent<PositionComponent>()) {
+    // Entities without a ModelComponent have nothing to render.
+    if (!entity->hasComponent<ModelComponent>()) {
         return;
     }
 
     d_shader.bind();
 
     auto modelComp = entity->getComponent<ModelComponent>();
-    auto posComp = entity->getComponent<PositionComponent>();
 
-    d_shader.loadUniform("transformMatrix", posComp.transform());
+    // If this Entity has a Position component, use the transform on that.
+    Maths::mat4 transform = Maths::mat4(1.0f);
+    if (entity->hasComponent<PositionComponent>()) {
+        transform = entity->getComponent<PositionComponent>().transform();
+    }
+
+    d_shader.loadUniform("transformMatrix", transform);
 	d_shader.loadUniform("shineDamper", modelComp.material().shineDamper());
 	d_shader.loadUniform("reflectivity", modelComp.material().reflectivity());
 

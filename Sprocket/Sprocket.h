@@ -27,6 +27,7 @@
 #include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Model3DLoader.h"
+#include "Graphics/StaticBatcher.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"
