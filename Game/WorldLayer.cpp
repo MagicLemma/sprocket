@@ -50,27 +50,34 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     pos->rotation(Maths::vec3{180.0f, 0.0f, 0.0f});
     pos->scale(1.0f);
 
-    auto dragon = entityManager.addEntity();
-    dragon->addComponent<Sprocket::ModelComponent>(
-        Sprocket::Model3D("Resources/Models/Dragon.obj"),
-        shinyGray
-    );
-    dragon->addComponent<Sprocket::PositionComponent>(
-        Maths::vec3{50.0f, 2.0f, 0.0f},
-        Maths::vec3{0.0f, 0.0f, 0.0f},
-        3.0f
-    );
+    //auto dragon = entityManager.addEntity();
+    //dragon->addComponent<Sprocket::ModelComponent>(
+    //    Sprocket::Model3D("Resources/Models/Dragon.obj"),
+    //    shinyGray
+    //);
+    //dragon->addComponent<Sprocket::PositionComponent>(
+    //    Maths::vec3{50.0f, 2.0f, 0.0f},
+    //    Maths::vec3{0.0f, 0.0f, 0.0f},
+    //    3.0f
+    //);
 
+    std::random_device r;
+    std::default_random_engine e1(r());
+    std::uniform_real_distribution<float> udist(-500, 500);
+    std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
+
+    // Load a bunch of random cubes
     StaticBatcher sb("Resources/Models/Cube.obj");
-    sb.addTransform({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
-    sb.addTransform({5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
-    sb.addTransform({10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
-    sb.addTransform({0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f);
+    for (int i = 0; i != 250000; ++i) {
+        sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
+                        {urot(e1), urot(e1), urot(e1)},
+                        1.0f);
+    }
     
     auto cubes = entityManager.addEntity();
     cubes->addComponent<ModelComponent>(
         sb.getModel3D(),
-        galaxy
+        shinyGray
     );
 
 
