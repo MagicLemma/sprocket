@@ -16,6 +16,7 @@ class Texture
 
 public:
     Texture(const std::string& pngFile);
+    Texture(int width, int height, const std::vector<unsigned char>& data);
     Texture();
 
     void bind() const;
@@ -24,6 +25,9 @@ public:
     int width() const { return d_width; }
     int height() const { return d_height; }
     int bpp() const { return d_bpp; }
+
+    // Standard texture builders
+    static Texture white();
 };
 
 }

@@ -18,9 +18,7 @@ struct Quad
     float       height;
 
     // Visuals
-    std::optional<Texture> texture = {};
-        // If no texture is provided, a plain white texture is used.
-        
+    Texture texture = Texture();        
     Colour colour = Colour{1.0, 1.0, 1.0};
     float opacity = 1.0f;
     float roundness = 0.0f;

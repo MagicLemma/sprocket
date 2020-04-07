@@ -104,12 +104,12 @@ void DisplayRenderer::draw(const Quad& quad, const Model2D& model) const
     d_colourShader.loadUniform("roundness", quad.roundness);
     d_colourShader.loadUniform("greyscale", quad.greyscale ? 1.0f : 0.0f);
 
-    quad.texture.value_or(d_whiteTexture).bind();
+    quad.texture.bind();
     model.bind();
     glDrawArrays(GL_TRIANGLE_STRIP
     , 0, 4);
     model.unbind();
-    quad.texture.value_or(d_whiteTexture).unbind();
+    quad.texture.unbind();
 
     d_colourShader.unbind();
     glDisable(GL_BLEND);
