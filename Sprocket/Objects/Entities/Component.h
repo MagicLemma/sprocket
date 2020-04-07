@@ -23,10 +23,6 @@ inline ComponentId getComponentTypeId() noexcept
     return id;
 }
 
-constexpr std::size_t maxComponents = 64;
-
-using ComponentArray = std::array<Component*, maxComponents>;
-
 class Component
 {
 protected:

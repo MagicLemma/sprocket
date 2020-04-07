@@ -1,26 +1,19 @@
 #pragma once
-#include "Model3D.h"
-#include "Material.h"
-#include "Maths.h"
-#include "Model3DLoader.h"
-#include "PositionComponent.h"
-#include "ModelComponent.h"
 #include "Component.h"
 
 #include <vector>
 #include <memory>
+#include <array>
+#include <utility>
 
 namespace Sprocket {
 
+constexpr std::size_t MAX_COMPONENTS = 64;
+
 class Entity
 {
-    // Iteration data structures
-    std::vector<std::shared_ptr<Component>> d_components;
-        // Components stored contiguously for internal iteration. 
-
-    // Index lookup data structures
-    ComponentArray  d_componentPtrs;
-        // Pointers to the Components with indices matching the bitset.
+    std::vector<std::shared_ptr<Component>> d_components;  // Iteration and ownership
+    std::array<Component*, MAX_COMPONENTS> d_componentPtrs;  // Index lookup
 
 public:
     Entity();
@@ -28,26 +21,35 @@ public:
     void update();
     bool handleEvent(const Event& event);
 
-    template <typename T> bool hasComponent() const
-    {
-        return d_componentPtrs[getComponentTypeId<T>()] != nullptr;
-    }
-
     template <typename T, typename... Args>
-    std::shared_ptr<T> addComponent(Args&&... args)
-    {
-        auto component = std::make_shared<T>(std::forward<Args>(args)...);
-        component->setOwner(this);
-        d_components.emplace_back(component);
-        d_componentPtrs[getComponentTypeId<T>()] = component.get();
-        return component;
-    }
+    T* addComponent(Args&&... args);
 
-    template <typename T> T& getComponent() const
-    {
-        auto component = d_componentPtrs[getComponentTypeId<T>()];
-        return *static_cast<T*>(component);
-    }
+    template <typename T>
+    bool hasComponent() const;
+
+    template <typename T>
+    T& getComponent() const;
 };
+
+template <typename T, typename... Args>
+T* Entity::addComponent(Args&&... args)
+{
+    auto component = std::make_shared<T>(std::forward<Args>(args)...);
+    component->setOwner(this);
+    d_components.emplace_back(component);
+    d_componentPtrs[getComponentTypeId<T>()] = component.get();
+    return component.get();
+}
+
+template <typename T> bool Entity::hasComponent() const
+{
+    return d_componentPtrs[getComponentTypeId<T>()] != nullptr;
+}
+
+template <typename T> T& Entity::getComponent() const
+{
+    auto component = d_componentPtrs[getComponentTypeId<T>()];
+    return *static_cast<T*>(component);
+}
 
 }

@@ -1,5 +1,7 @@
 #include "EntityRenderer.h"
 #include "Maths.h"
+#include "ModelComponent.h"
+#include "PositionComponent.h"
 
 #include <glad/glad.h>
 
