@@ -20,7 +20,9 @@ class StaticBatcher
 public:
     StaticBatcher(const std::string& objFile);
 
-    void addTransform(const Maths::vec3& position, const Maths::vec3& rotation, float scale);
+    void addTransform(const Maths::vec3& position,
+                      const Maths::vec3& rotation,
+                      float scale);
 
     Model3D getModel3D();
 };

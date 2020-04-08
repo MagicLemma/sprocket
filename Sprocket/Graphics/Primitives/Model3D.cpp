@@ -5,32 +5,50 @@
 
 namespace Sprocket {
 
-Model3D::Model3D(const std::string& objFile)
-    : d_vao(std::make_shared<VAO>())
+Model3D::Model3D(const std::string& objFile,
+                 bool storeGPU,
+                 bool storeCPU)
 {
     SPKT_LOG_INFO("Loading model '{}'", objFile);
     auto [vertices, indices] = parseObjFile(objFile);
     d_vertexCount = indices.size();
+
+    if (storeGPU) {
+        d_vao = std::make_shared<VAO>();
+        glBindVertexArray(d_vao->value());
+        d_vertexBuffer = loadVertexBuffer(vertices);
+        d_indexBuffer = loadIndexBuffer(indices);
+        glBindVertexArray(0);
+    }
     
-    glBindVertexArray(d_vao->value());
-    d_vertexBuffer = loadVertexBuffer(vertices);
-    d_indexBuffer = loadIndexBuffer(indices);
-    glBindVertexArray(0);
+    if (storeCPU) {
+        d_vertexData = vertices;
+        d_indexData = indices;
+    }
 }
 
-Model3D::Model3D(const Vertex3DBuffer& vertices, const IndexBuffer& indices)
-    : d_vao(std::make_shared<VAO>())
-    , d_vertexCount(indices.size())
+Model3D::Model3D(const Vertex3DBuffer& vertices,
+                 const IndexBuffer& indices,
+                 bool storeGPU,
+                 bool storeCPU)
+    : d_vertexCount(indices.size())
 {
-    glBindVertexArray(d_vao->value());
-    d_vertexBuffer = loadVertexBuffer(vertices);
-    d_indexBuffer = loadIndexBuffer(indices);
-    glBindVertexArray(0);
+    if (storeGPU) {
+        d_vao = std::make_shared<VAO>();
+        glBindVertexArray(d_vao->value());
+        d_vertexBuffer = loadVertexBuffer(vertices);
+        d_indexBuffer = loadIndexBuffer(indices);
+        glBindVertexArray(0);
+    }
+    
+    if (storeCPU) {
+        d_vertexData = vertices;
+        d_indexData = indices;
+    }
 }
 
 Model3D::Model3D()
-    : d_vao(nullptr)
-    , d_vertexCount(0)
+    : d_vertexCount(0)
 {
 }
 
@@ -83,6 +101,12 @@ std::shared_ptr<VBO> Model3D::loadIndexBuffer(const IndexBuffer& indices)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
     return indexBuffer;
+}
+
+void Model3D::clear()
+{
+    d_vertexData.clear();
+    d_indexData.clear();
 }
 
 }
