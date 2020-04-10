@@ -32,7 +32,7 @@ std::string MouseButtonReleasedEvent::toString() const
 	return ss.str();
 }
 
-MouseMovedEvent::MouseMovedEvent(double xPos, double yPos)
+MouseMovedEvent::MouseMovedEvent(float xPos, float yPos)
 	: d_xPos(xPos)
 	, d_yPos(yPos)
 {
@@ -45,7 +45,7 @@ std::string MouseMovedEvent::toString() const
 	return ss.str();
 }
 
-MouseScrolledEvent::MouseScrolledEvent(double xOffset, double yOffset)
+MouseScrolledEvent::MouseScrolledEvent(float xOffset, float yOffset)
 	: d_xOffset(xOffset)
 	, d_yOffset(yOffset)
 {

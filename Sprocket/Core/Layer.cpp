@@ -18,7 +18,7 @@ bool Layer::isActive() const
 }
 
 
-double Layer::layerTicker() const
+float Layer::layerTicker() const
 {
     return d_ticker;
 }

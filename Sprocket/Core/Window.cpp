@@ -123,14 +123,16 @@ Window::Window(
 	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double xPos, double yPos) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		MouseMovedEvent event(xPos, yPos);
+		MouseMovedEvent event(static_cast<float>(xPos),
+		                      static_cast<float>(yPos));
 		data->callback(event);
 	});
 
 	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double xOffset, double yOffset) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		MouseScrolledEvent event(xOffset, yOffset);
+		MouseScrolledEvent event(static_cast<float>(xOffset),
+		                         static_cast<float>(yOffset));
 		data->callback(event);
 	});
 

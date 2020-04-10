@@ -37,30 +37,30 @@ public:
 
 class MouseMovedEvent : public Event
 {
-	double d_xPos;
-	double d_yPos;
+	float d_xPos;
+	float d_yPos;
 
 public:
-	MouseMovedEvent(double xPos, double yPos);
+	MouseMovedEvent(float xPos, float yPos);
 	virtual int categoryFlags() const override { return MOUSE; }
 	std::string toString() const override;
 
-	double xPos() const { return d_xPos; }
-	double yPos() const { return d_yPos; }
+	float xPos() const { return d_xPos; }
+	float yPos() const { return d_yPos; }
 };
 
 class MouseScrolledEvent : public Event
 {
-	double d_xOffset;
-	double d_yOffset;
+	float d_xOffset;
+	float d_yOffset;
 
 public:
-	MouseScrolledEvent(double xOffset, double yOffset);
+	MouseScrolledEvent(float xOffset, float yOffset);
 	virtual int categoryFlags() const override { return MOUSE | INPUT; }
 	std::string toString() const override;
 
-	double xOffset() const { return d_xOffset; }
-	double yOffset() const { return d_yOffset; }
+	float xOffset() const { return d_xOffset; }
+	float yOffset() const { return d_yOffset; }
 };
 
 }

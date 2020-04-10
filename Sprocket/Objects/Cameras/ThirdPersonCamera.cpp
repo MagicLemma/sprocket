@@ -61,7 +61,7 @@ void ThirdPersonCamera::update(Window* window, float timeDelta)
 
     if (d_position.y != d_absoluteVerticalPosition) {
         float distance = d_absoluteVerticalPosition - d_position.y;
-        d_position.y += distance * 0.1;
+        d_position.y += distance * 0.1f;
     }
 }
 

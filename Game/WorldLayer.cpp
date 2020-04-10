@@ -139,18 +139,18 @@ void WorldLayer::updateImpl()
     d_status = d_paused ? Status::PAUSED : Status::NORMAL;
 
     if (d_status == Status::NORMAL) {
-        double tick = layerTicker();
+        float tick = layerTicker();
 
         d_entityManager.update();
 
-        d_lights[1].position.z = 50 * std::sin(tick);
-        d_lights[1].position.x = 50 * std::cos(tick);
+        d_lights[1].position.z = 50.0f * std::sin(tick);
+        d_lights[1].position.x = 50.0f * std::cos(tick);
 
-        d_lights[2].position.z = 60 * std::sin(-1.5f * tick);
-        d_lights[2].position.x = 60 * std::cos(-1.5f * tick);
+        d_lights[2].position.z = 60.0f * std::sin(-1.5f * tick);
+        d_lights[2].position.x = 60.0f * std::cos(-1.5f * tick);
 
-        d_lights[3].position.z = 60 * std::sin(8.0f * tick);
-        d_lights[3].position.x = 60 * std::cos(8.0f * tick);
+        d_lights[3].position.z = 60.0f * std::sin(8.0f * tick);
+        d_lights[3].position.x = 60.0f * std::cos(8.0f * tick);
 
         d_camera->update(d_accessor.window(), deltaTime());
 

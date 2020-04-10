@@ -49,7 +49,7 @@ public:
 
     Model3D(); // Empty model
 
-    int vertexCount() const { return d_indexData->size(); }
+    std::size_t vertexCount() const { return d_indexData->size(); }
 
     // GPU STORAGE ACCESS
     void bind() const;

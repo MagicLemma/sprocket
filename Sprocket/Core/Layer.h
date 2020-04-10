@@ -7,7 +7,7 @@ namespace Sprocket {
 
 class Layer
 {
-    double d_ticker;
+    float d_ticker;
         // A steadily increasing ticker. Increases in the same
         // way as d_lastFrame but only when the layer status
         // is NORMAL.
@@ -68,11 +68,11 @@ public:
     // Helper Functions
     bool isActive() const;
 
-    double layerTicker() const;
+    float layerTicker() const;
         // Returns d_ticker, a steadily increasing value bound to the
         // framerate.
 
-    float  deltaTime() const { return d_deltaTime; }
+    float deltaTime() const { return d_deltaTime; }
 
     void setAccessor(const Accessor& accessor);
 };
