@@ -10,8 +10,9 @@ namespace Sprocket {
 struct Vertex3D
 {
     Maths::vec3 position;
-    Maths::vec2 texture;
     Maths::vec3 normal;
+    Maths::vec2 textureCoords;
+    float       textureIndex;
 };
 
 using Vertex3DBuffer = std::vector<Vertex3D>;
@@ -23,34 +24,20 @@ class Model3D
     std::shared_ptr<VAO> d_vao;
     std::shared_ptr<VBO> d_vertexBuffer;
     std::shared_ptr<VBO> d_indexBuffer;
-        // The VBOs are not needed again after the attrib pointers in the
-        // VAO are set. They are kept here so that this Model object can
-        // manage their lifetimes; they are cleaned up when this Model
-        // destructs.
 
     // CPU STORAGE
-    Vertex3DBuffer d_vertexData;
-    IndexBuffer    d_indexData;
-        // If keepBuffers is true when constructing this Model3D, these
-        // store the vertex and index data that has also been loaded into
-        // the VBOs above. This can be used for batching. If keepBuffers is
-        // false, these are empty.
-
-    int d_vertexCount;
+    std::shared_ptr<Vertex3DBuffer> d_vertexData;
+    std::shared_ptr<IndexBuffer>    d_indexData;
 
     std::shared_ptr<VBO> loadVertexBuffer(const Vertex3DBuffer& vertices);
     std::shared_ptr<VBO> loadIndexBuffer(const IndexBuffer& indices);
 
 public:
     // CONSTRUCTORS
-    Model3D(const std::string& objFile,
-            bool storeGPU = true,
-            bool storeCPU = false);
+    Model3D(const std::string& objFile);
 
     Model3D(const Vertex3DBuffer& vertices,
-            const IndexBuffer& indices,
-            bool storeGPU = true,
-            bool storeCPU = false);
+            const IndexBuffer& indices);
 
         // If storeGPU is true, a VAO and two VBOs are created, and the data
         // is loaded in and the layouts set. These may be used by binding the
@@ -62,16 +49,17 @@ public:
 
     Model3D(); // Empty model
 
-    int vertexCount() const { return d_vertexCount; }
+    int vertexCount() const { return d_indexData->size(); }
 
     // GPU STORAGE ACCESS
     void bind() const;
     void unbind() const;
 
     // CPU STORAGE ACCESS
-    const Vertex3DBuffer& vertexBuffer() const { return d_vertexData; }
-    const IndexBuffer& indexBuffer() const { return d_indexData; }
-    void clear(); // Empties d_vertexData and d_indexData.
+    const Vertex3DBuffer& vertexBuffer() const { return *d_vertexData.get(); }
+    const IndexBuffer& indexBuffer() const { return *d_indexData.get(); }
+
+    bool operator==(const Model3D& other) const;
 };
 
 }

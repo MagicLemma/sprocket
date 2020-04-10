@@ -24,7 +24,7 @@ Texture::Texture(const std::string& pngFile)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTexImage2D(GL_TEXTURE_2D,
-                 0, GL_RGBA, d_width, d_height,
+                 0, GL_RGBA8, d_width, d_height,
                  0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     
     stbi_image_free(data);
@@ -59,21 +59,27 @@ Texture::Texture()
 {
 }
 
-void Texture::bind() const
+void Texture::bind(int slot) const
 {
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, d_texture->value());
+    d_slot = slot;
+    glBindTextureUnit(slot, d_texture->value());
 }
 
 void Texture::unbind() const
 {
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTextureUnit(d_slot, 0);
+    d_slot = -1;
 }
 
 Texture Texture::white()
 {
     static const Texture white(1, 1, {0xff, 0xff, 0xff, 0x55});
     return white;
+}
+
+bool Texture::operator==(const Texture& other) const
+{
+    return d_texture->value() == other.d_texture->value();
 }
 
 }

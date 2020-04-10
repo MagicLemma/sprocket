@@ -15,7 +15,7 @@ public:
     Material(const Texture& texture);
     Material();
 
-    void bind() const;
+    void bind(int index = 0) const;
     void unbind() const;
 
     float shineDamper() const { return d_shineDamper; }
@@ -23,6 +23,8 @@ public:
 
     float reflectivity() const { return d_reflectivity; }
     void reflectivity(float newReflectivity) { d_reflectivity = newReflectivity; } 
+
+    bool operator==(const Material& other) const;
 };
 
 }

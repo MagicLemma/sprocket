@@ -5,50 +5,35 @@
 
 namespace Sprocket {
 
-Model3D::Model3D(const std::string& objFile,
-                 bool storeGPU,
-                 bool storeCPU)
+Model3D::Model3D(const std::string& objFile)
 {
     SPKT_LOG_INFO("Loading model '{}'", objFile);
     auto [vertices, indices] = parseObjFile(objFile);
-    d_vertexCount = indices.size();
 
-    if (storeGPU) {
-        d_vao = std::make_shared<VAO>();
-        glBindVertexArray(d_vao->value());
-        d_vertexBuffer = loadVertexBuffer(vertices);
-        d_indexBuffer = loadIndexBuffer(indices);
-        glBindVertexArray(0);
-    }
-    
-    if (storeCPU) {
-        d_vertexData = vertices;
-        d_indexData = indices;
-    }
+    d_vao = std::make_shared<VAO>();
+    glBindVertexArray(d_vao->value());
+    d_vertexBuffer = loadVertexBuffer(vertices);
+    d_indexBuffer = loadIndexBuffer(indices);
+    glBindVertexArray(0);
+
+    d_vertexData = std::make_shared<Vertex3DBuffer>(vertices);
+    d_indexData = std::make_shared<IndexBuffer>(indices);
 }
 
 Model3D::Model3D(const Vertex3DBuffer& vertices,
-                 const IndexBuffer& indices,
-                 bool storeGPU,
-                 bool storeCPU)
-    : d_vertexCount(indices.size())
+                 const IndexBuffer& indices)
 {
-    if (storeGPU) {
-        d_vao = std::make_shared<VAO>();
-        glBindVertexArray(d_vao->value());
-        d_vertexBuffer = loadVertexBuffer(vertices);
-        d_indexBuffer = loadIndexBuffer(indices);
-        glBindVertexArray(0);
-    }
-    
-    if (storeCPU) {
-        d_vertexData = vertices;
-        d_indexData = indices;
-    }
+    d_vao = std::make_shared<VAO>();
+    glBindVertexArray(d_vao->value());
+    d_vertexBuffer = loadVertexBuffer(vertices);
+    d_indexBuffer = loadIndexBuffer(indices);
+    glBindVertexArray(0);
+
+    d_vertexData = std::make_shared<Vertex3DBuffer>(vertices);
+    d_indexData = std::make_shared<IndexBuffer>(indices);
 }
 
 Model3D::Model3D()
-    : d_vertexCount(0)
 {
 }
 
@@ -64,14 +49,15 @@ void Model3D::bind() const
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
 }
 
 void Model3D::unbind() const
 {
-    
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
     glBindVertexArray(0);
 }
 
@@ -84,12 +70,15 @@ std::shared_ptr<VBO> Model3D::loadVertexBuffer(const Vertex3DBuffer& vertices)
     // Set Vertex Attributes in the VAO
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
                           (void*)offsetof(Vertex3D, position));
-                                           
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          (void*)offsetof(Vertex3D, texture));
 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
                           (void*)offsetof(Vertex3D, normal));
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, textureCoords));
+
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, textureIndex));
 
     return vertexBuffer;
 }
@@ -103,10 +92,10 @@ std::shared_ptr<VBO> Model3D::loadIndexBuffer(const IndexBuffer& indices)
     return indexBuffer;
 }
 
-void Model3D::clear()
+bool Model3D::operator==(const Model3D& other) const
 {
-    d_vertexData.clear();
-    d_indexData.clear();
+    // Two models are the same if they point to the same VAO.
+    return d_vao->value() == other.d_vao->value();
 }
 
 }

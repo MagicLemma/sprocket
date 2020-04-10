@@ -14,12 +14,14 @@ class Texture
     int d_height;
     int d_bpp;
 
+    mutable int d_slot = -1;
+
 public:
     Texture(const std::string& pngFile);
     Texture(int width, int height, const std::vector<unsigned char>& data);
     Texture();
 
-    void bind() const;
+    void bind(int slot = 0) const;
     void unbind() const;
 
     int width() const { return d_width; }
@@ -28,6 +30,8 @@ public:
 
     // Standard texture builders
     static Texture white();
+
+    bool operator==(const Texture& other) const;
 };
 
 }

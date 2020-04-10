@@ -1,30 +1,32 @@
 #version 400 core
 
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec2 texture;
-layout(location = 2) in vec3 normal;
+layout(location = 0) in vec3  position;
+layout(location = 1) in vec3  normal;
+layout(location = 2) in vec2  texture_coords;
+layout(location = 3) in float texture_index;
 
-out vec2 d_texture;
-out vec3 surfaceNormal;
-out vec3 toLightVectors[5];
-out vec3 toCameraVector;
+out vec2  p_texture_coords;
+out float p_texture_index;
+out vec3  p_surface_normal;
+out vec3  p_to_camera_vector;
+out vec3  p_to_light_vector[5];
 
-uniform mat4 transformMatrix;
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-
-uniform vec3 lightPositions[5];
+uniform mat4 u_model_matrix;
+uniform mat4 u_proj_matrix;
+uniform mat4 u_view_matrix;
+uniform vec3 u_light_pos[5];
 
 void main()
 {
-    vec4 worldPosition = transformMatrix * vec4(position, 1.0);
-    gl_Position = projectionMatrix * viewMatrix * worldPosition;
-    d_texture = texture;
-
-    surfaceNormal = (transformMatrix * vec4(normal, 0.0)).xyz;
-    toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
+    vec4 world_pos = u_model_matrix * vec4(position, 1.0);
+    gl_Position = u_proj_matrix * u_view_matrix * world_pos;
+    
+    p_texture_coords = texture_coords;
+    p_texture_index  = texture_index;
+    p_surface_normal = (u_model_matrix * vec4(normal, 0.0)).xyz;
+    p_to_camera_vector = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
 
     for (int i = 0; i != 5; i++) {
-        toLightVectors[i] = lightPositions[i] - worldPosition.xyz;
+        p_to_light_vector[i] = u_light_pos[i] - world_pos.xyz;
     }
 }

@@ -117,16 +117,16 @@ std::pair<Vertex3DBuffer, IndexBuffer> parseObjFile(const std::string& objFile)
                     Maths::vec2 texCoord = tempTexCoords[texIdx];
                     Maths::vec3 normal   = tempNormals[norIdx];
 
-                    Vertex3D newVertex = {
-                        Maths::vec3{position.x, position.y, position.z},
-                        Maths::vec2{texCoord.x, texCoord.y},
-                        Maths::vec3{normal.x, normal.y, normal.z}
-                    };
+                    Vertex3D v;
+                    v.position      = Maths::vec3{position.x, position.y, position.z};
+                    v.normal        = Maths::vec3{normal.x, normal.y, normal.z};
+                    v.textureCoords = Maths::vec2{texCoord.x, texCoord.y};
+                    v.textureIndex  = 0.0f;
 
                     unsigned int newVertexIdx = (unsigned int)vertices.size();
 
                     indices.push_back(newVertexIdx);
-                    vertices.push_back(newVertex);
+                    vertices.push_back(v);
                     seenFaces[vertex] = newVertexIdx;
                 }
             }

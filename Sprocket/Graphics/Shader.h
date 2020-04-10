@@ -29,6 +29,8 @@ public:
 
     ~Shader();
 
+    unsigned int id() const { return d_programId; }
+
     void bind() const;
     void unbind() const;
 

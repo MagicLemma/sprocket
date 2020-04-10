@@ -17,14 +17,21 @@ Material::Material()
 }
 
 
-void Material::bind() const
+void Material::bind(int index) const
 {
-    d_texture.bind();
+    d_texture.bind(index);
 }
 
 void Material::unbind() const
 {
     d_texture.unbind();
+}
+
+bool Material::operator==(const Material& other) const
+{
+    return d_texture == other.d_texture
+        && d_shineDamper == other.d_shineDamper
+        && d_reflectivity == other.d_reflectivity;
 }
 
 }

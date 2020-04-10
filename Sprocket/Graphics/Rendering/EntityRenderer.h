@@ -7,6 +7,8 @@
 #include "Shader.h"
 #include "RenderOptions.h"
 
+#include "Texture.h"
+
 namespace Sprocket {
 
 class EntityRenderer
@@ -30,7 +32,7 @@ public:
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
 
-    void draw(std::shared_ptr<Entity> entity);
+    void draw(std::shared_ptr<Entity> entity, const Texture& tex2);
 };
 
 }

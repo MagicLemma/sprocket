@@ -57,6 +57,12 @@ Window::Window(
 	// Initialise GLAD
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
+	int versionMajor;
+	int versionMinor;
+	glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
+	glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
+	SPKT_LOG_INFO("OpenGL version: {}.{}", versionMajor, versionMinor);
+
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
 	{

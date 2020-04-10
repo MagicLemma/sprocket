@@ -22,7 +22,8 @@ public:
 
     void addTransform(const Maths::vec3& position,
                       const Maths::vec3& rotation,
-                      float scale);
+                      float scale,
+                      float textureIndex);
 
     Model3D getModel3D();
 };

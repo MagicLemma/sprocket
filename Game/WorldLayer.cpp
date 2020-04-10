@@ -43,7 +43,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     auto deagle = entityManager.addEntity();
     auto comp = deagle->addComponent<ModelComponent>();
     comp->model(Model3D("Resources/Models/Deagle.obj"));
-    comp->material(shinyGray);
+    comp->addMaterial(shinyGray);
 
     auto pos = deagle->addComponent<PositionComponent>();
     pos->position(Maths::vec3{0.0f, 2.0f, 0.0f});
@@ -68,9 +68,16 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     // Load a bunch of random cubes
     StaticBatcher sb("Resources/Models/Cube.obj");
-    for (int i = 0; i != 250000; ++i) {
+    for (int i = 0; i != 50000; ++i) {
         sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
                         {urot(e1), urot(e1), urot(e1)},
+                        1.0f,
+                        0.0f);
+    }
+    for (int i = 0; i != 50000; ++i) {
+        sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
+                        {urot(e1), urot(e1), urot(e1)},
+                        1.0f,
                         1.0f);
     }
     
@@ -168,8 +175,9 @@ void WorldLayer::drawImpl()
     d_entityRenderer.update(*d_camera, d_lens, d_lights, options);
     d_terrainRenderer.update(*d_camera, d_lens, d_lights, options);
 
+    static Sprocket::Texture space("Resources/Textures/Space.PNG");
     for (auto entity: d_entityManager.entities()) {
-        d_entityRenderer.draw(entity);
+        d_entityRenderer.draw(entity, space);
     }
 
     for (const auto& terrain: d_terrains) {
