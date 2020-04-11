@@ -184,9 +184,8 @@ void WorldLayer::drawImpl()
     d_entityRenderer.update(*d_camera, d_lens, d_lights, options);
     d_terrainRenderer.update(*d_camera, d_lens, d_lights, options);
 
-    static Sprocket::Texture space("Resources/Textures/Space.PNG");
     for (auto entity: d_entityManager.entities()) {
-        d_entityRenderer.draw(entity, space);
+        d_entityRenderer.draw(entity);
     }
 
     for (const auto& terrain: d_terrains) {

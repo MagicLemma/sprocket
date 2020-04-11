@@ -49,7 +49,7 @@ void EntityRenderer::update(const Camera& camera,
     d_shader.unbind();
 }
 
-void EntityRenderer::draw(std::shared_ptr<Entity> entity, const Texture& tex2)
+void EntityRenderer::draw(std::shared_ptr<Entity> entity)
 {
     // Entities without a ModelComponent have nothing to render.
     if (!entity->hasComponent<ModelComponent>()) {
@@ -71,11 +71,9 @@ void EntityRenderer::draw(std::shared_ptr<Entity> entity, const Texture& tex2)
 	d_shader.loadUniform("u_reflectivity", modelComp.material().reflectivity);
 
     modelComp.material().texture.bind(0);
-    tex2.bind(1);
     modelComp.model().bind();
     glDrawElements(GL_TRIANGLES, modelComp.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     modelComp.model().unbind();
-    tex2.unbind();
     modelComp.material().texture.unbind();
 
     d_shader.unbind();
