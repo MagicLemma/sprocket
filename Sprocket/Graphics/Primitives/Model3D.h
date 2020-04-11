@@ -33,19 +33,10 @@ class Model3D
     std::shared_ptr<VBO> loadIndexBuffer(const IndexBuffer& indices);
 
 public:
-    // CONSTRUCTORS
     Model3D(const std::string& objFile);
 
     Model3D(const Vertex3DBuffer& vertices,
             const IndexBuffer& indices);
-
-        // If storeGPU is true, a VAO and two VBOs are created, and the data
-        // is loaded in and the layouts set. These may be used by binding the
-        // model.
-
-        // If store CPU is true, the vertex buffer and index buffer vectors
-        // are copied into this object and stored. These may be retreived by
-        // the getter functions below. This is useful for batch rendering.
 
     Model3D(); // Empty model
 
