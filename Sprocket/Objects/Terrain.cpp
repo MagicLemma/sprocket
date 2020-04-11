@@ -56,12 +56,12 @@ Terrain::Terrain(const Material& material,
 void Terrain::bind() const
 {
     d_model.bind();
-    d_material.bind();
+    d_material.texture.bind();
 }
 
 void Terrain::unbind() const
 {
-    d_material.unbind();
+    d_material.texture.unbind();
     d_model.unbind();
 }
 

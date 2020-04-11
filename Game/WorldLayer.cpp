@@ -25,13 +25,19 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     Texture space("Resources/Textures/Space.PNG");
     Texture gray("Resources/Textures/PlainGray.PNG");
 
-    Material dullGray(gray);
-    Material shinyGray(gray);
-    Material field(green);
-    Material galaxy(space);
-    
-    shinyGray.reflectivity(3);
-    shinyGray.shineDamper(5);
+    Material dullGray;
+    dullGray.texture = gray;
+
+    Material shinyGray;
+    shinyGray.texture = gray;
+    shinyGray.reflectivity = 3.0f;
+    shinyGray.shineDamper = 5.0f;
+
+    Material field;
+    field.texture = green;
+
+    Material galaxy;
+    galaxy.texture = space;
 
     // Make the huge terrain.
     d_terrains.push_back({field, {0.0f, 0.0f, 0.0f}});
@@ -40,52 +46,52 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     d_terrains.push_back({field, {-50.0f, 0.0f, -50.0f}});
 
     // Load complex models
-    auto deagle = entityManager.addEntity();
-    auto comp = deagle->addComponent<ModelComponent>();
-    comp->model(Model3D("Resources/Models/Deagle.obj"));
-    comp->addMaterial(shinyGray);
+    //auto deagle = entityManager.addEntity();
+    //auto comp = deagle->addComponent<ModelComponent>();
+    //comp->model(Model3D("Resources/Models/Deagle.obj"));
+    //comp->addMaterial(shinyGray);
 
-    auto pos = deagle->addComponent<PositionComponent>();
-    pos->position(Maths::vec3{0.0f, 2.0f, 0.0f});
-    pos->rotation(Maths::vec3{180.0f, 0.0f, 0.0f});
-    pos->scale(1.0f);
+    //auto pos = deagle->addComponent<PositionComponent>();
+    //pos->position(Maths::vec3{0.0f, 2.0f, 0.0f});
+    //pos->rotation(Maths::vec3{180.0f, 0.0f, 0.0f});
+    //pos->scale(1.0f);
 
-    //auto dragon = entityManager.addEntity();
-    //dragon->addComponent<Sprocket::ModelComponent>(
-    //    Sprocket::Model3D("Resources/Models/Dragon.obj"),
-    //    shinyGray
-    //);
-    //dragon->addComponent<Sprocket::PositionComponent>(
-    //    Maths::vec3{50.0f, 2.0f, 0.0f},
-    //    Maths::vec3{0.0f, 0.0f, 0.0f},
-    //    3.0f
-    //);
-
-    std::random_device r;
-    std::default_random_engine e1(r());
-    std::uniform_real_distribution<float> udist(-500, 500);
-    std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
-
-    // Load a bunch of random cubes
-    StaticBatcher sb("Resources/Models/Cube.obj");
-    for (int i = 0; i != 50000; ++i) {
-        sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
-                        {urot(e1), urot(e1), urot(e1)},
-                        1.0f,
-                        0.0f);
-    }
-    for (int i = 0; i != 50000; ++i) {
-        sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
-                        {urot(e1), urot(e1), urot(e1)},
-                        1.0f,
-                        1.0f);
-    }
-    
-    auto cubes = entityManager.addEntity();
-    cubes->addComponent<ModelComponent>(
-        sb.getModel3D(),
+    auto dragon = entityManager.addEntity();
+    dragon->addComponent<Sprocket::ModelComponent>(
+        Sprocket::Model3D("Resources/Models/Dragon.obj"),
         shinyGray
     );
+    dragon->addComponent<Sprocket::PositionComponent>(
+        Maths::vec3{50.0f, 2.0f, 0.0f},
+        Maths::vec3{0.0f, 0.0f, 0.0f},
+        3.0f
+    );
+
+    //std::random_device r;
+    //std::default_random_engine e1(r());
+    //std::uniform_real_distribution<float> udist(-500, 500);
+    //std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
+
+    // Load a bunch of random cubes
+    //StaticBatcher sb("Resources/Models/Cube.obj");
+    //for (int i = 0; i != 50000; ++i) {
+    //    sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
+    //                    {urot(e1), urot(e1), urot(e1)},
+    //                    1.0f,
+    //                    0.0f);
+    //}
+    //for (int i = 0; i != 50000; ++i) {
+    //    sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
+    //                    {urot(e1), urot(e1), urot(e1)},
+    //                    1.0f,
+    //                    1.0f);
+    //}
+    //
+    //auto cubes = entityManager.addEntity();
+    //cubes->addComponent<ModelComponent>(
+    //    sb.getModel3D(),
+    //    shinyGray
+    //);
 
 
     // Load cubes to show the grid.

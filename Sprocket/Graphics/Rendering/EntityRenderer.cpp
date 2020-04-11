@@ -67,16 +67,16 @@ void EntityRenderer::draw(std::shared_ptr<Entity> entity, const Texture& tex2)
     }
 
     d_shader.loadUniform("u_model_matrix", transform);
-	d_shader.loadUniform("u_shine_dampner", modelComp.material().shineDamper());
-	d_shader.loadUniform("u_reflectivity", modelComp.material().reflectivity());
+	d_shader.loadUniform("u_shine_dampner", modelComp.material().shineDamper);
+	d_shader.loadUniform("u_reflectivity", modelComp.material().reflectivity);
 
-    modelComp.material().bind(0);
+    modelComp.material().texture.bind(0);
     tex2.bind(1);
     modelComp.model().bind();
     glDrawElements(GL_TRIANGLES, modelComp.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
     modelComp.model().unbind();
     tex2.unbind();
-    modelComp.material().unbind();
+    modelComp.material().texture.unbind();
 
     d_shader.unbind();
 }
