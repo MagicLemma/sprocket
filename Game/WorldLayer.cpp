@@ -8,14 +8,17 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     , d_postProcessor(accessor.window()->width(), accessor.window()->height())
     , d_lens(accessor.window()->aspectRatio())
     , d_camera(&d_firstCamera)
-    , d_skybox(Sprocket::Model3D("Resources/Models/Skybox.obj"),
-             Sprocket::CubeMap(
-                 {"Resources/Textures/Skybox/Skybox_X_Pos.png",
-                 "Resources/Textures/Skybox/Skybox_X_Neg.png",
-                 "Resources/Textures/Skybox/Skybox_Y_Pos.png",
-                 "Resources/Textures/Skybox/Skybox_Y_Neg.png",
-                 "Resources/Textures/Skybox/Skybox_Z_Pos.png",
-                 "Resources/Textures/Skybox/Skybox_Z_Neg.png"}))
+    , d_skybox({
+        Sprocket::Model3D("Resources/Models/Skybox.obj"),
+        Sprocket::CubeMap({
+            "Resources/Textures/Skybox/Skybox_X_Pos.png",
+            "Resources/Textures/Skybox/Skybox_X_Neg.png",
+            "Resources/Textures/Skybox/Skybox_Y_Pos.png",
+            "Resources/Textures/Skybox/Skybox_Y_Neg.png",
+            "Resources/Textures/Skybox/Skybox_Z_Pos.png",
+            "Resources/Textures/Skybox/Skybox_Z_Neg.png"
+        })
+    })
 {
     using namespace Sprocket;
 

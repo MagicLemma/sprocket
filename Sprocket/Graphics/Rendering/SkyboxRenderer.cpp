@@ -30,9 +30,11 @@ void SkyboxRenderer::draw(const Skybox& skybox,
     d_shader.loadUniform("projectionMatrix", lens.projection());
     d_shader.loadUniform("viewMatrix", view);
 
-    skybox.bind();
-    glDrawElements(GL_TRIANGLES, skybox.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
-    skybox.unbind();
+    skybox.model.bind();
+    skybox.texture.bind();
+    glDrawElements(GL_TRIANGLES, skybox.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
+    skybox.texture.unbind();
+    skybox.model.unbind();
 
     d_shader.unbind();
 }

@@ -7,7 +7,7 @@ namespace Sprocket {
 
 class Terrain
 {
-    Material     d_material;
+    Material    d_material;
 
     Maths::vec3 d_position;
 
