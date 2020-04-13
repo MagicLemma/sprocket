@@ -15,8 +15,7 @@ using EntityManager = std::vector<Entity>;
 
 class Entity
 {
-    std::vector<std::shared_ptr<Component>> d_components;  // Iteration and ownership
-    std::array<Component*, MAX_COMPONENTS> d_componentPtrs;  // Index lookup
+    std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
 
 public:
     Entity();
@@ -35,20 +34,19 @@ template <typename T>
 T* Entity::addComponent()
 {
     auto component = std::make_shared<T>();
-    d_components.emplace_back(component);
-    d_componentPtrs[getComponentTypeId<T>()] = component.get();
+    d_components[getComponentTypeId<T>()] = component;
     return component.get();
 }
 
 template <typename T> bool Entity::hasComponent() const
 {
-    return d_componentPtrs[getComponentTypeId<T>()] != nullptr;
+    return d_components[getComponentTypeId<T>()] != nullptr;
 }
 
 template <typename T> T& Entity::getComponent() const
 {
-    auto component = d_componentPtrs[getComponentTypeId<T>()];
-    return *static_cast<T*>(component);
+    auto component = d_components[getComponentTypeId<T>()];
+    return *static_cast<T*>(component.get());
 }
 
 }
