@@ -4,6 +4,8 @@
 #include <memory>
 #include <random>
 
+void updatePhysics(const Sprocket::Entity& entity, float ts);
+
 class WorldLayer : public Sprocket::Layer
 {
     Sprocket::FirstPersonCamera d_firstCamera;

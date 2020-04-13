@@ -9,21 +9,4 @@ Entity::Entity()
     }
 }
 
-void Entity::update()
-{
-    for (auto& component : d_components) {
-        component->update();
-    }
-}
-
-bool Entity::handleEvent(const Event& event)
-{
-    for (auto& component : d_components) {
-        if (component->handleEvent(event)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 }

@@ -1,5 +1,24 @@
 #include "WorldLayer.h"
 
+void updatePhysics(const Sprocket::Entity& entity, float ts)
+{
+    using namespace Sprocket;
+    if (!entity.hasComponent<PositionComponent>() && !entity.hasComponent<PhysicsComponent>()) {
+        return;
+    }
+
+    auto& pos = entity.getComponent<PositionComponent>();
+    auto& phy = entity.getComponent<PhysicsComponent>();
+
+    pos.position += phy.velocity * ts;
+    phy.velocity += phy.acceleration * ts;
+
+    if(pos.position.y < 0) {
+        pos.position.y = 0;
+        phy.velocity = - 0.8f * phy.velocity;
+    }
+}
+
 WorldLayer::WorldLayer(Sprocket::Accessor& accessor) 
     : Sprocket::Layer(accessor, Status::NORMAL, false)
     , d_entityRenderer(accessor.window())
@@ -42,77 +61,26 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     Material galaxy;
     galaxy.texture = space;
 
-    // Make the huge terrain.
     d_terrains.push_back({field, {0.0f, 0.0f, 0.0f}});
     d_terrains.push_back({field, {-50.0f, 0.0f, 0.0f}});
     d_terrains.push_back({field, {0.0f, 0.0f, -50.0f}});
     d_terrains.push_back({field, {-50.0f, 0.0f, -50.0f}});
 
-    // Load complex models
-    //auto deagle = entityManager.addEntity();
-    //auto comp = deagle->addComponent<ModelComponent>();
-    //comp->model(Model3D("Resources/Models/Deagle.obj"));
-    //comp->addMaterial(shinyGray);
+    auto dragon = Sprocket::Entity();
+    auto model = dragon.addComponent<Sprocket::ModelComponent>();
+    model->model = Sprocket::Model3D("Resources/Models/Dragon.obj");
+    model->materials.push_back(shinyGray);
 
-    //auto pos = deagle->addComponent<PositionComponent>();
-    //pos->position(Maths::vec3{0.0f, 2.0f, 0.0f});
-    //pos->rotation(Maths::vec3{180.0f, 0.0f, 0.0f});
-    //pos->scale(1.0f);
+    auto pos = dragon.addComponent<Sprocket::PositionComponent>();
+    pos->position = Maths::vec3{50.0f, 2.0f, 0.0f};
+    pos->rotation = Maths::vec3{0.0f, 0.0f, 0.0f};
+    pos->scale = 3.0f;
 
-    auto dragon = entityManager.addEntity();
-    dragon->addComponent<Sprocket::ModelComponent>(
-        Sprocket::Model3D("Resources/Models/Dragon.obj"),
-        shinyGray
-    );
-    dragon->addComponent<Sprocket::PositionComponent>(
-        Maths::vec3{50.0f, 2.0f, 0.0f},
-        Maths::vec3{0.0f, 0.0f, 0.0f},
-        3.0f
-    );
+    auto phy = dragon.addComponent<Sprocket::PhysicsComponent>();
+    phy->acceleration = {0.0f, -5.0f, 0.0f};
+    phy->velocity = {0.0f, 10.0f, 0.0f};
 
-    //std::random_device r;
-    //std::default_random_engine e1(r());
-    //std::uniform_real_distribution<float> udist(-500, 500);
-    //std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
-
-    // Load a bunch of random cubes
-    //StaticBatcher sb("Resources/Models/Cube.obj");
-    //for (int i = 0; i != 50000; ++i) {
-    //    sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
-    //                    {urot(e1), urot(e1), urot(e1)},
-    //                    1.0f,
-    //                    0.0f);
-    //}
-    //for (int i = 0; i != 50000; ++i) {
-    //    sb.addTransform({udist(e1), 50 + udist(e1), udist(e1)},
-    //                    {urot(e1), urot(e1), urot(e1)},
-    //                    1.0f,
-    //                    1.0f);
-    //}
-    //
-    //auto cubes = entityManager.addEntity();
-    //cubes->addComponent<ModelComponent>(
-    //    sb.getModel3D(),
-    //    shinyGray
-    //);
-
-
-    // Load cubes to show the grid.
-    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {5.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {10.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-    //d_entities.push_back({"Resources/Models/Cube.obj", galaxy, {0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}, 0.2f});
-
-    // Seed with a real random value, if available
-    //std::random_device r;
-    //std::default_random_engine e1(r());
-    //std::uniform_real_distribution<float> udist(-50, 50);
-    //std::uniform_real_distribution<float> urot(-180.0f, 180.0f);
-//
-    //// Load a bunch of random cubes/
-    //for (int i = 0; i != 100; ++i) {
-    //    d_entities.push_back({"Resources/Models/Cube.obj", shinyGray, {udist(e1), 50 + udist(e1), udist(e1)}, {urot(e1), urot(e1), urot(e1)}, 0.5f});
-    //}
+    entityManager.push_back(dragon);
 
     accessor.window()->setCursorVisibility(false);
 
@@ -121,7 +89,6 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     d_lights.push_back({{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
 
-    //d_postProcessor.addEffect<Negative>();
     d_postProcessor.addEffect<GaussianVert>();
     d_postProcessor.addEffect<GaussianHoriz>();
 }
@@ -131,10 +98,6 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
     if (auto e = event.as<Sprocket::WindowResizeEvent>()) {
         d_postProcessor.setScreenSize(e->width(), e->height()); 
         SPKT_LOG_INFO("Resizing!");
-    }
-
-    if (d_entityManager.handleEvent(event)) {
-        return true;
     }
 
     d_camera->handleEvent(d_accessor.window(), event);
@@ -150,8 +113,6 @@ void WorldLayer::updateImpl()
     if (d_status == Status::NORMAL) {
         float tick = layerTicker();
 
-        d_entityManager.update();
-
         d_lights[1].position.z = 50.0f * std::sin(tick);
         d_lights[1].position.x = 50.0f * std::cos(tick);
 
@@ -164,6 +125,10 @@ void WorldLayer::updateImpl()
         d_camera->update(d_accessor.window(), deltaTime());
 
         d_accessor.window()->setCursorVisibility(!d_cameraIsFirst);
+
+        for (const auto& entity : d_entityManager) {
+            updatePhysics(entity, deltaTime());
+        }
     }
     else {
         d_accessor.window()->setCursorVisibility(true);
@@ -184,7 +149,7 @@ void WorldLayer::drawImpl()
     d_entityRenderer.update(*d_camera, d_lens, d_lights, options);
     d_terrainRenderer.update(*d_camera, d_lens, d_lights, options);
 
-    for (auto entity: d_entityManager.entities()) {
+    for (const auto& entity: d_entityManager) {
         d_entityRenderer.draw(entity);
     }
 

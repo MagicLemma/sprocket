@@ -66,10 +66,7 @@ add_library(Sprocket STATIC
             Display/WidgetProperties/VerticalConstraint.cpp
 
             Objects/Entities/Entity.cpp
-            Objects/Entities/EntityManager.cpp
-            Objects/Entities/Component.cpp
-            Objects/Entities/PositionComponent.cpp
-            Objects/Entities/ModelComponent.cpp
+            Objects/Entities/Components.cpp
 
             Objects/Cameras/Camera.cpp
             Objects/Cameras/FirstPersonCamera.cpp

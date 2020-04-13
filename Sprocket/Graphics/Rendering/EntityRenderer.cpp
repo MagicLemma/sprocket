@@ -1,7 +1,6 @@
 #include "EntityRenderer.h"
 #include "Maths.h"
-#include "ModelComponent.h"
-#include "PositionComponent.h"
+#include "Components.h"
 
 #include <glad/glad.h>
 
@@ -49,32 +48,33 @@ void EntityRenderer::update(const Camera& camera,
     d_shader.unbind();
 }
 
-void EntityRenderer::draw(std::shared_ptr<Entity> entity)
+void EntityRenderer::draw(const Entity& entity)
 {
     // Entities without a ModelComponent have nothing to render.
-    if (!entity->hasComponent<ModelComponent>()) {
+    if (!entity.hasComponent<ModelComponent>()) {
         return;
     }
 
     d_shader.bind();
 
-    auto modelComp = entity->getComponent<ModelComponent>();
+    auto modelComp = entity.getComponent<ModelComponent>();
 
     // If this Entity has a Position component, use the transform on that.
     Maths::mat4 transform = Maths::mat4(1.0f);
-    if (entity->hasComponent<PositionComponent>()) {
-        transform = entity->getComponent<PositionComponent>().transform();
+    if (entity.hasComponent<PositionComponent>()) {
+        auto pos = entity.getComponent<PositionComponent>();
+        transform = Maths::transform(pos.position, pos.rotation, pos.scale);
     }
 
     d_shader.loadUniform("u_model_matrix", transform);
-	d_shader.loadUniform("u_shine_dampner", modelComp.material().shineDamper);
-	d_shader.loadUniform("u_reflectivity", modelComp.material().reflectivity);
+	d_shader.loadUniform("u_shine_dampner", modelComp.materials[0].shineDamper);
+	d_shader.loadUniform("u_reflectivity", modelComp.materials[0].reflectivity);
 
-    modelComp.material().texture.bind(0);
-    modelComp.model().bind();
-    glDrawElements(GL_TRIANGLES, modelComp.model().vertexCount(), GL_UNSIGNED_INT, nullptr);
-    modelComp.model().unbind();
-    modelComp.material().texture.unbind();
+    modelComp.materials[0].texture.bind(0);
+    modelComp.model.bind();
+    glDrawElements(GL_TRIANGLES, modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
+    modelComp.model.unbind();
+    modelComp.materials[0].texture.unbind();
 
     d_shader.unbind();
 }

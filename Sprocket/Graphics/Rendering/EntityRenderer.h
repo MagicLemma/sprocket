@@ -32,7 +32,7 @@ public:
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
 
-    void draw(std::shared_ptr<Entity> entity);
+    void draw(const Entity& entity);
 };
 
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "Components.h"
 
 #include <vector>
 #include <memory>
@@ -10,6 +10,9 @@ namespace Sprocket {
 
 constexpr std::size_t MAX_COMPONENTS = 64;
 
+class Entity;
+using EntityManager = std::vector<Entity>;
+
 class Entity
 {
     std::vector<std::shared_ptr<Component>> d_components;  // Iteration and ownership
@@ -18,11 +21,8 @@ class Entity
 public:
     Entity();
 
-    void update();
-    bool handleEvent(const Event& event);
-
-    template <typename T, typename... Args>
-    T* addComponent(Args&&... args);
+    template <typename T>
+    T* addComponent();
 
     template <typename T>
     bool hasComponent() const;
@@ -31,11 +31,10 @@ public:
     T& getComponent() const;
 };
 
-template <typename T, typename... Args>
-T* Entity::addComponent(Args&&... args)
+template <typename T>
+T* Entity::addComponent()
 {
-    auto component = std::make_shared<T>(std::forward<Args>(args)...);
-    component->setOwner(this);
+    auto component = std::make_shared<T>();
     d_components.emplace_back(component);
     d_componentPtrs[getComponentTypeId<T>()] = component.get();
     return component.get();
