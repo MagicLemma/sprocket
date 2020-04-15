@@ -3,7 +3,7 @@
 void updatePhysics(const Sprocket::Entity& entity, float ts)
 {
     using namespace Sprocket;
-    if (!entity.hasComponent<PositionComponent>() && !entity.hasComponent<PhysicsComponent>()) {
+    if (!entity.hasComponent<PositionComponent>() || !entity.hasComponent<PhysicsComponent>()) {
         return;
     }
 
@@ -52,8 +52,6 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     Material shinyGray;
     shinyGray.texture = gray;
-    shinyGray.reflectivity = 3.0f;
-    shinyGray.shineDamper = 5.0f;
 
     Material field;
     field.texture = green;
@@ -61,26 +59,17 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     Material galaxy;
     galaxy.texture = space;
 
-    d_terrains.push_back({field, {0.0f, 0.0f, 0.0f}});
-    d_terrains.push_back({field, {-50.0f, 0.0f, 0.0f}});
-    d_terrains.push_back({field, {0.0f, 0.0f, -50.0f}});
-    d_terrains.push_back({field, {-50.0f, 0.0f, -50.0f}});
-
-    auto dragon = Sprocket::Entity();
-    auto model = dragon.addComponent<Sprocket::ModelComponent>();
-    model->model = Sprocket::Model3D("Resources/Models/Dragon.obj");
+    auto platform = Sprocket::Entity();
+    auto model = platform.addComponent<Sprocket::ModelComponent>();
+    model->model = Sprocket::Model3D("Resources/Models/Platform.obj");
     model->materials.push_back(shinyGray);
 
-    auto pos = dragon.addComponent<Sprocket::PositionComponent>();
-    pos->position = Maths::vec3{50.0f, 2.0f, 0.0f};
+    auto pos = platform.addComponent<Sprocket::PositionComponent>();
+    pos->position = Maths::vec3{0.0f, 0.0f, 0.0f};
     pos->rotation = Maths::vec3{0.0f, 0.0f, 0.0f};
-    pos->scale = 3.0f;
+    pos->scale = 2.0f;
 
-    auto phy = dragon.addComponent<Sprocket::PhysicsComponent>();
-    phy->acceleration = {0.0f, -5.0f, 0.0f};
-    phy->velocity = {0.0f, 10.0f, 0.0f};
-
-    entityManager.push_back(dragon);
+    entityManager.push_back(platform);
 
     accessor.window()->setCursorVisibility(false);
 
@@ -147,15 +136,11 @@ void WorldLayer::drawImpl()
                         d_status == Status::NORMAL;
     
     d_entityRenderer.update(*d_camera, d_lens, d_lights, options);
-    d_terrainRenderer.update(*d_camera, d_lens, d_lights, options);
 
     for (const auto& entity: d_entityManager) {
         d_entityRenderer.draw(entity);
     }
 
-    for (const auto& terrain: d_terrains) {
-        d_terrainRenderer.draw(terrain);
-    }
     d_skyboxRenderer.draw(d_skybox,
                           *d_camera,
                           d_lens);

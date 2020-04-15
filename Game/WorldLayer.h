@@ -19,7 +19,6 @@ class WorldLayer : public Sprocket::Layer
  
     Sprocket::EntityManager d_entityManager;
     
-    std::vector<Sprocket::Terrain> d_terrains;
     std::vector<Sprocket::Light>   d_lights;
     
     bool d_paused = false;

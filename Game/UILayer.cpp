@@ -71,6 +71,10 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
 
     chattyButton->setUnclickCallback([&]() {
         SPKT_LOG_WARN("Have a great day!");
+        auto& dragon = d_worldLayer->d_entityManager.back();
+        auto phy = dragon.addComponent<Sprocket::PhysicsComponent>();
+        phy->acceleration = {0.0f, -5.0f, 0.0f};
+        phy->velocity = {0.0f, 10.0f, 0.0f};
     });
 
     auto cameraSwitchButton = d_container.add<Button>(
