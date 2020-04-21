@@ -10,12 +10,11 @@ namespace Sprocket {
 
 constexpr std::size_t MAX_COMPONENTS = 64;
 
-class Entity;
-using EntityManager = std::vector<Entity>;
-
 class Entity
 {
     std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
+
+    const std::size_t d_id;
 
 public:
     Entity();
@@ -28,6 +27,8 @@ public:
 
     template <typename T>
     T& getComponent() const;
+
+    std::size_t id() const { return d_id; }
 };
 
 template <typename T>

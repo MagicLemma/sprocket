@@ -76,7 +76,16 @@
 			"resumable": "cpp",
 			"future": "cpp",
 			"optional": "cpp",
-			"bitset": "cpp"
+			"bitset": "cpp",
+			"deque": "cpp",
+			"complex": "cpp",
+			"forward_list": "cpp",
+			"numeric": "cpp",
+			"queue": "cpp",
+			"regex": "cpp",
+			"typeindex": "cpp",
+			"unordered_set": "cpp",
+			"valarray": "cpp"
 		}
 	}
 }

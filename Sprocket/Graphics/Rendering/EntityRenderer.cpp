@@ -61,9 +61,9 @@ void EntityRenderer::draw(const Entity& entity)
 
     // If this Entity has a Position component, use the transform on that.
     Maths::mat4 transform = Maths::mat4(1.0f);
-    if (entity.hasComponent<PositionComponent>()) {
-        auto pos = entity.getComponent<PositionComponent>();
-        transform = Maths::transform(pos.position, pos.rotation, pos.scale);
+    if (entity.hasComponent<TransformComponent>()) {
+        transform = entity.getComponent<TransformComponent>().transform;
+        transform = Maths::scale(transform, modelComp.scale);
     }
 
     d_shader.loadUniform("u_model_matrix", transform);

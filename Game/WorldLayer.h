@@ -4,8 +4,6 @@
 #include <memory>
 #include <random>
 
-void updatePhysics(const Sprocket::Entity& entity, float ts);
-
 class WorldLayer : public Sprocket::Layer
 {
     Sprocket::FirstPersonCamera d_firstCamera;
@@ -18,6 +16,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::Skybox d_skybox;
  
     Sprocket::EntityManager d_entityManager;
+    Sprocket::PhysicsEngine d_physicsEngine;
     
     std::vector<Sprocket::Light>   d_lights;
     
@@ -28,6 +27,10 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::SkyboxRenderer  d_skyboxRenderer;
 
     Sprocket::PostProcessor   d_postProcessor;
+
+    bool d_run = false;
+
+    Sprocket::Entity* d_staticCube;
 
     friend class UILayer;
 

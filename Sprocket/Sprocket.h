@@ -24,6 +24,7 @@
 
 // GRAPHICS
 #include "Graphics/ObjParser.h"
+#include "Graphics/MousePicker.h"
 #include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
 #include "Graphics/Model3DLoader.h"
@@ -57,6 +58,7 @@
 
 #include "Objects/Entities/Entity.h"
 #include "Objects/Entities/Components.h"
+#include "Objects/Entities/EntityManager.h"
 
 #include "Objects/Cameras/Camera.h"
 #include "Objects/Cameras/FirstPersonCamera.h"
@@ -64,6 +66,11 @@
 
 #include "Objects/Lenses/Lens.h"
 #include "Objects/Lenses/PerspectiveLens.h"
+
+// SYSTEMS
+#include "Systems/EntitySystem.h"
+#include "Systems/Physics.h"
+#include "Systems/Colliders.h"
 
 // DISPLAY
 #include "Display/Widget.h"

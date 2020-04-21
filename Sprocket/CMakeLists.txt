@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(Sprocket)
+add_subdirectory(Vendor/reactphysics3d)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
@@ -23,6 +24,7 @@ add_library(Sprocket STATIC
             Core/Window.cpp
 
             Graphics/ObjParser.cpp
+            Graphics/MousePicker.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
             Graphics/Model3DLoader.cpp
@@ -67,6 +69,7 @@ add_library(Sprocket STATIC
 
             Objects/Entities/Entity.cpp
             Objects/Entities/Components.cpp
+            Objects/Entities/EntityManager.cpp
 
             Objects/Cameras/Camera.cpp
             Objects/Cameras/FirstPersonCamera.cpp
@@ -80,6 +83,10 @@ add_library(Sprocket STATIC
             Objects/Quad.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
+
+            Systems/EntitySystem.cpp
+            Systems/Physics.cpp
+            Systems/Colliders.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp
@@ -97,7 +104,8 @@ target_link_libraries(Sprocket PUBLIC
                       glfw
                       glad::glad
                       glm
-                      freetype)
+                      freetype
+                      reactphysics3d)
 
 target_include_directories(Sprocket PUBLIC
                            .
@@ -114,5 +122,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Objects/Entities
                            ./Objects/Cameras
                            ./Objects/Lenses
+                           ./Systems
                            ./Utility
                            ${STB_INCLUDE_DIR})
