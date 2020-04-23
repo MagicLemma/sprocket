@@ -45,10 +45,21 @@ struct PhysicsComponent : public Component
     bool     stationary = false;
     float    mass       = 1.0f;
     Collider collider   = EmptyCollider();
+
+    float       velocity;
+    Maths::vec3 velocityDirection;
 };
 
 struct PlayerComponent : public Component
 {
+    bool movingForwards = false;
+    bool movingBackwards = false;
+    bool movingLeft = false;
+    bool movingRight = false;
+
+    float yaw = 0.0f;  // Forwards direction
+
+    bool jumping = false;
 };
 
 

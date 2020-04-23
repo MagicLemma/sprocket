@@ -60,6 +60,7 @@
 #include "collision/PolygonVertexArray.h"
 #include "collision/CollisionCallback.h"
 #include "collision/OverlapCallback.h"
+#include "collision/ContactManifold.h"
 #include "constraint/BallAndSocketJoint.h"
 #include "constraint/SliderJoint.h"
 #include "constraint/HingeJoint.h"

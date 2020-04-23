@@ -81,10 +81,12 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
 
     cameraSwitchButton->setUnclickCallback([&]() {  //unclick
         if (d_worldLayer->d_cameraIsFirst) {
-            d_worldLayer->d_camera = &d_worldLayer->d_thirdCamera;
+            d_worldLayer->d_camera = &d_worldLayer->d_playerCamera;
+            d_worldLayer->d_playerMovement.enable(true);
         }
         else {
             d_worldLayer->d_camera = &d_worldLayer->d_firstCamera;
+            d_worldLayer->d_playerMovement.enable(false);
         }
         d_worldLayer->d_cameraIsFirst = !d_worldLayer->d_cameraIsFirst;
     });
@@ -116,7 +118,6 @@ bool UILayer::handleEventImpl(const Sprocket::Event& event)
     if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
         if (e->key() == Sprocket::Keyboard::ESC) {
             d_worldLayer->d_paused = !d_worldLayer->d_paused;
-            d_accessor.window()->setCursorVisibility(d_worldLayer->d_paused);
             return true;
         }
         else if (e->key() == Sprocket::Keyboard::E) {
@@ -146,6 +147,7 @@ void UILayer::updateImpl()
     if (d_status == Status::NORMAL) {
         d_container.update(d_accessor.window());
         d_image.update(d_accessor.window());
+        d_accessor.window()->setCursorVisibility(true);
     }
 }
 

@@ -36,6 +36,7 @@ mat4 ortho(float left, float right,
            float bottom, float top);
 
 mat4 inverse(const mat4& matrix);
+mat4 transpose(const mat4& matrix);
 
 float radians(float degrees);
 float degrees(float radians);

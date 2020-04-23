@@ -73,6 +73,7 @@ add_library(Sprocket STATIC
 
             Objects/Cameras/Camera.cpp
             Objects/Cameras/FirstPersonCamera.cpp
+            Objects/Cameras/PlayerBasedCamera.cpp
             Objects/Cameras/ThirdPersonCamera.cpp
 
             Objects/Lenses/Lens.cpp
@@ -87,6 +88,7 @@ add_library(Sprocket STATIC
             Systems/EntitySystem.cpp
             Systems/Physics.cpp
             Systems/Colliders.cpp
+            Systems/PlayerMovement.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp

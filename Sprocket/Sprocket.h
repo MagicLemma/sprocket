@@ -62,6 +62,7 @@
 
 #include "Objects/Cameras/Camera.h"
 #include "Objects/Cameras/FirstPersonCamera.h"
+#include "Objects/Cameras/PlayerBasedCamera.h"
 #include "Objects/Cameras/ThirdPersonCamera.h"
 
 #include "Objects/Lenses/Lens.h"
@@ -71,6 +72,7 @@
 #include "Systems/EntitySystem.h"
 #include "Systems/Physics.h"
 #include "Systems/Colliders.h"
+#include "Systems/PlayerMovement.h"
 
 // DISPLAY
 #include "Display/Widget.h"

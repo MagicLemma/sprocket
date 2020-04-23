@@ -7,7 +7,7 @@
 class WorldLayer : public Sprocket::Layer
 {
     Sprocket::FirstPersonCamera d_firstCamera;
-    Sprocket::ThirdPersonCamera d_thirdCamera;
+    Sprocket::PlayerBasedCamera d_playerCamera;
     Sprocket::Camera* d_camera;
     bool d_cameraIsFirst = true;
 
@@ -15,8 +15,9 @@ class WorldLayer : public Sprocket::Layer
 
     Sprocket::Skybox d_skybox;
  
-    Sprocket::EntityManager d_entityManager;
-    Sprocket::PhysicsEngine d_physicsEngine;
+    Sprocket::EntityManager  d_entityManager;
+    Sprocket::PlayerMovement d_playerMovement;
+    Sprocket::PhysicsEngine  d_physicsEngine;
     
     std::vector<Sprocket::Light>   d_lights;
     
@@ -29,8 +30,6 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::PostProcessor   d_postProcessor;
 
     bool d_run = false;
-
-    Sprocket::Entity* d_staticCube;
 
     friend class UILayer;
 

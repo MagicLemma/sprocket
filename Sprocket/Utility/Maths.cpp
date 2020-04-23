@@ -83,6 +83,11 @@ mat4 inverse(const mat4& matrix)
     return glm::inverse(matrix);
 }
 
+mat4 transpose(const mat4& matrix)
+{
+    return glm::transpose(matrix);
+}
+
 float radians(float degrees)
 {
     return glm::radians(degrees);

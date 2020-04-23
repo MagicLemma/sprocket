@@ -97,6 +97,42 @@ void PhysicsEngine::updateEntity(Entity& entity)
         else {
             bodyData->getTransform().getOpenGLMatrix(&t.transform[0][0]);
         }
+
+        if (entity.hasComponent<PlayerComponent>()) {
+            const auto& player = entity.getComponent<PlayerComponent>();
+
+            bodyData->setAngularVelocity(rp3d::Vector3(0, 0, 0));
+            rp3d::Transform transform = bodyData->getTransform();
+
+            rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(0.0f, player.yaw, 0.0f);
+            transform.setOrientation(q);
+            bodyData->setTransform(transform);
+
+            if (player.jumping && bodyData->getContactManifoldsList()) {
+                bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, 10, 0));
+            }
+
+            rp3d::Vector3 forwards(-std::sin(player.yaw), 0, -std::cos(player.yaw));
+            rp3d::Vector3 right(std::cos(player.yaw), 0, -std::sin(player.yaw));
+
+            if (player.movingForwards) {
+                bodyData->applyForceToCenterOfMass(forwards);
+            }
+            if (player.movingBackwards) {
+                bodyData->applyForceToCenterOfMass(-forwards);
+            }
+            if (player.movingRight) {
+                bodyData->applyForceToCenterOfMass(right);
+            }
+            if (player.movingLeft) {
+                bodyData->applyForceToCenterOfMass(-right);
+            }
+        }
+
+        rp3d::Vector3 v = bodyData->getLinearVelocity();
+        physics.velocity = std::sqrt(v.lengthSquare());
+        v.normalize();
+        physics.velocityDirection = convert(v);
     }
 }
 
@@ -120,6 +156,10 @@ void PhysicsEngine::registerEntity(const Entity& entity)
         physicsData.stationary ?
             rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC
     );
+
+    if (entity.hasComponent<PlayerComponent>()) {
+        entry->setAngularDamping(0.0f);
+    }
 
     std::shared_ptr<rp3d::CollisionShape> collider = nullptr;
     if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {

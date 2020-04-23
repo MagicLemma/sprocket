@@ -16,8 +16,8 @@ class PhysicsEngine : public EntitySystem
 {
     std::shared_ptr<PhysicsEngineImpl> d_impl;
 
-    const float         d_timeStep;
-    bool                d_running = false;
+    const float d_timeStep;
+    bool        d_running = false;
 
 public:
     PhysicsEngine(const Maths::vec3& gravity);

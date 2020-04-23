@@ -19,10 +19,14 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
             "Resources/Textures/Skybox/Skybox_Z_Neg.png"
         })
     })
+    , d_playerCamera(nullptr)
+    , d_playerMovement(accessor.window())
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
-    , d_entityManager({&d_physicsEngine})
+    , d_entityManager({&d_playerMovement, &d_physicsEngine})
 {
     using namespace Sprocket;
+
+    d_playerMovement.enable(false);
 
     auto& entityManager = d_entityManager;
 
@@ -51,7 +55,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->addComponent<TransformComponent>();
-        t->transform = Maths::transform({-2.0, 0.0, 3.0}, {-12.0, 0.0, 0.0});
+        t->transform = Maths::transform({-2.0, 0.0, 3.0}, {0.0, 0.0, 0.0});
         auto phys = platform->addComponent<PhysicsComponent>();
         phys->stationary = true;
         BoxCollider c;
@@ -59,75 +63,52 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         phys->collider = c;
         entityManager.addEntity(platform);
     }
+
     {
-        auto platform = std::make_shared<Entity>();
-        auto model = platform->addComponent<ModelComponent>();
-        model->model = Sprocket::Model3D("Resources/Models/Platform.obj");
-        model->materials.push_back(dullGray);
-        model->scale = 1.0f;
-        auto t = platform->addComponent<TransformComponent>();
-        t->transform = Maths::transform({2.0, 0.0, 3.0}, {12.0, 0.0, 0.0});
-        auto phys = platform->addComponent<PhysicsComponent>();
-        phys->stationary = true;
-        BoxCollider c;
-        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys->collider = c;
-        entityManager.addEntity(platform);
-    }
-    {
-        auto staticCube = std::make_shared<Entity>();
-        auto model = staticCube->addComponent<ModelComponent>();
-        model->model = Sprocket::Model3D("Resources/Models/Cube.obj");
-        model->materials.push_back(dullGray);
-        model->scale = 2.0f;
-        auto t = staticCube->addComponent<TransformComponent>();
-        t->transform = Maths::transform({20.0, 2.0, 3.0}, {0.0, 0.0, 0.0});
-        auto phys = staticCube->addComponent<PhysicsComponent>();
-        phys->stationary = true;
-        BoxCollider c;
-        c.halfExtents = {2.0f, 2.0f, 2.0f};
-        phys->collider = c;
-        entityManager.addEntity(staticCube);
-        d_staticCube = staticCube.get();
-    }
-    
-    auto cubeModel = Sprocket::Model3D("Resources/Models/Cube.obj");
-    auto sphereModel = Sprocket::Model3D("Resources/Models/Sphere.obj");
-    for (int i = 0; i != 20; ++i) {
         auto cube = std::make_shared<Entity>();
         auto modelC = cube->addComponent<ModelComponent>();
-        if (i % 2 == 0) {
-            modelC->model = cubeModel;
-        }
-        else {
-            modelC->model = sphereModel;
-        }
+        modelC->model = Sprocket::Model3D("Resources/Models/Cube.obj");
         modelC->materials.push_back(shinyGray);
-        modelC->scale = 0.5f + (float)i * 0.1f;
+        modelC->scale = 1.0f;
         auto tC = cube->addComponent<TransformComponent>();
         tC->transform = Maths::transform(
-            {0.0f, 2.0f + (float)i * 4.0f, 0.0f},
-            {0.0, (float)i * 25.0f, 0.0}
+            {0.0f, 5.0f, 0.0f},
+            {0.0, 0.0f, 0.0}
         );
         auto physC = cube->addComponent<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 2.0f;
-        if (i % 2 == 0) {
-            BoxCollider c;
-            c.halfExtents = {
-                0.5f + (float)i * 0.1f,
-                0.5f + (float)i * 0.1f,
-                0.5f + (float)i * 0.1f
-            };
+        {
+            CapsuleCollider c;
+            c.radius = 0.5f;
+            c.height = 1.0f;
             physC->collider = c;
         }
-        else {
-            SphereCollider c;
-            c.radius = 0.5f + (float)i * 0.1f;
-            physC->collider = c;
-        }
-        
+        cube->addComponent<PlayerComponent>();
+        d_playerCamera.setPlayer(cube.get());
         entityManager.addEntity(cube);
+    }
+
+    {
+        auto sphere = std::make_shared<Entity>();
+        auto modelC = sphere->addComponent<ModelComponent>();
+        modelC->model = Sprocket::Model3D("Resources/Models/Sphere.obj");
+        modelC->materials.push_back(shinyGray);
+        modelC->scale = 1.0f;
+        auto tC = sphere->addComponent<TransformComponent>();
+        tC->transform = Maths::transform(
+            {0.0f, 5.0f, 0.0f},
+            {0.0, 0.0f, 0.0}
+        );
+        auto physC = sphere->addComponent<PhysicsComponent>();
+        physC->stationary = false;
+        physC->mass = 2.0f;
+        {
+            SphereCollider c;
+            c.radius = 1.0f;
+            physC->collider = c;
+        }
+        entityManager.addEntity(sphere);
     }
 
     accessor.window()->setCursorVisibility(false);
@@ -166,14 +147,10 @@ void WorldLayer::updateImpl()
 
     if (d_status == Status::NORMAL) {
         d_camera->update(d_accessor.window(), deltaTime());
-        d_accessor.window()->setCursorVisibility(!d_cameraIsFirst);
+        d_accessor.window()->setCursorVisibility(false);
         d_entityManager.update(deltaTime());
-        
-        auto& cubeTransform = d_staticCube->getComponent<Sprocket::TransformComponent>();
-        cubeTransform.transform = Sprocket::Maths::translate(cubeTransform.transform, {-0.001, 0.0, 0.0}); 
     }
     else {
-        d_accessor.window()->setCursorVisibility(true);
     }
     
 }
