@@ -22,6 +22,12 @@ class EntityRenderer
     Shader d_mirrorShader;
         // Shader used to mirror-like entities.
 
+    void drawColliders(const Entity& entity);
+    Model3D d_cube;
+    Model3D d_sphere;
+    Model3D d_hemisphere;
+    Model3D d_cylinder;
+
 public:
     EntityRenderer(Window* window);
 
@@ -32,7 +38,8 @@ public:
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
 
-    void draw(const Entity& entity);
+    void draw(const Entity& entity,
+              bool renderColliders = false);
 };
 
 }

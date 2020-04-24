@@ -152,10 +152,15 @@ void PhysicsEngine::registerEntity(const Entity& entity)
     }
     
     entry = d_impl->world.createRigidBody(transform);
-    entry->setType(
-        physicsData.stationary ?
-            rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC
-    );
+
+    // Give each RigidBody a pointer back to the original Entity object.
+    entry->setUserData(const_cast<void*>(reinterpret_cast<const void*>(&entity)));
+    if (physicsData.stationary) {
+        entry->setType(rp3d::BodyType::STATIC);
+    }
+    else {
+        entry->setType(rp3d::BodyType::DYNAMIC);
+    }
 
     if (entity.hasComponent<PlayerComponent>()) {
         entry->setAngularDamping(0.0f);
@@ -177,7 +182,7 @@ void PhysicsEngine::registerEntity(const Entity& entity)
         return; // No collision data.
     }
 
-    entry->addCollisionShape(
+    auto ps = entry->addCollisionShape(
         collider.get(),
         rp3d::Transform::identity(),
         physicsData.mass

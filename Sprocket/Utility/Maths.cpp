@@ -40,6 +40,11 @@ mat4 rotate(const mat4& matrix, const vec3& axis, float radians)
     return glm::rotate(matrix, radians, axis);
 }
 
+mat4 scale(const mat4& matrix, const vec3& scales)
+{
+    return glm::scale(matrix, scales);
+}
+
 mat4 scale(const mat4& matrix, float scale)
 {
     return glm::scale(matrix, {scale, scale, scale});

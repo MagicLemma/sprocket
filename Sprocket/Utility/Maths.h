@@ -16,6 +16,8 @@ mat4 transform(const vec3& translation, const vec3& rotation);
 
 mat4 translate(const mat4& matrix, const vec3& translation);
 mat4 rotate(const mat4& matrix, const vec3& axis, float radians);
+
+mat4 scale(const mat4& matrix, const vec3& scales);
 mat4 scale(const mat4& matrix, float scale);
 
 mat4 perspective(float aspectRatio,

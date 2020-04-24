@@ -51,7 +51,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto platform = std::make_shared<Entity>();
         auto model = platform->addComponent<ModelComponent>();
-        model->model = Sprocket::Model3D("Resources/Models/Platform.obj");
+        model->model = Model3D("Resources/Models/Platform.obj");
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->addComponent<TransformComponent>();
@@ -67,12 +67,12 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto cube = std::make_shared<Entity>();
         auto modelC = cube->addComponent<ModelComponent>();
-        modelC->model = Sprocket::Model3D("Resources/Models/Cube.obj");
+        modelC->model = Model3D("Resources/Models/Cube.obj");
         modelC->materials.push_back(shinyGray);
-        modelC->scale = 1.0f;
+        modelC->scale = 0.1f;
         auto tC = cube->addComponent<TransformComponent>();
         tC->transform = Maths::transform(
-            {0.0f, 5.0f, 0.0f},
+            {0.0f, 5.0f, 5.0f},
             {0.0, 0.0f, 0.0}
         );
         auto physC = cube->addComponent<PhysicsComponent>();
@@ -89,23 +89,26 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         entityManager.addEntity(cube);
     }
 
+    Model3D s("Resources/Models/Sphere.obj");
+    for (int i = 0; i != 5; ++i)
     {
         auto sphere = std::make_shared<Entity>();
         auto modelC = sphere->addComponent<ModelComponent>();
-        modelC->model = Sprocket::Model3D("Resources/Models/Sphere.obj");
+        modelC->model = s;
         modelC->materials.push_back(shinyGray);
-        modelC->scale = 1.0f;
+        modelC->scale = 0.5f;
         auto tC = sphere->addComponent<TransformComponent>();
         tC->transform = Maths::transform(
-            {0.0f, 5.0f, 0.0f},
+            {0.0f, (float)i * 10.0f + 5.0f, 0.0f},
             {0.0, 0.0f, 0.0}
         );
         auto physC = sphere->addComponent<PhysicsComponent>();
         physC->stationary = false;
-        physC->mass = 2.0f;
+        physC->mass = 20.0f;
         {
-            SphereCollider c;
-            c.radius = 1.0f;
+            CapsuleCollider c;
+            c.radius = 1;
+            c.height = 1;
             physC->collider = c;
         }
         entityManager.addEntity(sphere);
@@ -168,7 +171,7 @@ void WorldLayer::drawImpl()
     d_entityRenderer.update(*d_camera, d_lens, d_lights, options);
 
     for (auto entity: d_entityManager.entities()) {
-        d_entityRenderer.draw(*entity);
+        d_entityRenderer.draw(*entity, true);
     }
 
     d_skyboxRenderer.draw(d_skybox,
