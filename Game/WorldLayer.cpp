@@ -105,10 +105,10 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto physC = sphere->add<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 20.0f;
-        physC->bounciness = 0.9f;
         {
-            SphereCollider c;
+            CapsuleCollider c;
             c.radius = 1;
+            c.height = 2;
             physC->collider = c;
         }
         entityManager.addEntity(sphere);
@@ -183,7 +183,8 @@ void WorldLayer::updateImpl()
                 Maths::vec3 translation = Maths::getTranslation(t.transform);
                 if (translation.y < -2.0f) {
                     if (entity->has<PhysicsComponent>()) {
-                        entity->get<PhysicsComponent>().velocity = {0.0, 10.0, 0.0};
+                        entity->get<PhysicsComponent>().velocity.y =
+                            std::abs(entity->get<PhysicsComponent>().velocity.y);
                     }
                 }
             }

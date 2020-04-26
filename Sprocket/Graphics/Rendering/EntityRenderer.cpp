@@ -9,9 +9,7 @@ namespace Sprocket {
 EntityRenderer::EntityRenderer(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/Entity.vert",
-               "Resources/Shaders/Entity.frag")
-    , d_mirrorShader("Resources/Shaders/EntityMirror.vert",
-                     "Resources/Shaders/EntityMirror.frag")
+               "Resources/Shaders/Entity.frag") 
     , d_cube("Resources/Models/Cube.obj")
     , d_sphere("Resources/Models/LowPolySphere.obj")
     , d_hemisphere("Resources/Models/Hemisphere.obj")
@@ -137,8 +135,8 @@ void EntityRenderer::drawColliders(const Entity& entity)
         {  // Top Hemisphere
             d_hemisphere.bind();
             Maths::mat4 transform = transformData.transform;
+            transform = Maths::translate(transform, {0.0, data->height/2, 0.0});
             transform = Maths::scale(transform, data->radius);
-            transform = Maths::translate(transform, {0.0, data->height, 0.0});
             d_shader.loadUniform("u_model_matrix", transform);
             glDrawElements(GL_TRIANGLES, d_hemisphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
             d_hemisphere.unbind();
@@ -147,9 +145,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
         {  // Middle Cylinder
             d_cylinder.bind();
             Maths::mat4 transform = transformData.transform;
-            float scale = data->radius * data->height;
-            transform = Maths::scale(transform, {data->radius, scale, data->radius});
-            transform = Maths::translate(transform, {0.0, 0.5, 0.0});
+            transform = Maths::scale(transform, {data->radius, data->height, data->radius});
             d_shader.loadUniform("u_model_matrix", transform);
             glDrawElements(GL_TRIANGLES, d_cylinder.vertexCount(), GL_UNSIGNED_INT, nullptr);
             d_cylinder.unbind();
@@ -158,8 +154,9 @@ void EntityRenderer::drawColliders(const Entity& entity)
         {  // Bottom Hemisphere
             d_hemisphere.bind();
             Maths::mat4 transform = transformData.transform;
-            transform = Maths::scale(transform, data->radius);
+            transform = Maths::translate(transform, {0.0, -data->height/2, 0.0});
             transform = Maths::rotate(transform, {1, 0, 0}, Maths::radians(180.0f));
+            transform = Maths::scale(transform, data->radius);
             d_shader.loadUniform("u_model_matrix", transform);
             glDrawElements(GL_TRIANGLES, d_hemisphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
             d_hemisphere.unbind();

@@ -14,13 +14,7 @@ namespace Sprocket {
 class EntityRenderer
 {
     Window* d_window;
-        // Non-owning pointer to the window to draw in.
-
-    Shader d_shader;
-        // Basic shader used to draw entities.
-
-    Shader d_mirrorShader;
-        // Shader used to mirror-like entities.
+    Shader  d_shader;
 
     void drawColliders(const Entity& entity);
     Model3D d_cube;

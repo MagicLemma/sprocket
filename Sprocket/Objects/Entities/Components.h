@@ -46,8 +46,8 @@ struct ModelComponent : public Component
 
 struct PhysicsComponent : public Component
 {
-    bool     stationary = false;
-    Collider collider   = EmptyCollider();
+    bool        stationary          = false;
+    Collider    collider            = EmptyCollider();
 
     float       mass                = 1.0f;
     Maths::vec3 velocity            = {0.0, 0.0, 0.0};
