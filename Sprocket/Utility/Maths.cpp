@@ -30,6 +30,16 @@ mat4 transform(const vec3& translation, const vec3& rotation)
     return transform(translation, rotation, 1.0f);
 }
 
+mat4 transform(const vec3& position, const mat3& orientation)
+{
+    mat4 m = orientation;
+    m[3][0] = position.x;
+    m[3][1] = position.y;
+    m[3][2] = position.z;
+    m[3][3] = 1.0f;
+    return m;
+}
+
 mat4 translate(const mat4& matrix, const vec3& translation)
 {
     return glm::translate(matrix, translation);

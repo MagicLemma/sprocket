@@ -33,6 +33,40 @@ Maths::vec2 convert(const rp3d::Vector2& v)
     return Maths::vec2(v.x, v.y);
 }
 
+Maths::mat3 convert(const rp3d::Matrix3x3& m)
+{
+    Maths::mat3 ret;
+    ret[0][0] = m[0][0];
+    ret[1][0] = m[1][0];
+    ret[2][0] = m[2][0];
+
+    ret[0][1] = m[0][1];
+    ret[1][1] = m[1][1];
+    ret[2][1] = m[2][1];
+
+    ret[0][2] = m[0][2];
+    ret[1][2] = m[1][2];
+    ret[2][2] = m[2][2];
+    return ret;
+}
+
+rp3d::Matrix3x3 convert(const Maths::mat4& m)
+{
+    rp3d::Matrix3x3 ret;
+    ret[0][0] = m[0][0];
+    ret[1][0] = m[1][0];
+    ret[2][0] = m[2][0];
+
+    ret[0][1] = m[0][1];
+    ret[1][1] = m[1][1];
+    ret[2][1] = m[2][1];
+
+    ret[0][2] = m[0][2];
+    ret[1][2] = m[1][2];
+    ret[2][2] = m[2][2];
+    return ret;
+}
+
 class RaycastCB : public rp3d::RaycastCallback
 {
     Entity* d_entity = nullptr;
@@ -72,6 +106,8 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     , d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
 {
     d_impl->world.enableSleeping(false);
+    d_impl->world.setNbIterationsPositionSolver(8);
+    d_impl->world.setNbIterationsVelocitySolver(15);
 }
 
 void PhysicsEngine::updateSystem(float dt)
@@ -102,18 +138,20 @@ void PhysicsEngine::preUpdateEntity(Entity& entity)
         const auto& t = entity.get<TransformComponent>();
         const auto& physics = entity.get<PhysicsComponent>();
 
-        auto& bodyData = d_impl->rigidBodies[entity.id()];
+        auto bodyData = d_impl->rigidBodies[entity.id()];
 
         // Update the RigidBody corresponding to this Entity.
+        rp3d::Transform transform = bodyData->getTransform();
+        transform.setPosition(convert(t.position));
         if (physics.stationary) {
-            Maths::mat4 transform = t.transform;
-            rp3d::Transform convertedTransform;
-            convertedTransform.setFromOpenGL(&transform[0][0]);
-            bodyData->setTransform(convertedTransform);
+            transform.setOrientation(rp3d::Quaternion(convert(t.orientation).getTranspose()));
+            // Only do this for static bodies as updating this behaves
+            // weirdly for dynamic ones.
         }
-
+        bodyData->setTransform(transform);
         bodyData->setMass(physics.mass);
         bodyData->setLinearVelocity(convert(physics.velocity));
+        bodyData->enableGravity(physics.gravity);
 
         auto& material = bodyData->getMaterial();
         material.setBounciness(physics.bounciness);
@@ -138,7 +176,10 @@ void PhysicsEngine::postUpdateEntity(Entity& entity)
 
         // Update the Entity corresponding to this RigidBody.
         if (!physics.stationary) {
-            bodyData->getTransform().getOpenGLMatrix(&t.transform[0][0]);
+            auto tr = bodyData->getTransform();
+            t.position = convert(tr.getPosition());
+            t.orientation = convert(tr.getOrientation().getMatrix().getTranspose());
+                // We transpose here as OpenGL uses column major ordering
         }
 
         physics.mass = bodyData->getMass();
@@ -167,8 +208,9 @@ void PhysicsEngine::registerEntity(const Entity& entity)
 
     rp3d::Transform transform = rp3d::Transform::identity();
     if (entity.has<TransformComponent>()) {
-        Maths::mat4& entityTransform = entity.get<TransformComponent>().transform; 
-        transform.setFromOpenGL(&entityTransform[0][0]);
+        auto transformData = entity.get<TransformComponent>();
+        transform.setPosition(convert(transformData.position));
+        transform.setOrientation(rp3d::Quaternion(convert(transformData.orientation)));
     }
     
     entry = d_impl->world.createRigidBody(transform);

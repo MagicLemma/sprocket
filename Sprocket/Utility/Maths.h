@@ -13,6 +13,7 @@ using vec4 = glm::vec4;
 mat4 transform(const vec3& translation, const vec3& rotation, const vec3& scale);
 mat4 transform(const vec3& translation, const vec3& rotation, float scale);
 mat4 transform(const vec3& translation, const vec3& rotation);
+mat4 transform(const vec3& position, const mat3& orientation);
 
 mat4 translate(const mat4& matrix, const vec3& translation);
 mat4 rotate(const mat4& matrix, const vec3& axis, float radians);

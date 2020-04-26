@@ -28,13 +28,13 @@ struct Component {
 
 struct TransformComponent : public Component
 {
-    Maths::mat4 transform;
-        // Contains the translation and rotation data for
-        // this entity.
-        
+       
         // If the object also has a physics component and is
         // not stationary, this component cannot be updated
         // manually.
+
+    Maths::vec3 position;
+    Maths::mat3 orientation;
 };
 
 struct ModelComponent : public Component
@@ -50,6 +50,7 @@ struct PhysicsComponent : public Component
     Collider    collider            = EmptyCollider();
 
     float       mass                = 1.0f;
+    bool        gravity             = true;
     Maths::vec3 velocity            = {0.0, 0.0, 0.0};
     float       bounciness          = 0.5f;
     float       frictionCoefficient = 0.3f;

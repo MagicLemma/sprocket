@@ -58,7 +58,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->add<TransformComponent>();
-        t->transform = Maths::transform({-2.0, 0.0, 3.0}, {0.0, 0.0, 0.0});
+        t->position = {-2.0, 0.0, 3.0};
+        t->orientation = Maths::mat3(1.0f);
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         BoxCollider c;
@@ -74,10 +75,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         modelC->materials.push_back(shinyGray);
         modelC->scale = 0.1f;
         auto tC = cube->add<TransformComponent>();
-        tC->transform = Maths::transform(
-            {0.0f, 5.0f, 5.0f},
-            {0.0, 0.0f, 0.0}
-        );
+        tC->position = {0.0f, 5.0f, 5.0f};
+        tC->orientation = Maths::mat3(1.0f);
         auto physC = cube->add<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 2.0f;
@@ -101,10 +100,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         modelC->materials.push_back(shinyGray);
         modelC->scale = 0.5f;
         auto tC = sphere->add<TransformComponent>();
-        tC->transform = Maths::transform(
-            {0.0f, (float)i * 10.0f + 5.0f, 0.0f},
-            {0.0, 0.0f, 0.0}
-        );
+        tC->position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
+        tC->orientation = Maths::mat3(1.0f);
         auto physC = sphere->add<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 20.0f;
@@ -174,15 +171,13 @@ void WorldLayer::updateImpl()
         d_accessor.window()->setCursorVisibility(false);
         d_entityManager.update(deltaTime());
 
-        for (auto& entity : d_entityManager.entities()) {
+       for (auto& entity : d_entityManager.entities()) {
             if (entity->has<TransformComponent>()) {
                 auto& t = entity->get<TransformComponent>();
 
-                Maths::vec3 translation = Maths::getTranslation(t.transform);
-                if (translation.y < -2.0f) {
-                    if (entity->has<PhysicsComponent>()) {
-                        entity->get<PhysicsComponent>().velocity.y =
-                            std::abs(entity->get<PhysicsComponent>().velocity.y);
+                if (t.position.y < -2.0f) {
+                    if (entity->has<TransformComponent>()) {
+                        entity->get<TransformComponent>().position.y = 10.0f;
                     }
                 }
             }
