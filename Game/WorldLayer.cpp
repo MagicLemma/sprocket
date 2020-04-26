@@ -25,6 +25,9 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     , d_entityManager({&d_playerMovement, &d_physicsEngine})
 {
     using namespace Sprocket;
+    d_entityRenderer.wireFrame(false);
+    d_entityRenderer.depthTest(true);
+    d_entityRenderer.renderColliders(true);
 
     d_playerMovement.enable(false);
 
@@ -152,11 +155,6 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
             if (x) {
                 x->get<ModelComponent>().scale *= 2.0f;
             }
-            else {
-                SPKT_LOG_INFO("No entity hit!");
-            }
-            
-            SPKT_LOG_INFO("Camera pos = {}, {}, {}", cameraPos.x, cameraPos.y, cameraPos.z);
         }
     }
 
@@ -198,14 +196,14 @@ void WorldLayer::drawImpl()
         d_postProcessor.bind();
     }
     
-    Sprocket::RenderOptions options;
-    options.wireframe = d_accessor.window()->isKeyDown(Sprocket::Keyboard::F) &&
-                        d_status == Status::NORMAL;
+    d_entityRenderer.wireFrame(
+        d_accessor.window()->isKeyDown(Sprocket::Keyboard::F) &&
+        d_status == Status::NORMAL);
     
-    d_entityRenderer.update(*d_camera, d_lens, d_lights, options);
+    d_entityRenderer.update(*d_camera, d_lens, d_lights);
 
     for (auto entity: d_entityManager.entities()) {
-        d_entityRenderer.draw(*entity, true);
+        d_entityRenderer.draw(*entity);
     }
 
     d_skyboxRenderer.draw(d_skybox,
