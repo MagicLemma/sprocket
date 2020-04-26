@@ -33,6 +33,21 @@ Maths::vec2 convert(const rp3d::Vector2& v)
     return Maths::vec2(v.x, v.y);
 }
 
+class RaycastCB : public rp3d::RaycastCallback
+{
+    Entity* d_entity = nullptr;
+
+
+public:
+    rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) override 
+    {
+        d_entity = reinterpret_cast<Entity*>(info.body->getUserData());
+        return 0.0;  // Store the first entity hit.
+    }
+
+    Entity* entity() const { return d_entity; }
+};
+
 }
 
 struct PhysicsEngineImpl
@@ -204,6 +219,22 @@ void PhysicsEngine::deregisterEntity(const Entity& entity)
 void PhysicsEngine::running(bool isRunning)
 {
     d_running = isRunning;
+}
+
+Entity* PhysicsEngine::raycast(const Maths::vec3& base,
+                               const Maths::vec3& direction)
+{
+    Maths::vec3 d = direction;
+    Maths::normalise(d);
+    d *= 1000.0f;
+
+    rp3d::Vector3 start = convert(base);
+    rp3d::Vector3 end = start + convert(d);
+
+    rp3d::Ray ray(start, end);
+    RaycastCB cb;
+    d_impl->world.raycast(ray, &cb);
+    return cb.entity();
 }
 
 }

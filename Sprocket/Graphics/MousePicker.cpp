@@ -2,43 +2,31 @@
 #include "Log.h"
 
 namespace Sprocket {
+namespace MousePicker {
 
-MousePicker::MousePicker(Window* window, Camera* camera, Lens* lens)
-    : d_window(window)
-    , d_camera(camera)
-    , d_lens(lens)
-{   
-}
-
-void MousePicker::calculateRay()
+Maths::vec3 getRay(Window* window, Camera* camera, Lens* lens)
 {
     // Pixel Space
-    Maths::vec2 mousePos = d_window->getMousePos();
-
-    // Normalised Screen Space
-    mousePos = {
-        (2.0f * mousePos.x) / d_window->width() - 1,
-        -((2.0f * mousePos.y) / d_window->height() - 1)
-    };
+    Maths::vec2 mousePos = window->getMousePos();
 
     // Homogeneous Clip Space
-    Maths::vec4 ray = { mousePos.x, mousePos.y, -1.0f, 1.0f };
+    Maths::vec4 ray = {
+        (2.0f * mousePos.x) / window->width() - 1,
+        -((2.0f * mousePos.y) / window->height() - 1),
+        -1.0f,
+        1.0f
+    };
 
     // Eye Space
-    ray = Maths::inverse(d_lens->projection()) * ray;
+    ray = Maths::inverse(lens->projection()) * ray;
     ray.z = -1.0f;
     ray.w = 0.0f;
 
     // World Space
-    ray = Maths::inverse(d_camera->view()) * ray;
-
-    d_currentRay = {ray.x, ray.y, -1.0f};
-    Maths::normalise(d_currentRay);
+    Maths::vec3 returnRay = Maths::inverse(camera->view()) * ray;
+    Maths::normalise(returnRay);
+    return returnRay;
 }
 
-void MousePicker::update()
-{
-    calculateRay();
 }
-
 }

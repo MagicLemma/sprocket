@@ -31,6 +31,11 @@ public:
 
     void running(bool isRunning);
     bool running() const { return d_running; }
+
+    Entity* raycast(const Maths::vec3& base, const Maths::vec3& direction);
+        // Given a position in the world and a direction from that point,
+        // return a pointer to the entity that it hits, or nullptr if it
+        // does not.
 };
 
 }

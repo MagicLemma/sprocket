@@ -20,7 +20,7 @@ int main()
     world->add<UILayer>(accessor, worldLayer.get());
     sceneManager.setActiveScene("World");
 
-    Sprocket::FramerateTimer fps; // Helper class to log the fps.
+    //Sprocket::FramerateTimer fps; // Helper class to log the fps.
 
     while (window.running()) {
         window.clear();
@@ -29,7 +29,7 @@ int main()
         sceneManager.draw();
 
         window.onUpdate();
-        fps.update();
+        //fps.update();
     }
 
     return 0;

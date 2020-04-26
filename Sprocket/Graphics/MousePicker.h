@@ -5,24 +5,9 @@
 #include "Maths.h"
 
 namespace Sprocket {
+namespace MousePicker {
 
-class MousePicker
-{
-    Window* d_window;
-    Camera* d_camera;
-    Lens*   d_lens;
-        // All non-owning references.
+Maths::vec3 getRay(Window* window, Camera* camera, Lens* lens);
 
-    Maths::vec3 d_currentRay;
-
-    void calculateRay();
-
-public:
-    MousePicker(Window* window, Camera* camera, Lens* lens);
-
-    Maths::vec3 currentRay() const { return d_currentRay; }
-
-    void update();
-};
-
+}
 }

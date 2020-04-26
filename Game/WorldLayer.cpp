@@ -108,7 +108,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         {
             CapsuleCollider c;
             c.radius = 1;
-            c.height = 1;
+            c.height = 2;
             physC->collider = c;
         }
         entityManager.addEntity(sphere);
@@ -127,14 +127,36 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
 bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
 {
-    if (auto e = event.as<Sprocket::WindowResizeEvent>()) {
+    using namespace Sprocket;
+
+    if (auto e = event.as<WindowResizeEvent>()) {
         d_postProcessor.setScreenSize(e->width(), e->height()); 
         SPKT_LOG_INFO("Resizing!");
     }
 
-    if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
-        if (e->key() == Sprocket::Keyboard::Q) {
+    if (auto e = event.as<KeyboardButtonPressedEvent>()) {
+        if (e->key() == Keyboard::Q) {
             d_physicsEngine.running(!d_physicsEngine.running());
+        }
+    }
+
+    if (auto e = event.as<MouseButtonPressedEvent>()) {
+        if (e->button() == Mouse::LEFT) {
+            Maths::vec3 cameraPos =
+                Maths::inverse(d_camera->view()) * Maths::vec4(0, 0, 0, 1);
+
+            Maths::vec3 dir = 
+                MousePicker::getRay(d_accessor.window(), d_camera, &d_lens);
+
+            auto x = d_physicsEngine.raycast(cameraPos, dir);
+            if (x) {
+                x->getComponent<ModelComponent>().scale *= 2.0f;
+            }
+            else {
+                SPKT_LOG_INFO("No entity hit!");
+            }
+            
+            SPKT_LOG_INFO("Camera pos = {}, {}, {}", cameraPos.x, cameraPos.y, cameraPos.z);
         }
     }
 
@@ -153,9 +175,6 @@ void WorldLayer::updateImpl()
         d_accessor.window()->setCursorVisibility(false);
         d_entityManager.update(deltaTime());
     }
-    else {
-    }
-    
 }
 
 void WorldLayer::drawImpl()
