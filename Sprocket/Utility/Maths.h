@@ -54,5 +54,8 @@ float distance(const Maths::vec2& A, const Maths::vec2& B);
 
 vec4 toQuaternion(const vec3& euler);
 vec3 toEuler(const vec4& quaternion);
+
+vec3 getTranslation(const mat4& transform);
+    // Extract the translation out of a transform matrix.
 }
 }

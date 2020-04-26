@@ -162,5 +162,10 @@ vec3 toEuler(const vec4& q)
     return {x, y, z};
 }
 
+vec3 getTranslation(const mat4& transform)
+{
+    return vec3{transform[3][0], transform[3][1], transform[3][2]};
+}
+
 }
 }

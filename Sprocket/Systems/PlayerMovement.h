@@ -16,7 +16,8 @@ public:
     ~PlayerMovement() {}
 
     void updateSystem(float dt) override;
-    void updateEntity(Entity& entity) override;
+    void preUpdateEntity(Entity& entity) override;
+    void postUpdateEntity(Entity& entity) override;
 
     void registerEntity(const Entity& entity) override;
     void deregisterEntity(const Entity& entity) override;

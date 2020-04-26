@@ -90,79 +90,84 @@ void PhysicsEngine::updateSystem(float dt)
     }
 }
 
-void PhysicsEngine::updateEntity(Entity& entity)
+void PhysicsEngine::preUpdateEntity(Entity& entity)
 {
     if (!d_running) {
         return;
     }
 
-    if (entity.hasComponent<PhysicsComponent>() &&
-        entity.hasComponent<TransformComponent>()) {
+    if (entity.has<PhysicsComponent>() &&
+        entity.has<TransformComponent>()) {
+    
+        const auto& t = entity.get<TransformComponent>();
+        const auto& physics = entity.get<PhysicsComponent>();
+
+        auto& bodyData = d_impl->rigidBodies[entity.id()];
+
+        // Update the RigidBody corresponding to this Entity.
+        if (physics.stationary) {
+            Maths::mat4 transform = t.transform;
+            rp3d::Transform convertedTransform;
+            convertedTransform.setFromOpenGL(&transform[0][0]);
+            bodyData->setTransform(convertedTransform);
+        }
+
+        bodyData->setMass(physics.mass);
+        bodyData->setLinearVelocity(convert(physics.velocity));
+
+        auto& material = bodyData->getMaterial();
+        material.setBounciness(physics.bounciness);
+        material.setFrictionCoefficient(physics.frictionCoefficient);
+        material.setRollingResistance(physics.rollingResistance);
+    }
+}
+
+void PhysicsEngine::postUpdateEntity(Entity& entity)
+{
+    if (!d_running) {
+        return;
+    }
+
+    if (entity.has<PhysicsComponent>() &&
+        entity.has<TransformComponent>()) {
         
-        auto& t = entity.getComponent<TransformComponent>();
-        auto& physics = entity.getComponent<PhysicsComponent>();
+        auto& t = entity.get<TransformComponent>();
+        auto& physics = entity.get<PhysicsComponent>();
 
         const auto& bodyData = d_impl->rigidBodies[entity.id()];
 
-        if (physics.stationary) {
-            rp3d::Transform transform;
-            transform.setFromOpenGL(&t.transform[0][0]);
-            bodyData->setTransform(transform);
-        }
-        else {
+        // Update the Entity corresponding to this RigidBody.
+        if (!physics.stationary) {
             bodyData->getTransform().getOpenGLMatrix(&t.transform[0][0]);
         }
 
-        if (entity.hasComponent<PlayerComponent>()) {
-            const auto& player = entity.getComponent<PlayerComponent>();
+        physics.mass = bodyData->getMass();
+        physics.velocity = convert(bodyData->getLinearVelocity());
 
-            bodyData->setAngularVelocity(rp3d::Vector3(0, 0, 0));
-            rp3d::Transform transform = bodyData->getTransform();
+        auto material = bodyData->getMaterial();
+        physics.bounciness = material.getBounciness();
+        physics.frictionCoefficient = material.getFrictionCoefficient();
+        physics.rollingResistance = material.getRollingResistance();
 
-            rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(0.0f, player.yaw, 0.0f);
-            transform.setOrientation(q);
-            bodyData->setTransform(transform);
-
-            if (player.jumping && bodyData->getContactManifoldsList()) {
-                bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, 10, 0));
-            }
-
-            rp3d::Vector3 forwards(-std::sin(player.yaw), 0, -std::cos(player.yaw));
-            rp3d::Vector3 right(std::cos(player.yaw), 0, -std::sin(player.yaw));
-
-            if (player.movingForwards) {
-                bodyData->applyForceToCenterOfMass(forwards);
-            }
-            if (player.movingBackwards) {
-                bodyData->applyForceToCenterOfMass(-forwards);
-            }
-            if (player.movingRight) {
-                bodyData->applyForceToCenterOfMass(right);
-            }
-            if (player.movingLeft) {
-                bodyData->applyForceToCenterOfMass(-right);
-            }
+        // Handle player movement updates.
+        if (entity.has<PlayerComponent>()) {
+            updatePlayer(entity);
         }
-
-        rp3d::Vector3 v = bodyData->getLinearVelocity();
-        physics.velocity = std::sqrt(v.lengthSquare());
-        v.normalize();
-        physics.velocityDirection = convert(v);
     }
 }
 
 void PhysicsEngine::registerEntity(const Entity& entity)
 {
-    if (!entity.hasComponent<PhysicsComponent>()) {
+    if (!entity.has<PhysicsComponent>()) {
         return;  // Entity must have physics.
     }
 
-    auto& physicsData = entity.getComponent<PhysicsComponent>();
+    auto& physicsData = entity.get<PhysicsComponent>();
     auto& entry = d_impl->rigidBodies[entity.id()];
 
     rp3d::Transform transform = rp3d::Transform::identity();
-    if (entity.hasComponent<TransformComponent>()) {
-        Maths::mat4& entityTransform = entity.getComponent<TransformComponent>().transform; 
+    if (entity.has<TransformComponent>()) {
+        Maths::mat4& entityTransform = entity.get<TransformComponent>().transform; 
         transform.setFromOpenGL(&entityTransform[0][0]);
     }
     
@@ -177,7 +182,7 @@ void PhysicsEngine::registerEntity(const Entity& entity)
         entry->setType(rp3d::BodyType::DYNAMIC);
     }
 
-    if (entity.hasComponent<PlayerComponent>()) {
+    if (entity.has<PlayerComponent>()) {
         entry->setAngularDamping(0.0f);
     }
 
@@ -208,7 +213,7 @@ void PhysicsEngine::registerEntity(const Entity& entity)
 
 void PhysicsEngine::deregisterEntity(const Entity& entity)
 {
-    if (!entity.hasComponent<PhysicsComponent>()) {
+    if (!entity.has<PhysicsComponent>()) {
         // Entity must have physics.
         return; 
     }
@@ -235,6 +240,39 @@ Entity* PhysicsEngine::raycast(const Maths::vec3& base,
     RaycastCB cb;
     d_impl->world.raycast(ray, &cb);
     return cb.entity();
+}
+
+void PhysicsEngine::updatePlayer(Entity& entity)
+{
+    const auto& bodyData = d_impl->rigidBodies[entity.id()];
+    const auto& player = entity.get<PlayerComponent>();
+
+    bodyData->setAngularVelocity(rp3d::Vector3(0, 0, 0));
+    rp3d::Transform transform = bodyData->getTransform();
+
+    rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(0.0f, player.yaw, 0.0f);
+    transform.setOrientation(q);
+    bodyData->setTransform(transform);
+
+    if (player.jumping && bodyData->getContactManifoldsList()) {
+        bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, 10, 0));
+    }
+
+    rp3d::Vector3 forwards(-std::sin(player.yaw), 0, -std::cos(player.yaw));
+    rp3d::Vector3 right(std::cos(player.yaw), 0, -std::sin(player.yaw));
+
+    if (player.movingForwards) {
+        bodyData->applyForceToCenterOfMass(forwards);
+    }
+    if (player.movingBackwards) {
+        bodyData->applyForceToCenterOfMass(-forwards);
+    }
+    if (player.movingRight) {
+        bodyData->applyForceToCenterOfMass(right);
+    }
+    if (player.movingLeft) {
+        bodyData->applyForceToCenterOfMass(-right);
+    }
 }
 
 }

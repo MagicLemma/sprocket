@@ -17,13 +17,19 @@ void EntityManager::addEntity(std::shared_ptr<Entity> entity)
 
 void EntityManager::update(float dt)
 {
+    for (auto& entity : d_entities) {
+        for (auto system : d_systems) {
+            system->preUpdateEntity(*entity);
+        }
+    }
+
     for (auto system : d_systems) {
         system->updateSystem(dt);
     }
 
     for (auto& entity : d_entities) {
         for (auto system : d_systems) {
-            system->updateEntity(*entity);
+            system->postUpdateEntity(*entity);
         }
     }
 }

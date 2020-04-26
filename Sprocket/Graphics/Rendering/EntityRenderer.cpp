@@ -56,18 +56,18 @@ void EntityRenderer::draw(const Entity& entity,
                           bool renderColliders)
 {
     // Entities without a ModelComponent have nothing to render.
-    if (!entity.hasComponent<ModelComponent>()) {
+    if (!entity.has<ModelComponent>()) {
         return;
     }
 
     d_shader.bind();
 
-    auto modelComp = entity.getComponent<ModelComponent>();
+    auto modelComp = entity.get<ModelComponent>();
 
     // If this Entity has a Position component, use the transform on that.
     Maths::mat4 transform = Maths::mat4(1.0f);
-    if (entity.hasComponent<TransformComponent>()) {
-        transform = entity.getComponent<TransformComponent>().transform;
+    if (entity.has<TransformComponent>()) {
+        transform = entity.get<TransformComponent>().transform;
         transform = Maths::scale(transform, modelComp.scale);
     }
 
@@ -90,12 +90,12 @@ void EntityRenderer::draw(const Entity& entity,
 
 void EntityRenderer::drawColliders(const Entity& entity)
 {
-    if (!entity.hasComponent<PhysicsComponent>()) {
+    if (!entity.has<PhysicsComponent>()) {
         return;
     }
 
-    auto& transformData = entity.getComponent<TransformComponent>();
-    auto& physicsData = entity.getComponent<PhysicsComponent>();
+    auto& transformData = entity.get<TransformComponent>();
+    auto& physicsData = entity.get<PhysicsComponent>();
 
     if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {
         Maths::mat4 transform = transformData.transform;

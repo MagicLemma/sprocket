@@ -14,13 +14,18 @@ void PlayerMovement::updateSystem(float dt)
     d_deltaTime = dt;
 }
 
-void PlayerMovement::updateEntity(Entity& entity)
+void PlayerMovement::preUpdateEntity(Entity& entity)
 {
-    if (!entity.hasComponent<PlayerComponent>()) {
+
+}
+
+void PlayerMovement::postUpdateEntity(Entity& entity)
+{
+    if (!entity.has<PlayerComponent>()) {
         return;
     }
 
-    auto& player = entity.getComponent<PlayerComponent>();
+    auto& player = entity.get<PlayerComponent>();
 
     if (d_enabled) {
         player.movingForwards = d_window->isKeyDown(Keyboard::W);

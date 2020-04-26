@@ -20,31 +20,31 @@ public:
     Entity();
 
     template <typename T>
-    T* addComponent();
+    T* add();
 
     template <typename T>
-    bool hasComponent() const;
+    bool has() const;
 
     template <typename T>
-    T& getComponent() const;
+    T& get() const;
 
     std::size_t id() const { return d_id; }
 };
 
 template <typename T>
-T* Entity::addComponent()
+T* Entity::add()
 {
     auto component = std::make_shared<T>();
     d_components[getComponentTypeId<T>()] = component;
     return component.get();
 }
 
-template <typename T> bool Entity::hasComponent() const
+template <typename T> bool Entity::has() const
 {
     return d_components[getComponentTypeId<T>()] != nullptr;
 }
 
-template <typename T> T& Entity::getComponent() const
+template <typename T> T& Entity::get() const
 {
     auto component = d_components[getComponentTypeId<T>()];
     return *static_cast<T*>(component.get());

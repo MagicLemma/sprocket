@@ -12,9 +12,11 @@ public:
         // Called once per frame, this should update any system
         // speific data.
 
-    virtual void updateEntity(Entity& entity) = 0;
-        // Called once per entity per frame, this should modify 
-        // entities as a reaction to the updated system.
+    virtual void preUpdateEntity(Entity& entity) = 0;
+        // Called once per entity per frame and before the system updates.
+
+    virtual void postUpdateEntity(Entity& entity) = 0;
+        // Called once per entity per frame and after the system updates.
 
     virtual void registerEntity(const Entity& entity) = 0;
     virtual void deregisterEntity(const Entity& entity) = 0;

@@ -50,13 +50,13 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     {
         auto platform = std::make_shared<Entity>();
-        auto model = platform->addComponent<ModelComponent>();
+        auto model = platform->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Platform.obj");
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
-        auto t = platform->addComponent<TransformComponent>();
+        auto t = platform->add<TransformComponent>();
         t->transform = Maths::transform({-2.0, 0.0, 3.0}, {0.0, 0.0, 0.0});
-        auto phys = platform->addComponent<PhysicsComponent>();
+        auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
@@ -66,16 +66,16 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     {
         auto cube = std::make_shared<Entity>();
-        auto modelC = cube->addComponent<ModelComponent>();
+        auto modelC = cube->add<ModelComponent>();
         modelC->model = Model3D("Resources/Models/Cube.obj");
         modelC->materials.push_back(shinyGray);
         modelC->scale = 0.1f;
-        auto tC = cube->addComponent<TransformComponent>();
+        auto tC = cube->add<TransformComponent>();
         tC->transform = Maths::transform(
             {0.0f, 5.0f, 5.0f},
             {0.0, 0.0f, 0.0}
         );
-        auto physC = cube->addComponent<PhysicsComponent>();
+        auto physC = cube->add<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 2.0f;
         {
@@ -84,7 +84,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
             c.height = 1.0f;
             physC->collider = c;
         }
-        cube->addComponent<PlayerComponent>();
+        cube->add<PlayerComponent>();
         d_playerCamera.setPlayer(cube.get());
         entityManager.addEntity(cube);
     }
@@ -93,22 +93,22 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     for (int i = 0; i != 5; ++i)
     {
         auto sphere = std::make_shared<Entity>();
-        auto modelC = sphere->addComponent<ModelComponent>();
+        auto modelC = sphere->add<ModelComponent>();
         modelC->model = s;
         modelC->materials.push_back(shinyGray);
         modelC->scale = 0.5f;
-        auto tC = sphere->addComponent<TransformComponent>();
+        auto tC = sphere->add<TransformComponent>();
         tC->transform = Maths::transform(
             {0.0f, (float)i * 10.0f + 5.0f, 0.0f},
             {0.0, 0.0f, 0.0}
         );
-        auto physC = sphere->addComponent<PhysicsComponent>();
+        auto physC = sphere->add<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 20.0f;
+        physC->bounciness = 0.9f;
         {
-            CapsuleCollider c;
+            SphereCollider c;
             c.radius = 1;
-            c.height = 2;
             physC->collider = c;
         }
         entityManager.addEntity(sphere);
@@ -150,7 +150,7 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
 
             auto x = d_physicsEngine.raycast(cameraPos, dir);
             if (x) {
-                x->getComponent<ModelComponent>().scale *= 2.0f;
+                x->get<ModelComponent>().scale *= 2.0f;
             }
             else {
                 SPKT_LOG_INFO("No entity hit!");
@@ -168,12 +168,26 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
 
 void WorldLayer::updateImpl()
 {
+    using namespace Sprocket;
     d_status = d_paused ? Status::PAUSED : Status::NORMAL;
 
     if (d_status == Status::NORMAL) {
         d_camera->update(d_accessor.window(), deltaTime());
         d_accessor.window()->setCursorVisibility(false);
         d_entityManager.update(deltaTime());
+
+        for (auto& entity : d_entityManager.entities()) {
+            if (entity->has<TransformComponent>()) {
+                auto& t = entity->get<TransformComponent>();
+
+                Maths::vec3 translation = Maths::getTranslation(t.transform);
+                if (translation.y < -2.0f) {
+                    if (entity->has<PhysicsComponent>()) {
+                        entity->get<PhysicsComponent>().velocity = {0.0, 10.0, 0.0};
+                    }
+                }
+            }
+        }
     }
 }
 
