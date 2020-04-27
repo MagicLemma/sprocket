@@ -13,11 +13,8 @@ PlayerBasedCamera::PlayerBasedCamera(Entity* player)
 
 Maths::mat4 PlayerBasedCamera::view() const
 {
-    Maths::mat4 t = Maths::transform(
-        d_player->get<TransformComponent>().position,
-        d_player->get<TransformComponent>().orientation
-    );
-    return Maths::inverse(t);
+    auto t = d_player->get<TransformComponent>();
+    return Maths::inverse(Maths::transform(t.position, t.orientation));
 }
 
 void PlayerBasedCamera::update(Window* window, float timeDelta)

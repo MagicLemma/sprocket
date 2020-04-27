@@ -166,8 +166,7 @@ void PhysicsEngine::postUpdateEntity(Entity& entity)
         return;
     }
 
-    if (entity.has<PhysicsComponent>() &&
-        entity.has<TransformComponent>()) {
+    if (entity.has<PhysicsComponent>() && entity.has<TransformComponent>()) {
         
         auto& t = entity.get<TransformComponent>();
         auto& physics = entity.get<PhysicsComponent>();
