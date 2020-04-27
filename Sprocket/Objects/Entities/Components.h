@@ -65,6 +65,7 @@ struct PlayerComponent : public Component
     bool movingRight = false;
 
     float yaw = 0.0f;  // Forwards direction
+    float pitch = 0.0f;
 
     bool jumping = false;
 };
