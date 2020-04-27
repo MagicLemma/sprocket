@@ -126,7 +126,7 @@ void PhysicsEngine::updateSystem(float dt)
     }
 }
 
-void PhysicsEngine::preUpdateEntity(Entity& entity)
+void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
 {
     if (!d_running) {
         return;
@@ -160,7 +160,7 @@ void PhysicsEngine::preUpdateEntity(Entity& entity)
     }
 }
 
-void PhysicsEngine::postUpdateEntity(Entity& entity)
+void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
 {
     if (!d_running) {
         return;
@@ -191,7 +191,7 @@ void PhysicsEngine::postUpdateEntity(Entity& entity)
 
         // Handle player movement updates.
         if (entity.has<PlayerComponent>()) {
-            updatePlayer(entity);
+            updatePlayer(entity, dt);
         }
     }
 }
@@ -283,10 +283,15 @@ Entity* PhysicsEngine::raycast(const Maths::vec3& base,
     return cb.entity();
 }
 
-void PhysicsEngine::updatePlayer(Entity& entity)
+void PhysicsEngine::updatePlayer(Entity& entity, float dt)
 {
-    const auto& bodyData = d_impl->rigidBodies[entity.id()];
+    auto& bodyData = d_impl->rigidBodies[entity.id()];
+    bodyData->setLinearDamping(0.6f);
+    
     const auto& player = entity.get<PlayerComponent>();
+    const auto& physics = entity.get<PhysicsComponent>();
+
+    SPKT_LOG_INFO("Player speed = {}", Maths::magnitude(physics.velocity));
 
     bodyData->setAngularVelocity(rp3d::Vector3(0, 0, 0));
     rp3d::Transform transform = bodyData->getTransform();
@@ -295,24 +300,35 @@ void PhysicsEngine::updatePlayer(Entity& entity)
     transform.setOrientation(q);
     bodyData->setTransform(transform);
 
+    float speedLimit = 5.0f;
+    float speedSquare = Maths::magnitudeSquare(physics.velocity);
+
+    float jumpForce = 100.0f * 10000.0f * dt;
+    float acceleration = 4.0f * 10000.0f * dt;
+
+    if (speedSquare >= speedLimit * speedLimit) {
+        acceleration = 0;
+        jumpForce = 0;
+    }
+
     if (player.jumping && bodyData->getContactManifoldsList()) {
-        bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, 10, 0));
+        bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, jumpForce, 0));
     }
 
     rp3d::Vector3 forwards(-std::sin(player.yaw), 0, -std::cos(player.yaw));
     rp3d::Vector3 right(std::cos(player.yaw), 0, -std::sin(player.yaw));
 
     if (player.movingForwards) {
-        bodyData->applyForceToCenterOfMass(forwards);
+        bodyData->applyForceToCenterOfMass(acceleration * forwards);
     }
     if (player.movingBackwards) {
-        bodyData->applyForceToCenterOfMass(-forwards);
+        bodyData->applyForceToCenterOfMass(-acceleration * forwards);
     }
     if (player.movingRight) {
-        bodyData->applyForceToCenterOfMass(right);
+        bodyData->applyForceToCenterOfMass(acceleration * right);
     }
     if (player.movingLeft) {
-        bodyData->applyForceToCenterOfMass(-right);
+        bodyData->applyForceToCenterOfMass(-acceleration * right);
     }
 }
 

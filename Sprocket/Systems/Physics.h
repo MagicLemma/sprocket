@@ -19,7 +19,7 @@ class PhysicsEngine : public EntitySystem
     const float d_timeStep;
     bool        d_running = false;
 
-    void updatePlayer(Entity& entity);
+    void updatePlayer(Entity& entity, float dt);
         // If this Entity has a PlayerComponent, perform the
         // necessary updates.
 
@@ -28,8 +28,8 @@ public:
     ~PhysicsEngine() {}
 
     void updateSystem(float dt) override;
-    void preUpdateEntity(Entity& entity) override;
-    void postUpdateEntity(Entity& entity) override;
+    void preUpdateEntity(Entity& entity, float dt) override;
+    void postUpdateEntity(Entity& entity, float dt) override;
 
     void registerEntity(const Entity& entity) override;
     void deregisterEntity(const Entity& entity) override;

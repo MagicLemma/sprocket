@@ -19,6 +19,9 @@ EntityRenderer::EntityRenderer(Window* window)
     glUniform1i(glGetUniformLocation(d_shader.id(), "texture_sampler[1]"), 1);
     glUniform1i(glGetUniformLocation(d_shader.id(), "texture_sampler[2]"), 2);
     d_shader.unbind();
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 }
 
 void EntityRenderer::wireFrame(bool value)
@@ -81,6 +84,9 @@ void EntityRenderer::draw(const Entity& entity)
         return;
     }
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     d_shader.bind();
 
     auto modelComp = entity.get<ModelComponent>();
@@ -129,7 +135,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
     }
 
     if (d_depthTest) { // Temporarily disable depth testing if on.
-        glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
     }
 
     auto& transformData = entity.get<TransformComponent>();
@@ -145,9 +151,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
         s_cube.bind();
         Texture::white().bind();
         d_shader.loadUniform("u_model_matrix", transform);
-        glDisable(GL_CULL_FACE);
         glDrawElements(GL_TRIANGLES, s_cube.vertexCount(), GL_UNSIGNED_INT, nullptr);
-        glEnable(GL_CULL_FACE);
         Texture::white().unbind();
         s_cube.unbind();
     }
@@ -162,16 +166,13 @@ void EntityRenderer::drawColliders(const Entity& entity)
         s_sphere.bind();
         Texture::white().bind();
         d_shader.loadUniform("u_model_matrix", transform);
-        glDisable(GL_CULL_FACE);
         glDrawElements(GL_TRIANGLES, s_sphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
-        glEnable(GL_CULL_FACE);
         Texture::white().unbind();
         s_sphere.unbind();
     }
     else if (auto data = std::get_if<CapsuleCollider>(&physicsData.collider)) {
         
         Texture::white().bind();
-        glDisable(GL_CULL_FACE);
 
         {  // Top Hemisphere
             s_hemisphere.bind();
@@ -212,7 +213,6 @@ void EntityRenderer::drawColliders(const Entity& entity)
             s_hemisphere.unbind();
         }
         
-        glEnable(GL_CULL_FACE);
         Texture::white().unbind();   
     }
 
@@ -221,7 +221,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
     }
 
     if (d_depthTest) {
-        glEnable(GL_CULL_FACE);
+        glEnable(GL_DEPTH_TEST);
     }
 }
 

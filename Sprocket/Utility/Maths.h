@@ -58,5 +58,9 @@ vec3 toEuler(const vec4& quaternion);
 
 vec3 getTranslation(const mat4& transform);
     // Extract the translation out of a transform matrix.
+
+float magnitude(const vec3& v);
+float magnitudeSquare(const vec3& v);
+
 }
 }

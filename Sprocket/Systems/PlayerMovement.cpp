@@ -14,12 +14,12 @@ void PlayerMovement::updateSystem(float dt)
     d_deltaTime = dt;
 }
 
-void PlayerMovement::preUpdateEntity(Entity& entity)
+void PlayerMovement::preUpdateEntity(Entity& entity, float dt)
 {
 
 }
 
-void PlayerMovement::postUpdateEntity(Entity& entity)
+void PlayerMovement::postUpdateEntity(Entity& entity, float dt)
 {
     if (!entity.has<PlayerComponent>()) {
         return;

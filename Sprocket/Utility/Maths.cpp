@@ -177,5 +177,15 @@ vec3 getTranslation(const mat4& transform)
     return vec3{transform[3][0], transform[3][1], transform[3][2]};
 }
 
+float magnitude(const vec3& v)
+{
+    return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+}
+
+float magnitudeSquare(const vec3& v)
+{
+    return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
 }
 }

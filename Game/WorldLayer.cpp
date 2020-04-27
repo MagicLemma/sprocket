@@ -27,7 +27,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     using namespace Sprocket;
     d_entityRenderer.wireFrame(false);
     d_entityRenderer.depthTest(true);
-    d_entityRenderer.renderColliders(true);
+    d_entityRenderer.renderColliders(false);
 
     d_playerMovement.enable(false);
 
@@ -73,13 +73,16 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto modelC = cube->add<ModelComponent>();
         modelC->model = Model3D("Resources/Models/Cube.obj");
         modelC->materials.push_back(shinyGray);
-        modelC->scale = 0.1f;
+        modelC->scale = 0.3f;
         auto tC = cube->add<TransformComponent>();
         tC->position = {0.0f, 5.0f, 5.0f};
         tC->orientation = Maths::mat3(1.0f);
         auto physC = cube->add<PhysicsComponent>();
         physC->stationary = false;
-        physC->mass = 2.0f;
+        physC->mass = 60.0f;
+        physC->frictionCoefficient = 1.0f;
+        physC->rollingResistance = 1.0f;
+        physC->bounciness = 0.0f;
         {
             CapsuleCollider c;
             c.radius = 0.5f;
@@ -98,7 +101,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto modelC = sphere->add<ModelComponent>();
         modelC->model = s;
         modelC->materials.push_back(shinyGray);
-        modelC->scale = 0.5f;
+        modelC->scale = 1.0f;
         auto tC = sphere->add<TransformComponent>();
         tC->position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
         tC->orientation = Maths::mat3(1.0f);
@@ -106,9 +109,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         physC->stationary = false;
         physC->mass = 20.0f;
         {
-            CapsuleCollider c;
+            SphereCollider c;
             c.radius = 1;
-            c.height = 2;
             physC->collider = c;
         }
         entityManager.addEntity(sphere);
@@ -149,9 +151,6 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
                 MousePicker::getRay(d_accessor.window(), d_camera, &d_lens);
 
             auto x = d_physicsEngine.raycast(cameraPos, dir);
-            if (x) {
-                x->get<ModelComponent>().scale *= 2.0f;
-            }
         }
     }
 
@@ -172,14 +171,17 @@ void WorldLayer::updateImpl()
         d_entityManager.update(deltaTime());
 
        for (auto& entity : d_entityManager.entities()) {
-            if (entity->has<TransformComponent>()) {
-                auto& t = entity->get<TransformComponent>();
+            if (entity->has<TransformComponent>() &&
+                entity->has<PlayerComponent>()) {
 
-                if (t.position.y < -2.0f) {
-                    if (entity->has<TransformComponent>()) {
-                        entity->get<TransformComponent>().position.y = 10.0f;
+                if (entity->get<TransformComponent>().position.y < -2.0f) {
+                    entity->get<TransformComponent>().position = {0, 3, 0};
+                    if (entity->has<PhysicsComponent>()) {
+                        entity->get<PhysicsComponent>().velocity = {0, 0, 0};
                     }
                 }
+                
+                
             }
         }
     }

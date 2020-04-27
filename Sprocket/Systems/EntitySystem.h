@@ -12,10 +12,10 @@ public:
         // Called once per frame, this should update any system
         // speific data.
 
-    virtual void preUpdateEntity(Entity& entity) = 0;
+    virtual void preUpdateEntity(Entity& entity, float dt) = 0;
         // Called once per entity per frame and before the system updates.
 
-    virtual void postUpdateEntity(Entity& entity) = 0;
+    virtual void postUpdateEntity(Entity& entity, float dt) = 0;
         // Called once per entity per frame and after the system updates.
 
     virtual void registerEntity(const Entity& entity) = 0;
