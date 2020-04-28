@@ -108,8 +108,8 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     , d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
 {
     d_impl->world.enableSleeping(false);
-    d_impl->world.setNbIterationsPositionSolver(8);
-    d_impl->world.setNbIterationsVelocitySolver(15);
+    d_impl->world.setNbIterationsPositionSolver(10);
+    d_impl->world.setNbIterationsVelocitySolver(20);
 }
 
 void PhysicsEngine::updateSystem(float dt)
@@ -288,7 +288,6 @@ Entity* PhysicsEngine::raycast(const Maths::vec3& base,
 void PhysicsEngine::updatePlayer(Entity& entity, float dt)
 {
     auto& bodyData = d_impl->rigidBodies[entity.id()];
-    bodyData->setLinearDamping(0.6f); // TODO: Set this elsewhere
     
     const auto& player = entity.get<PlayerComponent>();
     const auto& physics = entity.get<PhysicsComponent>();
@@ -297,12 +296,6 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
     auto aabb = bodyData->getAABB();
     rp3d::Vector3 playerBase = aabb.getCenter();
     playerBase.y = aabb.getMin().y;
-    
-    float jumpForce = 1000.0f;
-
-    rp3d::Ray ray(playerBase + rp3d::Vector3(0, 0.1, 0), playerBase - rp3d::Vector3(0, 0.9, 0));
-    RaycastCB cb;
-    d_impl->world.raycast(ray, &cb);
 
     // Keep player upright
     rp3d::Transform transform = bodyData->getTransform();
@@ -310,10 +303,6 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
         0.0f, Maths::radians(player.yaw), 0.0f);
     transform.setOrientation(q);
     bodyData->setTransform(transform);
-
-    //if (!(cb.entity() && cb.fraction() < 0.2f)) {
-    //    return;
-    //}
 
     // Player Movement
     float cosYaw = Maths::cosd(player.yaw);
@@ -328,39 +317,27 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
     if (player.movingLeft) { direction -= right; }
     direction.normalize();
 
-    //const auto* manifoldList = bodyData->getContactManifoldsList();
-    //while (manifoldList) {
-    //    auto manifold = manifoldList->getContactManifold();
-//
-    //    auto* contactPoint = manifold->getContactPoints();
-    //    while (contactPoint) {
-    //        rp3d::Vector3 point = bodyData->getWorldPoint(contactPoint->getLocalPointOnShape1());
-    //        rp3d::Vector3 toPoint = point - bodyData->getAABB().getCenter();
-    //        if (toPoint.dot(direction) > 0.0f) {
-    //            direction = {0, 0, 0};
-    //        }
-//
-    //        contactPoint = contactPoint->getNext(); 
-    //    }
-//
-    //    manifoldList = manifoldList->getNext();
-    //}
-
-    float speed = 8.0f;
+    float speed = 5.0f;
     rp3d::Vector3 velChange = (speed * direction) - convert(physics.velocity);
     velChange.y = 0.0f;  // Only consider horizontal movement.
 
     bodyData->applyForceToCenterOfMass(bodyData->getMass() * velChange);
 
     // Jumping
-    if (cb.entity() && cb.fraction() < 0.2f) {
-        SPKT_LOG_INFO("ON FLOOR ({})", cb.entity()->get<MetadataComponent>().name);
+    rp3d::Vector3 delta(0.0f, 0.1f, 0.0f);
+    rp3d::Ray ray(playerBase + delta, playerBase - 2 * delta);
+    RaycastCB cb;
+    d_impl->world.raycast(ray, &cb);
+
+    if (cb.entity()) {
+        //SPKT_LOG_INFO("On floor");
         if (player.jumping) {
+            float jumpForce = 35.0f * 10000.0f * dt;
             bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, jumpForce, 0));
         }
     }
     else {
-        SPKT_LOG_INFO("IN AIR");
+        //SPKT_LOG_INFO("In air");
     }
 }
 

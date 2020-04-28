@@ -37,6 +37,7 @@ void PlayerMovement::postUpdateEntity(Entity& entity, float dt)
         player.jumping = d_window->isKeyDown(Keyboard::SPACE);
         player.yaw -= d_window->getMouseOffset().x * sensitivity;
         player.pitch -= d_window->getMouseOffset().y * sensitivity;
+        Maths::clamp(player.pitch, -89.0f, 89.0f);
     }
     else {
         player.movingForwards = false;

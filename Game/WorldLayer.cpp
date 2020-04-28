@@ -58,15 +58,36 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->add<TransformComponent>();
-        t->position = {-2.0, 0.0, 3.0};
-        t->orientation = Maths::mat3(1.0f);
+        t->position = {2.0, 0.0, -3.0};
+        t->orientation = Maths::rotate(Maths::mat3(1.0f), {1, 0, 0}, Maths::radians(20.0f));
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
+        phys->bounciness = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
-        meta->name = "Platform";
+        meta->name = "Platform 1";
+        entityManager.addEntity(platform);
+    }
+
+        {
+        auto platform = std::make_shared<Entity>();
+        auto model = platform->add<ModelComponent>();
+        model->model = Model3D("Resources/Models/Platform.obj");
+        model->materials.push_back(dullGray);
+        model->scale = 1.0f;
+        auto t = platform->add<TransformComponent>();
+        t->position = {-2.0, 0.0, 3.0};
+        t->orientation = Maths::mat3(1.0f);
+        auto phys = platform->add<PhysicsComponent>();
+        phys->stationary = true;
+        phys->bounciness = 0.0f;
+        BoxCollider c;
+        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
+        phys->collider = c;
+        auto meta = platform->add<MetadataComponent>();
+        meta->name = "Platform 1";
         entityManager.addEntity(platform);
     }
 
@@ -82,11 +103,35 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         phys->mass = 1000.0f;
+        phys->bounciness = 0.0f;
+        phys->frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
-        meta->name = "Crate";
+        meta->name = "Crate 1";
+        entityManager.addEntity(platform);
+    }
+
+    {
+        auto platform = std::make_shared<Entity>();
+        auto model = platform->add<ModelComponent>();
+        model->model = Model3D("Resources/Models/Cube.obj");
+        model->materials.push_back(field);
+        model->scale = 1.2f;
+        auto t = platform->add<TransformComponent>();
+        t->position = {-1.0, 0.0, -3.0};
+        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
+        auto phys = platform->add<PhysicsComponent>();
+        phys->stationary = true;
+        phys->mass = 1000.0f;
+        phys->bounciness = 0.0f;
+        phys->frictionCoefficient = 0.0f;
+        BoxCollider c;
+        c.halfExtents = {1.2, 1.2, 1.2};
+        phys->collider = c;
+        auto meta = platform->add<MetadataComponent>();
+        meta->name = "Crate 2";
         entityManager.addEntity(platform);
     }
 
@@ -104,6 +149,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         physC->mass = 60.0f;
         physC->rollingResistance = 0.0f;
         physC->bounciness = 0.0f;
+        physC->frictionCoefficient = 0.0f;
         {
             CapsuleCollider c;
             c.radius = 0.5f;
