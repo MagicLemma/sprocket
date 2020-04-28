@@ -134,10 +134,6 @@ void EntityRenderer::drawColliders(const Entity& entity)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
-    if (d_depthTest) { // Temporarily disable depth testing if on.
-        glDisable(GL_DEPTH_TEST);
-    }
-
     auto& transformData = entity.get<TransformComponent>();
     auto& physicsData = entity.get<PhysicsComponent>();
 
@@ -218,10 +214,6 @@ void EntityRenderer::drawColliders(const Entity& entity)
 
     if (!d_wireFrame) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-
-    if (d_depthTest) {
-        glEnable(GL_DEPTH_TEST);
     }
 }
 

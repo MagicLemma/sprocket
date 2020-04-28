@@ -107,9 +107,8 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     : d_timeStep(1.0f / 60.0f)
     , d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
 {
-    d_impl->world.enableSleeping(false);
-    d_impl->world.setNbIterationsPositionSolver(10);
-    d_impl->world.setNbIterationsVelocitySolver(20);
+    d_impl->world.setNbIterationsPositionSolver(5);
+    d_impl->world.setNbIterationsVelocitySolver(8);
 }
 
 void PhysicsEngine::updateSystem(float dt)
@@ -158,12 +157,7 @@ void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
         auto& material = bodyData->getMaterial();
         material.setBounciness(physics.bounciness);
         material.setFrictionCoefficient(physics.frictionCoefficient);
-        material.setRollingResistance(physics.rollingResistance);
-    
-        // Handle player movement updates.
-        if (entity.has<PlayerComponent>()) {
-            updatePlayer(entity, dt);
-        }        
+        material.setRollingResistance(physics.rollingResistance);        
     }
 }
 
@@ -195,7 +189,13 @@ void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
         physics.bounciness = material.getBounciness();
         physics.frictionCoefficient = material.getFrictionCoefficient();
         physics.rollingResistance = material.getRollingResistance();
+
+        // Handle player movement updates.
+        if (entity.has<PlayerComponent>()) {
+            updatePlayer(entity, dt);
+        }
     }
+
 }
 
 void PhysicsEngine::registerEntity(const Entity& entity)
@@ -317,7 +317,7 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
     if (player.movingLeft) { direction -= right; }
     direction.normalize();
 
-    float speed = 5.0f;
+    float speed = 6.0f * 1000.0f * dt;
     rp3d::Vector3 velChange = (speed * direction) - convert(physics.velocity);
     velChange.y = 0.0f;  // Only consider horizontal movement.
 
@@ -329,15 +329,9 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
     RaycastCB cb;
     d_impl->world.raycast(ray, &cb);
 
-    if (cb.entity()) {
-        //SPKT_LOG_INFO("On floor");
-        if (player.jumping) {
-            float jumpForce = 35.0f * 10000.0f * dt;
-            bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, jumpForce, 0));
-        }
-    }
-    else {
-        //SPKT_LOG_INFO("In air");
+    if (cb.entity() && player.jumping) {
+        float jumpForce = 35.0f * 10000.0f * dt;
+        bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, jumpForce, 0));
     }
 }
 

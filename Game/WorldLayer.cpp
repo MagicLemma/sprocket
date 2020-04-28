@@ -58,8 +58,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->add<TransformComponent>();
-        t->position = {2.0, 0.0, -3.0};
-        t->orientation = Maths::rotate(Maths::mat3(1.0f), {1, 0, 0}, Maths::radians(20.0f));
+        t->position = {7.0, 0.0, -3.0};
+        t->orientation = Maths::rotate(Maths::mat3(1.0f), {1, 0, 0}, Maths::radians(6.0f));
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         phys->bounciness = 0.0f;
@@ -71,14 +71,14 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         entityManager.addEntity(platform);
     }
 
-        {
+    {
         auto platform = std::make_shared<Entity>();
         auto model = platform->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Platform.obj");
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->add<TransformComponent>();
-        t->position = {-2.0, 0.0, 3.0};
+        t->position = {-5.0, 0.0, 5.0};
         t->orientation = Maths::mat3(1.0f);
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
@@ -87,7 +87,28 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
-        meta->name = "Platform 1";
+        meta->name = "Platform 2";
+        entityManager.addEntity(platform);
+    }
+
+        {
+        auto platform = std::make_shared<Entity>();
+        auto model = platform->add<ModelComponent>();
+        model->model = Model3D("Resources/Models/Platform.obj");
+        model->materials.push_back(dullGray);
+        model->scale = 1.0f;
+        auto t = platform->add<TransformComponent>();
+        t->position = {-5.0, 0.0, 5.0};
+        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 0, 1}, Maths::radians(80.0f));
+        t->orientation = Maths::rotate(t->orientation, {0, 1, 0}, Maths::radians(90.0f));
+        auto phys = platform->add<PhysicsComponent>();
+        phys->stationary = true;
+        phys->bounciness = 0.0f;
+        BoxCollider c;
+        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
+        phys->collider = c;
+        auto meta = platform->add<MetadataComponent>();
+        meta->name = "Platform 3";
         entityManager.addEntity(platform);
     }
 
@@ -135,6 +156,28 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         entityManager.addEntity(platform);
     }
 
+        {
+        auto platform = std::make_shared<Entity>();
+        auto model = platform->add<ModelComponent>();
+        model->model = Model3D("Resources/Models/Cube.obj");
+        model->materials.push_back(field);
+        model->scale = 1.2f;
+        auto t = platform->add<TransformComponent>();
+        t->position = {8.0, 5.0, 7.0};
+        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
+        auto phys = platform->add<PhysicsComponent>();
+        phys->stationary = false;
+        phys->mass = 10000.0f;
+        phys->bounciness = 0.0f;
+        phys->frictionCoefficient = 0.2f;
+        BoxCollider c;
+        c.halfExtents = {1.2, 1.2, 1.2};
+        phys->collider = c;
+        auto meta = platform->add<MetadataComponent>();
+        meta->name = "Movable Crate";
+        entityManager.addEntity(platform);
+    }
+
     {
         auto cube = std::make_shared<Entity>();
         auto modelC = cube->add<ModelComponent>();
@@ -147,9 +190,9 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto physC = cube->add<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 60.0f;
-        physC->rollingResistance = 0.0f;
+        physC->rollingResistance = 1.0f;
+        physC->frictionCoefficient = 0.15f;
         physC->bounciness = 0.0f;
-        physC->frictionCoefficient = 0.0f;
         {
             CapsuleCollider c;
             c.radius = 0.5f;
@@ -193,7 +236,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     d_lights.push_back({{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
-    d_lights.push_back({{-5.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.push_back({{-7.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
 
     d_postProcessor.addEffect<GaussianVert>();
