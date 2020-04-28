@@ -70,5 +70,10 @@ struct PlayerComponent : public Component
     bool jumping = false;
 };
 
+struct MetadataComponent : public Component
+{
+    std::string name;
+};
+
 
 }

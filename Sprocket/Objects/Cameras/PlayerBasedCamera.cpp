@@ -18,8 +18,8 @@ Maths::mat4 PlayerBasedCamera::view() const
 
     Maths::vec3 position = t.position;
     Maths::mat3 orientation(1.0f);
-    orientation = Maths::rotate(orientation, {0, 1, 0}, p.yaw);
-    orientation = Maths::rotate(orientation, {1, 0, 0}, p.pitch);
+    orientation = Maths::rotate(orientation, {0, 1, 0}, Maths::radians(p.yaw));
+    orientation = Maths::rotate(orientation, {1, 0, 0}, Maths::radians(p.pitch));
     
     return Maths::inverse(Maths::transform(position, orientation));
 }

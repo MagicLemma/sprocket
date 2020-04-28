@@ -25,6 +25,8 @@ void PlayerMovement::postUpdateEntity(Entity& entity, float dt)
         return;
     }
 
+    float sensitivity = 0.15f;
+
     auto& player = entity.get<PlayerComponent>();
 
     if (d_enabled) {
@@ -33,8 +35,8 @@ void PlayerMovement::postUpdateEntity(Entity& entity, float dt)
         player.movingLeft = d_window->isKeyDown(Keyboard::A);
         player.movingRight = d_window->isKeyDown(Keyboard::D);
         player.jumping = d_window->isKeyDown(Keyboard::SPACE);
-        player.yaw -= d_window->getMouseOffset().x * d_deltaTime * 10.0f;
-        player.pitch -= d_window->getMouseOffset().y * d_deltaTime * 10.0f;
+        player.yaw -= d_window->getMouseOffset().x * sensitivity;
+        player.pitch -= d_window->getMouseOffset().y * sensitivity;
     }
     else {
         player.movingForwards = false;

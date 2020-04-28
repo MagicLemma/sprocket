@@ -65,6 +65,28 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         phys->collider = c;
+        auto meta = platform->add<MetadataComponent>();
+        meta->name = "Platform";
+        entityManager.addEntity(platform);
+    }
+
+    {
+        auto platform = std::make_shared<Entity>();
+        auto model = platform->add<ModelComponent>();
+        model->model = Model3D("Resources/Models/Cube.obj");
+        model->materials.push_back(galaxy);
+        model->scale = 1.2f;
+        auto t = platform->add<TransformComponent>();
+        t->position = {-5.0, 2.0, -3.0};
+        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(45.0f));
+        auto phys = platform->add<PhysicsComponent>();
+        phys->stationary = true;
+        phys->mass = 1000.0f;
+        BoxCollider c;
+        c.halfExtents = {1.2, 1.2, 1.2};
+        phys->collider = c;
+        auto meta = platform->add<MetadataComponent>();
+        meta->name = "Crate";
         entityManager.addEntity(platform);
     }
 
@@ -80,8 +102,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto physC = cube->add<PhysicsComponent>();
         physC->stationary = false;
         physC->mass = 60.0f;
-        physC->frictionCoefficient = 1.0f;
-        physC->rollingResistance = 1.0f;
+        physC->rollingResistance = 0.0f;
         physC->bounciness = 0.0f;
         {
             CapsuleCollider c;
@@ -91,6 +112,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         }
         cube->add<PlayerComponent>();
         d_playerCamera.setPlayer(cube.get());
+        auto meta = cube->add<MetadataComponent>();
+        meta->name = "Player";
         entityManager.addEntity(cube);
     }
 
@@ -113,6 +136,10 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
             c.radius = 1;
             physC->collider = c;
         }
+        auto meta = sphere->add<MetadataComponent>();
+        std::stringstream ss;
+        ss << "Sphere " << i;
+        meta->name = ss.str();
         entityManager.addEntity(sphere);
     }
 
