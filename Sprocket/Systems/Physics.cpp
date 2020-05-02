@@ -106,6 +106,7 @@ struct PhysicsEngineImpl
 PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     : d_timeStep(1.0f / 60.0f)
     , d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
+    , d_numStepsLastFrame(0)
 {
     d_impl->world.setNbIterationsPositionSolver(5);
     d_impl->world.setNbIterationsVelocitySolver(8);
@@ -117,6 +118,8 @@ void PhysicsEngine::updateSystem(float dt)
         return;
     }
 
+    d_numStepsLastFrame = 0;
+
     static float accumulator = 0.0f;
     accumulator += dt;
 
@@ -124,6 +127,7 @@ void PhysicsEngine::updateSystem(float dt)
     while (accumulator >= d_timeStep) {
         d_impl->world.update(d_timeStep);
         accumulator -= d_timeStep;
+        ++d_numStepsLastFrame;
     }
 }
 
@@ -287,6 +291,10 @@ Entity* PhysicsEngine::raycast(const Maths::vec3& base,
 
 void PhysicsEngine::updatePlayer(Entity& entity, float dt)
 {
+    if (d_numStepsLastFrame == 0) {
+        return;  // Physics engine not advanced this frame.
+    }
+
     auto& bodyData = d_impl->rigidBodies[entity.id()];
     
     const auto& player = entity.get<PlayerComponent>();
@@ -296,6 +304,14 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
     auto aabb = bodyData->getAABB();
     rp3d::Vector3 playerBase = aabb.getCenter();
     playerBase.y = aabb.getMin().y;
+
+    // On floor check
+    rp3d::Vector3 up(0.0f, 1.0f, 0.0f);
+    float delta = 0.1f;
+    rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
+    RaycastCB cb;
+    d_impl->world.raycast(ray, &cb);
+    bool onFloor = cb.entity();
 
     // Keep player upright
     rp3d::Transform transform = bodyData->getTransform();
@@ -317,21 +333,22 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
     if (player.movingLeft) { direction -= right; }
     direction.normalize();
 
-    float speed = 6.0f * 1000.0f * dt;
-    rp3d::Vector3 velChange = (speed * direction) - convert(physics.velocity);
-    velChange.y = 0.0f;  // Only consider horizontal movement.
-
-    bodyData->applyForceToCenterOfMass(bodyData->getMass() * velChange);
+    if (direction.length() != 0.0f || onFloor) {
+        float speed = 3.0f;
+        rp3d::Vector3 dv = (speed * direction) - convert(physics.velocity);
+        dv.y = 0.0f;  // Only consider horizontal movement.
+        float dtime = d_timeStep * d_numStepsLastFrame;
+        rp3d::Vector3 acceleration = dv / dtime;
+        bodyData->applyForceToCenterOfMass(bodyData->getMass() * acceleration);
+    }
 
     // Jumping
-    rp3d::Vector3 delta(0.0f, 0.1f, 0.0f);
-    rp3d::Ray ray(playerBase + delta, playerBase - 2 * delta);
-    RaycastCB cb;
-    d_impl->world.raycast(ray, &cb);
-
-    if (cb.entity() && player.jumping) {
-        float jumpForce = 35.0f * 10000.0f * dt;
-        bodyData->applyForceToCenterOfMass(rp3d::Vector3(0, jumpForce, 0));
+    if (onFloor && player.jumping) {
+        float speed = 6.0f;
+        rp3d::Vector3 dv = (speed - physics.velocity.y) * up;
+        float dtime = d_timeStep * d_numStepsLastFrame;
+        rp3d::Vector3 acceleration = dv / dtime;
+        bodyData->applyForceToCenterOfMass(bodyData->getMass() * acceleration);
     }
 }
 

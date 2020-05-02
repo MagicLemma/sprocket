@@ -104,6 +104,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         phys->bounciness = 0.0f;
+        phys->frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         phys->collider = c;
@@ -191,7 +192,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         physC->stationary = false;
         physC->mass = 60.0f;
         physC->rollingResistance = 1.0f;
-        physC->frictionCoefficient = 0.15f;
+        physC->frictionCoefficient = 0.4f;
         physC->bounciness = 0.0f;
         {
             CapsuleCollider c;

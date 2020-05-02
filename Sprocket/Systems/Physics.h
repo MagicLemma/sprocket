@@ -17,6 +17,8 @@ class PhysicsEngine : public EntitySystem
     std::shared_ptr<PhysicsEngineImpl> d_impl;
 
     const float d_timeStep;
+    int         d_numStepsLastFrame;
+    
     bool        d_running = false;
 
     void updatePlayer(Entity& entity, float dt);
