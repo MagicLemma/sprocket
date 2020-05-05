@@ -17,9 +17,19 @@ void EntityManager::addEntity(std::shared_ptr<Entity> entity)
 
 void EntityManager::update(float dt)
 {
-    for (auto& entity : d_entities) {
-        for (auto system : d_systems) {
-            system->preUpdateEntity(*(entity.second), dt);
+    auto it = d_entities.begin();
+    while (it != d_entities.end()) {
+        if (!it->second->alive()) {
+            for (auto system : d_systems) {
+                system->deregisterEntity(*(it->second));
+            }
+            it = d_entities.erase(it);
+        }
+        else {
+            for (auto system : d_systems) {
+                system->preUpdateEntity(*(it->second), dt);
+            }
+            ++it;
         }
     }
 
@@ -42,31 +52,6 @@ bool EntityManager::handleEvent(const Event& event)
         }
     }
     return false;
-}
-
-bool EntityManager::deleteEntity(std::size_t id)
-{
-    auto entityIt = d_entities.find(id);
-    if (entityIt == d_entities.end()) {
-        return false;
-    }
-
-    for (auto system : d_systems) {
-        system->deregisterEntity(*(entityIt->second));
-    }
-
-    d_entities.erase(id);
-    return true;
-}
-
-bool EntityManager::deleteEntity(const Entity& entity)
-{
-    return deleteEntity(entity.id());
-}
-
-bool EntityManager::deleteEntity(Entity* entity)
-{
-    return deleteEntity(entity->id());
 }
 
 }

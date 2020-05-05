@@ -53,10 +53,12 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     Material galaxy;
     galaxy.texture = space;
 
+    auto platformModel = Model3D("Resources/Models/Platform.obj");
+
     {
         auto platform = std::make_shared<Entity>();
         auto model = platform->add<ModelComponent>();
-        model->model = Model3D("Resources/Models/Platform.obj");
+        model->model = platformModel;
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->add<TransformComponent>();
@@ -77,7 +79,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto platform = std::make_shared<Entity>();
         auto model = platform->add<ModelComponent>();
-        model->model = Model3D("Resources/Models/Platform.obj");
+        model->model = platformModel;
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->add<TransformComponent>();
@@ -98,7 +100,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto platform = std::make_shared<Entity>();
         auto model = platform->add<ModelComponent>();
-        model->model = Model3D("Resources/Models/Platform.obj");
+        model->model = platformModel;
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
         auto t = platform->add<TransformComponent>();
@@ -297,6 +299,9 @@ void WorldLayer::updateImpl()
                         entity->get<PhysicsComponent>().velocity = {0, 0, 0};
                     }
                 }   
+            }
+            if (entity->get<TransformComponent>().position.y < -50.0f) {
+                entity->kill();
             }
         }
     }

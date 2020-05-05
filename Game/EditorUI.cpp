@@ -55,6 +55,11 @@ EditorUI::EditorUI(Sprocket::Accessor& accessor, WorldLayer* worldLayer)
         val = !val;
         d_worldLayer->d_entityRenderer.renderColliders(val);
     });
+
+    auto entityCount = d_container.add<TextBox>(d_container.width() - 20.0f, 20.0f, "");
+    entityCount->base().opacity = 0;
+    entityCount->text().colour = {0.85625f, 0.85625f, 0.85625f};
+    d_entityCount = entityCount.get();
     
     d_entityAttrs.position({10.0f, 10.0f});
     d_entityAttrs.base().colour = {0.07f, 0.07f, 0.07f};
@@ -84,7 +89,7 @@ EditorUI::EditorUI(Sprocket::Accessor& accessor, WorldLayer* worldLayer)
     deleteButton->buttonClicked().colour = {1.0, 0.0, 0.0};
     deleteButton->setUnclickCallback([&]() {
         if (auto e = d_worldLayer->d_selector.selectedEntity()) {
-            d_worldLayer->d_entityManager.deleteEntity(e);
+            e->kill();
         }
     });
     d_deleteButton = deleteButton.get();
@@ -113,7 +118,11 @@ void EditorUI::updateImpl()
     if (d_status == Layer::Status::NORMAL) {
         d_displayRenderer.update();
         d_container.update(d_accessor.window());
-        d_entityAttrs.update(d_accessor.window()); 
+        d_entityAttrs.update(d_accessor.window());
+
+        std::stringstream ss;
+        ss << "Entities: " << d_worldLayer->d_entityManager.entities().size();
+        d_entityCount->text().message = ss.str();;
 
         if (auto e = d_worldLayer->d_selector.selectedEntity()) {
             d_entityAttrs.active(true);

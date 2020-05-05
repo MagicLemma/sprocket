@@ -9,6 +9,7 @@ class EditorUI : public Sprocket::Layer
     
     Sprocket::DisplayRenderer d_displayRenderer;
     Sprocket::Container d_container;
+    Sprocket::TextBox* d_entityCount;
 
     Sprocket::Container d_entityAttrs;
     Sprocket::TextBox* d_positionText;

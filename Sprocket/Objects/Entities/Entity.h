@@ -15,6 +15,7 @@ class Entity
     std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
 
     const std::size_t d_id;
+    bool              d_alive;
 
 public:
     Entity();
@@ -29,7 +30,9 @@ public:
     T& get() const;
 
     std::size_t id() const { return d_id; }
+    bool alive() const { return d_alive; }
 
+    void kill() { d_alive = false; }
 };
 
 template <typename T>
