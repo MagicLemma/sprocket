@@ -15,6 +15,7 @@ class EntityRenderer
 {
     Window* d_window;
     Shader  d_shader;
+    Shader  d_outlineShader;
 
     bool d_wireFrame;
     bool d_depthTest;

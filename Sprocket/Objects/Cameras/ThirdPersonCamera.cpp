@@ -70,8 +70,9 @@ bool ThirdPersonCamera::handleEvent(Window* window, const Event& event)
     if (auto e = event.as<MouseScrolledEvent>()) {
         d_absoluteVerticalPosition -= e->yOffset();
         Maths::clamp(d_absoluteVerticalPosition, 2.0f, 10.0f);
+        return true;
     }
-    return true;
+    return false;
 }
 
 }

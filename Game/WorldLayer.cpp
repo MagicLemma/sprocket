@@ -2,12 +2,13 @@
 
 WorldLayer::WorldLayer(Sprocket::Accessor& accessor) 
     : Sprocket::Layer(accessor, Status::NORMAL, false)
+    , d_mode(Mode::OBSERVER)
     , d_entityRenderer(accessor.window())
     , d_terrainRenderer(accessor.window())
     , d_skyboxRenderer(accessor.window())
     , d_postProcessor(accessor.window()->width(), accessor.window()->height())
     , d_lens(accessor.window()->aspectRatio())
-    , d_camera(&d_firstCamera)
+    , d_camera(&d_observerCamera)
     , d_skybox({
         Sprocket::Model3D("Resources/Models/Skybox.obj"),
         Sprocket::CubeMap({
@@ -22,7 +23,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     , d_playerCamera(nullptr)
     , d_playerMovement(accessor.window())
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
-    , d_entityManager({&d_playerMovement, &d_physicsEngine})
+    , d_selector(accessor.window(), &d_editorCamera, &d_lens, &d_physicsEngine)
+    , d_entityManager({&d_playerMovement, &d_physicsEngine, &d_selector})
 {
     using namespace Sprocket;
     d_entityRenderer.wireFrame(false);
@@ -68,6 +70,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
         meta->name = "Platform 1";
+        platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
@@ -88,10 +91,11 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
         meta->name = "Platform 2";
+        platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
-        {
+    {
         auto platform = std::make_shared<Entity>();
         auto model = platform->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Platform.obj");
@@ -110,6 +114,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
         meta->name = "Platform 3";
+        platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
@@ -132,6 +137,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
         meta->name = "Crate 1";
+        platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
@@ -154,6 +160,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
         meta->name = "Crate 2";
+        platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
@@ -176,6 +183,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         phys->collider = c;
         auto meta = platform->add<MetadataComponent>();
         meta->name = "Movable Crate";
+        platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
@@ -204,6 +212,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         d_playerCamera.setPlayer(cube.get());
         auto meta = cube->add<MetadataComponent>();
         meta->name = "Player";
+        cube->add<SelectComponent>();
         entityManager.addEntity(cube);
     }
 
@@ -214,7 +223,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto modelC = sphere->add<ModelComponent>();
         modelC->model = s;
         modelC->materials.push_back(shinyGray);
-        modelC->scale = 1.0f;
+        modelC->scale = 0.9f;
         auto tC = sphere->add<TransformComponent>();
         tC->position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
         tC->orientation = Maths::mat3(1.0f);
@@ -230,7 +239,12 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         std::stringstream ss;
         ss << "Sphere " << i;
         meta->name = ss.str();
+        sphere->add<SelectComponent>();
         entityManager.addEntity(sphere);
+
+        if (i == 4) {
+            physC->velocity = {0, 20, 0};
+        }
     }
 
     accessor.window()->setCursorVisibility(false);
@@ -253,26 +267,12 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    if (auto e = event.as<KeyboardButtonPressedEvent>()) {
-        if (e->key() == Keyboard::Q) {
-            d_physicsEngine.running(!d_physicsEngine.running());
-        }
-    }
-
-    if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (e->button() == Mouse::LEFT) {
-            Maths::vec3 cameraPos =
-                Maths::inverse(d_camera->view()) * Maths::vec4(0, 0, 0, 1);
-
-            Maths::vec3 dir = 
-                MousePicker::getRay(d_accessor.window(), d_camera, &d_lens);
-
-            auto x = d_physicsEngine.raycast(cameraPos, dir);
-        }
-    }
-
     d_camera->handleEvent(d_accessor.window(), event);
-    d_lens.handleEvent(d_accessor.window(), event); 
+    d_lens.handleEvent(d_accessor.window(), event);
+
+    if (d_entityManager.handleEvent(event)) {
+        return true;
+    }
       
     return false;
 }
@@ -284,10 +284,10 @@ void WorldLayer::updateImpl()
 
     if (d_status == Status::NORMAL) {
         d_camera->update(d_accessor.window(), deltaTime());
-        d_accessor.window()->setCursorVisibility(false);
+        d_accessor.window()->setCursorVisibility(d_mouseRequired);
         d_entityManager.update(deltaTime());
 
-       for (auto& entity : d_entityManager.entities()) {
+        for (auto& [id, entity] : d_entityManager.entities()) {
             if (entity->has<TransformComponent>() &&
                 entity->has<PlayerComponent>()) {
 
@@ -296,9 +296,7 @@ void WorldLayer::updateImpl()
                     if (entity->has<PhysicsComponent>()) {
                         entity->get<PhysicsComponent>().velocity = {0, 0, 0};
                     }
-                }
-                
-                
+                }   
             }
         }
     }
@@ -316,13 +314,11 @@ void WorldLayer::drawImpl()
     
     d_entityRenderer.update(*d_camera, d_lens, d_lights);
 
-    for (auto entity: d_entityManager.entities()) {
+    d_skyboxRenderer.draw(d_skybox, *d_camera, d_lens);
+
+    for (auto [id, entity]: d_entityManager.entities()) {
         d_entityRenderer.draw(*entity);
     }
-
-    d_skyboxRenderer.draw(d_skybox,
-                          *d_camera,
-                          d_lens);
     
     if (d_paused) {
         d_postProcessor.unbind();

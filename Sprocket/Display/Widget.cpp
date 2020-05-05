@@ -104,6 +104,10 @@ bool Widget::handleEvent(Window* window, const Event& event)
 
 void Widget::draw(DisplayRenderer* renderer)
 {
+    if (!d_active) {
+        return;
+    }
+    
     renderer->draw(toScreenCoords(d_base));
 
     drawImpl(renderer);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Event.h"
 
 namespace Sprocket {
 
@@ -21,6 +22,9 @@ public:
     virtual void registerEntity(const Entity& entity) = 0;
     virtual void deregisterEntity(const Entity& entity) = 0;
         // Register and deregister entities with this system.
+
+    virtual bool handleEvent(const Event& event) = 0;
+        // Called with every event so systems can consume them.
 
 private:
     // EntitySystems can not be copied.

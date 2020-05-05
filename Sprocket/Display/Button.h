@@ -48,8 +48,8 @@ public:
     Button(float width,
            float height,
            float buttonScale = 0.5f,
-           float buttonHoveredScale = 0.5f,
-           float buttonClickedScale = 0.5f);
+           float buttonHoveredScale = 0.55f,
+           float buttonClickedScale = 0.45f);
 
     Quad& buttonNormal() { return d_buttonNormal; }
     Quad& buttonHovered() { return d_buttonHovered; }

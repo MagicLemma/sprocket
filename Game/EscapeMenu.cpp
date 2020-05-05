@@ -1,4 +1,4 @@
-#include "UILayer.h"
+#include "EscapeMenu.h"
 
 void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
 {
@@ -26,18 +26,18 @@ void setSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
     slider->picker().position.y = slider->base().height * (1.0f - 0.8f) / 2.0f;
 }
 
-UILayer::UILayer(Sprocket::Accessor& accessor,
-                 WorldLayer* worldLayer) 
+EscapeMenu::EscapeMenu(Sprocket::Accessor& accessor,
+                       WorldLayer* worldLayer,
+                       EditorUI* editorUi) 
     : Layer(accessor, Status::INACTIVE, true)
     , d_worldLayer(worldLayer)
+    , d_editorUi(editorUi)
     , d_displayRenderer(accessor.window())
     , d_container(
         (float)accessor.window()->width()/4.0f,
         {10.0, 10.0},
         10.0f
     )
-    , d_image(Sprocket::Texture{"Resources/Textures/Space.PNG"})
-    , d_text({"Sprocket, now only $20!"})
 {
     using namespace Sprocket;
 
@@ -49,29 +49,8 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
     //d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
     //d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
 
-    d_image.position({0.0f, 100.0f});
-    d_image.addProperty<Draggable>();
-
     auto topSlider = d_container.add<Slider>(300.0f, 50.0f);
     setSliderAttrs(topSlider);
-
-    auto roundnessSlider = d_container.add<Slider>(300.0f, 50.0f);
-    setSliderAttrs(roundnessSlider);
-
-    roundnessSlider->setCallback([&](float val) {
-        d_image.base().roundness = val;
-    });
-    roundnessSlider->setValue(0.6f);
-
-    auto chattyButton = d_container.add<Button>(
-        50.0f, 50.0f, 0.5f, 0.55f, 0.45f
-    );
-
-    setButtonAttrs(chattyButton);
-
-    chattyButton->setUnclickCallback([&]() {
-        SPKT_LOG_WARN("Have a great day!");
-    });
 
     auto cameraSwitchButton = d_container.add<Button>(
         50.0f, 50.0f, 0.5f, 0.55f, 0.45f
@@ -80,20 +59,51 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
     setButtonAttrs(cameraSwitchButton);
 
     cameraSwitchButton->setUnclickCallback([&]() {  //unclick
-        if (d_worldLayer->d_cameraIsFirst) {
-            d_worldLayer->d_camera = &d_worldLayer->d_playerCamera;
-            d_worldLayer->d_playerMovement.enable(true);
+        switch (d_worldLayer->d_mode) {
+            case Mode::OBSERVER: {
+                SPKT_LOG_INFO("Mode switched to Player");
+                d_worldLayer->d_mode = Mode::PLAYER;
+
+                d_worldLayer->d_camera = &d_worldLayer->d_playerCamera;
+                d_worldLayer->d_playerMovement.enable(true);
+                d_worldLayer->d_mouseRequired = false;
+                d_worldLayer->d_selector.enable(false);
+
+                d_editorUi->d_status = Sprocket::Layer::Status::INACTIVE;
+
+            } break;
+            case Mode::PLAYER: {
+                SPKT_LOG_INFO("Mode switched to Editor");
+                d_worldLayer->d_mode = Mode::EDITOR;
+
+                d_worldLayer->d_camera = &d_worldLayer->d_editorCamera;
+                d_worldLayer->d_playerMovement.enable(false);
+                d_worldLayer->d_mouseRequired = true;
+                d_worldLayer->d_selector.enable(true);
+
+                d_editorUi->d_status = Sprocket::Layer::Status::NORMAL;
+
+            } break;
+             case Mode::EDITOR: {
+                SPKT_LOG_INFO("Mode switched to Observer");
+                d_worldLayer->d_mode = Mode::OBSERVER;
+
+                d_worldLayer->d_camera = &d_worldLayer->d_observerCamera;
+                d_worldLayer->d_playerMovement.enable(false);
+                d_worldLayer->d_mouseRequired = false;
+                d_worldLayer->d_selector.enable(false);
+
+                d_editorUi->d_status = Sprocket::Layer::Status::INACTIVE;
+
+            } break;
         }
-        else {
-            d_worldLayer->d_camera = &d_worldLayer->d_firstCamera;
-            d_worldLayer->d_playerMovement.enable(false);
-        }
-        d_worldLayer->d_cameraIsFirst = !d_worldLayer->d_cameraIsFirst;
     });
 
     auto textBox = d_container.add<TextBox>(
         300.0f, 50.0f, "Text box!"
     );
+    textBox->text().position = {10.0, 10.0};
+    d_text = textBox.get();
     
     textBox->base().colour = {0.15625f, 0.15625f, 0.15625f};
     textBox->text().font = Sprocket::Font::CALIBRI;
@@ -113,47 +123,36 @@ UILayer::UILayer(Sprocket::Accessor& accessor,
     });
 }
 
-bool UILayer::handleEventImpl(const Sprocket::Event& event)
+bool EscapeMenu::handleEventImpl(const Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
         if (e->key() == Sprocket::Keyboard::ESC) {
             d_worldLayer->d_paused = !d_worldLayer->d_paused;
             return true;
         }
-        else if (e->key() == Sprocket::Keyboard::E) {
-            d_image.active(!d_image.active());
-            return true;
-        }
     }
 
     if (d_status == Status::NORMAL) {
-        if (d_image.handleEvent(d_accessor.window(), event)) {
-            return true;
-        }
         if (d_container.handleEvent(d_accessor.window(), event)) {
             return true;
         }
-        
     }
 
     return false;
 }
 
-void UILayer::updateImpl()
+void EscapeMenu::updateImpl()
 {
     d_status = d_worldLayer->d_paused ? Status::NORMAL : Status::INACTIVE;
     d_displayRenderer.update();
 
     if (d_status == Status::NORMAL) {
         d_container.update(d_accessor.window());
-        d_image.update(d_accessor.window());
         d_accessor.window()->setCursorVisibility(true);
     }
 }
 
-void UILayer::drawImpl()
+void EscapeMenu::drawImpl()
 {
     d_container.draw(&d_displayRenderer);
-    d_image.draw(&d_displayRenderer);
-    d_displayRenderer.draw(d_text);
 }

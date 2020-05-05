@@ -22,7 +22,7 @@ bool TextBox::handleEventImpl(Window* window, const Event& event)
 void TextBox::drawImpl(DisplayRenderer* renderer) const
 {
     Text text = d_text;
-    text.position = toScreenCoords(text.position + Maths::vec2{0.0, 0.5 * d_base.height});
+    text.position = toScreenCoords(text.position);
     renderer->draw(text);
 }
 

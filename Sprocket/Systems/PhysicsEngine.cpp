@@ -1,4 +1,4 @@
-#include "Physics.h"
+#include "PhysicsEngine.h"
 #include "Components.h"
 
 #include <variant>
@@ -70,18 +70,34 @@ rp3d::Matrix3x3 convert(const Maths::mat4& m)
 class RaycastCB : public rp3d::RaycastCallback
 {
     Entity* d_entity = nullptr;
-    float d_fraction = -1.0f;
+    float d_fraction = 10.0f;
 
 public:
     rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) override 
     {
-        d_entity = reinterpret_cast<Entity*>(info.body->getUserData());
-        d_fraction = info.hitFraction;
-        return 0.0;  // Store the first entity hit.
+        if (info.hitFraction < d_fraction) {  // This object is closer.
+            d_fraction = info.hitFraction;
+            d_entity = reinterpret_cast<Entity*>(info.body->getUserData());
+        }
+        return -1.0f;
     }
 
     Entity* entity() const { return d_entity; }
     float fraction() const { return d_fraction; }
+};
+
+float getSpeed(SpeedFactor s)
+{
+    switch (s) {
+        case SpeedFactor::QUARTER:   return 0.25f;
+        case SpeedFactor::HALF:      return 0.5f;
+        case SpeedFactor::NORMAL:    return 1.0f;
+        case SpeedFactor::DOUBLE:    return 2.0f;
+        case SpeedFactor::QUADRUPLE: return 4.0f;
+    }
+
+    SPKT_LOG_ERROR("Speed not found! Returning 1.0f");
+    return 1.0f;
 };
 
 }
@@ -104,9 +120,11 @@ struct PhysicsEngineImpl
 };
 
 PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
-    : d_timeStep(1.0f / 60.0f)
-    , d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
-    , d_numStepsLastFrame(0)
+    : d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
+    , d_timeStep(1.0f / 120.0f)
+    , d_lastFrameLength(0)
+    , d_speedFactor(SpeedFactor::NORMAL)
+    , d_running(true)
 {
     d_impl->world.setNbIterationsPositionSolver(5);
     d_impl->world.setNbIterationsVelocitySolver(8);
@@ -118,16 +136,19 @@ void PhysicsEngine::updateSystem(float dt)
         return;
     }
 
-    d_numStepsLastFrame = 0;
+    float speedFactor = getSpeed(d_speedFactor);
+
+    float frameLength = dt * speedFactor;
+    d_lastFrameLength = 0;
 
     static float accumulator = 0.0f;
-    accumulator += dt;
+    accumulator += frameLength;
 
     // First update the Physics World.
     while (accumulator >= d_timeStep) {
         d_impl->world.update(d_timeStep);
         accumulator -= d_timeStep;
-        ++d_numStepsLastFrame;
+        d_lastFrameLength += d_timeStep;
     }
 }
 
@@ -265,7 +286,14 @@ void PhysicsEngine::deregisterEntity(const Entity& entity)
         return; 
     }
 
-    // TODO
+    auto rigidBodyIt = d_impl->rigidBodies.find(entity.id());
+    if (rigidBodyIt == d_impl->rigidBodies.end()) {
+        return;  // Nothing to delete.
+    }
+
+    d_impl->world.destroyRigidBody(rigidBodyIt->second);
+
+    // TODO: Clean up of collision bodies
 }
 
 void PhysicsEngine::running(bool isRunning)
@@ -278,7 +306,7 @@ Entity* PhysicsEngine::raycast(const Maths::vec3& base,
 {
     Maths::vec3 d = direction;
     Maths::normalise(d);
-    d *= 1000.0f;
+    d *= 100.0f;
 
     rp3d::Vector3 start = convert(base);
     rp3d::Vector3 end = start + convert(d);
@@ -291,7 +319,7 @@ Entity* PhysicsEngine::raycast(const Maths::vec3& base,
 
 void PhysicsEngine::updatePlayer(Entity& entity, float dt)
 {
-    if (d_numStepsLastFrame == 0) {
+    if (d_lastFrameLength == 0) {
         return;  // Physics engine not advanced this frame.
     }
 
@@ -337,7 +365,7 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
         float speed = 3.0f;
         rp3d::Vector3 dv = (speed * direction) - convert(physics.velocity);
         dv.y = 0.0f;  // Only consider horizontal movement.
-        float dtime = d_timeStep * d_numStepsLastFrame;
+        float dtime = d_lastFrameLength;
         rp3d::Vector3 acceleration = dv / dtime;
         bodyData->applyForceToCenterOfMass(bodyData->getMass() * acceleration);
     }
@@ -346,7 +374,7 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
     if (onFloor && player.jumping) {
         float speed = 6.0f;
         rp3d::Vector3 dv = (speed - physics.velocity.y) * up;
-        float dtime = d_timeStep * d_numStepsLastFrame;
+        float dtime = d_lastFrameLength;
         rp3d::Vector3 acceleration = dv / dtime;
         bodyData->applyForceToCenterOfMass(bodyData->getMass() * acceleration);
     }

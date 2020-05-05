@@ -44,7 +44,7 @@ Button::Button(float width,
 
 void Button::updateImpl(Window* window)
 {
-    float speed = 0.02f;
+    float speed = 0.2f;
 
     if (d_clicked) {
         d_actual.position += speed * (d_buttonClicked.position - d_actual.position);

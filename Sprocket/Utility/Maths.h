@@ -1,5 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <string>
+#include <optional>
 
 namespace Sprocket {
 namespace Maths {
@@ -61,6 +63,8 @@ vec3 getTranslation(const mat4& transform);
 
 float magnitude(const vec3& v);
 float magnitudeSquare(const vec3& v);
+
+std::string to_string(const vec3& v, const std::optional<int>& dp = {});
 
 }
 }

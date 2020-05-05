@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <cmath>
+#include <sstream>
+#include <iomanip>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
@@ -185,6 +187,16 @@ float magnitude(const vec3& v)
 float magnitudeSquare(const vec3& v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
+std::string to_string(const vec3& v, const std::optional<int>& dp)
+{
+    std::stringstream ss;
+    if (dp.has_value()) {
+        ss << std::fixed << std::setprecision(dp.value());
+    }
+    ss << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+    return ss.str();
 }
 
 }

@@ -2,20 +2,23 @@
 #include <Sprocket.h>
 
 #include "WorldLayer.h"
+#include "EditorUI.h"
 
 #include <memory>
 
-class UILayer : public Sprocket::Layer
+class EscapeMenu : public Sprocket::Layer
 {
     WorldLayer* d_worldLayer;
+    EditorUI* d_editorUi;
     
     Sprocket::DisplayRenderer d_displayRenderer;
     Sprocket::Container d_container;
-    Sprocket::Image d_image;
-    Sprocket::Text d_text;
+    Sprocket::TextBox* d_text;
 
 public:
-    UILayer(Sprocket::Accessor& accessor, WorldLayer* worldLayer);
+    EscapeMenu(Sprocket::Accessor& accessor,
+               WorldLayer* worldLayer,
+               EditorUI* editorUi);
 
     bool handleEventImpl(const Sprocket::Event& event) override;
     void updateImpl() override;

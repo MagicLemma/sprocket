@@ -6,10 +6,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Game
                Game.m.cpp
-               LoadingScreen.cpp
-               MainMenu.cpp
                WorldLayer.cpp
-               UILayer.cpp)
+
+               EscapeMenu.cpp
+
+               EditorUI.cpp
+               
+               LoadingScreen.cpp
+               MainMenu.cpp)
 
 target_link_libraries(Game PRIVATE Sprocket)
 target_include_directories(Game PUBLIC .)

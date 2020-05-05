@@ -106,8 +106,7 @@ void DisplayRenderer::draw(const Quad& quad, const Model2D& model) const
 
     quad.texture.bind();
     model.bind();
-    glDrawArrays(GL_TRIANGLE_STRIP
-    , 0, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     model.unbind();
     quad.texture.unbind();
 
@@ -124,7 +123,11 @@ void DisplayRenderer::draw(const Text& text)
     FontPackage fontPack = getFont(text.font);
     float fontSize = text.size / fontPack.size();
 
-    Maths::vec3 pointer = {text.position.x, text.position.y, 0.0f};
+    Maths::vec3 pointer = {
+        text.position.x,
+        text.position.y + text.size,
+        0.0f
+    };
 
     d_characterShader.bind();
     d_characterShader.loadUniform("colour", text.colour);
@@ -150,6 +153,7 @@ void DisplayRenderer::draw(const Text& text)
     }
 
     d_characterShader.bind();
+    glDisable(GL_BLEND);
 }
 
 }

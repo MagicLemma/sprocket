@@ -29,6 +29,7 @@ public:
     T& get() const;
 
     std::size_t id() const { return d_id; }
+
 };
 
 template <typename T>

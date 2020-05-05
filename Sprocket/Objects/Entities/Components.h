@@ -68,11 +68,18 @@ struct PlayerComponent : public Component
     float pitch = 0.0f;
 
     bool jumping = false;
+    bool wallLeft = false;
 };
 
 struct MetadataComponent : public Component
 {
     std::string name;
+};
+
+struct SelectComponent : public Component
+{
+    bool selected = false;
+    bool hovered = false;
 };
 
 

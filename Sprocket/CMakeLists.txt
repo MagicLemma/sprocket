@@ -86,9 +86,10 @@ add_library(Sprocket STATIC
             Objects/Terrain.cpp
 
             Systems/EntitySystem.cpp
-            Systems/Physics.cpp
+            Systems/PhysicsEngine.cpp
             Systems/Colliders.cpp
             Systems/PlayerMovement.cpp
+            Systems/Selector.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp

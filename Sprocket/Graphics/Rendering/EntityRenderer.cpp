@@ -10,6 +10,8 @@ EntityRenderer::EntityRenderer(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/Entity.vert",
                "Resources/Shaders/Entity.frag")
+    , d_outlineShader("Resources/Shaders/EntityOutline.vert",
+                      "Resources/Shaders/EntityOutline.frag")
     , d_wireFrame(false)
     , d_depthTest(true)
     , d_renderColliders(false)
@@ -75,6 +77,11 @@ void EntityRenderer::update(const Camera& camera,
 		}
 	}
     d_shader.unbind();
+
+    d_outlineShader.bind();
+    d_outlineShader.loadUniform("u_proj_matrix", lens.projection());
+    d_outlineShader.loadUniform("u_view_matrix", camera.view());
+    d_outlineShader.unbind();
 }
 
 void EntityRenderer::draw(const Entity& entity)
@@ -84,8 +91,27 @@ void EntityRenderer::draw(const Entity& entity)
         return;
     }
 
+    bool outline = false;
+    if (entity.has<SelectComponent>()) {
+        outline = entity.get<SelectComponent>().hovered ||
+                  entity.get<SelectComponent>().selected;
+    }
+
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
+    glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+
+    if (outline) {
+        glStencilMask(0xFF);
+    }
+    else {
+        glStencilMask(0x00);
+    }
 
     d_shader.bind();
 
@@ -112,11 +138,41 @@ void EntityRenderer::draw(const Entity& entity)
     modelComp.model.unbind();
     modelComp.materials[0].texture.unbind();
 
+    if (outline) {
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+
+        transform = Maths::scale(transform, 1.05f);
+        d_outlineShader.bind();
+
+        d_outlineShader.loadUniform("u_model_matrix", transform);
+
+        if (entity.get<SelectComponent>().selected) {
+            d_outlineShader.loadUniform("u_colour", Maths::vec4{0, 1, 0, 1});
+        }
+        else {
+            d_outlineShader.loadUniform("u_colour", Maths::vec4{1, 1, 0, 1});
+        }
+
+        modelComp.materials[0].texture.bind(0);
+        modelComp.model.bind();
+        glDrawElements(GL_TRIANGLES, modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
+        modelComp.model.unbind();
+        modelComp.materials[0].texture.unbind();
+
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_STENCIL_BUFFER_BIT);
+    }
+
     if (d_renderColliders) {
         drawColliders(entity);
     }
 
     d_shader.unbind();
+    d_outlineShader.unbind();
 }
 
 void EntityRenderer::drawColliders(const Entity& entity)
@@ -124,6 +180,8 @@ void EntityRenderer::drawColliders(const Entity& entity)
     if (!entity.has<PhysicsComponent>()) {
         return;
     }
+
+    d_shader.bind();
 
     static Model3D s_cube("Resources/Models/Cube.obj");
     static Model3D s_sphere("Resources/Models/LowPolySphere.obj");
@@ -215,6 +273,8 @@ void EntityRenderer::drawColliders(const Entity& entity)
     if (!d_wireFrame) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+
+    d_shader.unbind();
 }
 
 }

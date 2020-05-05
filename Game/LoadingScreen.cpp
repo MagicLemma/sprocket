@@ -1,7 +1,7 @@
 #include "LoadingScreen.h"
 
 #include "WorldLayer.h"
-#include "UILayer.h"
+#include "EscapeMenu.h"
 
 LoadingScreen::LoadingScreen(Sprocket::Accessor& accessor)
     : Layer(accessor, Status::NORMAL, true)
