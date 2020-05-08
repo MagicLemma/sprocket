@@ -158,19 +158,17 @@ void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
         return;
     }
 
-    if (entity.has<PhysicsComponent>() &&
-        entity.has<TransformComponent>()) {
+    if (entity.has<PhysicsComponent>()) {
     
-        const auto& t = entity.get<TransformComponent>();
         const auto& physics = entity.get<PhysicsComponent>();
 
         auto bodyData = d_impl->rigidBodies[entity.id()];
 
         // Update the RigidBody corresponding to this Entity.
         rp3d::Transform transform = bodyData->getTransform();
-        transform.setPosition(convert(t.position));
+        transform.setPosition(convert(entity.position()));
         if (physics.stationary) {
-            transform.setOrientation(rp3d::Quaternion(convert(t.orientation).getTranspose()));
+            transform.setOrientation(rp3d::Quaternion(convert(entity.orientation()).getTranspose()));
             // Only do this for static bodies as updating this behaves
             // weirdly for dynamic ones.
         }
@@ -192,9 +190,8 @@ void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
         return;
     }
 
-    if (entity.has<PhysicsComponent>() && entity.has<TransformComponent>()) {
+    if (entity.has<PhysicsComponent>()) {
         
-        auto& t = entity.get<TransformComponent>();
         auto& physics = entity.get<PhysicsComponent>();
 
         const auto& bodyData = d_impl->rigidBodies[entity.id()];
@@ -202,8 +199,8 @@ void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
         // Update the Entity corresponding to this RigidBody.
         if (!physics.stationary) {
             auto tr = bodyData->getTransform();
-            t.position = convert(tr.getPosition());
-            t.orientation = convert(tr.getOrientation().getMatrix().getTranspose());
+            entity.position() = convert(tr.getPosition());
+            entity.orientation() = convert(tr.getOrientation().getMatrix().getTranspose());
                 // We transpose here as OpenGL uses column major ordering
         }
 
@@ -233,11 +230,8 @@ void PhysicsEngine::registerEntity(const Entity& entity)
     auto& entry = d_impl->rigidBodies[entity.id()];
 
     rp3d::Transform transform = rp3d::Transform::identity();
-    if (entity.has<TransformComponent>()) {
-        auto transformData = entity.get<TransformComponent>();
-        transform.setPosition(convert(transformData.position));
-        transform.setOrientation(rp3d::Quaternion(convert(transformData.orientation)));
-    }
+    transform.setPosition(convert(entity.position()));
+    transform.setOrientation(rp3d::Quaternion(convert(entity.orientation())));
     
     entry = d_impl->world.createRigidBody(transform);
 

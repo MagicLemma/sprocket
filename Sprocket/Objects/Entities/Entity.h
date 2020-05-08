@@ -12,6 +12,9 @@ constexpr std::size_t MAX_COMPONENTS = 64;
 
 class Entity
 {
+    Maths::vec3 d_position;
+    Maths::mat3 d_orientation;
+
     std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
 
     const std::size_t d_id;
@@ -20,14 +23,17 @@ class Entity
 public:
     Entity();
 
-    template <typename T>
-    T* add();
+    const Maths::vec3& position() const { return d_position; }
+    Maths::vec3& position() { return d_position; }
 
-    template <typename T>
-    bool has() const;
+    const Maths::mat3& orientation() const { return d_orientation; }
+    Maths::mat3& orientation() { return d_orientation; }
 
-    template <typename T>
-    T& get() const;
+    Maths::mat4 transform() const;
+
+    template <typename T> T* add();
+    template <typename T> bool has() const;
+    template <typename T> T& get() const;
 
     std::size_t id() const { return d_id; }
     bool alive() const { return d_alive; }

@@ -13,10 +13,9 @@ PlayerBasedCamera::PlayerBasedCamera(Entity* player)
 
 Maths::mat4 PlayerBasedCamera::view() const
 {
-    auto t = d_player->get<TransformComponent>();
     auto p = d_player->get<PlayerComponent>();
 
-    Maths::vec3 position = t.position;
+    Maths::vec3 position = d_player->position();
     Maths::mat3 orientation(1.0f);
     orientation = Maths::rotate(orientation, {0, 1, 0}, Maths::radians(p.yaw));
     orientation = Maths::rotate(orientation, {1, 0, 0}, Maths::radians(p.pitch));

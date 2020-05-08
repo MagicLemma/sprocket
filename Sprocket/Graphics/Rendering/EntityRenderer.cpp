@@ -117,16 +117,8 @@ void EntityRenderer::draw(const Entity& entity)
 
     auto modelComp = entity.get<ModelComponent>();
 
-    // If this Entity has a Position component, use the transform on that.
-    Maths::mat4 transform = Maths::mat4(1.0f);
-    if (entity.has<TransformComponent>()) {
-        auto transformData = entity.get<TransformComponent>();
-        transform = Maths::transform(
-            transformData.position,
-            transformData.orientation
-        );
-        transform = Maths::scale(transform, modelComp.scale);
-    }
+    Maths::mat4 transform = entity.transform();
+    transform = Maths::scale(transform, modelComp.scale);
 
     d_shader.loadUniform("u_model_matrix", transform);
 	d_shader.loadUniform("u_shine_dampner", modelComp.materials[0].shineDamper);
@@ -192,14 +184,10 @@ void EntityRenderer::drawColliders(const Entity& entity)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
-    auto& transformData = entity.get<TransformComponent>();
     auto& physicsData = entity.get<PhysicsComponent>();
 
     if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {
-        Maths::mat4 transform = Maths::transform(
-            transformData.position,
-            transformData.orientation
-        );
+        Maths::mat4 transform = entity.transform();
         transform = Maths::scale(transform, data->halfExtents);
 
         s_cube.bind();
@@ -210,12 +198,8 @@ void EntityRenderer::drawColliders(const Entity& entity)
         s_cube.unbind();
     }
     else if (auto data = std::get_if<SphereCollider>(&physicsData.collider)) {
-        Maths::mat4 transform = Maths::transform(
-            transformData.position,
-            transformData.orientation
-        );
-        float radius = data->radius;
-        transform = Maths::scale(transform, radius);
+        Maths::mat4 transform = entity.transform();
+        transform = Maths::scale(transform, data->radius);
         
         s_sphere.bind();
         Texture::white().bind();
@@ -230,10 +214,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
 
         {  // Top Hemisphere
             s_hemisphere.bind();
-            Maths::mat4 transform = Maths::transform(
-                transformData.position,
-                transformData.orientation
-            );
+            Maths::mat4 transform = entity.transform();
             transform = Maths::translate(transform, {0.0, data->height/2, 0.0});
             transform = Maths::scale(transform, data->radius);
             d_shader.loadUniform("u_model_matrix", transform);
@@ -243,10 +224,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
 
         {  // Middle Cylinder
             s_cylinder.bind();
-            Maths::mat4 transform = Maths::transform(
-                transformData.position,
-                transformData.orientation
-            );
+            Maths::mat4 transform = entity.transform();
             transform = Maths::scale(transform, {data->radius, data->height, data->radius});
             d_shader.loadUniform("u_model_matrix", transform);
             glDrawElements(GL_TRIANGLES, s_cylinder.vertexCount(), GL_UNSIGNED_INT, nullptr);
@@ -255,10 +233,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
 
         {  // Bottom Hemisphere
             s_hemisphere.bind();
-            Maths::mat4 transform = Maths::transform(
-                transformData.position,
-                transformData.orientation
-            );
+            Maths::mat4 transform = entity.transform();
             transform = Maths::translate(transform, {0.0, -data->height/2, 0.0});
             transform = Maths::rotate(transform, {1, 0, 0}, Maths::radians(180.0f));
             transform = Maths::scale(transform, data->radius);

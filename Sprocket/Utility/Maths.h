@@ -37,8 +37,7 @@ mat4 lookAt(const vec3& position,
             const vec3& target,
             const vec3& up = vec3{0.0f, 1.0f, 0.0f});
 
-mat4 ortho(float left, float right,
-           float bottom, float top);
+mat4 ortho(float left, float right, float bottom, float top);
 
 mat4 inverse(const mat4& matrix);
 mat4 transpose(const mat4& matrix);

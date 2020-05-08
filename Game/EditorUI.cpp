@@ -127,7 +127,7 @@ void EditorUI::updateImpl()
         if (auto e = d_worldLayer->d_selector.selectedEntity()) {
             d_entityAttrs.active(true);
 
-            Maths::vec3 pos = e->get<TransformComponent>().position;
+            Maths::vec3 pos = e->position();
             d_positionText->text().message = "Position: " + Maths::to_string(pos, 3);
         
             if (!e->has<PhysicsComponent>()) {

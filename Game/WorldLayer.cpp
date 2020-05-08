@@ -57,13 +57,13 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     {
         auto platform = std::make_shared<Entity>();
+        platform->position() = {7.0, 0.0, -3.0};
+        platform->orientation() = Maths::rotate(Maths::mat3(1.0f), {1, 0, 0}, Maths::radians(6.0f));
+        
         auto model = platform->add<ModelComponent>();
         model->model = platformModel;
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
-        auto t = platform->add<TransformComponent>();
-        t->position = {7.0, 0.0, -3.0};
-        t->orientation = Maths::rotate(Maths::mat3(1.0f), {1, 0, 0}, Maths::radians(6.0f));
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         phys->bounciness = 0.0f;
@@ -78,13 +78,12 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     {
         auto platform = std::make_shared<Entity>();
+        platform->position() = {-5.0, 0.0, 5.0};
+
         auto model = platform->add<ModelComponent>();
         model->model = platformModel;
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
-        auto t = platform->add<TransformComponent>();
-        t->position = {-5.0, 0.0, 5.0};
-        t->orientation = Maths::mat3(1.0f);
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         phys->bounciness = 0.0f;
@@ -99,14 +98,14 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     {
         auto platform = std::make_shared<Entity>();
+        platform->position() = {-5.0, 0.0, 5.0};
+        platform->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 0, 1}, Maths::radians(80.0f));
+        platform->orientation() = Maths::rotate(platform->orientation(), {0, 1, 0}, Maths::radians(90.0f));
+        
         auto model = platform->add<ModelComponent>();
         model->model = platformModel;
         model->materials.push_back(dullGray);
         model->scale = 1.0f;
-        auto t = platform->add<TransformComponent>();
-        t->position = {-5.0, 0.0, 5.0};
-        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 0, 1}, Maths::radians(80.0f));
-        t->orientation = Maths::rotate(t->orientation, {0, 1, 0}, Maths::radians(90.0f));
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
         phys->bounciness = 0.0f;
@@ -121,15 +120,15 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     }
 
     {
-        auto platform = std::make_shared<Entity>();
-        auto model = platform->add<ModelComponent>();
+        auto crate = std::make_shared<Entity>();
+        crate->position() = {-5.0, 2.0, -3.0};
+        crate->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(45.0f));
+        
+        auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
         model->materials.push_back(galaxy);
         model->scale = 1.2f;
-        auto t = platform->add<TransformComponent>();
-        t->position = {-5.0, 2.0, -3.0};
-        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(45.0f));
-        auto phys = platform->add<PhysicsComponent>();
+        auto phys = crate->add<PhysicsComponent>();
         phys->stationary = true;
         phys->mass = 1000.0f;
         phys->bounciness = 0.0f;
@@ -137,22 +136,22 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         phys->collider = c;
-        auto meta = platform->add<MetadataComponent>();
+        auto meta = crate->add<MetadataComponent>();
         meta->name = "Crate 1";
-        platform->add<SelectComponent>();
-        entityManager.addEntity(platform);
+        crate->add<SelectComponent>();
+        entityManager.addEntity(crate);
     }
 
     {
-        auto platform = std::make_shared<Entity>();
-        auto model = platform->add<ModelComponent>();
+        auto crate = std::make_shared<Entity>();
+        crate->position() = {-1.0, 0.0, -3.0};
+        crate->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
+        
+        auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
         model->materials.push_back(field);
         model->scale = 1.2f;
-        auto t = platform->add<TransformComponent>();
-        t->position = {-1.0, 0.0, -3.0};
-        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
-        auto phys = platform->add<PhysicsComponent>();
+        auto phys = crate->add<PhysicsComponent>();
         phys->stationary = true;
         phys->mass = 1000.0f;
         phys->bounciness = 0.0f;
@@ -160,22 +159,22 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         phys->collider = c;
-        auto meta = platform->add<MetadataComponent>();
+        auto meta = crate->add<MetadataComponent>();
         meta->name = "Crate 2";
-        platform->add<SelectComponent>();
-        entityManager.addEntity(platform);
+        crate->add<SelectComponent>();
+        entityManager.addEntity(crate);
     }
 
-        {
-        auto platform = std::make_shared<Entity>();
-        auto model = platform->add<ModelComponent>();
+    {
+        auto crate = std::make_shared<Entity>();
+        crate->position() = {8.0, 5.0, 7.0};
+        crate->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
+        
+        auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
         model->materials.push_back(field);
         model->scale = 1.2f;
-        auto t = platform->add<TransformComponent>();
-        t->position = {8.0, 5.0, 7.0};
-        t->orientation = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
-        auto phys = platform->add<PhysicsComponent>();
+        auto phys = crate->add<PhysicsComponent>();
         phys->stationary = false;
         phys->mass = 10000.0f;
         phys->bounciness = 0.0f;
@@ -183,59 +182,59 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         phys->collider = c;
-        auto meta = platform->add<MetadataComponent>();
+        auto meta = crate->add<MetadataComponent>();
         meta->name = "Movable Crate";
-        platform->add<SelectComponent>();
-        entityManager.addEntity(platform);
+        crate->add<SelectComponent>();
+        entityManager.addEntity(crate);
     }
 
     {
-        auto cube = std::make_shared<Entity>();
-        auto modelC = cube->add<ModelComponent>();
-        modelC->model = Model3D("Resources/Models/Cube.obj");
-        modelC->materials.push_back(shinyGray);
-        modelC->scale = 0.3f;
-        auto tC = cube->add<TransformComponent>();
-        tC->position = {0.0f, 5.0f, 5.0f};
-        tC->orientation = Maths::mat3(1.0f);
-        auto physC = cube->add<PhysicsComponent>();
-        physC->stationary = false;
-        physC->mass = 60.0f;
-        physC->rollingResistance = 1.0f;
-        physC->frictionCoefficient = 0.4f;
-        physC->bounciness = 0.0f;
+        auto player = std::make_shared<Entity>();
+        player->position() = {0.0f, 5.0f, 5.0f};
+        player->orientation() = Maths::mat3(1.0f);
+        
+        auto model = player->add<ModelComponent>();
+        model->model = Model3D("Resources/Models/Cube.obj");
+        model->materials.push_back(shinyGray);
+        model->scale = 0.3f;
+        auto physics = player->add<PhysicsComponent>();
+        physics->stationary = false;
+        physics->mass = 60.0f;
+        physics->rollingResistance = 1.0f;
+        physics->frictionCoefficient = 0.4f;
+        physics->bounciness = 0.0f;
         {
             CapsuleCollider c;
             c.radius = 0.5f;
             c.height = 1.0f;
-            physC->collider = c;
+            physics->collider = c;
         }
-        cube->add<PlayerComponent>();
-        d_playerCamera.setPlayer(cube.get());
-        auto meta = cube->add<MetadataComponent>();
+        player->add<PlayerComponent>();
+        d_playerCamera.setPlayer(player.get());
+        auto meta = player->add<MetadataComponent>();
         meta->name = "Player";
-        cube->add<SelectComponent>();
-        entityManager.addEntity(cube);
+        player->add<SelectComponent>();
+        entityManager.addEntity(player);
     }
 
     Model3D s("Resources/Models/Sphere.obj");
     for (int i = 0; i != 5; ++i)
     {
         auto sphere = std::make_shared<Entity>();
-        auto modelC = sphere->add<ModelComponent>();
-        modelC->model = s;
-        modelC->materials.push_back(shinyGray);
-        modelC->scale = 0.9f;
-        auto tC = sphere->add<TransformComponent>();
-        tC->position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
-        tC->orientation = Maths::mat3(1.0f);
-        auto physC = sphere->add<PhysicsComponent>();
-        physC->stationary = false;
-        physC->mass = 20.0f;
+        sphere->position() = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
+        sphere->orientation() = Maths::mat3(1.0f);
+        
+        auto model = sphere->add<ModelComponent>();
+        model->model = s;
+        model->materials.push_back(shinyGray);
+        model->scale = 0.9f;
+        auto physics = sphere->add<PhysicsComponent>();
+        physics->stationary = false;
+        physics->mass = 20.0f;
         {
             SphereCollider c;
             c.radius = 1;
-            physC->collider = c;
+            physics->collider = c;
         }
         auto meta = sphere->add<MetadataComponent>();
         std::stringstream ss;
@@ -245,7 +244,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         entityManager.addEntity(sphere);
 
         if (i == 4) {
-            physC->velocity = {0, 20, 0};
+            physics->velocity = {0, 20, 0};
         }
     }
 
@@ -290,17 +289,11 @@ void WorldLayer::updateImpl()
         d_entityManager.update(deltaTime());
 
         for (auto& [id, entity] : d_entityManager.entities()) {
-            if (entity->has<TransformComponent>() &&
-                entity->has<PlayerComponent>()) {
-
-                if (entity->get<TransformComponent>().position.y < -2.0f) {
-                    entity->get<TransformComponent>().position = {0, 3, 0};
-                    if (entity->has<PhysicsComponent>()) {
-                        entity->get<PhysicsComponent>().velocity = {0, 0, 0};
-                    }
-                }   
+            if (entity->has<PlayerComponent>() && entity->position().y < -2.0f) {
+                entity->position() = {0, 3, 0};
+                entity->get<PhysicsComponent>().velocity = {0, 0, 0};
             }
-            if (entity->get<TransformComponent>().position.y < -50.0f) {
+            if (entity->position().y < -50.0f) {
                 entity->kill();
             }
         }

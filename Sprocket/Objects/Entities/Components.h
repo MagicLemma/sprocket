@@ -26,17 +26,6 @@ struct Component {
     virtual ~Component() {}
 };
 
-struct TransformComponent : public Component
-{
-       
-        // If the object also has a physics component and is
-        // not stationary, this component cannot be updated
-        // manually.
-
-    Maths::vec3 position;
-    Maths::mat3 orientation;
-};
-
 struct ModelComponent : public Component
 {
     Model3D               model;
