@@ -93,7 +93,8 @@ void DisplayRenderer::draw(const Quad& quad, const Model2D& model) const
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     auto position3D = Maths::vec3{quad.position.x, quad.position.y, 0.0f};
-    auto transform = Maths::transform(position3D, {0.0, 0.0, 0.0}, {quad.width, quad.height, 0.0});
+    auto transform = Maths::transform(position3D, Maths::identity);
+    transform = Maths::scale(transform, {quad.width, quad.height, 0.0});
 
     // Find the appropriate shader and bind the colour/texture.
     d_colourShader.bind();
@@ -140,8 +141,8 @@ void DisplayRenderer::draw(const Text& text)
 
         auto transform = Maths::transform(
             Maths::vec3{xPos, yPos, 0.0f},
-            {0.0, 0.0, 0.0},
-            fontSize);
+            Maths::identity);
+        transform = Maths::scale(transform, fontSize);
 
         d_characterShader.loadUniform("transform", transform);;
 

@@ -13,7 +13,7 @@ constexpr std::size_t MAX_COMPONENTS = 64;
 class Entity
 {
     Maths::vec3 d_position;
-    Maths::mat3 d_orientation;
+    Maths::quat d_orientation;
 
     std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
 
@@ -26,8 +26,8 @@ public:
     const Maths::vec3& position() const { return d_position; }
     Maths::vec3& position() { return d_position; }
 
-    const Maths::mat3& orientation() const { return d_orientation; }
-    Maths::mat3& orientation() { return d_orientation; }
+    const Maths::quat& orientation() const { return d_orientation; }
+    Maths::quat& orientation() { return d_orientation; }
 
     Maths::mat4 transform() const;
 

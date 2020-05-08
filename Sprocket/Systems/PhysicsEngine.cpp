@@ -67,6 +67,34 @@ rp3d::Matrix3x3 convert(const Maths::mat4& m)
     return ret;
 }
 
+Maths::quat convertQuat(const rp3d::Quaternion& q)
+{
+    Maths::quat ret;
+    ret.w = q.w;
+    ret.x = q.x;
+    ret.y = q.y;
+    ret.z = q.z;
+    return ret;
+}
+
+rp3d::Quaternion convertQuat(const Maths::quat& q)
+{
+    rp3d::Quaternion ret;
+    ret.w = q.w;
+    ret.x = q.x;
+    ret.y = q.y;
+    ret.z = q.z;
+    return ret;
+}
+
+rp3d::Transform transform(const Entity& entity)
+{
+    rp3d::Transform t;
+    t.setPosition(convert(entity.position()));
+    t.setOrientation(convertQuat(entity.orientation()));
+    return t;
+}
+
 class RaycastCB : public rp3d::RaycastCallback
 {
     Entity* d_entity = nullptr;
@@ -165,14 +193,8 @@ void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
         auto bodyData = d_impl->rigidBodies[entity.id()];
 
         // Update the RigidBody corresponding to this Entity.
-        rp3d::Transform transform = bodyData->getTransform();
-        transform.setPosition(convert(entity.position()));
-        if (physics.stationary) {
-            transform.setOrientation(rp3d::Quaternion(convert(entity.orientation()).getTranspose()));
-            // Only do this for static bodies as updating this behaves
-            // weirdly for dynamic ones.
-        }
-        bodyData->setTransform(transform);
+        bodyData->setTransform(transform(entity));
+
         bodyData->setMass(physics.mass);
         bodyData->setLinearVelocity(convert(physics.velocity));
         bodyData->enableGravity(physics.gravity);
@@ -200,8 +222,7 @@ void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
         if (!physics.stationary) {
             auto tr = bodyData->getTransform();
             entity.position() = convert(tr.getPosition());
-            entity.orientation() = convert(tr.getOrientation().getMatrix().getTranspose());
-                // We transpose here as OpenGL uses column major ordering
+            entity.orientation() = convertQuat(tr.getOrientation());
         }
 
         physics.mass = bodyData->getMass();
@@ -229,11 +250,7 @@ void PhysicsEngine::registerEntity(const Entity& entity)
     auto& physicsData = entity.get<PhysicsComponent>();
     auto& entry = d_impl->rigidBodies[entity.id()];
 
-    rp3d::Transform transform = rp3d::Transform::identity();
-    transform.setPosition(convert(entity.position()));
-    transform.setOrientation(rp3d::Quaternion(convert(entity.orientation())));
-    
-    entry = d_impl->world.createRigidBody(transform);
+    entry = d_impl->world.createRigidBody(transform(entity));
 
     // Give each RigidBody a pointer back to the original Entity object.
     entry->setUserData(const_cast<void*>(reinterpret_cast<const void*>(&entity)));

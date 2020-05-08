@@ -16,7 +16,7 @@ Entity::Entity()
     : d_id(idGenerator())
     , d_alive(true)
     , d_position({0, 0, 0})
-    , d_orientation(Maths::mat4(1.0))
+    , d_orientation(Maths::identity)
 {
     for (std::size_t i = 0; i != MAX_COMPONENTS; ++i) {
         d_components[i] = nullptr;

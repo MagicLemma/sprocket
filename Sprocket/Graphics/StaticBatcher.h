@@ -21,7 +21,7 @@ public:
     StaticBatcher(const std::string& objFile);
 
     void addTransform(const Maths::vec3& position,
-                      const Maths::vec3& rotation,
+                      const Maths::quat& orientation,
                       float scale,
                       float textureIndex);
 

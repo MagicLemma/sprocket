@@ -128,7 +128,7 @@ void EditorUI::updateImpl()
             d_entityAttrs.active(true);
 
             Maths::vec3 pos = e->position();
-            d_positionText->text().message = "Position: " + Maths::to_string(pos, 3);
+            d_positionText->text().message = "Position: " + Maths::toString(pos, 3);
         
             if (!e->has<PhysicsComponent>()) {
                 d_velocityText->text().message = "N/A";
@@ -138,7 +138,7 @@ void EditorUI::updateImpl()
                 Maths::vec3 vel = e->get<PhysicsComponent>().velocity;
                 std::stringstream ss;
                 ss << "Speed: " << Maths::magnitude(vel);
-                d_velocityText->text().message = "Velocity: " + Maths::to_string(vel, 3);
+                d_velocityText->text().message = "Velocity: " + Maths::toString(vel, 3);
                 d_speedText->text().message = ss.str();
             }
         }

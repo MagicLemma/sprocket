@@ -19,7 +19,7 @@ FirstPersonCamera::FirstPersonCamera()
 
 Maths::mat4 FirstPersonCamera::view() const
 {
-    return Maths::createViewMatrix(d_position, d_pitch, d_yaw, d_roll);
+    return Maths::view(d_position, d_pitch, d_yaw, d_roll);
 }
 
 void FirstPersonCamera::update(Window* window, float timeDelta)

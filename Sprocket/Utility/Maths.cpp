@@ -11,30 +11,9 @@
 namespace Sprocket {
 namespace Maths {
 
-mat4 transform(const vec3& translation, const vec3& rotation, const vec3& scale)
+mat4 transform(const vec3& position, const quat& orientation)
 {
-    mat4 matrix(1.0);
-    matrix = glm::translate(matrix, translation);
-    matrix = glm::rotate(matrix, radians(rotation.x), vec3(1, 0, 0));
-    matrix = glm::rotate(matrix, radians(rotation.y), vec3(0, 1, 0));
-    matrix = glm::rotate(matrix, radians(rotation.z), vec3(0, 0, 1));
-    matrix = glm::scale(matrix, scale);
-    return matrix;
-}
-
-mat4 transform(const vec3& translation, const vec3& rotation, float scale)
-{
-    return transform(translation, rotation, {scale, scale, scale});
-}
-
-mat4 transform(const vec3& translation, const vec3& rotation)
-{
-    return transform(translation, rotation, 1.0f);
-}
-
-mat4 transform(const vec3& position, const mat3& orientation)
-{
-    mat4 m = orientation;
+    mat4 m = toMat3(orientation);
     m[3][0] = position.x;
     m[3][1] = position.y;
     m[3][2] = position.z;
@@ -70,7 +49,7 @@ mat4 perspective(float aspectRatio,
     return glm::perspective(fov, aspectRatio, nearPlane, farPlane);  
 }
 
-mat4 createViewMatrix(const vec3& position,
+mat4 view(const vec3& position,
                       float pitch,
                       float yaw,
                       float roll)
@@ -145,35 +124,6 @@ float distance(const Maths::vec2& A, const Maths::vec2& B)
     return glm::distance(A, B);
 }
 
-vec4 toQuaternion(const vec3& euler)
-{
-    double yaw = Maths::radians(euler.z);
-    double pitch = Maths::radians(euler.y);
-    double roll = Maths::radians(euler.x);
-
-    double cy = cos(yaw * 0.5);
-    double sy = sin(yaw * 0.5);
-    double cp = cos(pitch * 0.5);
-    double sp = sin(pitch * 0.5);
-    double cr = cos(roll * 0.5);
-    double sr = sin(roll * 0.5);
-
-    double x = sr * cp * cy - cr * sp * sy;
-    double y = cr * sp * cy + sr * cp * sy;
-    double z = cr * cp * sy - sr * sp * cy;
-    double w = cr * cp * cy + sr * sp * sy;
-
-    return {x, y, z, w};
-}
-
-vec3 toEuler(const vec4& q)
-{
-    double z = -std::atan2(2 * (q.x * q.y + q.z * q.w), 1 - 2 * (q.y * q.y + q.z * q.z));
-    double y = std::asin(2 * (q.x * q.z - q.w * q.y));
-    double x = std::atan2(2 * (q.x * q.w + q.y * q.z), 1 - 2 * (q.z * q.z + q.w * q.w));
-    return {x, y, z};
-}
-
 vec3 getTranslation(const mat4& transform)
 {
     return vec3{transform[3][0], transform[3][1], transform[3][2]};
@@ -189,7 +139,7 @@ float magnitudeSquare(const vec3& v)
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-std::string to_string(const vec3& v, const std::optional<int>& dp)
+std::string toString(const vec3& v, const std::optional<int>& dp)
 {
     std::stringstream ss;
     if (dp.has_value()) {
@@ -197,6 +147,26 @@ std::string to_string(const vec3& v, const std::optional<int>& dp)
     }
     ss << "(" << v.x << ", " << v.y << ", " << v.z << ")";
     return ss.str();
+}
+
+mat3 toMat3(const quat& q)
+{
+    return mat3(q);
+}
+
+quat toQuat(const mat3& m)
+{
+    return quat(m);
+}
+
+quat rotation(const vec3& axis, float degrees)
+{
+    return glm::rotate(glm::identity<quat>(), Maths::radians(degrees), axis);
+}
+
+quat rotation(const quat& orig, const vec3& axis, float degrees)
+{
+    return glm::rotate(orig, Maths::radians(degrees), axis);
 }
 
 }

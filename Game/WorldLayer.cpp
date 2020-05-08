@@ -58,7 +58,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto platform = std::make_shared<Entity>();
         platform->position() = {7.0, 0.0, -3.0};
-        platform->orientation() = Maths::rotate(Maths::mat3(1.0f), {1, 0, 0}, Maths::radians(6.0f));
+        platform->orientation() = Maths::rotation({1, 0, 0}, 6.0f);
         
         auto model = platform->add<ModelComponent>();
         model->model = platformModel;
@@ -99,9 +99,11 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto platform = std::make_shared<Entity>();
         platform->position() = {-5.0, 0.0, 5.0};
-        platform->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 0, 1}, Maths::radians(80.0f));
-        platform->orientation() = Maths::rotate(platform->orientation(), {0, 1, 0}, Maths::radians(90.0f));
-        
+
+        Maths::quat orientation = Maths::rotation({0, 0, 1}, 80.0f);
+        orientation = Maths::rotation(orientation, {0, 1, 0}, 90.0f);
+        platform->orientation() = orientation;
+
         auto model = platform->add<ModelComponent>();
         model->model = platformModel;
         model->materials.push_back(dullGray);
@@ -122,8 +124,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto crate = std::make_shared<Entity>();
         crate->position() = {-5.0, 2.0, -3.0};
-        crate->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(45.0f));
-        
+        crate->orientation() = Maths::rotation({0, 1, 0}, 45.0f);
+
         auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
         model->materials.push_back(galaxy);
@@ -145,8 +147,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto crate = std::make_shared<Entity>();
         crate->position() = {-1.0, 0.0, -3.0};
-        crate->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
-        
+        crate->orientation() = Maths::rotation({0, 1, 0}, 75.0f);
+
         auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
         model->materials.push_back(field);
@@ -168,8 +170,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto crate = std::make_shared<Entity>();
         crate->position() = {8.0, 5.0, 7.0};
-        crate->orientation() = Maths::rotate(Maths::mat3(1.0f), {0, 1, 0}, Maths::radians(75.0f));
-        
+        crate->orientation() = Maths::rotation({0, 1, 0}, 75.0f);
+
         auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
         model->materials.push_back(field);
@@ -191,8 +193,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto player = std::make_shared<Entity>();
         player->position() = {0.0f, 5.0f, 5.0f};
-        player->orientation() = Maths::mat3(1.0f);
-        
+
         auto model = player->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
         model->materials.push_back(shinyGray);
@@ -222,7 +223,6 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto sphere = std::make_shared<Entity>();
         sphere->position() = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
-        sphere->orientation() = Maths::mat3(1.0f);
         
         auto model = sphere->add<ModelComponent>();
         model->model = s;
