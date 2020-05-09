@@ -18,11 +18,6 @@ rp3d::Vector2 convert(const Maths::vec2& v)
     return rp3d::Vector2(v.x, v.y);
 }
 
-Maths::vec4 convert(const rp3d::Quaternion& v)
-{
-    return Maths::vec4(v.x, v.y, v.z, v.w);
-}
-
 Maths::vec3 convert(const rp3d::Vector3& v)
 {
     return Maths::vec3(v.x, v.y, v.z);
@@ -33,65 +28,21 @@ Maths::vec2 convert(const rp3d::Vector2& v)
     return Maths::vec2(v.x, v.y);
 }
 
-Maths::mat3 convert(const rp3d::Matrix3x3& m)
+Maths::quat convert(const rp3d::Quaternion& q)
 {
-    Maths::mat3 ret;
-    ret[0][0] = m[0][0];
-    ret[1][0] = m[1][0];
-    ret[2][0] = m[2][0];
-
-    ret[0][1] = m[0][1];
-    ret[1][1] = m[1][1];
-    ret[2][1] = m[2][1];
-
-    ret[0][2] = m[0][2];
-    ret[1][2] = m[1][2];
-    ret[2][2] = m[2][2];
-    return ret;
+    return Maths::quat(q.w, q.x, q.y, q.z);
 }
 
-rp3d::Matrix3x3 convert(const Maths::mat4& m)
+rp3d::Quaternion convert(const Maths::quat& q)
 {
-    rp3d::Matrix3x3 ret;
-    ret[0][0] = m[0][0];
-    ret[1][0] = m[1][0];
-    ret[2][0] = m[2][0];
-
-    ret[0][1] = m[0][1];
-    ret[1][1] = m[1][1];
-    ret[2][1] = m[2][1];
-
-    ret[0][2] = m[0][2];
-    ret[1][2] = m[1][2];
-    ret[2][2] = m[2][2];
-    return ret;
-}
-
-Maths::quat convertQuat(const rp3d::Quaternion& q)
-{
-    Maths::quat ret;
-    ret.w = q.w;
-    ret.x = q.x;
-    ret.y = q.y;
-    ret.z = q.z;
-    return ret;
-}
-
-rp3d::Quaternion convertQuat(const Maths::quat& q)
-{
-    rp3d::Quaternion ret;
-    ret.w = q.w;
-    ret.x = q.x;
-    ret.y = q.y;
-    ret.z = q.z;
-    return ret;
+    return rp3d::Quaternion(q.x, q.y, q.z, q.w);
 }
 
 rp3d::Transform transform(const Entity& entity)
 {
     rp3d::Transform t;
     t.setPosition(convert(entity.position()));
-    t.setOrientation(convertQuat(entity.orientation()));
+    t.setOrientation(convert(entity.orientation()));
     return t;
 }
 
@@ -187,9 +138,7 @@ void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
     }
 
     if (entity.has<PhysicsComponent>()) {
-    
         const auto& physics = entity.get<PhysicsComponent>();
-
         auto bodyData = d_impl->rigidBodies[entity.id()];
 
         // Update the RigidBody corresponding to this Entity.
@@ -213,17 +162,13 @@ void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
     }
 
     if (entity.has<PhysicsComponent>()) {
-        
         auto& physics = entity.get<PhysicsComponent>();
-
         const auto& bodyData = d_impl->rigidBodies[entity.id()];
 
         // Update the Entity corresponding to this RigidBody.
-        if (!physics.stationary) {
-            auto tr = bodyData->getTransform();
-            entity.position() = convert(tr.getPosition());
-            entity.orientation() = convertQuat(tr.getOrientation());
-        }
+        auto tr = bodyData->getTransform();
+        entity.position() = convert(tr.getPosition());
+        entity.orientation() = convert(tr.getOrientation());
 
         physics.mass = bodyData->getMass();
         physics.velocity = convert(bodyData->getLinearVelocity());
@@ -358,6 +303,7 @@ void PhysicsEngine::updatePlayer(Entity& entity, float dt)
         0.0f, Maths::radians(player.yaw), 0.0f);
     transform.setOrientation(q);
     bodyData->setTransform(transform);
+    entity.orientation() = convert(q);
 
     // Player Movement
     float cosYaw = Maths::cosd(player.yaw);

@@ -58,7 +58,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto platform = std::make_shared<Entity>();
         platform->position() = {7.0, 0.0, -3.0};
-        platform->orientation() = Maths::rotation({1, 0, 0}, 6.0f);
+        platform->orientation() = Maths::rotate({1, 0, 0}, 6.0f);
         
         auto model = platform->add<ModelComponent>();
         model->model = platformModel;
@@ -100,8 +100,9 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         auto platform = std::make_shared<Entity>();
         platform->position() = {-5.0, 0.0, 5.0};
 
-        Maths::quat orientation = Maths::rotation({0, 0, 1}, 80.0f);
-        orientation = Maths::rotation(orientation, {0, 1, 0}, 90.0f);
+        Maths::quat orientation = Maths::identity;
+        orientation = Maths::rotate(orientation, {0, 0, 1}, 80.0f);
+        orientation = Maths::rotate(orientation, {0, 1, 0}, 90.0f);
         platform->orientation() = orientation;
 
         auto model = platform->add<ModelComponent>();
@@ -124,7 +125,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto crate = std::make_shared<Entity>();
         crate->position() = {-5.0, 2.0, -3.0};
-        crate->orientation() = Maths::rotation({0, 1, 0}, 45.0f);
+        crate->orientation() = Maths::rotate({0, 1, 0}, 45.0f);
 
         auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
@@ -147,7 +148,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto crate = std::make_shared<Entity>();
         crate->position() = {-1.0, 0.0, -3.0};
-        crate->orientation() = Maths::rotation({0, 1, 0}, 75.0f);
+        crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
         auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");
@@ -170,7 +171,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     {
         auto crate = std::make_shared<Entity>();
         crate->position() = {8.0, 5.0, 7.0};
-        crate->orientation() = Maths::rotation({0, 1, 0}, 75.0f);
+        crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
         auto model = crate->add<ModelComponent>();
         model->model = Model3D("Resources/Models/Cube.obj");

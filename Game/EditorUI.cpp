@@ -137,7 +137,7 @@ void EditorUI::updateImpl()
             else {
                 Maths::vec3 vel = e->get<PhysicsComponent>().velocity;
                 std::stringstream ss;
-                ss << "Speed: " << Maths::magnitude(vel);
+                ss << "Speed: " << Maths::length(vel);
                 d_velocityText->text().message = "Velocity: " + Maths::toString(vel, 3);
                 d_speedText->text().message = ss.str();
             }
