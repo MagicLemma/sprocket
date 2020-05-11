@@ -12,6 +12,7 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
@@ -108,7 +109,8 @@ target_link_libraries(Sprocket PUBLIC
                       glad::glad
                       glm
                       freetype
-                      reactphysics3d)
+                      reactphysics3d
+                      assimp::assimp)
 
 target_include_directories(Sprocket PUBLIC
                            .
