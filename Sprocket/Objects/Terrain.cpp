@@ -19,7 +19,6 @@ std::pair<Vertex3DBuffer, IndexBuffer> generateTerrain(
             v.position = Maths::vec3{distance * i, 0, distance * j};
             v.normal = Maths::vec3{0.0f, 1.0f, 0.0f};
             v.textureCoords = Maths::vec2{(float)i / ((float)edge - 1), (float)j / ((float)edge - 1)};
-            v.textureIndex = 0.0f;
             vertices.push_back(v);
         }
     }

@@ -1,14 +1,15 @@
 #version 400 core
 
 in vec2  p_texture_coords;
-in float p_texture_index;
 in vec3  p_surface_normal;
 in vec3  p_to_camera_vector;
 in vec3  p_to_light_vector[5];
 
 layout(location = 0) out vec4 out_colour;
 
-uniform sampler2D texture_sampler[2];
+uniform sampler2D texture_sampler;
+uniform sampler2D specular_sampler;
+uniform sampler2D normal_sampler;
 
 // Lighting Information
 uniform vec3 u_light_colour[5];
@@ -25,8 +26,7 @@ void main()
     vec3 unit_to_camera = normalize(p_to_camera_vector);
 
     // Colour prior to lighting
-    int index = int(floor(p_texture_index + 0.5));
-    vec4 colour = texture(texture_sampler[index], p_texture_coords);
+    vec4 colour = texture(texture_sampler, p_texture_coords);
 
     // Lighting calculation
     vec4 total_diffuse = vec4(0.0);
@@ -47,9 +47,10 @@ void main()
 
         // Specular lighting calculation
         float specular_factor = dot(reflected_light_direction, unit_to_camera);
+        float reflectivity = texture(specular_sampler, p_texture_coords).r;
         specular_factor = max(specular_factor, 0.0);
         specular_factor = pow(specular_factor, u_shine_dampner) / attenuation;
-        total_specular = total_specular + vec4(specular_factor * u_reflectivity * u_light_colour[i], 1.0);
+        total_specular = total_specular + vec4(specular_factor * reflectivity * u_light_colour[i], 1.0);
     }
 
     // Ambient lighting calculation

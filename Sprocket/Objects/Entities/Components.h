@@ -28,9 +28,9 @@ struct Component {
 
 struct ModelComponent : public Component
 {
-    Model3D               model;
-    float                 scale;  // Affects the size of the model.
-    std::vector<Material> materials;
+    Model3D  model;
+    Material material;
+    float    scale;  // Affects the size of the model.
 };
 
 struct PhysicsComponent : public Component

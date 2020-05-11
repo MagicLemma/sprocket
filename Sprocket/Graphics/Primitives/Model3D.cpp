@@ -1,24 +1,8 @@
 #include "Model3D.h"
-#include "ObjParser.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
-
-Model3D::Model3D(const std::string& objFile)
-{
-    SPKT_LOG_INFO("Loading model '{}'", objFile);
-    auto [vertices, indices] = parseObjFile(objFile);
-
-    d_vao = std::make_shared<VAO>();
-    glBindVertexArray(d_vao->value());
-    d_vertexBuffer = loadVertexBuffer(vertices);
-    d_indexBuffer = loadIndexBuffer(indices);
-    glBindVertexArray(0);
-
-    d_vertexData = std::make_shared<Vertex3DBuffer>(vertices);
-    d_indexData = std::make_shared<IndexBuffer>(indices);
-}
 
 Model3D::Model3D(const Vertex3DBuffer& vertices,
                  const IndexBuffer& indices)
@@ -70,10 +54,6 @@ std::shared_ptr<VBO> Model3D::loadVertexBuffer(const Vertex3DBuffer& vertices)
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
                           (void*)offsetof(Vertex3D, textureCoords));
-
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          (void*)offsetof(Vertex3D, textureIndex));
 
     return vertexBuffer;
 }

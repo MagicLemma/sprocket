@@ -12,7 +12,6 @@ struct Vertex3D
     Maths::vec3 position;
     Maths::vec3 normal;
     Maths::vec2 textureCoords;
-    float       textureIndex;
 };
 
 using Vertex3DBuffer = std::vector<Vertex3D>;
@@ -33,8 +32,6 @@ class Model3D
     std::shared_ptr<VBO> loadIndexBuffer(const IndexBuffer& indices);
 
 public:
-    Model3D(const std::string& objFile);
-
     Model3D(const Vertex3DBuffer& vertices,
             const IndexBuffer& indices);
 

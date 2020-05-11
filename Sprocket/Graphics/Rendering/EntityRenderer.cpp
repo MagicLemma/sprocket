@@ -1,10 +1,45 @@
 #include "EntityRenderer.h"
 #include "Maths.h"
 #include "Components.h"
+#include "ModelLoader.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
+namespace {
+
+void bindMaterial(Shader* shader, const Material& material)
+{
+    glActiveTexture(GL_TEXTURE0);
+    material.texture.bind();
+    shader->loadUniformInt("texture_sampler", 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    material.specularMap.bind();
+    shader->loadUniformInt("specular_sampler", 1);
+
+    glActiveTexture(GL_TEXTURE2);
+    material.normalMap.bind();
+    shader->loadUniformInt("normal_sampler", 2);
+
+    glActiveTexture(GL_TEXTURE0);
+}
+
+void unbindMaterial(Shader* shader)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glActiveTexture(GL_TEXTURE0);
+}
+
+}
 
 EntityRenderer::EntityRenderer(Window* window)
     : d_window(window)
@@ -16,12 +51,6 @@ EntityRenderer::EntityRenderer(Window* window)
     , d_depthTest(true)
     , d_renderColliders(false)
 {
-    d_shader.bind();
-    glUniform1i(glGetUniformLocation(d_shader.id(), "texture_sampler[0]"), 0);
-    glUniform1i(glGetUniformLocation(d_shader.id(), "texture_sampler[1]"), 1);
-    glUniform1i(glGetUniformLocation(d_shader.id(), "texture_sampler[2]"), 2);
-    d_shader.unbind();
-
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 }
@@ -121,14 +150,15 @@ void EntityRenderer::draw(const Entity& entity)
     transform = Maths::scale(transform, modelComp.scale);
 
     d_shader.loadUniform("u_model_matrix", transform);
-	d_shader.loadUniform("u_shine_dampner", modelComp.materials[0].shineDamper);
-	d_shader.loadUniform("u_reflectivity", modelComp.materials[0].reflectivity);
+	d_shader.loadUniform("u_shine_dampner", modelComp.material.shineDamper);
+	d_shader.loadUniform("u_reflectivity", modelComp.material.reflectivity);
 
-    modelComp.materials[0].texture.bind(0);
+    // Bind textures
+    bindMaterial(&d_shader, modelComp.material);
     modelComp.model.bind();
     glDrawElements(GL_TRIANGLES, modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
     modelComp.model.unbind();
-    modelComp.materials[0].texture.unbind();
+    unbindMaterial(&d_shader);
 
     if (outline) {
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -147,11 +177,12 @@ void EntityRenderer::draw(const Entity& entity)
             d_outlineShader.loadUniform("u_colour", Maths::vec4{1, 1, 0, 1});
         }
 
-        modelComp.materials[0].texture.bind(0);
+        // Bind textures
+        bindMaterial(&d_shader, modelComp.material);
         modelComp.model.bind();
         glDrawElements(GL_TRIANGLES, modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
         modelComp.model.unbind();
-        modelComp.materials[0].texture.unbind();
+        unbindMaterial(&d_shader);
 
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -175,10 +206,16 @@ void EntityRenderer::drawColliders(const Entity& entity)
 
     d_shader.bind();
 
-    static Model3D s_cube("Resources/Models/Cube.obj");
-    static Model3D s_sphere("Resources/Models/LowPolySphere.obj");
-    static Model3D s_hemisphere("Resources/Models/Hemisphere.obj");
-    static Model3D s_cylinder("Resources/Models/Cylinder.obj");
+    ModelLoader loader;
+    auto cube = loader.loadModel("Resources/Models/Cube.obj");
+    auto sphere = loader.loadModel("Resources/Models/Cube.obj");
+    auto hemisphere = loader.loadModel("Resources/Models/Cube.obj");
+    auto cylinder = loader.loadModel("Resources/Models/Cube.obj");
+
+    static Model3D s_cube = cube[0].model;
+    static Model3D s_sphere = sphere[0].model;
+    static Model3D s_hemisphere = hemisphere[0].model;
+    static Model3D s_cylinder = cylinder[0].model;
 
     if (!d_wireFrame) { // Temporarily enable wire framing if off.
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

@@ -7,10 +7,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
 
-find_package(spdlog CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
@@ -24,12 +24,10 @@ add_library(Sprocket STATIC
             Core/SceneManager.cpp
             Core/Window.cpp
 
-            Graphics/ObjParser.cpp
             Graphics/MousePicker.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
-            Graphics/Model3DLoader.cpp
-            Graphics/StaticBatcher.cpp
+            Graphics/ModelLoader.cpp
 
             Graphics/Primitives/Resources.cpp
             Graphics/Primitives/Model2D.cpp
@@ -103,11 +101,10 @@ add_library(Sprocket STATIC
             Utility/Tokenize.cpp)
 
 target_link_libraries(Sprocket PUBLIC
-                      spdlog::spdlog
-                      spdlog::spdlog_header_only
                       glfw
                       glad::glad
                       glm
+                      spdlog::spdlog
                       freetype
                       reactphysics3d
                       assimp::assimp)

@@ -10,7 +10,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     , d_lens(accessor.window()->aspectRatio())
     , d_camera(&d_observerCamera)
     , d_skybox({
-        Sprocket::Model3D("Resources/Models/Skybox.obj"),
+        Sprocket::Model3D(),
         Sprocket::CubeMap({
             "Resources/Textures/Skybox/Skybox_X_Pos.png",
             "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -37,6 +37,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     Texture green("Resources/Textures/Green.PNG");
     Texture space("Resources/Textures/Space.PNG");
+    Texture spaceSpec("Resources/Textures/SpaceSpec.PNG");
     Texture gray("Resources/Textures/PlainGray.PNG");
 
     Material dullGray;
@@ -52,8 +53,16 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
 
     Material galaxy;
     galaxy.texture = space;
+    galaxy.specularMap = spaceSpec;
 
-    auto platformModel = Model3D("Resources/Models/Platform.obj");
+
+    ModelLoader loader;
+    auto platformData = loader.loadModel("Resources/Models/Platform.obj");
+    auto crateData = loader.loadModel("Resources/Models/Cube.obj");
+    auto sphereData = loader.loadModel("Resources/Models/Sphere.obj");
+    auto skyboxData = loader.loadModel("Resources/Models/Skybox.obj");
+    
+    d_skybox.model = skyboxData[0].model;
 
     {
         auto platform = std::make_shared<Entity>();
@@ -61,8 +70,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         platform->orientation() = Maths::rotate({1, 0, 0}, 6.0f);
         
         auto model = platform->add<ModelComponent>();
-        model->model = platformModel;
-        model->materials.push_back(dullGray);
+        model->model = platformData[0].model;
+        model->material = dullGray;
         model->scale = 1.0f;
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
@@ -81,8 +90,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         platform->position() = {-5.0, 0.0, 5.0};
 
         auto model = platform->add<ModelComponent>();
-        model->model = platformModel;
-        model->materials.push_back(dullGray);
+        model->model = platformData[0].model;
+        model->material = dullGray;
         model->scale = 1.0f;
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
@@ -106,8 +115,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         platform->orientation() = orientation;
 
         auto model = platform->add<ModelComponent>();
-        model->model = platformModel;
-        model->materials.push_back(dullGray);
+        model->model = platformData[0].model;
+        model->material = dullGray;
         model->scale = 1.0f;
         auto phys = platform->add<PhysicsComponent>();
         phys->stationary = true;
@@ -128,8 +137,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         crate->orientation() = Maths::rotate({0, 1, 0}, 45.0f);
 
         auto model = crate->add<ModelComponent>();
-        model->model = Model3D("Resources/Models/Cube.obj");
-        model->materials.push_back(galaxy);
+        model->model = crateData[0].model;
+        model->material = galaxy;
         model->scale = 1.2f;
         auto phys = crate->add<PhysicsComponent>();
         phys->stationary = true;
@@ -151,8 +160,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
         auto model = crate->add<ModelComponent>();
-        model->model = Model3D("Resources/Models/Cube.obj");
-        model->materials.push_back(field);
+        model->model = crateData[0].model;
+        model->material = field;
         model->scale = 1.2f;
         auto phys = crate->add<PhysicsComponent>();
         phys->stationary = true;
@@ -174,8 +183,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
         auto model = crate->add<ModelComponent>();
-        model->model = Model3D("Resources/Models/Cube.obj");
-        model->materials.push_back(field);
+        model->model = crateData[0].model;
+        model->material = field;
         model->scale = 1.2f;
         auto phys = crate->add<PhysicsComponent>();
         phys->stationary = false;
@@ -196,8 +205,8 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         player->position() = {0.0f, 5.0f, 5.0f};
 
         auto model = player->add<ModelComponent>();
-        model->model = Model3D("Resources/Models/Cube.obj");
-        model->materials.push_back(shinyGray);
+        model->model = crateData[0].model;
+        model->material = shinyGray;
         model->scale = 0.3f;
         auto physics = player->add<PhysicsComponent>();
         physics->stationary = false;
@@ -219,15 +228,14 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         entityManager.addEntity(player);
     }
 
-    Model3D s("Resources/Models/Sphere.obj");
     for (int i = 0; i != 5; ++i)
     {
         auto sphere = std::make_shared<Entity>();
         sphere->position() = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
         
         auto model = sphere->add<ModelComponent>();
-        model->model = s;
-        model->materials.push_back(shinyGray);
+        model->model = sphereData[0].model;
+        model->material = shinyGray;
         model->scale = 0.9f;
         auto physics = sphere->add<PhysicsComponent>();
         physics->stationary = false;

@@ -8,8 +8,10 @@
 
 namespace Sprocket {
 
-Texture::Texture(const std::string& pngFile)
+Texture::Texture(const std::string& pngFile,
+                 TextureType type)
     : d_texture(std::make_shared<TEX>())
+    , d_type(type)
 {
     glBindTexture(GL_TEXTURE_2D, d_texture->value());
 
@@ -31,11 +33,13 @@ Texture::Texture(const std::string& pngFile)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture::Texture(int width, int height, const std::vector<unsigned char>& data)
+Texture::Texture(int width, int height, const std::vector<unsigned char>& data,
+                 TextureType type)
     : d_texture(std::make_shared<TEX>())
     , d_width(width)
     , d_height(height)
     , d_bpp(4)
+    , d_type(type)
 {
     glBindTexture(GL_TEXTURE_2D, d_texture->value());
 
@@ -56,19 +60,18 @@ Texture::Texture()
     , d_width(Texture::white().d_width)
     , d_height(Texture::white().d_height)
     , d_bpp(Texture::white().d_bpp)
+    , d_type(TextureType::DIFFUSE)
 {
 }
 
-void Texture::bind(int slot) const
+void Texture::bind() const
 {
-    d_slot = slot;
-    glBindTextureUnit(slot, d_texture->value());
+    glBindTexture(GL_TEXTURE_2D, d_texture->value());
 }
 
 void Texture::unbind() const
 {
-    glBindTextureUnit(d_slot, 0);
-    d_slot = -1;
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture Texture::white()

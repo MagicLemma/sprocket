@@ -23,12 +23,10 @@
 #include "Utility/Tokenize.h"
 
 // GRAPHICS
-#include "Graphics/ObjParser.h"
 #include "Graphics/MousePicker.h"
 #include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
-#include "Graphics/Model3DLoader.h"
-#include "Graphics/StaticBatcher.h"
+#include "Graphics/ModelLoader.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"
