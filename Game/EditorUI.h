@@ -6,16 +6,9 @@
 class EditorUI : public Sprocket::Layer
 {
     WorldLayer* d_worldLayer;
-    
-    Sprocket::DisplayRenderer d_displayRenderer;
-    Sprocket::Container d_container;
-    Sprocket::TextBox* d_entityCount;
 
-    Sprocket::Container d_entityAttrs;
-    Sprocket::TextBox* d_positionText;
-    Sprocket::TextBox* d_velocityText;
-    Sprocket::TextBox* d_speedText;
-    Sprocket::Button* d_deleteButton;
+    Sprocket::DevGUI d_editorUI;
+    Sprocket::DevGUIRenderer d_editorUIRenderer;
 
 public:
     EditorUI(Sprocket::Accessor& accessor, WorldLayer* worldLayer);

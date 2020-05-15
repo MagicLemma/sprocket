@@ -30,6 +30,9 @@ public:
     Texture(int width, int height, const std::vector<unsigned char>& data,
             TextureType type = TextureType::DIFFUSE);
 
+    Texture(int width, int height, unsigned char* data,
+            TextureType type = TextureType::DIFFUSE);
+
     Texture();
 
     void bind() const;
@@ -43,6 +46,8 @@ public:
 
     // Standard texture builders
     static Texture white();
+
+    unsigned int id() const;
 
     bool operator==(const Texture& other) const;
 };

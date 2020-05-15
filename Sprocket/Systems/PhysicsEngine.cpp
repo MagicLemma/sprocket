@@ -147,6 +147,8 @@ void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
         bodyData->setMass(physics.mass);
         bodyData->setLinearVelocity(convert(physics.velocity));
         bodyData->enableGravity(physics.gravity);
+        bodyData->setType(physics.stationary ? rp3d::BodyType::STATIC
+                                             : rp3d::BodyType::DYNAMIC);
 
         auto& material = bodyData->getMaterial();
         material.setBounciness(physics.bounciness);
@@ -171,6 +173,8 @@ void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
         entity.orientation() = convert(tr.getOrientation());
 
         physics.mass = bodyData->getMass();
+        physics.gravity = bodyData->isGravityEnabled();
+        physics.stationary = bodyData->getType() == rp3d::BodyType::STATIC;
         physics.velocity = convert(bodyData->getLinearVelocity());
 
         auto material = bodyData->getMaterial();

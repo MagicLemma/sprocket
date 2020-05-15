@@ -38,7 +38,6 @@ void deleteBuffer(ResourceType type, unsigned int buf)
 {
     switch(type) {
         case ResourceType::VAO: {
-            SPKT_LOG_INFO("Cleaning up VAO");
             glDeleteVertexArrays(1, &buf);
         } break;
         case ResourceType::VBO: {

@@ -161,6 +161,13 @@ Window::Window(
 			data->callback(event);
 		}
 	});
+
+	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, unsigned int key) {
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		if (!data->focused) return;
+		KeyboardKeyTypedEvent event(key);
+		data->callback(event);
+	});
 }
 
 Window::~Window()
@@ -227,6 +234,16 @@ Maths::vec2 Window::getMouseOffset()
 float Window::getTime()
 {
 	return glfwGetTime();
+}
+
+const char* Window::getClipboardData()
+{
+	return glfwGetClipboardString(d_impl->window);
+}
+
+void Window::setClipboardData(const std::string& text)
+{
+	glfwSetClipboardString(d_impl->window, text.c_str());
 }
 
 }

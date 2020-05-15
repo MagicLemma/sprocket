@@ -27,7 +27,6 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
     , d_entityManager({&d_playerMovement, &d_physicsEngine, &d_selector})
 {
     using namespace Sprocket;
-    d_entityRenderer.wireFrame(false);
     d_entityRenderer.depthTest(true);
     d_entityRenderer.renderColliders(false);
 
@@ -314,10 +313,6 @@ void WorldLayer::drawImpl()
     if(d_paused) {
         d_postProcessor.bind();
     }
-    
-    d_entityRenderer.wireFrame(
-        d_accessor.window()->isKeyDown(Sprocket::Keyboard::F) &&
-        d_status == Status::NORMAL);
     
     d_entityRenderer.update(*d_camera, d_lens, d_lights);
 

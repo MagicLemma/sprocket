@@ -165,5 +165,23 @@ std::string toString(const vec3& v, const std::optional<int>& dp)
     return ss.str();
 }
 
+std::string toString(float x, const std::optional<int>& dp)
+{
+    std::stringstream ss;
+    if (dp.has_value()) {
+        ss << std::fixed << std::setprecision(dp.value());
+    }
+    ss << x;
+    return ss.str();
+}
+
+std::string toString(bool t)
+{
+    if (t) {
+        return "True";
+    }
+    return "False";
+}
+
 }
 }

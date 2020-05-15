@@ -37,8 +37,8 @@ struct PhysicsComponent : public Component
 {
     bool        stationary          = false;
     Collider    collider            = EmptyCollider();
-
     float       mass                = 1.0f;
+    
     bool        gravity             = true;
     Maths::vec3 velocity            = {0.0, 0.0, 0.0};
     float       bounciness          = 0.5f;

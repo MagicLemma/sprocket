@@ -26,9 +26,10 @@ class EntityRenderer
 public:
     EntityRenderer(Window* window);
 
-    void wireFrame(bool value);
     void depthTest(bool value);
     void renderColliders(bool value);
+
+    bool showColliders() const { return d_renderColliders; }
 
     void update(const Camera& camera, const Lens& lens, const Lights& lights);
         // To be called on every frame, all non-entity updates of the

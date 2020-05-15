@@ -46,4 +46,16 @@ std::string KeyboardButtonHeldEvent::toString() const
 	return ss.str();
 }
 
+KeyboardKeyTypedEvent::KeyboardKeyTypedEvent(unsigned int key)
+	: d_key(key) 
+{
+}
+
+std::string KeyboardKeyTypedEvent::toString() const
+{
+	std::stringstream ss;
+	ss << "KeyboardKeyTypedEvent: " << d_key;
+	return ss.str();
+}
+
 }

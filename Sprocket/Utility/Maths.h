@@ -64,6 +64,8 @@ void clamp(float& value, float min, float max);
 
 // Printing
 std::string toString(const vec3& v, const std::optional<int>& dp = {});
+std::string toString(float x, const std::optional<int>& dp = {});
+std::string toString(bool t);
 
 }
 }

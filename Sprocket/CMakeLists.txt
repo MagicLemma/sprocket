@@ -13,6 +13,7 @@ find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
@@ -24,7 +25,10 @@ add_library(Sprocket STATIC
             Core/SceneManager.cpp
             Core/Window.cpp
 
+            DevGUI/DevGUI.cpp
+
             Graphics/MousePicker.cpp
+            Graphics/RenderContext.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
             Graphics/ModelLoader.cpp
@@ -35,7 +39,9 @@ add_library(Sprocket STATIC
             Graphics/Primitives/Texture.cpp
             Graphics/Primitives/CubeMap.cpp
             Graphics/Primitives/FrameBuffer.cpp
+            Graphics/Primitives/StreamBuffer.cpp
 
+            Graphics/Rendering/DevGUIRenderer.cpp
             Graphics/Rendering/DisplayRenderer.cpp
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
@@ -107,11 +113,13 @@ target_link_libraries(Sprocket PUBLIC
                       spdlog::spdlog
                       freetype
                       reactphysics3d
-                      assimp::assimp)
+                      assimp::assimp
+                      imgui::imgui)
 
 target_include_directories(Sprocket PUBLIC
                            .
                            ./Core
+                           ./DevGUI
                            ./Display
                            ./Display/Fonts
                            ./Display/WidgetProperties

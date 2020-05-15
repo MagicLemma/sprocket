@@ -2,6 +2,7 @@
 #include "Maths.h"
 #include "Components.h"
 #include "ModelLoader.h"
+#include "RenderContext.h"
 
 #include <glad/glad.h>
 
@@ -53,17 +54,6 @@ EntityRenderer::EntityRenderer(Window* window)
 {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-}
-
-void EntityRenderer::wireFrame(bool value)
-{
-    d_wireFrame = value;
-    if (value) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
-    else {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
 }
 
 void EntityRenderer::depthTest(bool value)
@@ -120,6 +110,8 @@ void EntityRenderer::draw(const Entity& entity)
         return;
     }
 
+    RenderContext rc;
+
     bool outline = false;
     if (entity.has<SelectComponent>()) {
         outline = entity.get<SelectComponent>().hovered ||
@@ -128,9 +120,7 @@ void EntityRenderer::draw(const Entity& entity)
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-
     glEnable(GL_DEPTH_TEST);
-
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -206,22 +196,16 @@ void EntityRenderer::drawColliders(const Entity& entity)
 
     d_shader.bind();
 
-    ModelLoader loader;
-    auto cube = loader.loadModel("Resources/Models/Cube.obj");
-    auto sphere = loader.loadModel("Resources/Models/Cube.obj");
-    auto hemisphere = loader.loadModel("Resources/Models/Cube.obj");
-    auto cylinder = loader.loadModel("Resources/Models/Cube.obj");
+    static ModelLoader loader;
+    static Model3D s_cube = loader.loadModel("Resources/Models/Cube.obj")[0].model;
+    static Model3D s_sphere = loader.loadModel("Resources/Models/LowPolySphere.obj")[0].model;
+    static Model3D s_hemisphere = loader.loadModel("Resources/Models/Hemisphere.obj")[0].model;
+    static Model3D s_cylinder = loader.loadModel("Resources/Models/Cylinder.obj")[0].model;
 
-    static Model3D s_cube = cube[0].model;
-    static Model3D s_sphere = sphere[0].model;
-    static Model3D s_hemisphere = hemisphere[0].model;
-    static Model3D s_cylinder = cylinder[0].model;
-
-    if (!d_wireFrame) { // Temporarily enable wire framing if off.
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     auto& physicsData = entity.get<PhysicsComponent>();
+
 
     if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {
         Maths::mat4 transform = entity.transform();
@@ -282,9 +266,7 @@ void EntityRenderer::drawColliders(const Entity& entity)
         Texture::white().unbind();   
     }
 
-    if (!d_wireFrame) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     d_shader.unbind();
 }

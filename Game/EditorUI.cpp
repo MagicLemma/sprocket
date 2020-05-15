@@ -2,106 +2,85 @@
 
 #include <sstream>
 
+#include <imgui.h>
+
 namespace {
 
-void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
+void addEntityToList(const Sprocket::Entity& entity)
 {
-    button->base().colour = {0.15625f, 0.15625f, 0.15625f};
+    using namespace Sprocket;
+    std::string name = "N/A";
+    if (entity.has<MetadataComponent>()) {
+        name = entity.get<MetadataComponent>().name;
+    }
 
-    button->buttonNormal().colour = {0.926f, 0.496f, 0.0f};
-    button->buttonHovered().colour = {0.926f, 0.63281f, 0.3242f};
-    button->buttonClicked().colour = {0.324f, 0.90625f, 0.5352f};
+    ImGui::PushID((int)entity.id());
+    if (ImGui::TreeNode(name.c_str())) {
+        //ImGui::Text(name.c_str());
+        ImGui::TreePop();
+    }
+    ImGui::PopID();      
+}
+
+void selectedEntityInfo(Sprocket::Entity& entity)
+{
+    using namespace Sprocket;
+    ImGui::Begin("Selected Entity");
+        
+    if (entity.has<MetadataComponent>()) {
+        auto comp = entity.get<MetadataComponent>();
+        std::string name = "Name: " + comp.name;
+        ImGui::Text(name.c_str());
+    }
+    else {
+        ImGui::Text("Name: -");
+    }
+    std::string id = "ID: " + std::to_string(entity.id());
+    ImGui::Text(id.c_str());
+    ImGui::Separator();
+    
+    if (ImGui::TreeNode("Transform")) {
+        ImGui::DragFloat3("Position", &entity.position().x, 0.005f);
+        ImGui::Text("TODO: Add Orientation");
+        ImGui::TreePop();
+    }
+
+    if (entity.has<PhysicsComponent>() && ImGui::TreeNode("Physics")) {
+        auto& comp = entity.get<PhysicsComponent>();
+        ImGui::Checkbox("Stationary", &comp.stationary);
+        ImGui::SameLine();
+        ImGui::Checkbox("Gravity", &comp.gravity);
+        ImGui::DragFloat("Mass", &comp.mass, 0.05f);
+        ImGui::DragFloat3("Velocity", &comp.velocity.x, 0.005f);
+        ImGui::SliderFloat("Bounciness", &comp.bounciness, 0.0f, 1.0f, "%.3f");
+        ImGui::SliderFloat("Friction Coeff", &comp.frictionCoefficient, 0.0f, 1.0f, "%.3f");
+        ImGui::SliderFloat("Roll Resistance", &comp.rollingResistance, 0.0f, 1.0f, "%.3f");
+        ImGui::TreePop();
+    }
+
+    ImGui::Separator();
+
+    if (ImGui::Button("Delete Entity")) {
+        entity.kill();
+    }
+
+    ImGui::End();
 }
 
 }
 
 EditorUI::EditorUI(Sprocket::Accessor& accessor, WorldLayer* worldLayer)
     : Layer(accessor, Status::INACTIVE, true)
-    , d_container(
-        200.0f,
-        {10.0, 10.0},
-        10.0f
-    )
-    , d_entityAttrs(
-        400.0f,
-        {10.0, 10.0},
-        10.0f
-    )
     , d_worldLayer(worldLayer)
-    , d_displayRenderer(accessor.window())
-{
-    using namespace Sprocket;
-
-    d_container.position({10.0f, 10.0f});
-    d_container.base().colour = {0.07f, 0.07f, 0.07f};
-    d_container.base().roundness = 0.2f;
-    d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
-
-    auto button = d_container.add<Button>(50.0f, 50.0f);
-    setButtonAttrs(button);
-    button->setUnclickCallback([&]() {
-        auto& physics = d_worldLayer->d_physicsEngine;
-        bool isRunning = physics.running();
-        physics.running(!isRunning);
-    });
-
-    auto showCollidersBtn = d_container.add<Button>(
-        50.0f, 50.0f, 0.5f, 0.55f, 0.45f
-    );
-    setButtonAttrs(showCollidersBtn);
-    showCollidersBtn->buttonNormal().colour = {0.426f, 0.296f, 1.0f};
-    showCollidersBtn->setUnclickCallback([&]() {
-        static bool val = false;
-        val = !val;
-        d_worldLayer->d_entityRenderer.renderColliders(val);
-    });
-
-    auto entityCount = d_container.add<TextBox>(d_container.width() - 20.0f, 20.0f, "");
-    entityCount->base().opacity = 0;
-    entityCount->text().colour = {0.85625f, 0.85625f, 0.85625f};
-    d_entityCount = entityCount.get();
-    
-    d_entityAttrs.position({10.0f, 10.0f});
-    d_entityAttrs.base().colour = {0.07f, 0.07f, 0.07f};
-    d_entityAttrs.base().roundness = 0.2f;
-    d_entityAttrs.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
-    d_entityAttrs.addProperty<VerticalConstraint>(VerticalConstraint::Type::BOTTOM, 10.0f);
-
-    auto positionText = d_entityAttrs.add<TextBox>(d_entityAttrs.width() - 20.0f, 20.0f, "");
-    positionText->base().opacity = 0; 
-    positionText->text().colour = {0.85625f, 0.85625f, 0.85625f};
-    d_positionText = positionText.get();
-
-    auto velocityText = d_entityAttrs.add<TextBox>(d_entityAttrs.width() - 20.0f, 20.0f, "");
-    velocityText->base().opacity = 0;
-    velocityText->text().colour = {0.85625f, 0.85625f, 0.85625f};
-    d_velocityText = velocityText.get();
-
-    auto speedText = d_entityAttrs.add<TextBox>(d_entityAttrs.width() - 20.0f, 20.0f, "");
-    speedText->base().opacity = 0;
-    speedText->text().colour = {0.85625f, 0.85625f, 0.85625f};
-    d_speedText = speedText.get();
-
-    auto deleteButton = d_entityAttrs.add<Button>(50.0f, 50.0f);
-    deleteButton->base().colour = {0.15625f, 0.15625f, 0.15625f};
-    deleteButton->buttonNormal().colour = {0.8, 0.0, 0.0};
-    deleteButton->buttonHovered().colour = {0.4, 0.0, 0.0};
-    deleteButton->buttonClicked().colour = {1.0, 0.0, 0.0};
-    deleteButton->setUnclickCallback([&]() {
-        if (auto e = d_worldLayer->d_selector.selectedEntity()) {
-            e->kill();
-        }
-    });
-    d_deleteButton = deleteButton.get();
+    , d_editorUI(accessor.window())
+    , d_editorUIRenderer(accessor.window())
+{  
 }
 
 bool EditorUI::handleEventImpl(const Sprocket::Event& event)
 {
     if (d_status == Sprocket::Layer::Status::NORMAL) {
-        if (d_container.handleEvent(d_accessor.window(), event)) {
-            return true;
-        }
-        if (d_entityAttrs.handleEvent(d_accessor.window(), event)) {
+        if (d_editorUI.handleEvent(event)) {
             return true;
         }
     }
@@ -111,50 +90,49 @@ bool EditorUI::handleEventImpl(const Sprocket::Event& event)
 
 void EditorUI::updateImpl()
 {
-    using namespace Sprocket;
-
-    // Don't do anything on this layer if it is not NORMAL,
-    // this status of this layer is changed by the EscapeMenu layer.
-    if (d_status == Layer::Status::NORMAL) {
-        d_displayRenderer.update();
-        d_container.update(d_accessor.window());
-        d_entityAttrs.update(d_accessor.window());
-
-        std::stringstream ss;
-        ss << "Entities: " << d_worldLayer->d_entityManager.entities().size();
-        d_entityCount->text().message = ss.str();;
-
-        if (auto e = d_worldLayer->d_selector.selectedEntity()) {
-            d_entityAttrs.active(true);
-
-            Maths::vec3 pos = e->position();
-            d_positionText->text().message = "Position: " + Maths::toString(pos, 3);
-        
-            if (!e->has<PhysicsComponent>()) {
-                d_velocityText->text().message = "N/A";
-                d_speedText->text().message = "N/A";
-            }
-            else {
-                Maths::vec3 vel = e->get<PhysicsComponent>().velocity;
-                std::stringstream ss;
-                ss << "Speed: " << Maths::length(vel);
-                d_velocityText->text().message = "Velocity: " + Maths::toString(vel, 3);
-                d_speedText->text().message = ss.str();
-            }
-        }
-        else {
-            d_entityAttrs.active(false);
-            d_positionText->text().message = "Position: No Entity Selected";
-            d_velocityText->text().message = "Velocity: No Entity Selected";
-            d_speedText->text().message = "Speed: No Entity Selected";
-        }
-
-        
+    if (d_status == Sprocket::Layer::Status::NORMAL) {
+        d_editorUI.update(deltaTime());
     }
 }
 
 void EditorUI::drawImpl()
 {
-    d_container.draw(&d_displayRenderer);
-    d_entityAttrs.draw(&d_displayRenderer);
+    using namespace Sprocket;
+
+    d_editorUIRenderer.startFrame();
+
+    ImGui::Begin("Sprocket Editor");
+    if (ImGui::Button("Physics Engine")) {
+        auto& physics = d_worldLayer->d_physicsEngine;
+        bool isRunning = physics.running();
+        physics.running(!isRunning);
+    }
+
+    if (ImGui::Button("Show Colliders")) {
+        auto entityRenderer = &d_worldLayer->d_entityRenderer;
+        bool wireframe = entityRenderer->showColliders();
+        entityRenderer->renderColliders(!wireframe);
+    }
+
+    std::stringstream ss;
+    ss << "Entities: " << d_worldLayer->d_entityManager.entities().size();
+    ImGui::Text(ss.str().c_str());
+
+    if (ImGui::CollapsingHeader("Entity List")) {
+        for (auto [id, entity] : d_worldLayer->d_entityManager.entities()) {
+            addEntityToList(*entity);      
+        }
+    }
+
+    ImGui::End();
+
+    if (auto e = d_worldLayer->d_selector.selectedEntity()) {
+        selectedEntityInfo(*e);
+    }
+
+    bool show = true;
+    ImGui::ShowDemoWindow(&show);
+
+    d_editorUIRenderer.endFrame();
+    d_editorUIRenderer.draw();
 }
