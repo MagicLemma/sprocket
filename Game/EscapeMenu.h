@@ -16,7 +16,7 @@ class EscapeMenu : public Sprocket::Layer
     Sprocket::TextBox* d_text;
 
 public:
-    EscapeMenu(Sprocket::Accessor& accessor,
+    EscapeMenu(const Sprocket::CoreSystems& core,
                WorldLayer* worldLayer,
                EditorUI* editorUi);
 

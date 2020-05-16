@@ -18,8 +18,7 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
 
-            Core/Accessor.cpp
-            Core/Initialiser.cpp
+            Core/CoreSystems.cpp
             Core/Layer.cpp
             Core/Scene.cpp
             Core/SceneManager.cpp

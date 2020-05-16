@@ -7,7 +7,7 @@ class MainMenu : public Sprocket::Layer
     Sprocket::DisplayRenderer d_renderer;
 
 public:
-    MainMenu(Sprocket::Accessor& accessor);
+    MainMenu(const Sprocket::CoreSystems& core);
 
     bool handleEventImpl(const Sprocket::Event& event) override;
     void updateImpl() override;

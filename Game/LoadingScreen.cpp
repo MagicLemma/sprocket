@@ -3,16 +3,16 @@
 #include "WorldLayer.h"
 #include "EscapeMenu.h"
 
-LoadingScreen::LoadingScreen(Sprocket::Accessor& accessor)
-    : Layer(accessor, Status::NORMAL, true)
+LoadingScreen::LoadingScreen(const Sprocket::CoreSystems& core)
+    : Layer(core, Status::NORMAL, true)
     , d_container(
-        accessor.window()->width()/4.0f,
+        core.window->width()/4.0f,
         {10.0, 10.0},
         10.0f
     )
-    , d_renderer(accessor.window())
+    , d_renderer(core.window)
 {
-    accessor.window()->setCursorVisibility(true);
+    core.window->setCursorVisibility(true);
 
     d_container.position({10.0f, 10.0f});
     d_container.base().colour = {0.07f, 0.07f, 0.07f};
@@ -26,14 +26,14 @@ LoadingScreen::LoadingScreen(Sprocket::Accessor& accessor)
 
 bool LoadingScreen::handleEventImpl(const Sprocket::Event& event)
 {
-    return d_container.handleEvent(d_accessor.window(), event);
+    return d_container.handleEvent(d_core.window, event);
 }
 
 void LoadingScreen::updateImpl()
 {
-    d_accessor.window()->setCursorVisibility(true);
+    d_core.window->setCursorVisibility(true);
     d_renderer.update();
-    d_container.update(d_accessor.window());
+    d_container.update(d_core.window);
 }
 
 void LoadingScreen::drawImpl()

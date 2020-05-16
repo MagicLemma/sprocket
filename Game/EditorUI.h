@@ -11,7 +11,7 @@ class EditorUI : public Sprocket::Layer
     Sprocket::DevGUIRenderer d_editorUIRenderer;
 
 public:
-    EditorUI(Sprocket::Accessor& accessor, WorldLayer* worldLayer);
+    EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer);
 
     bool handleEventImpl(const Sprocket::Event& event) override;
     void updateImpl() override;

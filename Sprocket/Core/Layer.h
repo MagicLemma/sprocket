@@ -1,7 +1,7 @@
 #pragma once
-#include "Core/Window.h"
+#include "Window.h"
 #include "Events/Event.h"
-#include "Accessor.h"
+#include "CoreSystems.h"
 
 namespace Sprocket {
 
@@ -25,7 +25,7 @@ protected:
 
     Status d_status;
 
-    Accessor d_accessor;
+    CoreSystems d_core;
 
 private:
     Layer(Layer&&) = delete;
@@ -47,7 +47,7 @@ private:
         // the screen.
 
 public:
-    Layer(const Accessor& accessor, Status status, bool cursorVisible = true);
+    Layer(const CoreSystems& core, Status status, bool cursorVisible = true);
 
     bool handleEvent(const Event& event);
         // Called whenever an event happens. This function should return
@@ -73,8 +73,6 @@ public:
         // framerate.
 
     float deltaTime() const { return d_deltaTime; }
-
-    void setAccessor(const Accessor& accessor);
 };
 
 }

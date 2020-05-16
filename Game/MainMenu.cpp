@@ -20,16 +20,16 @@ void setButtonAttrs(std::shared_ptr<Sprocket::Button> button)
 
 }
 
-MainMenu::MainMenu(Sprocket::Accessor& accessor)
-    : Layer(accessor, Status::NORMAL, true)
+MainMenu::MainMenu(const Sprocket::CoreSystems& core)
+    : Layer(core, Status::NORMAL, true)
     , d_container(
-        accessor.window()->width()/4.0f,
+        core.window->width()/4.0f,
         {10.0, 10.0},
         10.0f
     )
-    , d_renderer(accessor.window())
+    , d_renderer(core.window)
 {
-    accessor.window()->setCursorVisibility(true);
+    core.window->setCursorVisibility(true);
 
     d_container.position({10.0f, 10.0f});
     d_container.base().colour = {0.07f, 0.07f, 0.07f};
@@ -47,14 +47,14 @@ MainMenu::MainMenu(Sprocket::Accessor& accessor)
 
 bool MainMenu::handleEventImpl(const Sprocket::Event& event)
 {
-    return d_container.handleEvent(d_accessor.window(), event);
+    return d_container.handleEvent(d_core.window, event);
 }
 
 void MainMenu::updateImpl()
 {
-    d_accessor.window()->setCursorVisibility(true);
+    d_core.window->setCursorVisibility(true);
     d_renderer.update();
-    d_container.update(d_accessor.window());
+    d_container.update(d_core.window);
 }
 
 void MainMenu::drawImpl()

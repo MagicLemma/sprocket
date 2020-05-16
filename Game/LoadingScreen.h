@@ -7,7 +7,7 @@ class LoadingScreen : public Sprocket::Layer
     Sprocket::DisplayRenderer d_renderer;
 
 public:
-    LoadingScreen(Sprocket::Accessor& accessor);
+    LoadingScreen(const Sprocket::CoreSystems& core);
 
     bool handleEventImpl(const Sprocket::Event& event) override;
     void updateImpl() override;

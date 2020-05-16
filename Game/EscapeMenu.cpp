@@ -26,15 +26,15 @@ void setSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
     slider->picker().position.y = slider->base().height * (1.0f - 0.8f) / 2.0f;
 }
 
-EscapeMenu::EscapeMenu(Sprocket::Accessor& accessor,
+EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                        WorldLayer* worldLayer,
                        EditorUI* editorUi) 
-    : Layer(accessor, Status::INACTIVE, true)
+    : Layer(core, Status::INACTIVE, true)
     , d_worldLayer(worldLayer)
     , d_editorUi(editorUi)
-    , d_displayRenderer(accessor.window())
+    , d_displayRenderer(core.window)
     , d_container(
-        (float)accessor.window()->width()/4.0f,
+        (float)core.window->width()/4.0f,
         {10.0, 10.0},
         10.0f
     )
@@ -133,7 +133,7 @@ bool EscapeMenu::handleEventImpl(const Sprocket::Event& event)
     }
 
     if (d_status == Status::NORMAL) {
-        if (d_container.handleEvent(d_accessor.window(), event)) {
+        if (d_container.handleEvent(d_core.window, event)) {
             return true;
         }
     }
@@ -147,8 +147,8 @@ void EscapeMenu::updateImpl()
     d_displayRenderer.update();
 
     if (d_status == Status::NORMAL) {
-        d_container.update(d_accessor.window());
-        d_accessor.window()->setCursorVisibility(true);
+        d_container.update(d_core.window);
+        d_core.window->setCursorVisibility(true);
     }
 }
 

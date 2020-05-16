@@ -5,7 +5,7 @@
 
 int main()
 {
-    Sprocket::Initialiser init;
+    Sprocket::Log::init();
     Sprocket::Window window("Game!");
     Sprocket::SceneManager sceneManager;
 
@@ -13,12 +13,14 @@ int main()
         sceneManager.handleEvent(event);
     });
 
-    Sprocket::Accessor accessor(&sceneManager, &window);
+    Sprocket::CoreSystems core;
+    core.window = &window;
+    core.sceneManager = &sceneManager;
 
     auto world = sceneManager.addScene("World");
-    auto worldLayer = world->add<WorldLayer>(accessor);
-    auto editorUi = world->add<EditorUI>(accessor, worldLayer.get());
-    world->add<EscapeMenu>(accessor, worldLayer.get(), editorUi.get());
+    auto worldLayer = world->add<WorldLayer>(core);
+    auto editorUi = world->add<EditorUI>(core, worldLayer.get());
+    world->add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
     sceneManager.setActiveScene("World");
 
     Sprocket::FramerateTimer fps; // Helper class to log the fps.

@@ -29,6 +29,8 @@ Window::Window(
 	, d_data({name, width, height})
 	, d_callback([](const Event&) {})
 {
+	glfwInit();
+	
 	// Set the callback that will get called by GLFW. This just
 	// forwards all events on to the keyboard/mouse and any
 	// registered objects.
@@ -52,7 +54,6 @@ Window::Window(
 
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
-	//glfwSwapInterval(1);  // Set VSync to be true
 
 	// Initialise GLAD
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -66,8 +67,7 @@ Window::Window(
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
 	{
-		glViewport(0, 0, width, height); // Update the viewport
-
+		glViewport(0, 0, width, height);
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		WindowResizeEvent event(width, height);
@@ -173,6 +173,7 @@ Window::Window(
 Window::~Window()
 {
 	glfwDestroyWindow(d_impl->window);
+	glfwTerminate();
 }
 
 void Window::onUpdate()

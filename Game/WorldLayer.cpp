@@ -1,13 +1,13 @@
 #include "WorldLayer.h"
 
-WorldLayer::WorldLayer(Sprocket::Accessor& accessor) 
-    : Sprocket::Layer(accessor, Status::NORMAL, false)
+WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
+    : Sprocket::Layer(core, Status::NORMAL, false)
     , d_mode(Mode::OBSERVER)
-    , d_entityRenderer(accessor.window())
-    , d_terrainRenderer(accessor.window())
-    , d_skyboxRenderer(accessor.window())
-    , d_postProcessor(accessor.window()->width(), accessor.window()->height())
-    , d_lens(accessor.window()->aspectRatio())
+    , d_entityRenderer(core.window)
+    , d_terrainRenderer(core.window)
+    , d_skyboxRenderer(core.window)
+    , d_postProcessor(core.window->width(), core.window->height())
+    , d_lens(core.window->aspectRatio())
     , d_camera(&d_observerCamera)
     , d_skybox({
         Sprocket::Model3D(),
@@ -21,9 +21,9 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         })
     })
     , d_playerCamera(nullptr)
-    , d_playerMovement(accessor.window())
+    , d_playerMovement(core.window)
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
-    , d_selector(accessor.window(), &d_editorCamera, &d_lens, &d_physicsEngine)
+    , d_selector(core.window, &d_editorCamera, &d_lens, &d_physicsEngine)
     , d_entityManager({&d_playerMovement, &d_physicsEngine, &d_selector})
 {
     using namespace Sprocket;
@@ -256,7 +256,7 @@ WorldLayer::WorldLayer(Sprocket::Accessor& accessor)
         }
     }
 
-    accessor.window()->setCursorVisibility(false);
+    core.window->setCursorVisibility(false);
 
     d_lights.push_back({{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
@@ -276,8 +276,8 @@ bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_camera->handleEvent(d_accessor.window(), event);
-    d_lens.handleEvent(d_accessor.window(), event);
+    d_camera->handleEvent(d_core.window, event);
+    d_lens.handleEvent(d_core.window, event);
 
     if (d_entityManager.handleEvent(event)) {
         return true;
@@ -292,8 +292,8 @@ void WorldLayer::updateImpl()
     d_status = d_paused ? Status::PAUSED : Status::NORMAL;
 
     if (d_status == Status::NORMAL) {
-        d_camera->update(d_accessor.window(), deltaTime());
-        d_accessor.window()->setCursorVisibility(d_mouseRequired);
+        d_camera->update(d_core.window, deltaTime());
+        d_core.window->setCursorVisibility(d_mouseRequired);
         d_entityManager.update(deltaTime());
 
         for (auto& [id, entity] : d_entityManager.entities()) {

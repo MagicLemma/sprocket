@@ -56,7 +56,7 @@ class WorldLayer : public Sprocket::Layer
     friend class EditorUI;
 
 public:
-    WorldLayer(Sprocket::Accessor& accessor);
+    WorldLayer(const Sprocket::CoreSystems& core);
 
     bool handleEventImpl(const Sprocket::Event& event) override;
     void updateImpl() override;

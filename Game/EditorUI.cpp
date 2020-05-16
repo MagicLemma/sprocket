@@ -69,11 +69,11 @@ void selectedEntityInfo(Sprocket::Entity& entity)
 
 }
 
-EditorUI::EditorUI(Sprocket::Accessor& accessor, WorldLayer* worldLayer)
-    : Layer(accessor, Status::INACTIVE, true)
+EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
+    : Layer(core, Status::INACTIVE, true)
     , d_worldLayer(worldLayer)
-    , d_editorUI(accessor.window())
-    , d_editorUIRenderer(accessor.window())
+    , d_editorUI(core.window)
+    , d_editorUIRenderer(core.window)
 {  
 }
 
