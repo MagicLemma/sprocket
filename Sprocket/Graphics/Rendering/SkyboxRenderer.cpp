@@ -13,12 +13,9 @@ SkyboxRenderer::SkyboxRenderer(Window* window)
 
 void SkyboxRenderer::draw(const Skybox& skybox,
                           const Camera& camera,
-                          const Lens& lens,
-                          const RenderOptions& options)
+                          const Lens& lens)
 {
-    RenderOptions ops = options;
-    ops.faceCulling = false;
-    handleRenderOptions(ops);
+    glDisable(GL_CULL_FACE);
     glDepthMask(true);
 
     d_shader.bind();

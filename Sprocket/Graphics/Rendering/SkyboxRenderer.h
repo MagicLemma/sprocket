@@ -22,8 +22,7 @@ public:
 
     void draw(const Skybox& entity,
               const Camera& camera,
-              const Lens& lens,
-              const RenderOptions& options = RenderOptions());
+              const Lens& lens);
 };
 
 }

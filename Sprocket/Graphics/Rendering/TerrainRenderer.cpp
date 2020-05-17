@@ -15,13 +15,9 @@ TerrainRenderer::TerrainRenderer(Window* window)
 
 void TerrainRenderer::update(const Camera& camera,
                              const Lens& lens,
-                             const Lights& lights,
-                             const RenderOptions& options)
+                             const Lights& lights)
 {
-    handleRenderOptions(options);
     d_shader.bind();
-    unsigned int MAX_NUM_LIGHTS = 5;
-
     d_shader.loadUniform("projectionMatrix", lens.projection());
     d_shader.loadUniform("viewMatrix", camera.view());
 
@@ -38,6 +34,7 @@ void TerrainRenderer::update(const Camera& camera,
 			d_shader.loadUniform(arrayName("lightAttenuations", i), {1.0f, 0.0f, 0.0f});
 		}
 	}
+    
     d_shader.unbind();
 }
 

@@ -82,6 +82,22 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         entityManager.addEntity(platform);
     }
 
+    //{
+    //    auto platform = std::make_shared<Entity>();
+    //    platform->position() = {40.0, -10.0, 0.0};
+    //    
+    //    auto model = platform->add<ModelComponent>();
+    //    model->model = floatIslandData[0].model;
+    //    model->material = islandMat;
+    //    model->scale = 0.5f;
+    //    
+    //    auto meta = platform->add<MetadataComponent>();
+    //    meta->name = "Island";
+//
+    //    platform->add<SelectComponent>();
+    //    entityManager.addEntity(platform);
+    //}
+
     {
         auto platform = std::make_shared<Entity>();
         platform->position() = {-5.0, 0.0, 5.0};

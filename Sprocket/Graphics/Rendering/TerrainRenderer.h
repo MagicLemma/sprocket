@@ -11,6 +11,8 @@ namespace Sprocket {
 
 class TerrainRenderer
 {
+    const unsigned int MAX_NUM_LIGHTS = 5;
+    
     Window* d_window;
         // Non-owning pointer to the window to draw in.
 
@@ -22,8 +24,7 @@ public:
 
     void update(const Camera& camera,
                 const Lens& lens,
-                const Lights& lights,
-                const RenderOptions& options = RenderOptions());
+                const Lights& lights);
 
     void draw(const Terrain& terrain);
 };

@@ -50,11 +50,11 @@ void main()
         float reflectivity = texture(specular_sampler, p_texture_coords).r;
         specular_factor = max(specular_factor, 0.0);
         specular_factor = pow(specular_factor, u_shine_dampner) / attenuation;
-        total_specular = total_specular + vec4(specular_factor * reflectivity * u_light_colour[i], 1.0);
+        total_specular = total_specular + vec4(specular_factor * u_reflectivity * u_light_colour[i], 1.0);
     }
 
     // Ambient lighting calculation
-    total_diffuse = max(total_diffuse, 0.05);
+    total_diffuse = max(total_diffuse, 0.1);
 
     out_colour = total_diffuse * colour + total_specular;
 }
