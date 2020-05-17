@@ -13,7 +13,8 @@ std::size_t idGenerator()
 }
 
 Entity::Entity()
-    : d_id(idGenerator())
+    : d_name("Unnamed")
+    , d_id(idGenerator())
     , d_alive(true)
     , d_position({0, 0, 0})
     , d_orientation(Maths::identity)

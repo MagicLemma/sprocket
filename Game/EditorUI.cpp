@@ -9,13 +9,9 @@ namespace {
 void addEntityToList(const Sprocket::Entity& entity)
 {
     using namespace Sprocket;
-    std::string name = "N/A";
-    if (entity.has<MetadataComponent>()) {
-        name = entity.get<MetadataComponent>().name;
-    }
-
+    
     ImGui::PushID((int)entity.id());
-    if (ImGui::TreeNode(name.c_str())) {
+    if (ImGui::TreeNode(entity.name().c_str())) {
         ImGui::TreePop();
     }
     ImGui::PopID();      
@@ -26,14 +22,9 @@ void selectedEntityInfo(Sprocket::Entity& entity)
     using namespace Sprocket;
     ImGui::Begin("Selected Entity");
         
-    if (entity.has<MetadataComponent>()) {
-        auto comp = entity.get<MetadataComponent>();
-        std::string name = "Name: " + comp.name;
-        ImGui::Text(name.c_str());
-    }
-    else {
-        ImGui::Text("Name: -");
-    }
+    std::string name = "Name: " + entity.name();
+    ImGui::Text(name.c_str());
+    
     std::string id = "ID: " + std::to_string(entity.id());
     ImGui::Text(id.c_str());
     ImGui::Separator();

@@ -60,11 +60,6 @@ struct PlayerComponent : public Component
     bool wallLeft = false;
 };
 
-struct MetadataComponent : public Component
-{
-    std::string name;
-};
-
 struct SelectComponent : public Component
 {
     bool selected = false;

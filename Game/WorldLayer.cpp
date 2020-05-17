@@ -10,7 +10,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_lens(core.window->aspectRatio())
     , d_camera(&d_observerCamera)
     , d_skybox({
-        Sprocket::Model3D(),
+        Sprocket::ModelManager::loadModel("Resources/Models/Skybox.obj"),
         Sprocket::CubeMap({
             "Resources/Textures/Skybox/Skybox_X_Pos.png",
             "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -60,10 +60,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     auto sphereModel = core.modelManager->loadModel("Sphere", "Resources/Models/Sphere.obj");
     auto floatingIslandModel = core.modelManager->loadModel("Floating Island", "Resources/Models/FloatingIsland.obj");
 
-    d_skybox.model = ModelManager::loadModel("Resources/Models/Skybox.obj");
-
     {
         auto platform = std::make_shared<Entity>();
+        platform->name() = "Platform 1";
         platform->position() = {7.0, 0.0, -3.0};
         platform->orientation() = Maths::rotate({1, 0, 0}, 6.0f);
         
@@ -77,23 +76,19 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         phys->collider = c;
-        auto meta = platform->add<MetadataComponent>();
-        meta->name = "Platform 1";
         platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
     {
         auto platform = std::make_shared<Entity>();
+        platform->name() = "Island";
         platform->position() = {40.0, -10.0, 0.0};
         
         auto model = platform->add<ModelComponent>();
         model->model = floatingIslandModel;
         model->material = islandMaterial;
         model->scale = 0.5f;
-        
-        auto meta = platform->add<MetadataComponent>();
-        meta->name = "Island";
 
         platform->add<SelectComponent>();
         entityManager.addEntity(platform);
@@ -101,6 +96,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto platform = std::make_shared<Entity>();
+        platform->name() = "Platform 2";
         platform->position() = {-5.0, 0.0, 5.0};
 
         auto model = platform->add<ModelComponent>();
@@ -113,14 +109,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         phys->collider = c;
-        auto meta = platform->add<MetadataComponent>();
-        meta->name = "Platform 2";
         platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
     {
         auto platform = std::make_shared<Entity>();
+        platform->name() = "Platform 3";
         platform->position() = {-5.0, 0.0, 5.0};
 
         Maths::quat orientation = Maths::identity;
@@ -139,14 +134,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         phys->collider = c;
-        auto meta = platform->add<MetadataComponent>();
-        meta->name = "Platform 3";
         platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
 
     {
         auto crate = std::make_shared<Entity>();
+        crate->name() = "Crate 1";
         crate->position() = {-5.0, 2.0, -3.0};
         crate->orientation() = Maths::rotate({0, 1, 0}, 45.0f);
 
@@ -162,14 +156,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         phys->collider = c;
-        auto meta = crate->add<MetadataComponent>();
-        meta->name = "Crate 1";
         crate->add<SelectComponent>();
         entityManager.addEntity(crate);
     }
 
     {
         auto crate = std::make_shared<Entity>();
+        crate->name() = "Crate 2";
         crate->position() = {-1.0, 0.0, -3.0};
         crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
@@ -185,14 +178,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         phys->collider = c;
-        auto meta = crate->add<MetadataComponent>();
-        meta->name = "Crate 2";
         crate->add<SelectComponent>();
         entityManager.addEntity(crate);
     }
 
     {
         auto crate = std::make_shared<Entity>();
+        crate->name() = "Movable Crate";
         crate->position() = {8.0, 5.0, 7.0};
         crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
@@ -208,14 +200,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         phys->collider = c;
-        auto meta = crate->add<MetadataComponent>();
-        meta->name = "Movable Crate";
         crate->add<SelectComponent>();
         entityManager.addEntity(crate);
     }
 
     {
         auto player = std::make_shared<Entity>();
+        player->name() = "Player";
         player->position() = {0.0f, 5.0f, 5.0f};
 
         auto model = player->add<ModelComponent>();
@@ -236,8 +227,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         }
         player->add<PlayerComponent>();
         d_playerCamera.setPlayer(player.get());
-        auto meta = player->add<MetadataComponent>();
-        meta->name = "Player";
         player->add<SelectComponent>();
         entityManager.addEntity(player);
     }
@@ -245,6 +234,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     for (int i = 0; i != 5; ++i)
     {
         auto sphere = std::make_shared<Entity>();
+        std::stringstream ss;
+        ss << "Sphere " << i;
+        sphere->name() = ss.str();
         sphere->position() = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
         
         auto model = sphere->add<ModelComponent>();
@@ -259,10 +251,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
             c.radius = 1;
             physics->collider = c;
         }
-        auto meta = sphere->add<MetadataComponent>();
-        std::stringstream ss;
-        ss << "Sphere " << i;
-        meta->name = ss.str();
         sphere->add<SelectComponent>();
         entityManager.addEntity(sphere);
 
