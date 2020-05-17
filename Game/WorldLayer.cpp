@@ -27,8 +27,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityManager({&d_playerMovement, &d_physicsEngine, &d_selector})
 {
     using namespace Sprocket;
-    d_entityRenderer.depthTest(true);
-    d_entityRenderer.renderColliders(false);
 
     d_playerMovement.enable(false);
 
@@ -54,12 +52,15 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     galaxy.texture = space;
     galaxy.specularMap = spaceSpec;
 
+    Material islandMaterial;
+    islandMaterial.texture = Texture("Resources/Textures/FloatingIslandTex.png");
+
     auto platformModel = core.modelManager->loadModel("Platform", "Resources/Models/Platform.obj");
     auto crateModel = core.modelManager->loadModel("Crate", "Resources/Models/Cube.obj");
     auto sphereModel = core.modelManager->loadModel("Sphere", "Resources/Models/Sphere.obj");
-    
-    d_skybox.model = ModelManager::loadModel("Resources/Models/Skybox.obj");
+    auto floatingIslandModel = core.modelManager->loadModel("Floating Island", "Resources/Models/FloatingIsland.obj");
 
+    d_skybox.model = ModelManager::loadModel("Resources/Models/Skybox.obj");
 
     {
         auto platform = std::make_shared<Entity>();
@@ -82,21 +83,21 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         entityManager.addEntity(platform);
     }
 
-    //{
-    //    auto platform = std::make_shared<Entity>();
-    //    platform->position() = {40.0, -10.0, 0.0};
-    //    
-    //    auto model = platform->add<ModelComponent>();
-    //    model->model = floatIslandData[0].model;
-    //    model->material = islandMat;
-    //    model->scale = 0.5f;
-    //    
-    //    auto meta = platform->add<MetadataComponent>();
-    //    meta->name = "Island";
-//
-    //    platform->add<SelectComponent>();
-    //    entityManager.addEntity(platform);
-    //}
+    {
+        auto platform = std::make_shared<Entity>();
+        platform->position() = {40.0, -10.0, 0.0};
+        
+        auto model = platform->add<ModelComponent>();
+        model->model = floatingIslandModel;
+        model->material = islandMaterial;
+        model->scale = 0.5f;
+        
+        auto meta = platform->add<MetadataComponent>();
+        meta->name = "Island";
+
+        platform->add<SelectComponent>();
+        entityManager.addEntity(platform);
+    }
 
     {
         auto platform = std::make_shared<Entity>();
@@ -276,6 +277,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{-7.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.push_back({{40.0, 20.0, 0.0}, {0.8f, 0.8f, 0.8f}, {1.0f, 0.0f, 0.0f}});
 
     d_postProcessor.addEffect<GaussianVert>();
     d_postProcessor.addEffect<GaussianHoriz>();

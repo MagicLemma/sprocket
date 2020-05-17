@@ -29,7 +29,6 @@ add_library(Sprocket STATIC
 
             Graphics/MousePicker.cpp
             Graphics/RenderContext.cpp
-            Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
 
             Graphics/Primitives/Resources.cpp
@@ -45,8 +44,6 @@ add_library(Sprocket STATIC
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
             Graphics/Rendering/TerrainRenderer.cpp
-
-            Graphics/Rendering/Constraints/AspectConstraint.cpp
             
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp

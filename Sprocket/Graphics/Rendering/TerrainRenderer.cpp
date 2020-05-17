@@ -1,5 +1,6 @@
 #include "TerrainRenderer.h"
 #include "Maths.h"
+#include "RenderContext.h"
 
 #include <glad/glad.h>
 
@@ -40,6 +41,7 @@ void TerrainRenderer::update(const Camera& camera,
 
 void TerrainRenderer::draw(const Terrain& terrain)
 {
+    RenderContext rc;
     d_shader.bind();
 
     // Load up the transform matrix.

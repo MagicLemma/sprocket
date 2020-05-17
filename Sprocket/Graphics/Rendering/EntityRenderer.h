@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "Lens.h"
 #include "Shader.h"
-#include "RenderOptions.h"
 
 #include "Texture.h"
 
@@ -17,8 +16,6 @@ class EntityRenderer
     Shader  d_shader;
     Shader  d_outlineShader;
 
-    bool d_wireFrame;
-    bool d_depthTest;
     bool d_renderColliders;
 
     void drawColliders(const Entity& entity);
@@ -26,7 +23,6 @@ class EntityRenderer
 public:
     EntityRenderer(Window* window);
 
-    void depthTest(bool value);
     void renderColliders(bool value);
 
     bool showColliders() const { return d_renderColliders; }

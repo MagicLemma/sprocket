@@ -1,4 +1,5 @@
 #include "SkyboxRenderer.h"
+#include "RenderContext.h"
 
 #include <glad/glad.h>
 
@@ -15,6 +16,7 @@ void SkyboxRenderer::draw(const Skybox& skybox,
                           const Camera& camera,
                           const Lens& lens)
 {
+    RenderContext rc;
     glDisable(GL_CULL_FACE);
     glDepthMask(true);
 

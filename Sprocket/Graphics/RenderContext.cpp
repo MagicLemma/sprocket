@@ -37,16 +37,3 @@ RenderContext::~RenderContext()
 }
 
 }
-
-    bool d_cullFace;
-    bool d_depthTest;
-
-    bool d_blend;
-    int  d_blendSrcAlpha;
-    int  d_blendDstAlpha;
-    int  d_blendEqnAlpha;
-    int  d_blendSrcRGB;
-    int  d_blendDstRGB;
-    int  d_blendEqnRGB;
-
-    int  d_polygonMode;

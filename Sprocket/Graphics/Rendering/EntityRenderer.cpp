@@ -48,23 +48,10 @@ EntityRenderer::EntityRenderer(Window* window)
                "Resources/Shaders/Entity.frag")
     , d_outlineShader("Resources/Shaders/EntityOutline.vert",
                       "Resources/Shaders/EntityOutline.frag")
-    , d_wireFrame(false)
-    , d_depthTest(true)
     , d_renderColliders(false)
 {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-}
-
-void EntityRenderer::depthTest(bool value)
-{
-    d_depthTest = value;
-    if (value) {
-        glEnable(GL_DEPTH_TEST);
-    }
-    else {
-        glDisable(GL_DEPTH_TEST);
-    }
 }
 
 void EntityRenderer::renderColliders(bool value)

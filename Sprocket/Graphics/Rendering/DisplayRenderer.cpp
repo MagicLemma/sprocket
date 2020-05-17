@@ -1,6 +1,7 @@
 #include "DisplayRenderer.h"
 #include "Maths.h"
 #include "Log.h"
+#include "RenderContext.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -88,7 +89,10 @@ void DisplayRenderer::draw(const Quad& quad) const
 
 void DisplayRenderer::draw(const Quad& quad, const Model2D& model) const
 {
-    handleRenderOptions({false, false, false});
+    RenderContext rc;
+    glDisable(GL_CULL_FACE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -117,7 +121,9 @@ void DisplayRenderer::draw(const Quad& quad, const Model2D& model) const
 
 void DisplayRenderer::draw(const Text& text)
 {
-    handleRenderOptions({false, false, false});
+    glDisable(GL_CULL_FACE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

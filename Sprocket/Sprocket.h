@@ -28,7 +28,6 @@
 // GRAPHICS
 #include "Graphics/MousePicker.h"
 #include "Graphics/RenderContext.h"
-#include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
@@ -49,8 +48,6 @@
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
 #include "Graphics/Rendering/TerrainRenderer.h"
-
-#include "Graphics/Rendering/Constraints/AspectConstraint.h"
 
 // OBJECTS
 #include "Objects/Material.h"

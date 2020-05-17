@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "Lens.h"
 #include "Shader.h"
-#include "RenderOptions.h"
 
 namespace Sprocket {
 

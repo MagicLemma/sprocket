@@ -3,8 +3,7 @@
 #include "Skybox.h"
 #include "Camera.h"
 #include "Lens.h"
-#include "Graphics/Shader.h"
-#include "Graphics/RenderOptions.h"
+#include "Shader.h"
 
 
 namespace Sprocket {

@@ -2,7 +2,6 @@
 #include "Window.h"
 #include "Model2D.h"
 #include "Shader.h"
-#include "RenderOptions.h"
 #include "Quad.h"
 #include "Text.h"
 
