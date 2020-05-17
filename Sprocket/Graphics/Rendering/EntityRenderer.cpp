@@ -40,6 +40,16 @@ void unbindMaterial(Shader* shader)
     glActiveTexture(GL_TEXTURE0);
 }
 
+bool shouldOutlineEntity(const Entity& entity)
+{
+    if (!entity.has<SelectComponent>()) {
+        return false;
+    }
+
+    auto& s = entity.get<SelectComponent>();
+    return s.hovered || s.selected;
+}
+
 }
 
 EntityRenderer::EntityRenderer(Window* window)
@@ -50,8 +60,6 @@ EntityRenderer::EntityRenderer(Window* window)
                       "Resources/Shaders/EntityOutline.frag")
     , d_renderColliders(false)
 {
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
 }
 
 void EntityRenderer::renderColliders(bool value)
@@ -91,41 +99,36 @@ void EntityRenderer::update(const Camera& camera,
 }
 
 void EntityRenderer::draw(const Entity& entity)
+{    
+    RenderContext rc; 
+
+    if (entity.has<ModelComponent>()) {
+        drawModel(entity);
+    }
+
+    if (d_renderColliders && entity.has<PhysicsComponent>()) {
+        drawCollider(entity);
+    }
+}
+
+void EntityRenderer::drawModel(const Entity& entity)
 {
-    // Entities without a ModelComponent have nothing to render.
-    if (!entity.has<ModelComponent>()) {
-        return;
-    }
-
-    RenderContext rc;
-
-    bool outline = false;
-    if (entity.has<SelectComponent>()) {
-        outline = entity.get<SelectComponent>().hovered ||
-                  entity.get<SelectComponent>().selected;
-    }
-
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
+
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
 
-    if (outline) {
-        glStencilMask(0xFF);
-    }
-    else {
-        glStencilMask(0x00);
-    }
-
-    d_shader.bind();
+    bool outline = shouldOutlineEntity(entity);
+    glStencilMask(outline ? 0xFF : 0x00);
 
     auto modelComp = entity.get<ModelComponent>();
-
     Maths::mat4 transform = entity.transform();
     transform = Maths::scale(transform, modelComp.scale);
 
+    d_shader.bind();
     d_shader.loadUniform("u_model_matrix", transform);
 	d_shader.loadUniform("u_shine_dampner", modelComp.material.shineDamper);
 	d_shader.loadUniform("u_reflectivity", modelComp.material.reflectivity);
@@ -133,128 +136,135 @@ void EntityRenderer::draw(const Entity& entity)
     // Bind textures
     bindMaterial(&d_shader, modelComp.material);
     modelComp.model.bind();
-    glDrawElements(GL_TRIANGLES, modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, (int)modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
     modelComp.model.unbind();
     unbindMaterial(&d_shader);
 
     if (outline) {
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-        glStencilMask(0x00);
-        glDisable(GL_DEPTH_TEST);
-
-        transform = Maths::scale(transform, 1.05f);
-        d_outlineShader.bind();
-
-        d_outlineShader.loadUniform("u_model_matrix", transform);
-
-        if (entity.get<SelectComponent>().selected) {
-            d_outlineShader.loadUniform("u_colour", Maths::vec4{0, 1, 0, 1});
-        }
-        else {
-            d_outlineShader.loadUniform("u_colour", Maths::vec4{1, 1, 0, 1});
-        }
-
-        // Bind textures
-        bindMaterial(&d_shader, modelComp.material);
-        modelComp.model.bind();
-        glDrawElements(GL_TRIANGLES, modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
-        modelComp.model.unbind();
-        unbindMaterial(&d_shader);
-
-        glStencilMask(0xFF);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glEnable(GL_DEPTH_TEST);
-        glClear(GL_STENCIL_BUFFER_BIT);
+        drawOutline(entity);
     }
-
-    if (d_renderColliders) {
-        drawColliders(entity);
-    }
-
-    d_shader.unbind();
-    d_outlineShader.unbind();
 }
 
-void EntityRenderer::drawColliders(const Entity& entity)
+void EntityRenderer::drawOutline(const Entity& entity)
 {
-    if (!entity.has<PhysicsComponent>()) {
-        return;
+    RenderContext rc;  // New render context for outlines.
+
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilMask(0x00);
+    glDisable(GL_DEPTH_TEST);
+
+    auto modelComp = entity.get<ModelComponent>();
+    Maths::mat4 transform = entity.transform();
+    transform = Maths::scale(transform, modelComp.scale);
+    transform = Maths::scale(transform, 1.05f);
+    
+    d_outlineShader.bind();
+    d_outlineShader.loadUniform("u_model_matrix", transform);
+
+    if (entity.get<SelectComponent>().selected) {
+        d_outlineShader.loadUniform("u_colour", Maths::vec4{0, 1, 0, 1});
+    }
+    else {
+        d_outlineShader.loadUniform("u_colour", Maths::vec4{1, 1, 0, 1});
     }
 
-    d_shader.bind();
+    // Bind textures
+    bindMaterial(&d_shader, modelComp.material);
+    modelComp.model.bind();
+    glDrawElements(GL_TRIANGLES, (int)modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
+    modelComp.model.unbind();
+    unbindMaterial(&d_shader);
 
+    glStencilMask(0xFF);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glClear(GL_STENCIL_BUFFER_BIT);
+}
+
+void EntityRenderer::drawCollider(const Entity& entity)
+{
+    RenderContext rc;  // New render context for colliders.
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    d_shader.bind();
+    auto& physicsData = entity.get<PhysicsComponent>();
+    if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {
+        drawBox(entity, data);
+    }
+    else if (auto data = std::get_if<SphereCollider>(&physicsData.collider)) {
+        drawSphere(entity, data);
+    }
+    else if (auto data = std::get_if<CapsuleCollider>(&physicsData.collider)) {
+        drawCapsule(entity, data);
+    }
+    d_shader.unbind();
+}
+
+void EntityRenderer::drawBox(const Entity& entity, const BoxCollider* collider)
+{
     static auto s_cube = ModelManager::loadModel("Resources/Models/Cube.obj");
+
+    Maths::mat4 transform = entity.transform();
+    transform = Maths::scale(transform, collider->halfExtents);
+
+    s_cube.bind();
+    Texture::white().bind();
+    d_shader.loadUniform("u_model_matrix", transform);
+    glDrawElements(GL_TRIANGLES, (int)s_cube.vertexCount(), GL_UNSIGNED_INT, nullptr);
+    Texture::white().unbind();
+    s_cube.unbind();
+}
+
+void EntityRenderer::drawSphere(const Entity& entity, const SphereCollider* collider)
+{
     static auto s_sphere = ModelManager::loadModel("Resources/Models/LowPolySphere.obj");
+
+    Maths::mat4 transform = entity.transform();
+    transform = Maths::scale(transform, collider->radius);
+    
+    s_sphere.bind();
+    Texture::white().bind();
+    d_shader.loadUniform("u_model_matrix", transform);
+    glDrawElements(GL_TRIANGLES, (int)s_sphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
+    Texture::white().unbind();
+    s_sphere.unbind();
+}
+
+void EntityRenderer::drawCapsule(const Entity& entity, const CapsuleCollider* collider)
+{
     static auto s_hemisphere = ModelManager::loadModel("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = ModelManager::loadModel("Resources/Models/Cylinder.obj");
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    auto& physicsData = entity.get<PhysicsComponent>();
-
-
-    if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {
+    Texture::white().bind();
+    {  // Top Hemisphere
+        s_hemisphere.bind();
         Maths::mat4 transform = entity.transform();
-        transform = Maths::scale(transform, data->halfExtents);
-
-        s_cube.bind();
-        Texture::white().bind();
+        transform = Maths::translate(transform, {0.0, collider->height/2, 0.0});
+        transform = Maths::scale(transform, collider->radius);
         d_shader.loadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, s_cube.vertexCount(), GL_UNSIGNED_INT, nullptr);
-        Texture::white().unbind();
-        s_cube.unbind();
+        glDrawElements(GL_TRIANGLES, (int)s_hemisphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
+        s_hemisphere.unbind();
     }
-    else if (auto data = std::get_if<SphereCollider>(&physicsData.collider)) {
+
+    {  // Middle Cylinder
+        s_cylinder.bind();
         Maths::mat4 transform = entity.transform();
-        transform = Maths::scale(transform, data->radius);
-        
-        s_sphere.bind();
-        Texture::white().bind();
+        transform = Maths::scale(transform, {collider->radius, collider->height, collider->radius});
         d_shader.loadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, s_sphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
-        Texture::white().unbind();
-        s_sphere.unbind();
-    }
-    else if (auto data = std::get_if<CapsuleCollider>(&physicsData.collider)) {
-        
-        Texture::white().bind();
-
-        {  // Top Hemisphere
-            s_hemisphere.bind();
-            Maths::mat4 transform = entity.transform();
-            transform = Maths::translate(transform, {0.0, data->height/2, 0.0});
-            transform = Maths::scale(transform, data->radius);
-            d_shader.loadUniform("u_model_matrix", transform);
-            glDrawElements(GL_TRIANGLES, s_hemisphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
-            s_hemisphere.unbind();
-        }
-
-        {  // Middle Cylinder
-            s_cylinder.bind();
-            Maths::mat4 transform = entity.transform();
-            transform = Maths::scale(transform, {data->radius, data->height, data->radius});
-            d_shader.loadUniform("u_model_matrix", transform);
-            glDrawElements(GL_TRIANGLES, s_cylinder.vertexCount(), GL_UNSIGNED_INT, nullptr);
-            s_cylinder.unbind();
-        }
-
-        {  // Bottom Hemisphere
-            s_hemisphere.bind();
-            Maths::mat4 transform = entity.transform();
-            transform = Maths::translate(transform, {0.0, -data->height/2, 0.0});
-            transform = Maths::rotate(transform, {1, 0, 0}, Maths::radians(180.0f));
-            transform = Maths::scale(transform, data->radius);
-            d_shader.loadUniform("u_model_matrix", transform);
-            glDrawElements(GL_TRIANGLES, s_hemisphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
-            s_hemisphere.unbind();
-        }
-        
-        Texture::white().unbind();   
+        glDrawElements(GL_TRIANGLES, (int)s_cylinder.vertexCount(), GL_UNSIGNED_INT, nullptr);
+        s_cylinder.unbind();
     }
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    d_shader.unbind();
+    {  // Bottom Hemisphere
+        s_hemisphere.bind();
+        Maths::mat4 transform = entity.transform();
+        transform = Maths::translate(transform, {0.0, -collider->height/2, 0.0});
+        transform = Maths::rotate(transform, {1, 0, 0}, Maths::radians(180.0f));
+        transform = Maths::scale(transform, collider->radius);
+        d_shader.loadUniform("u_model_matrix", transform);
+        glDrawElements(GL_TRIANGLES, (int)s_hemisphere.vertexCount(), GL_UNSIGNED_INT, nullptr);
+        s_hemisphere.unbind();
+    }
+    Texture::white().unbind();   
 }
 
 }

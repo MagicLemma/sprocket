@@ -18,7 +18,13 @@ class EntityRenderer
 
     bool d_renderColliders;
 
-    void drawColliders(const Entity& entity);
+    void drawModel    (const Entity& entity);
+    void drawOutline  (const Entity& entity);
+    void drawCollider (const Entity& entity);
+
+    void drawBox      (const Entity& entity, const BoxCollider* collider);
+    void drawSphere   (const Entity& entity, const SphereCollider* collider);
+    void drawCapsule  (const Entity& entity, const CapsuleCollider* collider);
 
 public:
     EntityRenderer(Window* window);
