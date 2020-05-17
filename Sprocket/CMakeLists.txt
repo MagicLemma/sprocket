@@ -19,10 +19,11 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 add_library(Sprocket STATIC
 
             Core/CoreSystems.cpp
+            Core/Window.cpp
+            Core/SceneManager.cpp
+            Core/ModelManager.cpp
             Core/Layer.cpp
             Core/Scene.cpp
-            Core/SceneManager.cpp
-            Core/Window.cpp
 
             DevGUI/DevGUI.cpp
 
@@ -30,7 +31,6 @@ add_library(Sprocket STATIC
             Graphics/RenderContext.cpp
             Graphics/RenderOptions.cpp
             Graphics/Shader.cpp
-            Graphics/ModelLoader.cpp
 
             Graphics/Primitives/Resources.cpp
             Graphics/Primitives/Model2D.cpp

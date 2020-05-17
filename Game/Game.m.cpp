@@ -8,6 +8,7 @@ int main()
     Sprocket::Log::init();
     Sprocket::Window window("Game!");
     Sprocket::SceneManager sceneManager;
+    Sprocket::ModelManager modelManager;
 
     window.setCallback([&sceneManager](const Sprocket::Event& event) {
         sceneManager.handleEvent(event);
@@ -16,6 +17,7 @@ int main()
     Sprocket::CoreSystems core;
     core.window = &window;
     core.sceneManager = &sceneManager;
+    core.modelManager = &modelManager;
 
     auto world = sceneManager.addScene("World");
     auto worldLayer = world->add<WorldLayer>(core);

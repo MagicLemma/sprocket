@@ -4,10 +4,11 @@
 
 // CORE
 #include "Core/CoreSystems.h"
+#include "Core/Window.h"
+#include "Core/SceneManager.h"
+#include "Core/ModelManager.h"
 #include "Core/Layer.h"
 #include "Core/Scene.h"
-#include "Core/SceneManager.h"
-#include "Core/Window.h"
 
 // DEV GUI
 #include "DevGUI/DevGUI.h"
@@ -29,7 +30,6 @@
 #include "Graphics/RenderContext.h"
 #include "Graphics/RenderOptions.h"
 #include "Graphics/Shader.h"
-#include "Graphics/ModelLoader.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"

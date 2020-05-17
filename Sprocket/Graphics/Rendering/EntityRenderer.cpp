@@ -1,7 +1,7 @@
 #include "EntityRenderer.h"
 #include "Maths.h"
 #include "Components.h"
-#include "ModelLoader.h"
+#include "ModelManager.h"
 #include "RenderContext.h"
 
 #include <glad/glad.h>
@@ -196,11 +196,10 @@ void EntityRenderer::drawColliders(const Entity& entity)
 
     d_shader.bind();
 
-    static ModelLoader loader;
-    static Model3D s_cube = loader.loadModel("Resources/Models/Cube.obj")[0].model;
-    static Model3D s_sphere = loader.loadModel("Resources/Models/LowPolySphere.obj")[0].model;
-    static Model3D s_hemisphere = loader.loadModel("Resources/Models/Hemisphere.obj")[0].model;
-    static Model3D s_cylinder = loader.loadModel("Resources/Models/Cylinder.obj")[0].model;
+    static auto s_cube = ModelManager::loadModel("Resources/Models/Cube.obj");
+    static auto s_sphere = ModelManager::loadModel("Resources/Models/LowPolySphere.obj");
+    static auto s_hemisphere = ModelManager::loadModel("Resources/Models/Hemisphere.obj");
+    static auto s_cylinder = ModelManager::loadModel("Resources/Models/Cylinder.obj");
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 

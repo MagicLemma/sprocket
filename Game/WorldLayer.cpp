@@ -54,14 +54,12 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     galaxy.texture = space;
     galaxy.specularMap = spaceSpec;
 
-
-    ModelLoader loader;
-    auto platformData = loader.loadModel("Resources/Models/Platform.obj");
-    auto crateData = loader.loadModel("Resources/Models/Cube.obj");
-    auto sphereData = loader.loadModel("Resources/Models/Sphere.obj");
-    auto skyboxData = loader.loadModel("Resources/Models/Skybox.obj");
+    auto platformModel = core.modelManager->loadModel("Platform", "Resources/Models/Platform.obj");
+    auto crateModel = core.modelManager->loadModel("Crate", "Resources/Models/Cube.obj");
+    auto sphereModel = core.modelManager->loadModel("Sphere", "Resources/Models/Sphere.obj");
     
-    d_skybox.model = skyboxData[0].model;
+    d_skybox.model = ModelManager::loadModel("Resources/Models/Skybox.obj");
+
 
     {
         auto platform = std::make_shared<Entity>();
@@ -69,7 +67,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         platform->orientation() = Maths::rotate({1, 0, 0}, 6.0f);
         
         auto model = platform->add<ModelComponent>();
-        model->model = platformData[0].model;
+        model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
         auto phys = platform->add<PhysicsComponent>();
@@ -89,7 +87,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         platform->position() = {-5.0, 0.0, 5.0};
 
         auto model = platform->add<ModelComponent>();
-        model->model = platformData[0].model;
+        model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
         auto phys = platform->add<PhysicsComponent>();
@@ -114,7 +112,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         platform->orientation() = orientation;
 
         auto model = platform->add<ModelComponent>();
-        model->model = platformData[0].model;
+        model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
         auto phys = platform->add<PhysicsComponent>();
@@ -136,7 +134,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         crate->orientation() = Maths::rotate({0, 1, 0}, 45.0f);
 
         auto model = crate->add<ModelComponent>();
-        model->model = crateData[0].model;
+        model->model = crateModel;
         model->material = galaxy;
         model->scale = 1.2f;
         auto phys = crate->add<PhysicsComponent>();
@@ -159,7 +157,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
         auto model = crate->add<ModelComponent>();
-        model->model = crateData[0].model;
+        model->model = crateModel;
         model->material = field;
         model->scale = 1.2f;
         auto phys = crate->add<PhysicsComponent>();
@@ -182,7 +180,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
 
         auto model = crate->add<ModelComponent>();
-        model->model = crateData[0].model;
+        model->model = crateModel;
         model->material = field;
         model->scale = 1.2f;
         auto phys = crate->add<PhysicsComponent>();
@@ -204,7 +202,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         player->position() = {0.0f, 5.0f, 5.0f};
 
         auto model = player->add<ModelComponent>();
-        model->model = crateData[0].model;
+        model->model = crateModel;
         model->material = shinyGray;
         model->scale = 0.3f;
         auto physics = player->add<PhysicsComponent>();
@@ -233,7 +231,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         sphere->position() = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
         
         auto model = sphere->add<ModelComponent>();
-        model->model = sphereData[0].model;
+        model->model = sphereModel;
         model->material = shinyGray;
         model->scale = 0.9f;
         auto physics = sphere->add<PhysicsComponent>();

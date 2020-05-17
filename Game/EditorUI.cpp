@@ -16,7 +16,6 @@ void addEntityToList(const Sprocket::Entity& entity)
 
     ImGui::PushID((int)entity.id());
     if (ImGui::TreeNode(name.c_str())) {
-        //ImGui::Text(name.c_str());
         ImGui::TreePop();
     }
     ImGui::PopID();      
@@ -67,6 +66,29 @@ void selectedEntityInfo(Sprocket::Entity& entity)
     ImGui::End();
 }
 
+void addEntityPanel(Sprocket::EntityManager* entities,
+                    Sprocket::ModelManager* models)
+{
+    ImGui::Begin("Add Entity");
+    for (const auto& [name, model] : *models) {
+        if (ImGui::Button(name.c_str())) {
+            SPKT_LOG_INFO("Added entity");
+            auto entity = std::make_shared<Sprocket::Entity>();
+            entity->position() = {10.0, 0.0, 10.0};
+            auto modelComp = entity->add<Sprocket::ModelComponent>();
+            modelComp->model = model;
+
+            Sprocket::Material m;
+            m.texture = Sprocket::Texture::white();
+            
+            modelComp->material = m;
+            modelComp->scale = 1.0f; 
+            entities->addEntity(entity);
+        }
+    }
+    ImGui::End();
+}
+
 }
 
 EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
@@ -74,6 +96,7 @@ EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
     , d_worldLayer(worldLayer)
     , d_editorUI(core.window)
     , d_editorUIRenderer(core.window)
+    , d_modelManager(core.modelManager)
 {  
 }
 
@@ -129,6 +152,8 @@ void EditorUI::drawImpl()
     if (auto e = d_worldLayer->d_selector.selectedEntity()) {
         selectedEntityInfo(*e);
     }
+
+    addEntityPanel(&d_worldLayer->d_entityManager, d_modelManager);
 
     bool show = true;
     ImGui::ShowDemoWindow(&show);
