@@ -121,17 +121,12 @@ void DevGUIRenderer::draw() const
                 glDrawElements(
                     GL_TRIANGLES,
                     pcmd->ElemCount,
-                    sizeof(ImDrawIdx) == 2
-                        ? GL_UNSIGNED_SHORT
-                        : GL_UNSIGNED_INT,
+                    sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT,
                     (void*)(intptr_t)(pcmd->IdxOffset * sizeof(ImDrawIdx))
                 );
-
             }
         }
     }
-
-    
 }
 
 }

@@ -58,6 +58,8 @@ public:
         // Given a position in the world and a direction from that point,
         // return a pointer to the entity that it hits, or nullptr if it
         // does not.
+
+        
 };
 
 }

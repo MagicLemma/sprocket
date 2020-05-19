@@ -85,12 +85,17 @@ struct PhysicsEngineImpl
 {
     rp3d::DynamicsWorld world;
 
-    std::vector<std::shared_ptr<rp3d::CollisionShape>> collisionShapes;
-        // This is just to manage the lifetimes of the collision bodies
-        // and should really not be touched. May want to enhance this in the
-        // future for some optimising.
+    std::unordered_map<
+        std::size_t,
+        std::shared_ptr<rp3d::CollisionShape>
+    > collisionShapes;
+        // This is just to manage the lifetimes of the collision bodies. 
+        // May want to enhance this in the future for some optimising.
 
-    std::unordered_map<std::size_t, rp3d::RigidBody*> rigidBodies; 
+    std::unordered_map<
+        std::size_t,
+        rp3d::RigidBody*
+    > rigidBodies; 
         // Lifetime of RidigBody managed by RapidPhysics3D?
 
     PhysicsEngineImpl(const Maths::vec3& gravity)
@@ -172,15 +177,7 @@ void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
         entity.position() = convert(tr.getPosition());
         entity.orientation() = convert(tr.getOrientation());
 
-        physics.mass = bodyData->getMass();
-        physics.gravity = bodyData->isGravityEnabled();
-        physics.stationary = bodyData->getType() == rp3d::BodyType::STATIC;
         physics.velocity = convert(bodyData->getLinearVelocity());
-
-        auto material = bodyData->getMaterial();
-        physics.bounciness = material.getBounciness();
-        physics.frictionCoefficient = material.getFrictionCoefficient();
-        physics.rollingResistance = material.getRollingResistance();
 
         // Handle player movement updates.
         if (entity.has<PlayerComponent>()) {
@@ -236,7 +233,7 @@ void PhysicsEngine::registerEntity(const Entity& entity)
         physicsData.mass
     );
 
-    d_impl->collisionShapes.push_back(collider);
+    d_impl->collisionShapes[entity.id()] = collider;
 }
 
 void PhysicsEngine::deregisterEntity(const Entity& entity)
