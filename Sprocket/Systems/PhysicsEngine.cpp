@@ -65,6 +65,21 @@ public:
     float fraction() const { return d_fraction; }
 };
 
+class EventListener : public rp3d::EventListener
+{
+public:
+    void rigidBodyUpdated(const rp3d::RigidBody* body) override
+    {
+        Entity* entity = reinterpret_cast<Entity*>(body->getUserData());
+        entity->position() = convert(body->getTransform().getPosition());
+        entity->orientation() = convert(body->getTransform().getOrientation());
+
+        if (entity->has<PhysicsComponent>()) {
+            entity->get<PhysicsComponent>().velocity = convert(body->getLinearVelocity());
+        }
+    }
+};
+
 float getSpeed(SpeedFactor s)
 {
     switch (s) {
@@ -98,6 +113,8 @@ struct PhysicsEngineImpl
     > rigidBodies; 
         // Lifetime of RidigBody managed by RapidPhysics3D?
 
+    EventListener eventListener;
+
     PhysicsEngineImpl(const Maths::vec3& gravity)
         : world(convert(gravity))
     {}
@@ -112,6 +129,7 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
 {
     d_impl->world.setNbIterationsPositionSolver(5);
     d_impl->world.setNbIterationsVelocitySolver(8);
+    d_impl->world.setEventListener(&d_impl->eventListener);
 }
 
 void PhysicsEngine::updateSystem(float dt)
@@ -136,7 +154,7 @@ void PhysicsEngine::updateSystem(float dt)
     }
 }
 
-void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
+void PhysicsEngine::updateEntity(Entity& entity, float dt)
 {
     if (!d_running) {
         return;
@@ -160,31 +178,11 @@ void PhysicsEngine::preUpdateEntity(Entity& entity, float dt)
         material.setFrictionCoefficient(physics.frictionCoefficient);
         material.setRollingResistance(physics.rollingResistance);        
     }
-}
 
-void PhysicsEngine::postUpdateEntity(Entity& entity, float dt)
-{
-    if (!d_running) {
-        return;
+    // Handle player movement updates.
+    if (entity.has<PlayerComponent>()) {
+        updatePlayer(entity, dt);
     }
-
-    if (entity.has<PhysicsComponent>()) {
-        auto& physics = entity.get<PhysicsComponent>();
-        const auto& bodyData = d_impl->rigidBodies[entity.id()];
-
-        // Update the Entity corresponding to this RigidBody.
-        auto tr = bodyData->getTransform();
-        entity.position() = convert(tr.getPosition());
-        entity.orientation() = convert(tr.getOrientation());
-
-        physics.velocity = convert(bodyData->getLinearVelocity());
-
-        // Handle player movement updates.
-        if (entity.has<PlayerComponent>()) {
-            updatePlayer(entity, dt);
-        }
-    }
-
 }
 
 void PhysicsEngine::registerEntity(const Entity& entity)

@@ -15,9 +15,8 @@ public:
     PlayerMovement(Window* window);
     ~PlayerMovement() {}
 
+    void updateEntity(Entity& entity, float dt) override;
     void updateSystem(float dt) override;
-    void preUpdateEntity(Entity& entity, float dt) override;
-    void postUpdateEntity(Entity& entity, float dt) override;
 
     bool handleEvent(const Event& event) override { return false; }
 

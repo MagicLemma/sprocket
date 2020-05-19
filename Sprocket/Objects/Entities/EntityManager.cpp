@@ -27,7 +27,7 @@ void EntityManager::update(float dt)
         }
         else {
             for (auto system : d_systems) {
-                system->preUpdateEntity(*(it->second), dt);
+                system->updateEntity(*(it->second), dt);
             }
             ++it;
         }
@@ -35,12 +35,6 @@ void EntityManager::update(float dt)
 
     for (auto system : d_systems) {
         system->updateSystem(dt);
-    }
-
-    for (auto& entity : d_entities) {
-        for (auto system : d_systems) {
-            system->postUpdateEntity(*(entity.second), dt);
-        }
     }
 }
 

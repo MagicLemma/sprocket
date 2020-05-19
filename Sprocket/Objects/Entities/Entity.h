@@ -32,6 +32,8 @@ public:
     bool alive() const { return d_alive; }
     void kill() { d_alive = false; }
 
+    void setPosition(const Maths::vec3& pos) { d_position = pos; }
+
     const Maths::vec3& position() const { return d_position; }
     Maths::vec3& position() { return d_position; }
 
