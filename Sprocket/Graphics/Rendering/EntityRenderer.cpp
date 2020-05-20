@@ -106,7 +106,7 @@ void EntityRenderer::draw(const Entity& entity)
         drawModel(entity);
     }
 
-    if (d_renderColliders && entity.has<PhysicsComponent>()) {
+    if (d_renderColliders && entity.has<ColliderComponent>()) {
         drawCollider(entity);
     }
 }
@@ -186,14 +186,14 @@ void EntityRenderer::drawCollider(const Entity& entity)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     d_shader.bind();
-    auto& physicsData = entity.get<PhysicsComponent>();
-    if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {
+    auto& colliderData = entity.get<ColliderComponent>();
+    if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
         drawBox(entity, data);
     }
-    else if (auto data = std::get_if<SphereCollider>(&physicsData.collider)) {
+    else if (auto data = std::get_if<SphereCollider>(&colliderData.collider)) {
         drawSphere(entity, data);
     }
-    else if (auto data = std::get_if<CapsuleCollider>(&physicsData.collider)) {
+    else if (auto data = std::get_if<CapsuleCollider>(&colliderData.collider)) {
         drawCapsule(entity, data);
     }
     d_shader.unbind();

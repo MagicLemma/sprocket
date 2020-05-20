@@ -70,12 +70,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
-        auto phys = platform->add<PhysicsComponent>();
-        phys->stationary = true;
-        phys->bounciness = 0.0f;
+
+        auto coll = platform->add<ColliderComponent>();
+        coll->bounciness = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys->collider = c;
+        coll->collider = c;
+
         platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
@@ -103,12 +104,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
-        auto phys = platform->add<PhysicsComponent>();
-        phys->stationary = true;
-        phys->bounciness = 0.0f;
+
+        auto coll = platform->add<ColliderComponent>();
+        coll->bounciness = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys->collider = c;
+        coll->collider = c;
+
         platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
@@ -127,13 +129,14 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
-        auto phys = platform->add<PhysicsComponent>();
-        phys->stationary = true;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.0f;
+
+        auto coll = platform->add<ColliderComponent>();
+        coll->bounciness = 0.0f;
+        coll->frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys->collider = c;
+        coll->collider = c;
+
         platform->add<SelectComponent>();
         entityManager.addEntity(platform);
     }
@@ -148,14 +151,14 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = crateModel;
         model->material = galaxy;
         model->scale = 1.2f;
-        auto phys = crate->add<PhysicsComponent>();
-        phys->stationary = true;
-        phys->mass = 1000.0f;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.0f;
+
+        auto coll = crate->add<ColliderComponent>();
+        coll->bounciness = 0.0f;
+        coll->frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
-        phys->collider = c;
+        coll->collider = c;
+
         crate->add<SelectComponent>();
         entityManager.addEntity(crate);
     }
@@ -170,14 +173,15 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = crateModel;
         model->material = field;
         model->scale = 1.2f;
-        auto phys = crate->add<PhysicsComponent>();
-        phys->stationary = true;
-        phys->mass = 1000.0f;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.0f;
+
+        auto coll = crate->add<ColliderComponent>();
+        coll->mass = 1000.0f;
+        coll->bounciness = 0.0f;
+        coll->frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
-        phys->collider = c;
+        coll->collider = c;
+
         crate->add<SelectComponent>();
         entityManager.addEntity(crate);
     }
@@ -192,14 +196,17 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = crateModel;
         model->material = field;
         model->scale = 1.2f;
+
         auto phys = crate->add<PhysicsComponent>();
-        phys->stationary = false;
-        phys->mass = 10000.0f;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.2f;
+
+        auto coll = crate->add<ColliderComponent>();
+        coll->mass = 10000.0f;
+        coll->bounciness = 0.0f;
+        coll->frictionCoefficient = 0.2f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
-        phys->collider = c;
+        coll->collider = c;
+
         crate->add<SelectComponent>();
         entityManager.addEntity(crate);
     }
@@ -213,20 +220,24 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = crateModel;
         model->material = shinyGray;
         model->scale = 0.3f;
+
         auto physics = player->add<PhysicsComponent>();
-        physics->stationary = false;
-        physics->mass = 60.0f;
-        physics->rollingResistance = 1.0f;
-        physics->frictionCoefficient = 0.4f;
-        physics->bounciness = 0.0f;
+
+        auto coll = player->add<ColliderComponent>();
+        coll->mass = 60.0f;
+        coll->rollingResistance = 1.0f;
+        coll->frictionCoefficient = 0.4f;
+        coll->bounciness = 0.0f;
         {
             CapsuleCollider c;
             c.radius = 0.5f;
             c.height = 1.0f;
-            physics->collider = c;
+            coll->collider = c;
         }
+
         player->add<PlayerComponent>();
         d_playerCamera.setPlayer(player.get());
+
         player->add<SelectComponent>();
         entityManager.addEntity(player);
     }
@@ -243,14 +254,15 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model->model = sphereModel;
         model->material = shinyGray;
         model->scale = 0.9f;
+
         auto physics = sphere->add<PhysicsComponent>();
-        physics->stationary = false;
-        physics->mass = 20.0f;
-        {
-            SphereCollider c;
-            c.radius = 1;
-            physics->collider = c;
-        }
+
+        auto coll = sphere->add<ColliderComponent>();
+        coll->mass = 20.0f;
+        SphereCollider c;
+        c.radius = 1;
+        coll->collider = c;
+
         sphere->add<SelectComponent>();
         entityManager.addEntity(sphere);
 
@@ -316,12 +328,11 @@ void WorldLayer::updateImpl()
 
 void WorldLayer::drawImpl()
 {
-    if(d_paused) {
+    if (d_paused) {
         d_postProcessor.bind();
     }
     
     d_skyboxRenderer.draw(d_skybox, *d_camera, d_lens);
-    
     d_entityManager.draw(&d_entityRenderer);
     
     if (d_paused) {

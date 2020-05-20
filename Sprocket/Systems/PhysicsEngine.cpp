@@ -158,23 +158,38 @@ void PhysicsEngine::updateEntity(float dt, Entity& entity)
         return;
     }
 
+    auto bodyData = d_impl->rigidBodies[entity.id()];
+
+    if (!bodyData) {
+        return; // This entity is not registered with the physics engine
+    }
+    
+    // Update the RigidBody corresponding to this Entity.
+    bodyData->setTransform(transform(entity));
+
     if (entity.has<PhysicsComponent>()) {
         const auto& physics = entity.get<PhysicsComponent>();
-        auto bodyData = d_impl->rigidBodies[entity.id()];
 
-        // Update the RigidBody corresponding to this Entity.
-        bodyData->setTransform(transform(entity));
-
-        bodyData->setMass(physics.mass);
         bodyData->setLinearVelocity(convert(physics.velocity));
-        bodyData->enableGravity(physics.gravity);
-        bodyData->setType(physics.stationary ? rp3d::BodyType::STATIC
-                                             : rp3d::BodyType::DYNAMIC);
+        bodyData->enableGravity(physics.gravity);    
+
+        if (physics.frozen) {
+            bodyData->setType(rp3d::BodyType::STATIC);
+        }
+        else {
+            bodyData->setType(rp3d::BodyType::DYNAMIC);
+        }
+    }
+    
+    if (entity.has<ColliderComponent>()) {
+        const auto& collider = entity.get<ColliderComponent>();
+
+        bodyData->setMass(collider.mass);
 
         auto& material = bodyData->getMaterial();
-        material.setBounciness(physics.bounciness);
-        material.setFrictionCoefficient(physics.frictionCoefficient);
-        material.setRollingResistance(physics.rollingResistance);        
+        material.setBounciness(collider.bounciness);
+        material.setFrictionCoefficient(collider.frictionCoefficient);
+        material.setRollingResistance(collider.rollingResistance); 
     }
 
     // Handle player movement updates.
@@ -185,48 +200,56 @@ void PhysicsEngine::updateEntity(float dt, Entity& entity)
 
 void PhysicsEngine::registerEntity(const Entity& entity)
 {
-    if (!entity.has<PhysicsComponent>()) {
+    auto hasPhysics = entity.has<PhysicsComponent>();
+    auto hasCollider = entity.has<ColliderComponent>();
+
+    if (!hasPhysics && !hasCollider) {
         return;  // Entity must have physics.
     }
 
-    auto& physicsData = entity.get<PhysicsComponent>();
     auto& entry = d_impl->rigidBodies[entity.id()];
-
     entry = d_impl->world.createRigidBody(transform(entity));
 
     // Give each RigidBody a pointer back to the original Entity object.
     entry->setUserData(const_cast<void*>(reinterpret_cast<const void*>(&entity)));
-    if (physicsData.stationary) {
-        entry->setType(rp3d::BodyType::STATIC);
+    if (hasPhysics) {
+        entry->setType(rp3d::BodyType::DYNAMIC);
     }
     else {
-        entry->setType(rp3d::BodyType::DYNAMIC);
+        entry->setType(rp3d::BodyType::STATIC);
     }
 
     if (entity.has<PlayerComponent>()) {
         entry->setAngularDamping(0.0f);
     }
 
+    if (!hasCollider) {
+        return; // No Collider to add.
+    }
+
+    auto& colliderData = entity.get<ColliderComponent>();
+
     std::shared_ptr<rp3d::CollisionShape> collider = nullptr;
-    if (auto data = std::get_if<BoxCollider>(&physicsData.collider)) {
+    if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
         collider = std::make_shared<rp3d::BoxShape>(convert(data->halfExtents));
     }
-    else if (auto data = std::get_if<SphereCollider>(&physicsData.collider)) {
+    else if (auto data = std::get_if<SphereCollider>(&colliderData.collider)) {
         collider = std::make_shared<rp3d::SphereShape>(data->radius);
     }
-    else if (auto data = std::get_if<CapsuleCollider>(&physicsData.collider)) {
+    else if (auto data = std::get_if<CapsuleCollider>(&colliderData.collider)) {
         collider = std::make_shared<rp3d::CapsuleShape>(
             data->radius, data->height
         );
     }
     else {
+        SPKT_LOG_ERROR("Entity has a ColliderComponent but no collider!");
         return; // No collision data.
     }
 
     auto ps = entry->addCollisionShape(
         collider.get(),
         rp3d::Transform::identity(),
-        physicsData.mass
+        colliderData.mass
     );
 
     d_impl->collisionShapes[entity.id()] = collider;
@@ -279,7 +302,9 @@ void PhysicsEngine::updatePlayer(float dt, Entity& entity)
     const auto& player = entity.get<PlayerComponent>();
     const auto& physics = entity.get<PhysicsComponent>();
 
-    // Keep player upright
+    float mass = d_impl->rigidBodies[entity.id()]->getMass();
+        // Sum of all colliders plus rigid body.
+
     makeUpright(&entity, player.yaw);
     
     bool onFloor = isOnFloor(&entity);
@@ -289,7 +314,7 @@ void PhysicsEngine::updatePlayer(float dt, Entity& entity)
         Maths::vec3 dv = (speed * player.direction) - physics.velocity;
         dv.y = 0.0f;  // Only consider horizontal movement.
         Maths::vec3 acceleration = dv / d_lastFrameLength;
-        applyForce(&entity, physics.mass * acceleration);
+        applyForce(&entity, mass * acceleration);
     }
 
     // Jumping
@@ -297,7 +322,7 @@ void PhysicsEngine::updatePlayer(float dt, Entity& entity)
         float speed = 6.0f;
         Maths::vec3 dv = (speed - physics.velocity.y) * Maths::vec3(0, 1, 0);
         Maths::vec3 acceleration = dv / d_lastFrameLength;
-        applyForce(&entity, physics.mass * acceleration);
+        applyForce(&entity, mass * acceleration);
     }
 }
 

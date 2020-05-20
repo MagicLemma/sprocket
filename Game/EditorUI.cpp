@@ -37,11 +37,16 @@ void selectedEntityInfo(Sprocket::Entity& entity)
 
     if (entity.has<PhysicsComponent>() && ImGui::TreeNode("Physics")) {
         auto& comp = entity.get<PhysicsComponent>();
-        ImGui::Checkbox("Stationary", &comp.stationary);
-        ImGui::SameLine();
         ImGui::Checkbox("Gravity", &comp.gravity);
-        ImGui::DragFloat("Mass", &comp.mass, 0.05f);
+        ImGui::SameLine();
+        ImGui::Checkbox("Frozen", &comp.frozen);
         ImGui::DragFloat3("Velocity", &comp.velocity.x, 0.005f);
+        ImGui::TreePop();
+    }
+
+        if (entity.has<ColliderComponent>() && ImGui::TreeNode("Collider")) {
+        auto& comp = entity.get<ColliderComponent>();
+        ImGui::DragFloat("Mass", &comp.mass, 0.05f);
         ImGui::SliderFloat("Bounciness", &comp.bounciness, 0.0f, 1.0f, "%.3f");
         ImGui::SliderFloat("Friction Coeff", &comp.frictionCoefficient, 0.0f, 1.0f, "%.3f");
         ImGui::SliderFloat("Roll Resistance", &comp.rollingResistance, 0.0f, 1.0f, "%.3f");

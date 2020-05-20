@@ -35,30 +35,31 @@ struct ModelComponent : public Component
 
 struct PhysicsComponent : public Component
 {
-    bool        stationary          = false;
-    Collider    collider            = EmptyCollider();
-    float       mass                = 1.0f;
-    
-    bool        gravity             = true;
-    Maths::vec3 velocity            = {0.0, 0.0, 0.0};
-    float       bounciness          = 0.5f;
-    float       frictionCoefficient = 0.3f;
-    float       rollingResistance   = 0.0f;
+    Maths::vec3 velocity = {0.0, 0.0, 0.0};
+    bool        gravity  = true;
+    bool        frozen   = false;
+};
+
+struct ColliderComponent : public Component
+{
+    Collider collider            = EmptyCollider();
+    float    mass                = 1.0f;
+    float    bounciness          = 0.5f;
+    float    frictionCoefficient = 0.3f;
+    float    rollingResistance   = 0.0f;
 };
 
 struct PlayerComponent : public Component
 {
-    bool movingForwards = false;
+    bool movingForwards  = false;
     bool movingBackwards = false;
-    bool movingLeft = false;
-    bool movingRight = false;
+    bool movingLeft      = false;
+    bool movingRight     = false;
+    bool jumping         = false;
+
     Maths::vec3 direction = {0.0, 0.0, 0.0};
-
-    float yaw = 0.0f;  // Forwards direction
-    float pitch = 0.0f;
-
-    bool jumping = false;
-    bool wallLeft = false;
+    float yaw             = 0.0f;  // Forwards direction
+    float pitch           = 0.0f;
 };
 
 struct SelectComponent : public Component
