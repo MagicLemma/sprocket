@@ -101,15 +101,13 @@ struct PhysicsEngineImpl
     rp3d::DynamicsWorld world;
 
     std::unordered_map<
-        std::size_t,
-        std::shared_ptr<rp3d::CollisionShape>
+        std::size_t, std::shared_ptr<rp3d::CollisionShape>
     > collisionShapes;
         // This is just to manage the lifetimes of the collision bodies. 
         // May want to enhance this in the future for some optimising.
 
     std::unordered_map<
-        std::size_t,
-        rp3d::RigidBody*
+        std::size_t, rp3d::RigidBody*
     > rigidBodies; 
         // Lifetime of RidigBody managed by RapidPhysics3D?
 
@@ -154,7 +152,7 @@ void PhysicsEngine::updateSystem(float dt)
     }
 }
 
-void PhysicsEngine::updateEntity(Entity& entity, float dt)
+void PhysicsEngine::updateEntity(float dt, Entity& entity)
 {
     if (!d_running) {
         return;
@@ -181,7 +179,7 @@ void PhysicsEngine::updateEntity(Entity& entity, float dt)
 
     // Handle player movement updates.
     if (entity.has<PlayerComponent>()) {
-        updatePlayer(entity, dt);
+        updatePlayer(dt, entity);
     }
 }
 
@@ -272,68 +270,72 @@ Entity* PhysicsEngine::raycast(const Maths::vec3& base,
     return cb.entity();
 }
 
-void PhysicsEngine::updatePlayer(Entity& entity, float dt)
+void PhysicsEngine::updatePlayer(float dt, Entity& entity)
 {
     if (d_lastFrameLength == 0) {
         return;  // Physics engine not advanced this frame.
     }
 
-    auto& bodyData = d_impl->rigidBodies[entity.id()];
-    
     const auto& player = entity.get<PlayerComponent>();
     const auto& physics = entity.get<PhysicsComponent>();
 
-    // Raycast down to see if there is an object underneath
-    auto aabb = bodyData->getAABB();
-    rp3d::Vector3 playerBase = aabb.getCenter();
-    playerBase.y = aabb.getMin().y;
-
-    // On floor check
-    rp3d::Vector3 up(0.0f, 1.0f, 0.0f);
-    float delta = 0.1f;
-    rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
-    RaycastCB cb;
-    d_impl->world.raycast(ray, &cb);
-    bool onFloor = cb.entity();
-
     // Keep player upright
-    rp3d::Transform transform = bodyData->getTransform();
-    rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(
-        0.0f, Maths::radians(player.yaw), 0.0f);
-    transform.setOrientation(q);
-    bodyData->setTransform(transform);
-    entity.orientation() = convert(q);
+    makeUpright(&entity, player.yaw);
+    
+    bool onFloor = isOnFloor(&entity);
 
-    // Player Movement
-    float cosYaw = Maths::cosd(player.yaw);
-    float sinYaw = Maths::sind(player.yaw);
-    rp3d::Vector3 forwards(-sinYaw, 0, -cosYaw);
-    rp3d::Vector3 right(cosYaw, 0, -sinYaw);
-
-    rp3d::Vector3 direction;
-    if (player.movingForwards) { direction += forwards; }
-    if (player.movingBackwards) { direction -= forwards; }
-    if (player.movingRight) { direction += right; }
-    if (player.movingLeft) { direction -= right; }
-    direction.normalize();
-
-    if (direction.length() != 0.0f || onFloor) {
+    if (player.direction.length() != 0.0f || onFloor) {
         float speed = 3.0f;
-        rp3d::Vector3 dv = (speed * direction) - convert(physics.velocity);
+        Maths::vec3 dv = (speed * player.direction) - physics.velocity;
         dv.y = 0.0f;  // Only consider horizontal movement.
-        float dtime = d_lastFrameLength;
-        rp3d::Vector3 acceleration = dv / dtime;
-        bodyData->applyForceToCenterOfMass(bodyData->getMass() * acceleration);
+        Maths::vec3 acceleration = dv / d_lastFrameLength;
+        applyForce(&entity, physics.mass * acceleration);
     }
 
     // Jumping
     if (onFloor && player.jumping) {
         float speed = 6.0f;
-        rp3d::Vector3 dv = (speed - physics.velocity.y) * up;
-        float dtime = d_lastFrameLength;
-        rp3d::Vector3 acceleration = dv / dtime;
-        bodyData->applyForceToCenterOfMass(bodyData->getMass() * acceleration);
+        Maths::vec3 dv = (speed - physics.velocity.y) * Maths::vec3(0, 1, 0);
+        Maths::vec3 acceleration = dv / d_lastFrameLength;
+        applyForce(&entity, physics.mass * acceleration);
     }
+}
+
+void PhysicsEngine::applyForce(Entity* entity, const Maths::vec3& force)
+{
+    auto& bodyData = d_impl->rigidBodies[entity->id()];
+    bodyData->applyForceToCenterOfMass(convert(force));
+}
+
+void PhysicsEngine::makeUpright(Entity* entity, float yaw)
+{
+    auto& bodyData = d_impl->rigidBodies[entity->id()];
+    rp3d::Transform transform = bodyData->getTransform();
+    rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(
+        0.0f, Maths::radians(yaw), 0.0f);
+    transform.setOrientation(q);
+    bodyData->setTransform(transform);
+    entity->orientation() = convert(q);
+}
+
+bool PhysicsEngine::isOnFloor(const Entity* entity) const
+{
+    auto& bodyData = d_impl->rigidBodies[entity->id()];
+
+    // Get the point at the bottom of the rigid body.
+    auto aabb = bodyData->getAABB();
+    rp3d::Vector3 playerBase = aabb.getCenter();
+    playerBase.y = aabb.getMin().y;
+
+    // Raycast down from this point. We actually raycast from slightly
+    // higher which works more consistently for some reason. TODO: Find
+    // out why
+    rp3d::Vector3 up(0.0f, 1.0f, 0.0f);
+    float delta = 0.1f;
+    rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
+    RaycastCB cb;
+    d_impl->world.raycast(ray, &cb);
+    return cb.entity() != nullptr;
 }
 
 }

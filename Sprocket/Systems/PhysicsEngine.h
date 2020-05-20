@@ -32,7 +32,7 @@ class PhysicsEngine : public EntitySystem
     
     bool        d_running = false;
 
-    void updatePlayer(Entity& entity, float dt);
+    void updatePlayer(float dt, Entity& entity);
         // If this Entity has a PlayerComponent, perform the
         // necessary updates.
 
@@ -40,7 +40,7 @@ public:
     PhysicsEngine(const Maths::vec3& gravity);
     ~PhysicsEngine() {}
 
-    void updateEntity(Entity& entity, float dt) override;
+    void updateEntity(float dt, Entity& entity) override;
     void updateSystem(float dt) override;
 
     bool handleEvent(const Event& event) override { return false; }
@@ -58,7 +58,18 @@ public:
         // return a pointer to the entity that it hits, or nullptr if it
         // does not.
 
-        
+    // Entity Manipulations
+    void applyForce(Entity* entity, const Maths::vec3& force);
+        // Apply the given force to the centre of mass of the given Entity.
+        // If the Entity has no PhysicsComponent, this is a noop.
+
+    void makeUpright(Entity* entity, float yaw = 0);
+        // Sets the orientation of the given Entity to make it upright. The yaw
+        // is the angle in degrees anti-clockwise from the negative Z axis.
+
+    bool isOnFloor(const Entity* entity) const; 
+        // Returns true if the given Entity is colliding with another
+        // Entity directly below it. TODO: Make this more general.
 };
 
 }

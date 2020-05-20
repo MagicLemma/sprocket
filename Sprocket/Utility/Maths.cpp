@@ -123,7 +123,12 @@ float lengthSquare(const vec3& v)
 
 void normalise(vec3& vec)
 {
-    vec = glm::normalize(vec);
+    float length = Maths::length(vec);
+    if (length != 0) {
+        vec.x /= length;
+        vec.y /= length;
+        vec.z /= length;
+    }
 }
 
 

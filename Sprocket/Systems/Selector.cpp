@@ -37,7 +37,7 @@ void Selector::updateSystem(float dt)
     }
 }
 
-void Selector::updateEntity(Entity& entity, float dt)
+void Selector::updateEntity(float dt, Entity& entity)
 {
     auto& selectData = entity.get<SelectComponent>();
 

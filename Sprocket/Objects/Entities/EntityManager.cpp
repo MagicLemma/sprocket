@@ -27,7 +27,7 @@ void EntityManager::update(float dt)
         }
         else {
             for (auto system : d_systems) {
-                system->updateEntity(*(it->second), dt);
+                system->updateEntity(dt, *(it->second));
             }
             ++it;
         }

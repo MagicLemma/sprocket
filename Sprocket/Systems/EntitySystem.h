@@ -9,7 +9,7 @@ class EntitySystem
 public:
     EntitySystem() = default;
     
-    virtual void updateEntity(Entity& entity, float dt) = 0;
+    virtual void updateEntity(float dt, Entity& entity) = 0;
         // Called once per entity per frame and before the system updates.
 
     virtual void updateSystem(float dt) = 0;

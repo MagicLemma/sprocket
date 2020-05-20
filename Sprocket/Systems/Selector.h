@@ -29,8 +29,8 @@ public:
     );
     ~Selector() {}
 
+    void updateEntity(float dt, Entity& entity) override;
     void updateSystem(float dt) override;
-    void updateEntity(Entity& entity, float dt) override;
 
     bool handleEvent(const Event& event) override;
 

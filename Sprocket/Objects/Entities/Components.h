@@ -52,6 +52,7 @@ struct PlayerComponent : public Component
     bool movingBackwards = false;
     bool movingLeft = false;
     bool movingRight = false;
+    Maths::vec3 direction = {0.0, 0.0, 0.0};
 
     float yaw = 0.0f;  // Forwards direction
     float pitch = 0.0f;

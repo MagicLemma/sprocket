@@ -14,7 +14,7 @@ void PlayerMovement::updateSystem(float dt)
     d_deltaTime = dt;
 }
 
-void PlayerMovement::updateEntity(Entity& entity, float dt)
+void PlayerMovement::updateEntity(float dt, Entity& entity)
 {
     if (!entity.has<PlayerComponent>()) {
         return;
@@ -23,6 +23,7 @@ void PlayerMovement::updateEntity(Entity& entity, float dt)
     float sensitivity = 0.15f;
 
     auto& player = entity.get<PlayerComponent>();
+    const auto& physics = entity.get<PhysicsComponent>();
 
     if (d_enabled) {
         player.movingForwards = d_window->isKeyDown(Keyboard::W);
@@ -41,6 +42,22 @@ void PlayerMovement::updateEntity(Entity& entity, float dt)
         player.movingRight = false;
         player.jumping = false;
     }
+
+    // Update the direction
+    float cosYaw = Maths::cosd(player.yaw);
+    float sinYaw = Maths::sind(player.yaw);
+
+    Maths::vec3 forwards(-sinYaw, 0, -cosYaw);
+    Maths::vec3 right(cosYaw, 0, -sinYaw);
+    Maths::vec3 direction(0.0f, 0.0f, 0.0f);
+
+    if (player.movingForwards) { direction += forwards; }
+    if (player.movingBackwards) { direction -= forwards; }
+    if (player.movingRight) { direction += right; }
+    if (player.movingLeft) { direction -= right; }
+    
+    Maths::normalise(direction);
+    player.direction = direction;
 }
 
 void PlayerMovement::registerEntity(const Entity& entity)
