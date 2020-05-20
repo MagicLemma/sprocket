@@ -295,6 +295,8 @@ void WorldLayer::updateImpl()
     using namespace Sprocket;
     d_status = d_paused ? Status::PAUSED : Status::NORMAL;
 
+    d_entityRenderer.update(*d_camera, d_lens, d_lights);
+
     if (d_status == Status::NORMAL) {
         d_camera->update(d_core.window, deltaTime());
         d_core.window->setCursorVisibility(d_mouseRequired);
@@ -318,13 +320,9 @@ void WorldLayer::drawImpl()
         d_postProcessor.bind();
     }
     
-    d_entityRenderer.update(*d_camera, d_lens, d_lights);
-
     d_skyboxRenderer.draw(d_skybox, *d_camera, d_lens);
-
-    for (auto [id, entity]: d_entityManager.entities()) {
-        d_entityRenderer.draw(*entity);
-    }
+    
+    d_entityManager.draw(&d_entityRenderer);
     
     if (d_paused) {
         d_postProcessor.unbind();

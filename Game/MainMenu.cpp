@@ -36,13 +36,6 @@ MainMenu::MainMenu(const Sprocket::CoreSystems& core)
     d_container.base().roundness = 0.081f;
     d_container.addProperty<Sprocket::HorizontalConstraint>(Sprocket::HorizontalConstraint::Type::CENTRE, 1.0f);
     d_container.addProperty<Sprocket::VerticalConstraint>(Sprocket::VerticalConstraint::Type::CENTRE, 1.0f);
-
-    auto button = d_container.add<Sprocket::Button>(300.0f, 300.0f, 0.5f, 0.55f, 0.45f);
-    setButtonAttrs(button);
-
-    button->setUnclickCallback([&]() {
-        
-    });
 }
 
 bool MainMenu::handleEventImpl(const Sprocket::Event& event)

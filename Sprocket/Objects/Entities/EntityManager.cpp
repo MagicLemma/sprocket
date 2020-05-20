@@ -48,4 +48,10 @@ bool EntityManager::handleEvent(const Event& event)
     return false;
 }
 
+void EntityManager::draw(EntityRenderer* renderer) {
+    for (auto [id, entity]: d_entities) {
+        renderer->draw(*entity);
+    }
+}
+
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "EntitySystem.h"
+#include "EntityRenderer.h"
 #include "Event.h"
 
 #include <vector>
@@ -25,6 +26,8 @@ public:
     void addEntity(std::shared_ptr<Entity> entity);
     void update(float dt);
     bool handleEvent(const Event& event);
+
+    void draw(EntityRenderer* renderer);
 
     const Entities& entities() const { return d_entities; }
 };
