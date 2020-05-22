@@ -100,7 +100,9 @@ add_library(Sprocket STATIC
             Utility/FramerateTimer.cpp
             Utility/Log.cpp
             Utility/Maths.cpp
-            Utility/Tokenize.cpp)
+            Utility/Tokenize.cpp
+            
+            Vendor/ImGuizmo/ImGuizmo.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       glfw
@@ -130,4 +132,5 @@ target_include_directories(Sprocket PUBLIC
                            ./Objects/Lenses
                            ./Systems
                            ./Utility
+                           ./Vendor/ImGuizmo
                            ${STB_INCLUDE_DIR})

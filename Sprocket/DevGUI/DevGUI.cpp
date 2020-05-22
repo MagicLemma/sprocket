@@ -4,6 +4,7 @@
 #include "WindowEvent.h"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 
 namespace Sprocket {
 namespace {
@@ -89,21 +90,21 @@ bool DevGUI::handleEvent(const Event& event)
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
         io.MouseDown[e->button()] = true;
-        if (ImGui::IsAnyWindowHovered()) {
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
             return true;
         }
     }
     
     else if (auto e = event.as<MouseButtonReleasedEvent>()) {
         io.MouseDown[e->button()] = false;
-        if (ImGui::IsAnyWindowHovered()) {
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
             return true;
         }
     }
 
     else if (auto e = event.as<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->xPos(), e->yPos());
-        if (ImGui::IsAnyWindowHovered()) {
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
             return true;
         }
     }
@@ -111,7 +112,7 @@ bool DevGUI::handleEvent(const Event& event)
     else if (auto e = event.as<MouseScrolledEvent>()) {
         io.MouseWheel += e->yOffset();
         io.MouseWheelH += e->xOffset();
-        if (ImGui::IsAnyWindowHovered()) {
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
             return true;
         }
     }

@@ -25,6 +25,7 @@ mat4 scale(const mat4& matrix, float scale);
 
 mat4 rotate(const mat4& matrix, const vec3& axis, float radians);
 mat4 inverse(const mat4& matrix);
+mat4 transpose(const mat4& matrix);
 
 // Matrix Constructors
 mat4 transform(const vec3& position, const quat& orientation);
@@ -40,10 +41,15 @@ quat inverse(const quat& quaternion);
 
 // Conversions
 mat3 toMat3(const quat& q);
+mat4 toMat4(const quat& q);
 quat toQuat(const mat3& m);
+
+float* cast(const mat3& m);
+float* cast(const mat4& m);
 
 // Vector Maths
 vec3 cross(const vec3& lhs, const vec3& rhs);
+vec3 getTranslation(const mat4& m);
 
 float distance(const Maths::vec2& A, const Maths::vec2& B);
 

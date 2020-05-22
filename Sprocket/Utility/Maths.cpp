@@ -37,6 +37,11 @@ mat4 inverse(const mat4& matrix)
     return glm::inverse(matrix);
 }
 
+mat4 transpose(const mat4& matrix)
+{
+    return glm::transpose(matrix);
+}
+
 // Matrix Constructors
 mat4 transform(const vec3& position, const quat& orientation)
 {
@@ -92,18 +97,38 @@ quat inverse(const quat& quaternion)
 // Conversions
 mat3 toMat3(const quat& q)
 {
-    return mat3(q);
+    return glm::mat3_cast(q);
+}
+
+mat4 toMat4(const quat& q)
+{
+    return glm::mat4_cast(q);
 }
 
 quat toQuat(const mat3& m)
 {
-    return quat(m);
+    return glm::quat_cast(m);
+}
+
+float* cast(const mat3& m)
+{
+    return (float*)&m[0][0];
+}
+
+float* cast(const mat4& m)
+{
+    return (float*)&m[0][0];
 }
 
 // Vector Maths
 vec3 cross(const vec3& lhs, const vec3& rhs)
 {
     return glm::cross(lhs, rhs);
+}
+
+vec3 getTranslation(const mat4& m)
+{
+    return vec3{m[3][0], m[3][1], m[3][2]};
 }
 
 float distance(const Maths::vec2& A, const Maths::vec2& B)

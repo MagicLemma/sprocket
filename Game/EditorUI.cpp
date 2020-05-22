@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 
 namespace {
 
@@ -119,6 +120,50 @@ void EditorUI::drawImpl()
     using namespace Sprocket;
 
     d_editorUIRenderer.startFrame();
+    ImGuizmo::BeginFrame();
+    Maths::mat4 view = d_worldLayer->d_camera->view();
+    Maths::mat4 proj = d_worldLayer->d_lens.projection();
+    
+    Sprocket::Entity* entity = d_worldLayer->d_selector.selectedEntity();
+    if (entity != nullptr) {
+        Maths::mat4 origin = entity->transform();
+        
+        ImGui::Begin("Guizmo");
+        static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
+        static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+
+        if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+            mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+            mCurrentGizmoOperation = ImGuizmo::ROTATE;
+
+        float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+        ImGuizmo::DecomposeMatrixToComponents(&origin[0][0], matrixTranslation, matrixRotation, matrixScale);
+        ImGui::InputFloat3("Tr", matrixTranslation, 3);
+        ImGui::InputFloat3("Rt", matrixRotation, 3);
+        ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &origin[0][0]);
+
+        if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
+            mCurrentGizmoMode = ImGuizmo::LOCAL;
+        ImGui::SameLine();
+        if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
+            mCurrentGizmoMode = ImGuizmo::WORLD;
+
+        ImGuiIO& io = ImGui::GetIO();
+        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+        ImGuizmo::Manipulate(
+            Maths::cast(view),
+            Maths::cast(proj),
+            mCurrentGizmoOperation,
+            mCurrentGizmoMode,
+            Maths::cast(origin));
+        ImGui::End();
+
+    
+        entity->position() = Maths::getTranslation(origin);
+        entity->orientation() = Maths::toQuat(Maths::mat3(origin));
+    }
 
     ImGui::Begin("Sprocket Editor");
     if (ImGui::Button("Physics Engine")) {

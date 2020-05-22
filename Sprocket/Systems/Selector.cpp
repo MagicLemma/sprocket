@@ -29,7 +29,7 @@ void Selector::updateSystem(float dt)
     Maths::vec3 rayStart = Maths::inverse(d_camera->view()) * Maths::vec4(0, 0, 0, 1);
     Maths::vec3 direction = MousePicker::getRay(d_window, d_camera, d_lens);
     auto hitEntity = d_physicsEngine->raycast(rayStart, direction);
-    if (hitEntity && hitEntity->has<SelectComponent>()) {
+    if (hitEntity != nullptr && hitEntity->has<SelectComponent>()) {
         d_hoveredEntity = hitEntity;
     }
     else {
@@ -39,15 +39,15 @@ void Selector::updateSystem(float dt)
 
 void Selector::updateEntity(float dt, Entity& entity)
 {
+    if (!entity.has<SelectComponent>()) {
+        return;
+    }
+
     auto& selectData = entity.get<SelectComponent>();
 
     if (!d_enabled) {
         selectData.hovered = false;
         selectData.selected = false;
-        return;
-    }
-
-    if (!entity.has<SelectComponent>()) {
         return;
     }
 

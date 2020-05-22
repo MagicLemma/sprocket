@@ -93,3 +93,6 @@
 #include "Display/WidgetProperties/Draggable.h"
 #include "Display/WidgetProperties/HorizontalConstraint.h"
 #include "Display/WidgetProperties/VerticalConstraint.h"
+
+// VENDOR: TODO - Remove this
+#include "Vendor/ImGuizmo/ImGuizmo.h"
