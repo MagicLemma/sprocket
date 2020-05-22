@@ -18,9 +18,13 @@ void addEntityToList(const Sprocket::Entity& entity)
     ImGui::PopID();      
 }
 
-void selectedEntityInfo(Sprocket::Entity& entity)
+void selectedEntityInfo(Sprocket::Entity& entity,
+                        const Sprocket::Maths::mat4& view,
+                        const Sprocket::Maths::mat4& proj)
 {
     using namespace Sprocket;
+    using namespace Maths; 
+
     ImGui::Begin("Selected Entity");
         
     std::string name = "Name: " + entity.name();
@@ -34,6 +38,38 @@ void selectedEntityInfo(Sprocket::Entity& entity)
         ImGui::DragFloat3("Position", &entity.position().x, 0.005f);
         ImGui::Text("TODO: Add Orientation");
         ImGui::TreePop();
+
+        Maths::mat4 origin = entity.transform();
+        
+        static ImGuizmo::OPERATION gizmoOp   = ImGuizmo::TRANSLATE;
+        static ImGuizmo::MODE      gizmoMode = ImGuizmo::WORLD;
+
+        if (ImGui::RadioButton("Translate", gizmoOp == ImGuizmo::TRANSLATE)) {
+            gizmoOp = ImGuizmo::TRANSLATE;
+        }
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Rotate", gizmoOp == ImGuizmo::ROTATE)) {
+            gizmoOp = ImGuizmo::ROTATE;
+        }
+
+        if (ImGui::RadioButton("World", gizmoMode == ImGuizmo::WORLD)) {
+            gizmoMode = ImGuizmo::WORLD;
+        }
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Local", gizmoMode == ImGuizmo::LOCAL)) {
+            gizmoMode = ImGuizmo::LOCAL;
+        }
+
+        ImGuiIO& io = ImGui::GetIO();
+        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+        
+        float angle = 1.0f;
+        ImGuizmo::Manipulate(
+            cast(view), cast(proj), gizmoOp, gizmoMode, cast(origin),
+            nullptr, gizmoOp == ImGuizmo::ROTATE ? nullptr : nullptr);
+
+        entity.position() = getTranslation(origin);
+        entity.orientation() = normalise(toQuat(mat3(origin)));
     }
 
     if (entity.has<PhysicsComponent>() && ImGui::TreeNode("Physics")) {
@@ -125,43 +161,6 @@ void EditorUI::drawImpl()
     mat4 view = d_worldLayer->d_camera->view();
     mat4 proj = d_worldLayer->d_lens.projection();
 
-    bool snap = false;
-    float angle = 1.0f;
-
-    Entity* entity = d_worldLayer->d_selector.selectedEntity();
-    if (entity != nullptr) {
-        Maths::mat4 origin = entity->transform();
-        
-        ImGui::Begin("Guizmo");
-        static ImGuizmo::OPERATION gizmoOp   = ImGuizmo::ROTATE;
-        static ImGuizmo::MODE      gizmoMode = ImGuizmo::WORLD;
-
-        if (ImGui::RadioButton("Translate", gizmoOp == ImGuizmo::TRANSLATE))
-            gizmoOp = ImGuizmo::TRANSLATE;
-        ImGui::SameLine();
-        if (ImGui::RadioButton("Rotate", gizmoOp == ImGuizmo::ROTATE)) {
-            gizmoOp = ImGuizmo::ROTATE;
-            snap = true;
-        }
-
-        if (ImGui::RadioButton("Local", gizmoMode == ImGuizmo::LOCAL))
-            gizmoMode = ImGuizmo::LOCAL;
-        ImGui::SameLine();
-        if (ImGui::RadioButton("World", gizmoMode == ImGuizmo::WORLD))
-            gizmoMode = ImGuizmo::WORLD;
-
-        ImGuiIO& io = ImGui::GetIO();
-        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-        
-        ImGuizmo::Manipulate(
-            cast(view), cast(proj), gizmoOp, gizmoMode,
-            cast(origin), nullptr, snap ? &angle : nullptr);
-        ImGui::End();
-
-        entity->position() = getTranslation(origin);
-        entity->orientation() = normalise(toQuat(mat3(origin)));
-    }
-
     ImGui::Begin("Sprocket Editor");
     if (ImGui::Button("Physics Engine")) {
         auto& physics = d_worldLayer->d_physicsEngine;
@@ -188,7 +187,8 @@ void EditorUI::drawImpl()
     ImGui::End();
 
     if (auto e = d_worldLayer->d_selector.selectedEntity()) {
-        selectedEntityInfo(*e);
+        selectedEntityInfo(*e, view, proj);
+        d_worldLayer->d_physicsEngine.refreshTransform(e);
     }
 
     addEntityPanel(&d_worldLayer->d_entityManager, d_modelManager);

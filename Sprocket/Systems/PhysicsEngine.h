@@ -70,6 +70,8 @@ public:
     bool isOnFloor(const Entity* entity) const; 
         // Returns true if the given Entity is colliding with another
         // Entity directly below it. TODO: Make this more general.
+
+    void refreshTransform(const Entity* entity);
 };
 
 }

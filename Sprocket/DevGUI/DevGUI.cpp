@@ -115,8 +115,8 @@ bool DevGUI::handleEvent(Event& event)
     else if (auto e = event.as<MouseScrolledEvent>()) {
         io.MouseWheel += e->yOffset();
         io.MouseWheelH += e->xOffset();
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
-            return true;
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
+            return false;
         }
     }
 

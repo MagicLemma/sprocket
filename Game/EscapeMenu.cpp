@@ -138,7 +138,7 @@ bool EscapeMenu::handleEventImpl(Sprocket::Event& event)
         }
     }
 
-    return false;
+    return d_status == Status::NORMAL;
 }
 
 void EscapeMenu::updateImpl()

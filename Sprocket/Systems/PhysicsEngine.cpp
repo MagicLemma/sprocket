@@ -363,4 +363,15 @@ bool PhysicsEngine::isOnFloor(const Entity* entity) const
     return cb.entity() != nullptr;
 }
 
+void PhysicsEngine::refreshTransform(const Entity* entity)
+{
+    auto& bodyData = d_impl->rigidBodies[entity->id()];
+    bodyData->setTransform(
+        rp3d::Transform(
+            convert(entity->position()),
+            convert(entity->orientation())
+        )
+    );
+}
+
 }
