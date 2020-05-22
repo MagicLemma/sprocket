@@ -19,6 +19,9 @@ uniform vec3 u_light_attenuation[5];
 uniform float u_shine_dampner;
 uniform float u_reflectivity;
 
+// Highlighting
+uniform float u_brightness;
+
 void main()
 {
     // Surface information
@@ -56,5 +59,8 @@ void main()
     // Ambient lighting calculation
     total_diffuse = max(total_diffuse, 0.1);
 
-    out_colour = total_diffuse * colour + total_specular;
+    out_colour = u_brightness * total_diffuse * colour + total_specular;
+    if (u_brightness > 1) {
+        out_colour += vec4(0.1, 0.1, 0.1, 1.0);
+    }
 }

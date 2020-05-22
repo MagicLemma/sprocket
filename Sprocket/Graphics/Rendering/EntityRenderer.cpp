@@ -133,6 +133,20 @@ void EntityRenderer::drawModel(const Entity& entity)
 	d_shader.loadUniform("u_shine_dampner", modelComp.material.shineDamper);
 	d_shader.loadUniform("u_reflectivity", modelComp.material.reflectivity);
 
+    if (entity.has<SelectComponent>()) {
+        auto data = entity.get<SelectComponent>();
+        if (data.selected) {
+            d_shader.loadUniform("u_brightness", 1.5f);
+        }   else if (data.hovered) {
+            d_shader.loadUniform("u_brightness", 1.25f);
+        }
+        else {
+            d_shader.loadUniform("u_brightness", 1.0f);
+        }
+    } else {
+        d_shader.loadUniform("u_brightness", 1.0f);
+    }
+
     // Bind textures
     bindMaterial(&d_shader, modelComp.material);
     modelComp.model.bind();
@@ -140,9 +154,9 @@ void EntityRenderer::drawModel(const Entity& entity)
     modelComp.model.unbind();
     unbindMaterial(&d_shader);
 
-    if (outline) {
-        drawOutline(entity);
-    }
+    //if (outline) {
+    //    drawOutline(entity);
+    //}
 }
 
 void EntityRenderer::drawOutline(const Entity& entity)

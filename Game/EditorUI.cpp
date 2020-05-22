@@ -34,15 +34,15 @@ void selectedEntityInfo(Sprocket::Entity& entity,
     ImGui::Text(id.c_str());
     ImGui::Separator();
     
+    static ImGuizmo::OPERATION gizmoOp   = ImGuizmo::TRANSLATE;
+    static ImGuizmo::MODE      gizmoMode = ImGuizmo::WORLD;
+    static float angle = 1.0f;
+
+    Maths::mat4 origin = entity.transform();
+
     if (ImGui::TreeNode("Transform")) {
         ImGui::DragFloat3("Position", &entity.position().x, 0.005f);
-        ImGui::Text("TODO: Add Orientation");
-        ImGui::TreePop();
-
-        Maths::mat4 origin = entity.transform();
-        
-        static ImGuizmo::OPERATION gizmoOp   = ImGuizmo::TRANSLATE;
-        static ImGuizmo::MODE      gizmoMode = ImGuizmo::WORLD;
+        ImGui::Text("TODO: Add Orientation");     
 
         if (ImGui::RadioButton("Translate", gizmoOp == ImGuizmo::TRANSLATE)) {
             gizmoOp = ImGuizmo::TRANSLATE;
@@ -60,17 +60,17 @@ void selectedEntityInfo(Sprocket::Entity& entity,
             gizmoMode = ImGuizmo::LOCAL;
         }
 
-        ImGuiIO& io = ImGui::GetIO();
-        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-        
-        float angle = 1.0f;
-        ImGuizmo::Manipulate(
-            cast(view), cast(proj), gizmoOp, gizmoMode, cast(origin),
-            nullptr, gizmoOp == ImGuizmo::ROTATE ? nullptr : nullptr);
-
-        entity.position() = getTranslation(origin);
-        entity.orientation() = normalise(toQuat(mat3(origin)));
+        ImGui::TreePop();
     }
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+    ImGuizmo::Manipulate(
+        cast(view), cast(proj), gizmoOp, gizmoMode, cast(origin),
+        nullptr, gizmoOp == ImGuizmo::ROTATE ? nullptr : nullptr);
+
+    entity.position() = getTranslation(origin);
+    entity.orientation() = normalise(toQuat(mat3(origin)));
 
     if (entity.has<PhysicsComponent>() && ImGui::TreeNode("Physics")) {
         auto& comp = entity.get<PhysicsComponent>();
