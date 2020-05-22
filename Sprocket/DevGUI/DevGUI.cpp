@@ -90,21 +90,23 @@ bool DevGUI::handleEvent(Event& event)
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
         io.MouseDown[e->button()] = true;
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
-            return true;
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
+            event.consume();
+            return false;
         }
     }
     
     else if (auto e = event.as<MouseButtonReleasedEvent>()) {
         io.MouseDown[e->button()] = false;
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
-            return true;
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
+            event.consume();
+            return false;
         }
     }
 
     else if (auto e = event.as<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->xPos(), e->yPos());
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
+        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
             event.consume();
             return false;
         }

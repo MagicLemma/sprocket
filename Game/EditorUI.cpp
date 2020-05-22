@@ -118,51 +118,48 @@ void EditorUI::updateImpl()
 void EditorUI::drawImpl()
 {
     using namespace Sprocket;
+    using namespace Maths;
 
     d_editorUIRenderer.startFrame();
     ImGuizmo::BeginFrame();
-    Maths::mat4 view = d_worldLayer->d_camera->view();
-    Maths::mat4 proj = d_worldLayer->d_lens.projection();
-    
-    Sprocket::Entity* entity = d_worldLayer->d_selector.selectedEntity();
+    mat4 view = d_worldLayer->d_camera->view();
+    mat4 proj = d_worldLayer->d_lens.projection();
+
+    bool snap = false;
+    float angle = 1.0f;
+
+    Entity* entity = d_worldLayer->d_selector.selectedEntity();
     if (entity != nullptr) {
         Maths::mat4 origin = entity->transform();
         
         ImGui::Begin("Guizmo");
-        static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
-        static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+        static ImGuizmo::OPERATION gizmoOp   = ImGuizmo::ROTATE;
+        static ImGuizmo::MODE      gizmoMode = ImGuizmo::WORLD;
 
-        if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
-            mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+        if (ImGui::RadioButton("Translate", gizmoOp == ImGuizmo::TRANSLATE))
+            gizmoOp = ImGuizmo::TRANSLATE;
         ImGui::SameLine();
-        if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
-            mCurrentGizmoOperation = ImGuizmo::ROTATE;
+        if (ImGui::RadioButton("Rotate", gizmoOp == ImGuizmo::ROTATE)) {
+            gizmoOp = ImGuizmo::ROTATE;
+            snap = true;
+        }
 
-        float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-        ImGuizmo::DecomposeMatrixToComponents(&origin[0][0], matrixTranslation, matrixRotation, matrixScale);
-        ImGui::InputFloat3("Tr", matrixTranslation, 3);
-        ImGui::InputFloat3("Rt", matrixRotation, 3);
-        ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, &origin[0][0]);
-
-        if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
-            mCurrentGizmoMode = ImGuizmo::LOCAL;
+        if (ImGui::RadioButton("Local", gizmoMode == ImGuizmo::LOCAL))
+            gizmoMode = ImGuizmo::LOCAL;
         ImGui::SameLine();
-        if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
-            mCurrentGizmoMode = ImGuizmo::WORLD;
+        if (ImGui::RadioButton("World", gizmoMode == ImGuizmo::WORLD))
+            gizmoMode = ImGuizmo::WORLD;
 
         ImGuiIO& io = ImGui::GetIO();
         ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+        
         ImGuizmo::Manipulate(
-            Maths::cast(view),
-            Maths::cast(proj),
-            mCurrentGizmoOperation,
-            mCurrentGizmoMode,
-            Maths::cast(origin));
+            cast(view), cast(proj), gizmoOp, gizmoMode,
+            cast(origin), nullptr, snap ? &angle : nullptr);
         ImGui::End();
 
-    
-        entity->position() = Maths::getTranslation(origin);
-        entity->orientation() = Maths::toQuat(Maths::mat3(origin));
+        entity->position() = getTranslation(origin);
+        entity->orientation() = normalise(toQuat(mat3(origin)));
     }
 
     ImGui::Begin("Sprocket Editor");

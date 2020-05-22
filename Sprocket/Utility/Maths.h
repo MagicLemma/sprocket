@@ -38,6 +38,7 @@ mat4 ortho(float left, float right, float bottom, float top);
 quat rotate(const vec3& axis, float radians);
 quat rotate(const quat& quaternion, const vec3& axis, float radians);
 quat inverse(const quat& quaternion);
+quat normalise(const quat& q);
 
 // Conversions
 mat3 toMat3(const quat& q);

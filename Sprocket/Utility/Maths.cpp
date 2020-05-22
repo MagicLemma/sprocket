@@ -94,6 +94,11 @@ quat inverse(const quat& quaternion)
     return glm::inverse(quaternion);
 }
 
+quat normalise(const quat& q)
+{
+    return glm::normalize(q);
+}
+
 // Conversions
 mat3 toMat3(const quat& q)
 {
