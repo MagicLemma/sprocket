@@ -38,7 +38,7 @@ MainMenu::MainMenu(const Sprocket::CoreSystems& core)
     d_container.addProperty<Sprocket::VerticalConstraint>(Sprocket::VerticalConstraint::Type::CENTRE, 1.0f);
 }
 
-bool MainMenu::handleEventImpl(const Sprocket::Event& event)
+bool MainMenu::handleEventImpl(Sprocket::Event& event)
 {
     return d_container.handleEvent(d_core.window, event);
 }

@@ -34,7 +34,7 @@ private:
         // Layers are non-copyable and non-moveable.
 
     // Virtual Interface
-    virtual bool handleEventImpl(const Event& event) = 0;
+    virtual bool handleEventImpl(Event& event) = 0;
         // This function should contain all logic to handle Events being
         // sent to the layer.
 
@@ -49,7 +49,7 @@ private:
 public:
     Layer(const CoreSystems& core, Status status, bool cursorVisible = true);
 
-    bool handleEvent(const Event& event);
+    bool handleEvent(Event& event);
         // Called whenever an event happens. This function should return
         // True if the layer "consumed" the Event, and False otherwise.
         // Consuming the event means that the Event will not be propagated

@@ -123,7 +123,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     });
 }
 
-bool EscapeMenu::handleEventImpl(const Sprocket::Event& event)
+bool EscapeMenu::handleEventImpl(Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
         if (e->key() == Sprocket::Keyboard::ESC) {

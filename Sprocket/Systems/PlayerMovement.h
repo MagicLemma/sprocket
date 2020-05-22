@@ -18,7 +18,7 @@ public:
     void updateEntity(float dt, Entity& entity) override;
     void updateSystem(float dt) override;
 
-    bool handleEvent(const Event& event) override { return false; }
+    bool handleEvent(Event& event) override { return false; }
 
     void registerEntity(const Entity& entity) override;
     void deregisterEntity(const Entity& entity) override;

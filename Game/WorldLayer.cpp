@@ -283,7 +283,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.addEffect<GaussianHoriz>();
 }
 
-bool WorldLayer::handleEventImpl(const Sprocket::Event& event)
+bool WorldLayer::handleEventImpl(Sprocket::Event& event)
 {
     using namespace Sprocket;
 

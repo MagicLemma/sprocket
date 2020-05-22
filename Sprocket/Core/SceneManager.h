@@ -37,7 +37,7 @@ public:
     void update();
         // Updates the active scene.
 
-    void handleEvent(const Event& event);
+    void handleEvent(Event& event);
         // Sends the event to the active scene.
 
     void draw();

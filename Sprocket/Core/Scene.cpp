@@ -9,7 +9,7 @@ LayerPtr Scene::popLayer()
     return layer;
 }
 
-void Scene::handleEvent(const Event& event)
+void Scene::handleEvent(Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;

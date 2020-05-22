@@ -20,7 +20,7 @@ public:
 
     LayerPtr popLayer();
 
-    void handleEvent(const Event& event);
+    void handleEvent(Event& event);
         // Called on every event. This propagates the event to
         // every layer in the stack, starting at the top. If a layer
         // returns True, the event is not propagated to any lower

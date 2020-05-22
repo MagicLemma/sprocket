@@ -84,7 +84,7 @@ void DevGUI::update(float dt)
                             (float)d_window->height());
 }
 
-bool DevGUI::handleEvent(const Event& event)
+bool DevGUI::handleEvent(Event& event)
 {
     ImGuiIO& io = ImGui::GetIO();
 
@@ -105,7 +105,8 @@ bool DevGUI::handleEvent(const Event& event)
     else if (auto e = event.as<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->xPos(), e->yPos());
         if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsUsing()) {
-            return true;
+            event.consume();
+            return false;
         }
     }
 

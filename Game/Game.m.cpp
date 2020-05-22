@@ -10,7 +10,7 @@ int main()
     Sprocket::SceneManager sceneManager;
     Sprocket::ModelManager modelManager;
 
-    window.setCallback([&sceneManager](const Sprocket::Event& event) {
+    window.setCallback([&sceneManager](Sprocket::Event& event) {
         sceneManager.handleEvent(event);
     });
 

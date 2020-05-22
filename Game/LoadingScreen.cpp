@@ -24,7 +24,7 @@ LoadingScreen::LoadingScreen(const Sprocket::CoreSystems& core)
     text->base().colour = {0.15625f, 0.15625f, 0.15625f};
 }
 
-bool LoadingScreen::handleEventImpl(const Sprocket::Event& event)
+bool LoadingScreen::handleEventImpl(Sprocket::Event& event)
 {
     return d_container.handleEvent(d_core.window, event);
 }

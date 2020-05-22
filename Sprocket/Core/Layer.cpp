@@ -23,7 +23,7 @@ float Layer::layerTicker() const
     return d_ticker;
 }
 
-bool Layer::handleEvent(const Event& event)
+bool Layer::handleEvent(Event& event)
 {
     return handleEventImpl(event);
 }

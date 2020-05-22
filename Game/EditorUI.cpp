@@ -97,7 +97,7 @@ EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
 {  
 }
 
-bool EditorUI::handleEventImpl(const Sprocket::Event& event)
+bool EditorUI::handleEventImpl(Sprocket::Event& event)
 {
     if (d_status == Sprocket::Layer::Status::NORMAL) {
         if (d_editorUI.handleEvent(event)) {

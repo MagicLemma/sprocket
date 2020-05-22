@@ -62,7 +62,7 @@ enum KeyModifier {
 	NUM_LOCK  = 0x0020
 };
 
-using EventCallback = std::function<void(const Event&)>;
+using EventCallback = std::function<void(Event&)>;
 
 struct WindowImpl;
 

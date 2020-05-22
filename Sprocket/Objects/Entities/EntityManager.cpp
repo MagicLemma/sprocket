@@ -38,7 +38,7 @@ void EntityManager::update(float dt)
     }
 }
 
-bool EntityManager::handleEvent(const Event& event)
+bool EntityManager::handleEvent(Event& event)
 {
     for (auto system : d_systems) {
         if (system->handleEvent(event)) {

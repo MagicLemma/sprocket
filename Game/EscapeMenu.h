@@ -20,7 +20,7 @@ public:
                WorldLayer* worldLayer,
                EditorUI* editorUi);
 
-    bool handleEventImpl(const Sprocket::Event& event) override;
+    bool handleEventImpl(Sprocket::Event& event) override;
     void updateImpl() override;
     void drawImpl() override;
 };

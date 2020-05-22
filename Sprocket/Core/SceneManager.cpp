@@ -37,7 +37,7 @@ void SceneManager::update()
     d_scenes[d_activeSceneName]->update();
 }
 
-void SceneManager::handleEvent(const Event& event)
+void SceneManager::handleEvent(Event& event)
 {
     d_scenes[d_activeSceneName]->handleEvent(event);
 }
