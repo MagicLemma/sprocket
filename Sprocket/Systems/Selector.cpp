@@ -22,6 +22,10 @@ Selector::Selector(
 
 void Selector::updateSystem(float dt)
 {
+    if (!d_enabled) {
+        clearHovered();
+        clearSelected();
+    }
 }
 
 void Selector::updateEntity(float dt, Entity& entity)
@@ -37,78 +41,90 @@ void Selector::updateEntity(float dt, Entity& entity)
         selectData.selected = false;
         return;
     }
-
-    //if (d_hoveredEntity == &entity) {
-    //    selectData.hovered = true;
-    //}
-    //else {
-    //    selectData.hovered = false;
-    //}
 }
 
 bool Selector::handleEvent(Event& event)
 {
-    if (!d_enabled) {
-        return false;
-    }
+    if (!d_enabled) { return false; }
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (event.isConsumed()) {
-            return false;
-        }
-        if (d_selectedEntity != nullptr) {
-            // Deselect the old entity.
-            d_selectedEntity->get<SelectComponent>().selected = false;
-        }
-
-        d_selectedEntity = d_hoveredEntity;
-        if (d_selectedEntity != nullptr) {
-            d_selectedEntity->get<SelectComponent>().selected = true;
-        }
-
+        if (e->isConsumed()) { return false; }
+        
+        auto entity = getMousedOver();
+        setSelected(entity);
         return true;
     }
 
-    if (auto e = event.as<MouseMovedEvent>()) {
-        if (e->isConsumed()) {
-            if (d_hoveredEntity != nullptr) {
-                d_hoveredEntity->get<SelectComponent>().hovered = false;
-                d_hoveredEntity = nullptr;
-            }
-            return false;
-        }
-
-        Maths::vec3 rayStart = Maths::inverse(d_camera->view()) * Maths::vec4(0, 0, 0, 1);
-        Maths::vec3 direction = MousePicker::getRay(d_window, d_camera, d_lens);
-        auto hitEntity = d_physicsEngine->raycast(rayStart, direction);
-        if (hitEntity != nullptr && hitEntity->has<SelectComponent>()) {
-            if (d_hoveredEntity != nullptr) {
-                d_hoveredEntity->get<SelectComponent>().hovered = false;
-            }
-            d_hoveredEntity = hitEntity;
-            d_hoveredEntity->get<SelectComponent>().hovered = true;
-        }
-        else {
-            if (d_hoveredEntity != nullptr) {
-                d_hoveredEntity->get<SelectComponent>().hovered = false;
-            }
-            d_hoveredEntity = nullptr;
-        }
+    else if (auto e = event.as<MouseMovedEvent>()) {  
+        clearHovered(); // Always clear as mouse may be on GUI
+        
+        if (e->isConsumed()) { return false; }
+        
+        auto entity = getMousedOver();
+        setHovered(entity);
         return true;
     }
 
     return false;
 }
 
-void Selector::clear()
-{
-    d_hoveredEntity = nullptr;
-    d_selectedEntity = nullptr;
-}
-
 void Selector::deregisterEntity(const Entity& entity)
 {
-    clear();
+    if (&entity == d_hoveredEntity) {
+        clearHovered();
+    }
+    if (&entity == d_selectedEntity) {
+        clearSelected();
+    }
+}
+
+void Selector::enable(bool newEnabled)
+{
+    d_enabled = newEnabled;
+    clearHovered();
+    clearSelected();
+}
+
+
+void Selector::clearHovered()
+{
+    if (d_hoveredEntity != nullptr) {
+        d_hoveredEntity->get<SelectComponent>().hovered = false;
+        d_hoveredEntity = nullptr;
+    }
+}
+
+void Selector::clearSelected()
+{
+    if (d_selectedEntity != nullptr) {
+        d_selectedEntity->get<SelectComponent>().selected = false;
+        d_selectedEntity = nullptr;
+    }
+}
+
+void Selector::setHovered(Entity* entity)
+{
+    clearHovered();
+    if (entity != nullptr && entity->has<SelectComponent>()) {
+        d_hoveredEntity = entity;
+        d_hoveredEntity->get<SelectComponent>().hovered = true;
+    }
+}
+
+void Selector::setSelected(Entity* entity)
+{
+    clearSelected();
+    if (entity != nullptr && entity->has<SelectComponent>()) {
+        d_selectedEntity = entity;
+        d_selectedEntity->get<SelectComponent>().selected = true;
+    }
+}
+
+Entity* Selector::getMousedOver()
+{
+    Maths::vec3 rayStart = Maths::inverse(d_camera->view()) * Maths::vec4(0, 0, 0, 1);
+    Maths::vec3 direction = MousePicker::getRay(d_window, d_camera, d_lens);
+    return d_physicsEngine->raycast(rayStart, direction);
 }
 
 }

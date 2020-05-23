@@ -17,8 +17,16 @@ class Selector : public EntitySystem
 
     bool d_enabled;
 
-    Entity* d_hoveredEntity;;
+    Entity* d_hoveredEntity;
     Entity* d_selectedEntity;
+
+    void clearHovered();
+    void clearSelected();
+
+    void setHovered(Entity* entity);
+    void setSelected(Entity* entity);
+
+    Entity* getMousedOver();
 
 public:
     Selector(
@@ -37,12 +45,10 @@ public:
     void registerEntity(const Entity& entity) override {}
     void deregisterEntity(const Entity& entity) override;
 
-    void enable(bool newEnabled) { d_enabled = newEnabled; }
+    void enable(bool newEnabled);
 
     Entity* hoveredEntity() const { return d_hoveredEntity; }
     Entity* selectedEntity() const { return d_selectedEntity; }
-
-    void clear();
 };
 
 }
