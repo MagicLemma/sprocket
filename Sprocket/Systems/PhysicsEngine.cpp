@@ -204,7 +204,7 @@ void PhysicsEngine::registerEntity(const Entity& entity)
     auto hasCollider = entity.has<ColliderComponent>();
 
     if (!hasPhysics && !hasCollider) {
-        return;  // Entity must have physics.
+        return;  // Entity must have physics or collider.
     }
 
     auto& entry = d_impl->rigidBodies[entity.id()];
@@ -257,9 +257,11 @@ void PhysicsEngine::registerEntity(const Entity& entity)
 
 void PhysicsEngine::deregisterEntity(const Entity& entity)
 {
-    if (!entity.has<PhysicsComponent>()) {
-        // Entity must have physics.
-        return; 
+    auto hasPhysics = entity.has<PhysicsComponent>();
+    auto hasCollider = entity.has<ColliderComponent>();
+
+    if (!hasPhysics && !hasCollider) {
+        return;  // Entity must have physics or collider.
     }
 
     auto rigidBodyIt = d_impl->rigidBodies.find(entity.id());
@@ -268,7 +270,7 @@ void PhysicsEngine::deregisterEntity(const Entity& entity)
     }
 
     d_impl->world.destroyRigidBody(rigidBodyIt->second);
-
+    d_impl->rigidBodies.erase(rigidBodyIt);
     // TODO: Clean up of collision bodies
 }
 
