@@ -121,9 +121,7 @@ public:
 	void setCursorVisibility(bool visibility);
 	float getTime();
 
-	// Keyboard/Mouse Utilities
-	bool isKeyDown(int key);
-	bool isMouseButtonDown(int button);
+	// Mouse Utilities
 	Maths::vec2 getMousePos();
 	Maths::vec2 getMouseOffset();
 

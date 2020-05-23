@@ -24,7 +24,7 @@ Maths::mat4 ThirdPersonCamera::view() const
     return Maths::lookAt(d_position, d_target);
 }
 
-void ThirdPersonCamera::update(Window* window, float timeDelta)
+void ThirdPersonCamera::update(float timeDelta)
 {
     float horizSpeed = d_rotationSpeed * timeDelta;
     float moveSpeed = d_movementSpeed * timeDelta;
@@ -65,7 +65,7 @@ void ThirdPersonCamera::update(Window* window, float timeDelta)
     }
 }
 
-void ThirdPersonCamera::handleEvent(Window* window, Event& event)
+void ThirdPersonCamera::handleEvent(Event& event)
 {
     d_keyboard.handleEvent(event);
 

@@ -92,7 +92,7 @@ void DevGUI::handleEvent(Event& event)
         if (e->isConsumed()) { return; }
 
         io.MouseDown[e->button()] = true;
-        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
             ImGuizmo::IsOver()) {
             
             e->consume();
@@ -103,7 +103,7 @@ void DevGUI::handleEvent(Event& event)
         if (e->isConsumed()) { return; }
         
         io.MouseDown[e->button()] = false;
-        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
             ImGuizmo::IsOver()) {
             
             e->consume(); // TODO: Experiment with this setting
@@ -114,7 +114,7 @@ void DevGUI::handleEvent(Event& event)
         if (e->isConsumed()) { return; }
         
         io.MousePos = ImVec2(e->xPos(), e->yPos());
-        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
             ImGuizmo::IsOver()) {
             
             e->consume();
@@ -126,7 +126,7 @@ void DevGUI::handleEvent(Event& event)
         
         io.MouseWheel += e->yOffset();
         io.MouseWheelH += e->xOffset();
-        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
             ImGuizmo::IsOver()) {
             
             e->consume();
@@ -146,7 +146,7 @@ void DevGUI::handleEvent(Event& event)
         io.KeyShift = e->mods() & KeyModifier::SHIFT;
         io.KeyAlt = e->mods() & KeyModifier::ALT;
         io.KeySuper = e->mods() & KeyModifier::SUPER;
-        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)) {
+        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow)) {
             e->consume();
         }
     }

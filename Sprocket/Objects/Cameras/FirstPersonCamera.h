@@ -4,6 +4,7 @@
 #include "Maths.h"
 #include "Camera.h"
 #include "KeyboardProxy.h"
+#include "MouseProxy.h"
 
 namespace Sprocket {
 
@@ -25,14 +26,17 @@ class FirstPersonCamera : public Camera
     float d_sensitivity;
         // Mouse sensitivity
 
+    Window* d_window;
+
     KeyboardProxy d_keyboard;
+    MouseProxy d_mouse;
 
 public:
-    FirstPersonCamera();
+    FirstPersonCamera(Window* window);
 
     Maths::mat4 view() const override;
-    void update(Window* window, float timeDelta) override;
-    void handleEvent(Window* window, Event& event) override;
+    void update(float timeDelta) override;
+    void handleEvent(Event& event) override;
     
     Maths::vec3 position() const { return d_position; }
     Maths::vec3 direction() const { return d_direction; }

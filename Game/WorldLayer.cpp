@@ -25,6 +25,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_playerMovement(core.window)
     , d_selector(core.window, &d_editorCamera, &d_lens, &d_physicsEngine)
     , d_entityManager({&d_playerMovement, &d_physicsEngine, &d_selector})
+    , d_observerCamera(core.window)
 {
     using namespace Sprocket;
 
@@ -292,8 +293,8 @@ void WorldLayer::handleEventImpl(Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_camera->handleEvent(d_core.window, event);
-    d_lens.handleEvent(d_core.window, event);
+    d_camera->handleEvent(event);
+    d_lens.handleEvent(event);
     d_entityManager.handleEvent(event);
 }
 
@@ -305,7 +306,7 @@ void WorldLayer::updateImpl()
     d_entityRenderer.update(*d_camera, d_lens, d_lights);
 
     if (d_status == Status::NORMAL) {
-        d_camera->update(d_core.window, deltaTime());
+        d_camera->update(deltaTime());
         d_core.window->setCursorVisibility(d_mouseRequired);
         d_entityManager.update(deltaTime());
 

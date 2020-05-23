@@ -23,6 +23,7 @@
 #include "Utility/Log.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"
+#include "Utility/MouseProxy.h"
 #include "Utility/FramerateTimer.h"
 #include "Utility/Tokenize.h"
 

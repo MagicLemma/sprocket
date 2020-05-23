@@ -36,8 +36,8 @@ public:
     ThirdPersonCamera();
 
     Maths::mat4 view() const override;
-    void update(Window* window, float timeDelta) override;
-    void handleEvent(Window* window, Event& event) override;
+    void update(float timeDelta) override;
+    void handleEvent(Event& event) override;
 
     Maths::vec3 target() const { return d_target; }
 };

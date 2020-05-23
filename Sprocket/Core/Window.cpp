@@ -208,18 +208,6 @@ void Window::setCallback(EventCallback cb)
 	d_callback = cb;
 }
 
-bool Window::isKeyDown(int key)
-{
-	int status = glfwGetKey(d_impl->window, key);
-	return status == GLFW_PRESS || status == GLFW_REPEAT;
-}
-
-bool Window::isMouseButtonDown(int button)
-{
-	int status = glfwGetMouseButton(d_impl->window, button);
-	return status == GLFW_PRESS;
-}
-
 Maths::vec2 Window::getMousePos()
 {
 	double x, y;

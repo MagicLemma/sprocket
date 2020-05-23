@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "EntitySystem.h"
+#include "KeyboardProxy.h"
 
 namespace Sprocket {
 
@@ -11,6 +12,8 @@ class PlayerMovement : public EntitySystem
 
     bool d_enabled = true;
 
+    KeyboardProxy d_keyboard;
+
 public:
     PlayerMovement(Window* window);
     ~PlayerMovement() {}
@@ -18,7 +21,7 @@ public:
     void updateEntity(float dt, Entity& entity) override;
     void updateSystem(float dt) override;
 
-    void handleEvent(Event& event) override { return; }
+    void handleEvent(Event& event) override;
 
     void registerEntity(const Entity& entity) override;
     void deregisterEntity(const Entity& entity) override;

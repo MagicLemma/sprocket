@@ -1,5 +1,6 @@
-#include "Core/Layer.h"
-#include "Utility/Log.h"
+#include "Layer.h"
+#include "Log.h"
+#include "Window.h"
 
 namespace Sprocket {
 

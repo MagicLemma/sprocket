@@ -26,11 +26,12 @@ void PlayerMovement::updateEntity(float dt, Entity& entity)
     const auto& physics = entity.get<PhysicsComponent>();
 
     if (d_enabled) {
-        player.movingForwards = d_window->isKeyDown(Keyboard::W);
-        player.movingBackwards = d_window->isKeyDown(Keyboard::S);
-        player.movingLeft = d_window->isKeyDown(Keyboard::A);
-        player.movingRight = d_window->isKeyDown(Keyboard::D);
-        player.jumping = d_window->isKeyDown(Keyboard::SPACE);
+        player.movingForwards = d_keyboard.isKeyDown(Keyboard::W);
+        player.movingBackwards = d_keyboard.isKeyDown(Keyboard::S);
+        player.movingLeft = d_keyboard.isKeyDown(Keyboard::A);
+        player.movingRight = d_keyboard.isKeyDown(Keyboard::D);
+        player.jumping = d_keyboard.isKeyDown(Keyboard::SPACE);
+        
         player.yaw -= d_window->getMouseOffset().x * sensitivity;
         player.pitch -= d_window->getMouseOffset().y * sensitivity;
         Maths::clamp(player.pitch, -89.0f, 89.0f);
@@ -58,6 +59,11 @@ void PlayerMovement::updateEntity(float dt, Entity& entity)
     
     Maths::normalise(direction);
     player.direction = direction;
+}
+
+void PlayerMovement::handleEvent(Event& event)
+{
+    d_keyboard.handleEvent(event);
 }
 
 void PlayerMovement::registerEntity(const Entity& entity)

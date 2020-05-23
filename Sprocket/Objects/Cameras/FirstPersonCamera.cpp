@@ -6,7 +6,7 @@
 
 namespace Sprocket {
 
-FirstPersonCamera::FirstPersonCamera()
+FirstPersonCamera::FirstPersonCamera(Window* window)
     : Camera()
     , d_position(Maths::vec3(0.0f, 0.0f, 0.0f))
     , d_direction(Maths::vec3(0.0f, 0.0f, -1.0f))
@@ -14,6 +14,7 @@ FirstPersonCamera::FirstPersonCamera()
     , d_yaw(0)
     , d_roll(0)
     , d_sensitivity(0.15f)
+    , d_window(window)
 {
 }
 
@@ -22,7 +23,7 @@ Maths::mat4 FirstPersonCamera::view() const
     return Maths::view(d_position, d_pitch, d_yaw, d_roll);
 }
 
-void FirstPersonCamera::update(Window* window, float timeDelta)
+void FirstPersonCamera::update(float timeDelta)
 {
     float speed = 10.0f * timeDelta;
 
@@ -53,7 +54,7 @@ void FirstPersonCamera::update(Window* window, float timeDelta)
         d_position -= speed * up;
     }
 
-    Maths::vec2 offset = window->getMouseOffset();
+    Maths::vec2 offset = d_window->getMouseOffset();
     d_yaw += d_sensitivity * offset.x;
     d_pitch += d_sensitivity * offset.y;
     Maths::clamp(d_pitch, -89.0, 89.0);
@@ -64,9 +65,10 @@ void FirstPersonCamera::update(Window* window, float timeDelta)
     Maths::normalise(d_direction);
 }
 
-void FirstPersonCamera::handleEvent(Window* window, Event& event)
+void FirstPersonCamera::handleEvent(Event& event)
 {
     d_keyboard.handleEvent(event);
+    d_mouse.handleEvent(event);
 }
 
 }

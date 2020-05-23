@@ -23,8 +23,4 @@ Maths::mat4 PlayerBasedCamera::view() const
     return Maths::inverse(Maths::transform(position, orientation));
 }
 
-void PlayerBasedCamera::update(Window* window, float timeDelta)
-{
-}
-
 }

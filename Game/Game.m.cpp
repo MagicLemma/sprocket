@@ -29,7 +29,7 @@ int main()
 
     while (window.running()) {
         window.clear();
-
+        
         sceneManager.update();
         sceneManager.draw();
 

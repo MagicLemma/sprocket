@@ -25,7 +25,7 @@ Maths::mat4 PerspectiveLens::projection() const
     return d_projection;
 }
 
-void PerspectiveLens::handleEvent(Window* window, Event& event)
+void PerspectiveLens::handleEvent(Event& event)
 {
     if (auto e = event.as<WindowResizeEvent>()) {
         d_aspectRatio = e->aspectRatio();

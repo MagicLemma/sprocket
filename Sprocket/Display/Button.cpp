@@ -95,7 +95,7 @@ void Button::handleEventImpl(Window* window, Event& event)
         }
     }
     else if (containsPoint(d_base, toLocalCoords(window->getMousePos()))) {
-        e->consume();
+        event.consume();
     }
 }
 

@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <functional>
 
 namespace Sprocket {
 

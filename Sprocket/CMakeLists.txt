@@ -100,6 +100,7 @@ add_library(Sprocket STATIC
             Utility/FramerateTimer.cpp
             Utility/Log.cpp
             Utility/KeyboardProxy.cpp
+            Utility/MouseProxy.cpp
             Utility/Maths.cpp
             Utility/Tokenize.cpp
             
