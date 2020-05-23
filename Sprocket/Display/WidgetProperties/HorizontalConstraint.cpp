@@ -39,11 +39,4 @@ void HorizontalConstraint::update(Widget* widget, Window* window)
     }
 }
 
-bool HorizontalConstraint::handleEvent(Widget* widget,
-                                       Window* window,
-                                       const Event& event)
-{ 
-    return false;
-}
-
 }

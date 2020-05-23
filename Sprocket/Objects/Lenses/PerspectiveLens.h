@@ -24,7 +24,7 @@ public:
     Maths::mat4 projection() const override;
         // Returns a projection matrix.
 
-    bool handleEvent(Window* window, const Event& event) override;
+    void handleEvent(Window* window, Event& event) override;
         // This function may be overriden if the Lens needs to
         // response to events.
 

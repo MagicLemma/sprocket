@@ -84,39 +84,52 @@ void DevGUI::update(float dt)
                             (float)d_window->height());
 }
 
-bool DevGUI::handleEvent(Event& event)
+void DevGUI::handleEvent(Event& event)
 {
     ImGuiIO& io = ImGui::GetIO();
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
+        if (e->isConsumed()) { return; }
+
         io.MouseDown[e->button()] = true;
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
-            event.consume();
-            return false;
+        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+            ImGuizmo::IsOver()) {
+            
+            e->consume();
         }
     }
     
     else if (auto e = event.as<MouseButtonReleasedEvent>()) {
+        if (e->isConsumed()) { return; }
+        
         io.MouseDown[e->button()] = false;
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
-            event.consume();
-            return false;
+        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+            ImGuizmo::IsOver()) {
+            
+            e->consume(); // TODO: Experiment with this setting
         }
     }
 
     else if (auto e = event.as<MouseMovedEvent>()) {
+        if (e->isConsumed()) { return; }
+        
         io.MousePos = ImVec2(e->xPos(), e->yPos());
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
-            event.consume();
-            return false;
+        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+            ImGuizmo::IsOver()) {
+            
+            e->consume();
         }
     }
 
     else if (auto e = event.as<MouseScrolledEvent>()) {
+        if (e->isConsumed()) { return; }
+        
         io.MouseWheel += e->yOffset();
         io.MouseWheelH += e->xOffset();
-        if (ImGui::IsAnyWindowHovered() || ImGuizmo::IsOver()) {
-            return false;
+        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow) ||
+            ImGuizmo::IsOver()) {
+            
+            e->consume();
         }
     }
 
@@ -126,13 +139,15 @@ bool DevGUI::handleEvent(Event& event)
     }
 
     else if (auto e = event.as<KeyboardButtonPressedEvent>()) {
+        if (e->isConsumed()) { return; }
+        
         io.KeysDown[e->key()] = true;
         io.KeyCtrl = e->mods() & KeyModifier::CTRL;
         io.KeyShift = e->mods() & KeyModifier::SHIFT;
         io.KeyAlt = e->mods() & KeyModifier::ALT;
         io.KeySuper = e->mods() & KeyModifier::SUPER;
         if (ImGui::IsWindowFocused(ImGuiFocusedFlags_AnyWindow)) {
-            return true;
+            e->consume();
         }
     }
 
@@ -145,12 +160,13 @@ bool DevGUI::handleEvent(Event& event)
     }
 
     else if (auto e = event.as<KeyboardKeyTypedEvent>()) {
+        if (e->isConsumed()) { return; }
+
         if (e->key() > 0 && e->key() < 0x10000) {
             io.AddInputCharacter((unsigned short)e->key());
+            e->consume();
         }
     }
-
-    return false;
 }
 
 }

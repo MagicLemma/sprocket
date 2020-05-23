@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Maths.h"
 #include "Camera.h"
+#include "KeyboardProxy.h"
 
 namespace Sprocket {
 
@@ -29,12 +30,14 @@ class ThirdPersonCamera : public Camera
     float d_movementSpeed;
         // Speed the camera can move around at.
 
+    KeyboardProxy d_keyboard;
+
 public:
     ThirdPersonCamera();
 
     Maths::mat4 view() const override;
     void update(Window* window, float timeDelta) override;
-    bool handleEvent(Window* window, const Event& event) override;
+    void handleEvent(Window* window, Event& event) override;
 
     Maths::vec3 target() const { return d_target; }
 };

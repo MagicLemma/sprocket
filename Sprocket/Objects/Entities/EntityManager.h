@@ -25,7 +25,7 @@ public:
 
     void addEntity(std::shared_ptr<Entity> entity);
     void update(float dt);
-    bool handleEvent(Event& event);
+    void handleEvent(Event& event);
 
     void draw(EntityRenderer* renderer);
 

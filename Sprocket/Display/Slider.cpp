@@ -26,36 +26,32 @@ void Slider::updateImpl(Window* window)
     }
 }
 
-bool Slider::handleEventImpl(Window* window, const Event& event)
+void Slider::handleEventImpl(Window* window, Event& event)
 {
     if (containsPoint(picker(), toLocalCoords(window->getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
-            if (e->button() == Mouse::LEFT) {
+            if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_updating = true;
-                return true;
+                e->consume();
             }
         }       
     } else if (containsPoint(bar(), toLocalCoords(window->getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
-            if (e->button() == Mouse::LEFT) {
+            if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_updating = true;
                 float newHorizPos = toLocalCoords(window->getMousePos()).x - d_picker.width/2;
                 auto& offset = d_picker.position;
                 Maths::clamp(newHorizPos, left(), right());
                 offset.x = newHorizPos;
                 d_callback(value());
-                return true;
+                e->consume();
             }
         }
-    }
-
-    if (auto e = event.as<MouseButtonReleasedEvent>()) {
-        if (e->button() == Mouse::LEFT) {
+    } else if (auto e = event.as<MouseButtonReleasedEvent>()) {
+        if (!e->isConsumed() && e->button() == Mouse::LEFT) {
             d_updating = false;
-            return false;
         }
     }
-    return false;
 }
 
 void Slider::drawImpl(DisplayRenderer* renderer) const

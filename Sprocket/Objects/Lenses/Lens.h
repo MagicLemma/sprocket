@@ -14,7 +14,7 @@ public:
     virtual Maths::mat4 projection() const = 0;
         // Returns a projection matrix.
 
-    virtual bool handleEvent(Window* window, const Event& event) { return false; }
+    virtual void handleEvent(Window* window, Event& event) { return; }
         // This function may be overriden if the Lens needs to
         // respond to events.
 };

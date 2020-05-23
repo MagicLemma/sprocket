@@ -16,9 +16,9 @@ public:
     
     virtual void update(Widget* widget, Window* window) override;
 
-    virtual bool handleEvent(Widget* widget,
+    virtual void handleEvent(Widget* widget,
                              Window* window,
-                             const Event& event) override;
+                             Event& event) override;
 };
 
 }

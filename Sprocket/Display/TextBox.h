@@ -9,8 +9,8 @@ class TextBox : public Widget
 {
     Text        d_text;
 
-    void updateImpl(Window* window) override;
-    bool handleEventImpl(Window* window, const Event& event) override;
+    void updateImpl(Window* window) override {};
+    void handleEventImpl(Window* window, Event& event) override {};
     void drawImpl(DisplayRenderer* renderer) const override;
 
 public:

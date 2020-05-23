@@ -12,9 +12,9 @@ class Container : public Widget
     Maths::vec2 d_placementPtr;
     float       d_spacing;
 
-    void updateImpl(Window* window) override;
-    bool handleEventImpl(Window* window, const Event& event) override;
-    void drawImpl(DisplayRenderer* renderer) const override;
+    void updateImpl(Window* window) override {};
+    void handleEventImpl(Window* window, Event& event) override {};
+    void drawImpl(DisplayRenderer* renderer) const override {};
 
 public:
     Container(float width,

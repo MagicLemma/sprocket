@@ -36,11 +36,11 @@ public:
 		return categoryFlags() & category;
 	}
 
-	// Returns a const* to this object as Type if the original
+	// Returns a pointer to this object as Type if the original
 	// type of this object is Type, and nullptr otherwise.
-	template <typename Type> Type const* as() const
+	template <typename Type> Type* as()
 	{
-		return dynamic_cast<Type const*>(this);
+		return dynamic_cast<Type*>(this);
 	}
 };
 

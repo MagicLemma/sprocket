@@ -11,12 +11,11 @@ class WidgetProperty
 public:
     virtual ~WidgetProperty() {}
     
-    virtual void update(Widget* widget,
-                        Window* window) = 0;
+    virtual void update(Widget* widget, Window* window) = 0;
 
-    virtual bool handleEvent(Widget* widget,
+    virtual void handleEvent(Widget* widget,
                              Window* window,
-                             const Event& event) = 0;
+                             Event& event) = 0;
 };
 
 }

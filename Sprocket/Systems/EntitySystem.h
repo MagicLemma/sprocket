@@ -19,7 +19,7 @@ public:
     virtual void deregisterEntity(const Entity& entity) = 0;
         // Register and deregister entities with this system.
 
-    virtual bool handleEvent(Event& event) = 0;
+    virtual void handleEvent(Event& event) = 0;
         // Called with every event so systems can consume them.
 
 private:

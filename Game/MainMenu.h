@@ -9,7 +9,7 @@ class MainMenu : public Sprocket::Layer
 public:
     MainMenu(const Sprocket::CoreSystems& core);
 
-    bool handleEventImpl(Sprocket::Event& event) override;
+    void handleEventImpl(Sprocket::Event& event) override;
     void updateImpl() override;
     void drawImpl() override;
 };

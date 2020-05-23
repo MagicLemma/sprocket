@@ -39,11 +39,4 @@ void VerticalConstraint::update(Widget* widget, Window* window)
     }
 }
 
-bool VerticalConstraint::handleEvent(Widget* widget,
-                                     Window* window,
-                                     const Event& event)
-{ 
-    return false;
-}
-
 }

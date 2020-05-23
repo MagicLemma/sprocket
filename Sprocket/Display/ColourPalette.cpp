@@ -137,11 +137,11 @@ void ColourPalette::updateImpl(Window* window)
     }
 }
 
-bool ColourPalette::handleEventImpl(Window* window, const Event& event)
+void ColourPalette::handleEventImpl(Window* window, Event& event)
 {
     if (containsPoint(d_paletteQuad, toLocalCoords(window->getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
-            if (e->button() == Mouse::LEFT) {
+            if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_movingPalettePicker = true;
                 Maths::vec2 newPosition = toLocalCoords(window->getMousePos());
                 Maths::clamp(newPosition.x, d_paletteQuad.position.x, d_paletteQuad.position.x + d_paletteQuad.width);
@@ -152,29 +152,27 @@ bool ColourPalette::handleEventImpl(Window* window, const Event& event)
                     newPosition.x / d_paletteQuad.width,
                     newPosition.y / d_paletteQuad.height
                 });
-                return true;
+                e->consume();
             }
         }
     } else if (containsPoint(d_blackWhiteQuad, toLocalCoords(window->getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
-            if (e->button() == Mouse::LEFT) {
+            if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_movingSliderPicker = true;
                 float newVertPos = toLocalCoords(window->getMousePos()).y - d_sliderPicker.height/2;
                 Maths::clamp(newVertPos, d_blackWhiteQuad.position.y - d_sliderPicker.height/2, d_blackWhiteQuad.position.y + d_blackWhiteQuad.height - d_sliderPicker.height/2);
                 d_sliderPicker.position.y = newVertPos;
-                return true;
+                e->consume();
             }
         }       
     }
 
     if (auto e = event.as<MouseButtonReleasedEvent>()) {
-        if (e->button() == Mouse::LEFT) {
+        if (!e->isConsumed() && e->button() == Mouse::LEFT) {
             d_movingPalettePicker = false;
             d_movingSliderPicker = false;
-            return false;
         }
     }
-    return false;
 }
 
 void ColourPalette::drawImpl(DisplayRenderer* renderer) const

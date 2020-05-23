@@ -74,32 +74,27 @@ void Widget::update(Window* window)
     }
 }
 
-bool Widget::handleEvent(Window* window, const Event& event)
+void Widget::handleEvent(Window* window, Event& event)
 {
     if (d_active) {
         for (const auto& child : d_children) {
-            if (child->handleEvent(window, event)) {
-                return true;
-            }
+            child->handleEvent(window, event);
         }
 
-        if (handleEventImpl(window, event)) {
-            return true;
-        }
+        handleEventImpl(window, event);
 
         for (const auto& property : d_properties) {
-            if (property->handleEvent(this, window, event)) {
-                return true;
-            }
+            property->handleEvent(this, window, event);
         }
 
         if (event.isInCategory(EventCategory::MOUSE)
-            && event.isInCategory(EventCategory::INPUT)) {
-            return containsPoint(toScreenCoords(d_base), window->getMousePos());
+            && event.isInCategory(EventCategory::INPUT)
+            && !event.isConsumed()
+            && containsPoint(toScreenCoords(d_base), window->getMousePos())) {
+            
+            event.consume();
         }
     }
-    
-    return false; 
 }
 
 void Widget::draw(DisplayRenderer* renderer)

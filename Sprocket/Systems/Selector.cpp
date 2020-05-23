@@ -28,33 +28,27 @@ void Selector::updateSystem(float dt)
     }
 }
 
-void Selector::updateEntity(float dt, Entity& entity)
+void Selector::handleEvent(Event& event)
 {
-}
-
-bool Selector::handleEvent(Event& event)
-{
-    if (!d_enabled) { return false; }
+    if (!d_enabled) { return; }
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (e->isConsumed()) { return false; }
+        if (e->isConsumed()) { return; }
         
         auto entity = getMousedOver();
         setSelected(entity);
-        return true;
+        e->consume();
     }
 
     else if (auto e = event.as<MouseMovedEvent>()) {  
         clearHovered(); // Always clear as mouse may be on GUI
         
-        if (e->isConsumed()) { return false; }
+        if (e->isConsumed()) { return; }
         
         auto entity = getMousedOver();
         setHovered(entity);
-        return true;
+        e->consume();
     }
-
-    return false;
 }
 
 void Selector::deregisterEntity(const Entity& entity)

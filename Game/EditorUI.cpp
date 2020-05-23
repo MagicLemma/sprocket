@@ -38,8 +38,6 @@ void selectedEntityInfo(Sprocket::Entity& entity,
     static ImGuizmo::MODE      gizmoMode = ImGuizmo::WORLD;
     static float angle = 1.0f;
 
-    Maths::mat4 origin = entity.transform();
-
     if (ImGui::TreeNode("Transform")) {
         ImGui::DragFloat3("Position", &entity.position().x, 0.005f);
         Maths::vec3 eulerAngles = Maths::toEuler(entity.orientation());
@@ -68,6 +66,7 @@ void selectedEntityInfo(Sprocket::Entity& entity,
         ImGui::TreePop();
     }
 
+    Maths::mat4 origin = entity.transform();
     ImGuiIO& io = ImGui::GetIO();
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
     ImGuizmo::Manipulate(
@@ -138,15 +137,11 @@ EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
 {  
 }
 
-bool EditorUI::handleEventImpl(Sprocket::Event& event)
+void EditorUI::handleEventImpl(Sprocket::Event& event)
 {
     if (d_status == Sprocket::Layer::Status::NORMAL) {
-        if (d_editorUI.handleEvent(event)) {
-            return true;
-        }
+        d_editorUI.handleEvent(event);
     }
-
-    return false;
 }
 
 void EditorUI::updateImpl()

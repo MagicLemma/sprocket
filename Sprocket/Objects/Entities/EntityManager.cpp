@@ -38,14 +38,11 @@ void EntityManager::update(float dt)
     }
 }
 
-bool EntityManager::handleEvent(Event& event)
+void EntityManager::handleEvent(Event& event)
 {
     for (auto system : d_systems) {
-        if (system->handleEvent(event)) {
-            return true;
-        }
+        system->handleEvent(event);
     }
-    return false;
 }
 
 void EntityManager::draw(EntityRenderer* renderer) {

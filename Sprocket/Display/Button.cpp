@@ -67,37 +67,36 @@ void Button::updateImpl(Window* window)
     }
 }
 
-bool Button::handleEventImpl(Window* window, const Event& event)
+void Button::handleEventImpl(Window* window, Event& event)
 {
     if (auto e = event.as<MouseMovedEvent>()) {
         bool mouseOnButton = containsPoint(d_actual, toLocalCoords(window->getMousePos()));
         if (!d_hovered && mouseOnButton) {
             d_hovered = true;
             d_hoverCallback();
-            return false;
         }
         else if (d_hovered && !mouseOnButton) {
             d_hovered = false;
             d_unhoverCallback();
-            return false;
         }
     }
     else if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (e->button() == Mouse::LEFT) {
+        if (!e->isConsumed() && e->button() == Mouse::LEFT) {
             if (containsPoint(d_actual, toLocalCoords(window->getMousePos()))) {
                 d_clicked = true;
                 d_clickCallback();
-                return true;
+                e->consume();
             }
         }   
     } else if (auto e = event.as<MouseButtonReleasedEvent>()) {
         if (d_clicked) {
             d_clicked = false;
             d_unclickCallback();
-            return false;
         }
     }
-    return containsPoint(d_base, toLocalCoords(window->getMousePos()));
+    else if (containsPoint(d_base, toLocalCoords(window->getMousePos()))) {
+        e->consume();
+    }
 }
 
 void Button::drawImpl(DisplayRenderer* renderer) const

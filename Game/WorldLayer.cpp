@@ -283,7 +283,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.addEffect<GaussianHoriz>();
 }
 
-bool WorldLayer::handleEventImpl(Sprocket::Event& event)
+void WorldLayer::handleEventImpl(Sprocket::Event& event)
 {
     using namespace Sprocket;
 
@@ -294,12 +294,7 @@ bool WorldLayer::handleEventImpl(Sprocket::Event& event)
 
     d_camera->handleEvent(d_core.window, event);
     d_lens.handleEvent(d_core.window, event);
-
-    if (d_entityManager.handleEvent(event)) {
-        return true;
-    }
-      
-    return false;
+    d_entityManager.handleEvent(event);
 }
 
 void WorldLayer::updateImpl()

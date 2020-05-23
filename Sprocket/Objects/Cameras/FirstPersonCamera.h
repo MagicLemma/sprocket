@@ -1,8 +1,9 @@
 #pragma once
-#include "Core/Window.h"
-#include "Events/Event.h"
-#include "Utility/Maths.h"
+#include "Window.h"
+#include "Event.h"
+#include "Maths.h"
 #include "Camera.h"
+#include "KeyboardProxy.h"
 
 namespace Sprocket {
 
@@ -24,12 +25,15 @@ class FirstPersonCamera : public Camera
     float d_sensitivity;
         // Mouse sensitivity
 
+    KeyboardProxy d_keyboard;
+
 public:
     FirstPersonCamera();
 
     Maths::mat4 view() const override;
     void update(Window* window, float timeDelta) override;
-
+    void handleEvent(Window* window, Event& event) override;
+    
     Maths::vec3 position() const { return d_position; }
     Maths::vec3 direction() const { return d_direction; }
 

@@ -25,7 +25,7 @@ Maths::mat4 PerspectiveLens::projection() const
     return d_projection;
 }
 
-bool PerspectiveLens::handleEvent(Window* window, const Event& event)
+void PerspectiveLens::handleEvent(Window* window, Event& event)
 {
     if (auto e = event.as<WindowResizeEvent>()) {
         d_aspectRatio = e->aspectRatio();
@@ -34,7 +34,6 @@ bool PerspectiveLens::handleEvent(Window* window, const Event& event)
                                           d_nearPlane,
                                           d_farPlane);
     }
-    return false;
 }
 
 void PerspectiveLens::fov(float newFov)

@@ -13,9 +13,7 @@ void Scene::handleEvent(Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        if (d_layers[i]->handleEvent(event)) {
-            break;
-        }
+        d_layers[i]->handleEvent(event);
     }
 }
 

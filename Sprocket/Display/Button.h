@@ -41,7 +41,7 @@ class Button : public Widget
     ButtonCallback d_unclickCallback = [](){};
 
     void updateImpl(Window* window) override;
-    bool handleEventImpl(Window* window, const Event& event) override;
+    void handleEventImpl(Window* window, Event& event) override;
     void drawImpl(DisplayRenderer* renderer) const override;
 
 public:

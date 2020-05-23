@@ -13,7 +13,7 @@ public:
     ~DevGUI();
 
     void update(float dt);
-    bool handleEvent(Event& event);
+    void handleEvent(Event& event);
 };
 
 }

@@ -36,23 +36,23 @@ void ThirdPersonCamera::update(Window* window, float timeDelta)
     Maths::vec3 up = {0.0f, 1.0f, 0.0f};
     Maths::vec3 right = cross(forwards, up);
     
-    if (window->isKeyDown(Keyboard::W)){
+    if (d_keyboard.isKeyDown(Keyboard::W)){
         d_target += moveSpeed * forwards;
     }
-    if (window->isKeyDown(Keyboard::S)){
+    if (d_keyboard.isKeyDown(Keyboard::S)){
         d_target -= moveSpeed * forwards;
     }
-    if (window->isKeyDown(Keyboard::D)){
+    if (d_keyboard.isKeyDown(Keyboard::D)){
         d_target += moveSpeed * right;
     }
-    if (window->isKeyDown(Keyboard::A)){
+    if (d_keyboard.isKeyDown(Keyboard::A)){
         d_target -= moveSpeed * right;
     }
 
-    if (window->isKeyDown(Keyboard::E)){
+    if (d_keyboard.isKeyDown(Keyboard::E)){
         d_horiz -= horizSpeed;
     }
-    if (window->isKeyDown(Keyboard::Q)){
+    if (d_keyboard.isKeyDown(Keyboard::Q)){
         d_horiz += horizSpeed;
     }
 
@@ -65,14 +65,16 @@ void ThirdPersonCamera::update(Window* window, float timeDelta)
     }
 }
 
-bool ThirdPersonCamera::handleEvent(Window* window, const Event& event)
+void ThirdPersonCamera::handleEvent(Window* window, Event& event)
 {
+    d_keyboard.handleEvent(event);
+
     if (auto e = event.as<MouseScrolledEvent>()) {
+        if (e->isConsumed()) { return; }
         d_absoluteVerticalPosition -= e->yOffset();
         Maths::clamp(d_absoluteVerticalPosition, 2.0f, 10.0f);
-        return true;
+        e->consume();
     }
-    return false;
 }
 
 }

@@ -12,17 +12,4 @@ Container::Container(float width,
 {
 }
 
-void Container::updateImpl(Window* window)
-{
-}
-
-bool Container::handleEventImpl(Window* window, const Event& event)
-{
-    return false;
-}
-
-void Container::drawImpl(DisplayRenderer* renderer) const
-{
-}
-
 }

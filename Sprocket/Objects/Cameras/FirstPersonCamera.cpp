@@ -33,23 +33,23 @@ void FirstPersonCamera::update(Window* window, float timeDelta)
     Maths::vec3 up = {0.0f, 1.0f, 0.0f};
     Maths::vec3 right = cross(forwards, up);
     
-    if (window->isKeyDown(Keyboard::W)){
+    if (d_keyboard.isKeyDown(Keyboard::W)){
         d_position += speed * forwards;
     }
-    if (window->isKeyDown(Keyboard::S)){
+    if (d_keyboard.isKeyDown(Keyboard::S)){
         d_position -= speed * forwards;
     }
-    if (window->isKeyDown(Keyboard::D)){
+    if (d_keyboard.isKeyDown(Keyboard::D)){
         d_position += speed * right;
     }
-    if (window->isKeyDown(Keyboard::A)){
+    if (d_keyboard.isKeyDown(Keyboard::A)){
         d_position -= speed * right;
     }
     
-    if (window->isKeyDown(Keyboard::SPACE)){
+    if (d_keyboard.isKeyDown(Keyboard::SPACE)){
         d_position += speed * up;
     }
-    if (window->isKeyDown(Keyboard::LSHIFT)){
+    if (d_keyboard.isKeyDown(Keyboard::LSHIFT)){
         d_position -= speed * up;
     }
 
@@ -62,6 +62,11 @@ void FirstPersonCamera::update(Window* window, float timeDelta)
     d_direction.y = -Maths::sind(d_pitch);
     d_direction.z = -Maths::cosd(d_yaw) * Maths::cosd(d_pitch);
     Maths::normalise(d_direction);
+}
+
+void FirstPersonCamera::handleEvent(Window* window, Event& event)
+{
+    d_keyboard.handleEvent(event);
 }
 
 }

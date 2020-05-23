@@ -123,22 +123,19 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     });
 }
 
-bool EscapeMenu::handleEventImpl(Sprocket::Event& event)
+void EscapeMenu::handleEventImpl(Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
-        if (e->key() == Sprocket::Keyboard::ESC) {
+        if (!e->isConsumed() && e->key() == Sprocket::Keyboard::ESC) {
             d_worldLayer->d_paused = !d_worldLayer->d_paused;
-            return true;
+            e->consume();
         }
     }
 
     if (d_status == Status::NORMAL) {
-        if (d_container.handleEvent(d_core.window, event)) {
-            return true;
-        }
+        d_container.handleEvent(d_core.window, event);
+        event.consume();
     }
-
-    return d_status == Status::NORMAL;
 }
 
 void EscapeMenu::updateImpl()

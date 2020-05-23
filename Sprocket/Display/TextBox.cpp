@@ -10,15 +10,6 @@ TextBox::TextBox(float width,
 {
 }
 
-void TextBox::updateImpl(Window* window)
-{
-}
-
-bool TextBox::handleEventImpl(Window* window, const Event& event)
-{
-    return false;
-}
-
 void TextBox::drawImpl(DisplayRenderer* renderer) const
 {
     Text text = d_text;

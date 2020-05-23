@@ -25,7 +25,7 @@ class Slider : public Widget
         // Local Coordinates.
 
     void updateImpl(Window* window) override;
-    bool handleEventImpl(Window* window, const Event& event) override;
+    void handleEventImpl(Window* window, Event& event) override;
     void drawImpl(DisplayRenderer* renderer) const override;
     
 public:

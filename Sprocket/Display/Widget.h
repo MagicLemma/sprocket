@@ -34,7 +34,7 @@ class Widget
         // Widget with respect to the screen.
 
     virtual void updateImpl(Window* window) = 0;
-    virtual bool handleEventImpl(Window* window, const Event& event) = 0;
+    virtual void handleEventImpl(Window* window, Event& event) = 0;
     virtual void drawImpl(DisplayRenderer* renderer) const = 0;
         // Recurses down through all children and draws them too.
 
@@ -66,7 +66,7 @@ public:
     virtual ~Widget();
 
     void update(Window* window);
-    bool handleEvent(Window* window, const Event& event);
+    void handleEvent(Window* window, Event& event);
     void draw(DisplayRenderer* renderer);
 
     Quad& base() { return d_base; }
