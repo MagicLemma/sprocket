@@ -44,6 +44,7 @@ quat normalise(const quat& q);
 mat3 toMat3(const quat& q);
 mat4 toMat4(const quat& q);
 quat toQuat(const mat3& m);
+vec3 toEuler(const quat& q);
 
 float* cast(const mat3& m);
 float* cast(const mat4& m);

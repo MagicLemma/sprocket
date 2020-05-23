@@ -42,7 +42,12 @@ void selectedEntityInfo(Sprocket::Entity& entity,
 
     if (ImGui::TreeNode("Transform")) {
         ImGui::DragFloat3("Position", &entity.position().x, 0.005f);
-        ImGui::Text("TODO: Add Orientation");     
+        Maths::vec3 eulerAngles = Maths::toEuler(entity.orientation());
+        std::stringstream ss;
+        ss << "Pitch: " << Maths::toString(eulerAngles.x, 3) << "\n"
+           << "Yaw: " << Maths::toString(eulerAngles.y, 3) << "\n"
+           << "Roll: " << Maths::toString(eulerAngles.z, 3);
+        ImGui::Text(ss.str().c_str());    
 
         if (ImGui::RadioButton("Translate", gizmoOp == ImGuizmo::TRANSLATE)) {
             gizmoOp = ImGuizmo::TRANSLATE;

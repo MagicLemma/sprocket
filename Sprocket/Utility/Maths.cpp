@@ -115,6 +115,11 @@ quat toQuat(const mat3& m)
     return glm::quat_cast(m);
 }
 
+vec3 toEuler(const quat& q)
+{
+    return glm::eulerAngles(q);
+}
+
 float* cast(const mat3& m)
 {
     return (float*)&m[0][0];

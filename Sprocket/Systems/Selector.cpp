@@ -30,17 +30,6 @@ void Selector::updateSystem(float dt)
 
 void Selector::updateEntity(float dt, Entity& entity)
 {
-    if (!entity.has<SelectComponent>()) {
-        return;
-    }
-
-    auto& selectData = entity.get<SelectComponent>();
-
-    if (!d_enabled) {
-        selectData.hovered = false;
-        selectData.selected = false;
-        return;
-    }
 }
 
 bool Selector::handleEvent(Event& event)
