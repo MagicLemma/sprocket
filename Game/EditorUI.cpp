@@ -129,7 +129,7 @@ void addEntityPanel(Sprocket::EntityManager* entities,
 }
 
 EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
-    : Layer(core, Status::INACTIVE, true)
+    : Layer(core)
     , d_worldLayer(worldLayer)
     , d_editorUI(core.window)
     , d_editorUIRenderer(core.window)
@@ -137,22 +137,23 @@ EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
 {  
 }
 
-void EditorUI::handleEventImpl(Sprocket::Event& event)
+void EditorUI::handleEvent(Sprocket::Event& event)
 {
-    if (d_status == Sprocket::Layer::Status::NORMAL) {
-        d_editorUI.handleEvent(event);
+    if (d_worldLayer->d_mode != Mode::EDITOR) {
+        return;
     }
+
+    d_editorUI.handleEvent(event);
 }
 
-void EditorUI::updateImpl()
+void EditorUI::update(float dt)
 {
-    if (d_status == Sprocket::Layer::Status::NORMAL) {
-        d_editorUI.update(deltaTime());
+    if (d_worldLayer->d_mode != Mode::EDITOR) {
+        return;
     }
-}
 
-void EditorUI::drawImpl()
-{
+    d_editorUI.update(dt);
+
     using namespace Sprocket;
     using namespace Maths;
 
@@ -208,4 +209,5 @@ void EditorUI::drawImpl()
 
     d_editorUIRenderer.endFrame();
     d_editorUIRenderer.draw();
+
 }

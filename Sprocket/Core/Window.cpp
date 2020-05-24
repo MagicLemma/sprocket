@@ -9,12 +9,6 @@
 
 namespace Sprocket {
 
-namespace {
-
-static bool s_GLFWInitialised = false;
-
-}
-
 struct WindowImpl
 {
 	GLFWwindow* window;	
@@ -218,11 +212,6 @@ Maths::vec2 Window::getMousePos()
 Maths::vec2 Window::getMouseOffset()
 {
 	return d_mouseOffset;
-}
-
-float Window::getTime()
-{
-	return glfwGetTime();
 }
 
 const char* Window::getClipboardData()

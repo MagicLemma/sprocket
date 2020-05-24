@@ -13,7 +13,7 @@ Slider::Slider(float width, float height)
 {
 }
 
-void Slider::updateImpl(Window* window)
+void Slider::updateImpl(Window* window, DisplayRenderer* renderer)
 {
     if (d_updating) {
         if (window->getMouseOffset().x != 0) {
@@ -24,6 +24,9 @@ void Slider::updateImpl(Window* window)
             d_callback(value());
         }
     }
+
+    renderer->draw(toScreenCoords(d_bar));
+    renderer->draw(toScreenCoords(d_picker));
 }
 
 void Slider::handleEventImpl(Window* window, Event& event)
@@ -52,12 +55,6 @@ void Slider::handleEventImpl(Window* window, Event& event)
             d_updating = false;
         }
     }
-}
-
-void Slider::drawImpl(DisplayRenderer* renderer) const
-{
-    renderer->draw(toScreenCoords(d_bar));
-    renderer->draw(toScreenCoords(d_picker));
 }
 
 float Slider::value() const

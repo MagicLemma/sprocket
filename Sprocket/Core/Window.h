@@ -119,7 +119,6 @@ public:
 
 	// Window Utilities
 	void setCursorVisibility(bool visibility);
-	float getTime();
 
 	// Mouse Utilities
 	Maths::vec2 getMousePos();

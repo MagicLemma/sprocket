@@ -33,9 +33,8 @@ class Widget
         // Recurses up the Widget tree to get the position of this
         // Widget with respect to the screen.
 
-    virtual void updateImpl(Window* window) = 0;
+    virtual void updateImpl(Window* window, DisplayRenderer* renderer) = 0;
     virtual void handleEventImpl(Window* window, Event& event) = 0;
-    virtual void drawImpl(DisplayRenderer* renderer) const = 0;
         // Recurses down through all children and draws them too.
 
     bool d_active;
@@ -65,9 +64,8 @@ public:
 
     virtual ~Widget();
 
-    void update(Window* window);
+    void update(Window* window, DisplayRenderer* renderer);
     void handleEvent(Window* window, Event& event);
-    void draw(DisplayRenderer* renderer);
 
     Quad& base() { return d_base; }
     const Quad& base() const { return d_base; }

@@ -1,7 +1,7 @@
 #include "WorldLayer.h"
 
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
-    : Sprocket::Layer(core, Status::NORMAL, false)
+    : Sprocket::Layer(core)
     , d_mode(Mode::OBSERVER)
     , d_entityRenderer(core.window)
     , d_terrainRenderer(core.window)
@@ -284,7 +284,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.addEffect<GaussianHoriz>();
 }
 
-void WorldLayer::handleEventImpl(Sprocket::Event& event)
+void WorldLayer::handleEvent(Sprocket::Event& event)
 {
     using namespace Sprocket;
 
@@ -298,17 +298,16 @@ void WorldLayer::handleEventImpl(Sprocket::Event& event)
     d_entityManager.handleEvent(event);
 }
 
-void WorldLayer::updateImpl()
+void WorldLayer::update(float dt)
 {
     using namespace Sprocket;
-    d_status = d_paused ? Status::PAUSED : Status::NORMAL;
-
+    
     d_entityRenderer.update(*d_camera, d_lens, d_lights);
 
-    if (d_status == Status::NORMAL) {
-        d_camera->update(deltaTime());
+    if (!d_paused) {
+        d_camera->update(dt);
         d_core.window->setCursorVisibility(d_mouseRequired);
-        d_entityManager.update(deltaTime());
+        d_entityManager.update(dt);
 
         for (auto& [id, entity] : d_entityManager.entities()) {
             if (entity->has<PlayerComponent>() && entity->position().y < -2.0f) {
@@ -320,10 +319,7 @@ void WorldLayer::updateImpl()
             }
         }
     }
-}
 
-void WorldLayer::drawImpl()
-{
     if (d_paused) {
         d_postProcessor.bind();
     }

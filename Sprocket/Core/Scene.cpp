@@ -17,18 +17,10 @@ void Scene::handleEvent(Event& event)
     }
 }
 
-void Scene::update()
+void Scene::update(float dt)
 { 
-    for (size_t i = d_layers.size(); i != 0;) {
-        --i;
-        d_layers[i]->update();
-    }
-}
-
-void Scene::draw()
-{
     for (size_t i = 0; i != d_layers.size(); ++i) {
-        d_layers[i]->draw();
+        d_layers[i]->update(dt);
     }
 }
 

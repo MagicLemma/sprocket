@@ -26,14 +26,9 @@ public:
         // returns True, the event is not propagated to any lower
         // layers.
 
-    void update();
-        // Called on every tick. This goes through the stack
-        // from the top and updates each layer. If a layer
-        // returns True, none of the lower layers are updated.
-
-    void draw();
+    void update(float dt);
         // Called on every tick. This does through the stack
-        // from the bottom and draws each layer.
+        // from the bottom and updates then draws each layer.
 };
 
 template <typename T, typename... Args>

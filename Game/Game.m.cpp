@@ -25,16 +25,16 @@ int main()
     world->add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
     sceneManager.setActiveScene("World");
 
-    Sprocket::FramerateTimer fps; // Helper class to log the fps.
+    Sprocket::Stopwatch watch;
+    watch.printFramerate(true);
 
     while (window.running()) {
         window.clear();
         
-        sceneManager.update();
-        sceneManager.draw();
+        watch.update();
+        sceneManager.update(watch.deltaTime());
 
         window.onUpdate();
-        fps.update();
     }
 
     return 0;

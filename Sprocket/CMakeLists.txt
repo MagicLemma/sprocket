@@ -97,11 +97,11 @@ add_library(Sprocket STATIC
             Events/KeyboardEvent.cpp
             Events/MouseEvent.cpp
             
-            Utility/FramerateTimer.cpp
             Utility/Log.cpp
             Utility/KeyboardProxy.cpp
             Utility/MouseProxy.cpp
             Utility/Maths.cpp
+            Utility/Stopwatch.cpp
             Utility/Tokenize.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp)

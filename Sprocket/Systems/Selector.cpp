@@ -34,17 +34,14 @@ void Selector::handleEvent(Event& event)
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
         if (e->isConsumed()) { return; }
-        
         auto entity = getMousedOver();
         setSelected(entity);
         e->consume();
     }
 
     else if (auto e = event.as<MouseMovedEvent>()) {  
-        clearHovered(); // Always clear as mouse may be on GUI
-        
+        clearHovered(); // Always clear as mouse may now be on GUI
         if (e->isConsumed()) { return; }
-        
         auto entity = getMousedOver();
         setHovered(entity);
         e->consume();
@@ -53,12 +50,8 @@ void Selector::handleEvent(Event& event)
 
 void Selector::deregisterEntity(const Entity& entity)
 {
-    if (&entity == d_hoveredEntity) {
-        clearHovered();
-    }
-    if (&entity == d_selectedEntity) {
-        clearSelected();
-    }
+    if (&entity == d_hoveredEntity) { clearHovered(); }
+    if (&entity == d_selectedEntity) { clearSelected(); }
 }
 
 void Selector::enable(bool newEnabled)

@@ -59,18 +59,22 @@ void Widget::makeChild(std::shared_ptr<Widget> child)
     child->d_parent = this;
 }
 
-void Widget::update(Window* window)
+void Widget::update(Window* window, DisplayRenderer* renderer)
 {
-    if (d_active) {
-        for (const auto& child : d_children) {
-            child->update(window);
-        }
+    if (!d_active) {
+        return;
+    }
 
-        updateImpl(window);
+    renderer->draw(toScreenCoords(d_base));
 
-        for (const auto& property : d_properties) {
-            property->update(this, window);
-        }
+    for (const auto& property : d_properties) {
+        property->update(this, window);
+    }
+
+    updateImpl(window, renderer);
+
+    for (const auto& child : d_children) {
+        child->update(window, renderer);
     }
 }
 
@@ -94,21 +98,6 @@ void Widget::handleEvent(Window* window, Event& event)
             
             event.consume();
         }
-    }
-}
-
-void Widget::draw(DisplayRenderer* renderer)
-{
-    if (!d_active) {
-        return;
-    }
-    
-    renderer->draw(toScreenCoords(d_base));
-
-    drawImpl(renderer);
-
-    for (const auto& child : d_children) {
-        child->draw(renderer);
     }
 }
 

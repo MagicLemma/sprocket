@@ -35,14 +35,11 @@ public:
 
     bool doesSceneExist(const std::string& name) const;
 
-    void update();
-        // Updates the active scene.
+    void update(float dt);
+        // Updates and draws the active scene.
 
     void handleEvent(Event& event);
         // Sends the event to the active scene.
-
-    void draw();
-        // Draws the active scene.
 };
 
 }

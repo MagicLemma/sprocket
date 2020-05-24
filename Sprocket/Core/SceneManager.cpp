@@ -32,19 +32,14 @@ bool SceneManager::doesSceneExist(const std::string& name) const
     return d_scenes.find(name) != d_scenes.end();
 }
 
-void SceneManager::update()
+void SceneManager::update(float dt)
 {
-    d_scenes[d_activeSceneName]->update();
+    d_scenes[d_activeSceneName]->update(dt);
 }
 
 void SceneManager::handleEvent(Event& event)
 {
     d_scenes[d_activeSceneName]->handleEvent(event);
-}
-
-void SceneManager::draw()
-{
-    d_scenes[d_activeSceneName]->draw();
 }
 
 }

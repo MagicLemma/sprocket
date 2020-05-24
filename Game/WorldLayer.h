@@ -58,7 +58,6 @@ class WorldLayer : public Sprocket::Layer
 public:
     WorldLayer(const Sprocket::CoreSystems& core);
 
-    void handleEventImpl(Sprocket::Event& event) override;
-    void updateImpl() override;
-    void drawImpl() override;
+    void handleEvent(Sprocket::Event& event) override;
+    void update(float dt) override;
 };

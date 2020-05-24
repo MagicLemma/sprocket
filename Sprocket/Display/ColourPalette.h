@@ -38,9 +38,8 @@ class ColourPalette : public Widget
 
     ColourPaletteCallback d_callback = [](const Maths::vec3&){};
 
-    void updateImpl(Window* window) override;
+    void updateImpl(Window* window, DisplayRenderer* renderer) override;
     void handleEventImpl(Window* window, Event& event) override;
-    void drawImpl(DisplayRenderer* renderer) const override;
 
 public:
     ColourPalette(float width, float height);

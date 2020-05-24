@@ -15,9 +15,8 @@ class EditorUI : public Sprocket::Layer
 public:
     EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer);
 
-    void handleEventImpl(Sprocket::Event& event) override;
-    void updateImpl() override;
-    void drawImpl() override;
+    void handleEvent(Sprocket::Event& event) override;
+    void update(float dt) override;
 
     friend class EscapeMenu;
 };

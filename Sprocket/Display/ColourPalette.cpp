@@ -102,7 +102,7 @@ ColourPalette::ColourPalette(float width, float height)
     d_palettePicker.roundness = 1.0f;
 }
     
-void ColourPalette::updateImpl(Window* window)
+void ColourPalette::updateImpl(Window* window, DisplayRenderer* renderer)
 {
     if (d_movingPalettePicker) {
         Maths::vec2 newPosition = toLocalCoords(window->getMousePos());
@@ -135,6 +135,26 @@ void ColourPalette::updateImpl(Window* window)
         d_bar.colour = d_overallColour;
         d_callback(d_overallColour);
     }
+
+    Quad quad = d_paletteQuad;
+    quad.width /= d_segments.size();
+    for (const auto& segment : d_segments) {
+        renderer->draw(toScreenCoords(quad), segment);
+        quad.position.x += quad.width;
+    }
+
+
+    quad = d_blackWhiteQuad;
+    quad.height /= 2;
+    quad.colour = d_paletteColour;
+    renderer->draw(toScreenCoords(quad), d_top);
+    quad.position.y += quad.height;
+    renderer->draw(toScreenCoords(quad), d_bottom);
+
+    renderer->draw(toScreenCoords(d_bar));
+
+    renderer->draw(toScreenCoords(d_palettePicker));
+    renderer->draw(toScreenCoords(d_sliderPicker));
 }
 
 void ColourPalette::handleEventImpl(Window* window, Event& event)
@@ -173,29 +193,6 @@ void ColourPalette::handleEventImpl(Window* window, Event& event)
             d_movingSliderPicker = false;
         }
     }
-}
-
-void ColourPalette::drawImpl(DisplayRenderer* renderer) const
-{
-    Quad quad = d_paletteQuad;
-    quad.width /= d_segments.size();
-    for (const auto& segment : d_segments) {
-        renderer->draw(toScreenCoords(quad), segment);
-        quad.position.x += quad.width;
-    }
-
-
-    quad = d_blackWhiteQuad;
-    quad.height /= 2;
-    quad.colour = d_paletteColour;
-    renderer->draw(toScreenCoords(quad), d_top);
-    quad.position.y += quad.height;
-    renderer->draw(toScreenCoords(quad), d_bottom);
-
-    renderer->draw(toScreenCoords(d_bar));
-
-    renderer->draw(toScreenCoords(d_palettePicker));
-    renderer->draw(toScreenCoords(d_sliderPicker));
 }
 
 }

@@ -42,7 +42,7 @@ Button::Button(float width,
     d_actual = d_buttonNormal;
 }
 
-void Button::updateImpl(Window* window)
+void Button::updateImpl(Window* window, DisplayRenderer* renderer)
 {
     float speed = 0.2f;
 
@@ -65,6 +65,8 @@ void Button::updateImpl(Window* window)
     else {
         d_actual = d_buttonNormal;
     }
+
+    renderer->draw(toScreenCoords(d_actual));
 }
 
 void Button::handleEventImpl(Window* window, Event& event)
@@ -97,11 +99,6 @@ void Button::handleEventImpl(Window* window, Event& event)
     else if (containsPoint(d_base, toLocalCoords(window->getMousePos()))) {
         event.consume();
     }
-}
-
-void Button::drawImpl(DisplayRenderer* renderer) const
-{
-    renderer->draw(toScreenCoords(d_actual));
 }
 
 }

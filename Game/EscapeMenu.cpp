@@ -29,7 +29,7 @@ void setSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                        WorldLayer* worldLayer,
                        EditorUI* editorUi) 
-    : Layer(core, Status::INACTIVE, true)
+    : Layer(core)
     , d_worldLayer(worldLayer)
     , d_editorUi(editorUi)
     , d_displayRenderer(core.window)
@@ -69,8 +69,6 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 d_worldLayer->d_mouseRequired = false;
                 d_worldLayer->d_selector.enable(false);
 
-                d_editorUi->d_status = Sprocket::Layer::Status::INACTIVE;
-
             } break;
             case Mode::PLAYER: {
                 SPKT_LOG_INFO("Mode switched to Editor");
@@ -81,8 +79,6 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 d_worldLayer->d_mouseRequired = true;
                 d_worldLayer->d_selector.enable(true);
 
-                d_editorUi->d_status = Sprocket::Layer::Status::NORMAL;
-
             } break;
              case Mode::EDITOR: {
                 SPKT_LOG_INFO("Mode switched to Observer");
@@ -92,8 +88,6 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 d_worldLayer->d_playerMovement.enable(false);
                 d_worldLayer->d_mouseRequired = false;
                 d_worldLayer->d_selector.enable(false);
-
-                d_editorUi->d_status = Sprocket::Layer::Status::INACTIVE;
 
             } break;
         }
@@ -123,7 +117,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     });
 }
 
-void EscapeMenu::handleEventImpl(Sprocket::Event& event)
+void EscapeMenu::handleEvent(Sprocket::Event& event)
 {
     if (auto e = event.as<Sprocket::KeyboardButtonPressedEvent>()) {
         if (!e->isConsumed() && e->key() == Sprocket::Keyboard::ESC) {
@@ -132,24 +126,18 @@ void EscapeMenu::handleEventImpl(Sprocket::Event& event)
         }
     }
 
-    if (d_status == Status::NORMAL) {
+    if (d_worldLayer->d_paused) {
         d_container.handleEvent(d_core.window, event);
         event.consume();
     }
 }
 
-void EscapeMenu::updateImpl()
+void EscapeMenu::update(float dt)
 {
-    d_status = d_worldLayer->d_paused ? Status::NORMAL : Status::INACTIVE;
     d_displayRenderer.update();
 
-    if (d_status == Status::NORMAL) {
-        d_container.update(d_core.window);
+    if (d_worldLayer->d_paused) {
+        d_container.update(d_core.window, &d_displayRenderer);
         d_core.window->setCursorVisibility(true);
     }
-}
-
-void EscapeMenu::drawImpl()
-{
-    d_container.draw(&d_displayRenderer);
 }
