@@ -56,8 +56,6 @@ EntityRenderer::EntityRenderer(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/Entity.vert",
                "Resources/Shaders/Entity.frag")
-    , d_outlineShader("Resources/Shaders/EntityOutline.vert",
-                      "Resources/Shaders/EntityOutline.frag")
     , d_renderColliders(false)
 {
 }
@@ -91,11 +89,6 @@ void EntityRenderer::update(const Camera& camera,
 		}
 	}
     d_shader.unbind();
-
-    d_outlineShader.bind();
-    d_outlineShader.loadUniform("u_proj_matrix", lens.projection());
-    d_outlineShader.loadUniform("u_view_matrix", camera.view());
-    d_outlineShader.unbind();
 }
 
 void EntityRenderer::draw(const Entity& entity)
@@ -153,45 +146,6 @@ void EntityRenderer::drawModel(const Entity& entity)
     glDrawElements(GL_TRIANGLES, (int)modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
     modelComp.model.unbind();
     unbindMaterial(&d_shader);
-
-    //if (outline) {
-    //    drawOutline(entity);
-    //}
-}
-
-void EntityRenderer::drawOutline(const Entity& entity)
-{
-    RenderContext rc;  // New render context for outlines.
-
-    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    glStencilMask(0x00);
-    glDisable(GL_DEPTH_TEST);
-
-    auto modelComp = entity.get<ModelComponent>();
-    Maths::mat4 transform = entity.transform();
-    transform = Maths::scale(transform, modelComp.scale);
-    transform = Maths::scale(transform, 1.05f);
-    
-    d_outlineShader.bind();
-    d_outlineShader.loadUniform("u_model_matrix", transform);
-
-    if (entity.get<SelectComponent>().selected) {
-        d_outlineShader.loadUniform("u_colour", Maths::vec4{0, 1, 0, 1});
-    }
-    else {
-        d_outlineShader.loadUniform("u_colour", Maths::vec4{1, 1, 0, 1});
-    }
-
-    // Bind textures
-    bindMaterial(&d_shader, modelComp.material);
-    modelComp.model.bind();
-    glDrawElements(GL_TRIANGLES, (int)modelComp.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
-    modelComp.model.unbind();
-    unbindMaterial(&d_shader);
-
-    glStencilMask(0xFF);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glClear(GL_STENCIL_BUFFER_BIT);
 }
 
 void EntityRenderer::drawCollider(const Entity& entity)

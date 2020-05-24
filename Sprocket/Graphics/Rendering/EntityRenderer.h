@@ -14,12 +14,10 @@ class EntityRenderer
 {
     Window* d_window;
     Shader  d_shader;
-    Shader  d_outlineShader;
 
     bool d_renderColliders;
 
     void drawModel    (const Entity& entity);
-    void drawOutline  (const Entity& entity);
     void drawCollider (const Entity& entity);
 
     void drawBox      (const Entity& entity, const BoxCollider* collider);
