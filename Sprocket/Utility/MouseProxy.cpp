@@ -5,7 +5,7 @@ namespace Sprocket {
 
 void MouseProxy::handleEvent(Event& event)
 {
-    if (!event.isInCategory(EventCategory::MOUSE)) { return; }
+    if (!event.in<EventCategory::MOUSE>()) { return; }
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
         if (event.isConsumed()) { return; }

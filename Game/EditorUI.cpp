@@ -161,7 +161,17 @@ void EditorUI::drawImpl()
     mat4 view = d_worldLayer->d_camera->view();
     mat4 proj = d_worldLayer->d_lens.projection();
 
-    ImGui::Begin("Sprocket Editor");
+    float distance = 10.0f;
+    ImGuiIO& io = ImGui::GetIO();
+
+    ImVec2 pos = ImVec2(io.DisplaySize.x - distance, distance);
+    ImVec2 posPivot = ImVec2(1.0f, 0.0f);
+    ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
+
+    bool open = true;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
+
+    ImGui::Begin("Sprocket Editor", &open, flags);
     if (ImGui::Button("Physics Engine")) {
         auto& physics = d_worldLayer->d_physicsEngine;
         bool isRunning = physics.running();

@@ -31,16 +31,16 @@ public:
 		// should clear the hovered entity pointer; it will do this
 		// when it receives a consumed MouseMovedEvent.
 
-	inline bool isInCategory(EventCategory category) const
-	{
-		return categoryFlags() & category;
-	}
-
 	// Returns a pointer to this object as Type if the original
 	// type of this object is Type, and nullptr otherwise.
 	template <typename Type> Type* as()
 	{
 		return dynamic_cast<Type*>(this);
+	}
+
+	template <EventCategory Category> bool in()
+	{
+		return categoryFlags() & Category; 
 	}
 };
 

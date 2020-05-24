@@ -86,51 +86,25 @@ void DevGUI::update(float dt)
 
 void DevGUI::handleEvent(Event& event)
 {
+    if (event.isConsumed()) { return; }
+
     ImGuiIO& io = ImGui::GetIO();
 
-    if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (e->isConsumed()) { return; }
-
+    if (auto e = event.as<MouseButtonPressedEvent>()) {    
         io.MouseDown[e->button()] = true;
-        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
-            ImGuizmo::IsOver()) {
-            
-            e->consume();
-        }
     }
     
     else if (auto e = event.as<MouseButtonReleasedEvent>()) {
-        if (e->isConsumed()) { return; }
-        
         io.MouseDown[e->button()] = false;
-        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
-            ImGuizmo::IsOver()) {
-            
-            e->consume(); // TODO: Experiment with this setting
-        }
     }
 
     else if (auto e = event.as<MouseMovedEvent>()) {
-        if (e->isConsumed()) { return; }
-        
         io.MousePos = ImVec2(e->xPos(), e->yPos());
-        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
-            ImGuizmo::IsOver()) {
-            
-            e->consume();
-        }
     }
 
     else if (auto e = event.as<MouseScrolledEvent>()) {
-        if (e->isConsumed()) { return; }
-        
         io.MouseWheel += e->yOffset();
         io.MouseWheelH += e->xOffset();
-        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow) ||
-            ImGuizmo::IsOver()) {
-            
-            e->consume();
-        }
     }
 
     else if (auto e = event.as<WindowResizeEvent>()) {
@@ -139,33 +113,33 @@ void DevGUI::handleEvent(Event& event)
     }
 
     else if (auto e = event.as<KeyboardButtonPressedEvent>()) {
-        if (e->isConsumed()) { return; }
-        
         io.KeysDown[e->key()] = true;
-        io.KeyCtrl = e->mods() & KeyModifier::CTRL;
+        io.KeyCtrl  = e->mods() & KeyModifier::CTRL;
         io.KeyShift = e->mods() & KeyModifier::SHIFT;
-        io.KeyAlt = e->mods() & KeyModifier::ALT;
+        io.KeyAlt   = e->mods() & KeyModifier::ALT;
         io.KeySuper = e->mods() & KeyModifier::SUPER;
-        if (ImGui::IsWindowHovered(ImGuiFocusedFlags_AnyWindow)) {
-            e->consume();
-        }
     }
 
     else if (auto e = event.as<KeyboardButtonReleasedEvent>()) {
         io.KeysDown[e->key()] = false;
-        io.KeyCtrl = e->mods() & KeyModifier::CTRL;
+        io.KeyCtrl  = e->mods() & KeyModifier::CTRL;
         io.KeyShift = e->mods() & KeyModifier::SHIFT;
-        io.KeyAlt = e->mods() & KeyModifier::ALT;
+        io.KeyAlt   = e->mods() & KeyModifier::ALT;
         io.KeySuper = e->mods() & KeyModifier::SUPER;
     }
 
     else if (auto e = event.as<KeyboardKeyTypedEvent>()) {
-        if (e->isConsumed()) { return; }
-
         if (e->key() > 0 && e->key() < 0x10000) {
             io.AddInputCharacter((unsigned short)e->key());
-            e->consume();
         }
+    }
+
+    if (event.in<EventCategory::KEYBOARD>() && io.WantCaptureKeyboard) {
+        event.consume();
+    }
+
+    if (event.in<EventCategory::MOUSE>() && io.WantCaptureMouse) {
+        event.consume();
     }
 }
 

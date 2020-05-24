@@ -18,9 +18,7 @@ void Draggable::update(Widget* widget, Window* window)
     }
 }
 
-void Draggable::handleEvent(Widget* widget,
-                            Window* window,
-                            Event& event)
+void Draggable::handleEvent(Widget* widget, Window* window, Event& event)
 {
     Quad widgetQuad{{0.0, 0.0}, widget->width(), widget->height()};
     if (containsPoint(widgetQuad, widget->toLocalCoords(window->getMousePos()))) {

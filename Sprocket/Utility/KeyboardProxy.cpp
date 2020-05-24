@@ -5,7 +5,7 @@ namespace Sprocket {
 
 void KeyboardProxy::handleEvent(Event& event)
 {
-    if (!event.isInCategory(EventCategory::KEYBOARD)) { return; }
+    if (!event.in<EventCategory::KEYBOARD>()) { return; }
 
     if (auto e = event.as<KeyboardButtonPressedEvent>()) {
         if (event.isConsumed()) { return; }

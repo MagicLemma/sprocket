@@ -87,10 +87,10 @@ void Widget::handleEvent(Window* window, Event& event)
             property->handleEvent(this, window, event);
         }
 
-        if (event.isInCategory(EventCategory::MOUSE)
-            && event.isInCategory(EventCategory::INPUT)
-            && !event.isConsumed()
-            && containsPoint(toScreenCoords(d_base), window->getMousePos())) {
+        if (event.in<EventCategory::MOUSE>() &&
+            event.in<EventCategory::INPUT>() &&
+            !event.isConsumed() &&
+            containsPoint(toScreenCoords(d_base), window->getMousePos())) {
             
             event.consume();
         }
