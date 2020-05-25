@@ -45,7 +45,6 @@
 #include "Graphics/Primitives/FrameBuffer.h"
 #include "Graphics/Primitives/StreamBuffer.h"
 
-#include "Graphics/Rendering/DevGUIRenderer.h"
 #include "Graphics/Rendering/DisplayRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"

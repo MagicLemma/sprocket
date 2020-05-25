@@ -132,7 +132,6 @@ EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
     : Layer(core)
     , d_worldLayer(worldLayer)
     , d_editorUI(core.window)
-    , d_editorUIRenderer(core.window)
     , d_modelManager(core.modelManager)
 {  
 }
@@ -152,13 +151,11 @@ void EditorUI::update(float dt)
         return;
     }
 
-    d_editorUI.update(dt);
-
     using namespace Sprocket;
     using namespace Maths;
 
-    d_editorUIRenderer.startFrame();
-    ImGuizmo::BeginFrame();
+    d_editorUI.startFrame(dt);
+
     mat4 view = d_worldLayer->d_camera->view();
     mat4 proj = d_worldLayer->d_lens.projection();
 
@@ -207,7 +204,6 @@ void EditorUI::update(float dt)
     bool show = true;
     ImGui::ShowDemoWindow(&show);
 
-    d_editorUIRenderer.endFrame();
-    d_editorUIRenderer.draw();
+    d_editorUI.endFrame();
 
 }

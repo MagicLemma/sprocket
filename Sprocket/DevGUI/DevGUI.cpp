@@ -2,12 +2,24 @@
 #include "MouseEvent.h"
 #include "KeyboardEvent.h"
 #include "WindowEvent.h"
+#include "RenderContext.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
+#include <glad/glad.h>
 
 namespace Sprocket {
 namespace {
+
+unsigned int cast(ImTextureID id)
+{
+    return (unsigned int)(intptr_t)id;
+}
+
+ImTextureID cast(unsigned int id)
+{
+    return (ImTextureID)(intptr_t)id;
+}
 
 void setBackendFlags(ImGuiIO& io)
 {
@@ -56,32 +68,43 @@ void setKeyMappings(ImGuiIO& io)
     io.KeyMap[ImGuiKey_Z] =           Keyboard::Z;
 }
 
+void setFontAtlas(ImGuiIO& io, Texture& fontAtlas)
+{
+    unsigned char* data;
+    int width, height;
+    io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
+    fontAtlas = Texture(width, height, data);
+    io.Fonts->TexID = cast(fontAtlas.id());
+}
+
 }
 
 DevGUI::DevGUI(Window* window)
     : d_window(window)
+    , d_shader("Resources/Shaders/DevGUI.vert",
+               "Resources/Shaders/DevGUI.frag")
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
 
-    ImGuiIO& io = ImGui::GetIO();    
+    ImGuiIO& io = ImGui::GetIO();
+    
     setBackendFlags(io);
     setClipboardCallbacks(io, window);
     setKeyMappings(io);
-}
-
-DevGUI::~DevGUI()
-{
+    setFontAtlas(io, d_fontAtlas);
     
-}
+    d_buffer.bind();
 
-void DevGUI::update(float dt)
-{
-    ImGuiIO& io = ImGui::GetIO();
-    io.DeltaTime = dt;
-    io.DisplaySize = ImVec2((float)d_window->width(),
-                            (float)d_window->height());
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+                        sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, pos));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+                        sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, uv));
+    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,
+                        sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, col));
+
+    d_buffer.unbind();
 }
 
 void DevGUI::handleEvent(Event& event)
@@ -140,6 +163,80 @@ void DevGUI::handleEvent(Event& event)
 
     if (event.in<EventCategory::MOUSE>() && io.WantCaptureMouse) {
         event.consume();
+    }
+}
+
+void DevGUI::startFrame(float dt)
+{
+    ImGuiIO& io = ImGui::GetIO();
+    io.DeltaTime = dt;
+    io.DisplaySize = ImVec2((float)d_window->width(),
+                            (float)d_window->height());
+
+    ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
+}
+
+void DevGUI::endFrame()
+{
+    ImGui::Render();
+
+    Sprocket::RenderContext rc;  
+    glEnable(GL_BLEND);
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_SCISSOR_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    ImDrawData* drawData = ImGui::GetDrawData();
+
+    auto proj = Sprocket::Maths::ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
+
+    d_shader.bind();
+    d_shader.loadUniform("Texture", 0);
+    d_shader.loadUniform("ProjMtx", proj);
+
+    d_buffer.bind();
+    d_fontAtlas.bind();
+
+    // Render command lists
+    int width = (int)drawData->DisplaySize.x;
+    int height = (int)drawData->DisplaySize.y;
+
+    for (int n = 0; n < drawData->CmdListsCount; ++n) {
+        const ImDrawList* cmd_list = drawData->CmdLists[n];
+
+        // Upload vertex/index buffers
+        d_buffer.setVertexData(
+            cmd_list->VtxBuffer.Size * sizeof(ImDrawVert),
+            cmd_list->VtxBuffer.Data
+        );
+        d_buffer.setIndexData(
+            cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx),
+            cmd_list->IdxBuffer.Data            
+        );
+
+        for (int i = 0; i < cmd_list->CmdBuffer.Size; ++i) {
+            const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[i];
+            const ImVec4& rect = pcmd->ClipRect;
+
+            if (rect.x < width && rect.y < height && rect.z >= 0 && rect.w >= 0) {
+
+                glScissor((int)rect.x,
+                          (int)(height - rect.w),
+                          (int)(rect.z - rect.x),
+                          (int)(rect.w - rect.y));
+
+                glDrawElements(
+                    GL_TRIANGLES,
+                    pcmd->ElemCount,
+                    GL_UNSIGNED_SHORT,
+                    (void*)(intptr_t)(pcmd->IdxOffset * sizeof(ImDrawIdx))
+                );
+            }
+        }
     }
 }
 

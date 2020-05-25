@@ -38,4 +38,15 @@ void StreamBuffer::unbind() const
     glBindVertexArray(0);
 }
 
+void StreamBuffer::setVertexData(std::size_t size, const void* data)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->value());
+    glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+}
+
+void StreamBuffer::setIndexData(std::size_t size, const void* data)
+{
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+}
+
 }

@@ -39,7 +39,6 @@ add_library(Sprocket STATIC
             Graphics/Primitives/FrameBuffer.cpp
             Graphics/Primitives/StreamBuffer.cpp
 
-            Graphics/Rendering/DevGUIRenderer.cpp
             Graphics/Rendering/DisplayRenderer.cpp
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
