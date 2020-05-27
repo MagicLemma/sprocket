@@ -47,13 +47,11 @@ public:
     void updateEntity(float dt, Entity& entity) override;
     void updateSystem(float dt) override;
 
-    void handleEvent(Event& event) override { return; }
-
     void registerEntity(const Entity& entity) override;
     void deregisterEntity(const Entity& entity) override;
 
-    void addComponent(const Entity& entity, const Component& component) override;
-    void removeComponent(const Entity& entity, const Component& component) override; 
+    void onComponentAttach(const Entity& entity, const Component& component) override;
+    void onComponentDetach(const Entity& entity, const Component& component) override; 
 
     void running(bool isRunning);
     bool running() const { return d_running; }

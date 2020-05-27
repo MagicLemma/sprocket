@@ -66,14 +66,6 @@ void PlayerMovement::handleEvent(Event& event)
     d_keyboard.handleEvent(event);
 }
 
-void PlayerMovement::registerEntity(const Entity& entity)
-{ 
-}
-
-void PlayerMovement::deregisterEntity(const Entity& entity)
-{
-}
-
 void PlayerMovement::enable(bool newEnabled)
 {
     d_enabled = newEnabled;

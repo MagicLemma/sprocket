@@ -175,12 +175,16 @@ void EditorUI::update(float dt)
         bool isRunning = physics.running();
         physics.running(!isRunning);
     }
+    ImGui::SameLine();
+    ImGui::Text(d_worldLayer->d_physicsEngine.running() ? "YES" : "NO");
 
     if (ImGui::Button("Show Colliders")) {
         auto entityRenderer = &d_worldLayer->d_entityRenderer;
         bool wireframe = entityRenderer->showColliders();
         entityRenderer->renderColliders(!wireframe);
     }
+    ImGui::SameLine();
+    ImGui::Text(d_worldLayer->d_entityRenderer.showColliders() ? "YES" : "NO");
 
     std::stringstream ss;
     ss << "Entities: " << d_worldLayer->d_entityManager.entities().size();

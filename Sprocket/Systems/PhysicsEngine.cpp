@@ -271,7 +271,7 @@ void PhysicsEngine::registerEntity(const Entity& entity)
     }
 }
 
-void PhysicsEngine::addComponent(const Entity& entity, const Component& component)
+void PhysicsEngine::onComponentAttach(const Entity& entity, const Component& component)
 {
     if (auto coll = dynamic_cast<const ColliderComponent*>(&component)) {
         if (entity.has<PhysicsComponent>()) {
@@ -297,7 +297,7 @@ void PhysicsEngine::addComponent(const Entity& entity, const Component& componen
     // TODO: Handle adding player components
 }
 
-void PhysicsEngine::removeComponent(const Entity& entity, const Component& component)
+void PhysicsEngine::onComponentDetach(const Entity& entity, const Component& component)
 {
     if (auto coll = dynamic_cast<const ColliderComponent*>(&component)) {
         if (entity.has<PhysicsComponent>()) {

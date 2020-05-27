@@ -210,9 +210,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         crate->add<SelectComponent>();
         entityManager.addEntity(crate);
-
-        entityManager.notifyComponentRemove<PhysicsComponent>(*crate.get());
-        crate->remove<PhysicsComponent>();
     }
 
     {

@@ -38,7 +38,7 @@ public:
     {
         const auto& c = entity.get<T>();
         for (auto& system : d_systems) {
-            system->addComponent(entity, c);
+            system->onComponentAttach(entity, c);
         }
     }
 
@@ -49,7 +49,7 @@ public:
     {
         const auto& c = entity.get<T>();
         for (auto& system : d_systems) {
-            system->removeComponent(entity, c);
+            system->onComponentDetach(entity, c);
         }
     }
 };

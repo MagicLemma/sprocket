@@ -47,16 +47,11 @@ public:
     );
     ~Selector() {}
 
-    void updateEntity(float dt, Entity& entity) override {};
     void updateSystem(float dt) override;
 
     void handleEvent(Event& event) override;
 
-    void registerEntity(const Entity& entity) override {}
     void deregisterEntity(const Entity& entity) override;
-
-    void addComponent(const Entity& entity, const Component& component) override {};
-    void removeComponent(const Entity& entity, const Component& component) override {};
 
     void enable(bool newEnabled);
 
