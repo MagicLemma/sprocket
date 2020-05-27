@@ -36,6 +36,10 @@ class PhysicsEngine : public EntitySystem
         // If this Entity has a PlayerComponent, perform the
         // necessary updates.
 
+    void addCollider(const Entity& entity);
+        // Registers the collider on the entity with the
+        // physics engine.
+
 public:
     PhysicsEngine(const Maths::vec3& gravity);
     ~PhysicsEngine() {}
@@ -47,6 +51,9 @@ public:
 
     void registerEntity(const Entity& entity) override;
     void deregisterEntity(const Entity& entity) override;
+
+    void addComponent(const Entity& entity, const Component& component) override;
+    void removeComponent(const Entity& entity, const Component& component) override; 
 
     void running(bool isRunning);
     bool running() const { return d_running; }

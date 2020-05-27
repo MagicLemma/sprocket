@@ -19,6 +19,10 @@ public:
     virtual void deregisterEntity(const Entity& entity) = 0;
         // Register and deregister entities with this system.
 
+    virtual void addComponent(const Entity& entity, const Component& component) = 0;
+    virtual void removeComponent(const Entity& entity, const Component& component) = 0;
+        // Called whenever a component is added or removed from an entity.
+
     virtual void handleEvent(Event& event) = 0;
         // Called with every event so systems can consume them.
 

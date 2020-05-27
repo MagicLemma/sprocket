@@ -45,6 +45,7 @@ public:
     template <typename T> T* add();
     template <typename T> bool has() const;
     template <typename T> T& get() const;
+    template <typename T> void remove();
 };
 
 template <typename T>
@@ -64,6 +65,11 @@ template <typename T> T& Entity::get() const
 {
     auto component = d_components[getComponentTypeId<T>()];
     return *static_cast<T*>(component.get());
+}
+
+template <typename T> void Entity::remove()
+{
+    d_components[getComponentTypeId<T>()] = nullptr;
 }
 
 }

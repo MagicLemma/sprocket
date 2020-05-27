@@ -96,12 +96,18 @@ float getSpeed(SpeedFactor s)
 
 }
 
+struct ColliderData
+{
+    std::shared_ptr<rp3d::CollisionShape> collisionShape;
+    rp3d::ProxyShape*                     proxyShape;
+};
+
 struct PhysicsEngineImpl
 {
     rp3d::DynamicsWorld world;
 
     std::unordered_map<
-        std::size_t, std::shared_ptr<rp3d::CollisionShape>
+        std::size_t, ColliderData
     > collisionShapes;
         // This is just to manage the lifetimes of the collision bodies. 
         // May want to enhance this in the future for some optimising.
@@ -180,6 +186,9 @@ void PhysicsEngine::updateEntity(float dt, Entity& entity)
             bodyData->setType(rp3d::BodyType::DYNAMIC);
         }
     }
+    else {
+        bodyData->setType(rp3d::BodyType::STATIC);
+    }
     
     if (entity.has<ColliderComponent>()) {
         const auto& collider = entity.get<ColliderComponent>();
@@ -196,6 +205,40 @@ void PhysicsEngine::updateEntity(float dt, Entity& entity)
     if (entity.has<PlayerComponent>()) {
         updatePlayer(dt, entity);
     }
+}
+
+void PhysicsEngine::addCollider(const Entity& entity)
+{
+    auto& colliderData = entity.get<ColliderComponent>();
+
+    std::shared_ptr<rp3d::CollisionShape> collider = nullptr;
+    if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
+        collider = std::make_shared<rp3d::BoxShape>(convert(data->halfExtents));
+    }
+    else if (auto data = std::get_if<SphereCollider>(&colliderData.collider)) {
+        collider = std::make_shared<rp3d::SphereShape>(data->radius);
+    }
+    else if (auto data = std::get_if<CapsuleCollider>(&colliderData.collider)) {
+        collider = std::make_shared<rp3d::CapsuleShape>(
+            data->radius, data->height
+        );
+    }
+    else {
+        SPKT_LOG_ERROR("Entity has a ColliderComponent but no collider!");
+        return; // No collision data.
+    }
+
+    auto& entry = d_impl->rigidBodies[entity.id()];
+    auto ps = entry->addCollisionShape(
+        collider.get(),
+        rp3d::Transform::identity(),
+        colliderData.mass
+    );
+
+    ColliderData data;
+    data.collisionShape = collider;
+    data.proxyShape = ps;
+    d_impl->collisionShapes[entity.id()] = data;
 }
 
 void PhysicsEngine::registerEntity(const Entity& entity)
@@ -223,36 +266,66 @@ void PhysicsEngine::registerEntity(const Entity& entity)
         entry->setAngularDamping(0.0f);
     }
 
-    if (!hasCollider) {
-        return; // No Collider to add.
+    if (hasCollider) {
+        addCollider(entity); // No Collider to add.
     }
+}
 
-    auto& colliderData = entity.get<ColliderComponent>();
+void PhysicsEngine::addComponent(const Entity& entity, const Component& component)
+{
+    if (auto coll = dynamic_cast<const ColliderComponent*>(&component)) {
+        if (entity.has<PhysicsComponent>()) {
+            // Existing entity
+            addCollider(entity);
+        }
+        else {
+            // New entity
+            registerEntity(entity);
+        }
+    }
+    else if (auto phys = dynamic_cast<const PhysicsComponent*>(&component)) {
+        if (entity.has<ColliderComponent>()) {
+            // Existing entity
+            auto& entry = d_impl->rigidBodies[entity.id()];
+            entry->setType(rp3d::BodyType::DYNAMIC);
+        }
+        else {
+            // New entity
+            registerEntity(entity);
+        }
+    }
+    // TODO: Handle adding player components
+}
 
-    std::shared_ptr<rp3d::CollisionShape> collider = nullptr;
-    if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
-        collider = std::make_shared<rp3d::BoxShape>(convert(data->halfExtents));
+void PhysicsEngine::removeComponent(const Entity& entity, const Component& component)
+{
+    if (auto coll = dynamic_cast<const ColliderComponent*>(&component)) {
+        if (entity.has<PhysicsComponent>()) {
+            // Now has physics but no collider
+            auto it = d_impl->collisionShapes.find(entity.id());
+            if (it != d_impl->collisionShapes.end()) {
+                auto& entry = d_impl->rigidBodies[entity.id()];
+                entry->removeCollisionShape(it->second.proxyShape);
+            } else {
+                SPKT_LOG_ERROR("Tried to remove a collider from a shape with no collider!");
+            }
+        }
+        else {
+            // Remove from physics engine
+            deregisterEntity(entity);
+        }
     }
-    else if (auto data = std::get_if<SphereCollider>(&colliderData.collider)) {
-        collider = std::make_shared<rp3d::SphereShape>(data->radius);
+    else if (auto phys = dynamic_cast<const PhysicsComponent*>(&component)) {
+        if (entity.has<ColliderComponent>()) {
+            // Now has collider but no physics
+            auto& entry = d_impl->rigidBodies[entity.id()];
+            entry->setType(rp3d::BodyType::STATIC);
+        }
+        else {
+            // Remove from physics engine
+            deregisterEntity(entity);
+        }
     }
-    else if (auto data = std::get_if<CapsuleCollider>(&colliderData.collider)) {
-        collider = std::make_shared<rp3d::CapsuleShape>(
-            data->radius, data->height
-        );
-    }
-    else {
-        SPKT_LOG_ERROR("Entity has a ColliderComponent but no collider!");
-        return; // No collision data.
-    }
-
-    auto ps = entry->addCollisionShape(
-        collider.get(),
-        rp3d::Transform::identity(),
-        colliderData.mass
-    );
-
-    d_impl->collisionShapes[entity.id()] = collider;
 }
 
 void PhysicsEngine::deregisterEntity(const Entity& entity)

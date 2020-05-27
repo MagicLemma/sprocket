@@ -55,6 +55,9 @@ public:
     void registerEntity(const Entity& entity) override {}
     void deregisterEntity(const Entity& entity) override;
 
+    void addComponent(const Entity& entity, const Component& component) override {};
+    void removeComponent(const Entity& entity, const Component& component) override {};
+
     void enable(bool newEnabled);
 
     Entity* hoveredEntity() const { return d_hoveredEntity; }

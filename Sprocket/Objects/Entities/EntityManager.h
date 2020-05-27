@@ -30,6 +30,28 @@ public:
     void draw(EntityRenderer* renderer);
 
     const Entities& entities() const { return d_entities; }
+
+    template <typename T>
+    void notifyComponentAdd(const Entity& entity)
+        // Call after adding a component to this entity if the entity
+        // if not already registered with the system.
+    {
+        const auto& c = entity.get<T>();
+        for (auto& system : d_systems) {
+            system->addComponent(entity, c);
+        }
+    }
+
+    template <typename T>
+    void notifyComponentRemove(const Entity& entity)
+        // Call BEFORE you remove the component from the entity. This does
+        // not remove the component for you.
+    {
+        const auto& c = entity.get<T>();
+        for (auto& system : d_systems) {
+            system->removeComponent(entity, c);
+        }
+    }
 };
 
 }
