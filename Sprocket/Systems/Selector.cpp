@@ -26,11 +26,14 @@ void Selector::updateSystem(float dt)
         clearHovered();
         clearSelected();
     }
+    d_mouse.update();
 }
 
 void Selector::handleEvent(Event& event)
 {
     if (!d_enabled) { return; }
+
+    d_mouse.handleEvent(event);
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {
         if (e->isConsumed()) { return; }
@@ -99,7 +102,11 @@ void Selector::setSelected(Entity* entity)
 Entity* Selector::getMousedOver()
 {
     Maths::vec3 rayStart = Maths::inverse(d_camera->view()) * Maths::vec4(0, 0, 0, 1);
-    Maths::vec3 direction = MousePicker::getRay(d_window, d_camera, d_lens);
+    Maths::vec3 direction = MousePicker::getRay(
+        d_mouse.getMousePos(),
+        d_window,
+        d_camera,
+        d_lens);
     return d_physicsEngine->raycast(rayStart, direction);
 }
 

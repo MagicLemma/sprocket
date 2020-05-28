@@ -13,11 +13,11 @@ Slider::Slider(float width, float height)
 {
 }
 
-void Slider::updateImpl(Window* window, DisplayRenderer* renderer)
+void Slider::updateImpl(DisplayRenderer* renderer)
 {
     if (d_updating) {
-        if (window->getMouseOffset().x != 0) {
-            float newHorizPos = toLocalCoords(window->getMousePos()).x - d_picker.width/2;
+        if (d_mouse.getMouseOffset().x != 0) {
+            float newHorizPos = toLocalCoords(d_mouse.getMousePos()).x - d_picker.width/2;
             auto& offset = d_picker.position;
             Maths::clamp(newHorizPos, left(), right());
             offset.x = newHorizPos;
@@ -29,20 +29,20 @@ void Slider::updateImpl(Window* window, DisplayRenderer* renderer)
     renderer->draw(toScreenCoords(d_picker));
 }
 
-void Slider::handleEventImpl(Window* window, Event& event)
+void Slider::handleEventImpl(Event& event)
 {
-    if (containsPoint(picker(), toLocalCoords(window->getMousePos()))) {
+    if (containsPoint(picker(), toLocalCoords(d_mouse.getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_updating = true;
                 e->consume();
             }
         }       
-    } else if (containsPoint(bar(), toLocalCoords(window->getMousePos()))) {
+    } else if (containsPoint(bar(), toLocalCoords(d_mouse.getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_updating = true;
-                float newHorizPos = toLocalCoords(window->getMousePos()).x - d_picker.width/2;
+                float newHorizPos = toLocalCoords(d_mouse.getMousePos()).x - d_picker.width/2;
                 auto& offset = d_picker.position;
                 Maths::clamp(newHorizPos, left(), right());
                 offset.x = newHorizPos;

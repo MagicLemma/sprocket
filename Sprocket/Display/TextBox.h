@@ -9,8 +9,8 @@ class TextBox : public Widget
 {
     Text        d_text;
 
-    void updateImpl(Window* window, DisplayRenderer* renderer) override;
-    void handleEventImpl(Window* window, Event& event) override {};
+    void updateImpl(DisplayRenderer* renderer) override;
+    void handleEventImpl(Event& event) override {};
 
 public:
     TextBox(float width, float height, const std::string& message);

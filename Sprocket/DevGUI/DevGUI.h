@@ -10,7 +10,7 @@
 
 namespace Sprocket {
 
-class DevGUI
+class DeveloperUI
 {
     Window* d_window;
     Shader  d_shader;
@@ -21,7 +21,7 @@ class DevGUI
         // for rendering it
 
 public:
-    DevGUI(Window* window);
+    DeveloperUI(Window* window);
 
     void handleEvent(Event& event);
 

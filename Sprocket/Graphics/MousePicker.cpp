@@ -4,11 +4,13 @@
 namespace Sprocket {
 namespace MousePicker {
 
-Maths::vec3 getRay(Window* window, Camera* camera, Lens* lens)
+Maths::vec3 getRay(
+    const Maths::vec2& mousePos,
+    Window* window,
+    Camera* camera,
+    Lens* lens
+)
 {
-    // Pixel Space
-    Maths::vec2 mousePos = window->getMousePos();
-
     // Homogeneous Clip Space
     Maths::vec4 ray = {
         (2.0f * mousePos.x) / window->width() - 1,

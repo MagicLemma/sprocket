@@ -12,6 +12,7 @@ PlayerMovement::PlayerMovement(Window* window)
 void PlayerMovement::updateSystem(float dt)
 {
     d_deltaTime = dt;
+    d_mouse.update();
 }
 
 void PlayerMovement::updateEntity(float dt, Entity& entity)
@@ -32,8 +33,8 @@ void PlayerMovement::updateEntity(float dt, Entity& entity)
         player.movingRight = d_keyboard.isKeyDown(Keyboard::D);
         player.jumping = d_keyboard.isKeyDown(Keyboard::SPACE);
         
-        player.yaw -= d_window->getMouseOffset().x * sensitivity;
-        player.pitch -= d_window->getMouseOffset().y * sensitivity;
+        player.yaw -= d_mouse.getMouseOffset().x * sensitivity;
+        player.pitch -= d_mouse.getMouseOffset().y * sensitivity;
         Maths::clamp(player.pitch, -89.0f, 89.0f);
     }
     else {
@@ -64,6 +65,7 @@ void PlayerMovement::updateEntity(float dt, Entity& entity)
 void PlayerMovement::handleEvent(Event& event)
 {
     d_keyboard.handleEvent(event);
+    d_mouse.handleEvent(event);
 }
 
 void PlayerMovement::enable(bool newEnabled)

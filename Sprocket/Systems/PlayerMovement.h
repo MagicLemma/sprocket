@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "EntitySystem.h"
 #include "KeyboardProxy.h"
+#include "MouseProxy.h"
 
 namespace Sprocket {
 
@@ -13,6 +14,7 @@ class PlayerMovement : public EntitySystem
     bool d_enabled = true;
 
     KeyboardProxy d_keyboard;
+    MouseProxy d_mouse;
 
 public:
     PlayerMovement(Window* window);

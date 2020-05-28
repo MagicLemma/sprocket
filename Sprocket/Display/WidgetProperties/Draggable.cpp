@@ -10,18 +10,21 @@ Draggable::Draggable()
 {
 }
 
-void Draggable::update(Widget* widget, Window* window)
+void Draggable::update(Widget* widget)
 {
+    d_mouse.update();
     if (d_moving) {
         auto currentPosition = widget->position();
-        widget->position(currentPosition + window->getMouseOffset());
+        widget->position(currentPosition + d_mouse.getMouseOffset());
     }
 }
 
-void Draggable::handleEvent(Widget* widget, Window* window, Event& event)
+void Draggable::handleEvent(Widget* widget, Event& event)
 {
+    d_mouse.handleEvent(event);
+
     Quad widgetQuad{{0.0, 0.0}, widget->width(), widget->height()};
-    if (containsPoint(widgetQuad, widget->toLocalCoords(window->getMousePos()))) {
+    if (containsPoint(widgetQuad, widget->toLocalCoords(d_mouse.getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_moving = true;

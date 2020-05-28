@@ -1,4 +1,5 @@
 #include "EditorUI.h"
+#include "MouseEvent.h"
 
 #include <sstream>
 

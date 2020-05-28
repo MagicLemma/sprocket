@@ -1,5 +1,4 @@
 #pragma once
-#include "Window.h"
 #include "Event.h"
 #include "Maths.h"
 #include "Camera.h"
@@ -26,13 +25,11 @@ class FirstPersonCamera : public Camera
     float d_sensitivity;
         // Mouse sensitivity
 
-    Window* d_window;
-
     KeyboardProxy d_keyboard;
     MouseProxy d_mouse;
 
 public:
-    FirstPersonCamera(Window* window);
+    FirstPersonCamera();
 
     Maths::mat4 view() const override;
     void update(float timeDelta) override;

@@ -4,13 +4,14 @@
 
 namespace Sprocket {
 
-VerticalConstraint::VerticalConstraint(Type type, float offset)
+VerticalConstraint::VerticalConstraint(Type type, float offset, Window* window)
     : d_type(type)
     , d_offset(offset)
+    , d_window(window)
 {
 }
 
-void VerticalConstraint::update(Widget* widget, Window* window)
+void VerticalConstraint::update(Widget* widget)
 {
     auto current_position = widget->position();
 
@@ -24,13 +25,13 @@ void VerticalConstraint::update(Widget* widget, Window* window)
         case Type::BOTTOM: {
             widget->position({
                 current_position.x,
-                (float)window->height() - widget->height() - d_offset
+                (float)d_window->height() - widget->height() - d_offset
             });
         } break;
         case Type::CENTRE: {
             widget->position({
                 current_position.x,
-                ((float)window->height() - widget->height())/2.0f
+                ((float)d_window->height() - widget->height())/2.0f
             });
         } break;
         default: {

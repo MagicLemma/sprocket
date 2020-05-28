@@ -44,8 +44,6 @@ Window::Window(
 		nullptr
 	);
 
-	d_mouseOffset = getMousePos();
-
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
 
@@ -174,11 +172,6 @@ void Window::onUpdate()
 {
 	glfwSwapBuffers(d_impl->window);
 	glfwPollEvents();
-
-	static Maths::vec2 prevMousePos = getMousePos();
-	Maths::vec2 mousePos = getMousePos();
-	d_mouseOffset = mousePos - prevMousePos;
-	prevMousePos = mousePos;
 }
 
 void Window::clear()
@@ -200,18 +193,6 @@ void Window::setCursorVisibility(bool visibility)
 void Window::setCallback(EventCallback cb)
 {
 	d_callback = cb;
-}
-
-Maths::vec2 Window::getMousePos()
-{
-	double x, y;
-	glfwGetCursorPos(d_impl->window, &x, &y);
-	return {x, y};
-}
-
-Maths::vec2 Window::getMouseOffset()
-{
-	return d_mouseOffset;
 }
 
 const char* Window::getClipboardData()

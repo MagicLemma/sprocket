@@ -24,13 +24,14 @@ private:
         // Offset from the side in pixels. This is ignored for
         // CENTRE constraints. TODO: Can we do better than this?
 
-public:
-    VerticalConstraint(Type type, float offset);
+    Window* d_window;
 
-    virtual void update(Widget* widget, Window* window) override;
+public:
+    VerticalConstraint(Type type, float offset, Window* window);
+
+    virtual void update(Widget* widget) override;
 
     virtual void handleEvent(Widget* widget,
-                             Window* window,
                              Event& event) override {}
 };
 

@@ -102,10 +102,10 @@ ColourPalette::ColourPalette(float width, float height)
     d_palettePicker.roundness = 1.0f;
 }
     
-void ColourPalette::updateImpl(Window* window, DisplayRenderer* renderer)
+void ColourPalette::updateImpl(DisplayRenderer* renderer)
 {
     if (d_movingPalettePicker) {
-        Maths::vec2 newPosition = toLocalCoords(window->getMousePos());
+        Maths::vec2 newPosition = toLocalCoords(d_mouse.getMousePos());
         Maths::clamp(newPosition.x, d_paletteQuad.position.x, d_paletteQuad.position.x + d_paletteQuad.width);
         Maths::clamp(newPosition.y, d_paletteQuad.position.y, d_paletteQuad.position.y + d_paletteQuad.height);
         d_palettePicker.position = newPosition - Maths::vec2{d_palettePicker.width/2, d_palettePicker.height/2};
@@ -117,7 +117,7 @@ void ColourPalette::updateImpl(Window* window, DisplayRenderer* renderer)
     }
 
     if (d_movingSliderPicker) {
-        float newVertPos = toLocalCoords(window->getMousePos()).y - d_sliderPicker.height/2;
+        float newVertPos = toLocalCoords(d_mouse.getMousePos()).y - d_sliderPicker.height/2;
         Maths::clamp(newVertPos, d_blackWhiteQuad.position.y - d_sliderPicker.height/2, d_blackWhiteQuad.position.y + d_blackWhiteQuad.height - d_sliderPicker.height/2);
         d_sliderPicker.position.y = newVertPos;
     }
@@ -157,13 +157,13 @@ void ColourPalette::updateImpl(Window* window, DisplayRenderer* renderer)
     renderer->draw(toScreenCoords(d_sliderPicker));
 }
 
-void ColourPalette::handleEventImpl(Window* window, Event& event)
+void ColourPalette::handleEventImpl(Event& event)
 {
-    if (containsPoint(d_paletteQuad, toLocalCoords(window->getMousePos()))) {
+    if (containsPoint(d_paletteQuad, toLocalCoords(d_mouse.getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_movingPalettePicker = true;
-                Maths::vec2 newPosition = toLocalCoords(window->getMousePos());
+                Maths::vec2 newPosition = toLocalCoords(d_mouse.getMousePos());
                 Maths::clamp(newPosition.x, d_paletteQuad.position.x, d_paletteQuad.position.x + d_paletteQuad.width);
                 Maths::clamp(newPosition.y, d_paletteQuad.position.y, d_paletteQuad.position.y + d_paletteQuad.height);
                 d_palettePicker.position = newPosition - Maths::vec2{d_palettePicker.width/2, d_palettePicker.height/2};
@@ -175,11 +175,11 @@ void ColourPalette::handleEventImpl(Window* window, Event& event)
                 e->consume();
             }
         }
-    } else if (containsPoint(d_blackWhiteQuad, toLocalCoords(window->getMousePos()))) {
+    } else if (containsPoint(d_blackWhiteQuad, toLocalCoords(d_mouse.getMousePos()))) {
         if (auto e = event.as<MouseButtonPressedEvent>()) {
             if (!e->isConsumed() && e->button() == Mouse::LEFT) {
                 d_movingSliderPicker = true;
-                float newVertPos = toLocalCoords(window->getMousePos()).y - d_sliderPicker.height/2;
+                float newVertPos = toLocalCoords(d_mouse.getMousePos()).y - d_sliderPicker.height/2;
                 Maths::clamp(newVertPos, d_blackWhiteQuad.position.y - d_sliderPicker.height/2, d_blackWhiteQuad.position.y + d_blackWhiteQuad.height - d_sliderPicker.height/2);
                 d_sliderPicker.position.y = newVertPos;
                 e->consume();

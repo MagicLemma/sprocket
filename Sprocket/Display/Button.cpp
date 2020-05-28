@@ -42,7 +42,7 @@ Button::Button(float width,
     d_actual = d_buttonNormal;
 }
 
-void Button::updateImpl(Window* window, DisplayRenderer* renderer)
+void Button::updateImpl(DisplayRenderer* renderer)
 {
     float speed = 0.2f;
 
@@ -69,10 +69,10 @@ void Button::updateImpl(Window* window, DisplayRenderer* renderer)
     renderer->draw(toScreenCoords(d_actual));
 }
 
-void Button::handleEventImpl(Window* window, Event& event)
+void Button::handleEventImpl(Event& event)
 {
     if (auto e = event.as<MouseMovedEvent>()) {
-        bool mouseOnButton = containsPoint(d_actual, toLocalCoords(window->getMousePos()));
+        bool mouseOnButton = containsPoint(d_actual, toLocalCoords(d_mouse.getMousePos()));
         if (!d_hovered && mouseOnButton) {
             d_hovered = true;
             d_hoverCallback();
@@ -84,7 +84,7 @@ void Button::handleEventImpl(Window* window, Event& event)
     }
     else if (auto e = event.as<MouseButtonPressedEvent>()) {
         if (!e->isConsumed() && e->button() == Mouse::LEFT) {
-            if (containsPoint(d_actual, toLocalCoords(window->getMousePos()))) {
+            if (containsPoint(d_actual, toLocalCoords(d_mouse.getMousePos()))) {
                 d_clicked = true;
                 d_clickCallback();
                 e->consume();
@@ -96,7 +96,7 @@ void Button::handleEventImpl(Window* window, Event& event)
             d_unclickCallback();
         }
     }
-    else if (containsPoint(d_base, toLocalCoords(window->getMousePos()))) {
+    else if (containsPoint(d_base, toLocalCoords(d_mouse.getMousePos()))) {
         event.consume();
     }
 }

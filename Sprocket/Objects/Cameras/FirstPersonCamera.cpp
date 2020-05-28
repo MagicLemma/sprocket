@@ -1,12 +1,11 @@
 #include "FirstPersonCamera.h"
-#include "WindowEvent.h"
 
 #include <cmath>
 #include <algorithm>
 
 namespace Sprocket {
 
-FirstPersonCamera::FirstPersonCamera(Window* window)
+FirstPersonCamera::FirstPersonCamera()
     : Camera()
     , d_position(Maths::vec3(0.0f, 0.0f, 0.0f))
     , d_direction(Maths::vec3(0.0f, 0.0f, -1.0f))
@@ -14,7 +13,6 @@ FirstPersonCamera::FirstPersonCamera(Window* window)
     , d_yaw(0)
     , d_roll(0)
     , d_sensitivity(0.15f)
-    , d_window(window)
 {
 }
 
@@ -25,6 +23,8 @@ Maths::mat4 FirstPersonCamera::view() const
 
 void FirstPersonCamera::update(float timeDelta)
 {
+    d_mouse.update();
+
     float speed = 10.0f * timeDelta;
 
     Maths::vec3 forwards = d_direction;
@@ -54,10 +54,12 @@ void FirstPersonCamera::update(float timeDelta)
         d_position -= speed * up;
     }
 
-    Maths::vec2 offset = d_window->getMouseOffset();
-    d_yaw += d_sensitivity * offset.x;
-    d_pitch += d_sensitivity * offset.y;
-    Maths::clamp(d_pitch, -89.0, 89.0);
+    Maths::vec2 offset = d_mouse.getMouseOffset();
+    if (offset != Maths::vec2{0.0, 0.0}) {
+        d_yaw += d_sensitivity * offset.x;
+        d_pitch += d_sensitivity * offset.y;
+        Maths::clamp(d_pitch, -89.0, 89.0);
+    }
 
     d_direction.x = Maths::sind(d_yaw) * Maths::cosd(d_pitch);
     d_direction.y = -Maths::sind(d_pitch);

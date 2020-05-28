@@ -86,10 +86,6 @@ class Window
 	EventCallback d_callback;
 		// A callback to be called with every event from the window.
 
-	Maths::vec2 d_mouseOffset;
-		// Updated every frame. This is the mouse offset between the
-		// current frame and the one before it.
-
 private:
 	// Deleted Constructors
 	Window(Window&&) = delete;
@@ -119,10 +115,6 @@ public:
 
 	// Window Utilities
 	void setCursorVisibility(bool visibility);
-
-	// Mouse Utilities
-	Maths::vec2 getMousePos();
-	Maths::vec2 getMouseOffset();
 
 	// Clipboard Utilities
 	const char* getClipboardData();

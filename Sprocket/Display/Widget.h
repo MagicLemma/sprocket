@@ -4,6 +4,7 @@
 #include "Quad.h"
 #include "WidgetProperty.h"
 #include "DisplayRenderer.h"
+#include "MouseProxy.h"
 
 #include <variant>
 #include <vector>
@@ -33,8 +34,8 @@ class Widget
         // Recurses up the Widget tree to get the position of this
         // Widget with respect to the screen.
 
-    virtual void updateImpl(Window* window, DisplayRenderer* renderer) = 0;
-    virtual void handleEventImpl(Window* window, Event& event) = 0;
+    virtual void updateImpl(DisplayRenderer* renderer) = 0;
+    virtual void handleEventImpl(Event& event) = 0;
         // Recurses down through all children and draws them too.
 
     bool d_active;
@@ -59,13 +60,15 @@ protected:
         // This is protected so external code cannot make widgets children
         // of other widgets, that can only happen within Widget code.
 
+    MouseProxy d_mouse;
+
 public:
     Widget(float width, float height);
 
     virtual ~Widget();
 
-    void update(Window* window, DisplayRenderer* renderer);
-    void handleEvent(Window* window, Event& event);
+    void update(DisplayRenderer* renderer);
+    void handleEvent(Event& event);
 
     Quad& base() { return d_base; }
     const Quad& base() const { return d_base; }

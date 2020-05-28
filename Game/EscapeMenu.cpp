@@ -46,8 +46,8 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     d_container.base().roundness = 0.081f;
     d_container.addProperty<Draggable>();
 
-    //d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f);
-    //d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f);
+    //d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f, d_window);
+    //d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f, d_window);
 
     auto topSlider = d_container.add<Slider>(300.0f, 50.0f);
     setSliderAttrs(topSlider);
@@ -127,7 +127,7 @@ void EscapeMenu::handleEvent(Sprocket::Event& event)
     }
 
     if (d_worldLayer->d_paused) {
-        d_container.handleEvent(d_core.window, event);
+        d_container.handleEvent(event);
         event.consume();
     }
 }
@@ -137,7 +137,7 @@ void EscapeMenu::update(float dt)
     d_displayRenderer.update();
 
     if (d_worldLayer->d_paused) {
-        d_container.update(d_core.window, &d_displayRenderer);
+        d_container.update(&d_displayRenderer);
         d_core.window->setCursorVisibility(true);
     }
 }

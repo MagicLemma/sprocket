@@ -5,6 +5,7 @@
 #include "RenderContext.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <ImGuizmo.h>
 #include <glad/glad.h>
 
@@ -79,16 +80,16 @@ void setFontAtlas(ImGuiIO& io, Texture& fontAtlas)
 
 }
 
-DevGUI::DevGUI(Window* window)
+DeveloperUI::DeveloperUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/DevGUI.vert",
                "Resources/Shaders/DevGUI.frag")
 {
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
+    auto c = ImGui::CreateContext();
+    ImGui::StyleColorsDark(&c->Style);
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = c->IO;
     
     setBackendFlags(io);
     setClipboardCallbacks(io, window);
@@ -107,7 +108,7 @@ DevGUI::DevGUI(Window* window)
     d_buffer.unbind();
 }
 
-void DevGUI::handleEvent(Event& event)
+void DeveloperUI::handleEvent(Event& event)
 {
     if (event.isConsumed()) { return; }
 
@@ -166,7 +167,7 @@ void DevGUI::handleEvent(Event& event)
     }
 }
 
-void DevGUI::startFrame(float dt)
+void DeveloperUI::startFrame(float dt)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = dt;
@@ -177,7 +178,7 @@ void DevGUI::startFrame(float dt)
     ImGuizmo::BeginFrame();
 }
 
-void DevGUI::endFrame()
+void DeveloperUI::endFrame()
 {
     ImGui::Render();
 

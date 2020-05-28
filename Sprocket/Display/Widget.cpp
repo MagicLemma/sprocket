@@ -59,8 +59,10 @@ void Widget::makeChild(std::shared_ptr<Widget> child)
     child->d_parent = this;
 }
 
-void Widget::update(Window* window, DisplayRenderer* renderer)
+void Widget::update(DisplayRenderer* renderer)
 {
+    d_mouse.update();
+
     if (!d_active) {
         return;
     }
@@ -68,33 +70,35 @@ void Widget::update(Window* window, DisplayRenderer* renderer)
     renderer->draw(toScreenCoords(d_base));
 
     for (const auto& property : d_properties) {
-        property->update(this, window);
+        property->update(this);
     }
 
-    updateImpl(window, renderer);
+    updateImpl(renderer);
 
     for (const auto& child : d_children) {
-        child->update(window, renderer);
+        child->update(renderer);
     }
 }
 
-void Widget::handleEvent(Window* window, Event& event)
+void Widget::handleEvent(Event& event)
 {
+    d_mouse.handleEvent(event);
+
     if (d_active) {
         for (const auto& child : d_children) {
-            child->handleEvent(window, event);
+            child->handleEvent(event);
         }
 
-        handleEventImpl(window, event);
+        handleEventImpl(event);
 
         for (const auto& property : d_properties) {
-            property->handleEvent(this, window, event);
+            property->handleEvent(this, event);
         }
 
         if (event.in<EventCategory::MOUSE>() &&
             event.in<EventCategory::INPUT>() &&
             !event.isConsumed() &&
-            containsPoint(toScreenCoords(d_base), window->getMousePos())) {
+            containsPoint(toScreenCoords(d_base), d_mouse.getMousePos())) {
             
             event.consume();
         }

@@ -7,7 +7,7 @@ class EditorUI : public Sprocket::Layer
 {
     WorldLayer* d_worldLayer;
 
-    Sprocket::DevGUI d_editorUI;
+    Sprocket::DeveloperUI d_editorUI;
 
     Sprocket::ModelManager* d_modelManager;
 

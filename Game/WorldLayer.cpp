@@ -25,7 +25,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_playerMovement(core.window)
     , d_selector(core.window, &d_editorCamera, &d_lens, &d_physicsEngine)
     , d_entityManager({&d_playerMovement, &d_physicsEngine, &d_selector})
-    , d_observerCamera(core.window)
+    , d_observerCamera()
 {
     using namespace Sprocket;
 
