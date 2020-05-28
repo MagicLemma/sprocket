@@ -25,7 +25,8 @@ add_library(Sprocket STATIC
             Core/Layer.cpp
             Core/Scene.cpp
 
-            DevGUI/DevGUI.cpp
+            UI/DevUI.cpp
+            UI/SimpleUI.cpp
 
             Graphics/MousePicker.cpp
             Graphics/RenderContext.cpp

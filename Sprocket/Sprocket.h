@@ -10,8 +10,9 @@
 #include "Core/Layer.h"
 #include "Core/Scene.h"
 
-// DEV GUI
-#include "DevGUI/DevGUI.h"
+// UI
+#include "UI/DevUI.h"
+#include "UI/SimpleUI.h"
 
 // EVENTS
 #include "Events/Event.h"

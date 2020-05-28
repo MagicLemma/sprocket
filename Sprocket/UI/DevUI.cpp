@@ -1,4 +1,4 @@
-#include "DevGUI.h"
+#include "DevUI.h"
 #include "MouseEvent.h"
 #include "KeyboardEvent.h"
 #include "WindowEvent.h"
@@ -10,6 +10,7 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
+namespace DevUI {
 namespace {
 
 unsigned int cast(ImTextureID id)
@@ -78,25 +79,68 @@ void setFontAtlas(ImGuiIO& io, Texture& fontAtlas)
     io.Fonts->TexID = cast(fontAtlas.id());
 }
 
+ImGuizmo::OPERATION getMode(GizmoMode mode)
+{
+    switch (mode) {
+        case GizmoMode::TRANSLATION: return ImGuizmo::OPERATION::TRANSLATE;
+        case GizmoMode::ROTATION:    return ImGuizmo::OPERATION::ROTATE;
+        default: {
+            SPKT_LOG_ERROR("Unknown GizmoMode!");
+            return ImGuizmo::OPERATION::TRANSLATE;
+        }
+    }
 }
 
-DeveloperUI::DeveloperUI(Window* window)
-    : d_window(window)
-    , d_shader("Resources/Shaders/DevGUI.vert",
-               "Resources/Shaders/DevGUI.frag")
+ImGuizmo::MODE getCoords(GizmoCoords coords) 
+{
+    switch (coords) {
+        case GizmoCoords::WORLD: return ImGuizmo::MODE::WORLD;
+        case GizmoCoords::LOCAL: return ImGuizmo::MODE::LOCAL;
+        default: {
+            SPKT_LOG_ERROR("Unknown GizmoCoords!");
+            return ImGuizmo::MODE::WORLD;
+        }
+    }
+}
+
+}
+
+struct DevUIData
+{
+    ImGuiContext* context;
+
+    // SPROCKET OBJECTS
+    Window* window;
+    Shader  shader;
+    Texture fontAtlas;
+
+    StreamBuffer buffer;
+        // Buffer used to store the render data created by ImGui
+        // for rendering it
+
+    DevUIData()
+        : shader("Resources/Shaders/DevGUI.vert",
+                 "Resources/Shaders/DevGUI.frag")
+    {}
+};
+
+Context::Context(Window* window)
+    : d_impl(std::make_shared<DevUIData>())
 {
     IMGUI_CHECKVERSION();
-    auto c = ImGui::CreateContext();
-    ImGui::StyleColorsDark(&c->Style);
+    d_impl->context = ImGui::CreateContext();
+    d_impl->window = window;
 
-    ImGuiIO& io = c->IO;
+    ImGui::StyleColorsDark(&d_impl->context->Style);
+
+    ImGuiIO& io = d_impl->context->IO;
     
     setBackendFlags(io);
     setClipboardCallbacks(io, window);
     setKeyMappings(io);
-    setFontAtlas(io, d_fontAtlas);
+    setFontAtlas(io, d_impl->fontAtlas);
     
-    d_buffer.bind();
+    d_impl->buffer.bind();
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
                         sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, pos));
@@ -105,14 +149,14 @@ DeveloperUI::DeveloperUI(Window* window)
     glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,
                         sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, col));
 
-    d_buffer.unbind();
+    d_impl->buffer.unbind();
 }
 
-void DeveloperUI::handleEvent(Event& event)
+void Context::handleEvent(Event& event)
 {
     if (event.isConsumed()) { return; }
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = d_impl->context->IO;
 
     if (auto e = event.as<MouseButtonPressedEvent>()) {    
         io.MouseDown[e->button()] = true;
@@ -124,6 +168,9 @@ void DeveloperUI::handleEvent(Event& event)
 
     else if (auto e = event.as<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->xPos(), e->yPos());
+        if (ImGui::IsAnyWindowHovered()) {
+            e->consume();
+        }
     }
 
     else if (auto e = event.as<MouseScrolledEvent>()) {
@@ -167,19 +214,26 @@ void DeveloperUI::handleEvent(Event& event)
     }
 }
 
-void DeveloperUI::startFrame(float dt)
+void Context::update(float dt)
 {
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO& io = d_impl->context->IO;
     io.DeltaTime = dt;
-    io.DisplaySize = ImVec2((float)d_window->width(),
-                            (float)d_window->height());
+    io.DisplaySize = ImVec2((float)d_impl->window->width(),
+                            (float)d_impl->window->height());
+    
+    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+}
 
+void Context::startFrame()
+{
+    ImGui::SetCurrentContext(d_impl->context);
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 }
 
-void DeveloperUI::endFrame()
+void Context::endFrame()
 {
+    ImGui::SetCurrentContext(d_impl->context);
     ImGui::Render();
 
     Sprocket::RenderContext rc;  
@@ -191,16 +245,16 @@ void DeveloperUI::endFrame()
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    ImDrawData* drawData = ImGui::GetDrawData();
+    ImDrawData* drawData = &d_impl->context->DrawData;
 
     auto proj = Sprocket::Maths::ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
 
-    d_shader.bind();
-    d_shader.loadUniform("Texture", 0);
-    d_shader.loadUniform("ProjMtx", proj);
+    d_impl->shader.bind();
+    d_impl->shader.loadUniform("Texture", 0);
+    d_impl->shader.loadUniform("ProjMtx", proj);
 
-    d_buffer.bind();
-    d_fontAtlas.bind();
+    d_impl->buffer.bind();
+    d_impl->fontAtlas.bind();
 
     // Render command lists
     int width = (int)drawData->DisplaySize.x;
@@ -210,11 +264,11 @@ void DeveloperUI::endFrame()
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
         // Upload vertex/index buffers
-        d_buffer.setVertexData(
+        d_impl->buffer.setVertexData(
             cmd_list->VtxBuffer.Size * sizeof(ImDrawVert),
             cmd_list->VtxBuffer.Data
         );
-        d_buffer.setIndexData(
+        d_impl->buffer.setIndexData(
             cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx),
             cmd_list->IdxBuffer.Data            
         );
@@ -241,4 +295,123 @@ void DeveloperUI::endFrame()
     }
 }
 
+void Context::startWindow(const std::string& name, bool* open, int flags)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::Begin(name.c_str(), open, flags);
+}
+
+void Context::endWindow()
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::End();
+}
+
+bool Context::startTreeNode(const std::string& name)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    return ImGui::TreeNode(name.c_str());
+}
+
+void Context::endTreeNode()
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::TreePop();
+}
+
+bool Context::button(const std::string& name)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    return ImGui::Button(name.c_str());
+}
+
+bool Context::radioButton(const std::string& name, bool active)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    return ImGui::RadioButton(name.c_str(), active);
+}
+
+bool Context::collapsingHeader(const std::string& name)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    return ImGui::CollapsingHeader(name.c_str());
+}
+
+void Context::text(const std::string& text)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::Text(text.c_str());
+}
+
+void Context::checkbox(const std::string& name, bool* value)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::Checkbox(name.c_str(), value);
+}
+
+void Context::sliderFloat(const std::string& name, float* value, float lower, float upper)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
+}
+
+void Context::dragFloat(const std::string& name, float* value, float speed)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::DragFloat(name.c_str(), value, speed);
+}
+
+void Context::dragFloat3(const std::string& name, Maths::vec3* values, float speed)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::DragFloat3(name.c_str(), &values->x, speed);
+}
+
+void Context::gizmo(Maths::mat4* matrix,
+                    const Maths::mat4& view,
+                    const Maths::mat4& projection,
+                    GizmoMode mode,
+                    GizmoCoords coords)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGuizmo::Manipulate(
+        Maths::cast(view),
+        Maths::cast(projection),
+        getMode(mode),
+        getCoords(coords),
+        Maths::cast(*matrix)
+    );
+}
+
+void Context::sameLine()
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::SameLine();
+}
+
+void Context::separator()
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::Separator();
+}
+
+void Context::pushID(std::size_t id)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::PushID((int)id);
+}
+
+void Context::popID()
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::PopID();
+}
+
+void Context::demoWindow()
+{
+    static bool show = true;
+    ImGui::ShowDemoWindow(&show);
+}
+
+}
 }

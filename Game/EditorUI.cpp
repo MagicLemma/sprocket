@@ -3,113 +3,103 @@
 
 #include <sstream>
 
-#include <imgui.h>
-#include <ImGuizmo.h>
-
 namespace {
 
-void addEntityToList(const Sprocket::Entity& entity)
+void addEntityToList(Sprocket::DevUI::Context& ui,
+                     const Sprocket::Entity& entity)
 {
     using namespace Sprocket;
     
-    ImGui::PushID((int)entity.id());
-    if (ImGui::TreeNode(entity.name().c_str())) {
-        ImGui::TreePop();
+    ui.pushID(entity.id());
+    if (ui.startTreeNode(entity.name())) {
+        ui.endTreeNode();
     }
-    ImGui::PopID();      
+    ui.popID();      
 }
 
-void selectedEntityInfo(Sprocket::Entity& entity,
+void selectedEntityInfo(Sprocket::DevUI::Context& ui,
+                        Sprocket::Entity& entity,
                         const Sprocket::Maths::mat4& view,
                         const Sprocket::Maths::mat4& proj)
 {
     using namespace Sprocket;
     using namespace Maths; 
 
-    ImGui::Begin("Selected Entity");
-        
-    std::string name = "Name: " + entity.name();
-    ImGui::Text(name.c_str());
+    ui.startWindow("Selected Entity");
+    ui.text("Name: " + entity.name());
+    ui.text("ID: " + std::to_string(entity.id()));
+    ui.separator();
     
-    std::string id = "ID: " + std::to_string(entity.id());
-    ImGui::Text(id.c_str());
-    ImGui::Separator();
-    
-    static ImGuizmo::OPERATION gizmoOp   = ImGuizmo::TRANSLATE;
-    static ImGuizmo::MODE      gizmoMode = ImGuizmo::WORLD;
+    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
+    static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
     static float angle = 1.0f;
 
-    if (ImGui::TreeNode("Transform")) {
-        ImGui::DragFloat3("Position", &entity.position().x, 0.005f);
+    if (ui.startTreeNode("Transform")) {
+        ui.dragFloat3("Position", &entity.position(), 0.005f);
         Maths::vec3 eulerAngles = Maths::toEuler(entity.orientation());
         std::stringstream ss;
         ss << "Pitch: " << Maths::toString(eulerAngles.x, 3) << "\n"
            << "Yaw: " << Maths::toString(eulerAngles.y, 3) << "\n"
            << "Roll: " << Maths::toString(eulerAngles.z, 3);
-        ImGui::Text(ss.str().c_str());    
+        ui.text(ss.str());    
 
-        if (ImGui::RadioButton("Translate", gizmoOp == ImGuizmo::TRANSLATE)) {
-            gizmoOp = ImGuizmo::TRANSLATE;
+        if (ui.radioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
+            mode = DevUI::GizmoMode::TRANSLATION;
         }
-        ImGui::SameLine();
-        if (ImGui::RadioButton("Rotate", gizmoOp == ImGuizmo::ROTATE)) {
-            gizmoOp = ImGuizmo::ROTATE;
-        }
-
-        if (ImGui::RadioButton("World", gizmoMode == ImGuizmo::WORLD)) {
-            gizmoMode = ImGuizmo::WORLD;
-        }
-        ImGui::SameLine();
-        if (ImGui::RadioButton("Local", gizmoMode == ImGuizmo::LOCAL)) {
-            gizmoMode = ImGuizmo::LOCAL;
+        ui.sameLine();
+        if (ui.radioButton("Rotate", mode == DevUI::GizmoMode::ROTATION)) {
+            mode = DevUI::GizmoMode::ROTATION;
         }
 
-        ImGui::TreePop();
+        if (ui.radioButton("World", coords == DevUI::GizmoCoords::WORLD)) {
+            coords = DevUI::GizmoCoords::WORLD;
+        }
+        ui.sameLine();
+        if (ui.radioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
+            coords = DevUI::GizmoCoords::LOCAL;
+        }
+        ui.endTreeNode();
     }
 
     Maths::mat4 origin = entity.transform();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-    ImGuizmo::Manipulate(
-        cast(view), cast(proj), gizmoOp, gizmoMode, cast(origin),
-        nullptr, gizmoOp == ImGuizmo::ROTATE ? nullptr : nullptr);
-
+    ui.gizmo(&origin, view, proj, mode, coords);
     entity.position() = getTranslation(origin);
     entity.orientation() = normalise(toQuat(mat3(origin)));
 
-    if (entity.has<PhysicsComponent>() && ImGui::TreeNode("Physics")) {
+    if (entity.has<PhysicsComponent>() && ui.startTreeNode("Physics")) {
         auto& comp = entity.get<PhysicsComponent>();
-        ImGui::Checkbox("Gravity", &comp.gravity);
-        ImGui::SameLine();
-        ImGui::Checkbox("Frozen", &comp.frozen);
-        ImGui::DragFloat3("Velocity", &comp.velocity.x, 0.005f);
-        ImGui::TreePop();
+        ui.checkbox("Gravity", &comp.gravity);
+        ui.sameLine();
+        ui.checkbox("Frozen", &comp.frozen);
+        ui.dragFloat3("Velocity", &comp.velocity, 0.005f);
+        ui.endTreeNode();
     }
 
-        if (entity.has<ColliderComponent>() && ImGui::TreeNode("Collider")) {
+    if (entity.has<ColliderComponent>() && ui.startTreeNode("Collider")) {
         auto& comp = entity.get<ColliderComponent>();
-        ImGui::DragFloat("Mass", &comp.mass, 0.05f);
-        ImGui::SliderFloat("Bounciness", &comp.bounciness, 0.0f, 1.0f, "%.3f");
-        ImGui::SliderFloat("Friction Coeff", &comp.frictionCoefficient, 0.0f, 1.0f, "%.3f");
-        ImGui::SliderFloat("Roll Resistance", &comp.rollingResistance, 0.0f, 1.0f, "%.3f");
-        ImGui::TreePop();
+        ui.dragFloat("Mass", &comp.mass, 0.05f);
+        ui.sliderFloat("Bounciness", &comp.bounciness, 0.0f, 1.0f);
+        ui.sliderFloat("Friction Coeff", &comp.frictionCoefficient, 0.0f, 1.0f);
+        ui.sliderFloat("Roll Resistance", &comp.rollingResistance, 0.0f, 1.0f);
+        ui.endTreeNode();
     }
 
-    ImGui::Separator();
+    ui.separator();
 
-    if (ImGui::Button("Delete Entity")) {
+    if (ui.button("Delete Entity")) {
         entity.kill();
     }
 
-    ImGui::End();
+    ui.endWindow();
 }
 
-void addEntityPanel(Sprocket::EntityManager* entities,
+void addEntityPanel(Sprocket::DevUI::Context& ui,
+                    Sprocket::EntityManager* entities,
                     Sprocket::ModelManager* models)
 {
-    ImGui::Begin("Add Entity");
+    ui.startWindow("Add Entity");
     for (const auto& [name, model] : *models) {
-        if (ImGui::Button(name.c_str())) {
+        if (ui.button(name.c_str())) {
             SPKT_LOG_INFO("Added entity");
             auto entity = std::make_shared<Sprocket::Entity>();
             entity->position() = {10.0, 0.0, 10.0};
@@ -124,7 +114,7 @@ void addEntityPanel(Sprocket::EntityManager* entities,
             entities->addEntity(entity);
         }
     }
-    ImGui::End();
+    ui.endWindow();
 }
 
 }
@@ -132,7 +122,7 @@ void addEntityPanel(Sprocket::EntityManager* entities,
 EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
     : Layer(core)
     , d_worldLayer(worldLayer)
-    , d_editorUI(core.window)
+    , d_ui(core.window)
     , d_modelManager(core.modelManager)
 {  
 }
@@ -143,7 +133,8 @@ void EditorUI::handleEvent(Sprocket::Event& event)
         return;
     }
 
-    d_editorUI.handleEvent(event);
+    d_ui.handleEvent(event);
+
 }
 
 void EditorUI::update(float dt)
@@ -155,60 +146,50 @@ void EditorUI::update(float dt)
     using namespace Sprocket;
     using namespace Maths;
 
-    d_editorUI.startFrame(dt);
-
-    mat4 view = d_worldLayer->d_camera->view();
-    mat4 proj = d_worldLayer->d_lens.projection();
-
-    float distance = 10.0f;
-    ImGuiIO& io = ImGui::GetIO();
-
-    ImVec2 pos = ImVec2(io.DisplaySize.x - distance, distance);
-    ImVec2 posPivot = ImVec2(1.0f, 0.0f);
-    ImGui::SetNextWindowPos(pos, ImGuiCond_Always, posPivot);
+    d_ui.update(dt);
+    d_ui.startFrame();
 
     bool open = true;
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
+    int flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
 
-    ImGui::Begin("Sprocket Editor", &open, flags);
-    if (ImGui::Button("Physics Engine")) {
+    d_ui.startWindow("Sprocket Editor", &open, flags);
+    if (d_ui.button("Physics Engine")) {
         auto& physics = d_worldLayer->d_physicsEngine;
         bool isRunning = physics.running();
         physics.running(!isRunning);
     }
-    ImGui::SameLine();
-    ImGui::Text(d_worldLayer->d_physicsEngine.running() ? "YES" : "NO");
+    d_ui.sameLine();
+    d_ui.text(d_worldLayer->d_physicsEngine.running() ? "YES" : "NO");
 
-    if (ImGui::Button("Show Colliders")) {
+    if (d_ui.button("Show Colliders")) {
         auto entityRenderer = &d_worldLayer->d_entityRenderer;
         bool wireframe = entityRenderer->showColliders();
         entityRenderer->renderColliders(!wireframe);
     }
-    ImGui::SameLine();
-    ImGui::Text(d_worldLayer->d_entityRenderer.showColliders() ? "YES" : "NO");
+    d_ui.sameLine();
+    d_ui.text(d_worldLayer->d_entityRenderer.showColliders() ? "YES" : "NO");
 
     std::stringstream ss;
     ss << "Entities: " << d_worldLayer->d_entityManager.entities().size();
-    ImGui::Text(ss.str().c_str());
+    d_ui.text(ss.str());
 
-    if (ImGui::CollapsingHeader("Entity List")) {
+    if (d_ui.collapsingHeader("Entity List")) {
         for (auto [id, entity] : d_worldLayer->d_entityManager.entities()) {
-            addEntityToList(*entity);      
+            addEntityToList(d_ui, *entity);      
         }
     }
 
-    ImGui::End();
+    d_ui.endWindow();
 
+    mat4 view = d_worldLayer->d_camera->view();
+    mat4 proj = d_worldLayer->d_lens.projection();
     if (auto e = d_worldLayer->d_selector.selectedEntity()) {
-        selectedEntityInfo(*e, view, proj);
+        selectedEntityInfo(d_ui, *e, view, proj);
         d_worldLayer->d_physicsEngine.refreshTransform(e);
     }
 
-    addEntityPanel(&d_worldLayer->d_entityManager, d_modelManager);
+    addEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
 
-    bool show = true;
-    ImGui::ShowDemoWindow(&show);
-
-    d_editorUI.endFrame();
-
+    d_ui.demoWindow();
+    d_ui.endFrame();
 }
