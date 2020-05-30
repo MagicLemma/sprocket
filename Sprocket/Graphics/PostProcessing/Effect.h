@@ -21,7 +21,7 @@ protected:
         // Override this function to set any uniforms in the shader.
 
 public:
-    Effect(int width, int height, float scale,
+    Effect(int width, int height,
            const std::string& vertShader,
            const std::string& fragShader);
 

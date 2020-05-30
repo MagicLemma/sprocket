@@ -4,17 +4,16 @@
 
 namespace Sprocket {
 
-FrameBuffer::FrameBuffer(int width, int height, float scale)
+FrameBuffer::FrameBuffer(int width, int height)
     : d_fbo(std::make_shared<FBO>())
     , d_texture(std::make_shared<TEX>())
     , d_depthBuffer(std::make_shared<RBO>())
     , d_width(width)
     , d_height(height)
-    , d_scale(scale)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->value());
     glBindTexture(GL_TEXTURE_2D, d_texture->value());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width * scale, height * scale, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -23,7 +22,7 @@ FrameBuffer::FrameBuffer(int width, int height, float scale)
 
     // Add depth buffer.
     glBindRenderbuffer(GL_RENDERBUFFER, d_depthBuffer->value());
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width * scale, height * scale);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, d_depthBuffer->value());
 
     // Validate the framebuffer.
@@ -37,7 +36,7 @@ FrameBuffer::FrameBuffer(int width, int height, float scale)
 void FrameBuffer::bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->value());
-    glViewport(0, 0, d_width * d_scale, d_height * d_scale);
+    glViewport(0, 0, d_width, d_height);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
@@ -65,11 +64,11 @@ void FrameBuffer::setScreenSize(int width, int height)
     d_height = height;
 
     glBindTexture(GL_TEXTURE_2D, d_texture->value());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width * d_scale, height * d_scale, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     glBindRenderbuffer(GL_RENDERBUFFER, d_depthBuffer->value());
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width * d_scale, height * d_scale);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 

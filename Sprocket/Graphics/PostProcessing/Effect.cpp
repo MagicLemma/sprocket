@@ -39,10 +39,10 @@ Vertex2DBuffer getQuad()
 
 }
 
-Effect::Effect(int width, int height, float scale,
+Effect::Effect(int width, int height,
                const std::string& vertShader,
                const std::string& fragShader)
-    : d_frameBuffer(width, height, scale)
+    : d_frameBuffer(width, height)
     , d_shader(vertShader, fragShader)
     , d_quad(getQuad())
 {

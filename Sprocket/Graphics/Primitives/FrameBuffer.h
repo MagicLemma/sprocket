@@ -1,5 +1,6 @@
 #pragma once
 #include "Resources.h"
+#include "Texture.h"
 
 namespace Sprocket {
 
@@ -11,10 +12,9 @@ class FrameBuffer
 
     int d_width;
     int d_height;
-    float d_scale;
 
 public:
-    FrameBuffer(int width, int height, float scale);
+    FrameBuffer(int width, int height);
 
     void bind() const;
     void unbind() const;
@@ -24,14 +24,12 @@ public:
 
     void bindTexture() const;
     void unbindTexture() const;
-        // Bind/unbind the texture (colour buffer) for sampling.
 
     void setScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
 
     int width() const { return d_width; }
     int height() const { return d_height; }
-    float scale() const { return d_scale; }
 };
 
 }
