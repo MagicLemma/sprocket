@@ -27,37 +27,38 @@ public:
     void handleEvent(Event& event);
     void update(float dt);
 
-    void startFrame();
-    void endFrame();
+    void StartFrame();
+    void EndFrame();
 
-    void startWindow(const std::string& name, bool* open = nullptr, int flags = 0);
-    void endWindow();
+    void StartWindow(const std::string& name, bool* open = nullptr, int flags = 0);
+    void EndWindow();
 
-    bool startTreeNode(const std::string& name);
-    void endTreeNode();
+    bool StartTreeNode(const std::string& name);
+    void EndTreeNode();
 
-    bool button(const std::string& name);
-    bool radioButton(const std::string& name, bool active);
-    bool collapsingHeader(const std::string& name);
-    void text(const std::string& text);
-    void checkbox(const std::string& name, bool* value);
-    void sliderFloat(const std::string& name, float* value, float lower, float upper);
-    void dragFloat(const std::string& name, float* value, float speed = 1.0f);
-    void dragFloat3(const std::string& name, Maths::vec3* values, float speed = 1.0f);
+    bool Button(const std::string& name);
+    bool RadioButton(const std::string& name, bool active);
+    bool CollapsingHeader(const std::string& name);
+    void Text(const std::string& text);
+    void TextModifiable(std::string& text);
+    void Checkbox(const std::string& name, bool* value);
+    void SliderFloat(const std::string& name, float* value, float lower, float upper);
+    void DragFloat(const std::string& name, float* value, float speed = 1.0f);
+    void DragFloat3(const std::string& name, Maths::vec3* values, float speed = 1.0f);
 
-    void gizmo(Maths::mat4* matrix,
+    void Gizmo(Maths::mat4* matrix,
                const Maths::mat4& view,
                const Maths::mat4& projection,
                GizmoMode mode,
                GizmoCoords coords);
 
-    void sameLine();
-    void separator();
+    void SameLine();
+    void Separator();
 
-    void pushID(std::size_t id);
-    void popID();
+    void PushID(std::size_t id);
+    void PopID();
 
-    void demoWindow();
+    void DemoWindow();
 };
 
 }

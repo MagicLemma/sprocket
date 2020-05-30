@@ -440,6 +440,10 @@ bool PhysicsEngine::isOnFloor(const Entity* entity) const
 
 void PhysicsEngine::refreshTransform(const Entity* entity)
 {
+    if (!entity->has<PhysicsComponent>() && !entity->has<ColliderComponent>()) {
+        return;
+    }
+    
     auto& bodyData = d_impl->rigidBodies[entity->id()];
     bodyData->setTransform(
         rp3d::Transform(

@@ -224,14 +224,14 @@ void Context::update(float dt)
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
 
-void Context::startFrame()
+void Context::StartFrame()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 }
 
-void Context::endFrame()
+void Context::EndFrame()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Render();
@@ -295,79 +295,88 @@ void Context::endFrame()
     }
 }
 
-void Context::startWindow(const std::string& name, bool* open, int flags)
+void Context::StartWindow(const std::string& name, bool* open, int flags)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Begin(name.c_str(), open, flags);
 }
 
-void Context::endWindow()
+void Context::EndWindow()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::End();
 }
 
-bool Context::startTreeNode(const std::string& name)
+bool Context::StartTreeNode(const std::string& name)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::TreeNode(name.c_str());
 }
 
-void Context::endTreeNode()
+void Context::EndTreeNode()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::TreePop();
 }
 
-bool Context::button(const std::string& name)
+bool Context::Button(const std::string& name)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::Button(name.c_str());
 }
 
-bool Context::radioButton(const std::string& name, bool active)
+bool Context::RadioButton(const std::string& name, bool active)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::RadioButton(name.c_str(), active);
 }
 
-bool Context::collapsingHeader(const std::string& name)
+bool Context::CollapsingHeader(const std::string& name)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::CollapsingHeader(name.c_str());
 }
 
-void Context::text(const std::string& text)
+void Context::Text(const std::string& text)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Text(text.c_str());
 }
 
-void Context::checkbox(const std::string& name, bool* value)
+void Context::TextModifiable(std::string& text)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    char nameStr[128] = "";
+    std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
+    ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
+    text = std::string(nameStr);
+}
+
+void Context::Checkbox(const std::string& name, bool* value)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Checkbox(name.c_str(), value);
 }
 
-void Context::sliderFloat(const std::string& name, float* value, float lower, float upper)
+void Context::SliderFloat(const std::string& name, float* value, float lower, float upper)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
 }
 
-void Context::dragFloat(const std::string& name, float* value, float speed)
+void Context::DragFloat(const std::string& name, float* value, float speed)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragFloat(name.c_str(), value, speed);
 }
 
-void Context::dragFloat3(const std::string& name, Maths::vec3* values, float speed)
+void Context::DragFloat3(const std::string& name, Maths::vec3* values, float speed)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragFloat3(name.c_str(), &values->x, speed);
 }
 
-void Context::gizmo(Maths::mat4* matrix,
+void Context::Gizmo(Maths::mat4* matrix,
                     const Maths::mat4& view,
                     const Maths::mat4& projection,
                     GizmoMode mode,
@@ -383,31 +392,31 @@ void Context::gizmo(Maths::mat4* matrix,
     );
 }
 
-void Context::sameLine()
+void Context::SameLine()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::SameLine();
 }
 
-void Context::separator()
+void Context::Separator()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Separator();
 }
 
-void Context::pushID(std::size_t id)
+void Context::PushID(std::size_t id)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::PushID((int)id);
 }
 
-void Context::popID()
+void Context::PopID()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::PopID();
 }
 
-void Context::demoWindow()
+void Context::DemoWindow()
 {
     static bool show = true;
     ImGui::ShowDemoWindow(&show);

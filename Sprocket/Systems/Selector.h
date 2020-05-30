@@ -25,17 +25,13 @@ class Selector : public EntitySystem
 
     MouseProxy d_mouse;
 
+    void setHovered(Entity* entity);
+
     void clearHovered();
     void clearSelected();
         // Sets the corresponding pointer to nullptr. If the previous value
         // was not null, update their internal state before setting the
         // pointer to nullptr.
-
-    void setHovered(Entity* entity);
-    void setSelected(Entity* entity);
-        // Sets the corresponding pointer to the given. The previous values
-        // of the pointers are always cleared up first, and passing a
-        // nullptr here is allowed.
 
     Entity* getMousedOver();
         // Returns a pointer to the entity that the mouse is currently
@@ -57,6 +53,10 @@ public:
     void deregisterEntity(const Entity& entity) override;
 
     void enable(bool newEnabled);
+
+    void setSelected(Entity* entity);
+        // Sets the current selected Entity. If called with a nullptr,
+        // it will clear the currently selected Entity.
 
     Entity* hoveredEntity() const { return d_hoveredEntity; }
     Entity* selectedEntity() const { return d_selectedEntity; }

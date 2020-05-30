@@ -126,19 +126,16 @@ void EntityRenderer::drawModel(const Entity& entity)
 	d_shader.loadUniform("u_shine_dampner", modelComp.material.shineDamper);
 	d_shader.loadUniform("u_reflectivity", modelComp.material.reflectivity);
 
+    float brightness = 1.0f;
     if (entity.has<SelectComponent>()) {
         auto data = entity.get<SelectComponent>();
         if (data.selected) {
-            d_shader.loadUniform("u_brightness", 1.5f);
-        }   else if (data.hovered) {
-            d_shader.loadUniform("u_brightness", 1.25f);
+            brightness = 1.5f;
+        } else if (data.hovered) {
+            brightness = 1.25f;
         }
-        else {
-            d_shader.loadUniform("u_brightness", 1.0f);
-        }
-    } else {
-        d_shader.loadUniform("u_brightness", 1.0f);
     }
+    d_shader.loadUniform("u_brightness", brightness);
 
     // Bind textures
     bindMaterial(&d_shader, modelComp.material);
