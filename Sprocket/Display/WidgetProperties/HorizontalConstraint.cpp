@@ -11,26 +11,26 @@ HorizontalConstraint::HorizontalConstraint(Type type, float offset, Window* wind
 {
 }
 
-void HorizontalConstraint::update(Widget* widget)
+void HorizontalConstraint::OnUpdate(Widget* widget)
 {
-    auto current_position = widget->position();
+    auto current_position = widget->Position();
 
     switch (d_type) {
         case Type::LEFT: {
-            widget->position({
+            widget->Position({
                 d_offset,
                 current_position.y
             });
         } break;
         case Type::RIGHT: {
-            widget->position({
-                (float)d_window->width() - widget->width() - d_offset,
+            widget->Position({
+                (float)d_window->Width() - widget->Width() - d_offset,
                 current_position.y
             });
         } break;
         case Type::CENTRE: {
-            widget->position({
-                ((float)d_window->width() - widget->width())/2.0f,
+            widget->Position({
+                ((float)d_window->Width() - widget->Width())/2.0f,
                 current_position.y
             });
         } break;

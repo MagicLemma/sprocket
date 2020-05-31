@@ -31,16 +31,16 @@ class FirstPersonCamera : public Camera
 public:
     FirstPersonCamera();
 
-    Maths::mat4 view() const override;
-    void update(float timeDelta) override;
-    void handleEvent(Event& event) override;
+    Maths::mat4 View() const override;
+    void OnUpdate(float timeDelta) override;
+    void OnEvent(Event& event) override;
     
-    Maths::vec3 position() const { return d_position; }
-    Maths::vec3 direction() const { return d_direction; }
+    Maths::vec3 Position() const { return d_position; }
+    Maths::vec3 Direction() const { return d_direction; }
 
-    float pitch() const { return d_pitch; }
-    float yaw() const { return d_yaw; }
-    float roll() const { return d_roll; }
+    float Pitch() const { return d_pitch; }
+    float Yaw() const { return d_yaw; }
+    float Roll() const { return d_roll; }
 };
 
 }

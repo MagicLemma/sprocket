@@ -24,8 +24,8 @@ class Context
 public:
     Context(Window* window);
 
-    void handleEvent(Event& event);
-    void update(float dt);
+    void OnEvent(Event& event);
+    void OnUpdate(float dt);
 
     void StartFrame();
     void EndFrame();

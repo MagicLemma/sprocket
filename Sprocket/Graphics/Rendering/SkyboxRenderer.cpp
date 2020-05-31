@@ -12,7 +12,7 @@ SkyboxRenderer::SkyboxRenderer(Window* window)
 {
 }
 
-void SkyboxRenderer::draw(const Skybox& skybox,
+void SkyboxRenderer::Draw(const Skybox& skybox,
                           const Camera& camera,
                           const Lens& lens)
 {
@@ -20,22 +20,22 @@ void SkyboxRenderer::draw(const Skybox& skybox,
     glDisable(GL_CULL_FACE);
     glDepthMask(true);
 
-    d_shader.bind();
-    Maths::mat4 projection = lens.projection();
+    d_shader.Bind();
+    Maths::mat4 projection = lens.Projection();
 
-    Maths::mat4 view = camera.view();
+    Maths::mat4 view = camera.View();
     view = Maths::mat4(Maths::mat3(view));
     
-    d_shader.loadUniform("projectionMatrix", lens.projection());
-    d_shader.loadUniform("viewMatrix", view);
+    d_shader.LoadUniform("projectionMatrix", lens.Projection());
+    d_shader.LoadUniform("viewMatrix", view);
 
-    skybox.model.bind();
-    skybox.texture.bind();
-    glDrawElements(GL_TRIANGLES, skybox.model.vertexCount(), GL_UNSIGNED_INT, nullptr);
-    skybox.texture.unbind();
-    skybox.model.unbind();
+    skybox.model.Bind();
+    skybox.texture.Bind();
+    glDrawElements(GL_TRIANGLES, skybox.model.VertexCount(), GL_UNSIGNED_INT, nullptr);
+    skybox.texture.Unbind();
+    skybox.model.Unbind();
 
-    d_shader.unbind();
+    d_shader.Unbind();
 }
 
 }

@@ -11,12 +11,12 @@ class KeyboardButtonPressedEvent : public Event
 
 public:
 	KeyboardButtonPressedEvent(int key, int scancode, int mods);
-	virtual int categoryFlags() const override { return KEYBOARD | INPUT; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return KEYBOARD | INPUT; }
+	std::string ToString() const override;
 
-	int key() const { return d_key; }
-	int scancode() const { return d_scancode; }
-	int mods() const { return d_mods; }
+	int Key() const { return d_key; }
+	int Scancode() const { return d_scancode; }
+	int Mods() const { return d_mods; }
 };
 
 class KeyboardButtonReleasedEvent : public Event
@@ -27,12 +27,12 @@ class KeyboardButtonReleasedEvent : public Event
 
 public:
 	KeyboardButtonReleasedEvent(int key, int scancode, int mods);
-	virtual int categoryFlags() const override { return KEYBOARD; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return KEYBOARD; }
+	std::string ToString() const override;
 
-	int key() const { return d_key; }
-	int scancode() const { return d_scancode; }
-	int mods() const { return d_mods; }
+	int Key() const { return d_key; }
+	int Scancode() const { return d_scancode; }
+	int Mods() const { return d_mods; }
 };
 
 class KeyboardButtonHeldEvent : public Event
@@ -43,12 +43,12 @@ class KeyboardButtonHeldEvent : public Event
 
 public:
 	KeyboardButtonHeldEvent(int key, int scancode, int mods);
-	virtual int categoryFlags() const override { return KEYBOARD | INPUT; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return KEYBOARD | INPUT; }
+	std::string ToString() const override;
 
-	int key() const { return d_key; }
-	int scancode() const { return d_scancode; }
-	int mods() const { return d_mods; }
+	int Key() const { return d_key; }
+	int Scancode() const { return d_scancode; }
+	int Mods() const { return d_mods; }
 };
 
 class KeyboardKeyTypedEvent : public Event
@@ -57,10 +57,10 @@ class KeyboardKeyTypedEvent : public Event
 
 public:
 	KeyboardKeyTypedEvent(unsigned int key);
-	virtual int categoryFlags() const override { return KEYBOARD | INPUT; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return KEYBOARD | INPUT; }
+	std::string ToString() const override;
 
-	int key() const { return d_key; }
+	int Key() const { return d_key; }
 };
 
 }

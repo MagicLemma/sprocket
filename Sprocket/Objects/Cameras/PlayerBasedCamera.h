@@ -14,9 +14,9 @@ class PlayerBasedCamera : public Camera
 public:
     PlayerBasedCamera(Entity* player);
 
-    Maths::mat4 view() const override;
+    Maths::mat4 View() const override;
 
-    void setPlayer(Entity* player) { d_player = player; }
+    void SetPlayer(Entity* player) { d_player = player; }
 };
 
 }

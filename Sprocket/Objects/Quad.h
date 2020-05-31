@@ -25,6 +25,6 @@ struct Quad
     bool greyscale = false; 
 };
 
-bool containsPoint(const Quad& quad, const Maths::vec2& point);
+bool ContainsPoint(const Quad& quad, const Maths::vec2& point);
 
 }

@@ -7,7 +7,7 @@
 namespace Sprocket {
 namespace {
 
-std::pair<Vertex3DBuffer, IndexBuffer> generateTerrain(
+std::pair<Vertex3DBuffer, IndexBuffer> GenerateTerrain(
     int edge, float distance)
 {
     Vertex3DBuffer vertices;
@@ -48,20 +48,20 @@ Terrain::Terrain(const Material& material,
     , d_edge(51)
     , d_distance(1.0f)
 {
-    auto [vertices, indices] = generateTerrain(d_edge, d_distance);
+    auto [vertices, indices] = GenerateTerrain(d_edge, d_distance);
     d_model = Model3D(vertices, indices);
 }
 
-void Terrain::bind() const
+void Terrain::Bind() const
 {
-    d_model.bind();
-    d_material.texture.bind();
+    d_model.Bind();
+    d_material.texture.Bind();
 }
 
-void Terrain::unbind() const
+void Terrain::Unbind() const
 {
-    d_material.texture.unbind();
-    d_model.unbind();
+    d_material.texture.Unbind();
+    d_model.Unbind();
 }
 
 }

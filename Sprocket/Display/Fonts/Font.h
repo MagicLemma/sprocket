@@ -25,10 +25,10 @@ public:
     FontPackage(const std::string& fntFile,
                 const std::string& texFile);
 
-    Character get(int id) const;
+    Character Get(int id) const;
 
-    Texture atlas() const { return d_atlas; }
-    float size() const { return d_size; }
+    Texture Atlas() const { return d_atlas; }
+    float Size() const { return d_size; }
 };
 
 }

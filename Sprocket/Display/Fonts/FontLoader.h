@@ -6,7 +6,7 @@
 
 namespace Sprocket {
 
-std::pair<GlyphMap, float> parseFntFile(
+std::pair<GlyphMap, float> ParseFntFile(
     const std::string& fntFile,
     const Texture& atlas);
 

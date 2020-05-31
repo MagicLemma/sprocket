@@ -35,11 +35,11 @@ class ThirdPersonCamera : public Camera
 public:
     ThirdPersonCamera();
 
-    Maths::mat4 view() const override;
-    void update(float timeDelta) override;
-    void handleEvent(Event& event) override;
+    Maths::mat4 View() const override;
+    void OnUpdate(float timeDelta) override;
+    void OnEvent(Event& event) override;
 
-    Maths::vec3 target() const { return d_target; }
+    Maths::vec3 Target() const { return d_target; }
 };
 
 }

@@ -12,8 +12,8 @@ class Container : public Widget
     Maths::vec2 d_placementPtr;
     float       d_spacing;
 
-    void updateImpl(DisplayRenderer* renderer) override {};
-    void handleEventImpl(Event& event) override {};
+    void OnUpdateImpl(DisplayRenderer* renderer) override {};
+    void OnEventImpl(Event& event) override {};
 
 public:
     Container(float width,
@@ -21,16 +21,16 @@ public:
               float spacing);
 
     template <typename T, typename... Args>
-    std::shared_ptr<T> add(Args&&... args)
+    std::shared_ptr<T> Add(Args&&... args)
     {
         static_assert(std::is_base_of<Widget, T>::value);
 
         auto newWidget = std::make_shared<T>(std::forward<Args>(args)...);
-        newWidget->position(d_placementPtr);
-        makeChild(newWidget);
+        newWidget->Position(d_placementPtr);
+        MakeChild(newWidget);
 
-        d_placementPtr.y += d_spacing + newWidget->height();
-        d_base.height += d_spacing + newWidget->height();
+        d_placementPtr.y += d_spacing + newWidget->Height();
+        d_base.height += d_spacing + newWidget->Height();
         return newWidget;
     }
 };

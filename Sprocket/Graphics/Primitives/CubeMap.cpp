@@ -8,11 +8,12 @@ namespace Sprocket {
 CubeMap::CubeMap(const std::array<std::string, 6>& faceFiles)
     : d_texture(std::make_shared<TEX>())
 {
-    glBindTexture(GL_TEXTURE_CUBE_MAP, d_texture->value());
+    glBindTexture(GL_TEXTURE_CUBE_MAP, d_texture->Value());
 
     for (unsigned int i = 0; i != faceFiles.size(); ++i) {
+        int bpp;
         unsigned char* data = stbi_load(faceFiles[i].c_str(),
-            &d_width, &d_height, &d_bpp, 0);
+            &d_width, &d_height, &bpp, 0);
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                      0, GL_RGB, d_width, d_height,
@@ -30,13 +31,13 @@ CubeMap::CubeMap(const std::array<std::string, 6>& faceFiles)
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-void CubeMap::bind() const
+void CubeMap::Bind() const
 {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, d_texture->value());
+    glBindTexture(GL_TEXTURE_CUBE_MAP, d_texture->Value());
 }
 
-void CubeMap::unbind() const
+void CubeMap::Unbind() const
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }

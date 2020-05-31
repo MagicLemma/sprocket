@@ -4,7 +4,7 @@
 
 namespace Sprocket {
 
-bool containsPoint(const Quad& quad, const Maths::vec2& point)
+bool ContainsPoint(const Quad& quad, const Maths::vec2& point)
 {
     return point.x >= quad.position.x
         && point.x <= quad.position.x + quad.width

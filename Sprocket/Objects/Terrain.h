@@ -19,14 +19,14 @@ public:
     Terrain(const Material& material,
             const Maths::vec3& postition = Maths::vec3{0.0f});
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
     // Getters / Setters
-    Model3D model() const { return d_model; }
-    Material material() const { return d_material; }
+    Model3D GetModel() const { return d_model; }
+    Material GetMaterial() const { return d_material; }
 
-    Maths::vec3 position() const { return d_position; }
+    Maths::vec3 Position() const { return d_position; }
 };
 
 }

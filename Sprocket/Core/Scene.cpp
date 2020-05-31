@@ -2,25 +2,18 @@
 
 namespace Sprocket {
 
-LayerPtr Scene::popLayer()
-{
-    LayerPtr layer = d_layers.back();
-    d_layers.pop_back();
-    return layer;
-}
-
-void Scene::handleEvent(Event& event)
+void Scene::OnEvent(Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
-        d_layers[i]->handleEvent(event);
+        d_layers[i]->OnEvent(event);
     }
 }
 
-void Scene::update(float dt)
+void Scene::OnUpdate(float dt)
 { 
     for (size_t i = 0; i != d_layers.size(); ++i) {
-        d_layers[i]->update(dt);
+        d_layers[i]->OnUpdate(dt);
     }
 }
 

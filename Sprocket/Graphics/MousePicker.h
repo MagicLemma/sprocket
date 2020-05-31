@@ -7,7 +7,7 @@
 namespace Sprocket {
 namespace MousePicker {
 
-Maths::vec3 getRay(
+Maths::vec3 GetRay(
     const Maths::vec2& mousePos,
     Window* window,
     Camera* camera,

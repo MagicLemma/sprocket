@@ -18,9 +18,9 @@ public:
     };
 
 private:
-    Type  d_type;
+    Type    d_type;
 
-    float d_offset;
+    float   d_offset;
         // Offset from the side in pixels. This is ignored for
         // CENTRE constraints. TODO: Can we do better than this?
 
@@ -29,10 +29,8 @@ private:
 public:
     HorizontalConstraint(Type type, float offset, Window* window);
 
-    virtual void update(Widget* widget) override;
-
-    virtual void handleEvent(Widget* widget,
-                             Event& event) override {};
+    virtual void OnUpdate(Widget* widget) override;
+    virtual void OnEvent(Widget* widget, Event& event) override {};
 };
 
 }

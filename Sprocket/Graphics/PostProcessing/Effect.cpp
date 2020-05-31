@@ -6,7 +6,7 @@
 namespace Sprocket {
 namespace {
 
-Vertex2DBuffer getQuad()
+Vertex2DBuffer GetQuad()
 {
     return Vertex2DBuffer{
         {
@@ -44,52 +44,52 @@ Effect::Effect(int width, int height,
                const std::string& fragShader)
     : d_frameBuffer(width, height)
     , d_shader(vertShader, fragShader)
-    , d_quad(getQuad())
+    , d_quad(GetQuad())
 {
 }
 
-void Effect::bindForWrite() const
+void Effect::BindForWrite() const
 {
-    d_frameBuffer.bind();
+    d_frameBuffer.Bind();
 }
 
-void Effect::unbindForWrite() const
+void Effect::UnbindForWrite() const
 {
-    d_frameBuffer.unbind();
+    d_frameBuffer.Unbind();
 }
 
-void Effect::bindForRead() const
+void Effect::BindForRead() const
 {
-    d_shader.bind();
-    d_quad.bind();
-    d_frameBuffer.bindTexture();
-    setUniforms();
+    d_shader.Bind();
+    d_quad.Bind();
+    d_frameBuffer.BindTexture();
+    SetUniforms();
 }
 
-void Effect::unbindForRead() const
+void Effect::UnbindForRead() const
 {
-    d_frameBuffer.unbindTexture();
-    d_quad.unbind();
-    d_shader.unbind();
+    d_frameBuffer.UnbindTexture();
+    d_quad.Unbind();
+    d_shader.Unbind();
 }
 
-void Effect::draw(const std::shared_ptr<Effect> target)
+void Effect::Draw(const std::shared_ptr<Effect> target)
 {
-    if (target) { target->bindForWrite(); }
-    bindForRead();
+    if (target) { target->BindForWrite(); }
+    BindForRead();
     glDrawArrays(GL_TRIANGLES, 0, 6);
-    unbindForRead();
-    if (target) { target->unbindForWrite(); }
+    UnbindForRead();
+    if (target) { target->UnbindForWrite(); }
 }
 
-void Effect::setUniforms() const
+void Effect::SetUniforms() const
 {
     // Override this function to set up uniforms.
 }
 
-void Effect::setScreenSize(int width, int height)
+void Effect::SetScreenSize(int width, int height)
 {
-    d_frameBuffer.setScreenSize(width, height);
+    d_frameBuffer.SetScreenSize(width, height);
 }
     
 }

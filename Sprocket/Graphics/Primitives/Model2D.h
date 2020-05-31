@@ -25,10 +25,10 @@ class Model2D
 public:
     Model2D(const Vertex2DBuffer& vertices);
 
-    int vertexCount() const { return d_vertexCount; }
+    int VertexCount() const { return d_vertexCount; }
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 };
 
 }

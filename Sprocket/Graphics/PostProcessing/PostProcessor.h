@@ -18,19 +18,19 @@ class PostProcessor
 public:
     PostProcessor(int width, int height);
 
-    void addEffect(std::shared_ptr<Effect> effect);
+    void AddEffect(std::shared_ptr<Effect> effect);
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
         // Binds/unbinds the first effect in the pipeline.
         // An error is thrown if no effects have been added.
 
-    void draw();
+    void Draw();
 
-    void setScreenSize(int width, int height);
+    void SetScreenSize(int width, int height);
 
     template <typename T, typename... Args>
-    void addEffect(Args&&... args) {
+    void AddEffect(Args&&... args) {
         d_effects.push_back(std::make_shared<T>(d_width, d_height, args...));
     }
 };

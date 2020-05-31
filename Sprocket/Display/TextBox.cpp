@@ -10,11 +10,11 @@ TextBox::TextBox(float width,
 {
 }
 
-void TextBox::updateImpl(DisplayRenderer* renderer)
+void TextBox::OnUpdateImpl(DisplayRenderer* renderer)
 {
     Text text = d_text;
-    text.position = toScreenCoords(text.position);
-    renderer->draw(text);
+    text.position = ToScreenCoords(text.position);
+    renderer->Draw(text);
 }
 
 }

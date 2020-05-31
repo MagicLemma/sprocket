@@ -11,7 +11,7 @@ KeyboardButtonPressedEvent::KeyboardButtonPressedEvent(int key, int scancode, in
 {
 }
 
-std::string KeyboardButtonPressedEvent::toString() const
+std::string KeyboardButtonPressedEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "KeyboardButtonPressedEvent: " << d_key << ", " << d_scancode << ", " << d_mods;
@@ -25,7 +25,7 @@ KeyboardButtonReleasedEvent::KeyboardButtonReleasedEvent(int key, int scancode, 
 {
 }
 
-std::string KeyboardButtonReleasedEvent::toString() const
+std::string KeyboardButtonReleasedEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "KeyboardButtonReleasedEvent: " << d_key << ", " << d_scancode << ", " << d_mods;
@@ -39,7 +39,7 @@ KeyboardButtonHeldEvent::KeyboardButtonHeldEvent(int key, int scancode, int mods
 {
 }
 
-std::string KeyboardButtonHeldEvent::toString() const
+std::string KeyboardButtonHeldEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "KeyboardButtonHeldEvent: " << d_key << ", " << d_scancode << ", " << d_mods;
@@ -51,7 +51,7 @@ KeyboardKeyTypedEvent::KeyboardKeyTypedEvent(unsigned int key)
 {
 }
 
-std::string KeyboardKeyTypedEvent::toString() const
+std::string KeyboardKeyTypedEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "KeyboardKeyTypedEvent: " << d_key;

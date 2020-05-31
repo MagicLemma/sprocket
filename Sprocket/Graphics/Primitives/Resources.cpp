@@ -7,7 +7,7 @@
 
 namespace Sprocket {
 
-unsigned int generateBuffer(ResourceType type)
+unsigned int GenerateBuffer(ResourceType type)
 {
     unsigned int buf;
     switch(type) {
@@ -34,7 +34,7 @@ unsigned int generateBuffer(ResourceType type)
     return buf;
 }
 
-void deleteBuffer(ResourceType type, unsigned int buf)
+void DeleteBuffer(ResourceType type, unsigned int buf)
 {
     switch(type) {
         case ResourceType::VAO: {

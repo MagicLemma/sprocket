@@ -14,8 +14,8 @@ enum class ResourceType
     RenderBuffer
 };
 
-unsigned int generateBuffer(ResourceType type);
-void deleteBuffer(ResourceType type, unsigned int buf);
+unsigned int GenerateBuffer(ResourceType type);
+void DeleteBuffer(ResourceType type, unsigned int buf);
 
 template <ResourceType Type>
 class Resource
@@ -26,7 +26,7 @@ public:
     Resource();
     ~Resource();
 
-    unsigned int value() const { return d_id; }
+    unsigned int Value() const { return d_id; }
 
 private:
     // Resources can not be copied.
@@ -46,14 +46,14 @@ using RBO = Resource<ResourceType::RenderBuffer>;
 
 template <ResourceType Type>
 Resource<Type>::Resource()
-    : d_id(generateBuffer(Type))
+    : d_id(GenerateBuffer(Type))
 {
 }
 
 template <ResourceType Type>
 Resource<Type>::~Resource()
 {
-    deleteBuffer(Type, d_id);
+    DeleteBuffer(Type, d_id);
 }
 
 }

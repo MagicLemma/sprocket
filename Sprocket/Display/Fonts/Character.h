@@ -36,23 +36,23 @@ public:
               float yOffset,
               float advance);
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
-    int id() const { return d_id; }
+    int Id() const { return d_id; }
 
-    Quad getAtlasQuad() const { return d_atlasQuad; }
+    Quad GetAtlasQuad() const { return d_atlasQuad; }
 
-    float xOffset() const { return d_xOffset; }
-    float yOffset() const { return d_yOffset; }
-    Maths::vec3 offset() const { return {d_xOffset, -d_yOffset, 0.0}; }
+    float XOffset() const { return d_xOffset; }
+    float YOffset() const { return d_yOffset; }
+    Maths::vec3 Offset() const { return {d_xOffset, -d_yOffset, 0.0}; }
 
-    float advance() const { return d_advance; }
+    float Advance() const { return d_advance; }
 
-    float width() const { return d_atlasQuad.width; }
-    float height() const { return d_atlasQuad.height; }
+    float Width() const { return d_atlasQuad.width; }
+    float Height() const { return d_atlasQuad.height; }
 
-    Texture atlas() const { return d_atlas; }
+    Texture Atlas() const { return d_atlas; }
 };
 
 }

@@ -10,30 +10,30 @@ Draggable::Draggable()
 {
 }
 
-void Draggable::update(Widget* widget)
+void Draggable::OnUpdate(Widget* widget)
 {
-    d_mouse.update();
+    d_mouse.OnUpdate();
     if (d_moving) {
-        auto currentPosition = widget->position();
-        widget->position(currentPosition + d_mouse.getMouseOffset());
+        auto currentPosition = widget->Position();
+        widget->Position(currentPosition + d_mouse.GetMouseOffset());
     }
 }
 
-void Draggable::handleEvent(Widget* widget, Event& event)
+void Draggable::OnEvent(Widget* widget, Event& event)
 {
-    d_mouse.handleEvent(event);
+    d_mouse.OnEvent(event);
 
-    Quad widgetQuad{{0.0, 0.0}, widget->width(), widget->height()};
-    if (containsPoint(widgetQuad, widget->toLocalCoords(d_mouse.getMousePos()))) {
-        if (auto e = event.as<MouseButtonPressedEvent>()) {
-            if (!e->isConsumed() && e->button() == Mouse::LEFT) {
+    Quad widgetQuad{{0.0, 0.0}, widget->Width(), widget->Height()};
+    if (ContainsPoint(widgetQuad, widget->ToLocalCoords(d_mouse.GetMousePos()))) {
+        if (auto e = event.As<MouseButtonPressedEvent>()) {
+            if (!e->IsConsumed() && e->Button() == Mouse::LEFT) {
                 d_moving = true;
-                e->consume();
+                e->Consume();
             }
         }
     }
 
-    if (auto e = event.as<MouseButtonReleasedEvent>()) {
+    if (auto e = event.As<MouseButtonReleasedEvent>()) {
         d_moving = false;
     }
 }

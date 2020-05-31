@@ -9,23 +9,23 @@ class EntitySystem
 public:
     EntitySystem() = default;
     
-    virtual void updateEntity(float dt, Entity& entity) {};
+    virtual void UpdateEntity(float dt, Entity& entity) {};
         // Called once per entity per frame and before the system updates.
 
-    virtual void updateSystem(float dt) = 0;
+    virtual void UpdateSystem(float dt) = 0;
         // Called once per frame, this should update any system speific data.
 
-    virtual void registerEntity(const Entity& entity) {};
-    virtual void deregisterEntity(const Entity& entity) {};
+    virtual void RegisterEntity(const Entity& entity) {};
+    virtual void DeregisterEntity(const Entity& entity) {};
         // Register and deregister entities with this system.
 
-    virtual void onComponentAttach(const Entity& entity,
+    virtual void OnComponentAttach(const Entity& entity,
                                    const Component& component) {};
-    virtual void onComponentDetach(const Entity& entity,
+    virtual void OnComponentDetach(const Entity& entity,
                                    const Component& component) {};
         // Called whenever a component is added or removed from an entity.
 
-    virtual void handleEvent(Event& event) {};
+    virtual void OnEvent(Event& event) {};
         // Called with every event so systems can consume them.
 
 private:

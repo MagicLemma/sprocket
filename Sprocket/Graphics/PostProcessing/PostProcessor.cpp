@@ -7,40 +7,40 @@ PostProcessor::PostProcessor(int width, int height)
     , d_height(height)
 {}
 
-void PostProcessor::addEffect(std::shared_ptr<Effect> effect)
+void PostProcessor::AddEffect(std::shared_ptr<Effect> effect)
 {
     d_effects.push_back(effect);
 }
 
-void PostProcessor::bind() const
+void PostProcessor::Bind() const
 {
-    d_effects[0]->bindForWrite();
+    d_effects[0]->BindForWrite();
 }
 
-void PostProcessor::unbind() const
+void PostProcessor::Unbind() const
 {
-    d_effects[0]->unbindForWrite();
+    d_effects[0]->UnbindForWrite();
 }
 
-void PostProcessor::draw()
+void PostProcessor::Draw()
 {
     for (int i = 0; i != d_effects.size(); ++i) {
         
         // Final effect, so draw to screen.
         if (i + 1 == d_effects.size()) {
-            d_effects[i]->draw();
+            d_effects[i]->Draw();
         } else {
-            d_effects[i]->draw(d_effects[i+1]);
+            d_effects[i]->Draw(d_effects[i+1]);
         }
     }
 }
 
-void PostProcessor::setScreenSize(int width, int height)
+void PostProcessor::SetScreenSize(int width, int height)
 {
     d_width = width;
     d_height = height;
     for (auto& effect : d_effects) {
-        effect->setScreenSize(width, height);
+        effect->SetScreenSize(width, height);
     }
 }
     

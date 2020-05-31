@@ -24,52 +24,52 @@ class Entity
 public:
     Entity();
 
-    const std::string& name() const { return d_name; }
-    std::string& name() { return d_name; }
+    const std::string& Name() const { return d_name; }
+    std::string& Name() { return d_name; }
 
-    std::size_t id() const { return d_id; }
+    std::size_t Id() const { return d_id; }
 
-    bool alive() const { return d_alive; }
-    void kill() { d_alive = false; }
+    bool Alive() const { return d_alive; }
+    void Kill() { d_alive = false; }
 
-    void setPosition(const Maths::vec3& pos) { d_position = pos; }
+    void SetPosition(const Maths::vec3& pos) { d_position = pos; }
 
-    const Maths::vec3& position() const { return d_position; }
-    Maths::vec3& position() { return d_position; }
+    const Maths::vec3& Position() const { return d_position; }
+    Maths::vec3& Position() { return d_position; }
 
-    const Maths::quat& orientation() const { return d_orientation; }
-    Maths::quat& orientation() { return d_orientation; }
+    const Maths::quat& Orientation() const { return d_orientation; }
+    Maths::quat& Orientation() { return d_orientation; }
 
-    Maths::mat4 transform() const;
+    Maths::mat4 Transform() const;
 
-    template <typename T> T* add();
-    template <typename T> bool has() const;
-    template <typename T> T& get() const;
-    template <typename T> void remove();
+    template <typename T> T* Add();
+    template <typename T> bool Has() const;
+    template <typename T> T& Get() const;
+    template <typename T> void Remove();
 };
 
 template <typename T>
-T* Entity::add()
+T* Entity::Add()
 {
     auto component = std::make_shared<T>();
-    d_components[getComponentTypeId<T>()] = component;
+    d_components[GetComponentTypeId<T>()] = component;
     return component.get();
 }
 
-template <typename T> bool Entity::has() const
+template <typename T> bool Entity::Has() const
 {
-    return d_components[getComponentTypeId<T>()] != nullptr;
+    return d_components[GetComponentTypeId<T>()] != nullptr;
 }
 
-template <typename T> T& Entity::get() const
+template <typename T> T& Entity::Get() const
 {
-    auto component = d_components[getComponentTypeId<T>()];
+    auto component = d_components[GetComponentTypeId<T>()];
     return *static_cast<T*>(component.get());
 }
 
-template <typename T> void Entity::remove()
+template <typename T> void Entity::Remove()
 {
-    d_components[getComponentTypeId<T>()] = nullptr;
+    d_components[GetComponentTypeId<T>()] = nullptr;
 }
 
 }

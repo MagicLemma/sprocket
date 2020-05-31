@@ -11,7 +11,7 @@
 
 namespace Sprocket {
 
-std::pair<GlyphMap, float> parseFntFile(
+std::pair<GlyphMap, float> ParseFntFile(
     const std::string& fntFile,
     const Texture& atlas)
 {
@@ -26,9 +26,9 @@ std::pair<GlyphMap, float> parseFntFile(
     std::string line;
     while (std::getline(file, line)) {
         if (line.substr(0, 5) == "info ") {
-            std::vector<std::string> charAttrs = tokenize(line.substr(5));
+            std::vector<std::string> charAttrs = Tokenize(line.substr(5));
             for (const auto& attr : charAttrs) {
-                std::vector<std::string> keyVal = tokenize(attr, "=");
+                std::vector<std::string> keyVal = Tokenize(attr, "=");
                 if (keyVal.size() != 2) {
                     SPKT_LOG_WARN("Failed to parse font attr '{}'", attr);
                     throw std::exception("Bad Font Parse");
@@ -55,9 +55,9 @@ std::pair<GlyphMap, float> parseFntFile(
         double yOffset = -100;
         double advance = -1;
 
-        std::vector<std::string> charAttrs = tokenize(line.substr(5));
+        std::vector<std::string> charAttrs = Tokenize(line.substr(5));
         for (const auto& attr : charAttrs) {
-            std::vector<std::string> keyVal = tokenize(attr, "=");
+            std::vector<std::string> keyVal = Tokenize(attr, "=");
             if (keyVal.size() != 2) {
                 SPKT_LOG_WARN("Failed to parse font attr '{}'", attr);
                 throw std::exception("Bad Font Parse");

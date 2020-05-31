@@ -33,12 +33,12 @@ void setClipboardCallbacks(ImGuiIO& io, Window* window)
 {
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
         Sprocket::Window* w = static_cast<Sprocket::Window*>(user_data);
-        w->setClipboardData(text);
+        w->SetClipboardData(text);
     };
 
     io.GetClipboardTextFn = [](void* user_data) {
         Sprocket::Window* w = static_cast<Sprocket::Window*>(user_data);
-        return w->getClipboardData();
+        return w->GetClipboardData();
     };
 
     io.ClipboardUserData = window;
@@ -76,7 +76,7 @@ void setFontAtlas(ImGuiIO& io, Texture& fontAtlas)
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
     fontAtlas = Texture(width, height, data);
-    io.Fonts->TexID = cast(fontAtlas.id());
+    io.Fonts->TexID = cast(fontAtlas.Id());
 }
 
 ImGuizmo::OPERATION getMode(GizmoMode mode)
@@ -140,7 +140,7 @@ Context::Context(Window* window)
     setKeyMappings(io);
     setFontAtlas(io, d_impl->fontAtlas);
     
-    d_impl->buffer.bind();
+    d_impl->buffer.Bind();
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
                         sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, pos));
@@ -149,77 +149,77 @@ Context::Context(Window* window)
     glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,
                         sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, col));
 
-    d_impl->buffer.unbind();
+    d_impl->buffer.Unbind();
 }
 
-void Context::handleEvent(Event& event)
+void Context::OnEvent(Event& event)
 {
-    if (event.isConsumed()) { return; }
+    if (event.IsConsumed()) { return; }
 
     ImGuiIO& io = d_impl->context->IO;
 
-    if (auto e = event.as<MouseButtonPressedEvent>()) {    
-        io.MouseDown[e->button()] = true;
+    if (auto e = event.As<MouseButtonPressedEvent>()) {    
+        io.MouseDown[e->Button()] = true;
     }
     
-    else if (auto e = event.as<MouseButtonReleasedEvent>()) {
-        io.MouseDown[e->button()] = false;
+    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
+        io.MouseDown[e->Button()] = false;
     }
 
-    else if (auto e = event.as<MouseMovedEvent>()) {
-        io.MousePos = ImVec2(e->xPos(), e->yPos());
+    else if (auto e = event.As<MouseMovedEvent>()) {
+        io.MousePos = ImVec2(e->XPos(), e->YPos());
         if (ImGui::IsAnyWindowHovered()) {
-            e->consume();
+            e->Consume();
         }
     }
 
-    else if (auto e = event.as<MouseScrolledEvent>()) {
-        io.MouseWheel += e->yOffset();
-        io.MouseWheelH += e->xOffset();
+    else if (auto e = event.As<MouseScrolledEvent>()) {
+        io.MouseWheel += e->YOffset();
+        io.MouseWheelH += e->XOffset();
     }
 
-    else if (auto e = event.as<WindowResizeEvent>()) {
-        io.DisplaySize = ImVec2((float)e->width(), (float)e->height());
+    else if (auto e = event.As<WindowResizeEvent>()) {
+        io.DisplaySize = ImVec2((float)e->Width(), (float)e->Height());
         io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
     }
 
-    else if (auto e = event.as<KeyboardButtonPressedEvent>()) {
-        io.KeysDown[e->key()] = true;
-        io.KeyCtrl  = e->mods() & KeyModifier::CTRL;
-        io.KeyShift = e->mods() & KeyModifier::SHIFT;
-        io.KeyAlt   = e->mods() & KeyModifier::ALT;
-        io.KeySuper = e->mods() & KeyModifier::SUPER;
+    else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+        io.KeysDown[e->Key()] = true;
+        io.KeyCtrl  = e->Mods() & KeyModifier::CTRL;
+        io.KeyShift = e->Mods() & KeyModifier::SHIFT;
+        io.KeyAlt   = e->Mods() & KeyModifier::ALT;
+        io.KeySuper = e->Mods() & KeyModifier::SUPER;
     }
 
-    else if (auto e = event.as<KeyboardButtonReleasedEvent>()) {
-        io.KeysDown[e->key()] = false;
-        io.KeyCtrl  = e->mods() & KeyModifier::CTRL;
-        io.KeyShift = e->mods() & KeyModifier::SHIFT;
-        io.KeyAlt   = e->mods() & KeyModifier::ALT;
-        io.KeySuper = e->mods() & KeyModifier::SUPER;
+    else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
+        io.KeysDown[e->Key()] = false;
+        io.KeyCtrl  = e->Mods() & KeyModifier::CTRL;
+        io.KeyShift = e->Mods() & KeyModifier::SHIFT;
+        io.KeyAlt   = e->Mods() & KeyModifier::ALT;
+        io.KeySuper = e->Mods() & KeyModifier::SUPER;
     }
 
-    else if (auto e = event.as<KeyboardKeyTypedEvent>()) {
-        if (e->key() > 0 && e->key() < 0x10000) {
-            io.AddInputCharacter((unsigned short)e->key());
+    else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
+        if (e->Key() > 0 && e->Key() < 0x10000) {
+            io.AddInputCharacter((unsigned short)e->Key());
         }
     }
 
-    if (event.in<EventCategory::KEYBOARD>() && io.WantCaptureKeyboard) {
-        event.consume();
+    if (event.In<EventCategory::KEYBOARD>() && io.WantCaptureKeyboard) {
+        event.Consume();
     }
 
-    if (event.in<EventCategory::MOUSE>() && io.WantCaptureMouse) {
-        event.consume();
+    if (event.In<EventCategory::MOUSE>() && io.WantCaptureMouse) {
+        event.Consume();
     }
 }
 
-void Context::update(float dt)
+void Context::OnUpdate(float dt)
 {
     ImGuiIO& io = d_impl->context->IO;
     io.DeltaTime = dt;
-    io.DisplaySize = ImVec2((float)d_impl->window->width(),
-                            (float)d_impl->window->height());
+    io.DisplaySize = ImVec2((float)d_impl->window->Width(),
+                            (float)d_impl->window->Height());
     
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
@@ -247,14 +247,14 @@ void Context::EndFrame()
 
     ImDrawData* drawData = &d_impl->context->DrawData;
 
-    auto proj = Sprocket::Maths::ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
+    auto proj = Sprocket::Maths::Ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
 
-    d_impl->shader.bind();
-    d_impl->shader.loadUniform("Texture", 0);
-    d_impl->shader.loadUniform("ProjMtx", proj);
+    d_impl->shader.Bind();
+    d_impl->shader.LoadUniform("Texture", 0);
+    d_impl->shader.LoadUniform("ProjMtx", proj);
 
-    d_impl->buffer.bind();
-    d_impl->fontAtlas.bind();
+    d_impl->buffer.Bind();
+    d_impl->fontAtlas.Bind();
 
     // Render command lists
     int width = (int)drawData->DisplaySize.x;
@@ -264,11 +264,11 @@ void Context::EndFrame()
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
         // Upload vertex/index buffers
-        d_impl->buffer.setVertexData(
+        d_impl->buffer.SetVertexData(
             cmd_list->VtxBuffer.Size * sizeof(ImDrawVert),
             cmd_list->VtxBuffer.Data
         );
-        d_impl->buffer.setIndexData(
+        d_impl->buffer.SetIndexData(
             cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx),
             cmd_list->IdxBuffer.Data            
         );
@@ -384,11 +384,11 @@ void Context::Gizmo(Maths::mat4* matrix,
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGuizmo::Manipulate(
-        Maths::cast(view),
-        Maths::cast(projection),
+        Maths::Cast(view),
+        Maths::Cast(projection),
         getMode(mode),
         getCoords(coords),
-        Maths::cast(*matrix)
+        Maths::Cast(*matrix)
     );
 }
 

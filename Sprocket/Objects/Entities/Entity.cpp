@@ -4,7 +4,7 @@ namespace Sprocket {
 
 namespace {
 
-std::size_t idGenerator()
+std::size_t IdGenerator()
 {
     static std::size_t id = 0;
     return id++;
@@ -14,7 +14,7 @@ std::size_t idGenerator()
 
 Entity::Entity()
     : d_name("Unnamed")
-    , d_id(idGenerator())
+    , d_id(IdGenerator())
     , d_alive(true)
     , d_position({0, 0, 0})
     , d_orientation(Maths::identity)
@@ -24,9 +24,9 @@ Entity::Entity()
     }
 }
 
-Maths::mat4 Entity::transform() const
+Maths::mat4 Entity::Transform() const
 {
-    return Maths::transform(d_position, d_orientation);
+    return Maths::Transform(d_position, d_orientation);
 }
 
 }

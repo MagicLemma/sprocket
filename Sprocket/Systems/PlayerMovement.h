@@ -20,12 +20,12 @@ public:
     PlayerMovement(Window* window);
     ~PlayerMovement() {}
 
-    void updateEntity(float dt, Entity& entity) override;
-    void updateSystem(float dt) override;
+    void UpdateEntity(float dt, Entity& entity) override;
+    void UpdateSystem(float dt) override;
 
-    void handleEvent(Event& event) override;
+    void OnEvent(Event& event) override;
 
-    void enable(bool newEnabled);
+    void Enable(bool newEnabled);
 };
 
 }

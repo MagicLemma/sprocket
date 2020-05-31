@@ -21,15 +21,15 @@ public:
                     float nearPlane = 0.1f,
                     float farPlane = 1000.0f);
 
-    Maths::mat4 projection() const override;
+    Maths::mat4 Projection() const override;
         // Returns a projection matrix.
 
-    void handleEvent(Event& event) override;
+    void OnEvent(Event& event) override;
         // This function may be overriden if the Lens needs to
         // response to events.
 
-    float fov() const { return d_fov; }
-    void fov(float newFov);
+    float FOV() const { return d_fov; }
+    void FOV(float newFov);
 };
 
 }

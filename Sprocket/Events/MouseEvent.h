@@ -11,12 +11,12 @@ class MouseButtonPressedEvent : public Event
 
 public:
 	MouseButtonPressedEvent(int button, int action, int mods);
-	virtual int categoryFlags() const override { return MOUSE | INPUT; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return MOUSE | INPUT; }
+	std::string ToString() const override;
 
-	int button() const { return d_button; }
-	int action() const { return d_action; }
-	int mods() const { return d_mods; }
+	int Button() const { return d_button; }
+	int Action() const { return d_action; }
+	int Mods() const { return d_mods; }
 };
 
 class MouseButtonReleasedEvent : public Event
@@ -27,12 +27,12 @@ class MouseButtonReleasedEvent : public Event
 
 public:
 	MouseButtonReleasedEvent(int button, int action, int mods);
-	virtual int categoryFlags() const override { return MOUSE; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return MOUSE; }
+	std::string ToString() const override;
 
-	int button() const { return d_button; }
-	int action() const { return d_action; }
-	int mods() const { return d_mods; }
+	int Button() const { return d_button; }
+	int Action() const { return d_action; }
+	int Mods() const { return d_mods; }
 };
 
 class MouseMovedEvent : public Event
@@ -42,11 +42,11 @@ class MouseMovedEvent : public Event
 
 public:
 	MouseMovedEvent(float xPos, float yPos);
-	virtual int categoryFlags() const override { return MOUSE; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return MOUSE; }
+	std::string ToString() const override;
 
-	float xPos() const { return d_xPos; }
-	float yPos() const { return d_yPos; }
+	float XPos() const { return d_xPos; }
+	float YPos() const { return d_yPos; }
 };
 
 class MouseScrolledEvent : public Event
@@ -56,11 +56,11 @@ class MouseScrolledEvent : public Event
 
 public:
 	MouseScrolledEvent(float xOffset, float yOffset);
-	virtual int categoryFlags() const override { return MOUSE | INPUT; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return MOUSE | INPUT; }
+	std::string ToString() const override;
 
-	float xOffset() const { return d_xOffset; }
-	float yOffset() const { return d_yOffset; }
+	float XOffset() const { return d_xOffset; }
+	float YOffset() const { return d_yOffset; }
 };
 
 }

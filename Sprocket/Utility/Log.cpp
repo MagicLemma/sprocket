@@ -11,7 +11,7 @@ namespace {
 	std::shared_ptr<spdlog::logger> s_logger_p;
 }
 
-void init()
+void Init()
 {
 	spdlog::set_pattern("%^[%T] %n: %v%$");
 
@@ -19,7 +19,7 @@ void init()
 	s_logger_p->set_level(spdlog::level::trace);
 }
 
-std::shared_ptr<spdlog::logger>& logger()
+std::shared_ptr<spdlog::logger>& Logger()
 {
 	return s_logger_p;
 }

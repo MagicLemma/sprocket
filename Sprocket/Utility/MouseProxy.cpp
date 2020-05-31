@@ -11,27 +11,27 @@ MouseProxy::MouseProxy()
     
 }
 
-void MouseProxy::handleEvent(Event& event)
+void MouseProxy::OnEvent(Event& event)
 {
-    if (!event.in<EventCategory::MOUSE>()) { return; }
+    if (!event.In<EventCategory::MOUSE>()) { return; }
 
-    if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (event.isConsumed()) { return; }
-        d_pressedButtons[e->button()] = true;
+    if (auto e = event.As<MouseButtonPressedEvent>()) {
+        if (event.IsConsumed()) { return; }
+        d_pressedButtons[e->Button()] = true;
     }
 
-    else if (auto e = event.as<MouseButtonReleasedEvent>()) {
-        d_pressedButtons[e->button()] = false;
+    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
+        d_pressedButtons[e->Button()] = false;
     }
 
-    else if (auto e = event.as<MouseMovedEvent>()) {
-        Sprocket::Maths::vec2 p = {e->xPos(), e->yPos()};
+    else if (auto e = event.As<MouseMovedEvent>()) {
+        Sprocket::Maths::vec2 p = {e->XPos(), e->YPos()};
         d_offsetSum = p - d_position;
         d_position = p;
     }
 }
 
-bool MouseProxy::isButtonDown(int key) const
+bool MouseProxy::IsButtonDown(int key) const
 {
     auto it = d_pressedButtons.find(key);
     if (it != d_pressedButtons.end()) {
@@ -40,7 +40,7 @@ bool MouseProxy::isButtonDown(int key) const
     return false;
 }
 
-void MouseProxy::update()
+void MouseProxy::OnUpdate()
 {
     d_offset = d_offsetSum;
     d_offsetSum = Maths::vec2(0.0f, 0.0f);

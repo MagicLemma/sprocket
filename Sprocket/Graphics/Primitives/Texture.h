@@ -19,16 +19,16 @@ public:
     Texture(int width, int height, unsigned char* data);
     Texture();
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
-    int width() const { return d_width; }
-    int height() const { return d_height; }
+    int Width() const { return d_width; }
+    int Height() const { return d_height; }
 
     // Standard texture builders
-    static Texture white();
+    static Texture White();
 
-    unsigned int id() const;
+    unsigned int Id() const;
 
     bool operator==(const Texture& other) const;
 };

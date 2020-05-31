@@ -40,8 +40,8 @@ class Button : public Widget
     ButtonCallback d_clickCallback = [](){};
     ButtonCallback d_unclickCallback = [](){};
 
-    void updateImpl(DisplayRenderer* renderer) override;
-    void handleEventImpl(Event& event) override;
+    void OnUpdateImpl(DisplayRenderer* renderer) override;
+    void OnEventImpl(Event& event) override;
 
 public:
     Button(float width,
@@ -50,18 +50,18 @@ public:
            float buttonHoveredScale = 0.55f,
            float buttonClickedScale = 0.45f);
 
-    Quad& buttonNormal() { return d_buttonNormal; }
-    Quad& buttonHovered() { return d_buttonHovered; }
-    Quad& buttonClicked() { return d_buttonClicked; }
+    Quad& ButtonNormal() { return d_buttonNormal; }
+    Quad& ButtonHovered() { return d_buttonHovered; }
+    Quad& ButtonClicked() { return d_buttonClicked; }
 
-    const Quad& buttonNormal() const { return d_buttonNormal; }
-    const Quad& buttonHovered() const { return d_buttonHovered; }
-    const Quad& buttonClicked() const { return d_buttonClicked; }
+    const Quad& ButtonNormal() const { return d_buttonNormal; }
+    const Quad& ButtonHovered() const { return d_buttonHovered; }
+    const Quad& ButtonClicked() const { return d_buttonClicked; }
 
-    void setHoverCallback(ButtonCallback cb) { d_hoverCallback = cb; }
-    void setUnhoverCallback(ButtonCallback cb) { d_unhoverCallback = cb; }
-    void setClickCallback(ButtonCallback cb) { d_clickCallback = cb; }
-    void setUnclickCallback(ButtonCallback cb) { d_unclickCallback = cb; }
+    void SetHoverCallback(ButtonCallback cb) { d_hoverCallback = cb; }
+    void SetUnhoverCallback(ButtonCallback cb) { d_unhoverCallback = cb; }
+    void SetClickCallback(ButtonCallback cb) { d_clickCallback = cb; }
+    void SetUnclickCallback(ButtonCallback cb) { d_unclickCallback = cb; }
 };
 
 }

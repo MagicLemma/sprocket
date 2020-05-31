@@ -18,15 +18,15 @@ Context::Context(Window* window)
 {
 }
 
-void Context::handleEvent(Event& event)
+void Context::OnEvent(Event& event)
 {
-    d_impl->keyboard.handleEvent(event);
-    d_impl->mouse.handleEvent(event);
+    d_impl->keyboard.OnEvent(event);
+    d_impl->mouse.OnEvent(event);
 }
 
-void Context::update(float dt)
+void Context::OnUpdate(float dt)
 {
-    d_impl->mouse.update();
+    d_impl->mouse.OnUpdate();
 }
 
 }

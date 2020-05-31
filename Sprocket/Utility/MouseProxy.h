@@ -20,12 +20,12 @@ class MouseProxy
 public:
     MouseProxy();
 
-    void update();  // Call at the start of every frame
-    void handleEvent(Event& event);
-    bool isButtonDown(int button) const;
+    void OnUpdate();  // Call at the start of every frame
+    void OnEvent(Event& event);
+    bool IsButtonDown(int button) const;
 
-    Maths::vec2 getMousePos() const { return d_position; }
-    Maths::vec2 getMouseOffset() const { return d_offset; }
+    Maths::vec2 GetMousePos() const { return d_position; }
+    Maths::vec2 GetMouseOffset() const { return d_offset; }
 };
 
 }

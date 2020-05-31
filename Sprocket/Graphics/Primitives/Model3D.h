@@ -28,8 +28,8 @@ class Model3D
     std::shared_ptr<Vertex3DBuffer> d_vertexData;
     std::shared_ptr<IndexBuffer>    d_indexData;
 
-    std::shared_ptr<VBO> loadVertexBuffer(const Vertex3DBuffer& vertices);
-    std::shared_ptr<VBO> loadIndexBuffer(const IndexBuffer& indices);
+    std::shared_ptr<VBO> LoadVertexBuffer(const Vertex3DBuffer& vertices);
+    std::shared_ptr<VBO> LoadIndexBuffer(const IndexBuffer& indices);
 
 public:
     Model3D(const Vertex3DBuffer& vertices,
@@ -37,15 +37,15 @@ public:
 
     Model3D(); // Empty model
 
-    std::size_t vertexCount() const { return d_indexData->size(); }
+    std::size_t VertexCount() const { return d_indexData->size(); }
 
     // GPU STORAGE ACCESS
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
     // CPU STORAGE ACCESS
-    const Vertex3DBuffer& vertexBuffer() const { return *d_vertexData.get(); }
-    const IndexBuffer& indexBuffer() const { return *d_indexData.get(); }
+    const Vertex3DBuffer& VertexBufferData() const { return *d_vertexData.get(); }
+    const IndexBuffer& IndexBufferData() const { return *d_indexData.get(); }
 
     bool operator==(const Model3D& other) const;
 };

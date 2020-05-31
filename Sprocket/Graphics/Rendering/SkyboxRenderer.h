@@ -19,7 +19,7 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(Window* window);
 
-    void draw(const Skybox& entity,
+    void Draw(const Skybox& entity,
               const Camera& camera,
               const Lens& lens);
 };

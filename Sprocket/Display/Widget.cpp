@@ -17,39 +17,39 @@ Widget::~Widget()
 {
 }
 
-Maths::vec2 Widget::absolutePosition() const
+Maths::vec2 Widget::AbsolutePosition() const
 {
     if (d_parent != nullptr) {
-        return d_offset + d_parent->absolutePosition();
+        return d_offset + d_parent->AbsolutePosition();
     }
     return d_offset;
 }
 
-Maths::vec2 Widget::toLocalCoords(const Maths::vec2& screenCoords) const
+Maths::vec2 Widget::ToLocalCoords(const Maths::vec2& screenCoords) const
 {
-    return screenCoords - absolutePosition();
+    return screenCoords - AbsolutePosition();
 }
 
-Maths::vec2 Widget::toScreenCoords(const Maths::vec2& localCoords) const
+Maths::vec2 Widget::ToScreenCoords(const Maths::vec2& localCoords) const
 {
-    return localCoords + absolutePosition();
+    return localCoords + AbsolutePosition();
 }
 
-Quad Widget::toLocalCoords(const Quad& screenQuad) const
+Quad Widget::ToLocalCoords(const Quad& screenQuad) const
 {
     Quad localQuad = screenQuad;
-    localQuad.position -= absolutePosition();
+    localQuad.position -= AbsolutePosition();
     return localQuad;
 }
 
-Quad Widget::toScreenCoords(const Quad& localQuad) const
+Quad Widget::ToScreenCoords(const Quad& localQuad) const
 {
     Quad screenQuad = localQuad;
-    screenQuad.position += absolutePosition();
+    screenQuad.position += AbsolutePosition();
     return screenQuad;
 }
 
-void Widget::makeChild(std::shared_ptr<Widget> child)
+void Widget::MakeChild(std::shared_ptr<Widget> child)
 {
     if (child->d_parent != nullptr) {
         SPKT_LOG_ERROR("Failed to make parent/child Widget relationship!");
@@ -59,56 +59,56 @@ void Widget::makeChild(std::shared_ptr<Widget> child)
     child->d_parent = this;
 }
 
-void Widget::update(DisplayRenderer* renderer)
+void Widget::OnUpdate(DisplayRenderer* renderer)
 {
-    d_mouse.update();
+    d_mouse.OnUpdate();
 
     if (!d_active) {
         return;
     }
 
-    renderer->draw(toScreenCoords(d_base));
+    renderer->Draw(ToScreenCoords(d_base));
 
     for (const auto& property : d_properties) {
-        property->update(this);
+        property->OnUpdate(this);
     }
 
-    updateImpl(renderer);
+    OnUpdateImpl(renderer);
 
     for (const auto& child : d_children) {
-        child->update(renderer);
+        child->OnUpdate(renderer);
     }
 }
 
-void Widget::handleEvent(Event& event)
+void Widget::OnEvent(Event& event)
 {
-    d_mouse.handleEvent(event);
+    d_mouse.OnEvent(event);
 
     if (d_active) {
         for (const auto& child : d_children) {
-            child->handleEvent(event);
+            child->OnEvent(event);
         }
 
-        handleEventImpl(event);
+        OnEventImpl(event);
 
         for (const auto& property : d_properties) {
-            property->handleEvent(this, event);
+            property->OnEvent(this, event);
         }
 
-        if (event.in<EventCategory::MOUSE>() &&
-            event.in<EventCategory::INPUT>() &&
-            !event.isConsumed() &&
-            containsPoint(toScreenCoords(d_base), d_mouse.getMousePos())) {
+        if (event.In<EventCategory::MOUSE>() &&
+            event.In<EventCategory::INPUT>() &&
+            !event.IsConsumed() &&
+            ContainsPoint(ToScreenCoords(d_base), d_mouse.GetMousePos())) {
             
-            event.consume();
+            event.Consume();
         }
     }
 }
 
-bool Widget::active() const
+bool Widget::Active() const
 {
     if (d_parent) {
-        return d_active && d_parent->active();
+        return d_active && d_parent->Active();
     }
     return d_active;
 }

@@ -15,13 +15,13 @@ class Shader
     unsigned int d_fragShaderId;
 
     // Shader Creation
-    void createShader(const std::string& vertShader,
+    void CreateShader(const std::string& vertShader,
                       const std::string& fragShader);
 
-    unsigned int compileShader(unsigned int type, const std::string& source);
+    unsigned int CompileShader(unsigned int type, const std::string& source);
 
     // Shader Uniform Getter
-    unsigned int getUniformLocation(const std::string& name) const;
+    unsigned int GetUniformLocation(const std::string& name) const;
 
 public:
     Shader(const std::string& vertShaderFile,
@@ -29,22 +29,22 @@ public:
 
     ~Shader();
 
-    unsigned int id() const { return d_programId; }
+    unsigned int Id() const { return d_programId; }
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
     // Shader Uniform Setters
-    void loadUniformInt(const std::string& name, int value) const;
-    void loadUniform(const std::string& name, float value) const;
-    void loadUniform(const std::string& name, const Maths::vec2& vector) const;
-    void loadUniform(const std::string& name, const Maths::vec3& vector) const;
-    void loadUniform(const std::string& name, const Maths::vec4& vector) const;
-    void loadUniform(const std::string& name, const Maths::mat4& matrix) const;
+    void LoadUniformInt(const std::string& name, int value) const;
+    void LoadUniform(const std::string& name, float value) const;
+    void LoadUniform(const std::string& name, const Maths::vec2& vector) const;
+    void LoadUniform(const std::string& name, const Maths::vec3& vector) const;
+    void LoadUniform(const std::string& name, const Maths::vec4& vector) const;
+    void LoadUniform(const std::string& name, const Maths::mat4& matrix) const;
 };
 
 // HELPER FUNCTIONS
-std::string arrayName(const std::string& uniformName, size_t index);
+std::string ArrayName(const std::string& uniformName, size_t index);
     // Give a name for a uniform that is an array, return the accessor
     // name for the given index.
 

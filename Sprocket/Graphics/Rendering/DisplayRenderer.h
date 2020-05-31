@@ -34,17 +34,17 @@ class DisplayRenderer
     std::unordered_map<Font, FontPackage> d_fonts;
         // Map of all loaded fonts to be accessible via the Font enum.
 
-    FontPackage getFont(Font font);
+    FontPackage GetFont(Font font);
 
 public:
     DisplayRenderer(Window* window);
 
-    void update() const;
+    void OnUpdate() const;
 
-    void draw(const Quad& quad) const;
-    void draw(const Quad& quad, const Model2D& model) const;
+    void Draw(const Quad& quad) const;
+    void Draw(const Quad& quad, const Model2D& model) const;
 
-    void draw(const Text& text);
+    void Draw(const Text& text);
 };
 
 

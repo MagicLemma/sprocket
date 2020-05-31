@@ -11,7 +11,7 @@ Stopwatch::Stopwatch()
     , d_frameCount(0)
 {}
 
-void Stopwatch::update()
+void Stopwatch::OnUpdate()
 {
     d_previousTime = d_currentTime;
     d_currentTime = d_clock.now();
@@ -25,7 +25,7 @@ void Stopwatch::update()
     }
 }
 
-float Stopwatch::deltaTime() const
+float Stopwatch::DeltaTime() const
 {
     std::chrono::duration<float> dt = d_currentTime - d_previousTime;
     return dt.count();

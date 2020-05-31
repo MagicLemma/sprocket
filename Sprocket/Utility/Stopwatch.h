@@ -17,10 +17,10 @@ class Stopwatch
 
 public:
     Stopwatch();
-    void update();
-    float deltaTime() const;
+    void OnUpdate();
+    float DeltaTime() const;
 
-    void printFramerate(bool val) { d_printFramerate = val; }
+    void PrintFramerate(bool val) { d_printFramerate = val; }
 };
 
 }

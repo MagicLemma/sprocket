@@ -9,33 +9,33 @@ PlayerMovement::PlayerMovement(Window* window)
 {
 }
 
-void PlayerMovement::updateSystem(float dt)
+void PlayerMovement::UpdateSystem(float dt)
 {
     d_deltaTime = dt;
-    d_mouse.update();
+    d_mouse.OnUpdate();
 }
 
-void PlayerMovement::updateEntity(float dt, Entity& entity)
+void PlayerMovement::UpdateEntity(float dt, Entity& entity)
 {
-    if (!entity.has<PlayerComponent>()) {
+    if (!entity.Has<PlayerComponent>()) {
         return;
     }
 
     float sensitivity = 0.15f;
 
-    auto& player = entity.get<PlayerComponent>();
-    const auto& physics = entity.get<PhysicsComponent>();
+    auto& player = entity.Get<PlayerComponent>();
+    const auto& physics = entity.Get<PhysicsComponent>();
 
     if (d_enabled) {
-        player.movingForwards = d_keyboard.isKeyDown(Keyboard::W);
-        player.movingBackwards = d_keyboard.isKeyDown(Keyboard::S);
-        player.movingLeft = d_keyboard.isKeyDown(Keyboard::A);
-        player.movingRight = d_keyboard.isKeyDown(Keyboard::D);
-        player.jumping = d_keyboard.isKeyDown(Keyboard::SPACE);
+        player.movingForwards = d_keyboard.IsKeyDown(Keyboard::W);
+        player.movingBackwards = d_keyboard.IsKeyDown(Keyboard::S);
+        player.movingLeft = d_keyboard.IsKeyDown(Keyboard::A);
+        player.movingRight = d_keyboard.IsKeyDown(Keyboard::D);
+        player.jumping = d_keyboard.IsKeyDown(Keyboard::SPACE);
         
-        player.yaw -= d_mouse.getMouseOffset().x * sensitivity;
-        player.pitch -= d_mouse.getMouseOffset().y * sensitivity;
-        Maths::clamp(player.pitch, -89.0f, 89.0f);
+        player.yaw -= d_mouse.GetMouseOffset().x * sensitivity;
+        player.pitch -= d_mouse.GetMouseOffset().y * sensitivity;
+        Maths::Clamp(player.pitch, -89.0f, 89.0f);
     }
     else {
         player.movingForwards = false;
@@ -46,8 +46,8 @@ void PlayerMovement::updateEntity(float dt, Entity& entity)
     }
 
     // Update the direction
-    float cosYaw = Maths::cosd(player.yaw);
-    float sinYaw = Maths::sind(player.yaw);
+    float cosYaw = Maths::Cosd(player.yaw);
+    float sinYaw = Maths::Sind(player.yaw);
 
     Maths::vec3 forwards(-sinYaw, 0, -cosYaw);
     Maths::vec3 right(cosYaw, 0, -sinYaw);
@@ -58,17 +58,17 @@ void PlayerMovement::updateEntity(float dt, Entity& entity)
     if (player.movingRight) { direction += right; }
     if (player.movingLeft) { direction -= right; }
     
-    Maths::normalise(direction);
+    Maths::Normalise(direction);
     player.direction = direction;
 }
 
-void PlayerMovement::handleEvent(Event& event)
+void PlayerMovement::OnEvent(Event& event)
 {
-    d_keyboard.handleEvent(event);
-    d_mouse.handleEvent(event);
+    d_keyboard.OnEvent(event);
+    d_mouse.OnEvent(event);
 }
 
-void PlayerMovement::enable(bool newEnabled)
+void PlayerMovement::Enable(bool newEnabled)
 {
     d_enabled = newEnabled;
 }

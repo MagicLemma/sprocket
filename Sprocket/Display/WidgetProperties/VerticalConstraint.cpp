@@ -11,27 +11,27 @@ VerticalConstraint::VerticalConstraint(Type type, float offset, Window* window)
 {
 }
 
-void VerticalConstraint::update(Widget* widget)
+void VerticalConstraint::OnUpdate(Widget* widget)
 {
-    auto current_position = widget->position();
+    auto current_position = widget->Position();
 
     switch (d_type) {
         case Type::TOP: {
-            widget->position({
+            widget->Position({
                 current_position.x,
                 d_offset
             });
         } break;
         case Type::BOTTOM: {
-            widget->position({
+            widget->Position({
                 current_position.x,
-                (float)d_window->height() - widget->height() - d_offset
+                (float)d_window->Height() - widget->Height() - d_offset
             });
         } break;
         case Type::CENTRE: {
-            widget->position({
+            widget->Position({
                 current_position.x,
-                ((float)d_window->height() - widget->height())/2.0f
+                ((float)d_window->Height() - widget->Height())/2.0f
             });
         } break;
         default: {

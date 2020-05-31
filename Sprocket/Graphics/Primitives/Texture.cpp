@@ -11,7 +11,7 @@ namespace Sprocket {
 Texture::Texture(const std::string& pngFile)
     : d_texture(std::make_shared<TEX>())
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->value());
+    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
     SPKT_LOG_INFO("Loading texture '{}'", pngFile);
     int bpp;
@@ -37,7 +37,7 @@ Texture::Texture(int width, int height, const std::vector<unsigned char>& data)
     , d_width(width)
     , d_height(height)
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->value());
+    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -56,7 +56,7 @@ Texture::Texture(int width, int height, unsigned char* data)
     , d_width(width)
     , d_height(height)
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->value());
+    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -71,36 +71,36 @@ Texture::Texture(int width, int height, unsigned char* data)
 }
 
 Texture::Texture()
-    : d_texture(Texture::white().d_texture)
-    , d_width(Texture::white().d_width)
-    , d_height(Texture::white().d_height)
+    : d_texture(Texture::White().d_texture)
+    , d_width(Texture::White().d_width)
+    , d_height(Texture::White().d_height)
 {
 }
 
-void Texture::bind() const
+void Texture::Bind() const
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->value());
+    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 }
 
-void Texture::unbind() const
+void Texture::Unbind() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture Texture::white()
+Texture Texture::White()
 {
     static const Texture white(1, 1, {0xff, 0xff, 0xff, 0x55});
     return white;
 }
 
-unsigned int Texture::id() const
+unsigned int Texture::Id() const
 {
-    return d_texture->value();
+    return d_texture->Value();
 }
 
 bool Texture::operator==(const Texture& other) const
 {
-    return d_texture->value() == other.d_texture->value();
+    return d_texture->Value() == other.d_texture->Value();
 }
 
 }

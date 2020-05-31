@@ -17,25 +17,25 @@ class EntityRenderer
 
     bool d_renderColliders;
 
-    void drawModel    (const Entity& entity);
-    void drawCollider (const Entity& entity);
+    void DrawModel    (const Entity& entity);
+    void DrawCollider (const Entity& entity);
 
-    void drawBox      (const Entity& entity, const BoxCollider* collider);
-    void drawSphere   (const Entity& entity, const SphereCollider* collider);
-    void drawCapsule  (const Entity& entity, const CapsuleCollider* collider);
+    void DrawBox      (const Entity& entity, const BoxCollider* collider);
+    void DrawSphere   (const Entity& entity, const SphereCollider* collider);
+    void DrawCapsule  (const Entity& entity, const CapsuleCollider* collider);
 
 public:
     EntityRenderer(Window* window);
 
-    void renderColliders(bool value);
+    void RenderColliders(bool value);
 
-    bool showColliders() const { return d_renderColliders; }
+    bool ShowColliders() const { return d_renderColliders; }
 
-    void update(const Camera& camera, const Lens& lens, const Lights& lights);
+    void OnUpdate(const Camera& camera, const Lens& lens, const Lights& lights);
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
 
-    void draw(const Entity& entity);
+    void Draw(const Entity& entity);
 };
 
 }

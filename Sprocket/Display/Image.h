@@ -10,8 +10,8 @@ namespace Sprocket {
 
 class Image : public Widget
 {
-    void updateImpl(DisplayRenderer* renderer) override {};
-    void handleEventImpl(Event& event) override {};
+    void OnUpdateImpl(DisplayRenderer* renderer) override {};
+    void OnEventImpl(Event& event) override {};
 
 public:
     Image(const Texture& texture);

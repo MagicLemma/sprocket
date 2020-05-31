@@ -2,9 +2,9 @@
 
 namespace Sprocket {
 
-void GaussianVert::setUniforms() const
+void GaussianVert::SetUniforms() const
 {
-    d_shader.loadUniform("targetHeight", (float)height());
+    d_shader.LoadUniform("targetHeight", (float)Height());
 }
 
 GaussianVert::GaussianVert(int width, int height)
@@ -15,9 +15,9 @@ GaussianVert::GaussianVert(int width, int height)
 
 }
 
-void GaussianHoriz::setUniforms() const
+void GaussianHoriz::SetUniforms() const
 {
-    d_shader.loadUniform("targetWidth", (float)width());
+    d_shader.LoadUniform("targetWidth", (float)Width());
 }
 
 GaussianHoriz::GaussianHoriz(int width, int height)

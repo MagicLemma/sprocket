@@ -21,11 +21,11 @@ class TerrainRenderer
 public:
     TerrainRenderer(Window* window);
 
-    void update(const Camera& camera,
+    void OnUpdate(const Camera& camera,
                 const Lens& lens,
                 const Lights& lights);
 
-    void draw(const Terrain& terrain);
+    void Draw(const Terrain& terrain);
 };
 
 }

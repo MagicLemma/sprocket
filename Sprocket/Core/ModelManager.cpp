@@ -8,7 +8,7 @@
 namespace Sprocket {
 namespace {
 
-bool isSceneValid(const aiScene* scene)
+bool IsSceneValid(const aiScene* scene)
     // Returns true if the scene is valid and false otherwise.
 {
     return scene && 
@@ -16,7 +16,7 @@ bool isSceneValid(const aiScene* scene)
            scene->mRootNode;
 }
 
-Model3D processMesh(const aiScene* scene, aiMesh* mesh)
+Model3D ProcessMesh(const aiScene* scene, aiMesh* mesh)
 {    
     Vertex3DBuffer vertices;
     IndexBuffer    indices;
@@ -53,13 +53,13 @@ Model3D processMesh(const aiScene* scene, aiMesh* mesh)
 
 }
 
-Model3D ModelManager::loadModel(const std::string& path)
+Model3D ModelManager::LoadModel(const std::string& path)
 {
     Assimp::Importer importer;
     int flags = aiProcess_Triangulate | aiProcess_FlipUVs;
     const aiScene* scene = importer.ReadFile(path, flags);
 
-    if (!isSceneValid(scene)) {
+    if (!IsSceneValid(scene)) {
         SPKT_LOG_ERROR("ERROR::ASSIMP::{}", importer.GetErrorString());
         return Model3D();
     }
@@ -69,10 +69,10 @@ Model3D ModelManager::loadModel(const std::string& path)
         return Model3D();
     }
 
-    return processMesh(scene, scene->mMeshes[0]);
+    return ProcessMesh(scene, scene->mMeshes[0]);
 }
 
-Model3D ModelManager::loadModel(const std::string& name,
+Model3D ModelManager::LoadModel(const std::string& name,
                                 const std::string& path)
 {
     auto it = d_loadedModels.find(name);
@@ -80,12 +80,12 @@ Model3D ModelManager::loadModel(const std::string& name,
         SPKT_LOG_ERROR("Tried to cache a model as '{}', which exists!", name);
         return it->second;
     }
-    Model3D model = loadModel(path);
+    Model3D model = LoadModel(path);
     d_loadedModels.insert(std::make_pair(name, model));
     return model;   
 }
 
-Model3D ModelManager::getModel(const std::string& name) const
+Model3D ModelManager::GetModel(const std::string& name) const
 {
     auto it = d_loadedModels.find(name);
     if (it == d_loadedModels.end()) {

@@ -30,12 +30,12 @@ class Widget
         // Properties of this widget. Applied on every update
         // and may receive every event.
 
-    Maths::vec2 absolutePosition() const;
+    Maths::vec2 AbsolutePosition() const;
         // Recurses up the Widget tree to get the position of this
         // Widget with respect to the screen.
 
-    virtual void updateImpl(DisplayRenderer* renderer) = 0;
-    virtual void handleEventImpl(Event& event) = 0;
+    virtual void OnUpdateImpl(DisplayRenderer* renderer) = 0;
+    virtual void OnEventImpl(Event& event) = 0;
         // Recurses down through all children and draws them too.
 
     bool d_active;
@@ -55,7 +55,7 @@ protected:
         // the position being in local coordinates; (0, 0) is the top left of
         // this widget.
 
-    void makeChild(std::shared_ptr<Widget> child);
+    void MakeChild(std::shared_ptr<Widget> child);
         // Sets the given widget to be a child of the current widget.
         // This is protected so external code cannot make widgets children
         // of other widgets, that can only happen within Widget code.
@@ -67,32 +67,32 @@ public:
 
     virtual ~Widget();
 
-    void update(DisplayRenderer* renderer);
-    void handleEvent(Event& event);
+    void OnUpdate(DisplayRenderer* renderer);
+    void OnEvent(Event& event);
 
-    Quad& base() { return d_base; }
-    const Quad& base() const { return d_base; }
+    Quad& Base() { return d_base; }
+    const Quad& Base() const { return d_base; }
 
-    Maths::vec2 position() const { return d_offset; }
+    Maths::vec2 Position() const { return d_offset; }
         // Returns the offset of this Widget relative to it's parent.
         // This is the offset from the screen if the Widget has no parent.
     
-    void position(const Maths::vec2& newPosition) { d_offset = newPosition; }
+    void Position(const Maths::vec2& newPosition) { d_offset = newPosition; }
         // Set the offset of this Widget with respect to its parent.
     
-    const std::vector<std::shared_ptr<Widget>>& children() const { return d_children; }
+    const std::vector<std::shared_ptr<Widget>>& Children() const { return d_children; }
 
-    float width() const { return d_base.width; }
-    void width(float newWidth) { d_base.width = newWidth; }
+    float Width() const { return d_base.width; }
+    void Width(float newWidth) { d_base.width = newWidth; }
 
-    float height() const { return d_base.height; }
-    void height(float newHeight) { d_base.height = newHeight; }
+    float Height() const { return d_base.height; }
+    void Height(float newHeight) { d_base.height = newHeight; }
 
-    bool active() const;
-    void active(bool newState) { d_active = newState; }
+    bool Active() const;
+    void Active(bool newState) { d_active = newState; }
 
     template <typename T, typename... Args>
-    std::shared_ptr<T> addProperty(Args&&... args)
+    std::shared_ptr<T> AddProperty(Args&&... args)
     {
         static_assert(std::is_base_of<WidgetProperty, T>::value);
         auto newProperty = std::make_shared<T>(std::forward<Args>(args)...);
@@ -102,11 +102,11 @@ public:
 
 public:
     // Helper Functions
-    Maths::vec2 toLocalCoords(const Maths::vec2& screenCoords) const;
-    Maths::vec2 toScreenCoords(const Maths::vec2& localCoords) const;
+    Maths::vec2 ToLocalCoords(const Maths::vec2& screenCoords) const;
+    Maths::vec2 ToScreenCoords(const Maths::vec2& localCoords) const;
 
-    Quad toLocalCoords(const Quad& screenQuad) const;
-    Quad toScreenCoords(const Quad& localQuad) const;
+    Quad ToLocalCoords(const Quad& screenQuad) const;
+    Quad ToScreenCoords(const Quad& localQuad) const;
 };
 
 }

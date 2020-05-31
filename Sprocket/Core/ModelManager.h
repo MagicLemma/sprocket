@@ -17,17 +17,17 @@ private:
     Map d_loadedModels;
 
 public:
-    static Model3D loadModel(const std::string& path);
+    static Model3D LoadModel(const std::string& path);
         // Loads a model without caching it.
 
-    Model3D loadModel(const std::string& name,
+    Model3D LoadModel(const std::string& name,
                       const std::string& path);
 
-    Model3D getModel(const std::string& name) const;
+    Model3D GetModel(const std::string& name) const;
 
+    // Lower camel case to match STL iterators
     Map::iterator begin();
     Map::iterator end();
-
     Map::const_iterator cbegin() const;
     Map::const_iterator cend() const;
 };

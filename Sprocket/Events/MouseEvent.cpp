@@ -11,7 +11,7 @@ MouseButtonPressedEvent::MouseButtonPressedEvent(int button, int action, int mod
 {
 }
 
-std::string MouseButtonPressedEvent::toString() const
+std::string MouseButtonPressedEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "MouseButtonPressedEvent: " << d_button << ", " << d_action << ", " << d_mods;
@@ -25,7 +25,7 @@ MouseButtonReleasedEvent::MouseButtonReleasedEvent(int button, int action, int m
 {
 }
 
-std::string MouseButtonReleasedEvent::toString() const
+std::string MouseButtonReleasedEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "MouseButtonReleasedEvent: " << d_button << ", " << d_action << ", " << d_mods;
@@ -38,7 +38,7 @@ MouseMovedEvent::MouseMovedEvent(float xPos, float yPos)
 {
 }
 
-std::string MouseMovedEvent::toString() const
+std::string MouseMovedEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "MouseMovedEvent: " << d_xPos << ", " << d_yPos;
@@ -51,7 +51,7 @@ MouseScrolledEvent::MouseScrolledEvent(float xOffset, float yOffset)
 {
 }
 
-std::string MouseScrolledEvent::toString() const
+std::string MouseScrolledEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "MouseScrolledEvent: " << d_xOffset << ", " << d_yOffset;

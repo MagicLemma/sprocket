@@ -11,17 +11,15 @@ class CubeMap
 
     int d_width;
     int d_height;
-    int d_bpp;
 
 public:
     CubeMap(const std::array<std::string, 6>& faceFiles);
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
-    int width() const { return d_width; }
-    int height() const { return d_height; }
-    int bpp() const { return d_bpp; }
+    int Width() const { return d_width; }
+    int Height() const { return d_height; }
 };
 
 }

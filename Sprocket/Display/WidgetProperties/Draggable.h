@@ -10,16 +10,14 @@ class Widget;
 
 class Draggable : public WidgetProperty
 {
-    bool d_moving;
+    bool       d_moving;
     MouseProxy d_mouse;
 
 public:
     Draggable();
     
-    virtual void update(Widget* widget) override;
-
-    virtual void handleEvent(Widget* widget,
-                             Event& event) override;
+    virtual void OnUpdate(Widget* widget) override;
+    virtual void OnEvent(Widget* widget, Event& event) override;
 };
 
 }

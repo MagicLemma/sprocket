@@ -6,11 +6,11 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityRenderer(core.window)
     , d_terrainRenderer(core.window)
     , d_skyboxRenderer(core.window)
-    , d_postProcessor(core.window->width(), core.window->height())
-    , d_lens(core.window->aspectRatio())
+    , d_postProcessor(core.window->Width(), core.window->Height())
+    , d_lens(core.window->AspectRatio())
     , d_camera(&d_observerCamera)
     , d_skybox({
-        Sprocket::ModelManager::loadModel("Resources/Models/Skybox.obj"),
+        Sprocket::ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         Sprocket::CubeMap({
             "Resources/Textures/Skybox/Skybox_X_Pos.png",
             "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -29,7 +29,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 {
     using namespace Sprocket;
 
-    d_playerMovement.enable(false);
+    d_playerMovement.Enable(false);
 
     auto& entityManager = d_entityManager;
 
@@ -56,126 +56,126 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     Material islandMaterial;
     islandMaterial.texture = Texture("Resources/Textures/FloatingIslandTex.png");
 
-    auto platformModel = core.modelManager->loadModel("Platform", "Resources/Models/Platform.obj");
-    auto crateModel = core.modelManager->loadModel("Crate", "Resources/Models/Cube.obj");
-    auto sphereModel = core.modelManager->loadModel("Sphere", "Resources/Models/Sphere.obj");
-    auto floatingIslandModel = core.modelManager->loadModel("Floating Island", "Resources/Models/FloatingIsland.obj");
+    auto platformModel = core.modelManager->LoadModel("Platform", "Resources/Models/Platform.obj");
+    auto crateModel = core.modelManager->LoadModel("Crate", "Resources/Models/Cube.obj");
+    auto sphereModel = core.modelManager->LoadModel("Sphere", "Resources/Models/Sphere.obj");
+    auto floatingIslandModel = core.modelManager->LoadModel("Floating Island", "Resources/Models/FloatingIsland.obj");
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->name() = "Platform 1";
-        platform->position() = {7.0, 0.0, -3.0};
-        platform->orientation() = Maths::rotate({1, 0, 0}, 6.0f);
+        platform->Name() = "Platform 1";
+        platform->Position() = {7.0, 0.0, -3.0};
+        platform->Orientation() = Maths::Rotate({1, 0, 0}, 6.0f);
         
-        auto model = platform->add<ModelComponent>();
+        auto model = platform->Add<ModelComponent>();
         model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
 
-        auto coll = platform->add<ColliderComponent>();
+        auto coll = platform->Add<ColliderComponent>();
         coll->bounciness = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         coll->collider = c;
 
-        platform->add<SelectComponent>();
-        entityManager.addEntity(platform);
+        platform->Add<SelectComponent>();
+        entityManager.AddEntity(platform);
     }
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->name() = "Island";
-        platform->position() = {40.0, -10.0, 0.0};
+        platform->Name() = "Island";
+        platform->Position() = {40.0, -10.0, 0.0};
         
-        auto model = platform->add<ModelComponent>();
+        auto model = platform->Add<ModelComponent>();
         model->model = floatingIslandModel;
         model->material = islandMaterial;
         model->scale = 0.5f;
 
-        platform->add<SelectComponent>();
-        entityManager.addEntity(platform);
+        platform->Add<SelectComponent>();
+        entityManager.AddEntity(platform);
     }
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->name() = "Platform 2";
-        platform->position() = {-5.0, 0.0, 5.0};
+        platform->Name() = "Platform 2";
+        platform->Position() = {-5.0, 0.0, 5.0};
 
-        auto model = platform->add<ModelComponent>();
+        auto model = platform->Add<ModelComponent>();
         model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
 
-        auto coll = platform->add<ColliderComponent>();
+        auto coll = platform->Add<ColliderComponent>();
         coll->bounciness = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         coll->collider = c;
 
-        platform->add<SelectComponent>();
-        entityManager.addEntity(platform);
+        platform->Add<SelectComponent>();
+        entityManager.AddEntity(platform);
     }
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->name() = "Platform 3";
-        platform->position() = {-5.0, 0.0, 5.0};
+        platform->Name() = "Platform 3";
+        platform->Position() = {-5.0, 0.0, 5.0};
 
         Maths::quat orientation = Maths::identity;
-        orientation = Maths::rotate(orientation, {0, 0, 1}, 80.0f);
-        orientation = Maths::rotate(orientation, {0, 1, 0}, 90.0f);
-        platform->orientation() = orientation;
+        orientation = Maths::Rotate(orientation, {0, 0, 1}, 80.0f);
+        orientation = Maths::Rotate(orientation, {0, 1, 0}, 90.0f);
+        platform->Orientation() = orientation;
 
-        auto model = platform->add<ModelComponent>();
+        auto model = platform->Add<ModelComponent>();
         model->model = platformModel;
         model->material = dullGray;
         model->scale = 1.0f;
 
-        auto coll = platform->add<ColliderComponent>();
+        auto coll = platform->Add<ColliderComponent>();
         coll->bounciness = 0.0f;
         coll->frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         coll->collider = c;
 
-        platform->add<SelectComponent>();
-        entityManager.addEntity(platform);
+        platform->Add<SelectComponent>();
+        entityManager.AddEntity(platform);
     }
 
     {
         auto crate = std::make_shared<Entity>();
-        crate->name() = "Crate 1";
-        crate->position() = {-5.0, 2.0, -3.0};
-        crate->orientation() = Maths::rotate({0, 1, 0}, 45.0f);
+        crate->Name() = "Crate 1";
+        crate->Position() = {-5.0, 2.0, -3.0};
+        crate->Orientation() = Maths::Rotate({0, 1, 0}, 45.0f);
 
-        auto model = crate->add<ModelComponent>();
+        auto model = crate->Add<ModelComponent>();
         model->model = crateModel;
         model->material = galaxy;
         model->scale = 1.2f;
 
-        auto coll = crate->add<ColliderComponent>();
+        auto coll = crate->Add<ColliderComponent>();
         coll->bounciness = 0.0f;
         coll->frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
         coll->collider = c;
 
-        crate->add<SelectComponent>();
-        entityManager.addEntity(crate);
+        crate->Add<SelectComponent>();
+        entityManager.AddEntity(crate);
     }
 
     {
         auto crate = std::make_shared<Entity>();
-        crate->name() = "Crate 2";
-        crate->position() = {-1.0, 0.0, -3.0};
-        crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
+        crate->Name() = "Crate 2";
+        crate->Position() = {-1.0, 0.0, -3.0};
+        crate->Orientation() = Maths::Rotate({0, 1, 0}, 75.0f);
 
-        auto model = crate->add<ModelComponent>();
+        auto model = crate->Add<ModelComponent>();
         model->model = crateModel;
         model->material = field;
         model->scale = 1.2f;
 
-        auto coll = crate->add<ColliderComponent>();
+        auto coll = crate->Add<ColliderComponent>();
         coll->mass = 1000.0f;
         coll->bounciness = 0.0f;
         coll->frictionCoefficient = 0.0f;
@@ -183,24 +183,24 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         c.halfExtents = {1.2, 1.2, 1.2};
         coll->collider = c;
 
-        crate->add<SelectComponent>();
-        entityManager.addEntity(crate);
+        crate->Add<SelectComponent>();
+        entityManager.AddEntity(crate);
     }
 
     {
         auto crate = std::make_shared<Entity>();
-        crate->name() = "Movable Crate";
-        crate->position() = {8.0, 5.0, 7.0};
-        crate->orientation() = Maths::rotate({0, 1, 0}, 75.0f);
+        crate->Name() = "Movable Crate";
+        crate->Position() = {8.0, 5.0, 7.0};
+        crate->Orientation() = Maths::Rotate({0, 1, 0}, 75.0f);
 
-        auto model = crate->add<ModelComponent>();
+        auto model = crate->Add<ModelComponent>();
         model->model = crateModel;
         model->material = field;
         model->scale = 1.2f;
 
-        auto phys = crate->add<PhysicsComponent>();
+        auto phys = crate->Add<PhysicsComponent>();
 
-        auto coll = crate->add<ColliderComponent>();
+        auto coll = crate->Add<ColliderComponent>();
         coll->mass = 10000.0f;
         coll->bounciness = 0.0f;
         coll->frictionCoefficient = 0.2f;
@@ -208,23 +208,23 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         c.halfExtents = {1.2, 1.2, 1.2};
         coll->collider = c;
 
-        crate->add<SelectComponent>();
-        entityManager.addEntity(crate);
+        crate->Add<SelectComponent>();
+        entityManager.AddEntity(crate);
     }
 
     {
         auto player = std::make_shared<Entity>();
-        player->name() = "Player";
-        player->position() = {0.0f, 5.0f, 5.0f};
+        player->Name() = "Player";
+        player->Position() = {0.0f, 5.0f, 5.0f};
 
-        auto model = player->add<ModelComponent>();
+        auto model = player->Add<ModelComponent>();
         model->model = crateModel;
         model->material = shinyGray;
         model->scale = 0.3f;
 
-        auto physics = player->add<PhysicsComponent>();
+        auto physics = player->Add<PhysicsComponent>();
 
-        auto coll = player->add<ColliderComponent>();
+        auto coll = player->Add<ColliderComponent>();
         coll->mass = 60.0f;
         coll->rollingResistance = 1.0f;
         coll->frictionCoefficient = 0.4f;
@@ -236,11 +236,11 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
             coll->collider = c;
         }
 
-        player->add<PlayerComponent>();
-        d_playerCamera.setPlayer(player.get());
+        player->Add<PlayerComponent>();
+        d_playerCamera.SetPlayer(player.get());
 
-        player->add<SelectComponent>();
-        entityManager.addEntity(player);
+        player->Add<SelectComponent>();
+        entityManager.AddEntity(player);
     }
 
     for (int i = 0; i != 5; ++i)
@@ -248,31 +248,31 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto sphere = std::make_shared<Entity>();
         std::stringstream ss;
         ss << "Sphere " << i;
-        sphere->name() = ss.str();
-        sphere->position() = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
+        sphere->Name() = ss.str();
+        sphere->Position() = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
         
-        auto model = sphere->add<ModelComponent>();
+        auto model = sphere->Add<ModelComponent>();
         model->model = sphereModel;
         model->material = shinyGray;
         model->scale = 0.9f;
 
-        auto physics = sphere->add<PhysicsComponent>();
+        auto physics = sphere->Add<PhysicsComponent>();
 
-        auto coll = sphere->add<ColliderComponent>();
+        auto coll = sphere->Add<ColliderComponent>();
         coll->mass = 20.0f;
         SphereCollider c;
         c.radius = 1;
         coll->collider = c;
 
-        sphere->add<SelectComponent>();
-        entityManager.addEntity(sphere);
+        sphere->Add<SelectComponent>();
+        entityManager.AddEntity(sphere);
 
         if (i == 4) {
             physics->velocity = {0, 20, 0};
         }
     }
 
-    core.window->setCursorVisibility(false);
+    core.window->SetCursorVisibility(false);
 
     d_lights.push_back({{0.0f, 50.0f, 0.0f}, {0.5f, 0.4f, 0.4f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
@@ -280,55 +280,55 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
     d_lights.push_back({{40.0, 20.0, 0.0}, {0.8f, 0.8f, 0.8f}, {1.0f, 0.0f, 0.0f}});
 
-    d_postProcessor.addEffect<GaussianVert>();
-    d_postProcessor.addEffect<GaussianHoriz>();
+    d_postProcessor.AddEffect<GaussianVert>();
+    d_postProcessor.AddEffect<GaussianHoriz>();
 }
 
-void WorldLayer::handleEvent(Sprocket::Event& event)
+void WorldLayer::OnEvent(Sprocket::Event& event)
 {
     using namespace Sprocket;
 
-    if (auto e = event.as<WindowResizeEvent>()) {
-        d_postProcessor.setScreenSize(e->width(), e->height()); 
+    if (auto e = event.As<WindowResizeEvent>()) {
+        d_postProcessor.SetScreenSize(e->Width(), e->Height()); 
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_camera->handleEvent(event);
-    d_lens.handleEvent(event);
-    d_entityManager.handleEvent(event);
+    d_camera->OnEvent(event);
+    d_lens.OnEvent(event);
+    d_entityManager.OnEvent(event);
 }
 
-void WorldLayer::update(float dt)
+void WorldLayer::OnUpdate(float dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.update(*d_camera, d_lens, d_lights);
+    d_entityRenderer.OnUpdate(*d_camera, d_lens, d_lights);
 
     if (!d_paused) {
-        d_camera->update(dt);
-        d_core.window->setCursorVisibility(d_mouseRequired);
-        d_entityManager.update(dt);
+        d_camera->OnUpdate(dt);
+        d_core.window->SetCursorVisibility(d_mouseRequired);
+        d_entityManager.OnUpdate(dt);
 
-        for (auto& [id, entity] : d_entityManager.entities()) {
-            if (entity->has<PlayerComponent>() && entity->position().y < -2.0f) {
-                entity->position() = {0, 3, 0};
-                entity->get<PhysicsComponent>().velocity = {0, 0, 0};
+        for (auto& [id, entity] : d_entityManager.Entities()) {
+            if (entity->Has<PlayerComponent>() && entity->Position().y < -2.0f) {
+                entity->Position() = {0, 3, 0};
+                entity->Get<PhysicsComponent>().velocity = {0, 0, 0};
             }
-            if (entity->position().y < -50.0f) {
-                entity->kill();
+            if (entity->Position().y < -50.0f) {
+                entity->Kill();
             }
         }
     }
 
     if (d_paused) {
-        d_postProcessor.bind();
+        d_postProcessor.Bind();
     }
     
-    d_skyboxRenderer.draw(d_skybox, *d_camera, d_lens);
-    d_entityManager.draw(&d_entityRenderer);
+    d_skyboxRenderer.Draw(d_skybox, *d_camera, d_lens);
+    d_entityManager.Draw(&d_entityRenderer);
     
     if (d_paused) {
-        d_postProcessor.unbind();
-        d_postProcessor.draw();
+        d_postProcessor.Unbind();
+        d_postProcessor.Draw();
     }
 }

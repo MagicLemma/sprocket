@@ -29,7 +29,7 @@ Window::Window(
 	// forwards all events on to the keyboard/mouse and any
 	// registered objects.
 	d_data.callback = [&](Event& event) {
-		if (auto e = event.as<WindowClosedEvent>()) {
+		if (auto e = event.As<WindowClosedEvent>()) {
 			d_data.running = false;
 			return;
 		}
@@ -168,19 +168,19 @@ Window::~Window()
 	glfwTerminate();
 }
 
-void Window::onUpdate()
+void Window::OnUpdate()
 {
 	glfwSwapBuffers(d_impl->window);
 	glfwPollEvents();
 }
 
-void Window::clear()
+void Window::Clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClearColor(0, 0, 0, 1);
 }
 
-void Window::setCursorVisibility(bool visibility)
+void Window::SetCursorVisibility(bool visibility)
 {
 	if (visibility) {
 		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -190,17 +190,17 @@ void Window::setCursorVisibility(bool visibility)
 	}
 }
 
-void Window::setCallback(EventCallback cb)
+void Window::SetCallback(EventCallback cb)
 {
 	d_callback = cb;
 }
 
-const char* Window::getClipboardData()
+const char* Window::GetClipboardData()
 {
 	return glfwGetClipboardString(d_impl->window);
 }
 
-void Window::setClipboardData(const std::string& text)
+void Window::SetClipboardData(const std::string& text)
 {
 	glfwSetClipboardString(d_impl->window, text.c_str());
 }

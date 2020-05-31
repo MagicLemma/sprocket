@@ -5,7 +5,7 @@ namespace Sprocket {
 
 class GaussianVert : public Effect
 {
-    void setUniforms() const override;
+    void SetUniforms() const override;
 
 public:
     GaussianVert(int width, int height);
@@ -13,7 +13,7 @@ public:
 
 class GaussianHoriz : public Effect
 {
-    void setUniforms() const override;
+    void SetUniforms() const override;
 
 public:
     GaussianHoriz(int width, int height);

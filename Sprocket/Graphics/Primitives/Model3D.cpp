@@ -8,9 +8,9 @@ Model3D::Model3D(const Vertex3DBuffer& vertices,
                  const IndexBuffer& indices)
 {
     d_vao = std::make_shared<VAO>();
-    glBindVertexArray(d_vao->value());
-    d_vertexBuffer = loadVertexBuffer(vertices);
-    d_indexBuffer = loadIndexBuffer(indices);
+    glBindVertexArray(d_vao->Value());
+    d_vertexBuffer = LoadVertexBuffer(vertices);
+    d_indexBuffer = LoadIndexBuffer(indices);
     glBindVertexArray(0);
 
     d_vertexData = std::make_shared<Vertex3DBuffer>(vertices);
@@ -21,25 +21,25 @@ Model3D::Model3D()
 {
 }
 
-void Model3D::bind() const
+void Model3D::Bind() const
 {
     if (d_vao) {
-        glBindVertexArray(d_vao->value());
+        glBindVertexArray(d_vao->Value());
     }
     else {
         glBindVertexArray(0);
     }
 }
 
-void Model3D::unbind() const
+void Model3D::Unbind() const
 {
     glBindVertexArray(0);
 }
 
-std::shared_ptr<VBO> Model3D::loadVertexBuffer(const Vertex3DBuffer& vertices)
+std::shared_ptr<VBO> Model3D::LoadVertexBuffer(const Vertex3DBuffer& vertices)
 {
     auto vertexBuffer = std::make_shared<VBO>();
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->value());
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->Value());
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
     // Set Vertex Attributes in the VAO
@@ -58,10 +58,10 @@ std::shared_ptr<VBO> Model3D::loadVertexBuffer(const Vertex3DBuffer& vertices)
     return vertexBuffer;
 }
 
-std::shared_ptr<VBO> Model3D::loadIndexBuffer(const IndexBuffer& indices)
+std::shared_ptr<VBO> Model3D::LoadIndexBuffer(const IndexBuffer& indices)
 {
     auto indexBuffer = std::make_shared<VBO>();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->value());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->Value());
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
     return indexBuffer;
@@ -70,7 +70,7 @@ std::shared_ptr<VBO> Model3D::loadIndexBuffer(const IndexBuffer& indices)
 bool Model3D::operator==(const Model3D& other) const
 {
     // Two models are the same if they point to the same VAO.
-    return d_vao->value() == other.d_vao->value();
+    return d_vao->Value() == other.d_vao->Value();
 }
 
 }

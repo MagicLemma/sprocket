@@ -10,13 +10,10 @@ class Camera
 public:
     virtual ~Camera() {};
 
-    virtual Maths::mat4 view() const = 0;
+    virtual Maths::mat4 View() const = 0;
 
-    virtual void update(float timeDelta) {}
-        // To be implemented, how this camera should update every tick.
-
-    virtual void handleEvent(Event& event) {}
-        // Optional override to handle events.
+    virtual void OnUpdate(float timeDelta) {}
+    virtual void OnEvent(Event& event) {}
 };
 
 }

@@ -25,20 +25,20 @@ class SceneManager
 public:
     SceneManager();
 
-    Scene* addScene(const std::string& name);
+    Scene* AddScene(const std::string& name);
         // Create a new scene with the given name and return a pointer to it.
 
-    bool setActiveScene(const std::string& name);
+    bool SetActiveScene(const std::string& name);
         // Set the scene with the given name to be the active scene. If no
         // scene with the given name exists, this is a no-op and false is
         // returned.
 
-    bool doesSceneExist(const std::string& name) const;
+    bool DoesSceneExist(const std::string& name) const;
 
-    void update(float dt);
+    void OnUpdate(float dt);
         // Updates and draws the active scene.
 
-    void handleEvent(Event& event);
+    void OnEvent(Event& event);
         // Sends the event to the active scene.
 };
 

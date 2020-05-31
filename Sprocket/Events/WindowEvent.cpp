@@ -10,33 +10,33 @@ WindowResizeEvent::WindowResizeEvent(unsigned int width, unsigned int height)
 {
 }
 
-std::string WindowResizeEvent::toString() const
+std::string WindowResizeEvent::ToString() const
 {
 	std::stringstream ss;
 	ss << "WindowResizeEvent: " << d_width << ", " << d_height;
 	return ss.str();
 }
 
-std::string WindowClosedEvent::toString() const
+std::string WindowClosedEvent::ToString() const
 {
 	return "WindowClosedEvent";
 }
 
-std::string WindowGotFocusEvent::toString() const
+std::string WindowGotFocusEvent::ToString() const
 {
 	return "WindowGotFocus";
 }
 
-std::string WindowLostFocusEvent::toString() const
+std::string WindowLostFocusEvent::ToString() const
 {
 	return "WindowLostFocus";
 }
-std::string WindowMaximizeEvent::toString() const
+std::string WindowMaximizeEvent::ToString() const
 {
 	return "WindowMaximizeEvent";
 }
 
-std::string WindowMinimizeEvent::toString() const
+std::string WindowMinimizeEvent::ToString() const
 {
 	return "WindowMinimizeEvent";
 }

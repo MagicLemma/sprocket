@@ -98,27 +98,27 @@ public:
 		   unsigned int height = 720);
 	~Window();
 
-	void onUpdate();
-	void clear();
+	void OnUpdate();
+	void Clear();
 
 	// Getters
-	unsigned int height() const { return d_data.height; }
-	unsigned int width() const { return d_data.width; }
-	float aspectRatio() const { return (float)d_data.width / (float)d_data.height; }
-	bool running() const { return d_data.running; }
-	bool focused() const { return d_data.focused; }
+	unsigned int Height() const { return d_data.height; }
+	unsigned int Width() const { return d_data.width; }
+	float AspectRatio() const { return (float)d_data.width / (float)d_data.height; }
+	bool Running() const { return d_data.running; }
+	bool Focused() const { return d_data.focused; }
 
 	// Callback Utilities
-	void setCallback(EventCallback cb);
+	void SetCallback(EventCallback cb);
 		// Sets the callback to be given events. If a callback is already
 		// provided, it is overwritten.
 
 	// Window Utilities
-	void setCursorVisibility(bool visibility);
+	void SetCursorVisibility(bool visibility);
 
 	// Clipboard Utilities
-	const char* getClipboardData();
-	void setClipboardData(const std::string& text);
+	const char* GetClipboardData();
+	void SetClipboardData(const std::string& text);
 };
 
 }

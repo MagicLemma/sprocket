@@ -15,8 +15,8 @@ class KeyboardProxy
     std::unordered_map<int, bool> d_pressedKeys;
 
 public:
-    void handleEvent(Event& event);
-    bool isKeyDown(int key) const;
+    void OnEvent(Event& event);
+    bool IsKeyDown(int key) const;
 };
 
 }

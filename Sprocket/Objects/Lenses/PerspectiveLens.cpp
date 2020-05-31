@@ -10,36 +10,36 @@ PerspectiveLens::PerspectiveLens(float aspectRatio,
                                  float farPlane)
     : Lens()
     , d_aspectRatio(aspectRatio)
-    , d_fov(Maths::radians(fov))
+    , d_fov(Maths::Radians(fov))
     , d_nearPlane(nearPlane)
     , d_farPlane(farPlane)
-    , d_projection(Maths::perspective(d_aspectRatio,
+    , d_projection(Maths::Perspective(d_aspectRatio,
                                       d_fov,
                                       d_nearPlane,
                                       d_farPlane))
 {
 }
 
-Maths::mat4 PerspectiveLens::projection() const
+Maths::mat4 PerspectiveLens::Projection() const
 {
     return d_projection;
 }
 
-void PerspectiveLens::handleEvent(Event& event)
+void PerspectiveLens::OnEvent(Event& event)
 {
-    if (auto e = event.as<WindowResizeEvent>()) {
-        d_aspectRatio = e->aspectRatio();
-        d_projection = Maths::perspective(d_aspectRatio,
+    if (auto e = event.As<WindowResizeEvent>()) {
+        d_aspectRatio = e->AspectRatio();
+        d_projection = Maths::Perspective(d_aspectRatio,
                                           d_fov,
                                           d_nearPlane,
                                           d_farPlane);
     }
 }
 
-void PerspectiveLens::fov(float newFov)
+void PerspectiveLens::FOV(float newFov)
 {
-    d_fov = Maths::radians(newFov);
-    d_projection = Maths::perspective(d_aspectRatio,
+    d_fov = Maths::Radians(newFov);
+    d_projection = Maths::Perspective(d_aspectRatio,
                                       d_fov,
                                       d_nearPlane,
                                       d_farPlane);

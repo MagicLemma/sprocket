@@ -16,61 +16,61 @@ FirstPersonCamera::FirstPersonCamera()
 {
 }
 
-Maths::mat4 FirstPersonCamera::view() const
+Maths::mat4 FirstPersonCamera::View() const
 {
-    return Maths::view(d_position, d_pitch, d_yaw, d_roll);
+    return Maths::View(d_position, d_pitch, d_yaw, d_roll);
 }
 
-void FirstPersonCamera::update(float timeDelta)
+void FirstPersonCamera::OnUpdate(float timeDelta)
 {
-    d_mouse.update();
+    d_mouse.OnUpdate();
 
     float speed = 10.0f * timeDelta;
 
     Maths::vec3 forwards = d_direction;
     forwards.y = 0;
-    Maths::normalise(forwards);
+    Maths::Normalise(forwards);
 
     Maths::vec3 up = {0.0f, 1.0f, 0.0f};
     Maths::vec3 right = cross(forwards, up);
     
-    if (d_keyboard.isKeyDown(Keyboard::W)){
+    if (d_keyboard.IsKeyDown(Keyboard::W)){
         d_position += speed * forwards;
     }
-    if (d_keyboard.isKeyDown(Keyboard::S)){
+    if (d_keyboard.IsKeyDown(Keyboard::S)){
         d_position -= speed * forwards;
     }
-    if (d_keyboard.isKeyDown(Keyboard::D)){
+    if (d_keyboard.IsKeyDown(Keyboard::D)){
         d_position += speed * right;
     }
-    if (d_keyboard.isKeyDown(Keyboard::A)){
+    if (d_keyboard.IsKeyDown(Keyboard::A)){
         d_position -= speed * right;
     }
     
-    if (d_keyboard.isKeyDown(Keyboard::SPACE)){
+    if (d_keyboard.IsKeyDown(Keyboard::SPACE)){
         d_position += speed * up;
     }
-    if (d_keyboard.isKeyDown(Keyboard::LSHIFT)){
+    if (d_keyboard.IsKeyDown(Keyboard::LSHIFT)){
         d_position -= speed * up;
     }
 
-    Maths::vec2 offset = d_mouse.getMouseOffset();
+    Maths::vec2 offset = d_mouse.GetMouseOffset();
     if (offset != Maths::vec2{0.0, 0.0}) {
         d_yaw += d_sensitivity * offset.x;
         d_pitch += d_sensitivity * offset.y;
-        Maths::clamp(d_pitch, -89.0, 89.0);
+        Maths::Clamp(d_pitch, -89.0, 89.0);
     }
 
-    d_direction.x = Maths::sind(d_yaw) * Maths::cosd(d_pitch);
-    d_direction.y = -Maths::sind(d_pitch);
-    d_direction.z = -Maths::cosd(d_yaw) * Maths::cosd(d_pitch);
-    Maths::normalise(d_direction);
+    d_direction.x = Maths::Sind(d_yaw) * Maths::Cosd(d_pitch);
+    d_direction.y = -Maths::Sind(d_pitch);
+    d_direction.z = -Maths::Cosd(d_yaw) * Maths::Cosd(d_pitch);
+    Maths::Normalise(d_direction);
 }
 
-void FirstPersonCamera::handleEvent(Event& event)
+void FirstPersonCamera::OnEvent(Event& event)
 {
-    d_keyboard.handleEvent(event);
-    d_mouse.handleEvent(event);
+    d_keyboard.OnEvent(event);
+    d_mouse.OnEvent(event);
 }
 
 }

@@ -9,7 +9,7 @@ SceneManager::SceneManager()
 
 }
 
-Scene* SceneManager::addScene(const std::string& name)
+Scene* SceneManager::AddScene(const std::string& name)
 {
     auto scene = d_scenes.insert(std::make_pair(name, std::make_unique<Scene>()));
 
@@ -21,25 +21,25 @@ Scene* SceneManager::addScene(const std::string& name)
     return scene.first->second.get();
 }
 
-bool SceneManager::setActiveScene(const std::string& name)
+bool SceneManager::SetActiveScene(const std::string& name)
 {
     d_activeSceneName = name;
     return true;
 }
 
-bool SceneManager::doesSceneExist(const std::string& name) const
+bool SceneManager::DoesSceneExist(const std::string& name) const
 {
     return d_scenes.find(name) != d_scenes.end();
 }
 
-void SceneManager::update(float dt)
+void SceneManager::OnUpdate(float dt)
 {
-    d_scenes[d_activeSceneName]->update(dt);
+    d_scenes[d_activeSceneName]->OnUpdate(dt);
 }
 
-void SceneManager::handleEvent(Event& event)
+void SceneManager::OnEvent(Event& event)
 {
-    d_scenes[d_activeSceneName]->handleEvent(event);
+    d_scenes[d_activeSceneName]->OnEvent(event);
 }
 
 }

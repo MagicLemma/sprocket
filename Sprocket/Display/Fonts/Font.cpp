@@ -9,12 +9,12 @@ FontPackage::FontPackage(const std::string& fntFile,
     , d_glyphs()
     , d_size(0.0f)
 {
-    auto [glyphs, size] = parseFntFile(fntFile, d_atlas);
+    auto [glyphs, size] = ParseFntFile(fntFile, d_atlas);
     d_glyphs = glyphs;
     d_size = size;
 }
 
-Character FontPackage::get(int id) const
+Character FontPackage::Get(int id) const
 {
     auto it = d_glyphs.find(id);
     if (it == d_glyphs.end()) {

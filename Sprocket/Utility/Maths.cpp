@@ -12,40 +12,40 @@ namespace Sprocket {
 namespace Maths {
 
 // Matrix Modifiers
-mat4 translate(const mat4& matrix, const vec3& translation)
+mat4 Translate(const mat4& matrix, const vec3& translation)
 {
     return glm::translate(matrix, translation);
 }
 
-mat4 scale(const mat4& matrix, const vec3& scales)
+mat4 Scale(const mat4& matrix, const vec3& scales)
 {
     return glm::scale(matrix, scales);
 }
 
-mat4 scale(const mat4& matrix, float scale)
+mat4 Scale(const mat4& matrix, float scale)
 {
     return glm::scale(matrix, {scale, scale, scale});
 }
 
-mat4 rotate(const mat4& matrix, const vec3& axis, float radians)
+mat4 Rotate(const mat4& matrix, const vec3& axis, float radians)
 {
     return glm::rotate(matrix, radians, axis);
 }
 
-mat4 inverse(const mat4& matrix)
+mat4 Inverse(const mat4& matrix)
 {
     return glm::inverse(matrix);
 }
 
-mat4 transpose(const mat4& matrix)
+mat4 Transpose(const mat4& matrix)
 {
     return glm::transpose(matrix);
 }
 
 // Matrix Constructors
-mat4 transform(const vec3& position, const quat& orientation)
+mat4 Transform(const vec3& position, const quat& orientation)
 {
-    mat4 m = toMat3(orientation);
+    mat4 m = ToMat3(orientation);
     m[3][0] = position.x;
     m[3][1] = position.y;
     m[3][2] = position.z;
@@ -53,112 +53,112 @@ mat4 transform(const vec3& position, const quat& orientation)
     return m;
 }
 
-mat4 perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
+mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
 {
     return glm::perspective(fov, aspectRatio, nearPlane, farPlane);  
 }
 
-mat4 view(const vec3& position, float pitch, float yaw, float roll)
+mat4 View(const vec3& position, float pitch, float yaw, float roll)
 {
     mat4 matrix(1.0);
-    matrix = glm::rotate(matrix, radians(pitch), vec3(1, 0, 0));
-    matrix = glm::rotate(matrix, radians(yaw), vec3(0, 1, 0));
-    matrix = glm::rotate(matrix, radians(roll), vec3(0, 0, 1));
+    matrix = glm::rotate(matrix, Radians(pitch), vec3(1, 0, 0));
+    matrix = glm::rotate(matrix, Radians(yaw), vec3(0, 1, 0));
+    matrix = glm::rotate(matrix, Radians(roll), vec3(0, 0, 1));
     matrix = glm::translate(matrix, -position);
     return matrix;
 }
 
-mat4 lookAt(const vec3& position, const vec3& target, const vec3& up)
+mat4 LookAt(const vec3& position, const vec3& target, const vec3& up)
 {
     return glm::lookAt(position, target, up);
 }
 
-mat4 ortho(float left, float right, float bottom, float top)
+mat4 Ortho(float left, float right, float bottom, float top)
 {
     return glm::ortho(left, right, bottom, top);   
 }
 
 // Quaternion Modifiers
-quat rotate(const vec3& axis, float degrees)
+quat Rotate(const vec3& axis, float degrees)
 {
-    return glm::rotate(Maths::identity, Maths::radians(degrees), axis);
+    return glm::rotate(Maths::identity, Radians(degrees), axis);
 }
 
-quat rotate(const quat& orig, const vec3& axis, float degrees)
+quat Rotate(const quat& orig, const vec3& axis, float degrees)
 {
-    return glm::rotate(orig, Maths::radians(degrees), axis);
+    return glm::rotate(orig, Radians(degrees), axis);
 }
 
-quat inverse(const quat& quaternion)
+quat Inverse(const quat& quaternion)
 {
     return glm::inverse(quaternion);
 }
 
-quat normalise(const quat& q)
+quat Normalise(const quat& q)
 {
     return glm::normalize(q);
 }
 
 // Conversions
-mat3 toMat3(const quat& q)
+mat3 ToMat3(const quat& q)
 {
     return glm::mat3_cast(q);
 }
 
-mat4 toMat4(const quat& q)
+mat4 ToMat4(const quat& q)
 {
     return glm::mat4_cast(q);
 }
 
-quat toQuat(const mat3& m)
+quat ToQuat(const mat3& m)
 {
     return glm::quat_cast(m);
 }
 
-vec3 toEuler(const quat& q)
+vec3 ToEuler(const quat& q)
 {
     return glm::eulerAngles(q);
 }
 
-float* cast(const mat3& m)
+float* Cast(const mat3& m)
 {
     return (float*)&m[0][0];
 }
 
-float* cast(const mat4& m)
+float* Cast(const mat4& m)
 {
     return (float*)&m[0][0];
 }
 
 // Vector Maths
-vec3 cross(const vec3& lhs, const vec3& rhs)
+vec3 Cross(const vec3& lhs, const vec3& rhs)
 {
     return glm::cross(lhs, rhs);
 }
 
-vec3 getTranslation(const mat4& m)
+vec3 GetTranslation(const mat4& m)
 {
     return vec3{m[3][0], m[3][1], m[3][2]};
 }
 
-float distance(const Maths::vec2& A, const Maths::vec2& B)
+float Distance(const Maths::vec2& A, const Maths::vec2& B)
 {
     return glm::distance(A, B);
 }
 
-float length(const vec3& v)
+float Length(const vec3& v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-float lengthSquare(const vec3& v)
+float LengthSquare(const vec3& v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-void normalise(vec3& vec)
+void Normalise(vec3& vec)
 {
-    float length = Maths::length(vec);
+    float length = Length(vec);
     if (length != 0) {
         vec.x /= length;
         vec.y /= length;
@@ -166,36 +166,35 @@ void normalise(vec3& vec)
     }
 }
 
-
 // Trig
-float radians(float degrees)
+float Radians(float degrees)
 {
     return glm::radians(degrees);
 }
 
-float degrees(float radians)
+float Degrees(float radians)
 {
     return glm::degrees(radians);
 }
 
-float sind(float degrees)
+float Sind(float degrees)
 {
-    return std::sin(radians(degrees));
+    return std::sin(Radians(degrees));
 }
 
-float cosd(float degrees)
+float Cosd(float degrees)
 {
-    return std::cos(radians(degrees));
+    return std::cos(Radians(degrees));
 }
 
 // General Helpers
-void clamp(float& value, float min, float max)
+void Clamp(float& value, float min, float max)
 {
     value = std::min(std::max(value, min), max);
 }
 
 // Printing
-std::string toString(const vec3& v, const std::optional<int>& dp)
+std::string ToString(const vec3& v, const std::optional<int>& dp)
 {
     std::stringstream ss;
     if (dp.has_value()) {
@@ -205,7 +204,7 @@ std::string toString(const vec3& v, const std::optional<int>& dp)
     return ss.str();
 }
 
-std::string toString(float x, const std::optional<int>& dp)
+std::string ToString(float x, const std::optional<int>& dp)
 {
     std::stringstream ss;
     if (dp.has_value()) {
@@ -215,7 +214,7 @@ std::string toString(float x, const std::optional<int>& dp)
     return ss.str();
 }
 
-std::string toString(bool t)
+std::string ToString(bool t)
 {
     if (t) {
         return "True";

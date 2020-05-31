@@ -5,7 +5,7 @@
 namespace Sprocket {
 namespace {
 
-Maths::vec2 makeButtonOffset(float width, float height, float buttonScale)
+Maths::vec2 MakeButtonOffset(float width, float height, float buttonScale)
 {
     return {
         width * (1 - buttonScale) / 2,
@@ -22,17 +22,17 @@ Button::Button(float width,
                float buttonClickedScale)
     : Widget(width, height)
     , d_buttonNormal({
-        makeButtonOffset(width, height, buttonScale),
+        MakeButtonOffset(width, height, buttonScale),
         width * buttonScale,
         height * buttonScale
     })
     , d_buttonHovered({
-        makeButtonOffset(width, height, buttonHoveredScale),
+        MakeButtonOffset(width, height, buttonHoveredScale),
         width * buttonHoveredScale,
         height * buttonHoveredScale
     })
     , d_buttonClicked({
-        makeButtonOffset(width, height, buttonClickedScale),
+        MakeButtonOffset(width, height, buttonClickedScale),
         width * buttonClickedScale,
         height * buttonClickedScale
     })
@@ -42,7 +42,7 @@ Button::Button(float width,
     d_actual = d_buttonNormal;
 }
 
-void Button::updateImpl(DisplayRenderer* renderer)
+void Button::OnUpdateImpl(DisplayRenderer* renderer)
 {
     float speed = 0.2f;
 
@@ -66,13 +66,13 @@ void Button::updateImpl(DisplayRenderer* renderer)
         d_actual = d_buttonNormal;
     }
 
-    renderer->draw(toScreenCoords(d_actual));
+    renderer->Draw(ToScreenCoords(d_actual));
 }
 
-void Button::handleEventImpl(Event& event)
+void Button::OnEventImpl(Event& event)
 {
-    if (auto e = event.as<MouseMovedEvent>()) {
-        bool mouseOnButton = containsPoint(d_actual, toLocalCoords(d_mouse.getMousePos()));
+    if (auto e = event.As<MouseMovedEvent>()) {
+        bool mouseOnButton = ContainsPoint(d_actual, ToLocalCoords(d_mouse.GetMousePos()));
         if (!d_hovered && mouseOnButton) {
             d_hovered = true;
             d_hoverCallback();
@@ -82,22 +82,22 @@ void Button::handleEventImpl(Event& event)
             d_unhoverCallback();
         }
     }
-    else if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (!e->isConsumed() && e->button() == Mouse::LEFT) {
-            if (containsPoint(d_actual, toLocalCoords(d_mouse.getMousePos()))) {
+    else if (auto e = event.As<MouseButtonPressedEvent>()) {
+        if (!e->IsConsumed() && e->Button() == Mouse::LEFT) {
+            if (ContainsPoint(d_actual, ToLocalCoords(d_mouse.GetMousePos()))) {
                 d_clicked = true;
                 d_clickCallback();
-                e->consume();
+                e->Consume();
             }
         }   
-    } else if (auto e = event.as<MouseButtonReleasedEvent>()) {
+    } else if (auto e = event.As<MouseButtonReleasedEvent>()) {
         if (d_clicked) {
             d_clicked = false;
             d_unclickCallback();
         }
     }
-    else if (containsPoint(d_base, toLocalCoords(d_mouse.getMousePos()))) {
-        event.consume();
+    else if (ContainsPoint(d_base, ToLocalCoords(d_mouse.GetMousePos()))) {
+        event.Consume();
     }
 }
 

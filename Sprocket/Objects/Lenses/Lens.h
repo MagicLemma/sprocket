@@ -11,10 +11,10 @@ class Lens
 public:
     virtual ~Lens() {}
 
-    virtual Maths::mat4 projection() const = 0;
+    virtual Maths::mat4 Projection() const = 0;
         // Returns a projection matrix.
 
-    virtual void handleEvent(Event& event) {}
+    virtual void OnEvent(Event& event) {}
         // This function may be overriden if the Lens needs to
         // respond to events.
 };

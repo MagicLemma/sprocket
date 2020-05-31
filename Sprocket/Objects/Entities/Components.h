@@ -9,16 +9,16 @@
 
 namespace Sprocket {
 
-inline std::size_t counter()
+inline std::size_t Counter()
 {
     static std::size_t id = 0;
     return ++id;
 }
 
 template <typename T>
-inline std::size_t getComponentTypeId() noexcept
+inline std::size_t GetComponentTypeId() noexcept
 {
-    static std::size_t id = counter();
+    static std::size_t id = Counter();
     return id;
 }
 

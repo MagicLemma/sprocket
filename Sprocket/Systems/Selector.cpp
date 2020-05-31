@@ -20,94 +20,94 @@ Selector::Selector(
 {
 }
 
-void Selector::updateSystem(float dt)
+void Selector::UpdateSystem(float dt)
 {
     if (!d_enabled) {
-        clearHovered();
-        clearSelected();
+        ClearHovered();
+        ClearSelected();
     }
-    d_mouse.update();
+    d_mouse.OnUpdate();
 }
 
-void Selector::handleEvent(Event& event)
+void Selector::OnEvent(Event& event)
 {
     if (!d_enabled) { return; }
 
-    d_mouse.handleEvent(event);
+    d_mouse.OnEvent(event);
 
-    if (auto e = event.as<MouseButtonPressedEvent>()) {
-        if (e->isConsumed()) { return; }
-        auto entity = getMousedOver();
-        setSelected(entity);
-        e->consume();
+    if (auto e = event.As<MouseButtonPressedEvent>()) {
+        if (e->IsConsumed()) { return; }
+        auto entity = GetMousedOver();
+        SetSelected(entity);
+        e->Consume();
     }
 
-    else if (auto e = event.as<MouseMovedEvent>()) {  
-        clearHovered(); // Always clear as mouse may now be on GUI
-        if (e->isConsumed()) { return; }
-        auto entity = getMousedOver();
-        setHovered(entity);
-        e->consume();
+    else if (auto e = event.As<MouseMovedEvent>()) {  
+        ClearHovered(); // Always clear as mouse may now be on GUI
+        if (e->IsConsumed()) { return; }
+        auto entity = GetMousedOver();
+        SetHovered(entity);
+        e->Consume();
     }
 }
 
-void Selector::deregisterEntity(const Entity& entity)
+void Selector::DeregisterEntity(const Entity& entity)
 {
-    if (&entity == d_hoveredEntity) { clearHovered(); }
-    if (&entity == d_selectedEntity) { clearSelected(); }
+    if (&entity == d_hoveredEntity) { ClearHovered(); }
+    if (&entity == d_selectedEntity) { ClearSelected(); }
 }
 
-void Selector::enable(bool newEnabled)
+void Selector::Enable(bool newEnabled)
 {
     d_enabled = newEnabled;
-    clearHovered();
-    clearSelected();
+    ClearHovered();
+    ClearSelected();
 }
 
 
-void Selector::clearHovered()
+void Selector::ClearHovered()
 {
     if (d_hoveredEntity != nullptr) {
-        d_hoveredEntity->get<SelectComponent>().hovered = false;
+        d_hoveredEntity->Get<SelectComponent>().hovered = false;
         d_hoveredEntity = nullptr;
     }
 }
 
-void Selector::clearSelected()
+void Selector::ClearSelected()
 {
     if (d_selectedEntity != nullptr) {
-        d_selectedEntity->get<SelectComponent>().selected = false;
+        d_selectedEntity->Get<SelectComponent>().selected = false;
         d_selectedEntity = nullptr;
     }
 }
 
-void Selector::setHovered(Entity* entity)
+void Selector::SetHovered(Entity* entity)
 {
-    clearHovered();
-    if (entity != nullptr && entity->has<SelectComponent>()) {
+    ClearHovered();
+    if (entity != nullptr && entity->Has<SelectComponent>()) {
         d_hoveredEntity = entity;
-        d_hoveredEntity->get<SelectComponent>().hovered = true;
+        d_hoveredEntity->Get<SelectComponent>().hovered = true;
     }
 }
 
-void Selector::setSelected(Entity* entity)
+void Selector::SetSelected(Entity* entity)
 {
-    clearSelected();
-    if (entity != nullptr && entity->has<SelectComponent>()) {
+    ClearSelected();
+    if (entity != nullptr && entity->Has<SelectComponent>()) {
         d_selectedEntity = entity;
-        d_selectedEntity->get<SelectComponent>().selected = true;
+        d_selectedEntity->Get<SelectComponent>().selected = true;
     }
 }
 
-Entity* Selector::getMousedOver()
+Entity* Selector::GetMousedOver()
 {
-    Maths::vec3 rayStart = Maths::inverse(d_camera->view()) * Maths::vec4(0, 0, 0, 1);
-    Maths::vec3 direction = MousePicker::getRay(
-        d_mouse.getMousePos(),
+    Maths::vec3 rayStart = Maths::Inverse(d_camera->View()) * Maths::vec4(0, 0, 0, 1);
+    Maths::vec3 direction = MousePicker::GetRay(
+        d_mouse.GetMousePos(),
         d_window,
         d_camera,
         d_lens);
-    return d_physicsEngine->raycast(rayStart, direction);
+    return d_physicsEngine->Raycast(rayStart, direction);
 }
 
 }

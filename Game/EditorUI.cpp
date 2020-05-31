@@ -5,24 +5,24 @@
 
 namespace {
 
-void addEntityToList(Sprocket::DevUI::Context& ui,
+void AddEntityToList(Sprocket::DevUI::Context& ui,
                      Sprocket::Selector& selector,
                      Sprocket::Entity* entity)
 {
     using namespace Sprocket;
     
-    ui.PushID(entity->id());
-    if (ui.StartTreeNode(entity->name())) {
+    ui.PushID(entity->Id());
+    if (ui.StartTreeNode(entity->Name())) {
         if (ui.Button("Select")) {
             SPKT_LOG_INFO("Select clicked!");
-            selector.setSelected(entity);
+            selector.SetSelected(entity);
         }
         ui.EndTreeNode();
     }
     ui.PopID();         
 }
 
-void selectedEntityInfo(Sprocket::DevUI::Context& ui,
+void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
                         Sprocket::Entity& entity,
                         const Sprocket::Maths::mat4& view,
                         const Sprocket::Maths::mat4& proj)
@@ -33,8 +33,8 @@ void selectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.StartWindow("Selected Entity");
     ui.Text("Name: ");
     ui.SameLine();
-    ui.TextModifiable(entity.name());
-    ui.Text("ID: " + std::to_string(entity.id()));
+    ui.TextModifiable(entity.Name());
+    ui.Text("ID: " + std::to_string(entity.Id()));
     ui.Separator();
     
     static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
@@ -42,12 +42,12 @@ void selectedEntityInfo(Sprocket::DevUI::Context& ui,
     static float angle = 1.0f;
 
     if (ui.StartTreeNode("Transform")) {
-        ui.DragFloat3("Position", &entity.position(), 0.005f);
-        Maths::vec3 eulerAngles = Maths::toEuler(entity.orientation());
+        ui.DragFloat3("Position", &entity.Position(), 0.005f);
+        Maths::vec3 eulerAngles = Maths::ToEuler(entity.Orientation());
         std::stringstream ss;
-        ss << "Pitch: " << Maths::toString(eulerAngles.x, 3) << "\n"
-           << "Yaw: " << Maths::toString(eulerAngles.y, 3) << "\n"
-           << "Roll: " << Maths::toString(eulerAngles.z, 3);
+        ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
+           << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
+           << "Roll: " << Maths::ToString(eulerAngles.z, 3);
         ui.Text(ss.str());    
 
         if (ui.RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
@@ -68,13 +68,13 @@ void selectedEntityInfo(Sprocket::DevUI::Context& ui,
         ui.EndTreeNode();
     }
 
-    Maths::mat4 origin = entity.transform();
+    Maths::mat4 origin = entity.Transform();
     ui.Gizmo(&origin, view, proj, mode, coords);
-    entity.position() = getTranslation(origin);
-    entity.orientation() = normalise(toQuat(mat3(origin)));
+    entity.Position() = GetTranslation(origin);
+    entity.Orientation() = Normalise(ToQuat(mat3(origin)));
 
-    if (entity.has<PhysicsComponent>() && ui.StartTreeNode("Physics")) {
-        auto& comp = entity.get<PhysicsComponent>();
+    if (entity.Has<PhysicsComponent>() && ui.StartTreeNode("Physics")) {
+        auto& comp = entity.Get<PhysicsComponent>();
         ui.Checkbox("Gravity", &comp.gravity);
         ui.SameLine();
         ui.Checkbox("Frozen", &comp.frozen);
@@ -82,8 +82,8 @@ void selectedEntityInfo(Sprocket::DevUI::Context& ui,
         ui.EndTreeNode();
     }
 
-    if (entity.has<ColliderComponent>() && ui.StartTreeNode("Collider")) {
-        auto& comp = entity.get<ColliderComponent>();
+    if (entity.Has<ColliderComponent>() && ui.StartTreeNode("Collider")) {
+        auto& comp = entity.Get<ColliderComponent>();
         ui.DragFloat("Mass", &comp.mass, 0.05f);
         ui.SliderFloat("Bounciness", &comp.bounciness, 0.0f, 1.0f);
         ui.SliderFloat("Friction Coeff", &comp.frictionCoefficient, 0.0f, 1.0f);
@@ -94,14 +94,14 @@ void selectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.Separator();
 
     if (ui.Button("Delete Entity")) {
-        entity.kill();
+        entity.Kill();
     }
 
     if (ui.CollapsingHeader("Add Component")) {
-        if (!entity.has<PhysicsComponent>() && ui.Button("Physics")) {
+        if (!entity.Has<PhysicsComponent>() && ui.Button("Physics")) {
 
         }
-        if (!entity.has<ColliderComponent>() && ui.Button("Colldier")) {
+        if (!entity.Has<ColliderComponent>() && ui.Button("Colldier")) {
 
         }
     }
@@ -109,7 +109,7 @@ void selectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.EndWindow();
 }
 
-void addEntityPanel(Sprocket::DevUI::Context& ui,
+void AddEntityPanel(Sprocket::DevUI::Context& ui,
                     Sprocket::EntityManager* entities,
                     Sprocket::ModelManager* models)
 {
@@ -118,18 +118,18 @@ void addEntityPanel(Sprocket::DevUI::Context& ui,
         if (ui.Button(name.c_str())) {
             SPKT_LOG_INFO("Added entity");
             auto entity = std::make_shared<Sprocket::Entity>();
-            entity->position() = {10.0, 0.0, 10.0};
-            auto modelComp = entity->add<Sprocket::ModelComponent>();
+            entity->Position() = {10.0, 0.0, 10.0};
+            auto modelComp = entity->Add<Sprocket::ModelComponent>();
             modelComp->model = model;
 
             Sprocket::Material m;
-            m.texture = Sprocket::Texture::white();
+            m.texture = Sprocket::Texture::White();
 
-            entity->add<Sprocket::SelectComponent>();
+            entity->Add<Sprocket::SelectComponent>();
             
             modelComp->material = m;
             modelComp->scale = 1.0f; 
-            entities->addEntity(entity);
+            entities->AddEntity(entity);
         }
     }
     ui.EndWindow();
@@ -145,17 +145,17 @@ EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
 {  
 }
 
-void EditorUI::handleEvent(Sprocket::Event& event)
+void EditorUI::OnEvent(Sprocket::Event& event)
 {
     if (d_worldLayer->d_mode != Mode::EDITOR) {
         return;
     }
 
-    d_ui.handleEvent(event);
+    d_ui.OnEvent(event);
 
 }
 
-void EditorUI::update(float dt)
+void EditorUI::OnUpdate(float dt)
 {
     if (d_worldLayer->d_mode != Mode::EDITOR) {
         return;
@@ -164,7 +164,7 @@ void EditorUI::update(float dt)
     using namespace Sprocket;
     using namespace Maths;
 
-    d_ui.update(dt);
+    d_ui.OnUpdate(dt);
     d_ui.StartFrame();
 
     bool open = true;
@@ -173,40 +173,40 @@ void EditorUI::update(float dt)
     d_ui.StartWindow("Sprocket Editor", &open, flags);
     if (d_ui.Button("Physics Engine")) {
         auto& physics = d_worldLayer->d_physicsEngine;
-        bool isRunning = physics.running();
-        physics.running(!isRunning);
+        bool isRunning = physics.Running();
+        physics.Running(!isRunning);
     }
     d_ui.SameLine();
-    d_ui.Text(d_worldLayer->d_physicsEngine.running() ? "YES" : "NO");
+    d_ui.Text(d_worldLayer->d_physicsEngine.Running() ? "YES" : "NO");
 
     if (d_ui.Button("Show Colliders")) {
         auto entityRenderer = &d_worldLayer->d_entityRenderer;
-        bool wireframe = entityRenderer->showColliders();
-        entityRenderer->renderColliders(!wireframe);
+        bool wireframe = entityRenderer->ShowColliders();
+        entityRenderer->RenderColliders(!wireframe);
     }
     d_ui.SameLine();
-    d_ui.Text(d_worldLayer->d_entityRenderer.showColliders() ? "YES" : "NO");
+    d_ui.Text(d_worldLayer->d_entityRenderer.ShowColliders() ? "YES" : "NO");
 
     std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_entityManager.entities().size();
+    ss << "Entities: " << d_worldLayer->d_entityManager.Entities().size();
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {
-        for (auto [id, entity] : d_worldLayer->d_entityManager.entities()) {
-            addEntityToList(d_ui, d_worldLayer->d_selector, entity.get());      
+        for (auto [id, entity] : d_worldLayer->d_entityManager.Entities()) {
+            AddEntityToList(d_ui, d_worldLayer->d_selector, entity.get());      
         }
     }
 
     d_ui.EndWindow();
 
-    mat4 view = d_worldLayer->d_camera->view();
-    mat4 proj = d_worldLayer->d_lens.projection();
-    if (auto e = d_worldLayer->d_selector.selectedEntity()) {
-        selectedEntityInfo(d_ui, *e, view, proj);
-        d_worldLayer->d_physicsEngine.refreshTransform(e);
+    mat4 view = d_worldLayer->d_camera->View();
+    mat4 proj = d_worldLayer->d_lens.Projection();
+    if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
+        SelectedEntityInfo(d_ui, *e, view, proj);
+        d_worldLayer->d_physicsEngine.RefreshTransform(e);
     }
 
-    addEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
+    AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
 
     d_ui.DemoWindow();
     d_ui.EndFrame();

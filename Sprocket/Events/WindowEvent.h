@@ -10,47 +10,47 @@ class WindowResizeEvent : public Event
 
 public:
 	WindowResizeEvent(unsigned int width, unsigned int height);
-	virtual int categoryFlags() const override { return WINDOW; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return WINDOW; }
+	std::string ToString() const override;
 
-	unsigned int width() const { return d_width; }
-	unsigned int height() const { return d_height; }
-	float aspectRatio() const { return (float)d_width / (float)d_height; }
+	unsigned int Width() const { return d_width; }
+	unsigned int Height() const { return d_height; }
+	float AspectRatio() const { return (float)d_width / (float)d_height; }
 };
 
 class WindowClosedEvent : public Event
 {
 public:
-	virtual int categoryFlags() const override { return WINDOW; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return WINDOW; }
+	std::string ToString() const override;
 };
 
 class WindowGotFocusEvent : public Event
 {
 public:
-	virtual int categoryFlags() const override { return WINDOW; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return WINDOW; }
+	std::string ToString() const override;
 };
 
 class WindowLostFocusEvent : public Event
 {
 public:
-	virtual int categoryFlags() const override { return WINDOW; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return WINDOW; }
+	std::string ToString() const override;
 };
 
 class WindowMaximizeEvent : public Event
 {
 public:
-	virtual int categoryFlags() const override { return WINDOW; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return WINDOW; }
+	std::string ToString() const override;
 };
 
 class WindowMinimizeEvent : public Event
 {
 public:
-	virtual int categoryFlags() const override { return WINDOW; }
-	std::string toString() const override;
+	virtual int CategoryFlags() const override { return WINDOW; }
+	std::string ToString() const override;
 };
 
 }

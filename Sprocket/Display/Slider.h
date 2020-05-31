@@ -19,26 +19,26 @@ class Slider : public Widget
 
     SliderCallback d_callback = [](float){};
 
-    float left() const;
-    float right() const;
+    float Left() const;
+    float Right() const;
         // Maximum left and right positions of the picker in
         // Local Coordinates.
 
-    void updateImpl(DisplayRenderer* renderer) override;
-    void handleEventImpl(Event& event) override;
+    void OnUpdateImpl(DisplayRenderer* renderer) override;
+    void OnEventImpl(Event& event) override;
     
 public:
     Slider(float width, float height);
 
-    Quad& bar() { return d_bar; }
-    Quad& picker() { return d_picker; }
-    const Quad& bar() const { return d_bar; }
-    const Quad& picker() const { return d_picker; }
+    Quad& Bar() { return d_bar; }
+    Quad& Picker() { return d_picker; }
+    const Quad& Bar() const { return d_bar; }
+    const Quad& Picker() const { return d_picker; }
 
-    float value() const;
-    void setValue(float val);
+    float Value() const;
+    void SetValue(float val);
 
-    void setCallback(SliderCallback cb) { d_callback = cb; }
+    void SetCallback(SliderCallback cb) { d_callback = cb; }
 };
 
 }

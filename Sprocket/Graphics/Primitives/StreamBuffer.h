@@ -19,11 +19,11 @@ public:
     StreamBuffer();
     ~StreamBuffer();
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
 
-    void setVertexData(std::size_t size, const void* data);
-    void setIndexData(std::size_t size, const void* data);
+    void SetVertexData(std::size_t size, const void* data);
+    void SetIndexData(std::size_t size, const void* data);
         // Sets the data inside the StreamBuffer object. The
         // StreamBuffer object MUST be bound before calling these
         // functions, otherwise the behaviour is undefined.

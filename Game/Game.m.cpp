@@ -5,13 +5,13 @@
 
 int main()
 {
-    Sprocket::Log::init();
+    Sprocket::Log::Init();
     Sprocket::Window window("Game!");
     Sprocket::SceneManager sceneManager;
     Sprocket::ModelManager modelManager;
 
-    window.setCallback([&sceneManager](Sprocket::Event& event) {
-        sceneManager.handleEvent(event);
+    window.SetCallback([&sceneManager](Sprocket::Event& event) {
+        sceneManager.OnEvent(event);
     });
 
     Sprocket::CoreSystems core;
@@ -19,22 +19,22 @@ int main()
     core.sceneManager = &sceneManager;
     core.modelManager = &modelManager;
 
-    auto world = sceneManager.addScene("World");
-    auto worldLayer = world->add<WorldLayer>(core);
-    auto editorUi = world->add<EditorUI>(core, worldLayer.get());
-    world->add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
-    sceneManager.setActiveScene("World");
+    auto world = sceneManager.AddScene("World");
+    auto worldLayer = world->Add<WorldLayer>(core);
+    auto editorUi = world->Add<EditorUI>(core, worldLayer.get());
+    world->Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
+    sceneManager.SetActiveScene("World");
 
     Sprocket::Stopwatch watch;
-    watch.printFramerate(true);
+    watch.PrintFramerate(true);
 
-    while (window.running()) {
-        window.clear();
+    while (window.Running()) {
+        window.Clear();
         
-        watch.update();
-        sceneManager.update(watch.deltaTime());
+        watch.OnUpdate();
+        sceneManager.OnUpdate(watch.DeltaTime());
 
-        window.onUpdate();
+        window.OnUpdate();
     }
 
     return 0;

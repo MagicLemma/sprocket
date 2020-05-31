@@ -12,44 +12,44 @@ namespace Sprocket {
 class EntityManager
 {
 public:
-    using Entities = std::map<std::size_t, std::shared_ptr<Entity>>;
+    using EntityMap = std::map<std::size_t, std::shared_ptr<Entity>>;
 
 private:
     const std::vector<EntitySystem*> d_systems;
         // All systems must be given at creation.
 
-    Entities d_entities;
+    EntityMap d_entities;
 
 public:
     EntityManager(const std::vector<EntitySystem*> systems);
 
-    void addEntity(std::shared_ptr<Entity> entity);
-    void update(float dt);
-    void handleEvent(Event& event);
+    void AddEntity(std::shared_ptr<Entity> entity);
+    void OnUpdate(float dt);
+    void OnEvent(Event& event);
 
-    void draw(EntityRenderer* renderer);
+    void Draw(EntityRenderer* renderer);
 
-    const Entities& entities() const { return d_entities; }
+    const EntityMap& Entities() const { return d_entities; }
 
     template <typename T>
-    void notifyComponentAdd(const Entity& entity)
+    void NotifyComponentAdd(const Entity& entity)
         // Call after adding a component to this entity if the entity
         // if not already registered with the system.
     {
         const auto& c = entity.get<T>();
         for (auto& system : d_systems) {
-            system->onComponentAttach(entity, c);
+            system->OnComponentAttach(entity, c);
         }
     }
 
     template <typename T>
-    void notifyComponentRemove(const Entity& entity)
+    void NotifyComponentRemove(const Entity& entity)
         // Call BEFORE you remove the component from the entity. This does
         // not remove the component for you.
     {
         const auto& c = entity.get<T>();
         for (auto& system : d_systems) {
-            system->onComponentDetach(entity, c);
+            system->OnComponentDetach(entity, c);
         }
     }
 };

@@ -9,8 +9,8 @@ Model2D::Model2D(const Vertex2DBuffer& vertices)
     , d_vertexBuffer(std::make_shared<VBO>())
     , d_vertexCount(vertices.size())
 {
-    glBindVertexArray(d_vao->value());
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->value());
+    glBindVertexArray(d_vao->Value());
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex2D) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
@@ -30,12 +30,12 @@ Model2D::Model2D(const Vertex2DBuffer& vertices)
     glBindVertexArray(0);
 }
 
-void Model2D::bind() const
+void Model2D::Bind() const
 {
-    glBindVertexArray(d_vao->value());
+    glBindVertexArray(d_vao->Value());
 }
 
-void Model2D::unbind() const
+void Model2D::Unbind() const
 {
     glBindVertexArray(0);
 }

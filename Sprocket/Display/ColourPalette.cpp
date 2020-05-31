@@ -5,7 +5,7 @@
 namespace Sprocket {
 namespace {
 
-Model2D getSegment(const Maths::vec3& left, const Maths::vec3& right)
+Model2D GetSegment(const Maths::vec3& left, const Maths::vec3& right)
 {
     return {{
         {{1.0f, 1.0f}, {1.0f, 1.0f}, {0.5f, 0.5f, 0.5f}},
@@ -15,7 +15,7 @@ Model2D getSegment(const Maths::vec3& left, const Maths::vec3& right)
     }};
 }
 
-Maths::vec3 interpolateColour(const Maths::vec2& pos)
+Maths::vec3 InterpolateColour(const Maths::vec2& pos)
 {
     Maths::vec3 ret;
     if (0 < pos.x && pos.x < 1.0f / 6) {
@@ -58,12 +58,12 @@ ColourPalette::ColourPalette(float width, float height)
         6 * (width - 3 * s_border) / 7
     })
     , d_segments({
-        getSegment({1.0, 0.0, 0.0}, {1.0, 1.0, 0.0}),
-        getSegment({1.0, 1.0, 0.0}, {0.0, 1.0, 0.0}),
-        getSegment({0.0, 1.0, 0.0}, {0.0, 1.0, 1.0}),
-        getSegment({0.0, 1.0, 1.0}, {0.0, 0.0, 1.0}),
-        getSegment({0.0, 0.0, 1.0}, {1.0, 0.0, 1.0}),
-        getSegment({1.0, 0.0, 1.0}, {1.0, 0.0, 0.0})
+        GetSegment({1.0, 0.0, 0.0}, {1.0, 1.0, 0.0}),
+        GetSegment({1.0, 1.0, 0.0}, {0.0, 1.0, 0.0}),
+        GetSegment({0.0, 1.0, 0.0}, {0.0, 1.0, 1.0}),
+        GetSegment({0.0, 1.0, 1.0}, {0.0, 0.0, 1.0}),
+        GetSegment({0.0, 0.0, 1.0}, {1.0, 0.0, 1.0}),
+        GetSegment({1.0, 0.0, 1.0}, {1.0, 0.0, 0.0})
     })
     , d_palettePickerPosition({0.0, 0.0})
     , d_palettePicker({
@@ -102,23 +102,23 @@ ColourPalette::ColourPalette(float width, float height)
     d_palettePicker.roundness = 1.0f;
 }
     
-void ColourPalette::updateImpl(DisplayRenderer* renderer)
+void ColourPalette::OnUpdateImpl(DisplayRenderer* renderer)
 {
     if (d_movingPalettePicker) {
-        Maths::vec2 newPosition = toLocalCoords(d_mouse.getMousePos());
-        Maths::clamp(newPosition.x, d_paletteQuad.position.x, d_paletteQuad.position.x + d_paletteQuad.width);
-        Maths::clamp(newPosition.y, d_paletteQuad.position.y, d_paletteQuad.position.y + d_paletteQuad.height);
+        Maths::vec2 newPosition = ToLocalCoords(d_mouse.GetMousePos());
+        Maths::Clamp(newPosition.x, d_paletteQuad.position.x, d_paletteQuad.position.x + d_paletteQuad.width);
+        Maths::Clamp(newPosition.y, d_paletteQuad.position.y, d_paletteQuad.position.y + d_paletteQuad.height);
         d_palettePicker.position = newPosition - Maths::vec2{d_palettePicker.width/2, d_palettePicker.height/2};
 
-        d_paletteColour = interpolateColour({
+        d_paletteColour = InterpolateColour({
             newPosition.x / d_paletteQuad.width,
             newPosition.y / d_paletteQuad.height
         });
     }
 
     if (d_movingSliderPicker) {
-        float newVertPos = toLocalCoords(d_mouse.getMousePos()).y - d_sliderPicker.height/2;
-        Maths::clamp(newVertPos, d_blackWhiteQuad.position.y - d_sliderPicker.height/2, d_blackWhiteQuad.position.y + d_blackWhiteQuad.height - d_sliderPicker.height/2);
+        float newVertPos = ToLocalCoords(d_mouse.GetMousePos()).y - d_sliderPicker.height/2;
+        Maths::Clamp(newVertPos, d_blackWhiteQuad.position.y - d_sliderPicker.height/2, d_blackWhiteQuad.position.y + d_blackWhiteQuad.height - d_sliderPicker.height/2);
         d_sliderPicker.position.y = newVertPos;
     }
 
@@ -139,7 +139,7 @@ void ColourPalette::updateImpl(DisplayRenderer* renderer)
     Quad quad = d_paletteQuad;
     quad.width /= d_segments.size();
     for (const auto& segment : d_segments) {
-        renderer->draw(toScreenCoords(quad), segment);
+        renderer->Draw(ToScreenCoords(quad), segment);
         quad.position.x += quad.width;
     }
 
@@ -147,48 +147,48 @@ void ColourPalette::updateImpl(DisplayRenderer* renderer)
     quad = d_blackWhiteQuad;
     quad.height /= 2;
     quad.colour = d_paletteColour;
-    renderer->draw(toScreenCoords(quad), d_top);
+    renderer->Draw(ToScreenCoords(quad), d_top);
     quad.position.y += quad.height;
-    renderer->draw(toScreenCoords(quad), d_bottom);
+    renderer->Draw(ToScreenCoords(quad), d_bottom);
 
-    renderer->draw(toScreenCoords(d_bar));
+    renderer->Draw(ToScreenCoords(d_bar));
 
-    renderer->draw(toScreenCoords(d_palettePicker));
-    renderer->draw(toScreenCoords(d_sliderPicker));
+    renderer->Draw(ToScreenCoords(d_palettePicker));
+    renderer->Draw(ToScreenCoords(d_sliderPicker));
 }
 
-void ColourPalette::handleEventImpl(Event& event)
+void ColourPalette::OnEventImpl(Event& event)
 {
-    if (containsPoint(d_paletteQuad, toLocalCoords(d_mouse.getMousePos()))) {
-        if (auto e = event.as<MouseButtonPressedEvent>()) {
-            if (!e->isConsumed() && e->button() == Mouse::LEFT) {
+    if (ContainsPoint(d_paletteQuad, ToLocalCoords(d_mouse.GetMousePos()))) {
+        if (auto e = event.As<MouseButtonPressedEvent>()) {
+            if (!e->IsConsumed() && e->Button() == Mouse::LEFT) {
                 d_movingPalettePicker = true;
-                Maths::vec2 newPosition = toLocalCoords(d_mouse.getMousePos());
-                Maths::clamp(newPosition.x, d_paletteQuad.position.x, d_paletteQuad.position.x + d_paletteQuad.width);
-                Maths::clamp(newPosition.y, d_paletteQuad.position.y, d_paletteQuad.position.y + d_paletteQuad.height);
+                Maths::vec2 newPosition = ToLocalCoords(d_mouse.GetMousePos());
+                Maths::Clamp(newPosition.x, d_paletteQuad.position.x, d_paletteQuad.position.x + d_paletteQuad.width);
+                Maths::Clamp(newPosition.y, d_paletteQuad.position.y, d_paletteQuad.position.y + d_paletteQuad.height);
                 d_palettePicker.position = newPosition - Maths::vec2{d_palettePicker.width/2, d_palettePicker.height/2};
 
-                d_paletteColour = interpolateColour({
+                d_paletteColour = InterpolateColour({
                     newPosition.x / d_paletteQuad.width,
                     newPosition.y / d_paletteQuad.height
                 });
-                e->consume();
+                e->Consume();
             }
         }
-    } else if (containsPoint(d_blackWhiteQuad, toLocalCoords(d_mouse.getMousePos()))) {
-        if (auto e = event.as<MouseButtonPressedEvent>()) {
-            if (!e->isConsumed() && e->button() == Mouse::LEFT) {
+    } else if (ContainsPoint(d_blackWhiteQuad, ToLocalCoords(d_mouse.GetMousePos()))) {
+        if (auto e = event.As<MouseButtonPressedEvent>()) {
+            if (!e->IsConsumed() && e->Button() == Mouse::LEFT) {
                 d_movingSliderPicker = true;
-                float newVertPos = toLocalCoords(d_mouse.getMousePos()).y - d_sliderPicker.height/2;
-                Maths::clamp(newVertPos, d_blackWhiteQuad.position.y - d_sliderPicker.height/2, d_blackWhiteQuad.position.y + d_blackWhiteQuad.height - d_sliderPicker.height/2);
+                float newVertPos = ToLocalCoords(d_mouse.GetMousePos()).y - d_sliderPicker.height/2;
+                Maths::Clamp(newVertPos, d_blackWhiteQuad.position.y - d_sliderPicker.height/2, d_blackWhiteQuad.position.y + d_blackWhiteQuad.height - d_sliderPicker.height/2);
                 d_sliderPicker.position.y = newVertPos;
-                e->consume();
+                e->Consume();
             }
         }       
     }
 
-    if (auto e = event.as<MouseButtonReleasedEvent>()) {
-        if (!e->isConsumed() && e->button() == Mouse::LEFT) {
+    if (auto e = event.As<MouseButtonReleasedEvent>()) {
+        if (!e->IsConsumed() && e->Button() == Mouse::LEFT) {
             d_movingPalettePicker = false;
             d_movingSliderPicker = false;
         }

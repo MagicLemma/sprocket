@@ -4,7 +4,7 @@
 namespace Sprocket {
 
 Image::Image(const Texture& texture)
-    : Widget((float)texture.width(), (float)texture.height())
+    : Widget((float)texture.Width(), (float)texture.Height())
 {
     d_base.texture = texture;
 }

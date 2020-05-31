@@ -7,47 +7,47 @@ EntityManager::EntityManager(const std::vector<EntitySystem*> systems)
 {
 }
 
-void EntityManager::addEntity(std::shared_ptr<Entity> entity)
+void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 {
-    d_entities.insert(std::make_pair(entity->id(), entity));
+    d_entities.insert(std::make_pair(entity->Id(), entity));
     for (auto system : d_systems) {
-        system->registerEntity(*entity);
+        system->RegisterEntity(*entity);
     }
 }
 
-void EntityManager::update(float dt)
+void EntityManager::OnUpdate(float dt)
 {
     auto it = d_entities.begin();
     while (it != d_entities.end()) {
-        if (!it->second->alive()) {
+        if (!it->second->Alive()) {
             for (auto system : d_systems) {
-                system->deregisterEntity(*(it->second));
+                system->DeregisterEntity(*(it->second));
             }
             it = d_entities.erase(it);
         }
         else {
             for (auto system : d_systems) {
-                system->updateEntity(dt, *(it->second));
+                system->UpdateEntity(dt, *(it->second));
             }
             ++it;
         }
     }
 
     for (auto system : d_systems) {
-        system->updateSystem(dt);
+        system->UpdateSystem(dt);
     }
 }
 
-void EntityManager::handleEvent(Event& event)
+void EntityManager::OnEvent(Event& event)
 {
     for (auto system : d_systems) {
-        system->handleEvent(event);
+        system->OnEvent(event);
     }
 }
 
-void EntityManager::draw(EntityRenderer* renderer) {
+void EntityManager::Draw(EntityRenderer* renderer) {
     for (auto [id, entity]: d_entities) {
-        renderer->draw(*entity);
+        renderer->Draw(*entity);
     }
 }
 

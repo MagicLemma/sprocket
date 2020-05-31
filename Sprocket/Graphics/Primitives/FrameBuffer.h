@@ -16,20 +16,20 @@ class FrameBuffer
 public:
     FrameBuffer(int width, int height);
 
-    void bind() const;
-    void unbind() const;
+    void Bind() const;
+    void Unbind() const;
         // Bind/unbind for writing. Any render calls while this is
         // bound for writing will cause objects to be rendered onto
         // this objects texture.
 
-    void bindTexture() const;
-    void unbindTexture() const;
+    void BindTexture() const;
+    void UnbindTexture() const;
 
-    void setScreenSize(int width, int height);
+    void SetScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
 
-    int width() const { return d_width; }
-    int height() const { return d_height; }
+    int Width() const { return d_width; }
+    int Height() const { return d_height; }
 };
 
 }

@@ -20,6 +20,6 @@ public:
                WorldLayer* worldLayer,
                EditorUI* editorUi);
 
-    void handleEvent(Sprocket::Event& event) override;
-    void update(float dt) override;
+    void OnEvent(Sprocket::Event& event) override;
+    void OnUpdate(float dt) override;
 };
