@@ -22,6 +22,46 @@ void AddEntityToList(Sprocket::DevUI::Context& ui,
     ui.PopID();         
 }
 
+void PhysicsComponentInfo(Sprocket::DevUI::Context& ui,
+                          Sprocket::PhysicsComponent& phys)
+{
+    if (ui.StartTreeNode("Physics")) {
+        ui.Checkbox("Gravity", &phys.gravity);
+        ui.SameLine();
+        ui.Checkbox("Frozen", &phys.frozen);
+        ui.DragFloat3("Velocity", &phys.velocity, 0.005f);
+        ui.EndTreeNode();
+    }
+}
+
+void ColliderComponentInfo(Sprocket::DevUI::Context& ui,
+                           Sprocket::ColliderComponent& coll)
+{
+    if (ui.StartTreeNode("Collider")) {
+        ui.DragFloat("Mass", &coll.mass, 0.05f);
+        ui.SliderFloat("Bounciness", &coll.bounciness, 0.0f, 1.0f);
+        ui.SliderFloat("Friction Coeff", &coll.frictionCoefficient, 0.0f, 1.0f);
+        ui.SliderFloat("Roll Resistance", &coll.rollingResistance, 0.0f, 1.0f);
+        ui.EndTreeNode();
+    }
+}
+
+void PlayerComponentInfo(Sprocket::DevUI::Context& ui,
+                          Sprocket::PlayerComponent& play)
+{
+    using namespace Sprocket::Maths;
+    if (ui.StartTreeNode("Player")) {
+        ui.Text("Moving Forwards: " + ToString(play.movingForwards));
+        ui.Text("Moving Backwards: " + ToString(play.movingBackwards));
+        ui.Text("Moving Left: " + ToString(play.movingLeft));
+        ui.Text("Moving Right: " + ToString(play.movingRight));
+        ui.Text("Jumping: " + ToString(play.jumping));
+        ui.SliderFloat("Yaw", &play.yaw, -180.0f, 180.0f);
+        ui.SliderFloat("Pitch", &play.pitch, -89.0f, 89.0f);
+        ui.EndTreeNode();
+    }
+}
+
 void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
                         Sprocket::Entity& entity,
                         const Sprocket::Maths::mat4& view,
@@ -73,22 +113,16 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     entity.Position() = GetTranslation(origin);
     entity.Orientation() = Normalise(ToQuat(mat3(origin)));
 
-    if (entity.Has<PhysicsComponent>() && ui.StartTreeNode("Physics")) {
-        auto& comp = entity.Get<PhysicsComponent>();
-        ui.Checkbox("Gravity", &comp.gravity);
-        ui.SameLine();
-        ui.Checkbox("Frozen", &comp.frozen);
-        ui.DragFloat3("Velocity", &comp.velocity, 0.005f);
-        ui.EndTreeNode();
+    if (entity.Has<PhysicsComponent>()) {
+        PhysicsComponentInfo(ui, entity.Get<PhysicsComponent>());
     }
 
-    if (entity.Has<ColliderComponent>() && ui.StartTreeNode("Collider")) {
-        auto& comp = entity.Get<ColliderComponent>();
-        ui.DragFloat("Mass", &comp.mass, 0.05f);
-        ui.SliderFloat("Bounciness", &comp.bounciness, 0.0f, 1.0f);
-        ui.SliderFloat("Friction Coeff", &comp.frictionCoefficient, 0.0f, 1.0f);
-        ui.SliderFloat("Roll Resistance", &comp.rollingResistance, 0.0f, 1.0f);
-        ui.EndTreeNode();
+    if (entity.Has<ColliderComponent>()) {
+        ColliderComponentInfo(ui, entity.Get<ColliderComponent>());
+    }
+
+    if (entity.Has<PlayerComponent>()) {
+        PlayerComponentInfo(ui, entity.Get<PlayerComponent>());
     }
 
     ui.Separator();

@@ -52,7 +52,7 @@ void TerrainRenderer::Draw(const Terrain& terrain)
 	d_shader.LoadUniform("reflectivity", terrain.GetMaterial().reflectivity);
     
     terrain.Bind();
-    glDrawElements(GL_TRIANGLES, terrain.GetModel().VertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, terrain.GetModel().VertexCount(), GL_UNSIGNED_INT, (const void*)0);
     terrain.Unbind();
 
     d_shader.Unbind();

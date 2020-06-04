@@ -31,7 +31,7 @@ void SkyboxRenderer::Draw(const Skybox& skybox,
 
     skybox.model.Bind();
     skybox.texture.Bind();
-    glDrawElements(GL_TRIANGLES, skybox.model.VertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, skybox.model.VertexCount(), GL_UNSIGNED_INT, (const void*)0);
     skybox.texture.Unbind();
     skybox.model.Unbind();
 
