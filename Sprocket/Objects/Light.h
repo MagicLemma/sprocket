@@ -5,13 +5,20 @@
 
 namespace Sprocket {
 
-struct Light
+struct PointLight
 {
     Maths::vec3 position;
     Maths::vec3 colour;
     Maths::vec3 attenuation;
 };
 
-using Lights = std::vector<Light>;
+struct DirectionalLight
+{
+    Maths::vec3 direction;
+    Maths::vec3 colour;
+    float       brightness;
+};
+
+using PointLights = std::vector<PointLight>;
 
 }

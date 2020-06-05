@@ -42,6 +42,7 @@ public:
     void Text(const std::string& text);
     void TextModifiable(std::string& text);
     void Checkbox(const std::string& name, bool* value);
+    void ColourPicker(const std::string& name, Maths::vec3* colour);
     void SliderFloat(const std::string& name, float* value, float lower, float upper);
     void DragFloat(const std::string& name, float* value, float speed = 1.0f);
     void DragFloat3(const std::string& name, Maths::vec3* values, float speed = 1.0f);

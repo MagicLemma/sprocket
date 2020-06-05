@@ -15,6 +15,10 @@ uniform sampler2D normal_sampler;
 uniform vec3 u_light_colour[5];
 uniform vec3 u_light_attenuation[5];
 
+uniform vec3  u_sun_direction;
+uniform vec3  u_sun_colour;
+uniform float u_sun_brightness;
+
 // Texture/Lighting Information
 uniform float u_shine_dampner;
 uniform float u_reflectivity;
@@ -35,6 +39,19 @@ void main()
     vec4 total_diffuse = vec4(0.0);
     vec4 total_specular = vec4(0.0);
 
+    // Sun diffuse light
+    vec3 unit_sun_direction = normalize(u_sun_direction);
+    float sun_diffuse_factor = dot(-unit_sun_direction, unit_normal);
+    sun_diffuse_factor = max(sun_diffuse_factor, 0.0);
+    total_diffuse += sun_diffuse_factor * u_sun_brightness * vec4(u_sun_colour, 1.0);
+
+    // Sun specular light
+    vec3 sun_reflected_light_dir = reflect(unit_sun_direction, unit_normal);
+    float sun_specular_factor = dot(sun_reflected_light_dir, unit_to_camera);
+    sun_specular_factor = max(sun_specular_factor, 0.0);
+    total_specular += sun_specular_factor * u_sun_brightness * vec4(u_sun_colour, 1.0);
+
+    // Point Lights
     for (int i = 0; i != 5; i++) {
         vec3 unit_to_light = normalize(p_to_light_vector[i]);
         vec3 reflected_light_direction = reflect(-unit_to_light, unit_normal);

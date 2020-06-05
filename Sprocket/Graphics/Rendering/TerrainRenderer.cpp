@@ -15,8 +15,8 @@ TerrainRenderer::TerrainRenderer(Window* window)
 }
 
 void TerrainRenderer::OnUpdate(const Camera& camera,
-                             const Lens& lens,
-                             const Lights& lights)
+                               const Lens& lens,
+                               const PointLights& lights)
 {
     d_shader.Bind();
     d_shader.LoadUniform("projectionMatrix", lens.Projection());

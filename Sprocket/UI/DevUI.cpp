@@ -358,6 +358,14 @@ void Context::Checkbox(const std::string& name, bool* value)
     ImGui::Checkbox(name.c_str(), value);
 }
 
+void Context::ColourPicker(const std::string& name, Maths::vec3* colour)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    static int flags = ImGuiColorEditFlags_Float
+                     | ImGuiColorEditFlags_InputRGB;
+    ImGui::ColorEdit3(name.c_str(), &colour->x, flags);
+}
+
 void Context::SliderFloat(const std::string& name, float* value, float lower, float upper)
 {
     ImGui::SetCurrentContext(d_impl->context);

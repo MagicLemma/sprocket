@@ -66,8 +66,9 @@ void EntityRenderer::RenderColliders(bool value)
 }
 
 void EntityRenderer::OnUpdate(const Camera& camera,
-                            const Lens& lens,
-                            const Lights& lights)
+                              const Lens& lens,
+                              const DirectionalLight& sun,
+                              const PointLights& pointLights)
 {
     d_shader.Bind();
     unsigned int MAX_NUM_LIGHTS = 5;
@@ -75,12 +76,17 @@ void EntityRenderer::OnUpdate(const Camera& camera,
     d_shader.LoadUniform("u_proj_matrix", lens.Projection());
     d_shader.LoadUniform("u_view_matrix", camera.View());
 
-    // Load lights to shader
+    // Load sun to shader
+    d_shader.LoadUniform("u_sun_direction", sun.direction);
+    d_shader.LoadUniform("u_sun_colour", sun.colour);
+    d_shader.LoadUniform("u_sun_brightness", sun.brightness);
+    
+    // Load point lights to shader
     for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
-		if (i < lights.size()) {
-			d_shader.LoadUniform(ArrayName("u_light_pos", i), lights[i].position);
-			d_shader.LoadUniform(ArrayName("u_light_colour", i), lights[i].colour);
-			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), lights[i].attenuation);
+		if (i < pointLights.size()) {
+			d_shader.LoadUniform(ArrayName("u_light_pos", i), pointLights[i].position);
+			d_shader.LoadUniform(ArrayName("u_light_colour", i), pointLights[i].colour);
+			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), pointLights[i].attenuation);
 		}
 		else {  // "Empty" lights to pad the array
 			d_shader.LoadUniform(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});

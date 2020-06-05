@@ -169,6 +169,17 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
     ui.EndWindow();
 }
 
+void SunInfoPanel(Sprocket::DevUI::Context& ui,
+                  Sprocket::DirectionalLight& sun,
+                  float& sunAngle)
+{
+    ui.StartWindow("Sun");
+    ui.ColourPicker("Colour", &sun.colour);
+    ui.SliderFloat("Brightness", &sun.brightness, 0.0f, 1.0f);
+    ui.DragFloat("Sun Angle", &sunAngle);
+    ui.EndWindow();
+}
+
 }
 
 EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
@@ -241,6 +252,8 @@ void EditorUI::OnUpdate(float dt)
     }
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
+
+    SunInfoPanel(d_ui, d_worldLayer->d_sun, d_worldLayer->d_sunAngle);
 
     d_ui.DemoWindow();
     d_ui.EndFrame();
