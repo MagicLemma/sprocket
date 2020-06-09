@@ -3,6 +3,7 @@
 #include "KeyboardEvent.h"
 #include "WindowEvent.h"
 #include "RenderContext.h"
+#include "BufferLayout.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -13,23 +14,23 @@ namespace Sprocket {
 namespace DevUI {
 namespace {
 
-unsigned int cast(ImTextureID id)
+unsigned int Cast(ImTextureID id)
 {
     return (unsigned int)(intptr_t)id;
 }
 
-ImTextureID cast(unsigned int id)
+ImTextureID Cast(unsigned int id)
 {
     return (ImTextureID)(intptr_t)id;
 }
 
-void setBackendFlags(ImGuiIO& io)
+void SetBackendFlags(ImGuiIO& io)
 {
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 }
 
-void setClipboardCallbacks(ImGuiIO& io, Window* window)
+void SetClipboardCallbacks(ImGuiIO& io, Window* window)
 {
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
         Sprocket::Window* w = static_cast<Sprocket::Window*>(user_data);
@@ -44,7 +45,7 @@ void setClipboardCallbacks(ImGuiIO& io, Window* window)
     io.ClipboardUserData = window;
 }
 
-void setKeyMappings(ImGuiIO& io)
+void SetKeyMappings(ImGuiIO& io)
 {
     io.KeyMap[ImGuiKey_Tab] =         Keyboard::TAB;
     io.KeyMap[ImGuiKey_LeftArrow] =   Keyboard::LEFT_ARROW;
@@ -70,16 +71,16 @@ void setKeyMappings(ImGuiIO& io)
     io.KeyMap[ImGuiKey_Z] =           Keyboard::Z;
 }
 
-void setFontAtlas(ImGuiIO& io, Texture& fontAtlas)
+void SetFontAtlas(ImGuiIO& io, Texture& fontAtlas)
 {
     unsigned char* data;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
     fontAtlas = Texture(width, height, data);
-    io.Fonts->TexID = cast(fontAtlas.Id());
+    io.Fonts->TexID = Cast(fontAtlas.Id());
 }
 
-ImGuizmo::OPERATION getMode(GizmoMode mode)
+ImGuizmo::OPERATION GetMode(GizmoMode mode)
 {
     switch (mode) {
         case GizmoMode::TRANSLATION: return ImGuizmo::OPERATION::TRANSLATE;
@@ -91,7 +92,7 @@ ImGuizmo::OPERATION getMode(GizmoMode mode)
     }
 }
 
-ImGuizmo::MODE getCoords(GizmoCoords coords) 
+ImGuizmo::MODE GetCoords(GizmoCoords coords) 
 {
     switch (coords) {
         case GizmoCoords::WORLD: return ImGuizmo::MODE::WORLD;
@@ -116,12 +117,22 @@ struct DevUIData
 
     StreamBuffer buffer;
         // Buffer used to store the render data created by ImGui
-        // for rendering it
+        // for rendering it.
+
+    BufferLayout bufferLayout;
+        // Describes the layout of the buffer above.
 
     DevUIData()
         : shader("Resources/Shaders/DevGUI.vert",
                  "Resources/Shaders/DevGUI.frag")
-    {}
+        , bufferLayout(sizeof(ImDrawVert))
+    {
+        bufferLayout.AddAttribute(DataType::FLOAT, 2);
+        bufferLayout.AddAttribute(DataType::FLOAT, 2);
+        bufferLayout.AddAttribute(DataType::UBYTE, 4);
+
+        buffer.SetBufferLayout(bufferLayout);
+    }
 };
 
 Context::Context(Window* window)
@@ -135,21 +146,10 @@ Context::Context(Window* window)
 
     ImGuiIO& io = d_impl->context->IO;
     
-    setBackendFlags(io);
-    setClipboardCallbacks(io, window);
-    setKeyMappings(io);
-    setFontAtlas(io, d_impl->fontAtlas);
-    
-    d_impl->buffer.Bind();
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
-                        sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, pos));
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
-                        sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, uv));
-    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE,
-                        sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, col));
-
-    d_impl->buffer.Unbind();
+    SetBackendFlags(io);
+    SetClipboardCallbacks(io, window);
+    SetKeyMappings(io);
+    SetFontAtlas(io, d_impl->fontAtlas);
 }
 
 void Context::OnEvent(Event& event)
@@ -168,9 +168,7 @@ void Context::OnEvent(Event& event)
 
     else if (auto e = event.As<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->XPos(), e->YPos());
-        if (ImGui::IsAnyWindowHovered()) {
-            e->Consume();
-        }
+        if (ImGui::IsAnyWindowHovered()) { e->Consume(); }
     }
 
     else if (auto e = event.As<MouseScrolledEvent>()) {
@@ -347,7 +345,8 @@ void Context::TextModifiable(std::string& text)
 {
     ImGui::SetCurrentContext(d_impl->context);
     char nameStr[128] = "";
-    std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
+    std::memcpy(nameStr, text.c_str(), text.size()-1);
+    nameStr[sizeof(nameStr)-1] = '\0';
     ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
     text = std::string(nameStr);
 }
@@ -394,8 +393,8 @@ void Context::Gizmo(Maths::mat4* matrix,
     ImGuizmo::Manipulate(
         Maths::Cast(view),
         Maths::Cast(projection),
-        getMode(mode),
-        getCoords(coords),
+        GetMode(mode),
+        GetCoords(coords),
         Maths::Cast(*matrix)
     );
 }

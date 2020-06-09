@@ -10,14 +10,9 @@ class Layer
 protected:  
     CoreSystems d_core;
 
-private:
-    Layer(Layer&&) = delete;
-    Layer(const Layer&) = delete;
-    Layer& operator=(const Layer&) = delete;
-        // Layers are non-copyable and non-moveable.
-
 public:
     Layer(const CoreSystems& core);
+    Layer(Layer&&) = delete; // Non-copyable and non-moveable.
     virtual ~Layer() {}
 
     virtual void OnEvent(Event& event) = 0;

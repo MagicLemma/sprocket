@@ -32,6 +32,7 @@ add_library(Sprocket STATIC
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
 
+            Graphics/Primitives/BufferLayout.cpp
             Graphics/Primitives/Resources.cpp
             Graphics/Primitives/Model2D.cpp
             Graphics/Primitives/Model3D.cpp

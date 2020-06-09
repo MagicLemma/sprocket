@@ -1,6 +1,7 @@
 #pragma once
 #include "Maths.h"
 #include "Resources.h"
+#include "BufferLayout.h"
 
 #include <vector>
 
@@ -21,6 +22,9 @@ public:
 
     void Bind() const;
     void Unbind() const;
+
+    void SetBufferLayout(const BufferLayout& layout) const;
+        // Sets the buffer layout of the vertex buffer.
 
     void SetVertexData(std::size_t size, const void* data);
     void SetIndexData(std::size_t size, const void* data);

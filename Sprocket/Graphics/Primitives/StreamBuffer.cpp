@@ -8,18 +8,12 @@ namespace Sprocket {
 
 StreamBuffer::StreamBuffer()
     : d_vao(std::make_shared<VAO>())
+    , d_vertexBuffer(std::make_shared<VBO>())
+    , d_indexBuffer(std::make_shared<VBO>())
 {
+    // Set the index buffer pointer in the VAO.
     glBindVertexArray(d_vao->Value());
-
-    d_vertexBuffer = std::make_shared<VBO>();
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-
-    d_indexBuffer = std::make_shared<VBO>();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
-
     glBindVertexArray(0);
 }
 
@@ -31,11 +25,25 @@ StreamBuffer::~StreamBuffer()
 void StreamBuffer::Bind() const
 {
     glBindVertexArray(d_vao->Value());
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
 }
 
 void StreamBuffer::Unbind() const
 {
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void StreamBuffer::SetBufferLayout(const BufferLayout& layout) const
+{
+    if (layout.Validate()) {
+        Bind();
+        layout.SetAttributes();
+        Unbind();
+    }
+    else {
+        SPKT_LOG_ERROR("Buffer layout is not complete!");
+    }
 }
 
 void StreamBuffer::SetVertexData(std::size_t size, const void* data)

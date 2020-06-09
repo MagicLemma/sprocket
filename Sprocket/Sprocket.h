@@ -38,6 +38,7 @@
 #include "Graphics/PostProcessing/GaussianBlur.h"
 #include "Graphics/PostProcessing/Negative.h"
 
+#include "Graphics/Primitives/BufferLayout.h"
 #include "Graphics/Primitives/Resources.h"
 #include "Graphics/Primitives/Model2D.h"
 #include "Graphics/Primitives/Model3D.h"
