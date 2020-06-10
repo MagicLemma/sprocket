@@ -174,10 +174,15 @@ void Window::OnUpdate()
 	glfwPollEvents();
 }
 
-void Window::Clear()
+void Window::Clear(const Maths::vec4& colour)
+{
+	Clear(colour.r, colour.g, colour.b, colour.a);
+}
+
+void Window::Clear(float r, float g, float b, float a)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(0, 0, 0, 1);
+	glClearColor(r, g, b, a);
 }
 
 void Window::SetCursorVisibility(bool visibility)

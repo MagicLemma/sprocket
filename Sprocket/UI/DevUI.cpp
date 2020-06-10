@@ -345,8 +345,7 @@ void Context::TextModifiable(std::string& text)
 {
     ImGui::SetCurrentContext(d_impl->context);
     char nameStr[128] = "";
-    std::memcpy(nameStr, text.c_str(), text.size()-1);
-    nameStr[sizeof(nameStr)-1] = '\0';
+    std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
     ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
     text = std::string(nameStr);
 }

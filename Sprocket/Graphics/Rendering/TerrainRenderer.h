@@ -23,7 +23,8 @@ public:
 
     void OnUpdate(const Camera& camera,
                 const Lens& lens,
-                const PointLights& lights);
+                const DirectionalLight& sun,
+                const PointLights& lights = {});
 
     void Draw(const Terrain& terrain);
 };

@@ -16,11 +16,17 @@ TerrainRenderer::TerrainRenderer(Window* window)
 
 void TerrainRenderer::OnUpdate(const Camera& camera,
                                const Lens& lens,
+                               const DirectionalLight& sun,
                                const PointLights& lights)
 {
     d_shader.Bind();
     d_shader.LoadUniform("projectionMatrix", lens.Projection());
     d_shader.LoadUniform("viewMatrix", camera.View());
+
+    // Load sun to shader
+    d_shader.LoadUniform("u_sun_direction", sun.direction);
+    d_shader.LoadUniform("u_sun_colour", sun.colour);
+    d_shader.LoadUniform("u_sun_brightness", sun.brightness);
 
     // Load lights to shader
     for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
@@ -42,6 +48,7 @@ void TerrainRenderer::OnUpdate(const Camera& camera,
 void TerrainRenderer::Draw(const Terrain& terrain)
 {
     RenderContext rc;
+    glEnable(GL_DEPTH_TEST);
     d_shader.Bind();
 
     // Load up the transform matrix.

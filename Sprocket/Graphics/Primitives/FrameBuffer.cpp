@@ -36,8 +36,6 @@ FrameBuffer::FrameBuffer(int width, int height)
 void FrameBuffer::Bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
-    glViewport(0, 0, d_width, d_height);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 }
@@ -45,7 +43,6 @@ void FrameBuffer::Bind() const
 void FrameBuffer::Unbind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, d_width, d_height);
 }
 
 void FrameBuffer::BindTexture() const

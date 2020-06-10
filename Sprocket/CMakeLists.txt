@@ -91,6 +91,7 @@ add_library(Sprocket STATIC
             Systems/PhysicsEngine.cpp
             Systems/Colliders.cpp
             Systems/PlayerMovement.cpp
+            Systems/BasicSelector.cpp
             Systems/Selector.cpp
 
             Events/Event.cpp
@@ -99,6 +100,7 @@ add_library(Sprocket STATIC
             Events/MouseEvent.cpp
             
             Utility/Log.cpp
+            Utility/Colour.cpp
             Utility/KeyboardProxy.cpp
             Utility/MouseProxy.cpp
             Utility/Maths.cpp

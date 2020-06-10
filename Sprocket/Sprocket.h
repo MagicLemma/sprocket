@@ -22,6 +22,7 @@
 
 // UTILITY
 #include "Utility/Log.h"
+#include "Utility/Colour.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"
 #include "Utility/MouseProxy.h"
@@ -76,6 +77,7 @@
 #include "Systems/PhysicsEngine.h"
 #include "Systems/Colliders.h"
 #include "Systems/PlayerMovement.h"
+#include "Systems/BasicSelector.h"
 #include "Systems/Selector.h"
 
 // DISPLAY

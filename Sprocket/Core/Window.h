@@ -99,7 +99,8 @@ public:
 	~Window();
 
 	void OnUpdate();
-	void Clear();
+	void Clear(const Maths::vec4& colour);
+	void Clear(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
 
 	// Getters
 	unsigned int Height() const { return d_data.height; }

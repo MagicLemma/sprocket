@@ -12,7 +12,7 @@ public:
     virtual void UpdateEntity(float dt, Entity& entity) {};
         // Called once per entity per frame and before the system updates.
 
-    virtual void UpdateSystem(float dt) = 0;
+    virtual void UpdateSystem(float dt) {};
         // Called once per frame, this should update any system speific data.
 
     virtual void RegisterEntity(const Entity& entity) {};

@@ -3,3 +3,4 @@ project(Sprocket)
 
 add_subdirectory(Sprocket)
 add_subdirectory(Workshop)
+add_subdirectory(Game)

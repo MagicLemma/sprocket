@@ -13,6 +13,10 @@ uniform sampler2D textureSampler;
 uniform vec3 lightColours[5];
 uniform vec3 lightAttenuations[5];
 
+uniform vec3  u_sun_direction;
+uniform vec3  u_sun_colour;
+uniform float u_sun_brightness;
+
 // Texture/Lighting Information
 uniform float shineDamper;
 uniform float reflectivity;
@@ -29,6 +33,18 @@ void main()
     // Lighting calculation
     vec4 totalDiffuse = vec4(0.0);
     vec4 totalSpecular = vec4(0.0);
+    
+    // Sun diffuse light
+    vec3 unit_sun_direction = normalize(u_sun_direction);
+    float sun_diffuse_factor = dot(-unit_sun_direction, unitNormal);
+    sun_diffuse_factor = max(sun_diffuse_factor, 0.0);
+    totalDiffuse += sun_diffuse_factor * u_sun_brightness * vec4(u_sun_colour, 1.0);
+
+    // Sun specular light
+    vec3 sun_reflected_light_dir = reflect(unit_sun_direction, unitNormal);
+    float sun_specular_factor = dot(sun_reflected_light_dir, unitToCamera);
+    sun_specular_factor = max(sun_specular_factor, 0.0);
+    totalSpecular += sun_specular_factor * u_sun_brightness * vec4(u_sun_colour, 1.0);
 
     for (int i = 0; i != 5; i++) {
         vec3 unitToLight = normalize(toLightVectors[i]);
