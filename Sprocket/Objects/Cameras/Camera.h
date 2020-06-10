@@ -11,6 +11,7 @@ public:
     virtual ~Camera() {};
 
     virtual Maths::mat4 View() const = 0;
+    virtual Maths::vec3 Position() const = 0;
 
     virtual void OnUpdate(float timeDelta) {}
     virtual void OnEvent(Event& event) {}

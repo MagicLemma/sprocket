@@ -33,9 +33,11 @@ class ThirdPersonCamera : public Camera
     KeyboardProxy d_keyboard;
 
 public:
-    ThirdPersonCamera();
+    ThirdPersonCamera(float distance = 10.0f);
 
     Maths::mat4 View() const override;
+    Maths::vec3 Position() const override { return d_position; }
+
     void OnUpdate(float timeDelta) override;
     void OnEvent(Event& event) override;
 

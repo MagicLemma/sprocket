@@ -46,9 +46,6 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     d_container.Base().roundness = 0.081f;
     d_container.AddProperty<Draggable>();
 
-    //d_container.addProperty<VerticalConstraint>(VerticalConstraint::Type::TOP, 10.0f, d_window);
-    //d_container.addProperty<HorizontalConstraint>(HorizontalConstraint::Type::RIGHT, 10.0f, d_window);
-
     auto topSlider = d_container.Add<Slider>(300.0f, 50.0f);
     SetSliderAttrs(topSlider);
 
@@ -60,21 +57,11 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
 
     cameraSwitchButton->SetUnclickCallback([&]() {  //unclick
         switch (d_worldLayer->d_mode) {
-            case Mode::OBSERVER: {
-                SPKT_LOG_INFO("Mode switched to Editor");
+            case Mode::PLAYER: {
                 d_worldLayer->d_mode = Mode::EDITOR;
-
-                d_worldLayer->d_camera = &d_worldLayer->d_editorCamera;
-                d_worldLayer->d_mouseRequired = true;
-
             } break;
              case Mode::EDITOR: {
-                SPKT_LOG_INFO("Mode switched to Observer");
-                d_worldLayer->d_mode = Mode::OBSERVER;
-
-                d_worldLayer->d_camera = &d_worldLayer->d_observerCamera;
-                d_worldLayer->d_mouseRequired = false;
-
+                d_worldLayer->d_mode = Mode::PLAYER;
             } break;
         }
     });

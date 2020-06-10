@@ -1,5 +1,4 @@
 #include "Selector.h"
-#include "MousePicker.h"
 #include "MouseEvent.h"
 
 namespace Sprocket {
@@ -102,11 +101,12 @@ void Selector::SetSelected(Entity* entity)
 Entity* Selector::GetMousedOver()
 {
     Maths::vec3 rayStart = Maths::Inverse(d_camera->View()) * Maths::vec4(0, 0, 0, 1);
-    Maths::vec3 direction = MousePicker::GetRay(
+    Maths::vec3 direction = Maths::GetMouseRay(
         d_mouse.GetMousePos(),
-        d_window,
-        d_camera,
-        d_lens);
+        d_window->Width(),
+        d_window->Height(),
+        d_camera->View(),
+        d_lens->Projection());
     return d_physicsEngine->Raycast(rayStart, direction);
 }
 

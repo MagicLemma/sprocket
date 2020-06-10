@@ -31,7 +31,7 @@ int main()
     Stopwatch watch;
 
     while (window.Running()) {
-        window.Clear(SPACE_DARK);
+        window.Clear(LIGHT_BLUE);
         
         watch.OnUpdate();
         sceneManager.OnUpdate(watch.DeltaTime());

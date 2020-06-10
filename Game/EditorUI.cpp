@@ -174,7 +174,7 @@ void EditorUI::OnUpdate(float dt)
 
     d_ui.EndWindow();
 
-    mat4 view = d_worldLayer->d_camera->View();
+    mat4 view = d_worldLayer->d_camera.View();
     mat4 proj = d_worldLayer->d_lens.Projection();
     if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
         SelectedEntityInfo(d_ui, *e, view, proj);

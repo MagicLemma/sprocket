@@ -8,12 +8,12 @@
 
 namespace Sprocket {
 
-ThirdPersonCamera::ThirdPersonCamera()
+ThirdPersonCamera::ThirdPersonCamera(float distance)
     : Camera()
     , d_position({10.0f, 2.0f, 0.0f})
     , d_absoluteVerticalPosition(d_position.y)
     , d_target({0.0f, 0.0f, 0.0f})
-    , d_distance(10.0f)
+    , d_distance(distance)
     , d_horiz(0.0f)
     , d_rotationSpeed(90.0f)
     , d_movementSpeed(10.0f)

@@ -31,7 +31,6 @@
 #include "Utility/Tokenize.h"
 
 // GRAPHICS
-#include "Graphics/MousePicker.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/Shader.h"
 

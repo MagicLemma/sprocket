@@ -1,34 +1,24 @@
 #pragma once
+#include "GameGrid.h"
+
 #include <Sprocket.h>
 
 #include <memory>
 #include <random>
 
-enum class Mode
-{
-    PLAYER,
-    OBSERVER,
-    EDITOR
-};
+enum class Mode { PLAYER, EDITOR };
 
 class WorldLayer : public Sprocket::Layer
 {
     Mode d_mode;
 
-    // OBSERVER MODE
-    Sprocket::FirstPersonCamera d_observerCamera;
-
-    // EDITOR MODE
-    Sprocket::ThirdPersonCamera d_editorCamera;
+    Sprocket::ThirdPersonCamera d_camera;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
     Sprocket::TerrainRenderer d_terrainRenderer;
 
     Sprocket::PostProcessor   d_postProcessor;
-
-    Sprocket::Camera* d_camera;
-        // Pointer to the current camera based on the mode.
 
     Sprocket::PerspectiveLens d_lens;
         // Perspective Projection for all modes.
@@ -43,10 +33,13 @@ class WorldLayer : public Sprocket::Layer
     // Additional world setup
     Sprocket::DirectionalLight d_sun;
     float                      d_sunAngle;
+
+    Sprocket::MouseProxy d_mouse;
+
+    GameGrid d_gameGrid;
     
     // LAYER DATA
     bool d_paused = false;
-    bool d_mouseRequired = false;
 
     friend class EscapeMenu;
     friend class EditorUI;

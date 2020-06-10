@@ -141,7 +141,7 @@ vec3 GetTranslation(const mat4& m)
     return vec3{m[3][0], m[3][1], m[3][2]};
 }
 
-float Distance(const Maths::vec2& A, const Maths::vec2& B)
+float Distance(const vec2& A, const vec2& B)
 {
     return glm::distance(A, B);
 }
@@ -191,6 +191,33 @@ float Cosd(float degrees)
 void Clamp(float& value, float min, float max)
 {
     value = std::min(std::max(value, min), max);
+}
+
+vec3 GetMouseRay(
+    const vec2& mousePos,
+    unsigned int screenWidth,
+    unsigned int screenHeight,
+    const mat4& viewMatrix,
+    const mat4& projMatrix
+)
+{
+    // Homogeneous Clip Space
+    vec4 ray = {
+        (2.0f * mousePos.x) /screenWidth - 1,
+        -((2.0f * mousePos.y) / screenHeight - 1),
+        -1.0f,
+        1.0f
+    };
+
+    // Eye Space
+    ray = Inverse(projMatrix) * ray;
+    ray.z = -1.0f;
+    ray.w = 0.0f;
+
+    // World Space
+    vec3 returnRay = Inverse(viewMatrix) * ray;
+    Normalise(returnRay);
+    return returnRay;
 }
 
 // Printing

@@ -32,10 +32,11 @@ public:
     FirstPersonCamera();
 
     Maths::mat4 View() const override;
+    Maths::vec3 Position() const override { return d_position; }
+
     void OnUpdate(float timeDelta) override;
     void OnEvent(Event& event) override;
     
-    Maths::vec3 Position() const { return d_position; }
     Maths::vec3 Direction() const { return d_direction; }
 
     float Pitch() const { return d_pitch; }

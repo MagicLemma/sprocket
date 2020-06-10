@@ -15,6 +15,7 @@ public:
     PlayerBasedCamera(Entity* player);
 
     Maths::mat4 View() const override;
+    Maths::vec3 Position() const override { return d_player->Position(); }
 
     void SetPlayer(Entity* player) { d_player = player; }
 };

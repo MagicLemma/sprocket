@@ -70,6 +70,15 @@ float Cosd(float degrees);
 // General Helpers
 void Clamp(float& value, float min, float max);
 
+// Mouse Picking
+vec3 GetMouseRay(
+    const vec2& mousePos,
+    unsigned int screenWidth,
+    unsigned int screenHeight,
+    const mat4& viewMatrix,
+    const mat4& projMatrix
+);
+
 // Printing
 std::string ToString(const vec3& v, const std::optional<int>& dp = {});
 std::string ToString(float x, const std::optional<int>& dp = {});

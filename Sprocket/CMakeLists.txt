@@ -28,7 +28,6 @@ add_library(Sprocket STATIC
             UI/DevUI.cpp
             UI/SimpleUI.cpp
 
-            Graphics/MousePicker.cpp
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
 

@@ -1,5 +1,6 @@
 #include "MouseProxy.h"
 #include "MouseEvent.h"
+#include "Log.h"
 
 namespace Sprocket {
 
