@@ -2,6 +2,7 @@
 #include "Widget.h"
 #include "Quad.h"
 #include "MouseEvent.h"
+#include "MouseCodes.h"
 
 namespace Sprocket {
 

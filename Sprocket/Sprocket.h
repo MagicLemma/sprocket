@@ -3,7 +3,6 @@
 //
 
 // CORE
-#include "Core/CoreSystems.h"
 #include "Core/Window.h"
 #include "Core/SceneManager.h"
 #include "Core/ModelManager.h"
@@ -25,7 +24,9 @@
 #include "Utility/Colour.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"
+#include "Utility/KeyboardCodes.h"
 #include "Utility/MouseProxy.h"
+#include "Utility/MouseCodes.h"
 #include "Utility/Stopwatch.h"
 #include "Utility/Tokenize.h"
 

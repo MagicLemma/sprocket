@@ -2,6 +2,7 @@
 #include "MouseEvent.h"
 #include "KeyboardEvent.h"
 #include "WindowEvent.h"
+#include "KeyboardCodes.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
 

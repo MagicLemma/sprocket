@@ -1,5 +1,4 @@
 #pragma once
-#include "Window.h"
 #include "Event.h"
 #include "WidgetProperty.h"
 #include "MouseProxy.h"

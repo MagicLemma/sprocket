@@ -1,5 +1,6 @@
 #include "Slider.h"
 #include "MouseEvent.h"
+#include "MouseCodes.h"
 #include "Maths.h"
 #include "Log.h"
 

@@ -1,4 +1,5 @@
 #include "FirstPersonCamera.h"
+#include "KeyboardCodes.h"
 
 #include <cmath>
 #include <algorithm>

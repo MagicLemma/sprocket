@@ -1,11 +1,11 @@
 #include "PlayerMovement.h"
+#include "KeyboardCodes.h"
 #include "Log.h"
 
 namespace Sprocket {
 
-PlayerMovement::PlayerMovement(Window* window)
-    : d_window(window)
-    , d_deltaTime(0.0f)
+PlayerMovement::PlayerMovement()
+    : d_deltaTime(0.0f)
 {
 }
 

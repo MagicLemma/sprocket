@@ -1,5 +1,4 @@
 #pragma once
-#include "Window.h"
 #include "Event.h"
 
 namespace Sprocket {

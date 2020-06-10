@@ -1,5 +1,6 @@
 #include "ColourPalette.h"
 #include "MouseEvent.h"
+#include "MouseCodes.h"
 #include "Log.h"
 
 namespace Sprocket {

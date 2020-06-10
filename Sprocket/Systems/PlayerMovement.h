@@ -1,5 +1,4 @@
 #pragma once
-#include "Window.h"
 #include "EntitySystem.h"
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
@@ -8,7 +7,6 @@ namespace Sprocket {
 
 class PlayerMovement : public EntitySystem
 {
-    Window* d_window;
     float d_deltaTime;
 
     bool d_enabled = true;
@@ -17,7 +15,7 @@ class PlayerMovement : public EntitySystem
     MouseProxy d_mouse;
 
 public:
-    PlayerMovement(Window* window);
+    PlayerMovement();
     ~PlayerMovement() {}
 
     void UpdateEntity(float dt, Entity& entity) override;
