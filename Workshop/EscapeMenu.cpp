@@ -111,7 +111,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     auto palette = d_container.Add<ColourPalette>(300.0f, 300.0f);
     palette->Base().colour = {0.15625f, 0.15625f, 0.15625f};
     palette->SetCallback([&](const Maths::vec3& colour) {
-        for (auto& light : d_worldLayer->d_lights) {
+        for (auto& light : d_worldLayer->d_lights.points) {
             light.colour = colour;
         }
     });

@@ -45,10 +45,9 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::Selector       d_selector;
 
     // Additional world setup
-    Sprocket::Skybox           d_skybox;
-    Sprocket::DirectionalLight d_sun;
-    Sprocket::PointLights      d_lights;
-    float                      d_sunAngle = 45.0f;
+    Sprocket::Skybox d_skybox;
+    Sprocket::Lights d_lights;
+    float            d_sunAngle = 45.0f;
     
     // LAYER DATA
     bool d_paused = false;

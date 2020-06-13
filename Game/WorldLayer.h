@@ -26,12 +26,15 @@ class WorldLayer : public Sprocket::Layer
     // WORLD
     Sprocket::Terrain d_terrain;
 
+    // MODELLING
+    Sprocket::ModelManager d_modelManager;
+
     // Entity management and systems
     Sprocket::EntityManager d_entityManager;
     Sprocket::BasicSelector d_selector;
 
     // Additional world setup
-    Sprocket::DirectionalLight d_sun;
+    Sprocket::Lights d_lights;
     float                      d_sunAngle;
 
     Sprocket::MouseProxy d_mouse;

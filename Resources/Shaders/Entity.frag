@@ -19,6 +19,9 @@ uniform vec3  u_sun_direction;
 uniform vec3  u_sun_colour;
 uniform float u_sun_brightness;
 
+uniform vec3  u_ambience_colour;
+uniform float u_ambience_brightness;
+
 // Texture/Lighting Information
 uniform float u_shine_dampner;
 uniform float u_reflectivity;
@@ -34,6 +37,9 @@ void main()
 
     // Colour prior to lighting
     vec4 colour = texture(texture_sampler, p_texture_coords);
+
+    // Ambience
+    vec4 ambience = vec4(u_ambience_brightness * u_ambience_colour, 1.0);
 
     // Lighting calculation
     vec4 total_diffuse = vec4(0.0);
@@ -73,11 +79,9 @@ void main()
         total_specular = total_specular + vec4(specular_factor * u_reflectivity * u_light_colour[i], 1.0);
     }
 
-    // Ambient lighting calculation
-    total_diffuse = max(total_diffuse, 0.1);
-
-    out_colour = u_brightness * total_diffuse * colour + total_specular;
+    out_colour = ambience + total_diffuse * colour + total_specular;
+    
     if (u_brightness > 1) {
-        out_colour += vec4(0.1, 0.1, 0.1, 1.0);
+        out_colour += u_brightness * vec4(0.1, 0.1, 0.1, 1.0);
     }
 }

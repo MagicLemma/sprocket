@@ -19,6 +19,18 @@ struct DirectionalLight
     float       brightness;
 };
 
-using PointLights = std::vector<PointLight>;
+struct AmbientLight
+{
+    Maths::vec3 colour     = {1.0, 1.0, 1.0};
+    float       brightness = 0.0f;
+};
+
+struct Lights
+// TODO: Allow for more than one DirectionalLight
+{
+    std::vector<PointLight> points;
+    DirectionalLight        sun;
+    AmbientLight            ambience;
+};
 
 }

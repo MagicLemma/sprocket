@@ -17,6 +17,9 @@ uniform vec3  u_sun_direction;
 uniform vec3  u_sun_colour;
 uniform float u_sun_brightness;
 
+uniform vec3  u_ambience_colour;
+uniform float u_ambience_brightness;
+
 // Texture/Lighting Information
 uniform float shineDamper;
 uniform float reflectivity;
@@ -29,6 +32,9 @@ void main()
 
     // Colour prior to lighting
     vec4 colour = texture(textureSampler, d_texture);
+
+    // Add ambience
+    colour += vec4(u_ambience_brightness * u_ambience_colour, 1.0);
 
     // Lighting calculation
     vec4 totalDiffuse = vec4(0.0);

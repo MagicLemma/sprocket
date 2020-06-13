@@ -274,14 +274,14 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     core.window->SetCursorVisibility(false);
 
-    d_lights.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
-    d_lights.push_back({{-7.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
-    d_lights.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
-    d_lights.push_back({{40.0, 20.0, 0.0}, {0.8f, 0.8f, 0.8f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.points.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.points.push_back({{-7.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.points.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
+    d_lights.points.push_back({{40.0, 20.0, 0.0}, {0.8f, 0.8f, 0.8f}, {1.0f, 0.0f, 0.0f}});
 
-    d_sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
-    d_sun.colour = {1.0, 1.0, 1.0};
-    d_sun.brightness = 0.2f;
+    d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
+    d_lights.sun.colour = {1.0, 1.0, 1.0};
+    d_lights.sun.brightness = 0.2f;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
@@ -305,10 +305,10 @@ void WorldLayer::OnUpdate(float dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.OnUpdate(*d_camera, d_lens, d_sun, d_lights);
+    d_entityRenderer.OnUpdate(*d_camera, d_lens, d_lights);
 
     if (!d_paused) {
-        d_sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
+        d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
         d_camera->OnUpdate(dt);
         d_core.window->SetCursorVisibility(d_mouseRequired);
         d_entityManager.OnUpdate(dt);

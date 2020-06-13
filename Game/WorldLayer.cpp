@@ -22,15 +22,16 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_terrain(GetTerrainMaterial())
     , d_sunAngle(0)
     , d_camera(5.0f)
+    , d_gameGrid(&d_entityManager, &d_modelManager)
 {
     using namespace Sprocket;
 
-    // Add the GameGrid square highligher to the ECS
-    d_entityManager.AddEntity(d_gameGrid.GetHighlightSquare());
+    d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
+    d_lights.sun.colour = {1.0, 1.0, 1.0};
+    d_lights.sun.brightness = 0.5f;
 
-    d_sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
-    d_sun.colour = {1.0, 1.0, 1.0};
-    d_sun.brightness = 0.5f;
+    d_lights.ambience.colour = {1.0, 1.0, 1.0};
+    d_lights.ambience.brightness = 0.2f;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
@@ -56,13 +57,13 @@ void WorldLayer::OnUpdate(float dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.OnUpdate(d_camera, d_lens, d_sun);
-    d_terrainRenderer.OnUpdate(d_camera, d_lens, d_sun);
+    d_entityRenderer.OnUpdate(d_camera, d_lens, d_lights);
+    d_terrainRenderer.OnUpdate(d_camera, d_lens, d_lights);
     d_gameGrid.OnUpdate(d_core.window, &d_camera, &d_lens);
     d_mouse.OnUpdate();
 
     if (!d_paused) {
-        d_sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
+        d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
         d_camera.OnUpdate(dt);
         d_entityManager.OnUpdate(dt);
     }

@@ -16,24 +16,27 @@ TerrainRenderer::TerrainRenderer(Window* window)
 
 void TerrainRenderer::OnUpdate(const Camera& camera,
                                const Lens& lens,
-                               const DirectionalLight& sun,
-                               const PointLights& lights)
+                               const Lights& lights)
 {
     d_shader.Bind();
     d_shader.LoadUniform("projectionMatrix", lens.Projection());
     d_shader.LoadUniform("viewMatrix", camera.View());
 
     // Load sun to shader
-    d_shader.LoadUniform("u_sun_direction", sun.direction);
-    d_shader.LoadUniform("u_sun_colour", sun.colour);
-    d_shader.LoadUniform("u_sun_brightness", sun.brightness);
+    d_shader.LoadUniform("u_sun_direction", lights.sun.direction);
+    d_shader.LoadUniform("u_sun_colour", lights.sun.colour);
+    d_shader.LoadUniform("u_sun_brightness", lights.sun.brightness);
+
+    // Load ambience to shader
+    d_shader.LoadUniform("u_ambience_colour", lights.ambience.colour);
+    d_shader.LoadUniform("u_ambience_brightness", lights.ambience.brightness);
 
     // Load lights to shader
     for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
-		if (i < lights.size()) {
-			d_shader.LoadUniform(ArrayName("lightPositions", i), lights[i].position);
-			d_shader.LoadUniform(ArrayName("lightColours", i), lights[i].colour);
-			d_shader.LoadUniform(ArrayName("lightAttenuations", i), lights[i].attenuation);
+		if (i < lights.points.size()) {
+			d_shader.LoadUniform(ArrayName("lightPositions", i), lights.points[i].position);
+			d_shader.LoadUniform(ArrayName("lightColours", i), lights.points[i].colour);
+			d_shader.LoadUniform(ArrayName("lightAttenuations", i), lights.points[i].attenuation);
 		}
 		else {  // "Empty" lights to pad the array
 			d_shader.LoadUniform(ArrayName("lightPositions", i), {0.0f, 0.0f, 0.0f});

@@ -33,8 +33,7 @@ public:
 
     void OnUpdate(const Camera& camera,
                   const Lens& lens,
-                  const DirectionalLight& sun,
-                  const PointLights& pointLights = {});
+                  const Lights& lights);
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
 

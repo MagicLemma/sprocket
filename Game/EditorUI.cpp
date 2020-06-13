@@ -13,7 +13,7 @@ void AddEntityToList(Sprocket::DevUI::Context& ui,
     
     ui.PushID(entity->Id());
     if (ui.StartTreeNode(entity->Name())) {
-        if (ui.Button("Select")) {
+        if (entity->Has<SelectComponent>() && ui.Button("Select")) {
             SPKT_LOG_INFO("Select clicked!");
             selector.SetSelected(entity);
         }
@@ -181,7 +181,7 @@ void EditorUI::OnUpdate(float dt)
     }
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
-    SunInfoPanel(d_ui, d_worldLayer->d_sun, d_worldLayer->d_sunAngle);
+    SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_sunAngle);
 
     d_ui.DemoWindow();
     d_ui.EndFrame();
