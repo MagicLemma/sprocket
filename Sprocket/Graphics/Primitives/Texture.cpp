@@ -8,13 +8,14 @@
 
 namespace Sprocket {
 
-Texture::Texture(const std::string& pngFile)
+Texture::Texture(const std::string& pngFile, bool flip)
     : d_texture(std::make_shared<TEX>())
 {
     glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
     SPKT_LOG_INFO("Loading texture '{}'", pngFile);
     int bpp;
+    stbi_set_flip_vertically_on_load(flip);
     unsigned char* data = stbi_load(
         pngFile.c_str(),
         &d_width, &d_height, &bpp, 4);

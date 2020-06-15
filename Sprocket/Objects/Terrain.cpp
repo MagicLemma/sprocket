@@ -41,27 +41,39 @@ std::pair<Vertex3DBuffer, IndexBuffer> GenerateTerrain(
 
 }
 
-Terrain::Terrain(const Material& material,
-                 const Maths::vec3& postition)
-    : d_material(material)
-    , d_position(postition)
-    , d_edge(51)
-    , d_distance(1.0f)
+Model3D MakeTerrain(int numEdges, float distance)
 {
-    auto [vertices, indices] = GenerateTerrain(d_edge, d_distance);
-    d_model = Model3D(vertices, indices);
-}
+    Vertex3DBuffer vertices;
+    vertices.reserve(numEdges * numEdges);
+    IndexBuffer indices;
+    for (int i = 0; i < numEdges; ++i) {
+        for (int j = 0; j < numEdges; ++j) {
+            Vertex3D v;
+            v.position = Maths::vec3{distance * i, 0, distance * j};
+            v.normal = Maths::vec3{0.0f, 1.0f, 0.0f};
+            v.textureCoords = Maths::vec2{
+                (float)i / ((float)numEdges - 1),
+                (float)j / ((float)numEdges - 1)
+            };
+            vertices.push_back(v);
+        }
+    }
+    for (int i = 0; i != vertices.size() - numEdges; ++i) {
+        if ((i + 1) % numEdges != 0) {
+            indices.push_back(i);
+            indices.push_back(i + 1);
+            indices.push_back(i + numEdges);
+        }
 
-void Terrain::Bind() const
-{
-    d_model.Bind();
-    d_material.texture.Bind();
-}
+        if (i % numEdges != 0) {
+            indices.push_back(i);
+            indices.push_back(i + numEdges);
+            indices.push_back(i + numEdges - 1);
+        }
+        
+    }
 
-void Terrain::Unbind() const
-{
-    d_material.texture.Unbind();
-    d_model.Unbind();
+    return Model3D(vertices, indices);
 }
 
 }

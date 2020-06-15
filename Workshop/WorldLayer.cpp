@@ -4,7 +4,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     : Sprocket::Layer(core)
     , d_mode(Mode::OBSERVER)
     , d_entityRenderer(core.window)
-    , d_terrainRenderer(core.window)
     , d_skyboxRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_lens(core.window->AspectRatio())
@@ -305,7 +304,12 @@ void WorldLayer::OnUpdate(float dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.OnUpdate(*d_camera, d_lens, d_lights);
+    d_entityRenderer.OnUpdate(
+        *d_camera,
+        d_lens,
+        d_lights,
+        0,
+        Maths::mat4(1.0));
 
     if (!d_paused) {
         d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};

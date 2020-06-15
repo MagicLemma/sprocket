@@ -14,7 +14,7 @@ class Texture
     int d_height;
 
 public:
-    Texture(const std::string& pngFile);
+    Texture(const std::string& pngFile, bool flip = true);
     Texture(int width, int height, const std::vector<unsigned char>& data);
     Texture(int width, int height, unsigned char* data);
     Texture();

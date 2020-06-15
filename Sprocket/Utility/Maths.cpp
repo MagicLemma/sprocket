@@ -78,6 +78,21 @@ mat4 Ortho(float left, float right, float bottom, float top)
     return glm::ortho(left, right, bottom, top);   
 }
 
+mat4 Ortho(float left, float right, float bottom, float top, float near, float far)
+{
+    return glm::ortho(left, right, bottom, top, near, far);   
+}
+
+mat4 Ortho(float width, float height, float length)
+{
+    mat4 m(0.0f);
+    m[0][0] = 2.0f / width;
+    m[1][1] = 2.0f / height;
+    m[2][2] = -2.0f / length;
+    m[3][3] = 1.0f;
+    return m;
+}
+
 // Quaternion Modifiers
 quat Rotate(const vec3& axis, float degrees)
 {
@@ -149,6 +164,11 @@ float Distance(const vec2& A, const vec2& B)
 float Length(const vec3& v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+}
+
+float Length(const vec2& v)
+{
+    return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
 float LengthSquare(const vec3& v)

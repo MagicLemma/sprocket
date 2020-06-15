@@ -32,6 +32,7 @@ add_library(Sprocket STATIC
             Graphics/Shader.cpp
 
             Graphics/Primitives/BufferLayout.cpp
+            Graphics/Primitives/DepthBuffer.cpp
             Graphics/Primitives/Resources.cpp
             Graphics/Primitives/Model2D.cpp
             Graphics/Primitives/Model3D.cpp
@@ -43,7 +44,9 @@ add_library(Sprocket STATIC
             Graphics/Rendering/DisplayRenderer.cpp
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
-            Graphics/Rendering/TerrainRenderer.cpp
+
+            Graphics/Shadows/ShadowMapRenderer.cpp
+            Graphics/Shadows/ShadowBox.cpp
             
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
@@ -73,12 +76,14 @@ add_library(Sprocket STATIC
             Objects/Entities/EntityManager.cpp
 
             Objects/Cameras/Camera.cpp
+            Objects/Cameras/StaticCamera.cpp
             Objects/Cameras/FirstPersonCamera.cpp
             Objects/Cameras/PlayerBasedCamera.cpp
             Objects/Cameras/ThirdPersonCamera.cpp
 
             Objects/Lenses/Lens.cpp
             Objects/Lenses/PerspectiveLens.cpp
+            Objects/Lenses/OrthographicLens.cpp
 
             Objects/Light.cpp
             Objects/Material.cpp
@@ -129,6 +134,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics
                            ./Graphics/Primitives
                            ./Graphics/Rendering
+                           ./Graphics/Shadows
                            ./Graphics/PostProcessing
                            ./Objects
                            ./Objects/Entities

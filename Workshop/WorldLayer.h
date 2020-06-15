@@ -26,7 +26,6 @@ class WorldLayer : public Sprocket::Layer
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
-    Sprocket::TerrainRenderer d_terrainRenderer;
     Sprocket::SkyboxRenderer  d_skyboxRenderer;
 
     Sprocket::PostProcessor   d_postProcessor;

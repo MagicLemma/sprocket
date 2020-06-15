@@ -29,6 +29,10 @@ uniform float u_reflectivity;
 // Highlighting
 uniform float u_brightness;
 
+// Shadows
+in vec4 p_light_space_pos;
+uniform sampler2D shadow_map;
+
 void main()
 {
     // Surface information
@@ -45,17 +49,19 @@ void main()
     vec4 total_diffuse = vec4(0.0);
     vec4 total_specular = vec4(0.0);
 
+    float sun_brightness = u_sun_brightness * max(-u_sun_direction.y, 0.0);
+
     // Sun diffuse light
     vec3 unit_sun_direction = normalize(u_sun_direction);
     float sun_diffuse_factor = dot(-unit_sun_direction, unit_normal);
     sun_diffuse_factor = max(sun_diffuse_factor, 0.0);
-    total_diffuse += sun_diffuse_factor * u_sun_brightness * vec4(u_sun_colour, 1.0);
+    total_diffuse += sun_diffuse_factor * sun_brightness * vec4(u_sun_colour, 1.0);
 
     // Sun specular light
     vec3 sun_reflected_light_dir = reflect(unit_sun_direction, unit_normal);
     float sun_specular_factor = dot(sun_reflected_light_dir, unit_to_camera);
     sun_specular_factor = max(sun_specular_factor, 0.0);
-    total_specular += sun_specular_factor * u_sun_brightness * vec4(u_sun_colour, 1.0);
+    total_specular += sun_specular_factor * sun_brightness * vec4(u_sun_colour, 1.0);
 
     // Point Lights
     for (int i = 0; i != 5; i++) {
@@ -79,7 +85,16 @@ void main()
         total_specular = total_specular + vec4(specular_factor * u_reflectivity * u_light_colour[i], 1.0);
     }
 
-    out_colour = ambience + total_diffuse * colour + total_specular;
+    // Shadows
+    vec3 proj_coords = p_light_space_pos.xyz / p_light_space_pos.w;
+    proj_coords = 0.5 * proj_coords + 0.5;
+    float closest_depth = texture(shadow_map, proj_coords.xy).r;
+    float current_depth = proj_coords.z;
+    float bias = 0.0002;
+    bias = max(0.0008 * (1.0 - dot(p_surface_normal, u_sun_direction)), 0.0001);
+    float shadow = current_depth - bias > closest_depth ? 1.0 : 0.0;
+
+    out_colour = (ambience + (1.0 - shadow) * (total_diffuse + total_specular)) * colour;
     
     if (u_brightness > 1) {
         out_colour += u_brightness * vec4(0.1, 0.1, 0.1, 1.0);

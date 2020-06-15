@@ -39,7 +39,11 @@
 #include "Graphics/PostProcessing/GaussianBlur.h"
 #include "Graphics/PostProcessing/Negative.h"
 
+#include "Graphics/Shadows/ShadowMapRenderer.h"
+#include "Graphics/Shadows/ShadowBox.h"
+
 #include "Graphics/Primitives/BufferLayout.h"
+#include "Graphics/Primitives/DepthBuffer.h"
 #include "Graphics/Primitives/Resources.h"
 #include "Graphics/Primitives/Model2D.h"
 #include "Graphics/Primitives/Model3D.h"
@@ -51,7 +55,6 @@
 #include "Graphics/Rendering/DisplayRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
-#include "Graphics/Rendering/TerrainRenderer.h"
 
 // OBJECTS
 #include "Objects/Material.h"
@@ -65,12 +68,14 @@
 #include "Objects/Entities/EntityManager.h"
 
 #include "Objects/Cameras/Camera.h"
+#include "Objects/Cameras/StaticCamera.h"
 #include "Objects/Cameras/FirstPersonCamera.h"
 #include "Objects/Cameras/PlayerBasedCamera.h"
 #include "Objects/Cameras/ThirdPersonCamera.h"
 
 #include "Objects/Lenses/Lens.h"
 #include "Objects/Lenses/PerspectiveLens.h"
+#include "Objects/Lenses/OrthographicLens.h"
 
 // SYSTEMS
 #include "Systems/EntitySystem.h"

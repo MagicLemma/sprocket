@@ -33,6 +33,8 @@ mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane);
 mat4 View(const vec3& position, float pitch, float yaw, float roll);
 mat4 LookAt(const vec3& position, const vec3& target, const vec3& up = {0, 1, 0});
 mat4 Ortho(float left, float right, float bottom, float top);
+mat4 Ortho(float left, float right, float bottom, float top, float near, float far);
+mat4 Ortho(float width, float height, float length);
 
 // Quaternion Modifiers
 quat Rotate(const vec3& axis, float radians);
@@ -56,6 +58,7 @@ vec3 GetTranslation(const mat4& m);
 float Distance(const Maths::vec2& A, const Maths::vec2& B);
 
 float Length(const vec3& v);
+float Length(const vec2& v);
 float LengthSquare(const vec3& v);
 
 void Normalise(vec3& vec);

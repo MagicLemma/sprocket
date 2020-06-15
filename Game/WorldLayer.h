@@ -16,15 +16,12 @@ class WorldLayer : public Sprocket::Layer
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
-    Sprocket::TerrainRenderer d_terrainRenderer;
 
     Sprocket::PostProcessor   d_postProcessor;
 
     Sprocket::PerspectiveLens d_lens;
+    //Sprocket::OrthographicLens d_lens;
         // Perspective Projection for all modes.
-
-    // WORLD
-    Sprocket::Terrain d_terrain;
 
     // MODELLING
     Sprocket::ModelManager d_modelManager;
@@ -35,7 +32,10 @@ class WorldLayer : public Sprocket::Layer
 
     // Additional world setup
     Sprocket::Lights d_lights;
-    float                      d_sunAngle;
+    float            d_sunAngle;
+
+    Sprocket::DepthBuffer       d_shadowMap;
+    Sprocket::ShadowMapRenderer d_shadowMapRenderer;
 
     Sprocket::MouseProxy d_mouse;
 

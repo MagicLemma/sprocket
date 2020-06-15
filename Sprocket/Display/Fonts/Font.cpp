@@ -5,7 +5,7 @@ namespace Sprocket {
 
 FontPackage::FontPackage(const std::string& fntFile,
                          const std::string& texFile)
-    : d_atlas(texFile)
+    : d_atlas(texFile, false)
     , d_glyphs()
     , d_size(0.0f)
 {

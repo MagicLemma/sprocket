@@ -33,7 +33,9 @@ public:
 
     void OnUpdate(const Camera& camera,
                   const Lens& lens,
-                  const Lights& lights);
+                  const Lights& lights,
+                  unsigned int shadowMap,
+                  const Maths::mat4& lightProjView);
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
 

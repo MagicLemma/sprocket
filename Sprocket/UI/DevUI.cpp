@@ -278,6 +278,8 @@ void Context::EndFrame()
 
             if (rect.x < width && rect.y < height && rect.z >= 0 && rect.w >= 0) {
 
+                glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
+
                 glScissor((int)rect.x,
                           (int)(height - rect.w),
                           (int)(rect.z - rect.x),

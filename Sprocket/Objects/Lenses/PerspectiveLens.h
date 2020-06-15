@@ -30,6 +30,9 @@ public:
 
     float FOV() const { return d_fov; }
     void FOV(float newFov);
+
+    float NearPlane() const { return d_nearPlane; }
+    float FarPlane() const { return d_farPlane; }
 };
 
 }

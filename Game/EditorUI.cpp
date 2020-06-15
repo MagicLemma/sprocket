@@ -112,7 +112,7 @@ void SunInfoPanel(Sprocket::DevUI::Context& ui,
 {
     ui.StartWindow("Sun");
     ui.ColourPicker("Colour", &sun.colour);
-    ui.SliderFloat("Brightness", &sun.brightness, 0.0f, 1.0f);
+    ui.SliderFloat("Brightness", &sun.brightness, 0.0f, 30.0f);
     ui.DragFloat("Sun Angle", &sunAngle);
     ui.EndWindow();
 }
@@ -182,6 +182,13 @@ void EditorUI::OnUpdate(float dt)
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
     SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_sunAngle);
+
+    d_ui.StartWindow("Shadow Map", &open);
+
+    ImTextureID id = (void*)(intptr_t)d_worldLayer->d_shadowMap.DepthTexId();
+    ImGui::Image(id, ImVec2(d_worldLayer->d_shadowMap.Width(), d_worldLayer->d_shadowMap.Height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
+
+    d_ui.EndWindow();
 
     d_ui.DemoWindow();
     d_ui.EndFrame();
