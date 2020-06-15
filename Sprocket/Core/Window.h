@@ -33,6 +33,8 @@ class Window
 	EventCallback d_callback;
 		// A callback to be called with every event from the window.
 
+	Maths::vec3 d_clearColour;
+
 private:
 	// Deleted Constructors
 	Window(Window&&) = delete;
@@ -46,8 +48,9 @@ public:
 	~Window();
 
 	void OnUpdate();
-	void Clear(const Maths::vec4& colour);
-	void Clear(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
+	void Clear();
+
+	void SetClearColour(const Maths::vec3& colour);
 
 	// Getters
 	unsigned int Height() const { return d_data.height; }

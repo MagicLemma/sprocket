@@ -278,7 +278,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.points.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
     d_lights.points.push_back({{40.0, 20.0, 0.0}, {0.8f, 0.8f, 0.8f}, {1.0f, 0.0f, 0.0f}});
 
-    d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
+    d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
     d_lights.sun.colour = {1.0, 1.0, 1.0};
     d_lights.sun.brightness = 0.2f;
 
@@ -312,7 +312,7 @@ void WorldLayer::OnUpdate(float dt)
         Maths::mat4(1.0));
 
     if (!d_paused) {
-        d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.0f};
+        d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_camera->OnUpdate(dt);
         d_core.window->SetCursorVisibility(d_mouseRequired);
         d_entityManager.OnUpdate(dt);

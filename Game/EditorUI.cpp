@@ -108,12 +108,21 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
 
 void SunInfoPanel(Sprocket::DevUI::Context& ui,
                   Sprocket::DirectionalLight& sun,
-                  float& sunAngle)
+                  Sprocket::CircadianCycle& cycle)
 {
     ui.StartWindow("Sun");
     ui.ColourPicker("Colour", &sun.colour);
     ui.SliderFloat("Brightness", &sun.brightness, 0.0f, 30.0f);
-    ui.DragFloat("Sun Angle", &sunAngle);
+
+    float angle = cycle.GetAngle();
+    ui.DragFloat("Sun Angle", &angle, 0.5f);
+    cycle.SetAngle(angle);
+
+    int seconds = cycle.GetSeconds();
+    ui.DragInt("Seconds After Midnight", &seconds);
+    cycle.SetSeconds(seconds);
+
+    ui.Text(cycle.ToString12Hour());
     ui.EndWindow();
 }
 
@@ -181,7 +190,7 @@ void EditorUI::OnUpdate(float dt)
     }
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
-    SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_sunAngle);
+    SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_cycle);
 
     d_ui.StartWindow("Shadow Map", &open);
 

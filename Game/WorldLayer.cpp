@@ -1,4 +1,5 @@
 #include "WorldLayer.h"
+#include "Palette.h"
 
 namespace {
 
@@ -18,17 +19,17 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_lens(core.window->AspectRatio())
     , d_entityManager({&d_selector})
-    , d_sunAngle(0)
     , d_camera(5.0f)
     , d_gameGrid(&d_entityManager, &d_modelManager)
     , d_shadowMap(core.window, core.window->Width(), core.window->Height())
     , d_shadowMapRenderer(core.window)
 {
     using namespace Sprocket;
+    d_cycle.SetAngle(180.0f);
 
-    d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 30.0f};
-    d_lights.sun.colour = {1.0, 1.0, 1.0};
-    d_lights.sun.brightness = 0.5f;
+    d_lights.sun.direction = d_cycle.GetSunDir();
+    d_lights.sun.colour = {1.0, 0.945, 0.789};
+    d_lights.sun.brightness = 0.8f;
 
     d_lights.ambience.colour = {1.0, 1.0, 1.0};
     d_lights.ambience.brightness = 0.1f;
@@ -109,7 +110,21 @@ void WorldLayer::OnUpdate(float dt)
     
 
     if (!d_paused) {
-        d_lights.sun.direction = {-Maths::Sind(d_sunAngle), -Maths::Cosd(d_sunAngle), 0.1f};
+        float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
+        float facSq = factor * factor;
+        auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
+        d_core.window->SetClearColour(skyColour);
+        if (d_cycle.IsDay()) {
+            d_lights.sun.direction = d_cycle.GetSunDir();
+            d_lights.sun.colour = {1.0, 0.945, 0.789};
+            d_lights.sun.brightness = 0.8f;
+        }
+        else {
+            d_lights.sun.direction = -d_cycle.GetSunDir();
+            d_lights.sun.colour = {0.5, 0.57, 0.98};
+            d_lights.sun.brightness = 0.1f;
+        }
+
         Maths::Normalise(d_lights.sun.direction);
         d_camera.OnUpdate(dt);
         d_entityManager.OnUpdate(dt);

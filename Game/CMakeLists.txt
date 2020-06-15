@@ -12,7 +12,8 @@ add_executable(Game
 
                EditorUI.cpp
                
-               GameGrid.cpp)
+               GameGrid.cpp
+               CircadianCycle.cpp)
 
 target_link_libraries(Game PRIVATE Sprocket)
 target_include_directories(Game PUBLIC .)

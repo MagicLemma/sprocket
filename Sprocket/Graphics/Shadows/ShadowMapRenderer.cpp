@@ -39,9 +39,9 @@ void ShadowMapRenderer::Draw(const Entity& entity)
     d_shader.LoadUniform("u_model_matrix", transform);
 
     model.Bind();
-    glCullFace(GL_FRONT);
+    //glCullFace(GL_FRONT);
     glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
-    glCullFace(GL_BACK);
+    //glCullFace(GL_BACK);
     model.Unbind();
     d_shader.Unbind();
 }

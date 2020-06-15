@@ -373,6 +373,12 @@ void Context::SliderFloat(const std::string& name, float* value, float lower, fl
     ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
 }
 
+void Context::DragInt(const std::string& name, int* value, int speed)
+{
+    ImGui::SetCurrentContext(d_impl->context);
+    ImGui::DragInt(name.c_str(), value, speed);
+}
+
 void Context::DragFloat(const std::string& name, float* value, float speed)
 {
     ImGui::SetCurrentContext(d_impl->context);

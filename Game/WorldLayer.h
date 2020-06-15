@@ -1,5 +1,6 @@
 #pragma once
 #include "GameGrid.h"
+#include "CircadianCycle.h"
 
 #include <Sprocket.h>
 
@@ -31,8 +32,8 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::BasicSelector d_selector;
 
     // Additional world setup
-    Sprocket::Lights d_lights;
-    float            d_sunAngle;
+    Sprocket::Lights         d_lights;
+    Sprocket::CircadianCycle d_cycle;
 
     Sprocket::DepthBuffer       d_shadowMap;
     Sprocket::ShadowMapRenderer d_shadowMapRenderer;
