@@ -88,11 +88,19 @@ void main()
     // Shadows
     vec3 proj_coords = p_light_space_pos.xyz / p_light_space_pos.w;
     proj_coords = 0.5 * proj_coords + 0.5;
-    float closest_depth = texture(shadow_map, proj_coords.xy).r;
     float current_depth = proj_coords.z;
     float bias = 0.0002;
-    bias = max(0.0008 * (1.0 - dot(p_surface_normal, u_sun_direction)), 0.0001);
-    float shadow = current_depth - bias > closest_depth ? 1.0 : 0.0;
+    bias = max(0.001 * (1.0 - dot(p_surface_normal, u_sun_direction)), 0.0001);
+    
+    float shadow = 0;
+    vec2 texel_size = 1.0 / textureSize(shadow_map, 0);
+    for (int x = -1; x <= 1; ++x) {
+        for (int y= -1; y <= 1; ++y) {
+            float pcf_depth = texture(shadow_map, proj_coords.xy + vec2(x, y) * texel_size).r;
+            shadow += current_depth - bias > pcf_depth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
 
     out_colour = (ambience + (1.0 - shadow) * (total_diffuse + total_specular)) * colour;
     
