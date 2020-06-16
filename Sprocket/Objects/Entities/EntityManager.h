@@ -24,7 +24,7 @@ public:
     EntityManager(const std::vector<EntitySystem*> systems);
 
     void AddEntity(std::shared_ptr<Entity> entity);
-    void OnUpdate(float dt);
+    void OnUpdate(double dt);
     void OnEvent(Event& event);
 
     void Draw(EntityRenderer* renderer);

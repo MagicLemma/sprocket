@@ -9,13 +9,13 @@ PlayerMovement::PlayerMovement()
 {
 }
 
-void PlayerMovement::UpdateSystem(float dt)
+void PlayerMovement::UpdateSystem(double dt)
 {
     d_deltaTime = dt;
     d_mouse.OnUpdate();
 }
 
-void PlayerMovement::UpdateEntity(float dt, Entity& entity)
+void PlayerMovement::UpdateEntity(double dt, Entity& entity)
 {
     if (!entity.Has<PlayerComponent>()) {
         return;

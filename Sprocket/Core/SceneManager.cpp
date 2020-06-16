@@ -32,7 +32,7 @@ bool SceneManager::DoesSceneExist(const std::string& name) const
     return d_scenes.find(name) != d_scenes.end();
 }
 
-void SceneManager::OnUpdate(float dt)
+void SceneManager::OnUpdate(double dt)
 {
     d_scenes[d_activeSceneName]->OnUpdate(dt);
 }

@@ -22,7 +22,7 @@ public:
         // down to lower layers. Layers will receive Events even if they
         // are inactive.
 
-    virtual void OnUpdate(float dt) = 0;
+    virtual void OnUpdate(double dt) = 0;
         // Called in every tick of the game loop. Within a layer stack, these
         // are called in reverse order, starting at the bottom of the stack
         // and working upwards.

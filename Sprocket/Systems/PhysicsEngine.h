@@ -32,7 +32,7 @@ class PhysicsEngine : public EntitySystem
     
     bool        d_running = false;
 
-    void UpdatePlayer(float dt, Entity& entity);
+    void UpdatePlayer(double dt, Entity& entity);
         // If this Entity has a PlayerComponent, perform the
         // necessary updates.
 
@@ -44,8 +44,8 @@ public:
     PhysicsEngine(const Maths::vec3& gravity);
     ~PhysicsEngine() {}
 
-    void UpdateEntity(float dt, Entity& entity) override;
-    void UpdateSystem(float dt) override;
+    void UpdateEntity(double dt, Entity& entity) override;
+    void UpdateSystem(double dt) override;
 
     void RegisterEntity(const Entity& entity) override;
     void DeregisterEntity(const Entity& entity) override;

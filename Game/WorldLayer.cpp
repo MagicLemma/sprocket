@@ -85,12 +85,13 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     d_gameGrid.OnEvent(event);
 }
 
-void WorldLayer::OnUpdate(float dt)
+void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
 
     d_gameGrid.OnUpdate(d_core.window, &d_camera, &d_lens);
     d_mouse.OnUpdate();
+    d_cycle.AddSeconds(dt);
 
     d_shadowMap.Bind();
     d_shadowMapRenderer.OnUpdate(d_lights.sun);

@@ -132,7 +132,7 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
     }
 }
 
-void EscapeMenu::OnUpdate(float dt)
+void EscapeMenu::OnUpdate(double dt)
 {
     d_displayRenderer.OnUpdate();
 

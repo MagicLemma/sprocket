@@ -15,7 +15,7 @@ void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
     }
 }
 
-void EntityManager::OnUpdate(float dt)
+void EntityManager::OnUpdate(double dt)
 {
     auto it = d_entities.begin();
     while (it != d_entities.end()) {

@@ -34,7 +34,7 @@ public:
     Maths::mat4 View() const override;
     Maths::vec3 Position() const override { return d_position; }
 
-    void OnUpdate(float timeDelta) override;
+    void OnUpdate(double timeDelta) override;
     void OnEvent(Event& event) override;
     
     Maths::vec3 Direction() const { return d_direction; }

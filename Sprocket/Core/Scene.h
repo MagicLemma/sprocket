@@ -24,7 +24,7 @@ public:
         // returns True, the event is not propagated to any lower
         // layers.
 
-    void OnUpdate(float dt);
+    void OnUpdate(double dt);
         // Called on every tick. This does through the stack
         // from the bottom and updates then draws each layer.
 };

@@ -10,7 +10,7 @@ void Scene::OnEvent(Event& event)
     }
 }
 
-void Scene::OnUpdate(float dt)
+void Scene::OnUpdate(double dt)
 { 
     for (size_t i = 0; i != d_layers.size(); ++i) {
         d_layers[i]->OnUpdate(dt);

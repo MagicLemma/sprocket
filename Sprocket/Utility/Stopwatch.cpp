@@ -25,9 +25,9 @@ void Stopwatch::OnUpdate()
     }
 }
 
-float Stopwatch::DeltaTime() const
+double Stopwatch::DeltaTime() const
 {
-    std::chrono::duration<float> dt = d_currentTime - d_previousTime;
+    std::chrono::duration<double> dt = d_currentTime - d_previousTime;
     return dt.count();
 }
 

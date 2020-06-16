@@ -19,7 +19,7 @@ Selector::Selector(
 {
 }
 
-void Selector::UpdateSystem(float dt)
+void Selector::UpdateSystem(double dt)
 {
     if (!d_enabled) {
         ClearHovered();

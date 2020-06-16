@@ -18,8 +18,8 @@ public:
     PlayerMovement();
     ~PlayerMovement() {}
 
-    void UpdateEntity(float dt, Entity& entity) override;
-    void UpdateSystem(float dt) override;
+    void UpdateEntity(double dt, Entity& entity) override;
+    void UpdateSystem(double dt) override;
 
     void OnEvent(Event& event) override;
 

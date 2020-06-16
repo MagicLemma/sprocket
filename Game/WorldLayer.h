@@ -52,5 +52,5 @@ public:
     WorldLayer(const Sprocket::CoreSystems& core);
 
     void OnEvent(Sprocket::Event& event) override;
-    void OnUpdate(float dt) override;
+    void OnUpdate(double dt) override;
 };

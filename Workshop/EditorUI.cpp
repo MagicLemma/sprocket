@@ -200,7 +200,7 @@ void EditorUI::OnEvent(Sprocket::Event& event)
 
 }
 
-void EditorUI::OnUpdate(float dt)
+void EditorUI::OnUpdate(double dt)
 {
     if (d_worldLayer->d_mode != Mode::EDITOR) {
         return;

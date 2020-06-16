@@ -113,16 +113,8 @@ void SunInfoPanel(Sprocket::DevUI::Context& ui,
     ui.StartWindow("Sun");
     ui.ColourPicker("Colour", &sun.colour);
     ui.SliderFloat("Brightness", &sun.brightness, 0.0f, 30.0f);
-
-    float angle = cycle.GetAngle();
-    ui.DragFloat("Sun Angle", &angle, 0.5f);
-    cycle.SetAngle(angle);
-
-    int seconds = cycle.GetSeconds();
-    ui.DragInt("Seconds After Midnight", &seconds);
-    cycle.SetSeconds(seconds);
-
     ui.Text(cycle.ToString12Hour());
+    ui.Text(std::to_string(cycle.GetSeconds()));
     ui.EndWindow();
 }
 
@@ -155,7 +147,7 @@ void EditorUI::OnEvent(Sprocket::Event& event)
 
 }
 
-void EditorUI::OnUpdate(float dt)
+void EditorUI::OnUpdate(double dt)
 {
     if (d_worldLayer->d_mode != Mode::EDITOR) {
         return;

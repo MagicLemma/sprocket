@@ -21,5 +21,5 @@ public:
                EditorUI* editorUi);
 
     void OnEvent(Sprocket::Event& event) override;
-    void OnUpdate(float dt) override;
+    void OnUpdate(double dt) override;
 };

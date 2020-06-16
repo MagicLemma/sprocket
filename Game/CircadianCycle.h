@@ -7,13 +7,13 @@ namespace Sprocket {
 
 class CircadianCycle
 {
-    const int SIX_HOURS = 21600;
-    const int SIX_AM = SIX_HOURS;
-    const int NOON = 2 * SIX_HOURS;
-    const int SIX_PM = 3 * SIX_HOURS;
-    const int SECONDS_IN_DAY = 4 * SIX_HOURS;
+    const float SIX_HOURS = 21600;
+    const float SIX_AM = SIX_HOURS;
+    const float NOON = 2 * SIX_HOURS;
+    const float SIX_PM = 3 * SIX_HOURS;
+    const float SECONDS_IN_DAY = 4 * SIX_HOURS;
 
-    int d_seconds;
+    double d_seconds;
     void Modulo();
 
     std::string ToString(bool twelveHour = false) const;
@@ -23,14 +23,15 @@ public:
     CircadianCycle();
 
     void SetTime(int hours, int mins, int secs);
+    void AddSeconds(double seconds);
 
-    int GetSeconds() const;
-    void SetSeconds(int secs);
+    double GetSeconds() const;
+    void SetSeconds(double secs);
         // Access the value of the circadian cycle by treating it as
         // the number of seconds past midnight.
 
-    float GetAngle() const;
-    void SetAngle(float angle);
+    double GetAngle() const;
+    void SetAngle(double angle);
         // Access the value of the circadian cycle by treating it as
         // an angle. 0.0f is midnight and 180.0f is noon.
 

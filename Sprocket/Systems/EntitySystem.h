@@ -9,10 +9,10 @@ class EntitySystem
 public:
     EntitySystem() = default;
     
-    virtual void UpdateEntity(float dt, Entity& entity) {};
+    virtual void UpdateEntity(double dt, Entity& entity) {};
         // Called once per entity per frame and before the system updates.
 
-    virtual void UpdateSystem(float dt) {};
+    virtual void UpdateSystem(double dt) {};
         // Called once per frame, this should update any system speific data.
 
     virtual void RegisterEntity(const Entity& entity) {};

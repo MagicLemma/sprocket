@@ -22,7 +22,7 @@ Maths::mat4 FirstPersonCamera::View() const
     return Maths::View(d_position, d_pitch, d_yaw, d_roll);
 }
 
-void FirstPersonCamera::OnUpdate(float timeDelta)
+void FirstPersonCamera::OnUpdate(double timeDelta)
 {
     d_mouse.OnUpdate();
 

@@ -35,7 +35,7 @@ public:
 
     bool DoesSceneExist(const std::string& name) const;
 
-    void OnUpdate(float dt);
+    void OnUpdate(double dt);
         // Updates and draws the active scene.
 
     void OnEvent(Event& event);

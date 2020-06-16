@@ -46,7 +46,7 @@ public:
     );
     ~Selector() {}
 
-    void UpdateSystem(float dt) override;
+    void UpdateSystem(double dt) override;
 
     void OnEvent(Event& event) override;
 

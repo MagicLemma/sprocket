@@ -136,7 +136,7 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     d_impl->world.setEventListener(&d_impl->eventListener);
 }
 
-void PhysicsEngine::UpdateSystem(float dt)
+void PhysicsEngine::UpdateSystem(double dt)
 {
     if (!d_running) {
         return;
@@ -158,7 +158,7 @@ void PhysicsEngine::UpdateSystem(float dt)
     }
 }
 
-void PhysicsEngine::UpdateEntity(float dt, Entity& entity)
+void PhysicsEngine::UpdateEntity(double dt, Entity& entity)
 {
     if (!d_running) {
         return;
@@ -368,7 +368,7 @@ Entity* PhysicsEngine::Raycast(const Maths::vec3& base,
     return cb.EntityPtr();
 }
 
-void PhysicsEngine::UpdatePlayer(float dt, Entity& entity)
+void PhysicsEngine::UpdatePlayer(double dt, Entity& entity)
 {
     if (d_lastFrameLength == 0) {
         return;  // Physics engine not advanced this frame.

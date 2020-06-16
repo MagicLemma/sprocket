@@ -18,7 +18,7 @@ class Stopwatch
 public:
     Stopwatch();
     void OnUpdate();
-    float DeltaTime() const;
+    double DeltaTime() const;
 
     void PrintFramerate(bool val) { d_printFramerate = val; }
 };

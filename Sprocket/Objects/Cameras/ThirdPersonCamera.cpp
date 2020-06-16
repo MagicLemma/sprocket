@@ -25,7 +25,7 @@ Maths::mat4 ThirdPersonCamera::View() const
     return Maths::LookAt(d_position, d_target);
 }
 
-void ThirdPersonCamera::OnUpdate(float timeDelta)
+void ThirdPersonCamera::OnUpdate(double timeDelta)
 {
     float horizSpeed = d_rotationSpeed * timeDelta;
     float moveSpeed = d_movementSpeed * timeDelta;

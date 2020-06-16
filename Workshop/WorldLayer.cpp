@@ -300,7 +300,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     d_entityManager.OnEvent(event);
 }
 
-void WorldLayer::OnUpdate(float dt)
+void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     

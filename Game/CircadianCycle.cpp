@@ -5,35 +5,42 @@
 namespace Sprocket {
 
 CircadianCycle::CircadianCycle()
-    : d_seconds(86400)
+    : d_seconds(0.0f)
 {   
 }
 
 void CircadianCycle::SetTime(int hours, int mins, int secs)
 {
-    d_seconds = hours * 3600 + mins * 60 + secs;
+    d_seconds = hours * 3600.0 + mins * 60.0 + secs;
     Modulo();
 }
 
-int CircadianCycle::GetSeconds() const
+void CircadianCycle::AddSeconds(double seconds)
+{
+    //SPKT_LOG_INFO("Adding {}", seconds);
+    d_seconds += seconds;
+    Modulo();
+}
+
+double CircadianCycle::GetSeconds() const
 {
     return d_seconds; 
 }
 
-void CircadianCycle::SetSeconds(int seconds)
+void CircadianCycle::SetSeconds(double seconds)
 {
     d_seconds = seconds;
     Modulo();
 }
 
-float CircadianCycle::GetAngle() const
+double CircadianCycle::GetAngle() const
 { 
-    return 360.0f * (float)d_seconds / (float)SECONDS_IN_DAY;
+    return 360.0 * d_seconds / SECONDS_IN_DAY;
 }
 
-void CircadianCycle::SetAngle(float angle)
+void CircadianCycle::SetAngle(double angle)
 {
-    d_seconds = (int)((angle / 360.0f) * SECONDS_IN_DAY);
+    d_seconds = (angle / 360.0) * SECONDS_IN_DAY;
     Modulo();
 }
 
@@ -72,9 +79,11 @@ void CircadianCycle::Modulo()
 
 std::string CircadianCycle::ToString(bool twelveHour) const
 {
-    int hours = d_seconds / 3600;
-    int mins = (d_seconds - 3600 * hours) / 60;
-    int seconds = d_seconds - 60 * mins - 3600 * hours;
+    int hours = 0;
+    int mins = 0;
+    double seconds = d_seconds;
+    while (seconds > 3600.0f) { ++hours; seconds -= 3600.0f; }
+    while (seconds > 60.0f) { ++mins; seconds -= 60.0f; }
 
     std::string suffix = "";
     if (twelveHour) {
