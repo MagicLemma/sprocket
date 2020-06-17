@@ -25,7 +25,7 @@ public:
     Context(Window* window);
 
     void OnEvent(Event& event);
-    void OnUpdate(float dt);
+    void OnUpdate(double dt);
 
     void StartFrame();
     void EndFrame();
@@ -44,7 +44,7 @@ public:
     void Checkbox(const std::string& name, bool* value);
     void ColourPicker(const std::string& name, Maths::vec3* colour);
     void SliderFloat(const std::string& name, float* value, float lower, float upper);
-    void DragInt(const std::string& name, int* value, int speed = 1);
+    void DragInt(const std::string& name, int* value, float speed = 1.0f);
     void DragFloat(const std::string& name, float* value, float speed = 1.0f);
     void DragFloat3(const std::string& name, Maths::vec3* values, float speed = 1.0f);
 

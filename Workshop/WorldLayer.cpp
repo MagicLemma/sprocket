@@ -304,12 +304,7 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.OnUpdate(
-        *d_camera,
-        d_lens,
-        d_lights,
-        0,
-        Maths::mat4(1.0));
+    d_entityRenderer.BeginScene(*d_camera, d_lens, d_lights);
 
     if (!d_paused) {
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};

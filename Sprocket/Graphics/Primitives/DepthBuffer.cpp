@@ -7,25 +7,13 @@ namespace Sprocket {
 DepthBuffer::DepthBuffer(Window* window, int width, int height)
     : d_window(window)
     , d_fbo(std::make_shared<FBO>())
-    , d_texture(std::make_shared<TEX>())
     , d_depth(std::make_shared<TEX>())
     , d_width(width)
     , d_height(height)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
-    //glDrawBuffer(GL_NONE);
-    //glReadBuffer(GL_NONE);
-
-    // TODO: Remove Colour attachment
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d_texture->Value(), 0);
-
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
 
     glBindTexture(GL_TEXTURE_2D, d_depth->Value());
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0,

@@ -65,21 +65,26 @@ void EntityRenderer::RenderColliders(bool value)
     d_renderColliders = value;
 }
 
-void EntityRenderer::OnUpdate(const Camera& camera,
-                              const Lens& lens,
-                              const Lights& lights,
-                              unsigned int shadowMap,
-                              const Maths::mat4& lightProjView)
+void EntityRenderer::EnableShadows(
+    const Texture& shadowMap,
+    const Maths::mat4& lightProjView)
 {
+    glActiveTexture(GL_TEXTURE3);
+    shadowMap.Bind();
+ 
     d_shader.Bind();
+    d_shader.LoadUniformInt("shadow_map", 3);
+    d_shader.LoadUniform("u_light_proj_view", lightProjView);
+}
+
+void EntityRenderer::BeginScene(
+    const Camera& camera,
+    const Lens& lens,
+    const Lights& lights)
+{
     unsigned int MAX_NUM_LIGHTS = 5;
 
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, shadowMap);
-    d_shader.LoadUniformInt("shadow_map", 3);
-
-    d_shader.LoadUniform("u_light_proj_view", lightProjView);
-
+    d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", lens.Projection());
     d_shader.LoadUniform("u_view_matrix", camera.View());
 

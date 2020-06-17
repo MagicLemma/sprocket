@@ -35,7 +35,6 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::Lights         d_lights;
     Sprocket::CircadianCycle d_cycle;
 
-    Sprocket::DepthBuffer       d_shadowMap;
     Sprocket::ShadowMapRenderer d_shadowMapRenderer;
 
     Sprocket::MouseProxy d_mouse;

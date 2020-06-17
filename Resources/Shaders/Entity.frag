@@ -33,6 +33,11 @@ uniform float u_brightness;
 in vec4 p_light_space_pos;
 uniform sampler2D shadow_map;
 
+// Takes a value between 
+float cutoff(float value, float low, float high) {
+    return clamp((value - low) / (high - low), 0.0, 1.0);
+}
+
 void main()
 {
     // Surface information
@@ -50,6 +55,7 @@ void main()
     vec4 total_specular = vec4(0.0);
 
     float sun_brightness = u_sun_brightness * max(-u_sun_direction.y, 0.0);
+    sun_brightness *= cutoff(abs(dot(u_sun_direction, unit_normal)), 0.15, 0.25);
 
     // Sun diffuse light
     vec3 unit_sun_direction = normalize(u_sun_direction);
@@ -62,7 +68,7 @@ void main()
     float sun_specular_factor = dot(sun_reflected_light_dir, unit_to_camera);
     sun_specular_factor = max(sun_specular_factor, 0.0);
     total_specular += sun_specular_factor * sun_brightness * vec4(u_sun_colour, 1.0);
-
+    
     // Point Lights
     for (int i = 0; i != 5; i++) {
         vec3 unit_to_light = normalize(p_to_light_vector[i]);
@@ -89,8 +95,9 @@ void main()
     vec3 proj_coords = p_light_space_pos.xyz / p_light_space_pos.w;
     proj_coords = 0.5 * proj_coords + 0.5;
     float current_depth = proj_coords.z;
-    float bias = 0.0002;
-    bias = max(0.001 * (1.0 - dot(p_surface_normal, u_sun_direction)), 0.0001);
+    float d = dot(p_surface_normal, -u_sun_direction);
+    float bias = max(0.025 * (1.0 - d), 0.005);
+    //bias = 0.01;
     
     float shadow = 0;
     vec2 texel_size = 1.0 / textureSize(shadow_map, 0);
@@ -101,6 +108,8 @@ void main()
         }
     }
     shadow /= 9.0;
+
+    if (proj_coords.z > 1.0) { shadow = 0.0; }
 
     out_colour = (ambience + (1.0 - shadow) * (total_diffuse + total_specular)) * colour;
     

@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "Lens.h"
 #include "Shader.h"
-
 #include "Texture.h"
 
 namespace Sprocket {
@@ -31,13 +30,12 @@ public:
 
     bool ShowColliders() const { return d_renderColliders; }
 
-    void OnUpdate(const Camera& camera,
-                  const Lens& lens,
-                  const Lights& lights,
-                  unsigned int shadowMap,
-                  const Maths::mat4& lightProjView);
+    void BeginScene(const Camera& camera, const Lens& lens, const Lights& lights);
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
+
+    void EnableShadows(const Texture& shadowMap, const Maths::mat4& lightProjView);
+
 
     void Draw(const Entity& entity);
 };

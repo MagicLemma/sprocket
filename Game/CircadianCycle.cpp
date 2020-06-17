@@ -6,7 +6,37 @@ namespace Sprocket {
 
 CircadianCycle::CircadianCycle()
     : d_seconds(0.0f)
+    , d_running(true)
+    , d_speed(1.0f)
 {   
+}
+
+void CircadianCycle::OnUpdate(double dt)
+{
+    if (d_running) {
+        d_seconds += d_speed * dt;
+        Modulo();
+    }
+}
+
+void CircadianCycle::Start()
+{
+    d_running = true;
+}
+
+void CircadianCycle::Stop()
+{
+    d_running = false;
+}
+
+void CircadianCycle::SetSpeed(float speed)
+{
+    d_speed = speed;
+}
+
+float CircadianCycle::GetSpeed() const
+{
+    return d_speed;
 }
 
 void CircadianCycle::SetTime(int hours, int mins, int secs)
@@ -52,7 +82,7 @@ bool CircadianCycle::IsDay() const
 Maths::vec3 CircadianCycle::GetSunDir() const
 {
     float angle = GetAngle();
-    Maths::vec3 dir = {Maths::Sind(angle), Maths::Cosd(angle), 0.15f};
+    Maths::vec3 dir = {Maths::Sind(angle), Maths::Cosd(angle), 0.1f * Maths::Sind(angle)};
     Maths::Normalise(dir);
     return dir;
 }

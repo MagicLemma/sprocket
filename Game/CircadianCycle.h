@@ -14,6 +14,9 @@ class CircadianCycle
     const float SECONDS_IN_DAY = 4 * SIX_HOURS;
 
     double d_seconds;
+    bool   d_running;
+    float  d_speed;
+
     void Modulo();
 
     std::string ToString(bool twelveHour = false) const;
@@ -21,6 +24,14 @@ class CircadianCycle
 
 public:
     CircadianCycle();
+
+    void OnUpdate(double dt);
+    void Start();
+    void Stop();
+    bool IsRunning() const { return d_running; }
+
+    void SetSpeed(float speed);
+    float GetSpeed() const;
 
     void SetTime(int hours, int mins, int secs);
     void AddSeconds(double seconds);

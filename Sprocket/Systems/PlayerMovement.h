@@ -7,7 +7,7 @@ namespace Sprocket {
 
 class PlayerMovement : public EntitySystem
 {
-    float d_deltaTime;
+    double d_deltaTime;
 
     bool d_enabled = true;
 

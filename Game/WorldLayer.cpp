@@ -21,7 +21,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityManager({&d_selector})
     , d_camera(5.0f)
     , d_gameGrid(&d_entityManager, &d_modelManager)
-    , d_shadowMap(core.window, core.window->Width(), core.window->Height())
     , d_shadowMapRenderer(core.window)
 {
     using namespace Sprocket;
@@ -36,7 +35,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
-    d_postProcessor.AddEffect<Negative>();
 
     {
         auto gun = std::make_shared<Entity>();
@@ -91,24 +89,7 @@ void WorldLayer::OnUpdate(double dt)
 
     d_gameGrid.OnUpdate(d_core.window, &d_camera, &d_lens);
     d_mouse.OnUpdate();
-    d_cycle.AddSeconds(dt);
-
-    d_shadowMap.Bind();
-    d_shadowMapRenderer.OnUpdate(d_lights.sun);
-    for (const auto& [id, entity] : d_entityManager.Entities()) {
-        d_shadowMapRenderer.Draw(*entity);
-    }
-    d_shadowMap.Unbind();
-
-    d_entityRenderer.OnUpdate(
-        d_camera,
-        d_lens,
-        d_lights,
-        d_shadowMap.DepthTexId(),
-        Maths::Ortho(-10.0f, 10.0f, -10.0f, 10.0f, -150.0f, 150.0f)
-            * Maths::LookAt(-d_lights.sun.direction, {0.0, 0.0, 0.0})   
-    );
-    
+    d_cycle.OnUpdate(dt);   
 
     if (!d_paused) {
         float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
@@ -131,11 +112,25 @@ void WorldLayer::OnUpdate(double dt)
         d_entityManager.OnUpdate(dt);
     }
 
+    // Create the Shadow Map
+    d_shadowMapRenderer.BeginScene(d_lights.sun, d_camera.Target());
+    for (const auto& [id, entity] : d_entityManager.Entities()) {
+        d_shadowMapRenderer.Draw(*entity);
+    }
+    d_shadowMapRenderer.EndScene(); 
+
     if (d_paused) {
         d_postProcessor.Bind();
     }
 
-    d_entityManager.Draw(&d_entityRenderer);
+    d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
+    d_entityRenderer.EnableShadows(
+        d_shadowMapRenderer.GetShadowMap(),
+        d_shadowMapRenderer.GetLightProjViewMatrix()   
+    );
+    for (const auto& [id, entity] : d_entityManager.Entities()) {
+        d_entityRenderer.Draw(*entity);
+    }
 
     if (d_paused) {
         d_postProcessor.Unbind();

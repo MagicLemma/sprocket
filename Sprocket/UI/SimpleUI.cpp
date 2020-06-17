@@ -24,7 +24,7 @@ void Context::OnEvent(Event& event)
     d_impl->mouse.OnEvent(event);
 }
 
-void Context::OnUpdate(float dt)
+void Context::OnUpdate(double dt)
 {
     d_impl->mouse.OnUpdate();
 }

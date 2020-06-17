@@ -213,10 +213,10 @@ void Context::OnEvent(Event& event)
     }
 }
 
-void Context::OnUpdate(float dt)
+void Context::OnUpdate(double dt)
 {
     ImGuiIO& io = d_impl->context->IO;
-    io.DeltaTime = dt;
+    io.DeltaTime = (float)dt;
     io.DisplaySize = ImVec2((float)d_impl->window->Width(),
                             (float)d_impl->window->Height());
     
@@ -373,7 +373,7 @@ void Context::SliderFloat(const std::string& name, float* value, float lower, fl
     ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
 }
 
-void Context::DragInt(const std::string& name, int* value, int speed)
+void Context::DragInt(const std::string& name, int* value, float speed)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragInt(name.c_str(), value, speed);

@@ -111,10 +111,25 @@ void SunInfoPanel(Sprocket::DevUI::Context& ui,
                   Sprocket::CircadianCycle& cycle)
 {
     ui.StartWindow("Sun");
-    ui.ColourPicker("Colour", &sun.colour);
-    ui.SliderFloat("Brightness", &sun.brightness, 0.0f, 30.0f);
+
+    if (ui.Button("Start")) { cycle.Start(); }
+    ui.SameLine();
+    if (ui.Button("Stop")) { cycle.Stop(); }
+    ui.Separator();
+
+    if (cycle.IsRunning()) { // If running, be able to change the speed.
+        float speed = cycle.GetSpeed();
+        ui.SliderFloat("Speed", &speed, 1.0f, 1000.0f);
+        cycle.SetSpeed(speed);
+    }
+    else { // If not running, be able to set manually
+        float angle = cycle.GetAngle();
+        ui.DragFloat("Angle", &angle);
+        cycle.SetAngle(angle);
+    }
+    
+    ui.Separator();
     ui.Text(cycle.ToString12Hour());
-    ui.Text(std::to_string(cycle.GetSeconds()));
     ui.EndWindow();
 }
 
@@ -186,8 +201,9 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.StartWindow("Shadow Map", &open);
 
-    ImTextureID id = (void*)(intptr_t)d_worldLayer->d_shadowMap.DepthTexId();
-    ImGui::Image(id, ImVec2(d_worldLayer->d_shadowMap.Width(), d_worldLayer->d_shadowMap.Height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
+    auto shadowMap = d_worldLayer->d_shadowMapRenderer.GetShadowMap();
+    ImTextureID id = (void*)(intptr_t)shadowMap.Id();
+    ImGui::Image(id, ImVec2(shadowMap.Width(), shadowMap.Height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
 
     d_ui.EndWindow();
 

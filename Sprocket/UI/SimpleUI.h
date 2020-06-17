@@ -17,7 +17,7 @@ public:
     Context(Window* window);
 
     void OnEvent(Event& event);
-    void OnUpdate(float dt);
+    void OnUpdate(double dt);
 };
 
 }

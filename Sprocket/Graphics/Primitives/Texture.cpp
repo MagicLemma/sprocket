@@ -71,6 +71,13 @@ Texture::Texture(int width, int height, unsigned char* data)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+Texture::Texture(int width, int height, std::shared_ptr<TEX> texture)
+    : d_texture(texture)
+    , d_width(width)
+    , d_height(height)
+{
+}
+
 Texture::Texture()
     : d_texture(Texture::White().d_texture)
     , d_width(Texture::White().d_width)
