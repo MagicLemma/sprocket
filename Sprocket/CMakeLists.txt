@@ -80,7 +80,6 @@ add_library(Sprocket STATIC
 
             Objects/Cameras/Camera.cpp
             Objects/Cameras/StaticCamera.cpp
-            Objects/Cameras/FirstPersonCamera.cpp
             Objects/Cameras/PlayerBasedCamera.cpp
             Objects/Cameras/ThirdPersonCamera.cpp
 

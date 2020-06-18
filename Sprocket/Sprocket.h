@@ -69,7 +69,6 @@
 
 #include "Objects/Cameras/Camera.h"
 #include "Objects/Cameras/StaticCamera.h"
-#include "Objects/Cameras/FirstPersonCamera.h"
 #include "Objects/Cameras/PlayerBasedCamera.h"
 #include "Objects/Cameras/ThirdPersonCamera.h"
 

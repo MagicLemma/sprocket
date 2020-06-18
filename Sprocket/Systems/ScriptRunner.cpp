@@ -13,7 +13,10 @@ void ScriptRunner::UpdateEntity(double dt, Entity& entity)
     if (!entity.Has<ScriptComponent>()) {
         return;
     }
-    d_luaEngine.RunOnUpdateScript(dt, entity);
+
+    if (entity.Get<ScriptComponent>().active) {
+        d_luaEngine.RunOnUpdateScript(dt, entity);
+    }
 }
 
 void ScriptRunner::UpdateSystem(double dt)

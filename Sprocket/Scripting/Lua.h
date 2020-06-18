@@ -22,7 +22,7 @@ public:
     ~LuaEngine();
 
     void RunScript(const std::string& filename);
-    void RunOnUpdateScript(float dt, Entity& entity);
+    void RunOnUpdateScript(double dt, Entity& entity);
 
     void OnUpdate(double dt);
     void OnEvent(Event& event);

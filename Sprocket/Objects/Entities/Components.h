@@ -73,6 +73,7 @@ struct SelectComponent : public Component
 struct ScriptComponent : public Component
 {
     std::string script = "";
+    bool active        = true;
 };
 
 struct CameraComponent : public Component

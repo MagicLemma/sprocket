@@ -208,7 +208,7 @@ void LuaEngine::RunScript(const std::string& filename)
     luaL_dofile(d_L, filename.c_str());
 }
 
-void LuaEngine::RunOnUpdateScript(float dt, Entity& entity)
+void LuaEngine::RunOnUpdateScript(double dt, Entity& entity)
 {
     if (CheckLua(d_L, luaL_dofile(d_L, entity.Get<ScriptComponent>().script.c_str()))) {
         SetEntity(d_L, &entity);
