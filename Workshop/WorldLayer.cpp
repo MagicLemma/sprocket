@@ -357,7 +357,10 @@ void WorldLayer::OnUpdate(double dt)
 
     if (d_camera != nullptr) {
         d_skyboxRenderer.Draw(d_skybox, *d_camera, d_lens);
-    }    
+    }
+    else {
+        d_skyboxRenderer.Draw(d_skybox, *d_oCamera);
+    }
     
     d_entityManager.Draw(&d_entityRenderer);
     
