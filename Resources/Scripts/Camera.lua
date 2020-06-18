@@ -10,39 +10,35 @@ function OnUpdate(dt)
     fx, fz = Normalise(fx, fz)
     fy = 0
 
-    print(fx, fy, fz)
-
     local speed = 10 * dt
 
     local rx, ry, rz = GetRightDir()
 
-    if IsKeyDown(KEYBOARD_C) then
+    if IsKeyDown(KEYBOARD_W) then
         x = x + speed * fx
-        y = y + speed * fy
         z = z + speed * fz
     end
-    if IsKeyDown(KEYBOARD_X) then
+    if IsKeyDown(KEYBOARD_S) then
         x = x - speed * fx
-        y = y - speed * fy
         z = z - speed * fz
     end
-    if IsKeyDown(KEYBOARD_V) then
+    if IsKeyDown(KEYBOARD_D) then
         x = x + speed * rx
-        y = y + speed * ry
         z = z + speed * rz
     end
-    if IsKeyDown(KEYBOARD_Z) then
+    if IsKeyDown(KEYBOARD_A) then
         x = x - speed * rx
-        y = y - speed * ry
         z = z - speed * rz
     end
+    if IsKeyDown(KEYBOARD_SPACE) then
+        y = y + speed
+    end
+    if IsKeyDown(KEYBOARD_LSHIFT) then
+        y = y - speed
+    end
 
-    if IsKeyDown(KEYBOARD_R) then
-        RotateY(1000 * dt)
-    end
-    if IsKeyDown(KEYBOARD_F) then
-        RotateY(-1000 * dt)
-    end
+    local dx, dy = GetMouseOffset()
+    RotateY(-10 * dx)
     
     SetPosition(x, y, z)
 end

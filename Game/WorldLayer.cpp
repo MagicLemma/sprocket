@@ -50,7 +50,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto script = gun->Add<ScriptComponent>();
         script->script = "Resources/Scripts/Camera.lua";
-    
+        auto c = gun->Add<CameraComponent>();
+        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
+        d_cameraEntity = gun.get();
         d_entityManager.AddEntity(gun);
     }
 
@@ -73,14 +75,12 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         camera->Name() = "Camera";
         camera->Position() = {-10.0, 2.0, -10.0};
 
-        auto c = camera->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
-
+        
         //auto s = camera->Add<ScriptComponent>();
         //s->script = "Resources/Scripts/Camera.lua";
 
         d_entityManager.AddEntity(camera);
-        d_cameraEntity = camera.get();
+        
     }
 }
 
@@ -94,8 +94,8 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_camera.OnEvent(event);
-    d_lens.OnEvent(event);
+    //d_camera.OnEvent(event);
+    //d_lens.OnEvent(event);
     d_entityManager.OnEvent(event);
     d_gameGrid.OnEvent(event);
 }
@@ -140,8 +140,8 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
-    //d_entityRenderer.BeginScene(*d_cameraEntity, d_lights);
+    //d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
+    d_entityRenderer.BeginScene(*d_cameraEntity, d_lights);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   
