@@ -39,19 +39,18 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto gun = std::make_shared<Entity>();
         gun->Name() = "Deagle";
-        gun->Position() = {10.0f, -1.5f, -3.0f};
-        gun->Orientation() = Maths::Rotate({1, 0, 0}, 180.0f);
+        gun->Position() = {10.0f, 1.5f, -3.0f};
         
         gun->Add<SelectComponent>();
 
         auto modelData = gun->Add<ModelComponent>();
         modelData->scale = 1.0f;
-        modelData->model = ModelManager::LoadModel("Resources/Models/Deagle.obj");
+        modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
         modelData->material.texture = Texture::White();
 
-        //auto script = gun->Add<ScriptComponent>();
-        //script->script = "Resources/Scripts/Test.lua";
-        
+        auto script = gun->Add<ScriptComponent>();
+        script->script = "Resources/Scripts/Camera.lua";
+    
         d_entityManager.AddEntity(gun);
     }
 
@@ -141,8 +140,8 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    //d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
-    d_entityRenderer.BeginScene(*d_cameraEntity, d_lights);
+    d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
+    //d_entityRenderer.BeginScene(*d_cameraEntity, d_lights);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   

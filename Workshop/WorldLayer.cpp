@@ -321,8 +321,6 @@ void WorldLayer::OnUpdate(double dt)
                 entity->Kill();
             }
         }
-
-        d_observerCamera.Foo();
     }
 
     if (d_paused) {
