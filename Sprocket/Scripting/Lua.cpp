@@ -150,6 +150,25 @@ int Lua_GetRightDir(lua_State* L)
     return 3;
 }
 
+int Lua_GetPitch(lua_State* L)
+{
+    if (!CheckLuaArgs(L, 0)) { return luaL_error(L, "Bad number of args"); }
+
+    auto c = GetEntity(L)->Get<CameraComponent>();
+    lua_pushnumber(L, c.pitch);
+    return 1;
+}
+
+int Lua_SetPitch(lua_State* L)
+{
+    if (!CheckLuaArgs(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    float x = (float)lua_tonumber(L, 1);
+    auto& c = GetEntity(L)->Get<CameraComponent>();
+    c.pitch = x;
+    return 0;
+}
+
 }
 
 LuaEngine::LuaEngine()
@@ -167,6 +186,10 @@ LuaEngine::LuaEngine()
 
     lua_register(d_L, "GetForwardsDir", &Lua_GetForwardsDir);
     lua_register(d_L, "GetRightDir", &Lua_GetRightDir);
+
+    lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
+    lua_register(d_L, "GetPitch", &Lua_GetPitch);
+    lua_register(d_L, "SetPitch", &Lua_SetPitch);
 
     lua_pushlightuserdata(d_L, (void*)&d_keyboard);
     lua_setglobal(d_L, "Keyboard");

@@ -39,6 +39,10 @@ function OnUpdate(dt)
 
     local dx, dy = GetMouseOffset()
     RotateY(-10 * dx)
+
+    local pitch = GetPitch()
+    pitch = pitch - 0.15 * dy
+    SetPitch(pitch)
     
     SetPosition(x, y, z)
 end
