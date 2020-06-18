@@ -3,9 +3,11 @@
 #include "Model3D.h"
 #include "Material.h"
 #include "Colliders.h"
+#include "Lens.h"
 
 #include <cstddef>
 #include <vector>
+#include <memory>
 
 namespace Sprocket {
 
@@ -73,5 +75,9 @@ struct ScriptComponent : public Component
     std::string script = "";
 };
 
+struct CameraComponent : public Component
+{
+    std::shared_ptr<Lens> lens;
+};
 
 }

@@ -34,6 +34,8 @@ public:
         // To be called on every frame, all non-entity updates of the
         // shader should be carried out here.
 
+    void BeginScene(const Entity& camera, const Lights& light);
+
     void EnableShadows(const Texture& shadowMap, const Maths::mat4& lightProjView);
 
 

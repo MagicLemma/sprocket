@@ -4,6 +4,8 @@
 #include "ModelManager.h"
 #include "RenderContext.h"
 
+#include "StaticCamera.h"
+
 #include <glad/glad.h>
 
 namespace Sprocket {
@@ -111,6 +113,13 @@ void EntityRenderer::BeginScene(
 		}
 	}
     d_shader.Unbind();
+}
+
+void EntityRenderer::BeginScene(const Entity& camera, const Lights& light)
+{
+    StaticCamera cam(camera.Position());
+    cam.SetOrientation(camera.Orientation());
+    return BeginScene(cam, *camera.Get<CameraComponent>().lens, light);
 }
 
 void EntityRenderer::Draw(const Entity& entity)

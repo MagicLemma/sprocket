@@ -70,8 +70,8 @@ std::array<Maths::vec4, 8> ShadowBox::CalculateFrustumVertices(
 void ShadowBox::OnUpdate(const StaticCamera& lightView)
 {
     Maths::quat rotationQuat = Maths::identity;
-    rotationQuat = Maths::Rotate(rotationQuat, {0, 1, 0}, lightView.Yaw());
-    rotationQuat = Maths::Rotate(rotationQuat, {1, 0, 0}, lightView.Pitch());
+    rotationQuat = Maths::Rotate(rotationQuat, {0, 1, 0}, 0);
+    rotationQuat = Maths::Rotate(rotationQuat, {1, 0, 0}, 0);
     Maths::mat4 rotation = Maths::ToMat4(rotationQuat);
 
     Maths::vec3 forward = rotation * FORWARD;

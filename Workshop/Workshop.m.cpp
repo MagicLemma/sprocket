@@ -26,7 +26,7 @@ int main()
     sceneManager.SetActiveScene("World");
 
     Sprocket::Stopwatch watch;
-    watch.PrintFramerate(true);
+    watch.PrintFramerate(false);
 
     while (window.Running()) {
         window.Clear();

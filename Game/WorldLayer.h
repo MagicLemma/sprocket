@@ -14,6 +14,7 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     Sprocket::ThirdPersonCamera d_camera;
+    Sprocket::Entity* d_cameraEntity;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;

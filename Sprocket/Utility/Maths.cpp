@@ -114,6 +114,21 @@ quat Normalise(const quat& q)
     return glm::normalize(q);
 }
 
+vec3 Forwards(const quat& q)
+{
+    return glm::normalize(q) * vec3(0, 0, -1);
+}
+
+vec3 Right(const quat& q)
+{
+    return glm::normalize(q) * vec3(1, 0, 0);
+}
+
+vec3 Up(const quat& q)
+{
+    return glm::normalize(q) * vec3(0, 1, 0);
+}
+
 // Conversions
 mat3 ToMat3(const quat& q)
 {
