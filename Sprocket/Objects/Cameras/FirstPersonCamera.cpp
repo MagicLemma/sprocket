@@ -14,6 +14,7 @@ FirstPersonCamera::FirstPersonCamera()
     , d_yaw(0)
     , d_roll(0)
     , d_sensitivity(0.15f)
+    , d_orientation(Maths::identity)
 {
 }
 

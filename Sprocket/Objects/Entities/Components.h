@@ -78,6 +78,8 @@ struct ScriptComponent : public Component
 struct CameraComponent : public Component
 {
     std::shared_ptr<Lens> lens;
+    Maths::quat orientation;
+        // Relative to the entities orientation.
 };
 
 }

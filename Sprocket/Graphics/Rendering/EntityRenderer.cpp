@@ -84,11 +84,19 @@ void EntityRenderer::BeginScene(
     const Lens& lens,
     const Lights& lights)
 {
+    return BeginScene(camera.View(), lens.Projection(), lights);   
+}
+
+void EntityRenderer::BeginScene(
+    const Maths::mat4& viewMx,
+    const Maths::mat4& projMx,
+    const Lights& lights)
+{
     unsigned int MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
-    d_shader.LoadUniform("u_proj_matrix", lens.Projection());
-    d_shader.LoadUniform("u_view_matrix", camera.View());
+    d_shader.LoadUniform("u_proj_matrix", projMx);
+    d_shader.LoadUniform("u_view_matrix", viewMx);
 
     // Load sun to shader
     d_shader.LoadUniform("u_sun_direction", lights.sun.direction);
@@ -117,9 +125,10 @@ void EntityRenderer::BeginScene(
 
 void EntityRenderer::BeginScene(const Entity& camera, const Lights& light)
 {
-    StaticCamera cam(camera.Position());
-    cam.SetOrientation(camera.Orientation());
-    return BeginScene(cam, *camera.Get<CameraComponent>().lens, light);
+    return BeginScene(
+        Maths::Inverse(camera.Transform()),
+        camera.Get<CameraComponent>().lens->Projection(),
+        light);
 }
 
 void EntityRenderer::Draw(const Entity& entity)

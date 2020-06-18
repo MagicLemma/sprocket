@@ -128,6 +128,28 @@ int Lua_GetMouseOffset(lua_State* L)
     return 2;
 }
 
+int Lua_GetForwardsDir(lua_State* L)
+{
+    if (!CheckLuaArgs(L, 0)) { return luaL_error(L, "Bad number of args"); }
+
+    auto forwards = Maths::Forwards(GetEntity(L)->Orientation());
+    lua_pushnumber(L, forwards.x);
+    lua_pushnumber(L, forwards.y);
+    lua_pushnumber(L, forwards.z);
+    return 3;
+}
+
+int Lua_GetRightDir(lua_State* L)
+{
+    if (!CheckLuaArgs(L, 0)) { return luaL_error(L, "Bad number of args"); }
+
+    auto right = Maths::Right(GetEntity(L)->Orientation());
+    lua_pushnumber(L, right.x);
+    lua_pushnumber(L, right.y);
+    lua_pushnumber(L, right.z);
+    return 3;
+}
+
 }
 
 LuaEngine::LuaEngine()
@@ -142,6 +164,9 @@ LuaEngine::LuaEngine()
     lua_register(d_L, "IsKeyDown", &Lua_IsKeyDown);
     lua_register(d_L, "IsButtonDown", &Lua_IsButtonDown);
     lua_register(d_L, "GetMouseOffset", &Lua_GetMouseOffset);
+
+    lua_register(d_L, "GetForwardsDir", &Lua_GetForwardsDir);
+    lua_register(d_L, "GetRightDir", &Lua_GetRightDir);
 
     lua_pushlightuserdata(d_L, (void*)&d_keyboard);
     lua_setglobal(d_L, "Keyboard");

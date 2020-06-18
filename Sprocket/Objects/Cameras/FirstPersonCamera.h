@@ -12,6 +12,8 @@ class FirstPersonCamera : public Camera
     Maths::vec3 d_position;
         // The position of the camera in the world.
 
+    Maths::quat d_orientation;
+
     Maths::vec3 d_direction;
         // Vector that points in the direction of the camera. This
         // should ideally be a unit vector.
@@ -42,6 +44,8 @@ public:
     float Pitch() const { return d_pitch; }
     float Yaw() const { return d_yaw; }
     float Roll() const { return d_roll; }
+
+    void Foo();
 };
 
 }
