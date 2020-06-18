@@ -125,9 +125,16 @@ void EntityRenderer::BeginScene(
 
 void EntityRenderer::BeginScene(const Entity& camera, const Lights& light)
 {
+    Maths::vec3 position = camera.Position();
+    Maths::quat orientation = camera.Orientation();
+    
+    auto c = camera.Get<CameraComponent>();
+
+    orientation *= Maths::Rotate({1, 0, 0}, c.pitch);
+
     return BeginScene(
-        Maths::Inverse(camera.Transform()),
-        camera.Get<CameraComponent>().lens->Projection(),
+        Maths::Inverse(Maths::Transform(position, orientation)),
+        c.lens->Projection(),
         light);
 }
 
