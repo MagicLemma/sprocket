@@ -35,6 +35,8 @@ GameGrid::GameGrid(EntityManager* entityManager,
     d_entityManager->AddEntity(d_highlightSquare);
 
     d_modelManager->LoadModel("GG_Cube", "Resources/Models/Cube.obj");
+
+    d_keyboard.ConsumeAll(false);
 }
 
 std::size_t GameGrid::Key(int x, int z)

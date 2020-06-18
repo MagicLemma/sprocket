@@ -30,6 +30,7 @@ class WorldLayer : public Sprocket::Layer
     // Entity management and systems
     Sprocket::EntityManager d_entityManager;
     Sprocket::BasicSelector d_selector;
+    Sprocket::ScriptRunner  d_scriptRunner;
 
     // Additional world setup
     Sprocket::Lights         d_lights;

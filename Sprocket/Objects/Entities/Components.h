@@ -68,5 +68,10 @@ struct SelectComponent : public Component
     bool hovered = false;
 };
 
+struct ScriptComponent : public Component
+{
+    std::string script = "";
+};
+
 
 }

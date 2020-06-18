@@ -42,6 +42,9 @@ quat Rotate(const quat& quaternion, const vec3& axis, float radians);
 quat Inverse(const quat& quaternion);
 quat Normalise(const quat& q);
 
+// Vector Modifiers
+vec3 Rotate(const vec3& vector, const vec3& axis, float radians);
+
 // Conversions
 mat3 ToMat3(const quat& q);
 mat4 ToMat4(const quat& q);

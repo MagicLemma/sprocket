@@ -83,6 +83,7 @@
 #include "Systems/Colliders.h"
 #include "Systems/PlayerMovement.h"
 #include "Systems/BasicSelector.h"
+#include "Systems/ScriptRunner.h"
 #include "Systems/Selector.h"
 
 // DISPLAY
@@ -103,6 +104,8 @@
 #include "Display/WidgetProperties/Draggable.h"
 #include "Display/WidgetProperties/HorizontalConstraint.h"
 #include "Display/WidgetProperties/VerticalConstraint.h"
+
+#include "Scripting/Lua.h"
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"

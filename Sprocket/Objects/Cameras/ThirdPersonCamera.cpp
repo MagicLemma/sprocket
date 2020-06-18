@@ -18,6 +18,13 @@ ThirdPersonCamera::ThirdPersonCamera(float distance)
     , d_rotationSpeed(90.0f)
     , d_movementSpeed(10.0f)
 {
+    d_keyboard.ConsumeAll(false);
+    d_keyboard.ConsumeEventsFor(Keyboard::W);
+    d_keyboard.ConsumeEventsFor(Keyboard::A);
+    d_keyboard.ConsumeEventsFor(Keyboard::S);
+    d_keyboard.ConsumeEventsFor(Keyboard::D);
+    d_keyboard.ConsumeEventsFor(Keyboard::Q);
+    d_keyboard.ConsumeEventsFor(Keyboard::E);
 }
 
 Maths::mat4 ThirdPersonCamera::View() const

@@ -2,6 +2,7 @@
 #include "Event.h"
 
 #include <unordered_map>
+#include <unordered_set>
 
 namespace Sprocket {
 
@@ -13,10 +14,16 @@ class KeyboardProxy
 // still make the camera move.
 {
     std::unordered_map<int, bool> d_pressedKeys;
+    std::unordered_set<int> d_consumedKeys;
+    bool d_consumeAll = true;
 
 public:
     void OnEvent(Event& event);
     bool IsKeyDown(int key) const;
+
+    // TODO: Remove ConsumeAll and make non consumed by default.
+    void ConsumeAll(bool value);
+    void ConsumeEventsFor(int key);
 };
 
 }

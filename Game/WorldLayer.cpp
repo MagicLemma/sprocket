@@ -18,7 +18,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_lens(core.window->AspectRatio())
-    , d_entityManager({&d_selector})
+    , d_entityManager({&d_selector, &d_scriptRunner})
     , d_camera(5.0f)
     , d_gameGrid(&d_entityManager, &d_modelManager)
     , d_shadowMapRenderer(core.window)
@@ -48,6 +48,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         modelData->scale = 1.0f;
         modelData->model = ModelManager::LoadModel("Resources/Models/Deagle.obj");
         modelData->material.texture = Texture::White();
+
+        auto script = gun->Add<ScriptComponent>();
+        script->script = "Resources/Scripts/Test.lua";
         
         d_entityManager.AddEntity(gun);
     }
@@ -89,7 +92,7 @@ void WorldLayer::OnUpdate(double dt)
 
     d_gameGrid.OnUpdate(d_core.window, &d_camera, &d_lens);
     d_mouse.OnUpdate();
-    d_cycle.OnUpdate(dt);   
+    d_cycle.OnUpdate(dt);
 
     if (!d_paused) {
         float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;

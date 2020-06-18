@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
 
+include(FindLua)
+
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -14,6 +16,7 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
+find_package(lua REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
@@ -96,6 +99,7 @@ add_library(Sprocket STATIC
             Systems/Colliders.cpp
             Systems/PlayerMovement.cpp
             Systems/BasicSelector.cpp
+            Systems/ScriptRunner.cpp
             Systems/Selector.cpp
 
             Events/Event.cpp
@@ -110,6 +114,8 @@ add_library(Sprocket STATIC
             Utility/Maths.cpp
             Utility/Stopwatch.cpp
             Utility/Tokenize.cpp
+
+            Scripting/Lua.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp)
 
@@ -121,7 +127,8 @@ target_link_libraries(Sprocket PUBLIC
                       freetype
                       reactphysics3d
                       assimp::assimp
-                      imgui::imgui)
+                      imgui::imgui
+                      ${LUA_LIBRARIES})
 
 target_include_directories(Sprocket PUBLIC
                            .
@@ -142,5 +149,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Objects/Lenses
                            ./Systems
                            ./Utility
+                           ./Scripting
                            ./Vendor/ImGuizmo
-                           ${STB_INCLUDE_DIR})
+                           ${STB_INCLUDE_DIR}
+                           ${LUA_INCLUDE_DIR})
