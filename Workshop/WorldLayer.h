@@ -19,7 +19,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::PlayerBasedCamera d_playerCamera;
 
     // OBSERVER MODE
-    Sprocket::FirstPersonCamera d_observerCamera;
+    Sprocket::Entity* d_oCamera;
 
     // EDITOR MODE
     Sprocket::ThirdPersonCamera d_editorCamera;
@@ -42,6 +42,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::PlayerMovement d_playerMovement;
     Sprocket::PhysicsEngine  d_physicsEngine;
     Sprocket::Selector       d_selector;
+    Sprocket::ScriptRunner   d_scriptRunner;
 
     // Additional world setup
     Sprocket::Skybox d_skybox;

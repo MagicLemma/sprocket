@@ -84,7 +84,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 SPKT_LOG_INFO("Mode switched to Observer");
                 d_worldLayer->d_mode = Mode::OBSERVER;
 
-                d_worldLayer->d_camera = &d_worldLayer->d_observerCamera;
+                d_worldLayer->d_camera = nullptr;
                 d_worldLayer->d_playerMovement.Enable(false);
                 d_worldLayer->d_mouseRequired = false;
                 d_worldLayer->d_selector.Enable(false);

@@ -7,7 +7,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_skyboxRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_lens(core.window->AspectRatio())
-    , d_camera(&d_observerCamera)
+    , d_camera(nullptr)
     , d_skybox({
         Sprocket::ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         Sprocket::CubeMap({
@@ -23,8 +23,12 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
     , d_playerMovement()
     , d_selector(core.window, &d_editorCamera, &d_lens, &d_physicsEngine)
-    , d_entityManager({&d_playerMovement, &d_physicsEngine, &d_selector})
-    , d_observerCamera()
+    , d_entityManager({
+        &d_playerMovement,
+        &d_physicsEngine,
+        &d_selector,
+        &d_scriptRunner
+    })
 {
     using namespace Sprocket;
 
@@ -242,6 +246,20 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         entityManager.AddEntity(player);
     }
 
+    {
+        auto observerCamera = std::make_shared<Entity>();
+        observerCamera->Name() = "Observer Camera";
+
+        auto c = observerCamera->Add<CameraComponent>();
+        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
+
+        auto s = observerCamera->Add<ScriptComponent>();
+        s->script = "Resources/Scripts/FirstPersonCamera.lua";
+
+        d_oCamera = observerCamera.get();
+        entityManager.AddEntity(observerCamera);
+    }
+
     for (int i = 0; i != 5; ++i)
     {
         auto sphere = std::make_shared<Entity>();
@@ -295,7 +313,10 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_camera->OnEvent(event);
+    if (d_camera != nullptr) {
+        d_camera->OnEvent(event);
+    }
+
     d_lens.OnEvent(event);
     d_entityManager.OnEvent(event);
 }
@@ -304,11 +325,18 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.BeginScene(*d_camera, d_lens, d_lights);
+    if (d_camera != nullptr) {
+        d_entityRenderer.BeginScene(*d_camera, d_lens, d_lights);
+    }
+    else {
+        d_entityRenderer.BeginScene(*d_oCamera, d_lights);
+    }
 
     if (!d_paused) {
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
-        d_camera->OnUpdate(dt);
+        if (d_camera != nullptr) {
+            d_camera->OnUpdate(dt); // We don't use a camera for first person anymore
+        }
         d_core.window->SetCursorVisibility(d_mouseRequired);
         d_entityManager.OnUpdate(dt);
 
@@ -326,8 +354,11 @@ void WorldLayer::OnUpdate(double dt)
     if (d_paused) {
         d_postProcessor.Bind();
     }
+
+    if (d_camera != nullptr) {
+        d_skyboxRenderer.Draw(d_skybox, *d_camera, d_lens);
+    }    
     
-    d_skyboxRenderer.Draw(d_skybox, *d_camera, d_lens);
     d_entityManager.Draw(&d_entityRenderer);
     
     if (d_paused) {

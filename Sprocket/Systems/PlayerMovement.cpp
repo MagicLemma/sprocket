@@ -71,6 +71,7 @@ void PlayerMovement::OnEvent(Event& event)
 void PlayerMovement::Enable(bool newEnabled)
 {
     d_enabled = newEnabled;
+    d_keyboard.ConsumeAll(d_enabled);
 }
 
 }
