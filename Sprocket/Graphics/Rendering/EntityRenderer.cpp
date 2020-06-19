@@ -4,8 +4,6 @@
 #include "ModelManager.h"
 #include "RenderContext.h"
 
-#include "StaticCamera.h"
-
 #include <glad/glad.h>
 
 namespace Sprocket {

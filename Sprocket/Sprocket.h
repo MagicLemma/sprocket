@@ -40,7 +40,6 @@
 #include "Graphics/PostProcessing/Negative.h"
 
 #include "Graphics/Shadows/ShadowMapRenderer.h"
-#include "Graphics/Shadows/ShadowBox.h"
 
 #include "Graphics/Primitives/BufferLayout.h"
 #include "Graphics/Primitives/DepthBuffer.h"
@@ -68,7 +67,6 @@
 #include "Objects/Entities/EntityManager.h"
 
 #include "Objects/Cameras/Camera.h"
-#include "Objects/Cameras/StaticCamera.h"
 #include "Objects/Cameras/PlayerBasedCamera.h"
 #include "Objects/Cameras/ThirdPersonCamera.h"
 

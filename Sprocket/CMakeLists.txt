@@ -49,7 +49,6 @@ add_library(Sprocket STATIC
             Graphics/Rendering/SkyboxRenderer.cpp
 
             Graphics/Shadows/ShadowMapRenderer.cpp
-            Graphics/Shadows/ShadowBox.cpp
             
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
@@ -79,7 +78,6 @@ add_library(Sprocket STATIC
             Objects/Entities/EntityManager.cpp
 
             Objects/Cameras/Camera.cpp
-            Objects/Cameras/StaticCamera.cpp
             Objects/Cameras/PlayerBasedCamera.cpp
             Objects/Cameras/ThirdPersonCamera.cpp
 

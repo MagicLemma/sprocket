@@ -256,7 +256,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto s = observerCamera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/FirstPersonCamera.lua";
 
-        d_oCamera = observerCamera.get();
+        d_observerCamera = observerCamera.get();
         entityManager.AddEntity(observerCamera);
     }
 
@@ -329,7 +329,7 @@ void WorldLayer::OnUpdate(double dt)
         d_entityRenderer.BeginScene(*d_camera, d_lens, d_lights);
     }
     else {
-        d_entityRenderer.BeginScene(*d_oCamera, d_lights);
+        d_entityRenderer.BeginScene(*d_observerCamera, d_lights);
     }
 
     if (!d_paused) {
@@ -359,7 +359,7 @@ void WorldLayer::OnUpdate(double dt)
         d_skyboxRenderer.Draw(d_skybox, *d_camera, d_lens);
     }
     else {
-        d_skyboxRenderer.Draw(d_skybox, *d_oCamera);
+        d_skyboxRenderer.Draw(d_skybox, *d_observerCamera);
     }
     
     d_entityManager.Draw(&d_entityRenderer);

@@ -65,7 +65,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 d_worldLayer->d_mode = Mode::PLAYER;
 
                 d_worldLayer->d_camera = &d_worldLayer->d_playerCamera;
-                d_worldLayer->d_oCamera->Get<ScriptComponent>().active = false;
+                d_worldLayer->d_observerCamera->Get<ScriptComponent>().active = false;
 
                 d_worldLayer->d_playerMovement.Enable(true);
                 d_worldLayer->d_mouseRequired = false;
@@ -77,7 +77,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 d_worldLayer->d_mode = Mode::EDITOR;
 
                 d_worldLayer->d_camera = &d_worldLayer->d_editorCamera;
-                d_worldLayer->d_oCamera->Get<ScriptComponent>().active = false;
+                d_worldLayer->d_observerCamera->Get<ScriptComponent>().active = false;
 
                 d_worldLayer->d_playerMovement.Enable(false);
                 d_worldLayer->d_mouseRequired = true;
@@ -89,7 +89,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 d_worldLayer->d_mode = Mode::OBSERVER;
 
                 d_worldLayer->d_camera = nullptr;
-                d_worldLayer->d_oCamera->Get<ScriptComponent>().active = true;
+                d_worldLayer->d_observerCamera->Get<ScriptComponent>().active = true;
 
                 d_worldLayer->d_playerMovement.Enable(false);
                 d_worldLayer->d_mouseRequired = false;
