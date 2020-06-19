@@ -29,7 +29,10 @@ bool CheckLuaArgs(lua_State* L, int argc)
 KeyboardProxy* GetKeyboard(lua_State* L)
 {
     lua_getglobal(L, "Keyboard");
-    KeyboardProxy* k = (KeyboardProxy*)lua_touserdata(L, -1);
+    KeyboardProxy* k = nullptr;
+    if (!lua_isnil(L, -1)) {
+        k = (KeyboardProxy*)lua_touserdata(L, -1);
+    }
     lua_pop(L, 1);
     return k;
 }
@@ -37,7 +40,10 @@ KeyboardProxy* GetKeyboard(lua_State* L)
 MouseProxy* GetMouse(lua_State* L)
 {
     lua_getglobal(L, "Mouse");
-    MouseProxy* m = (MouseProxy*)lua_touserdata(L, -1);
+    MouseProxy* m = nullptr;
+    if (!lua_isnil(L, -1)) {
+        m = (MouseProxy*)lua_touserdata(L, -1);
+    }
     lua_pop(L, 1);
     return m;
 }
@@ -104,8 +110,15 @@ int Lua_IsKeyDown(lua_State* L)
 {
     if (!CheckLuaArgs(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    int x = (int)lua_tointeger(L, 1);
-    lua_pushboolean(L, GetKeyboard(L)->IsKeyDown(x));
+    auto k = GetKeyboard(L);
+    if (k == nullptr) {
+        lua_pushboolean(L, false);
+    }
+    else {
+        int x = (int)lua_tointeger(L, 1);
+        lua_pushboolean(L, k->IsKeyDown(x));
+    }
+    
     return 1;
 }
 
@@ -113,8 +126,15 @@ int Lua_IsButtonDown(lua_State* L)
 {
     if (!CheckLuaArgs(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    int x = (int)lua_tointeger(L, 1);
-    lua_pushboolean(L, GetMouse(L)->IsButtonDown(x));
+    auto m = GetMouse(L);
+    if (m == nullptr) {
+        lua_pushboolean(L, false);
+    }
+    else {
+        int x = (int)lua_tointeger(L, 1);
+        lua_pushboolean(L, m->IsButtonDown(x));
+    }
+
     return 1;
 }
 
@@ -122,9 +142,16 @@ int Lua_GetMouseOffset(lua_State* L)
 {
     if (!CheckLuaArgs(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
-    auto offset = GetMouse(L)->GetMouseOffset();
-    lua_pushnumber(L, offset.x);
-    lua_pushnumber(L, offset.y);
+    auto m = GetMouse(L);
+    if (m == nullptr) {
+        lua_pushnumber(L, 0);
+        lua_pushnumber(L, 0);
+    }
+    else {
+        auto offset = m->GetMouseOffset();
+        lua_pushnumber(L, offset.x);
+        lua_pushnumber(L, offset.y);
+    }
     return 2;
 }
 
@@ -191,10 +218,10 @@ LuaEngine::LuaEngine()
     lua_register(d_L, "GetPitch", &Lua_GetPitch);
     lua_register(d_L, "SetPitch", &Lua_SetPitch);
 
-    lua_pushlightuserdata(d_L, (void*)&d_keyboard);
+    lua_pushnil(d_L);
     lua_setglobal(d_L, "Keyboard");
 
-    lua_pushlightuserdata(d_L, (void*)&d_mouse);
+    lua_pushnil(d_L);
     lua_setglobal(d_L, "Mouse");
 }
 
@@ -219,15 +246,16 @@ void LuaEngine::RunOnUpdateScript(double dt, Entity& entity)
     } 
 }
 
-void LuaEngine::OnUpdate(double dt)
+void LuaEngine::SetKeyboard(KeyboardProxy* k)
 {
-    d_mouse.OnUpdate();
+    lua_pushlightuserdata(d_L, (void*)k);
+    lua_setglobal(d_L, "Keyboard");
 }
 
-void LuaEngine::OnEvent(Event& event)
+void LuaEngine::SetMouse(MouseProxy* m)
 {
-    d_mouse.OnEvent(event);
-    d_keyboard.OnEvent(event);
+    lua_pushlightuserdata(d_L, (void*)m);
+    lua_setglobal(d_L, "Mouse");
 }
 
 }

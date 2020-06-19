@@ -1,12 +1,14 @@
 #pragma once
 #include "EntitySystem.h"
-#include "LuaEngine.h"
+#include "KeyboardProxy.h"
+#include "MouseProxy.h"
 
 namespace Sprocket {
 
 class ScriptRunner : public EntitySystem
 {
-    LuaEngine d_luaEngine;
+    KeyboardProxy d_keyboard;
+    MouseProxy    d_mouse;
 
 public:
     ScriptRunner();

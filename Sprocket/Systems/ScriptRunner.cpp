@@ -1,10 +1,10 @@
 #include "ScriptRunner.h"
 #include "Log.h"
+#include "LuaEngine.h"
 
 namespace Sprocket {
 
 ScriptRunner::ScriptRunner()
-    : d_luaEngine()
 {
 }
 
@@ -14,19 +14,24 @@ void ScriptRunner::UpdateEntity(double dt, Entity& entity)
         return;
     }
 
-    if (entity.Get<ScriptComponent>().active) {
-        d_luaEngine.RunOnUpdateScript(dt, entity);
+    auto& sc = entity.Get<ScriptComponent>();
+    sc.luaEngine.SetKeyboard(&d_keyboard);
+    sc.luaEngine.SetMouse(&d_mouse);
+
+    if (sc.active) {
+        sc.luaEngine.RunOnUpdateScript(dt, entity);
     }
 }
 
 void ScriptRunner::UpdateSystem(double dt)
 {
-    d_luaEngine.OnUpdate(dt);
+    d_mouse.OnUpdate();
 }
 
 void ScriptRunner::OnEvent(Event& event)
 {
-    d_luaEngine.OnEvent(event);
+    d_keyboard.OnEvent(event);
+    d_mouse.OnEvent(event);
 }
 
 }

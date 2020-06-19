@@ -1,5 +1,4 @@
 #pragma once
-#include "Entity.h"
 #include "Event.h"
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
@@ -10,12 +9,11 @@
 
 namespace Sprocket {
 
+class Entity;
+
 class LuaEngine
 {
     lua_State* d_L;
-
-    KeyboardProxy d_keyboard;
-    MouseProxy d_mouse;
 
 public:
     LuaEngine();
@@ -24,8 +22,8 @@ public:
     void RunScript(const std::string& filename);
     void RunOnUpdateScript(double dt, Entity& entity);
 
-    void OnUpdate(double dt);
-    void OnEvent(Event& event);
+    void SetKeyboard(KeyboardProxy* k);
+    void SetMouse(MouseProxy* m);
 };
 
 }
