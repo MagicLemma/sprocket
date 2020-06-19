@@ -133,6 +133,37 @@ void SunInfoPanel(Sprocket::DevUI::Context& ui,
     ui.EndWindow();
 }
 
+void ShaderInfoPanel(Sprocket::DevUI::Context& ui,
+                     Sprocket::Shader& shader)
+{
+    static std::string compileStatus;
+
+    ui.StartWindow("Shader");
+    if(ui.Button("Recompile")) {
+        bool result = shader.Reload();
+        compileStatus ="Shader compile:";
+        compileStatus += (result? " SUCCESS": " FAILURE");
+    }
+
+    ui.Text(compileStatus.c_str());
+    
+    bool closed = true;
+    if(ui.CollapsingHeader("Vertex")){
+        closed = false;
+        ui.MultilineTextModifiable("", shader.VertexShaderSource());
+    }
+    if(ui.CollapsingHeader("Frag")) {
+        closed = false;
+        ui.MultilineTextModifiable("", shader.FragShaderSource());
+    }
+    
+    if(closed) {
+        compileStatus.clear();
+    }
+
+    ui.EndWindow();
+}
+
 }
 
 EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
@@ -198,6 +229,7 @@ void EditorUI::OnUpdate(double dt)
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
     SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_cycle);
+    ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
     d_ui.StartWindow("Shadow Map", &open);
 
