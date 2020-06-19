@@ -6,6 +6,7 @@ namespace Sprocket {
 
 ScriptRunner::ScriptRunner()
 {
+    d_keyboard.ConsumeAll(false);
 }
 
 void ScriptRunner::UpdateEntity(double dt, Entity& entity)

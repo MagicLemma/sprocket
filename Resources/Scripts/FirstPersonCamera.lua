@@ -46,3 +46,7 @@ function OnUpdate(dt)
     
     SetPosition(x, y, z)
 end
+
+function OnMouseButtonPressedEvent(consumed, button, action, mods)
+    print("Received button down event!");
+end

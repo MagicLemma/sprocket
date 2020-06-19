@@ -2,6 +2,7 @@
 #include "Event.h"
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
+#include "MouseEvent.h"
 
 #include <lua.hpp>
 
@@ -22,6 +23,7 @@ public:
     void RunScript(const std::string& filename);
     
     void CallOnUpdateFunction(double dt);
+    void CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e);
 
     void SetEntity(Entity* e);
     void SetKeyboard(KeyboardProxy* k);

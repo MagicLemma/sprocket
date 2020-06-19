@@ -237,6 +237,18 @@ void LuaEngine::CallOnUpdateFunction(double dt)
     lua_pcall(d_L, 1, 0, 0);
 }
 
+void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
+{
+    lua_getglobal(d_L, "OnMouseButtonPressedEvent");
+    // TODO: Check that the OnMouseButtonPressedEvent function exists.
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->Button());
+    lua_pushnumber(d_L, e->Action());
+    lua_pushnumber(d_L, e->Mods());
+    lua_pcall(d_L, 4, 1, 0);
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
 void LuaEngine::SetEntity(Entity* e)
 {
     lua_pushlightuserdata(d_L, (void*)e);
