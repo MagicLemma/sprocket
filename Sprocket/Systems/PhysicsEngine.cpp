@@ -271,63 +271,6 @@ void PhysicsEngine::RegisterEntity(const Entity& entity)
     }
 }
 
-void PhysicsEngine::OnComponentAttach(const Entity& entity, const Component& component)
-{
-    if (auto coll = dynamic_cast<const ColliderComponent*>(&component)) {
-        if (entity.Has<PhysicsComponent>()) {
-            // Existing entity
-            AddCollider(entity);
-        }
-        else {
-            // New entity
-            RegisterEntity(entity);
-        }
-    }
-    else if (auto phys = dynamic_cast<const PhysicsComponent*>(&component)) {
-        if (entity.Has<ColliderComponent>()) {
-            // Existing entity
-            auto& entry = d_impl->rigidBodies[entity.Id()];
-            entry->setType(rp3d::BodyType::DYNAMIC);
-        }
-        else {
-            // New entity
-            RegisterEntity(entity);
-        }
-    }
-    // TODO: Handle adding player components
-}
-
-void PhysicsEngine::OnComponentDetach(const Entity& entity, const Component& component)
-{
-    if (auto coll = dynamic_cast<const ColliderComponent*>(&component)) {
-        if (entity.Has<PhysicsComponent>()) {
-            // Now has physics but no collider
-            auto it = d_impl->collisionShapes.find(entity.Id());
-            if (it != d_impl->collisionShapes.end()) {
-                auto& entry = d_impl->rigidBodies[entity.Id()];
-                entry->removeCollisionShape(it->second.proxyShape);
-            } else {
-                SPKT_LOG_ERROR("Tried to remove a collider from a shape with no collider!");
-            }
-        }
-        else {
-            // Remove from physics engine
-            DeregisterEntity(entity);
-        }
-    }
-    else if (auto phys = dynamic_cast<const PhysicsComponent*>(&component)) {
-        if (entity.Has<ColliderComponent>()) {
-            // Now has collider but no physics
-            auto& entry = d_impl->rigidBodies[entity.Id()];
-            entry->setType(rp3d::BodyType::STATIC);
-        }
-        else {
-            // Remove from physics engine
-            DeregisterEntity(entity);
-        }
-    }
-}
-
 void PhysicsEngine::DeregisterEntity(const Entity& entity)
 {
     auto hasPhysics = entity.Has<PhysicsComponent>();
