@@ -10,7 +10,7 @@ function OnUpdate(dt)
     fx, fz = Normalise(fx, fz)
     fy = 0
 
-    local speed = 10 * dt
+    local speed = 20 * dt
 
     local rx, ry, rz = GetRightDir()
 
