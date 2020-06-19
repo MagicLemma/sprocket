@@ -242,12 +242,12 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.EndWindow();
 
-    mat4 view = d_worldLayer->d_camera->View();
-    mat4 proj = d_worldLayer->d_lens.Projection();
-    if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
-        SelectedEntityInfo(d_ui, *e, view, proj);
-        d_worldLayer->d_physicsEngine.RefreshTransform(e);
-    }
+    //mat4 view = d_worldLayer->d_camera->View();
+    //mat4 proj = d_worldLayer->d_activeCamera.Get<CameraComponent>().lens.Projection();
+    //if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
+    //    SelectedEntityInfo(d_ui, *e, view, proj);
+    //    d_worldLayer->d_physicsEngine.RefreshTransform(e);
+    //}
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
 

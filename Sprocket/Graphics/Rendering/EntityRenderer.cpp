@@ -3,6 +3,7 @@
 #include "Components.h"
 #include "ModelManager.h"
 #include "RenderContext.h"
+#include "CameraUtils.h"
 
 #include <glad/glad.h>
 
@@ -123,14 +124,9 @@ void EntityRenderer::BeginScene(
 
 void EntityRenderer::BeginScene(const Entity& camera, const Lights& light)
 {
-    Maths::vec3 position = camera.Position();
-    Maths::quat orientation = camera.Orientation();
-    auto c = camera.Get<CameraComponent>();
-    orientation *= Maths::Rotate({1, 0, 0}, c.pitch);
-
     return BeginScene(
-        Maths::Inverse(Maths::Transform(position, orientation)),
-        c.lens->Projection(),
+        CameraUtils::MakeView(camera),
+        CameraUtils::MakeProj(camera),
         light);
 }
 

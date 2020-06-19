@@ -9,7 +9,7 @@ function OnUpdate(dt)
     local fx, fy, fz = GetForwardsDir()
     fx, fz = Normalise(fx, fz)
 
-    local speed = 20 * dt
+    local speed = 10 * dt
 
     local rx, ry, rz = GetRightDir()
 

@@ -245,6 +245,10 @@ void LuaEngine::RunScript(const std::string& filename)
 
 void LuaEngine::CallOnUpdateFunction(double dt)
 {
+    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+        return;
+    }
+
     lua_getglobal(d_L, "OnUpdate");
     
     if (!lua_isfunction(d_L, -1)) {
@@ -258,6 +262,10 @@ void LuaEngine::CallOnUpdateFunction(double dt)
 
 void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
 {
+    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+        return;
+    }
+
     lua_getglobal(d_L, "OnMouseButtonPressedEvent");
 
     if (!lua_isfunction(d_L, -1)) {

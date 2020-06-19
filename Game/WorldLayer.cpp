@@ -44,9 +44,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         gun->Add<SelectComponent>();
 
         auto modelData = gun->Add<ModelComponent>();
-        modelData->scale = 1.0f;
         modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
-        modelData->material.texture = Texture::White();
         
         auto c = gun->Add<CameraComponent>();
         c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
@@ -56,15 +54,16 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto terrain = std::make_shared<Entity>();
-        terrain->Add<SelectComponent>();
         terrain->Name() = "Terrain";
         terrain->Position() = {-25, 0, -25};
+
         auto modelData = terrain->Add<ModelComponent>();
         modelData->scale = 1.0f;
         modelData->model = MakeTerrain(51, 1.0f);
         modelData->material = GetTerrainMaterial();
-        //terrain->Position() = {0, 0, 0};
         
+        terrain->Add<SelectComponent>();
+
         d_entityManager.AddEntity(terrain);
     }
 

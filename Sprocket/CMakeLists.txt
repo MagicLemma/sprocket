@@ -84,6 +84,7 @@ add_library(Sprocket STATIC
             Objects/Lenses/PerspectiveLens.cpp
             Objects/Lenses/OrthographicLens.cpp
 
+            Objects/CameraUtils.cpp
             Objects/Light.cpp
             Objects/Material.cpp
             Objects/Quad.cpp

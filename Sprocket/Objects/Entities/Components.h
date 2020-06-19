@@ -32,7 +32,7 @@ struct ModelComponent : public Component
 {
     Model3D  model;
     Material material;
-    float    scale;  // Affects the size of the model.
+    float    scale = 1.0f;  // Affects the size of the model.
 };
 
 struct PhysicsComponent : public Component

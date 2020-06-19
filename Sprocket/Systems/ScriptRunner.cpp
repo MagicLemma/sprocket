@@ -18,9 +18,7 @@ void ScriptRunner::UpdateEntity(double dt, Entity& entity)
     }
 
     auto& luaEngine = d_engines[entity.Id()];
-    if (entity.Get<ScriptComponent>().active) {
-        luaEngine.CallOnUpdateFunction(dt);
-    }
+    luaEngine.CallOnUpdateFunction(dt);
 }
 
 void ScriptRunner::UpdateSystem(double dt)

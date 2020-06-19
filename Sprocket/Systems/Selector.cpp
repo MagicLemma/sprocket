@@ -5,13 +5,13 @@ namespace Sprocket {
 
 Selector::Selector(
     Window* window,
-    Camera* camera,
-    Lens* lens,
+    //Camera* camera,
+    //Lens* lens,
     PhysicsEngine* physicsEngine
 )
     : d_window(window)
-    , d_camera(camera)
-    , d_lens(lens)
+    //, d_camera(camera)
+    //, d_lens(lens)
     , d_physicsEngine(physicsEngine)
     , d_enabled(false)
     , d_hoveredEntity(nullptr)
@@ -100,14 +100,15 @@ void Selector::SetSelected(Entity* entity)
 
 Entity* Selector::GetMousedOver()
 {
-    Maths::vec3 rayStart = Maths::Inverse(d_camera->View()) * Maths::vec4(0, 0, 0, 1);
-    Maths::vec3 direction = Maths::GetMouseRay(
-        d_mouse.GetMousePos(),
-        d_window->Width(),
-        d_window->Height(),
-        d_camera->View(),
-        d_lens->Projection());
-    return d_physicsEngine->Raycast(rayStart, direction);
+    //Maths::vec3 rayStart = Maths::Inverse(d_camera->View()) * Maths::vec4(0, 0, 0, 1);
+    //Maths::vec3 direction = Maths::GetMouseRay(
+    //    d_mouse.GetMousePos(),
+    //    d_window->Width(),
+    //    d_window->Height(),
+    //    d_camera->View(),
+    //    d_lens->Projection());
+    //return d_physicsEngine->Raycast(rayStart, direction);
+    return nullptr;
 }
 
 }

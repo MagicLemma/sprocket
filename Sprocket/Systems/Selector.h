@@ -40,8 +40,8 @@ class Selector : public EntitySystem
 public:
     Selector(
         Window* window,
-        Camera* camera,
-        Lens* lens,
+        //Camera* camera,
+        //Lens* lens,
         PhysicsEngine* physicsEngine
     );
     ~Selector() {}

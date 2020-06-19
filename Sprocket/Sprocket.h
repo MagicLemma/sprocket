@@ -56,6 +56,7 @@
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
 // OBJECTS
+#include "Objects/CameraUtils.h"
 #include "Objects/Material.h"
 #include "Objects/Quad.h"
 #include "Objects/Light.h"
