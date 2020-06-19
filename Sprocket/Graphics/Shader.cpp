@@ -32,6 +32,10 @@ Shader::Shader(const std::string& vertShaderFile,
 {
 	std::string vertShader = ParseShader(vertShaderFile);
 	std::string fragShader = ParseShader(fragShaderFile);
+	
+	this->d_vertexSource = vertShader;
+	this->d_fragSource = fragShader;
+	
 	CreateShader(vertShader, fragShader);
 }
 
@@ -128,6 +132,53 @@ std::string ArrayName(const std::string& uniformName, size_t index)
 	std::stringstream ss;
 	ss << uniformName << "[" << index << "]";
 	return ss.str();
+}
+
+bool Shader::Reload()
+{
+	unsigned int programId = glCreateProgram();
+
+	unsigned int vertShaderId = CompileShader(GL_VERTEX_SHADER, d_vertexSource);
+
+	if(vertShaderId == 0) {
+		glDeleteProgram(programId);
+
+		return false;
+	}
+
+	unsigned int fragShaderId = CompileShader(GL_FRAGMENT_SHADER, d_fragSource);
+
+	if(fragShaderId == 0) {
+		glDeleteShader(vertShaderId);
+		glDeleteProgram(programId);
+
+		return false;
+	}
+
+	glAttachShader(programId, vertShaderId);
+	glAttachShader(programId, fragShaderId);
+	glLinkProgram(programId);
+	glValidateProgram(programId);
+
+	GLint validateStatus = GL_FALSE;
+	glGetProgramiv(programId, GL_VALIDATE_STATUS, &validateStatus);
+
+	if(validateStatus != GL_TRUE) {
+		glDeleteShader(fragShaderId);
+		glDeleteShader(vertShaderId);
+		glDeleteProgram(programId);
+		return false;
+	}
+
+	glDeleteShader(d_vertShaderId);
+	glDeleteShader(d_fragShaderId);
+	glDeleteProgram(d_programId);
+
+	d_programId = programId;
+	d_vertShaderId = vertShaderId;
+	d_fragShaderId = fragShaderId;
+
+	return true;
 }
 
 }

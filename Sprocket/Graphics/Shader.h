@@ -14,6 +14,9 @@ class Shader
     unsigned int d_vertShaderId;
     unsigned int d_fragShaderId;
 
+    std::string d_vertexSource;
+    std::string d_fragSource;
+
     // Shader Creation
     void CreateShader(const std::string& vertShader,
                       const std::string& fragShader);
@@ -28,6 +31,11 @@ public:
            const std::string& fragShaderFile);
 
     ~Shader();
+
+    bool Reload();
+    
+    std::string& VertexShaderSource() { return d_vertexSource; }
+    std::string& FragShaderSource() { return d_fragSource; }
 
     unsigned int Id() const { return d_programId; }
 
