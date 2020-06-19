@@ -240,9 +240,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         }
 
         player->Add<PlayerComponent>();
-        d_playerCamera.SetPlayer(player.get());
+
+        auto c = player->Add<CameraComponent>();
+        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
 
         player->Add<SelectComponent>();
+
+        d_playerCamera = player.get();
         entityManager.AddEntity(player);
     }
 
@@ -329,7 +333,12 @@ void WorldLayer::OnUpdate(double dt)
         d_entityRenderer.BeginScene(*d_camera, d_lens, d_lights);
     }
     else {
-        d_entityRenderer.BeginScene(*d_observerCamera, d_lights);
+        if (d_mode == Mode::OBSERVER) {
+            d_entityRenderer.BeginScene(*d_observerCamera, d_lights);
+        }
+        else {
+            d_entityRenderer.BeginScene(*d_playerCamera, d_lights);
+        }
     }
 
     if (!d_paused) {
@@ -359,7 +368,12 @@ void WorldLayer::OnUpdate(double dt)
         d_skyboxRenderer.Draw(d_skybox, *d_camera, d_lens);
     }
     else {
-        d_skyboxRenderer.Draw(d_skybox, *d_observerCamera);
+        if (d_mode == Mode::OBSERVER) {
+            d_skyboxRenderer.Draw(d_skybox, *d_observerCamera);
+        }
+        else {
+            d_skyboxRenderer.Draw(d_skybox, *d_playerCamera);
+        }
     }
     
     d_entityManager.Draw(&d_entityRenderer);

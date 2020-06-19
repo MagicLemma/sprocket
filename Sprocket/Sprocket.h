@@ -67,7 +67,6 @@
 #include "Objects/Entities/EntityManager.h"
 
 #include "Objects/Cameras/Camera.h"
-#include "Objects/Cameras/PlayerBasedCamera.h"
 #include "Objects/Cameras/ThirdPersonCamera.h"
 
 #include "Objects/Lenses/Lens.h"

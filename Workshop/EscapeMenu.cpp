@@ -64,7 +64,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                 SPKT_LOG_INFO("Mode switched to Player");
                 d_worldLayer->d_mode = Mode::PLAYER;
 
-                d_worldLayer->d_camera = &d_worldLayer->d_playerCamera;
+                d_worldLayer->d_camera = nullptr;
                 d_worldLayer->d_observerCamera->Get<ScriptComponent>().active = false;
 
                 d_worldLayer->d_playerMovement.Enable(true);

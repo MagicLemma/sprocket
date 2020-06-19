@@ -16,7 +16,7 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     // PLAYER MODE
-    Sprocket::PlayerBasedCamera d_playerCamera;
+    Sprocket::Entity* d_playerCamera;
 
     // OBSERVER MODE
     Sprocket::Entity* d_observerCamera;

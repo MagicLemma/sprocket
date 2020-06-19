@@ -78,7 +78,6 @@ add_library(Sprocket STATIC
             Objects/Entities/EntityManager.cpp
 
             Objects/Cameras/Camera.cpp
-            Objects/Cameras/PlayerBasedCamera.cpp
             Objects/Cameras/ThirdPersonCamera.cpp
 
             Objects/Lenses/Lens.cpp

@@ -56,8 +56,6 @@ void PlayerComponentInfo(Sprocket::DevUI::Context& ui,
         ui.Text("Moving Left: " + ToString(play.movingLeft));
         ui.Text("Moving Right: " + ToString(play.movingRight));
         ui.Text("Jumping: " + ToString(play.jumping));
-        ui.SliderFloat("Yaw", &play.yaw, -180.0f, 180.0f);
-        ui.SliderFloat("Pitch", &play.pitch, -89.0f, 89.0f);
         ui.EndTreeNode();
     }
 }
