@@ -15,11 +15,14 @@ void ScriptRunner::UpdateEntity(double dt, Entity& entity)
     }
 
     auto& sc = entity.Get<ScriptComponent>();
+
+    // TODO: Move these so they only get called once.
     sc.luaEngine.SetKeyboard(&d_keyboard);
     sc.luaEngine.SetMouse(&d_mouse);
+    sc.luaEngine.SetEntity(&entity);
 
     if (sc.active) {
-        sc.luaEngine.RunOnUpdateScript(dt, entity);
+        sc.luaEngine.CallOnUpdateFunction(dt);
     }
 }
 

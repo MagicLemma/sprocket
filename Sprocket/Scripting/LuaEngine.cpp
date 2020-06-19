@@ -48,12 +48,6 @@ MouseProxy* GetMouse(lua_State* L)
     return m;
 }
 
-void SetEntity(lua_State* L, Entity* entity)
-{
-    lua_pushlightuserdata(L, (void*)entity);
-    lua_setglobal(L, "Entity");
-}
-
 Entity* GetEntity(lua_State* L)
 {
     lua_getglobal(L, "Entity");
@@ -235,15 +229,18 @@ void LuaEngine::RunScript(const std::string& filename)
     luaL_dofile(d_L, filename.c_str());
 }
 
-void LuaEngine::RunOnUpdateScript(double dt, Entity& entity)
+void LuaEngine::CallOnUpdateFunction(double dt)
 {
-    if (CheckLua(d_L, luaL_dofile(d_L, entity.Get<ScriptComponent>().script.c_str()))) {
-        SetEntity(d_L, &entity);
-        lua_getglobal(d_L, "OnUpdate");
-        lua_pushnumber(d_L, dt);
-        lua_pcall(d_L, 1, 0, 0);
-        SetEntity(d_L, nullptr);
-    } 
+    lua_getglobal(d_L, "OnUpdate");
+    // TODO: Check that the OnUpdate function exists.
+    lua_pushnumber(d_L, dt);
+    lua_pcall(d_L, 1, 0, 0);
+}
+
+void LuaEngine::SetEntity(Entity* e)
+{
+    lua_pushlightuserdata(d_L, (void*)e);
+    lua_setglobal(d_L, "Entity");
 }
 
 void LuaEngine::SetKeyboard(KeyboardProxy* k)

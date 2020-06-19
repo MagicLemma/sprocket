@@ -259,6 +259,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto s = observerCamera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/FirstPersonCamera.lua";
+        s->luaEngine.RunScript(s->script);
 
         d_observerCamera = observerCamera.get();
         entityManager.AddEntity(observerCamera);

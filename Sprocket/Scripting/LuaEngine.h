@@ -20,8 +20,10 @@ public:
     ~LuaEngine();
 
     void RunScript(const std::string& filename);
-    void RunOnUpdateScript(double dt, Entity& entity);
+    
+    void CallOnUpdateFunction(double dt);
 
+    void SetEntity(Entity* e);
     void SetKeyboard(KeyboardProxy* k);
     void SetMouse(MouseProxy* m);
 };
