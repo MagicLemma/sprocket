@@ -47,9 +47,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         modelData->scale = 1.0f;
         modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
         modelData->material.texture = Texture::White();
-
-        auto script = gun->Add<ScriptComponent>();
-        script->script = "Resources/Scripts/Camera.lua";
         
         auto c = gun->Add<CameraComponent>();
         c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());

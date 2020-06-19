@@ -6,26 +6,6 @@ namespace Sprocket {
 
 namespace {
 
-bool CheckLua(lua_State* L, int rc)
-{
-    if (rc != LUA_OK) {
-        const char* error = lua_tostring(L, -1);
-        SPKT_LOG_ERROR("[Lua]: {}", error);
-        return false;
-    }
-    return true;
-}
-
-bool CheckLuaArgs(lua_State* L, int argc)
-{
-    int args = lua_gettop(L);
-    if (args != argc) {
-        SPKT_LOG_ERROR("[Lua]: Expected {} args, got {}", argc, args);
-        return false;
-    }
-    return true;
-}
-
 KeyboardProxy* GetKeyboard(lua_State* L)
 {
     lua_getglobal(L, "Keyboard");
@@ -54,6 +34,40 @@ Entity* GetEntity(lua_State* L)
     Entity* e = (Entity*)lua_touserdata(L, -1);
     lua_pop(L, 1);
     return e;
+}
+
+void PrintErrors(lua_State* L, int rc)
+{
+    Entity* e = GetEntity(L);
+    if (rc == LUA_ERRRUN) {
+        SPKT_LOG_ERROR("[Lua]: Runtime error for {}", e->Name());
+    }
+    else if (rc == LUA_ERRMEM) {
+        SPKT_LOG_ERROR("[Lua]: Memory allocation error for {}", e->Name());
+    }
+    else if (rc == LUA_ERRERR) {
+        SPKT_LOG_ERROR("[Lua]: Error handler func failed for {}", e->Name());
+    }
+}
+
+bool CheckLua(lua_State* L, int rc)
+{
+    if (rc != LUA_OK) {
+        const char* error = lua_tostring(L, -1);
+        SPKT_LOG_ERROR("[Lua]: {}", error);
+        return false;
+    }
+    return true;
+}
+
+bool CheckLuaArgs(lua_State* L, int argc)
+{
+    int args = lua_gettop(L);
+    if (args != argc) {
+        SPKT_LOG_ERROR("[Lua]: Expected {} args, got {}", argc, args);
+        return false;
+    }
+    return true;
 }
 
 int Lua_GetPosition(lua_State* L)
@@ -232,7 +246,12 @@ void LuaEngine::RunScript(const std::string& filename)
 void LuaEngine::CallOnUpdateFunction(double dt)
 {
     lua_getglobal(d_L, "OnUpdate");
-    // TODO: Check that the OnUpdate function exists.
+    
+    if (!lua_isfunction(d_L, -1)) {
+        SPKT_LOG_TRACE("[Lua]: OnUpdate not implemented for {}",
+                       GetEntity(d_L)->Name());
+    }
+
     lua_pushnumber(d_L, dt);
     lua_pcall(d_L, 1, 0, 0);
 }
@@ -240,12 +259,21 @@ void LuaEngine::CallOnUpdateFunction(double dt)
 void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
 {
     lua_getglobal(d_L, "OnMouseButtonPressedEvent");
-    // TODO: Check that the OnMouseButtonPressedEvent function exists.
+
+    if (!lua_isfunction(d_L, -1)) {
+        SPKT_LOG_TRACE("[Lua]: OnMouseButtonPressedEvent not "
+                       "implemented for {}",
+                       GetEntity(d_L)->Name());
+    }
+    
     lua_pushboolean(d_L, e->IsConsumed());
     lua_pushnumber(d_L, e->Button());
     lua_pushnumber(d_L, e->Action());
     lua_pushnumber(d_L, e->Mods());
-    lua_pcall(d_L, 4, 1, 0);
+
+    int rc = lua_pcall(d_L, 4, 1, 0);
+    PrintErrors(d_L, rc);
+
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
