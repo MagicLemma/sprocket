@@ -50,7 +50,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto script = gun->Add<ScriptComponent>();
         script->script = "Resources/Scripts/Camera.lua";
-        script->luaEngine.RunScript(script->script);
+        
         auto c = gun->Add<CameraComponent>();
         c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
         d_cameraEntity = gun.get();

@@ -8,7 +8,6 @@ function OnUpdate(dt)
 
     local fx, fy, fz = GetForwardsDir()
     fx, fz = Normalise(fx, fz)
-    fy = 0
 
     local speed = 20 * dt
 

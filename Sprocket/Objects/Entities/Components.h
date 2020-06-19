@@ -4,7 +4,6 @@
 #include "Material.h"
 #include "Colliders.h"
 #include "Lens.h"
-#include "LuaEngine.h"
 
 #include <cstddef>
 #include <vector>
@@ -73,9 +72,8 @@ struct SelectComponent : public Component
 
 struct ScriptComponent : public Component
 {
-    LuaEngine luaEngine;
-    std::string script  = "";
-    bool active         = true;
+    std::string script;
+    bool active = true;
 };
 
 struct CameraComponent : public Component
