@@ -111,7 +111,7 @@ add_library(Sprocket STATIC
             Utility/Stopwatch.cpp
             Utility/Tokenize.cpp
 
-            Scripting/Lua.cpp
+            Scripting/LuaEngine.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp)
 

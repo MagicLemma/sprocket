@@ -101,7 +101,7 @@
 #include "Display/WidgetProperties/HorizontalConstraint.h"
 #include "Display/WidgetProperties/VerticalConstraint.h"
 
-#include "Scripting/Lua.h"
+#include "Scripting/LuaEngine.h"
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"

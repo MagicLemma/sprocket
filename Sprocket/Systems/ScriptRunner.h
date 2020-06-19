@@ -1,6 +1,6 @@
 #pragma once
 #include "EntitySystem.h"
-#include "Lua.h"
+#include "LuaEngine.h"
 
 namespace Sprocket {
 
