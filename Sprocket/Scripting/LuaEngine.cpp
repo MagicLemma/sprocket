@@ -249,9 +249,9 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
-void LuaEngine::SetEntity(Entity* e)
+void LuaEngine::SetEntity(const Entity& e)
 {
-    lua_pushlightuserdata(d_L, (void*)e);
+    lua_pushlightuserdata(d_L, (void*)&e);
     lua_setglobal(d_L, "Entity");
 }
 

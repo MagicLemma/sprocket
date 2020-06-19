@@ -18,12 +18,6 @@ void ScriptRunner::UpdateEntity(double dt, Entity& entity)
     }
 
     auto& luaEngine = d_engines[entity.Id()];
-
-    // TODO: Move these so they only get called once.
-    luaEngine.SetKeyboard(&d_keyboard);
-    luaEngine.SetMouse(&d_mouse);
-    luaEngine.SetEntity(&entity);
-
     if (entity.Get<ScriptComponent>().active) {
         luaEngine.CallOnUpdateFunction(dt);
     }
@@ -43,15 +37,16 @@ void ScriptRunner::OnEvent(Event& event)
 void ScriptRunner::RegisterEntity(const Entity& entity)
 {
     if (!entity.Has<ScriptComponent>()) { return; }
-
     auto& luaEngine = d_engines[entity.Id()];
+    luaEngine.SetKeyboard(&d_keyboard);
+    luaEngine.SetMouse(&d_mouse);
+    luaEngine.SetEntity(entity);
     luaEngine.RunScript(entity.Get<ScriptComponent>().script);
 }
 
 void ScriptRunner::DeregisterEntity(const Entity& entity)
 {
     if (!entity.Has<ScriptComponent>()) { return; }
-
     d_engines.erase(entity.Id());
 }
 
