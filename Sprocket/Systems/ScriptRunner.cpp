@@ -32,6 +32,12 @@ void ScriptRunner::OnEvent(Event& event)
 {
     d_keyboard.OnEvent(event);
     d_mouse.OnEvent(event);
+
+    if (auto e = event.As<MouseButtonPressedEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnMouseButtonPressedEvent(e);
+        }
+    }
 }
 
 void ScriptRunner::RegisterEntity(const Entity& entity)
