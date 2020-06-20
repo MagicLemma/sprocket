@@ -1,8 +1,3 @@
-function Normalise(x, y)
-    local size = math.sqrt(x * x + y * y)
-    return x/size, y/size
-end
-
 function Init()
     ASPECT_RATIO = 16 / 9
     FOV = 70
@@ -15,7 +10,7 @@ function OnUpdate(dt)
     local x, y, z = GetPosition()
 
     local fx, fy, fz = GetForwardsDir()
-    fx, fz = Normalise(fx, fz)
+    fx, fz = Normalise2(fx, fz)
 
     local speed = 10 * dt
 

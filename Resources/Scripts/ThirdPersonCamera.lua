@@ -1,16 +1,3 @@
-function Normalise(x, y, z)
-    local size = math.sqrt(x * x + y * y + z * z)
-    return x/size, y/size, z/size
-end
-
-function Cross(a1, a2, a3, b1, b2, b3)
-    return a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1
-end
-
-function Clamp(value, low, high)
-    return math.min(high, math.max(value, low))
-end
-
 function Init()
     DISTANCE = 8
     MOVEMENT_SPEED = 10
@@ -52,7 +39,7 @@ function OnUpdate(dt)
 
     -- get horizonal component
     fy = 0
-    fx, fy, fz = Normalise(fx, fy, fz)
+    fx, fy, fz = Normalise3(fx, fy, fz)
 
     -- right vector
     local rx, ry, rz = Cross(fx, fy, fz, 0, 1, 0)
