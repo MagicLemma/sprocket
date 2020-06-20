@@ -110,6 +110,10 @@ add_library(Sprocket STATIC
             Utility/Tokenize.cpp
 
             Scripting/LuaEngine.cpp
+            Scripting/LuaGlobals.cpp
+            Scripting/LuaTransform.cpp
+            Scripting/LuaInput.cpp
+            Scripting/LuaCamera.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp)
 
