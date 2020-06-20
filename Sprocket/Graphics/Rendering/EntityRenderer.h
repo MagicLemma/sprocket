@@ -35,6 +35,8 @@ public:
 
 
     void Draw(const Entity& entity);
+
+    Shader& GetShader() { return d_shader; }
 };
 
 }

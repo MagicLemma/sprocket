@@ -1,0 +1,10 @@
+# libraries
+- glfw3
+- glad 
+- glm 
+- spdlog 
+- freetype 
+- assimp
+- imgui
+- imgui[bindings]
+- stb
