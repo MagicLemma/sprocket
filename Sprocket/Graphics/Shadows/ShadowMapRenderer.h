@@ -22,8 +22,7 @@ class ShadowMapRenderer
 public:
     ShadowMapRenderer(Window* window);
 
-    void BeginScene(const DirectionalLight& light,
-                    const Maths::vec3& centre = {0.0, 0.0, 0.0});
+    void BeginScene(const DirectionalLight& light, const Maths::vec3& centre);
         // Called before any draw calls. The light is the light
         // casting the shadow and the centre is the middle of the
         // shadow box.
