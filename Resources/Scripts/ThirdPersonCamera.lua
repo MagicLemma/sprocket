@@ -11,7 +11,7 @@ function Clamp(value, low, high)
     return math.min(high, math.max(value, low))
 end
 
-DISTANCE = 10
+DISTANCE = 5
 MOVEMENT_SPEED = 10
 ROTATION_SPEED = 90
 
@@ -91,7 +91,7 @@ function OnMouseScrolledEvent(consumed, xOffset, yOffset)
 
     if ABS_VERT == nil then return false end
         -- If we receive an event before update, just ignore it
-        
+
     ABS_VERT = Clamp(ABS_VERT - yOffset, ABS_VERT_LOW, ABS_VERT_HIGH)
     return true
 end

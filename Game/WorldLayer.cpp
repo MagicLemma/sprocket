@@ -55,7 +55,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto c = camera->Add<CameraComponent>();
         c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
-    
+        
         auto s = camera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/ThirdPersonCamera.lua";
 
@@ -77,20 +77,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         d_entityManager.AddEntity(terrain);
     }
-
-    {
-        auto camera = std::make_shared<Entity>();
-        camera->Name() = "Camera";
-        camera->Position() = {-10.0, 2.0, -10.0};
-
-        
-        //auto s = camera->Add<ScriptComponent>();
-        //s->script = "Resources/Scripts/Camera.lua";
-        //s->luaEngine.RunScript(s->script);
-
-        d_entityManager.AddEntity(camera);
-        
-    }
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -103,8 +89,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    //d_camera.OnEvent(event);
-    //d_lens.OnEvent(event);
     d_entityManager.OnEvent(event);
     d_gameGrid.OnEvent(event);
 }
