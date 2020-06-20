@@ -93,6 +93,25 @@ int Lua_SetPosition(lua_State* L)
     return 0;
 }
 
+int Lua_SetLookAt(lua_State* L)
+{
+    if (!CheckLuaArgs(L, 6)) { return luaL_error(L, "Bad number of args"); }
+
+    Entity* entity = GetEntity(L);
+    float px = (float)lua_tonumber(L, 1);
+    float py = (float)lua_tonumber(L, 2);
+    float pz = (float)lua_tonumber(L, 3);
+
+    float tx = (float)lua_tonumber(L, 4);
+    float ty = (float)lua_tonumber(L, 5);
+    float tz = (float)lua_tonumber(L, 6);
+    Maths::quat q = Maths::LookAtQuat({px, py, pz}, {tx, ty, tz});
+
+    entity->Position() = {px, py, pz};
+    entity->Orientation() = q;
+    return 0;
+}
+
 int Lua_RotateY(lua_State* L)
 {
     if (!CheckLuaArgs(L, 1)) { return luaL_error(L, "Bad number of args"); };
@@ -214,6 +233,7 @@ LuaEngine::LuaEngine()
 
     lua_register(d_L, "GetPosition", &Lua_GetPosition);
     lua_register(d_L, "SetPosition", &Lua_SetPosition);
+    lua_register(d_L, "SetLookAt", &Lua_SetLookAt);
     lua_register(d_L, "RotateY", &Lua_RotateY);
     lua_register(d_L, "IsKeyDown", &Lua_IsKeyDown);
     lua_register(d_L, "IsButtonDown", &Lua_IsButtonDown);

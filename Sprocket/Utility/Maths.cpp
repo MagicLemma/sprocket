@@ -114,6 +114,13 @@ quat Normalise(const quat& q)
     return glm::normalize(q);
 }
 
+quat LookAtQuat(const vec3& position, const vec3& target, const vec3& up)
+{
+    mat4 lookAtMat = LookAt(position, target, up);
+    mat3 rotation = lookAtMat;
+    return ToQuat(glm::inverse(rotation));
+}
+
 vec3 Forwards(const quat& q)
 {
     return glm::normalize(q) * vec3(0, 0, -1);

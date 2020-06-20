@@ -41,6 +41,11 @@ function OnUpdate(dt)
 
     local pitch = GetPitch()
     pitch = pitch - 0.15 * dy
+    if pitch > 89 then
+        pitch = 89
+    elseif pitch < -89 then
+        pitch = -89
+    end
     SetPitch(pitch)
     
     SetPosition(x, y, z)

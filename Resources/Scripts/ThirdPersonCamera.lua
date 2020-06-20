@@ -12,14 +12,20 @@ MOVEMENT_SPEED = 10
 ROTATION_SPEED = 90
 TARGET = {0, 0, 0}
 
+X = 10
+Y = 10
+Z = 10
+
 HORIZ = 0
 
 function OnUpdate(dt)
-    local x, y, z = GetPosition()
-    local fx, fy, fz = GetForwardsDir() -- Position to Target unit vector
+    --local x, y, z = GetPosition()
+    --local fx, fy, fz = GetForwardsDir() -- Position to Target unit vector
+    --local rx, ry, rz = GetRightDir()
 
-    fy = 0
-    fx, fy, fz = Normalise(fx, fy, fz)
+    local speed = 10 * dt
+    --fy = 0
+    --fx, fy, fz = Normalise(fx, fy, fz)
 
     --local horizSpeed = ROTATION_SPEED * dt
     --local moveSpeed = MOVEMENT_SPEED * dt
@@ -27,26 +33,40 @@ function OnUpdate(dt)
     --local up = {0, 1, 0}
     --local rx, ry, rz = Cross(fx, fy, fz, 0, 1, 0)
 
-    --if IsKeyDown(KEYBOARD_W) then
-    --    TARGET[1] = TARGET[1] + speed * fx
-    --    TARGET[3] = TARGET[3] + speed * fz
-    --end
-    --if IsKeyDown(KEYBOARD_S) then
-    --    TARGET[1] = TARGET[1] - speed * fx
-    --    TARGET[3] = TARGET[3] - speed * fz
-    --end
-    --if IsKeyDown(KEYBOARD_D) then
-    --    TARGET[1] = TARGET[1] + speed * rx
-    --    TARGET[3] = TARGET[3] + speed * rz
-    --end
-    --if IsKeyDown(KEYBOARD_A) then
-    --    TARGET[1] = TARGET[1] - speed * rx
-    --    TARGET[3] = TARGET[3] - speed * rz
-    --end
+    if IsKeyDown(KEYBOARD_W) then
+        Z = Z + speed * -1
+    end
+    if IsKeyDown(KEYBOARD_S) then
+        Z = Z + speed * 1
+    end
+    if IsKeyDown(KEYBOARD_D) then
+        X = X + speed * 1
+    end
+    if IsKeyDown(KEYBOARD_A) then
+        X = X + speed * -1
+    end
 
+    SetLookAt(X, Y, Z, 0, 0, 0)
     --x = TARGET[1] - DISTANCE * fx
-    --y = TARGET[1] - DISTANCE * fy
-    --z = TARGET[1] - DISTANCE * fz
+    --y = TARGET[2] - DISTANCE * fy
+    --z = TARGET[3] - DISTANCE * fz
+
+    --f IsKeyDown(KEYBOARD_W) then
+    --   x = x + speed * fx
+    --   z = z + speed * fz
+    --nd
+    --f IsKeyDown(KEYBOARD_S) then
+    --   x = x - speed * fx
+    --   z = z - speed * fz
+    --nd
+    --f IsKeyDown(KEYBOARD_D) then
+    --   x = x + speed * rx
+    --   z = z + speed * rz
+    --nd
+    --f IsKeyDown(KEYBOARD_A) then
+    --   x = x - speed * rx
+    --   z = z - speed * rz
+    --nd
 
     --if IsKeyDown(KEYBOARD_E) then
     --    HORIZ = HORIZ - horizSpeed
@@ -61,8 +81,8 @@ function OnUpdate(dt)
     --local pitch = GetPitch()
     --pitch = pitch - 0.15 * dy
     --SetPitch(pitch)
-    print("Update 3pc");
-    SetPosition(x, y, z)
+
+    --SetPosition(x, y, z)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods)
