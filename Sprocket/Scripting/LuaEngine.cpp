@@ -2,6 +2,8 @@
 #include "Log.h"
 #include "Entity.h"
 
+#include <lua.hpp>
+
 namespace Sprocket {
 
 namespace {

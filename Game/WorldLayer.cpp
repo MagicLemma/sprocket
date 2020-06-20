@@ -43,7 +43,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         gun->Add<SelectComponent>();
 
         auto modelData = gun->Add<ModelComponent>();
-        modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
+        modelData->model = ModelManager::LoadModel("Resources/Models/Deagle.obj");
         
         d_entityManager.AddEntity(gun);
     }

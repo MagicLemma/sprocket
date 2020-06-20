@@ -4,9 +4,9 @@
 #include "MouseProxy.h"
 #include "MouseEvent.h"
 
-#include <lua.hpp>
-
 #include <string>
+
+class lua_State;
 
 namespace Sprocket {
 
