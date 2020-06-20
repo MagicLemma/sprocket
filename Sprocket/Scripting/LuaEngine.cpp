@@ -305,6 +305,30 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
+void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
+{
+    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+        return;
+    }
+
+    lua_getglobal(d_L, "OnMouseScrolledEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        SPKT_LOG_TRACE("[Lua]: OnMouseScrolledEvent not "
+                       "implemented for {}",
+                       GetEntity(d_L)->Name());
+    }
+    
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->XOffset());
+    lua_pushnumber(d_L, e->YOffset());
+
+    int rc = lua_pcall(d_L, 3, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
 void LuaEngine::SetEntity(const Entity& e)
 {
     lua_pushlightuserdata(d_L, (void*)&e);

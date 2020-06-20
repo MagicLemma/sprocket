@@ -24,6 +24,7 @@ public:
     
     void CallOnUpdateFunction(double dt);
     void CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e);
+    void CallOnMouseScrolledEvent(MouseScrolledEvent* e);
 
     void SetEntity(const Entity& e);
     void SetKeyboard(KeyboardProxy* k);

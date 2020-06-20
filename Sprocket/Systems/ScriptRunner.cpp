@@ -36,6 +36,11 @@ void ScriptRunner::OnEvent(Event& event)
             luaEngine.CallOnMouseButtonPressedEvent(e);
         }
     }
+    else if (auto e = event.As<MouseScrolledEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnMouseScrolledEvent(e);
+        }
+    }
 }
 
 void ScriptRunner::RegisterEntity(const Entity& entity)
