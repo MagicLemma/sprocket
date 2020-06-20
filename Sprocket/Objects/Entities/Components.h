@@ -3,9 +3,11 @@
 #include "Model3D.h"
 #include "Material.h"
 #include "Colliders.h"
+#include "Lens.h"
 
 #include <cstddef>
 #include <vector>
+#include <memory>
 
 namespace Sprocket {
 
@@ -30,7 +32,7 @@ struct ModelComponent : public Component
 {
     Model3D  model;
     Material material;
-    float    scale;  // Affects the size of the model.
+    float    scale = 1.0f;  // Affects the size of the model.
 };
 
 struct PhysicsComponent : public Component
@@ -70,8 +72,15 @@ struct SelectComponent : public Component
 
 struct ScriptComponent : public Component
 {
-    std::string script = "";
+    std::string script;
+    bool active = true;
 };
 
+struct CameraComponent : public Component
+{
+    std::shared_ptr<Lens> lens;
+    float pitch = 0.0f; // Relative to the entities orientation.
+        // TODO: Generalise this.
+};
 
 }

@@ -19,7 +19,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_lens(core.window->AspectRatio())
     , d_entityManager({&d_selector, &d_scriptRunner})
-    , d_camera(5.0f)
     , d_gameGrid(&d_entityManager, &d_modelManager)
     , d_shadowMapRenderer(core.window)
 {
@@ -39,33 +38,43 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto gun = std::make_shared<Entity>();
         gun->Name() = "Deagle";
-        gun->Position() = {10.0f, -1.5f, -3.0f};
-        gun->Orientation() = Maths::Rotate({1, 0, 0}, 180.0f);
+        gun->Position() = {10.0f, 1.5f, -3.0f};
         
         gun->Add<SelectComponent>();
 
         auto modelData = gun->Add<ModelComponent>();
-        modelData->scale = 1.0f;
         modelData->model = ModelManager::LoadModel("Resources/Models/Deagle.obj");
-        modelData->material.texture = Texture::White();
-
-        auto script = gun->Add<ScriptComponent>();
-        script->script = "Resources/Scripts/Test.lua";
         
         d_entityManager.AddEntity(gun);
     }
 
     {
+        auto camera = std::make_shared<Entity>();
+        camera->Name() = "Camera";
+        camera->Position() = {0, 5, 0};
+
+        auto c = camera->Add<CameraComponent>();
+        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
+        
+        auto s = camera->Add<ScriptComponent>();
+        s->script = "Resources/Scripts/ThirdPersonCamera.lua";
+
+        d_camera = camera.get();
+        d_entityManager.AddEntity(camera);
+    }
+
+    {
         auto terrain = std::make_shared<Entity>();
-        terrain->Add<SelectComponent>();
         terrain->Name() = "Terrain";
         terrain->Position() = {-25, 0, -25};
+
         auto modelData = terrain->Add<ModelComponent>();
         modelData->scale = 1.0f;
         modelData->model = MakeTerrain(51, 1.0f);
         modelData->material = GetTerrainMaterial();
-        //terrain->Position() = {0, 0, 0};
         
+        terrain->Add<SelectComponent>();
+
         d_entityManager.AddEntity(terrain);
     }
 }
@@ -80,8 +89,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_camera.OnEvent(event);
-    d_lens.OnEvent(event);
     d_entityManager.OnEvent(event);
     d_gameGrid.OnEvent(event);
 }
@@ -90,7 +97,7 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
 
-    d_gameGrid.OnUpdate(d_core.window, &d_camera, &d_lens);
+    d_gameGrid.OnUpdate(d_core.window, d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
 
@@ -111,12 +118,13 @@ void WorldLayer::OnUpdate(double dt)
         }
 
         Maths::Normalise(d_lights.sun.direction);
-        d_camera.OnUpdate(dt);
         d_entityManager.OnUpdate(dt);
     }
 
     // Create the Shadow Map
-    d_shadowMapRenderer.BeginScene(d_lights.sun, d_camera.Target());
+    float lambda = 5.0f; // TODO: Calculate the floor intersection point
+    Maths::vec3 target = d_camera->Position() + lambda * Maths::Forwards(d_camera->Orientation());
+    d_shadowMapRenderer.BeginScene(d_lights.sun, target);
     for (const auto& [id, entity] : d_entityManager.Entities()) {
         d_shadowMapRenderer.Draw(*entity);
     }
@@ -126,7 +134,8 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
+    //d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
+    d_entityRenderer.BeginScene(*d_camera, d_lights);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   

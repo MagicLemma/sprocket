@@ -35,7 +35,13 @@ void PlayerMovement::UpdateEntity(double dt, Entity& entity)
         
         player.yaw -= d_mouse.GetMouseOffset().x * sensitivity;
         player.pitch -= d_mouse.GetMouseOffset().y * sensitivity;
+
         Maths::Clamp(player.pitch, -89.0f, 89.0f);
+
+        if (entity.Has<CameraComponent>()) {
+            entity.Get<CameraComponent>().pitch -=d_mouse.GetMouseOffset().y * sensitivity;
+            Maths::Clamp(entity.Get<CameraComponent>().pitch, -89.0f, 89.0f);
+        }
     }
     else {
         player.movingForwards = false;
@@ -71,6 +77,7 @@ void PlayerMovement::OnEvent(Event& event)
 void PlayerMovement::Enable(bool newEnabled)
 {
     d_enabled = newEnabled;
+    d_keyboard.ConsumeAll(d_enabled);
 }
 
 }

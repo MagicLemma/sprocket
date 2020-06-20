@@ -49,7 +49,6 @@ add_library(Sprocket STATIC
             Graphics/Rendering/SkyboxRenderer.cpp
 
             Graphics/Shadows/ShadowMapRenderer.cpp
-            Graphics/Shadows/ShadowBox.cpp
             
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
@@ -78,16 +77,11 @@ add_library(Sprocket STATIC
             Objects/Entities/Components.cpp
             Objects/Entities/EntityManager.cpp
 
-            Objects/Cameras/Camera.cpp
-            Objects/Cameras/StaticCamera.cpp
-            Objects/Cameras/FirstPersonCamera.cpp
-            Objects/Cameras/PlayerBasedCamera.cpp
-            Objects/Cameras/ThirdPersonCamera.cpp
-
             Objects/Lenses/Lens.cpp
             Objects/Lenses/PerspectiveLens.cpp
             Objects/Lenses/OrthographicLens.cpp
 
+            Objects/CameraUtils.cpp
             Objects/Light.cpp
             Objects/Material.cpp
             Objects/Quad.cpp
@@ -115,7 +109,7 @@ add_library(Sprocket STATIC
             Utility/Stopwatch.cpp
             Utility/Tokenize.cpp
 
-            Scripting/Lua.cpp
+            Scripting/LuaEngine.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp)
 
@@ -145,7 +139,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics/PostProcessing
                            ./Objects
                            ./Objects/Entities
-                           ./Objects/Cameras
                            ./Objects/Lenses
                            ./Systems
                            ./Utility

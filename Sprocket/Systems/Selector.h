@@ -1,8 +1,8 @@
 #pragma once
 #include "EntitySystem.h"
 #include "Window.h"
-#include "Camera.h"
 #include "Lens.h"
+#include "Entity.h"
 #include "PhysicsEngine.h"
 #include "MouseProxy.h"
 
@@ -11,8 +11,7 @@ namespace Sprocket {
 class Selector : public EntitySystem
 {
     Window* d_window;
-    Camera* d_camera;
-    Lens* d_lens;
+    Entity* d_camera;
 
     PhysicsEngine* d_physicsEngine;
 
@@ -40,8 +39,6 @@ class Selector : public EntitySystem
 public:
     Selector(
         Window* window,
-        Camera* camera,
-        Lens* lens,
         PhysicsEngine* physicsEngine
     );
     ~Selector() {}
@@ -57,6 +54,8 @@ public:
     void SetSelected(Entity* entity);
         // Sets the current selected Entity. If called with a nullptr,
         // it will clear the currently selected Entity.
+
+    void SetCamera(Entity* camera) { d_camera = camera; }
 
     Entity* HoveredEntity() const { return d_hoveredEntity; }
     Entity* SelectedEntity() const { return d_selectedEntity; }

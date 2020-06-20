@@ -16,22 +16,17 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     // PLAYER MODE
-    Sprocket::PlayerBasedCamera d_playerCamera;
+    Sprocket::Entity* d_playerCamera;
+    Sprocket::Entity* d_observerCamera;
+    Sprocket::Entity* d_editorCamera;
 
-    // OBSERVER MODE
-    Sprocket::FirstPersonCamera d_observerCamera;
-
-    // EDITOR MODE
-    Sprocket::ThirdPersonCamera d_editorCamera;
+    Sprocket::Entity* d_activeCamera;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
     Sprocket::SkyboxRenderer  d_skyboxRenderer;
 
     Sprocket::PostProcessor   d_postProcessor;
-
-    Sprocket::Camera* d_camera;
-        // Pointer to the current camera based on the mode.
 
     Sprocket::PerspectiveLens d_lens;
         // Perspective Projection for all modes.
@@ -42,6 +37,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::PlayerMovement d_playerMovement;
     Sprocket::PhysicsEngine  d_physicsEngine;
     Sprocket::Selector       d_selector;
+    Sprocket::ScriptRunner   d_scriptRunner;
 
     // Additional world setup
     Sprocket::Skybox d_skybox;

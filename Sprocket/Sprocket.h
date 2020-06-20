@@ -40,7 +40,6 @@
 #include "Graphics/PostProcessing/Negative.h"
 
 #include "Graphics/Shadows/ShadowMapRenderer.h"
-#include "Graphics/Shadows/ShadowBox.h"
 
 #include "Graphics/Primitives/BufferLayout.h"
 #include "Graphics/Primitives/DepthBuffer.h"
@@ -57,6 +56,7 @@
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
 // OBJECTS
+#include "Objects/CameraUtils.h"
 #include "Objects/Material.h"
 #include "Objects/Quad.h"
 #include "Objects/Light.h"
@@ -66,12 +66,6 @@
 #include "Objects/Entities/Entity.h"
 #include "Objects/Entities/Components.h"
 #include "Objects/Entities/EntityManager.h"
-
-#include "Objects/Cameras/Camera.h"
-#include "Objects/Cameras/StaticCamera.h"
-#include "Objects/Cameras/FirstPersonCamera.h"
-#include "Objects/Cameras/PlayerBasedCamera.h"
-#include "Objects/Cameras/ThirdPersonCamera.h"
 
 #include "Objects/Lenses/Lens.h"
 #include "Objects/Lenses/PerspectiveLens.h"
@@ -105,7 +99,7 @@
 #include "Display/WidgetProperties/HorizontalConstraint.h"
 #include "Display/WidgetProperties/VerticalConstraint.h"
 
-#include "Scripting/Lua.h"
+#include "Scripting/LuaEngine.h"
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"

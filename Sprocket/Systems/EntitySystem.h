@@ -19,12 +19,6 @@ public:
     virtual void DeregisterEntity(const Entity& entity) {};
         // Register and deregister entities with this system.
 
-    virtual void OnComponentAttach(const Entity& entity,
-                                   const Component& component) {};
-    virtual void OnComponentDetach(const Entity& entity,
-                                   const Component& component) {};
-        // Called whenever a component is added or removed from an entity.
-
     virtual void OnEvent(Event& event) {};
         // Called with every event so systems can consume them.
 

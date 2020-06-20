@@ -1,5 +1,6 @@
 #include "EditorUI.h"
 #include "MouseEvent.h"
+#include "CameraUtils.h"
 
 #include <sstream>
 
@@ -190,8 +191,8 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.EndWindow();
 
-    mat4 view = d_worldLayer->d_camera.View();
-    mat4 proj = d_worldLayer->d_lens.Projection();
+    mat4 view = CameraUtils::MakeView(*d_worldLayer->d_camera);
+    mat4 proj = CameraUtils::MakeProj(*d_worldLayer->d_camera);
     if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
         SelectedEntityInfo(d_ui, *e, view, proj);
     }

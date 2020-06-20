@@ -1,5 +1,6 @@
 #include "SkyboxRenderer.h"
 #include "RenderContext.h"
+#include "CameraUtils.h"
 
 #include <glad/glad.h>
 
@@ -13,21 +14,21 @@ SkyboxRenderer::SkyboxRenderer(Window* window)
 }
 
 void SkyboxRenderer::Draw(const Skybox& skybox,
-                          const Camera& camera,
-                          const Lens& lens)
+                          const Entity& camera)
 {
+    Maths::mat4 view = CameraUtils::MakeView(camera);
+    Maths::mat4 proj = CameraUtils::MakeProj(camera);
+
     RenderContext rc;
     glDisable(GL_CULL_FACE);
     glDepthMask(true);
 
     d_shader.Bind();
-    Maths::mat4 projection = lens.Projection();
 
-    Maths::mat4 view = camera.View();
-    view = Maths::mat4(Maths::mat3(view));
+    Maths::mat4 view2 = Maths::mat4(Maths::mat3(view));
     
-    d_shader.LoadUniform("projectionMatrix", lens.Projection());
-    d_shader.LoadUniform("viewMatrix", view);
+    d_shader.LoadUniform("projectionMatrix", proj);
+    d_shader.LoadUniform("viewMatrix", view2);
 
     skybox.model.Bind();
     skybox.texture.Bind();

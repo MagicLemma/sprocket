@@ -9,7 +9,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Game/Debug/Game.exe",
+            "program": "${workspaceFolder}/build/Workshop/Debug/Workshop.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

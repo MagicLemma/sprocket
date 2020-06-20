@@ -14,6 +14,7 @@ class Entity
 {
     std::string       d_name;
     const std::size_t d_id;
+
     bool              d_alive;
 
     Maths::vec3 d_position;

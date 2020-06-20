@@ -56,8 +56,6 @@ void PlayerComponentInfo(Sprocket::DevUI::Context& ui,
         ui.Text("Moving Left: " + ToString(play.movingLeft));
         ui.Text("Moving Right: " + ToString(play.movingRight));
         ui.Text("Jumping: " + ToString(play.jumping));
-        ui.SliderFloat("Yaw", &play.yaw, -180.0f, 180.0f);
-        ui.SliderFloat("Pitch", &play.pitch, -89.0f, 89.0f);
         ui.EndTreeNode();
     }
 }
@@ -244,12 +242,12 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.EndWindow();
 
-    mat4 view = d_worldLayer->d_camera->View();
-    mat4 proj = d_worldLayer->d_lens.Projection();
-    if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
-        SelectedEntityInfo(d_ui, *e, view, proj);
-        d_worldLayer->d_physicsEngine.RefreshTransform(e);
-    }
+    //mat4 view = d_worldLayer->d_camera->View();
+    //mat4 proj = d_worldLayer->d_activeCamera.Get<CameraComponent>().lens.Projection();
+    //if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
+    //    SelectedEntityInfo(d_ui, *e, view, proj);
+    //    d_worldLayer->d_physicsEngine.RefreshTransform(e);
+    //}
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
 

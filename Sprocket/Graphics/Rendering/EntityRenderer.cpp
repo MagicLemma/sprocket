@@ -3,6 +3,7 @@
 #include "Components.h"
 #include "ModelManager.h"
 #include "RenderContext.h"
+#include "CameraUtils.h"
 
 #include <glad/glad.h>
 
@@ -77,16 +78,16 @@ void EntityRenderer::EnableShadows(
     d_shader.LoadUniform("u_light_proj_view", lightProjView);
 }
 
-void EntityRenderer::BeginScene(
-    const Camera& camera,
-    const Lens& lens,
-    const Lights& lights)
+void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
 {
+    Maths::mat4 view = CameraUtils::MakeView(camera);
+    Maths::mat4 proj = CameraUtils::MakeProj(camera);
+
     unsigned int MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
-    d_shader.LoadUniform("u_proj_matrix", lens.Projection());
-    d_shader.LoadUniform("u_view_matrix", camera.View());
+    d_shader.LoadUniform("u_proj_matrix", proj);
+    d_shader.LoadUniform("u_view_matrix", view);
 
     // Load sun to shader
     d_shader.LoadUniform("u_sun_direction", lights.sun.direction);

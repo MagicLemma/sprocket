@@ -42,6 +42,13 @@ quat Rotate(const quat& quaternion, const vec3& axis, float radians);
 quat Inverse(const quat& quaternion);
 quat Normalise(const quat& q);
 
+quat LookAtQuat(const vec3& position, const vec3& target, const vec3& up = {0, 1, 0});
+
+// Given an orientation, find the directions of Forwards, Right and Up.
+vec3 Forwards(const quat& q);
+vec3 Right(const quat& q);
+vec3 Up(const quat& q);
+
 // Vector Modifiers
 vec3 Rotate(const vec3& vector, const vec3& axis, float radians);
 

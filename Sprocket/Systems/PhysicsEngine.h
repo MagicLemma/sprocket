@@ -50,9 +50,6 @@ public:
     void RegisterEntity(const Entity& entity) override;
     void DeregisterEntity(const Entity& entity) override;
 
-    void OnComponentAttach(const Entity& entity, const Component& component) override;
-    void OnComponentDetach(const Entity& entity, const Component& component) override; 
-
     void Running(bool isRunning);
     bool Running() const { return d_running; }
 
