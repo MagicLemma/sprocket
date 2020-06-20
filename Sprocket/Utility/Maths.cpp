@@ -118,7 +118,7 @@ quat LookAtQuat(const vec3& position, const vec3& target, const vec3& up)
 {
     mat4 lookAtMat = LookAt(position, target, up);
     mat3 rotation = lookAtMat;
-    return ToQuat(glm::inverse(rotation));
+    return glm::conjugate(ToQuat(rotation));
 }
 
 vec3 Forwards(const quat& q)
