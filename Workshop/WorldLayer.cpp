@@ -327,7 +327,11 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
     if (auto e = event.As<WindowResizeEvent>()) {
         d_postProcessor.SetScreenSize(e->Width(), e->Height());
-        d_playerCamera->Get<CameraComponent>().projection = Maths::Perspective(e->AspectRatio(), 70, 0.1f, 1000.0f);
+
+        // We only do the player camera here as the observer and editor
+        // projection matrices are updated via scripts.
+        d_playerCamera->Get<CameraComponent>().projection =
+            Maths::Perspective(e->AspectRatio(), 70, 0.1f, 1000.0f);
         SPKT_LOG_INFO("Resizing!");
     }
 
