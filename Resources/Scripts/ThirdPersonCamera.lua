@@ -94,6 +94,6 @@ end
 
 function OnWindowResizeEvent(consumed, width, height)
     ASPECT_RATIO = width / height
-    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
+    --SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
     return false
 end

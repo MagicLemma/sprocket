@@ -77,10 +77,6 @@ add_library(Sprocket STATIC
             Objects/Entities/Components.cpp
             Objects/Entities/EntityManager.cpp
 
-            Objects/Lenses/Lens.cpp
-            Objects/Lenses/PerspectiveLens.cpp
-            Objects/Lenses/OrthographicLens.cpp
-
             Objects/CameraUtils.cpp
             Objects/Light.cpp
             Objects/Material.cpp

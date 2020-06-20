@@ -28,9 +28,6 @@ class WorldLayer : public Sprocket::Layer
 
     Sprocket::PostProcessor   d_postProcessor;
 
-    Sprocket::PerspectiveLens d_lens;
-        // Perspective Projection for all modes.
-
     // WORLD
     // Entity management and systems
     Sprocket::EntityManager  d_entityManager;

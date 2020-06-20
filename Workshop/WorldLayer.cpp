@@ -6,7 +6,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityRenderer(core.window)
     , d_skyboxRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_lens(core.window->AspectRatio())
     , d_skybox({
         Sprocket::ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         Sprocket::CubeMap({
@@ -331,7 +330,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         SPKT_LOG_INFO("Resizing!");
     }
 
-    d_lens.OnEvent(event);
     d_entityManager.OnEvent(event);
 }
 
