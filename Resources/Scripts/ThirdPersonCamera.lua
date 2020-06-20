@@ -11,20 +11,29 @@ function Clamp(value, low, high)
     return math.min(high, math.max(value, low))
 end
 
-DISTANCE = 5
-MOVEMENT_SPEED = 10
-ROTATION_SPEED = 90
+function Init()
+    DISTANCE = 8
+    MOVEMENT_SPEED = 10
+    ROTATION_SPEED = 90
 
-ABS_VERT = nil
-ABS_VERT_LOW = 2
-ABS_VERT_HIGH = 10
+    ABS_VERT = nil
+    ABS_VERT_LOW = 2
+    ABS_VERT_HIGH = 10
 
--- Target
-X = 0
-Y = 0
-Z = 0
+    -- Target
+    X = 0
+    Y = 0
+    Z = 0
 
-HORIZ = 0 -- Parametrized yaw
+    HORIZ = 0 -- Parametrized yaw
+
+    -- Projection matrix setup
+    ASPECT_RATIO = 16 / 9
+    FOV = 70
+    NEAR_PLANE = 0.1
+    FAR_PLANE = 1000
+    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
+end
 
 function OnUpdate(dt)
     local x, y, z = GetPosition()
@@ -94,4 +103,10 @@ function OnMouseScrolledEvent(consumed, xOffset, yOffset)
 
     ABS_VERT = Clamp(ABS_VERT - yOffset, ABS_VERT_LOW, ABS_VERT_HIGH)
     return true
+end
+
+function OnWindowResizeEvent(consumed, width, height)
+    ASPECT_RATIO = width / height
+    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
+    return false
 end

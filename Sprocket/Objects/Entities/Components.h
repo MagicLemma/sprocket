@@ -3,7 +3,6 @@
 #include "Model3D.h"
 #include "Material.h"
 #include "Colliders.h"
-#include "Lens.h"
 
 #include <cstddef>
 #include <vector>
@@ -78,8 +77,8 @@ struct ScriptComponent : public Component
 
 struct CameraComponent : public Component
 {
-    std::shared_ptr<Lens> lens;
-    float pitch = 0.0f; // Relative to the entities orientation.
+    Maths::mat4 projection;
+    float       pitch = 0.0f; // Relative to the entities orientation.
         // TODO: Generalise this.
 };
 

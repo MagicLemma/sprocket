@@ -16,13 +16,16 @@ void PrintErrors(lua_State* L, int rc)
 {
     Entity* e = GetEntity(L);
     if (rc == LUA_ERRRUN) {
-        SPKT_LOG_ERROR("[Lua]: Runtime error for {}", e->Name());
+        std::string err = lua_tostring(L, -1);
+        SPKT_LOG_ERROR("[Lua]: Runtime error for {}: {}", e->Name(), err);
     }
     else if (rc == LUA_ERRMEM) {
-        SPKT_LOG_ERROR("[Lua]: Memory allocation error for {}", e->Name());
+        std::string err = lua_tostring(L, -1);
+        SPKT_LOG_ERROR("[Lua]: Memory allocation error for {}: {}", e->Name(), err);
     }
     else if (rc == LUA_ERRERR) {
-        SPKT_LOG_ERROR("[Lua]: Error handler func failed for {}", e->Name());
+        std::string err = lua_tostring(L, -1);
+        SPKT_LOG_ERROR("[Lua]: Error handler func failed for {}: {}", e->Name(), err);
     }
 }
 
@@ -71,6 +74,22 @@ void LuaEngine::RunScript(const std::string& filename)
     luaL_dofile(d_L, filename.c_str());
 }
 
+void LuaEngine::CallInitFunction()
+{
+    SPKT_LOG_INFO("Calling init!");
+
+    lua_getglobal(d_L, "Init");
+    
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        SPKT_LOG_TRACE("[Lua]: Init not implemented for {}",
+                       GetEntity(d_L)->Name());
+        return;
+    }
+
+    lua_pcall(d_L, 0, 0, 0);
+}
+
 void LuaEngine::CallOnUpdateFunction(double dt)
 {
     if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
@@ -80,12 +99,40 @@ void LuaEngine::CallOnUpdateFunction(double dt)
     lua_getglobal(d_L, "OnUpdate");
     
     if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
         SPKT_LOG_TRACE("[Lua]: OnUpdate not implemented for {}",
                        GetEntity(d_L)->Name());
+        return;
     }
 
     lua_pushnumber(d_L, dt);
     lua_pcall(d_L, 1, 0, 0);
+}
+
+void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
+{
+    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+        return;
+    }
+
+    lua_getglobal(d_L, "OnWindowResizeEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        SPKT_LOG_TRACE("[Lua]: OnWindowResizeEvent not "
+                       "implemented for {}",
+                       GetEntity(d_L)->Name());
+        return;
+    }
+
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, (float)e->Width());
+    lua_pushnumber(d_L, (float)e->Height());
+
+    int rc = lua_pcall(d_L, 3, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
 void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
@@ -97,6 +144,7 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
     lua_getglobal(d_L, "OnMouseButtonPressedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
         SPKT_LOG_TRACE("[Lua]: OnMouseButtonPressedEvent not "
                        "implemented for {}",
                        GetEntity(d_L)->Name());

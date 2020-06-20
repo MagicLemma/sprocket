@@ -54,8 +54,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         camera->Position() = {0, 5, 0};
 
         auto c = camera->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
-        
+      
         auto s = camera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/ThirdPersonCamera.lua";
 

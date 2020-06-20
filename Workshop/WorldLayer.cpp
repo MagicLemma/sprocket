@@ -241,7 +241,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         player->Add<PlayerComponent>();
 
         auto c = player->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
+        c->projection = Maths::Perspective(core.window->AspectRatio(), 70, 0.1f, 1000.0f);
 
         player->Add<SelectComponent>();
 
@@ -254,8 +254,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         observerCamera->Name() = "Observer Camera";
 
         auto c = observerCamera->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
-
+  
         auto s = observerCamera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/FirstPersonCamera.lua";
 
@@ -269,7 +268,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         editorCamera->Position() = {10.0f, 2.0f, 0.0f};
 
         auto c = editorCamera->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
 
         auto s = editorCamera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/ThirdPersonCamera.lua";

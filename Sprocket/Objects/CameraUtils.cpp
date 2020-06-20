@@ -22,7 +22,7 @@ Maths::mat4 MakeProj(const Entity& entity)
         return Maths::mat4(1.0);
     }
 
-    return entity.Get<CameraComponent>().lens->Projection();
+    return entity.Get<CameraComponent>().projection;
 }
 
 }
