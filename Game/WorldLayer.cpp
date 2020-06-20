@@ -19,7 +19,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_lens(core.window->AspectRatio())
     , d_entityManager({&d_selector, &d_scriptRunner})
-    , d_camera(5.0f)
     , d_gameGrid(&d_entityManager, &d_modelManager)
     , d_shadowMapRenderer(core.window)
 {
@@ -46,10 +45,22 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto modelData = gun->Add<ModelComponent>();
         modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
         
-        auto c = gun->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
-        d_cameraEntity = gun.get();
         d_entityManager.AddEntity(gun);
+    }
+
+    {
+        auto camera = std::make_shared<Entity>();
+        camera->Name() = "Camera";
+        camera->Position() = {0, 5, 0};
+
+        auto c = camera->Add<CameraComponent>();
+        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
+    
+        auto s = camera->Add<ScriptComponent>();
+        s->script = "Resources/Scripts/ThirdPersonCamera.lua";
+
+        d_camera = camera.get();
+        d_entityManager.AddEntity(camera);
     }
 
     {
@@ -102,7 +113,7 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
 
-    d_gameGrid.OnUpdate(d_core.window, &d_camera, &d_lens);
+    d_gameGrid.OnUpdate(d_core.window, d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
 
@@ -123,12 +134,13 @@ void WorldLayer::OnUpdate(double dt)
         }
 
         Maths::Normalise(d_lights.sun.direction);
-        d_camera.OnUpdate(dt);
         d_entityManager.OnUpdate(dt);
     }
 
     // Create the Shadow Map
-    d_shadowMapRenderer.BeginScene(d_lights.sun, d_camera.Target());
+    float lambda = 5.0f; // TODO: Calculate the floor intersection point
+    Maths::vec3 target = d_camera->Position() + lambda * Maths::Forwards(d_camera->Orientation());
+    d_shadowMapRenderer.BeginScene(d_lights.sun, target);
     for (const auto& [id, entity] : d_entityManager.Entities()) {
         d_shadowMapRenderer.Draw(*entity);
     }
@@ -139,7 +151,7 @@ void WorldLayer::OnUpdate(double dt)
     }
 
     //d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
-    d_entityRenderer.BeginScene(*d_cameraEntity, d_lights);
+    d_entityRenderer.BeginScene(*d_camera, d_lights);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   

@@ -78,24 +78,16 @@ void EntityRenderer::EnableShadows(
     d_shader.LoadUniform("u_light_proj_view", lightProjView);
 }
 
-void EntityRenderer::BeginScene(
-    const Camera& camera,
-    const Lens& lens,
-    const Lights& lights)
+void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
 {
-    return BeginScene(camera.View(), lens.Projection(), lights);   
-}
+    Maths::mat4 view = CameraUtils::MakeView(camera);
+    Maths::mat4 proj = CameraUtils::MakeProj(camera);
 
-void EntityRenderer::BeginScene(
-    const Maths::mat4& viewMx,
-    const Maths::mat4& projMx,
-    const Lights& lights)
-{
     unsigned int MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
-    d_shader.LoadUniform("u_proj_matrix", projMx);
-    d_shader.LoadUniform("u_view_matrix", viewMx);
+    d_shader.LoadUniform("u_proj_matrix", proj);
+    d_shader.LoadUniform("u_view_matrix", view);
 
     // Load sun to shader
     d_shader.LoadUniform("u_sun_direction", lights.sun.direction);
@@ -120,14 +112,6 @@ void EntityRenderer::BeginScene(
 		}
 	}
     d_shader.Unbind();
-}
-
-void EntityRenderer::BeginScene(const Entity& camera, const Lights& light)
-{
-    return BeginScene(
-        CameraUtils::MakeView(camera),
-        CameraUtils::MakeProj(camera),
-        light);
 }
 
 void EntityRenderer::Draw(const Entity& entity)

@@ -77,9 +77,6 @@ add_library(Sprocket STATIC
             Objects/Entities/Components.cpp
             Objects/Entities/EntityManager.cpp
 
-            Objects/Cameras/Camera.cpp
-            Objects/Cameras/ThirdPersonCamera.cpp
-
             Objects/Lenses/Lens.cpp
             Objects/Lenses/PerspectiveLens.cpp
             Objects/Lenses/OrthographicLens.cpp
@@ -142,7 +139,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics/PostProcessing
                            ./Objects
                            ./Objects/Entities
-                           ./Objects/Cameras
                            ./Objects/Lenses
                            ./Systems
                            ./Utility

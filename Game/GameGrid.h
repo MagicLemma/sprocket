@@ -32,8 +32,7 @@ public:
              Sprocket::ModelManager*  modelManager);
 
     void OnUpdate(Sprocket::Window* window,
-                  Sprocket::Camera* camera,
-                  Sprocket::Lens* lens);
+                  Sprocket::Entity* camera);
 
     void OnEvent(Sprocket::Event& event);
 };

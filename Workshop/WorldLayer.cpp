@@ -21,7 +21,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_playerCamera(nullptr)
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
     , d_playerMovement()
-    , d_selector(core.window, /*&d_editorCamera, &d_lens,*/ &d_physicsEngine)
+    , d_selector(core.window, &d_physicsEngine)
     , d_entityManager({
         &d_playerMovement,
         &d_physicsEngine,
@@ -276,6 +276,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         s->active = false;
 
         d_editorCamera = editorCamera.get();
+        d_selector.SetCamera(d_editorCamera);
         entityManager.AddEntity(editorCamera);
     }
 

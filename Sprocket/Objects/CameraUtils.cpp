@@ -21,7 +21,7 @@ Maths::mat4 MakeProj(const Entity& entity)
     if (!entity.Has<CameraComponent>()) {
         return Maths::mat4(1.0);
     }
-    
+
     return entity.Get<CameraComponent>().lens->Projection();
 }
 

@@ -1,4 +1,5 @@
 #include "GameGrid.h"
+#include "CameraUtils.h"
 
 #include <random>
 
@@ -44,7 +45,7 @@ std::size_t GameGrid::Key(int x, int z)
     return (std::size_t(x) << 32) | (unsigned int )z;
 }
 
-void GameGrid::OnUpdate(Window* window, Camera* camera, Lens* lens)
+void GameGrid::OnUpdate(Window* window, Entity* camera)
 {
     d_mouse.OnUpdate();
     Maths::vec3 cameraPos = camera->Position();
@@ -52,8 +53,8 @@ void GameGrid::OnUpdate(Window* window, Camera* camera, Lens* lens)
         d_mouse.GetMousePos(),
         window->Width(),
         window->Height(),
-        camera->View(),
-        lens->Projection()
+        CameraUtils::MakeView(*camera),
+        CameraUtils::MakeProj(*camera)
     );
 
     float lambda = -cameraPos.y / direction.y;
