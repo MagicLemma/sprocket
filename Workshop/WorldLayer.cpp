@@ -319,6 +319,16 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
+
+    if (d_mode == Mode::EDITOR) {
+        d_activeCamera = d_editorCamera;
+    }
+    else if (d_mode == Mode::OBSERVER) {
+        d_activeCamera = d_observerCamera;
+    }
+    else {
+        d_activeCamera = d_playerCamera;
+    }
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -342,15 +352,7 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    if (d_mode == Mode::OBSERVER) {
-        d_entityRenderer.BeginScene(*d_observerCamera, d_lights);
-    }
-    else if (d_mode == Mode::PLAYER) {
-        d_entityRenderer.BeginScene(*d_playerCamera, d_lights);
-    }
-    else {
-        d_entityRenderer.BeginScene(*d_editorCamera, d_lights);
-    }
+    d_entityRenderer.BeginScene(*d_activeCamera, d_lights);
 
     if (!d_paused) {
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
@@ -372,16 +374,7 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    if (d_mode == Mode::OBSERVER) {
-        d_skyboxRenderer.Draw(d_skybox, *d_observerCamera);
-    }
-    else if (d_mode == Mode::PLAYER) {
-        d_skyboxRenderer.Draw(d_skybox, *d_playerCamera);
-    }
-    else {
-        d_skyboxRenderer.Draw(d_skybox, *d_editorCamera);
-    }
-    
+    d_skyboxRenderer.Draw(d_skybox, *d_activeCamera);
     d_entityManager.Draw(&d_entityRenderer);
     
     if (d_paused) {
