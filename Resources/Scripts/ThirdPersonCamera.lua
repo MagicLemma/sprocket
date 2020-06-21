@@ -23,19 +23,19 @@ function Init()
 end
 
 function OnUpdate(dt)
-    local x, y, z = Lua_GetPosition()
+    local pos = GetPosition()
 
     if ABS_VERT == nil then
-        ABS_VERT = y
+        ABS_VERT = pos.y
     end
 
     local horizSpeed = ROTATION_SPEED * dt
     local moveSpeed = MOVEMENT_SPEED * dt
 
     -- forwards vector
-    local fx = X - x
-    local fy = Y - y
-    local fz = Z - z
+    local fx = X - pos.x
+    local fy = Y - pos.y
+    local fz = Z - pos.z
 
     -- get horizonal component
     fy = 0
@@ -68,15 +68,15 @@ function OnUpdate(dt)
         HORIZ = HORIZ + horizSpeed
     end
 
-    x = X + DISTANCE * math.cos(math.rad(HORIZ))
-    z = Z + DISTANCE * math.sin(math.rad(HORIZ))
+    pos.x = X + DISTANCE * math.cos(math.rad(HORIZ))
+    pos.z = Z + DISTANCE * math.sin(math.rad(HORIZ))
 
-    if y ~= ABS_VERT then
-        local distance = ABS_VERT - y
-        y = y + distance * 0.1
+    if pos.y ~= ABS_VERT then
+        local distance = ABS_VERT - pos.y
+        pos.y = pos.y + distance * 0.1
     end
 
-    Lua_SetLookAt(x, y, z, X, Y, Z)
+    Lua_SetLookAt(pos.x, pos.y, pos.z, X, Y, Z)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
