@@ -55,3 +55,37 @@ end
 function Clamp(value, low, high)
     return math.min(high, math.max(value, low))
 end
+
+Vec3 = {}
+Vec3_mt = { __index = Vec3 }
+
+function Vec3:new(x, y, z)
+    return setmetatable({x=x, y=y, z=z}, Vec3_mt)
+end
+
+function Vec3:mag()
+    return math.sqrt(self:dot(self))
+end
+
+function Vec3:dot(other)
+    return self.x * other.x + self.y * other.y + self.z * other.z
+end
+
+function SpktGetPosition()
+    local x, y, z = GetPosition()
+    return Vec3:new(x, y, z)
+end
+
+function SpktGetForwardsDir()
+    local x, y, z = GetForwardsDir()
+    return Vec3:new(x, y, z)
+end
+
+function SpktGetRightDir()
+    local x, y, z = GetRightDir()
+    return Vec3:new(x, y, z)
+end
+
+function SpktSetPosition(vec)
+    SetPosition(vec.x, vec.y, vec.z)
+end

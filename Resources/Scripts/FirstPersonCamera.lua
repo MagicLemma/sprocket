@@ -7,51 +7,46 @@ function Init()
 end
 
 function OnUpdate(dt)
-    local x, y, z = GetPosition()
+    local pos = SpktGetPosition()
 
-    local fx, fy, fz = GetForwardsDir()
-    fx, fz = Normalise2(fx, fz)
+    local f = SpktGetForwardsDir()
+    f.x, f.z = Normalise2(f.x, f.z)
 
     local speed = 10 * dt
 
-    local rx, ry, rz = GetRightDir()
+    local r = SpktGetRightDir()
 
     if IsKeyDown(KEYBOARD_W) then
-        x = x + speed * fx
-        z = z + speed * fz
+        pos.x = pos.x + speed * f.x
+        pos.z = pos.z + speed * f.z
     end
     if IsKeyDown(KEYBOARD_S) then
-        x = x - speed * fx
-        z = z - speed * fz
+        pos.x = pos.x - speed * f.x
+        pos.z = pos.z - speed * f.z
     end
     if IsKeyDown(KEYBOARD_D) then
-        x = x + speed * rx
-        z = z + speed * rz
+        pos.x = pos.x + speed * r.x
+        pos.z = pos.z + speed * r.z
     end
     if IsKeyDown(KEYBOARD_A) then
-        x = x - speed * rx
-        z = z - speed * rz
+        pos.x = pos.x - speed * r.x
+        pos.z = pos.z - speed * r.z
     end
     if IsKeyDown(KEYBOARD_SPACE) then
-        y = y + speed
+        pos.y = pos.y + speed
     end
     if IsKeyDown(KEYBOARD_LSHIFT) then
-        y = y - speed
+        pos.y = pos.y - speed
     end
 
     local dx, dy = GetMouseOffset()
     RotateY(-10 * dx)
 
     local pitch = GetPitch()
-    pitch = pitch - 0.15 * dy
-    if pitch > 89 then
-        pitch = 89
-    elseif pitch < -89 then
-        pitch = -89
-    end
+    pitch = Clamp(pitch - 0.15 * dy, -89, 89)
     SetPitch(pitch)
     
-    SetPosition(x, y, z)
+    SpktSetPosition(pos)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
