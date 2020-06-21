@@ -42,7 +42,7 @@ function OnUpdate(dt)
     fx, fy, fz = Normalise3(fx, fy, fz)
 
     -- right vector
-    local rx, ry, rz = Cross(fx, fy, fz, 0, 1, 0)
+    local r = Cross({fx, fy, fz}, {0, 1, 0})
 
     if IsKeyDown(KEYBOARD_W) then
         X = X + moveSpeed * fx
@@ -53,12 +53,12 @@ function OnUpdate(dt)
         Z = Z - moveSpeed * fz
     end
     if IsKeyDown(KEYBOARD_D) then
-        X = X + moveSpeed * rx
-        Z = Z + moveSpeed * rz
+        X = X + moveSpeed * r.x
+        Z = Z + moveSpeed * r.z
     end
     if IsKeyDown(KEYBOARD_A) then
-        X = X - moveSpeed * rx
-        Z = Z - moveSpeed * rz
+        X = X - moveSpeed * r.x
+        Z = Z - moveSpeed * r.z
     end
 
     if IsKeyDown(KEYBOARD_E) then

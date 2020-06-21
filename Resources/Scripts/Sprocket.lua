@@ -44,8 +44,12 @@ function Normalise3(x, y, z)
     return x/size, y/size, z/size
 end
 
-function Cross(a1, a2, a3, b1, b2, b3)
-    return a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1
+function Cross(a, b)
+    return {
+        x = a[2]*b[3] - a[3]*b[2],
+        y = a[3]*b[1] - a[1]*b[3],
+        z = a[1]*b[2] - a[2]*b[1]
+    }
 end
 
 function Clamp(value, low, high)
