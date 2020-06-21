@@ -6,7 +6,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityRenderer(core.window)
     , d_skyboxRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_lens(core.window->AspectRatio())
     , d_skybox({
         Sprocket::ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         Sprocket::CubeMap({
@@ -241,7 +240,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         player->Add<PlayerComponent>();
 
         auto c = player->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
+        c->projection = Maths::Perspective(core.window->AspectRatio(), 70, 0.1f, 1000.0f);
 
         player->Add<SelectComponent>();
 
@@ -254,8 +253,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         observerCamera->Name() = "Observer Camera";
 
         auto c = observerCamera->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
-
+  
         auto s = observerCamera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/FirstPersonCamera.lua";
 
@@ -269,7 +267,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         editorCamera->Position() = {10.0f, 2.0f, 0.0f};
 
         auto c = editorCamera->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
 
         auto s = editorCamera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/ThirdPersonCamera.lua";
@@ -322,6 +319,16 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
+
+    if (d_mode == Mode::EDITOR) {
+        d_activeCamera = d_editorCamera;
+    }
+    else if (d_mode == Mode::OBSERVER) {
+        d_activeCamera = d_observerCamera;
+    }
+    else {
+        d_activeCamera = d_playerCamera;
+    }
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -329,11 +336,14 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     using namespace Sprocket;
 
     if (auto e = event.As<WindowResizeEvent>()) {
-        d_postProcessor.SetScreenSize(e->Width(), e->Height()); 
-        SPKT_LOG_INFO("Resizing!");
+        d_postProcessor.SetScreenSize(e->Width(), e->Height());
+
+        // We only do the player camera here as the observer and editor
+        // projection matrices are updated via scripts.
+        d_playerCamera->Get<CameraComponent>().projection =
+            Maths::Perspective(e->AspectRatio(), 70, 0.1f, 1000.0f);
     }
 
-    d_lens.OnEvent(event);
     d_entityManager.OnEvent(event);
 }
 
@@ -341,15 +351,7 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    if (d_mode == Mode::OBSERVER) {
-        d_entityRenderer.BeginScene(*d_observerCamera, d_lights);
-    }
-    else if (d_mode == Mode::PLAYER) {
-        d_entityRenderer.BeginScene(*d_playerCamera, d_lights);
-    }
-    else {
-        d_entityRenderer.BeginScene(*d_editorCamera, d_lights);
-    }
+    d_entityRenderer.BeginScene(*d_activeCamera, d_lights);
 
     if (!d_paused) {
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
@@ -371,16 +373,7 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    if (d_mode == Mode::OBSERVER) {
-        d_skyboxRenderer.Draw(d_skybox, *d_observerCamera);
-    }
-    else if (d_mode == Mode::PLAYER) {
-        d_skyboxRenderer.Draw(d_skybox, *d_playerCamera);
-    }
-    else {
-        d_skyboxRenderer.Draw(d_skybox, *d_editorCamera);
-    }
-    
+    d_skyboxRenderer.Draw(d_skybox, *d_activeCamera);
     d_entityManager.Draw(&d_entityRenderer);
     
     if (d_paused) {

@@ -17,7 +17,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_lens(core.window->AspectRatio())
     , d_entityManager({&d_selector, &d_scriptRunner})
     , d_gameGrid(&d_entityManager, &d_modelManager)
     , d_shadowMapRenderer(core.window)
@@ -54,8 +53,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         camera->Position() = {0, 5, 0};
 
         auto c = camera->Add<CameraComponent>();
-        c->lens = std::make_shared<PerspectiveLens>(core.window->AspectRatio());
-        
+      
         auto s = camera->Add<ScriptComponent>();
         s->script = "Resources/Scripts/ThirdPersonCamera.lua";
 

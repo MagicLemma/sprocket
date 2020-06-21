@@ -1,7 +1,6 @@
 #pragma once
 #include "EntitySystem.h"
 #include "Window.h"
-#include "Lens.h"
 #include "Entity.h"
 #include "PhysicsEngine.h"
 #include "MouseProxy.h"

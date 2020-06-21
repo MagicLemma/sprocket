@@ -41,6 +41,11 @@ void ScriptRunner::OnEvent(Event& event)
             luaEngine.CallOnMouseScrolledEvent(e);
         }
     }
+    else if (auto e = event.As<WindowResizeEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnWindowResizeEvent(e);
+        }
+    }
 }
 
 void ScriptRunner::RegisterEntity(const Entity& entity)
@@ -51,6 +56,7 @@ void ScriptRunner::RegisterEntity(const Entity& entity)
     luaEngine.SetMouse(&d_mouse);
     luaEngine.SetEntity(entity);
     luaEngine.RunScript(entity.Get<ScriptComponent>().script);
+    luaEngine.CallInitFunction();
 }
 
 void ScriptRunner::DeregisterEntity(const Entity& entity)

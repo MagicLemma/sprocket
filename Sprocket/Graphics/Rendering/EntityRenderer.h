@@ -2,7 +2,6 @@
 #include "Window.h"
 #include "Entity.h"
 #include "Light.h"
-#include "Lens.h"
 #include "Shader.h"
 #include "Texture.h"
 

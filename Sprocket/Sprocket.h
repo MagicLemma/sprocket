@@ -67,10 +67,6 @@
 #include "Objects/Entities/Components.h"
 #include "Objects/Entities/EntityManager.h"
 
-#include "Objects/Lenses/Lens.h"
-#include "Objects/Lenses/PerspectiveLens.h"
-#include "Objects/Lenses/OrthographicLens.h"
-
 // SYSTEMS
 #include "Systems/EntitySystem.h"
 #include "Systems/PhysicsEngine.h"

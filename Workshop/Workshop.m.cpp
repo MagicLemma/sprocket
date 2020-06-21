@@ -6,7 +6,7 @@
 int main()
 {
     Sprocket::Log::Init();
-    Sprocket::Window window("Game!");
+    Sprocket::Window window("Workshop");
     Sprocket::SceneManager sceneManager;
     Sprocket::ModelManager modelManager;
 

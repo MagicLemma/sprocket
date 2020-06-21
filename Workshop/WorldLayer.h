@@ -4,12 +4,7 @@
 #include <memory>
 #include <random>
 
-enum class Mode
-{
-    PLAYER,
-    OBSERVER,
-    EDITOR
-};
+enum class Mode { PLAYER, OBSERVER, EDITOR };
 
 class WorldLayer : public Sprocket::Layer
 {
@@ -27,9 +22,6 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::SkyboxRenderer  d_skyboxRenderer;
 
     Sprocket::PostProcessor   d_postProcessor;
-
-    Sprocket::PerspectiveLens d_lens;
-        // Perspective Projection for all modes.
 
     // WORLD
     // Entity management and systems

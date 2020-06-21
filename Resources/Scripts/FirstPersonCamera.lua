@@ -1,13 +1,16 @@
-function Normalise(x, y)
-    local size = math.sqrt(x * x + y * y)
-    return x/size, y/size
+function Init()
+    ASPECT_RATIO = 16 / 9
+    FOV = 70
+    NEAR_PLANE = 0.1
+    FAR_PLANE = 1000
+    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
 end
 
 function OnUpdate(dt)
     local x, y, z = GetPosition()
 
     local fx, fy, fz = GetForwardsDir()
-    fx, fz = Normalise(fx, fz)
+    fx, fz = Normalise2(fx, fz)
 
     local speed = 10 * dt
 
@@ -54,3 +57,9 @@ end
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
 
 function OnMouseScrolledEvent(consumed, xOffset, yOffset) end
+
+function OnWindowResizeEvent(consumed, width, height)
+    ASPECT_RATIO = width / height
+    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
+    return false
+end
