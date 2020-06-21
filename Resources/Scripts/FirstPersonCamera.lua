@@ -10,27 +10,25 @@ function OnUpdate(dt)
     local pos = SpktGetPosition()
 
     local f = SpktGetForwardsDir()
-    f.x, f.z = Normalise2(f.x, f.z)
+    
+    f.y = 0
+    f = f:Normalised()
 
     local speed = 10 * dt
 
     local r = SpktGetRightDir()
 
     if IsKeyDown(KEYBOARD_W) then
-        pos.x = pos.x + speed * f.x
-        pos.z = pos.z + speed * f.z
+        pos = pos + speed * f
     end
     if IsKeyDown(KEYBOARD_S) then
-        pos.x = pos.x - speed * f.x
-        pos.z = pos.z - speed * f.z
+        pos = pos - speed * f
     end
     if IsKeyDown(KEYBOARD_D) then
-        pos.x = pos.x + speed * r.x
-        pos.z = pos.z + speed * r.z
+        pos = pos + speed * r
     end
     if IsKeyDown(KEYBOARD_A) then
-        pos.x = pos.x - speed * r.x
-        pos.z = pos.z - speed * r.z
+        pos = pos - speed * r
     end
     if IsKeyDown(KEYBOARD_SPACE) then
         pos.y = pos.y + speed

@@ -34,6 +34,9 @@ KEYBOARD_END = 269
 KEYBOARD_INSERT = 260
 KEYBOARD_DEL = 26
 
+local Sprocket = {}
+Sprocket.__index = Sprocket
+
 function Normalise2(x, y)
     local size = math.sqrt(x * x + y * y)
     return x/size, y/size
@@ -56,34 +59,57 @@ function Clamp(value, low, high)
     return math.min(high, math.max(value, low))
 end
 
-Vec3 = {}
-Vec3_mt = { __index = Vec3 }
+local Vec3 = {}
+Vec3.__index = Vec3
 
-function Vec3:new(x, y, z)
-    return setmetatable({x=x, y=y, z=z}, Vec3_mt)
+function Vec3:New(x, y, z)
+    return setmetatable({x=x, y=y, z=z}, Vec3)
 end
 
-function Vec3:mag()
-    return math.sqrt(self:dot(self))
+function Vec3:Mag()
+    return math.sqrt(self:Dot(self))
 end
 
-function Vec3:dot(other)
-    return self.x * other.x + self.y * other.y + self.z * other.z
+function Vec3:Dot(other)
+    return self.x ^ 2 + self.y ^ 2 + self.z ^ 2
 end
 
 function SpktGetPosition()
     local x, y, z = GetPosition()
-    return Vec3:new(x, y, z)
+    return Vec3:New(x, y, z)
+end
+
+function Vec3.__add(a, b)
+    return Vec3:New(a.x + b.x, a.y + b.y, a.z + b.z)
+end
+
+function Vec3.__sub(a, b)
+    return Vec3:New(a.x - b.x, a.y - b.y, a.z - b.z)
+end
+
+function Vec3.__mul(a, b)
+    if type(a) == 'number' then
+        return Vec3:New(a * b.x, a * b.y, a * b.z)
+    elseif type(b) == 'number' then
+        return Vec3:New(a.x * b, a.y * b, a.z * b)
+    else
+        return Vec3:New(a.x * b.x, a.y * b.y, a.z * b.z)
+    end
+end
+
+function Vec3:Normalised()
+    local mag = self:Mag()
+    return Vec3:New(self.x / mag, self.y / mag, self.z / mag)
 end
 
 function SpktGetForwardsDir()
     local x, y, z = GetForwardsDir()
-    return Vec3:new(x, y, z)
+    return Vec3:New(x, y, z)
 end
 
 function SpktGetRightDir()
     local x, y, z = GetRightDir()
-    return Vec3:new(x, y, z)
+    return Vec3:New(x, y, z)
 end
 
 function SpktSetPosition(vec)
