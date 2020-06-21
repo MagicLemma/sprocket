@@ -10,7 +10,6 @@ function OnUpdate(dt)
     local pos = GetPosition()
 
     local f = GetForwardsDir()
-    
     f.y = 0
     f = f:Normalised()
 
@@ -38,7 +37,7 @@ function OnUpdate(dt)
     end
 
     local dx, dy = GetMouseOffset()
-    Lua_RotateY(-10 * dx)
+    RotateY(-10 * dx)
 
     local pitch = GetPitch()
     pitch = Clamp(pitch - 0.15 * dy, -89, 89)

@@ -34,24 +34,6 @@ KEYBOARD_END = 269
 KEYBOARD_INSERT = 260
 KEYBOARD_DEL = 26
 
-function Normalise2(x, y)
-    local size = math.sqrt(x * x + y * y)
-    return x/size, y/size
-end
-
-function Normalise3(x, y, z)
-    local size = math.sqrt(x * x + y * y + z * z)
-    return x/size, y/size, z/size
-end
-
-function Cross(a, b)
-    return {
-        x = a[2]*b[3] - a[3]*b[2],
-        y = a[3]*b[1] - a[1]*b[3],
-        z = a[1]*b[2] - a[2]*b[1]
-    }
-end
-
 function Clamp(value, low, high)
     return math.min(high, math.max(value, low))
 end
@@ -69,6 +51,14 @@ end
 
 function Vec3:Dot(other)
     return self.x ^ 2 + self.y ^ 2 + self.z ^ 2
+end
+
+function Vec3:Cross(other)
+    return Vec3:New(
+        self.y * other.z - self.z * other.y,
+        self.z * other.x - self.x * other.z,
+        self.x * other.y - self.y * other.x
+    )
 end
 
 function Vec3.__add(a, b)
@@ -111,4 +101,8 @@ end
 
 function SetPosition(vec)
     Lua_SetPosition(vec.x, vec.y, vec.z)
+end
+
+function SetLookAt(pos, target)
+    Lua_SetLookAt(pos.x, pos.y, pos.z, target.x, target.y, target.z)
 end

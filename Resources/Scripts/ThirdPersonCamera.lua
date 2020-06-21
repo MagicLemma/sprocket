@@ -29,32 +29,26 @@ function OnUpdate(dt)
     local moveSpeed = MOVEMENT_SPEED * dt
 
     -- forwards vector
-    local fx = TARGET.x - pos.x
-    local fy = TARGET.y - pos.y
-    local fz = TARGET.z - pos.z
+    local f = TARGET - pos
 
-    -- get horizonal component
-    fy = 0
-    fx, fy, fz = Normalise3(fx, fy, fz)
+    f.y = 0
+    f = f:Normalised()
 
     -- right vector
-    local r = Cross({fx, fy, fz}, {0, 1, 0})
+    local up = Vec3:New(0, 1, 0)
+    local r = f:Cross(up)
 
     if IsKeyDown(KEYBOARD_W) then
-        TARGET.x = TARGET.x + moveSpeed * fx
-        TARGET.z = TARGET.z + moveSpeed * fz
+        TARGET = TARGET + moveSpeed * f
     end
     if IsKeyDown(KEYBOARD_S) then
-        TARGET.x = TARGET.x - moveSpeed * fx
-        TARGET.z = TARGET.z - moveSpeed * fz
+        TARGET = TARGET - moveSpeed * f
     end
     if IsKeyDown(KEYBOARD_D) then
-        TARGET.x = TARGET.x + moveSpeed * r.x
-        TARGET.z = TARGET.z + moveSpeed * r.z
+        TARGET = TARGET + moveSpeed * r
     end
     if IsKeyDown(KEYBOARD_A) then
-        TARGET.x = TARGET.x - moveSpeed * r.x
-        TARGET.z = TARGET.z - moveSpeed * r.z
+        TARGET = TARGET - moveSpeed * r
     end
 
     if IsKeyDown(KEYBOARD_E) then
@@ -69,10 +63,10 @@ function OnUpdate(dt)
 
     if pos.y ~= ABS_VERT then
         local distance = ABS_VERT - pos.y
-        pos.y = pos.y + distance * 0.1
+        pos.y = pos.y + distance * 0.01
     end
 
-    Lua_SetLookAt(pos.x, pos.y, pos.z, TARGET.x, TARGET.y, TARGET.z)
+    SetLookAt(pos, TARGET)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
@@ -90,6 +84,6 @@ end
 
 function OnWindowResizeEvent(consumed, width, height)
     ASPECT_RATIO = width / height
-    --SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
+    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
     return false
 end
