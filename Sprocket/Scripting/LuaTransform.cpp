@@ -8,12 +8,12 @@ namespace Sprocket {
 
 void RegisterTransformFunctions(lua_State* L)
 {
-    lua_register(L, "GetPosition", &Lua::GetPosition);
-    lua_register(L, "SetPosition", &Lua::SetPosition);
-    lua_register(L, "SetLookAt", &Lua::SetLookAt);
-    lua_register(L, "RotateY", &Lua::RotateY);
-    lua_register(L, "GetForwardsDir", &Lua::GetForwardsDir);
-    lua_register(L, "GetRightDir", &Lua::GetRightDir);
+    lua_register(L, "Lua_GetPosition", &Lua::GetPosition);
+    lua_register(L, "Lua_SetPosition", &Lua::SetPosition);
+    lua_register(L, "Lua_SetLookAt", &Lua::SetLookAt);
+    lua_register(L, "Lua_RotateY", &Lua::RotateY);
+    lua_register(L, "Lua_GetForwardsDir", &Lua::GetForwardsDir);
+    lua_register(L, "Lua_GetRightDir", &Lua::GetRightDir);
 }
 
 namespace Lua {

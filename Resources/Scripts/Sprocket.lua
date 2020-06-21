@@ -74,11 +74,6 @@ function Vec3:Dot(other)
     return self.x ^ 2 + self.y ^ 2 + self.z ^ 2
 end
 
-function SpktGetPosition()
-    local x, y, z = GetPosition()
-    return Vec3:New(x, y, z)
-end
-
 function Vec3.__add(a, b)
     return Vec3:New(a.x + b.x, a.y + b.y, a.z + b.z)
 end
@@ -102,16 +97,21 @@ function Vec3:Normalised()
     return Vec3:New(self.x / mag, self.y / mag, self.z / mag)
 end
 
-function SpktGetForwardsDir()
-    local x, y, z = GetForwardsDir()
+function GetPosition()
+    local x, y, z = Lua_GetPosition()
     return Vec3:New(x, y, z)
 end
 
-function SpktGetRightDir()
-    local x, y, z = GetRightDir()
+function GetForwardsDir()
+    local x, y, z = Lua_GetForwardsDir()
     return Vec3:New(x, y, z)
 end
 
-function SpktSetPosition(vec)
-    SetPosition(vec.x, vec.y, vec.z)
+function GetRightDir()
+    local x, y, z = Lua_GetRightDir()
+    return Vec3:New(x, y, z)
+end
+
+function SetPosition(vec)
+    Lua_SetPosition(vec.x, vec.y, vec.z)
 end

@@ -7,16 +7,16 @@ function Init()
 end
 
 function OnUpdate(dt)
-    local pos = SpktGetPosition()
+    local pos = GetPosition()
 
-    local f = SpktGetForwardsDir()
+    local f = GetForwardsDir()
     
     f.y = 0
     f = f:Normalised()
 
     local speed = 10 * dt
 
-    local r = SpktGetRightDir()
+    local r = GetRightDir()
 
     if IsKeyDown(KEYBOARD_W) then
         pos = pos + speed * f
@@ -38,13 +38,13 @@ function OnUpdate(dt)
     end
 
     local dx, dy = GetMouseOffset()
-    RotateY(-10 * dx)
+    Lua_RotateY(-10 * dx)
 
     local pitch = GetPitch()
     pitch = Clamp(pitch - 0.15 * dy, -89, 89)
     SetPitch(pitch)
     
-    SpktSetPosition(pos)
+    SetPosition(pos)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end

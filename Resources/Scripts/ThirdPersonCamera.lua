@@ -23,7 +23,7 @@ function Init()
 end
 
 function OnUpdate(dt)
-    local x, y, z = GetPosition()
+    local x, y, z = Lua_GetPosition()
 
     if ABS_VERT == nil then
         ABS_VERT = y
@@ -76,7 +76,7 @@ function OnUpdate(dt)
         y = y + distance * 0.1
     end
 
-    SetLookAt(x, y, z, X, Y, Z)
+    Lua_SetLookAt(x, y, z, X, Y, Z)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
