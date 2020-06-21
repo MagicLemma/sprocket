@@ -342,7 +342,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         // projection matrices are updated via scripts.
         d_playerCamera->Get<CameraComponent>().projection =
             Maths::Perspective(e->AspectRatio(), 70, 0.1f, 1000.0f);
-        SPKT_LOG_INFO("Resizing!");
     }
 
     d_entityManager.OnEvent(event);
