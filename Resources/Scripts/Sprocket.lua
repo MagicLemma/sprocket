@@ -34,9 +34,6 @@ KEYBOARD_END = 269
 KEYBOARD_INSERT = 260
 KEYBOARD_DEL = 26
 
-local Sprocket = {}
-Sprocket.__index = Sprocket
-
 function Normalise2(x, y)
     local size = math.sqrt(x * x + y * y)
     return x/size, y/size
@@ -59,7 +56,7 @@ function Clamp(value, low, high)
     return math.min(high, math.max(value, low))
 end
 
-local Vec3 = {}
+Vec3 = {}
 Vec3.__index = Vec3
 
 function Vec3:New(x, y, z)

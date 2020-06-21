@@ -8,9 +8,7 @@ function Init()
     ABS_VERT_HIGH = 10
 
     -- Target
-    X = 0
-    Y = 0
-    Z = 0
+    TARGET = Vec3:New(0, 0, 0)
 
     HORIZ = 0 -- Parametrized yaw
 
@@ -25,17 +23,15 @@ end
 function OnUpdate(dt)
     local pos = GetPosition()
 
-    if ABS_VERT == nil then
-        ABS_VERT = pos.y
-    end
+    if ABS_VERT == nil then ABS_VERT = pos.y end
 
     local horizSpeed = ROTATION_SPEED * dt
     local moveSpeed = MOVEMENT_SPEED * dt
 
     -- forwards vector
-    local fx = X - pos.x
-    local fy = Y - pos.y
-    local fz = Z - pos.z
+    local fx = TARGET.x - pos.x
+    local fy = TARGET.y - pos.y
+    local fz = TARGET.z - pos.z
 
     -- get horizonal component
     fy = 0
@@ -45,20 +41,20 @@ function OnUpdate(dt)
     local r = Cross({fx, fy, fz}, {0, 1, 0})
 
     if IsKeyDown(KEYBOARD_W) then
-        X = X + moveSpeed * fx
-        Z = Z + moveSpeed * fz
+        TARGET.x = TARGET.x + moveSpeed * fx
+        TARGET.z = TARGET.z + moveSpeed * fz
     end
     if IsKeyDown(KEYBOARD_S) then
-        X = X - moveSpeed * fx
-        Z = Z - moveSpeed * fz
+        TARGET.x = TARGET.x - moveSpeed * fx
+        TARGET.z = TARGET.z - moveSpeed * fz
     end
     if IsKeyDown(KEYBOARD_D) then
-        X = X + moveSpeed * r.x
-        Z = Z + moveSpeed * r.z
+        TARGET.x = TARGET.x + moveSpeed * r.x
+        TARGET.z = TARGET.z + moveSpeed * r.z
     end
     if IsKeyDown(KEYBOARD_A) then
-        X = X - moveSpeed * r.x
-        Z = Z - moveSpeed * r.z
+        TARGET.x = TARGET.x - moveSpeed * r.x
+        TARGET.z = TARGET.z - moveSpeed * r.z
     end
 
     if IsKeyDown(KEYBOARD_E) then
@@ -68,15 +64,15 @@ function OnUpdate(dt)
         HORIZ = HORIZ + horizSpeed
     end
 
-    pos.x = X + DISTANCE * math.cos(math.rad(HORIZ))
-    pos.z = Z + DISTANCE * math.sin(math.rad(HORIZ))
+    pos.x = TARGET.x + DISTANCE * math.cos(math.rad(HORIZ))
+    pos.z = TARGET.z + DISTANCE * math.sin(math.rad(HORIZ))
 
     if pos.y ~= ABS_VERT then
         local distance = ABS_VERT - pos.y
         pos.y = pos.y + distance * 0.1
     end
 
-    Lua_SetLookAt(pos.x, pos.y, pos.z, X, Y, Z)
+    Lua_SetLookAt(pos.x, pos.y, pos.z, TARGET.x, TARGET.y, TARGET.z)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
