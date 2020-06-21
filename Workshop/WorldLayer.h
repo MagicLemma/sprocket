@@ -4,12 +4,7 @@
 #include <memory>
 #include <random>
 
-enum class Mode
-{
-    PLAYER,
-    OBSERVER,
-    EDITOR
-};
+enum class Mode { PLAYER, OBSERVER, EDITOR };
 
 class WorldLayer : public Sprocket::Layer
 {
