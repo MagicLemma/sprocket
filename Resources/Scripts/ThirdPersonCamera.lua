@@ -8,7 +8,7 @@ function Init()
     ABS_VERT_HIGH = 10
 
     -- Target
-    TARGET = Vec3:New(0, 0, 0)
+    TARGET = Vec3(0, 0, 0)
 
     HORIZ = 0 -- Parametrized yaw
 
@@ -32,11 +32,11 @@ function OnUpdate(dt)
     local f = TARGET - pos
 
     f.y = 0
-    f = f:Normalised()
+    f = Normalised(f)
 
     -- right vector
-    local up = Vec3:New(0, 1, 0)
-    local r = f:Cross(up)
+    local up = Vec3(0, 1, 0)
+    local r = Cross(f, up)
 
     if IsKeyDown(KEYBOARD_W) then
         TARGET = TARGET + moveSpeed * f

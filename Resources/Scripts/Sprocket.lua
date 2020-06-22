@@ -38,65 +38,67 @@ function Clamp(value, low, high)
     return math.min(high, math.max(value, low))
 end
 
-Vec3 = {}
-Vec3.__index = Vec3
+local Vec3_meta = {}
 
-function Vec3:New(x, y, z)
-    return setmetatable({x=x, y=y, z=z}, Vec3)
+Vec3_meta.__index = Vec3_meta
+
+Vec3_meta.__add = function(a, b)
+    return Vec3(a.x + b.x, a.y + b.y, a.z + b.z)
 end
 
-function Vec3:Mag()
-    return math.sqrt(self:Dot(self))
+Vec3_meta.__sub = function(a, b)
+    return Vec3(a.x - b.x, a.y - b.y, a.z - b.z)
 end
 
-function Vec3:Dot(other)
-    return self.x ^ 2 + self.y ^ 2 + self.z ^ 2
-end
-
-function Vec3:Cross(other)
-    return Vec3:New(
-        self.y * other.z - self.z * other.y,
-        self.z * other.x - self.x * other.z,
-        self.x * other.y - self.y * other.x
-    )
-end
-
-function Vec3.__add(a, b)
-    return Vec3:New(a.x + b.x, a.y + b.y, a.z + b.z)
-end
-
-function Vec3.__sub(a, b)
-    return Vec3:New(a.x - b.x, a.y - b.y, a.z - b.z)
-end
-
-function Vec3.__mul(a, b)
+Vec3_meta.__mul = function(a, b)
     if type(a) == 'number' then
-        return Vec3:New(a * b.x, a * b.y, a * b.z)
+        return Vec3(a * b.x, a * b.y, a * b.z)
     elseif type(b) == 'number' then
-        return Vec3:New(a.x * b, a.y * b, a.z * b)
+        return Vec3(a.x * b, a.y * b, a.z * b)
     else
-        return Vec3:New(a.x * b.x, a.y * b.y, a.z * b.z)
+        return Vec3(a.x * b.x, a.y * b.y, a.z * b.z)
     end
 end
 
-function Vec3:Normalised()
-    local mag = self:Mag()
-    return Vec3:New(self.x / mag, self.y / mag, self.z / mag)
+function Vec3(x, y, z)
+    return setmetatable({x=x, y=y, z=z}, Vec3_meta)
+end
+
+
+function Mag(vector)
+    return math.sqrt(Dot(vector, vector))
+end
+
+function Dot(a, b)
+    return a.x * b.x + a.y * b.y + a.z * b.z
+end
+
+function Cross(a, b)
+    return Vec3(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    )
+end
+
+function Normalised(vector)
+    local mag = Mag(vector)
+    return Vec3(vector.x / mag, vector.y / mag, vector.z / mag)
 end
 
 function GetPosition()
     local x, y, z = Lua_GetPosition()
-    return Vec3:New(x, y, z)
+    return Vec3(x, y, z)
 end
 
 function GetForwardsDir()
     local x, y, z = Lua_GetForwardsDir()
-    return Vec3:New(x, y, z)
+    return Vec3(x, y, z)
 end
 
 function GetRightDir()
     local x, y, z = Lua_GetRightDir()
-    return Vec3:New(x, y, z)
+    return Vec3(x, y, z)
 end
 
 function SetPosition(vec)

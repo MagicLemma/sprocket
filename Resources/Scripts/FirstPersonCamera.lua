@@ -11,7 +11,7 @@ function OnUpdate(dt)
 
     local f = GetForwardsDir()
     f.y = 0
-    f = f:Normalised()
+    f = Normalised(f)
 
     local speed = 10 * dt
 
