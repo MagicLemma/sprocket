@@ -1,7 +1,5 @@
 local Vec3_meta = {}
 
-Vec3_meta.__index = Vec3_meta
-
 Vec3_meta.__add = function(a, b)
     return Vec3(a.x + b.x, a.y + b.y, a.z + b.z)
 end
