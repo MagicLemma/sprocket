@@ -7,7 +7,7 @@ namespace Sprocket {
 
 KeyboardProxy* GetKeyboard(lua_State* L)
 {
-    lua_getglobal(L, "Keyboard");
+    lua_getglobal(L, "__keyboard__");
     KeyboardProxy* k = nullptr;
     if (!lua_isnil(L, -1)) {
         k = (KeyboardProxy*)lua_touserdata(L, -1);
@@ -18,7 +18,7 @@ KeyboardProxy* GetKeyboard(lua_State* L)
 
 MouseProxy* GetMouse(lua_State* L)
 {
-    lua_getglobal(L, "Mouse");
+    lua_getglobal(L, "__mouse__");
     MouseProxy* m = nullptr;
     if (!lua_isnil(L, -1)) {
         m = (MouseProxy*)lua_touserdata(L, -1);
@@ -29,7 +29,7 @@ MouseProxy* GetMouse(lua_State* L)
 
 Entity* GetEntity(lua_State* L)
 {
-    lua_getglobal(L, "Entity");
+    lua_getglobal(L, "__entity__");
     Entity* e = (Entity*)lua_touserdata(L, -1);
     lua_pop(L, 1);
     return e;

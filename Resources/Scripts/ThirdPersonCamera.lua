@@ -8,9 +8,7 @@ function Init()
     ABS_VERT_HIGH = 10
 
     -- Target
-    X = 0
-    Y = 0
-    Z = 0
+    TARGET = Vec3(0, 0, 0)
 
     HORIZ = 0 -- Parametrized yaw
 
@@ -23,42 +21,34 @@ function Init()
 end
 
 function OnUpdate(dt)
-    local x, y, z = GetPosition()
+    local pos = GetPosition()
 
-    if ABS_VERT == nil then
-        ABS_VERT = y
-    end
+    if ABS_VERT == nil then ABS_VERT = pos.y end
 
     local horizSpeed = ROTATION_SPEED * dt
     local moveSpeed = MOVEMENT_SPEED * dt
 
     -- forwards vector
-    local fx = X - x
-    local fy = Y - y
-    local fz = Z - z
+    local f = TARGET - pos
 
-    -- get horizonal component
-    fy = 0
-    fx, fy, fz = Normalise3(fx, fy, fz)
+    f.y = 0
+    f = Normalised(f)
 
     -- right vector
-    local rx, ry, rz = Cross(fx, fy, fz, 0, 1, 0)
+    local up = Vec3(0, 1, 0)
+    local r = Cross(f, up)
 
     if IsKeyDown(KEYBOARD_W) then
-        X = X + moveSpeed * fx
-        Z = Z + moveSpeed * fz
+        TARGET = TARGET + moveSpeed * f
     end
     if IsKeyDown(KEYBOARD_S) then
-        X = X - moveSpeed * fx
-        Z = Z - moveSpeed * fz
+        TARGET = TARGET - moveSpeed * f
     end
     if IsKeyDown(KEYBOARD_D) then
-        X = X + moveSpeed * rx
-        Z = Z + moveSpeed * rz
+        TARGET = TARGET + moveSpeed * r
     end
     if IsKeyDown(KEYBOARD_A) then
-        X = X - moveSpeed * rx
-        Z = Z - moveSpeed * rz
+        TARGET = TARGET - moveSpeed * r
     end
 
     if IsKeyDown(KEYBOARD_E) then
@@ -68,15 +58,15 @@ function OnUpdate(dt)
         HORIZ = HORIZ + horizSpeed
     end
 
-    x = X + DISTANCE * math.cos(math.rad(HORIZ))
-    z = Z + DISTANCE * math.sin(math.rad(HORIZ))
+    pos.x = TARGET.x + DISTANCE * math.cos(math.rad(HORIZ))
+    pos.z = TARGET.z + DISTANCE * math.sin(math.rad(HORIZ))
 
-    if y ~= ABS_VERT then
-        local distance = ABS_VERT - y
-        y = y + distance * 0.1
+    if pos.y ~= ABS_VERT then
+        local distance = ABS_VERT - pos.y
+        pos.y = pos.y + distance * 0.01
     end
 
-    SetLookAt(x, y, z, X, Y, Z)
+    SetLookAt(pos, TARGET)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
@@ -94,6 +84,6 @@ end
 
 function OnWindowResizeEvent(consumed, width, height)
     ASPECT_RATIO = width / height
-    --SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
+    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
     return false
 end

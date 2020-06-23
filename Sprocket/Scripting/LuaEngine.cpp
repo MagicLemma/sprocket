@@ -46,6 +46,7 @@ LuaEngine::LuaEngine()
     luaL_openlibs(d_L);
 
     // Core Sprocket Constants and Helper Functions
+    luaL_dofile(d_L, "Resources/Scripts/Vec3.lua");
     luaL_dofile(d_L, "Resources/Scripts/Sprocket.lua");
 
     RegisterTransformFunctions(d_L);
@@ -55,13 +56,13 @@ LuaEngine::LuaEngine()
     RegisterCameraFunctions(d_L);
 
     lua_pushnil(d_L);
-    lua_setglobal(d_L, "Keyboard");
+    lua_setglobal(d_L, "__keyboard__");
 
     lua_pushnil(d_L);
-    lua_setglobal(d_L, "Mouse");
+    lua_setglobal(d_L, "__mouse__");
 
     lua_pushnil(d_L);
-    lua_setglobal(d_L, "Entity");
+    lua_setglobal(d_L, "__entity__");
 }
 
 LuaEngine::~LuaEngine()
@@ -188,19 +189,19 @@ void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
 void LuaEngine::SetEntity(const Entity& e)
 {
     lua_pushlightuserdata(d_L, (void*)&e);
-    lua_setglobal(d_L, "Entity");
+    lua_setglobal(d_L, "__entity__");
 }
 
 void LuaEngine::SetKeyboard(KeyboardProxy* k)
 {
     lua_pushlightuserdata(d_L, (void*)k);
-    lua_setglobal(d_L, "Keyboard");
+    lua_setglobal(d_L, "__keyboard__");
 }
 
 void LuaEngine::SetMouse(MouseProxy* m)
 {
     lua_pushlightuserdata(d_L, (void*)m);
-    lua_setglobal(d_L, "Mouse");
+    lua_setglobal(d_L, "__mouse__");
 }
 
 }
