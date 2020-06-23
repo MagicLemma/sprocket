@@ -96,7 +96,7 @@ void main()
     proj_coords = 0.5 * proj_coords + 0.5;
     float current_depth = proj_coords.z;
     float d = dot(p_surface_normal, -u_sun_direction);
-    float bias = max(0.025 * (1.0 - d), 0.005);
+    float bias = max(0.005 * (1.0 - d), 0.001);
     //bias = 0.01;
     
     float shadow = 0;
