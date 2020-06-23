@@ -80,7 +80,7 @@ void GameGrid::OnEvent(Event& event)
         if (e->Button() == Mouse::LEFT && it == d_gridEntities.end()) {                
             SPKT_LOG_INFO("Grid square empty!");
             auto newEntity = std::make_shared<Entity>();
-            newEntity->Name() = "New Cube";
+            newEntity->Name() = "Tree";
             newEntity->Orientation() = Maths::Rotate({0, 1, 0}, d(gen));
             auto modelData = newEntity->Add<ModelComponent>();
             modelData->model = d_modelManager->GetModel("GG_Cube");
@@ -88,6 +88,7 @@ void GameGrid::OnEvent(Event& event)
             modelData->material.shineDamper = 10.0f;
             modelData->material.reflectivity = 0.0f;
             modelData->scale = 0.5f;
+            newEntity->Add<SelectComponent>();
             d_entityManager->AddEntity(newEntity);
             AddEntity(newEntity.get(), d_x, d_z);
             e->Consume();
