@@ -140,7 +140,7 @@ void EntityRenderer::DrawModel(const Entity& entity)
     bool outline = ShouldOutlineEntity(entity);
     glStencilMask(outline ? 0xFF : 0x00);
 
-    auto modelComp = entity.Get<ModelComponent>();
+    auto& modelComp = entity.Get<ModelComponent>();
     Maths::mat4 transform = entity.Transform();
     transform = Maths::Scale(transform, modelComp.scale);
 

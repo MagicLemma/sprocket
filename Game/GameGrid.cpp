@@ -35,7 +35,7 @@ GameGrid::GameGrid(EntityManager* entityManager,
     model->scale = 0.5f;
     d_entityManager->AddEntity(d_highlightSquare);
 
-    d_modelManager->LoadModel("GG_Cube", "Resources/DuoCube/Tree.obj");
+    d_modelManager->LoadModel("GG_Cube", "Resources/Models/BetterTree.obj");
 
     d_keyboard.ConsumeAll(false);
 }
@@ -70,7 +70,10 @@ void GameGrid::OnEvent(Event& event)
     if (event.IsConsumed()) { return; }
 
     static std::uniform_real_distribution d(0.0f, 360.0f);
+    static std::uniform_real_distribution ef(1.0f, 1.3f);
     static std::mt19937 gen;
+
+    static auto tex = Texture("Resources/Textures/BetterTree.png", false);
 
     d_mouse.OnEvent(event);
     d_keyboard.OnEvent(event);
@@ -84,10 +87,10 @@ void GameGrid::OnEvent(Event& event)
             newEntity->Orientation() = Maths::Rotate({0, 1, 0}, d(gen));
             auto modelData = newEntity->Add<ModelComponent>();
             modelData->model = d_modelManager->GetModel("GG_Cube");
-            modelData->material.texture = Texture("Resources/DuoCube/Tree.png", false);
+            modelData->scale = ef(gen);
+            modelData->material.texture = tex;
             modelData->material.shineDamper = 10.0f;
             modelData->material.reflectivity = 0.0f;
-            modelData->scale = 0.5f;
             newEntity->Add<SelectComponent>();
             d_entityManager->AddEntity(newEntity);
             AddEntity(newEntity.get(), d_x, d_z);
