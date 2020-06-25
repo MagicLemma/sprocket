@@ -4,6 +4,8 @@
 #include "EscapeMenu.h"
 #include "Palette.h"
 
+#include <SFML/Audio.hpp>
+
 int main()
 {
     using namespace Sprocket;
@@ -29,6 +31,15 @@ int main()
     sceneManager.SetActiveScene("World");
  
     Stopwatch watch;
+
+    sf::SoundBuffer buffer;
+    if (!buffer.loadFromFile("Resources/Audio/Sample.wav")) {
+        SPKT_LOG_ERROR("Failed to load file");
+    }
+
+    sf::Sound sound;
+    sound.setBuffer(buffer);
+    sound.play();
 
     while (window.Running()) {
         window.Clear();
