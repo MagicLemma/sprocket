@@ -104,7 +104,6 @@ void GameGrid::OnEvent(Event& event)
             static sf::Sound sound;
             sf::Vector3f v(d_x, 0, d_z);
             
-            sf::Listener::setPosition(0, 0, 0);
             sound.setPosition(v);
             sound.setMinDistance(5.f);
             sound.setAttenuation(10.f);

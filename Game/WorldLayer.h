@@ -37,6 +37,9 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::MouseProxy d_mouse;
 
     GameGrid d_gameGrid;
+
+    // AUDIO
+    Sprocket::Listener d_listener;
     
     // LAYER DATA
     bool d_paused = false;

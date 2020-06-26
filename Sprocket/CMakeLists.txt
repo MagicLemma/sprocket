@@ -32,6 +32,8 @@ add_library(Sprocket STATIC
             Core/Layer.cpp
             Core/Scene.cpp
 
+            Audio/Listener.cpp
+
             UI/DevUI.cpp
             UI/SimpleUI.cpp
 
@@ -132,6 +134,7 @@ target_link_libraries(Sprocket PUBLIC
 
 target_include_directories(Sprocket PUBLIC
                            .
+                           ./Audio
                            ./Core
                            ./DevGUI
                            ./Display
