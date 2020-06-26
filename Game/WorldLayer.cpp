@@ -99,7 +99,7 @@ void WorldLayer::OnUpdate(double dt)
     d_gameGrid.OnUpdate(d_core.window, d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
-    d_listener.OnUpdate(dt);
+    d_listener.OnUpdate();
 
     if (!d_paused) {
         float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;

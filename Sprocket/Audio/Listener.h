@@ -11,7 +11,7 @@ class Listener
 public:
     Listener(Entity* camera = nullptr);
 
-    void OnUpdate(double dt);
+    void OnUpdate();
 
     void SetCamera(Entity* camera) { d_camera = camera; }
 };

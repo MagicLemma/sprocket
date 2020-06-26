@@ -9,7 +9,7 @@ Listener::Listener(Entity* camera)
 {   
 }
 
-void Listener::OnUpdate(double dt)
+void Listener::OnUpdate()
 {
     if (d_camera == nullptr) {
         return;
