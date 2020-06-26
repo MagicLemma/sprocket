@@ -17,6 +17,10 @@ find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
+
+find_package(SFML CONFIG REQUIRED system audio)
+include_directories(${SFML_INCLUDE_DIR})
+
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
@@ -122,6 +126,8 @@ target_link_libraries(Sprocket PUBLIC
                       reactphysics3d
                       assimp::assimp
                       imgui::imgui
+                      sfml-system
+                      sfml-audio
                       ${LUA_LIBRARIES})
 
 target_include_directories(Sprocket PUBLIC

@@ -32,14 +32,14 @@ int main()
  
     Stopwatch watch;
 
-    sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile("Resources/Audio/Sample.wav")) {
-        SPKT_LOG_ERROR("Failed to load file");
-    }
-
-    sf::Sound sound;
-    sound.setBuffer(buffer);
-    sound.play();
+    //sf::SoundBuffer buffer;
+    //if (!buffer.loadFromFile("Resources/Audio/Sample.wav")) {
+    //    SPKT_LOG_ERROR("Failed to load file");
+    //}
+//
+    //sf::Sound sound;
+    //sound.setBuffer(buffer);
+    //sound.play();
 
     while (window.Running()) {
         window.Clear();

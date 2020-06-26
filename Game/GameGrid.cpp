@@ -2,6 +2,8 @@
 #include "CameraUtils.h"
 
 #include <random>
+#include <SFML/Audio.hpp>
+#include <SFML/System/Vector3.hpp>
 
 using namespace Sprocket;
 
@@ -97,6 +99,17 @@ void GameGrid::OnEvent(Event& event)
             e->Consume();
         }
         if (e->Button() == Mouse::RIGHT && it != d_gridEntities.end()) {
+            static sf::SoundBuffer buffer;
+            buffer.loadFromFile("Resources/Audio/Break.ogg");
+            static sf::Sound sound;
+            sf::Vector3f v(d_x, 0, d_z);
+            
+            sf::Listener::setPosition(0, 0, 0);
+            sound.setPosition(v);
+            sound.setMinDistance(5.f);
+            sound.setAttenuation(10.f);
+            sound.setBuffer(buffer);
+            sound.play();
             it->second->Kill();
             RemoveEntity(d_x, d_z);
             e->Consume();
