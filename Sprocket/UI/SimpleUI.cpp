@@ -29,9 +29,14 @@ bool SimpleUI::Button(
     float width, float height)
 {
     auto mouse = d_mouse.GetMousePos();
-    return x < mouse.x && mouse.x < x + width &&
-           y < mouse.y && mouse.y < y + height &&
-           d_mouse.IsButtonClicked(Mouse::LEFT);
+    auto hovered = x < mouse.x && mouse.x < x + width &&
+                   y < mouse.y && mouse.y < y + height;
+
+    if (d_mouse.IsButtonDown(Mouse::LEFT)) {
+        // Render 
+    }
+
+    return hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
 }
 
 }
