@@ -107,9 +107,13 @@ void EscapeMenu::OnUpdate(double dt)
         return; // Layer not active
     }
 
+    d_ui.StartFrame();
+
     if (d_ui.Button("Button", 0, 0, 100, 100)) {
         SPKT_LOG_INFO("Button clicked!");
     }
+
+    d_ui.EndFrame();
 
     d_container.OnUpdate(&d_displayRenderer);
     d_core.window->SetCursorVisibility(true);
