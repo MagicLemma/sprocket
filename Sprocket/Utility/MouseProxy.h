@@ -2,14 +2,21 @@
 #include "Event.h"
 #include "Maths.h"
 
-#include <unordered_map>
 #include <array>
 
 namespace Sprocket {
 
 class MouseProxy
 {
-    std::array<bool, 5> d_pressedButtons;
+    // Stores the history of how the mouse buttons are pressed.
+    std::array<bool, 5> d_pressedButtonsA;
+        // Updated in the event loop.
+
+    std::array<bool, 5> d_pressedButtonsB;
+        // Copied from A at the start of OnUpdate. Stores the current state.
+
+    std::array<bool, 5> d_pressedButtonsC;
+        // Copied from B at the start of OnUpdate. Stores the previous state.
 
     Maths::vec2 d_position;
 

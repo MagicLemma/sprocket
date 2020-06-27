@@ -8,7 +8,9 @@ MouseProxy::MouseProxy()
     : d_position({0.0f, 0.0f})
     , d_offsetSum({0.0f, 0.0f})
     , d_offset({0.0f, 0.0f})
-    , d_pressedButtons({false, false, false, false, false})
+    , d_pressedButtonsA({false, false, false, false, false})
+    , d_pressedButtonsB({false, false, false, false, false})
+    , d_pressedButtonsC({false, false, false, false, false})
 {
     
 }
@@ -19,11 +21,11 @@ void MouseProxy::OnEvent(Event& event)
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         if (event.IsConsumed()) { return; }
-        d_pressedButtons[e->Button()] = true;
+        d_pressedButtonsA[e->Button()] = true;
     }
 
     else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-        d_pressedButtons[e->Button()] = false;
+        d_pressedButtonsA[e->Button()] = false;
     }
 
     else if (auto e = event.As<MouseMovedEvent>()) {
@@ -35,11 +37,14 @@ void MouseProxy::OnEvent(Event& event)
 
 bool MouseProxy::IsButtonDown(int key) const
 {
-    return d_pressedButtons[key];
+    return d_pressedButtonsB[key];
 }
 
 void MouseProxy::OnUpdate()
 {
+    d_pressedButtonsC = d_pressedButtonsB;
+    d_pressedButtonsB = d_pressedButtonsA;
+
     d_offset = d_offsetSum;
     d_offsetSum = Maths::vec2(0.0f, 0.0f);
 }
