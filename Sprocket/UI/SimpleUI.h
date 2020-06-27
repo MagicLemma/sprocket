@@ -19,9 +19,18 @@ struct QuadBufferVertex
     Maths::vec4 colour;
 };
 
+struct SimpleUITheme
+{
+    Maths::vec4 baseColour;
+    Maths::vec4 hoveredColour;
+    Maths::vec4 clickedColour;
+};
+
 class SimpleUI
 {
     Window* d_window;
+
+    SimpleUITheme d_theme;
 
     Shader d_shader;
 
@@ -44,6 +53,9 @@ class SimpleUI
 public:
     SimpleUI(Window* window);
 
+    const SimpleUITheme& GetTheme() const { return d_theme; }
+    void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
+
     void OnEvent(Event& event);
     void OnUpdate(double dt);
 
@@ -53,6 +65,10 @@ public:
     bool Button(int id, const std::string& name,
                 float x, float y,
                 float width, float height);
+
+    void Quad(float x, float y,
+              float width, float height,
+              const Maths::vec4& colour);
 };
 
 }

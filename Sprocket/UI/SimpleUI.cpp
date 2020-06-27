@@ -95,16 +95,23 @@ bool SimpleUI::Button(
         d_clicked = id;
     }
 
-    Maths::vec4 colour = {1.0, 0.0, 0.0, 1.0};
+    Maths::vec4 colour = d_theme.baseColour;
     if (d_clicked == id) {
-        colour = {0.0, 0.0, 1.0, 0.2};
+        colour = d_theme.clickedColour;
     }
     else if (hovered) {
-        colour = {0.0, 1.0, 0.0, 1.0};
+        colour = d_theme.hoveredColour;
     }
 
     AddQuad({x, y}, width, height, colour);
     return clicked;
+}
+
+void SimpleUI::Quad(float x, float y,
+                    float width, float height,
+                    const Maths::vec4& colour)
+{
+    AddQuad({x, y}, width, height, colour);
 }
 
 void SimpleUI::AddQuad(const Maths::vec2& pos,

@@ -1,14 +1,5 @@
 #include "EscapeMenu.h"
 
-void SetButtonAttrs(std::shared_ptr<Sprocket::Button> button)
-{
-    button->Base().colour = {0.15625f, 0.15625f, 0.15625f};
-
-    button->ButtonNormal().colour = {0.926f, 0.496f, 0.0f};
-    button->ButtonHovered().colour = {0.926f, 0.63281f, 0.3242f};
-    button->ButtonClicked().colour = {0.324f, 0.90625f, 0.5352f};
-}
-
 void SetSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
 {
     slider->Base().colour = {0.15625f, 0.15625f, 0.15625f};
@@ -40,6 +31,12 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
 {
     using namespace Sprocket;
 
+    SimpleUITheme theme;
+    theme.baseColour = {0.926f, 0.496f, 0.0f, 1.0f};
+    theme.hoveredColour = {0.926f, 0.63281f, 0.3242f, 1.0f};
+    theme.clickedColour = {0.324f, 0.90625f, 0.5352f, 1.0f};
+    d_ui.SetTheme(theme);
+
     d_container.Position({10.0f, 10.0f});
     d_container.Base().colour = {0.07f, 0.07f, 0.07f};
     d_container.Base().roundness = 0.081f;
@@ -48,22 +45,6 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     auto topSlider = d_container.Add<Slider>(300.0f, 50.0f);
     SetSliderAttrs(topSlider);
 
-    auto cameraSwitchButton = d_container.Add<Button>(
-        50.0f, 50.0f, 0.5f, 0.55f, 0.45f
-    );
-
-    SetButtonAttrs(cameraSwitchButton);
-
-    cameraSwitchButton->SetUnclickCallback([&]() {  //unclick
-        switch (d_worldLayer->d_mode) {
-            case Mode::PLAYER: {
-                d_worldLayer->d_mode = Mode::EDITOR;
-            } break;
-             case Mode::EDITOR: {
-                d_worldLayer->d_mode = Mode::PLAYER;
-            } break;
-        }
-    });
 
     auto textBox = d_container.Add<TextBox>(
         300.0f, 50.0f, "Text box!"
@@ -107,13 +88,26 @@ void EscapeMenu::OnUpdate(double dt)
         return; // Layer not active
     }
 
-    d_ui.StartFrame();
+    auto* window = d_worldLayer->d_core.window;
+    float w = window->Width();
+    float h = window->Height();
 
-    if (d_ui.Button(1, "Button", 0, 0, 100, 100)) {
-        SPKT_LOG_INFO("Button clicked!");
+    d_ui.StartFrame();
+    d_ui.Quad(w * 0.35f, 0.0f, w * 0.3f, h,
+              Sprocket::Maths::vec4{0.0, 0.0, 0.0, 0.8});
+
+    if (d_ui.Button(1, "Button", w * 0.75f / 2, 100, w * 0.25f, 50)) {
+        switch (d_worldLayer->d_mode) {
+            case Mode::PLAYER: {
+                d_worldLayer->d_mode = Mode::EDITOR;
+            } break;
+             case Mode::EDITOR: {
+                d_worldLayer->d_mode = Mode::PLAYER;
+            } break;
+        }
     }
 
-    if (d_ui.Button(2, "F", 0, 100, 100, 100)) {
+    if (d_ui.Button(2, "F", w * 0.75f / 2, 175, w * 0.25f, 50)) {
         SPKT_LOG_INFO("Other button clicked!");
     }
 
