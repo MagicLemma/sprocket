@@ -4,6 +4,9 @@
 #include "MouseCodes.h"
 #include "Log.h"
 #include "Maths.h"
+#include "RenderContext.h"
+
+#include <glad/glad.h>
 
 namespace Sprocket {
 
@@ -11,6 +14,8 @@ namespace Sprocket {
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
+    , d_shader("Resources/Shaders/SimpleUI.vert",
+               "Resources/Shaders/SimpleUI.frag")
     , d_quadBufferLayout(sizeof(QuadBufferVertex))
 {
     d_keyboard.ConsumeAll(false);
@@ -38,7 +43,41 @@ void SimpleUI::StartFrame()
 }
 
 void SimpleUI::EndFrame()
-{}
+{
+    Sprocket::RenderContext rc;  
+    glEnable(GL_BLEND);
+    glBlendEquation(GL_FUNC_ADD);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_SCISSOR_TEST);
+    glDisable(GL_DEPTH_TEST);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    Maths::mat4 proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
+    d_shader.Bind();
+    d_shader.LoadUniform("u_proj_matrix", proj);
+    
+    d_quadBuffer.Bind();
+    d_quadBuffer.SetVertexData(
+        sizeof(QuadBufferVertex) * d_quadBufferVertices.size(),
+        d_quadBufferVertices.data()
+    );
+
+    d_quadBuffer.SetIndexData(
+        sizeof(unsigned int) * d_quadBufferIndices.size(),
+        d_quadBufferIndices.data()
+    );
+
+    glDrawElements(
+        GL_TRIANGLES,
+        d_quadBufferIndices.size(),
+        GL_UNSIGNED_INT,
+        nullptr
+    );
+
+    d_shader.Unbind();
+    d_quadBuffer.Unbind();
+}
 
 bool SimpleUI::Button(
     const std::string& name,

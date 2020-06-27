@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.h"
+#include "Shader.h"
 #include "Event.h"
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
@@ -19,6 +20,8 @@ struct QuadBufferVertex
 class SimpleUI
 {
     Window* d_window;
+
+    Shader d_shader;
 
     KeyboardProxy d_keyboard;
     MouseProxy d_mouse;
