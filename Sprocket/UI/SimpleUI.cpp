@@ -1,6 +1,7 @@
 #include "SimpleUI.h"
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
+#include "MouseCodes.h"
 
 namespace Sprocket {
 
@@ -27,7 +28,8 @@ bool SimpleUI::Button(
 {
     auto mouse = d_mouse.GetMousePos();
     return x < mouse.x && mouse.x < x + width &&
-           y < mouse.y && mouse.y < y + height;
+           y < mouse.y && mouse.y < y + height &&
+           d_mouse.IsButtonDown(Mouse::LEFT);
 }
 
 }

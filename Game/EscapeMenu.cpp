@@ -36,6 +36,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
         {10.0, 10.0},
         10.0f
     )
+    , d_ui(core.window)
 {
     using namespace Sprocket;
 
@@ -89,6 +90,8 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
         }
     }
 
+    d_ui.OnEvent(event);
+
     if (d_worldLayer->d_paused) {
         d_container.OnEvent(event);
         event.Consume();
@@ -98,9 +101,16 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
 void EscapeMenu::OnUpdate(double dt)
 {
     d_displayRenderer.OnUpdate();
+    d_ui.OnUpdate(dt);
 
-    if (d_worldLayer->d_paused) {
-        d_container.OnUpdate(&d_displayRenderer);
-        d_core.window->SetCursorVisibility(true);
+    if (!d_worldLayer->d_paused) {
+        return; // Layer not active
     }
+
+    if (d_ui.Button("Button", 0, 0, 100, 100)) {
+        SPKT_LOG_INFO("Button clicked!");
+    }
+
+    d_container.OnUpdate(&d_displayRenderer);
+    d_core.window->SetCursorVisibility(true);
 }
