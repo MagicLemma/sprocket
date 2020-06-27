@@ -58,7 +58,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         s->script = "Resources/Scripts/ThirdPersonCamera.lua";
 
         d_camera = camera.get();
-        d_listener.SetCamera(d_camera);
         d_entityManager.AddEntity(camera);
     }
 
@@ -99,7 +98,8 @@ void WorldLayer::OnUpdate(double dt)
     d_gameGrid.OnUpdate(d_core.window, d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
-    d_listener.OnUpdate();
+
+    Audio::SetListener(*d_camera);
 
     if (!d_paused) {
         float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;

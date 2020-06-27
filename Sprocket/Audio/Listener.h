@@ -3,18 +3,9 @@
 #include "Event.h"
 
 namespace Sprocket {
+namespace Audio {
+    
+void SetListener(const Entity& entity);
 
-class Listener
-{
-    Entity* d_camera;
-
-public:
-    Listener(Entity* camera = nullptr);
-
-    void OnUpdate();
-
-    void SetCamera(Entity* camera) { d_camera = camera; }
-};
-
-
+}
 }

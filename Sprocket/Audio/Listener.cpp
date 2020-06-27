@@ -3,23 +3,16 @@
 #include <SFML/Audio.hpp>
 
 namespace Sprocket {
+namespace Audio {
 
-Listener::Listener(Entity* camera)
-    : d_camera(camera)
-{   
-}
-
-void Listener::OnUpdate()
+void SetListener(const Entity& entity)
 {
-    if (d_camera == nullptr) {
-        return;
-    }
-
-    auto pos = d_camera->Position();
+    auto pos = entity.Position();
     sf::Listener::setPosition(pos.x, pos.y, pos.z);
 
-    auto dir = Maths::Forwards(d_camera->Orientation());
+    auto dir = Maths::Forwards(entity.Orientation());
     sf::Listener::setDirection(dir.x, dir.y, dir.z);
 }
 
+}
 }
