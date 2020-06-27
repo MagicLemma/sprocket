@@ -55,6 +55,11 @@
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
+// AUDIO
+#include "Audio/Listener.h"
+#include "Audio/Music.h"
+#include "Audio/Sound.h"
+
 // OBJECTS
 #include "Objects/CameraUtils.h"
 #include "Objects/Material.h"

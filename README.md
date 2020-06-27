@@ -8,3 +8,5 @@
 - imgui
 - imgui[bindings]
 - stb
+- sfml-system
+- sfml-audio

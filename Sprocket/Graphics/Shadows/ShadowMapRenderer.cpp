@@ -10,7 +10,7 @@ ShadowMapRenderer::ShadowMapRenderer(Window* window)
                "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.
     , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
-    , d_shadowMap(window, 2048, 2048)
+    , d_shadowMap(window, 4096, 4096)
 {
 }
 

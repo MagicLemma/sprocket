@@ -99,6 +99,8 @@ void WorldLayer::OnUpdate(double dt)
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
 
+    Audio::SetListener(*d_camera);
+
     if (!d_paused) {
         float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
         float facSq = factor * factor;

@@ -17,6 +17,8 @@ find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
+find_package(SFML CONFIG REQUIRED system audio)
+
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
@@ -27,6 +29,10 @@ add_library(Sprocket STATIC
             Core/ModelManager.cpp
             Core/Layer.cpp
             Core/Scene.cpp
+
+            Audio/Listener.cpp
+            Audio/Music.cpp
+            Audio/Sound.cpp
 
             UI/DevUI.cpp
             UI/SimpleUI.cpp
@@ -122,10 +128,13 @@ target_link_libraries(Sprocket PUBLIC
                       reactphysics3d
                       assimp::assimp
                       imgui::imgui
+                      sfml-system
+                      sfml-audio
                       ${LUA_LIBRARIES})
 
 target_include_directories(Sprocket PUBLIC
                            .
+                           ./Audio
                            ./Core
                            ./DevGUI
                            ./Display
@@ -145,4 +154,5 @@ target_include_directories(Sprocket PUBLIC
                            ./Scripting
                            ./Vendor/ImGuizmo
                            ${STB_INCLUDE_DIR}
-                           ${LUA_INCLUDE_DIR})
+                           ${LUA_INCLUDE_DIR}
+                           ${SFML_INCLUDE_DIR})

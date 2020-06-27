@@ -97,6 +97,13 @@ void GameGrid::OnEvent(Event& event)
             e->Consume();
         }
         if (e->Button() == Mouse::RIGHT && it != d_gridEntities.end()) {
+            static Sprocket::Audio::Sound sound;
+            sound.Load("Resources/Audio/Break.ogg");
+            static Sprocket::Audio::Source source;
+            
+            source.SetPosition(d_x, 0, d_z);
+            source.SetSound(sound);
+            source.Play();
             it->second->Kill();
             RemoveEntity(d_x, d_z);
             e->Consume();
