@@ -10,8 +10,6 @@
 
 namespace Sprocket {
 
-
-
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
@@ -21,7 +19,7 @@ SimpleUI::SimpleUI(Window* window)
     d_keyboard.ConsumeAll(false);
 
     d_quadBufferLayout.AddAttribute(DataType::FLOAT, 2);
-    d_quadBufferLayout.AddAttribute(DataType::FLOAT, 3);
+    d_quadBufferLayout.AddAttribute(DataType::FLOAT, 4);
     d_quadBuffer.SetBufferLayout(d_quadBufferLayout);
 }
 
@@ -97,12 +95,12 @@ bool SimpleUI::Button(
         d_clicked = id;
     }
 
-    Maths::vec3 colour = {1.0, 0.0, 0.0};
+    Maths::vec4 colour = {1.0, 0.0, 0.0, 1.0};
     if (d_clicked == id) {
-        colour = {0.0, 0.0, 1.0};
+        colour = {0.0, 0.0, 1.0, 0.2};
     }
     else if (hovered) {
-        colour = {0.0, 1.0, 0.0};
+        colour = {0.0, 1.0, 0.0, 1.0};
     }
 
     AddQuad({x, y}, width, height, colour);
@@ -111,7 +109,7 @@ bool SimpleUI::Button(
 
 void SimpleUI::AddQuad(const Maths::vec2& pos,
                        float width, float height,
-                       const Maths::vec3& colour)
+                       const Maths::vec4& colour)
 {
     unsigned int index = d_quadBufferVertices.size();
     d_quadBufferVertices.push_back({{pos.x,         pos.y},          colour});

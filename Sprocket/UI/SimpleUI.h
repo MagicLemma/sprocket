@@ -16,7 +16,7 @@ namespace Sprocket {
 struct QuadBufferVertex
 {
     Maths::vec2 position;
-    Maths::vec3 colour;
+    Maths::vec4 colour;
 };
 
 class SimpleUI
@@ -39,7 +39,7 @@ class SimpleUI
 
     void AddQuad(const Maths::vec2& pos,
                  float width, float height,
-                 const Maths::vec3& colour);
+                 const Maths::vec4& colour);
 
 public:
     SimpleUI(Window* window);
