@@ -33,6 +33,8 @@ add_library(Sprocket STATIC
             Core/Scene.cpp
 
             Audio/Listener.cpp
+            Audio/Music.cpp
+            Audio/Sound.cpp
 
             UI/DevUI.cpp
             UI/SimpleUI.cpp

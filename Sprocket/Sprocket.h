@@ -57,6 +57,8 @@
 
 // AUDIO
 #include "Audio/Listener.h"
+#include "Audio/Music.h"
+#include "Audio/Sound.h"
 
 // OBJECTS
 #include "Objects/CameraUtils.h"
