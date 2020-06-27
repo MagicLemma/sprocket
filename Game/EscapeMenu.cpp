@@ -81,6 +81,8 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
 
 void EscapeMenu::OnUpdate(double dt)
 {
+    using namespace Sprocket::Maths;
+
     d_displayRenderer.OnUpdate();
     d_ui.OnUpdate(dt);
 
@@ -89,27 +91,27 @@ void EscapeMenu::OnUpdate(double dt)
     }
 
     auto* window = d_worldLayer->d_core.window;
-    float w = window->Width();
-    float h = window->Height();
+    float w = (float)window->Width();
+    float h = (float)window->Height();
 
     d_ui.StartFrame();
-    d_ui.Quad(w * 0.35f, 0.0f, w * 0.3f, h,
-              Sprocket::Maths::vec4{0.0, 0.0, 0.0, 0.8});
+    d_ui.Quad(w * 0.35f, 0.0f, w * 0.3f, h, vec4{0.0, 0.0, 0.0, 0.8});
 
-    if (d_ui.Button(1, "Button", w * 0.75f / 2, 100, w * 0.25f, 50)) {
+    if (d_ui.Button(1, "Toggle Dev UI", w * 0.375f, 100, w * 0.25f, 50)) {
         switch (d_worldLayer->d_mode) {
             case Mode::PLAYER: {
                 d_worldLayer->d_mode = Mode::EDITOR;
             } break;
-             case Mode::EDITOR: {
+            case Mode::EDITOR: {
                 d_worldLayer->d_mode = Mode::PLAYER;
             } break;
         }
     }
 
-    if (d_ui.Button(2, "F", w * 0.75f / 2, 175, w * 0.25f, 50)) {
-        SPKT_LOG_INFO("Other button clicked!");
+    if (d_ui.Button(2, "Volume", w * 0.375f, 175, w * 0.25f, 50)) {
+        SPKT_LOG_INFO("Clicked!");
     }
+    
 
     d_ui.EndFrame();
 

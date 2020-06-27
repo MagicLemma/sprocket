@@ -83,8 +83,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     d_mouse.OnEvent(event);
 
     if (auto e = event.As<WindowResizeEvent>()) {
-        d_postProcessor.SetScreenSize(e->Width(), e->Height()); 
-        SPKT_LOG_INFO("Resizing!");
+        d_postProcessor.SetScreenSize(e->Width(), e->Height());
     }
 
     d_entityManager.OnEvent(event);
