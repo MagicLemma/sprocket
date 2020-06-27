@@ -27,11 +27,9 @@ void SetSliderAttrs(std::shared_ptr<Sprocket::Slider> slider)
 }
 
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
-                       WorldLayer* worldLayer,
-                       EditorUI* editorUi) 
+                       WorldLayer* worldLayer) 
     : Layer(core)
     , d_worldLayer(worldLayer)
-    , d_editorUi(editorUi)
     , d_displayRenderer(core.window)
     , d_container(
         (float)core.window->Width()/4.0f,

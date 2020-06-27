@@ -3,31 +3,31 @@
 #include "MouseProxy.h"
 
 namespace Sprocket {
-namespace SimpleUI {
 
-struct SimpleUIData
-{
-    Window* window;
-
-    KeyboardProxy keyboard;
-    MouseProxy mouse;
-};
-
-Context::Context(Window* window)
-    : d_impl(std::make_shared<SimpleUIData>())
+SimpleUI::SimpleUI(Window* window)
+    : d_window(window)
 {
 }
 
-void Context::OnEvent(Event& event)
+void SimpleUI::OnEvent(Event& event)
 {
-    d_impl->keyboard.OnEvent(event);
-    d_impl->mouse.OnEvent(event);
+    d_keyboard.OnEvent(event);
+    d_mouse.OnEvent(event);
 }
 
-void Context::OnUpdate(double dt)
+void SimpleUI::OnUpdate(double dt)
 {
-    d_impl->mouse.OnUpdate();
+    d_mouse.OnUpdate();
 }
 
+bool SimpleUI::Button(
+    const std::string& name,
+    float x, float y,
+    float width, float height)
+{
+    auto mouse = d_mouse.GetMousePos();
+    return x < mouse.x && mouse.x < x + width &&
+           y < mouse.y && mouse.y < y + height;
 }
+
 }

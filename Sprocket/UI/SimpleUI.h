@@ -1,24 +1,27 @@
 #pragma once
 #include "Window.h"
 #include "Event.h"
-
-#include <memory>
+#include "KeyboardProxy.h"
+#include "MouseProxy.h"
 
 namespace Sprocket {
-namespace SimpleUI {
 
-struct SimpleUIData;
-
-class Context
+class SimpleUI
 {
-    std::shared_ptr<SimpleUIData> d_impl;
+    Window* d_window;
+
+    KeyboardProxy d_keyboard;
+    MouseProxy d_mouse;
 
 public:
-    Context(Window* window);
+    SimpleUI(Window* window);
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);
+
+    bool Button(const std::string& name,
+                float x, float y,
+                float width, float height);
 };
 
-}
 }

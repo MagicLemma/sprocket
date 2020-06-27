@@ -25,7 +25,7 @@ int main()
     auto world = sceneManager.AddScene("World");
     auto worldLayer = world->Add<WorldLayer>(core);
     auto editorUi = world->Add<EditorUI>(core, worldLayer.get());
-    world->Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
+    world->Add<EscapeMenu>(core, worldLayer.get());
     sceneManager.SetActiveScene("World");
  
     Stopwatch watch;
