@@ -20,6 +20,7 @@ SimpleUI::SimpleUI(Window* window)
 
     d_quadBufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_quadBufferLayout.AddAttribute(DataType::FLOAT, 4);
+    d_quadBufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_quadBuffer.SetBufferLayout(d_quadBufferLayout);
 }
 
@@ -57,6 +58,7 @@ void SimpleUI::EndFrame()
     Maths::mat4 proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
     d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", proj);
+    Texture::White().Bind();
     
     d_quadBuffer.Bind();
     d_quadBuffer.SetVertexData(
@@ -76,6 +78,7 @@ void SimpleUI::EndFrame()
         nullptr
     );
 
+    Texture::White().Unbind();
     d_shader.Unbind();
     d_quadBuffer.Unbind();
 }
