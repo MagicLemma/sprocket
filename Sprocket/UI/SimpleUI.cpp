@@ -70,7 +70,7 @@ void SimpleUI::EndFrame()
 
     glDrawElements(
         GL_TRIANGLES,
-        d_quadBufferIndices.size(),
+        (int)d_quadBufferIndices.size(),
         GL_UNSIGNED_INT,
         nullptr
     );
