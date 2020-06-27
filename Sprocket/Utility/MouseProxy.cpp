@@ -5,9 +5,9 @@
 namespace Sprocket {
 
 MouseProxy::MouseProxy()
-    : d_position({0.0f, 0.0f})
-    , d_offsetSum({0.0f, 0.0f})
-    , d_offset({0.0f, 0.0f})
+    : d_positionTemp({0.0f, 0.0f})
+    , d_positionCurr({0.0f, 0.0f})
+    , d_positionPrev({0.0f, 0.0f})
     , d_pressedTemp({false, false, false, false, false})
     , d_pressedCurr({false, false, false, false, false})
     , d_pressedPrev({false, false, false, false, false})
@@ -29,9 +29,7 @@ void MouseProxy::OnEvent(Event& event)
     }
 
     else if (auto e = event.As<MouseMovedEvent>()) {
-        Sprocket::Maths::vec2 p = {e->XPos(), e->YPos()};
-        d_offsetSum = p - d_position;
-        d_position = p;
+        d_positionTemp = {e->XPos(), e->YPos()};
     }
 }
 
@@ -45,8 +43,8 @@ void MouseProxy::OnUpdate()
     d_pressedPrev = d_pressedCurr;
     d_pressedCurr = d_pressedTemp;
 
-    d_offset = d_offsetSum;
-    d_offsetSum = Maths::vec2(0.0f, 0.0f);
+    d_positionPrev = d_positionCurr;
+    d_positionCurr = d_positionTemp;
 }
 
 bool MouseProxy::IsButtonClicked(int button) const

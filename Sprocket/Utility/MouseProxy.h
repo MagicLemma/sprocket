@@ -15,12 +15,9 @@ class MouseProxy
         // frame and previous respectively. The temp is the one that the
         // event loop writes to. It is copied to current during OnUpdate.
 
-    Maths::vec2 d_position;
-
-    Maths::vec2 d_offsetSum;
-        // Intermediate value to calulate the final offset
-
-    Maths::vec2 d_offset;
+    Maths::vec2 d_positionTemp;
+    Maths::vec2 d_positionCurr;
+    Maths::vec2 d_positionPrev;
 
 public:
     MouseProxy();
@@ -29,8 +26,8 @@ public:
     void OnEvent(Event& event);
     bool IsButtonDown(int button) const;
 
-    Maths::vec2 GetMousePos() const { return d_position; }
-    Maths::vec2 GetMouseOffset() const { return d_offset; }
+    Maths::vec2 GetMousePos() const { return d_positionCurr; }
+    Maths::vec2 GetMouseOffset() const { return d_positionCurr - d_positionPrev; }
 
     bool IsButtonClicked(int button) const;
     bool IsButtonReleased(int button) const;
