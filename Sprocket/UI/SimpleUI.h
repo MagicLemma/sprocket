@@ -8,6 +8,8 @@
 #include "BufferLayout.h"
 
 #include <vector>
+#include <unordered_map>
+#include <chrono>
 
 namespace Sprocket {
 
@@ -29,6 +31,8 @@ class SimpleUI
     StreamBuffer d_quadBuffer;
     BufferLayout d_quadBufferLayout;
 
+    int d_clicked; // ID of the clicked widget.
+
     // Used to construct the VBO each frame.
     std::vector<QuadBufferVertex> d_quadBufferVertices;
     std::vector<unsigned int>     d_quadBufferIndices;
@@ -46,7 +50,7 @@ public:
     void StartFrame();
     void EndFrame();
 
-    bool Button(const std::string& name,
+    bool Button(int id, const std::string& name,
                 float x, float y,
                 float width, float height);
 };

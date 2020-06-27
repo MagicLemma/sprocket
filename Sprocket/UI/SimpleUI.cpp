@@ -34,6 +34,10 @@ void SimpleUI::OnEvent(Event& event)
 void SimpleUI::OnUpdate(double dt)
 {
     d_mouse.OnUpdate();
+
+    if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
+        d_clicked = -1;
+    }
 }
 
 void SimpleUI::StartFrame()
@@ -79,18 +83,30 @@ void SimpleUI::EndFrame()
 }
 
 bool SimpleUI::Button(
-    const std::string& name,
+    int id, const std::string& name,
     float x, float y,
     float width, float height)
 {
-
-    AddQuad({x, y}, width, height, Maths::vec3{1.0, 0.0, 0.0});
-
     auto mouse = d_mouse.GetMousePos();
     auto hovered = x < mouse.x && mouse.x < x + width &&
                    y < mouse.y && mouse.y < y + height;
 
-    return hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
+    auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
+
+    if (clicked) {
+        d_clicked = id;
+    }
+
+    Maths::vec3 colour = {1.0, 0.0, 0.0};
+    if (d_clicked == id) {
+        colour = {0.0, 0.0, 1.0};
+    }
+    else if (hovered) {
+        colour = {0.0, 1.0, 0.0};
+    }
+
+    AddQuad({x, y}, width, height, colour);
+    return clicked;
 }
 
 void SimpleUI::AddQuad(const Maths::vec2& pos,
