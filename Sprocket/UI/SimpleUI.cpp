@@ -2,12 +2,14 @@
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
 #include "MouseCodes.h"
+#include "Log.h"
 
 namespace Sprocket {
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
 {
+    d_keyboard.ConsumeAll(false);
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -29,7 +31,7 @@ bool SimpleUI::Button(
     auto mouse = d_mouse.GetMousePos();
     return x < mouse.x && mouse.x < x + width &&
            y < mouse.y && mouse.y < y + height &&
-           d_mouse.IsButtonDown(Mouse::LEFT);
+           d_mouse.IsButtonClicked(Mouse::LEFT);
 }
 
 }

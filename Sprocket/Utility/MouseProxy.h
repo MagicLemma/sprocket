@@ -34,6 +34,9 @@ public:
 
     Maths::vec2 GetMousePos() const { return d_position; }
     Maths::vec2 GetMouseOffset() const { return d_offset; }
+
+    bool IsButtonClicked(int button) const;
+    bool IsButtonReleased(int button) const;
 };
 
 }

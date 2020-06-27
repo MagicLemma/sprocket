@@ -49,4 +49,14 @@ void MouseProxy::OnUpdate()
     d_offsetSum = Maths::vec2(0.0f, 0.0f);
 }
 
+bool MouseProxy::IsButtonClicked(int button) const
+{
+    return d_pressedButtonsB[button] && !d_pressedButtonsC[button];
+}
+
+bool MouseProxy::IsButtonReleased(int button) const
+{
+    return !d_pressedButtonsB[button] && d_pressedButtonsC[button];
+}
+
 }
