@@ -3,12 +3,13 @@
 #include "Maths.h"
 
 #include <unordered_map>
+#include <array>
 
 namespace Sprocket {
 
 class MouseProxy
 {
-    std::unordered_map<int, bool> d_pressedButtons;
+    std::array<bool, 5> d_pressedButtons;
 
     Maths::vec2 d_position;
 

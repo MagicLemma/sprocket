@@ -8,6 +8,7 @@ MouseProxy::MouseProxy()
     : d_position({0.0f, 0.0f})
     , d_offsetSum({0.0f, 0.0f})
     , d_offset({0.0f, 0.0f})
+    , d_pressedButtons({false, false, false, false, false})
 {
     
 }
@@ -34,11 +35,7 @@ void MouseProxy::OnEvent(Event& event)
 
 bool MouseProxy::IsButtonDown(int key) const
 {
-    auto it = d_pressedButtons.find(key);
-    if (it != d_pressedButtons.end()) {
-        return it->second;
-    }
-    return false;
+    return d_pressedButtons[key];
 }
 
 void MouseProxy::OnUpdate()
