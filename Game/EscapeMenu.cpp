@@ -113,6 +113,10 @@ void EscapeMenu::OnUpdate(double dt)
         SPKT_LOG_INFO("Button clicked!");
     }
 
+    if (d_ui.Button("F", 0, 100, 100, 100)) {
+        SPKT_LOG_INFO("Other button clicked!");
+    }
+
     d_ui.EndFrame();
 
     d_container.OnUpdate(&d_displayRenderer);

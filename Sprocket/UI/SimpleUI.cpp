@@ -49,7 +49,6 @@ void SimpleUI::EndFrame()
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_CULL_FACE);
-    glEnable(GL_SCISSOR_TEST);
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -98,7 +97,7 @@ void SimpleUI::AddQuad(const Maths::vec2& pos,
                        float width, float height,
                        const Maths::vec3& colour)
 {
-    auto index = d_quadBufferIndices.size();
+    unsigned int index = d_quadBufferVertices.size();
     d_quadBufferVertices.push_back({{pos.x,         pos.y},          colour});
     d_quadBufferVertices.push_back({{pos.x + width, pos.y},          colour});
     d_quadBufferVertices.push_back({{pos.x,         pos.y + height}, colour});
