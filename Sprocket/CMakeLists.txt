@@ -17,9 +17,7 @@ find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
-
 find_package(SFML CONFIG REQUIRED system audio)
-include_directories(${SFML_INCLUDE_DIR})
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
@@ -156,4 +154,5 @@ target_include_directories(Sprocket PUBLIC
                            ./Scripting
                            ./Vendor/ImGuizmo
                            ${STB_INCLUDE_DIR}
-                           ${LUA_INCLUDE_DIR})
+                           ${LUA_INCLUDE_DIR}
+                           ${SFML_INCLUDE_DIR})

@@ -4,9 +4,6 @@ project(Game)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(SFML CONFIG REQUIRED system audio)
-include_directories(${SFML_INCLUDE_DIR})
-
 add_executable(Game
                Game.m.cpp
                WorldLayer.cpp
@@ -18,9 +15,6 @@ add_executable(Game
                GameGrid.cpp
                CircadianCycle.cpp)
 
-target_link_libraries(Game PRIVATE
-                      Sprocket
-                      sfml-system
-                      sfml-audio)
+target_link_libraries(Game PRIVATE Sprocket)
 
 target_include_directories(Game PUBLIC .)
