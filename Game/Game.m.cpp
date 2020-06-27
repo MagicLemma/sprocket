@@ -30,9 +30,9 @@ int main()
  
     Stopwatch watch;
 
-    Audio::Music sound;
-    sound.Load("Resources/Audio/Sample.wav");
-    sound.Play();
+    //Audio::Music sound;
+    //sound.Load("Resources/Audio/Sample.wav");
+    //sound.Play();
 
     while (window.Running()) {
         window.Clear();

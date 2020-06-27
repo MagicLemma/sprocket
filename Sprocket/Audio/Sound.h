@@ -2,6 +2,8 @@
 #include <string>
 #include <memory>
 
+#include "Maths.h"
+
 namespace Sprocket {
 namespace Audio {
 
@@ -31,6 +33,9 @@ public:
         // Non-copyable
 
     void SetSound(const Sound& sound);
+
+    void SetPosition(float x, float y, float z);
+    void SetPosition(const Maths::vec3& position);
 
     void Play() const;
     void Pause() const;

@@ -36,6 +36,16 @@ void Source::SetSound(const Sound& sound)
     d_impl->sound.setBuffer(sound.d_impl->buffer);
 }
 
+void Source::SetPosition(float x, float y, float z)
+{
+    d_impl->sound.setPosition({x, y, z});
+}
+
+void Source::SetPosition(const Maths::vec3& position)
+{
+    SetPosition(position.x, position.y, position.z);
+}
+
 void Source::Play() const
 {
     d_impl->sound.play();
