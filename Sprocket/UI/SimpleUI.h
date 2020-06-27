@@ -63,12 +63,15 @@ public:
     void EndFrame();
 
     bool Button(int id, const std::string& name,
-                float x, float y,
-                float width, float height);
+                float x, float y, float width, float height);
 
     void Quad(float x, float y,
               float width, float height,
               const Maths::vec4& colour);
+
+    void Slider(int id, const std::string& name,
+                float x, float y, float width, float height,
+                float* value, float min, float max);
 };
 
 }

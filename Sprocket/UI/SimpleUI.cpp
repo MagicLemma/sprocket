@@ -86,14 +86,9 @@ bool SimpleUI::Button(
     float width, float height)
 {
     auto mouse = d_mouse.GetMousePos();
-    auto hovered = x < mouse.x && mouse.x < x + width &&
-                   y < mouse.y && mouse.y < y + height;
-
+    auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-
-    if (clicked) {
-        d_clicked = id;
-    }
+    if (clicked) { d_clicked = id; }
 
     Maths::vec4 colour = d_theme.baseColour;
     if (d_clicked == id) {
@@ -112,6 +107,26 @@ void SimpleUI::Quad(float x, float y,
                     const Maths::vec4& colour)
 {
     AddQuad({x, y}, width, height, colour);
+}
+
+void SimpleUI::Slider(int id, const std::string& name,
+                      float x, float y, float width, float height,
+                      float* value, float min, float max)
+{
+    auto mouse = d_mouse.GetMousePos();
+    auto hovered = d_mouse.InRegion(x, y, width, height);
+    auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
+    if (clicked) { d_clicked = id; }
+
+    float ratio = (*value - min) / (max - min);
+    AddQuad({x, y}, ratio * width, height, d_theme.hoveredColour);
+    AddQuad({x + ratio * width, y}, (1 - ratio) * width, height, d_theme.baseColour);
+
+    if (d_clicked == id) {
+        Maths::Clamp(mouse.x, x, x + width);
+        float r = (mouse.x - x) / width;
+        *value = (1 - r) * min + r * max;
+    }    
 }
 
 void SimpleUI::AddQuad(const Maths::vec2& pos,

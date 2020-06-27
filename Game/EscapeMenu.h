@@ -10,10 +10,6 @@ class EscapeMenu : public Sprocket::Layer
     WorldLayer* d_worldLayer;
 
     Sprocket::SimpleUI d_ui;
-    
-    Sprocket::DisplayRenderer d_displayRenderer;
-    Sprocket::Container d_container;
-    Sprocket::TextBox* d_text;
 
 public:
     EscapeMenu(const Sprocket::CoreSystems& core,

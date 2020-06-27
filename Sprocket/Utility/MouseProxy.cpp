@@ -57,4 +57,11 @@ bool MouseProxy::IsButtonReleased(int button) const
     return !d_pressedCurr[button] && d_pressedPrev[button];
 }
 
+bool MouseProxy::InRegion(float x, float y, float width, float height) const
+{
+    auto pos = GetMousePos();
+    return x < pos.x && pos.x < x + width &&
+           y < pos.y && pos.y < y + height;
+}
+
 }

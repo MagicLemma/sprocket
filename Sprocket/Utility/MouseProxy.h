@@ -31,6 +31,8 @@ public:
 
     bool IsButtonClicked(int button) const;
     bool IsButtonReleased(int button) const;
+
+    bool InRegion(float x, float y, float width, float height) const;
 };
 
 }
