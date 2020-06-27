@@ -101,15 +101,8 @@ bool SimpleUI::Button(
         colour = d_theme.hoveredColour;
     }
 
-    AddQuad({x, y}, width, height, colour);
+    Quad(x, y, width, height, colour);
     return clicked;
-}
-
-void SimpleUI::Quad(float x, float y,
-                    float width, float height,
-                    const Maths::vec4& colour)
-{
-    AddQuad({x, y}, width, height, colour);
 }
 
 void SimpleUI::Slider(int id, const std::string& name,
@@ -122,8 +115,8 @@ void SimpleUI::Slider(int id, const std::string& name,
     if (clicked) { d_clicked = id; }
 
     float ratio = (*value - min) / (max - min);
-    AddQuad({x, y}, ratio * width, height, d_theme.hoveredColour);
-    AddQuad({x + ratio * width, y}, (1 - ratio) * width, height, d_theme.baseColour);
+    Quad(x, y, ratio * width, height, d_theme.hoveredColour);
+    Quad(x + ratio * width, y, (1 - ratio) * width, height, d_theme.baseColour);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -132,15 +125,15 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void SimpleUI::AddQuad(const Maths::vec2& pos,
-                       float width, float height,
-                       const Maths::vec4& colour)
+void SimpleUI::Quad(float x, float y,
+                    float width, float height,
+                    const Maths::vec4& colour)
 {
     unsigned int index = d_quadBufferVertices.size();
-    d_quadBufferVertices.push_back({{pos.x,         pos.y},          colour});
-    d_quadBufferVertices.push_back({{pos.x + width, pos.y},          colour});
-    d_quadBufferVertices.push_back({{pos.x,         pos.y + height}, colour});
-    d_quadBufferVertices.push_back({{pos.x + width, pos.y + height}, colour});
+    d_quadBufferVertices.push_back({{x,         y},          colour});
+    d_quadBufferVertices.push_back({{x + width, y},          colour});
+    d_quadBufferVertices.push_back({{x,         y + height}, colour});
+    d_quadBufferVertices.push_back({{x + width, y + height}, colour});
 
     d_quadBufferIndices.push_back(index + 0);
     d_quadBufferIndices.push_back(index + 1);

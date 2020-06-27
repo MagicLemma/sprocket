@@ -48,10 +48,6 @@ class SimpleUI
     std::vector<QuadBufferVertex> d_quadBufferVertices;
     std::vector<unsigned int>     d_quadBufferIndices;
 
-    void AddQuad(const Maths::vec2& pos,
-                 float width, float height,
-                 const Maths::vec4& colour);
-
 public:
     SimpleUI(Window* window);
 
