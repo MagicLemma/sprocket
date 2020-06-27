@@ -8,15 +8,12 @@ namespace Sprocket {
 
 class MouseProxy
 {
-    // Stores the history of how the mouse buttons are pressed.
-    std::array<bool, 5> d_pressedButtonsA;
-        // Updated in the event loop.
-
-    std::array<bool, 5> d_pressedButtonsB;
-        // Copied from A at the start of OnUpdate. Stores the current state.
-
-    std::array<bool, 5> d_pressedButtonsC;
-        // Copied from B at the start of OnUpdate. Stores the previous state.
+    std::array<bool, 5> d_pressedTemp;
+    std::array<bool, 5> d_pressedCurr;
+    std::array<bool, 5> d_pressedPrev;
+        // Current and prev store the state of the mouse on the current
+        // frame and previous respectively. The temp is the one that the
+        // event loop writes to. It is copied to current during OnUpdate.
 
     Maths::vec2 d_position;
 

@@ -8,9 +8,9 @@ MouseProxy::MouseProxy()
     : d_position({0.0f, 0.0f})
     , d_offsetSum({0.0f, 0.0f})
     , d_offset({0.0f, 0.0f})
-    , d_pressedButtonsA({false, false, false, false, false})
-    , d_pressedButtonsB({false, false, false, false, false})
-    , d_pressedButtonsC({false, false, false, false, false})
+    , d_pressedTemp({false, false, false, false, false})
+    , d_pressedCurr({false, false, false, false, false})
+    , d_pressedPrev({false, false, false, false, false})
 {
     
 }
@@ -21,11 +21,11 @@ void MouseProxy::OnEvent(Event& event)
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         if (event.IsConsumed()) { return; }
-        d_pressedButtonsA[e->Button()] = true;
+        d_pressedTemp[e->Button()] = true;
     }
 
     else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-        d_pressedButtonsA[e->Button()] = false;
+        d_pressedTemp[e->Button()] = false;
     }
 
     else if (auto e = event.As<MouseMovedEvent>()) {
@@ -37,13 +37,13 @@ void MouseProxy::OnEvent(Event& event)
 
 bool MouseProxy::IsButtonDown(int key) const
 {
-    return d_pressedButtonsB[key];
+    return d_pressedCurr[key];
 }
 
 void MouseProxy::OnUpdate()
 {
-    d_pressedButtonsC = d_pressedButtonsB;
-    d_pressedButtonsB = d_pressedButtonsA;
+    d_pressedPrev = d_pressedCurr;
+    d_pressedCurr = d_pressedTemp;
 
     d_offset = d_offsetSum;
     d_offsetSum = Maths::vec2(0.0f, 0.0f);
@@ -51,12 +51,12 @@ void MouseProxy::OnUpdate()
 
 bool MouseProxy::IsButtonClicked(int button) const
 {
-    return d_pressedButtonsB[button] && !d_pressedButtonsC[button];
+    return d_pressedCurr[button] && !d_pressedPrev[button];
 }
 
 bool MouseProxy::IsButtonReleased(int button) const
 {
-    return !d_pressedButtonsB[button] && d_pressedButtonsC[button];
+    return !d_pressedCurr[button] && d_pressedPrev[button];
 }
 
 }
