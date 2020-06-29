@@ -83,6 +83,24 @@ void SimpleUI::EndFrame()
     d_quadBuffer.Unbind();
 }
 
+void SimpleUI::Quad(float x, float y,
+                    float width, float height,
+                    const Maths::vec4& colour)
+{
+    unsigned int index = d_quadBufferVertices.size();
+    d_quadBufferVertices.push_back({{x,         y},          colour});
+    d_quadBufferVertices.push_back({{x + width, y},          colour});
+    d_quadBufferVertices.push_back({{x,         y + height}, colour});
+    d_quadBufferVertices.push_back({{x + width, y + height}, colour});
+
+    d_quadBufferIndices.push_back(index + 0);
+    d_quadBufferIndices.push_back(index + 1);
+    d_quadBufferIndices.push_back(index + 2);
+    d_quadBufferIndices.push_back(index + 2);
+    d_quadBufferIndices.push_back(index + 1);
+    d_quadBufferIndices.push_back(index + 3);
+}
+
 bool SimpleUI::Button(
     int id, const std::string& name,
     float x, float y,
@@ -125,22 +143,9 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void SimpleUI::Quad(float x, float y,
-                    float width, float height,
-                    const Maths::vec4& colour)
+void AddText(float x, float y, const std::string& text, float size)
 {
-    unsigned int index = d_quadBufferVertices.size();
-    d_quadBufferVertices.push_back({{x,         y},          colour});
-    d_quadBufferVertices.push_back({{x + width, y},          colour});
-    d_quadBufferVertices.push_back({{x,         y + height}, colour});
-    d_quadBufferVertices.push_back({{x + width, y + height}, colour});
-
-    d_quadBufferIndices.push_back(index + 0);
-    d_quadBufferIndices.push_back(index + 1);
-    d_quadBufferIndices.push_back(index + 2);
-    d_quadBufferIndices.push_back(index + 2);
-    d_quadBufferIndices.push_back(index + 1);
-    d_quadBufferIndices.push_back(index + 3);
+    
 }
 
 }

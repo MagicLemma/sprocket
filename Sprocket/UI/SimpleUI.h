@@ -48,6 +48,8 @@ class SimpleUI
     std::vector<QuadBufferVertex> d_quadBufferVertices;
     std::vector<unsigned int>     d_quadBufferIndices;
 
+    void AddText(float x, float y, const std::string& text, float size);
+
 public:
     SimpleUI(Window* window);
 
@@ -60,12 +62,12 @@ public:
     void StartFrame();
     void EndFrame();
 
-    bool Button(int id, const std::string& name,
-                float x, float y, float width, float height);
-
     void Quad(float x, float y,
               float width, float height,
               const Maths::vec4& colour);
+
+    bool Button(int id, const std::string& name,
+                float x, float y, float width, float height);
 
     void Slider(int id, const std::string& name,
                 float x, float y, float width, float height,
