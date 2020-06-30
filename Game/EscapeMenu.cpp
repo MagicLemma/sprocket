@@ -63,8 +63,9 @@ void EscapeMenu::OnUpdate(double dt)
         SPKT_LOG_INFO("Clicked!");
     }
     
-    static float x = 30.0f;
-    d_ui.Slider(4, "Slider", w * 0.025f, 250, w * 0.25f, 50, &x, 24, 84);
+    float volume = Sprocket::Audio::GetMasterVolume();
+    d_ui.Slider(4, "Slider", w * 0.025f, 250, w * 0.25f, 50, &volume, 0.0, 100.0);
+    Sprocket::Audio::SetMasterVolume(volume);
 
     d_ui.EndFrame();
 
