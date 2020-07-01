@@ -166,7 +166,11 @@ void SimpleUI::Slider(int id, const std::string& name,
     float ratio = (*value - min) / (max - min);
     Quad(x, y, ratio * width, height, d_theme.hoveredColour);
     Quad(x + ratio * width, y, (1 - ratio) * width, height, d_theme.baseColour);
-    AddText(x, y, "Testing", 36.0f);
+    
+    std::stringstream text;
+    text << "Volume: " << Maths::ToString(*value, 0);
+    
+    AddText(x, y, text.str(), 36.0f);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -177,8 +181,8 @@ void SimpleUI::Slider(int id, const std::string& name,
 
 void SimpleUI::AddText(float x, float y, const std::string& text, float size)
 {
-    Maths::vec2 pointer(x, y);
     float fontSize = size / d_font.Size();
+    Maths::vec2 pointer(x + 60.0f, y - size); // TODO: Remove this 60.0
 
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
@@ -192,17 +196,19 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size)
         float height = c.Height() * fontSize;
 
         float xTexCoord = c.GetAtlasQuad().position.x;
+        float aWidth = c.GetAtlasQuad().width;
         float yTexCoord = c.GetAtlasQuad().position.y;
+        float aHeight = c.GetAtlasQuad().height;
         float aw = (float)d_font.Atlas().Width();
         float ah = (float)d_font.Atlas().Height();
 
         pointer.x += c.Advance() * fontSize;
 
         unsigned int index = d_textBufferVertices.size();
-        d_textBufferVertices.push_back({{xPos,         yPos},          colour, {xTexCoord/aw, yTexCoord/aw}});
-        d_textBufferVertices.push_back({{xPos + width, yPos},          colour, {(xTexCoord + width)/aw, yTexCoord/aw}});
-        d_textBufferVertices.push_back({{xPos,         yPos + height}, colour, {xTexCoord/aw, (yTexCoord + height)/aw}});
-        d_textBufferVertices.push_back({{xPos + width, yPos + height}, colour, {(xTexCoord + width)/aw, (yTexCoord + height)/aw}});
+        d_textBufferVertices.push_back({{xPos,         yPos},          colour, {xTexCoord/aw, yTexCoord/ah}});
+        d_textBufferVertices.push_back({{xPos + width, yPos},          colour, {(xTexCoord + aWidth)/aw, yTexCoord/ah}});
+        d_textBufferVertices.push_back({{xPos,         yPos + height}, colour, {xTexCoord/aw, (yTexCoord + aHeight)/ah}});
+        d_textBufferVertices.push_back({{xPos + width, yPos + height}, colour, {(xTexCoord + aWidth)/aw, (yTexCoord + aHeight)/ah}});
 
         d_textBufferIndices.push_back(index + 0);
         d_textBufferIndices.push_back(index + 1);
