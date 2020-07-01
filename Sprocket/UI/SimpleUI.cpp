@@ -168,7 +168,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     Quad(x + ratio * width, y, (1 - ratio) * width, height, d_theme.baseColour);
     
     std::stringstream text;
-    text << "Volume: " << Maths::ToString(*value, 0);
+    text << name << ": " << Maths::ToString(*value, 0);
     
     AddText(x, y, text.str(), 36.0f);
 

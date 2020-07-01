@@ -59,12 +59,12 @@ void EscapeMenu::OnUpdate(double dt)
         }
     }
 
-    if (d_ui.Button(2, "Volume", w * 0.025f, 175, w * 0.25f, 50)) {
+    if (d_ui.Button(2, "Button", w * 0.025f, 175, w * 0.25f, 50)) {
         SPKT_LOG_INFO("Clicked!");
     }
     
     float volume = Sprocket::Audio::GetMasterVolume();
-    d_ui.Slider(4, "Slider", w * 0.025f, 250, w * 0.25f, 50, &volume, 0.0, 100.0);
+    d_ui.Slider(4, "Volume", w * 0.025f, 250, w * 0.25f, 50, &volume, 0.0, 100.0);
     Sprocket::Audio::SetMasterVolume(volume);
 
     d_ui.EndFrame();
