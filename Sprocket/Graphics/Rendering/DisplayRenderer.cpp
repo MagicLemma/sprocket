@@ -143,8 +143,8 @@ void DisplayRenderer::Draw(const Text& text)
     for (int character : text.message) {
         Character c = fontPack.Get(character);
 
-        float xPos = pointer.x + c.XOffset() * fontSize;
-        float yPos = pointer.y - (c.Height() - c.YOffset()) * fontSize;
+        float xPos = pointer.x + c.xOffset * fontSize;
+        float yPos = pointer.y - (c.height - c.yOffset) * fontSize;
 
         auto transform = Maths::Transform(
             Maths::vec3{xPos, yPos, 0.0f},
@@ -153,11 +153,11 @@ void DisplayRenderer::Draw(const Text& text)
 
         d_characterShader.LoadUniform("transform", transform);
 
-        c.Bind();
+        c.model.Bind();
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        c.Unbind();
+        c.model.Unbind();
 
-        pointer.x += c.Advance() * fontSize;
+        pointer.x += c.advance * fontSize;
     }
     fontPack.Atlas().Unbind();
 

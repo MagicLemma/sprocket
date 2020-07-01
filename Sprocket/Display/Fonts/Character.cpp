@@ -26,25 +26,15 @@ Character::Character(int id,
                      float xOffset,
                      float yOffset,
                      float advance)
-    : d_id(id)
-    , d_width(width)
-    , d_height(height)
-    , d_xOffset(xOffset)
-    , d_yOffset(yOffset)
-    , d_advance(advance)
-    , d_model(GetBuffer(textureQuad, width, height))
-    , d_textureQuad(textureQuad)
+    : id(id)
+    , width(width)
+    , height(height)
+    , xOffset(xOffset)
+    , yOffset(yOffset)
+    , advance(advance)
+    , model(GetBuffer(textureQuad, width, height))
+    , textureQuad(textureQuad)
 {
-}
-
-void Character::Bind() const
-{
-    d_model.Bind();
-}
-
-void Character::Unbind() const
-{
-    d_model.Unbind();
 }
 
 }

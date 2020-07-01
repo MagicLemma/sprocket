@@ -17,14 +17,14 @@ float TextWidth(const std::string& text, const FontPackage& font, float size)
 
     for (char character : text) {
         Character c = font.Get(character);
-        textWidth += c.Advance();
+        textWidth += c.advance;
     }
 
     auto first = font.Get(text.front());
-    textWidth -= first.XOffset();
+    textWidth -= first.xOffset;
 
     auto last = font.Get(text.back());
-    textWidth += (last.XOffset() + last.Width());
+    textWidth += (last.xOffset + last.width);
 
     return textWidth * size;
 }
@@ -186,19 +186,19 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     for (char character : text) {
         Character c = d_font.Get(character);
 
-        float xPos = pointer.x + c.XOffset() * fontSize;
-        float yPos = pointer.y + c.YOffset() * fontSize;
+        float xPos = pointer.x + c.xOffset * fontSize;
+        float yPos = pointer.y + c.yOffset * fontSize;
 
-        float width = c.Width() * fontSize;
-        float height = c.Height() * fontSize;
+        float width = c.width * fontSize;
+        float height = c.height * fontSize;
 
-        auto quad = c.GetTextureQuad();
+        auto quad = c.textureQuad;
         float x = quad.position.x;
         float y = quad.position.y;
         float w = quad.width;
         float h = quad.height;
 
-        pointer.x += c.Advance() * fontSize;
+        pointer.x += c.advance * fontSize;
 
         unsigned int index = d_textVertices.size();
         d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
