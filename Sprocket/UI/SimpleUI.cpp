@@ -16,7 +16,7 @@ float TextWidth(const std::string& text, const FontPackage& font, float size)
     float textWidth = 0.0f;
 
     for (char character : text) {
-        Character c = font.Get(character);
+        Glyph c = font.Get(character);
         textWidth += c.advance;
     }
 
@@ -184,7 +184,7 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     Maths::vec2 pointer(x + (width - textWidth) / 2.0f, y);
     
     for (char character : text) {
-        Character c = d_font.Get(character);
+        Glyph c = d_font.Get(character);
 
         float xPos = pointer.x + c.xOffset * fontSize;
         float yPos = pointer.y + c.yOffset * fontSize;

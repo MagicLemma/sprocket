@@ -4,7 +4,7 @@
 
 namespace Sprocket {
 
-struct Character
+struct Glyph
 {
     int id; // ASCII ID
 

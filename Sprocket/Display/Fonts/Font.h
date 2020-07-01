@@ -1,12 +1,12 @@
 #pragma once
-#include "Character.h"
+#include "Glyph.h"
 #include "Texture.h"
 
 #include <unordered_map>
 
 namespace Sprocket {
 
-using GlyphMap = std::unordered_map<int, Character>;
+using GlyphMap = std::unordered_map<int, Glyph>;
 
 enum class Font
 {
@@ -25,7 +25,7 @@ public:
     FontPackage(const std::string& fntFile,
                 const std::string& texFile);
 
-    Character Get(int id) const;
+    Glyph Get(int id) const;
 
     Texture Atlas() const { return d_atlas; }
     float Size() const { return d_size; }

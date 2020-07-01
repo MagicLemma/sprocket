@@ -141,7 +141,7 @@ void DisplayRenderer::Draw(const Text& text)
 
     fontPack.Atlas().Bind();
     for (int character : text.message) {
-        Character c = fontPack.Get(character);
+        Glyph c = fontPack.Get(character);
 
         float xPos = pointer.x + c.xOffset * fontSize;
         float yPos = pointer.y - (c.height - c.yOffset) * fontSize;

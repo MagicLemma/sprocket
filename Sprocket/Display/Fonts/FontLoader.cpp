@@ -1,5 +1,5 @@
 #include "FontLoader.h"
-#include "Character.h"
+#include "Glyph.h"
 #include "Tokenize.h"
 #include "Log.h"
 
@@ -67,7 +67,7 @@ std::pair<GlyphMap, float> ParseFntFile(
         }
 
         // Parameters to be populated
-        Character c;
+        Glyph c;
         c.id = -1;
         Maths::vec2 texTopLeft = {-1.0, -1.0};
         c.width = -1;

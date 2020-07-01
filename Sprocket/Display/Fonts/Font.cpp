@@ -14,7 +14,7 @@ FontPackage::FontPackage(const std::string& fntFile,
     d_size = size;
 }
 
-Character FontPackage::Get(int id) const
+Glyph FontPackage::Get(int id) const
 {
     auto it = d_glyphs.find(id);
     if (it == d_glyphs.end()) {
