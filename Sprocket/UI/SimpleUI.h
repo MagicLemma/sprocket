@@ -14,7 +14,7 @@
 
 namespace Sprocket {
 
-struct QuadBufferVertex
+struct BufferVertex
 {
     Maths::vec2 position;
     Maths::vec4 colour;
@@ -47,11 +47,11 @@ class SimpleUI
     int d_clicked; // ID of the clicked widget.
 
     // Used to construct the VBO each frame.
-    std::vector<QuadBufferVertex> d_quadBufferVertices;
-    std::vector<unsigned int>     d_quadBufferIndices;
+    std::vector<BufferVertex> d_quadVertices;
+    std::vector<unsigned int> d_quadIndices;
 
-    std::vector<QuadBufferVertex> d_textBufferVertices;
-    std::vector<unsigned int>     d_textBufferIndices;
+    std::vector<BufferVertex> d_textVertices;
+    std::vector<unsigned int> d_textIndices;
 
     void AddText(float x, float y, const std::string& text, float size);
 

@@ -14,7 +14,7 @@ SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_bufferLayout(sizeof(QuadBufferVertex))
+    , d_bufferLayout(sizeof(BufferVertex))
     , d_font("Resources/Fonts/Calibri.fnt",
              "Resources/Fonts/Calibri.png")
 {
@@ -43,11 +43,11 @@ void SimpleUI::OnUpdate(double dt)
 
 void SimpleUI::StartFrame()
 {
-    d_quadBufferVertices.clear();
-    d_quadBufferIndices.clear();
+    d_quadVertices.clear();
+    d_quadIndices.clear();
 
-    d_textBufferVertices.clear();
-    d_textBufferIndices.clear();
+    d_textVertices.clear();
+    d_textIndices.clear();
 }
 
 void SimpleUI::EndFrame()
@@ -63,44 +63,26 @@ void SimpleUI::EndFrame()
     Maths::mat4 proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
     d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", proj);
+    d_buffer.Bind();
 
     Texture::White().Bind();
-    d_buffer.Bind();
     d_buffer.SetVertexData(
-        sizeof(QuadBufferVertex) * d_quadBufferVertices.size(),
-        d_quadBufferVertices.data()
-    );
-
+        sizeof(BufferVertex) * d_quadVertices.size(),
+        d_quadVertices.data());
     d_buffer.SetIndexData(
-        sizeof(unsigned int) * d_quadBufferIndices.size(),
-        d_quadBufferIndices.data()
-    );
-
-    glDrawElements(
-        GL_TRIANGLES,
-        (int)d_quadBufferIndices.size(),
-        GL_UNSIGNED_INT,
-        nullptr
-    );
+        sizeof(unsigned int) * d_quadIndices.size(),
+        d_quadIndices.data());
+    glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
     d_font.Atlas().Bind();
-    d_buffer.Bind();
     d_buffer.SetVertexData(
-        sizeof(QuadBufferVertex) * d_textBufferVertices.size(),
-        d_textBufferVertices.data()
-    );
-
+        sizeof(BufferVertex) * d_textVertices.size(),
+        d_textVertices.data());
     d_buffer.SetIndexData(
-        sizeof(unsigned int) * d_textBufferIndices.size(),
-        d_textBufferIndices.data()
-    );
-
-    glDrawElements(
-        GL_TRIANGLES,
-        (int)d_textBufferIndices.size(),
-        GL_UNSIGNED_INT,
-        nullptr
-    );
+        sizeof(unsigned int) * d_textIndices.size(),
+        d_textIndices.data());
+    glDrawElements(GL_TRIANGLES, (int)d_textIndices.size(), GL_UNSIGNED_INT, nullptr);
+    
     d_buffer.Unbind();
     d_font.Atlas().Unbind();
     
@@ -110,18 +92,18 @@ void SimpleUI::Quad(float x, float y,
                     float width, float height,
                     const Maths::vec4& colour)
 {
-    unsigned int index = d_quadBufferVertices.size();
-    d_quadBufferVertices.push_back({{x,         y},          colour});
-    d_quadBufferVertices.push_back({{x + width, y},          colour});
-    d_quadBufferVertices.push_back({{x,         y + height}, colour});
-    d_quadBufferVertices.push_back({{x + width, y + height}, colour});
+    unsigned int index = d_quadVertices.size();
+    d_quadVertices.push_back({{x,         y},          colour});
+    d_quadVertices.push_back({{x + width, y},          colour});
+    d_quadVertices.push_back({{x,         y + height}, colour});
+    d_quadVertices.push_back({{x + width, y + height}, colour});
 
-    d_quadBufferIndices.push_back(index + 0);
-    d_quadBufferIndices.push_back(index + 1);
-    d_quadBufferIndices.push_back(index + 2);
-    d_quadBufferIndices.push_back(index + 2);
-    d_quadBufferIndices.push_back(index + 1);
-    d_quadBufferIndices.push_back(index + 3);
+    d_quadIndices.push_back(index + 0);
+    d_quadIndices.push_back(index + 1);
+    d_quadIndices.push_back(index + 2);
+    d_quadIndices.push_back(index + 2);
+    d_quadIndices.push_back(index + 1);
+    d_quadIndices.push_back(index + 3);
 }
 
 bool SimpleUI::Button(
@@ -196,18 +178,18 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size)
 
         pointer.x += c.Advance() * fontSize;
 
-        unsigned int index = d_textBufferVertices.size();
-        d_textBufferVertices.push_back({{xPos,         yPos},          colour, {xTexCoord/aw, yTexCoord/ah}});
-        d_textBufferVertices.push_back({{xPos + width, yPos},          colour, {(xTexCoord + aWidth)/aw, yTexCoord/ah}});
-        d_textBufferVertices.push_back({{xPos,         yPos + height}, colour, {xTexCoord/aw, (yTexCoord + aHeight)/ah}});
-        d_textBufferVertices.push_back({{xPos + width, yPos + height}, colour, {(xTexCoord + aWidth)/aw, (yTexCoord + aHeight)/ah}});
+        unsigned int index = d_textVertices.size();
+        d_textVertices.push_back({{xPos,         yPos},          colour, {xTexCoord/aw, yTexCoord/ah}});
+        d_textVertices.push_back({{xPos + width, yPos},          colour, {(xTexCoord + aWidth)/aw, yTexCoord/ah}});
+        d_textVertices.push_back({{xPos,         yPos + height}, colour, {xTexCoord/aw, (yTexCoord + aHeight)/ah}});
+        d_textVertices.push_back({{xPos + width, yPos + height}, colour, {(xTexCoord + aWidth)/aw, (yTexCoord + aHeight)/ah}});
 
-        d_textBufferIndices.push_back(index + 0);
-        d_textBufferIndices.push_back(index + 1);
-        d_textBufferIndices.push_back(index + 2);
-        d_textBufferIndices.push_back(index + 2);
-        d_textBufferIndices.push_back(index + 1);
-        d_textBufferIndices.push_back(index + 3);
+        d_textIndices.push_back(index + 0);
+        d_textIndices.push_back(index + 1);
+        d_textIndices.push_back(index + 2);
+        d_textIndices.push_back(index + 2);
+        d_textIndices.push_back(index + 1);
+        d_textIndices.push_back(index + 3);
     }
 }
 
