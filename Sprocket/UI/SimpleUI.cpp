@@ -89,9 +89,9 @@ void SimpleUI::EndFrame()
         nullptr
     );
     d_quadBuffer.Unbind();
-    //Texture::White().Unbind();
+    Texture::White().Unbind();
 
-    //d_font.Atlas().Bind();
+    d_font.Atlas().Bind();
     d_textBuffer.Bind();
     d_textBuffer.SetVertexData(
         sizeof(QuadBufferVertex) * d_textBufferVertices.size(),
@@ -110,7 +110,7 @@ void SimpleUI::EndFrame()
         nullptr
     );
     d_textBuffer.Unbind();
-    //d_font.Atlas().Unbind();
+    d_font.Atlas().Unbind();
     
 }
 
@@ -166,7 +166,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     float ratio = (*value - min) / (max - min);
     Quad(x, y, ratio * width, height, d_theme.hoveredColour);
     Quad(x + ratio * width, y, (1 - ratio) * width, height, d_theme.baseColour);
-    AddText(x, y, "Test", 1.0f);
+    AddText(x, y, "Testing", 36.0f);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -178,35 +178,31 @@ void SimpleUI::Slider(int id, const std::string& name,
 void SimpleUI::AddText(float x, float y, const std::string& text, float size)
 {
     Maths::vec2 pointer(x, y);
-    //float fontSize = size / d_font.Size();
+    float fontSize = size / d_font.Size();
 
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
     for (int character : text) {
         Character c = d_font.Get(character);
 
-        float xPos = pointer.x;// + c.XOffset() * fontSize;
-        float yPos = pointer.y;// + (c.Height() - c.YOffset()) * fontSize;
+        float xPos = pointer.x + c.XOffset() * fontSize;
+        float yPos = pointer.y + (c.Height() - c.YOffset()) * fontSize;
 
-        //float width = c.Width() * fontSize;
-        //float height = c.Height() * fontSize;
-//
-        //float xTexCoord = c.GetAtlasQuad().position.x;
-        //float yTexCoord = c.GetAtlasQuad().position.y;
-//
-        //float aw = (float)d_font.Atlas().Width();
-        //float ah = (float)d_font.Atlas().Height();
+        float width = c.Width() * fontSize;
+        float height = c.Height() * fontSize;
 
-        float width = 10.0f;
-        float height = 10.0f;
+        float xTexCoord = c.GetAtlasQuad().position.x;
+        float yTexCoord = c.GetAtlasQuad().position.y;
+        float aw = (float)d_font.Atlas().Width();
+        float ah = (float)d_font.Atlas().Height();
 
-        pointer.x += 15.0f;
+        pointer.x += c.Advance() * fontSize;
 
         unsigned int index = d_textBufferVertices.size();
-        d_textBufferVertices.push_back({{xPos,         yPos},          colour});//, {xTexCoord/aw, yTexCoord/aw}});
-        d_textBufferVertices.push_back({{xPos + width, yPos},          colour});//, {(xTexCoord + width)/aw, yTexCoord/aw}});
-        d_textBufferVertices.push_back({{xPos,         yPos + height}, colour});//, {xTexCoord/aw, (yTexCoord + height)/aw}});
-        d_textBufferVertices.push_back({{xPos + width, yPos + height}, colour});//, {(xTexCoord + width)/aw, (yTexCoord + height)/aw}});
+        d_textBufferVertices.push_back({{xPos,         yPos},          colour, {xTexCoord/aw, yTexCoord/aw}});
+        d_textBufferVertices.push_back({{xPos + width, yPos},          colour, {(xTexCoord + width)/aw, yTexCoord/aw}});
+        d_textBufferVertices.push_back({{xPos,         yPos + height}, colour, {xTexCoord/aw, (yTexCoord + height)/aw}});
+        d_textBufferVertices.push_back({{xPos + width, yPos + height}, colour, {(xTexCoord + width)/aw, (yTexCoord + height)/aw}});
 
         d_textBufferIndices.push_back(index + 0);
         d_textBufferIndices.push_back(index + 1);
