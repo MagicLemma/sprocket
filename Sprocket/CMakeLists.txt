@@ -69,9 +69,7 @@ add_library(Sprocket STATIC
             Display/Image.cpp
             Display/TextBox.cpp
 
-            Display/Fonts/Glyph.cpp
             Display/Fonts/Font.cpp
-            Display/Fonts/Text.cpp
 
             Display/WidgetProperties/WidgetProperty.cpp
             Display/WidgetProperties/Draggable.cpp
