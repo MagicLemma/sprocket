@@ -144,7 +144,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
     
-    AddText(x, y, text.str(), 36.0f);
+    AddText(x, y, text.str(), 0.8f * height, width);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -153,18 +153,26 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void SimpleUI::AddText(float x, float y, const std::string& text, float size)
+void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width)
 {
     float fontSize = size / d_font.Size();
-    Maths::vec2 pointer(x + 60.0f, y - size); // TODO: Remove this 60.0
-
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
-    for (int character : text) {
+    float textWidth = 0.0f;
+    for (char character : text) {
+        Character c = d_font.Get(character);
+        textWidth += c.Advance() * fontSize;
+    }
+    auto last = d_font.Get(text.back());
+    textWidth += (last.XOffset() + last.Width()) * fontSize;
+
+    Maths::vec2 pointer(x + (width - textWidth) / 2.0f, y);
+    
+    for (char character : text) {
         Character c = d_font.Get(character);
 
         float xPos = pointer.x + c.XOffset() * fontSize;
-        float yPos = pointer.y + (c.Height() - c.YOffset()) * fontSize;
+        float yPos = pointer.y + c.YOffset() * fontSize;
 
         float width = c.Width() * fontSize;
         float height = c.Height() * fontSize;
