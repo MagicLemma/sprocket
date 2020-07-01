@@ -9,6 +9,27 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
+namespace {
+
+float TextWidth(const std::string& text, const FontPackage& font, float size)
+{
+    float textWidth = 0.0f;
+
+    for (char character : text) {
+        Character c = font.Get(character);
+        textWidth += c.Advance();
+    }
+
+    auto first = font.Get(text.front());
+    textWidth -= first.XOffset();
+
+    auto last = font.Get(text.back());
+    textWidth += (last.XOffset() + last.Width());
+
+    return textWidth * size;
+}
+
+}
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
@@ -125,6 +146,7 @@ bool SimpleUI::Button(
     }
 
     Quad(x, y, width, height, colour);
+    AddText(x, y, name, 0.6f * height, width);
     return clicked;
 }
 
@@ -144,7 +166,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
     
-    AddText(x, y, text.str(), 0.8f * height, width);
+    AddText(x, y, text.str(), 0.6f * height, width);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -155,17 +177,10 @@ void SimpleUI::Slider(int id, const std::string& name,
 
 void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width)
 {
-    float fontSize = size / d_font.Size();
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
+    float fontSize = size / d_font.Size();
 
-    float textWidth = 0.0f;
-    for (char character : text) {
-        Character c = d_font.Get(character);
-        textWidth += c.Advance() * fontSize;
-    }
-    auto last = d_font.Get(text.back());
-    textWidth += (last.XOffset() + last.Width()) * fontSize;
-
+    float textWidth = TextWidth(text, d_font, fontSize);
     Maths::vec2 pointer(x + (width - textWidth) / 2.0f, y);
     
     for (char character : text) {
