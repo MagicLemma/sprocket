@@ -1,5 +1,4 @@
 #pragma once
-#include "Maths.h"
 #include "Quad.h"
 #include "Model2D.h"
 
@@ -25,14 +24,6 @@ struct Character
     Quad textureQuad;
         // Quad that describes the region in the texture atlas that holds
         // this character.
-
-    Character(int id,
-              const Quad& textureQuad,
-              float width,
-              float height,
-              float xOffset,
-              float yOffset,
-              float advance);
 };
 
 }

@@ -30,6 +30,10 @@ Model2D::Model2D(const Vertex2DBuffer& vertices)
     glBindVertexArray(0);
 }
 
+Model2D::Model2D()
+{
+}
+
 void Model2D::Bind() const
 {
     glBindVertexArray(d_vao->Value());

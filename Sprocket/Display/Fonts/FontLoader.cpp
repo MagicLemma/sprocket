@@ -10,6 +10,26 @@
 #include FT_FREETYPE_H
 
 namespace Sprocket {
+namespace {
+
+Model2D GetModel(const Quad& textureQuad,
+                 double width,
+                 double height)
+{
+    auto x = textureQuad.position.x;
+    auto y = textureQuad.position.y;
+    auto w = textureQuad.width;
+    auto h = textureQuad.height;
+    Vertex2DBuffer buffer{
+        {{0.0f,  0.0f  }, {x,     y    }},
+        {{width, 0.0f  }, {x + w, y    }},
+        {{0.0f,  height}, {x,     y + h}},
+        {{width, height}, {x + w, y + h}}      
+    };
+    return Model2D(buffer);
+}
+
+}
 
 std::pair<GlyphMap, float> ParseFntFile(
     const std::string& fntFile,
@@ -47,13 +67,14 @@ std::pair<GlyphMap, float> ParseFntFile(
         }
 
         // Parameters to be populated
-        int id = -1;
+        Character c;
+        c.id = -1;
         Maths::vec2 texTopLeft = {-1.0, -1.0};
-        double width = -1;
-        double height = -1;
-        double xOffset = -100; // Offsets can be negative, but surely not this big.
-        double yOffset = -100;
-        double advance = -1;
+        c.width = -1;
+        c.height = -1;
+        c.xOffset = -100; // Offsets can be negative, but surely not this big.
+        c.yOffset = -100;
+        c.advance = -1;
 
         std::vector<std::string> charAttrs = Tokenize(line.substr(5));
         for (const auto& attr : charAttrs) {
@@ -64,7 +85,7 @@ std::pair<GlyphMap, float> ParseFntFile(
             }
 
             if (keyVal[0] == "id") {
-                id = std::stoi(keyVal[1]);
+                c.id = std::stoi(keyVal[1]);
             }
             else if (keyVal[0] == "x") {
                 texTopLeft.x = std::stod(keyVal[1]);
@@ -73,30 +94,30 @@ std::pair<GlyphMap, float> ParseFntFile(
                 texTopLeft.y = std::stod(keyVal[1]);
             }
             else if (keyVal[0] == "width") {
-                width = std::stod(keyVal[1]);
+                c.width = std::stod(keyVal[1]);
             }
             else if (keyVal[0] == "height") {
-                height = std::stod(keyVal[1]);
+                c.height = std::stod(keyVal[1]);
             }
             else if (keyVal[0] == "xoffset") {
-                xOffset = std::stod(keyVal[1]);
+                c.xOffset = std::stod(keyVal[1]);
             }
             else if (keyVal[0] == "yoffset") {
-                yOffset = std::stod(keyVal[1]);
+                c.yOffset = std::stod(keyVal[1]);
             }
             else if (keyVal[0] == "xadvance") {
-                advance = std::stod(keyVal[1]);
+                c.advance = std::stod(keyVal[1]);
             }
         }
 
         bool invalid = false;
-        if (id == -1 ||
+        if (c.id == -1 ||
             texTopLeft == Maths::vec2{-1.0, -1.0} ||
-            width == -1 ||
-            height == -1 ||
-            xOffset == -100 ||
-            yOffset == -100 ||
-            advance == -1) {
+            c.width == -1 ||
+            c.height == -1 ||
+            c.xOffset == -100 ||
+            c.yOffset == -100 ||
+            c.advance == -1) {
             invalid = true;
         }
 
@@ -105,14 +126,14 @@ std::pair<GlyphMap, float> ParseFntFile(
             throw std::exception("Bad Font Parse");
         }      
     
-        Quad textureQuad;
-        textureQuad.position = { texTopLeft.x / (float)atlas.Width(),
+        c.textureQuad.position = { texTopLeft.x / (float)atlas.Width(),
                                  texTopLeft.y / (float)atlas.Height() };
-        textureQuad.width = width / (float)atlas.Width();
-        textureQuad.height = height / (float)atlas.Height(); 
+        c.textureQuad.width = c.width / (float)atlas.Width();
+        c.textureQuad.height = c.height / (float)atlas.Height();
 
-        glyphs.insert(std::make_pair(id, Character(
-            id, textureQuad, width, height, xOffset, yOffset, advance)));
+        c.model = GetModel(c.textureQuad, c.width, c.height);
+
+        glyphs.insert(std::make_pair(c.id, c));
     }
 
     return {glyphs, size};
