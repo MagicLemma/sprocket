@@ -25,14 +25,14 @@ int main()
     auto world = sceneManager.AddScene("World");
     auto worldLayer = world->Add<WorldLayer>(core);
     auto editorUi = world->Add<EditorUI>(core, worldLayer.get());
-    world->Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
+    world->Add<EscapeMenu>(core, worldLayer.get());
     sceneManager.SetActiveScene("World");
  
     Stopwatch watch;
 
-    //Audio::Music sound;
-    //sound.Load("Resources/Audio/Sample.wav");
-    //sound.Play();
+    Audio::Music sound;
+    sound.Load("Resources/Audio/Sample.wav");
+    sound.Play();
 
     while (window.Running()) {
         window.Clear();

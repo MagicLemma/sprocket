@@ -5,9 +5,12 @@
 namespace Sprocket {
 
 MouseProxy::MouseProxy()
-    : d_position({0.0f, 0.0f})
-    , d_offsetSum({0.0f, 0.0f})
-    , d_offset({0.0f, 0.0f})
+    : d_positionTemp({0.0f, 0.0f})
+    , d_positionCurr({0.0f, 0.0f})
+    , d_positionPrev({0.0f, 0.0f})
+    , d_pressedTemp({false, false, false, false, false})
+    , d_pressedCurr({false, false, false, false, false})
+    , d_pressedPrev({false, false, false, false, false})
 {
     
 }
@@ -18,33 +21,47 @@ void MouseProxy::OnEvent(Event& event)
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         if (event.IsConsumed()) { return; }
-        d_pressedButtons[e->Button()] = true;
+        d_pressedTemp[e->Button()] = true;
     }
 
     else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-        d_pressedButtons[e->Button()] = false;
+        d_pressedTemp[e->Button()] = false;
     }
 
     else if (auto e = event.As<MouseMovedEvent>()) {
-        Sprocket::Maths::vec2 p = {e->XPos(), e->YPos()};
-        d_offsetSum = p - d_position;
-        d_position = p;
+        d_positionTemp = {e->XPos(), e->YPos()};
     }
 }
 
 bool MouseProxy::IsButtonDown(int key) const
 {
-    auto it = d_pressedButtons.find(key);
-    if (it != d_pressedButtons.end()) {
-        return it->second;
-    }
-    return false;
+    return d_pressedCurr[key];
 }
 
 void MouseProxy::OnUpdate()
 {
-    d_offset = d_offsetSum;
-    d_offsetSum = Maths::vec2(0.0f, 0.0f);
+    d_pressedPrev = d_pressedCurr;
+    d_pressedCurr = d_pressedTemp;
+
+    d_positionPrev = d_positionCurr;
+    d_positionCurr = d_positionTemp;
+}
+
+bool MouseProxy::IsButtonClicked(int button) const
+{
+    return d_pressedCurr[button] && !d_pressedPrev[button];
+}
+
+bool MouseProxy::IsButtonReleased(int button) const
+{
+    return !d_pressedCurr[button] && d_pressedPrev[button];
+}
+
+bool MouseProxy::InRegion(float x, float y, float width, float height) const
+{
+    auto pos = GetMousePos();
+    return x < pos.x && pos.x < x + width &&
+           y < pos.y && pos.y < y + height;
 }
 
 }

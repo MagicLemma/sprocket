@@ -8,11 +8,15 @@ Vertex2DBuffer GetBuffer(const Texture& atlas,
                          double width,
                          double height)
 {
+    auto x = texTopLeft.x;
+    auto y = texTopLeft.y;
+    auto aw = atlas.Width();
+    auto ah = atlas.Height();
     return Vertex2DBuffer{
-        {Maths::vec2{0.0f, 0.0f}, Maths::vec2{texTopLeft.x/atlas.Width(), texTopLeft.y/atlas.Height()}},
-        {Maths::vec2{width, 0.0f}, Maths::vec2{(texTopLeft.x + width)/atlas.Width(), texTopLeft.y/atlas.Height()}},
-        {Maths::vec2{0.0f, height}, Maths::vec2{texTopLeft.x/atlas.Width(), (texTopLeft.y + height)/atlas.Height()}},
-        {Maths::vec2{width, height}, Maths::vec2{(texTopLeft.x + width)/atlas.Width(), (texTopLeft.y + height)/atlas.Height()}}       
+        {{0.0f, 0.0f}, {x/aw, y/ah}},
+        {{width, 0.0f}, {(x + width)/aw, y/ah}},
+        {{0.0f, height}, {x/aw, (y + height)/ah}},
+        {{width, height}, {(x + width)/aw, (y + height)/ah}}       
     };
 }
     

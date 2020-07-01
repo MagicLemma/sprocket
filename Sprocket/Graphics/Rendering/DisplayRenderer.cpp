@@ -150,7 +150,7 @@ void DisplayRenderer::Draw(const Text& text)
             Maths::identity);
         transform = Maths::Scale(transform, fontSize);
 
-        d_characterShader.LoadUniform("transform", transform);;
+        d_characterShader.LoadUniform("transform", transform);
 
         c.Bind();
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

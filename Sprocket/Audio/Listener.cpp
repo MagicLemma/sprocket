@@ -14,5 +14,15 @@ void SetListener(const Entity& entity)
     sf::Listener::setDirection(dir.x, dir.y, dir.z);
 }
 
+float GetMasterVolume()
+{
+    return sf::Listener::getGlobalVolume();
+}
+
+void SetMasterVolume(float volume)
+{
+    sf::Listener::setGlobalVolume(volume);
+}
+
 }
 }

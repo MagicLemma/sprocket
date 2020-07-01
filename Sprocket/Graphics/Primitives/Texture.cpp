@@ -97,7 +97,7 @@ void Texture::Unbind() const
 
 Texture Texture::White()
 {
-    static const Texture white(1, 1, {0xff, 0xff, 0xff, 0x55});
+    static const Texture white(1, 1, {0xff, 0xff, 0xff, 0xff});
     return white;
 }
 
