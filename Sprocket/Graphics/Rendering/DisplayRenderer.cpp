@@ -139,6 +139,7 @@ void DisplayRenderer::Draw(const Text& text)
     d_characterShader.Bind();
     d_characterShader.LoadUniform("colour", text.colour);
 
+    fontPack.Atlas().Bind();
     for (int character : text.message) {
         Character c = fontPack.Get(character);
 
@@ -158,6 +159,7 @@ void DisplayRenderer::Draw(const Text& text)
 
         pointer.x += c.Advance() * fontSize;
     }
+    fontPack.Atlas().Unbind();
 
     d_characterShader.Bind();
     glDisable(GL_BLEND);
