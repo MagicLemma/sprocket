@@ -14,22 +14,16 @@ SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_quadBufferLayout(sizeof(QuadBufferVertex))
-    , d_textBufferLayout(sizeof(QuadBufferVertex))
+    , d_bufferLayout(sizeof(QuadBufferVertex))
     , d_font("Resources/Fonts/Calibri.fnt",
              "Resources/Fonts/Calibri.png")
 {
     d_keyboard.ConsumeAll(false);
 
-    d_quadBufferLayout.AddAttribute(DataType::FLOAT, 2);
-    d_quadBufferLayout.AddAttribute(DataType::FLOAT, 4);
-    d_quadBufferLayout.AddAttribute(DataType::FLOAT, 2);
-    d_quadBuffer.SetBufferLayout(d_quadBufferLayout);
-
-    d_textBufferLayout.AddAttribute(DataType::FLOAT, 2);
-    d_textBufferLayout.AddAttribute(DataType::FLOAT, 4);
-    d_textBufferLayout.AddAttribute(DataType::FLOAT, 2);
-    d_textBuffer.SetBufferLayout(d_textBufferLayout);
+    d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
+    d_bufferLayout.AddAttribute(DataType::FLOAT, 4);
+    d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
+    d_buffer.SetBufferLayout(d_bufferLayout);
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -71,13 +65,13 @@ void SimpleUI::EndFrame()
     d_shader.LoadUniform("u_proj_matrix", proj);
 
     Texture::White().Bind();
-    d_quadBuffer.Bind();
-    d_quadBuffer.SetVertexData(
+    d_buffer.Bind();
+    d_buffer.SetVertexData(
         sizeof(QuadBufferVertex) * d_quadBufferVertices.size(),
         d_quadBufferVertices.data()
     );
 
-    d_quadBuffer.SetIndexData(
+    d_buffer.SetIndexData(
         sizeof(unsigned int) * d_quadBufferIndices.size(),
         d_quadBufferIndices.data()
     );
@@ -88,17 +82,15 @@ void SimpleUI::EndFrame()
         GL_UNSIGNED_INT,
         nullptr
     );
-    d_quadBuffer.Unbind();
-    Texture::White().Unbind();
 
     d_font.Atlas().Bind();
-    d_textBuffer.Bind();
-    d_textBuffer.SetVertexData(
+    d_buffer.Bind();
+    d_buffer.SetVertexData(
         sizeof(QuadBufferVertex) * d_textBufferVertices.size(),
         d_textBufferVertices.data()
     );
 
-    d_textBuffer.SetIndexData(
+    d_buffer.SetIndexData(
         sizeof(unsigned int) * d_textBufferIndices.size(),
         d_textBufferIndices.data()
     );
@@ -109,7 +101,7 @@ void SimpleUI::EndFrame()
         GL_UNSIGNED_INT,
         nullptr
     );
-    d_textBuffer.Unbind();
+    d_buffer.Unbind();
     d_font.Atlas().Unbind();
     
 }

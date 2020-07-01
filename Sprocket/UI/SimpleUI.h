@@ -39,11 +39,8 @@ class SimpleUI
     KeyboardProxy d_keyboard;
     MouseProxy d_mouse;
 
-    StreamBuffer d_quadBuffer;
-    BufferLayout d_quadBufferLayout;
-
-    StreamBuffer d_textBuffer;
-    BufferLayout d_textBufferLayout;
+    StreamBuffer d_buffer;
+    BufferLayout d_bufferLayout;
 
     FontPackage d_font;
 
