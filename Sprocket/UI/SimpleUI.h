@@ -42,11 +42,19 @@ class SimpleUI
     StreamBuffer d_quadBuffer;
     BufferLayout d_quadBufferLayout;
 
+    StreamBuffer d_textBuffer;
+    BufferLayout d_textBufferLayout;
+
+    FontPackage d_font;
+
     int d_clicked; // ID of the clicked widget.
 
     // Used to construct the VBO each frame.
     std::vector<QuadBufferVertex> d_quadBufferVertices;
     std::vector<unsigned int>     d_quadBufferIndices;
+
+    std::vector<QuadBufferVertex> d_textBufferVertices;
+    std::vector<unsigned int>     d_textBufferIndices;
 
     void AddText(float x, float y, const std::string& text, float size);
 

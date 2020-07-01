@@ -15,6 +15,9 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_quadBufferLayout(sizeof(QuadBufferVertex))
+    , d_textBufferLayout(sizeof(QuadBufferVertex))
+    , d_font("Resources/Fonts/Calibri.fnt",
+             "Resources/Fonts/Calibri.png")
 {
     d_keyboard.ConsumeAll(false);
 
@@ -22,6 +25,11 @@ SimpleUI::SimpleUI(Window* window)
     d_quadBufferLayout.AddAttribute(DataType::FLOAT, 4);
     d_quadBufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_quadBuffer.SetBufferLayout(d_quadBufferLayout);
+
+    d_textBufferLayout.AddAttribute(DataType::FLOAT, 2);
+    d_textBufferLayout.AddAttribute(DataType::FLOAT, 4);
+    d_textBufferLayout.AddAttribute(DataType::FLOAT, 2);
+    d_textBuffer.SetBufferLayout(d_textBufferLayout);
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -43,6 +51,9 @@ void SimpleUI::StartFrame()
 {
     d_quadBufferVertices.clear();
     d_quadBufferIndices.clear();
+
+    d_textBufferVertices.clear();
+    d_textBufferIndices.clear();
 }
 
 void SimpleUI::EndFrame()
@@ -58,8 +69,8 @@ void SimpleUI::EndFrame()
     Maths::mat4 proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
     d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", proj);
+
     Texture::White().Bind();
-    
     d_quadBuffer.Bind();
     d_quadBuffer.SetVertexData(
         sizeof(QuadBufferVertex) * d_quadBufferVertices.size(),
@@ -77,10 +88,30 @@ void SimpleUI::EndFrame()
         GL_UNSIGNED_INT,
         nullptr
     );
-
-    Texture::White().Unbind();
-    d_shader.Unbind();
     d_quadBuffer.Unbind();
+    //Texture::White().Unbind();
+
+    //d_font.Atlas().Bind();
+    d_textBuffer.Bind();
+    d_textBuffer.SetVertexData(
+        sizeof(QuadBufferVertex) * d_textBufferVertices.size(),
+        d_textBufferVertices.data()
+    );
+
+    d_textBuffer.SetIndexData(
+        sizeof(unsigned int) * d_textBufferIndices.size(),
+        d_textBufferIndices.data()
+    );
+
+    glDrawElements(
+        GL_TRIANGLES,
+        (int)d_textBufferIndices.size(),
+        GL_UNSIGNED_INT,
+        nullptr
+    );
+    d_textBuffer.Unbind();
+    //d_font.Atlas().Unbind();
+    
 }
 
 void SimpleUI::Quad(float x, float y,
@@ -135,6 +166,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     float ratio = (*value - min) / (max - min);
     Quad(x, y, ratio * width, height, d_theme.hoveredColour);
     Quad(x + ratio * width, y, (1 - ratio) * width, height, d_theme.baseColour);
+    AddText(x, y, "Test", 1.0f);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -143,9 +175,46 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void AddText(float x, float y, const std::string& text, float size)
+void SimpleUI::AddText(float x, float y, const std::string& text, float size)
 {
-    
+    Maths::vec2 pointer(x, y);
+    //float fontSize = size / d_font.Size();
+
+    Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
+
+    for (int character : text) {
+        Character c = d_font.Get(character);
+
+        float xPos = pointer.x;// + c.XOffset() * fontSize;
+        float yPos = pointer.y;// + (c.Height() - c.YOffset()) * fontSize;
+
+        //float width = c.Width() * fontSize;
+        //float height = c.Height() * fontSize;
+//
+        //float xTexCoord = c.GetAtlasQuad().position.x;
+        //float yTexCoord = c.GetAtlasQuad().position.y;
+//
+        //float aw = (float)d_font.Atlas().Width();
+        //float ah = (float)d_font.Atlas().Height();
+
+        float width = 10.0f;
+        float height = 10.0f;
+
+        pointer.x += 15.0f;
+
+        unsigned int index = d_textBufferVertices.size();
+        d_textBufferVertices.push_back({{xPos,         yPos},          colour});//, {xTexCoord/aw, yTexCoord/aw}});
+        d_textBufferVertices.push_back({{xPos + width, yPos},          colour});//, {(xTexCoord + width)/aw, yTexCoord/aw}});
+        d_textBufferVertices.push_back({{xPos,         yPos + height}, colour});//, {xTexCoord/aw, (yTexCoord + height)/aw}});
+        d_textBufferVertices.push_back({{xPos + width, yPos + height}, colour});//, {(xTexCoord + width)/aw, (yTexCoord + height)/aw}});
+
+        d_textBufferIndices.push_back(index + 0);
+        d_textBufferIndices.push_back(index + 1);
+        d_textBufferIndices.push_back(index + 2);
+        d_textBufferIndices.push_back(index + 2);
+        d_textBufferIndices.push_back(index + 1);
+        d_textBufferIndices.push_back(index + 3);
+    }
 }
 
 }
