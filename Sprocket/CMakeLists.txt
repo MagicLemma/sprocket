@@ -71,7 +71,6 @@ add_library(Sprocket STATIC
 
             Display/Fonts/Glyph.cpp
             Display/Fonts/Font.cpp
-            Display/Fonts/FontLoader.cpp
             Display/Fonts/Text.cpp
 
             Display/WidgetProperties/WidgetProperty.cpp

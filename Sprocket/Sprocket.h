@@ -92,7 +92,6 @@
 
 #include "Display/Fonts/Glyph.h"
 #include "Display/Fonts/Font.h"
-#include "Display/Fonts/FontLoader.h"
 #include "Display/Fonts/Text.h"
 
 #include "Display/WidgetProperties/WidgetProperty.h"
