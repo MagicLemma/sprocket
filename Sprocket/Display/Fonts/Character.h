@@ -10,8 +10,8 @@ class Character
     int d_id;
         // ASCII ID
 
-    Quad d_atlasQuad;
-        // Describes the area in the texture map that shows this character.
+    float d_width;
+    float d_height;
 
     float d_xOffset;
     float d_yOffset;
@@ -23,13 +23,11 @@ class Character
     Model2D d_model;
         // Model of the character to load.
 
-    Texture d_atlas;
-        // Texture atlas that holds this character
+    Quad d_textureQuad;
 
 public:
-    Character(const Texture& atlas,
-              int id,
-              const Maths::vec2& texTopLeft,
+    Character(int id,
+              const Quad& textureQuad,
               float width,
               float height,
               float xOffset,
@@ -41,18 +39,16 @@ public:
 
     int Id() const { return d_id; }
 
-    Quad GetAtlasQuad() const { return d_atlasQuad; }
-
     float XOffset() const { return d_xOffset; }
     float YOffset() const { return d_yOffset; }
     Maths::vec3 Offset() const { return {d_xOffset, -d_yOffset, 0.0}; }
 
     float Advance() const { return d_advance; }
 
-    float Width() const { return d_atlasQuad.width; }
-    float Height() const { return d_atlasQuad.height; }
+    float Width() const { return d_width; }
+    float Height() const { return d_height; }
 
-    Texture Atlas() const { return d_atlas; }
+    Quad GetTextureQuad() const { return d_textureQuad; }
 };
 
 }

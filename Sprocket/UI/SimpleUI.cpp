@@ -192,20 +192,19 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
         float width = c.Width() * fontSize;
         float height = c.Height() * fontSize;
 
-        float xTexCoord = c.GetAtlasQuad().position.x;
-        float aWidth = c.GetAtlasQuad().width;
-        float yTexCoord = c.GetAtlasQuad().position.y;
-        float aHeight = c.GetAtlasQuad().height;
-        float aw = (float)d_font.Atlas().Width();
-        float ah = (float)d_font.Atlas().Height();
+        auto quad = c.GetTextureQuad();
+        float x = quad.position.x;
+        float y = quad.position.y;
+        float w = quad.width;
+        float h = quad.height;
 
         pointer.x += c.Advance() * fontSize;
 
         unsigned int index = d_textVertices.size();
-        d_textVertices.push_back({{xPos,         yPos},          colour, {xTexCoord/aw, yTexCoord/ah}});
-        d_textVertices.push_back({{xPos + width, yPos},          colour, {(xTexCoord + aWidth)/aw, yTexCoord/ah}});
-        d_textVertices.push_back({{xPos,         yPos + height}, colour, {xTexCoord/aw, (yTexCoord + aHeight)/ah}});
-        d_textVertices.push_back({{xPos + width, yPos + height}, colour, {(xTexCoord + aWidth)/aw, (yTexCoord + aHeight)/ah}});
+        d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
+        d_textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
+        d_textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
+        d_textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
 
         d_textIndices.push_back(index + 0);
         d_textIndices.push_back(index + 1);

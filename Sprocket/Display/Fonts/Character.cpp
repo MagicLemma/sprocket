@@ -3,51 +3,48 @@
 
 namespace Sprocket {
 
-Vertex2DBuffer GetBuffer(const Texture& atlas,
-                         const Maths::vec2& texTopLeft,
+Vertex2DBuffer GetBuffer(const Quad& textureQuad,
                          double width,
                          double height)
 {
-    auto x = texTopLeft.x;
-    auto y = texTopLeft.y;
-    auto aw = atlas.Width();
-    auto ah = atlas.Height();
+    auto x = textureQuad.position.x;
+    auto y = textureQuad.position.y;
+    auto w = textureQuad.width;
+    auto h = textureQuad.height;
     return Vertex2DBuffer{
-        {{0.0f, 0.0f}, {x/aw, y/ah}},
-        {{width, 0.0f}, {(x + width)/aw, y/ah}},
-        {{0.0f, height}, {x/aw, (y + height)/ah}},
-        {{width, height}, {(x + width)/aw, (y + height)/ah}}       
+        {{0.0f,  0.0f  }, {x,     y    }},
+        {{width, 0.0f  }, {x + w, y    }},
+        {{0.0f,  height}, {x,     y + h}},
+        {{width, height}, {x + w, y + h}}      
     };
 }
     
-Character::Character(const Texture& atlas,
-                     int id,
-                     const Maths::vec2& texTopLeft,
+Character::Character(int id,
+                     const Quad& textureQuad,
                      float width,
                      float height,
                      float xOffset,
                      float yOffset,
                      float advance)
     : d_id(id)
-    , d_atlasQuad({texTopLeft, width, height})
+    , d_width(width)
+    , d_height(height)
     , d_xOffset(xOffset)
     , d_yOffset(yOffset)
     , d_advance(advance)
-    , d_model(GetBuffer(atlas, texTopLeft, width, height))
-    , d_atlas(atlas)
+    , d_model(GetBuffer(textureQuad, width, height))
+    , d_textureQuad(textureQuad)
 {
 }
 
 void Character::Bind() const
 {
-    d_atlas.Bind();
     d_model.Bind();
 }
 
 void Character::Unbind() const
 {
     d_model.Unbind();
-    d_atlas.Unbind();
 }
 
 }

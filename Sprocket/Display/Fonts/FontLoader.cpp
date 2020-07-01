@@ -103,10 +103,16 @@ std::pair<GlyphMap, float> ParseFntFile(
         if (invalid) {
             SPKT_LOG_WARN("Could not parse line '{}'", line);
             throw std::exception("Bad Font Parse");
-        }
+        }      
+    
+        Quad textureQuad;
+        textureQuad.position = { texTopLeft.x / (float)atlas.Width(),
+                                 texTopLeft.y / (float)atlas.Height() };
+        textureQuad.width = width / (float)atlas.Width();
+        textureQuad.height = height / (float)atlas.Height(); 
 
         glyphs.insert(std::make_pair(id, Character(
-            atlas, id, texTopLeft, width, height, xOffset, yOffset, advance)));
+            id, textureQuad, width, height, xOffset, yOffset, advance)));
     }
 
     return {glyphs, size};
