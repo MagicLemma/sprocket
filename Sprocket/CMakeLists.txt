@@ -117,7 +117,10 @@ add_library(Sprocket STATIC
             Vendor/ImGuizmo/ImGuizmo.cpp
             Vendor/freetype-gl/texture-font.c
             Vendor/freetype-gl/texture-atlas.c
-            Vendor/freetype-gl/vector.c)
+            Vendor/freetype-gl/vector.c
+            Vendor/freetype-gl/utf8-utils.c
+            Vendor/freetype-gl/distance-field.c
+            Vendor/freetype-gl/edtaa3func.c)
 
 target_link_libraries(Sprocket PUBLIC
                       glfw
