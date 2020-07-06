@@ -46,7 +46,7 @@ void EscapeMenu::OnUpdate(double dt)
     float h = (float)window->Height();
 
     d_ui.StartFrame();
-    d_ui.Quad(0, 0.0f, w * 0.3f, h, vec4{0.0, 0.0, 0.0, 0.8});
+    d_ui.Quad(0, 0.0f, w * 0.3f, h, Sprocket::Maths::vec4{0.0, 0.0, 0.0, 0.8});
 
     if (d_ui.Button(1, "Toggle Dev UI", w * 0.025f, 100, w * 0.25f, 50)) {
         switch (d_worldLayer->d_mode) {
