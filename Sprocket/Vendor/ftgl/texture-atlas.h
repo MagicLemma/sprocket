@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "vector.h"
 #include "vec234.h"
 
 namespace ftgl {

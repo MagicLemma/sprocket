@@ -7,7 +7,6 @@
 #include <vector>
 #include <string>
 
-#include "vector.h"
 #include "texture-atlas.h"
 
 namespace ftgl {
