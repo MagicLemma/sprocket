@@ -6,6 +6,8 @@
 #include <string.h>
 #include "utf8-utils.h"
 
+namespace ftgl {
+
 // ----------------------------------------------------- utf8_surrogate_len ---
 size_t
 utf8_surrogate_len( const char* character )
@@ -82,4 +84,6 @@ utf8_to_utf32( const char * character )
     }
 
     return result;
+}
+
 }

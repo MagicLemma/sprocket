@@ -15,21 +15,14 @@
  *
  *  ============================================================================
  */
-#ifndef __TEXTURE_ATLAS_H__
-#define __TEXTURE_ATLAS_H__
+#pragma once
 
 #include <stdlib.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "vector.h"
 #include "vec234.h"
 
-#ifdef __cplusplus
 namespace ftgl {
-#endif
 
 /**
  * @file   texture-atlas.h
@@ -73,7 +66,7 @@ namespace ftgl {
 /**
  * A texture atlas is used to pack several small regions into a single texture.
  */
-typedef struct texture_atlas_t
+struct texture_atlas_t
 {
     /**
      * Allocated nodes
@@ -110,7 +103,7 @@ typedef struct texture_atlas_t
      */
     unsigned char * data;
 
-} texture_atlas_t;
+};
 
 
 
@@ -186,9 +179,5 @@ typedef struct texture_atlas_t
 
 /** @} */
 
-#ifdef __cplusplus
 }
-}
-#endif
 
-#endif /* __TEXTURE_ATLAS_H__ */

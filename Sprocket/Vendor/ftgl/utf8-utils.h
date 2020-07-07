@@ -1,19 +1,9 @@
-/* Freetype GL - A C OpenGL Freetype engine
- *
- * Distributed under the OSI-approved BSD 2-Clause License.  See accompanying
- * file `LICENSE` for more details.
- */
-#ifndef __UTF8_UTILS_H__
-#define __UTF8_UTILS_H__
+#pragma once
 
 #include <stdlib.h>
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-
 namespace ftgl {
-#endif
 
 /**
  * @file    utf8-utils.h
@@ -60,9 +50,4 @@ namespace ftgl {
  * @}
  */
 
-#ifdef __cplusplus
 }
-}
-#endif
-
-#endif /* #define __UTF8_UTILS_H__ */

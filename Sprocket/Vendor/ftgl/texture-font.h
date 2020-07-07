@@ -1,24 +1,11 @@
-/* Freetype GL - A C OpenGL Freetype engine
- *
- * Distributed under the OSI-approved BSD 2-Clause License.  See accompanying
- * file `LICENSE` for more details.
- */
-#ifndef __TEXTURE_FONT_H__
-#define __TEXTURE_FONT_H__
+#pragma once
 
 #include <stdlib.h>
 #include <stdint.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "vector.h"
 #include "texture-atlas.h"
 
-#ifdef __cplusplus
 namespace ftgl {
-#endif
 
 /**
  * @file   texture-font.h
@@ -45,13 +32,13 @@ namespace ftgl {
 /**
  * A list of possible ways to render a glyph.
  */
-typedef enum rendermode_t
+enum rendermode_t
 {
     RENDER_NORMAL,
     RENDER_OUTLINE_EDGE,
     RENDER_OUTLINE_POSITIVE,
     RENDER_OUTLINE_NEGATIVE
-} rendermode_t;
+};
 
 
 /**
@@ -61,7 +48,7 @@ typedef enum rendermode_t
  * This structure cannot be used alone since the (necessary) right
  * Unicode codepoint is implicitely held by the owner of this structure.
  */
-typedef struct kerning_t
+struct kerning_t
 {
     /**
      * Left Unicode codepoint in the kern pair in UTF-32 LE encoding.
@@ -73,7 +60,7 @@ typedef struct kerning_t
      */
     float kerning;
 
-} kerning_t;
+};
 
 
 
@@ -114,7 +101,7 @@ typedef struct kerning_t
 /**
  * A structure that describe a glyph.
  */
-typedef struct texture_glyph_t
+struct texture_glyph_t
 {
     /**
      * Unicode codepoint this glyph represents in UTF-32 LE encoding.
@@ -193,14 +180,18 @@ typedef struct texture_glyph_t
      */
     float outline_thickness;
 
-} texture_glyph_t;
+};
 
-
+enum class FontLocation
+{
+    TEXTURE_FONT_FILE = 0,
+    TEXTURE_FONT_MEMORY
+};
 
 /**
  *  Texture font structure.
  */
-typedef struct texture_font_t
+struct texture_font_t
 {
     /**
      * Vector of glyphs contained in this font.
@@ -215,10 +206,7 @@ typedef struct texture_font_t
     /**
      * font location
      */
-    enum {
-        TEXTURE_FONT_FILE = 0,
-        TEXTURE_FONT_MEMORY,
-    } location;
+    FontLocation location;
 
     union {
         /**
@@ -326,7 +314,7 @@ typedef struct texture_font_t
     */
     int padding;
 
-} texture_font_t;
+};
 
 
 
@@ -472,10 +460,4 @@ texture_glyph_new( void );
 
 /** @} */
 
-
-#ifdef __cplusplus
 }
-}
-#endif
-
-#endif /* __TEXTURE_FONT_H__ */

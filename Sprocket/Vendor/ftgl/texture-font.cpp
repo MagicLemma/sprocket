@@ -20,15 +20,7 @@
 #define HRESf 64.f
 #define DPI   72
 
-#undef __FTERRORS_H__
-#define FT_ERRORDEF( e, v, s )  { e, s },
-#define FT_ERROR_START_LIST     {
-#define FT_ERROR_END_LIST       { 0, 0 } };
-const struct {
-    int          code;
-    const char*  message;
-} FT_Errors[] =
-#include FT_ERRORS_H
+namespace ftgl {
 
 // ------------------------------------------------- texture_font_load_face ---
 static int
@@ -48,34 +40,31 @@ texture_font_load_face(texture_font_t *self, float size,
     /* Initialize library */
     error = FT_Init_FreeType(library);
     if(error) {
-        fprintf(stderr, "FT_Error (0x%02x) : %s\n",
-                FT_Errors[error].code, FT_Errors[error].message);
+        // TODO: Print error 
         goto cleanup;
     }
 
     /* Load face */
     switch (self->location) {
-    case TEXTURE_FONT_FILE:
+    case FontLocation::TEXTURE_FONT_FILE:
         error = FT_New_Face(*library, self->filename, 0, face);
         break;
 
-    case TEXTURE_FONT_MEMORY:
+    case FontLocation::TEXTURE_FONT_MEMORY:
         error = FT_New_Memory_Face(*library,
-            self->memory.base, self->memory.size, 0, face);
+            (const FT_Byte*)self->memory.base, self->memory.size, 0, face);
         break;
     }
 
     if(error) {
-        fprintf(stderr, "FT_Error (line %d, code 0x%02x) : %s\n",
-                __LINE__, FT_Errors[error].code, FT_Errors[error].message);
+        // TODO: Print error 
         goto cleanup_library;
     }
 
     /* Select charmap */
     error = FT_Select_Charmap(*face, FT_ENCODING_UNICODE);
     if(error) {
-        fprintf(stderr, "FT_Error (line %d, code 0x%02x) : %s\n",
-                __LINE__, FT_Errors[error].code, FT_Errors[error].message);
+        // TODO: Print error 
         goto cleanup_face;
     }
 
@@ -83,8 +72,7 @@ texture_font_load_face(texture_font_t *self, float size,
     error = FT_Set_Char_Size(*face, (int)(size * HRES), 0, DPI * HRES, DPI);
 
     if(error) {
-        fprintf(stderr, "FT_Error (line %d, code 0x%02x) : %s\n",
-                __LINE__, FT_Errors[error].code, FT_Errors[error].message);
+        // TODO: Print error 
         goto cleanup_face;
     }
 
@@ -207,8 +195,8 @@ texture_font_init(texture_font_t *self)
 
     assert(self->atlas);
     assert(self->size > 0);
-    assert((self->location == TEXTURE_FONT_FILE && self->filename)
-        || (self->location == TEXTURE_FONT_MEMORY
+    assert((self->location == FontLocation::TEXTURE_FONT_FILE && self->filename)
+        || (self->location == FontLocation::TEXTURE_FONT_MEMORY
             && self->memory.base && self->memory.size));
 
     self->glyphs = vector_new(sizeof(texture_glyph_t *));
@@ -269,7 +257,7 @@ texture_font_new_from_file(texture_atlas_t *atlas, const float pt_size,
 
     assert(filename);
 
-    self = calloc(1, sizeof(*self));
+    self = (ftgl::texture_font_t*)calloc(1, sizeof(*self));
     if (!self) {
         fprintf(stderr,
                 "line %d: No more memory for allocating data\n", __LINE__);
@@ -279,7 +267,7 @@ texture_font_new_from_file(texture_atlas_t *atlas, const float pt_size,
     self->atlas = atlas;
     self->size  = pt_size;
 
-    self->location = TEXTURE_FONT_FILE;
+    self->location = FontLocation::TEXTURE_FONT_FILE;
     self->filename = strdup(filename);
 
     if (texture_font_init(self)) {
@@ -300,7 +288,7 @@ texture_font_new_from_memory(texture_atlas_t *atlas, float pt_size,
     assert(memory_base);
     assert(memory_size);
 
-    self = calloc(1, sizeof(*self));
+    self = (ftgl::texture_font_t*)calloc(1, sizeof(*self));
     if (!self) {
         fprintf(stderr,
                 "line %d: No more memory for allocating data\n", __LINE__);
@@ -310,7 +298,7 @@ texture_font_new_from_memory(texture_atlas_t *atlas, float pt_size,
     self->atlas = atlas;
     self->size  = pt_size;
 
-    self->location = TEXTURE_FONT_MEMORY;
+    self->location = FontLocation::TEXTURE_FONT_MEMORY;
     self->memory.base = memory_base;
     self->memory.size = memory_size;
 
@@ -331,7 +319,7 @@ texture_font_delete( texture_font_t *self )
 
     assert( self );
 
-    if(self->location == TEXTURE_FONT_FILE && self->filename)
+    if(self->location == FontLocation::TEXTURE_FONT_FILE && self->filename)
         free( self->filename );
 
     for( i=0; i<vector_size( self->glyphs ); ++i)
@@ -472,8 +460,7 @@ texture_font_load_glyph( texture_font_t * self,
     error = FT_Load_Glyph( face, glyph_index, flags );
     if( error )
     {
-        fprintf( stderr, "FT_Error (line %d, code 0x%02x) : %s\n",
-                 __LINE__, FT_Errors[error].code, FT_Errors[error].message );
+        // TODO: Print error 
         FT_Done_Face( face );
         FT_Done_FreeType( library );
         return 0;
@@ -495,8 +482,7 @@ texture_font_load_glyph( texture_font_t * self,
 
         if( error )
         {
-            fprintf(stderr, "FT_Error (0x%02x) : %s\n",
-                    FT_Errors[error].code, FT_Errors[error].message);
+            // TODO: Print error 
             goto cleanup_stroker;
         }
 
@@ -510,8 +496,7 @@ texture_font_load_glyph( texture_font_t * self,
 
         if( error )
         {
-            fprintf(stderr, "FT_Error (0x%02x) : %s\n",
-                    FT_Errors[error].code, FT_Errors[error].message);
+            // TODO: Print error 
             goto cleanup_stroker;
         }
 
@@ -524,8 +509,7 @@ texture_font_load_glyph( texture_font_t * self,
 
         if( error )
         {
-            fprintf(stderr, "FT_Error (0x%02x) : %s\n",
-                    FT_Errors[error].code, FT_Errors[error].message);
+            // TODO: Print error 
             goto cleanup_stroker;
         }
 
@@ -536,8 +520,7 @@ texture_font_load_glyph( texture_font_t * self,
 
         if( error )
         {
-            fprintf(stderr, "FT_Error (0x%02x) : %s\n",
-                    FT_Errors[error].code, FT_Errors[error].message);
+            // TODO: Print error 
             goto cleanup_stroker;
         }
 
@@ -591,7 +574,7 @@ cleanup_stroker:
     x = region.x;
     y = region.y;
 
-    unsigned char *buffer = calloc( tgt_w * tgt_h * self->atlas->depth, sizeof(unsigned char) );
+    unsigned char *buffer = (unsigned char*)calloc( tgt_w * tgt_h * self->atlas->depth, sizeof(unsigned char) );
 
     unsigned char *dst_ptr = buffer + (padding.top * tgt_w + padding.left) * self->atlas->depth;
     unsigned char *src_ptr = ft_bitmap.buffer;
@@ -694,7 +677,7 @@ texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
     size_t height_old = ta->height;
     //allocate new buffer
     unsigned char* data_old = ta->data;
-    ta->data = calloc(1,width_new*height_new * sizeof(char)*ta->depth);
+    ta->data = (unsigned char*)calloc(1,width_new*height_new * sizeof(char)*ta->depth);
     //update atlas size
     ta->width = width_new;
     ta->height = height_new;
@@ -724,4 +707,6 @@ texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
         g->t0 *= mulh;
         g->t1 *= mulh;
     }
+}
+
 }

@@ -115,10 +115,10 @@ add_library(Sprocket STATIC
             Scripting/LuaCamera.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp
-            Vendor/ftgl/texture-font.c
-            Vendor/ftgl/texture-atlas.c
-            Vendor/ftgl/vector.c
-            Vendor/ftgl/utf8-utils.c)
+            Vendor/ftgl/texture-font.cpp
+            Vendor/ftgl/texture-atlas.cpp
+            Vendor/ftgl/vector.cpp
+            Vendor/ftgl/utf8-utils.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       glfw

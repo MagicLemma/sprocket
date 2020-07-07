@@ -2,15 +2,9 @@
 
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stddef.h>
 
-#ifdef __cplusplus
 namespace ftgl {
-#endif
 
 /**
  * @file   vector.h
@@ -314,9 +308,6 @@ typedef struct vector_t
                int (*cmp)(const void *, const void *) );
 
 
-/** @} */
 
-#ifdef __cplusplus
 }
-}
-#endif
+

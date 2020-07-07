@@ -10,6 +10,8 @@
 #include <limits.h>
 #include "texture-atlas.h"
 
+namespace ftgl {
+
 
 // ------------------------------------------------------ texture_atlas_new ---
 texture_atlas_t *
@@ -272,4 +274,6 @@ texture_atlas_clear( texture_atlas_t * self )
 
     vector_push_back( self->nodes, &node );
     memset( self->data, 0, self->width*self->height*self->depth );
+}
+
 }
