@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
+#include <string>
 
 #include "vector.h"
 #include "texture-atlas.h"
@@ -52,12 +53,6 @@ struct TextureGlyph
 
 };
 
-enum class FontLocation
-{
-    TEXTURE_FONT_FILE = 0,
-    TEXTURE_FONT_MEMORY
-};
-
 /**
  *  Texture font structure.
  */
@@ -73,25 +68,7 @@ struct texture_font_t
      */
     std::shared_ptr<texture_atlas_t> atlas;
 
-    /**
-     * font location
-     */
-    FontLocation location;
-
-    union {
-        /**
-         * Font filename, for when location == TEXTURE_FONT_FILE
-         */
-        char *filename;
-
-        /**
-         * Font memory address, for when location == TEXTURE_FONT_MEMORY
-         */
-        struct {
-            const void *base;
-            size_t size;
-        } memory;
-    };
+    std::string filename;
 
     /**
      * Font size
@@ -187,123 +164,31 @@ struct texture_font_t
 };
 
 
+std::shared_ptr<texture_font_t>
+texture_font_new_from_file( std::shared_ptr<texture_atlas_t> atlas,
+                        const float pt_size,
+                        const char * filename );
 
-/**
- * This function creates a new texture font from given filename and size.  The
- * texture atlas is used to store glyph on demand. Note the depth of the atlas
- * will determine if the font is rendered as alpha channel only (depth = 1) or
- * RGB (depth = 3) that correspond to subpixel rendering (if available on your
- * freetype implementation).
- *
- * @param atlas     A texture atlas
- * @param pt_size   Size of font to be created (in points)
- * @param filename  A font filename
- *
- * @return A new empty font (no glyph inside yet)
- *
- */
-  std::shared_ptr<texture_font_t>
-  texture_font_new_from_file( std::shared_ptr<texture_atlas_t> atlas,
-                              const float pt_size,
-                              const char * filename );
+std::shared_ptr<TextureGlyph>
+texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
+                    const char * codepoint );
 
+std::shared_ptr<TextureGlyph>
+texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
+                    const char * codepoint );
 
-/**
- * This function creates a new texture font from a memory location and size.
- * The texture atlas is used to store glyph on demand. Note the depth of the
- * atlas will determine if the font is rendered as alpha channel only
- * (depth = 1) or RGB (depth = 3) that correspond to subpixel rendering (if
- * available on your freetype implementation).
- *
- * @param atlas       A texture atlas
- * @param pt_size     Size of font to be created (in points)
- * @param memory_base Start of the font file in memory
- * @param memory_size Size of the font file memory region, in bytes
- *
- * @return A new empty font (no glyph inside yet)
- *
- */
-  std::shared_ptr<texture_font_t>
-  texture_font_new_from_memory( std::shared_ptr<texture_atlas_t> atlas,
-                                float pt_size,
-                                const void *memory_base,
-                                size_t memory_size );
+int
+texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
+                    const char * codepoint );
+
+size_t
+texture_font_load_glyphs(std::shared_ptr<texture_font_t> self,
+                    const char * codepoints );
 
 
-/**
- * Request a new glyph from the font. If it has not been created yet, it will
- * be.
- *
- * @param self      A valid texture font
- * @param codepoint Character codepoint to be loaded in UTF-8 encoding.
- *
- * @return A pointer on the new glyph or 0 if the texture atlas is not big
- *         enough
- *
- */
-  std::shared_ptr<TextureGlyph>
-  texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
-                          const char * codepoint );
+float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
+                                const char* codepoint );
 
-/**
- * Request an already loaded glyph from the font.
- *
- * @param self      A valid texture font
- * @param codepoint Character codepoint to be found in UTF-8 encoding.
- *
- * @return A pointer on the glyph or 0 if the glyph is not loaded
- */
- std::shared_ptr<TextureGlyph>
- texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
-                          const char * codepoint );
-
-/**
- * Request the loading of a given glyph.
- *
- * @param self       A valid texture font
- * @param codepoints Character codepoint to be loaded in UTF-8 encoding.
- *
- * @return One if the glyph could be loaded, zero if not.
- */
-  int
-  texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
-                           const char * codepoint );
-
-/**
- * Request the loading of several glyphs at once.
- *
- * @param self       A valid texture font
- * @param codepoints Character codepoints to be loaded in UTF-8 encoding. May
- *                   contain duplicates.
- *
- * @return Number of missed glyph if the texture is not big enough to hold
- *         every glyphs.
- */
-  size_t
-  texture_font_load_glyphs(std::shared_ptr<texture_font_t> self,
-                           const char * codepoints );
-
-
-/**
- * Get the kerning between two horizontal glyphs.
- *
- * @param self      A valid texture glyph
- * @param codepoint Character codepoint of the peceding character in UTF-8 encoding.
- *
- * @return x kerning value
- */
-float
-texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
-                          const char* codepoint );
-
-
-/**
- * Creates a new empty glyph
- *
- * @return a new empty glyph (not valid)
- */
 std::shared_ptr<TextureGlyph> texture_glyph_new();
-
-/** @} */
 
 }

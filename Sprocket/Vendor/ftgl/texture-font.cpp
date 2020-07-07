@@ -45,16 +45,7 @@ texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
     }
 
     /* Load face */
-    switch (self->location) {
-    case FontLocation::TEXTURE_FONT_FILE:
-        error = FT_New_Face(*library, self->filename, 0, face);
-        break;
-
-    case FontLocation::TEXTURE_FONT_MEMORY:
-        error = FT_New_Memory_Face(*library,
-            (const FT_Byte*)self->memory.base, self->memory.size, 0, face);
-        break;
-    }
+    error = FT_New_Face(*library, self->filename.c_str(), 0, face);
 
     if(error) {
         // TODO: Print error 
@@ -178,9 +169,6 @@ texture_font_init(std::shared_ptr<texture_font_t> self)
 
     assert(self->atlas);
     assert(self->size > 0);
-    assert((self->location == FontLocation::TEXTURE_FONT_FILE && self->filename)
-        || (self->location == FontLocation::TEXTURE_FONT_MEMORY
-            && self->memory.base && self->memory.size));
 
     self->height = 0;
     self->ascender = 0;
@@ -241,36 +229,10 @@ texture_font_new_from_file(std::shared_ptr<texture_atlas_t> atlas, const float p
 
     self->atlas = atlas;
     self->size  = pt_size;
-
-    self->location = FontLocation::TEXTURE_FONT_FILE;
-    self->filename = strdup(filename);
+    self->filename = filename;
 
     if (texture_font_init(self)) {
         return nullptr;
-    }
-
-    return self;
-}
-
-// ------------------------------------------- texture_font_new_from_memory ---
-std::shared_ptr<texture_font_t> 
-texture_font_new_from_memory(std::shared_ptr<texture_atlas_t> atlas, float pt_size,
-        const void *memory_base, size_t memory_size)
-{
-    auto self = std::make_shared<texture_font_t>();
-
-    assert(memory_base);
-    assert(memory_size);
-
-    self->atlas = atlas;
-    self->size  = pt_size;
-
-    self->location = FontLocation::TEXTURE_FONT_MEMORY;
-    self->memory.base = memory_base;
-    self->memory.size = memory_size;
-
-    if (texture_font_init(self)) {
-        return NULL;
     }
 
     return self;
@@ -587,9 +549,8 @@ std::shared_ptr<TextureGlyph>
 texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
                         const char * codepoint )
 {
-    assert( self );
-    assert( self->filename );
-    assert( self->atlas );
+    assert(self);
+    assert(self->atlas);
 
     auto glyph = texture_font_find_glyph(self, codepoint);
 
