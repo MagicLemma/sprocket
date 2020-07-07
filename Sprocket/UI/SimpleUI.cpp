@@ -203,8 +203,15 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     Maths::vec2 pointer(x + (width - textWidth) / 2.0f, y);
     pointer = {x, y};
     
-    for (char character : text) {
-        auto glyph = ftgl::texture_font_get_glyph(d_texFont, &character);
+    for (std::size_t i = 0; i != text.size(); ++i) {
+        char c = text[i];
+        auto glyph = ftgl::texture_font_get_glyph(d_texFont, &c);
+
+        float kerning = 0.0f;
+        if (i > 0) {
+            kerning = ftgl::texture_glyph_get_kerning(glyph, &text[i-1]);
+        }
+        pointer.x += kerning;
 
         float xPos = pointer.x + glyph->offset_x * fontSize;
         float yPos = pointer.y - glyph->offset_y * fontSize;
