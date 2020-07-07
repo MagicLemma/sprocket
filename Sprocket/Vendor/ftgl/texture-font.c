@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
-#include "distance-field.h"
 #include "texture-font.h"
 #include "platform.h"
 #include "utf8-utils.h"
@@ -442,7 +441,7 @@ texture_font_load_glyph( texture_font_t * self,
     // WARNING: We use texture-atlas depth to guess if user wants
     //          LCD subpixel rendering
 
-    if( self->rendermode != RENDER_NORMAL && self->rendermode != RENDER_SIGNED_DISTANCE_FIELD )
+    if( self->rendermode != RENDER_NORMAL)
     {
         flags |= FT_LOAD_NO_BITMAP;
     }
@@ -481,7 +480,7 @@ texture_font_load_glyph( texture_font_t * self,
         return 0;
     }
 
-    if( self->rendermode == RENDER_NORMAL || self->rendermode == RENDER_SIGNED_DISTANCE_FIELD )
+    if( self->rendermode == RENDER_NORMAL)
     {
         slot            = face->glyph;
         ft_bitmap       = slot->bitmap;
@@ -566,12 +565,6 @@ cleanup_stroker:
         int bottom;
     } padding = { 0, 0, 1, 1 };
 
-    if( self->rendermode == RENDER_SIGNED_DISTANCE_FIELD )
-    {
-        padding.top = 1;
-        padding.left = 1;
-    }
-
     if( self->padding != 0 )
     {
         padding.top += self->padding;
@@ -611,13 +604,6 @@ cleanup_stroker:
         src_ptr += ft_bitmap.pitch;
     }
 
-    if( self->rendermode == RENDER_SIGNED_DISTANCE_FIELD )
-    {
-        unsigned char *sdf = make_distance_mapb( buffer, tgt_w, tgt_h );
-        free( buffer );
-        buffer = sdf;
-    }
-
     texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, buffer, tgt_w * self->atlas->depth);
 
     free( buffer );
@@ -643,7 +629,7 @@ cleanup_stroker:
 
     vector_push_back( self->glyphs, &glyph );
 
-    if( self->rendermode != RENDER_NORMAL && self->rendermode != RENDER_SIGNED_DISTANCE_FIELD )
+    if( self->rendermode != RENDER_NORMAL)
         FT_Done_Glyph( ft_glyph );
 
     texture_font_generate_kerning( self, &library, &face );
