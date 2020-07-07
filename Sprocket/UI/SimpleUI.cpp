@@ -49,7 +49,7 @@ SimpleUI::SimpleUI(Window* window)
     d_texAtlas = ftgl::texture_atlas_new(1024, 1024, 1);
     d_texFont = ftgl::texture_font_new_from_file(d_texAtlas, 36.0f, "Resources/Fonts/arial.ttf");
 
-    d_texFont->rendermode = ftgl::RENDER_NORMAL;
+    d_texFont->rendermode = ftgl::RenderMode::RENDER_NORMAL;
     d_texFont->outline_thickness = 0;
 
     glGenTextures(1, &d_texAtlas->id);

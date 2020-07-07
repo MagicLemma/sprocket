@@ -103,7 +103,7 @@ texture_glyph_new(void)
     self->codepoint  = -1;
     self->width     = 0;
     self->height    = 0;
-    self->rendermode = RENDER_NORMAL;
+    self->rendermode = RenderMode::RENDER_NORMAL;
     self->outline_thickness = 0.0;
     self->offset_x  = 0;
     self->offset_y  = 0;
@@ -203,7 +203,7 @@ texture_font_init(texture_font_t *self)
     self->height = 0;
     self->ascender = 0;
     self->descender = 0;
-    self->rendermode = RENDER_NORMAL;
+    self->rendermode = RenderMode::RENDER_NORMAL;
     self->outline_thickness = 0.0;
     self->hinting = 1;
     self->kerning = 1;
@@ -428,7 +428,7 @@ texture_font_load_glyph( texture_font_t * self,
     // WARNING: We use texture-atlas depth to guess if user wants
     //          LCD subpixel rendering
 
-    if( self->rendermode != RENDER_NORMAL)
+    if( self->rendermode != RenderMode::RENDER_NORMAL)
     {
         flags |= FT_LOAD_NO_BITMAP;
     }
@@ -466,7 +466,7 @@ texture_font_load_glyph( texture_font_t * self,
         return 0;
     }
 
-    if( self->rendermode == RENDER_NORMAL)
+    if( self->rendermode == RenderMode::RENDER_NORMAL)
     {
         slot            = face->glyph;
         ft_bitmap       = slot->bitmap;
@@ -500,11 +500,11 @@ texture_font_load_glyph( texture_font_t * self,
             goto cleanup_stroker;
         }
 
-        if( self->rendermode == RENDER_OUTLINE_EDGE )
+        if( self->rendermode == RenderMode::RENDER_OUTLINE_EDGE )
             error = FT_Glyph_Stroke( &ft_glyph, stroker, 1 );
-        else if ( self->rendermode == RENDER_OUTLINE_POSITIVE )
+        else if ( self->rendermode == RenderMode::RENDER_OUTLINE_POSITIVE )
             error = FT_Glyph_StrokeBorder( &ft_glyph, stroker, 0, 1 );
-        else if ( self->rendermode == RENDER_OUTLINE_NEGATIVE )
+        else if ( self->rendermode == RenderMode::RENDER_OUTLINE_NEGATIVE )
             error = FT_Glyph_StrokeBorder( &ft_glyph, stroker, 1, 1 );
 
         if( error )
@@ -611,7 +611,7 @@ cleanup_stroker:
 
     vector_push_back( self->glyphs, &glyph );
 
-    if( self->rendermode != RENDER_NORMAL)
+    if( self->rendermode != RenderMode::RENDER_NORMAL)
         FT_Done_Glyph( ft_glyph );
 
     texture_font_generate_kerning( self, &library, &face );

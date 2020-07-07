@@ -7,32 +7,7 @@
 
 namespace ftgl {
 
-/**
- * @file   texture-font.h
- * @author Nicolas Rougier (Nicolas.Rougier@inria.fr)
- *
- * @defgroup texture-font Texture font
- *
- * Texture font.
- *
- * Example Usage:
- * @code
- * #include "texture-font.h"
- *
- * int main( int arrgc, char *argv[] )
- * {
- *   return 0;
- * }
- * @endcode
- *
- * @{
- */
-
-
-/**
- * A list of possible ways to render a glyph.
- */
-enum rendermode_t
+enum class RenderMode
 {
     RENDER_NORMAL,
     RENDER_OUTLINE_EDGE,
@@ -173,7 +148,7 @@ struct texture_glyph_t
     /**
      * Mode this glyph was rendered
      */
-    rendermode_t rendermode;
+    RenderMode rendermode;
 
     /**
      * Glyph outline thickness
@@ -236,7 +211,7 @@ struct texture_font_t
     /**
      * Mode the font is rendering its next glyph
      */
-    rendermode_t rendermode;
+    RenderMode rendermode;
 
     /**
      * Outline thickness
