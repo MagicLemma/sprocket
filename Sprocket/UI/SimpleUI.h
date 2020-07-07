@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <chrono>
 
+#include <freetype-gl.h>
+
 namespace Sprocket {
 
 struct BufferVertex
@@ -43,6 +45,9 @@ class SimpleUI
     BufferLayout d_bufferLayout;
 
     FontPackage d_font;
+
+    ftgl::texture_atlas_t* d_texAtlas;
+    ftgl::texture_font_t* d_texFont;
 
     int d_clicked; // ID of the clicked widget.
 

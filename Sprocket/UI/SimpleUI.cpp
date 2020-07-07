@@ -45,6 +45,22 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 4);
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
+
+    d_texAtlas = ftgl::texture_atlas_new(1024, 1024, 1);
+    d_texFont = ftgl::texture_font_new_from_file(d_texAtlas, 36.0f, "Resources/Fonts/arial.ttf");
+
+    d_texFont->rendermode = RENDER_NORMAL;
+    d_texFont->outline_thickness = 0;
+
+    glGenTextures(1, &d_texAtlas->id);
+    glBindTexture( GL_TEXTURE_2D, d_texAtlas->id );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexImage2D( GL_TEXTURE_2D, 0, GL_RED, d_texAtlas->width, d_texAtlas->height,
+                  0, GL_RED, GL_UNSIGNED_BYTE, d_texAtlas->data );
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -95,7 +111,10 @@ void SimpleUI::EndFrame()
         d_quadIndices.data());
     glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
-    d_font.Atlas().Bind();
+    glBindTexture(GL_TEXTURE_2D, d_texAtlas->id);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, d_texAtlas->width, d_texAtlas->height,
+                 0, GL_RED, GL_UNSIGNED_BYTE, d_texAtlas->data);
+
     d_buffer.SetVertexData(
         sizeof(BufferVertex) * d_textVertices.size(),
         d_textVertices.data());
@@ -178,27 +197,27 @@ void SimpleUI::Slider(int id, const std::string& name,
 void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width)
 {
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
-    float fontSize = size / d_font.Size();
+    float fontSize = 1.0f;
 
     float textWidth = TextWidth(text, d_font, fontSize);
     Maths::vec2 pointer(x + (width - textWidth) / 2.0f, y);
+    pointer = {x, y};
     
     for (char character : text) {
-        Glyph c = d_font.Get(character);
+        auto glyph = ftgl::texture_font_get_glyph(d_texFont, &character);
 
-        float xPos = pointer.x + c.xOffset * fontSize;
-        float yPos = pointer.y + c.yOffset * fontSize;
+        float xPos = pointer.x + glyph->offset_x * fontSize;
+        float yPos = pointer.y - glyph->offset_y * fontSize;
 
-        float width = c.width * fontSize;
-        float height = c.height * fontSize;
+        float width = glyph->width * fontSize;
+        float height = glyph->height * fontSize;
 
-        auto quad = c.textureQuad;
-        float x = quad.position.x;
-        float y = quad.position.y;
-        float w = quad.width;
-        float h = quad.height;
+        float x = glyph->s0;
+        float y = glyph->t0;
+        float w = glyph->s1 - glyph->s0;
+        float h = glyph->t1 - glyph->t0;
 
-        pointer.x += c.advance * fontSize;
+        pointer.x += glyph->advance_x * fontSize;
 
         unsigned int index = d_textVertices.size();
         d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});

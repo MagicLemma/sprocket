@@ -9,5 +9,6 @@ layout (location = 0) out vec4 out_colour;
 
 void main()
 {
-    out_colour = pass_colour * texture(tex, pass_textureCoords);
+    float a = texture(tex, pass_textureCoords).r;
+    out_colour = vec4(pass_colour.rgb, pass_colour.a * a);
 }
