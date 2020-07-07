@@ -10,17 +10,12 @@ namespace Sprocket {
 
 std::shared_ptr<texture_atlas_t> texture_atlas_new(
     std::size_t width,
-    std::size_t height,
-    std::size_t depth)
+    std::size_t height)
 {
-    assert((depth == 1) || (depth == 3) || (depth == 4));
-    using namespace Sprocket;
-
     auto self = std::make_shared<texture_atlas_t>();
     self->used = 0;
     self->width = width;
     self->height = height;
-    self->depth = depth;
     self->id = 0;
 
     // We want a one pixel border around the whole atlas to avoid any
@@ -31,7 +26,7 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     node->z = width - 2;
 
     self->nodes.push_back(node);
-    self->data.reserve(width*height*depth);
+    self->data.reserve(width*height);
     return self;
 }
 
@@ -56,14 +51,13 @@ void texture_atlas_set_region(
     // and prevent memcpy's undefined behavior when count is zero
     assert(height == 0 || (data != NULL && width > 0));
 
-    size_t depth = self->depth;
     size_t charsize = sizeof(char);
     for (std::size_t i=0; i<height; ++i )
     {
         std::memcpy(
-            self->data.data()+((y+i)*self->width + x ) * charsize * depth,
+            self->data.data()+((y+i)*self->width + x ) * charsize,
             data + (i*stride) * charsize,
-            width * charsize * depth
+            width * charsize
         );
     }
 }

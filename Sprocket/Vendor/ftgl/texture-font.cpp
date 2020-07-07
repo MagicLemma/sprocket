@@ -315,17 +315,6 @@ int texture_font_load_glyph(
         flags |= FT_LOAD_FORCE_AUTOHINT;
     }
 
-    if( self->atlas->depth == 3 )
-    {
-        FT_Library_SetLcdFilter( library, FT_LCD_FILTER_LIGHT );
-        flags |= FT_LOAD_TARGET_LCD;
-
-        if( self->filtering )
-        {
-            FT_Library_SetLcdFilterWeights( library, self->lcd_weights );
-        }
-    }
-
     error = FT_Load_Glyph( face, glyph_index, flags );
     if( error )
     {
@@ -382,11 +371,7 @@ int texture_font_load_glyph(
             goto cleanup_stroker;
         }
 
-        if( self->atlas->depth == 1 )
-            error = FT_Glyph_To_Bitmap( &ft_glyph, FT_RENDER_MODE_NORMAL, 0, 1);
-        else
-            error = FT_Glyph_To_Bitmap( &ft_glyph, FT_RENDER_MODE_LCD, 0, 1);
-
+        error = FT_Glyph_To_Bitmap( &ft_glyph, FT_RENDER_MODE_NORMAL, 0, 1);
         if( error )
         {
             // TODO: Print error 
@@ -424,7 +409,7 @@ cleanup_stroker:
         padding.bottom += self->padding;
     }
 
-    size_t src_w = ft_bitmap.width/self->atlas->depth;
+    size_t src_w = ft_bitmap.width;
     size_t src_h = ft_bitmap.rows;
 
     size_t tgt_w = src_w + padding.left + padding.right;
@@ -443,19 +428,19 @@ cleanup_stroker:
     std::size_t x = region.x;
     std::size_t y = region.y;
 
-    unsigned char *buffer = (unsigned char*)calloc( tgt_w * tgt_h * self->atlas->depth, sizeof(unsigned char) );
+    unsigned char *buffer = (unsigned char*)calloc( tgt_w * tgt_h, sizeof(unsigned char) );
 
-    unsigned char *dst_ptr = buffer + (padding.top * tgt_w + padding.left) * self->atlas->depth;
+    unsigned char *dst_ptr = buffer + (padding.top * tgt_w + padding.left);
     unsigned char *src_ptr = ft_bitmap.buffer;
     for (std::size_t i = 0; i < src_h; i++ )
     {
         //difference between width and pitch: https://www.freetype.org/freetype2/docs/reference/ft2-basic_types.html#FT_Bitmap
         memcpy( dst_ptr, src_ptr, ft_bitmap.width);
-        dst_ptr += tgt_w * self->atlas->depth;
+        dst_ptr += tgt_w;
         src_ptr += ft_bitmap.pitch;
     }
 
-    texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, tgt_w * self->atlas->depth, buffer);
+    texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, tgt_w, buffer);
 
     free( buffer );
 

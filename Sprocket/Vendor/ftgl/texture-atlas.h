@@ -13,7 +13,6 @@ struct texture_atlas_t
 
     size_t width;
     size_t height;
-    size_t depth;
 
     size_t used;
 
@@ -25,8 +24,7 @@ struct texture_atlas_t
 
 std::shared_ptr<texture_atlas_t> texture_atlas_new(
     std::size_t width,
-    std::size_t height,
-    std::size_t depth
+    std::size_t height
 );
 
 Maths::ivec4 texture_atlas_get_region(
