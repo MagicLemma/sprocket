@@ -107,4 +107,4 @@
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"
-#include "Vendor/freetype-gl/freetype-gl.h"
+#include "Vendor/ftgl/freetype-gl.h"

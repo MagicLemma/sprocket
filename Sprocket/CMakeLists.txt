@@ -115,12 +115,12 @@ add_library(Sprocket STATIC
             Scripting/LuaCamera.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp
-            Vendor/freetype-gl/texture-font.c
-            Vendor/freetype-gl/texture-atlas.c
-            Vendor/freetype-gl/vector.c
-            Vendor/freetype-gl/utf8-utils.c
-            Vendor/freetype-gl/distance-field.c
-            Vendor/freetype-gl/edtaa3func.c)
+            Vendor/ftgl/texture-font.c
+            Vendor/ftgl/texture-atlas.c
+            Vendor/ftgl/vector.c
+            Vendor/ftgl/utf8-utils.c
+            Vendor/ftgl/distance-field.c
+            Vendor/ftgl/edtaa3func.c)
 
 target_link_libraries(Sprocket PUBLIC
                       glfw
@@ -156,7 +156,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Utility
                            ./Scripting
                            ./Vendor/ImGuizmo
-                           ./Vendor/freetype-gl
+                           ./Vendor/ftgl
                            ${STB_INCLUDE_DIR}
                            ${LUA_INCLUDE_DIR}
                            ${SFML_INCLUDE_DIR})
