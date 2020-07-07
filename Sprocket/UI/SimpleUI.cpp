@@ -47,7 +47,7 @@ SimpleUI::SimpleUI(Window* window)
     d_buffer.SetBufferLayout(d_bufferLayout);
 
     d_texAtlas = Sprocket::texture_atlas_new(1024, 1024);
-    d_texFont = Sprocket::texture_font_new_from_file(d_texAtlas, 36.0f, "Resources/Fonts/arial.ttf");
+    d_texFont = Sprocket::texture_font_new_from_file(d_texAtlas, 56, "Resources/Fonts/INKFREE.TTF");
 
     d_texFont->rendermode = Sprocket::RenderMode::RENDER_NORMAL;
     d_texFont->outline_thickness = 0;
@@ -207,11 +207,11 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
         char c = text[i];
         auto glyph = Sprocket::texture_font_get_glyph(d_texFont, &c);
 
-        float kerning = 0.0f;
-        if (i > 0) {
-            kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
-        }
-        pointer.x += kerning;
+        //float kerning = 0.0f;
+        //if (i > 0) {
+        //    kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
+        //}
+        //pointer.x += kerning;
 
         float xPos = pointer.x + glyph->offset_x * fontSize;
         float yPos = pointer.y - glyph->offset_y * fontSize;

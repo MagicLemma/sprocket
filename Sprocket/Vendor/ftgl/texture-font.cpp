@@ -428,8 +428,7 @@ cleanup_stroker:
     std::size_t x = region.x;
     std::size_t y = region.y;
 
-    unsigned char *buffer = (unsigned char*)calloc( tgt_w * tgt_h, sizeof(unsigned char) );
-
+    unsigned char *buffer = (unsigned char*)calloc( tgt_w * tgt_h, sizeof(unsigned char));
     unsigned char *dst_ptr = buffer + (padding.top * tgt_w + padding.left);
     unsigned char *src_ptr = ft_bitmap.buffer;
     for (std::size_t i = 0; i < src_h; i++ )
