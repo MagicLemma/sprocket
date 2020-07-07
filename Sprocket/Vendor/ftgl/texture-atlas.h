@@ -11,7 +11,7 @@ namespace ftgl {
 
 struct texture_atlas_t
 {
-    vector_t * nodes;
+    std::vector<std::shared_ptr<ivec3>> nodes;
 
     size_t width;
     size_t height;

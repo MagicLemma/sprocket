@@ -23,7 +23,10 @@ texture_atlas_new( const size_t width,
 
     // We want a one pixel border around the whole atlas to avoid any artefact when
     // sampling texture
-    ivec3 node = {{1,1,width-2}};
+    auto node = std::make_shared<ivec3>();
+    node->x = 1;
+    node->y = 1;
+    node->z = width-2;
 
     assert( (depth == 1) || (depth == 3) || (depth == 4) );
     if( self == NULL)
@@ -32,14 +35,13 @@ texture_atlas_new( const size_t width,
                  "line %d: No more memory for allocating data\n", __LINE__ );
         exit( EXIT_FAILURE );
     }
-    self->nodes = vector_new( sizeof(ivec3) );
     self->used = 0;
     self->width = width;
     self->height = height;
     self->depth = depth;
     self->id = 0;
 
-    vector_push_back( self->nodes, &node );
+    self->nodes.push_back(node);
     self->data.reserve(width*height*depth);
     return self;
 }
@@ -87,13 +89,12 @@ texture_atlas_fit( std::shared_ptr<texture_atlas_t> self,
                    const size_t width,
                    const size_t height )
 {
-    ivec3 *node;
     int x, y, width_left;
     size_t i;
 
     assert( self );
 
-    node = (ivec3 *) (vector_get( self->nodes, index ));
+    auto node = self->nodes[index];
     x = node->x;
     y = node->y;
     width_left = width;
@@ -106,16 +107,16 @@ texture_atlas_fit( std::shared_ptr<texture_atlas_t> self,
     y = node->y;
     while( width_left > 0 )
     {
-        node = (ivec3 *) (vector_get( self->nodes, i ));
-        if( node->y > y )
+        auto node2 = self->nodes[i];
+        if( node2->y > y )
         {
-            y = node->y;
+            y = node2->y;
         }
         if( (y + height) > (self->height-1) )
         {
             return -1;
         }
-        width_left -= node->z;
+        width_left -= node2->z;
         ++i;
     }
     return y;
@@ -126,19 +127,18 @@ texture_atlas_fit( std::shared_ptr<texture_atlas_t> self,
 void
 texture_atlas_merge( std::shared_ptr<texture_atlas_t> self )
 {
-    ivec3 *node, *next;
     size_t i;
 
     assert( self );
 
-    for( i=0; i< self->nodes->size-1; ++i )
+    for( i=0; i< self->nodes.size()-1; ++i )
     {
-        node = (ivec3 *) (vector_get( self->nodes, i ));
-        next = (ivec3 *) (vector_get( self->nodes, i+1 ));
+        auto node = self->nodes[i];
+        auto next = self->nodes[i+1];
         if( node->y == next->y )
         {
             node->z += next->z;
-            vector_erase( self->nodes, i+1 );
+            self->nodes.erase(self->nodes.begin() + i + 1);
             --i;
         }
     }
@@ -153,7 +153,6 @@ texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
 {
     int y, best_index;
     size_t best_height, best_width;
-    ivec3 *node, *prev;
     ivec4 region = {{0,0,width,height}};
     size_t i;
 
@@ -162,12 +161,12 @@ texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
     best_height = UINT_MAX;
     best_index  = -1;
     best_width = UINT_MAX;
-    for( i=0; i<self->nodes->size; ++i )
+    for( i=0; i<self->nodes.size(); ++i )
     {
         y = texture_atlas_fit( self, i, width, height );
         if( y >= 0 )
         {
-            node = (ivec3 *) vector_get( self->nodes, i );
+            auto node = self->nodes[i];
             if( ( (y + height) < best_height ) ||
                 ( ((y + height) == best_height) && (node->z > 0 && (size_t)node->z < best_width)) )
             {
@@ -189,23 +188,16 @@ texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
         return region;
     }
 
-    node = (ivec3 *) malloc( sizeof(ivec3) );
-    if( node == NULL)
-    {
-        fprintf( stderr,
-                 "line %d: No more memory for allocating data\n", __LINE__ );
-        exit( EXIT_FAILURE );
-    }
-    node->x = region.x;
-    node->y = region.y + height;
-    node->z = width;
-    vector_insert( self->nodes, best_index, node );
-    free( node );
+    auto n = std::make_shared<ivec3>();
+    n->x = region.x;
+    n->y = region.y + height;
+    n->z = width;
+    self->nodes.insert(self->nodes.begin() + best_index, n);
 
-    for(i = best_index+1; i < self->nodes->size; ++i)
+    for(i = best_index+1; i < self->nodes.size(); ++i)
     {
-        node = (ivec3 *) vector_get( self->nodes, i );
-        prev = (ivec3 *) vector_get( self->nodes, i-1 );
+        auto node = self->nodes[i];
+        auto prev = self->nodes[i-1];
 
         if (node->x < (prev->x + prev->z) )
         {
@@ -214,7 +206,7 @@ texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
             node->z -= shrink;
             if (node->z <= 0)
             {
-                vector_erase( self->nodes, i );
+                self->nodes.erase(self->nodes.begin() + i);
                 --i;
             }
             else
