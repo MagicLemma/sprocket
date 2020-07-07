@@ -16,66 +16,12 @@ enum class RenderMode
 };
 
 
-/**
- * A structure that hold a kerning value relatively to a Unicode
- * codepoint.
- *
- * This structure cannot be used alone since the (necessary) right
- * Unicode codepoint is implicitely held by the owner of this structure.
- */
-struct kerning_t
+struct Kerning
 {
-    /**
-     * Left Unicode codepoint in the kern pair in UTF-32 LE encoding.
-     */
     uint32_t codepoint;
-
-    /**
-     * Kerning value (in fractional pixels).
-     */
     float kerning;
-
 };
 
-
-
-
-/*
- * Glyph metrics:
- * --------------
- *
- *                       xmin                     xmax
- *                        |                         |
- *                        |<-------- width -------->|
- *                        |                         |
- *              |         +-------------------------+----------------- ymax
- *              |         |    ggggggggg   ggggg    |     ^        ^
- *              |         |   g:::::::::ggg::::g    |     |        |
- *              |         |  g:::::::::::::::::g    |     |        |
- *              |         | g::::::ggggg::::::gg    |     |        |
- *              |         | g:::::g     g:::::g     |     |        |
- *    offset_x -|-------->| g:::::g     g:::::g     |  offset_y    |
- *              |         | g:::::g     g:::::g     |     |        |
- *              |         | g::::::g    g:::::g     |     |        |
- *              |         | g:::::::ggggg:::::g     |     |        |
- *              |         |  g::::::::::::::::g     |     |      height
- *              |         |   gg::::::::::::::g     |     |        |
- *  baseline ---*---------|---- gggggggg::::::g-----*--------      |
- *            / |         |             g:::::g     |              |
- *     origin   |         | gggggg      g:::::g     |              |
- *              |         | g:::::gg   gg:::::g     |              |
- *              |         |  g::::::ggg:::::::g     |              |
- *              |         |   gg:::::::::::::g      |              |
- *              |         |     ggg::::::ggg        |              |
- *              |         |         gggggg          |              v
- *              |         +-------------------------+----------------- ymin
- *              |                                   |
- *              |------------- advance_x ---------->|
- */
-
-/**
- * A structure that describe a glyph.
- */
 struct texture_glyph_t
 {
     /**

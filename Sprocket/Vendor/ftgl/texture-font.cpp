@@ -113,7 +113,7 @@ texture_glyph_new(void)
     self->t0        = 0.0;
     self->s1        = 0.0;
     self->t1        = 0.0;
-    self->kerning   = vector_new( sizeof(kerning_t) );
+    self->kerning   = vector_new( sizeof(Kerning) );
     return self;
 }
 
@@ -138,7 +138,7 @@ texture_glyph_get_kerning( const texture_glyph_t * self,
     assert( self );
     for( i=0; i<vector_size(self->kerning); ++i )
     {
-        kerning_t * kerning = (kerning_t *) vector_get( self->kerning, i );
+        Kerning * kerning = (Kerning *) vector_get( self->kerning, i );
         if( kerning->codepoint == ucodepoint )
         {
             return kerning->kerning;
@@ -178,7 +178,7 @@ texture_font_generate_kerning( texture_font_t *self,
             //       glyph_index, glyph_index, kerning.x);
             if( kerning.x )
             {
-                kerning_t k = {prev_glyph->codepoint, kerning.x / (float)(HRESf*HRESf)};
+                Kerning k = {prev_glyph->codepoint, kerning.x / (float)(HRESf*HRESf)};
                 vector_push_back( glyph->kerning, &k );
             }
         }
