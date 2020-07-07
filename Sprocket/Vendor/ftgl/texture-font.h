@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <cstddef>
 #include "vector.h"
 #include "texture-atlas.h"
 
@@ -22,83 +23,28 @@ struct Kerning
     float kerning;
 };
 
-struct texture_glyph_t
+struct TextureGlyph
 {
-    /**
-     * Unicode codepoint this glyph represents in UTF-32 LE encoding.
-     */
     uint32_t codepoint;
 
-    /**
-     * Glyph's width in pixels.
-     */
-    size_t width;
+    std::size_t width;
+    std::size_t height;
 
-    /**
-     * Glyph's height in pixels.
-     */
-    size_t height;
-
-    /**
-     * Glyph's left bearing expressed in integer pixels.
-     */
     int offset_x;
-
-    /**
-     * Glyphs's top bearing expressed in integer pixels.
-     *
-     * Remember that this is the distance from the baseline to the top-most
-     * glyph scanline, upwards y coordinates being positive.
-     */
     int offset_y;
 
-    /**
-     * For horizontal text layouts, this is the horizontal distance (in
-     * fractional pixels) used to increment the pen position when the glyph is
-     * drawn as part of a string of text.
-     */
     float advance_x;
-
-    /**
-     * For vertical text layouts, this is the vertical distance (in fractional
-     * pixels) used to increment the pen position when the glyph is drawn as
-     * part of a string of text.
-     */
     float advance_y;
 
-    /**
-     * First normalized texture coordinate (x) of top-left corner
-     */
     float s0;
-
-    /**
-     * Second normalized texture coordinate (y) of top-left corner
-     */
     float t0;
-
-    /**
-     * First normalized texture coordinate (x) of bottom-right corner
-     */
     float s1;
-
-    /**
-     * Second normalized texture coordinate (y) of bottom-right corner
-     */
     float t1;
 
-    /**
-     * A vector of kerning pairs relative to this glyph.
-     */
     vector_t * kerning;
 
-    /**
-     * Mode this glyph was rendered
-     */
     RenderMode rendermode;
 
-    /**
-     * Glyph outline thickness
-     */
     float outline_thickness;
 
 };
@@ -301,7 +247,7 @@ struct texture_font_t
  *         enough
  *
  */
-  texture_glyph_t *
+  TextureGlyph *
   texture_font_get_glyph( texture_font_t * self,
                           const char * codepoint );
 
@@ -313,7 +259,7 @@ struct texture_font_t
  *
  * @return A pointer on the glyph or 0 if the glyph is not loaded
  */
- texture_glyph_t *
+ TextureGlyph *
  texture_font_find_glyph( texture_font_t * self,
                           const char * codepoint );
 
@@ -367,7 +313,7 @@ texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
  * @return x kerning value
  */
 float
-texture_glyph_get_kerning( const texture_glyph_t * self,
+texture_glyph_get_kerning( const TextureGlyph * self,
                            const char * codepoint );
 
 
@@ -376,7 +322,7 @@ texture_glyph_get_kerning( const texture_glyph_t * self,
  *
  * @return a new empty glyph (not valid)
  */
-texture_glyph_t *
+TextureGlyph *
 texture_glyph_new( void );
 
 /** @} */

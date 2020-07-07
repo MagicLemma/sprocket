@@ -90,10 +90,10 @@ cleanup:
 }
 
 // ------------------------------------------------------ texture_glyph_new ---
-texture_glyph_t *
+TextureGlyph *
 texture_glyph_new(void)
 {
-    texture_glyph_t *self = (texture_glyph_t *) malloc( sizeof(texture_glyph_t) );
+    TextureGlyph *self = (TextureGlyph *) malloc( sizeof(TextureGlyph) );
     if(self == NULL) {
         fprintf( stderr,
                 "line %d: No more memory for allocating data\n", __LINE__);
@@ -120,7 +120,7 @@ texture_glyph_new(void)
 
 // --------------------------------------------------- texture_glyph_delete ---
 void
-texture_glyph_delete( texture_glyph_t *self )
+texture_glyph_delete( TextureGlyph *self )
 {
     assert( self );
     vector_delete( self->kerning );
@@ -129,7 +129,7 @@ texture_glyph_delete( texture_glyph_t *self )
 
 // ---------------------------------------------- texture_glyph_get_kerning ---
 float
-texture_glyph_get_kerning( const texture_glyph_t * self,
+texture_glyph_get_kerning( const TextureGlyph * self,
                            const char * codepoint )
 {
     size_t i;
@@ -155,7 +155,7 @@ texture_font_generate_kerning( texture_font_t *self,
 {
     size_t i, j;
     FT_UInt glyph_index, prev_index;
-    texture_glyph_t *glyph, *prev_glyph;
+    TextureGlyph *glyph, *prev_glyph;
     FT_Vector kerning;
 
     assert( self );
@@ -164,13 +164,13 @@ texture_font_generate_kerning( texture_font_t *self,
     /* Starts at index 1 since 0 is for the special backgroudn glyph */
     for( i=1; i<self->glyphs->size; ++i )
     {
-        glyph = *(texture_glyph_t **) vector_get( self->glyphs, i );
+        glyph = *(TextureGlyph **) vector_get( self->glyphs, i );
         glyph_index = FT_Get_Char_Index( *face, glyph->codepoint );
         vector_clear( glyph->kerning );
 
         for( j=1; j<self->glyphs->size; ++j )
         {
-            prev_glyph = *(texture_glyph_t **) vector_get( self->glyphs, j );
+            prev_glyph = *(TextureGlyph **) vector_get( self->glyphs, j );
             prev_index = FT_Get_Char_Index( *face, prev_glyph->codepoint );
             FT_Get_Kerning( *face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
             // printf("%c(%d)-%c(%d): %ld\n",
@@ -199,7 +199,7 @@ texture_font_init(texture_font_t *self)
         || (self->location == FontLocation::TEXTURE_FONT_MEMORY
             && self->memory.base && self->memory.size));
 
-    self->glyphs = vector_new(sizeof(texture_glyph_t *));
+    self->glyphs = vector_new(sizeof(TextureGlyph *));
     self->height = 0;
     self->ascender = 0;
     self->descender = 0;
@@ -315,7 +315,7 @@ void
 texture_font_delete( texture_font_t *self )
 {
     size_t i;
-    texture_glyph_t *glyph;
+    TextureGlyph *glyph;
 
     assert( self );
 
@@ -324,7 +324,7 @@ texture_font_delete( texture_font_t *self )
 
     for( i=0; i<vector_size( self->glyphs ); ++i)
     {
-        glyph = *(texture_glyph_t **) vector_get( self->glyphs, i );
+        glyph = *(TextureGlyph **) vector_get( self->glyphs, i );
         texture_glyph_delete( glyph);
     }
 
@@ -332,17 +332,17 @@ texture_font_delete( texture_font_t *self )
     free( self );
 }
 
-texture_glyph_t *
+TextureGlyph *
 texture_font_find_glyph( texture_font_t * self,
                          const char * codepoint )
 {
     size_t i;
-    texture_glyph_t *glyph;
+    TextureGlyph *glyph;
     uint32_t ucodepoint = utf8_to_utf32( codepoint );
 
     for( i = 0; i < self->glyphs->size; ++i )
     {
-        glyph = *(texture_glyph_t **) vector_get( self->glyphs, i );
+        glyph = *(TextureGlyph **) vector_get( self->glyphs, i );
         // If codepoint is -1, we don't care about outline type or thickness
         if( (glyph->codepoint == ucodepoint) &&
             ((ucodepoint == -1) ||
@@ -371,7 +371,7 @@ texture_font_load_glyph( texture_font_t * self,
     FT_Bitmap ft_bitmap;
 
     FT_UInt glyph_index;
-    texture_glyph_t *glyph;
+    TextureGlyph *glyph;
     FT_Int32 flags = 0;
     int ft_glyph_top = 0;
     int ft_glyph_left = 0;
@@ -396,7 +396,7 @@ texture_font_load_glyph( texture_font_t * self,
     if( !codepoint )
     {
         ivec4 region = texture_atlas_get_region( self->atlas, 5, 5 );
-        texture_glyph_t * glyph = texture_glyph_new( );
+        TextureGlyph * glyph = texture_glyph_new( );
         static unsigned char data[4*4*3] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
                                             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
                                             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -640,11 +640,11 @@ texture_font_load_glyphs( texture_font_t * self,
 
 
 // ------------------------------------------------- texture_font_get_glyph ---
-texture_glyph_t *
+TextureGlyph *
 texture_font_get_glyph( texture_font_t * self,
                         const char * codepoint )
 {
-    texture_glyph_t *glyph;
+    TextureGlyph *glyph;
 
     assert( self );
     assert( self->filename );
@@ -701,7 +701,7 @@ texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
     size_t i;
     for( i = 0; i < vector_size(self->glyphs); i++ )
     {
-        texture_glyph_t* g = *(texture_glyph_t**)vector_get(self->glyphs, i);
+        TextureGlyph* g = *(TextureGlyph**)vector_get(self->glyphs, i);
         g->s0 *= mulw;
         g->s1 *= mulw;
         g->t0 *= mulh;
