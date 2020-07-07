@@ -18,6 +18,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include <memory>
 
 #include "vector.h"
 #include "vec234.h"
@@ -116,20 +117,10 @@ struct texture_atlas_t
  * @return          a new empty texture atlas.
  *
  */
-  texture_atlas_t *
+  std::shared_ptr<texture_atlas_t>
   texture_atlas_new( const size_t width,
                      const size_t height,
                      const size_t depth );
-
-
-/**
- *  Deletes a texture atlas.
- *
- *  @param self a texture atlas structure
- *
- */
-  void
-  texture_atlas_delete( texture_atlas_t * self );
 
 
 /**
@@ -142,7 +133,7 @@ struct texture_atlas_t
  *
  */
   ivec4
-  texture_atlas_get_region( texture_atlas_t * self,
+  texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
                             const size_t width,
                             const size_t height );
 
@@ -160,7 +151,7 @@ struct texture_atlas_t
  *
  */
   void
-  texture_atlas_set_region( texture_atlas_t * self,
+  texture_atlas_set_region( std::shared_ptr<texture_atlas_t> self,
                             const size_t x,
                             const size_t y,
                             const size_t width,

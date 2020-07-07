@@ -14,12 +14,12 @@ namespace ftgl {
 
 
 // ------------------------------------------------------ texture_atlas_new ---
-texture_atlas_t *
+std::shared_ptr<texture_atlas_t>
 texture_atlas_new( const size_t width,
                    const size_t height,
                    const size_t depth )
 {
-    texture_atlas_t *self = (texture_atlas_t *) malloc( sizeof(texture_atlas_t) );
+    auto self = std::make_shared<texture_atlas_t>();
 
     // We want a one pixel border around the whole atlas to avoid any artefact when
     // sampling texture
@@ -54,23 +54,9 @@ texture_atlas_new( const size_t width,
 }
 
 
-// --------------------------------------------------- texture_atlas_delete ---
-void
-texture_atlas_delete( texture_atlas_t *self )
-{
-    assert( self );
-    vector_delete( self->nodes );
-    if( self->data )
-    {
-        free( self->data );
-    }
-    free( self );
-}
-
-
 // ----------------------------------------------- texture_atlas_set_region ---
 void
-texture_atlas_set_region( texture_atlas_t * self,
+texture_atlas_set_region( std::shared_ptr<texture_atlas_t> self,
                           const size_t x,
                           const size_t y,
                           const size_t width,
@@ -106,7 +92,7 @@ texture_atlas_set_region( texture_atlas_t * self,
 
 // ------------------------------------------------------ texture_atlas_fit ---
 int
-texture_atlas_fit( texture_atlas_t * self,
+texture_atlas_fit( std::shared_ptr<texture_atlas_t> self,
                    const size_t index,
                    const size_t width,
                    const size_t height )
@@ -148,7 +134,7 @@ texture_atlas_fit( texture_atlas_t * self,
 
 // ---------------------------------------------------- texture_atlas_merge ---
 void
-texture_atlas_merge( texture_atlas_t * self )
+texture_atlas_merge( std::shared_ptr<texture_atlas_t> self )
 {
     ivec3 *node, *next;
     size_t i;
@@ -171,7 +157,7 @@ texture_atlas_merge( texture_atlas_t * self )
 
 // ----------------------------------------------- texture_atlas_get_region ---
 ivec4
-texture_atlas_get_region( texture_atlas_t * self,
+texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
                           const size_t width,
                           const size_t height )
 {
@@ -259,7 +245,7 @@ texture_atlas_get_region( texture_atlas_t * self,
 
 // ---------------------------------------------------- texture_atlas_clear ---
 void
-texture_atlas_clear( texture_atlas_t * self )
+texture_atlas_clear( std::shared_ptr<texture_atlas_t> self )
 {
     ivec3 node = {{1,1,1}};
 

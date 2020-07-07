@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <cstddef>
+#include <memory>
+
 #include "vector.h"
 #include "texture-atlas.h"
 
@@ -68,7 +70,7 @@ struct texture_font_t
     /**
      * Atlas structure to store glyphs data.
      */
-    texture_atlas_t * atlas;
+    std::shared_ptr<texture_atlas_t> atlas;
 
     /**
      * font location
@@ -199,8 +201,8 @@ struct texture_font_t
  * @return A new empty font (no glyph inside yet)
  *
  */
-  texture_font_t *
-  texture_font_new_from_file( texture_atlas_t * atlas,
+  std::shared_ptr<texture_font_t>
+  texture_font_new_from_file( std::shared_ptr<texture_atlas_t> atlas,
                               const float pt_size,
                               const char * filename );
 
@@ -220,20 +222,11 @@ struct texture_font_t
  * @return A new empty font (no glyph inside yet)
  *
  */
-  texture_font_t *
-  texture_font_new_from_memory( texture_atlas_t *atlas,
+  std::shared_ptr<texture_font_t>
+  texture_font_new_from_memory( std::shared_ptr<texture_atlas_t> atlas,
                                 float pt_size,
                                 const void *memory_base,
                                 size_t memory_size );
-
-/**
- * Delete a texture font. Note that this does not delete the glyph from the
- * texture atlas.
- *
- * @param self a valid texture font
- */
-  void
-  texture_font_delete( texture_font_t * self );
 
 
 /**
@@ -248,7 +241,7 @@ struct texture_font_t
  *
  */
   TextureGlyph *
-  texture_font_get_glyph( texture_font_t * self,
+  texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
                           const char * codepoint );
 
 /**
@@ -260,7 +253,7 @@ struct texture_font_t
  * @return A pointer on the glyph or 0 if the glyph is not loaded
  */
  TextureGlyph *
- texture_font_find_glyph( texture_font_t * self,
+ texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
                           const char * codepoint );
 
 /**
@@ -272,7 +265,7 @@ struct texture_font_t
  * @return One if the glyph could be loaded, zero if not.
  */
   int
-  texture_font_load_glyph( texture_font_t * self,
+  texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
                            const char * codepoint );
 
 /**
@@ -286,7 +279,7 @@ struct texture_font_t
  *         every glyphs.
  */
   size_t
-  texture_font_load_glyphs( texture_font_t * self,
+  texture_font_load_glyphs( std::shared_ptr<texture_font_t> self,
                             const char * codepoints );
 
 /*
@@ -301,7 +294,7 @@ struct texture_font_t
  *                   equal to current height)
  */
 void
-texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
+texture_font_enlarge_atlas( std::shared_ptr<texture_font_t> self, size_t width_new,
                             size_t height_new );
 
 /**

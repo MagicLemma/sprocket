@@ -24,7 +24,7 @@ namespace ftgl {
 
 // ------------------------------------------------- texture_font_load_face ---
 static int
-texture_font_load_face(texture_font_t *self, float size,
+texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
         FT_Library *library, FT_Face *face)
 {
     FT_Error error;
@@ -150,7 +150,7 @@ texture_glyph_get_kerning( const TextureGlyph * self,
 
 // ------------------------------------------ texture_font_generate_kerning ---
 void
-texture_font_generate_kerning( texture_font_t *self,
+texture_font_generate_kerning( std::shared_ptr<texture_font_t>  self,
                                FT_Library *library, FT_Face *face )
 {
     size_t i, j;
@@ -187,7 +187,7 @@ texture_font_generate_kerning( texture_font_t *self,
 
 // ------------------------------------------------------ texture_font_init ---
 static int
-texture_font_init(texture_font_t *self)
+texture_font_init(std::shared_ptr<texture_font_t> self)
 {
     FT_Library library;
     FT_Face face;
@@ -249,20 +249,13 @@ texture_font_init(texture_font_t *self)
 }
 
 // --------------------------------------------- texture_font_new_from_file ---
-texture_font_t *
-texture_font_new_from_file(texture_atlas_t *atlas, const float pt_size,
+std::shared_ptr<texture_font_t> 
+texture_font_new_from_file(std::shared_ptr<texture_atlas_t> atlas, const float pt_size,
         const char *filename)
 {
-    texture_font_t *self;
+    auto self = std::make_shared<texture_font_t>();
 
     assert(filename);
-
-    self = (ftgl::texture_font_t*)calloc(1, sizeof(*self));
-    if (!self) {
-        fprintf(stderr,
-                "line %d: No more memory for allocating data\n", __LINE__);
-        return NULL;
-    }
 
     self->atlas = atlas;
     self->size  = pt_size;
@@ -271,29 +264,21 @@ texture_font_new_from_file(texture_atlas_t *atlas, const float pt_size,
     self->filename = strdup(filename);
 
     if (texture_font_init(self)) {
-        texture_font_delete(self);
-        return NULL;
+        return nullptr;
     }
 
     return self;
 }
 
 // ------------------------------------------- texture_font_new_from_memory ---
-texture_font_t *
-texture_font_new_from_memory(texture_atlas_t *atlas, float pt_size,
+std::shared_ptr<texture_font_t> 
+texture_font_new_from_memory(std::shared_ptr<texture_atlas_t> atlas, float pt_size,
         const void *memory_base, size_t memory_size)
 {
-    texture_font_t *self;
+    auto self = std::make_shared<texture_font_t>();
 
     assert(memory_base);
     assert(memory_size);
-
-    self = (ftgl::texture_font_t*)calloc(1, sizeof(*self));
-    if (!self) {
-        fprintf(stderr,
-                "line %d: No more memory for allocating data\n", __LINE__);
-        return NULL;
-    }
 
     self->atlas = atlas;
     self->size  = pt_size;
@@ -303,37 +288,14 @@ texture_font_new_from_memory(texture_atlas_t *atlas, float pt_size,
     self->memory.size = memory_size;
 
     if (texture_font_init(self)) {
-        texture_font_delete(self);
         return NULL;
     }
 
     return self;
 }
 
-// ---------------------------------------------------- texture_font_delete ---
-void
-texture_font_delete( texture_font_t *self )
-{
-    size_t i;
-    TextureGlyph *glyph;
-
-    assert( self );
-
-    if(self->location == FontLocation::TEXTURE_FONT_FILE && self->filename)
-        free( self->filename );
-
-    for( i=0; i<vector_size( self->glyphs ); ++i)
-    {
-        glyph = *(TextureGlyph **) vector_get( self->glyphs, i );
-        texture_glyph_delete( glyph);
-    }
-
-    vector_delete( self->glyphs );
-    free( self );
-}
-
 TextureGlyph *
-texture_font_find_glyph( texture_font_t * self,
+texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
                          const char * codepoint )
 {
     size_t i;
@@ -358,7 +320,7 @@ texture_font_find_glyph( texture_font_t * self,
 
 // ------------------------------------------------ texture_font_load_glyph ---
 int
-texture_font_load_glyph( texture_font_t * self,
+texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
                          const char * codepoint )
 {
     size_t i, x, y;
@@ -624,7 +586,7 @@ cleanup_stroker:
 
 // ----------------------------------------------- texture_font_load_glyphs ---
 size_t
-texture_font_load_glyphs( texture_font_t * self,
+texture_font_load_glyphs( std::shared_ptr<texture_font_t> self,
                           const char * codepoints )
 {
     size_t i, c;
@@ -641,7 +603,7 @@ texture_font_load_glyphs( texture_font_t * self,
 
 // ------------------------------------------------- texture_font_get_glyph ---
 TextureGlyph *
-texture_font_get_glyph( texture_font_t * self,
+texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
                         const char * codepoint )
 {
     TextureGlyph *glyph;
@@ -663,7 +625,7 @@ texture_font_get_glyph( texture_font_t * self,
 
 // ------------------------------------------------- texture_font_enlarge_atlas ---
 void
-texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
+texture_font_enlarge_atlas( std::shared_ptr<texture_font_t> self, size_t width_new,
                             size_t height_new )
 {
     assert(self);
@@ -672,7 +634,7 @@ texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
     assert(width_new >= self->atlas->width);
     assert(height_new >= self->atlas->height);
     assert(width_new + height_new > self->atlas->width + self->atlas->height);
-    texture_atlas_t* ta = self->atlas;
+    auto ta = self->atlas;
     size_t width_old = ta->width;
     size_t height_old = ta->height;
     //allocate new buffer
