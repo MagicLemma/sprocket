@@ -9,7 +9,7 @@
 
 #include "texture-atlas.h"
 
-namespace ftgl {
+namespace Sprocket {
 
 enum class RenderMode
 {

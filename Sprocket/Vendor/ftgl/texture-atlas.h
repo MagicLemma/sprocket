@@ -1,12 +1,11 @@
 #pragma once
-
-#include <stdlib.h>
+#include <cstdlib>
 #include <memory>
 #include <vector>
 
 #include "Maths.h"
 
-namespace ftgl {
+namespace Sprocket {
 
 struct texture_atlas_t
 {
@@ -25,25 +24,32 @@ struct texture_atlas_t
 
 
 std::shared_ptr<texture_atlas_t> texture_atlas_new(
-    const size_t width,
-    const size_t height,
-    const size_t depth
+    std::size_t width,
+    std::size_t height,
+    std::size_t depth
 );
 
-Sprocket::Maths::ivec4 texture_atlas_get_region(
+Maths::ivec4 texture_atlas_get_region(
     std::shared_ptr<texture_atlas_t> self,
-    const size_t width,
-    const size_t height
+    std::size_t width,
+    std::size_t height
+);
+
+int texture_atlas_fit(
+    std::shared_ptr<texture_atlas_t> self,
+    std::size_t index,
+    std::size_t width,
+    std::size_t height
 );
 
 void texture_atlas_set_region(
     std::shared_ptr<texture_atlas_t> self,
-    const size_t x,
-    const size_t y,
-    const size_t width,
-    const size_t height,
-    const unsigned char *data,
-    const size_t stride
+    std::size_t x,
+    std::size_t y,
+    std::size_t width,
+    std::size_t height,
+    std::size_t stride,
+    const unsigned char *data
 );
 
 }

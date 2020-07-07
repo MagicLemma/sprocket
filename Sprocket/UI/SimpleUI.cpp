@@ -46,10 +46,10 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
 
-    d_texAtlas = ftgl::texture_atlas_new(1024, 1024, 1);
-    d_texFont = ftgl::texture_font_new_from_file(d_texAtlas, 36.0f, "Resources/Fonts/arial.ttf");
+    d_texAtlas = Sprocket::texture_atlas_new(1024, 1024, 1);
+    d_texFont = Sprocket::texture_font_new_from_file(d_texAtlas, 36.0f, "Resources/Fonts/arial.ttf");
 
-    d_texFont->rendermode = ftgl::RenderMode::RENDER_NORMAL;
+    d_texFont->rendermode = Sprocket::RenderMode::RENDER_NORMAL;
     d_texFont->outline_thickness = 0;
 
     glGenTextures(1, &d_texAtlas->id);
@@ -205,11 +205,11 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         char c = text[i];
-        auto glyph = ftgl::texture_font_get_glyph(d_texFont, &c);
+        auto glyph = Sprocket::texture_font_get_glyph(d_texFont, &c);
 
         float kerning = 0.0f;
         if (i > 0) {
-            kerning = ftgl::texture_glyph_get_kerning(glyph, &text[i-1]);
+            kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
         }
         pointer.x += kerning;
 

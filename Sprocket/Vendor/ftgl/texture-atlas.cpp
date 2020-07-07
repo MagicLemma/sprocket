@@ -1,8 +1,3 @@
-/* Freetype GL - A C OpenGL Freetype engine
- *
- * Distributed under the OSI-approved BSD 2-Clause License.  See accompanying
- * file `LICENSE` for more details.
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,54 +6,43 @@
 #include "texture-atlas.h"
 #include "Maths.h"
 
-namespace ftgl {
+namespace Sprocket {
 
-
-// ------------------------------------------------------ texture_atlas_new ---
-std::shared_ptr<texture_atlas_t>
-texture_atlas_new( const size_t width,
-                   const size_t height,
-                   const size_t depth )
+std::shared_ptr<texture_atlas_t> texture_atlas_new(
+    std::size_t width,
+    std::size_t height,
+    std::size_t depth)
 {
+    assert((depth == 1) || (depth == 3) || (depth == 4));
     using namespace Sprocket;
 
     auto self = std::make_shared<texture_atlas_t>();
-
-    // We want a one pixel border around the whole atlas to avoid any artefact when
-    // sampling texture
-    auto node = std::make_shared<Maths::ivec3>();
-    node->x = 1;
-    node->y = 1;
-    node->z = width-2;
-
-    assert( (depth == 1) || (depth == 3) || (depth == 4) );
-    if( self == NULL)
-    {
-        fprintf( stderr,
-                 "line %d: No more memory for allocating data\n", __LINE__ );
-        exit( EXIT_FAILURE );
-    }
     self->used = 0;
     self->width = width;
     self->height = height;
     self->depth = depth;
     self->id = 0;
 
+    // We want a one pixel border around the whole atlas to avoid any
+    // artefact when sampling texture
+    auto node = std::make_shared<Maths::ivec3>();
+    node->x = 1;
+    node->y = 1;
+    node->z = width - 2;
+
     self->nodes.push_back(node);
     self->data.reserve(width*height*depth);
     return self;
 }
 
-
-// ----------------------------------------------- texture_atlas_set_region ---
-void
-texture_atlas_set_region(std::shared_ptr<texture_atlas_t> self,
-                         const size_t x,
-                         const size_t y,
-                         const size_t width,
-                         const size_t height,
-                         const unsigned char * data,
-                         const size_t stride )
+void texture_atlas_set_region(
+    std::shared_ptr<texture_atlas_t> self,
+    std::size_t x,
+    std::size_t y,
+    std::size_t width,
+    std::size_t height,
+    std::size_t stride,
+    const unsigned char* data)
 {
     assert( self );
     assert( x > 0);
@@ -84,13 +68,11 @@ texture_atlas_set_region(std::shared_ptr<texture_atlas_t> self,
     }
 }
 
-
-// ------------------------------------------------------ texture_atlas_fit ---
-int
-texture_atlas_fit( std::shared_ptr<texture_atlas_t> self,
-                   const size_t index,
-                   const size_t width,
-                   const size_t height )
+int texture_atlas_fit(
+    std::shared_ptr<texture_atlas_t> self,
+    std::size_t index,
+    std::size_t width,
+    std::size_t height)
 {
     int x, y, width_left;
     size_t i;
@@ -125,16 +107,11 @@ texture_atlas_fit( std::shared_ptr<texture_atlas_t> self,
     return y;
 }
 
-
-// ---------------------------------------------------- texture_atlas_merge ---
-void
-texture_atlas_merge( std::shared_ptr<texture_atlas_t> self )
+void texture_atlas_merge(std::shared_ptr<texture_atlas_t> self)
 {
-    size_t i;
-
     assert( self );
 
-    for( i=0; i< self->nodes.size()-1; ++i )
+    for (std::size_t i=0; i< self->nodes.size()-1; ++i )
     {
         auto node = self->nodes[i];
         auto next = self->nodes[i+1];
@@ -147,12 +124,10 @@ texture_atlas_merge( std::shared_ptr<texture_atlas_t> self )
     }
 }
 
-
-// ----------------------------------------------- texture_atlas_get_region ---
-Sprocket::Maths::ivec4
-texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
-                          const size_t width,
-                          const size_t height )
+Sprocket::Maths::ivec4 texture_atlas_get_region(
+    std::shared_ptr<texture_atlas_t> self,
+    std::size_t width,
+    std::size_t height )
 {
     int y, best_index;
     size_t best_height, best_width;

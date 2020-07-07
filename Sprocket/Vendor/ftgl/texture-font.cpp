@@ -21,7 +21,7 @@
 #define HRESf 64.f
 #define DPI   72
 
-namespace ftgl {
+namespace Sprocket {
 
 // ------------------------------------------------- texture_font_load_face ---
 static int
@@ -260,13 +260,10 @@ texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
     return nullptr;
 }
 
-// ------------------------------------------------ texture_font_load_glyph ---
-int
-texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
-                         const char * codepoint )
+int texture_font_load_glyph(
+    std::shared_ptr<texture_font_t> self,
+    const char* codepoint )
 {
-    size_t i, x, y;
-
     FT_Library library;
     FT_Error error;
     FT_Face face;
@@ -282,9 +279,9 @@ texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
     Sprocket::Maths::ivec4 region;
     size_t missed = 0;
 
-
-    if (!texture_font_load_face(self, self->size, &library, &face))
+    if (!texture_font_load_face(self, self->size, &library, &face)) {
         return 0;
+    }
 
     /* Check if codepoint has been already loaded */
     if (texture_font_find_glyph(self, codepoint)) {
@@ -296,7 +293,7 @@ texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
     flags = 0;
     ft_glyph_top = 0;
     ft_glyph_left = 0;
-    glyph_index = FT_Get_Char_Index( face, (FT_ULong)utf8_to_utf32( codepoint ) );
+    glyph_index = FT_Get_Char_Index(face, (FT_ULong)utf8_to_utf32(codepoint));
     // WARNING: We use texture-atlas depth to guess if user wants
     //          LCD subpixel rendering
 
@@ -443,14 +440,14 @@ cleanup_stroker:
         return 0;
     }
 
-    x = region.x;
-    y = region.y;
+    std::size_t x = region.x;
+    std::size_t y = region.y;
 
     unsigned char *buffer = (unsigned char*)calloc( tgt_w * tgt_h * self->atlas->depth, sizeof(unsigned char) );
 
     unsigned char *dst_ptr = buffer + (padding.top * tgt_w + padding.left) * self->atlas->depth;
     unsigned char *src_ptr = ft_bitmap.buffer;
-    for( i = 0; i < src_h; i++ )
+    for (std::size_t i = 0; i < src_h; i++ )
     {
         //difference between width and pitch: https://www.freetype.org/freetype2/docs/reference/ft2-basic_types.html#FT_Bitmap
         memcpy( dst_ptr, src_ptr, ft_bitmap.width);
@@ -458,7 +455,7 @@ cleanup_stroker:
         src_ptr += ft_bitmap.pitch;
     }
 
-    texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, buffer, tgt_w * self->atlas->depth);
+    texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, tgt_w * self->atlas->depth, buffer);
 
     free( buffer );
 
@@ -494,24 +491,18 @@ cleanup_stroker:
     return 1;
 }
 
-
-// ------------------------------------------------- texture_font_get_glyph ---
-std::shared_ptr<TextureGlyph>
-texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
-                        const char * codepoint )
+std::shared_ptr<TextureGlyph> texture_font_get_glyph(
+    std::shared_ptr<texture_font_t> self,
+    const char* codepoint )
 {
-    assert(self);
-    assert(self->atlas);
-
     auto glyph = texture_font_find_glyph(self, codepoint);
-
-    /* Check if codepoint has been already loaded */
-    if (glyph != nullptr)
+    if (glyph != nullptr) {
         return glyph;
+    }
 
-    /* Glyph has not been already loaded */
-    if( texture_font_load_glyph( self, codepoint ) )
-        return texture_font_find_glyph( self, codepoint );
+    if (texture_font_load_glyph(self, codepoint)) {
+        return texture_font_find_glyph(self, codepoint);
+    }
 
     return nullptr;
 }
