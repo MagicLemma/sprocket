@@ -212,9 +212,6 @@ texture_font_init(std::shared_ptr<texture_font_t> self)
     FT_Done_Face( face );
     FT_Done_FreeType( library );
 
-    /* NULL is a special glyph */
-    texture_font_get_glyph( self, NULL );
-
     return 0;
 }
 
@@ -290,37 +287,6 @@ texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
 
     /* Check if codepoint has been already loaded */
     if (texture_font_find_glyph(self, codepoint)) {
-        FT_Done_Face(face);
-        FT_Done_FreeType(library);
-        return 1;
-    }
-
-    /* codepoint NULL is special : it is used for line drawing (overline,
-     * underline, strikethrough) and background.
-     */
-    if( !codepoint )
-    {
-        ivec4 region = texture_atlas_get_region( self->atlas, 5, 5 );
-        auto glyph = texture_glyph_new();
-        static unsigned char data[4*4*3] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                                            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                                            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
-                                            -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-        if ( region.x < 0 )
-        {
-            fprintf( stderr, "Texture atlas is full (line %d)\n",  __LINE__ );
-            FT_Done_Face( face );
-            FT_Done_FreeType( library );
-            return 0;
-        }
-        texture_atlas_set_region( self->atlas, region.x, region.y, 4, 4, data, 0 );
-        glyph->codepoint = -1;
-        glyph->s0 = (region.x+2)/(float)self->atlas->width;
-        glyph->t0 = (region.y+2)/(float)self->atlas->height;
-        glyph->s1 = (region.x+3)/(float)self->atlas->width;
-        glyph->t1 = (region.y+3)/(float)self->atlas->height;
-        self->glyphs.push_back(glyph);
-
         FT_Done_Face(face);
         FT_Done_FreeType(library);
         return 1;

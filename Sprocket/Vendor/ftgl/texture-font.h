@@ -50,9 +50,7 @@ struct TextureGlyph
     RenderMode rendermode;
 
     float outline_thickness;
-
 };
-
 
 struct texture_font_t
 {

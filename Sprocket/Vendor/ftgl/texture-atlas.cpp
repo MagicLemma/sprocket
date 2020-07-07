@@ -47,18 +47,14 @@ texture_atlas_new( const size_t width,
 
 // ----------------------------------------------- texture_atlas_set_region ---
 void
-texture_atlas_set_region( std::shared_ptr<texture_atlas_t> self,
-                          const size_t x,
-                          const size_t y,
-                          const size_t width,
-                          const size_t height,
-                          const unsigned char * data,
-                          const size_t stride )
+texture_atlas_set_region(std::shared_ptr<texture_atlas_t> self,
+                         const size_t x,
+                         const size_t y,
+                         const size_t width,
+                         const size_t height,
+                         const unsigned char * data,
+                         const size_t stride )
 {
-    size_t i;
-    size_t depth;
-    size_t charsize;
-
     assert( self );
     assert( x > 0);
     assert( y > 0);
@@ -71,12 +67,15 @@ texture_atlas_set_region( std::shared_ptr<texture_atlas_t> self,
     // and prevent memcpy's undefined behavior when count is zero
     assert(height == 0 || (data != NULL && width > 0));
 
-    depth = self->depth;
-    charsize = sizeof(char);
-    for( i=0; i<height; ++i )
+    size_t depth = self->depth;
+    size_t charsize = sizeof(char);
+    for (std::size_t i=0; i<height; ++i )
     {
-        memcpy( self->data.data()+((y+i)*self->width + x ) * charsize * depth,
-                data + (i*stride) * charsize, width * charsize * depth  );
+        std::memcpy(
+            self->data.data()+((y+i)*self->width + x ) * charsize * depth,
+            data + (i*stride) * charsize,
+            width * charsize * depth
+        );
     }
 }
 
