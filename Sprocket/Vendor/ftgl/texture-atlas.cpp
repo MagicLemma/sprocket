@@ -40,16 +40,7 @@ texture_atlas_new( const size_t width,
     self->id = 0;
 
     vector_push_back( self->nodes, &node );
-    self->data = (unsigned char *)
-        calloc( width*height*depth, sizeof(unsigned char) );
-
-    if( self->data == NULL)
-    {
-        fprintf( stderr,
-                 "line %d: No more memory for allocating data\n", __LINE__ );
-        exit( EXIT_FAILURE );
-    }
-
+    self->data.reserve(width*height*depth);
     return self;
 }
 
@@ -84,7 +75,7 @@ texture_atlas_set_region( std::shared_ptr<texture_atlas_t> self,
     charsize = sizeof(char);
     for( i=0; i<height; ++i )
     {
-        memcpy( self->data+((y+i)*self->width + x ) * charsize * depth,
+        memcpy( self->data.data()+((y+i)*self->width + x ) * charsize * depth,
                 data + (i*stride) * charsize, width * charsize * depth  );
     }
 }
@@ -250,7 +241,6 @@ texture_atlas_clear( std::shared_ptr<texture_atlas_t> self )
     ivec3 node = {{1,1,1}};
 
     assert( self );
-    assert( self->data );
 
     vector_clear( self->nodes );
     self->used = 0;
@@ -259,7 +249,7 @@ texture_atlas_clear( std::shared_ptr<texture_atlas_t> self )
     node.z = self->width-2;
 
     vector_push_back( self->nodes, &node );
-    memset( self->data, 0, self->width*self->height*self->depth );
+    self->data.clear();
 }
 
 }

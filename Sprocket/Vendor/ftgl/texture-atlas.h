@@ -44,7 +44,7 @@ struct texture_atlas_t
     /**
      * Atlas data
      */
-    unsigned char * data;
+    std::vector<unsigned char> data;
 
 };
 
