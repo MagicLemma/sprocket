@@ -44,7 +44,7 @@ struct TextureGlyph
     float s1;
     float t1;
 
-    vector_t * kerning;
+    std::vector<std::shared_ptr<Kerning>> kerning;
 
     RenderMode rendermode;
 

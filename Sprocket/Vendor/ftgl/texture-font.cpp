@@ -106,18 +106,7 @@ std::shared_ptr<TextureGlyph> texture_glyph_new()
     self->t0        = 0.0;
     self->s1        = 0.0;
     self->t1        = 0.0;
-    self->kerning   = vector_new( sizeof(Kerning) );
     return self;
-}
-
-
-// --------------------------------------------------- texture_glyph_delete ---
-void
-texture_glyph_delete( TextureGlyph *self )
-{
-    assert( self );
-    vector_delete( self->kerning );
-    free( self );
 }
 
 // ---------------------------------------------- texture_glyph_get_kerning ---
@@ -129,9 +118,9 @@ texture_glyph_get_kerning( const std::shared_ptr<TextureGlyph> self,
     uint32_t ucodepoint = utf8_to_utf32( codepoint );
 
     assert( self );
-    for( i=0; i<vector_size(self->kerning); ++i )
+    for( i=0; i< self->kerning.size(); ++i )
     {
-        Kerning * kerning = (Kerning *) vector_get( self->kerning, i );
+        auto kerning = self->kerning[i];
         if( kerning->codepoint == ucodepoint )
         {
             return kerning->kerning;
@@ -148,7 +137,6 @@ texture_font_generate_kerning( std::shared_ptr<texture_font_t>  self,
 {
     size_t i, j;
     FT_UInt glyph_index, prev_index;
-    TextureGlyph *glyph, *prev_glyph;
     FT_Vector kerning;
 
     assert( self );
@@ -159,7 +147,7 @@ texture_font_generate_kerning( std::shared_ptr<texture_font_t>  self,
     {
         auto glyph = self->glyphs[i];
         glyph_index = FT_Get_Char_Index( *face, glyph->codepoint );
-        vector_clear( glyph->kerning );
+        glyph->kerning.clear();
 
         for( j=1; j < self->glyphs.size(); ++j )
         {
@@ -171,8 +159,10 @@ texture_font_generate_kerning( std::shared_ptr<texture_font_t>  self,
             //       glyph_index, glyph_index, kerning.x);
             if( kerning.x )
             {
-                Kerning k = {prev_glyph->codepoint, kerning.x / (float)(HRESf*HRESf)};
-                vector_push_back( glyph->kerning, &k );
+                auto k = std::make_shared<Kerning>();
+                k->codepoint = prev_glyph->codepoint;
+                k->kerning = kerning.x / (float)(HRESf*HRESf);
+                glyph->kerning.push_back(k);
             }
         }
     }
