@@ -90,16 +90,9 @@ cleanup:
 }
 
 // ------------------------------------------------------ texture_glyph_new ---
-TextureGlyph *
-texture_glyph_new(void)
+std::shared_ptr<TextureGlyph> texture_glyph_new()
 {
-    TextureGlyph *self = (TextureGlyph *) malloc( sizeof(TextureGlyph) );
-    if(self == NULL) {
-        fprintf( stderr,
-                "line %d: No more memory for allocating data\n", __LINE__);
-        return NULL;
-    }
-
+    auto self = std::make_shared<TextureGlyph>();
     self->codepoint  = -1;
     self->width     = 0;
     self->height    = 0;
@@ -129,7 +122,7 @@ texture_glyph_delete( TextureGlyph *self )
 
 // ---------------------------------------------- texture_glyph_get_kerning ---
 float
-texture_glyph_get_kerning( const TextureGlyph * self,
+texture_glyph_get_kerning( const std::shared_ptr<TextureGlyph> self,
                            const char * codepoint )
 {
     size_t i;
@@ -162,15 +155,15 @@ texture_font_generate_kerning( std::shared_ptr<texture_font_t>  self,
 
     /* For each glyph couple combination, check if kerning is necessary */
     /* Starts at index 1 since 0 is for the special backgroudn glyph */
-    for( i=1; i<self->glyphs->size; ++i )
+    for( i=1; i < self->glyphs.size(); ++i )
     {
-        glyph = *(TextureGlyph **) vector_get( self->glyphs, i );
+        auto glyph = self->glyphs[i];
         glyph_index = FT_Get_Char_Index( *face, glyph->codepoint );
         vector_clear( glyph->kerning );
 
-        for( j=1; j<self->glyphs->size; ++j )
+        for( j=1; j < self->glyphs.size(); ++j )
         {
-            prev_glyph = *(TextureGlyph **) vector_get( self->glyphs, j );
+            auto prev_glyph = self->glyphs[j];
             prev_index = FT_Get_Char_Index( *face, prev_glyph->codepoint );
             FT_Get_Kerning( *face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
             // printf("%c(%d)-%c(%d): %ld\n",
@@ -199,7 +192,6 @@ texture_font_init(std::shared_ptr<texture_font_t> self)
         || (self->location == FontLocation::TEXTURE_FONT_MEMORY
             && self->memory.base && self->memory.size));
 
-    self->glyphs = vector_new(sizeof(TextureGlyph *));
     self->height = 0;
     self->ascender = 0;
     self->descender = 0;
@@ -294,7 +286,7 @@ texture_font_new_from_memory(std::shared_ptr<texture_atlas_t> atlas, float pt_si
     return self;
 }
 
-TextureGlyph *
+std::shared_ptr<TextureGlyph>
 texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
                          const char * codepoint )
 {
@@ -302,9 +294,9 @@ texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
     TextureGlyph *glyph;
     uint32_t ucodepoint = utf8_to_utf32( codepoint );
 
-    for( i = 0; i < self->glyphs->size; ++i )
+    for( i = 0; i < self->glyphs.size(); ++i )
     {
-        glyph = *(TextureGlyph **) vector_get( self->glyphs, i );
+        auto glyph = self->glyphs[i];
         // If codepoint is -1, we don't care about outline type or thickness
         if( (glyph->codepoint == ucodepoint) &&
             ((ucodepoint == -1) ||
@@ -315,7 +307,7 @@ texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // ------------------------------------------------ texture_font_load_glyph ---
@@ -333,7 +325,6 @@ texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
     FT_Bitmap ft_bitmap;
 
     FT_UInt glyph_index;
-    TextureGlyph *glyph;
     FT_Int32 flags = 0;
     int ft_glyph_top = 0;
     int ft_glyph_left = 0;
@@ -358,7 +349,7 @@ texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
     if( !codepoint )
     {
         ivec4 region = texture_atlas_get_region( self->atlas, 5, 5 );
-        TextureGlyph * glyph = texture_glyph_new( );
+        auto glyph = texture_glyph_new();
         static unsigned char data[4*4*3] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
                                             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
                                             -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -376,7 +367,7 @@ texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
         glyph->t0 = (region.y+2)/(float)self->atlas->height;
         glyph->s1 = (region.x+3)/(float)self->atlas->width;
         glyph->t1 = (region.y+3)/(float)self->atlas->height;
-        vector_push_back( self->glyphs, &glyph );
+        self->glyphs.push_back(glyph);
 
         FT_Done_Face(face);
         FT_Done_FreeType(library);
@@ -552,7 +543,7 @@ cleanup_stroker:
 
     free( buffer );
 
-    glyph = texture_glyph_new( );
+    auto glyph = texture_glyph_new();
     glyph->codepoint = utf8_to_utf32( codepoint );
     glyph->width    = tgt_w;
     glyph->height   = tgt_h;
@@ -571,7 +562,7 @@ cleanup_stroker:
     glyph->advance_x = slot->advance.x / HRESf;
     glyph->advance_y = slot->advance.y / HRESf;
 
-    vector_push_back( self->glyphs, &glyph );
+    self->glyphs.push_back(glyph);
 
     if( self->rendermode != RenderMode::RENDER_NORMAL)
         FT_Done_Glyph( ft_glyph );
@@ -602,18 +593,18 @@ texture_font_load_glyphs( std::shared_ptr<texture_font_t> self,
 
 
 // ------------------------------------------------- texture_font_get_glyph ---
-TextureGlyph *
+std::shared_ptr<TextureGlyph>
 texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
                         const char * codepoint )
 {
-    TextureGlyph *glyph;
-
     assert( self );
     assert( self->filename );
     assert( self->atlas );
 
+    auto glyph = texture_font_find_glyph(self, codepoint);
+
     /* Check if codepoint has been already loaded */
-    if( (glyph = texture_font_find_glyph( self, codepoint )) )
+    if (glyph != nullptr)
         return glyph;
 
     /* Glyph has not been already loaded */
@@ -625,7 +616,7 @@ texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
 
 // ------------------------------------------------- texture_font_enlarge_atlas ---
 void
-texture_font_enlarge_atlas( std::shared_ptr<texture_font_t> self, size_t width_new,
+texture_font_enlarge_atlas( texture_font_t * self, size_t width_new,
                             size_t height_new )
 {
     assert(self);
@@ -661,9 +652,9 @@ texture_font_enlarge_atlas( std::shared_ptr<texture_font_t> self, size_t width_n
     float mulw = (float)width_old / width_new;
     float mulh = (float)height_old / height_new;
     size_t i;
-    for( i = 0; i < vector_size(self->glyphs); i++ )
+    for( i = 0; i < self->glyphs.size(); i++ )
     {
-        TextureGlyph* g = *(TextureGlyph**)vector_get(self->glyphs, i);
+        auto g = self->glyphs[i];
         g->s0 *= mulw;
         g->s1 *= mulw;
         g->t0 *= mulh;

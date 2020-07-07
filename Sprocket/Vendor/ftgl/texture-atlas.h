@@ -1,20 +1,3 @@
-/* Freetype GL - A C OpenGL Freetype engine
- *
- * Distributed under the OSI-approved BSD 2-Clause License.  See accompanying
- * file `LICENSE` for more details.
- *  ============================================================================
- *
- *
- * This source is based on the article by Jukka Jylänki :
- * "A Thousand Ways to Pack the Bin - A Practical Approach to
- * Two-Dimensional Rectangle Bin Packing", February 27, 2010.
- *
- * More precisely, this is an implementation of the Skyline Bottom-Left
- * algorithm based on C++ sources provided by Jukka Jylänki at:
- * http://clb.demon.fi/files/RectangleBinPack/
- *
- *  ============================================================================
- */
 #pragma once
 
 #include <stdlib.h>
@@ -25,48 +8,6 @@
 
 namespace ftgl {
 
-/**
- * @file   texture-atlas.h
- * @author Nicolas Rougier (Nicolas.Rougier@inria.fr)
- *
- * @defgroup texture-atlas Texture atlas
- *
- * A texture atlas is used to pack several small regions into a single texture.
- *
- * The actual implementation is based on the article by Jukka Jylänki : "A
- * Thousand Ways to Pack the Bin - A Practical Approach to Two-Dimensional
- * Rectangle Bin Packing", February 27, 2010.
- * More precisely, this is an implementation of the Skyline Bottom-Left
- * algorithm based on C++ sources provided by Jukka Jylänki at:
- * http://clb.demon.fi/files/RectangleBinPack/
- *
- *
- * Example Usage:
- * @code
- * #include "texture-atlas.h"
- *
- * ...
- *
- * / Creates a new atlas of 512x512 with a depth of 1
- * texture_atlas_t * atlas = texture_atlas_new( 512, 512, 1 );
- *
- * // Allocates a region of 20x20
- * ivec4 region = texture_atlas_get_region( atlas, 20, 20 );
- *
- * // Fill region with some data
- * texture_atlas_set_region( atlas, region.x, region.y, region.width, region.height, data, stride )
- *
- * ...
- *
- * @endcode
- *
- * @{
- */
-
-
-/**
- * A texture atlas is used to pack several small regions into a single texture.
- */
 struct texture_atlas_t
 {
     /**

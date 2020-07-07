@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <cstddef>
 #include <memory>
+#include <vector>
 
 #include "vector.h"
 #include "texture-atlas.h"
@@ -65,7 +66,7 @@ struct texture_font_t
     /**
      * Vector of glyphs contained in this font.
      */
-    vector_t * glyphs;
+    std::vector<std::shared_ptr<TextureGlyph>> glyphs;
 
     /**
      * Atlas structure to store glyphs data.
@@ -240,7 +241,7 @@ struct texture_font_t
  *         enough
  *
  */
-  TextureGlyph *
+  std::shared_ptr<TextureGlyph>
   texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
                           const char * codepoint );
 
@@ -252,7 +253,7 @@ struct texture_font_t
  *
  * @return A pointer on the glyph or 0 if the glyph is not loaded
  */
- TextureGlyph *
+ std::shared_ptr<TextureGlyph>
  texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
                           const char * codepoint );
 
@@ -279,8 +280,8 @@ struct texture_font_t
  *         every glyphs.
  */
   size_t
-  texture_font_load_glyphs( std::shared_ptr<texture_font_t> self,
-                            const char * codepoints );
+  texture_font_load_glyphs(std::shared_ptr<texture_font_t> self,
+                           const char * codepoints );
 
 /*
  * Increases the size of a fonts texture atlas
@@ -294,8 +295,9 @@ struct texture_font_t
  *                   equal to current height)
  */
 void
-texture_font_enlarge_atlas( std::shared_ptr<texture_font_t> self, size_t width_new,
-                            size_t height_new );
+texture_font_enlarge_atlas(std::shared_ptr<texture_font_t> self,
+                           size_t width_new,
+                           size_t height_new);
 
 /**
  * Get the kerning between two horizontal glyphs.
@@ -306,8 +308,8 @@ texture_font_enlarge_atlas( std::shared_ptr<texture_font_t> self, size_t width_n
  * @return x kerning value
  */
 float
-texture_glyph_get_kerning( const TextureGlyph * self,
-                           const char * codepoint );
+texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
+                          const char* codepoint );
 
 
 /**
@@ -315,8 +317,7 @@ texture_glyph_get_kerning( const TextureGlyph * self,
  *
  * @return a new empty glyph (not valid)
  */
-TextureGlyph *
-texture_glyph_new( void );
+std::shared_ptr<TextureGlyph> texture_glyph_new();
 
 /** @} */
 
