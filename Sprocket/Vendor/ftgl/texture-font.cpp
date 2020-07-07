@@ -493,22 +493,6 @@ cleanup_stroker:
     return 1;
 }
 
-// ----------------------------------------------- texture_font_load_glyphs ---
-size_t
-texture_font_load_glyphs( std::shared_ptr<texture_font_t> self,
-                          const char * codepoints )
-{
-    size_t i, c;
-
-    /* Load each glyph */
-    for( i = 0; i < strlen(codepoints); i += utf8_surrogate_len(codepoints + i) ) {
-        if( !texture_font_load_glyph( self, codepoints + i ) )
-            return utf8_strlen( codepoints + i );
-    }
-
-    return 0;
-}
-
 
 // ------------------------------------------------- texture_font_get_glyph ---
 std::shared_ptr<TextureGlyph>
@@ -528,7 +512,7 @@ texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
     if( texture_font_load_glyph( self, codepoint ) )
         return texture_font_find_glyph( self, codepoint );
 
-    return NULL;
+    return nullptr;
 }
 
 }

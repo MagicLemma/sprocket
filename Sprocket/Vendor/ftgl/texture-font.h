@@ -91,11 +91,6 @@ int
 texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
                     const char * codepoint );
 
-size_t
-texture_font_load_glyphs(std::shared_ptr<texture_font_t> self,
-                    const char * codepoints );
-
-
 float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
                                 const char* codepoint );
 
