@@ -15,6 +15,7 @@
 #include <math.h>
 #include "texture-font.h"
 #include "utf8-utils.h"
+#include "Maths.h"
 
 #define HRES  64
 #define HRESf 64.f
@@ -278,7 +279,7 @@ texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
     int ft_glyph_top = 0;
     int ft_glyph_left = 0;
 
-    ivec4 region;
+    Sprocket::Maths::ivec4 region;
     size_t missed = 0;
 
 

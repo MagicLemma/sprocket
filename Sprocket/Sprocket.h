@@ -107,6 +107,5 @@
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"
-#include "vec234.h"
 #include "texture-atlas.h"
 #include "texture-font.h"

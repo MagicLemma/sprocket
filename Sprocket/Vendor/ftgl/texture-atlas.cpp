@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <limits.h>
 #include "texture-atlas.h"
+#include "Maths.h"
 
 namespace ftgl {
 
@@ -19,11 +20,13 @@ texture_atlas_new( const size_t width,
                    const size_t height,
                    const size_t depth )
 {
+    using namespace Sprocket;
+
     auto self = std::make_shared<texture_atlas_t>();
 
     // We want a one pixel border around the whole atlas to avoid any artefact when
     // sampling texture
-    auto node = std::make_shared<ivec3>();
+    auto node = std::make_shared<Maths::ivec3>();
     node->x = 1;
     node->y = 1;
     node->z = width-2;
@@ -146,14 +149,18 @@ texture_atlas_merge( std::shared_ptr<texture_atlas_t> self )
 
 
 // ----------------------------------------------- texture_atlas_get_region ---
-ivec4
+Sprocket::Maths::ivec4
 texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
                           const size_t width,
                           const size_t height )
 {
     int y, best_index;
     size_t best_height, best_width;
-    ivec4 region = {{0,0,width,height}};
+    Sprocket::Maths::ivec4 region;
+    region.x = 0;
+    region.y = 0;
+    region.z = width;
+    region.w = height;
     size_t i;
 
     assert( self );
@@ -183,12 +190,12 @@ texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
     {
         region.x = -1;
         region.y = -1;
-        region.width = 0;
-        region.height = 0;
+        region.z = 0; // width
+        region.w = 0; // height
         return region;
     }
 
-    auto n = std::make_shared<ivec3>();
+    auto n = std::make_shared<Sprocket::Maths::ivec3>();
     n->x = region.x;
     n->y = region.y + height;
     n->z = width;

@@ -4,13 +4,13 @@
 #include <memory>
 #include <vector>
 
-#include "vec234.h"
+#include "Maths.h"
 
 namespace ftgl {
 
 struct texture_atlas_t
 {
-    std::vector<std::shared_ptr<ivec3>> nodes;
+    std::vector<std::shared_ptr<Sprocket::Maths::ivec3>> nodes;
 
     size_t width;
     size_t height;
@@ -30,7 +30,7 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     const size_t depth
 );
 
-ivec4 texture_atlas_get_region(
+Sprocket::Maths::ivec4 texture_atlas_get_region(
     std::shared_ptr<texture_atlas_t> self,
     const size_t width,
     const size_t height
