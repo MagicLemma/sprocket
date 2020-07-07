@@ -12,7 +12,8 @@
 #include <unordered_map>
 #include <chrono>
 
-#include <freetype-gl.h>
+#include <texture-atlas.h>
+#include <texture-font.h>
 
 namespace Sprocket {
 

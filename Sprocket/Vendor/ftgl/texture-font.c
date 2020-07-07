@@ -14,7 +14,6 @@
 #include <assert.h>
 #include <math.h>
 #include "texture-font.h"
-#include "platform.h"
 #include "utf8-utils.h"
 
 #define HRES  64
