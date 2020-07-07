@@ -233,23 +233,4 @@ texture_atlas_get_region( std::shared_ptr<texture_atlas_t> self,
     return region;
 }
 
-
-// ---------------------------------------------------- texture_atlas_clear ---
-void
-texture_atlas_clear( std::shared_ptr<texture_atlas_t> self )
-{
-    ivec3 node = {{1,1,1}};
-
-    assert( self );
-
-    vector_clear( self->nodes );
-    self->used = 0;
-    // We want a one pixel border around the whole atlas to avoid any artefact when
-    // sampling texture
-    node.z = self->width-2;
-
-    vector_push_back( self->nodes, &node );
-    self->data.clear();
-}
-
 }

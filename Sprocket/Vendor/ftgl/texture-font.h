@@ -53,114 +53,26 @@ struct TextureGlyph
 
 };
 
-/**
- *  Texture font structure.
- */
+
 struct texture_font_t
 {
-    /**
-     * Vector of glyphs contained in this font.
-     */
     std::vector<std::shared_ptr<TextureGlyph>> glyphs;
-
-    /**
-     * Atlas structure to store glyphs data.
-     */
     std::shared_ptr<texture_atlas_t> atlas;
-
     std::string filename;
-
-    /**
-     * Font size
-     */
     float size;
-
-    /**
-     * Whether to use autohint when rendering font
-     */
     int hinting;
-
-    /**
-     * Mode the font is rendering its next glyph
-     */
     RenderMode rendermode;
-
-    /**
-     * Outline thickness
-     */
     float outline_thickness;
-
-    /**
-     * Whether to use our own lcd filter.
-     */
     int filtering;
-
-    /**
-     * LCD filter weights
-     */
     unsigned char lcd_weights[5];
-
-    /**
-     * Whether to use kerning if available
-     */
     int kerning;
-
-
-    /**
-     * This field is simply used to compute a default line spacing (i.e., the
-     * baseline-to-baseline distance) when writing text with this font. Note
-     * that it usually is larger than the sum of the ascender and descender
-     * taken as absolute values. There is also no guarantee that no glyphs
-     * extend above or below subsequent baselines when using this distance.
-     */
     float height;
-
-    /**
-     * This field is the distance that must be placed between two lines of
-     * text. The baseline-to-baseline distance should be computed as:
-     * ascender - descender + linegap
-     */
     float linegap;
-
-    /**
-     * The ascender is the vertical distance from the horizontal baseline to
-     * the highest 'character' coordinate in a font face. Unfortunately, font
-     * formats define the ascender differently. For some, it represents the
-     * ascent of all capital latin characters (without accents), for others it
-     * is the ascent of the highest accented character, and finally, other
-     * formats define it as being equal to bbox.yMax.
-     */
     float ascender;
-
-    /**
-     * The descender is the vertical distance from the horizontal baseline to
-     * the lowest 'character' coordinate in a font face. Unfortunately, font
-     * formats define the descender differently. For some, it represents the
-     * descent of all capital latin characters (without accents), for others it
-     * is the ascent of the lowest accented character, and finally, other
-     * formats define it as being equal to bbox.yMin. This field is negative
-     * for values below the baseline.
-     */
     float descender;
-
-    /**
-     * The position of the underline line for this face. It is the center of
-     * the underlining stem. Only relevant for scalable formats.
-     */
     float underline_position;
-
-    /**
-     * The thickness of the underline for this face. Only relevant for scalable
-     * formats.
-     */
     float underline_thickness;
-
-    /**
-    * The padding to be add to the glyph's texture that are loaded by this font.
-    * Usefull when adding effects with shaders.
-    */
     int padding;
-
 };
 
 
