@@ -1,10 +1,4 @@
-/* Freetype GL - A C OpenGL Freetype engine
- *
- * Distributed under the OSI-approved BSD 2-Clause License.  See accompanying
- * file `LICENSE` for more details.
- */
-#ifndef __VECTOR_H__
-#define __VECTOR_H__
+#pragma once
 
 #include <stdlib.h>
 
@@ -326,5 +320,3 @@ typedef struct vector_t
 }
 }
 #endif
-
-#endif /* __VECTOR_H__ */
