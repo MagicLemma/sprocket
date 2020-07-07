@@ -118,9 +118,7 @@ add_library(Sprocket STATIC
             Vendor/ftgl/texture-font.c
             Vendor/ftgl/texture-atlas.c
             Vendor/ftgl/vector.c
-            Vendor/ftgl/utf8-utils.c
-            Vendor/ftgl/distance-field.c
-            Vendor/ftgl/edtaa3func.c)
+            Vendor/ftgl/utf8-utils.c)
 
 target_link_libraries(Sprocket PUBLIC
                       glfw
