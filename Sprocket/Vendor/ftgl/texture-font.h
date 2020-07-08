@@ -1,5 +1,4 @@
 #pragma once
-
 #include <stdlib.h>
 #include <stdint.h>
 #include <cstddef>
@@ -53,7 +52,7 @@ struct TextureGlyph
 struct texture_font_t
 {
     std::vector<std::shared_ptr<TextureGlyph>> glyphs;
-    std::shared_ptr<texture_atlas_t> atlas;
+    std::shared_ptr<FontAtlas> atlas;
     std::string filename;
     float size;
     int hinting;
@@ -67,21 +66,20 @@ struct texture_font_t
 
 
 std::shared_ptr<texture_font_t>
-texture_font_new_from_file( std::shared_ptr<texture_atlas_t> atlas,
-                        const float pt_size,
-                        const char * filename );
+texture_font_new_from_file(std::shared_ptr<FontAtlas> atlas,
+                           const float pt_size,
+                           const char* filename );
 
 std::shared_ptr<TextureGlyph>
-texture_font_get_glyph( std::shared_ptr<texture_font_t> self,
-                    const char * codepoint );
+texture_font_get_glyph(std::shared_ptr<texture_font_t> self,
+                       const char* codepoint );
 
 std::shared_ptr<TextureGlyph>
-texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
-                    const char * codepoint );
+texture_font_find_glyph(std::shared_ptr<texture_font_t> self,
+                        const char* codepoint );
 
-int
-texture_font_load_glyph( std::shared_ptr<texture_font_t> self,
-                    const char * codepoint );
+int texture_font_load_glyph(std::shared_ptr<texture_font_t> self,
+                            const char* codepoint );
 
 float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
                                 const char* codepoint );

@@ -47,7 +47,7 @@ class SimpleUI
 
     FontPackage d_font;
 
-    std::shared_ptr<Sprocket::texture_atlas_t> d_texAtlas;
+    std::shared_ptr<FontAtlas> d_texAtlas;
     std::shared_ptr<Sprocket::texture_font_t> d_texFont;
 
     int d_clicked; // ID of the clicked widget.

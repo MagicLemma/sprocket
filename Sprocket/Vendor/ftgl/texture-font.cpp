@@ -169,7 +169,7 @@ float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
 }
 
 std::shared_ptr<texture_font_t> 
-texture_font_new_from_file(std::shared_ptr<texture_atlas_t> atlas, const float pt_size,
+texture_font_new_from_file(std::shared_ptr<FontAtlas> atlas, const float pt_size,
         const char *filename)
 {
     auto self = std::make_shared<texture_font_t>();
