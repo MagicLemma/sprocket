@@ -100,8 +100,8 @@ void GenerateKerning(
 
 }
 
-Font::Font(FontAtlas* atlas)
-    : d_atlas(atlas)
+Font::Font(std::size_t width, std::size_t height)
+    : d_atlas(width, height)
     , d_outline_thickness(0.0f)
     , d_padding(1)
 {
@@ -218,7 +218,7 @@ bool Font::LoadGlyph(char c)
     std::size_t tgt_w = src_w + padding.left + padding.right;
     std::size_t tgt_h = src_h + padding.top + padding.bottom;
 
-    region = d_atlas->GetRegion(tgt_w, tgt_h);
+    region = d_atlas.GetRegion(tgt_w, tgt_h);
 
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
@@ -242,7 +242,7 @@ bool Font::LoadGlyph(char c)
         src_ptr += ft_bitmap.pitch;
     }
 
-    d_atlas->SetRegion({x, y, tgt_w, tgt_h}, buffer);
+    d_atlas.SetRegion({x, y, tgt_w, tgt_h}, buffer);
 
     auto glyph = std::make_shared<Glyph>();
     glyph->codepoint = utf8_to_utf32(&c);
@@ -250,10 +250,10 @@ bool Font::LoadGlyph(char c)
     glyph->height   = tgt_h;
     glyph->offset_x = ft_glyph_left;
     glyph->offset_y = ft_glyph_top;
-    glyph->s0       = x/(float)d_atlas->Width();;
-    glyph->t0       = y/(float)d_atlas->Height();
-    glyph->s1       = (x + glyph->width)/(float)d_atlas->Width();
-    glyph->t1       = (y + glyph->height)/(float)d_atlas->Height();
+    glyph->s0       = x/(float)d_atlas.Width();;
+    glyph->t0       = y/(float)d_atlas.Height();
+    glyph->s1       = (x + glyph->width)/(float)d_atlas.Width();
+    glyph->t1       = (y + glyph->height)/(float)d_atlas.Height();
     glyph->outline_thickness = d_outline_thickness;
 
     // Discard hinting to get advance

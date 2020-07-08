@@ -41,7 +41,7 @@ struct Glyph
 
 class Font
 {
-    FontAtlas* d_atlas;
+    FontAtlas d_atlas;
 
     std::string d_filename;
     float d_size;
@@ -57,12 +57,15 @@ class Font
     bool LoadGlyph(char c);
 
 public:
-    Font(FontAtlas* atlas);
+    Font(std::size_t width, std::size_t height);
     bool Load(const std::string& filename, float size);
 
     std::shared_ptr<Glyph> GetGlyph(char c);
 
     float GetKerning(const std::shared_ptr<Glyph> self, char c);
+
+    void Bind() const { d_atlas.Bind(); }
+    void Unbind() const { d_atlas.Unbind(); }
 };
 
 }

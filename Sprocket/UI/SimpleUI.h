@@ -45,7 +45,6 @@ class SimpleUI
     StreamBuffer d_buffer;
     BufferLayout d_bufferLayout;
 
-    FontAtlas d_texAtlas;
     Font d_texFont;
 
     int d_clicked; // ID of the clicked widget.

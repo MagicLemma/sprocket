@@ -36,8 +36,7 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
-    , d_texAtlas(1024, 1024)
-    , d_texFont(&d_texAtlas)
+    , d_texFont(1024, 1024)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -46,7 +45,7 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
 
-    if (!d_texFont.Load("Resources/Fonts/Arial.ttf", 36.0f)) {
+    if (!d_texFont.Load("Resources/Fonts/InkFree.ttf", 36.0f)) {
         SPKT_LOG_ERROR("Could not load font!");
     }
 }
@@ -99,7 +98,7 @@ void SimpleUI::EndFrame()
         d_quadIndices.data());
     glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
-    d_texAtlas.Bind();
+    d_texFont.Bind();
     d_buffer.SetVertexData(
         sizeof(BufferVertex) * d_textVertices.size(),
         d_textVertices.data());
