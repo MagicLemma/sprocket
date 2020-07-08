@@ -43,8 +43,6 @@ struct Glyph
     float t0 = 0.0f;
     float s1 = 0.0f;
     float t1 = 0.0f;
-
-    float outline_thickness = 0.0f;
 };
 
 class Font

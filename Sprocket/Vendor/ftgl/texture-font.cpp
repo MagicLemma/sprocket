@@ -128,7 +128,6 @@ void GenerateKerning(
 
 Font::Font(std::size_t width, std::size_t height)
     : d_atlas(width, height)
-    , d_outline_thickness(0.0f)
     , d_padding(1)
 {
 }
@@ -280,7 +279,6 @@ bool Font::LoadGlyph(char c)
     glyph->t0       = y/(float)d_atlas.Height();
     glyph->s1       = (x + glyph->width)/(float)d_atlas.Width();
     glyph->t1       = (y + glyph->height)/(float)d_atlas.Height();
-    glyph->outline_thickness = d_outline_thickness;
 
     // Discard hinting to get advance
     FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
