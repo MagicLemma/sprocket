@@ -19,7 +19,6 @@ enum class RenderMode
     RENDER_OUTLINE_NEGATIVE
 };
 
-
 struct Kerning
 {
     uint32_t codepoint;
@@ -44,7 +43,7 @@ struct TextureGlyph
     float s1;
     float t1;
 
-    std::vector<std::shared_ptr<Kerning>> kerning;
+    std::vector<Kerning> kerning;
 
     RenderMode rendermode;
 
