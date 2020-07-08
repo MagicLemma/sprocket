@@ -6,6 +6,8 @@
 #include "texture-atlas.h"
 #include "Maths.h"
 
+#include <glad/glad.h>
+
 namespace Sprocket {
 
 std::shared_ptr<texture_atlas_t> texture_atlas_new(
@@ -50,15 +52,12 @@ void texture_atlas_set_region(
     // and prevent memcpy's undefined behavior when count is zero
     assert(height == 0 || (data != NULL && width > 0));
 
-    size_t charsize = sizeof(char);
-    for (std::size_t i=0; i<height; ++i )
-    {
-        std::memcpy(
-            self->data.data()+((y+i)*self->width + x ) * charsize,
-            data + (i*stride) * charsize,
-            width * charsize
-        );
-    }
+    glBindTexture(GL_TEXTURE_2D, self->textureId);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexSubImage2D(GL_TEXTURE_2D,
+                    0, x, y, width, height, 
+                    GL_RED, GL_UNSIGNED_BYTE, (void*)data);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 int texture_atlas_fit(

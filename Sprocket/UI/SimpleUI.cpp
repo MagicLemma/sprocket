@@ -115,9 +115,9 @@ void SimpleUI::EndFrame()
     glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
     glBindTexture(GL_TEXTURE_2D, d_texAtlas->textureId);
-    glTexImage2D(GL_TEXTURE_2D,
-                 0, GL_RED, d_texAtlas->width, d_texAtlas->height,
-                 0, GL_RED, GL_UNSIGNED_BYTE, d_texAtlas->data.data());
+    //glTexImage2D(GL_TEXTURE_2D,
+    //             0, GL_RED, d_texAtlas->width, d_texAtlas->height,
+    //             0, GL_RED, GL_UNSIGNED_BYTE, d_texAtlas->data.data());
 
     d_buffer.SetVertexData(
         sizeof(BufferVertex) * d_textVertices.size(),
