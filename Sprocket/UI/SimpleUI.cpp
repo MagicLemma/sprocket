@@ -37,6 +37,7 @@ SimpleUI::SimpleUI(Window* window)
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
     , d_texAtlas(1024, 1024)
+    , d_texFont(&d_texAtlas)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -45,10 +46,9 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
 
-    d_texFont = Sprocket::texture_font_new_from_file(
-        &d_texAtlas,
-        72.0f,
-        "Resources/Fonts/inkfree.ttf");
+    if (!d_texFont.Load("Resources/Fonts/Arial.ttf", 36.0f)) {
+        SPKT_LOG_ERROR("Could not load font!");
+    }
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -187,10 +187,10 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         char c = text[i];
-        auto glyph = Sprocket::texture_font_get_glyph(d_texFont, &c);
+        auto glyph = d_texFont.GetGlyph(c);
 
         if (i > 0) {
-            float kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
+            float kerning = d_texFont.GetKerning(glyph, text[i-1]);
             pen.x += kerning;
         }
 

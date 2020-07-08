@@ -46,7 +46,7 @@ class SimpleUI
     BufferLayout d_bufferLayout;
 
     FontAtlas d_texAtlas;
-    std::shared_ptr<Sprocket::texture_font_t> d_texFont;
+    Font d_texFont;
 
     int d_clicked; // ID of the clicked widget.
 

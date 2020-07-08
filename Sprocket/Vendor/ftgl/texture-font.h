@@ -16,64 +16,53 @@ struct Kerning
     float kerning;
 };
 
-struct TextureGlyph
+struct Glyph
 {
-    uint32_t codepoint;
+    uint32_t codepoint = -1;
 
-    std::size_t width;
-    std::size_t height;
+    std::size_t width  = 0;
+    std::size_t height = 0;
 
-    int offset_x;
-    int offset_y;
+    int offset_x = 0;
+    int offset_y = 0;
 
-    float advance_x;
-    float advance_y;
+    float advance_x = 0.0f;
+    float advance_y = 0.0f;
 
-    float s0;
-    float t0;
-    float s1;
-    float t1;
+    float s0 = 0.0f;
+    float t0 = 0.0f;
+    float s1 = 0.0f;
+    float t1 = 0.0f;
+
+    float outline_thickness = 0.0f;
 
     std::vector<Kerning> kerning;
-
-    float outline_thickness;
 };
 
-struct texture_font_t
+class Font
 {
-    FontAtlas* atlas;
-    float size;
-    std::string filename;
+    FontAtlas* d_atlas;
+
+    std::string d_filename;
+    float d_size;
     
-    std::vector<std::shared_ptr<TextureGlyph>> glyphs;
-    int hinting;
-    float outline_thickness;
-    float height;
-    float underline_position;
-    float underline_thickness;
-    int padding;
+    std::vector<std::shared_ptr<Glyph>> d_glyphs;
+    float d_outline_thickness;
+    float d_height;
+    float d_underline_position;
+    float d_underline_thickness;
+    int d_padding;
+
+    std::shared_ptr<Glyph> FindGlyph(char c);
+    bool LoadGlyph(char c);
+
+public:
+    Font(FontAtlas* atlas);
+    bool Load(const std::string& filename, float size);
+
+    std::shared_ptr<Glyph> GetGlyph(char c);
+
+    float GetKerning(const std::shared_ptr<Glyph> self, char c);
 };
-
-
-std::shared_ptr<texture_font_t>
-texture_font_new_from_file(FontAtlas* atlas,
-                           float size,
-                           const std::string& filename);
-
-std::shared_ptr<TextureGlyph>
-texture_font_get_glyph(std::shared_ptr<texture_font_t> self,
-                       const char* codepoint );
-
-std::shared_ptr<TextureGlyph>
-texture_font_find_glyph(std::shared_ptr<texture_font_t> self,
-                        const char* codepoint );
-
-int texture_font_load_glyph(std::shared_ptr<texture_font_t> self,
-                            const char* codepoint );
-
-float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
-                                const char* codepoint );
-
-std::shared_ptr<TextureGlyph> texture_glyph_new();
 
 }

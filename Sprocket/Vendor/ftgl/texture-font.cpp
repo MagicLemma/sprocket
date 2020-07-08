@@ -25,8 +25,11 @@
 namespace Sprocket {
 namespace {
 
-bool texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
-                            FT_Library *library, FT_Face *face)
+bool LoadFace(
+    const std::string& filename,
+    float size,
+    FT_Library *library,
+    FT_Face *face)
 {
     FT_Error error;
     FT_Matrix matrix = {
@@ -43,7 +46,7 @@ bool texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
         return false;
     }
 
-    error = FT_New_Face(*library, self->filename.c_str(), 0, face);
+    error = FT_New_Face(*library, filename.c_str(), 0, face);
     if (error) {
         FT_Done_FreeType(*library);
         return false;
@@ -67,21 +70,23 @@ bool texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
     return true;
 }
 
-void texture_font_generate_kerning(std::shared_ptr<texture_font_t> self,
-                                   FT_Library *library, FT_Face *face )
+void GenerateKerning(
+    std::vector<std::shared_ptr<Glyph>>& glyphs,
+    FT_Library* library,
+    FT_Face* face)
 {
     // For each glyph couple combination, check if kerning is necessary
     // Starts at index 1 since 0 is for the special backgroudn glyph
-    for (std::size_t i = 1; i < self->glyphs.size(); ++i) {
-        auto glyph = self->glyphs[i];
+    for (std::size_t i = 1; i < glyphs.size(); ++i) {
+        auto glyph = glyphs[i];
         FT_UInt glyph_index = FT_Get_Char_Index( *face, glyph->codepoint );
         glyph->kerning.clear();
 
-        for (std::size_t j = 1; j < self->glyphs.size(); ++j) {
-            auto prev_glyph = self->glyphs[j];
-            FT_UInt prev_index = FT_Get_Char_Index( *face, prev_glyph->codepoint );
+        for (std::size_t j = 1; j < glyphs.size(); ++j) {
+            auto prev_glyph = glyphs[j];
+            FT_UInt prev_index = FT_Get_Char_Index(*face, prev_glyph->codepoint);
             FT_Vector kerning;
-            FT_Get_Kerning( *face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
+            FT_Get_Kerning(*face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
 
             if (kerning.x) {
                 Kerning k;
@@ -93,109 +98,64 @@ void texture_font_generate_kerning(std::shared_ptr<texture_font_t> self,
     }
 }
 
-int texture_font_init(std::shared_ptr<texture_font_t> self)
+}
+
+Font::Font(FontAtlas* atlas)
+    : d_atlas(atlas)
+    , d_outline_thickness(0.0f)
+    , d_padding(1)
 {
+}
+
+bool Font::Load(const std::string& filename, float size)
+{
+    assert(size);
+    
+    d_filename = filename;
+    d_size = size;
+
     FT_Library library;
     FT_Face face;
-    FT_Size_Metrics metrics;
 
-    assert(self->atlas);
-    assert(self->size > 0);
-
-    self->height = 0;
-    self->outline_thickness = 0.0;
-    self->hinting = 1;
-    self->padding = 1;
-
-    if (!texture_font_load_face(self, self->size * 100.f, &library, &face))
-        return -1;
-
-    self->underline_position = face->underline_position / (float)(HRESf*HRESf) * self->size;
-    self->underline_position = roundf( self->underline_position );
-    if( self->underline_position > -2 )
-    {
-        self->underline_position = -2.0;
+    if (!LoadFace(filename, size, &library, &face)) {
+        return false;
     }
 
-    self->underline_thickness = face->underline_thickness / (float)(HRESf*HRESf) * self->size;
-    self->underline_thickness = roundf( self->underline_thickness );
-    if( self->underline_thickness < 1 )
-    {
-        self->underline_thickness = 1.0;
+    d_underline_position = face->underline_position / (float)(HRESf*HRESf) * d_size;
+    d_underline_position = roundf(d_underline_position);
+    if (d_underline_position > -2) {
+        d_underline_position = -2.0;
     }
 
-    metrics = face->size->metrics;
-    self->height = (metrics.height >> 6) / 100.0;
+    d_underline_thickness = face->underline_thickness / (float)(HRESf*HRESf) * d_size;
+    d_underline_thickness = roundf(d_underline_thickness);
+    if (d_underline_thickness < 1) {
+        d_underline_thickness = 1.0;
+    }
+
+    FT_Size_Metrics metrics = face->size->metrics;
+    d_height = (metrics.height >> 6) / 100.0;
     FT_Done_Face(face);
     FT_Done_FreeType(library);
-    return 0;
+    return true;
 }
 
-}
-
-
-std::shared_ptr<TextureGlyph> texture_glyph_new()
+std::shared_ptr<Glyph> Font::GetGlyph(char c)
 {
-    auto self = std::make_shared<TextureGlyph>();
-    self->codepoint  = -1;
-    self->width     = 0;
-    self->height    = 0;
-    self->outline_thickness = 0.0;
-    self->offset_x  = 0;
-    self->offset_y  = 0;
-    self->advance_x = 0.0;
-    self->advance_y = 0.0;
-    self->s0        = 0.0;
-    self->t0        = 0.0;
-    self->s1        = 0.0;
-    self->t1        = 0.0;
-    return self;
-}
-
-float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
-                                const char* codepoint )
-{
-    uint32_t ucodepoint = utf8_to_utf32(codepoint);
-    auto& k = self->kerning;
-
-    auto it = std::find_if(k.begin(), k.end(), [&](const auto x) {
-        return x.codepoint == ucodepoint;
-    });
-
-    if (it != k.end()) {
-        SPKT_LOG_INFO("Found kerning!");
-        return it->kerning;
+    auto glyph = FindGlyph(c);
+    if (glyph != nullptr) {
+        return glyph;
     }
 
-    return 0;
+    LoadGlyph(c);
+    return FindGlyph(c);
 }
 
-std::shared_ptr<texture_font_t> texture_font_new_from_file(
-    FontAtlas* atlas,
-    float size,
-    const std::string& filename)
+std::shared_ptr<Glyph> Font::FindGlyph(char c)
 {
-    auto self = std::make_shared<texture_font_t>();
-
-    self->atlas = atlas;
-    self->size  = size;
-    self->filename = filename;
-
-    if (texture_font_init(self)) {
-        return nullptr;
-    }
-
-    return self;
-}
-
-std::shared_ptr<TextureGlyph>
-texture_font_find_glyph(std::shared_ptr<texture_font_t> self,
-                        const char * codepoint)
-{
-    uint32_t ucodepoint = utf8_to_utf32( codepoint );
-
-    for (std::size_t i = 0; i < self->glyphs.size(); ++i) {
-        auto glyph = self->glyphs[i];
+    uint32_t ucodepoint = utf8_to_utf32(&c);
+    for (std::size_t i = 0; i < d_glyphs.size(); ++i) {
+        auto glyph = d_glyphs[i];
         if (glyph->codepoint == ucodepoint) {
             return glyph;
         }
@@ -204,64 +164,39 @@ texture_font_find_glyph(std::shared_ptr<texture_font_t> self,
     return nullptr;
 }
 
-int texture_font_load_glyph(
-    std::shared_ptr<texture_font_t> self,
-    const char* codepoint)
+bool Font::LoadGlyph(char c)
 {
-    FT_Library library;
-    FT_Error error;
-    FT_Face face;
-    FT_Glyph ft_glyph;
-    FT_GlyphSlot slot;
-    FT_Bitmap ft_bitmap;
+    if (FindGlyph(c)) {
+        return true; // Already loaded
+    }
 
-    FT_UInt glyph_index;
-    FT_Int32 flags = 0;
-    int ft_glyph_top = 0;
-    int ft_glyph_left = 0;
+    FT_Library library;
+    FT_Face face;
+
+    if (!LoadFace(d_filename, d_size, &library, &face)) {
+        return false;
+    }
 
     Maths::ivec4 region;
     size_t missed = 0;
 
-    if (!texture_font_load_face(self, self->size, &library, &face)) {
-        return 0;
+    if (!LoadFace(d_filename, d_size, &library, &face)) {
+        return false;
     }
 
-    /* Check if codepoint has been already loaded */
-    if (texture_font_find_glyph(self, codepoint)) {
+    FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)utf8_to_utf32(&c));
+    FT_Int32 flags = FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT;
+
+    if (FT_Load_Glyph(face, glyph_index, flags)) {
         FT_Done_Face(face);
         FT_Done_FreeType(library);
-        return 1;
+        return false;
     }
 
-    flags = 0;
-    ft_glyph_top = 0;
-    ft_glyph_left = 0;
-    glyph_index = FT_Get_Char_Index(face, (FT_ULong)utf8_to_utf32(codepoint));
-
-    flags |= FT_LOAD_RENDER;
-
-    if (!self->hinting)
-    {
-        flags |= FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT;
-    }
-    else
-    {
-        flags |= FT_LOAD_FORCE_AUTOHINT;
-    }
-
-    error = FT_Load_Glyph( face, glyph_index, flags );
-    if (error) {
-        // TODO: Print error 
-        FT_Done_Face(face);
-        FT_Done_FreeType(library);
-        return 0;
-    }
-
-    slot            = face->glyph;
-    ft_bitmap       = slot->bitmap;
-    ft_glyph_top    = slot->bitmap_top;
-    ft_glyph_left   = slot->bitmap_left;
+    FT_GlyphSlot slot   = face->glyph;
+    FT_Bitmap ft_bitmap = slot->bitmap;
+    int ft_glyph_top    = slot->bitmap_top;
+    int ft_glyph_left   = slot->bitmap_left;
 
     struct {
         int left;
@@ -270,11 +205,11 @@ int texture_font_load_glyph(
         int bottom;
     } padding = { 0, 0, 1, 1 };
 
-    if (self->padding != 0) {
-        padding.top += self->padding;
-        padding.left += self->padding;
-        padding.right += self->padding;
-        padding.bottom += self->padding;
+    if (d_padding != 0) {
+        padding.top += d_padding;
+        padding.left += d_padding;
+        padding.right += d_padding;
+        padding.bottom += d_padding;
     }
 
     std::size_t src_w = ft_bitmap.width;
@@ -283,7 +218,7 @@ int texture_font_load_glyph(
     std::size_t tgt_w = src_w + padding.left + padding.right;
     std::size_t tgt_h = src_h + padding.top + padding.bottom;
 
-    region = self->atlas->GetRegion(tgt_w, tgt_h);
+    region = d_atlas->GetRegion(tgt_w, tgt_h);
 
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
@@ -307,19 +242,19 @@ int texture_font_load_glyph(
         src_ptr += ft_bitmap.pitch;
     }
 
-    self->atlas->SetRegion({x, y, tgt_w, tgt_h}, buffer);
+    d_atlas->SetRegion({x, y, tgt_w, tgt_h}, buffer);
 
-    auto glyph = texture_glyph_new();
-    glyph->codepoint = utf8_to_utf32( codepoint );
+    auto glyph = std::make_shared<Glyph>();
+    glyph->codepoint = utf8_to_utf32(&c);
     glyph->width    = tgt_w;
     glyph->height   = tgt_h;
-    glyph->outline_thickness = self->outline_thickness;
     glyph->offset_x = ft_glyph_left;
     glyph->offset_y = ft_glyph_top;
-    glyph->s0       = x/(float)self->atlas->Width();;
-    glyph->t0       = y/(float)self->atlas->Height();
-    glyph->s1       = (x + glyph->width)/(float)self->atlas->Width();
-    glyph->t1       = (y + glyph->height)/(float)self->atlas->Height();
+    glyph->s0       = x/(float)d_atlas->Width();;
+    glyph->t0       = y/(float)d_atlas->Height();
+    glyph->s1       = (x + glyph->width)/(float)d_atlas->Width();
+    glyph->t1       = (y + glyph->height)/(float)d_atlas->Height();
+    glyph->outline_thickness = d_outline_thickness;
 
     // Discard hinting to get advance
     FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
@@ -327,29 +262,31 @@ int texture_font_load_glyph(
     glyph->advance_x = slot->advance.x / HRESf;
     glyph->advance_y = slot->advance.y / HRESf;
 
-    self->glyphs.push_back(glyph);
+    d_glyphs.push_back(glyph);
 
-    texture_font_generate_kerning( self, &library, &face );
+    GenerateKerning(d_glyphs, &library, &face);
 
     FT_Done_Face(face);
     FT_Done_FreeType(library);
-    return 1;
+    return true;
 }
 
-std::shared_ptr<TextureGlyph> texture_font_get_glyph(
-    std::shared_ptr<texture_font_t> self,
-    const char* codepoint )
+float Font::GetKerning(
+    const std::shared_ptr<Glyph> glyph,
+    char c)
 {
-    auto glyph = texture_font_find_glyph(self, codepoint);
-    if (glyph != nullptr) {
-        return glyph;
+    uint32_t ucodepoint = utf8_to_utf32(&c);
+    auto& k = glyph->kerning;
+
+    auto it = std::find_if(k.begin(), k.end(), [&](const auto x) {
+        return x.codepoint == ucodepoint;
+    });
+
+    if (it != k.end()) {
+        return it->kerning;
     }
 
-    if (texture_font_load_glyph(self, codepoint)) {
-        return texture_font_find_glyph(self, codepoint);
-    }
-
-    return nullptr;
+    return 0;
 }
 
 }
