@@ -22,11 +22,10 @@
 #define DPI   72
 
 namespace Sprocket {
+namespace {
 
-// ------------------------------------------------- texture_font_load_face ---
-static int
-texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
-        FT_Library *library, FT_Face *face)
+bool texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
+                            FT_Library *library, FT_Face *face)
 {
     FT_Error error;
     FT_Matrix matrix = {
@@ -38,50 +37,103 @@ texture_font_load_face(std::shared_ptr<texture_font_t> self, float size,
     assert(library);
     assert(size);
 
-    /* Initialize library */
     error = FT_Init_FreeType(library);
-    if(error) {
-        // TODO: Print error 
-        goto cleanup;
+    if (error) {
+        return false;
     }
 
-    /* Load face */
     error = FT_New_Face(*library, self->filename.c_str(), 0, face);
-
-    if(error) {
-        // TODO: Print error 
-        goto cleanup_library;
+    if (error) {
+        FT_Done_FreeType(*library);
+        return false;
     }
 
-    /* Select charmap */
     error = FT_Select_Charmap(*face, FT_ENCODING_UNICODE);
-    if(error) {
-        // TODO: Print error 
-        goto cleanup_face;
+    if (error) {
+        FT_Done_Face(*face);
+        FT_Done_FreeType(*library);
+        return false;
     }
 
-    /* Set char size */
     error = FT_Set_Char_Size(*face, (int)(size * HRES), 0, DPI * HRES, DPI);
-
-    if(error) {
-        // TODO: Print error 
-        goto cleanup_face;
+    if (error) {
+        FT_Done_Face(*face);
+        FT_Done_FreeType(*library);
+        return false;
     }
 
-    /* Set transform matrix */
     FT_Set_Transform(*face, &matrix, NULL);
+    return true;
+}
 
-    return 1;
+void texture_font_generate_kerning(std::shared_ptr<texture_font_t> self,
+                                   FT_Library *library, FT_Face *face )
+{
+    // For each glyph couple combination, check if kerning is necessary
+    // Starts at index 1 since 0 is for the special backgroudn glyph
+    for (std::size_t i = 1; i < self->glyphs.size(); ++i) {
+        auto glyph = self->glyphs[i];
+        FT_UInt glyph_index = FT_Get_Char_Index( *face, glyph->codepoint );
+        glyph->kerning.clear();
 
-cleanup_face:
-    FT_Done_Face( *face );
-cleanup_library:
-    FT_Done_FreeType( *library );
-cleanup:
+        for (std::size_t j = 1; j < self->glyphs.size(); ++j) {
+            auto prev_glyph = self->glyphs[j];
+            FT_UInt prev_index = FT_Get_Char_Index( *face, prev_glyph->codepoint );
+            FT_Vector kerning;
+            FT_Get_Kerning( *face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
+
+            if (kerning.x) {
+                Kerning k;
+                k.codepoint = prev_glyph->codepoint;
+                k.kerning = kerning.x / (float)(HRESf*HRESf);
+                glyph->kerning.push_back(k);
+            }
+        }
+    }
+}
+
+int texture_font_init(std::shared_ptr<texture_font_t> self)
+{
+    FT_Library library;
+    FT_Face face;
+    FT_Size_Metrics metrics;
+
+    assert(self->atlas);
+    assert(self->size > 0);
+
+    self->height = 0;
+    self->rendermode = RenderMode::RENDER_NORMAL;
+    self->outline_thickness = 0.0;
+    self->hinting = 1;
+    self->padding = 1;
+
+    if (!texture_font_load_face(self, self->size * 100.f, &library, &face))
+        return -1;
+
+    self->underline_position = face->underline_position / (float)(HRESf*HRESf) * self->size;
+    self->underline_position = roundf( self->underline_position );
+    if( self->underline_position > -2 )
+    {
+        self->underline_position = -2.0;
+    }
+
+    self->underline_thickness = face->underline_thickness / (float)(HRESf*HRESf) * self->size;
+    self->underline_thickness = roundf( self->underline_thickness );
+    if( self->underline_thickness < 1 )
+    {
+        self->underline_thickness = 1.0;
+    }
+
+    metrics = face->size->metrics;
+    self->height = (metrics.height >> 6) / 100.0;
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
     return 0;
 }
 
-// ------------------------------------------------------ texture_glyph_new ---
+}
+
+
 std::shared_ptr<TextureGlyph> texture_glyph_new()
 {
     auto self = std::make_shared<TextureGlyph>();
@@ -116,84 +168,6 @@ float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
     return 0;
 }
 
-
-void texture_font_generate_kerning(std::shared_ptr<texture_font_t> self,
-                                   FT_Library *library, FT_Face *face )
-{
-    size_t i, j;
-    FT_UInt glyph_index, prev_index;
-    FT_Vector kerning;
-
-    assert( self );
-
-    /* For each glyph couple combination, check if kerning is necessary */
-    /* Starts at index 1 since 0 is for the special backgroudn glyph */
-    for( i=1; i < self->glyphs.size(); ++i )
-    {
-        auto glyph = self->glyphs[i];
-        glyph_index = FT_Get_Char_Index( *face, glyph->codepoint );
-        glyph->kerning.clear();
-
-        for( j=1; j < self->glyphs.size(); ++j )
-        {
-            auto prev_glyph = self->glyphs[j];
-            prev_index = FT_Get_Char_Index( *face, prev_glyph->codepoint );
-            FT_Get_Kerning( *face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
-
-            if (kerning.x)
-            {
-                Kerning k;
-                k.codepoint = prev_glyph->codepoint;
-                k.kerning = kerning.x / (float)(HRESf*HRESf);
-                glyph->kerning.push_back(k);
-            }
-        }
-    }
-}
-
-// ------------------------------------------------------ texture_font_init ---
-static int
-texture_font_init(std::shared_ptr<texture_font_t> self)
-{
-    FT_Library library;
-    FT_Face face;
-    FT_Size_Metrics metrics;
-
-    assert(self->atlas);
-    assert(self->size > 0);
-
-    self->height = 0;
-    self->rendermode = RenderMode::RENDER_NORMAL;
-    self->outline_thickness = 0.0;
-    self->hinting = 1;
-    self->padding = 1;
-
-    if (!texture_font_load_face(self, self->size * 100.f, &library, &face))
-        return -1;
-
-    self->underline_position = face->underline_position / (float)(HRESf*HRESf) * self->size;
-    self->underline_position = roundf( self->underline_position );
-    if( self->underline_position > -2 )
-    {
-        self->underline_position = -2.0;
-    }
-
-    self->underline_thickness = face->underline_thickness / (float)(HRESf*HRESf) * self->size;
-    self->underline_thickness = roundf( self->underline_thickness );
-    if( self->underline_thickness < 1 )
-    {
-        self->underline_thickness = 1.0;
-    }
-
-    metrics = face->size->metrics;
-    self->height = (metrics.height >> 6) / 100.0;
-    FT_Done_Face( face );
-    FT_Done_FreeType( library );
-
-    return 0;
-}
-
-// --------------------------------------------- texture_font_new_from_file ---
 std::shared_ptr<texture_font_t> 
 texture_font_new_from_file(std::shared_ptr<texture_atlas_t> atlas, const float pt_size,
         const char *filename)
