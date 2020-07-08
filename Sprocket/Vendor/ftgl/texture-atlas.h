@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdlib>
-#include <memory>
 #include <vector>
 
 #include "Maths.h"
@@ -10,7 +9,7 @@ namespace Sprocket {
 
 struct texture_atlas_t
 {
-    std::vector<std::shared_ptr<Sprocket::Maths::ivec3>> nodes;
+    std::vector<Maths::ivec3> nodes;
 
     Texture texture;
 };

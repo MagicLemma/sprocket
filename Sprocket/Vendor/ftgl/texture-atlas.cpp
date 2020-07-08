@@ -20,10 +20,10 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
 
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture
-    auto node = std::make_shared<Maths::ivec3>();
-    node->x = 1;
-    node->y = 1;
-    node->z = width - 2;
+    Maths::ivec3 node;
+    node.x = 1;
+    node.y = 1;
+    node.z = width - 2;
 
     self->nodes.push_back(node);
     return self;
@@ -67,8 +67,8 @@ int texture_atlas_fit(
     size_t i;
 
     auto node = self->nodes[index];
-    x = node->x;
-    y = node->y;
+    x = node.x;
+    y = node.y;
     width_left = width;
     i = index;
 
@@ -76,19 +76,20 @@ int texture_atlas_fit(
     {
         return -1;
     }
-    y = node->y;
+
+    y = node.y;
     while( width_left > 0 )
     {
         auto node2 = self->nodes[i];
-        if( node2->y > y )
+        if( node2.y > y )
         {
-            y = node2->y;
+            y = node2.y;
         }
         if( (y + height) > (self->texture.Height()-1) )
         {
             return -1;
         }
-        width_left -= node2->z;
+        width_left -= node2.z;
         ++i;
     }
     return y;
@@ -98,11 +99,11 @@ void texture_atlas_merge(std::shared_ptr<texture_atlas_t> self)
 {
     for (std::size_t i=0; i< self->nodes.size()-1; ++i )
     {
-        auto node = self->nodes[i];
-        auto next = self->nodes[i+1];
-        if( node->y == next->y )
+        auto& node = self->nodes[i];
+        auto& next = self->nodes[i+1];
+        if( node.y == next.y )
         {
-            node->z += next->z;
+            node.z += next.z;
             self->nodes.erase(self->nodes.begin() + i + 1);
             --i;
         }
@@ -132,12 +133,12 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
         {
             auto node = self->nodes[i];
             if( ( (y + height) < best_height ) ||
-                ( ((y + height) == best_height) && (node->z > 0 && (size_t)node->z < best_width)) )
+                ( ((y + height) == best_height) && (node.z > 0 && (size_t)node.z < best_width)) )
             {
                 best_height = y + height;
                 best_index = i;
-                best_width = node->z;
-                region.x = node->x;
+                best_width = node.z;
+                region.x = node.x;
                 region.y = y;
             }
         }
@@ -152,23 +153,23 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
         return region;
     }
 
-    auto n = std::make_shared<Sprocket::Maths::ivec3>();
-    n->x = region.x;
-    n->y = region.y + height;
-    n->z = width;
+    Maths::ivec3 n;
+    n.x = region.x;
+    n.y = region.y + height;
+    n.z = width;
     self->nodes.insert(self->nodes.begin() + best_index, n);
 
     for(std::size_t i = best_index + 1; i < self->nodes.size(); ++i)
     {
-        auto node = self->nodes[i];
-        auto prev = self->nodes[i-1];
+        auto& node = self->nodes[i];
+        auto& prev = self->nodes[i-1];
 
-        if (node->x < (prev->x + prev->z) )
+        if (node.x < (prev.x + prev.z) )
         {
-            int shrink = prev->x + prev->z - node->x;
-            node->x += shrink;
-            node->z -= shrink;
-            if (node->z <= 0)
+            int shrink = prev.x + prev.z - node.x;
+            node.x += shrink;
+            node.z -= shrink;
+            if (node.z <= 0)
             {
                 self->nodes.erase(self->nodes.begin() + i);
                 --i;
