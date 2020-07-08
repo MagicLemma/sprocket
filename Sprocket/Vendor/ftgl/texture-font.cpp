@@ -11,40 +11,43 @@
 #include "texture-font.h"
 #include "Maths.h"
 
-#define HRES  64
-#define HRESf 64.f
-#define DPI   72
-
 namespace Sprocket {
+
+static constexpr int HRES = 64;
+static constexpr float HRESf = 64.0f;
+static constexpr int DPI = 72;
+
 namespace {
 
 uint32_t ToUTF32(const char* c)
 {
+    uint32_t result = -1;
+
     if (!c) {
-        return -1;
+        return result;
     }
 
     if ((c[0] & 0x80) == 0x0) {
-        return c[0];
+        result = c[0];
     }
 
     if ((c[0] & 0xC0) == 0xC0) {
-        return ((c[0] & 0x3F) << 6 ) | (c[1] & 0x3F);
+        result = ((c[0] & 0x3F) << 6 ) | (c[1] & 0x3F);
     }
 
     if ((c[0] & 0xE0) == 0xE0) {
-        return ((c[0] & 0x1F) << (6 + 6)) | ((c[1] & 0x3F) << 6) | (c[2] & 0x3F);
+        result = ((c[0] & 0x1F) << (6 + 6)) | ((c[1] & 0x3F) << 6) | (c[2] & 0x3F);
     }
 
     if ((c[0] & 0xF0) == 0xF0) {
-        return ((c[0] & 0x0F) << (6 + 6 + 6)) | ((c[1] & 0x3F) << (6 + 6)) | ((c[2] & 0x3F) << 6) | (c[3] & 0x3F);
+        result = ((c[0] & 0x0F) << (6 + 6 + 6)) | ((c[1] & 0x3F) << (6 + 6)) | ((c[2] & 0x3F) << 6) | (c[3] & 0x3F);
     }
 
     if ((c[0] & 0xF8) == 0xF8) {
-        return ((c[0] & 0x07) << (6 + 6 + 6 + 6)) | ((c[1] & 0x3F) << (6 + 6 + 6)) | ((c[2] & 0x3F) << (6 + 6)) | ((c[3] & 0x3F) << 6) | (c[4] & 0x3F);
+        result = ((c[0] & 0x07) << (6 + 6 + 6 + 6)) | ((c[1] & 0x3F) << (6 + 6 + 6)) | ((c[2] & 0x3F) << (6 + 6)) | ((c[3] & 0x3F) << 6) | (c[4] & 0x3F);
     }
 
-    return -1;
+    return result;
 }
 
 bool LoadFace(
@@ -113,7 +116,7 @@ void GenerateKerning(
             if (kerning.x) {
                 Kerning k;
                 k.codepoint = prev_glyph->codepoint;
-                k.kerning = kerning.x / (float)(HRESf*HRESf);
+                k.kerning = kerning.x / (HRESf * HRESf);
                 glyph->kerning.push_back(k);
             }
         }
@@ -143,20 +146,20 @@ bool Font::Load(const std::string& filename, float size)
         return false;
     }
 
-    d_underline_position = face->underline_position / (float)(HRESf*HRESf) * d_size;
+    d_underline_position = face->underline_position / (HRESf * HRESf) * d_size;
     d_underline_position = roundf(d_underline_position);
     if (d_underline_position > -2) {
-        d_underline_position = -2.0;
+        d_underline_position = -2.0f;
     }
 
-    d_underline_thickness = face->underline_thickness / (float)(HRESf*HRESf) * d_size;
+    d_underline_thickness = face->underline_thickness / (HRESf * HRESf) * d_size;
     d_underline_thickness = roundf(d_underline_thickness);
     if (d_underline_thickness < 1) {
-        d_underline_thickness = 1.0;
+        d_underline_thickness = 1.0f;
     }
 
     FT_Size_Metrics metrics = face->size->metrics;
-    d_height = (metrics.height >> 6) / 100.0;
+    d_height = (metrics.height >> 6) / 100.0f;
     FT_Done_Face(face);
     FT_Done_FreeType(library);
     return true;
