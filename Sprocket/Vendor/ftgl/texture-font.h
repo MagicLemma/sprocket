@@ -1,20 +1,30 @@
 #pragma once
-#include <stdlib.h>
-#include <stdint.h>
 #include <cstddef>
 #include <memory>
 #include <vector>
 #include <string>
+#include <utility>
+#include <unordered_map>
 
 #include "texture-atlas.h"
 
 namespace Sprocket {
 
-struct Kerning
-{
-    uint32_t codepoint;
-    float kerning;
+struct HashPair { 
+    template <class T1, class T2> 
+    size_t operator()(const std::pair<T1, T2>& p) const
+    { 
+        auto hash1 = std::hash<T1>{}(p.first); 
+        auto hash2 = std::hash<T2>{}(p.second); 
+        return hash1 ^ hash2; 
+    } 
 };
+
+using KerningMap = std::unordered_map<
+    std::pair<uint32_t, uint32_t>,
+    float,
+    HashPair
+>;
 
 struct Glyph
 {
@@ -35,8 +45,6 @@ struct Glyph
     float t1 = 0.0f;
 
     float outline_thickness = 0.0f;
-
-    std::vector<Kerning> kerning;
 };
 
 class Font
@@ -53,6 +61,8 @@ class Font
     float d_underline_thickness;
     int d_padding;
 
+    KerningMap d_kernings;
+
     std::shared_ptr<Glyph> FindGlyph(char c);
     bool LoadGlyph(char c);
 
@@ -62,7 +72,7 @@ public:
 
     std::shared_ptr<Glyph> GetGlyph(char c);
 
-    float GetKerning(const std::shared_ptr<Glyph> self, char c);
+    float GetKerning(char left, char right);
 
     void Bind() const { d_atlas.Bind(); }
     void Unbind() const { d_atlas.Unbind(); }

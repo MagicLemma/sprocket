@@ -45,7 +45,7 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
 
-    if (!d_texFont.Load("Resources/Fonts/InkFree.ttf", 36.0f)) {
+    if (!d_texFont.Load("Resources/Fonts/Arial.ttf", 36.0f)) {
         SPKT_LOG_ERROR("Could not load font!");
     }
 }
@@ -189,7 +189,7 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
         auto glyph = d_texFont.GetGlyph(c);
 
         if (i > 0) {
-            float kerning = d_texFont.GetKerning(glyph, text[i-1]);
+            float kerning = d_texFont.GetKerning(text[i-1], c);
             pen.x += kerning;
         }
 

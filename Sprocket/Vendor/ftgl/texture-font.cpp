@@ -96,28 +96,29 @@ bool LoadFace(
 }
 
 void GenerateKerning(
-    std::vector<std::shared_ptr<Glyph>>& glyphs,
+    const std::vector<std::shared_ptr<Glyph>>& glyphs,
+    KerningMap& kernings,
     FT_Library* library,
     FT_Face* face)
 {
-    // For each glyph couple combination, check if kerning is necessary
-    // Starts at index 1 since 0 is for the special backgroudn glyph
-    for (std::size_t i = 1; i < glyphs.size(); ++i) {
-        auto glyph = glyphs[i];
-        FT_UInt glyph_index = FT_Get_Char_Index( *face, glyph->codepoint );
-        glyph->kerning.clear();
+    if (!FT_HAS_KERNING(*face)) {
+        return;
+    }
 
-        for (std::size_t j = 1; j < glyphs.size(); ++j) {
-            auto prev_glyph = glyphs[j];
-            FT_UInt prev_index = FT_Get_Char_Index(*face, prev_glyph->codepoint);
+    kernings.clear();
+    for (const auto leftGlyph : glyphs) {
+        FT_UInt leftIndex = FT_Get_Char_Index(*face, (FT_ULong)leftGlyph->codepoint);
+        for (const auto rightGlyph : glyphs) {
+            FT_UInt rightIndex = FT_Get_Char_Index(*face, (FT_ULong)rightGlyph->codepoint);
+        
             FT_Vector kerning;
-            FT_Get_Kerning(*face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
+            FT_Get_Kerning(*face, leftIndex, rightIndex, FT_KERNING_UNFITTED, &kerning);
 
             if (kerning.x) {
-                Kerning k;
-                k.codepoint = prev_glyph->codepoint;
-                k.kerning = kerning.x / (HRESf * HRESf);
-                glyph->kerning.push_back(k);
+                uint32_t left = leftGlyph->codepoint;
+                uint32_t right = rightGlyph->codepoint;
+                auto key = std::make_pair(left, right);
+                kernings.emplace(key, kerning.x / (HRESf * HRESf));
             }
         }
     }
@@ -289,29 +290,24 @@ bool Font::LoadGlyph(char c)
 
     d_glyphs.push_back(glyph);
 
-    GenerateKerning(d_glyphs, &library, &face);
+    GenerateKerning(d_glyphs, d_kernings, &library, &face);
 
     FT_Done_Face(face);
     FT_Done_FreeType(library);
     return true;
 }
 
-float Font::GetKerning(
-    const std::shared_ptr<Glyph> glyph,
-    char c)
+float Font::GetKerning(char left, char right)
 {
-    uint32_t ucodepoint = ToUTF32(&c);
-    auto& k = glyph->kerning;
+    uint32_t l = ToUTF32(&left);
+    uint32_t r = ToUTF32(&right);
 
-    auto it = std::find_if(k.begin(), k.end(), [&](const auto x) {
-        return x.codepoint == ucodepoint;
-    });
-
-    if (it != k.end()) {
-        return it->kerning;
+    auto it = d_kernings.find(std::make_pair(l, r));
+    if (it != d_kernings.end()) {
+        return it->second;
     }
 
-    return 0;
+    return 0.0f;
 }
 
 }
