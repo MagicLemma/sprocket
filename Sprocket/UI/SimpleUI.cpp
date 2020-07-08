@@ -16,7 +16,7 @@ float TextWidth(const std::string& text, const FontPackage& font, float size)
     float textWidth = 0.0f;
 
     for (char character : text) {
-        Glyph c = font.Get(character);
+        GlyphStruct c = font.Get(character);
         textWidth += c.advance;
     }
 
@@ -36,8 +36,6 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
-    , d_font("Resources/Fonts/Calibri.fnt",
-             "Resources/Fonts/Calibri.png")
     , d_texAtlas(1024, 1024)
 {
     d_keyboard.ConsumeAll(false);
@@ -50,9 +48,7 @@ SimpleUI::SimpleUI(Window* window)
     d_texFont = Sprocket::texture_font_new_from_file(
         &d_texAtlas,
         72.0f,
-        "Resources/Fonts/calibri.ttf");
-
-    d_texFont->rendermode = Sprocket::RenderMode::RENDER_NORMAL;
+        "Resources/Fonts/inkfree.ttf");
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -113,7 +109,6 @@ void SimpleUI::EndFrame()
     glDrawElements(GL_TRIANGLES, (int)d_textIndices.size(), GL_UNSIGNED_INT, nullptr);
     
     d_buffer.Unbind();
-    d_font.Atlas().Unbind();
     
 }
 
@@ -188,19 +183,16 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
     float fontSize = 1.0f;
 
-    float textWidth = TextWidth(text, d_font, fontSize);
-    Maths::vec2 pen(x + (width - textWidth) / 2.0f, y);
-    pen = {x, y};
+    Maths::vec2 pen{x, y};
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         char c = text[i];
         auto glyph = Sprocket::texture_font_get_glyph(d_texFont, &c);
 
-        float kerning = 0.0f;
         if (i > 0) {
-            kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
+            float kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
+            pen.x += kerning;
         }
-        pen.x += kerning;
 
         float xPos = pen.x + glyph->offset_x * fontSize;
         float yPos = pen.y - glyph->offset_y * fontSize;

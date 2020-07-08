@@ -43,15 +43,15 @@ DisplayRenderer::DisplayRenderer(Window* window)
     , d_quad(GetQuad())
     , d_whiteTexture("Resources/Textures/White.png")
 {
-    d_availableFonts.insert({Font::ARIAL, {"Resources/Fonts/Arial.fnt",
+    d_availableFonts.insert({FontEnum::ARIAL, {"Resources/Fonts/Arial.fnt",
                                            "Resources/Fonts/Arial.png"}});
-    d_availableFonts.insert({Font::GEORGIA, {"Resources/Fonts/Georgia.fnt",
+    d_availableFonts.insert({FontEnum::GEORGIA, {"Resources/Fonts/Georgia.fnt",
                                              "Resources/Fonts/Georgia.png"}});
-    d_availableFonts.insert({Font::CALIBRI, {"Resources/Fonts/Calibri.fnt",
+    d_availableFonts.insert({FontEnum::CALIBRI, {"Resources/Fonts/Calibri.fnt",
                                              "Resources/Fonts/Calibri.png"}});
 }
 
-FontPackage DisplayRenderer::GetFont(Font font)
+FontPackage DisplayRenderer::GetFont(FontEnum font)
 {
     auto it = d_fonts.find(font);
     if (it != d_fonts.end()) {
@@ -141,7 +141,7 @@ void DisplayRenderer::Draw(const Text& text)
 
     fontPack.Atlas().Bind();
     for (int character : text.message) {
-        Glyph c = fontPack.Get(character);
+        GlyphStruct c = fontPack.Get(character);
 
         float xPos = pointer.x + c.xOffset * fontSize;
         float yPos = pointer.y - (c.height - c.yOffset) * fontSize;

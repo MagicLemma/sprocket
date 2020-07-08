@@ -45,8 +45,6 @@ class SimpleUI
     StreamBuffer d_buffer;
     BufferLayout d_bufferLayout;
 
-    FontPackage d_font;
-
     FontAtlas d_texAtlas;
     std::shared_ptr<Sprocket::texture_font_t> d_texFont;
 

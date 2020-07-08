@@ -1,9 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include <limits.h>
 #include "texture-atlas.h"
+
+#include <cstdlib>
+#include <assert.h>
+
 #include "Maths.h"
 
 #include <glad/glad.h>
@@ -24,29 +23,22 @@ FontAtlas::FontAtlas(std::size_t width, std::size_t height)
 }
 
 void FontAtlas::SetRegion(
-    std::size_t x,
-    std::size_t y,
-    std::size_t width,
-    std::size_t height,
-    std::size_t stride,
-    const unsigned char* data)
+    const Maths::ivec4& region,
+    const std::vector<unsigned char>& data)
 {
-    assert(x > 0);
-    assert(y > 0);
-    assert(x < d_texture.Width() - 1);
-    assert((x + width) <= d_texture.Width() - 1);
-    assert(y < d_texture.Height() - 1);
-    assert((y + height) <= d_texture.Height() - 1);
-
-    // prevent copying data from undefined position
-    // and prevent memcpy's undefined behavior when count is zero
-    assert(height == 0 || (data != NULL && width > 0));
+    assert(region.x > 0);
+    assert(region.y > 0);
+    assert(region.z > 0);
+    assert(region.w > 0);
+    assert(region.x + region.z < d_texture.Width());
+    assert(region.y + region.w < d_texture.Height());
+    assert(data.size() == region.z * region.w); // width * height
 
     d_texture.Bind();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexSubImage2D(GL_TEXTURE_2D,
-                    0, x, y, width, height, 
-                    GL_RED, GL_UNSIGNED_BYTE, (void*)data);
+                    0, region.x, region.y, region.z, region.w, 
+                    GL_RED, GL_UNSIGNED_BYTE, (void*)data.data());
     d_texture.Unbind();
 }
 
@@ -55,20 +47,16 @@ int FontAtlas::Fit(
     std::size_t width,
     std::size_t height)
 {
-    int x, y, width_left;
-    size_t i;
-
     auto node = d_nodes[index];
-    x = node.x;
-    y = node.y;
-    width_left = width;
-    i = index;
+    int x = node.x;
+    int y = node.y;
+    int width_left = width;
+    std::size_t i = index;
 
     if ((x + width) > (d_texture.Width() - 1)) {
         return -1;
     }
 
-    y = node.y;
     while (width_left > 0) {
         auto node2 = d_nodes[i];
         if (node2.y > y) {

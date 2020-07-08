@@ -17,15 +17,14 @@ class FontAtlas
 public:
     FontAtlas(std::size_t width, std::size_t height);
 
-    Maths::ivec4 GetRegion(std::size_t width, std::size_t height);
+    Maths::ivec4 GetRegion(
+        std::size_t width,
+        std::size_t height
+    );
 
     void SetRegion(
-        std::size_t x,
-        std::size_t y,
-        std::size_t width,
-        std::size_t height,
-        std::size_t stride,
-        const unsigned char *data
+        const Maths::ivec4& region,
+        const std::vector<unsigned char>& data
     );
 
     std::size_t Width() const { return d_texture.Width(); }

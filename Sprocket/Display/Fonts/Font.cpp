@@ -59,7 +59,7 @@ std::pair<GlyphMap, float> ParseFntFile(
         }
 
         // Parameters to be populated
-        Glyph c;
+        GlyphStruct c;
         c.id = -1;
         Maths::vec2 texTopLeft = {-1.0, -1.0};
         c.width = -1;
@@ -144,7 +144,7 @@ FontPackage::FontPackage(const std::string& fntFile,
     d_size = size;
 }
 
-Glyph FontPackage::Get(int id) const
+GlyphStruct FontPackage::Get(int id) const
 {
     auto it = d_glyphs.find(id);
     if (it == d_glyphs.end()) {

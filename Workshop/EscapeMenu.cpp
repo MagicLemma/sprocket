@@ -109,7 +109,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     d_text = textBox.get();
     
     textBox->Base().colour = {0.15625f, 0.15625f, 0.15625f};
-    textBox->TextData().font = Sprocket::Font::CALIBRI;
+    textBox->TextData().font = Sprocket::FontEnum::CALIBRI;
 
     topSlider->SetCallback([textBox](float val) {
         textBox->TextData().size = 24.0f + val * 60.0f;

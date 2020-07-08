@@ -6,9 +6,9 @@
 
 namespace Sprocket {
 
-using GlyphMap = std::unordered_map<int, Glyph>;
+using GlyphMap = std::unordered_map<int, GlyphStruct>;
 
-enum class Font
+enum class FontEnum
 {
     ARIAL,
     GEORGIA,
@@ -25,7 +25,7 @@ public:
     FontPackage(const std::string& fntFile,
                 const std::string& texFile);
 
-    Glyph Get(int id) const;
+    GlyphStruct Get(int id) const;
 
     Texture Atlas() const { return d_atlas; }
     float Size() const { return d_size; }

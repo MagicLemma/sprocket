@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
+#include <algorithm>
 #include "texture-font.h"
 #include "utf8-utils.h"
 #include "Maths.h"
@@ -102,7 +103,6 @@ int texture_font_init(std::shared_ptr<texture_font_t> self)
     assert(self->size > 0);
 
     self->height = 0;
-    self->rendermode = RenderMode::RENDER_NORMAL;
     self->outline_thickness = 0.0;
     self->hinting = 1;
     self->padding = 1;
@@ -140,7 +140,6 @@ std::shared_ptr<TextureGlyph> texture_glyph_new()
     self->codepoint  = -1;
     self->width     = 0;
     self->height    = 0;
-    self->rendermode = RenderMode::RENDER_NORMAL;
     self->outline_thickness = 0.0;
     self->offset_x  = 0;
     self->offset_y  = 0;
@@ -154,15 +153,18 @@ std::shared_ptr<TextureGlyph> texture_glyph_new()
 }
 
 float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
-                                const char * codepoint )
+                                const char* codepoint )
 {
-    uint32_t ucodepoint = utf8_to_utf32( codepoint );
+    uint32_t ucodepoint = utf8_to_utf32(codepoint);
+    auto& k = self->kerning;
 
-    for (std::size_t i = 0; i < self->kerning.size(); ++i) {
-        auto kerning = self->kerning[i];
-        if (kerning.codepoint == ucodepoint) {
-            return kerning.kerning;
-        }
+    auto it = std::find_if(k.begin(), k.end(), [&](const auto x) {
+        return x.codepoint == ucodepoint;
+    });
+
+    if (it != k.end()) {
+        SPKT_LOG_INFO("Found kerning!");
+        return it->kerning;
     }
 
     return 0;
@@ -170,15 +172,13 @@ float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
 
 std::shared_ptr<texture_font_t> texture_font_new_from_file(
     FontAtlas* atlas,
-    const float pt_size,
-    const char *filename)
+    float size,
+    const std::string& filename)
 {
     auto self = std::make_shared<texture_font_t>();
 
-    assert(filename);
-
     self->atlas = atlas;
-    self->size  = pt_size;
+    self->size  = size;
     self->filename = filename;
 
     if (texture_font_init(self)) {
@@ -189,22 +189,14 @@ std::shared_ptr<texture_font_t> texture_font_new_from_file(
 }
 
 std::shared_ptr<TextureGlyph>
-texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
-                         const char * codepoint )
+texture_font_find_glyph(std::shared_ptr<texture_font_t> self,
+                        const char * codepoint)
 {
-    size_t i;
-    TextureGlyph *glyph;
     uint32_t ucodepoint = utf8_to_utf32( codepoint );
 
-    for( i = 0; i < self->glyphs.size(); ++i )
-    {
+    for (std::size_t i = 0; i < self->glyphs.size(); ++i) {
         auto glyph = self->glyphs[i];
-        // If codepoint is -1, we don't care about outline type or thickness
-        if( (glyph->codepoint == ucodepoint) &&
-            ((ucodepoint == -1) ||
-             ((glyph->rendermode == self->rendermode) &&
-              (glyph->outline_thickness == self->outline_thickness)) ))
-        {
+        if (glyph->codepoint == ucodepoint) {
             return glyph;
         }
     }
@@ -214,7 +206,7 @@ texture_font_find_glyph( std::shared_ptr<texture_font_t> self,
 
 int texture_font_load_glyph(
     std::shared_ptr<texture_font_t> self,
-    const char* codepoint )
+    const char* codepoint)
 {
     FT_Library library;
     FT_Error error;
@@ -228,7 +220,7 @@ int texture_font_load_glyph(
     int ft_glyph_top = 0;
     int ft_glyph_left = 0;
 
-    Sprocket::Maths::ivec4 region;
+    Maths::ivec4 region;
     size_t missed = 0;
 
     if (!texture_font_load_face(self, self->size, &library, &face)) {
@@ -246,19 +238,10 @@ int texture_font_load_glyph(
     ft_glyph_top = 0;
     ft_glyph_left = 0;
     glyph_index = FT_Get_Char_Index(face, (FT_ULong)utf8_to_utf32(codepoint));
-    // WARNING: We use texture-atlas depth to guess if user wants
-    //          LCD subpixel rendering
 
-    if( self->rendermode != RenderMode::RENDER_NORMAL)
-    {
-        flags |= FT_LOAD_NO_BITMAP;
-    }
-    else
-    {
-        flags |= FT_LOAD_RENDER;
-    }
+    flags |= FT_LOAD_RENDER;
 
-    if( !self->hinting )
+    if (!self->hinting)
     {
         flags |= FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT;
     }
@@ -268,83 +251,17 @@ int texture_font_load_glyph(
     }
 
     error = FT_Load_Glyph( face, glyph_index, flags );
-    if( error )
-    {
+    if (error) {
         // TODO: Print error 
-        FT_Done_Face( face );
-        FT_Done_FreeType( library );
+        FT_Done_Face(face);
+        FT_Done_FreeType(library);
         return 0;
     }
 
-    if( self->rendermode == RenderMode::RENDER_NORMAL)
-    {
-        slot            = face->glyph;
-        ft_bitmap       = slot->bitmap;
-        ft_glyph_top    = slot->bitmap_top;
-        ft_glyph_left   = slot->bitmap_left;
-    }
-    else
-    {
-        FT_Stroker stroker;
-        FT_BitmapGlyph ft_bitmap_glyph;
-
-        error = FT_Stroker_New( library, &stroker );
-
-        if( error )
-        {
-            // TODO: Print error 
-            goto cleanup_stroker;
-        }
-
-        FT_Stroker_Set(stroker,
-                        (int)(self->outline_thickness * HRES),
-                        FT_STROKER_LINECAP_ROUND,
-                        FT_STROKER_LINEJOIN_ROUND,
-                        0);
-
-        error = FT_Get_Glyph( face->glyph, &ft_glyph);
-
-        if( error )
-        {
-            // TODO: Print error 
-            goto cleanup_stroker;
-        }
-
-        if( self->rendermode == RenderMode::RENDER_OUTLINE_EDGE )
-            error = FT_Glyph_Stroke( &ft_glyph, stroker, 1 );
-        else if ( self->rendermode == RenderMode::RENDER_OUTLINE_POSITIVE )
-            error = FT_Glyph_StrokeBorder( &ft_glyph, stroker, 0, 1 );
-        else if ( self->rendermode == RenderMode::RENDER_OUTLINE_NEGATIVE )
-            error = FT_Glyph_StrokeBorder( &ft_glyph, stroker, 1, 1 );
-
-        if( error )
-        {
-            // TODO: Print error 
-            goto cleanup_stroker;
-        }
-
-        error = FT_Glyph_To_Bitmap( &ft_glyph, FT_RENDER_MODE_NORMAL, 0, 1);
-        if( error )
-        {
-            // TODO: Print error 
-            goto cleanup_stroker;
-        }
-
-        ft_bitmap_glyph = (FT_BitmapGlyph) ft_glyph;
-        ft_bitmap       = ft_bitmap_glyph->bitmap;
-        ft_glyph_top    = ft_bitmap_glyph->top;
-        ft_glyph_left   = ft_bitmap_glyph->left;
-
-cleanup_stroker:
-        FT_Stroker_Done( stroker );
-
-        if( error )
-        {
-            FT_Done_Face( face );
-            FT_Done_FreeType( library );
-            return 0;
-        }
-    }
+    slot            = face->glyph;
+    ft_bitmap       = slot->bitmap;
+    ft_glyph_top    = slot->bitmap_top;
+    ft_glyph_left   = slot->bitmap_left;
 
     struct {
         int left;
@@ -390,13 +307,12 @@ cleanup_stroker:
         src_ptr += ft_bitmap.pitch;
     }
 
-    self->atlas->SetRegion(x, y, tgt_w, tgt_h, tgt_w, buffer.data());
+    self->atlas->SetRegion({x, y, tgt_w, tgt_h}, buffer);
 
     auto glyph = texture_glyph_new();
     glyph->codepoint = utf8_to_utf32( codepoint );
     glyph->width    = tgt_w;
     glyph->height   = tgt_h;
-    glyph->rendermode = self->rendermode;
     glyph->outline_thickness = self->outline_thickness;
     glyph->offset_x = ft_glyph_left;
     glyph->offset_y = ft_glyph_top;
@@ -406,21 +322,17 @@ cleanup_stroker:
     glyph->t1       = (y + glyph->height)/(float)self->atlas->Height();
 
     // Discard hinting to get advance
-    FT_Load_Glyph( face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
+    FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
     slot = face->glyph;
     glyph->advance_x = slot->advance.x / HRESf;
     glyph->advance_y = slot->advance.y / HRESf;
 
     self->glyphs.push_back(glyph);
 
-    if( self->rendermode != RenderMode::RENDER_NORMAL)
-        FT_Done_Glyph( ft_glyph );
-
     texture_font_generate_kerning( self, &library, &face );
 
-    FT_Done_Face( face );
-    FT_Done_FreeType( library );
-
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
     return 1;
 }
 

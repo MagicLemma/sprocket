@@ -27,14 +27,14 @@ class DisplayRenderer
     Texture d_whiteTexture;
         // A while texture for rendering textureless quads.
 
-    std::unordered_map<Font, std::pair<std::string, std::string>> d_availableFonts;
+    std::unordered_map<FontEnum, std::pair<std::string, std::string>> d_availableFonts;
         // A map of all available fonts. If a requested font is not in d_fonts,
         // the renderer will check here.
 
-    std::unordered_map<Font, FontPackage> d_fonts;
+    std::unordered_map<FontEnum, FontPackage> d_fonts;
         // Map of all loaded fonts to be accessible via the Font enum.
 
-    FontPackage GetFont(Font font);
+    FontPackage GetFont(FontEnum font);
 
 public:
     DisplayRenderer(Window* window);

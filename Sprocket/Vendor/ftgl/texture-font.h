@@ -10,14 +10,6 @@
 
 namespace Sprocket {
 
-enum class RenderMode
-{
-    RENDER_NORMAL,
-    RENDER_OUTLINE_EDGE,
-    RENDER_OUTLINE_POSITIVE,
-    RENDER_OUTLINE_NEGATIVE
-};
-
 struct Kerning
 {
     uint32_t codepoint;
@@ -44,19 +36,17 @@ struct TextureGlyph
 
     std::vector<Kerning> kerning;
 
-    RenderMode rendermode;
-
     float outline_thickness;
 };
 
 struct texture_font_t
 {
     FontAtlas* atlas;
-    std::vector<std::shared_ptr<TextureGlyph>> glyphs;
-    std::string filename;
     float size;
+    std::string filename;
+    
+    std::vector<std::shared_ptr<TextureGlyph>> glyphs;
     int hinting;
-    RenderMode rendermode;
     float outline_thickness;
     float height;
     float underline_position;
@@ -67,8 +57,8 @@ struct texture_font_t
 
 std::shared_ptr<texture_font_t>
 texture_font_new_from_file(FontAtlas* atlas,
-                           const float pt_size,
-                           const char* filename );
+                           float size,
+                           const std::string& filename);
 
 std::shared_ptr<TextureGlyph>
 texture_font_get_glyph(std::shared_ptr<texture_font_t> self,
