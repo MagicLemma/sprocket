@@ -16,8 +16,6 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
 {
     auto self = std::make_shared<texture_atlas_t>();
     self->used = 0;
-    self->width = width;
-    self->height = height;
 
     self->texture = Sprocket::Texture(width, height, Texture::Channels::RED);
 
@@ -43,10 +41,10 @@ void texture_atlas_set_region(
 {
     assert( x > 0);
     assert( y > 0);
-    assert( x < (self->width-1));
-    assert( (x + width) <= (self->width-1));
-    assert( y < (self->height-1));
-    assert( (y + height) <= (self->height-1));
+    assert( x < (self->texture.Width()-1));
+    assert( (x + width) <= (self->texture.Width()-1));
+    assert( y < (self->texture.Height()-1));
+    assert( (y + height) <= (self->texture.Height()-1));
 
     // prevent copying data from undefined position
     // and prevent memcpy's undefined behavior when count is zero
@@ -75,7 +73,7 @@ int texture_atlas_fit(
     width_left = width;
     i = index;
 
-    if ( (x + width) > (self->width-1) )
+    if ( (x + width) > (self->texture.Width()-1) )
     {
         return -1;
     }
@@ -87,7 +85,7 @@ int texture_atlas_fit(
         {
             y = node2->y;
         }
-        if( (y + height) > (self->height-1) )
+        if( (y + height) > (self->texture.Height()-1) )
         {
             return -1;
         }

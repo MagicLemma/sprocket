@@ -436,10 +436,10 @@ cleanup_stroker:
     glyph->outline_thickness = self->outline_thickness;
     glyph->offset_x = ft_glyph_left;
     glyph->offset_y = ft_glyph_top;
-    glyph->s0       = x/(float)self->atlas->width;
-    glyph->t0       = y/(float)self->atlas->height;
-    glyph->s1       = (x + glyph->width)/(float)self->atlas->width;
-    glyph->t1       = (y + glyph->height)/(float)self->atlas->height;
+    glyph->s0       = x/(float)self->atlas->texture.Width();;
+    glyph->t0       = y/(float)self->atlas->texture.Height();
+    glyph->s1       = (x + glyph->width)/(float)self->atlas->texture.Width();
+    glyph->t1       = (y + glyph->height)/(float)self->atlas->texture.Height();
 
     // Discard hinting to get advance
     FT_Load_Glyph( face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
