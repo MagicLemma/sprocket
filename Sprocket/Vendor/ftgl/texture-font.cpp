@@ -168,9 +168,10 @@ float texture_glyph_get_kerning(const std::shared_ptr<TextureGlyph> self,
     return 0;
 }
 
-std::shared_ptr<texture_font_t> 
-texture_font_new_from_file(std::shared_ptr<FontAtlas> atlas, const float pt_size,
-        const char *filename)
+std::shared_ptr<texture_font_t> texture_font_new_from_file(
+    FontAtlas* atlas,
+    const float pt_size,
+    const char *filename)
 {
     auto self = std::make_shared<texture_font_t>();
 
@@ -352,25 +353,23 @@ cleanup_stroker:
         int bottom;
     } padding = { 0, 0, 1, 1 };
 
-    if( self->padding != 0 )
-    {
+    if (self->padding != 0) {
         padding.top += self->padding;
         padding.left += self->padding;
         padding.right += self->padding;
         padding.bottom += self->padding;
     }
 
-    size_t src_w = ft_bitmap.width;
-    size_t src_h = ft_bitmap.rows;
+    std::size_t src_w = ft_bitmap.width;
+    std::size_t src_h = ft_bitmap.rows;
 
-    size_t tgt_w = src_w + padding.left + padding.right;
-    size_t tgt_h = src_h + padding.top + padding.bottom;
+    std::size_t tgt_w = src_w + padding.left + padding.right;
+    std::size_t tgt_h = src_h + padding.top + padding.bottom;
 
-    region = texture_atlas_get_region( self->atlas, tgt_w, tgt_h );
+    region = self->atlas->GetRegion(tgt_w, tgt_h);
 
-    if ( region.x < 0 )
-    {
-        fprintf( stderr, "Texture atlas is full (line %d)\n",  __LINE__ );
+    if (region.x < 0) {
+        SPKT_LOG_ERROR("Texture atlas is full!");
         FT_Done_Face( face );
         FT_Done_FreeType( library );
         return 0;
@@ -391,7 +390,7 @@ cleanup_stroker:
         src_ptr += ft_bitmap.pitch;
     }
 
-    texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, tgt_w, buffer.data());
+    self->atlas->SetRegion(x, y, tgt_w, tgt_h, tgt_w, buffer.data());
 
     auto glyph = texture_glyph_new();
     glyph->codepoint = utf8_to_utf32( codepoint );
@@ -401,10 +400,10 @@ cleanup_stroker:
     glyph->outline_thickness = self->outline_thickness;
     glyph->offset_x = ft_glyph_left;
     glyph->offset_y = ft_glyph_top;
-    glyph->s0       = x/(float)self->atlas->texture.Width();;
-    glyph->t0       = y/(float)self->atlas->texture.Height();
-    glyph->s1       = (x + glyph->width)/(float)self->atlas->texture.Width();
-    glyph->t1       = (y + glyph->height)/(float)self->atlas->texture.Height();
+    glyph->s0       = x/(float)self->atlas->Width();;
+    glyph->t0       = y/(float)self->atlas->Height();
+    glyph->s1       = (x + glyph->width)/(float)self->atlas->Width();
+    glyph->t1       = (y + glyph->height)/(float)self->atlas->Height();
 
     // Discard hinting to get advance
     FT_Load_Glyph( face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);

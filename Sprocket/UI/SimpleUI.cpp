@@ -38,6 +38,7 @@ SimpleUI::SimpleUI(Window* window)
     , d_bufferLayout(sizeof(BufferVertex))
     , d_font("Resources/Fonts/Calibri.fnt",
              "Resources/Fonts/Calibri.png")
+    , d_texAtlas(1024, 1024)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -46,9 +47,8 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
 
-    d_texAtlas = Sprocket::texture_atlas_new(1024, 1024);
     d_texFont = Sprocket::texture_font_new_from_file(
-        d_texAtlas,
+        &d_texAtlas,
         72.0f,
         "Resources/Fonts/calibri.ttf");
 
@@ -103,7 +103,7 @@ void SimpleUI::EndFrame()
         d_quadIndices.data());
     glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
-    d_texAtlas->texture.Bind();
+    d_texAtlas.Bind();
     d_buffer.SetVertexData(
         sizeof(BufferVertex) * d_textVertices.size(),
         d_textVertices.data());

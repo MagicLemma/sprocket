@@ -7,41 +7,33 @@
 
 namespace Sprocket {
 
-struct FontAtlas
+class FontAtlas
 {
-    std::vector<Maths::ivec3> nodes;
+    std::vector<Maths::ivec3> d_nodes;
+    Texture d_texture;
 
-    Texture texture;
+    int Fit(std::size_t index, std::size_t width, std::size_t height);
+
+public:
+    FontAtlas(std::size_t width, std::size_t height);
+
+    Maths::ivec4 GetRegion(std::size_t width, std::size_t height);
+
+    void SetRegion(
+        std::size_t x,
+        std::size_t y,
+        std::size_t width,
+        std::size_t height,
+        std::size_t stride,
+        const unsigned char *data
+    );
+
+    std::size_t Width() const { return d_texture.Width(); }
+    std::size_t Height() const { return d_texture.Height(); }
+
+    void Bind() const { d_texture.Bind(); }
+    void Unbind() const { d_texture.Unbind(); }
 };
-
-
-std::shared_ptr<FontAtlas> texture_atlas_new(
-    std::size_t width,
-    std::size_t height
-);
-
-Maths::ivec4 texture_atlas_get_region(
-    std::shared_ptr<FontAtlas> self,
-    std::size_t width,
-    std::size_t height
-);
-
-int texture_atlas_fit(
-    std::shared_ptr<FontAtlas> self,
-    std::size_t index,
-    std::size_t width,
-    std::size_t height
-);
-
-void texture_atlas_set_region(
-    std::shared_ptr<FontAtlas> self,
-    std::size_t x,
-    std::size_t y,
-    std::size_t width,
-    std::size_t height,
-    std::size_t stride,
-    const unsigned char *data
-);
 
 }
 

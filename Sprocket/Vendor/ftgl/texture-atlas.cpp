@@ -10,14 +10,9 @@
 
 namespace Sprocket {
 
-std::shared_ptr<FontAtlas> texture_atlas_new(
-    std::size_t width,
-    std::size_t height)
+FontAtlas::FontAtlas(std::size_t width, std::size_t height)
+    : d_texture(width, height, Texture::Channels::RED)
 {
-    auto self = std::make_shared<FontAtlas>();
-
-    self->texture = Sprocket::Texture(width, height, Texture::Channels::RED);
-
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture
     Maths::ivec3 node;
@@ -25,12 +20,10 @@ std::shared_ptr<FontAtlas> texture_atlas_new(
     node.y = 1;
     node.z = width - 2;
 
-    self->nodes.push_back(node);
-    return self;
+    d_nodes.push_back(node);
 }
 
-void texture_atlas_set_region(
-    std::shared_ptr<FontAtlas> self,
+void FontAtlas::SetRegion(
     std::size_t x,
     std::size_t y,
     std::size_t width,
@@ -38,27 +31,26 @@ void texture_atlas_set_region(
     std::size_t stride,
     const unsigned char* data)
 {
-    assert( x > 0);
-    assert( y > 0);
-    assert( x < (self->texture.Width()-1));
-    assert( (x + width) <= (self->texture.Width()-1));
-    assert( y < (self->texture.Height()-1));
-    assert( (y + height) <= (self->texture.Height()-1));
+    assert(x > 0);
+    assert(y > 0);
+    assert(x < d_texture.Width() - 1);
+    assert((x + width) <= d_texture.Width() - 1);
+    assert(y < d_texture.Height() - 1);
+    assert((y + height) <= d_texture.Height() - 1);
 
     // prevent copying data from undefined position
     // and prevent memcpy's undefined behavior when count is zero
     assert(height == 0 || (data != NULL && width > 0));
 
-    self->texture.Bind();
+    d_texture.Bind();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexSubImage2D(GL_TEXTURE_2D,
                     0, x, y, width, height, 
                     GL_RED, GL_UNSIGNED_BYTE, (void*)data);
-    self->texture.Unbind();
+    d_texture.Unbind();
 }
 
-int texture_atlas_fit(
-    std::shared_ptr<FontAtlas> self,
+int FontAtlas::Fit(
     std::size_t index,
     std::size_t width,
     std::size_t height)
@@ -66,37 +58,34 @@ int texture_atlas_fit(
     int x, y, width_left;
     size_t i;
 
-    auto node = self->nodes[index];
+    auto node = d_nodes[index];
     x = node.x;
     y = node.y;
     width_left = width;
     i = index;
 
-    if ( (x + width) > (self->texture.Width()-1) )
-    {
+    if ((x + width) > (d_texture.Width() - 1)) {
         return -1;
     }
 
     y = node.y;
-    while( width_left > 0 )
-    {
-        auto node2 = self->nodes[i];
-        if( node2.y > y )
-        {
+    while (width_left > 0) {
+        auto node2 = d_nodes[i];
+        if (node2.y > y) {
             y = node2.y;
         }
-        if( (y + height) > (self->texture.Height()-1) )
-        {
+
+        if ((y + height) > (d_texture.Height() - 1)) {
             return -1;
         }
+
         width_left -= node2.z;
         ++i;
     }
     return y;
 }
 
-Maths::ivec4 texture_atlas_get_region(
-    std::shared_ptr<FontAtlas> self,
+Maths::ivec4 FontAtlas::GetRegion(
     std::size_t width,
     std::size_t height )
 {
@@ -107,11 +96,11 @@ Maths::ivec4 texture_atlas_get_region(
 
     int best_index  = -1;
 
-    for (std::size_t i = 0; i < self->nodes.size(); ++i)
+    for (std::size_t i = 0; i < d_nodes.size(); ++i)
     {
-        int y = texture_atlas_fit(self, i, width, height);
+        int y = Fit(i, width, height);
         if (y >= 0) {
-            auto node = self->nodes[i];
+            auto node = d_nodes[i];
             if ((y + height < best_height) ||
                 ((y + height == best_height) &&
                  (node.z > 0 &&
@@ -138,18 +127,18 @@ Maths::ivec4 texture_atlas_get_region(
     n.x = region.x;
     n.y = region.y + height;
     n.z = width;
-    self->nodes.insert(self->nodes.begin() + best_index, n);
+    d_nodes.insert(d_nodes.begin() + best_index, n);
 
-    for (std::size_t i = best_index + 1; i < self->nodes.size(); ++i) {
-        auto& node = self->nodes[i];
-        auto& prev = self->nodes[i-1];
+    for (std::size_t i = best_index + 1; i < d_nodes.size(); ++i) {
+        auto& node = d_nodes[i];
+        auto& prev = d_nodes[i-1];
 
         if (node.x < prev.x + prev.z) {
             int shrink = prev.x + prev.z - node.x;
             node.x += shrink;
             node.z -= shrink;
             if (node.z <= 0) {
-                self->nodes.erase(self->nodes.begin() + i);
+                d_nodes.erase(d_nodes.begin() + i);
                 --i;
             }
             else {
@@ -162,12 +151,12 @@ Maths::ivec4 texture_atlas_get_region(
     }
     
     // Merge
-    for (std::size_t i = 0; i < self->nodes.size() - 1; ++i ) {
-        auto& node = self->nodes[i];
-        auto& next = self->nodes[i+1];
+    for (std::size_t i = 0; i < d_nodes.size() - 1; ++i ) {
+        auto& node = d_nodes[i];
+        auto& next = d_nodes[i+1];
         if (node.y == next.y) {
             node.z += next.z;
-            self->nodes.erase(self->nodes.begin() + i + 1);
+            d_nodes.erase(d_nodes.begin() + i + 1);
             --i;
         }
     }

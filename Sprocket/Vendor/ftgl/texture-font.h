@@ -51,8 +51,8 @@ struct TextureGlyph
 
 struct texture_font_t
 {
+    FontAtlas* atlas;
     std::vector<std::shared_ptr<TextureGlyph>> glyphs;
-    std::shared_ptr<FontAtlas> atlas;
     std::string filename;
     float size;
     int hinting;
@@ -66,7 +66,7 @@ struct texture_font_t
 
 
 std::shared_ptr<texture_font_t>
-texture_font_new_from_file(std::shared_ptr<FontAtlas> atlas,
+texture_font_new_from_file(FontAtlas* atlas,
                            const float pt_size,
                            const char* filename );
 
