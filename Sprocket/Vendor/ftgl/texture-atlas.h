@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Maths.h"
+#include "Texture.h"
 
 namespace Sprocket {
 
@@ -15,7 +16,7 @@ struct texture_atlas_t
     size_t height;
     size_t used;
 
-    unsigned int textureId;
+    Texture texture;
 };
 
 

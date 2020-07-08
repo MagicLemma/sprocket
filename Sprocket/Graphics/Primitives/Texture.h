@@ -6,18 +6,27 @@
 
 namespace Sprocket {
 
+
 class Texture
 {
+public:
+    enum class Channels { RGBA, RED };
+
+private:
     std::shared_ptr<TEX> d_texture;
 
     int d_width;
     int d_height;
+
+    Channels d_channels = Channels::RGBA;
+        // TODO: Generalise other constructors to expose this.
 
 public:
     Texture(const std::string& pngFile, bool flip = true);
     Texture(int width, int height, const std::vector<unsigned char>& data);
     Texture(int width, int height, unsigned char* data);
     Texture(int width, int height, std::shared_ptr<TEX> texture);
+    Texture(int width, int height, Channels channels);
     Texture();
 
     void Bind() const;

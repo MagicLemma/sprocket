@@ -18,7 +18,8 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     self->used = 0;
     self->width = width;
     self->height = height;
-    self->textureId = 0;
+
+    self->texture = Sprocket::Texture(width, height, Texture::Channels::RED);
 
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture
@@ -51,12 +52,12 @@ void texture_atlas_set_region(
     // and prevent memcpy's undefined behavior when count is zero
     assert(height == 0 || (data != NULL && width > 0));
 
-    glBindTexture(GL_TEXTURE_2D, self->textureId);
+    self->texture.Bind();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexSubImage2D(GL_TEXTURE_2D,
                     0, x, y, width, height, 
                     GL_RED, GL_UNSIGNED_BYTE, (void*)data);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    self->texture.Unbind();
 }
 
 int texture_atlas_fit(

@@ -78,6 +78,30 @@ Texture::Texture(int width, int height, std::shared_ptr<TEX> texture)
 {
 }
 
+Texture::Texture(int width, int height, Channels channels)
+    : d_texture(std::make_shared<TEX>())
+    , d_width(width)
+    , d_height(height)
+{
+    auto c = channels == Channels::RGBA ? GL_RGBA : GL_RED;
+
+    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    if (channels == Channels::RED) {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    }
+
+    glTexImage2D(GL_TEXTURE_2D,
+                 0, c, width, height,
+                 0, c, GL_UNSIGNED_BYTE, nullptr);
+                 
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 Texture::Texture()
     : d_texture(Texture::White().d_texture)
     , d_width(Texture::White().d_width)
