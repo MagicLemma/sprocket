@@ -12,8 +12,6 @@ struct texture_atlas_t
 {
     std::vector<std::shared_ptr<Sprocket::Maths::ivec3>> nodes;
 
-    size_t used;
-
     Texture texture;
 };
 

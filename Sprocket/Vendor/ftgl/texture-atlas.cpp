@@ -15,7 +15,6 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     std::size_t height)
 {
     auto self = std::make_shared<texture_atlas_t>();
-    self->used = 0;
 
     self->texture = Sprocket::Texture(width, height, Texture::Channels::RED);
 
@@ -185,7 +184,6 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
         }
     }
     texture_atlas_merge( self );
-    self->used += width * height;
     return region;
 }
 
