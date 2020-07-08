@@ -1,12 +1,6 @@
-/* Freetype GL - A C OpenGL Freetype engine
- *
- * Distributed under the OSI-approved BSD 2-Clause License.  See accompanying
- * file `LICENSE` for more details.
- */
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_STROKER_H
-// #include FT_ADVANCES_H
 #include FT_LCD_FILTER_H
 #include <stdint.h>
 #include <stdlib.h>
@@ -15,7 +9,6 @@
 #include <math.h>
 #include <algorithm>
 #include "texture-font.h"
-#include "utf8-utils.h"
 #include "Maths.h"
 
 #define HRES  64
@@ -24,6 +17,35 @@
 
 namespace Sprocket {
 namespace {
+
+uint32_t ToUTF32(const char* c)
+{
+    if (!c) {
+        return -1;
+    }
+
+    if ((c[0] & 0x80) == 0x0) {
+        return c[0];
+    }
+
+    if ((c[0] & 0xC0) == 0xC0) {
+        return ((c[0] & 0x3F) << 6 ) | (c[1] & 0x3F);
+    }
+
+    if ((c[0] & 0xE0) == 0xE0) {
+        return ((c[0] & 0x1F) << (6 + 6)) | ((c[1] & 0x3F) << 6) | (c[2] & 0x3F);
+    }
+
+    if ((c[0] & 0xF0) == 0xF0) {
+        return ((c[0] & 0x0F) << (6 + 6 + 6)) | ((c[1] & 0x3F) << (6 + 6)) | ((c[2] & 0x3F) << 6) | (c[3] & 0x3F);
+    }
+
+    if ((c[0] & 0xF8) == 0xF8) {
+        return ((c[0] & 0x07) << (6 + 6 + 6 + 6)) | ((c[1] & 0x3F) << (6 + 6 + 6)) | ((c[2] & 0x3F) << (6 + 6)) | ((c[3] & 0x3F) << 6) | (c[4] & 0x3F);
+    }
+
+    return -1;
+}
 
 bool LoadFace(
     const std::string& filename,
@@ -153,7 +175,7 @@ std::shared_ptr<Glyph> Font::GetGlyph(char c)
 
 std::shared_ptr<Glyph> Font::FindGlyph(char c)
 {
-    uint32_t ucodepoint = utf8_to_utf32(&c);
+    uint32_t ucodepoint = ToUTF32(&c);
     for (std::size_t i = 0; i < d_glyphs.size(); ++i) {
         auto glyph = d_glyphs[i];
         if (glyph->codepoint == ucodepoint) {
@@ -184,7 +206,7 @@ bool Font::LoadGlyph(char c)
         return false;
     }
 
-    FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)utf8_to_utf32(&c));
+    FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)ToUTF32(&c));
     FT_Int32 flags = FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT;
 
     if (FT_Load_Glyph(face, glyph_index, flags)) {
@@ -245,7 +267,7 @@ bool Font::LoadGlyph(char c)
     d_atlas.SetRegion({x, y, tgt_w, tgt_h}, buffer);
 
     auto glyph = std::make_shared<Glyph>();
-    glyph->codepoint = utf8_to_utf32(&c);
+    glyph->codepoint = ToUTF32(&c);
     glyph->width    = tgt_w;
     glyph->height   = tgt_h;
     glyph->offset_x = ft_glyph_left;
@@ -275,7 +297,7 @@ float Font::GetKerning(
     const std::shared_ptr<Glyph> glyph,
     char c)
 {
-    uint32_t ucodepoint = utf8_to_utf32(&c);
+    uint32_t ucodepoint = ToUTF32(&c);
     auto& k = glyph->kerning;
 
     auto it = std::find_if(k.begin(), k.end(), [&](const auto x) {

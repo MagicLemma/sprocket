@@ -116,8 +116,7 @@ add_library(Sprocket STATIC
             
             Vendor/ImGuizmo/ImGuizmo.cpp
             Vendor/ftgl/texture-font.cpp
-            Vendor/ftgl/texture-atlas.cpp
-            Vendor/ftgl/utf8-utils.cpp)
+            Vendor/ftgl/texture-atlas.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       glfw
