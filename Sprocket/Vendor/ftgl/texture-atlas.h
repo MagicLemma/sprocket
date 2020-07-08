@@ -10,7 +10,6 @@ namespace Sprocket {
 struct texture_atlas_t
 {
     std::vector<std::shared_ptr<Sprocket::Maths::ivec3>> nodes;
-    std::vector<unsigned char> data;
 
     size_t width;
     size_t height;

@@ -28,7 +28,6 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     node->z = width - 2;
 
     self->nodes.push_back(node);
-    self->data.resize(width*height);
     return self;
 }
 

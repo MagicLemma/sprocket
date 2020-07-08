@@ -62,7 +62,7 @@ SimpleUI::SimpleUI(Window* window)
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexImage2D(GL_TEXTURE_2D,
                  0, GL_RED, d_texAtlas->width, d_texAtlas->height,
-                 0, GL_RED, GL_UNSIGNED_BYTE, d_texAtlas->data.data());
+                 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
