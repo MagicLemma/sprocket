@@ -179,6 +179,7 @@ texture_font_init(std::shared_ptr<texture_font_t> self)
     self->hinting = 1;
     self->kerning = 1;
     self->filtering = 1;
+    self->padding = 1;
 
     if (!texture_font_load_face(self, self->size * 100.f, &library, &face))
         return -1;
@@ -427,8 +428,7 @@ cleanup_stroker:
     unsigned char *src_ptr = ft_bitmap.buffer;
     for (std::size_t i = 0; i < src_h; i++ )
     {
-        //difference between width and pitch: https://www.freetype.org/freetype2/docs/reference/ft2-basic_types.html#FT_Bitmap
-        memcpy( dst_ptr, src_ptr, ft_bitmap.width);
+        std::memcpy( dst_ptr, src_ptr, ft_bitmap.width);
         dst_ptr += tgt_w;
         src_ptr += ft_bitmap.pitch;
     }

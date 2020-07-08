@@ -47,9 +47,12 @@ SimpleUI::SimpleUI(Window* window)
     d_buffer.SetBufferLayout(d_bufferLayout);
 
     d_texAtlas = Sprocket::texture_atlas_new(1024, 1024);
-    d_texFont = Sprocket::texture_font_new_from_file(d_texAtlas, 56, "Resources/Fonts/arial.ttf");
+    d_texFont = Sprocket::texture_font_new_from_file(
+        d_texAtlas,
+        72.0f,
+        "Resources/Fonts/calibri.ttf");
 
-    d_texFont->rendermode = Sprocket::RenderMode::RENDER_NORMAL;
+    d_texFont->rendermode = Sprocket::RenderMode::RENDER_OUTLINE_POSITIVE;
     d_texFont->outline_thickness = 0;
 
     glGenTextures(1, &d_texAtlas->id);
