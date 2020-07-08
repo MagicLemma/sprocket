@@ -95,45 +95,27 @@ int texture_atlas_fit(
     return y;
 }
 
-void texture_atlas_merge(std::shared_ptr<texture_atlas_t> self)
-{
-    for (std::size_t i=0; i< self->nodes.size()-1; ++i )
-    {
-        auto& node = self->nodes[i];
-        auto& next = self->nodes[i+1];
-        if( node.y == next.y )
-        {
-            node.z += next.z;
-            self->nodes.erase(self->nodes.begin() + i + 1);
-            --i;
-        }
-    }
-}
-
-Sprocket::Maths::ivec4 texture_atlas_get_region(
+Maths::ivec4 texture_atlas_get_region(
     std::shared_ptr<texture_atlas_t> self,
     std::size_t width,
     std::size_t height )
 {
-    int best_index;
-    size_t best_height, best_width;
-    Sprocket::Maths::ivec4 region;
-    region.x = 0;
-    region.y = 0;
-    region.z = width;
-    region.w = height;
+    Maths::ivec4 region{0, 0, width, height};
 
-    best_height = UINT_MAX;
-    best_index  = -1;
-    best_width = UINT_MAX;
+    std::size_t best_height = UINT_MAX;
+    std::size_t best_width = UINT_MAX;
+
+    int best_index  = -1;
+
     for (std::size_t i = 0; i < self->nodes.size(); ++i)
     {
         int y = texture_atlas_fit(self, i, width, height);
-        if (y >= 0)
-        {
+        if (y >= 0) {
             auto node = self->nodes[i];
-            if( ( (y + height) < best_height ) ||
-                ( ((y + height) == best_height) && (node.z > 0 && (size_t)node.z < best_width)) )
+            if ((y + height < best_height) ||
+                ((y + height == best_height) &&
+                 (node.z > 0 &&
+                 (size_t)node.z < best_width)))
             {
                 best_height = y + height;
                 best_index = i;
@@ -144,8 +126,7 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
         }
     }
 
-    if( best_index == -1 )
-    {
+    if (best_index == -1) {
         region.x = -1;
         region.y = -1;
         region.z = 0; // width
@@ -159,32 +140,38 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
     n.z = width;
     self->nodes.insert(self->nodes.begin() + best_index, n);
 
-    for(std::size_t i = best_index + 1; i < self->nodes.size(); ++i)
-    {
+    for (std::size_t i = best_index + 1; i < self->nodes.size(); ++i) {
         auto& node = self->nodes[i];
         auto& prev = self->nodes[i-1];
 
-        if (node.x < (prev.x + prev.z) )
-        {
+        if (node.x < prev.x + prev.z) {
             int shrink = prev.x + prev.z - node.x;
             node.x += shrink;
             node.z -= shrink;
-            if (node.z <= 0)
-            {
+            if (node.z <= 0) {
                 self->nodes.erase(self->nodes.begin() + i);
                 --i;
             }
-            else
-            {
+            else {
                 break;
             }
         }
-        else
-        {
+        else {
             break;
         }
     }
-    texture_atlas_merge( self );
+    
+    // Merge
+    for (std::size_t i = 0; i < self->nodes.size() - 1; ++i ) {
+        auto& node = self->nodes[i];
+        auto& next = self->nodes[i+1];
+        if (node.y == next.y) {
+            node.z += next.z;
+            self->nodes.erase(self->nodes.begin() + i + 1);
+            --i;
+        }
+    }
+
     return region;
 }
 
