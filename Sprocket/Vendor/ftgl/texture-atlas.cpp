@@ -21,9 +21,9 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture
     auto node = std::make_shared<Maths::ivec3>();
-    node->x = 5;
-    node->y = 5;
-    node->z = width - 10;
+    node->x = 1;
+    node->y = 1;
+    node->z = width - 2;
 
     self->nodes.push_back(node);
     self->data.resize(width*height);
@@ -39,7 +39,6 @@ void texture_atlas_set_region(
     std::size_t stride,
     const unsigned char* data)
 {
-    assert( self );
     assert( x > 0);
     assert( y > 0);
     assert( x < (self->width-1));
@@ -71,8 +70,6 @@ int texture_atlas_fit(
     int x, y, width_left;
     size_t i;
 
-    assert( self );
-
     auto node = self->nodes[index];
     x = node->x;
     y = node->y;
@@ -103,8 +100,6 @@ int texture_atlas_fit(
 
 void texture_atlas_merge(std::shared_ptr<texture_atlas_t> self)
 {
-    assert( self );
-
     for (std::size_t i=0; i< self->nodes.size()-1; ++i )
     {
         auto node = self->nodes[i];
@@ -123,24 +118,21 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
     std::size_t width,
     std::size_t height )
 {
-    int y, best_index;
+    int best_index;
     size_t best_height, best_width;
     Sprocket::Maths::ivec4 region;
     region.x = 0;
     region.y = 0;
     region.z = width;
     region.w = height;
-    size_t i;
-
-    assert( self );
 
     best_height = UINT_MAX;
     best_index  = -1;
     best_width = UINT_MAX;
-    for( i=0; i<self->nodes.size(); ++i )
+    for (std::size_t i = 0; i < self->nodes.size(); ++i)
     {
-        y = texture_atlas_fit(self, i, width, height);
-        if( y >= 0 )
+        int y = texture_atlas_fit(self, i, width, height);
+        if (y >= 0)
         {
             auto node = self->nodes[i];
             if( ( (y + height) < best_height ) ||
@@ -170,7 +162,7 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
     n->z = width;
     self->nodes.insert(self->nodes.begin() + best_index, n);
 
-    for(i = best_index+1; i < self->nodes.size(); ++i)
+    for(std::size_t i = best_index + 1; i < self->nodes.size(); ++i)
     {
         auto node = self->nodes[i];
         auto prev = self->nodes[i-1];
