@@ -180,14 +180,6 @@ texture_font_init(std::shared_ptr<texture_font_t> self)
     self->kerning = 1;
     self->filtering = 1;
 
-    // FT_LCD_FILTER_LIGHT   is (0x00, 0x55, 0x56, 0x55, 0x00)
-    // FT_LCD_FILTER_DEFAULT is (0x10, 0x40, 0x70, 0x40, 0x10)
-    self->lcd_weights[0] = 0x10;
-    self->lcd_weights[1] = 0x40;
-    self->lcd_weights[2] = 0x70;
-    self->lcd_weights[3] = 0x40;
-    self->lcd_weights[4] = 0x10;
-
     if (!texture_font_load_face(self, self->size * 100.f, &library, &face))
         return -1;
 
@@ -428,8 +420,10 @@ cleanup_stroker:
     std::size_t x = region.x;
     std::size_t y = region.y;
 
-    unsigned char *buffer = (unsigned char*)calloc( tgt_w * tgt_h, sizeof(unsigned char));
-    unsigned char *dst_ptr = buffer + (padding.top * tgt_w + padding.left);
+    std::vector<unsigned char> buffer;
+    buffer.resize(tgt_w * tgt_h);
+    
+    unsigned char *dst_ptr = buffer.data() + (padding.top * tgt_w + padding.left);
     unsigned char *src_ptr = ft_bitmap.buffer;
     for (std::size_t i = 0; i < src_h; i++ )
     {
@@ -439,9 +433,7 @@ cleanup_stroker:
         src_ptr += ft_bitmap.pitch;
     }
 
-    texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, tgt_w, buffer);
-
-    free( buffer );
+    texture_atlas_set_region( self->atlas, x, y, tgt_w, tgt_h, tgt_w, buffer.data());
 
     auto glyph = texture_glyph_new();
     glyph->codepoint = utf8_to_utf32( codepoint );

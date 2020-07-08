@@ -21,12 +21,12 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture
     auto node = std::make_shared<Maths::ivec3>();
-    node->x = 1;
-    node->y = 1;
-    node->z = width - 2;
+    node->x = 5;
+    node->y = 5;
+    node->z = width - 10;
 
     self->nodes.push_back(node);
-    self->data.reserve(width*height);
+    self->data.resize(width*height);
     return self;
 }
 
@@ -139,7 +139,7 @@ Sprocket::Maths::ivec4 texture_atlas_get_region(
     best_width = UINT_MAX;
     for( i=0; i<self->nodes.size(); ++i )
     {
-        y = texture_atlas_fit( self, i, width, height );
+        y = texture_atlas_fit(self, i, width, height);
         if( y >= 0 )
         {
             auto node = self->nodes[i];

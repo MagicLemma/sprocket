@@ -61,7 +61,6 @@ struct texture_font_t
     RenderMode rendermode;
     float outline_thickness;
     int filtering;
-    unsigned char lcd_weights[5];
     int kerning;
     float height;
     float linegap;

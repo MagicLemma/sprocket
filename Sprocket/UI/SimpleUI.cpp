@@ -47,7 +47,7 @@ SimpleUI::SimpleUI(Window* window)
     d_buffer.SetBufferLayout(d_bufferLayout);
 
     d_texAtlas = Sprocket::texture_atlas_new(1024, 1024);
-    d_texFont = Sprocket::texture_font_new_from_file(d_texAtlas, 56, "Resources/Fonts/INKFREE.TTF");
+    d_texFont = Sprocket::texture_font_new_from_file(d_texAtlas, 56, "Resources/Fonts/arial.ttf");
 
     d_texFont->rendermode = Sprocket::RenderMode::RENDER_NORMAL;
     d_texFont->outline_thickness = 0;
@@ -200,21 +200,21 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     float fontSize = 1.0f;
 
     float textWidth = TextWidth(text, d_font, fontSize);
-    Maths::vec2 pointer(x + (width - textWidth) / 2.0f, y);
-    pointer = {x, y};
+    Maths::vec2 pen(x + (width - textWidth) / 2.0f, y);
+    pen = {x, y};
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         char c = text[i];
         auto glyph = Sprocket::texture_font_get_glyph(d_texFont, &c);
 
-        //float kerning = 0.0f;
-        //if (i > 0) {
-        //    kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
-        //}
-        //pointer.x += kerning;
+        float kerning = 0.0f;
+        if (i > 0) {
+            kerning = Sprocket::texture_glyph_get_kerning(glyph, &text[i-1]);
+        }
+        pen.x += kerning;
 
-        float xPos = pointer.x + glyph->offset_x * fontSize;
-        float yPos = pointer.y - glyph->offset_y * fontSize;
+        float xPos = pen.x + glyph->offset_x * fontSize;
+        float yPos = pen.y - glyph->offset_y * fontSize;
 
         float width = glyph->width * fontSize;
         float height = glyph->height * fontSize;
@@ -224,7 +224,7 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
         float w = glyph->s1 - glyph->s0;
         float h = glyph->t1 - glyph->t0;
 
-        pointer.x += glyph->advance_x * fontSize;
+        pen.x += glyph->advance_x * fontSize;
 
         unsigned int index = d_textVertices.size();
         d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
