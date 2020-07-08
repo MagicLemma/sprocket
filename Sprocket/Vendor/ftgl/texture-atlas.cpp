@@ -16,7 +16,7 @@ std::shared_ptr<texture_atlas_t> texture_atlas_new(
     self->used = 0;
     self->width = width;
     self->height = height;
-    self->id = 0;
+    self->textureId = 0;
 
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture

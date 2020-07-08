@@ -60,12 +60,7 @@ struct texture_font_t
     int hinting;
     RenderMode rendermode;
     float outline_thickness;
-    int filtering;
-    int kerning;
     float height;
-    float linegap;
-    float ascender;
-    float descender;
     float underline_position;
     float underline_thickness;
     int padding;

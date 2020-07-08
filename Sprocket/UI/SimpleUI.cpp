@@ -52,11 +52,10 @@ SimpleUI::SimpleUI(Window* window)
         72.0f,
         "Resources/Fonts/calibri.ttf");
 
-    d_texFont->rendermode = Sprocket::RenderMode::RENDER_OUTLINE_POSITIVE;
-    d_texFont->outline_thickness = 0;
+    d_texFont->rendermode = Sprocket::RenderMode::RENDER_NORMAL;
 
-    glGenTextures(1, &d_texAtlas->id);
-    glBindTexture( GL_TEXTURE_2D, d_texAtlas->id );
+    glGenTextures(1, &d_texAtlas->textureId);
+    glBindTexture( GL_TEXTURE_2D, d_texAtlas->textureId );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -114,7 +113,7 @@ void SimpleUI::EndFrame()
         d_quadIndices.data());
     glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
-    glBindTexture(GL_TEXTURE_2D, d_texAtlas->id);
+    glBindTexture(GL_TEXTURE_2D, d_texAtlas->textureId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, d_texAtlas->width, d_texAtlas->height,
                  0, GL_RED, GL_UNSIGNED_BYTE, (void*)d_texAtlas->data.data());
 

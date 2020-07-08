@@ -172,13 +172,9 @@ texture_font_init(std::shared_ptr<texture_font_t> self)
     assert(self->size > 0);
 
     self->height = 0;
-    self->ascender = 0;
-    self->descender = 0;
     self->rendermode = RenderMode::RENDER_NORMAL;
     self->outline_thickness = 0.0;
     self->hinting = 1;
-    self->kerning = 1;
-    self->filtering = 1;
     self->padding = 1;
 
     if (!texture_font_load_face(self, self->size * 100.f, &library, &face))
@@ -199,10 +195,7 @@ texture_font_init(std::shared_ptr<texture_font_t> self)
     }
 
     metrics = face->size->metrics;
-    self->ascender = (metrics.ascender >> 6) / 100.0;
-    self->descender = (metrics.descender >> 6) / 100.0;
     self->height = (metrics.height >> 6) / 100.0;
-    self->linegap = self->height - self->ascender + self->descender;
     FT_Done_Face( face );
     FT_Done_FreeType( library );
 
