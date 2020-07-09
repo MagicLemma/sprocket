@@ -146,20 +146,6 @@ bool Font::Load(const std::string& filename, float size)
         return false;
     }
 
-    d_underline_position = face->underline_position / (HRESf * HRESf) * d_size;
-    d_underline_position = roundf(d_underline_position);
-    if (d_underline_position > -2) {
-        d_underline_position = -2.0f;
-    }
-
-    d_underline_thickness = face->underline_thickness / (HRESf * HRESf) * d_size;
-    d_underline_thickness = roundf(d_underline_thickness);
-    if (d_underline_thickness < 1) {
-        d_underline_thickness = 1.0f;
-    }
-
-    FT_Size_Metrics metrics = face->size->metrics;
-    d_height = (metrics.height >> 6) / 100.0f;
     FT_Done_Face(face);
     FT_Done_FreeType(library);
     return true;

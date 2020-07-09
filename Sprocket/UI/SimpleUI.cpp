@@ -148,7 +148,7 @@ bool SimpleUI::Button(
     }
 
     Quad(x, y, width, height, colour);
-    AddText(x, y, name, 0.6f * height, width);
+    AddText(x, y, name, 0.6f * height, width, height);
     return clicked;
 }
 
@@ -168,7 +168,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
     
-    AddText(x, y, text.str(), 0.6f * height, width);
+    AddText(x, y, text.str(), 0.6f * height, width, height);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -177,12 +177,14 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width)
+void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width, float height)
 {
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
     float fontSize = 1.0f;
 
     Maths::vec2 pen{x, y};
+
+    pen.y += d_texFont.Size();
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         char c = text[i];

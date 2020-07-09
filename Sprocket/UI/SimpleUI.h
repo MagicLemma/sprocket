@@ -56,7 +56,8 @@ class SimpleUI
     std::vector<BufferVertex> d_textVertices;
     std::vector<unsigned int> d_textIndices;
 
-    void AddText(float x, float y, const std::string& text, float size, float width);
+    void AddText(float x, float y, const std::string& text,
+                 float size, float width, float height);
 
 public:
     SimpleUI(Window* window);

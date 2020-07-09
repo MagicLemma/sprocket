@@ -53,10 +53,6 @@ class Font
     float d_size;
     
     std::vector<std::shared_ptr<Glyph>> d_glyphs;
-    float d_outline_thickness;
-    float d_height;
-    float d_underline_position;
-    float d_underline_thickness;
     int d_padding;
 
     KerningMap d_kernings;
@@ -74,6 +70,8 @@ public:
 
     void Bind() const { d_atlas.Bind(); }
     void Unbind() const { d_atlas.Unbind(); }
+
+    float Size() const { return d_size; }
 };
 
 }
