@@ -1,7 +1,7 @@
 #include "texture-atlas.h"
 
 #include <cstdlib>
-#include <assert.h>
+#include <cassert>
 
 #include "Maths.h"
 

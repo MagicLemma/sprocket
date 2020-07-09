@@ -1,15 +1,11 @@
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include FT_STROKER_H
-#include FT_LCD_FILTER_H
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <assert.h>
-#include <math.h>
-#include <algorithm>
 #include "texture-font.h"
 #include "Maths.h"
+
+#include <cassert>
+#include <algorithm>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 namespace Sprocket {
 
@@ -135,7 +131,7 @@ Font::Font(std::size_t width, std::size_t height)
 bool Font::Load(const std::string& filename, float size)
 {
     assert(size);
-    
+
     d_filename = filename;
     d_size = size;
 
