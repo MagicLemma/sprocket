@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "Log.h"
+#include "Maths.h"
 
 #include <glad/glad.h>
 
@@ -82,6 +83,7 @@ Texture::Texture(int width, int height, Channels channels)
     : d_texture(std::make_shared<TEX>())
     , d_width(width)
     , d_height(height)
+    , d_channels(channels)
 {
     auto c = channels == Channels::RGBA ? GL_RGBA : GL_RED;
 
@@ -133,6 +135,24 @@ unsigned int Texture::Id() const
 bool Texture::operator==(const Texture& other) const
 {
     return d_texture->Value() == other.d_texture->Value();
+}
+
+void Texture::SetSubTexture(
+    const Maths::ivec4& region,
+    const std::vector<unsigned char>& data)
+{
+    Bind();
+
+    if (d_channels == Channels::RED) {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    }
+
+    auto c = d_channels == Channels::RGBA ? GL_RGBA : GL_RED;
+    glTexSubImage2D(GL_TEXTURE_2D,
+                    0, region.x, region.y, region.z, region.w, 
+                    c, GL_UNSIGNED_BYTE, (void*)data.data());
+
+    Unbind();
 }
 
 }

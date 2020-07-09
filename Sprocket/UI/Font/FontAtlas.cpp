@@ -5,8 +5,6 @@
 
 #include "Maths.h"
 
-#include <glad/glad.h>
-
 namespace Sprocket {
 
 FontAtlas::FontAtlas(std::size_t width, std::size_t height)
@@ -34,12 +32,7 @@ void FontAtlas::SetRegion(
     assert(region.y + region.w < d_texture.Height());
     assert(data.size() == region.z * region.w); // width * height
 
-    d_texture.Bind();
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexSubImage2D(GL_TEXTURE_2D,
-                    0, region.x, region.y, region.z, region.w, 
-                    GL_RED, GL_UNSIGNED_BYTE, (void*)data.data());
-    d_texture.Unbind();
+    d_texture.SetSubTexture(region, data);
 }
 
 int FontAtlas::Fit(

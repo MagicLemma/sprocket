@@ -1,5 +1,6 @@
 #pragma once
 #include "Resources.h"
+#include "Maths.h"
 
 #include <memory>
 #include <string>
@@ -37,6 +38,9 @@ public:
 
     // Standard texture builders
     static Texture White();
+
+    void SetSubTexture(const Maths::ivec4& region,
+                       const std::vector<unsigned char>& data);
 
     unsigned int Id() const;
 
