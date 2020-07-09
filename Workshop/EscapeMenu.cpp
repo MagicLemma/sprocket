@@ -101,18 +101,8 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
             } break;
         }
     });
-
-    auto textBox = d_container.Add<TextBox>(
-        300.0f, 50.0f, "Text box!"
-    );
-    textBox->TextData().position = {10.0, 10.0};
-    d_text = textBox.get();
-    
-    textBox->Base().colour = {0.15625f, 0.15625f, 0.15625f};
-    textBox->TextData().font = Sprocket::FontEnum::CALIBRI;
-
-    topSlider->SetCallback([textBox](float val) {
-        textBox->TextData().size = 24.0f + val * 60.0f;
+    topSlider->SetCallback([](float val) {
+        
     });
 
     topSlider->SetValue(0.0f);

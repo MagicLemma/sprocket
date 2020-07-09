@@ -88,11 +88,6 @@
 #include "Display/ColourPalette.h"
 #include "Display/Slider.h"
 #include "Display/Image.h"
-#include "Display/TextBox.h"
-
-#include "Display/Fonts/Glyph.h"
-#include "Display/Fonts/Font.h"
-#include "Display/Fonts/Text.h"
 
 #include "Display/WidgetProperties/WidgetProperty.h"
 #include "Display/WidgetProperties/Draggable.h"

@@ -9,27 +9,6 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
-namespace {
-
-float TextWidth(const std::string& text, const FontPackage& font, float size)
-{
-    float textWidth = 0.0f;
-
-    for (char character : text) {
-        GlyphStruct c = font.Get(character);
-        textWidth += c.advance;
-    }
-
-    auto first = font.Get(text.front());
-    textWidth -= first.xOffset;
-
-    auto last = font.Get(text.back());
-    textWidth += (last.xOffset + last.width);
-
-    return textWidth * size;
-}
-
-}
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)

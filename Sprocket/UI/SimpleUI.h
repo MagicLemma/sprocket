@@ -6,7 +6,6 @@
 #include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "BufferLayout.h"
-#include "Font.h"
 
 #include <vector>
 #include <unordered_map>

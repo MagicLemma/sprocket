@@ -67,9 +67,6 @@ add_library(Sprocket STATIC
             Display/Button.cpp
             Display/ColourPalette.cpp
             Display/Image.cpp
-            Display/TextBox.cpp
-
-            Display/Fonts/Font.cpp
 
             Display/WidgetProperties/WidgetProperty.cpp
             Display/WidgetProperties/Draggable.cpp
@@ -137,7 +134,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Core
                            ./DevGUI
                            ./Display
-                           ./Display/Fonts
                            ./Display/WidgetProperties
                            ./Events
                            ./Graphics
