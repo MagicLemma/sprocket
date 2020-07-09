@@ -59,7 +59,7 @@ void EscapeMenu::OnUpdate(double dt)
         }
     }
 
-    if (d_ui.Button(2, "ButtonWABCDEF", w * 0.025f, 175, w * 0.25f, 50)) {
+    if (d_ui.Button(2, "Button", w * 0.025f, 175, w * 0.25f, 50)) {
         SPKT_LOG_INFO("Clicked!");
     }
 

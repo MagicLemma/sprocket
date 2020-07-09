@@ -9,6 +9,28 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
+namespace {
+
+float TextWidth(Font& font, const std::string& text)
+{
+    float width = 0.0f;
+    for (char c : text) {
+        auto glyph = font.GetGlyph(c);
+        width += glyph.advance.x;
+    }
+
+    char first = text.front();
+    width -= font.GetGlyph(first).offset.x;
+
+    char last = text.back();
+    width += font.GetGlyph(last).width;
+    width += font.GetGlyph(last).offset.x;
+    width -= font.GetGlyph(last).advance.x;
+
+    return width;
+}
+
+}
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
@@ -164,28 +186,28 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
     Maths::vec2 pen{x, y};
 
     pen.y += d_font.Size();
+    pen.x += (width - TextWidth(d_font, text)) / 2.0f;
     
     for (std::size_t i = 0; i != text.size(); ++i) {
-        char c = text[i];
-        auto glyph = d_font.GetGlyph(c);
+        auto glyph = d_font.GetGlyph(text[i]);
 
         if (i > 0) {
-            float kerning = d_font.GetKerning(text[i-1], c);
+            float kerning = d_font.GetKerning(text[i-1], text[i]);
             pen.x += kerning;
         }
 
-        float xPos = pen.x + glyph->offset.x * fontSize;
-        float yPos = pen.y - glyph->offset.y * fontSize;
+        float xPos = pen.x + glyph.offset.x * fontSize;
+        float yPos = pen.y - glyph.offset.y * fontSize;
 
-        float width = glyph->width * fontSize;
-        float height = glyph->height * fontSize;
+        float width = glyph.width * fontSize;
+        float height = glyph.height * fontSize;
 
-        float x = glyph->texture.x;
-        float y = glyph->texture.y;
-        float w = glyph->texture.z;
-        float h = glyph->texture.w;
+        float x = glyph.texture.x;
+        float y = glyph.texture.y;
+        float w = glyph.texture.z;
+        float h = glyph.texture.w;
 
-        pen += glyph->advance * fontSize;
+        pen += glyph.advance * fontSize;
 
         unsigned int index = d_textVertices.size();
         d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});

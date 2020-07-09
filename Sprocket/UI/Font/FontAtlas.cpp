@@ -44,12 +44,12 @@ int FontAtlas::Fit(
     int x = node.x;
     int y = node.y;
     int width_left = width;
-    std::size_t i = index;
 
     if ((x + width) > (d_texture.Width() - 1)) {
         return -1;
     }
 
+    std::size_t i = index;
     while (width_left > 0) {
         auto node2 = d_nodes[i];
         if (node2.y > y) {
@@ -97,10 +97,7 @@ Maths::ivec4 FontAtlas::GetRegion(
     }
 
     if (best_index == -1) {
-        region.x = -1;
-        region.y = -1;
-        region.z = 0; // width
-        region.w = 0; // height
+        region.x = -1; // Full atlas
         return region;
     }
 

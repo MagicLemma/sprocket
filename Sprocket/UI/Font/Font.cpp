@@ -122,7 +122,6 @@ void GenerateKerning(
 
 Font::Font(std::size_t width, std::size_t height)
     : d_atlas(width, height)
-    , d_padding(1)
 {
 }
 
@@ -145,28 +144,30 @@ bool Font::Load(const std::string& filename, float size)
     return true;
 }
 
-Glyph* Font::GetGlyph(char c)
+Glyph Font::GetGlyph(char c)
 {
     uint32_t ucodepoint = ToUTF32(&c);
     auto it = d_glyphs.find(ucodepoint);
     if (it != d_glyphs.end()) {
-        return &it->second;
+        return it->second;
     }
 
     // If we could not find it, attempt to load it
     LoadGlyph(c);
     it = d_glyphs.find(ucodepoint);
     if (it != d_glyphs.end()) {
-        return &it->second;
+        return it->second;
     }
 
-    return nullptr;
+    return Glyph(); // Empty glyph
 }
 
 bool Font::LoadGlyph(char c)
 {
     FT_Library library;
     FT_Face face;
+
+    int padding = 1; // Potentially make this modifiable.
 
     if (!LoadFace(d_filename, d_size, &library, &face)) {
         return false;
@@ -191,8 +192,8 @@ bool Font::LoadGlyph(char c)
     std::size_t src_w = ft_bitmap.width;
     std::size_t src_h = ft_bitmap.rows;
 
-    std::size_t tgt_w = src_w + 2 * d_padding;
-    std::size_t tgt_h = src_h + 2 * d_padding;
+    std::size_t tgt_w = src_w + 2 * padding;
+    std::size_t tgt_h = src_h + 2 * padding;
 
     region = d_atlas.GetRegion(tgt_w, tgt_h);
 
@@ -200,16 +201,13 @@ bool Font::LoadGlyph(char c)
         SPKT_LOG_ERROR("Texture atlas is full!");
         FT_Done_Face( face );
         FT_Done_FreeType( library );
-        return 0;
+        return false;
     }
-
-    std::size_t x = region.x;
-    std::size_t y = region.y;
 
     std::vector<unsigned char> buffer;
     buffer.resize(tgt_w * tgt_h);
     
-    unsigned char *dst_ptr = buffer.data() + (d_padding * tgt_w + d_padding);
+    unsigned char *dst_ptr = buffer.data() + (padding * tgt_w + padding);
     unsigned char *src_ptr = ft_bitmap.buffer;
     for (std::size_t i = 0; i < src_h; i++ )
     {
@@ -218,24 +216,20 @@ bool Font::LoadGlyph(char c)
         src_ptr += ft_bitmap.pitch;
     }
 
-    d_atlas.SetRegion({x, y, tgt_w, tgt_h}, buffer);
+    d_atlas.SetRegion({region.x, region.y, tgt_w, tgt_h}, buffer);
 
-    Glyph glyph;
+    uint32_t codepoint = ToUTF32(&c);
+
+    Glyph& glyph = d_glyphs[codepoint];
     glyph.codepoint = ToUTF32(&c);
     glyph.width     = tgt_w;
     glyph.height    = tgt_h;
-    glyph.offset  = {ft_glyph_left, ft_glyph_top};
-    glyph.texture.x = x / (float)d_atlas.Width();
-    glyph.texture.y = y / (float)d_atlas.Height();
+    glyph.offset    = {ft_glyph_left, ft_glyph_top};
+    glyph.texture.x = region.x / (float)d_atlas.Width();
+    glyph.texture.y = region.y / (float)d_atlas.Height();
     glyph.texture.z = glyph.width / (float)d_atlas.Width();
     glyph.texture.w = glyph.height / (float)d_atlas.Height();
-
-    // Discard hinting to get advance
-    FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
-    slot = face->glyph;
     glyph.advance = Maths::vec2{slot->advance.x, slot->advance.y} / HRESf;
-
-    d_glyphs.emplace(glyph.codepoint, glyph);
 
     GenerateKerning(d_glyphs, d_kernings, &library, &face);
 

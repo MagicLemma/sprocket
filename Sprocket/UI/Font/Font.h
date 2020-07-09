@@ -51,11 +51,9 @@ class Font
     FontAtlas d_atlas;
 
     std::string d_filename;
-    float d_size;
+    float       d_size;
     
-    GlyphMap d_glyphs;
-    int d_padding;
-
+    GlyphMap   d_glyphs;
     KerningMap d_kernings;
 
     bool LoadGlyph(char c);
@@ -64,8 +62,7 @@ public:
     Font(std::size_t width, std::size_t height);
     bool Load(const std::string& filename, float size);
 
-    Glyph* GetGlyph(char c);
-
+    Glyph GetGlyph(char c);
     float GetKerning(char left, char right);
 
     void Bind() const { d_atlas.Bind(); }
