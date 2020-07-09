@@ -59,8 +59,7 @@ class Font
     bool LoadGlyph(char c);
 
 public:
-    Font(std::size_t width, std::size_t height);
-    bool Load(const std::string& filename, float size);
+    Font(const std::string& filename, float size);
 
     Glyph GetGlyph(char c);
     float GetKerning(char left, char right);

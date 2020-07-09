@@ -37,7 +37,7 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
-    , d_font(1024, 1024)
+    , d_font("Resources/Fonts/Coolvetica.ttf", 42.0f)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -45,10 +45,6 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 4);
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
-
-    if (!d_font.Load("Resources/Fonts/Arial.ttf", 36.0f)) {
-        SPKT_LOG_ERROR("Could not load font!");
-    }
 }
 
 void SimpleUI::OnEvent(Event& event)

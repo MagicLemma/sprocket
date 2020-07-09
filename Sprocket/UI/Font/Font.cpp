@@ -120,28 +120,11 @@ void GenerateKerning(
 
 }
 
-Font::Font(std::size_t width, std::size_t height)
-    : d_atlas(width, height)
+Font::Font(const std::string& filename, float size)
+    : d_atlas(1024, 1024)
+    , d_filename(filename)
+    , d_size(size)
 {
-}
-
-bool Font::Load(const std::string& filename, float size)
-{
-    assert(size);
-
-    d_filename = filename;
-    d_size = size;
-
-    FT_Library library;
-    FT_Face face;
-
-    if (!LoadFace(filename, size, &library, &face)) {
-        return false;
-    }
-
-    FT_Done_Face(face);
-    FT_Done_FreeType(library);
-    return true;
 }
 
 Glyph Font::GetGlyph(char c)
