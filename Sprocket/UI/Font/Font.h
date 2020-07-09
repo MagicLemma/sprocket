@@ -21,10 +21,17 @@ struct HashPair {
     } 
 };
 
+struct Glyph;
+
 using KerningMap = std::unordered_map<
     std::pair<uint32_t, uint32_t>,
     float,
     HashPair
+>;
+
+using GlyphMap = std::unordered_map<
+    uint32_t,
+    Glyph
 >;
 
 struct Glyph
@@ -46,7 +53,7 @@ class Font
     std::string d_filename;
     float d_size;
     
-    std::vector<Glyph> d_glyphs;
+    GlyphMap d_glyphs;
     int d_padding;
 
     KerningMap d_kernings;

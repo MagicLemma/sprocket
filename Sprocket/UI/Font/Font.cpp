@@ -92,7 +92,7 @@ bool LoadFace(
 }
 
 void GenerateKerning(
-    const std::vector<Glyph>& glyphs,
+    const GlyphMap& glyphs,
     KerningMap& kernings,
     FT_Library* library,
     FT_Face* face)
@@ -102,18 +102,16 @@ void GenerateKerning(
     }
 
     kernings.clear();
-    for (const auto leftGlyph : glyphs) {
-        FT_UInt leftIndex = FT_Get_Char_Index(*face, (FT_ULong)leftGlyph.codepoint);
-        for (const auto rightGlyph : glyphs) {
-            FT_UInt rightIndex = FT_Get_Char_Index(*face, (FT_ULong)rightGlyph.codepoint);
+    for (const auto [lcp, leftGlyph] : glyphs) {
+        FT_UInt leftIndex = FT_Get_Char_Index(*face, (FT_ULong)lcp);
+        for (const auto [rcp, rightGlyph] : glyphs) {
+            FT_UInt rightIndex = FT_Get_Char_Index(*face, (FT_ULong)rcp);
         
             FT_Vector kerning;
             FT_Get_Kerning(*face, leftIndex, rightIndex, FT_KERNING_UNFITTED, &kerning);
 
             if (kerning.x) {
-                uint32_t left = leftGlyph.codepoint;
-                uint32_t right = rightGlyph.codepoint;
-                auto key = std::make_pair(left, right);
+                auto key = std::make_pair(lcp, rcp);
                 kernings.emplace(key, kerning.x / (HRESf * HRESf));
             }
         }
@@ -161,11 +159,9 @@ Glyph* Font::GetGlyph(char c)
 Glyph* Font::FindGlyph(char c)
 {
     uint32_t ucodepoint = ToUTF32(&c);
-    for (std::size_t i = 0; i < d_glyphs.size(); ++i) {
-        auto& glyph = d_glyphs[i];
-        if (glyph.codepoint == ucodepoint) {
-            return &glyph;
-        }
+    auto it = d_glyphs.find(ucodepoint);
+    if (it != d_glyphs.end()) {
+        return &it->second;
     }
 
     return nullptr;
@@ -266,7 +262,7 @@ bool Font::LoadGlyph(char c)
     slot = face->glyph;
     glyph.advance = Maths::vec2{slot->advance.x, slot->advance.y} / HRESf;
 
-    d_glyphs.push_back(glyph);
+    d_glyphs.emplace(glyph.codepoint, glyph);
 
     GenerateKerning(d_glyphs, d_kernings, &library, &face);
 
