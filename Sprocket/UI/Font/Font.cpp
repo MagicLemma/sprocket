@@ -147,19 +147,15 @@ bool Font::Load(const std::string& filename, float size)
 
 Glyph* Font::GetGlyph(char c)
 {
-    auto glyph = FindGlyph(c);
-    if (glyph != nullptr) {
-        return glyph;
-    }
-
-    LoadGlyph(c);
-    return FindGlyph(c);
-}
-
-Glyph* Font::FindGlyph(char c)
-{
     uint32_t ucodepoint = ToUTF32(&c);
     auto it = d_glyphs.find(ucodepoint);
+    if (it != d_glyphs.end()) {
+        return &it->second;
+    }
+
+    // If we could not find it, attempt to load it
+    LoadGlyph(c);
+    it = d_glyphs.find(ucodepoint);
     if (it != d_glyphs.end()) {
         return &it->second;
     }
@@ -169,10 +165,6 @@ Glyph* Font::FindGlyph(char c)
 
 bool Font::LoadGlyph(char c)
 {
-    if (FindGlyph(c)) {
-        return true; // Already loaded
-    }
-
     FT_Library library;
     FT_Face face;
 

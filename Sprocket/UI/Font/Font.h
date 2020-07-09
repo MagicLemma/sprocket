@@ -58,7 +58,6 @@ class Font
 
     KerningMap d_kernings;
 
-    Glyph* FindGlyph(char c);
     bool LoadGlyph(char c);
 
 public:
