@@ -11,51 +11,33 @@
 namespace Sprocket {
 namespace {
 
-float TextWidth(Font& font, const std::string& text)
+struct TextInfo
 {
     float width = 0.0f;
-    for (char c : text) {
-        auto glyph = font.GetGlyph(c);
-        width += glyph.advance.x;
-    }
-
-    char first = text.front();
-    width -= font.GetGlyph(first).offset.x;
-
-    char last = text.back();
-    width += font.GetGlyph(last).width;
-    width += font.GetGlyph(last).offset.x;
-    width -= font.GetGlyph(last).advance.x;
-
-    return width;
-}
-
-float TextHeight(Font& font, const std::string& text)
-{
     float height = 0.0f;
-    for (char c : text) {
-        auto glyph = font.GetGlyph(c);
-        if (glyph.height > height) {
-            height = glyph.height;
-        }
-    }
+};
 
-    return height;
-}
-
-float MaxYOffset(Font& font, const std::string& text)
+TextInfo GetTextInfo(Font& font, const std::string& text)
 {
-    float yOffset = 0.0f;
+    TextInfo info;
     for (char c : text) {
         auto glyph = font.GetGlyph(c);
-        if (glyph.offset.y > yOffset) {
-            yOffset = glyph.offset.y;
+        info.width += glyph.advance.x;
+        if (glyph.height > info.height) {
+            info.height = glyph.height;
         }
     }
 
-    return yOffset;
-}
+    Glyph first = font.GetGlyph(text.front());
+    info.width -= first.offset.x;
 
+    Glyph last = font.GetGlyph(text.back());
+    info.width += last.width;
+    info.width += last.offset.x;
+    info.width -= last.advance.x;
+
+    return info;
+}
 
 }
 
@@ -135,9 +117,9 @@ void SimpleUI::EndFrame()
     
 }
 
-void SimpleUI::Quad(float x, float y,
-                    float width, float height,
-                    const Maths::vec4& colour)
+void SimpleUI::Quad(const Maths::vec4& colour,
+                    float x, float y,
+                    float width, float height)
 {
     unsigned int index = d_quadVertices.size();
     d_quadVertices.push_back({{x,         y},          colour});
@@ -171,8 +153,8 @@ bool SimpleUI::Button(
         colour = d_theme.hoveredColour;
     }
 
-    Quad(x, y, width, height, colour);
-    AddText(x, y, name, 0.6f * height, width, height);
+    Quad(colour, x, y, width, height);
+    AddText(name, x, y, width, height);
     return clicked;
 }
 
@@ -184,15 +166,22 @@ void SimpleUI::Slider(int id, const std::string& name,
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
     if (clicked) { d_clicked = id; }
+    
+    Maths::vec4 leftColour = d_theme.baseColour;
+    Maths::vec4 rightColour = d_theme.backgroundColour;
+    if (d_clicked == id || hovered) {
+        leftColour = d_theme.hoveredColour;
+        rightColour *= 1.1f;
+    }
 
     float ratio = (*value - min) / (max - min);
-    Quad(x, y, ratio * width, height, d_theme.hoveredColour);
-    Quad(x + ratio * width, y, (1 - ratio) * width, height, d_theme.baseColour);
+    Quad(leftColour, x, y, ratio * width, height);
+    Quad(rightColour, x + ratio * width, y, (1 - ratio) * width, height);
     
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
     
-    AddText(x, y, text.str(), 0.6f * height, width, height);
+    AddText(text.str(), x, y, width, height);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -201,14 +190,17 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width, float height)
+void SimpleUI::AddText(
+    const std::string& text,
+    float x, float y, float width, float height)
 {
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
     Glyph first = d_font.GetGlyph(text.front());
+    auto textInfo = GetTextInfo(d_font, text);
 
     Maths::vec2 pen = {
-        x + (width - TextWidth(d_font, text)) / 2.0f,
+        x + (width - textInfo.width) / 2.0f,
         y + (height - first.height) / 2.0f
     };
 

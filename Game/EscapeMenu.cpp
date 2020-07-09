@@ -9,6 +9,7 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     using namespace Sprocket;
 
     SimpleUITheme theme;
+    theme.backgroundColour = {0.463f, 0.248f, 0.0f, 1.0f};
     theme.baseColour = {0.926f, 0.496f, 0.0f, 1.0f};
     theme.hoveredColour = {0.926f, 0.63281f, 0.3242f, 1.0f};
     theme.clickedColour = {0.324f, 0.90625f, 0.5352f, 1.0f};
@@ -46,7 +47,8 @@ void EscapeMenu::OnUpdate(double dt)
     float h = (float)window->Height();
 
     d_ui.StartFrame();
-    d_ui.Quad(0, 0.0f, w * 0.3f, h, Sprocket::Maths::vec4{0.0, 0.0, 0.0, 0.8});
+    d_ui.Quad(Sprocket::Maths::vec4{0.0, 0.0, 0.0, 0.8},
+              0.0f, 0.0f, w * 0.3f, h);
 
     if (d_ui.Button(1, "Toggle Dev UI", w * 0.025f, 100, w * 0.25f, 50)) {
         switch (d_worldLayer->d_mode) {
