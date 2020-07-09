@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 #include "FontAtlas.h"
+#include "Maths.h"
 
 namespace Sprocket {
 
@@ -33,16 +34,9 @@ struct Glyph
     std::size_t width  = 0;
     std::size_t height = 0;
 
-    int offset_x = 0;
-    int offset_y = 0;
-
-    float advance_x = 0.0f;
-    float advance_y = 0.0f;
-
-    float s0        = 0.0f;
-    float t0        = 0.0f;
-    float texWidth  = 0.0f;
-    float texHeight = 0.0f;
+    Maths::ivec2 offset = {0, 0};
+    Maths::vec2 advance = {0.0f, 0.0f};
+    Maths::vec4 texture = {0.0f, 0.0f, 0.0f, 0.0f};
 };
 
 class Font

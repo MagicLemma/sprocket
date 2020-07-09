@@ -174,19 +174,18 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
             pen.x += kerning;
         }
 
-        float xPos = pen.x + glyph->offset_x * fontSize;
-        float yPos = pen.y - glyph->offset_y * fontSize;
+        float xPos = pen.x + glyph->offset.x * fontSize;
+        float yPos = pen.y - glyph->offset.y * fontSize;
 
         float width = glyph->width * fontSize;
         float height = glyph->height * fontSize;
 
-        float x = glyph->s0;
-        float y = glyph->t0;
-        float w = glyph->texWidth;
-        float h = glyph->texHeight;
+        float x = glyph->texture.x;
+        float y = glyph->texture.y;
+        float w = glyph->texture.z;
+        float h = glyph->texture.w;
 
-        pen.x += glyph->advance_x * fontSize;
-        pen.y += glyph->advance_y * fontSize;
+        pen += glyph->advance * fontSize;
 
         unsigned int index = d_textVertices.size();
         d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});

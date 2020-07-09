@@ -255,18 +255,16 @@ bool Font::LoadGlyph(char c)
     glyph->codepoint = ToUTF32(&c);
     glyph->width     = tgt_w;
     glyph->height    = tgt_h;
-    glyph->offset_x  = ft_glyph_left;
-    glyph->offset_y  = ft_glyph_top;
-    glyph->s0        = x / (float)d_atlas.Width();;
-    glyph->t0        = y / (float)d_atlas.Height();
-    glyph->texWidth  = glyph->width / (float)d_atlas.Width();
-    glyph->texHeight = glyph->height / (float)d_atlas.Height();
+    glyph->offset  = {ft_glyph_left, ft_glyph_top};
+    glyph->texture.x = x / (float)d_atlas.Width();;
+    glyph->texture.y = y / (float)d_atlas.Height();
+    glyph->texture.z = glyph->width / (float)d_atlas.Width();
+    glyph->texture.w = glyph->height / (float)d_atlas.Height();
 
     // Discard hinting to get advance
     FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
     slot = face->glyph;
-    glyph->advance_x = slot->advance.x / HRESf;
-    glyph->advance_y = slot->advance.y / HRESf;
+    glyph->advance = Maths::vec2{slot->advance.x, slot->advance.y} / HRESf;
 
     d_glyphs.push_back(glyph);
 
