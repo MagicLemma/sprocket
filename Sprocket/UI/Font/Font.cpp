@@ -104,12 +104,12 @@ void GenerateKerning(
     kernings.clear();
     for (const auto [lcp, leftGlyph] : glyphs) {
         FT_UInt leftIndex = FT_Get_Char_Index(*face, (FT_ULong)lcp);
+
         for (const auto [rcp, rightGlyph] : glyphs) {
             FT_UInt rightIndex = FT_Get_Char_Index(*face, (FT_ULong)rcp);
         
             FT_Vector kerning;
             FT_Get_Kerning(*face, leftIndex, rightIndex, FT_KERNING_UNFITTED, &kerning);
-
             if (kerning.x) {
                 auto key = std::make_pair(lcp, rcp);
                 kernings.emplace(key, kerning.x / (HRESf * HRESf));
@@ -181,11 +181,6 @@ bool Font::LoadGlyph(char c)
     }
 
     Maths::ivec4 region;
-    size_t missed = 0;
-
-    if (!LoadFace(d_filename, d_size, &library, &face)) {
-        return false;
-    }
 
     FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)ToUTF32(&c));
     FT_Int32 flags = FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT;
@@ -201,25 +196,11 @@ bool Font::LoadGlyph(char c)
     int ft_glyph_top    = slot->bitmap_top;
     int ft_glyph_left   = slot->bitmap_left;
 
-    struct {
-        int left;
-        int top;
-        int right;
-        int bottom;
-    } padding = { 0, 0, 1, 1 };
-
-    if (d_padding != 0) {
-        padding.top += d_padding;
-        padding.left += d_padding;
-        padding.right += d_padding;
-        padding.bottom += d_padding;
-    }
-
     std::size_t src_w = ft_bitmap.width;
     std::size_t src_h = ft_bitmap.rows;
 
-    std::size_t tgt_w = src_w + padding.left + padding.right;
-    std::size_t tgt_h = src_h + padding.top + padding.bottom;
+    std::size_t tgt_w = src_w + 2 * d_padding;
+    std::size_t tgt_h = src_h + 2 * d_padding;
 
     region = d_atlas.GetRegion(tgt_w, tgt_h);
 
@@ -236,7 +217,7 @@ bool Font::LoadGlyph(char c)
     std::vector<unsigned char> buffer;
     buffer.resize(tgt_w * tgt_h);
     
-    unsigned char *dst_ptr = buffer.data() + (padding.top * tgt_w + padding.left);
+    unsigned char *dst_ptr = buffer.data() + (d_padding * tgt_w + d_padding);
     unsigned char *src_ptr = ft_bitmap.buffer;
     for (std::size_t i = 0; i < src_h; i++ )
     {
