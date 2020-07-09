@@ -15,7 +15,7 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
-    , d_texFont(1024, 1024)
+    , d_font(1024, 1024)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -24,7 +24,7 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
 
-    if (!d_texFont.Load("Resources/Fonts/Arial.ttf", 36.0f)) {
+    if (!d_font.Load("Resources/Fonts/Arial.ttf", 36.0f)) {
         SPKT_LOG_ERROR("Could not load font!");
     }
 }
@@ -77,7 +77,7 @@ void SimpleUI::EndFrame()
         d_quadIndices.data());
     glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
-    d_texFont.Bind();
+    d_font.Bind();
     d_buffer.SetVertexData(
         sizeof(BufferVertex) * d_textVertices.size(),
         d_textVertices.data());
@@ -163,14 +163,14 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
 
     Maths::vec2 pen{x, y};
 
-    pen.y += d_texFont.Size();
+    pen.y += d_font.Size();
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         char c = text[i];
-        auto glyph = d_texFont.GetGlyph(c);
+        auto glyph = d_font.GetGlyph(c);
 
         if (i > 0) {
-            float kerning = d_texFont.GetKerning(text[i-1], c);
+            float kerning = d_font.GetKerning(text[i-1], c);
             pen.x += kerning;
         }
 
