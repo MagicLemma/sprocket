@@ -122,8 +122,8 @@ void SimpleUI::Quad(const Maths::vec4& colour,
                     float width, float height)
 {
     unsigned int index = d_quadVertices.size();
-    d_quadVertices.push_back({{x,         y},          colour});
-    d_quadVertices.push_back({{x + width, y},          colour});
+    d_quadVertices.push_back({{x,         y},          colour * 1.4f});
+    d_quadVertices.push_back({{x + width, y},          colour * 1.4f});
     d_quadVertices.push_back({{x,         y + height}, colour});
     d_quadVertices.push_back({{x + width, y + height}, colour});
 
@@ -154,7 +154,7 @@ bool SimpleUI::Button(
     }
 
     Quad(colour, x, y, width, height);
-    AddText(name, x, y, width, height);
+    Text(name, x, y, width, height);
     return clicked;
 }
 
@@ -169,9 +169,11 @@ void SimpleUI::Slider(int id, const std::string& name,
     
     Maths::vec4 leftColour = d_theme.baseColour;
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    if (d_clicked == id || hovered) {
+    if (d_clicked == id) {
+        leftColour = d_theme.clickedColour;
+    }
+    else if (hovered) {
         leftColour = d_theme.hoveredColour;
-        rightColour *= 1.1f;
     }
 
     float ratio = (*value - min) / (max - min);
@@ -181,7 +183,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
     
-    AddText(text.str(), x, y, width, height);
+    Text(text.str(), x, y, width, height);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -190,7 +192,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void SimpleUI::AddText(
+void SimpleUI::Text(
     const std::string& text,
     float x, float y, float width, float height)
 {

@@ -76,8 +76,8 @@ public:
                 float x, float y, float width, float height,
                 float* value, float min, float max);
 
-    void AddText(const std::string& text,
-                 float x, float y, float width, float height);
+    void Text(const std::string& text,
+              float x, float y, float width, float height);
 };
 
 }
