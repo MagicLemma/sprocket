@@ -30,6 +30,33 @@ float TextWidth(Font& font, const std::string& text)
     return width;
 }
 
+float TextHeight(Font& font, const std::string& text)
+{
+    float height = 0.0f;
+    for (char c : text) {
+        auto glyph = font.GetGlyph(c);
+        if (glyph.height > height) {
+            height = glyph.height;
+        }
+    }
+
+    return height;
+}
+
+float MaxYOffset(Font& font, const std::string& text)
+{
+    float yOffset = 0.0f;
+    for (char c : text) {
+        auto glyph = font.GetGlyph(c);
+        if (glyph.offset.y > yOffset) {
+            yOffset = glyph.offset.y;
+        }
+    }
+
+    return yOffset;
+}
+
+
 }
 
 SimpleUI::SimpleUI(Window* window)
@@ -37,7 +64,7 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
-    , d_font("Resources/Fonts/Coolvetica.ttf", 42.0f)
+    , d_font("Resources/Fonts/Coolvetica.ttf", 36.0f)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -177,12 +204,16 @@ void SimpleUI::Slider(int id, const std::string& name,
 void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width, float height)
 {
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
-    float fontSize = 1.0f;
 
-    Maths::vec2 pen{x, y};
+    Glyph first = d_font.GetGlyph(text.front());
 
-    pen.y += d_font.Size();
-    pen.x += (width - TextWidth(d_font, text)) / 2.0f;
+    Maths::vec2 pen = {
+        x + (width - TextWidth(d_font, text)) / 2.0f,
+        y + (height - first.height) / 2.0f
+    };
+
+    pen.x -= first.offset.x;
+    pen.y += first.offset.y;
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         auto glyph = d_font.GetGlyph(text[i]);
@@ -192,18 +223,18 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
             pen.x += kerning;
         }
 
-        float xPos = pen.x + glyph.offset.x * fontSize;
-        float yPos = pen.y - glyph.offset.y * fontSize;
+        float xPos = pen.x + glyph.offset.x;
+        float yPos = pen.y - glyph.offset.y;
 
-        float width = glyph.width * fontSize;
-        float height = glyph.height * fontSize;
+        float width = glyph.width;
+        float height = glyph.height;
 
         float x = glyph.texture.x;
         float y = glyph.texture.y;
         float w = glyph.texture.z;
         float h = glyph.texture.w;
 
-        pen += glyph.advance * fontSize;
+        pen += glyph.advance;
 
         unsigned int index = d_textVertices.size();
         d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});

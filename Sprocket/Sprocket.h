@@ -12,6 +12,7 @@
 // UI
 #include "UI/Font/FontAtlas.h"
 #include "UI/Font/Font.h"
+#include "UI/Font/Glyph.h"
 
 #include "UI/DevUI.h"
 #include "UI/SimpleUI.h"
@@ -25,6 +26,7 @@
 // UTILITY
 #include "Utility/Log.h"
 #include "Utility/Colour.h"
+#include "Utility/HashPair.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"
 #include "Utility/KeyboardCodes.h"

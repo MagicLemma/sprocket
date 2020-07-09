@@ -8,20 +8,10 @@
 
 #include "FontAtlas.h"
 #include "Maths.h"
+#include "HashPair.h"
+#include "Glyph.h"
 
 namespace Sprocket {
-
-struct HashPair { 
-    template <class T1, class T2> 
-    size_t operator()(const std::pair<T1, T2>& p) const
-    { 
-        auto hash1 = std::hash<T1>{}(p.first); 
-        auto hash2 = std::hash<T2>{}(p.second); 
-        return hash1 ^ hash2; 
-    } 
-};
-
-struct Glyph;
 
 using KerningMap = std::unordered_map<
     std::pair<uint32_t, uint32_t>,
@@ -33,18 +23,6 @@ using GlyphMap = std::unordered_map<
     uint32_t,
     Glyph
 >;
-
-struct Glyph
-{
-    uint32_t codepoint = -1;
-
-    std::size_t width  = 0;
-    std::size_t height = 0;
-
-    Maths::ivec2 offset = {0, 0};
-    Maths::vec2 advance = {0.0f, 0.0f};
-    Maths::vec4 texture = {0.0f, 0.0f, 0.0f, 0.0f};
-};
 
 class Font
 {
