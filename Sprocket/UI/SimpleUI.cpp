@@ -186,6 +186,7 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
         float h = glyph->texHeight;
 
         pen.x += glyph->advance_x * fontSize;
+        pen.y += glyph->advance_y * fontSize;
 
         unsigned int index = d_textVertices.size();
         d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
