@@ -46,19 +46,19 @@ class Font
     std::string d_filename;
     float d_size;
     
-    std::vector<std::shared_ptr<Glyph>> d_glyphs;
+    std::vector<Glyph> d_glyphs;
     int d_padding;
 
     KerningMap d_kernings;
 
-    std::shared_ptr<Glyph> FindGlyph(char c);
+    Glyph* FindGlyph(char c);
     bool LoadGlyph(char c);
 
 public:
     Font(std::size_t width, std::size_t height);
     bool Load(const std::string& filename, float size);
 
-    std::shared_ptr<Glyph> GetGlyph(char c);
+    Glyph* GetGlyph(char c);
 
     float GetKerning(char left, char right);
 

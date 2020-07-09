@@ -92,7 +92,7 @@ bool LoadFace(
 }
 
 void GenerateKerning(
-    const std::vector<std::shared_ptr<Glyph>>& glyphs,
+    const std::vector<Glyph>& glyphs,
     KerningMap& kernings,
     FT_Library* library,
     FT_Face* face)
@@ -103,16 +103,16 @@ void GenerateKerning(
 
     kernings.clear();
     for (const auto leftGlyph : glyphs) {
-        FT_UInt leftIndex = FT_Get_Char_Index(*face, (FT_ULong)leftGlyph->codepoint);
+        FT_UInt leftIndex = FT_Get_Char_Index(*face, (FT_ULong)leftGlyph.codepoint);
         for (const auto rightGlyph : glyphs) {
-            FT_UInt rightIndex = FT_Get_Char_Index(*face, (FT_ULong)rightGlyph->codepoint);
+            FT_UInt rightIndex = FT_Get_Char_Index(*face, (FT_ULong)rightGlyph.codepoint);
         
             FT_Vector kerning;
             FT_Get_Kerning(*face, leftIndex, rightIndex, FT_KERNING_UNFITTED, &kerning);
 
             if (kerning.x) {
-                uint32_t left = leftGlyph->codepoint;
-                uint32_t right = rightGlyph->codepoint;
+                uint32_t left = leftGlyph.codepoint;
+                uint32_t right = rightGlyph.codepoint;
                 auto key = std::make_pair(left, right);
                 kernings.emplace(key, kerning.x / (HRESf * HRESf));
             }
@@ -147,7 +147,7 @@ bool Font::Load(const std::string& filename, float size)
     return true;
 }
 
-std::shared_ptr<Glyph> Font::GetGlyph(char c)
+Glyph* Font::GetGlyph(char c)
 {
     auto glyph = FindGlyph(c);
     if (glyph != nullptr) {
@@ -158,13 +158,13 @@ std::shared_ptr<Glyph> Font::GetGlyph(char c)
     return FindGlyph(c);
 }
 
-std::shared_ptr<Glyph> Font::FindGlyph(char c)
+Glyph* Font::FindGlyph(char c)
 {
     uint32_t ucodepoint = ToUTF32(&c);
     for (std::size_t i = 0; i < d_glyphs.size(); ++i) {
-        auto glyph = d_glyphs[i];
-        if (glyph->codepoint == ucodepoint) {
-            return glyph;
+        auto& glyph = d_glyphs[i];
+        if (glyph.codepoint == ucodepoint) {
+            return &glyph;
         }
     }
 
@@ -251,20 +251,20 @@ bool Font::LoadGlyph(char c)
 
     d_atlas.SetRegion({x, y, tgt_w, tgt_h}, buffer);
 
-    auto glyph = std::make_shared<Glyph>();
-    glyph->codepoint = ToUTF32(&c);
-    glyph->width     = tgt_w;
-    glyph->height    = tgt_h;
-    glyph->offset  = {ft_glyph_left, ft_glyph_top};
-    glyph->texture.x = x / (float)d_atlas.Width();;
-    glyph->texture.y = y / (float)d_atlas.Height();
-    glyph->texture.z = glyph->width / (float)d_atlas.Width();
-    glyph->texture.w = glyph->height / (float)d_atlas.Height();
+    Glyph glyph;
+    glyph.codepoint = ToUTF32(&c);
+    glyph.width     = tgt_w;
+    glyph.height    = tgt_h;
+    glyph.offset  = {ft_glyph_left, ft_glyph_top};
+    glyph.texture.x = x / (float)d_atlas.Width();
+    glyph.texture.y = y / (float)d_atlas.Height();
+    glyph.texture.z = glyph.width / (float)d_atlas.Width();
+    glyph.texture.w = glyph.height / (float)d_atlas.Height();
 
     // Discard hinting to get advance
     FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
     slot = face->glyph;
-    glyph->advance = Maths::vec2{slot->advance.x, slot->advance.y} / HRESf;
+    glyph.advance = Maths::vec2{slot->advance.x, slot->advance.y} / HRESf;
 
     d_glyphs.push_back(glyph);
 
