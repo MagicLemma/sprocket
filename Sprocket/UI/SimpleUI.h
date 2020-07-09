@@ -6,13 +6,11 @@
 #include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "BufferLayout.h"
+#include "Font.h"
 
 #include <vector>
 #include <unordered_map>
 #include <chrono>
-
-#include <texture-atlas.h>
-#include <texture-font.h>
 
 namespace Sprocket {
 

@@ -1,4 +1,4 @@
-#include "texture-atlas.h"
+#include "FontAtlas.h"
 
 #include <cstdlib>
 #include <cassert>

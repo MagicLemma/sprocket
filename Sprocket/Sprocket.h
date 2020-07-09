@@ -10,6 +10,9 @@
 #include "Core/Scene.h"
 
 // UI
+#include "UI/Font/FontAtlas.h"
+#include "UI/Font/Font.h"
+
 #include "UI/DevUI.h"
 #include "UI/SimpleUI.h"
 
@@ -102,5 +105,3 @@
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"
-#include "texture-atlas.h"
-#include "texture-font.h"

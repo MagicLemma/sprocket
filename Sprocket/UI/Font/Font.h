@@ -6,7 +6,7 @@
 #include <utility>
 #include <unordered_map>
 
-#include "texture-atlas.h"
+#include "FontAtlas.h"
 
 namespace Sprocket {
 

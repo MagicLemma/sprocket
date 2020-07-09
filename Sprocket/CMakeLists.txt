@@ -34,6 +34,9 @@ add_library(Sprocket STATIC
             Audio/Music.cpp
             Audio/Sound.cpp
 
+            UI/Font/FontAtlas.cpp
+            UI/Font/Font.cpp
+            
             UI/DevUI.cpp
             UI/SimpleUI.cpp
 
@@ -111,9 +114,7 @@ add_library(Sprocket STATIC
             Scripting/LuaInput.cpp
             Scripting/LuaCamera.cpp
             
-            Vendor/ImGuizmo/ImGuizmo.cpp
-            Vendor/ftgl/texture-font.cpp
-            Vendor/ftgl/texture-atlas.cpp)
+            Vendor/ImGuizmo/ImGuizmo.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       glfw
@@ -132,7 +133,6 @@ target_include_directories(Sprocket PUBLIC
                            .
                            ./Audio
                            ./Core
-                           ./DevGUI
                            ./Display
                            ./Display/WidgetProperties
                            ./Events
@@ -144,9 +144,11 @@ target_include_directories(Sprocket PUBLIC
                            ./Objects
                            ./Objects/Entities
                            ./Objects/Lenses
-                           ./Systems
                            ./Utility
                            ./Scripting
+                           ./Systems
+                           ./UI
+                           ./UI/Font
                            ./Vendor/ImGuizmo
                            ./Vendor/ftgl
                            ${STB_INCLUDE_DIR}

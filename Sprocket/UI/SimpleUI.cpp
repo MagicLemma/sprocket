@@ -24,7 +24,7 @@ SimpleUI::SimpleUI(Window* window)
     d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
     d_buffer.SetBufferLayout(d_bufferLayout);
 
-    if (!d_texFont.Load("Resources/Fonts/inkfree.ttf", 36.0f)) {
+    if (!d_texFont.Load("Resources/Fonts/Arial.ttf", 36.0f)) {
         SPKT_LOG_ERROR("Could not load font!");
     }
 }
