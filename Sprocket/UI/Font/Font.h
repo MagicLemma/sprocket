@@ -39,10 +39,10 @@ struct Glyph
     float advance_x = 0.0f;
     float advance_y = 0.0f;
 
-    float s0 = 0.0f;
-    float t0 = 0.0f;
-    float s1 = 0.0f;
-    float t1 = 0.0f;
+    float s0        = 0.0f;
+    float t0        = 0.0f;
+    float texWidth  = 0.0f;
+    float texHeight = 0.0f;
 };
 
 class Font

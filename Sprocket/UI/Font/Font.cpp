@@ -253,14 +253,14 @@ bool Font::LoadGlyph(char c)
 
     auto glyph = std::make_shared<Glyph>();
     glyph->codepoint = ToUTF32(&c);
-    glyph->width    = tgt_w;
-    glyph->height   = tgt_h;
-    glyph->offset_x = ft_glyph_left;
-    glyph->offset_y = ft_glyph_top;
-    glyph->s0       = x/(float)d_atlas.Width();;
-    glyph->t0       = y/(float)d_atlas.Height();
-    glyph->s1       = (x + glyph->width)/(float)d_atlas.Width();
-    glyph->t1       = (y + glyph->height)/(float)d_atlas.Height();
+    glyph->width     = tgt_w;
+    glyph->height    = tgt_h;
+    glyph->offset_x  = ft_glyph_left;
+    glyph->offset_y  = ft_glyph_top;
+    glyph->s0        = x / (float)d_atlas.Width();;
+    glyph->t0        = y / (float)d_atlas.Height();
+    glyph->texWidth  = glyph->width / (float)d_atlas.Width();
+    glyph->texHeight = glyph->height / (float)d_atlas.Height();
 
     // Discard hinting to get advance
     FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);

@@ -182,8 +182,8 @@ void SimpleUI::AddText(float x, float y, const std::string& text, float size, fl
 
         float x = glyph->s0;
         float y = glyph->t0;
-        float w = glyph->s1 - glyph->s0;
-        float h = glyph->t1 - glyph->t0;
+        float w = glyph->texWidth;
+        float h = glyph->texHeight;
 
         pen.x += glyph->advance_x * fontSize;
 
