@@ -23,6 +23,7 @@ struct BufferVertex
 
 struct SimpleUITheme
 {
+    Maths::vec4 backgroundColour;
     Maths::vec4 baseColour;
     Maths::vec4 hoveredColour;
     Maths::vec4 clickedColour;
@@ -42,7 +43,7 @@ class SimpleUI
     StreamBuffer d_buffer;
     BufferLayout d_bufferLayout;
 
-    FontPackage d_font;
+    Font d_font;
 
     int d_clicked; // ID of the clicked widget.
 
@@ -52,8 +53,6 @@ class SimpleUI
 
     std::vector<BufferVertex> d_textVertices;
     std::vector<unsigned int> d_textIndices;
-
-    void AddText(float x, float y, const std::string& text, float size, float width);
 
 public:
     SimpleUI(Window* window);
@@ -67,9 +66,8 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void Quad(float x, float y,
-              float width, float height,
-              const Maths::vec4& colour);
+    void Quad(const Maths::vec4& colour,
+              float x, float y, float width, float height);
 
     bool Button(int id, const std::string& name,
                 float x, float y, float width, float height);
@@ -77,6 +75,9 @@ public:
     void Slider(int id, const std::string& name,
                 float x, float y, float width, float height,
                 float* value, float min, float max);
+
+    void Text(const std::string& text,
+              float x, float y, float width, float height);
 };
 
 }

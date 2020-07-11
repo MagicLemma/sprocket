@@ -34,6 +34,9 @@ add_library(Sprocket STATIC
             Audio/Music.cpp
             Audio/Sound.cpp
 
+            UI/Font/FontAtlas.cpp
+            UI/Font/Font.cpp
+            
             UI/DevUI.cpp
             UI/SimpleUI.cpp
 
@@ -67,12 +70,6 @@ add_library(Sprocket STATIC
             Display/Button.cpp
             Display/ColourPalette.cpp
             Display/Image.cpp
-            Display/TextBox.cpp
-
-            Display/Fonts/Character.cpp
-            Display/Fonts/Font.cpp
-            Display/Fonts/FontLoader.cpp
-            Display/Fonts/Text.cpp
 
             Display/WidgetProperties/WidgetProperty.cpp
             Display/WidgetProperties/Draggable.cpp
@@ -136,9 +133,7 @@ target_include_directories(Sprocket PUBLIC
                            .
                            ./Audio
                            ./Core
-                           ./DevGUI
                            ./Display
-                           ./Display/Fonts
                            ./Display/WidgetProperties
                            ./Events
                            ./Graphics
@@ -149,10 +144,13 @@ target_include_directories(Sprocket PUBLIC
                            ./Objects
                            ./Objects/Entities
                            ./Objects/Lenses
-                           ./Systems
                            ./Utility
                            ./Scripting
+                           ./Systems
+                           ./UI
+                           ./UI/Font
                            ./Vendor/ImGuizmo
+                           ./Vendor/ftgl
                            ${STB_INCLUDE_DIR}
                            ${LUA_INCLUDE_DIR}
                            ${SFML_INCLUDE_DIR})

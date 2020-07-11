@@ -1,4 +1,5 @@
 #include "EscapeMenu.h"
+#include "Palette.h"
 
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                        WorldLayer* worldLayer) 
@@ -9,9 +10,10 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     using namespace Sprocket;
 
     SimpleUITheme theme;
-    theme.baseColour = {0.926f, 0.496f, 0.0f, 1.0f};
-    theme.hoveredColour = {0.926f, 0.63281f, 0.3242f, 1.0f};
-    theme.clickedColour = {0.324f, 0.90625f, 0.5352f, 1.0f};
+    theme.backgroundColour = SPACE_DARK;
+    theme.baseColour = CLEAR_BLUE;
+    theme.hoveredColour = LIGHT_BLUE;
+    theme.clickedColour = GARDEN;
     d_ui.SetTheme(theme);
 }
 
@@ -46,7 +48,11 @@ void EscapeMenu::OnUpdate(double dt)
     float h = (float)window->Height();
 
     d_ui.StartFrame();
-    d_ui.Quad(0, 0.0f, w * 0.3f, h, vec4{0.0, 0.0, 0.0, 0.8});
+    auto background = SPACE_DARK * 0.1f;
+    background.a = 0.9f;
+    d_ui.Quad(background, 0.0f, 0.0f, w * 0.3f, h);
+
+    d_ui.Text("Menu", 0.0f, 0.0f, w * 0.3f, 100);
 
     if (d_ui.Button(1, "Toggle Dev UI", w * 0.025f, 100, w * 0.25f, 50)) {
         switch (d_worldLayer->d_mode) {
@@ -66,6 +72,9 @@ void EscapeMenu::OnUpdate(double dt)
     float volume = Sprocket::Audio::GetMasterVolume();
     d_ui.Slider(5, "Volume", w * 0.025f, 325, w * 0.25f, 50, &volume, 0.0, 100.0);
     Sprocket::Audio::SetMasterVolume(volume);
+
+    static float value = 250.0f;
+    d_ui.Slider(6, "Value", w * 0.025f, 400, w * 0.25f, 50, &value, 100, 1200);
 
     d_ui.EndFrame();
 

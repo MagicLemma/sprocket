@@ -24,6 +24,7 @@ class Model2D
 
 public:
     Model2D(const Vertex2DBuffer& vertices);
+    Model2D();
 
     int VertexCount() const { return d_vertexCount; }
 

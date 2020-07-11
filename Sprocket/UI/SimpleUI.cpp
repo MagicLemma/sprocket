@@ -11,22 +11,32 @@
 namespace Sprocket {
 namespace {
 
-float TextWidth(const std::string& text, const FontPackage& font, float size)
+struct TextInfo
 {
-    float textWidth = 0.0f;
+    float width = 0.0f;
+    float height = 0.0f;
+};
 
-    for (char character : text) {
-        Character c = font.Get(character);
-        textWidth += c.Advance();
+TextInfo GetTextInfo(Font& font, const std::string& text)
+{
+    TextInfo info;
+    for (char c : text) {
+        auto glyph = font.GetGlyph(c);
+        info.width += glyph.advance.x;
+        if (glyph.height > info.height) {
+            info.height = glyph.height;
+        }
     }
 
-    auto first = font.Get(text.front());
-    textWidth -= first.XOffset();
+    Glyph first = font.GetGlyph(text.front());
+    info.width -= first.offset.x;
 
-    auto last = font.Get(text.back());
-    textWidth += (last.XOffset() + last.Width());
+    Glyph last = font.GetGlyph(text.back());
+    info.width += last.width;
+    info.width += last.offset.x;
+    info.width -= last.advance.x;
 
-    return textWidth * size;
+    return info;
 }
 
 }
@@ -36,8 +46,7 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
-    , d_font("Resources/Fonts/Calibri.fnt",
-             "Resources/Fonts/Calibri.png")
+    , d_font("Resources/Fonts/Coolvetica.ttf", 36.0f)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -95,7 +104,7 @@ void SimpleUI::EndFrame()
         d_quadIndices.data());
     glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
 
-    d_font.Atlas().Bind();
+    d_font.Bind();
     d_buffer.SetVertexData(
         sizeof(BufferVertex) * d_textVertices.size(),
         d_textVertices.data());
@@ -105,17 +114,16 @@ void SimpleUI::EndFrame()
     glDrawElements(GL_TRIANGLES, (int)d_textIndices.size(), GL_UNSIGNED_INT, nullptr);
     
     d_buffer.Unbind();
-    d_font.Atlas().Unbind();
     
 }
 
-void SimpleUI::Quad(float x, float y,
-                    float width, float height,
-                    const Maths::vec4& colour)
+void SimpleUI::Quad(const Maths::vec4& colour,
+                    float x, float y,
+                    float width, float height)
 {
     unsigned int index = d_quadVertices.size();
-    d_quadVertices.push_back({{x,         y},          colour});
-    d_quadVertices.push_back({{x + width, y},          colour});
+    d_quadVertices.push_back({{x,         y},          colour * 1.4f});
+    d_quadVertices.push_back({{x + width, y},          colour * 1.4f});
     d_quadVertices.push_back({{x,         y + height}, colour});
     d_quadVertices.push_back({{x + width, y + height}, colour});
 
@@ -145,8 +153,8 @@ bool SimpleUI::Button(
         colour = d_theme.hoveredColour;
     }
 
-    Quad(x, y, width, height, colour);
-    AddText(x, y, name, 0.6f * height, width);
+    Quad(colour, x, y, width, height);
+    Text(name, x, y, width, height);
     return clicked;
 }
 
@@ -158,15 +166,24 @@ void SimpleUI::Slider(int id, const std::string& name,
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
     if (clicked) { d_clicked = id; }
+    
+    Maths::vec4 leftColour = d_theme.baseColour;
+    Maths::vec4 rightColour = d_theme.backgroundColour;
+    if (d_clicked == id) {
+        leftColour = d_theme.clickedColour;
+    }
+    else if (hovered) {
+        leftColour = d_theme.hoveredColour;
+    }
 
     float ratio = (*value - min) / (max - min);
-    Quad(x, y, ratio * width, height, d_theme.hoveredColour);
-    Quad(x + ratio * width, y, (1 - ratio) * width, height, d_theme.baseColour);
+    Quad(leftColour, x, y, ratio * width, height);
+    Quad(rightColour, x + ratio * width, y, (1 - ratio) * width, height);
     
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
     
-    AddText(x, y, text.str(), 0.6f * height, width);
+    Text(text.str(), x, y, width, height);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -175,37 +192,49 @@ void SimpleUI::Slider(int id, const std::string& name,
     }    
 }
 
-void SimpleUI::AddText(float x, float y, const std::string& text, float size, float width)
+void SimpleUI::Text(
+    const std::string& text,
+    float x, float y, float width, float height)
 {
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
-    float fontSize = size / d_font.Size();
 
-    float textWidth = TextWidth(text, d_font, fontSize);
-    Maths::vec2 pointer(x + (width - textWidth) / 2.0f, y);
+    Glyph first = d_font.GetGlyph(text.front());
+    auto textInfo = GetTextInfo(d_font, text);
+
+    Maths::vec2 pen = {
+        x + (width - textInfo.width) / 2.0f,
+        y + (height - first.height) / 2.0f
+    };
+
+    pen.x -= first.offset.x;
+    pen.y += first.offset.y;
     
-    for (char character : text) {
-        Character c = d_font.Get(character);
+    for (std::size_t i = 0; i != text.size(); ++i) {
+        auto glyph = d_font.GetGlyph(text[i]);
 
-        float xPos = pointer.x + c.XOffset() * fontSize;
-        float yPos = pointer.y + c.YOffset() * fontSize;
+        if (i > 0) {
+            float kerning = d_font.GetKerning(text[i-1], text[i]);
+            pen.x += kerning;
+        }
 
-        float width = c.Width() * fontSize;
-        float height = c.Height() * fontSize;
+        float xPos = pen.x + glyph.offset.x;
+        float yPos = pen.y - glyph.offset.y;
 
-        float xTexCoord = c.GetAtlasQuad().position.x;
-        float aWidth = c.GetAtlasQuad().width;
-        float yTexCoord = c.GetAtlasQuad().position.y;
-        float aHeight = c.GetAtlasQuad().height;
-        float aw = (float)d_font.Atlas().Width();
-        float ah = (float)d_font.Atlas().Height();
+        float width = glyph.width;
+        float height = glyph.height;
 
-        pointer.x += c.Advance() * fontSize;
+        float x = glyph.texture.x;
+        float y = glyph.texture.y;
+        float w = glyph.texture.z;
+        float h = glyph.texture.w;
+
+        pen += glyph.advance;
 
         unsigned int index = d_textVertices.size();
-        d_textVertices.push_back({{xPos,         yPos},          colour, {xTexCoord/aw, yTexCoord/ah}});
-        d_textVertices.push_back({{xPos + width, yPos},          colour, {(xTexCoord + aWidth)/aw, yTexCoord/ah}});
-        d_textVertices.push_back({{xPos,         yPos + height}, colour, {xTexCoord/aw, (yTexCoord + aHeight)/ah}});
-        d_textVertices.push_back({{xPos + width, yPos + height}, colour, {(xTexCoord + aWidth)/aw, (yTexCoord + aHeight)/ah}});
+        d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
+        d_textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
+        d_textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
+        d_textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
 
         d_textIndices.push_back(index + 0);
         d_textIndices.push_back(index + 1);

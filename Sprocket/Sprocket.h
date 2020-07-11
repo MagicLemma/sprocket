@@ -10,6 +10,10 @@
 #include "Core/Scene.h"
 
 // UI
+#include "UI/Font/FontAtlas.h"
+#include "UI/Font/Font.h"
+#include "UI/Font/Glyph.h"
+
 #include "UI/DevUI.h"
 #include "UI/SimpleUI.h"
 
@@ -22,6 +26,7 @@
 // UTILITY
 #include "Utility/Log.h"
 #include "Utility/Colour.h"
+#include "Utility/HashPair.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"
 #include "Utility/KeyboardCodes.h"
@@ -88,12 +93,6 @@
 #include "Display/ColourPalette.h"
 #include "Display/Slider.h"
 #include "Display/Image.h"
-#include "Display/TextBox.h"
-
-#include "Display/Fonts/Character.h"
-#include "Display/Fonts/Font.h"
-#include "Display/Fonts/FontLoader.h"
-#include "Display/Fonts/Text.h"
 
 #include "Display/WidgetProperties/WidgetProperty.h"
 #include "Display/WidgetProperties/Draggable.h"

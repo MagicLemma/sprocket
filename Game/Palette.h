@@ -22,7 +22,7 @@ const auto KEPPEL      = Sprocket::FromHex(0x58B19F);
 const auto OASIS       = Sprocket::FromHex(0x9AECDB);
 const auto PINE_GLADE  = Sprocket::FromHex(0xBDC581);
 
-const auto STAR_WHITE  = Sprocket::FromHex(0x55E6C1);
+const auto STAR_WHITE  = Sprocket::FromHex(0xCAD3C8);
 const auto SPACE_DARK  = Sprocket::FromHex(0x2C3A47);
 const auto PALE_INDIGO = Sprocket::FromHex(0x9AECDB);
 const auto LAVENDER    = Sprocket::FromHex(0xBDC581);

@@ -3,7 +3,6 @@
 #include "Model2D.h"
 #include "Shader.h"
 #include "Quad.h"
-#include "Text.h"
 
 #include <memory>
 #include <unordered_map>
@@ -18,23 +17,8 @@ class DisplayRenderer
     Shader d_colourShader;
         // Shader used to draw a coloured Quad.
 
-    Shader d_characterShader;
-        // Shader used to draw characters.
-
     Model2D d_quad;
         // Model that is bound to render quads.
-
-    Texture d_whiteTexture;
-        // A while texture for rendering textureless quads.
-
-    std::unordered_map<Font, std::pair<std::string, std::string>> d_availableFonts;
-        // A map of all available fonts. If a requested font is not in d_fonts,
-        // the renderer will check here.
-
-    std::unordered_map<Font, FontPackage> d_fonts;
-        // Map of all loaded fonts to be accessible via the Font enum.
-
-    FontPackage GetFont(Font font);
 
 public:
     DisplayRenderer(Window* window);
@@ -43,8 +27,6 @@ public:
 
     void Draw(const Quad& quad) const;
     void Draw(const Quad& quad, const Model2D& model) const;
-
-    void Draw(const Text& text);
 };
 
 

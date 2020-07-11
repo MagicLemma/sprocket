@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "Log.h"
+#include "Maths.h"
 
 #include <glad/glad.h>
 
@@ -78,6 +79,31 @@ Texture::Texture(int width, int height, std::shared_ptr<TEX> texture)
 {
 }
 
+Texture::Texture(int width, int height, Channels channels)
+    : d_texture(std::make_shared<TEX>())
+    , d_width(width)
+    , d_height(height)
+    , d_channels(channels)
+{
+    auto c = channels == Channels::RGBA ? GL_RGBA : GL_RED;
+
+    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    if (channels == Channels::RED) {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    }
+
+    glTexImage2D(GL_TEXTURE_2D,
+                 0, c, width, height,
+                 0, c, GL_UNSIGNED_BYTE, nullptr);
+                 
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 Texture::Texture()
     : d_texture(Texture::White().d_texture)
     , d_width(Texture::White().d_width)
@@ -95,7 +121,7 @@ void Texture::Unbind() const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture Texture::White()
+const Texture& Texture::White()
 {
     static const Texture white(1, 1, {0xff, 0xff, 0xff, 0xff});
     return white;
@@ -109,6 +135,24 @@ unsigned int Texture::Id() const
 bool Texture::operator==(const Texture& other) const
 {
     return d_texture->Value() == other.d_texture->Value();
+}
+
+void Texture::SetSubTexture(
+    const Maths::ivec4& region,
+    const std::vector<unsigned char>& data)
+{
+    Bind();
+
+    if (d_channels == Channels::RED) {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    }
+
+    auto c = d_channels == Channels::RGBA ? GL_RGBA : GL_RED;
+    glTexSubImage2D(GL_TEXTURE_2D,
+                    0, region.x, region.y, region.z, region.w, 
+                    c, GL_UNSIGNED_BYTE, (void*)data.data());
+
+    Unbind();
 }
 
 }

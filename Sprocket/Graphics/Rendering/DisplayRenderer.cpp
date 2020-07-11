@@ -38,34 +38,8 @@ DisplayRenderer::DisplayRenderer(Window* window)
     : d_window(window)
     , d_colourShader("Resources/Shaders/DisplayQuad.vert",
                      "Resources/Shaders/DisplayQuad.frag")
-    , d_characterShader("Resources/Shaders/DisplayCharacter.vert",
-                        "Resources/Shaders/DisplayCharacter.frag")
     , d_quad(GetQuad())
-    , d_whiteTexture("Resources/Textures/White.png")
 {
-    d_availableFonts.insert({Font::ARIAL, {"Resources/Fonts/Arial.fnt",
-                                           "Resources/Fonts/Arial.png"}});
-    d_availableFonts.insert({Font::GEORGIA, {"Resources/Fonts/Georgia.fnt",
-                                             "Resources/Fonts/Georgia.png"}});
-    d_availableFonts.insert({Font::CALIBRI, {"Resources/Fonts/Calibri.fnt",
-                                             "Resources/Fonts/Calibri.png"}});
-}
-
-FontPackage DisplayRenderer::GetFont(Font font)
-{
-    auto it = d_fonts.find(font);
-    if (it != d_fonts.end()) {
-        return it->second;
-    }
-
-    auto it2 = d_availableFonts.find(font);
-    if (it2 == d_availableFonts.end()) {
-        SPKT_LOG_ERROR("Font is not available!");
-    }
-
-    SPKT_LOG_INFO("Loading a font!");
-    auto val = d_fonts.emplace(font, FontPackage(it2->second.first, it2->second.second));
-    return val.first->second;
 }
 
 void DisplayRenderer::OnUpdate() const
@@ -76,10 +50,6 @@ void DisplayRenderer::OnUpdate() const
 
     d_colourShader.Bind();
     d_colourShader.LoadUniform("projection", projection);
-
-    d_characterShader.Bind();
-    d_characterShader.LoadUniform("projection", projection);
-    d_characterShader.Unbind();
 }
 
 void DisplayRenderer::Draw(const Quad& quad) const
@@ -116,50 +86,6 @@ void DisplayRenderer::Draw(const Quad& quad, const Model2D& model) const
     quad.texture.Unbind();
 
     d_colourShader.Unbind();
-    glDisable(GL_BLEND);
-}
-
-void DisplayRenderer::Draw(const Text& text)
-{
-    glDisable(GL_CULL_FACE);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    FontPackage fontPack = GetFont(text.font);
-    float fontSize = text.size / fontPack.Size();
-
-    Maths::vec3 pointer = {
-        text.position.x,
-        text.position.y + text.size,
-        0.0f
-    };
-
-    d_characterShader.Bind();
-    d_characterShader.LoadUniform("colour", text.colour);
-
-    for (int character : text.message) {
-        Character c = fontPack.Get(character);
-
-        float xPos = pointer.x + c.XOffset() * fontSize;
-        float yPos = pointer.y - (c.Height() - c.YOffset()) * fontSize;
-
-        auto transform = Maths::Transform(
-            Maths::vec3{xPos, yPos, 0.0f},
-            Maths::identity);
-        transform = Maths::Scale(transform, fontSize);
-
-        d_characterShader.LoadUniform("transform", transform);
-
-        c.Bind();
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        c.Unbind();
-
-        pointer.x += c.Advance() * fontSize;
-    }
-
-    d_characterShader.Bind();
     glDisable(GL_BLEND);
 }
 
