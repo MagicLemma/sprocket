@@ -156,8 +156,6 @@ bool Font::LoadGlyph(char c)
         return false;
     }
 
-    Maths::ivec4 region;
-
     FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)ToUTF32(&c));
     FT_Int32 flags = FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT;
 
@@ -178,7 +176,7 @@ bool Font::LoadGlyph(char c)
     std::size_t tgt_w = src_w + 2 * padding;
     std::size_t tgt_h = src_h + 2 * padding;
 
-    region = d_atlas.GetRegion(tgt_w, tgt_h);
+    Maths::ivec4 region = d_atlas.GetRegion(tgt_w, tgt_h);
 
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
@@ -194,7 +192,7 @@ bool Font::LoadGlyph(char c)
     unsigned char *src_ptr = ft_bitmap.buffer;
     for (std::size_t i = 0; i < src_h; i++ )
     {
-        std::memcpy( dst_ptr, src_ptr, ft_bitmap.width);
+        std::memcpy(dst_ptr, src_ptr, ft_bitmap.width);
         dst_ptr += tgt_w;
         src_ptr += ft_bitmap.pitch;
     }
