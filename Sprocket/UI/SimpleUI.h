@@ -45,11 +45,14 @@ class SimpleUI
 
     Font d_font;
 
-    std::size_t d_hovered;
+    std::size_t d_hovered = 0;
     double d_hoveredTime = 0.0;
     bool d_hoveredFlag = false;
     
-    std::size_t d_clicked; // Hash of the clicked widget.
+    std::size_t d_clicked = 0; // Hash of the clicked widget.
+    double d_clickedTime = 0.0;
+    bool d_clickedFlag = false;
+
     double d_dt = 0.0;
 
     // Used to construct the VBO each frame.

@@ -70,6 +70,7 @@ void SimpleUI::OnUpdate(double dt)
 
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
         d_clicked = 0;
+        d_clickedTime = 0.0;
     }
 }
 
@@ -82,6 +83,7 @@ void SimpleUI::StartFrame()
     d_textIndices.clear();
 
     d_hoveredFlag = false;
+    d_clickedFlag = false;
 }
 
 void SimpleUI::EndFrame()
@@ -91,12 +93,22 @@ void SimpleUI::EndFrame()
         d_hovered = 0;
     }
 
+    if (d_clickedFlag == false) {
+        d_clickedTime = 0.0;
+    }
+
     std::stringstream ss;
     ss << d_hoveredTime;
     Text(ss.str(), {500, 0, 100, 100});
     ss.str("");
     ss << d_hovered;
     Text(ss.str(), {500, 50, 100, 100});
+    ss.str("");
+    ss << d_clickedTime;
+    Text(ss.str(), {500, 100, 100, 100});
+    ss.str("");
+    ss << d_clicked;
+    Text(ss.str(), {500, 150, 100, 100});
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
@@ -151,10 +163,18 @@ bool SimpleUI::Button(
     auto mouse = d_mouse.GetMousePos();
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-    if (clicked) { d_clicked = hash; }
+    //if (clicked) { d_clicked = hash; }
 
     Maths::vec4 colour = d_theme.baseColour;
-    if (d_clicked == hash) {
+    if ((d_clicked == hash) || clicked) {
+        d_clickedFlag = true;
+        if (d_clicked == hash) {
+            d_clickedTime += d_dt;
+        }
+        else {
+            d_clicked = hash;
+            d_clickedTime = d_dt;
+        }
         colour = d_theme.clickedColour;
     }
     
@@ -190,11 +210,19 @@ void SimpleUI::Slider(const std::string& name,
     auto mouse = d_mouse.GetMousePos();
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-    if (clicked) { d_clicked = hash; }
     
     Maths::vec4 leftColour = d_theme.baseColour;
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    if (d_clicked == hash) {
+    if ((d_clicked == hash) || clicked) {
+        d_clickedFlag = true;
+        if (d_clicked == hash) {
+            d_clickedTime += d_dt;
+        }
+        else {
+            d_clicked = hash;
+            d_clickedTime = d_dt;
+        }
+
         leftColour = d_theme.clickedColour;
     }
     
