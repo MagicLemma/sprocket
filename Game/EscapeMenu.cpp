@@ -73,6 +73,9 @@ void EscapeMenu::OnUpdate(double dt)
     d_ui.Slider(5, "Volume", w * 0.025f, 325, w * 0.25f, 50, &volume, 0.0, 100.0);
     Sprocket::Audio::SetMasterVolume(volume);
 
+    static float value = 250.0f;
+    d_ui.Slider(6, "Value", w * 0.025f, 400, w * 0.25f, 50, &value, 100, 1200);
+
     d_ui.EndFrame();
 
     d_core.window->SetCursorVisibility(true);

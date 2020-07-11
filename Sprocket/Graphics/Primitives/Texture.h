@@ -37,7 +37,7 @@ public:
     int Height() const { return d_height; }
 
     // Standard texture builders
-    static Texture White();
+    static const Texture& White();
 
     void SetSubTexture(const Maths::ivec4& region,
                        const std::vector<unsigned char>& data);

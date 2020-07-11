@@ -121,7 +121,7 @@ void Texture::Unbind() const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture Texture::White()
+const Texture& Texture::White()
 {
     static const Texture white(1, 1, {0xff, 0xff, 0xff, 0xff});
     return white;
