@@ -29,6 +29,14 @@ struct SimpleUITheme
     Maths::vec4 clickedColour;
 };
 
+struct WidgetInfo
+{
+    float hovered = false;
+    float clicked = false;
+    
+    float onClick = false;
+};
+
 class SimpleUI
 {
     Window* d_window;
@@ -52,6 +60,9 @@ class SimpleUI
     std::size_t d_clicked = 0; // Hash of the clicked widget.
     double d_clickedTime = 0.0;
     bool d_clickedFlag = false;
+
+    WidgetInfo GetWidgetInfo(const std::string& name,
+                             const Maths::vec4& region);
 
     double d_dt = 0.0;
 

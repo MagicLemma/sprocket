@@ -68,10 +68,44 @@ void SimpleUI::OnUpdate(double dt)
     d_mouse.OnUpdate();
     d_dt = dt;
 
+    d_hoveredTime += dt;
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
         d_clicked = 0;
         d_clickedTime = 0.0;
     }
+}
+
+WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
+                         const Maths::vec4& region)
+{
+    WidgetInfo info;
+
+    std::size_t hash = std::hash<std::string>{}(name);
+    auto hovered = d_mouse.InRegion(region.x, region.y, region.z, region.w);
+    auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
+
+    if ((d_clicked == hash) || clicked) {
+        d_clickedFlag = true;
+        if (d_clicked == hash) {
+            d_clickedTime += d_dt;
+        }
+        else {
+            d_clicked = hash;
+            d_clickedTime = d_dt;
+            info.onClick = true;
+        }
+        info.clicked = true;
+    }
+    
+    if (hovered) {
+        d_hoveredFlag = true;
+        if (d_hovered != hash) {
+            d_hovered = hash;
+            d_hoveredTime = d_dt;
+        }
+        info.hovered = true;
+    }
+    return info;
 }
 
 void SimpleUI::StartFrame()
@@ -89,8 +123,10 @@ void SimpleUI::StartFrame()
 void SimpleUI::EndFrame()
 {
     if (d_hoveredFlag == false) {
-        d_hoveredTime = 0.0;
-        d_hovered = 0;
+        if (d_hovered > 0) {
+            d_hoveredTime = 0.0;
+            d_hovered = 0;
+        }
     }
 
     if (d_clickedFlag == false) {
@@ -149,106 +185,60 @@ void SimpleUI::Quad(const Maths::vec4& colour,
     d_quadIndices.push_back(index + 3);
 }
 
-bool SimpleUI::Button(
-    const std::string& name,
-    const Maths::vec4& region)
+bool SimpleUI::Button(const std::string& name,
+                      const Maths::vec4& region)
 {
-    std::size_t hash = std::hash<std::string>{}(name);
+    auto info = GetWidgetInfo(name, region);
 
-    float x = region.x;
-    float y = region.y;
-    float width = region.z;
-    float height = region.w;
-    
-    auto mouse = d_mouse.GetMousePos();
-    auto hovered = d_mouse.InRegion(x, y, width, height);
-    auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-    //if (clicked) { d_clicked = hash; }
+    Maths::vec4 hoveredRegion = region;
+    hoveredRegion.x += 25.0f;
 
+    Maths::vec4 shape = region;
     Maths::vec4 colour = d_theme.baseColour;
-    if ((d_clicked == hash) || clicked) {
-        d_clickedFlag = true;
-        if (d_clicked == hash) {
-            d_clickedTime += d_dt;
-        }
-        else {
-            d_clicked = hash;
-            d_clickedTime = d_dt;
-        }
+    if (info.clicked) {
         colour = d_theme.clickedColour;
-    }
-    
-    if (hovered) {
-        d_hoveredFlag = true;
-        if (d_hovered == hash) {
-            d_hoveredTime += d_dt;
-        }
-        else {
-            d_hovered = hash;
-            d_hoveredTime = d_dt;
-        }
-
+    } else if (info.hovered) {
         colour = d_theme.hoveredColour;
-    }
 
-    Quad(colour, {x, y, width, height});
-    Text(name, {x, y, width, height});
-    return clicked;
+        float ratio = std::min(d_hoveredTime, 0.1) / 0.1f;
+        shape = (1 - ratio) * region + ratio * hoveredRegion;
+    } 
+    
+    Quad(colour, shape);
+    Text(name, region);
+
+    return info.onClick;
 }
 
 void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
-    std::size_t hash = std::hash<std::string>{}(name);
+    auto info = GetWidgetInfo(name, region);
 
     float x = region.x;
     float y = region.y;
     float width = region.z;
     float height = region.w;
     
-    auto mouse = d_mouse.GetMousePos();
-    auto hovered = d_mouse.InRegion(x, y, width, height);
-    auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-    
     Maths::vec4 leftColour = d_theme.baseColour;
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    if ((d_clicked == hash) || clicked) {
-        d_clickedFlag = true;
-        if (d_clicked == hash) {
-            d_clickedTime += d_dt;
-        }
-        else {
-            d_clicked = hash;
-            d_clickedTime = d_dt;
-        }
-
+    if (info.clicked) {
         leftColour = d_theme.clickedColour;
-    }
-    
-    if (hovered) {
-        d_hoveredFlag = true;
-        if (d_hovered == hash) {
-            d_hoveredTime += d_dt;
-        }
-        else {
-            d_hovered = hash;
-            d_hoveredTime = d_dt;
-        }
-
+    } else if (info.hovered) {
         leftColour = d_theme.hoveredColour;
     }
-
+    
     float ratio = (*value - min) / (max - min);
     Quad(leftColour, {x, y, ratio * width, height});
     Quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
     
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
-    
     Text(text.str(), region);
 
-    if (d_clicked == hash) {
+    if (info.clicked) {
+        auto mouse = d_mouse.GetMousePos();
         Maths::Clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
