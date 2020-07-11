@@ -45,7 +45,12 @@ class SimpleUI
 
     Font d_font;
 
+    std::size_t d_hovered;
+    double d_hoveredTime = 0.0;
+    bool d_hoveredFlag = false;
+    
     std::size_t d_clicked; // Hash of the clicked widget.
+    double d_dt = 0.0;
 
     // Used to construct the VBO each frame.
     std::vector<BufferVertex> d_quadVertices;

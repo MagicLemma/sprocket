@@ -7,6 +7,7 @@
 #include "RenderContext.h"
 
 #include <functional>
+#include <sstream>
 
 namespace Sprocket {
 namespace {
@@ -65,6 +66,7 @@ void SimpleUI::OnEvent(Event& event)
 void SimpleUI::OnUpdate(double dt)
 {
     d_mouse.OnUpdate();
+    d_dt = dt;
 
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
         d_clicked = 0;
@@ -78,10 +80,24 @@ void SimpleUI::StartFrame()
 
     d_textVertices.clear();
     d_textIndices.clear();
+
+    d_hoveredFlag = false;
 }
 
 void SimpleUI::EndFrame()
 {
+    if (d_hoveredFlag == false) {
+        d_hoveredTime = 0.0;
+        d_hovered = 0;
+    }
+
+    std::stringstream ss;
+    ss << d_hoveredTime;
+    Text(ss.str(), {500, 0, 100, 100});
+    ss.str("");
+    ss << d_hovered;
+    Text(ss.str(), {500, 50, 100, 100});
+
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
     rc.FaceCulling(false);
@@ -141,7 +157,17 @@ bool SimpleUI::Button(
     if (d_clicked == hash) {
         colour = d_theme.clickedColour;
     }
-    else if (hovered) {
+    
+    if (hovered) {
+        d_hoveredFlag = true;
+        if (d_hovered == hash) {
+            d_hoveredTime += d_dt;
+        }
+        else {
+            d_hovered = hash;
+            d_hoveredTime = d_dt;
+        }
+
         colour = d_theme.hoveredColour;
     }
 
@@ -171,7 +197,17 @@ void SimpleUI::Slider(const std::string& name,
     if (d_clicked == hash) {
         leftColour = d_theme.clickedColour;
     }
-    else if (hovered) {
+    
+    if (hovered) {
+        d_hoveredFlag = true;
+        if (d_hovered == hash) {
+            d_hoveredTime += d_dt;
+        }
+        else {
+            d_hovered = hash;
+            d_hoveredTime = d_dt;
+        }
+
         leftColour = d_theme.hoveredColour;
     }
 
