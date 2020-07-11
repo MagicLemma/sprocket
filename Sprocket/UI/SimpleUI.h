@@ -45,7 +45,7 @@ class SimpleUI
 
     Font d_font;
 
-    int d_clicked; // ID of the clicked widget.
+    std::size_t d_clicked; // Hash of the clicked widget.
 
     // Used to construct the VBO each frame.
     std::vector<BufferVertex> d_quadVertices;
@@ -69,10 +69,10 @@ public:
     void Quad(const Maths::vec4& colour,
               const Maths::vec4& region);
 
-    bool Button(int id, const std::string& name,
+    bool Button(const std::string& name,
                 const Maths::vec4& region);
 
-    void Slider(int id, const std::string& name,
+    void Slider(const std::string& name,
                 const Maths::vec4& region,
                 float* value, float min, float max);
 

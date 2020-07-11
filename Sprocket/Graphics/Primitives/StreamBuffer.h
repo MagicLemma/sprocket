@@ -16,6 +16,7 @@ class StreamBuffer
     std::shared_ptr<VBO> d_vertexBuffer;
     std::shared_ptr<VBO> d_indexBuffer;
 
+
 public:
     StreamBuffer();
     ~StreamBuffer();
@@ -34,6 +35,38 @@ public:
 
     void Draw(int count) const;
         // Draws the specified number of indices in the buffer.
+
+    // Templatised wrapper functions for an nicer interface.
+    template <class Vertex>
+    void SetVertexData(const std::vector<Vertex>& data);
+
+    template <class Index>
+    void SetIndexData(const std::vector<Index>& data);
+
+    template <class Vertex, class Index>
+    void Draw(const std::vector<Vertex>& vertices,
+              const std::vector<Index>& indices);
 };
+
+template <class Vertex>
+void StreamBuffer::SetVertexData(const std::vector<Vertex>& data)
+{
+    SetVertexData(sizeof(Vertex) * data.size(), data.data());
+}
+
+template <class Index>
+void StreamBuffer::SetIndexData(const std::vector<Index>& data)
+{
+    SetIndexData(sizeof(Index) * data.size(), data.data());
+}
+
+template <class Vertex, class Index>
+void StreamBuffer::Draw(const std::vector<Vertex>& vertices,
+                        const std::vector<Index>& indices)
+{
+    SetVertexData(vertices);
+    SetIndexData(indices);
+    Draw(indices.size());
+}
 
 }

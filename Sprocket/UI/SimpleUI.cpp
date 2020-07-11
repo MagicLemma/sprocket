@@ -6,6 +6,8 @@
 #include "Maths.h"
 #include "RenderContext.h"
 
+#include <functional>
+
 namespace Sprocket {
 namespace {
 
@@ -65,7 +67,7 @@ void SimpleUI::OnUpdate(double dt)
     d_mouse.OnUpdate();
 
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
-        d_clicked = -1;
+        d_clicked = 0;
     }
 }
 
@@ -85,31 +87,16 @@ void SimpleUI::EndFrame()
     rc.FaceCulling(false);
     rc.DepthTesting(false);
 
-    Maths::mat4 proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
+    auto proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
     d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", proj);
+
     d_buffer.Bind();
-
     Texture::White().Bind();
-    d_buffer.SetVertexData(
-        sizeof(BufferVertex) * d_quadVertices.size(),
-        d_quadVertices.data());
-    d_buffer.SetIndexData(
-        sizeof(unsigned int) * d_quadIndices.size(),
-        d_quadIndices.data());
-    d_buffer.Draw(d_quadIndices.size());
-
+    d_buffer.Draw(d_quadVertices, d_quadIndices);
     d_font.Bind();
-    d_buffer.SetVertexData(
-        sizeof(BufferVertex) * d_textVertices.size(),
-        d_textVertices.data());
-    d_buffer.SetIndexData(
-        sizeof(unsigned int) * d_textIndices.size(),
-        d_textIndices.data());
-    d_buffer.Draw(d_textIndices.size());
-
+    d_buffer.Draw(d_textVertices, d_textIndices);
     d_buffer.Unbind();
-    
 }
 
 void SimpleUI::Quad(const Maths::vec4& colour,
@@ -121,10 +108,10 @@ void SimpleUI::Quad(const Maths::vec4& colour,
     float height = region.w;
 
     unsigned int index = d_quadVertices.size();
-    d_quadVertices.push_back({{x,         y},          colour * 1.4f});
-    d_quadVertices.push_back({{x + width, y},          colour * 1.4f});
-    d_quadVertices.push_back({{x,         y + height}, colour});
-    d_quadVertices.push_back({{x + width, y + height}, colour});
+    d_quadVertices.push_back({{x,         y},          colour});
+    d_quadVertices.push_back({{x + width, y},          colour});
+    d_quadVertices.push_back({{x,         y + height}, colour * 0.7f});
+    d_quadVertices.push_back({{x + width, y + height}, colour * 0.7f});
 
     d_quadIndices.push_back(index + 0);
     d_quadIndices.push_back(index + 1);
@@ -135,9 +122,11 @@ void SimpleUI::Quad(const Maths::vec4& colour,
 }
 
 bool SimpleUI::Button(
-    int id, const std::string& name,
+    const std::string& name,
     const Maths::vec4& region)
 {
+    std::size_t hash = std::hash<std::string>{}(name);
+
     float x = region.x;
     float y = region.y;
     float width = region.z;
@@ -146,10 +135,10 @@ bool SimpleUI::Button(
     auto mouse = d_mouse.GetMousePos();
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-    if (clicked) { d_clicked = id; }
+    if (clicked) { d_clicked = hash; }
 
     Maths::vec4 colour = d_theme.baseColour;
-    if (d_clicked == id) {
+    if (d_clicked == hash) {
         colour = d_theme.clickedColour;
     }
     else if (hovered) {
@@ -161,10 +150,12 @@ bool SimpleUI::Button(
     return clicked;
 }
 
-void SimpleUI::Slider(int id, const std::string& name,
+void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
+    std::size_t hash = std::hash<std::string>{}(name);
+
     float x = region.x;
     float y = region.y;
     float width = region.z;
@@ -173,11 +164,11 @@ void SimpleUI::Slider(int id, const std::string& name,
     auto mouse = d_mouse.GetMousePos();
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-    if (clicked) { d_clicked = id; }
+    if (clicked) { d_clicked = hash; }
     
     Maths::vec4 leftColour = d_theme.baseColour;
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    if (d_clicked == id) {
+    if (d_clicked == hash) {
         leftColour = d_theme.clickedColour;
     }
     else if (hovered) {
@@ -193,7 +184,7 @@ void SimpleUI::Slider(int id, const std::string& name,
     
     Text(text.str(), region);
 
-    if (d_clicked == id) {
+    if (d_clicked == hash) {
         Maths::Clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
