@@ -50,11 +50,11 @@ void EscapeMenu::OnUpdate(double dt)
     d_ui.StartFrame();
     auto background = SPACE_DARK * 0.1f;
     background.a = 0.9f;
-    d_ui.Quad(background, 0.0f, 0.0f, w * 0.3f, h);
+    d_ui.Quad(background, {0.0f, 0.0f, w * 0.3f, h});
 
-    d_ui.Text("Menu", 0.0f, 0.0f, w * 0.3f, 100);
+    d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
 
-    if (d_ui.Button(1, "Toggle Dev UI", w * 0.025f, 100, w * 0.25f, 50)) {
+    if (d_ui.Button(1, "Toggle Dev UI", {w * 0.025f, 100, w * 0.25f, 50})) {
         switch (d_worldLayer->d_mode) {
             case Mode::PLAYER: {
                 d_worldLayer->d_mode = Mode::EDITOR;
@@ -65,16 +65,16 @@ void EscapeMenu::OnUpdate(double dt)
         }
     }
 
-    if (d_ui.Button(2, "Button", w * 0.025f, 175, w * 0.25f, 50)) {
+    if (d_ui.Button(2, "Button", {w * 0.025f, 175, w * 0.25f, 50})) {
         SPKT_LOG_INFO("Clicked!");
     }
 
     float volume = Sprocket::Audio::GetMasterVolume();
-    d_ui.Slider(5, "Volume", w * 0.025f, 325, w * 0.25f, 50, &volume, 0.0, 100.0);
+    d_ui.Slider(5, "Volume", {w * 0.025f, 325, w * 0.25f, 50}, &volume, 0.0, 100.0);
     Sprocket::Audio::SetMasterVolume(volume);
 
     static float value = 250.0f;
-    d_ui.Slider(6, "Value", w * 0.025f, 400, w * 0.25f, 50, &value, 100, 1200);
+    d_ui.Slider(6, "Value", {w * 0.025f, 400, w * 0.25f, 50}, &value, 100, 1200);
 
     d_ui.EndFrame();
 

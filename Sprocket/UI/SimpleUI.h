@@ -67,17 +67,17 @@ public:
     void EndFrame();
 
     void Quad(const Maths::vec4& colour,
-              float x, float y, float width, float height);
+              const Maths::vec4& region);
 
     bool Button(int id, const std::string& name,
-                float x, float y, float width, float height);
+                const Maths::vec4& region);
 
     void Slider(int id, const std::string& name,
-                float x, float y, float width, float height,
+                const Maths::vec4& region,
                 float* value, float min, float max);
 
     void Text(const std::string& text,
-              float x, float y, float width, float height);
+              const Maths::vec4& region);
 };
 
 }

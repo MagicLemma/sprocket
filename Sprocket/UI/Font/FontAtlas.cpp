@@ -1,23 +1,20 @@
 #include "FontAtlas.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <cassert>
+#include <limits>
 
 #include "Maths.h"
 
 namespace Sprocket {
 
-FontAtlas::FontAtlas(std::size_t width, std::size_t height)
+FontAtlas::FontAtlas(int width, int height)
     : d_texture(width, height, Texture::Channels::RED)
 {
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture
-    Maths::ivec3 node;
-    node.x = 1;
-    node.y = 1;
-    node.z = width - 2;
-
-    d_nodes.push_back(node);
+    d_nodes.push_back({1, 1, width - 2});
 }
 
 void FontAtlas::SetRegion(
@@ -35,47 +32,40 @@ void FontAtlas::SetRegion(
     d_texture.SetSubTexture(region, data);
 }
 
-int FontAtlas::Fit(
-    std::size_t index,
-    std::size_t width,
-    std::size_t height)
+int FontAtlas::Fit(int index, int width, int height)
 {
     auto node = d_nodes[index];
     int x = node.x;
     int y = node.y;
     int width_left = width;
 
-    if ((x + width) > (d_texture.Width() - 1)) {
+    if (x + width >= d_texture.Width()) {
         return -1;
     }
 
     std::size_t i = index;
     while (width_left > 0) {
-        auto node2 = d_nodes[i];
-        if (node2.y > y) {
-            y = node2.y;
-        }
-
-        if ((y + height) > (d_texture.Height() - 1)) {
+        node = d_nodes[i];
+        
+        y = std::max(y, node.y);
+        if (y + height >= d_texture.Height()) {
             return -1;
         }
 
-        width_left -= node2.z;
+        width_left -= node.z;
         ++i;
     }
     return y;
 }
 
-Maths::ivec4 FontAtlas::GetRegion(
-    std::size_t width,
-    std::size_t height )
+Maths::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
 {
     Maths::ivec4 region{0, 0, width, height};
 
-    std::size_t best_height = UINT_MAX;
-    std::size_t best_width = UINT_MAX;
+    std::size_t best_height = std::numeric_limits<std::size_t>::max();
+    std::size_t best_width = std::numeric_limits<std::size_t>::max();
 
-    int best_index  = -1;
+    int best_index = -1;
 
     for (std::size_t i = 0; i < d_nodes.size(); ++i)
     {
@@ -105,9 +95,11 @@ Maths::ivec4 FontAtlas::GetRegion(
     n.x = region.x;
     n.y = region.y + height;
     n.z = width;
+
     d_nodes.insert(d_nodes.begin() + best_index, n);
 
-    for (std::size_t i = best_index + 1; i < d_nodes.size(); ++i) {
+    std::size_t i = best_index + 1;
+    while (i < d_nodes.size()) {
         auto& node = d_nodes[i];
         auto& prev = d_nodes[i-1];
 
@@ -117,21 +109,16 @@ Maths::ivec4 FontAtlas::GetRegion(
             node.z -= shrink;
             if (node.z <= 0) {
                 d_nodes.erase(d_nodes.begin() + i);
-                --i;
-            }
-            else {
-                break;
             }
         }
-        else {
-            break;
-        }
+        break;
     }
     
     // Merge
-    for (std::size_t i = 0; i < d_nodes.size() - 1; ++i ) {
+    for (std::size_t i = 0; i < d_nodes.size() - 1; ++i) {
         auto& node = d_nodes[i];
         auto& next = d_nodes[i+1];
+
         if (node.y == next.y) {
             node.z += next.z;
             d_nodes.erase(d_nodes.begin() + i + 1);

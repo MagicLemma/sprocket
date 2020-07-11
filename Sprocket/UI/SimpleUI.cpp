@@ -6,8 +6,6 @@
 #include "Maths.h"
 #include "RenderContext.h"
 
-#include <glad/glad.h>
-
 namespace Sprocket {
 namespace {
 
@@ -82,13 +80,10 @@ void SimpleUI::StartFrame()
 
 void SimpleUI::EndFrame()
 {
-    Sprocket::RenderContext rc;  
-    glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    Sprocket::RenderContext rc;
+    rc.AlphaBlending(true);
+    rc.FaceCulling(false);
+    rc.DepthTesting(false);
 
     Maths::mat4 proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
     d_shader.Bind();
@@ -102,7 +97,7 @@ void SimpleUI::EndFrame()
     d_buffer.SetIndexData(
         sizeof(unsigned int) * d_quadIndices.size(),
         d_quadIndices.data());
-    glDrawElements(GL_TRIANGLES, (int)d_quadIndices.size(), GL_UNSIGNED_INT, nullptr);
+    d_buffer.Draw(d_quadIndices.size());
 
     d_font.Bind();
     d_buffer.SetVertexData(
@@ -111,16 +106,20 @@ void SimpleUI::EndFrame()
     d_buffer.SetIndexData(
         sizeof(unsigned int) * d_textIndices.size(),
         d_textIndices.data());
-    glDrawElements(GL_TRIANGLES, (int)d_textIndices.size(), GL_UNSIGNED_INT, nullptr);
-    
+    d_buffer.Draw(d_textIndices.size());
+
     d_buffer.Unbind();
     
 }
 
 void SimpleUI::Quad(const Maths::vec4& colour,
-                    float x, float y,
-                    float width, float height)
+                    const Maths::vec4& region)
 {
+    float x = region.x;
+    float y = region.y;
+    float width = region.z;
+    float height = region.w;
+
     unsigned int index = d_quadVertices.size();
     d_quadVertices.push_back({{x,         y},          colour * 1.4f});
     d_quadVertices.push_back({{x + width, y},          colour * 1.4f});
@@ -137,9 +136,13 @@ void SimpleUI::Quad(const Maths::vec4& colour,
 
 bool SimpleUI::Button(
     int id, const std::string& name,
-    float x, float y,
-    float width, float height)
+    const Maths::vec4& region)
 {
+    float x = region.x;
+    float y = region.y;
+    float width = region.z;
+    float height = region.w;
+    
     auto mouse = d_mouse.GetMousePos();
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
@@ -153,15 +156,20 @@ bool SimpleUI::Button(
         colour = d_theme.hoveredColour;
     }
 
-    Quad(colour, x, y, width, height);
-    Text(name, x, y, width, height);
+    Quad(colour, {x, y, width, height});
+    Text(name, {x, y, width, height});
     return clicked;
 }
 
 void SimpleUI::Slider(int id, const std::string& name,
-                      float x, float y, float width, float height,
+                      const Maths::vec4& region,
                       float* value, float min, float max)
 {
+    float x = region.x;
+    float y = region.y;
+    float width = region.z;
+    float height = region.w;
+    
     auto mouse = d_mouse.GetMousePos();
     auto hovered = d_mouse.InRegion(x, y, width, height);
     auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
@@ -177,13 +185,13 @@ void SimpleUI::Slider(int id, const std::string& name,
     }
 
     float ratio = (*value - min) / (max - min);
-    Quad(leftColour, x, y, ratio * width, height);
-    Quad(rightColour, x + ratio * width, y, (1 - ratio) * width, height);
+    Quad(leftColour, {x, y, ratio * width, height});
+    Quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
     
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
     
-    Text(text.str(), x, y, width, height);
+    Text(text.str(), region);
 
     if (d_clicked == id) {
         Maths::Clamp(mouse.x, x, x + width);
@@ -194,8 +202,13 @@ void SimpleUI::Slider(int id, const std::string& name,
 
 void SimpleUI::Text(
     const std::string& text,
-    float x, float y, float width, float height)
+    const Maths::vec4& region)
 {
+    float x = region.x;
+    float y = region.y;
+    float width = region.z;
+    float height = region.w;
+    
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
     Glyph first = d_font.GetGlyph(text.front());

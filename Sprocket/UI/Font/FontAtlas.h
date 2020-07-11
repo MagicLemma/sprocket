@@ -12,10 +12,10 @@ class FontAtlas
     std::vector<Maths::ivec3> d_nodes;
     Texture d_texture;
 
-    int Fit(std::size_t index, std::size_t width, std::size_t height);
+    int Fit(int index, int width, int height);
 
 public:
-    FontAtlas(std::size_t width, std::size_t height);
+    FontAtlas(int width, int height);
 
     Maths::ivec4 GetRegion(
         std::size_t width,

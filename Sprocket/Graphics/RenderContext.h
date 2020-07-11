@@ -23,6 +23,11 @@ class RenderContext
 public:
     RenderContext();
     ~RenderContext();
+
+    void AlphaBlending(bool enabled) const;
+    void FaceCulling(bool enabled) const;
+    void DepthTesting(bool enabled) const;
+
 };
 
 }

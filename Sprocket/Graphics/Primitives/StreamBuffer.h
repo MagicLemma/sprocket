@@ -31,6 +31,9 @@ public:
         // Sets the data inside the StreamBuffer object. The
         // StreamBuffer object MUST be bound before calling these
         // functions, otherwise the behaviour is undefined.
+
+    void Draw(int count) const;
+        // Draws the specified number of indices in the buffer.
 };
 
 }
