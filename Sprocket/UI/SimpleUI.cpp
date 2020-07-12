@@ -40,6 +40,33 @@ TextInfo GetTextInfo(Font& font, const std::string& text)
     return info;
 }
 
+template <typename T> T Interpolate(
+    const WidgetInfo& info,
+    const T& base,
+    const T& hovered,
+    const T& clicked)
+{
+    T ret = base;
+    if (info.hovered) {
+        float r = std::min(info.hovered, 0.1) / 0.1f;
+        ret = (1 - r) * ret + r * hovered;
+    }
+    else {
+        float r = std::min(info.unhovered, 0.1) / 0.1f;
+        ret = (1 - r) * hovered + r * ret;
+    }
+
+    if (info.clicked) {
+        float r = std::min(info.clicked, 0.1) / 0.1f;
+        ret = (1 - r) * ret + r * clicked;
+    }
+    else {
+        float r = std::min(info.unclicked, 0.1) / 0.1f;
+        ret = (1 - r) * clicked + r * ret;
+    }
+    return ret;
+}
+
 }
 
 SimpleUI::SimpleUI(Window* window)
@@ -204,29 +231,8 @@ bool SimpleUI::Button(const std::string& name,
     clickedRegion.x += 10.0f;
     clickedRegion.z -= 20.0f;
 
-    Maths::vec4 colour = d_theme.baseColour;
-    Maths::vec4 shape = region;
-    if (info.hovered) {
-        float ratio = std::min(info.hovered, 0.1) / 0.1f;
-        colour = (1 - ratio) * colour + ratio * d_theme.hoveredColour;
-        shape = (1 - ratio) * region + ratio * hoveredRegion;
-    } else {
-        float ratio = std::min(info.unhovered, 0.1) / 0.1f;
-        colour = (1 - ratio) * d_theme.hoveredColour + ratio * colour;
-        shape = (1 - ratio) * hoveredRegion + ratio * region;
-    }
-
-    if (info.clicked) {
-        float ratio = std::min(info.clicked, 0.05) / 0.05f;
-        colour = (1 - ratio) * colour + ratio * d_theme.clickedColour;
-        shape = (1 - ratio) * shape + ratio * clickedRegion;
-    }
-    else {
-        float ratio = std::min(info.unclicked, 0.05) / 0.05f;
-        colour = (1 - ratio) * d_theme.clickedColour + ratio * colour;
-        shape = (1 - ratio) * clickedRegion + ratio * shape;
-    }
-    
+    Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
+    Maths::vec4 shape = Interpolate(info, region, hoveredRegion, clickedRegion);
     
     Quad(colour, shape);
     Text(name, region);
@@ -244,18 +250,31 @@ void SimpleUI::Slider(const std::string& name,
     float y = region.y;
     float width = region.z;
     float height = region.w;
+
+    float ratio = (*value - min) / (max - min);
     
     Maths::vec4 leftColour = d_theme.baseColour;
     Maths::vec4 rightColour = d_theme.backgroundColour;
+    if (info.hovered) {
+        float r = std::min(info.hovered, 0.1) / 0.1f;
+        leftColour = (1 - r) * leftColour + r * d_theme.hoveredColour;
+    }
+    else {
+        float r = std::min(info.unhovered, 0.1) / 0.1f;
+        leftColour = (1 - r) * d_theme.hoveredColour + r * leftColour;
+    }
+
     if (info.clicked) {
-        leftColour = d_theme.clickedColour;
-    } else if (info.hovered) {
-        leftColour = d_theme.hoveredColour;
+        float r = std::min(info.clicked, 0.1) / 0.1f;
+        leftColour = (1 - r) * leftColour + r * d_theme.clickedColour;
+    }
+    else {
+        float r = std::min(info.unclicked, 0.1) / 0.1f;
+        leftColour = (1 - r) * d_theme.clickedColour + r * leftColour;
     }
     
-    float ratio = (*value - min) / (max - min);
-    Quad(leftColour, {x, y, ratio * width, height});
     Quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
+    Quad(leftColour, {x, y, ratio * width, height});
     
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
