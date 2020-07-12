@@ -31,8 +31,10 @@ struct SimpleUITheme
 
 struct WidgetInfo
 {
-    float hovered = false;
-    float clicked = false;
+    double hovered = 0.0;
+    double unhovered = 0.0;
+
+    double clicked = 0.0;
     
     float onClick = false;
 };
@@ -56,6 +58,7 @@ class SimpleUI
     std::size_t d_hovered = 0;
     double d_hoveredTime = 0.0;
     bool d_hoveredFlag = false;
+    std::unordered_map<std::size_t, double> d_unhoveredTimes;
     
     std::size_t d_clicked = 0; // Hash of the clicked widget.
     double d_clickedTime = 0.0;
@@ -65,6 +68,7 @@ class SimpleUI
                              const Maths::vec4& region);
 
     double d_dt = 0.0;
+    double d_time = 0.0;
 
     // Used to construct the VBO each frame.
     std::vector<BufferVertex> d_quadVertices;

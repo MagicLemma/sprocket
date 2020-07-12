@@ -67,6 +67,7 @@ void SimpleUI::OnUpdate(double dt)
 {
     d_mouse.OnUpdate();
     d_dt = dt;
+    d_time += dt;
 
     d_hoveredTime += dt;
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
@@ -94,7 +95,7 @@ WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
             d_clickedTime = d_dt;
             info.onClick = true;
         }
-        info.clicked = true;
+        info.clicked = d_clickedTime;
     }
     
     if (hovered) {
@@ -103,7 +104,13 @@ WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
             d_hovered = hash;
             d_hoveredTime = d_dt;
         }
-        info.hovered = true;
+        info.hovered = d_hoveredTime;
+    }
+    else {
+        if (d_unhoveredTimes.find(hash) == d_unhoveredTimes.end()) {
+            d_unhoveredTimes[hash] = 0.0;
+        }
+        info.unhovered = d_time - d_unhoveredTimes[hash];
     }
     return info;
 }
@@ -125,12 +132,16 @@ void SimpleUI::EndFrame()
     if (d_hoveredFlag == false) {
         if (d_hovered > 0) {
             d_hoveredTime = 0.0;
+            d_unhoveredTimes[d_hovered] = d_time;
             d_hovered = 0;
         }
     }
 
     if (d_clickedFlag == false) {
-        d_clickedTime = 0.0;
+        if (d_clicked > 0) {
+            d_clickedTime = 0.0;
+            d_hovered = 0;
+        } 
     }
 
     std::stringstream ss;
@@ -200,9 +211,12 @@ bool SimpleUI::Button(const std::string& name,
     } else if (info.hovered) {
         colour = d_theme.hoveredColour;
 
-        float ratio = std::min(d_hoveredTime, 0.1) / 0.1f;
+        float ratio = std::min(info.hovered, 0.1) / 0.1f;
         shape = (1 - ratio) * region + ratio * hoveredRegion;
-    } 
+    } else if (info.unhovered) {
+        float ratio = std::min(info.unhovered, 0.1) / 0.1f;
+        shape = (1 - ratio) * hoveredRegion + ratio * region;
+    }
     
     Quad(colour, shape);
     Text(name, region);

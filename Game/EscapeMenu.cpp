@@ -49,7 +49,7 @@ void EscapeMenu::OnUpdate(double dt)
 
     d_ui.StartFrame();
     auto background = SPACE_DARK * 0.1f;
-    background.a = 0.9f;
+    background.a = 1.0f;
     d_ui.Quad(background, {0.0f, 0.0f, w * 0.3f, h});
 
     d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
