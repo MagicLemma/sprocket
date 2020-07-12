@@ -69,10 +69,12 @@ void SimpleUI::OnUpdate(double dt)
     d_dt = dt;
     d_time += dt;
 
-    d_hoveredTime += dt;
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
-        d_clicked = 0;
         d_clickedTime = 0.0;
+        if (d_clicked > 0) {
+            d_unclickedTimes[d_clicked] = d_time;
+            d_clicked = 0;
+        }
     }
 }
 
@@ -97,10 +99,19 @@ WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
         }
         info.clicked = d_clickedTime;
     }
+    else {
+        if (d_unclickedTimes.find(hash) == d_unclickedTimes.end()) {
+            d_unclickedTimes[hash] = 0.0;
+        }
+        info.unclicked = d_time - d_unclickedTimes[hash];
+    }
     
     if (hovered) {
         d_hoveredFlag = true;
-        if (d_hovered != hash) {
+        if (d_hovered == hash) {
+            d_hoveredTime += d_dt;
+        }
+        else {
             d_hovered = hash;
             d_hoveredTime = d_dt;
         }
@@ -144,13 +155,15 @@ void SimpleUI::EndFrame()
     if (d_clickedFlag == false) {
         if (d_clicked > 0) {
             d_clickedTime = 0.0;
+            d_unclickedTimes[d_clicked] = d_time;
             d_hovered = 0;
         } 
     }
 
     Text(std::to_string(buttonInfo.clicked), {500, 0, 100, 100});
-    Text(std::to_string(buttonInfo.hovered), {500, 50, 100, 100});
-    Text(std::to_string(buttonInfo.unhovered), {500, 100, 100, 100});
+    Text(std::to_string(buttonInfo.unclicked), {500, 50, 100, 100});
+    Text(std::to_string(buttonInfo.hovered), {500, 100, 100, 100});
+    Text(std::to_string(buttonInfo.unhovered), {500, 150, 100, 100});
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
