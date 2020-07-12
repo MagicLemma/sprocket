@@ -47,23 +47,24 @@ template <typename T> T Interpolate(
     const T& clicked)
 {
     T ret = base;
+    double interval = 0.1;
+    
     if (info.hovered) {
-        float r = std::min(info.hovered, 0.1) / 0.1f;
+        float r = std::min(info.hovered, interval) / interval;
         ret = (1 - r) * ret + r * hovered;
-    }
-    else {
-        float r = std::min(info.unhovered, 0.1) / 0.1f;
+    } else {
+        float r = std::min(info.unhovered, interval) / interval;
         ret = (1 - r) * hovered + r * ret;
     }
 
     if (info.clicked) {
-        float r = std::min(info.clicked, 0.1) / 0.1f;
+        float r = std::min(info.clicked, interval) / interval;
         ret = (1 - r) * ret + r * clicked;
-    }
-    else {
-        float r = std::min(info.unclicked, 0.1) / 0.1f;
+    } else {
+        float r = std::min(info.unclicked, interval) / interval;
         ret = (1 - r) * clicked + r * ret;
     }
+
     return ret;
 }
 
@@ -106,7 +107,7 @@ void SimpleUI::OnUpdate(double dt)
     }
 }
 
-WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
+WidgetInfo SimpleUI::RegisterWidget(const std::string& name,
                          const Maths::vec4& region)
 {
     WidgetInfo info;
@@ -207,8 +208,8 @@ void SimpleUI::Quad(const Maths::vec4& colour,
     unsigned int index = d_quadVertices.size();
     d_quadVertices.push_back({{x,         y},          colour});
     d_quadVertices.push_back({{x + width, y},          colour});
-    d_quadVertices.push_back({{x,         y + height}, colour * 0.7f});
-    d_quadVertices.push_back({{x + width, y + height}, colour * 0.7f});
+    d_quadVertices.push_back({{x,         y + height}, colour * 0.8f});
+    d_quadVertices.push_back({{x + width, y + height}, colour * 0.8f});
 
     d_quadIndices.push_back(index + 0);
     d_quadIndices.push_back(index + 1);
@@ -221,7 +222,7 @@ void SimpleUI::Quad(const Maths::vec4& colour,
 bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
-    auto info = GetWidgetInfo(name, region);
+    auto info = RegisterWidget(name, region);
 
     Maths::vec4 hoveredRegion = region;
     hoveredRegion.x -= 10.0f;
@@ -244,7 +245,7 @@ void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
-    auto info = GetWidgetInfo(name, region);
+    auto info = RegisterWidget(name, region);
 
     float x = region.x;
     float y = region.y;

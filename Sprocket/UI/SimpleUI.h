@@ -66,8 +66,8 @@ class SimpleUI
     bool d_clickedFlag = false;
     std::unordered_map<std::size_t, double> d_unclickedTimes;
 
-    WidgetInfo GetWidgetInfo(const std::string& name,
-                             const Maths::vec4& region);
+    WidgetInfo RegisterWidget(const std::string& name,
+                              const Maths::vec4& region);
 
     double d_time = 0.0;
 
