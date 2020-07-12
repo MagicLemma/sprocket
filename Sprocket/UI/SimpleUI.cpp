@@ -251,30 +251,12 @@ void SimpleUI::Slider(const std::string& name,
     float width = region.z;
     float height = region.w;
 
-    float ratio = (*value - min) / (max - min);
-    
-    Maths::vec4 leftColour = d_theme.baseColour;
+    Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    if (info.hovered) {
-        float r = std::min(info.hovered, 0.1) / 0.1f;
-        leftColour = (1 - r) * leftColour + r * d_theme.hoveredColour;
-    }
-    else {
-        float r = std::min(info.unhovered, 0.1) / 0.1f;
-        leftColour = (1 - r) * d_theme.hoveredColour + r * leftColour;
-    }
-
-    if (info.clicked) {
-        float r = std::min(info.clicked, 0.1) / 0.1f;
-        leftColour = (1 - r) * leftColour + r * d_theme.clickedColour;
-    }
-    else {
-        float r = std::min(info.unclicked, 0.1) / 0.1f;
-        leftColour = (1 - r) * d_theme.clickedColour + r * leftColour;
-    }
     
-    Quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
+    float ratio = (*value - min) / (max - min);
     Quad(leftColour, {x, y, ratio * width, height});
+    Quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
     
     std::stringstream text;
     text << name << ": " << Maths::ToString(*value, 0);
