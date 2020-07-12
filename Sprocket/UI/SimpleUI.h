@@ -7,6 +7,7 @@
 #include "StreamBuffer.h"
 #include "BufferLayout.h"
 #include "Font.h"
+#include "UIEngine.h"
 
 #include <vector>
 #include <unordered_map>
@@ -29,47 +30,23 @@ struct SimpleUITheme
     Maths::vec4 clickedColour;
 };
 
-struct WidgetInfo
-{
-    double hovered = 0.0;
-    double unhovered = 0.0;
-
-    double clicked = 0.0;
-    double unclicked = 0.0;
-    
-    float onClick = false;
-};
-
 class SimpleUI
 {
     Window* d_window;
 
     SimpleUITheme d_theme;
 
-    Shader d_shader;
-
     KeyboardProxy d_keyboard;
     MouseProxy d_mouse;
 
-    StreamBuffer d_buffer;
-    BufferLayout d_bufferLayout;
+    UIEngine d_engine;
 
     Font d_font;
 
-    std::size_t d_hovered = 0;
-    double d_hoveredTime = 0.0;
-    bool d_hoveredFlag = false;
-    std::unordered_map<std::size_t, double> d_unhoveredTimes;
-    
-    std::size_t d_clicked = 0; // Hash of the clicked widget.
-    double d_clickedTime = 0.0;
-    bool d_clickedFlag = false;
-    std::unordered_map<std::size_t, double> d_unclickedTimes;
-
-    WidgetInfo RegisterWidget(const std::string& name,
-                              const Maths::vec4& region);
-
-    double d_time = 0.0;
+    // Rendering code    
+    Shader d_shader;
+    StreamBuffer d_buffer;
+    BufferLayout d_bufferLayout;
 
     // Used to construct the VBO each frame.
     std::vector<BufferVertex> d_quadVertices;

@@ -25,7 +25,7 @@ TextInfo GetTextInfo(Font& font, const std::string& text)
         auto glyph = font.GetGlyph(c);
         info.width += glyph.advance.x;
         if (glyph.height > info.height) {
-            info.height = glyph.height;
+            info.height = (float)glyph.height;
         }
     }
 
@@ -50,18 +50,18 @@ template <typename T> T Interpolate(
     double interval = 0.1;
     
     if (info.hovered) {
-        float r = std::min(info.hovered, interval) / interval;
+        float r = std::min(info.hovered, interval) / (float)interval;
         ret = (1 - r) * ret + r * hovered;
     } else {
-        float r = std::min(info.unhovered, interval) / interval;
+        float r = std::min(info.unhovered, interval) / (float)interval;
         ret = (1 - r) * hovered + r * ret;
     }
 
     if (info.clicked) {
-        float r = std::min(info.clicked, interval) / interval;
+        float r = std::min(info.clicked, interval) / (float)interval;
         ret = (1 - r) * ret + r * clicked;
     } else {
-        float r = std::min(info.unclicked, interval) / interval;
+        float r = std::min(info.unclicked, interval) / (float)interval;
         ret = (1 - r) * clicked + r * ret;
     }
 
@@ -76,6 +76,7 @@ SimpleUI::SimpleUI(Window* window)
                "Resources/Shaders/SimpleUI.frag")
     , d_bufferLayout(sizeof(BufferVertex))
     , d_font("Resources/Fonts/Coolvetica.ttf", 36.0f)
+    , d_engine(&d_keyboard, &d_mouse)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -94,98 +95,32 @@ void SimpleUI::OnEvent(Event& event)
 void SimpleUI::OnUpdate(double dt)
 {
     d_mouse.OnUpdate();
-    d_time += dt;
-    d_clickedTime += dt;
-    d_hoveredTime += dt;
-
-    if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
-        d_clickedTime = 0.0;
-        if (d_clicked > 0) {
-            d_unclickedTimes[d_clicked] = d_time;
-            d_clicked = 0;
-        }
-    }
-}
-
-WidgetInfo SimpleUI::RegisterWidget(const std::string& name,
-                         const Maths::vec4& region)
-{
-    WidgetInfo info;
-
-    std::size_t hash = std::hash<std::string>{}(name);
-    auto hovered = d_mouse.InRegion(region.x, region.y, region.z, region.w);
-    auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
-
-    if ((d_clicked == hash) || clicked) {
-        d_clickedFlag = true;
-        if (d_clicked != hash) {
-            d_clicked = hash;
-            d_clickedTime = 0.0;
-            info.onClick = true;
-        }
-        info.clicked = d_clickedTime;
-    }
-    else {
-        if (d_unclickedTimes.find(hash) == d_unclickedTimes.end()) {
-            d_unclickedTimes[hash] = 0.0;
-        }
-        info.unclicked = d_time - d_unclickedTimes[hash];
-    }
-    
-    if (hovered) {
-        d_hoveredFlag = true;
-        if (d_hovered != hash) {
-            d_hovered = hash;
-            d_hoveredTime = 0.0;
-        }
-        info.hovered = d_hoveredTime;
-    }
-    else {
-        if (d_unhoveredTimes.find(hash) == d_unhoveredTimes.end()) {
-            d_unhoveredTimes[hash] = 0.0;
-        }
-        info.unhovered = d_time - d_unhoveredTimes[hash];
-    }
-
-    return info;
+    d_engine.OnUpdate(dt);
 }
 
 void SimpleUI::StartFrame()
 {
+    d_engine.StartFrame();
+
     d_quadVertices.clear();
     d_quadIndices.clear();
 
     d_textVertices.clear();
     d_textIndices.clear();
-
-    d_hoveredFlag = false;
-    d_clickedFlag = false;
 }
 
 void SimpleUI::EndFrame()
 {
-    if (d_hoveredFlag == false) {
-        d_hoveredTime = 0.0;
-        if (d_hovered > 0) {
-            d_unhoveredTimes[d_hovered] = d_time;
-            d_hovered = 0;
-        }
-    }
-
-    if (d_clickedFlag == false) {
-        d_clickedTime = 0.0;
-        if (d_clicked > 0) {
-            d_unclickedTimes[d_clicked] = d_time;
-            d_hovered = 0;
-        } 
-    }
+    d_engine.EndFrame();
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
     rc.FaceCulling(false);
     rc.DepthTesting(false);
 
-    auto proj = Maths::Ortho(0, d_window->Width(), d_window->Height(), 0);
+    float w = (float)d_window->Width();
+    float h = (float)d_window->Height();
+    auto proj = Maths::Ortho(0, w, h, 0);
     d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", proj);
 
@@ -205,7 +140,7 @@ void SimpleUI::Quad(const Maths::vec4& colour,
     float width = region.z;
     float height = region.w;
 
-    unsigned int index = d_quadVertices.size();
+    std::size_t index = d_quadVertices.size();
     d_quadVertices.push_back({{x,         y},          colour});
     d_quadVertices.push_back({{x + width, y},          colour});
     d_quadVertices.push_back({{x,         y + height}, colour * 0.8f});
@@ -222,7 +157,7 @@ void SimpleUI::Quad(const Maths::vec4& colour,
 bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
-    auto info = RegisterWidget(name, region);
+    auto info = d_engine.RegisterWidget(name, region);
 
     Maths::vec4 hoveredRegion = region;
     hoveredRegion.x -= 10.0f;
@@ -245,7 +180,7 @@ void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
-    auto info = RegisterWidget(name, region);
+    auto info = d_engine.RegisterWidget(name, region);
 
     float x = region.x;
     float y = region.y;
@@ -297,8 +232,7 @@ void SimpleUI::Text(
         auto glyph = d_font.GetGlyph(text[i]);
 
         if (i > 0) {
-            float kerning = d_font.GetKerning(text[i-1], text[i]);
-            pen.x += kerning;
+            pen.x += d_font.GetKerning(text[i-1], text[i]);
         }
 
         float xPos = pen.x + glyph.offset.x;
