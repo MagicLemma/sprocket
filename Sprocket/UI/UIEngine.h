@@ -28,22 +28,36 @@ struct WidgetInfo
 
 class UIEngine
 // Intended to be used as a component in an IMGUI class. Used to keep
-// track of the currently clicked/hovered widgets.
+// track of the currently clicked/hovered widgets. We only need to store
+// information on the currently selected widgets, whereas we store a map
+// for unselected widgets.
 {
     KeyboardProxy* d_keyboard;
     MouseProxy* d_mouse;
 
     std::size_t d_hovered = 0;
-    double d_hoveredTime = 0.0;
-    bool d_hoveredFlag = false;
-    std::unordered_map<std::size_t, double> d_unhoveredTimes;
-
     std::size_t d_clicked = 0;
+        // Hashes of the currently hovered/clicked widgets.
+
+    double d_hoveredTime = 0.0;
     double d_clickedTime = 0.0;
+        // Times (in seconds) that the current widgets have been
+        // hovered/selected.
+
+    bool d_hoveredFlag = false;
     bool d_clickedFlag = false;
+        // Set to false at the start of each frame, used to track
+        // when widgets become unselected.
+
+    std::unordered_map<std::size_t, double> d_unhoveredTimes;
     std::unordered_map<std::size_t, double> d_unclickedTimes;
+        // Hash -> time map keeping track of the last time each
+        // widget was unselected. Used to calculate the unhovered
+        // and unclicked times.
 
     double d_time = 0.0;
+        // A steadily increasing timer used to set the unselected
+        // times in the maps above.
 
 public:
     UIEngine(KeyboardProxy* keyboard, MouseProxy* mouse);

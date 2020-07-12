@@ -5,7 +5,6 @@
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
 #include "StreamBuffer.h"
-#include "BufferLayout.h"
 #include "Font.h"
 #include "UIEngine.h"
 
@@ -46,7 +45,6 @@ class SimpleUI
     // Rendering code    
     Shader d_shader;
     StreamBuffer d_buffer;
-    BufferLayout d_bufferLayout;
 
     // Used to construct the VBO each frame.
     std::vector<BufferVertex> d_quadVertices;

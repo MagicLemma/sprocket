@@ -5,6 +5,7 @@
 #include "Log.h"
 #include "Maths.h"
 #include "RenderContext.h"
+#include "BufferLayout.h"
 
 #include <functional>
 #include <sstream>
@@ -74,16 +75,16 @@ SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_bufferLayout(sizeof(BufferVertex))
     , d_font("Resources/Fonts/Coolvetica.ttf", 36.0f)
     , d_engine(&d_keyboard, &d_mouse)
 {
     d_keyboard.ConsumeAll(false);
 
-    d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
-    d_bufferLayout.AddAttribute(DataType::FLOAT, 4);
-    d_bufferLayout.AddAttribute(DataType::FLOAT, 2);
-    d_buffer.SetBufferLayout(d_bufferLayout);
+    BufferLayout layout(sizeof(BufferVertex));
+    layout.AddAttribute(DataType::FLOAT, 2);
+    layout.AddAttribute(DataType::FLOAT, 4);
+    layout.AddAttribute(DataType::FLOAT, 2);
+    d_buffer.SetBufferLayout(layout);
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -194,9 +195,8 @@ void SimpleUI::Slider(const std::string& name,
     Quad(leftColour, {x, y, ratio * width, height});
     Quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
     
-    std::stringstream text;
-    text << name << ": " << Maths::ToString(*value, 0);
-    Text(text.str(), region);
+    std::string text = name + ": " + Maths::ToString(*value, 0);
+    Text(text, region);
 
     if (info.clicked) {
         auto mouse = d_mouse.GetMousePos();
