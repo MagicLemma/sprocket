@@ -15,6 +15,8 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     theme.hoveredColour = LIGHT_BLUE;
     theme.clickedColour = GARDEN;
     d_ui.SetTheme(theme);
+
+    Sprocket::Audio::SetMasterVolume(0);
 }
 
 void EscapeMenu::OnEvent(Sprocket::Event& event)
@@ -54,7 +56,9 @@ void EscapeMenu::OnUpdate(double dt)
 
     d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
 
-    if (d_ui.Button("Toggle Dev UI", {w * 0.025f, 100, w * 0.25f, 50})) {
+    vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
+
+    if (d_ui.Button("Toggle Dev UI", buttonRegion)) {
         switch (d_worldLayer->d_mode) {
             case Mode::PLAYER: {
                 d_worldLayer->d_mode = Mode::EDITOR;
@@ -65,16 +69,43 @@ void EscapeMenu::OnUpdate(double dt)
         }
     }
 
-    if (d_ui.Button("Button", {w * 0.025f, 175, w * 0.25f, 50})) {
+    buttonRegion.y += 55;
+    if (d_ui.Button("Button 1", buttonRegion)) {
+        SPKT_LOG_INFO("Clicked!");
+    }
+    
+    buttonRegion.y += 55;
+    if (d_ui.Button("Button 2", buttonRegion)) {
+        SPKT_LOG_INFO("Clicked!");
+    }
+    
+    buttonRegion.y += 55;
+    if (d_ui.Button("Button 3", buttonRegion)) {
         SPKT_LOG_INFO("Clicked!");
     }
 
+    buttonRegion.y += 55;
+    if (d_ui.Button("Button 4", buttonRegion)) {
+        SPKT_LOG_INFO("Clicked!");
+    }
+
+    buttonRegion.y += 55;
+    if (d_ui.Button("Button 5", buttonRegion)) {
+        SPKT_LOG_INFO("Clicked!");
+    }
+
+    buttonRegion.y += 2 * 55;
     float volume = Sprocket::Audio::GetMasterVolume();
-    d_ui.Slider("Volume", {w * 0.025f, 325, w * 0.25f, 50}, &volume, 0.0, 100.0);
+    d_ui.Slider("Volume", buttonRegion, &volume, 0.0, 100.0);
     Sprocket::Audio::SetMasterVolume(volume);
 
-    static float value = 250.0f;
-    d_ui.Slider("Value", {w * 0.025f, 400, w * 0.25f, 50}, &value, 100, 1200);
+    buttonRegion.y += 55;
+    static float value1 = 27.0f;
+    d_ui.Slider("Value 1", buttonRegion, &value1, 0, 100);
+
+    buttonRegion.y += 55;
+    static float value2 = 84.0f;
+    d_ui.Slider("Value 2", buttonRegion, &value2, 0, 100);
 
     d_ui.EndFrame();
 

@@ -66,8 +66,9 @@ void SimpleUI::OnEvent(Event& event)
 void SimpleUI::OnUpdate(double dt)
 {
     d_mouse.OnUpdate();
-    d_dt = dt;
     d_time += dt;
+    d_clickedTime += dt;
+    d_hoveredTime += dt;
 
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
         d_clickedTime = 0.0;
@@ -89,12 +90,9 @@ WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
 
     if ((d_clicked == hash) || clicked) {
         d_clickedFlag = true;
-        if (d_clicked == hash) {
-            d_clickedTime += d_dt;
-        }
-        else {
+        if (d_clicked != hash) {
             d_clicked = hash;
-            d_clickedTime = d_dt;
+            d_clickedTime = 0.0;
             info.onClick = true;
         }
         info.clicked = d_clickedTime;
@@ -108,12 +106,9 @@ WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
     
     if (hovered) {
         d_hoveredFlag = true;
-        if (d_hovered == hash) {
-            d_hoveredTime += d_dt;
-        }
-        else {
+        if (d_hovered != hash) {
             d_hovered = hash;
-            d_hoveredTime = d_dt;
+            d_hoveredTime = 0.0;
         }
         info.hovered = d_hoveredTime;
     }
@@ -124,9 +119,6 @@ WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
         info.unhovered = d_time - d_unhoveredTimes[hash];
     }
 
-    if (name == "Button") {
-        buttonInfo = info;
-    }
     return info;
 }
 
@@ -145,25 +137,20 @@ void SimpleUI::StartFrame()
 void SimpleUI::EndFrame()
 {
     if (d_hoveredFlag == false) {
+        d_hoveredTime = 0.0;
         if (d_hovered > 0) {
-            d_hoveredTime = 0.0;
             d_unhoveredTimes[d_hovered] = d_time;
             d_hovered = 0;
         }
     }
 
     if (d_clickedFlag == false) {
+        d_clickedTime = 0.0;
         if (d_clicked > 0) {
-            d_clickedTime = 0.0;
             d_unclickedTimes[d_clicked] = d_time;
             d_hovered = 0;
         } 
     }
-
-    Text(std::to_string(buttonInfo.clicked), {500, 0, 100, 100});
-    Text(std::to_string(buttonInfo.unclicked), {500, 50, 100, 100});
-    Text(std::to_string(buttonInfo.hovered), {500, 100, 100, 100});
-    Text(std::to_string(buttonInfo.unhovered), {500, 150, 100, 100});
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
@@ -210,21 +197,36 @@ bool SimpleUI::Button(const std::string& name,
     auto info = GetWidgetInfo(name, region);
 
     Maths::vec4 hoveredRegion = region;
-    hoveredRegion.x += 25.0f;
+    hoveredRegion.x -= 20.0f;
+    hoveredRegion.z += 40.0f;
+
+    Maths::vec4 clickedRegion = region;
+    clickedRegion.x += 10.0f;
+    clickedRegion.z -= 20.0f;
 
     Maths::vec4 shape = region;
     Maths::vec4 colour = d_theme.baseColour;
-    if (info.clicked) {
-        colour = d_theme.clickedColour;
-    } else if (info.hovered) {
+    if (info.hovered) {
         colour = d_theme.hoveredColour;
 
         float ratio = std::min(info.hovered, 0.1) / 0.1f;
         shape = (1 - ratio) * region + ratio * hoveredRegion;
-    } else if (info.unhovered) {
+    } else {
         float ratio = std::min(info.unhovered, 0.1) / 0.1f;
         shape = (1 - ratio) * hoveredRegion + ratio * region;
     }
+
+    if (info.clicked) {
+        colour = d_theme.clickedColour;
+
+        float ratio = std::min(info.clicked, 0.05) / 0.05f;
+        shape = (1 - ratio) * shape + ratio * clickedRegion;
+    }
+    else {
+        float ratio = std::min(info.unclicked, 0.1) / 0.1f;
+        shape = (1 - ratio) * clickedRegion + ratio * shape;
+    }
+    
     
     Quad(colour, shape);
     Text(name, region);

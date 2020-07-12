@@ -69,9 +69,6 @@ class SimpleUI
     WidgetInfo GetWidgetInfo(const std::string& name,
                              const Maths::vec4& region);
 
-    WidgetInfo buttonInfo; // TODO REMOVE
-
-    double d_dt = 0.0;
     double d_time = 0.0;
 
     // Used to construct the VBO each frame.
