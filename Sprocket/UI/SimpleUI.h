@@ -35,6 +35,7 @@ struct WidgetInfo
     double unhovered = 0.0;
 
     double clicked = 0.0;
+    double unclicked = 0.0;
     
     float onClick = false;
 };
@@ -63,9 +64,12 @@ class SimpleUI
     std::size_t d_clicked = 0; // Hash of the clicked widget.
     double d_clickedTime = 0.0;
     bool d_clickedFlag = false;
+    std::unordered_map<std::size_t, double> d_unclickedTimes;
 
     WidgetInfo GetWidgetInfo(const std::string& name,
                              const Maths::vec4& region);
+
+    WidgetInfo buttonInfo; // TODO REMOVE
 
     double d_dt = 0.0;
     double d_time = 0.0;

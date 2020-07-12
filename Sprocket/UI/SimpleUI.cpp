@@ -112,6 +112,10 @@ WidgetInfo SimpleUI::GetWidgetInfo(const std::string& name,
         }
         info.unhovered = d_time - d_unhoveredTimes[hash];
     }
+
+    if (name == "Button") {
+        buttonInfo = info;
+    }
     return info;
 }
 
@@ -144,18 +148,9 @@ void SimpleUI::EndFrame()
         } 
     }
 
-    std::stringstream ss;
-    ss << d_hoveredTime;
-    Text(ss.str(), {500, 0, 100, 100});
-    ss.str("");
-    ss << d_hovered;
-    Text(ss.str(), {500, 50, 100, 100});
-    ss.str("");
-    ss << d_clickedTime;
-    Text(ss.str(), {500, 100, 100, 100});
-    ss.str("");
-    ss << d_clicked;
-    Text(ss.str(), {500, 150, 100, 100});
+    Text(std::to_string(buttonInfo.clicked), {500, 0, 100, 100});
+    Text(std::to_string(buttonInfo.hovered), {500, 50, 100, 100});
+    Text(std::to_string(buttonInfo.unhovered), {500, 100, 100, 100});
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
