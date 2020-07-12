@@ -40,6 +40,8 @@ int main()
         watch.OnUpdate();
         sceneManager.OnUpdate(watch.DeltaTime());
 
+        std::string name = "Game! FPS: " + std::to_string(watch.Framerate());
+        window.SetWindowName(name);
         window.OnUpdate();
     }
 

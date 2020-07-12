@@ -197,33 +197,33 @@ bool SimpleUI::Button(const std::string& name,
     auto info = GetWidgetInfo(name, region);
 
     Maths::vec4 hoveredRegion = region;
-    hoveredRegion.x -= 20.0f;
-    hoveredRegion.z += 40.0f;
+    hoveredRegion.x -= 10.0f;
+    hoveredRegion.z += 20.0f;
 
     Maths::vec4 clickedRegion = region;
     clickedRegion.x += 10.0f;
     clickedRegion.z -= 20.0f;
 
-    Maths::vec4 shape = region;
     Maths::vec4 colour = d_theme.baseColour;
+    Maths::vec4 shape = region;
     if (info.hovered) {
-        colour = d_theme.hoveredColour;
-
         float ratio = std::min(info.hovered, 0.1) / 0.1f;
+        colour = (1 - ratio) * colour + ratio * d_theme.hoveredColour;
         shape = (1 - ratio) * region + ratio * hoveredRegion;
     } else {
         float ratio = std::min(info.unhovered, 0.1) / 0.1f;
+        colour = (1 - ratio) * d_theme.hoveredColour + ratio * colour;
         shape = (1 - ratio) * hoveredRegion + ratio * region;
     }
 
     if (info.clicked) {
-        colour = d_theme.clickedColour;
-
         float ratio = std::min(info.clicked, 0.05) / 0.05f;
+        colour = (1 - ratio) * colour + ratio * d_theme.clickedColour;
         shape = (1 - ratio) * shape + ratio * clickedRegion;
     }
     else {
-        float ratio = std::min(info.unclicked, 0.1) / 0.1f;
+        float ratio = std::min(info.unclicked, 0.05) / 0.05f;
+        colour = (1 - ratio) * d_theme.clickedColour + ratio * colour;
         shape = (1 - ratio) * clickedRegion + ratio * shape;
     }
     

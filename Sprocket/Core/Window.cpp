@@ -196,6 +196,11 @@ void Window::SetCursorVisibility(bool visibility)
 	}
 }
 
+void Window::SetWindowName(const std::string& name)
+{
+	glfwSetWindowTitle(d_impl->window, name.c_str());
+}
+
 void Window::SetCallback(EventCallback cb)
 {
 	d_callback = cb;

@@ -69,41 +69,41 @@ void EscapeMenu::OnUpdate(double dt)
         }
     }
 
-    buttonRegion.y += 55;
+    buttonRegion.y += 60;
     if (d_ui.Button("Button 1", buttonRegion)) {
         SPKT_LOG_INFO("Clicked!");
     }
     
-    buttonRegion.y += 55;
+    buttonRegion.y += 60;
     if (d_ui.Button("Button 2", buttonRegion)) {
         SPKT_LOG_INFO("Clicked!");
     }
     
-    buttonRegion.y += 55;
+    buttonRegion.y += 60;
     if (d_ui.Button("Button 3", buttonRegion)) {
         SPKT_LOG_INFO("Clicked!");
     }
 
-    buttonRegion.y += 55;
+    buttonRegion.y += 60;
     if (d_ui.Button("Button 4", buttonRegion)) {
         SPKT_LOG_INFO("Clicked!");
     }
 
-    buttonRegion.y += 55;
+    buttonRegion.y += 60;
     if (d_ui.Button("Button 5", buttonRegion)) {
         SPKT_LOG_INFO("Clicked!");
     }
 
-    buttonRegion.y += 2 * 55;
+    buttonRegion.y += 2 * 60;
     float volume = Sprocket::Audio::GetMasterVolume();
     d_ui.Slider("Volume", buttonRegion, &volume, 0.0, 100.0);
     Sprocket::Audio::SetMasterVolume(volume);
 
-    buttonRegion.y += 55;
+    buttonRegion.y += 60;
     static float value1 = 27.0f;
     d_ui.Slider("Value 1", buttonRegion, &value1, 0, 100);
 
-    buttonRegion.y += 55;
+    buttonRegion.y += 60;
     static float value2 = 84.0f;
     d_ui.Slider("Value 2", buttonRegion, &value2, 0, 100);
 
