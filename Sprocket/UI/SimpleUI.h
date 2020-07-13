@@ -43,7 +43,6 @@ struct PanelInfo
 {
     std::string name;
     Maths::vec4 region;
-    bool active;
 };
 
 class SimpleUI
@@ -84,11 +83,6 @@ class SimpleUI
         // Returns <panel name>##<name> if there is a current panel,
         // or name otherwise.
 
-    bool IsActive();
-        // Returns true if the current panel is active or if there
-        // are no panels.
-
-
 public:
     SimpleUI(Window* window);
 
@@ -115,6 +109,10 @@ public:
 
     bool Button(const std::string& name,
                 const Maths::vec4& region);
+
+    bool Checkbox(const std::string& name,
+                  const Maths::vec4& region,
+                  bool* value);
 
     void Slider(const std::string& name,
                 const Maths::vec4& region,

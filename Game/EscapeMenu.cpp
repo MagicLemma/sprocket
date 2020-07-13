@@ -71,9 +71,7 @@ void EscapeMenu::OnUpdate(double dt)
 
     buttonRegion.y += 60;
     static bool showVolume = false;
-    if (d_ui.Button("Volume Panel", buttonRegion)) {
-        showVolume = !showVolume;
-    }
+    d_ui.Checkbox("Volume Panel", buttonRegion, &showVolume);
 
     vec4 shape{w/2 - 200, 100, 400, 500};
     bool draggable = false;
@@ -83,17 +81,23 @@ void EscapeMenu::OnUpdate(double dt)
         float volume = Sprocket::Audio::GetMasterVolume();
         d_ui.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
         Sprocket::Audio::SetMasterVolume(volume);
+        
+        d_ui.EndPanel();
     }
-    d_ui.EndPanel();
 
     buttonRegion.y += 2 * 60;
     static float value1 = 27.0f;
-    d_ui.Slider("Value 1", buttonRegion, &value1, 0, 100);
+    d_ui.Slider("Slider", buttonRegion, &value1, 0, 100);
 
     buttonRegion.y += 60;
     static float value2 = 84.0f;
-    d_ui.Dragger("Value 2", buttonRegion, &value2, 0.1f);
-    
+    d_ui.Dragger("Dragger", buttonRegion, &value2, 0.1f);
+
+    buttonRegion.y += 60;
+    static bool check = false;
+    if (d_ui.Checkbox("Checkbox", buttonRegion, &check)) {
+        SPKT_LOG_INFO("Checkbox on!");
+    }
 
     d_ui.EndFrame();
 

@@ -51,19 +51,19 @@ template <typename T> T Interpolate(
     T ret = base;
     double interval = 0.1;
     
-    if (info.hovered) {
-        float r = std::min(info.hovered, interval) / (float)interval;
+    if (info.mouseOver) {
+        float r = std::min(info.mouseOver, interval) / (float)interval;
         ret = (1 - r) * ret + r * hovered;
     } else {
-        float r = std::min(info.unhovered, interval) / (float)interval;
+        float r = std::min(info.sinceUnhovered, interval) / (float)interval;
         ret = (1 - r) * hovered + r * ret;
     }
 
-    if (info.clicked) {
-        float r = std::min(info.clicked, interval) / (float)interval;
+    if (info.mouseDown) {
+        float r = std::min(info.mouseDown, interval) / (float)interval;
         ret = (1 - r) * ret + r * clicked;
     } else {
-        float r = std::min(info.unclicked, interval) / (float)interval;
+        float r = std::min(info.sinceUnlicked, interval) / (float)interval;
         ret = (1 - r) * clicked + r * ret;
     }
 
@@ -105,14 +105,6 @@ std::string SimpleUI::MangleName(const std::string& name)
         return d_currentPanel.value().name + "##" + name;
     }
     return name;
-}
-
-bool SimpleUI::IsActive()
-{
-    if (d_currentPanel.has_value()) {
-        return d_currentPanel.value().active;
-    }
-    return true;
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -178,15 +170,15 @@ bool SimpleUI::StartPanel(
         
         auto info = d_engine.RegisterWidget(name, *region);
 
-        if (info.clicked && *draggable) {
+        if (info.mouseDown && *draggable) {
             region->x += d_mouse.GetMouseOffset().x;
             region->y += d_mouse.GetMouseOffset().y;
         }
 
         DrawQuad(d_theme.backgroundColour * 0.7f, *region);
-    }
 
-    d_currentPanel = {name, *region, *active};
+        d_currentPanel = {name, *region};
+    }
     return *active;
 }
 
@@ -197,7 +189,7 @@ void SimpleUI::EndPanel()
 }
 
 void SimpleUI::DrawQuad(const Maths::vec4& colour,
-                    const Maths::vec4& region)
+                        const Maths::vec4& region)
 {
     auto copy = region;
     float x = copy.x;
@@ -276,14 +268,12 @@ void SimpleUI::DrawText(
 
 void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 {
-    if (!IsActive()) { return; }
     auto copy = ApplyOffset(quad);
     DrawQuad(colour, copy);
 }
 
 void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 {
-    if (!IsActive()) { return; }
     auto copy = ApplyOffset(quad);
     DrawText(text, copy);
 }
@@ -291,7 +281,6 @@ void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
-    if (!IsActive()) { return false; }
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
@@ -312,11 +301,39 @@ bool SimpleUI::Button(const std::string& name,
     return info.onClick;
 }
 
+bool SimpleUI::Checkbox(const std::string& name,
+                        const Maths::vec4& region,
+                        bool* value)
+{
+    Maths::vec4 copy = ApplyOffset(region);
+    auto info = d_engine.RegisterWidget(MangleName(name), copy);
+
+    auto unselected = Interpolate(info, d_theme.backgroundColour, d_theme.backgroundColour*1.1f, d_theme.backgroundColour*1.3f);
+    auto selected = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);;
+
+    float r = std::min(info.sinceUnlicked, 0.1) / 0.1f;
+
+    Maths::vec4 colour;
+    if (*value) {
+        colour = r * selected + (1 - r) * unselected;
+    } else {
+        colour = r * unselected + (1 - r) * selected;
+    }
+
+    if (info.onClick) {
+        *value = !(*value);
+    }
+
+    DrawQuad(colour, copy);
+    DrawText(name, copy);
+
+    return *value; 
+}
+
 void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
-    if (!IsActive()) { return; }
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
@@ -333,7 +350,7 @@ void SimpleUI::Slider(const std::string& name,
     DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
     DrawText(name + ": " + Maths::ToString(*value, 0), copy);
 
-    if (info.clicked) {
+    if (info.mouseDown) {
         auto mouse = d_mouse.GetMousePos();
         Maths::Clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
@@ -345,7 +362,6 @@ void SimpleUI::Dragger(const std::string& name,
                        const Maths::vec4& region,
                        float* value, float speed)
 {
-    if (!IsActive()) { return; }
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
@@ -354,7 +370,7 @@ void SimpleUI::Dragger(const std::string& name,
     DrawQuad(colour, copy);
     DrawText(name + ": " + Maths::ToString(*value, 0), copy);
 
-    if (info.clicked) {
+    if (info.mouseDown) {
         *value += d_mouse.GetMouseOffset().x * speed;
     }    
 }

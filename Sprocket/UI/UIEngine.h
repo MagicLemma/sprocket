@@ -22,11 +22,13 @@ struct WidgetInfo
 // other pieces of info. The caller can then use this information to
 // decide how the widget should be rendered.
 {
-    double hovered = 0.0;
-    double unhovered = 0.0;
+    double mouseOver = 0.0;
+    double sinceHovered = 0.0f;
+    double sinceUnhovered = 0.0;
 
-    double clicked = 0.0;
-    double unclicked = 0.0;
+    double mouseDown = 0.0;
+    double sinceClicked = 0.0;
+    double sinceUnlicked = 0.0;
     
     bool onClick = false;
     bool onHover = false;
@@ -50,7 +52,9 @@ class UIEngine
         // Times (in seconds) that the current widgets have been
         // hovered/selected.
 
+    std::unordered_map<std::size_t, double> d_hoveredTimes;
     std::unordered_map<std::size_t, double> d_unhoveredTimes;
+    std::unordered_map<std::size_t, double> d_clickedTimes;
     std::unordered_map<std::size_t, double> d_unclickedTimes;
         // Hash -> time map keeping track of the last time each
         // widget was unselected. Used to calculate the unhovered

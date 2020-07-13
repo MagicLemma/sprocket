@@ -18,16 +18,18 @@ WidgetInfo UIEngine::RegisterWidget(const std::string& name,
     std::size_t hash = std::hash<std::string>{}(name);
 
     if (hash == d_clicked) {
-        info.clicked = d_clickedTime;
-    } else {
-        info.unclicked = d_time - d_unclickedTimes[hash];
+        info.mouseDown = d_clickedTime;
     }
 
+    info.sinceUnlicked = d_time - d_unclickedTimes[hash];
+    info.sinceClicked = d_time - d_clickedTimes[hash];
+
     if (hash == d_hovered) {
-        info.hovered = d_hoveredTime;
-    } else {
-        info.unhovered = d_time - d_unhoveredTimes[hash];
+        info.mouseOver = d_hoveredTime;
     }
+    
+    info.sinceUnhovered = d_time - d_unhoveredTimes[hash];
+    info.sinceHovered = d_time - d_unhoveredTimes[hash];
 
     if (d_onClick == hash) { // Consume the onCLick
         d_onClick = 0;
@@ -63,6 +65,7 @@ void UIEngine::EndFrame()
             foundClicked = true;
             if (d_clicked != hash) {
                 d_unclickedTimes[d_clicked] = d_time;
+                d_clickedTimes[hash] = d_time;
                 d_clicked = hash;
                 d_onClick = hash;
                 d_clickedTime = 0.0;
@@ -73,6 +76,7 @@ void UIEngine::EndFrame()
             foundHovered = true;
             if (d_hovered != hash) {
                 d_unhoveredTimes[d_hovered] = d_time;
+                d_hoveredTimes[hash] = d_time;
                 d_hovered = hash;
                 d_onHover = hash;
                 d_hoveredTime = 0.0;
