@@ -101,7 +101,10 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name, Maths::vec4* region, bool* active);
+    bool StartPanel(const std::string& name,
+                    Maths::vec4* region,
+                    bool* active,
+                    bool* draggable);
     void EndPanel();
 
     void Quad(const Maths::vec4& colour,

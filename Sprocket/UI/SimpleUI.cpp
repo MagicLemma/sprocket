@@ -162,10 +162,11 @@ void SimpleUI::EndFrame()
     d_buffer.Unbind();
 }
 
-void SimpleUI::StartPanel(
+bool SimpleUI::StartPanel(
     const std::string& name,
     Maths::vec4* region,
-    bool* active)
+    bool* active,
+    bool* draggable)
 {
     assert(!d_currentPanel.has_value());
     assert(region != nullptr);
@@ -177,15 +178,16 @@ void SimpleUI::StartPanel(
         
         auto info = d_engine.RegisterWidget(name, *region);
 
-        if (info.clicked) {
+        if (info.clicked && *draggable) {
             region->x += d_mouse.GetMouseOffset().x;
             region->y += d_mouse.GetMouseOffset().y;
         }
 
-        DrawQuad(d_theme.backgroundColour, *region);
+        DrawQuad(d_theme.backgroundColour * 0.7f, *region);
     }
 
     d_currentPanel = {name, *region, *active};
+    return *active;
 }
 
 void SimpleUI::EndPanel()

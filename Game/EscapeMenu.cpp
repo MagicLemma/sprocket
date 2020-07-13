@@ -70,43 +70,20 @@ void EscapeMenu::OnUpdate(double dt)
     }
 
     buttonRegion.y += 60;
-    if (d_ui.Button("Button 1", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked 1!");
-    }
-    
-    buttonRegion.y += 60;
-    if (d_ui.Button("Button 2", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked 2!");
-    }
-    
-    buttonRegion.y += 60;
-    if (d_ui.Button("Button 3", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked 3!");
-    }
-
-    buttonRegion.y += 60;
-    if (d_ui.Button("Button 4", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked 4!");
-    }
-
-    buttonRegion.y += 60;
-    if (d_ui.Button("Button 5", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked 5!");
-    }
-
-    buttonRegion.y += 60;
     static bool showVolume = false;
     if (d_ui.Button("Volume Panel", buttonRegion)) {
         showVolume = !showVolume;
     }
 
-    static vec4 shape{w/2 - 200, 200, 400, h - 200};
-    d_ui.StartPanel("VolumePanel", &shape, &showVolume);
+    vec4 shape{w/2 - 200, 100, 400, 500};
+    bool draggable = false;
+    if (d_ui.StartPanel("VolumePanel", &shape, &showVolume, &draggable)) {
+        d_ui.Text("Volume", {0, 0, 400, 100});
 
         float volume = Sprocket::Audio::GetMasterVolume();
-        d_ui.Slider("Master Volume", {10, 10, w * 0.25f, 50}, &volume, 0.0, 100.0);
+        d_ui.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
         Sprocket::Audio::SetMasterVolume(volume);
-
+    }
     d_ui.EndPanel();
 
     buttonRegion.y += 2 * 60;
