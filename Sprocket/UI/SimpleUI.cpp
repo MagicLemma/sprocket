@@ -104,11 +104,8 @@ void SimpleUI::StartFrame()
 {
     d_engine.StartFrame();
 
-    d_quadVertices.clear();
-    d_quadIndices.clear();
-
-    d_textVertices.clear();
-    d_textIndices.clear();
+    d_commands.clear();
+    d_commands.push_back(DrawCommand());
 }
 
 void SimpleUI::EndFrame()
@@ -127,15 +124,22 @@ void SimpleUI::EndFrame()
     d_shader.LoadUniform("u_proj_matrix", proj);
 
     d_buffer.Bind();
-    Texture::White().Bind();
-    d_buffer.Draw(d_quadVertices, d_quadIndices);
-    d_font.Bind();
-    d_buffer.Draw(d_textVertices, d_textIndices);
+    for (const auto& cmd : d_commands) {
+        Texture::White().Bind();
+        d_buffer.Draw(cmd.quadVertices, cmd.quadIndices);
+        d_font.Bind();
+        d_buffer.Draw(cmd.textVertices, cmd.textIndices);
+    }
     d_buffer.Unbind();
 }
 
 void SimpleUI::StartWindow(const std::string& name, Maths::vec4* region)
 {
+    ++d_commandIndex;
+    if (d_commandIndex == d_commands.size()) {
+        d_commands.push_back(DrawCommand());
+    }
+
     auto info = d_engine.RegisterWidget(name, *region);
 
     if (info.clicked) {
@@ -153,7 +157,7 @@ void SimpleUI::StartWindow(const std::string& name, Maths::vec4* region)
 
 void SimpleUI::EndWindow()
 {
-
+    --d_commandIndex;
 }
 
 void SimpleUI::Quad(const Maths::vec4& colour,
@@ -164,18 +168,19 @@ void SimpleUI::Quad(const Maths::vec4& colour,
     float width = region.z;
     float height = region.w;
 
-    std::size_t index = d_quadVertices.size();
-    d_quadVertices.push_back({{x,         y},          colour});
-    d_quadVertices.push_back({{x + width, y},          colour});
-    d_quadVertices.push_back({{x,         y + height}, colour * 0.8f});
-    d_quadVertices.push_back({{x + width, y + height}, colour * 0.8f});
+    auto& cmd = d_commands[d_commandIndex];
+    std::size_t index = cmd.quadVertices.size();
+    cmd.quadVertices.push_back({{x,         y},          colour});
+    cmd.quadVertices.push_back({{x + width, y},          colour});
+    cmd.quadVertices.push_back({{x,         y + height}, colour * 0.8f});
+    cmd.quadVertices.push_back({{x + width, y + height}, colour * 0.8f});
 
-    d_quadIndices.push_back(index + 0);
-    d_quadIndices.push_back(index + 1);
-    d_quadIndices.push_back(index + 2);
-    d_quadIndices.push_back(index + 2);
-    d_quadIndices.push_back(index + 1);
-    d_quadIndices.push_back(index + 3);
+    cmd.quadIndices.push_back(index + 0);
+    cmd.quadIndices.push_back(index + 1);
+    cmd.quadIndices.push_back(index + 2);
+    cmd.quadIndices.push_back(index + 2);
+    cmd.quadIndices.push_back(index + 1);
+    cmd.quadIndices.push_back(index + 3);
 }
 
 bool SimpleUI::Button(const std::string& name,
@@ -282,18 +287,19 @@ void SimpleUI::Text(
 
         pen += glyph.advance;
 
-        unsigned int index = d_textVertices.size();
-        d_textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
-        d_textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
-        d_textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
-        d_textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
+        auto& cmd = d_commands[d_commandIndex];
+        unsigned int index = cmd.textVertices.size();
+        cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
+        cmd.textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
+        cmd.textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
+        cmd.textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
 
-        d_textIndices.push_back(index + 0);
-        d_textIndices.push_back(index + 1);
-        d_textIndices.push_back(index + 2);
-        d_textIndices.push_back(index + 2);
-        d_textIndices.push_back(index + 1);
-        d_textIndices.push_back(index + 3);
+        cmd.textIndices.push_back(index + 0);
+        cmd.textIndices.push_back(index + 1);
+        cmd.textIndices.push_back(index + 2);
+        cmd.textIndices.push_back(index + 2);
+        cmd.textIndices.push_back(index + 1);
+        cmd.textIndices.push_back(index + 3);
     }
 }
 

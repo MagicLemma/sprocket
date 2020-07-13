@@ -29,6 +29,15 @@ struct SimpleUITheme
     Maths::vec4 clickedColour;
 };
 
+struct DrawCommand
+{
+    std::vector<BufferVertex> quadVertices;
+    std::vector<unsigned int> quadIndices;
+
+    std::vector<BufferVertex> textVertices;
+    std::vector<unsigned int> textIndices;
+};
+
 class SimpleUI
 {
     Window* d_window;
@@ -46,12 +55,9 @@ class SimpleUI
     Shader d_shader;
     StreamBuffer d_buffer;
 
-    // Used to construct the VBO each frame.
-    std::vector<BufferVertex> d_quadVertices;
-    std::vector<unsigned int> d_quadIndices;
-
-    std::vector<BufferVertex> d_textVertices;
-    std::vector<unsigned int> d_textIndices;
+    std::vector<DrawCommand> d_commands;
+        // One for the window and an extra one for each window.
+    std::size_t d_commandIndex = 0;
 
 public:
     SimpleUI(Window* window);
