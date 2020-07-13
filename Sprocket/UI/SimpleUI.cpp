@@ -90,13 +90,13 @@ SimpleUI::SimpleUI(Window* window)
 
 Maths::vec4 SimpleUI::ApplyOffset(const Maths::vec4& region)
 {
-    if (d_windows.size() == 0) {
+    if (!d_currentPanel.has_value()) {
         return region;
     }
 
     Maths::vec4 quad = region;
-    quad.x += d_windows.top().x;
-    quad.y += d_windows.top().y;
+    quad.x += d_currentPanel.value().x;
+    quad.y += d_currentPanel.value().y;
     return quad;
 }
 
@@ -122,6 +122,8 @@ void SimpleUI::StartFrame()
 
 void SimpleUI::EndFrame()
 {
+    assert(!d_currentPanel.has_value());
+
     d_engine.EndFrame();
 
     Sprocket::RenderContext rc;
@@ -145,31 +147,29 @@ void SimpleUI::EndFrame()
     d_buffer.Unbind();
 }
 
-void SimpleUI::StartWindow(const std::string& name, Maths::vec4* region)
+void SimpleUI::StartPanel(const std::string& name, Maths::vec4* region)
 {
-    auto copy = ApplyOffset(*region);
+    assert(!d_currentPanel.has_value());
 
-    ++d_commandIndex;
-    if (d_commandIndex == d_commands.size()) {
-        d_commands.push_back(DrawCommand());
-    }
+    d_commands.push_back(DrawCommand());
+    d_commandIndex = d_commands.size() - 1;
 
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.RegisterWidget(name, *region);
 
     if (info.clicked) {
         region->x += d_mouse.GetMouseOffset().x;
         region->y += d_mouse.GetMouseOffset().y;
     }
 
-    DrawQuad(d_theme.backgroundColour, copy);
+    DrawQuad(d_theme.backgroundColour, *region);
 
-    d_windows.push(copy);
+    d_currentPanel = *region;
 }
 
-void SimpleUI::EndWindow()
+void SimpleUI::EndPanel()
 {
-    --d_commandIndex;
-    d_windows.pop();
+    d_currentPanel.reset();
+    d_commandIndex = 0;
 }
 
 void SimpleUI::DrawQuad(const Maths::vec4& colour,

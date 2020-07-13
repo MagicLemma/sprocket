@@ -10,7 +10,7 @@
 
 #include <vector>
 #include <unordered_map>
-#include <stack>
+#include <optional>
 #include <chrono>
 
 namespace Sprocket {
@@ -60,10 +60,7 @@ class SimpleUI
         // One for the window and an extra one for each window.
     std::size_t d_commandIndex = 0;
 
-    std::stack<Maths::vec4> d_windows;
-        // The top of the stack represents the offset that the
-        // regions should be drawn from. If the stack is empty, the
-        // widgets are drawn with respect to the main window.
+    std::optional<Maths::vec4> d_currentPanel = {};
 
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
     void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
@@ -81,8 +78,8 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartWindow(const std::string& name, Maths::vec4* region);
-    void EndWindow();
+    void StartPanel(const std::string& name, Maths::vec4* region);
+    void EndPanel();
 
     void Quad(const Maths::vec4& colour,
               const Maths::vec4& region);

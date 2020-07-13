@@ -108,19 +108,20 @@ void EscapeMenu::OnUpdate(double dt)
     d_ui.Dragger("Value 2", buttonRegion, &value2, 0.1f);
 
     static vec4 shape{300, 300, 300, 300};
-    d_ui.StartWindow("window", &shape);
+    d_ui.StartPanel("window", &shape);
 
-    if (d_ui.Button("X", {10, 10, 50, 50})) {
-        SPKT_LOG_INFO("Clicked Window Button!");
-    }
+        if (d_ui.Button("X", {10, 10, 50, 50})) {
+            SPKT_LOG_INFO("Clicked Window Button!");
+        }
 
+    d_ui.EndPanel();
+    
     static vec4 shape2{100, 100, 100, 100};
-    d_ui.StartWindow("subwindow", &shape2);
-    d_ui.Slider("Value 1 Again", {10, 10, 50, 50}, &value1, 0, 100);
+    d_ui.StartPanel("subwindow", &shape2);
 
-    d_ui.EndWindow();
-
-    d_ui.EndWindow();
+        d_ui.Slider("Value 1 Again", {10, 10, 50, 50}, &value1, 0, 100);
+        
+    d_ui.EndPanel();
 
     d_ui.EndFrame();
 
