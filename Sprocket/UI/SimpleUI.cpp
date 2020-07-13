@@ -88,6 +88,18 @@ SimpleUI::SimpleUI(Window* window)
     d_buffer.SetBufferLayout(layout);
 }
 
+Maths::vec4 SimpleUI::ApplyOffset(const Maths::vec4& region)
+{
+    if (d_offset.size() == 0) {
+        return region;
+    }
+
+    Maths::vec4 quad = region;
+    quad.x += d_offset.top().x;
+    quad.y += d_offset.top().y;
+    return quad;
+}
+
 void SimpleUI::OnEvent(Event& event)
 {
     d_keyboard.OnEvent(event);
@@ -143,30 +155,35 @@ void SimpleUI::StartWindow(const std::string& name, Maths::vec4* region)
     auto info = d_engine.RegisterWidget(name, *region);
 
     if (info.clicked) {
-        if (d_mouse.InRegion(region->x, region->y + region->w - 5, region->z, 5)) {
-            region->w += d_mouse.GetMouseOffset().y;
-        }
-        else {
-            region->x += d_mouse.GetMouseOffset().x;
-            region->y += d_mouse.GetMouseOffset().y;
-        }
+        region->x += d_mouse.GetMouseOffset().x;
+        region->y += d_mouse.GetMouseOffset().y;
     }
 
     Quad(d_theme.backgroundColour, *region);
+    
+    if (d_offset.size() > 0) {
+        const auto& top = d_offset.top();
+        d_offset.push({top.x + region->x, top.y + region->y});
+    }
+    else {
+        d_offset.push({region->x, region->y});
+    }
 }
 
 void SimpleUI::EndWindow()
 {
     --d_commandIndex;
+    d_offset.pop();
 }
 
 void SimpleUI::Quad(const Maths::vec4& colour,
                     const Maths::vec4& region)
 {
-    float x = region.x;
-    float y = region.y;
-    float width = region.z;
-    float height = region.w;
+    Maths::vec4 copy = ApplyOffset(region);
+    float x = copy.x;
+    float y = copy.y;
+    float width = copy.z;
+    float height = copy.w;
 
     auto& cmd = d_commands[d_commandIndex];
     std::size_t index = cmd.quadVertices.size();
@@ -186,21 +203,22 @@ void SimpleUI::Quad(const Maths::vec4& colour,
 bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
-    auto info = d_engine.RegisterWidget(name, region);
+    Maths::vec4 copy = ApplyOffset(region);
+    auto info = d_engine.RegisterWidget(name, copy);
 
-    Maths::vec4 hoveredRegion = region;
+    Maths::vec4 hoveredRegion = copy;
     hoveredRegion.x -= 10.0f;
     hoveredRegion.z += 20.0f;
 
-    Maths::vec4 clickedRegion = region;
+    Maths::vec4 clickedRegion = copy;
     clickedRegion.x += 10.0f;
     clickedRegion.z -= 20.0f;
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
-    Maths::vec4 shape = Interpolate(info, region, hoveredRegion, clickedRegion);
+    Maths::vec4 shape = Interpolate(info, copy, hoveredRegion, clickedRegion);
     
     Quad(colour, shape);
-    Text(name, region);
+    Text(name, copy);
 
     return info.onClick;
 }
@@ -209,12 +227,13 @@ void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
-    auto info = d_engine.RegisterWidget(name, region);
+    Maths::vec4 copy = ApplyOffset(region);
+    auto info = d_engine.RegisterWidget(name, copy);
 
-    float x = region.x;
-    float y = region.y;
-    float width = region.z;
-    float height = region.w;
+    float x = copy.x;
+    float y = copy.y;
+    float width = copy.z;
+    float height = copy.w;
 
     Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 rightColour = d_theme.backgroundColour;
@@ -224,7 +243,7 @@ void SimpleUI::Slider(const std::string& name,
     Quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
     
     std::string text = name + ": " + Maths::ToString(*value, 0);
-    Text(text, region);
+    Text(text, copy);
 
     if (info.clicked) {
         auto mouse = d_mouse.GetMousePos();
@@ -238,12 +257,13 @@ void SimpleUI::Dragger(const std::string& name,
                        const Maths::vec4& region,
                        float* value, float speed)
 {
-    auto info = d_engine.RegisterWidget(name, region);
+    Maths::vec4 copy = ApplyOffset(region);
+    auto info = d_engine.RegisterWidget(name, copy);
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
-    Quad(colour, region);
-    Text(name + ": " + Maths::ToString(*value, 0), region);
+    Quad(colour, copy);
+    Text(name + ": " + Maths::ToString(*value, 0), copy);
 
     if (info.clicked) {
         *value += d_mouse.GetMouseOffset().x * speed;
@@ -254,14 +274,15 @@ void SimpleUI::Text(
     const std::string& text,
     const Maths::vec4& region)
 {
+    Maths::vec4 copy = ApplyOffset(region);
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
     Glyph first = d_font.GetGlyph(text.front());
     auto textInfo = GetTextInfo(d_font, text);
 
     Maths::vec2 pen = {
-        region.x + (region.z - textInfo.width) / 2.0f,
-        region.y + (region.w - first.height) / 2.0f
+        region.x + (copy.z - textInfo.width) / 2.0f,
+        region.y + (copy.w - first.height) / 2.0f
     };
 
     pen.x -= first.offset.x;

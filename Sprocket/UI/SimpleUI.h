@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <stack>
 #include <chrono>
 
 namespace Sprocket {
@@ -58,6 +59,13 @@ class SimpleUI
     std::vector<DrawCommand> d_commands;
         // One for the window and an extra one for each window.
     std::size_t d_commandIndex = 0;
+
+    std::stack<Maths::vec2> d_offset;
+        // The top of the stack represents the offset that the
+        // regions should be drawn from. If the stack is empty, the
+        // widgets are drawn with respect to the main window.
+
+    Maths::vec4 ApplyOffset(const Maths::vec4& region);
 
 public:
     SimpleUI(Window* window);
