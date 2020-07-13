@@ -66,6 +66,8 @@ class SimpleUI
         // widgets are drawn with respect to the main window.
 
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
+    void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
+    void DrawText(const std::string& text, const Maths::vec4& quad);
 
 public:
     SimpleUI(Window* window);

@@ -74,7 +74,7 @@ void EscapeMenu::OnUpdate(double dt)
         SPKT_LOG_INFO("Clicked 1!");
     }
     
-    buttonRegion.y += 30;
+    buttonRegion.y += 60;
     if (d_ui.Button("Button 2", buttonRegion)) {
         SPKT_LOG_INFO("Clicked 2!");
     }
@@ -109,6 +109,17 @@ void EscapeMenu::OnUpdate(double dt)
 
     static vec4 shape{300, 300, 300, 300};
     d_ui.StartWindow("window", &shape);
+
+    if (d_ui.Button("X", {10, 10, 50, 50})) {
+        SPKT_LOG_INFO("Clicked Window Button!");
+    }
+
+    static vec4 shape2{100, 100, 100, 100};
+    d_ui.StartWindow("subwindow", &shape2);
+    d_ui.Slider("Value 1 Again", {10, 10, 50, 50}, &value1, 0, 100);
+
+    d_ui.EndWindow();
+
     d_ui.EndWindow();
 
     d_ui.EndFrame();
