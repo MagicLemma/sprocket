@@ -50,11 +50,6 @@ class UIEngine
         // Times (in seconds) that the current widgets have been
         // hovered/selected.
 
-    bool d_hoveredFlag = false;
-    bool d_clickedFlag = false;
-        // Set to false at the start of each frame, used to track
-        // when widgets become unselected.
-
     std::unordered_map<std::size_t, double> d_unhoveredTimes;
     std::unordered_map<std::size_t, double> d_unclickedTimes;
         // Hash -> time map keeping track of the last time each
@@ -66,8 +61,14 @@ class UIEngine
         // times in the maps above.
 
     std::vector<QuadData> d_quads;
+        // Stores a list of all regions registered during the frame,
+        // these are processed at the end of the frame to update the
+        // internal state of each widget.
 
     std::size_t d_onClick = 0;
+    std::size_t d_onHover = 0;
+        // Stores which widget has been clicked/hovered so that it can
+        // be acted on next frame. These are consumed when retrieved.
 
 public:
     UIEngine(KeyboardProxy* keyboard, MouseProxy* mouse);

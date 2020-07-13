@@ -134,6 +134,28 @@ void SimpleUI::EndFrame()
     d_buffer.Unbind();
 }
 
+void SimpleUI::StartWindow(const std::string& name, Maths::vec4* region)
+{
+    auto info = d_engine.RegisterWidget(name, *region);
+
+    if (info.clicked) {
+        if (d_mouse.InRegion(region->x, region->y + region->w - 5, region->z, 5)) {
+            region->w += d_mouse.GetMouseOffset().y;
+        }
+        else {
+            region->x += d_mouse.GetMouseOffset().x;
+            region->y += d_mouse.GetMouseOffset().y;
+        }
+    }
+
+    Quad(d_theme.backgroundColour, *region);
+}
+
+void SimpleUI::EndWindow()
+{
+
+}
+
 void SimpleUI::Quad(const Maths::vec4& colour,
                     const Maths::vec4& region)
 {

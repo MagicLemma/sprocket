@@ -74,7 +74,7 @@ void EscapeMenu::OnUpdate(double dt)
         SPKT_LOG_INFO("Clicked 1!");
     }
     
-    buttonRegion.y += 60;
+    buttonRegion.y += 30;
     if (d_ui.Button("Button 2", buttonRegion)) {
         SPKT_LOG_INFO("Clicked 2!");
     }
@@ -106,6 +106,10 @@ void EscapeMenu::OnUpdate(double dt)
     buttonRegion.y += 60;
     static float value2 = 84.0f;
     d_ui.Dragger("Value 2", buttonRegion, &value2, 0.1f);
+
+    static vec4 shape{300, 300, 300, 300};
+    d_ui.StartWindow("window", &shape);
+    d_ui.EndWindow();
 
     d_ui.EndFrame();
 

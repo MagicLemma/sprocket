@@ -65,6 +65,9 @@ public:
     void StartFrame();
     void EndFrame();
 
+    void StartWindow(const std::string& name, Maths::vec4* region);
+    void EndWindow();
+
     void Quad(const Maths::vec4& colour,
               const Maths::vec4& region);
 
