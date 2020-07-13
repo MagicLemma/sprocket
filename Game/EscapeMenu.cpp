@@ -94,34 +94,29 @@ void EscapeMenu::OnUpdate(double dt)
         SPKT_LOG_INFO("Clicked 5!");
     }
 
-    buttonRegion.y += 2 * 60;
-    float volume = Sprocket::Audio::GetMasterVolume();
-    d_ui.Slider("Volume", buttonRegion, &volume, 0.0, 100.0);
-    Sprocket::Audio::SetMasterVolume(volume);
-
     buttonRegion.y += 60;
+    static bool showVolume = false;
+    if (d_ui.Button("Volume Panel", buttonRegion)) {
+        showVolume = !showVolume;
+    }
+
+    static vec4 shape{w/2 - 200, 200, 400, h - 200};
+    d_ui.StartPanel("VolumePanel", &shape, &showVolume);
+
+        float volume = Sprocket::Audio::GetMasterVolume();
+        d_ui.Slider("Master Volume", {10, 10, w * 0.25f, 50}, &volume, 0.0, 100.0);
+        Sprocket::Audio::SetMasterVolume(volume);
+
+    d_ui.EndPanel();
+
+    buttonRegion.y += 2 * 60;
     static float value1 = 27.0f;
     d_ui.Slider("Value 1", buttonRegion, &value1, 0, 100);
 
     buttonRegion.y += 60;
     static float value2 = 84.0f;
     d_ui.Dragger("Value 2", buttonRegion, &value2, 0.1f);
-
-    static vec4 shape{300, 300, 300, 300};
-    d_ui.StartPanel("window", &shape);
-
-        if (d_ui.Button("X", {10, 10, 50, 50})) {
-            SPKT_LOG_INFO("Clicked Window Button!");
-        }
-
-    d_ui.EndPanel();
     
-    static vec4 shape2{100, 100, 100, 100};
-    d_ui.StartPanel("subwindow", &shape2);
-
-        d_ui.Slider("Value 1 Again", {10, 10, 50, 50}, &value1, 0, 100);
-        
-    d_ui.EndPanel();
 
     d_ui.EndFrame();
 

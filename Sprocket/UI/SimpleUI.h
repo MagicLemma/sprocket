@@ -39,6 +39,13 @@ struct DrawCommand
     std::vector<unsigned int> textIndices;
 };
 
+struct PanelInfo
+{
+    std::string name;
+    Maths::vec4 region;
+    bool active;
+};
+
 class SimpleUI
 {
     Window* d_window;
@@ -62,11 +69,25 @@ class SimpleUI
     std::size_t d_commandIndex = 0;
         // Current command being written to.
 
-    std::optional<Maths::vec4> d_currentPanel = {};
-
-    Maths::vec4 ApplyOffset(const Maths::vec4& region);
     void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
     void DrawText(const std::string& text, const Maths::vec4& quad);
+        // Basic draw functions, does not take panelling into account.
+    
+    // Panel info 
+    std::optional<PanelInfo> d_currentPanel = {};
+
+    Maths::vec4 ApplyOffset(const Maths::vec4& region);
+        // Returns the region offsetted by the position of the current
+        // panel if there is one, or region otherwise.
+
+    std::string MangleName(const std::string& name);
+        // Returns <panel name>##<name> if there is a current panel,
+        // or name otherwise.
+
+    bool IsActive();
+        // Returns true if the current panel is active or if there
+        // are no panels.
+
 
 public:
     SimpleUI(Window* window);
@@ -80,7 +101,7 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name, Maths::vec4* region);
+    void StartPanel(const std::string& name, Maths::vec4* region, bool* active);
     void EndPanel();
 
     void Quad(const Maths::vec4& colour,

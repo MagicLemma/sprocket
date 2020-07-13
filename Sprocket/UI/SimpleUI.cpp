@@ -90,14 +90,29 @@ SimpleUI::SimpleUI(Window* window)
 
 Maths::vec4 SimpleUI::ApplyOffset(const Maths::vec4& region)
 {
-    if (!d_currentPanel.has_value()) {
-        return region;
+    if (d_currentPanel.has_value()) {
+        Maths::vec4 quad = region;
+        quad.x += d_currentPanel.value().region.x;
+        quad.y += d_currentPanel.value().region.y;
+        return quad;
     }
+    return region;
+}
 
-    Maths::vec4 quad = region;
-    quad.x += d_currentPanel.value().x;
-    quad.y += d_currentPanel.value().y;
-    return quad;
+std::string SimpleUI::MangleName(const std::string& name)
+{
+    if (d_currentPanel.has_value()) {
+        return d_currentPanel.value().name + "##" + name;
+    }
+    return name;
+}
+
+bool SimpleUI::IsActive()
+{
+    if (d_currentPanel.has_value()) {
+        return d_currentPanel.value().active;
+    }
+    return true;
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -147,23 +162,30 @@ void SimpleUI::EndFrame()
     d_buffer.Unbind();
 }
 
-void SimpleUI::StartPanel(const std::string& name, Maths::vec4* region)
+void SimpleUI::StartPanel(
+    const std::string& name,
+    Maths::vec4* region,
+    bool* active)
 {
     assert(!d_currentPanel.has_value());
+    assert(region != nullptr);
+    assert(active != nullptr);
 
-    d_commands.push_back(DrawCommand());
-    d_commandIndex = d_commands.size() - 1;
+    if (*active) {
+        d_commands.push_back(DrawCommand());
+        d_commandIndex = d_commands.size() - 1;
+        
+        auto info = d_engine.RegisterWidget(name, *region);
 
-    auto info = d_engine.RegisterWidget(name, *region);
+        if (info.clicked) {
+            region->x += d_mouse.GetMouseOffset().x;
+            region->y += d_mouse.GetMouseOffset().y;
+        }
 
-    if (info.clicked) {
-        region->x += d_mouse.GetMouseOffset().x;
-        region->y += d_mouse.GetMouseOffset().y;
+        DrawQuad(d_theme.backgroundColour, *region);
     }
 
-    DrawQuad(d_theme.backgroundColour, *region);
-
-    d_currentPanel = *region;
+    d_currentPanel = {name, *region, *active};
 }
 
 void SimpleUI::EndPanel()
@@ -252,12 +274,14 @@ void SimpleUI::DrawText(
 
 void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 {
+    if (!IsActive()) { return; }
     auto copy = ApplyOffset(quad);
     DrawQuad(colour, copy);
 }
 
 void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 {
+    if (!IsActive()) { return; }
     auto copy = ApplyOffset(quad);
     DrawText(text, copy);
 }
@@ -265,8 +289,9 @@ void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
+    if (!IsActive()) { return false; }
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
     Maths::vec4 hoveredRegion = copy;
     hoveredRegion.x -= 10.0f;
@@ -289,8 +314,9 @@ void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
+    if (!IsActive()) { return; }
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
     float x = copy.x;
     float y = copy.y;
@@ -317,8 +343,9 @@ void SimpleUI::Dragger(const std::string& name,
                        const Maths::vec4& region,
                        float* value, float speed)
 {
+    if (!IsActive()) { return; }
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
