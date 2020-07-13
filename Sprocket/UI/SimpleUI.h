@@ -60,7 +60,7 @@ class SimpleUI
         // One for the window and an extra one for each window.
     std::size_t d_commandIndex = 0;
 
-    std::stack<Maths::vec2> d_offset;
+    std::stack<Maths::vec4> d_windows;
         // The top of the stack represents the offset that the
         // regions should be drawn from. If the stack is empty, the
         // widgets are drawn with respect to the main window.

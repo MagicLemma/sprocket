@@ -90,13 +90,13 @@ SimpleUI::SimpleUI(Window* window)
 
 Maths::vec4 SimpleUI::ApplyOffset(const Maths::vec4& region)
 {
-    if (d_offset.size() == 0) {
+    if (d_windows.size() == 0) {
         return region;
     }
 
     Maths::vec4 quad = region;
-    quad.x += d_offset.top().x;
-    quad.y += d_offset.top().y;
+    quad.x += d_windows.top().x;
+    quad.y += d_windows.top().y;
     return quad;
 }
 
@@ -163,13 +163,13 @@ void SimpleUI::StartWindow(const std::string& name, Maths::vec4* region)
 
     DrawQuad(d_theme.backgroundColour, copy);
 
-    d_offset.push({copy.x, copy.y});
+    d_windows.push(copy);
 }
 
 void SimpleUI::EndWindow()
 {
     --d_commandIndex;
-    d_offset.pop();
+    d_windows.pop();
 }
 
 void SimpleUI::DrawQuad(const Maths::vec4& colour,
