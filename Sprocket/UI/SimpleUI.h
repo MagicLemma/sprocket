@@ -58,7 +58,9 @@ class SimpleUI
 
     std::vector<DrawCommand> d_commands;
         // One for the window and an extra one for each window.
+    
     std::size_t d_commandIndex = 0;
+        // Current command being written to.
 
     std::optional<Maths::vec4> d_currentPanel = {};
 

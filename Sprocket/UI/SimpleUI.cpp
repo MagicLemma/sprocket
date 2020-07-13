@@ -114,10 +114,10 @@ void SimpleUI::OnUpdate(double dt)
 
 void SimpleUI::StartFrame()
 {
-    d_engine.StartFrame();
-
     d_commands.clear();
     d_commands.push_back(DrawCommand());
+
+    d_engine.StartFrame();
 }
 
 void SimpleUI::EndFrame()
