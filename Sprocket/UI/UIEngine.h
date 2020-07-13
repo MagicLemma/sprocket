@@ -64,6 +64,8 @@ public:
 
     WidgetInfo RegisterWidget(const std::string& name,
                               const Maths::vec4& region);
+        // Register a widget with the given name and region on the
+        // screen. This tests if the widget is hovered and clicekd
 
     void StartFrame();
     void EndFrame();

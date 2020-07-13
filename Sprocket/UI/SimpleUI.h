@@ -68,6 +68,9 @@ public:
     void Quad(const Maths::vec4& colour,
               const Maths::vec4& region);
 
+    void Text(const std::string& text,
+              const Maths::vec4& region);
+
     bool Button(const std::string& name,
                 const Maths::vec4& region);
 
@@ -75,8 +78,9 @@ public:
                 const Maths::vec4& region,
                 float* value, float min, float max);
 
-    void Text(const std::string& text,
-              const Maths::vec4& region);
+    void Dragger(const std::string& name,
+                 const Maths::vec4& region,
+                 float* value, float speed);
 };
 
 }

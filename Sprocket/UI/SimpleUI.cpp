@@ -2,6 +2,7 @@
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
 #include "MouseCodes.h"
+#include "KeyboardCodes.h"
 #include "Log.h"
 #include "Maths.h"
 #include "RenderContext.h"
@@ -206,23 +207,34 @@ void SimpleUI::Slider(const std::string& name,
     }    
 }
 
+void SimpleUI::Dragger(const std::string& name,
+                       const Maths::vec4& region,
+                       float* value, float speed)
+{
+    auto info = d_engine.RegisterWidget(name, region);
+
+    Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
+    
+    Quad(colour, region);
+    Text(name + ": " + Maths::ToString(*value, 0), region);
+
+    if (info.clicked) {
+        *value += d_mouse.GetMouseOffset().x * speed;
+    }    
+}
+
 void SimpleUI::Text(
     const std::string& text,
     const Maths::vec4& region)
 {
-    float x = region.x;
-    float y = region.y;
-    float width = region.z;
-    float height = region.w;
-    
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
     Glyph first = d_font.GetGlyph(text.front());
     auto textInfo = GetTextInfo(d_font, text);
 
     Maths::vec2 pen = {
-        x + (width - textInfo.width) / 2.0f,
-        y + (height - first.height) / 2.0f
+        region.x + (region.z - textInfo.width) / 2.0f,
+        region.y + (region.w - first.height) / 2.0f
     };
 
     pen.x -= first.offset.x;

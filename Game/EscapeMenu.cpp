@@ -105,7 +105,7 @@ void EscapeMenu::OnUpdate(double dt)
 
     buttonRegion.y += 60;
     static float value2 = 84.0f;
-    d_ui.Slider("Value 2", buttonRegion, &value2, 0, 100);
+    d_ui.Dragger("Value 2", buttonRegion, &value2, 0.1f);
 
     d_ui.EndFrame();
 
