@@ -9,6 +9,12 @@
 
 namespace Sprocket {
 
+struct QuadData
+{
+    std::string name;
+    Maths::vec4 region;
+};
+
 struct WidgetInfo
 // When registering a new widget with the UIEngine, the callers gets
 // this struct back. It contains, in seconds, the amount of time that
@@ -58,6 +64,10 @@ class UIEngine
     double d_time = 0.0;
         // A steadily increasing timer used to set the unselected
         // times in the maps above.
+
+    std::vector<QuadData> d_quads;
+
+    std::size_t d_onClick = 0;
 
 public:
     UIEngine(KeyboardProxy* keyboard, MouseProxy* mouse);

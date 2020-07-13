@@ -71,27 +71,27 @@ void EscapeMenu::OnUpdate(double dt)
 
     buttonRegion.y += 60;
     if (d_ui.Button("Button 1", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked!");
+        SPKT_LOG_INFO("Clicked 1!");
     }
     
     buttonRegion.y += 60;
     if (d_ui.Button("Button 2", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked!");
+        SPKT_LOG_INFO("Clicked 2!");
     }
     
     buttonRegion.y += 60;
     if (d_ui.Button("Button 3", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked!");
+        SPKT_LOG_INFO("Clicked 3!");
     }
 
     buttonRegion.y += 60;
     if (d_ui.Button("Button 4", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked!");
+        SPKT_LOG_INFO("Clicked 4!");
     }
 
     buttonRegion.y += 60;
     if (d_ui.Button("Button 5", buttonRegion)) {
-        SPKT_LOG_INFO("Clicked!");
+        SPKT_LOG_INFO("Clicked 5!");
     }
 
     buttonRegion.y += 2 * 60;
