@@ -40,13 +40,6 @@ struct DrawCommand
     std::vector<unsigned int> textIndices;
 };
 
-struct PanelInfo
-{
-    std::size_t hash;
-    std::string name;
-    Maths::vec4 region;
-};
-
 struct QuadData
 {
     std::size_t hash;
@@ -55,6 +48,7 @@ struct QuadData
 
 struct Panel
 {
+    std::string name;
     std::size_t hash;
     Maths::vec4 region;
 
@@ -107,8 +101,9 @@ class SimpleUI
         // Basic draw functions, does not take panelling into account.
     
     // Panel info 
-    std::optional<PanelInfo> d_currentPanel = {};
     std::unordered_map<std::size_t, Panel> d_panels;
+    Panel* d_currentPanel = nullptr;
+    std::deque<std::size_t> d_panelOrder;
 
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
         // Returns the region offsetted by the position of the current
@@ -139,7 +134,6 @@ class SimpleUI
         // A steadily increasing timer used to set the unselected
         // times in the maps above.
 
-    std::deque<std::size_t> d_panelOrder;
 
     std::size_t d_onClick = 0;
     std::size_t d_onHover = 0;

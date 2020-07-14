@@ -91,10 +91,10 @@ SimpleUI::SimpleUI(Window* window)
 
 Maths::vec4 SimpleUI::ApplyOffset(const Maths::vec4& region)
 {
-    if (d_currentPanel.has_value()) {
+    if (d_currentPanel) {
         Maths::vec4 quad = region;
-        quad.x += d_currentPanel.value().region.x;
-        quad.y += d_currentPanel.value().region.y;
+        quad.x += d_currentPanel->region.x;
+        quad.y += d_currentPanel->region.y;
         return quad;
     }
     return region;
@@ -102,7 +102,7 @@ Maths::vec4 SimpleUI::ApplyOffset(const Maths::vec4& region)
 
 std::string SimpleUI::MangleName(const std::string& name)
 {
-    return d_currentPanel.value().name + "##" + name;
+    return d_currentPanel->name + "##" + name;
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -130,12 +130,12 @@ void SimpleUI::OnUpdate(double dt)
 void SimpleUI::StartFrame()
 {
     d_panels.clear();
-    d_currentPanel.reset();
+    d_currentPanel = nullptr;
 }
 
 void SimpleUI::EndFrame()
 {
-    assert(!d_currentPanel.has_value());
+    assert(!d_currentPanel);
 
     bool foundHovered = false;
     bool foundClicked = false;
@@ -219,7 +219,7 @@ bool SimpleUI::StartPanel(
     bool* active,
     bool* draggable)
 {
-    assert(!d_currentPanel.has_value());
+    assert(!d_currentPanel);
     assert(region != nullptr);
     assert(active != nullptr);
 
@@ -232,10 +232,11 @@ bool SimpleUI::StartPanel(
         }
         
         auto& panel = d_panels[hash];
+        panel.name = name;
         panel.hash = hash;
         panel.region = *region;
 
-        d_currentPanel = PanelInfo{hash, name, *region};
+        d_currentPanel = &panel;
         
         auto info = RegisterWidget(name, *region);
 
@@ -252,21 +253,21 @@ bool SimpleUI::StartPanel(
 
 void SimpleUI::EndPanel()
 {
-    assert(d_currentPanel.has_value());
-    d_currentPanel.reset();
+    assert(d_currentPanel);
+    d_currentPanel = nullptr;
 }
 
 void SimpleUI::DrawQuad(const Maths::vec4& colour,
                         const Maths::vec4& region)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     auto copy = region;
     float x = copy.x;
     float y = copy.y;
     float width = copy.z;
     float height = copy.w;
 
-    auto& cmd = d_panels[d_currentPanel.value().hash];
+    auto& cmd = d_panels[d_currentPanel->hash];
 
     auto col = colour;
     col.a = 1;
@@ -289,7 +290,7 @@ void SimpleUI::DrawText(
     const std::string& text,
     const Maths::vec4& region)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
 
     auto copy = region;
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
@@ -325,7 +326,7 @@ void SimpleUI::DrawText(
 
         pen += glyph.advance;
 
-        auto& cmd = d_panels[d_currentPanel.value().hash];
+        auto& cmd = d_panels[d_currentPanel->hash];
 
         unsigned int index = cmd.textVertices.size();
         cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
@@ -344,14 +345,14 @@ void SimpleUI::DrawText(
 
 void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     auto copy = ApplyOffset(quad);
     DrawQuad(colour, copy);
 }
 
 void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     auto copy = ApplyOffset(quad);
     DrawText(text, copy);
 }
@@ -359,7 +360,7 @@ void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     Maths::vec4 copy = ApplyOffset(region);
     auto info = RegisterWidget(MangleName(name), copy);
 
@@ -384,7 +385,7 @@ bool SimpleUI::Checkbox(const std::string& name,
                         const Maths::vec4& region,
                         bool* value)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     Maths::vec4 copy = ApplyOffset(region);
     auto info = RegisterWidget(MangleName(name), copy);
 
@@ -414,7 +415,7 @@ void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     Maths::vec4 copy = ApplyOffset(region);
     auto info = RegisterWidget(MangleName(name), copy);
 
@@ -443,7 +444,7 @@ void SimpleUI::Dragger(const std::string& name,
                        const Maths::vec4& region,
                        float* value, float speed)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     Maths::vec4 copy = ApplyOffset(region);
     auto info = RegisterWidget(MangleName(name), copy);
 
@@ -460,10 +461,10 @@ void SimpleUI::Dragger(const std::string& name,
 WidgetInfo SimpleUI::RegisterWidget(const std::string& name,
                                     const Maths::vec4& region)
 {
-    assert(d_currentPanel.has_value());
+    assert(d_currentPanel);
     WidgetInfo info;
     std::size_t hash = std::hash<std::string>{}(name);
-    d_panels[d_currentPanel.value().hash].widgetRegions.push_back({hash, region});
+    d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, region});
 
     if (hash == d_clicked) {
         info.mouseDown = d_clickedTime;
