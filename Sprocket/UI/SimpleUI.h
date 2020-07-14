@@ -6,7 +6,7 @@
 #include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "Font.h"
-#include "UIEngine.h"
+//#include "UIEngine.h"
 
 #include <vector>
 #include <unordered_map>
@@ -46,6 +46,31 @@ struct PanelInfo
     Maths::vec4 region;
 };
 
+struct QuadData
+{
+    std::string name;
+    Maths::vec4 region;
+};
+
+struct WidgetInfo
+// When registering a new widget with the UIEngine, the callers gets
+// this struct back. It contains, in seconds, the amount of time that
+// the current widget has been (un)hovered and (un)clicked, among
+// other pieces of info. The caller can then use this information to
+// decide how the widget should be rendered.
+{
+    double mouseOver = 0.0;
+    double sinceHovered = 0.0f;
+    double sinceUnhovered = 0.0;
+
+    double mouseDown = 0.0;
+    double sinceClicked = 0.0;
+    double sinceUnlicked = 0.0;
+    
+    bool onClick = false;
+    bool onHover = false;
+};
+
 class SimpleUI
 {
     Window* d_window;
@@ -54,8 +79,6 @@ class SimpleUI
 
     KeyboardProxy d_keyboard;
     MouseProxy d_mouse;
-
-    UIEngine d_engine;
 
     Font d_font;
 
@@ -79,11 +102,42 @@ class SimpleUI
         // Returns <panel name>##<name> if there is a current panel,
         // or name otherwise.
 
+    std::size_t d_hovered = 0;
+    std::size_t d_clicked = 0;
+        // Hashes of the currently hovered/clicked widgets.
+
+    double d_hoveredTime = 0.0;
+    double d_clickedTime = 0.0;
+        // Times (in seconds) that the current widgets have been
+        // hovered/selected.
+
+    std::unordered_map<std::size_t, double> d_hoveredTimes;
+    std::unordered_map<std::size_t, double> d_unhoveredTimes;
+    std::unordered_map<std::size_t, double> d_clickedTimes;
+    std::unordered_map<std::size_t, double> d_unclickedTimes;
+        // Hash -> time map keeping track of the last time each
+        // widget was unselected. Used to calculate the unhovered
+        // and unclicked times.
+
+    double d_time = 0.0;
+        // A steadily increasing timer used to set the unselected
+        // times in the maps above.
+
+    std::unordered_map<std::size_t, std::vector<QuadData>> d_panelQuads;
+
+    std::size_t d_onClick = 0;
+    std::size_t d_onHover = 0;
+        // Stores which widget has been clicked/hovered so that it can
+        // be acted on next frame. These are consumed when retrieved.
+
 public:
     SimpleUI(Window* window);
 
     const SimpleUITheme& GetTheme() const { return d_theme; }
     void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
+
+    WidgetInfo RegisterWidget(const std::string& name,
+                              const Maths::vec4& region);
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);

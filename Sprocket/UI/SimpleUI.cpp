@@ -78,7 +78,6 @@ SimpleUI::SimpleUI(Window* window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_font("Resources/Fonts/Coolvetica.ttf", 36.0f)
-    , d_engine(&d_keyboard, &d_mouse)
 {
     d_keyboard.ConsumeAll(false);
 
@@ -102,10 +101,7 @@ Maths::vec4 SimpleUI::ApplyOffset(const Maths::vec4& region)
 
 std::string SimpleUI::MangleName(const std::string& name)
 {
-    if (d_currentPanel.has_value()) {
-        return d_currentPanel.value().name + "##" + name;
-    }
-    return name;
+    return d_currentPanel.value().name + "##" + name;
 }
 
 void SimpleUI::OnEvent(Event& event)
@@ -117,22 +113,72 @@ void SimpleUI::OnEvent(Event& event)
 void SimpleUI::OnUpdate(double dt)
 {
     d_mouse.OnUpdate();
-    d_engine.OnUpdate(dt);
+    d_time += dt;
+    d_clickedTime += dt;
+    d_hoveredTime += dt;
+
+    if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
+        d_clickedTime = 0.0;
+        if (d_clicked > 0) {
+            d_unclickedTimes[d_clicked] = d_time;
+            d_clicked = 0;
+        }
+    }
 }
 
 void SimpleUI::StartFrame()
 {
     d_commands.clear();
     d_currentPanel.reset();
-
-    d_engine.StartFrame();
+    d_panelQuads.clear();
 }
 
 void SimpleUI::EndFrame()
 {
     assert(!d_currentPanel.has_value());
 
-    d_engine.EndFrame();
+    bool foundHovered = false;
+    bool foundClicked = false;
+
+    for (const auto& [panel, quads] : d_panelQuads) {
+        for (std::size_t i = quads.size(); i != 0;) {
+            --i;
+            const auto& quad = quads[i];
+            std::size_t hash = std::hash<std::string>{}(quad.name);
+            auto hovered = d_mouse.InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
+            auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
+
+            if (!foundClicked && ((d_clicked == hash) || clicked)) {
+                foundClicked = true;
+                if (d_clicked != hash) {
+                    d_unclickedTimes[d_clicked] = d_time;
+                    d_clickedTimes[hash] = d_time;
+                    d_clicked = hash;
+                    d_onClick = hash;
+                    d_clickedTime = 0.0;
+                }
+            }
+            
+            if (!foundHovered && hovered) {
+                foundHovered = true;
+                if (d_hovered != hash) {
+                    d_unhoveredTimes[d_hovered] = d_time;
+                    d_hoveredTimes[hash] = d_time;
+                    d_hovered = hash;
+                    d_onHover = hash;
+                    d_hoveredTime = 0.0;
+                }
+            }
+        }
+    }
+
+    if (foundHovered == false) {
+        d_hoveredTime = 0.0;
+        if (d_hovered > 0) {
+            d_unhoveredTimes[d_hovered] = d_time;
+            d_hovered = 0;
+        }
+    }
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
@@ -168,12 +214,12 @@ bool SimpleUI::StartPanel(
 
     if (*active) {
         std::size_t hash = std::hash<std::string>{}(name);
-        d_engine.StartPanel(hash, *region);
         
         d_commands.emplace(hash, DrawCommand());
+        d_panelQuads.emplace(hash, std::vector<QuadData>{});
         d_currentPanel = PanelInfo{hash, name, *region};
         
-        auto info = d_engine.RegisterWidget(name, *region);
+        auto info = RegisterWidget(name, *region);
 
         if (info.mouseDown && *draggable) {
             region->x += d_mouse.GetMouseOffset().x;
@@ -190,7 +236,6 @@ void SimpleUI::EndPanel()
 {
     assert(d_currentPanel.has_value());
     d_currentPanel.reset();
-    d_engine.EndPanel();
 }
 
 void SimpleUI::DrawQuad(const Maths::vec4& colour,
@@ -295,7 +340,7 @@ bool SimpleUI::Button(const std::string& name,
 {
     assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(MangleName(name), copy);
+    auto info = RegisterWidget(MangleName(name), copy);
 
     Maths::vec4 hoveredRegion = copy;
     hoveredRegion.x -= 10.0f;
@@ -320,7 +365,7 @@ bool SimpleUI::Checkbox(const std::string& name,
 {
     assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(MangleName(name), copy);
+    auto info = RegisterWidget(MangleName(name), copy);
 
     auto unselected = Interpolate(info, d_theme.backgroundColour, d_theme.backgroundColour*1.1f, d_theme.clickedColour);
     auto selected = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);;
@@ -350,7 +395,7 @@ void SimpleUI::Slider(const std::string& name,
 {
     assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(MangleName(name), copy);
+    auto info = RegisterWidget(MangleName(name), copy);
 
     float x = copy.x;
     float y = copy.y;
@@ -379,7 +424,7 @@ void SimpleUI::Dragger(const std::string& name,
 {
     assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(MangleName(name), copy);
+    auto info = RegisterWidget(MangleName(name), copy);
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
@@ -391,6 +436,40 @@ void SimpleUI::Dragger(const std::string& name,
     }    
 }
 
+WidgetInfo SimpleUI::RegisterWidget(const std::string& name,
+                                    const Maths::vec4& region)
+{
+    assert(d_currentPanel.has_value());
+    WidgetInfo info;
+    d_panelQuads[d_currentPanel.value().hash].push_back({name, region});
+    std::size_t hash = std::hash<std::string>{}(name);
+
+    if (hash == d_clicked) {
+        info.mouseDown = d_clickedTime;
+    }
+
+    info.sinceUnlicked = d_time - d_unclickedTimes[hash];
+    info.sinceClicked = d_time - d_clickedTimes[hash];
+
+    if (hash == d_hovered) {
+        info.mouseOver = d_hoveredTime;
+    }
+    
+    info.sinceUnhovered = d_time - d_unhoveredTimes[hash];
+    info.sinceHovered = d_time - d_unhoveredTimes[hash];
+
+    if (d_onClick == hash) { // Consume the onCLick
+        d_onClick = 0;
+        info.onClick = true;
+    }
+
+    if (d_onHover == hash) { // Consume the onHover
+        d_onHover = 0;
+        info.onHover = true;
+    }
+
+    return info;
+}
 
 
 }
