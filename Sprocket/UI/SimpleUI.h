@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <optional>
 #include <chrono>
+#include <deque>
 
 namespace Sprocket {
 
@@ -124,6 +125,7 @@ class SimpleUI
         // times in the maps above.
 
     std::unordered_map<std::size_t, std::vector<QuadData>> d_panelQuads;
+    std::deque<std::size_t> d_panelOrder;
 
     std::size_t d_onClick = 0;
     std::size_t d_onHover = 0;

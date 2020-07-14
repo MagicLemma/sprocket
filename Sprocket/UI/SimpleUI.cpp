@@ -11,6 +11,7 @@
 #include <functional>
 #include <sstream>
 #include <cassert>
+#include <algorithm>
 
 namespace Sprocket {
 namespace {
@@ -140,7 +141,10 @@ void SimpleUI::EndFrame()
     bool foundHovered = false;
     bool foundClicked = false;
 
-    for (const auto& [panel, quads] : d_panelQuads) {
+    std::size_t moveToFront = 0;
+
+    for (auto it = d_panelOrder.rbegin(); it != d_panelOrder.rend(); ++it) {
+        const auto& quads = d_panelQuads[*it];
         for (std::size_t i = quads.size(); i != 0;) {
             --i;
             const auto& quad = quads[i];
@@ -150,6 +154,7 @@ void SimpleUI::EndFrame()
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
+                moveToFront = *it;
                 if (d_clicked != hash) {
                     d_unclickedTimes[d_clicked] = d_time;
                     d_clickedTimes[hash] = d_time;
@@ -192,13 +197,20 @@ void SimpleUI::EndFrame()
     d_shader.LoadUniform("u_proj_matrix", proj);
 
     d_buffer.Bind();
-    for (const auto& [panel, cmd] : d_commands) {
+    for (auto it = d_panelOrder.begin(); it != d_panelOrder.end(); ++it) {
+        const auto& cmd = d_commands[*it];
         Texture::White().Bind();
         d_buffer.Draw(cmd.quadVertices, cmd.quadIndices);
         d_font.Bind();
         d_buffer.Draw(cmd.textVertices, cmd.textIndices);
     }
     d_buffer.Unbind();
+
+    if (moveToFront > 0) {
+        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
+        d_panelOrder.erase(toMove);
+        d_panelOrder.push_back(moveToFront);
+    }
 }
 
 bool SimpleUI::StartPanel(
@@ -211,9 +223,13 @@ bool SimpleUI::StartPanel(
     assert(region != nullptr);
     assert(active != nullptr);
 
-
     if (*active) {
         std::size_t hash = std::hash<std::string>{}(name);
+
+        auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
+        if (it == d_panelOrder.end()) {
+            d_panelOrder.push_back(hash);
+        }
         
         d_commands.emplace(hash, DrawCommand());
         d_panelQuads.emplace(hash, std::vector<QuadData>{});
