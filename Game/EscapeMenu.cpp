@@ -130,6 +130,16 @@ void EscapeMenu::OnUpdate(double dt)
         d_ui.EndPanel();
     }
 
+    //static vec4 imageRegion{3*w/4, 100, 50, 50};
+    //bool dragImage = true;
+    //if (d_ui.StartPanel("Image", &imageRegion, &dragImage, &dragImage)) {
+
+    //    static Sprocket::Texture space("Resources/Textures/Space.png");
+    //    d_ui.Image("Space", space, {50, 50});
+
+    //    d_ui.EndPanel();
+    //}
+
     d_ui.EndFrame();
 
     d_core.window->SetCursorVisibility(true);

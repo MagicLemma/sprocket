@@ -138,7 +138,6 @@ class SimpleUI
         // A steadily increasing timer used to set the unselected
         // times in the maps above.
 
-
     std::size_t d_onClick = 0;
     std::size_t d_onHover = 0;
         // Stores which widget has been clicked/hovered so that it can
