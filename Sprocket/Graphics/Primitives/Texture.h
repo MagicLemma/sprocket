@@ -23,7 +23,7 @@ private:
         // TODO: Generalise other constructors to expose this.
 
 public:
-    Texture(const std::string& pngFile, bool flip = true);
+    Texture(const std::string& pngFile, bool flip = false);
     Texture(int width, int height, const std::vector<unsigned char>& data);
     Texture(int width, int height, unsigned char* data);
     Texture(int width, int height, std::shared_ptr<TEX> texture);
@@ -43,6 +43,8 @@ public:
                        const std::vector<unsigned char>& data);
 
     unsigned int Id() const;
+
+    int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
 
     bool operator==(const Texture& other) const;
 };

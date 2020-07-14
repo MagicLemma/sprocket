@@ -15,6 +15,8 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     theme.hoveredColour = LIGHT_BLUE;
     theme.clickedColour = GARDEN;
     d_ui.SetTheme(theme);
+
+    Sprocket::Audio::SetMasterVolume(0);
 }
 
 void EscapeMenu::OnEvent(Sprocket::Event& event)
@@ -48,33 +50,95 @@ void EscapeMenu::OnUpdate(double dt)
     float h = (float)window->Height();
 
     d_ui.StartFrame();
-    auto background = SPACE_DARK * 0.1f;
-    background.a = 0.9f;
-    d_ui.Quad(background, 0.0f, 0.0f, w * 0.3f, h);
+    static bool showVolume = false;
 
-    d_ui.Text("Menu", 0.0f, 0.0f, w * 0.3f, 100);
+    bool mainActive = true;
+    bool mainDraggable = false;
+    vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
+    if (d_ui.StartPanel("Main", &mainRegion, &mainActive, &mainDraggable)) {
 
-    if (d_ui.Button(1, "Toggle Dev UI", w * 0.025f, 100, w * 0.25f, 50)) {
-        switch (d_worldLayer->d_mode) {
-            case Mode::PLAYER: {
-                d_worldLayer->d_mode = Mode::EDITOR;
-            } break;
-            case Mode::EDITOR: {
-                d_worldLayer->d_mode = Mode::PLAYER;
-            } break;
+        d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
+
+        vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
+
+        if (d_ui.Button("Toggle Dev UI", buttonRegion)) {
+            switch (d_worldLayer->d_mode) {
+                case Mode::PLAYER: {
+                    d_worldLayer->d_mode = Mode::EDITOR;
+                } break;
+                case Mode::EDITOR: {
+                    d_worldLayer->d_mode = Mode::PLAYER;
+                } break;
+            }
         }
+
+        buttonRegion.y += 2 * 60;
+        static float value1 = 27.0f;
+        d_ui.Slider("Slider", buttonRegion, &value1, 0, 100);
+
+        buttonRegion.y += 60;
+        static float value2 = 84.0f;
+        d_ui.Dragger("Dragger", buttonRegion, &value2, 0.1f);
+
+        buttonRegion.y += 60;
+        static bool check = false;
+        d_ui.Checkbox("Checkbox", buttonRegion, &check);
+
+        buttonRegion.y += 60;
+        d_ui.Checkbox("Volume Panel", buttonRegion, &showVolume);
+        
+        d_ui.EndPanel();
+    }
+    
+    static vec4 shape{w/2 - 200, 100, 400, 500};
+    bool draggable = true;
+    if (d_ui.StartPanel("VolumePanel", &shape, &showVolume, &draggable)) {
+        d_ui.Text("Volume", {0, 0, 400, 100});
+
+        float volume = Sprocket::Audio::GetMasterVolume();
+        d_ui.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
+        Sprocket::Audio::SetMasterVolume(volume);
+        
+        d_ui.EndPanel();
     }
 
-    if (d_ui.Button(2, "Button", w * 0.025f, 175, w * 0.25f, 50)) {
-        SPKT_LOG_INFO("Clicked!");
+    static vec4 shape2{w/2 + 300, 100, 400, 500};
+    bool draggable2 = true;
+    if (d_ui.StartPanel("BUTTONS! :D", &shape2, &draggable2, &draggable)) {
+        d_ui.Text("BUTTONS! :D", {0, 0, 400, 100});
+        vec4 buttonQuad{10, 100, 400 - 20, 50};
+        d_ui.Button("Button 1", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 2", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 3", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 4", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 5", buttonQuad);
+        buttonQuad.y += 60;
+        buttonQuad.z = buttonQuad.w;
+
+        static bool valA = false;
+        d_ui.Checkbox("A", buttonQuad, &valA);
+        buttonQuad.x += buttonQuad.z + 10.0f;
+
+        static bool valB = true;
+        d_ui.Checkbox("B", buttonQuad, &valB);
+        buttonQuad.x += buttonQuad.z + 10.0f;
+
+        d_ui.EndPanel();
     }
 
-    float volume = Sprocket::Audio::GetMasterVolume();
-    d_ui.Slider(5, "Volume", w * 0.025f, 325, w * 0.25f, 50, &volume, 0.0, 100.0);
-    Sprocket::Audio::SetMasterVolume(volume);
+    //static vec4 imageRegion{3*w/4, 100, 50, 50};
+    //bool dragImage = true;
+    //if (d_ui.StartPanel("Image", &imageRegion, &dragImage, &dragImage)) {
 
-    static float value = 250.0f;
-    d_ui.Slider(6, "Value", w * 0.025f, 400, w * 0.25f, 50, &value, 100, 1200);
+    //    static Sprocket::Texture space("Resources/Textures/Space.png");
+    //    d_ui.Image("Space", space, {50, 50});
+
+    //    d_ui.EndPanel();
+    //}
 
     d_ui.EndFrame();
 

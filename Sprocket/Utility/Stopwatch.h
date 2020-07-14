@@ -15,12 +15,15 @@ class Stopwatch
     Clock::time_point d_lastTimePrinted;
     unsigned int d_frameCount;
 
+    unsigned int d_frameRate = 0.0f;
+
 public:
     Stopwatch();
     void OnUpdate();
     double DeltaTime() const;
 
     void PrintFramerate(bool val) { d_printFramerate = val; }
+    unsigned int Framerate() const { return d_frameRate; }
 };
 
 }

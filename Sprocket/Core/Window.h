@@ -65,6 +65,7 @@ public:
 		// provided, it is overwritten.
 
 	// Window Utilities
+	void SetWindowName(const std::string& name);
 	void SetCursorVisibility(bool visibility);
 
 	// Clipboard Utilities

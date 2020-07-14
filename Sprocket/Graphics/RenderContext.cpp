@@ -36,4 +36,34 @@ RenderContext::~RenderContext()
     glPolygonMode(GL_FRONT_AND_BACK, d_polygonMode[0]);
 }
 
+void RenderContext::AlphaBlending(bool enabled) const
+{
+    if (enabled) {
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    } else {
+        glDisable(GL_BLEND);
+    }
+}
+
+void RenderContext::FaceCulling(bool enabled) const
+{
+    if (enabled) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    } else {
+        glDisable(GL_CULL_FACE);
+    }
+}
+
+void RenderContext::DepthTesting(bool enabled) const
+{
+    if (enabled) {
+        glEnable(GL_DEPTH_TEST);
+    } else {
+        glDisable(GL_DEPTH_TEST);
+    }
+}
+
 }
