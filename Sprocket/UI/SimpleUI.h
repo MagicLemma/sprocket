@@ -6,7 +6,6 @@
 #include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "Font.h"
-//#include "UIEngine.h"
 
 #include <vector>
 #include <unordered_map>
@@ -37,6 +36,13 @@ struct QuadData
     Maths::vec4 region;
 };
 
+struct DrawCommand
+{
+    std::vector<BufferVertex> vertices;
+    std::vector<unsigned int> indices;
+    const Texture* texture;
+};
+
 struct Panel
 {
     std::string name;
@@ -51,6 +57,8 @@ struct Panel
 
     std::vector<BufferVertex> textVertices;
     std::vector<unsigned int> textIndices;
+
+    std::vector<DrawCommand> extraCommands;
 };
 
 struct WidgetTimes
@@ -177,6 +185,10 @@ public:
     void Dragger(const std::string& name,
                  const Maths::vec4& region,
                  float* value, float speed);
+
+    void Image(const std::string& name,
+               const Texture& image,
+               const Maths::vec2& position);
 };
 
 }

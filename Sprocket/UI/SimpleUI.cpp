@@ -198,11 +198,17 @@ void SimpleUI::EndFrame()
 
     d_buffer.Bind();
     for (auto it = d_panelOrder.begin(); it != d_panelOrder.end(); ++it) {
-        const auto& cmd = d_panels[*it];
+        const auto& panel = d_panels[*it];
+        d_shader.LoadUniformInt("texture_channels", 1);
         Texture::White().Bind();
-        d_buffer.Draw(cmd.quadVertices, cmd.quadIndices);
+        d_buffer.Draw(panel.quadVertices, panel.quadIndices);
         d_font.Bind();
-        d_buffer.Draw(cmd.textVertices, cmd.textIndices);
+        d_buffer.Draw(panel.textVertices, panel.textIndices);
+        for (const auto& cmd : panel.extraCommands) {
+            d_shader.LoadUniformInt("texture_channels", cmd.texture->GetChannels());
+            cmd.texture->Bind();
+            d_buffer.Draw(cmd.vertices, cmd.indices);
+        }
     }
     d_buffer.Unbind();
 
@@ -464,6 +470,26 @@ void SimpleUI::Dragger(const std::string& name,
     if (info.mouseDown) {
         *value += d_mouse.GetMouseOffset().x * speed;
     }    
+}
+
+void SimpleUI::Image(const std::string& name,
+                     const Texture& image,
+                     const Maths::vec2& position)
+{
+    assert(d_currentPanel);
+    Maths::vec4 region{position.x, position.y, image.Width(), image.Height()};
+    Maths::vec4 copy = ApplyOffset(region);
+    auto info = RegisterWidget(MangleName(name), copy);
+
+    auto& cmd = d_currentPanel->extraCommands.emplace_back(DrawCommand());
+    cmd.vertices = {
+        {{copy.x,          copy.y         }, {1.0, 1.0, 1.0, 1.0}, {0.0, 0.0}},
+        {{copy.x + copy.z, copy.y         }, {1.0, 1.0, 1.0, 1.0}, {1.0, 0.0}},
+        {{copy.x,          copy.y + copy.w}, {1.0, 1.0, 1.0, 1.0}, {0.0, 1.0}},
+        {{copy.x + copy.z, copy.y + copy.w}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0}}
+    };
+    cmd.indices = {0, 1, 2, 2, 1, 3};
+    cmd.texture = &image;
 }
 
 WidgetInfo SimpleUI::RegisterWidget(const std::string& name,
