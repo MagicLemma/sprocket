@@ -105,6 +105,12 @@ void EscapeMenu::OnUpdate(double dt)
         d_ui.EndPanel();
     }
 
+    static vec4 shape2{w/2 + 300, 100, 400, 500};
+    bool draggable2 = true;
+    if (d_ui.StartPanel("VolumePanel2", &shape2, &draggable2, &draggable)) {
+        d_ui.Button("Master Volume", {10, 100, 400 - 20, 50});
+        d_ui.EndPanel();
+    }
 
     d_ui.EndFrame();
 
