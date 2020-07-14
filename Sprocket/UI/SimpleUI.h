@@ -31,15 +31,6 @@ struct SimpleUITheme
     Maths::vec4 clickedColour;
 };
 
-struct DrawCommand
-{
-    std::vector<BufferVertex> quadVertices;
-    std::vector<unsigned int> quadIndices;
-
-    std::vector<BufferVertex> textVertices;
-    std::vector<unsigned int> textIndices;
-};
-
 struct QuadData
 {
     std::size_t hash;
@@ -60,6 +51,14 @@ struct Panel
 
     std::vector<BufferVertex> textVertices;
     std::vector<unsigned int> textIndices;
+};
+
+struct WidgetTimes
+{
+    double hoveredTime = 0.0;
+    double unhoveredTime = 0.0;
+    double clickedTime = 0.0;
+    double unclickedTime = 0.0;
 };
 
 struct WidgetInfo
@@ -122,10 +121,7 @@ class SimpleUI
         // Times (in seconds) that the current widgets have been
         // hovered/selected.
 
-    std::unordered_map<std::size_t, double> d_hoveredTimes;
-    std::unordered_map<std::size_t, double> d_unhoveredTimes;
-    std::unordered_map<std::size_t, double> d_clickedTimes;
-    std::unordered_map<std::size_t, double> d_unclickedTimes;
+    std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
         // Hash -> time map keeping track of the last time each
         // widget was unselected. Used to calculate the unhovered
         // and unclicked times.

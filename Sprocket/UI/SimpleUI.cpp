@@ -121,7 +121,7 @@ void SimpleUI::OnUpdate(double dt)
     if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
         d_clickedTime = 0.0;
         if (d_clicked > 0) {
-            d_unclickedTimes[d_clicked] = d_time;
+            d_widgetTimes[d_clicked].unclickedTime = d_time;
             d_clicked = 0;
         }
     }
@@ -156,8 +156,8 @@ void SimpleUI::EndFrame()
                 foundClicked = true;
                 moveToFront = *it;
                 if (d_clicked != hash) {
-                    d_unclickedTimes[d_clicked] = d_time;
-                    d_clickedTimes[hash] = d_time;
+                    d_widgetTimes[d_clicked].unclickedTime = d_time;
+                    d_widgetTimes[hash].clickedTime = d_time;
                     d_clicked = hash;
                     d_onClick = hash;
                     d_clickedTime = 0.0;
@@ -167,8 +167,8 @@ void SimpleUI::EndFrame()
             if (!foundHovered && hovered) {
                 foundHovered = true;
                 if (d_hovered != hash) {
-                    d_unhoveredTimes[d_hovered] = d_time;
-                    d_hoveredTimes[hash] = d_time;
+                    d_widgetTimes[d_hovered].unhoveredTime = d_time;
+                    d_widgetTimes[hash].hoveredTime = d_time;
                     d_hovered = hash;
                     d_onHover = hash;
                     d_hoveredTime = 0.0;
@@ -180,7 +180,7 @@ void SimpleUI::EndFrame()
     if (foundHovered == false) {
         d_hoveredTime = 0.0;
         if (d_hovered > 0) {
-            d_unhoveredTimes[d_hovered] = d_time;
+            d_widgetTimes[d_hovered].unhoveredTime = d_time;
             d_hovered = 0;
         }
     }
@@ -470,15 +470,15 @@ WidgetInfo SimpleUI::RegisterWidget(const std::string& name,
         info.mouseDown = d_clickedTime;
     }
 
-    info.sinceUnlicked = d_time - d_unclickedTimes[hash];
-    info.sinceClicked = d_time - d_clickedTimes[hash];
+    info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
+    info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
 
     if (hash == d_hovered) {
         info.mouseOver = d_hoveredTime;
     }
     
-    info.sinceUnhovered = d_time - d_unhoveredTimes[hash];
-    info.sinceHovered = d_time - d_unhoveredTimes[hash];
+    info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
+    info.sinceHovered = d_time - d_widgetTimes[hash].hoveredTime;
 
     if (d_onClick == hash) { // Consume the onCLick
         d_onClick = 0;
