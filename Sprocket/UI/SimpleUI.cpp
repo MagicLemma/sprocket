@@ -129,7 +129,7 @@ void SimpleUI::OnUpdate(double dt)
 
 void SimpleUI::StartFrame()
 {
-    d_commands.clear();
+    d_panels.clear();
     d_currentPanel.reset();
     d_panelQuads.clear();
 }
@@ -198,7 +198,7 @@ void SimpleUI::EndFrame()
 
     d_buffer.Bind();
     for (auto it = d_panelOrder.begin(); it != d_panelOrder.end(); ++it) {
-        const auto& cmd = d_commands[*it];
+        const auto& cmd = d_panels[*it];
         Texture::White().Bind();
         d_buffer.Draw(cmd.quadVertices, cmd.quadIndices);
         d_font.Bind();
@@ -231,7 +231,7 @@ bool SimpleUI::StartPanel(
             d_panelOrder.push_back(hash);
         }
         
-        d_commands.emplace(hash, DrawCommand());
+        d_panels.emplace(hash, Panel());
         d_panelQuads.emplace(hash, std::vector<QuadData>{});
         d_currentPanel = PanelInfo{hash, name, *region};
         
@@ -264,7 +264,7 @@ void SimpleUI::DrawQuad(const Maths::vec4& colour,
     float width = copy.z;
     float height = copy.w;
 
-    auto& cmd = d_commands[d_currentPanel.value().hash];
+    auto& cmd = d_panels[d_currentPanel.value().hash];
 
     auto col = colour;
     col.a = 1;
@@ -323,7 +323,7 @@ void SimpleUI::DrawText(
 
         pen += glyph.advance;
 
-        auto& cmd = d_commands[d_currentPanel.value().hash];
+        auto& cmd = d_panels[d_currentPanel.value().hash];
 
         unsigned int index = cmd.textVertices.size();
         cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});

@@ -53,6 +53,21 @@ struct QuadData
     Maths::vec4 region;
 };
 
+struct Panel
+{
+    std::size_t hash;
+    Maths::vec4 region;
+
+    std::vector<Maths::vec4> widgetRegions;
+
+    // Render data
+    std::vector<BufferVertex> quadVertices;
+    std::vector<unsigned int> quadIndices;
+
+    std::vector<BufferVertex> textVertices;
+    std::vector<unsigned int> textIndices;
+};
+
 struct WidgetInfo
 // When registering a new widget with the UIEngine, the callers gets
 // this struct back. It contains, in seconds, the amount of time that
@@ -94,6 +109,7 @@ class SimpleUI
     // Panel info 
     std::optional<PanelInfo> d_currentPanel = {};
     std::unordered_map<std::size_t, DrawCommand> d_commands;
+    std::unordered_map<std::size_t, Panel> d_panels;
 
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
         // Returns the region offsetted by the position of the current
