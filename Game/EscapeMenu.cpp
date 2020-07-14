@@ -56,9 +56,6 @@ void EscapeMenu::OnUpdate(double dt)
     bool mainDraggable = false;
     vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
     if (d_ui.StartPanel("Main", &mainRegion, &mainActive, &mainDraggable)) {
-        auto background = SPACE_DARK * 0.1f;
-        background.a = 1.0f;
-        d_ui.Quad(background, {0.0f, 0.0f, w * 0.3f, h});
 
         d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
 
@@ -107,8 +104,29 @@ void EscapeMenu::OnUpdate(double dt)
 
     static vec4 shape2{w/2 + 300, 100, 400, 500};
     bool draggable2 = true;
-    if (d_ui.StartPanel("VolumePanel2", &shape2, &draggable2, &draggable)) {
-        d_ui.Button("Master Volume", {10, 100, 400 - 20, 50});
+    if (d_ui.StartPanel("BUTTONS! :D", &shape2, &draggable2, &draggable)) {
+        d_ui.Text("BUTTONS! :D", {0, 0, 400, 100});
+        vec4 buttonQuad{10, 100, 400 - 20, 50};
+        d_ui.Button("Button 1", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 2", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 3", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 4", buttonQuad);
+        buttonQuad.y += 60;
+        d_ui.Button("Button 5", buttonQuad);
+        buttonQuad.y += 60;
+        buttonQuad.z = buttonQuad.w;
+
+        static bool valA = false;
+        d_ui.Checkbox("A", buttonQuad, &valA);
+        buttonQuad.x += buttonQuad.z + 10.0f;
+
+        static bool valB = true;
+        d_ui.Checkbox("B", buttonQuad, &valB);
+        buttonQuad.x += buttonQuad.z + 10.0f;
+
         d_ui.EndPanel();
     }
 

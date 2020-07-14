@@ -245,6 +245,14 @@ bool SimpleUI::StartPanel(
             region->y += d_mouse.GetMouseOffset().y;
         }
 
+        float thickness = 5.0f;
+        auto border = *region;
+        border.x -= thickness;
+        border.y -= thickness;
+        border.z += 2.0f * thickness;
+        border.w += 2.0f * thickness;
+
+        DrawQuad(d_theme.backgroundColour * 0.35f, border);
         DrawQuad(d_theme.backgroundColour * 0.7f, *region);
     }
 
