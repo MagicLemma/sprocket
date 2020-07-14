@@ -10,6 +10,7 @@
 
 #include <functional>
 #include <sstream>
+#include <cassert>
 
 namespace Sprocket {
 namespace {
@@ -122,7 +123,7 @@ void SimpleUI::OnUpdate(double dt)
 void SimpleUI::StartFrame()
 {
     d_commands.clear();
-    d_commands.push_back(DrawCommand());
+    d_currentPanel.reset();
 
     d_engine.StartFrame();
 }
@@ -145,7 +146,7 @@ void SimpleUI::EndFrame()
     d_shader.LoadUniform("u_proj_matrix", proj);
 
     d_buffer.Bind();
-    for (const auto& cmd : d_commands) {
+    for (const auto& [panel, cmd] : d_commands) {
         Texture::White().Bind();
         d_buffer.Draw(cmd.quadVertices, cmd.quadIndices);
         d_font.Bind();
@@ -164,9 +165,12 @@ bool SimpleUI::StartPanel(
     assert(region != nullptr);
     assert(active != nullptr);
 
+
     if (*active) {
-        d_commands.push_back(DrawCommand());
-        d_commandIndex = d_commands.size() - 1;
+        std::size_t hash = std::hash<std::string>{}(name);
+        
+        d_commands.emplace(hash, DrawCommand());
+        d_currentPanel = PanelInfo{hash, name, *region};
         
         auto info = d_engine.RegisterWidget(name, *region);
 
@@ -176,28 +180,29 @@ bool SimpleUI::StartPanel(
         }
 
         DrawQuad(d_theme.backgroundColour * 0.7f, *region);
-
-        d_currentPanel = {name, *region};
     }
+
     return *active;
 }
 
 void SimpleUI::EndPanel()
 {
+    assert(d_currentPanel.has_value());
     d_currentPanel.reset();
-    d_commandIndex = 0;
 }
 
 void SimpleUI::DrawQuad(const Maths::vec4& colour,
                         const Maths::vec4& region)
 {
+    assert(d_currentPanel.has_value());
     auto copy = region;
     float x = copy.x;
     float y = copy.y;
     float width = copy.z;
     float height = copy.w;
 
-    auto& cmd = d_commands[d_commandIndex];
+    auto& cmd = d_commands[d_currentPanel.value().hash];
+
     std::size_t index = cmd.quadVertices.size();
     cmd.quadVertices.push_back({{x,         y},          colour});
     cmd.quadVertices.push_back({{x + width, y},          colour});
@@ -216,6 +221,8 @@ void SimpleUI::DrawText(
     const std::string& text,
     const Maths::vec4& region)
 {
+    assert(d_currentPanel.has_value());
+
     auto copy = region;
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
@@ -250,7 +257,8 @@ void SimpleUI::DrawText(
 
         pen += glyph.advance;
 
-        auto& cmd = d_commands[d_commandIndex];
+        auto& cmd = d_commands[d_currentPanel.value().hash];
+
         unsigned int index = cmd.textVertices.size();
         cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
         cmd.textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
@@ -268,12 +276,14 @@ void SimpleUI::DrawText(
 
 void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 {
+    assert(d_currentPanel.has_value());
     auto copy = ApplyOffset(quad);
     DrawQuad(colour, copy);
 }
 
 void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 {
+    assert(d_currentPanel.has_value());
     auto copy = ApplyOffset(quad);
     DrawText(text, copy);
 }
@@ -281,6 +291,7 @@ void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
 bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
+    assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
@@ -305,6 +316,7 @@ bool SimpleUI::Checkbox(const std::string& name,
                         const Maths::vec4& region,
                         bool* value)
 {
+    assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
@@ -334,6 +346,7 @@ void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
+    assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
@@ -362,6 +375,7 @@ void SimpleUI::Dragger(const std::string& name,
                        const Maths::vec4& region,
                        float* value, float speed)
 {
+    assert(d_currentPanel.has_value());
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 

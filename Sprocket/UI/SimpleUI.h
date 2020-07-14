@@ -41,6 +41,7 @@ struct DrawCommand
 
 struct PanelInfo
 {
+    std::size_t hash;
     std::string name;
     Maths::vec4 region;
 };
@@ -62,18 +63,13 @@ class SimpleUI
     Shader d_shader;
     StreamBuffer d_buffer;
 
-    std::vector<DrawCommand> d_commands;
-        // One for the window and an extra one for each window.
-    
-    std::size_t d_commandIndex = 0;
-        // Current command being written to.
-
     void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
     void DrawText(const std::string& text, const Maths::vec4& quad);
         // Basic draw functions, does not take panelling into account.
     
     // Panel info 
     std::optional<PanelInfo> d_currentPanel = {};
+    std::unordered_map<std::size_t, DrawCommand> d_commands;
 
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
         // Returns the region offsetted by the position of the current

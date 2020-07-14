@@ -50,41 +50,48 @@ void EscapeMenu::OnUpdate(double dt)
     float h = (float)window->Height();
 
     d_ui.StartFrame();
-    auto background = SPACE_DARK * 0.1f;
-    background.a = 1.0f;
-    d_ui.Quad(background, {0.0f, 0.0f, w * 0.3f, h});
-
-    d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
-
-    vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
-
-    if (d_ui.Button("Toggle Dev UI", buttonRegion)) {
-        switch (d_worldLayer->d_mode) {
-            case Mode::PLAYER: {
-                d_worldLayer->d_mode = Mode::EDITOR;
-            } break;
-            case Mode::EDITOR: {
-                d_worldLayer->d_mode = Mode::PLAYER;
-            } break;
-        }
-    }
-
-
-    buttonRegion.y += 2 * 60;
-    static float value1 = 27.0f;
-    d_ui.Slider("Slider", buttonRegion, &value1, 0, 100);
-
-    buttonRegion.y += 60;
-    static float value2 = 84.0f;
-    d_ui.Dragger("Dragger", buttonRegion, &value2, 0.1f);
-
-    buttonRegion.y += 60;
-    static bool check = false;
-    d_ui.Checkbox("Checkbox", buttonRegion, &check);
-
-    buttonRegion.y += 60;
     static bool showVolume = false;
-    d_ui.Checkbox("Volume Panel", buttonRegion, &showVolume);
+
+    bool mainActive = true;
+    bool mainDraggable = false;
+    vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
+    if (d_ui.StartPanel("Main", &mainRegion, &mainActive, &mainDraggable)) {
+        auto background = SPACE_DARK * 0.1f;
+        background.a = 1.0f;
+        d_ui.Quad(background, {0.0f, 0.0f, w * 0.3f, h});
+
+        d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
+
+        vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
+
+        if (d_ui.Button("Toggle Dev UI", buttonRegion)) {
+            switch (d_worldLayer->d_mode) {
+                case Mode::PLAYER: {
+                    d_worldLayer->d_mode = Mode::EDITOR;
+                } break;
+                case Mode::EDITOR: {
+                    d_worldLayer->d_mode = Mode::PLAYER;
+                } break;
+            }
+        }
+
+        buttonRegion.y += 2 * 60;
+        static float value1 = 27.0f;
+        d_ui.Slider("Slider", buttonRegion, &value1, 0, 100);
+
+        buttonRegion.y += 60;
+        static float value2 = 84.0f;
+        d_ui.Dragger("Dragger", buttonRegion, &value2, 0.1f);
+
+        buttonRegion.y += 60;
+        static bool check = false;
+        d_ui.Checkbox("Checkbox", buttonRegion, &check);
+
+        buttonRegion.y += 60;
+        d_ui.Checkbox("Volume Panel", buttonRegion, &showVolume);
+        
+        d_ui.EndPanel();
+    }
     
     static vec4 shape{w/2 - 200, 100, 400, 500};
     bool draggable = true;
