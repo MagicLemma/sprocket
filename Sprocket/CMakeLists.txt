@@ -70,7 +70,6 @@ add_library(Sprocket STATIC
             Objects/CameraUtils.cpp
             Objects/Light.cpp
             Objects/Material.cpp
-            Objects/Quad.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
 
