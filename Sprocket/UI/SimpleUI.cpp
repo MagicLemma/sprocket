@@ -131,7 +131,6 @@ void SimpleUI::StartFrame()
 {
     d_panels.clear();
     d_currentPanel.reset();
-    d_panelQuads.clear();
 }
 
 void SimpleUI::EndFrame()
@@ -144,11 +143,12 @@ void SimpleUI::EndFrame()
     std::size_t moveToFront = 0;
 
     for (auto it = d_panelOrder.rbegin(); it != d_panelOrder.rend(); ++it) {
-        const auto& quads = d_panelQuads[*it];
+        const auto& panel = d_panels[*it];
+        const auto& quads = panel.widgetRegions;
         for (std::size_t i = quads.size(); i != 0;) {
             --i;
             const auto& quad = quads[i];
-            std::size_t hash = std::hash<std::string>{}(quad.name);
+            std::size_t hash = quad.hash;
             auto hovered = d_mouse.InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
             auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
 
@@ -231,8 +231,10 @@ bool SimpleUI::StartPanel(
             d_panelOrder.push_back(hash);
         }
         
-        d_panels.emplace(hash, Panel());
-        d_panelQuads.emplace(hash, std::vector<QuadData>{});
+        auto& panel = d_panels[hash];
+        panel.hash = hash;
+        panel.region = *region;
+
         d_currentPanel = PanelInfo{hash, name, *region};
         
         auto info = RegisterWidget(name, *region);
@@ -460,8 +462,8 @@ WidgetInfo SimpleUI::RegisterWidget(const std::string& name,
 {
     assert(d_currentPanel.has_value());
     WidgetInfo info;
-    d_panelQuads[d_currentPanel.value().hash].push_back({name, region});
     std::size_t hash = std::hash<std::string>{}(name);
+    d_panels[d_currentPanel.value().hash].widgetRegions.push_back({hash, region});
 
     if (hash == d_clicked) {
         info.mouseDown = d_clickedTime;

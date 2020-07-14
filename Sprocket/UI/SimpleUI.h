@@ -49,7 +49,7 @@ struct PanelInfo
 
 struct QuadData
 {
-    std::string name;
+    std::size_t hash;
     Maths::vec4 region;
 };
 
@@ -58,7 +58,7 @@ struct Panel
     std::size_t hash;
     Maths::vec4 region;
 
-    std::vector<Maths::vec4> widgetRegions;
+    std::vector<QuadData> widgetRegions;
 
     // Render data
     std::vector<BufferVertex> quadVertices;
@@ -108,7 +108,6 @@ class SimpleUI
     
     // Panel info 
     std::optional<PanelInfo> d_currentPanel = {};
-    std::unordered_map<std::size_t, DrawCommand> d_commands;
     std::unordered_map<std::size_t, Panel> d_panels;
 
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
@@ -140,7 +139,6 @@ class SimpleUI
         // A steadily increasing timer used to set the unselected
         // times in the maps above.
 
-    std::unordered_map<std::size_t, std::vector<QuadData>> d_panelQuads;
     std::deque<std::size_t> d_panelOrder;
 
     std::size_t d_onClick = 0;
