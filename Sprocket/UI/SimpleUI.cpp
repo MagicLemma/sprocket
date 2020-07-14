@@ -308,10 +308,10 @@ bool SimpleUI::Checkbox(const std::string& name,
     Maths::vec4 copy = ApplyOffset(region);
     auto info = d_engine.RegisterWidget(MangleName(name), copy);
 
-    auto unselected = Interpolate(info, d_theme.backgroundColour, d_theme.backgroundColour*1.1f, d_theme.backgroundColour*1.3f);
+    auto unselected = Interpolate(info, d_theme.backgroundColour, d_theme.backgroundColour*1.1f, d_theme.clickedColour);
     auto selected = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);;
 
-    float r = std::min(info.sinceUnlicked, 0.1) / 0.1f;
+    float r = std::min(info.sinceClicked, 0.1) / 0.1f;
 
     Maths::vec4 colour;
     if (*value) {
