@@ -266,11 +266,14 @@ void SimpleUI::DrawQuad(const Maths::vec4& colour,
 
     auto& cmd = d_commands[d_currentPanel.value().hash];
 
+    auto col = colour;
+    col.a = 1;
+
     std::size_t index = cmd.quadVertices.size();
-    cmd.quadVertices.push_back({{x,         y},          colour});
-    cmd.quadVertices.push_back({{x + width, y},          colour});
-    cmd.quadVertices.push_back({{x,         y + height}, colour * 0.8f});
-    cmd.quadVertices.push_back({{x + width, y + height}, colour * 0.8f});
+    cmd.quadVertices.push_back({{x,         y},          col});
+    cmd.quadVertices.push_back({{x + width, y},          col});
+    cmd.quadVertices.push_back({{x,         y + height}, col});
+    cmd.quadVertices.push_back({{x + width, y + height}, col});
 
     cmd.quadIndices.push_back(index + 0);
     cmd.quadIndices.push_back(index + 1);
