@@ -120,39 +120,40 @@ void GenerateKerning(
 
 }
 
-Font::Font(const std::string& filename, float size)
-    : d_atlas(1024, 1024)
+Font::Font(const std::string& filename)
+    : d_atlas(2048, 2048)
     , d_filename(filename)
-    , d_size(size)
 {
 }
 
-Glyph Font::GetGlyph(char c)
+Glyph Font::GetGlyph(char c, float size)
 {
+    auto& font = d_fontData[size];
+
     uint32_t ucodepoint = ToUTF32(&c);
-    auto it = d_glyphs.find(ucodepoint);
-    if (it != d_glyphs.end()) {
+    auto it = font.glyphs.find(ucodepoint);
+    if (it != font.glyphs.end()) {
         return it->second;
     }
 
     // If we could not find it, attempt to load it
-    LoadGlyph(c);
-    it = d_glyphs.find(ucodepoint);
-    if (it != d_glyphs.end()) {
+    LoadGlyph(c, size);
+    it = font.glyphs.find(ucodepoint);
+    if (it != font.glyphs.end()) {
         return it->second;
     }
 
     return Glyph(); // Empty glyph
 }
 
-bool Font::LoadGlyph(char c)
+bool Font::LoadGlyph(char c, float size)
 {
     FT_Library library;
     FT_Face face;
 
     int padding = 1; // Potentially make this modifiable.
 
-    if (!LoadFace(d_filename, d_size, &library, &face)) {
+    if (!LoadFace(d_filename, size, &library, &face)) {
         return false;
     }
 
@@ -201,7 +202,8 @@ bool Font::LoadGlyph(char c)
 
     uint32_t codepoint = ToUTF32(&c);
 
-    Glyph& glyph = d_glyphs[codepoint];
+    auto& font = d_fontData[size];
+    Glyph& glyph = font.glyphs[codepoint];
     glyph.codepoint = ToUTF32(&c);
     glyph.width     = tgt_w;
     glyph.height    = tgt_h;
@@ -212,20 +214,22 @@ bool Font::LoadGlyph(char c)
     glyph.texture.w = glyph.height / (float)d_atlas.Height();
     glyph.advance = Maths::vec2{slot->advance.x, slot->advance.y} / HRESf;
 
-    GenerateKerning(d_glyphs, d_kernings, &library, &face);
+    GenerateKerning(font.glyphs, font.kernings, &library, &face);
 
     FT_Done_Face(face);
     FT_Done_FreeType(library);
     return true;
 }
 
-float Font::GetKerning(char left, char right)
+float Font::GetKerning(char left, char right, float size)
 {
+    auto& font = d_fontData[size];
+
     uint32_t l = ToUTF32(&left);
     uint32_t r = ToUTF32(&right);
 
-    auto it = d_kernings.find(std::make_pair(l, r));
-    if (it != d_kernings.end()) {
+    auto it = font.kernings.find(std::make_pair(l, r));
+    if (it != font.kernings.end()) {
         return it->second;
     }
 

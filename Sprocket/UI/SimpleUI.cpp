@@ -26,17 +26,17 @@ TextInfo GetTextInfo(Font& font, const std::string& text)
 {
     TextInfo info;
     for (char c : text) {
-        auto glyph = font.GetGlyph(c);
+        auto glyph = font.GetGlyph(c, 36.0f);
         info.width += glyph.advance.x;
         if (glyph.height > info.height) {
             info.height = (float)glyph.height;
         }
     }
 
-    Glyph first = font.GetGlyph(text.front());
+    Glyph first = font.GetGlyph(text.front(), 36.0f);
     info.width -= first.offset.x;
 
-    Glyph last = font.GetGlyph(text.back());
+    Glyph last = font.GetGlyph(text.back(), 36.0f);
     info.width += last.width;
     info.width += last.offset.x;
     info.width -= last.advance.x;
@@ -78,7 +78,7 @@ SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_font("Resources/Fonts/Coolvetica.ttf", 36.0f)
+    , d_font("Resources/Fonts/Coolvetica.ttf")
 {
     d_keyboard.ConsumeAll(false);
 
@@ -309,7 +309,7 @@ void SimpleUI::DrawText(
     auto copy = region;
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
-    Glyph first = d_font.GetGlyph(text.front());
+    Glyph first = d_font.GetGlyph(text.front(), 36.0f);
     auto textInfo = GetTextInfo(d_font, text);
 
     Maths::vec2 pen = {
@@ -321,10 +321,10 @@ void SimpleUI::DrawText(
     pen.y += first.offset.y;
     
     for (std::size_t i = 0; i != text.size(); ++i) {
-        auto glyph = d_font.GetGlyph(text[i]);
+        auto glyph = d_font.GetGlyph(text[i], 36.0f);
 
         if (i > 0) {
-            pen.x += d_font.GetKerning(text[i-1], text[i]);
+            pen.x += d_font.GetKerning(text[i-1], text[i], 36.0f);
         }
 
         float xPos = pen.x + glyph.offset.x;
