@@ -13,8 +13,9 @@ UIEngine::UIEngine(KeyboardProxy* keyboard, MouseProxy* mouse)
 WidgetInfo UIEngine::RegisterWidget(const std::string& name,
                                     const Maths::vec4& region)
 {
+    assert(d_currentPanel.has_value());
     WidgetInfo info;
-    d_quads.push_back({name, region});
+    d_panelQuads[d_currentPanel.value().hash].push_back({name, region});
     std::size_t hash = std::hash<std::string>{}(name);
 
     if (hash == d_clicked) {
@@ -46,7 +47,8 @@ WidgetInfo UIEngine::RegisterWidget(const std::string& name,
 
 void UIEngine::StartFrame()
 {
-    d_quads.clear();
+    d_panelQuads.clear();
+    d_currentPanel.reset();
 }
 
 void UIEngine::EndFrame()
@@ -54,32 +56,34 @@ void UIEngine::EndFrame()
     bool foundHovered = false;
     bool foundClicked = false;
 
-    for (std::size_t i = d_quads.size(); i != 0;) {
-        --i;
-        const auto& quad = d_quads[i];
-        std::size_t hash = std::hash<std::string>{}(quad.name);
-        auto hovered = d_mouse->InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
-        auto clicked = hovered && d_mouse->IsButtonClicked(Mouse::LEFT);
+    for (const auto& [panel, quads] : d_panelQuads) {
+        for (std::size_t i = quads.size(); i != 0;) {
+            --i;
+            const auto& quad = quads[i];
+            std::size_t hash = std::hash<std::string>{}(quad.name);
+            auto hovered = d_mouse->InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
+            auto clicked = hovered && d_mouse->IsButtonClicked(Mouse::LEFT);
 
-        if (!foundClicked && ((d_clicked == hash) || clicked)) {
-            foundClicked = true;
-            if (d_clicked != hash) {
-                d_unclickedTimes[d_clicked] = d_time;
-                d_clickedTimes[hash] = d_time;
-                d_clicked = hash;
-                d_onClick = hash;
-                d_clickedTime = 0.0;
+            if (!foundClicked && ((d_clicked == hash) || clicked)) {
+                foundClicked = true;
+                if (d_clicked != hash) {
+                    d_unclickedTimes[d_clicked] = d_time;
+                    d_clickedTimes[hash] = d_time;
+                    d_clicked = hash;
+                    d_onClick = hash;
+                    d_clickedTime = 0.0;
+                }
             }
-        }
-        
-        if (!foundHovered && hovered) {
-            foundHovered = true;
-            if (d_hovered != hash) {
-                d_unhoveredTimes[d_hovered] = d_time;
-                d_hoveredTimes[hash] = d_time;
-                d_hovered = hash;
-                d_onHover = hash;
-                d_hoveredTime = 0.0;
+            
+            if (!foundHovered && hovered) {
+                foundHovered = true;
+                if (d_hovered != hash) {
+                    d_unhoveredTimes[d_hovered] = d_time;
+                    d_hoveredTimes[hash] = d_time;
+                    d_hovered = hash;
+                    d_onHover = hash;
+                    d_hoveredTime = 0.0;
+                }
             }
         }
     }
@@ -91,6 +95,19 @@ void UIEngine::EndFrame()
             d_hovered = 0;
         }
     }
+}
+
+void UIEngine::StartPanel(std::size_t panel, const Maths::vec4& region)
+{
+    assert(!d_currentPanel.has_value());
+    d_currentPanel = PanelData{panel, region};
+    d_panelQuads.emplace(panel, std::vector<QuadData>{});
+}
+
+void UIEngine::EndPanel()
+{
+    assert(d_currentPanel.has_value());
+    d_currentPanel.reset();
 }
 
 void UIEngine::OnUpdate(double dt)

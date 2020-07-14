@@ -168,6 +168,7 @@ bool SimpleUI::StartPanel(
 
     if (*active) {
         std::size_t hash = std::hash<std::string>{}(name);
+        d_engine.StartPanel(hash, *region);
         
         d_commands.emplace(hash, DrawCommand());
         d_currentPanel = PanelInfo{hash, name, *region};
@@ -189,6 +190,7 @@ void SimpleUI::EndPanel()
 {
     assert(d_currentPanel.has_value());
     d_currentPanel.reset();
+    d_engine.EndPanel();
 }
 
 void SimpleUI::DrawQuad(const Maths::vec4& colour,

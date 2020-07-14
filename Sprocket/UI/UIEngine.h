@@ -15,6 +15,12 @@ struct QuadData
     Maths::vec4 region;
 };
 
+struct PanelData
+{
+    std::size_t hash;
+    Maths::vec4 region;
+};
+
 struct WidgetInfo
 // When registering a new widget with the UIEngine, the callers gets
 // this struct back. It contains, in seconds, the amount of time that
@@ -64,10 +70,8 @@ class UIEngine
         // A steadily increasing timer used to set the unselected
         // times in the maps above.
 
-    std::vector<QuadData> d_quads;
-        // Stores a list of all regions registered during the frame,
-        // these are processed at the end of the frame to update the
-        // internal state of each widget.
+    std::unordered_map<std::size_t, std::vector<QuadData>> d_panelQuads;
+    std::optional<PanelData> d_currentPanel;
 
     std::size_t d_onClick = 0;
     std::size_t d_onHover = 0;
@@ -84,6 +88,9 @@ public:
 
     void StartFrame();
     void EndFrame();
+
+    void StartPanel(std::size_t panel, const Maths::vec4& region);
+    void EndPanel();
 
     void OnUpdate(double dt);
 };
