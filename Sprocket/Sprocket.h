@@ -56,7 +56,6 @@
 #include "Graphics/Primitives/FrameBuffer.h"
 #include "Graphics/Primitives/StreamBuffer.h"
 
-#include "Graphics/Rendering/DisplayRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
@@ -85,19 +84,6 @@
 #include "Systems/BasicSelector.h"
 #include "Systems/ScriptRunner.h"
 #include "Systems/Selector.h"
-
-// DISPLAY
-#include "Display/Widget.h"
-#include "Display/Container.h"
-#include "Display/Button.h"
-#include "Display/ColourPalette.h"
-#include "Display/Slider.h"
-#include "Display/Image.h"
-
-#include "Display/WidgetProperties/WidgetProperty.h"
-#include "Display/WidgetProperties/Draggable.h"
-#include "Display/WidgetProperties/HorizontalConstraint.h"
-#include "Display/WidgetProperties/VerticalConstraint.h"
 
 #include "Scripting/LuaEngine.h"
 #include "Scripting/LuaGlobals.h"

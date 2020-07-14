@@ -53,7 +53,6 @@ add_library(Sprocket STATIC
             Graphics/Primitives/FrameBuffer.cpp
             Graphics/Primitives/StreamBuffer.cpp
 
-            Graphics/Rendering/DisplayRenderer.cpp
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
 
@@ -63,18 +62,6 @@ add_library(Sprocket STATIC
             Graphics/PostProcessing/Negative.cpp
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
-
-            Display/Widget.cpp
-            Display/Container.cpp
-            Display/Slider.cpp
-            Display/Button.cpp
-            Display/ColourPalette.cpp
-            Display/Image.cpp
-
-            Display/WidgetProperties/WidgetProperty.cpp
-            Display/WidgetProperties/Draggable.cpp
-            Display/WidgetProperties/HorizontalConstraint.cpp
-            Display/WidgetProperties/VerticalConstraint.cpp
 
             Objects/Entities/Entity.cpp
             Objects/Entities/Components.cpp
