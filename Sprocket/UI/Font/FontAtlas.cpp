@@ -66,6 +66,7 @@ Maths::ivec4 FontAtlas::GetRegion(
     // Add padding
     width += 2 * padding;
     height += 2 * padding;
+    
     Maths::ivec4 region{0, 0, width, height};
 
     std::size_t best_height = std::numeric_limits<std::size_t>::max();
@@ -133,8 +134,8 @@ Maths::ivec4 FontAtlas::GetRegion(
     }
 
     // Remove padding
-    //region.x += padding;
-    //region.y += padding;
+    region.x += padding;
+    region.y += padding;
     region.z -= 2 * padding;
     region.w -= 2 * padding;
     return region;
