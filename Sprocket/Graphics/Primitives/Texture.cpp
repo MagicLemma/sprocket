@@ -139,7 +139,7 @@ bool Texture::operator==(const Texture& other) const
 
 void Texture::SetSubTexture(
     const Maths::ivec4& region,
-    const std::vector<unsigned char>& data)
+    const unsigned char* data)
 {
     Bind();
 
@@ -150,7 +150,7 @@ void Texture::SetSubTexture(
     auto c = d_channels == Channels::RGBA ? GL_RGBA : GL_RED;
     glTexSubImage2D(GL_TEXTURE_2D,
                     0, region.x, region.y, region.z, region.w, 
-                    c, GL_UNSIGNED_BYTE, (void*)data.data());
+                    c, GL_UNSIGNED_BYTE, (void*)data);
 
     Unbind();
 }

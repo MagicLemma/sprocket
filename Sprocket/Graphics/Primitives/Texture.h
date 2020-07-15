@@ -40,7 +40,7 @@ public:
     static const Texture& White();
 
     void SetSubTexture(const Maths::ivec4& region,
-                       const std::vector<unsigned char>& data);
+                       const unsigned char* data);
 
     unsigned int Id() const;
 

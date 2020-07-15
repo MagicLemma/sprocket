@@ -21,7 +21,7 @@ public:
 
     void SetRegion(
         const Maths::ivec4& region,
-        const std::vector<unsigned char>& data
+        const unsigned char* data
     );
 
     std::size_t Width() const { return d_texture.Width(); }

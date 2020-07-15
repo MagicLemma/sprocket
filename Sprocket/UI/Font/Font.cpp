@@ -148,16 +148,16 @@ Glyph Font::GetGlyph(char c, float size)
 
 bool Font::LoadGlyph(char c, float size)
 {
+    uint32_t codepoint = ToUTF32(&c);
+    
     FT_Library library;
     FT_Face face;
-
     if (!LoadFace(d_filename, size, &library, &face)) {
         return false;
     }
 
-    FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)ToUTF32(&c));
+    FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)codepoint);
     FT_Int32 flags = FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT;
-
     if (FT_Load_Glyph(face, glyph_index, flags)) {
         FT_Done_Face(face);
         FT_Done_FreeType(library);
@@ -166,33 +166,23 @@ bool Font::LoadGlyph(char c, float size)
 
     FT_GlyphSlot slot = face->glyph;
     FT_Bitmap bitmap  = slot->bitmap;
-    int ft_glyph_top  = slot->bitmap_top;
-    int ft_glyph_left = slot->bitmap_left;
-
-    Maths::ivec4 region = d_atlas.GetRegion(bitmap.width, bitmap.rows);
-
+    auto region = d_atlas.GetRegion(bitmap.width, bitmap.rows);
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
-        FT_Done_Face( face );
-        FT_Done_FreeType( library );
+        FT_Done_Face(face);
+        FT_Done_FreeType(library);
         return false;
     }
 
-    std::vector<unsigned char> buffer;
-    unsigned int length = bitmap.width * bitmap.rows;
-    buffer.resize(length);
-    std::memcpy(buffer.data(), bitmap.buffer, length);
-
-    d_atlas.SetRegion(region, buffer);
-
-    uint32_t codepoint = ToUTF32(&c);
+    d_atlas.SetRegion(region, bitmap.buffer);
 
     auto& font = d_fontData[size];
     Glyph& glyph = font.glyphs[codepoint];
-    glyph.codepoint = ToUTF32(&c);
-    glyph.width     = bitmap.width;
-    glyph.height    = bitmap.rows;
-    glyph.offset    = {ft_glyph_left, ft_glyph_top};
+
+    glyph.codepoint = codepoint;
+    glyph.width     = slot->bitmap.width;
+    glyph.height    = slot->bitmap.rows;
+    glyph.offset    = {slot->bitmap_left, slot->bitmap_top};
     glyph.texture.x = region.x / (float)d_atlas.Width();
     glyph.texture.y = region.y / (float)d_atlas.Height();
     glyph.texture.z = glyph.width / (float)d_atlas.Width();

@@ -19,16 +19,12 @@ FontAtlas::FontAtlas(int width, int height)
 
 void FontAtlas::SetRegion(
     const Maths::ivec4& region,
-    const std::vector<unsigned char>& data)
+    const unsigned char* data)
 {
     assert(region.x > 0);
     assert(region.y > 0);
-    //assert(region.z > 0);
-    //assert(region.w > 0);
     assert(region.x + region.z < d_texture.Width());
     assert(region.y + region.w < d_texture.Height());
-    assert(data.size() == region.z * region.w); // width * height
-
     d_texture.SetSubTexture(region, data);
 }
 
