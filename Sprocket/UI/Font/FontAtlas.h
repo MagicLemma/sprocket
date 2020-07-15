@@ -17,11 +17,7 @@ class FontAtlas
 public:
     FontAtlas(int width, int height);
 
-    Maths::ivec4 GetRegion(
-        std::size_t width,
-        std::size_t height,
-        int padding
-    );
+    Maths::ivec4 GetRegion(std::size_t width, std::size_t height);
 
     void SetRegion(
         const Maths::ivec4& region,

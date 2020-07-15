@@ -151,8 +151,6 @@ bool Font::LoadGlyph(char c, float size)
     FT_Library library;
     FT_Face face;
 
-    int padding = 1; // Potentially make this modifiable.
-
     if (!LoadFace(d_filename, size, &library, &face)) {
         return false;
     }
@@ -166,14 +164,12 @@ bool Font::LoadGlyph(char c, float size)
         return false;
     }
 
-    FT_GlyphSlot slot   = face->glyph;
-    FT_Bitmap ft_bitmap = slot->bitmap;
-    int ft_glyph_top    = slot->bitmap_top;
-    int ft_glyph_left   = slot->bitmap_left;
+    FT_GlyphSlot slot = face->glyph;
+    FT_Bitmap bitmap  = slot->bitmap;
+    int ft_glyph_top  = slot->bitmap_top;
+    int ft_glyph_left = slot->bitmap_left;
 
-    Maths::ivec4 region = d_atlas.GetRegion(
-        ft_bitmap.width, ft_bitmap.rows, padding
-    );
+    Maths::ivec4 region = d_atlas.GetRegion(bitmap.width, bitmap.rows);
 
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
@@ -183,9 +179,9 @@ bool Font::LoadGlyph(char c, float size)
     }
 
     std::vector<unsigned char> buffer;
-    unsigned int length = ft_bitmap.width * ft_bitmap.rows;
+    unsigned int length = bitmap.width * bitmap.rows;
     buffer.resize(length);
-    std::memcpy(buffer.data(), ft_bitmap.buffer, length);
+    std::memcpy(buffer.data(), bitmap.buffer, length);
 
     d_atlas.SetRegion(region, buffer);
 
@@ -194,8 +190,8 @@ bool Font::LoadGlyph(char c, float size)
     auto& font = d_fontData[size];
     Glyph& glyph = font.glyphs[codepoint];
     glyph.codepoint = ToUTF32(&c);
-    glyph.width     = ft_bitmap.width;
-    glyph.height    = ft_bitmap.rows;
+    glyph.width     = bitmap.width;
+    glyph.height    = bitmap.rows;
     glyph.offset    = {ft_glyph_left, ft_glyph_top};
     glyph.texture.x = region.x / (float)d_atlas.Width();
     glyph.texture.y = region.y / (float)d_atlas.Height();
