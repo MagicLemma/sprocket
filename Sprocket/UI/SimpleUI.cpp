@@ -22,21 +22,21 @@ struct TextInfo
     float height = 0.0f;
 };
 
-TextInfo GetTextInfo(Font& font, const std::string& text)
+TextInfo GetTextInfo(Font& font, float size, const std::string& text)
 {
     TextInfo info;
-    for (char c : text) {
-        auto glyph = font.GetGlyph(c);
+    for (char c : text) { // TODO: Take kerning into account.
+        auto glyph = font.GetGlyph(c, size);
         info.width += glyph.advance.x;
         if (glyph.height > info.height) {
             info.height = (float)glyph.height;
         }
     }
 
-    Glyph first = font.GetGlyph(text.front());
+    Glyph first = font.GetGlyph(text.front(), size);
     info.width -= first.offset.x;
 
-    Glyph last = font.GetGlyph(text.back());
+    Glyph last = font.GetGlyph(text.back(), size);
     info.width += last.width;
     info.width += last.offset.x;
     info.width -= last.advance.x;
@@ -78,7 +78,7 @@ SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_font("Resources/Fonts/Coolvetica.ttf", 36.0f)
+    , d_font("Resources/Fonts/Coolvetica.ttf")
 {
     d_keyboard.ConsumeAll(false);
 
@@ -302,6 +302,7 @@ void SimpleUI::DrawQuad(const Maths::vec4& colour,
 
 void SimpleUI::DrawText(
     const std::string& text,
+    float size,
     const Maths::vec4& region)
 {
     assert(d_currentPanel);
@@ -309,8 +310,8 @@ void SimpleUI::DrawText(
     auto copy = region;
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
-    Glyph first = d_font.GetGlyph(text.front());
-    auto textInfo = GetTextInfo(d_font, text);
+    Glyph first = d_font.GetGlyph(text.front(), size);
+    auto textInfo = GetTextInfo(d_font, size, text);
 
     Maths::vec2 pen = {
         region.x + (copy.z - textInfo.width) / 2.0f,
@@ -321,10 +322,10 @@ void SimpleUI::DrawText(
     pen.y += first.offset.y;
     
     for (std::size_t i = 0; i != text.size(); ++i) {
-        auto glyph = d_font.GetGlyph(text[i]);
+        auto glyph = d_font.GetGlyph(text[i], size);
 
         if (i > 0) {
-            pen.x += d_font.GetKerning(text[i-1], text[i]);
+            pen.x += d_font.GetKerning(text[i-1], text[i], size);
         }
 
         float xPos = pen.x + glyph.offset.x;
@@ -364,11 +365,14 @@ void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
     DrawQuad(colour, copy);
 }
 
-void SimpleUI::Text(const std::string& text, const Maths::vec4& quad)
+void SimpleUI::Text(
+    const std::string& text,
+    float size,
+    const Maths::vec4& quad)
 {
     assert(d_currentPanel);
     auto copy = ApplyOffset(quad);
-    DrawText(text, copy);
+    DrawText(text, size, copy);
 }
 
 bool SimpleUI::Button(const std::string& name,
@@ -390,7 +394,7 @@ bool SimpleUI::Button(const std::string& name,
     Maths::vec4 shape = Interpolate(info, copy, hoveredRegion, clickedRegion);
     
     DrawQuad(colour, shape);
-    DrawText(name, copy);
+    DrawText(name, 36.0f, copy);
 
     return info.onClick;
 }
@@ -420,7 +424,7 @@ bool SimpleUI::Checkbox(const std::string& name,
     }
 
     DrawQuad(colour, copy);
-    DrawText(name, copy);
+    DrawText(name, 36.0f, copy);
 
     return *value; 
 }
@@ -444,7 +448,7 @@ void SimpleUI::Slider(const std::string& name,
     float ratio = (*value - min) / (max - min);
     DrawQuad(leftColour, {x, y, ratio * width, height});
     DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    DrawText(name + ": " + Maths::ToString(*value, 0), copy);
+    DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, copy);
 
     if (info.mouseDown) {
         auto mouse = d_mouse.GetMousePos();
@@ -465,7 +469,7 @@ void SimpleUI::Dragger(const std::string& name,
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
     DrawQuad(colour, copy);
-    DrawText(name + ": " + Maths::ToString(*value, 0), copy);
+    DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, copy);
 
     if (info.mouseDown) {
         *value += d_mouse.GetMouseOffset().x * speed;
@@ -479,7 +483,6 @@ void SimpleUI::Image(const std::string& name,
     assert(d_currentPanel);
     Maths::vec4 region{position.x, position.y, image.Width(), image.Height()};
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = RegisterWidget(MangleName(name), copy);
 
     auto& cmd = d_currentPanel->extraCommands.emplace_back(DrawCommand());
     cmd.vertices = {

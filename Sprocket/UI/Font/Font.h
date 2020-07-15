@@ -24,28 +24,31 @@ using GlyphMap = std::unordered_map<
     Glyph
 >;
 
+struct SizedFontData
+{
+    GlyphMap   glyphs;
+    KerningMap kernings;
+};
+
 class Font
 {
-    FontAtlas d_atlas;
-
     std::string d_filename;
-    float       d_size;
     
-    GlyphMap   d_glyphs;
-    KerningMap d_kernings;
+    FontAtlas  d_atlas;
+    std::unordered_map<float, SizedFontData> d_fontData;
 
-    bool LoadGlyph(char c);
+    bool LoadGlyph(char c, float size);
 
 public:
-    Font(const std::string& filename, float size);
+    Font(const std::string& filename);
 
-    Glyph GetGlyph(char c);
-    float GetKerning(char left, char right);
+    Glyph GetGlyph(char c, float size);
+    float GetKerning(char left, char right, float size);
 
     void Bind() const { d_atlas.Bind(); }
     void Unbind() const { d_atlas.Unbind(); }
 
-    float Size() const { return d_size; }
+    Texture GetAtlas() const { return d_atlas.GetAtlas(); }
 };
 
 }

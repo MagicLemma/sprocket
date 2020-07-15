@@ -104,7 +104,7 @@ class SimpleUI
     StreamBuffer d_buffer;
 
     void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
-    void DrawText(const std::string& text, const Maths::vec4& quad);
+    void DrawText(const std::string& text, float size, const Maths::vec4& quad);
         // Basic draw functions, does not take panelling into account.
     
     // Panel info 
@@ -152,6 +152,8 @@ public:
     WidgetInfo RegisterWidget(const std::string& name,
                               const Maths::vec4& region);
 
+    Font& GetFont() { return d_font; }
+
     void OnEvent(Event& event);
     void OnUpdate(double dt);
 
@@ -168,6 +170,7 @@ public:
               const Maths::vec4& region);
 
     void Text(const std::string& text,
+              float size,
               const Maths::vec4& region);
 
     bool Button(const std::string& name,
