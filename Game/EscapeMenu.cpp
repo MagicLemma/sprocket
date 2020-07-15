@@ -57,7 +57,7 @@ void EscapeMenu::OnUpdate(double dt)
     vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
     if (d_ui.StartPanel("Main", &mainRegion, &mainActive, &mainDraggable)) {
 
-        d_ui.Text("Menu", {0.0f, 0.0f, w * 0.3f, 100});
+        d_ui.Text("Menu", 48.0f, {0.0f, 0.0f, w * 0.3f, 100});
 
         vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
 
@@ -93,7 +93,7 @@ void EscapeMenu::OnUpdate(double dt)
     static vec4 shape{w/2 - 200, 100, 400, 500};
     bool draggable = true;
     if (d_ui.StartPanel("VolumePanel", &shape, &showVolume, &draggable)) {
-        d_ui.Text("Volume", {0, 0, 400, 100});
+        d_ui.Text("Volume", 48.0f, {0, 0, 400, 100});
 
         float volume = Sprocket::Audio::GetMasterVolume();
         d_ui.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
@@ -105,7 +105,7 @@ void EscapeMenu::OnUpdate(double dt)
     static vec4 shape2{w/2 + 300, 100, 400, 500};
     bool draggable2 = true;
     if (d_ui.StartPanel("BUTTONS! :D", &shape2, &draggable2, &draggable)) {
-        d_ui.Text("BUTTONS! :D", {0, 0, 400, 100});
+        d_ui.Text("BUTTONS! :D", 48.0f, {0, 0, 400, 100});
         vec4 buttonQuad{10, 100, 400 - 20, 50};
         d_ui.Button("Button 1", buttonQuad);
         buttonQuad.y += 60;

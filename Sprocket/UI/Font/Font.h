@@ -47,6 +47,8 @@ public:
 
     void Bind() const { d_atlas.Bind(); }
     void Unbind() const { d_atlas.Unbind(); }
+
+    Texture GetAtlas() const { return d_atlas.GetAtlas(); }
 };
 
 }
