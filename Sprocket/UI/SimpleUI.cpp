@@ -7,6 +7,7 @@
 #include "Maths.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
+#include "Adaptors.h"
 
 #include <functional>
 #include <sstream>
@@ -142,19 +143,17 @@ void SimpleUI::EndFrame()
 
     std::size_t moveToFront = 0;
 
-    for (auto it = d_panelOrder.rbegin(); it != d_panelOrder.rend(); ++it) {
-        const auto& panel = d_panels[*it];
-        const auto& quads = panel.widgetRegions;
-        for (std::size_t i = quads.size(); i != 0;) {
-            --i;
-            const auto& quad = quads[i];
+    for (const auto& panelHash : Reversed(d_panelOrder)) {
+        const auto& panel = d_panels[panelHash];
+
+        for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
             auto hovered = d_mouse.InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
             auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
-                moveToFront = *it;
+                moveToFront = panelHash;
                 if (d_clicked != hash) {
                     d_widgetTimes[d_clicked].unclickedTime = d_time;
                     d_widgetTimes[hash].clickedTime = d_time;
@@ -197,8 +196,8 @@ void SimpleUI::EndFrame()
     d_shader.LoadUniform("u_proj_matrix", proj);
 
     d_buffer.Bind();
-    for (auto it = d_panelOrder.begin(); it != d_panelOrder.end(); ++it) {
-        const auto& panel = d_panels[*it];
+    for (const auto& panelHash : d_panelOrder) {
+        const auto& panel = d_panels[panelHash];
         d_shader.LoadUniformInt("texture_channels", 1);
         Texture::White().Bind();
         d_buffer.Draw(panel.quadVertices, panel.quadIndices);
