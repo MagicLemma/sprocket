@@ -58,9 +58,13 @@ int FontAtlas::Fit(int index, int width, int height)
     return y;
 }
 
-Maths::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
+Maths::ivec4 FontAtlas::GetRegion(
+    std::size_t width,
+    std::size_t height,
+    int padding)
 {
-    Maths::ivec4 region{0, 0, width, height};
+    // Add padding
+    Maths::ivec4 region{0, 0, width + 2 * padding, height + 2 * padding};
 
     std::size_t best_height = std::numeric_limits<std::size_t>::max();
     std::size_t best_width = std::numeric_limits<std::size_t>::max();
@@ -126,6 +130,11 @@ Maths::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
         }
     }
 
+    // Remove padding
+    region.x += padding;
+    region.y += padding;
+    region.z -= 2 * padding;
+    region.w -= 2 * padding;
     return region;
 }
 

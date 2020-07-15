@@ -19,7 +19,8 @@ public:
 
     Maths::ivec4 GetRegion(
         std::size_t width,
-        std::size_t height
+        std::size_t height,
+        int padding
     );
 
     void SetRegion(

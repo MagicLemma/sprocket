@@ -177,7 +177,7 @@ bool Font::LoadGlyph(char c, float size)
     std::size_t tgt_w = src_w + 2 * padding;
     std::size_t tgt_h = src_h + 2 * padding;
 
-    Maths::ivec4 region = d_atlas.GetRegion(tgt_w, tgt_h);
+    Maths::ivec4 region = d_atlas.GetRegion(tgt_w, tgt_h, padding);
 
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
