@@ -483,7 +483,6 @@ void SimpleUI::Image(const std::string& name,
     assert(d_currentPanel);
     Maths::vec4 region{position.x, position.y, image.Width(), image.Height()};
     Maths::vec4 copy = ApplyOffset(region);
-    auto info = RegisterWidget(MangleName(name), copy);
 
     auto& cmd = d_currentPanel->extraCommands.emplace_back(DrawCommand());
     cmd.vertices = {
