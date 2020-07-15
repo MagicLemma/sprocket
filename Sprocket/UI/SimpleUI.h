@@ -152,6 +152,8 @@ public:
     WidgetInfo RegisterWidget(const std::string& name,
                               const Maths::vec4& region);
 
+    Font& GetFont() { return d_font; }
+
     void OnEvent(Event& event);
     void OnUpdate(double dt);
 

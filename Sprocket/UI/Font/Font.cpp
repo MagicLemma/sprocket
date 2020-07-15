@@ -121,7 +121,7 @@ void GenerateKerning(
 }
 
 Font::Font(const std::string& filename)
-    : d_atlas(2048, 2048)
+    : d_atlas(1024, 1024)
     , d_filename(filename)
 {
 }

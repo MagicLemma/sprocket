@@ -104,8 +104,8 @@ void EscapeMenu::OnUpdate(double dt)
 
     static vec4 shape2{w/2 + 300, 100, 400, 500};
     bool draggable2 = true;
-    if (d_ui.StartPanel("BUTTONS! :D", &shape2, &draggable2, &draggable)) {
-        d_ui.Text("BUTTONS! :D", 48.0f, {0, 0, 400, 100});
+    if (d_ui.StartPanel("Button Panel", &shape2, &draggable2, &draggable)) {
+        d_ui.Text("Buttons", 36.0f, {0, 0, 400, 100});
         vec4 buttonQuad{10, 100, 400 - 20, 50};
         d_ui.Button("Button 1", buttonQuad);
         buttonQuad.y += 60;
@@ -126,6 +126,12 @@ void EscapeMenu::OnUpdate(double dt)
         static bool valB = true;
         d_ui.Checkbox("B", buttonQuad, &valB);
         buttonQuad.x += buttonQuad.z + 10.0f;
+
+        //d_ui.Image(
+        //    "Font Atlas",
+        //    d_ui.GetFont().GetAtlas(),
+        //    {buttonQuad.x, buttonQuad.y + 10}
+        //);
 
         d_ui.EndPanel();
     }
