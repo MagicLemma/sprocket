@@ -23,8 +23,8 @@ void FontAtlas::SetRegion(
 {
     assert(region.x > 0);
     assert(region.y > 0);
-    assert(region.z > 0);
-    assert(region.w > 0);
+    //assert(region.z > 0);
+    //assert(region.w > 0);
     assert(region.x + region.z < d_texture.Width());
     assert(region.y + region.w < d_texture.Height());
     assert(data.size() == region.z * region.w); // width * height
@@ -64,7 +64,9 @@ Maths::ivec4 FontAtlas::GetRegion(
     int padding)
 {
     // Add padding
-    Maths::ivec4 region{0, 0, width + 2 * padding, height + 2 * padding};
+    width += 2 * padding;
+    height += 2 * padding;
+    Maths::ivec4 region{0, 0, width, height};
 
     std::size_t best_height = std::numeric_limits<std::size_t>::max();
     std::size_t best_width = std::numeric_limits<std::size_t>::max();
@@ -131,8 +133,8 @@ Maths::ivec4 FontAtlas::GetRegion(
     }
 
     // Remove padding
-    region.x += padding;
-    region.y += padding;
+    //region.x += padding;
+    //region.y += padding;
     region.z -= 2 * padding;
     region.w -= 2 * padding;
     return region;

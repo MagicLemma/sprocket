@@ -177,7 +177,7 @@ bool Font::LoadGlyph(char c, float size)
     std::size_t tgt_w = src_w + 2 * padding;
     std::size_t tgt_h = src_h + 2 * padding;
 
-    Maths::ivec4 region = d_atlas.GetRegion(tgt_w, tgt_h, padding);
+    Maths::ivec4 region = d_atlas.GetRegion(src_w, src_h, padding);
 
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
@@ -187,26 +187,27 @@ bool Font::LoadGlyph(char c, float size)
     }
 
     std::vector<unsigned char> buffer;
-    buffer.resize(tgt_w * tgt_h);
+    buffer.resize(src_w * src_h);
+    std::memcpy(buffer.data(), ft_bitmap.buffer, src_w * src_h);
     
-    unsigned char *dst_ptr = buffer.data() + (padding * tgt_w + padding);
-    unsigned char *src_ptr = ft_bitmap.buffer;
-    for (std::size_t i = 0; i < src_h; i++ )
-    {
-        std::memcpy(dst_ptr, src_ptr, ft_bitmap.width);
-        dst_ptr += tgt_w;
-        src_ptr += ft_bitmap.pitch;
-    }
+    //unsigned char *dst_ptr = buffer.data() + (padding * tgt_w + padding);
+    //unsigned char *src_ptr = ft_bitmap.buffer;
+    //for (std::size_t i = 0; i < src_h; i++ )
+    //{
+    //    std::memcpy(dst_ptr, src_ptr, ft_bitmap.width);
+    //    dst_ptr += tgt_w;
+    //    src_ptr += ft_bitmap.pitch;
+    //}
 
-    d_atlas.SetRegion({region.x, region.y, tgt_w, tgt_h}, buffer);
+    d_atlas.SetRegion(region, buffer);
 
     uint32_t codepoint = ToUTF32(&c);
 
     auto& font = d_fontData[size];
     Glyph& glyph = font.glyphs[codepoint];
     glyph.codepoint = ToUTF32(&c);
-    glyph.width     = tgt_w;
-    glyph.height    = tgt_h;
+    glyph.width     = src_w;
+    glyph.height    = src_h;
     glyph.offset    = {ft_glyph_left, ft_glyph_top};
     glyph.texture.x = region.x / (float)d_atlas.Width();
     glyph.texture.y = region.y / (float)d_atlas.Height();
