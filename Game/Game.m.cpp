@@ -7,8 +7,8 @@
 int main()
 {
     using namespace Sprocket;
-
     Log::Init();
+
     Window window("Game!");
     SceneManager sceneManager;
     ModelManager modelManager;

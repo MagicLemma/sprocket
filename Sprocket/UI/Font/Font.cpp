@@ -148,66 +148,41 @@ Glyph Font::GetGlyph(char c, float size)
 
 bool Font::LoadGlyph(char c, float size)
 {
+    uint32_t codepoint = ToUTF32(&c);
+    
     FT_Library library;
     FT_Face face;
-
-    int padding = 1; // Potentially make this modifiable.
-
     if (!LoadFace(d_filename, size, &library, &face)) {
         return false;
     }
 
-    FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)ToUTF32(&c));
+    FT_UInt glyph_index = FT_Get_Char_Index(face, (FT_ULong)codepoint);
     FT_Int32 flags = FT_LOAD_RENDER | FT_LOAD_FORCE_AUTOHINT;
-
     if (FT_Load_Glyph(face, glyph_index, flags)) {
         FT_Done_Face(face);
         FT_Done_FreeType(library);
         return false;
     }
 
-    FT_GlyphSlot slot   = face->glyph;
-    FT_Bitmap ft_bitmap = slot->bitmap;
-    int ft_glyph_top    = slot->bitmap_top;
-    int ft_glyph_left   = slot->bitmap_left;
-
-    std::size_t src_w = ft_bitmap.width;
-    std::size_t src_h = ft_bitmap.rows;
-
-    std::size_t tgt_w = src_w + 2 * padding;
-    std::size_t tgt_h = src_h + 2 * padding;
-
-    Maths::ivec4 region = d_atlas.GetRegion(tgt_w, tgt_h);
-
+    FT_GlyphSlot slot = face->glyph;
+    FT_Bitmap bitmap  = slot->bitmap;
+    auto region = d_atlas.GetRegion(bitmap.width, bitmap.rows);
     if (region.x < 0) {
         SPKT_LOG_ERROR("Texture atlas is full!");
-        FT_Done_Face( face );
-        FT_Done_FreeType( library );
+        FT_Done_Face(face);
+        FT_Done_FreeType(library);
         return false;
     }
 
-    std::vector<unsigned char> buffer;
-    buffer.resize(tgt_w * tgt_h);
-    
-    unsigned char *dst_ptr = buffer.data() + (padding * tgt_w + padding);
-    unsigned char *src_ptr = ft_bitmap.buffer;
-    for (std::size_t i = 0; i < src_h; i++ )
-    {
-        std::memcpy(dst_ptr, src_ptr, ft_bitmap.width);
-        dst_ptr += tgt_w;
-        src_ptr += ft_bitmap.pitch;
-    }
-
-    d_atlas.SetRegion({region.x, region.y, tgt_w, tgt_h}, buffer);
-
-    uint32_t codepoint = ToUTF32(&c);
+    d_atlas.SetRegion(region, bitmap.buffer);
 
     auto& font = d_fontData[size];
     Glyph& glyph = font.glyphs[codepoint];
-    glyph.codepoint = ToUTF32(&c);
-    glyph.width     = tgt_w;
-    glyph.height    = tgt_h;
-    glyph.offset    = {ft_glyph_left, ft_glyph_top};
+
+    glyph.codepoint = codepoint;
+    glyph.width     = slot->bitmap.width;
+    glyph.height    = slot->bitmap.rows;
+    glyph.offset    = {slot->bitmap_left, slot->bitmap_top};
     glyph.texture.x = region.x / (float)d_atlas.Width();
     glyph.texture.y = region.y / (float)d_atlas.Height();
     glyph.texture.z = glyph.width / (float)d_atlas.Width();

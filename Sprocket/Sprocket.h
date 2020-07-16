@@ -24,6 +24,7 @@
 #include "Events/WindowEvent.h"
 
 // UTILITY
+#include "Utility/Adaptors.h"
 #include "Utility/Log.h"
 #include "Utility/Colour.h"
 #include "Utility/HashPair.h"
