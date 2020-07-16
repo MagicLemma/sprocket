@@ -15,65 +15,6 @@
 #include <algorithm>
 
 namespace Sprocket {
-namespace {
-
-struct TextInfo
-{
-    float width = 0.0f;
-    float height = 0.0f;
-};
-
-TextInfo GetTextInfo(Font& font, float size, const std::string& text)
-{
-    TextInfo info;
-    for (char c : text) { // TODO: Take kerning into account.
-        auto glyph = font.GetGlyph(c, size);
-        info.width += glyph.advance.x;
-        if (glyph.height > info.height) {
-            info.height = (float)glyph.height;
-        }
-    }
-
-    Glyph first = font.GetGlyph(text.front(), size);
-    info.width -= first.offset.x;
-
-    Glyph last = font.GetGlyph(text.back(), size);
-    info.width += last.width;
-    info.width += last.offset.x;
-    info.width -= last.advance.x;
-
-    return info;
-}
-
-template <typename T> T Interpolate(
-    const WidgetInfo& info,
-    const T& base,
-    const T& hovered,
-    const T& clicked)
-{
-    T ret = base;
-    double interval = 0.1;
-    
-    if (info.mouseOver) {
-        float r = std::min(info.mouseOver, interval) / (float)interval;
-        ret = (1 - r) * ret + r * hovered;
-    } else {
-        float r = std::min(info.sinceUnhovered, interval) / (float)interval;
-        ret = (1 - r) * hovered + r * ret;
-    }
-
-    if (info.mouseDown) {
-        float r = std::min(info.mouseDown, interval) / (float)interval;
-        ret = (1 - r) * ret + r * clicked;
-    } else {
-        float r = std::min(info.sinceUnlicked, interval) / (float)interval;
-        ret = (1 - r) * clicked + r * ret;
-    }
-
-    return ret;
-}
-
-}
 
 UIEngine::UIEngine(Window* window)
     : d_window(window)
@@ -101,15 +42,17 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
     return region;
 }
 
-WidgetInfo UIEngine::RegisterWidget(const std::string& name,
+WidgetInfo UIEngine::Register(const std::string& name,
                                     const Maths::vec4& region)
 {
     assert(d_currentPanel);
+    
+    WidgetInfo info;
+    info.quad = ApplyOffset(region);
+    
     std::string prefixedName = d_currentPanel->name + "##" + name;
     std::size_t hash = std::hash<std::string>{}(prefixedName);
-    d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, region});
-
-    WidgetInfo info;
+    d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, info.quad});
 
     if (hash == d_clicked) {
         info.mouseDown = d_clickedTime;
@@ -274,8 +217,11 @@ bool UIEngine::StartPanel(
         panel.region = *region;
 
         d_currentPanel = &panel;
-        
-        auto info = RegisterWidget(name, *region);
+
+        auto info = Register(
+            name,
+            {0, 0, region->z, region->w}
+        );
 
         if (info.mouseDown && *draggable) {
             region->x += d_mouse.GetMouseOffset().x;
@@ -332,10 +278,10 @@ void UIEngine::DrawText(
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
     Glyph first = d_font.GetGlyph(text.front(), size);
-    auto textInfo = GetTextInfo(d_font, size, text);
+    float textWidth = d_font.TextWidth(text, size);
 
     Maths::vec2 pen = {
-        region.x + (copy.z - textInfo.width) / 2.0f,
+        region.x + (copy.z - textWidth) / 2.0f,
         region.y + (copy.w - first.height) / 2.0f
     };
 

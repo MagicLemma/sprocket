@@ -48,6 +48,8 @@ public:
     void Bind() const { d_atlas.Bind(); }
     void Unbind() const { d_atlas.Unbind(); }
 
+    float TextWidth(const std::string& text, float size);
+
     Texture GetAtlas() const { return d_atlas.GetAtlas(); }
 };
 

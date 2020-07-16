@@ -78,6 +78,9 @@ struct WidgetInfo
     
     bool onClick = false;
     bool onHover = false;
+
+    Maths::vec4 quad;
+        // The region of the widget converted to screen space coords.
 };
 
 class UIEngine
@@ -124,8 +127,14 @@ class UIEngine
 public:
     UIEngine(Window* window);
 
-    WidgetInfo RegisterWidget(const std::string& name,
-                              const Maths::vec4& region);
+    WidgetInfo Register(const std::string& name, const Maths::vec4& region);
+        // Registers a region that can respond to hovers and clicks.
+        // The (x, y) position of the region is with respect to the
+        // position of the active panel. The widget info returned
+
+    Maths::vec4 ApplyOffset(const Maths::vec4& region);
+        // Returns the region offsetted by the position of the current
+        // panel if there is one, or region otherwise.
 
     Font& GetFont() { return d_font; }
 
@@ -140,10 +149,6 @@ public:
                     bool* active,
                     bool* draggable);
     void EndPanel();
-
-    Maths::vec4 ApplyOffset(const Maths::vec4& region);
-        // Returns the region offsetted by the position of the current
-        // panel if there is one, or region otherwise.
 
     void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
     void DrawText(const std::string& text, float size, const Maths::vec4& quad);

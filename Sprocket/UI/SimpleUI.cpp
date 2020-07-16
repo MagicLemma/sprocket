@@ -17,34 +17,6 @@
 namespace Sprocket {
 namespace {
 
-struct TextInfo
-{
-    float width = 0.0f;
-    float height = 0.0f;
-};
-
-TextInfo GetTextInfo(Font& font, float size, const std::string& text)
-{
-    TextInfo info;
-    for (char c : text) { // TODO: Take kerning into account.
-        auto glyph = font.GetGlyph(c, size);
-        info.width += glyph.advance.x;
-        if (glyph.height > info.height) {
-            info.height = (float)glyph.height;
-        }
-    }
-
-    Glyph first = font.GetGlyph(text.front(), size);
-    info.width -= first.offset.x;
-
-    Glyph last = font.GetGlyph(text.back(), size);
-    info.width += last.width;
-    info.width += last.offset.x;
-    info.width -= last.advance.x;
-
-    return info;
-}
-
 template <typename T> T Interpolate(
     const WidgetInfo& info,
     const T& base,
@@ -148,25 +120,23 @@ void SimpleUI::Text(
     d_engine.DrawText(text, size, copy);
 }
 
-bool SimpleUI::Button(const std::string& name,
-                      const Maths::vec4& region)
+bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
 {
-    Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.Register(name, region);
 
-    Maths::vec4 hoveredRegion = copy;
+    Maths::vec4 hoveredRegion = info.quad;
     hoveredRegion.x -= 10.0f;
     hoveredRegion.z += 20.0f;
 
-    Maths::vec4 clickedRegion = copy;
+    Maths::vec4 clickedRegion = info.quad;
     clickedRegion.x += 10.0f;
     clickedRegion.z -= 20.0f;
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
-    Maths::vec4 shape = Interpolate(info, copy, hoveredRegion, clickedRegion);
+    Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
     
     d_engine.DrawQuad(colour, shape);
-    d_engine.DrawText(name, 36.0f, copy);
+    d_engine.DrawText(name, 36.0f, info.quad);
 
     return info.onClick;
 }
@@ -175,8 +145,7 @@ bool SimpleUI::Checkbox(const std::string& name,
                         const Maths::vec4& region,
                         bool* value)
 {
-    Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.Register(name, region);
 
     auto unselected = Interpolate(info, d_theme.backgroundColour, d_theme.backgroundColour*1.1f, d_theme.clickedColour);
     auto selected = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);;
@@ -194,8 +163,8 @@ bool SimpleUI::Checkbox(const std::string& name,
         *value = !(*value);
     }
 
-    d_engine.DrawQuad(colour, copy);
-    d_engine.DrawText(name, 36.0f, copy);
+    d_engine.DrawQuad(colour, info.quad);
+    d_engine.DrawText(name, 36.0f, info.quad);
 
     return *value; 
 }
@@ -204,13 +173,12 @@ void SimpleUI::Slider(const std::string& name,
                       const Maths::vec4& region,
                       float* value, float min, float max)
 {
-    Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.Register(name, region);
 
-    float x = copy.x;
-    float y = copy.y;
-    float width = copy.z;
-    float height = copy.w;
+    float x = info.quad.x;
+    float y = info.quad.y;
+    float width = info.quad.z;
+    float height = info.quad.w;
 
     Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 rightColour = d_theme.backgroundColour;
@@ -218,7 +186,7 @@ void SimpleUI::Slider(const std::string& name,
     float ratio = (*value - min) / (max - min);
     d_engine.DrawQuad(leftColour, {x, y, ratio * width, height});
     d_engine.DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, copy);
+    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
 
     if (info.mouseDown) {
         auto mouse = d_mouse.GetMousePos();
@@ -232,13 +200,12 @@ void SimpleUI::Dragger(const std::string& name,
                        const Maths::vec4& region,
                        float* value, float speed)
 {
-    Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(name, copy);
+    auto info = d_engine.Register(name, region);
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
-    d_engine.DrawQuad(colour, copy);
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, copy);
+    d_engine.DrawQuad(colour, info.quad);
+    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
 
     if (info.mouseDown) {
         *value += d_mouse.GetMouseOffset().x * speed;
