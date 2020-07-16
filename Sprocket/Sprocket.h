@@ -14,8 +14,10 @@
 #include "UI/Font/Font.h"
 #include "UI/Font/Glyph.h"
 
-#include "UI/DevUI.h"
+#include "UI/UIEngine.h"
 #include "UI/SimpleUI.h"
+#include "UI/SinglePanelUI.h"
+#include "UI/DevUI.h"
 
 // EVENTS
 #include "Events/Event.h"
