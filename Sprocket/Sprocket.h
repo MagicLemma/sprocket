@@ -16,6 +16,7 @@
 
 #include "UI/UIEngine.h"
 #include "UI/SimpleUI.h"
+#include "UI/SinglePanelUI.h"
 #include "UI/DevUI.h"
 
 // EVENTS
