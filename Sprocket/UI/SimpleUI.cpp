@@ -136,7 +136,7 @@ bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
     Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
     
     d_engine.DrawQuad(colour, shape);
-    d_engine.DrawText(name, 36.0f, info.quad);
+    d_engine.DrawText(name, 36.0f, info.quad, Alignment::RIGHT);
 
     return info.onClick;
 }

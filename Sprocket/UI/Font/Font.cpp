@@ -214,8 +214,13 @@ float Font::GetKerning(char left, char right, float size)
 float Font::TextWidth(const std::string& text, float size)
 {
     float width = 0;
-    for (char c : text) { // TODO: Take kerning into account.
-        auto glyph = GetGlyph(c, size);
+    for (int i = 0; i != text.size(); ++i) {
+        auto glyph = GetGlyph(text[i], size);
+
+        if (i > 0) {
+            width += GetKerning(text[i-1], text[i], size);
+        }
+
         width += glyph.advance.x;
     }
 

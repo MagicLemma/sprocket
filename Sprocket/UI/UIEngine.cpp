@@ -270,7 +270,8 @@ void UIEngine::DrawQuad(const Maths::vec4& colour,
 void UIEngine::DrawText(
     const std::string& text,
     float size,
-    const Maths::vec4& region)
+    const Maths::vec4& region,
+    Alignment alignment)
 {
     assert(d_currentPanel);
 
@@ -280,10 +281,17 @@ void UIEngine::DrawText(
     Glyph first = d_font.GetGlyph(text.front(), size);
     float textWidth = d_font.TextWidth(text, size);
 
-    Maths::vec2 pen = {
-        region.x + (copy.z - textWidth) / 2.0f,
-        region.y + (copy.w - first.height) / 2.0f
-    };
+    Maths::vec2 pen{region.x, region.y};
+
+    pen.y += (copy.w - first.height) / 2.0f;
+
+    if (alignment == Alignment::LEFT) {
+        pen.x += 5.0f;
+    } else if (alignment == Alignment::RIGHT) {
+        pen.x += region.z - 5.0f - textWidth;
+    } else {
+        pen.x += (copy.z - textWidth) / 2.0f;
+    }
 
     pen.x -= first.offset.x;
     pen.y += first.offset.y;

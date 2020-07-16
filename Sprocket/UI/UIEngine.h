@@ -83,6 +83,13 @@ struct WidgetInfo
         // The region of the widget converted to screen space coords.
 };
 
+enum class Alignment
+{
+    LEFT,
+    CENTRE,
+    RIGHT
+};
+
 class UIEngine
 {
     Window* d_window;
@@ -150,8 +157,17 @@ public:
                     bool* draggable);
     void EndPanel();
 
-    void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
-    void DrawText(const std::string& text, float size, const Maths::vec4& quad);
+    void DrawQuad(
+        const Maths::vec4& colour,
+        const Maths::vec4& quad
+    );
+
+    void DrawText(
+        const std::string& text,
+        float size,
+        const Maths::vec4& quad,
+        Alignment alignment = Alignment::CENTRE
+    );
         // Basic draw functions, does not take panelling into account.
 
     void SubmitDrawCommand(const DrawCommand& cmd);
