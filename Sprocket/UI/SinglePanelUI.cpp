@@ -67,28 +67,15 @@ void SinglePanelUI::OnUpdate(double dt)
     d_engine.OnUpdate(dt);
 }
 
-bool SinglePanelUI::StartFrame(
-    const std::string& name,
-    Maths::vec4* region,
-    bool* active,
-    bool* draggable)
+void SinglePanelUI::StartFrame()
 {
+    std::string name = "__SinglePanelUI_Name__";
+    Maths::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
+    bool active = true;
+    bool draggable = false;
+
     d_engine.StartFrame();
-    d_engine.StartPanel(name, region, active, draggable);
-
-    if(*active) {
-        float thickness = 5.0f;
-        auto border = *region;
-        border.x -= thickness;
-        border.y -= thickness;
-        border.z += 2.0f * thickness;
-        border.w += 2.0f * thickness;
-
-        d_engine.DrawQuad(d_theme.backgroundColour * 0.35f, border);
-        d_engine.DrawQuad(d_theme.backgroundColour * 0.7f, *region);
-    }
-
-    return *active;
+    d_engine.StartPanel(name, &region, &active, &draggable);
 }
 
 void SinglePanelUI::EndFrame()
@@ -143,6 +130,19 @@ void SinglePanelUI::Slider(const std::string& name,
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
     }    
+}
+
+void SinglePanelUI::Box(const Maths::vec4& quad, const Maths::vec4& colour)
+{
+    float padding = 5.0f;
+    Maths::vec4 border = quad;
+    border.x -= padding;
+    border.y -= padding;
+    border.z += 2 * padding;
+    border.w += 2 * padding;
+
+    d_engine.DrawQuad(colour * 0.7f, border);
+    d_engine.DrawQuad(colour, quad);
 }
 
 }

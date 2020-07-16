@@ -46,10 +46,7 @@ public:
     void OnEvent(Event& event);
     void OnUpdate(double dt);
 
-    bool StartFrame(const std::string& name,
-                    Maths::vec4* region,
-                    bool* active,
-                    bool* draggable);
+    void StartFrame();
     void EndFrame();
 
     bool Button(const std::string& name,
@@ -58,6 +55,8 @@ public:
     void Slider(const std::string& name,
                 const Maths::vec4& region,
                 float* value, float min, float max);
+
+    void Box(const Maths::vec4& quad, const Maths::vec4& colour);
 };
 
 }
