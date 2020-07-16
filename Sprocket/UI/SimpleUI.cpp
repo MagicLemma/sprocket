@@ -152,7 +152,7 @@ bool SimpleUI::Button(const std::string& name,
                       const Maths::vec4& region)
 {
     Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(d_engine.MangleName(name), copy);
+    auto info = d_engine.RegisterWidget(name, copy);
 
     Maths::vec4 hoveredRegion = copy;
     hoveredRegion.x -= 10.0f;
@@ -176,7 +176,7 @@ bool SimpleUI::Checkbox(const std::string& name,
                         bool* value)
 {
     Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(d_engine.MangleName(name), copy);
+    auto info = d_engine.RegisterWidget(name, copy);
 
     auto unselected = Interpolate(info, d_theme.backgroundColour, d_theme.backgroundColour*1.1f, d_theme.clickedColour);
     auto selected = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);;
@@ -205,7 +205,7 @@ void SimpleUI::Slider(const std::string& name,
                       float* value, float min, float max)
 {
     Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(d_engine.MangleName(name), copy);
+    auto info = d_engine.RegisterWidget(name, copy);
 
     float x = copy.x;
     float y = copy.y;
@@ -233,7 +233,7 @@ void SimpleUI::Dragger(const std::string& name,
                        float* value, float speed)
 {
     Maths::vec4 copy = d_engine.ApplyOffset(region);
-    auto info = d_engine.RegisterWidget(d_engine.MangleName(name), copy);
+    auto info = d_engine.RegisterWidget(name, copy);
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     

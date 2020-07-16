@@ -101,18 +101,15 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
     return region;
 }
 
-std::string UIEngine::MangleName(const std::string& name)
-{
-    return d_currentPanel->name + "##" + name;
-}
-
 WidgetInfo UIEngine::RegisterWidget(const std::string& name,
                                     const Maths::vec4& region)
 {
     assert(d_currentPanel);
-    WidgetInfo info;
-    std::size_t hash = std::hash<std::string>{}(name);
+    std::string prefixedName = d_currentPanel->name + "##" + name;
+    std::size_t hash = std::hash<std::string>{}(prefixedName);
     d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, region});
+
+    WidgetInfo info;
 
     if (hash == d_clicked) {
         info.mouseDown = d_clickedTime;

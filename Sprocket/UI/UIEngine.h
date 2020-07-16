@@ -145,10 +145,6 @@ public:
         // Returns the region offsetted by the position of the current
         // panel if there is one, or region otherwise.
 
-    std::string MangleName(const std::string& name);
-        // Returns <panel name>##<name> if there is a current panel,
-        // or name otherwise.
-
     void DrawQuad(const Maths::vec4& colour, const Maths::vec4& quad);
     void DrawText(const std::string& text, float size, const Maths::vec4& quad);
         // Basic draw functions, does not take panelling into account.
