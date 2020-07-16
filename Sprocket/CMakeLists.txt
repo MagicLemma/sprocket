@@ -37,8 +37,9 @@ add_library(Sprocket STATIC
             UI/Font/FontAtlas.cpp
             UI/Font/Font.cpp
             
-            UI/DevUI.cpp
+            UI/UIEngine.cpp
             UI/SimpleUI.cpp
+            UI/DevUI.cpp
 
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
