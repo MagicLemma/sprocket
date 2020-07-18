@@ -40,11 +40,6 @@ GameGrid::GameGrid(EntityManager* entityManager,
     d_keyboard.ConsumeAll(false);
 }
 
-std::size_t GameGrid::Key(int x, int z)
-{
-    return (std::size_t(x) << 32) | (unsigned int )z;
-}
-
 void GameGrid::OnUpdate(Window* window, Entity* camera)
 {
     d_mouse.OnUpdate();
