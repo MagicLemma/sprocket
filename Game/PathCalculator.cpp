@@ -7,7 +7,7 @@ std::vector<Sprocket::Maths::vec3> GeneratePath(
 {
     using namespace Sprocket;
 
-    auto p1 = ClosestGridSquare(start, grid);
+    auto p1 = InitialGridSquare(start, end);
     Maths::vec3 first{p1.first + 0.5f, start.y, p1.second + 0.5f};
 
     auto p2 = ClosestGridSquare(end, grid);
@@ -63,4 +63,48 @@ std::pair<int, int> ClosestGridSquare(
     //};
 
     return {gridX, gridZ};
+}
+
+std::pair<int, int> InitialGridSquare(
+    const Sprocket::Maths::vec3& start,
+    const Sprocket::Maths::vec3& end)
+{
+    using namespace Sprocket;
+
+    int gridX = std::floor(start.x);
+    int gridZ = std::floor(start.z);
+
+    int offsetX = 0;
+    int offsetZ = 0;
+
+    auto DistanceTo = [](const Maths::vec3& pos, int x, int z) {
+        Maths::vec3 target{x + 0.5f, pos.y, z + 0.5f};
+        return Maths::Distance(pos, target);
+    };
+
+    float distance = DistanceTo(end, gridX, gridZ);
+    float minDistance = distance;
+
+    distance = DistanceTo(end, gridX + 1, gridZ);
+    if (distance < minDistance) {
+        minDistance = distance;
+        offsetX = 1;
+        offsetZ = 0;
+    }
+
+    distance = DistanceTo(end, gridX, gridZ + 1);
+    if (distance < minDistance) {
+        minDistance = distance;
+        offsetX = 0;
+        offsetZ = 1;
+    }
+
+    distance = DistanceTo(end, gridX + 1, gridZ + 1);
+    if (distance < minDistance) {
+        minDistance = distance;
+        offsetX = 1;
+        offsetZ = 1;
+    }
+
+    return {gridX + offsetX, gridZ + offsetZ};
 }

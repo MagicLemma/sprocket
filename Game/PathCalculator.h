@@ -15,3 +15,8 @@ std::pair<int, int> ClosestGridSquare(
     const Sprocket::Maths::vec3& position,
     const GameGrid& grid
 );
+
+std::pair<int, int> InitialGridSquare(
+    const Sprocket::Maths::vec3& start,
+    const Sprocket::Maths::vec3& end
+);
