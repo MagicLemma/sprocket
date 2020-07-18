@@ -79,7 +79,7 @@ void GameGrid::OnEvent(Event& event)
     d_keyboard.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
-        auto it = d_gridEntities.find(Key(d_x, d_z));
+        auto it = d_gridEntities.find({d_x, d_z});
         if (e->Button() == Mouse::LEFT && it == d_gridEntities.end()) {                
             SPKT_LOG_INFO("Grid square empty!");
             auto newEntity = std::make_shared<Entity>();
@@ -121,13 +121,13 @@ void GameGrid::AddEntity(Sprocket::Entity* entity, int x, int z)
         c->x = x;
         c->z = z;
         entity->Position() = {x + 0.5f, 0.05f, z + 0.5f};
-        d_gridEntities[Key(x, z)] = entity;
+        d_gridEntities[{x, z}] = entity;
     }
 }
 
 void GameGrid::RemoveEntity(int x, int z)
 {
-    auto it = d_gridEntities.find(Key(x, z));
+    auto it = d_gridEntities.find({x, z});
     if (it == d_gridEntities.end()) {
         SPKT_LOG_WARN("No entity exists at this coord!");
     }
@@ -135,4 +135,18 @@ void GameGrid::RemoveEntity(int x, int z)
         it->second->Remove<GridComponent>();
         d_gridEntities.erase(it);
     }
+}
+
+Sprocket::Entity* GameGrid::At(int x, int z) const
+{
+    auto it = d_gridEntities.find({x, z});
+    if (it != d_gridEntities.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
+Sprocket::Entity* GameGrid::Selected() const
+{
+    return At(d_x, d_z);
 }

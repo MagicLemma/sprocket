@@ -12,6 +12,14 @@ struct GridComponent : public Sprocket::Component
 
 class GameGrid
 {
+public:
+    using GridMap = std::unordered_map<
+        std::pair<int, int>,
+        Sprocket::Entity*,
+        Sprocket::HashPair
+    >;
+
+private:
     Sprocket::EntityManager* d_entityManager;
     Sprocket::ModelManager*  d_modelManager;
 
@@ -22,7 +30,7 @@ class GameGrid
     int d_x, d_z;
 
     std::size_t Key(int x, int z);
-    std::unordered_map<std::size_t, Sprocket::Entity*> d_gridEntities; 
+    GridMap d_gridEntities; 
 
     void AddEntity(Sprocket::Entity* entity, int x, int z);
     void RemoveEntity(int x, int z);
@@ -35,4 +43,8 @@ public:
                   Sprocket::Entity* camera);
 
     void OnEvent(Sprocket::Event& event);
+
+    Sprocket::Entity* At(int x, int z) const;
+
+    Sprocket::Entity* Selected() const;
 };

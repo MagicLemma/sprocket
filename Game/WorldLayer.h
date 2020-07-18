@@ -37,6 +37,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::MouseProxy d_mouse;
 
     GameGrid d_gameGrid;
+    Sprocket::SimpleUI d_hoveredEntityUI;
     
     // LAYER DATA
     bool d_paused = false;

@@ -20,8 +20,17 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityManager({&d_selector, &d_scriptRunner})
     , d_gameGrid(&d_entityManager, &d_modelManager)
     , d_shadowMapRenderer(core.window)
+    , d_hoveredEntityUI(core.window)
 {
     using namespace Sprocket;
+
+    SimpleUITheme theme;
+    theme.backgroundColour = SPACE_DARK;
+    theme.baseColour = CLEAR_BLUE;
+    theme.hoveredColour = LIGHT_BLUE;
+    theme.clickedColour = GARDEN;
+    d_hoveredEntityUI.SetTheme(theme);
+
     d_cycle.SetAngle(180.0f);
 
     d_lights.sun.direction = d_cycle.GetSunDir();
@@ -88,6 +97,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
     d_entityManager.OnEvent(event);
     d_gameGrid.OnEvent(event);
+    d_hoveredEntityUI.OnEvent(event);
 }
 
 void WorldLayer::OnUpdate(double dt)
@@ -97,6 +107,7 @@ void WorldLayer::OnUpdate(double dt)
     d_gameGrid.OnUpdate(d_core.window, d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
+    d_hoveredEntityUI.OnUpdate(dt);
 
     Audio::SetListener(*d_camera);
 
@@ -133,7 +144,6 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    //d_entityRenderer.BeginScene(d_camera, d_lens, d_lights);
     d_entityRenderer.BeginScene(*d_camera, d_lights);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
@@ -146,5 +156,30 @@ void WorldLayer::OnUpdate(double dt)
     if (d_paused) {
         d_postProcessor.Unbind();
         d_postProcessor.Draw();
+    }
+
+    if (!d_paused && d_gameGrid.Selected()) {
+        d_hoveredEntityUI.StartFrame();
+        auto mouse = d_mouse.GetMousePos();
+
+        float width = 200;
+        float height = 50;
+        float x = std::min(mouse.x, (float)(d_core.window->Width() - width - 10));
+        float y = std::min(mouse.y, (float)(d_core.window->Height() - height - 10));
+
+        Maths::vec4 region{x, y, width, height};
+        bool active = true;
+        bool draggable = false;
+        if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable)) {
+            
+            auto selected = d_gameGrid.Selected();
+            d_hoveredEntityUI.Text(selected->Name(), 36.0f, {0, 0, width, height});
+
+            d_hoveredEntityUI.EndPanel();
+        }
+
+        auto selected = d_gameGrid.Selected();
+
+        d_hoveredEntityUI.EndFrame();
     }
 }
