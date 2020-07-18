@@ -70,6 +70,7 @@ vec3 Cross(const vec3& lhs, const vec3& rhs);
 vec3 GetTranslation(const mat4& m);
 
 float Distance(const Maths::vec2& A, const Maths::vec2& B);
+float Distance(const Maths::vec3& A, const Maths::vec3& B);
 
 float Length(const vec3& v);
 float Length(const vec2& v);

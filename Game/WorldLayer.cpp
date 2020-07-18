@@ -1,5 +1,7 @@
 #include "WorldLayer.h"
 #include "Palette.h"
+#include "PathFollower.h"
+#include "PathCalculator.h"
 
 namespace {
 
@@ -17,7 +19,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_entityManager({&d_selector, &d_scriptRunner})
+    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower})
     , d_gameGrid(&d_entityManager, &d_modelManager)
     , d_shadowMapRenderer(core.window)
     , d_hoveredEntityUI(core.window)
@@ -44,16 +46,22 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianHoriz>();
 
     {
-        auto gun = std::make_shared<Entity>();
-        gun->Name() = "Deagle";
-        gun->Position() = {10.0f, 1.5f, -3.0f};
+        auto worker = std::make_shared<Entity>();
+        worker->Name() = "Worker";
+        worker->Position() = {0.5f, 0.5f, 0.5f};
         
-        gun->Add<SelectComponent>();
+        worker->Add<SelectComponent>();
 
-        auto modelData = gun->Add<ModelComponent>();
-        modelData->model = ModelManager::LoadModel("Resources/Models/Deagle.obj");
-        
-        d_entityManager.AddEntity(gun);
+        auto path = worker->Add<PathComponent>();
+        path->speed = 3.0f;
+        path->markers.push({10.5f, 0.5f, 3.5f});
+
+        auto modelData = worker->Add<ModelComponent>();
+        modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
+        modelData->scale = 0.5f;
+
+        d_entityManager.AddEntity(worker);
+        d_worker = worker.get();
     }
 
     {
@@ -93,6 +101,42 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
     if (auto e = event.As<WindowResizeEvent>()) {
         d_postProcessor.SetScreenSize(e->Width(), e->Height());
+    }
+
+    if (auto e = event.As<MouseButtonPressedEvent>()) {
+        if (e->Mods() & KeyModifier::CTRL) {
+            Maths::vec3 cameraPos = d_camera->Position();
+            Maths::vec3 direction = Maths::GetMouseRay(
+                d_mouse.GetMousePos(),
+                d_core.window->Width(),
+                d_core.window->Height(),
+                CameraUtils::MakeView(*d_camera),
+                CameraUtils::MakeProj(*d_camera)
+            );
+
+            float lambda = -cameraPos.y / direction.y;
+            Maths::vec3 mousePos = cameraPos + lambda * direction;
+            mousePos.y = 0.5f;
+            
+            auto& path = d_worker->Get<PathComponent>();
+
+            if (e->Button() == Mouse::LEFT) {
+                if (Maths::Distance(d_worker->Position(), mousePos) > 1.0f) {
+                    for (const auto& pos : GeneratePath(d_worker->Position(), mousePos, d_gameGrid)) {
+                        path.markers.push(pos);
+                    }
+                } else {
+                    path.markers.push(mousePos);
+                }
+                e->Consume();
+            }
+            else if (e->Button() == Mouse::RIGHT) {
+                while (!path.markers.empty()) {
+                    path.markers.pop();
+                }
+                e->Consume();
+            }
+        }
     }
 
     d_entityManager.OnEvent(event);

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameGrid.h"
 #include "CircadianCycle.h"
+#include "PathFollower.h"
 
 #include <Sprocket.h>
 
@@ -14,6 +15,7 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     Sprocket::Entity* d_camera;
+    Sprocket::Entity* d_worker;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
@@ -27,6 +29,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::EntityManager d_entityManager;
     Sprocket::BasicSelector d_selector;
     Sprocket::ScriptRunner  d_scriptRunner;
+    PathFollower  d_pathFollower;
 
     // Additional world setup
     Sprocket::Lights         d_lights;
