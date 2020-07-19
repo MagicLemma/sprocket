@@ -1,22 +1,42 @@
 #pragma once
-#include "GameGrid.h"
-
 #include <Sprocket.h>
 
-#include <vector>
+#include <queue>
+#include <memory>
+#include <functional>
 
-std::vector<Sprocket::Maths::vec3> GeneratePath(
+using GridFunction = std::function<bool(const Sprocket::Maths::ivec2&)>;
+    // A function used to query the grid. Accepts coordinates and returns
+    // true if that location in the grid is filled.
+
+struct PathNode
+{
+    Sprocket::Maths::ivec2 position;
+    int g;
+    int h;
+    std::shared_ptr<PathNode> parent = nullptr;
+
+    int Score() const { return g + h; }
+};
+
+using PathNodePtr = std::shared_ptr<PathNode>;
+
+PathNodePtr FindNode(
+    const std::vector<PathNodePtr>& nodes,
+    const Sprocket::Maths::ivec2& coords
+);
+
+float Heuristic(
+    PathNodePtr node,
+    const Sprocket::Maths::ivec2& target
+);
+
+std::queue<Sprocket::Maths::vec3> GenerateAStarPath(
     const Sprocket::Maths::vec3& start,
     const Sprocket::Maths::vec3& end,
-    const GameGrid& grid
+    GridFunction gridFunction
 );
 
-std::pair<int, int> ClosestGridSquare(
-    const Sprocket::Maths::vec3& position,
-    const GameGrid& grid
-);
-
-std::pair<int, int> InitialGridSquare(
-    const Sprocket::Maths::vec3& start,
-    const Sprocket::Maths::vec3& end
+Sprocket::Maths::ivec2 ClosestGridSquare(
+    const Sprocket::Maths::vec3& position
 );

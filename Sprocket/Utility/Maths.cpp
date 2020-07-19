@@ -198,6 +198,12 @@ float Length(const vec2& v)
     return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
+float Length(const ivec2& v)
+{
+    return std::sqrt(v.x * v.x + v.y * v.y);
+}
+
+
 float LengthSquare(const vec3& v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;

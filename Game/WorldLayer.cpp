@@ -121,19 +121,22 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
             auto& path = d_worker->Get<PathComponent>();
 
             if (e->Button() == Mouse::LEFT) {
+                std::queue<Maths::vec3>().swap(path.markers);
                 if (Maths::Distance(d_worker->Position(), mousePos) > 1.0f) {
-                    for (const auto& pos : GeneratePath(d_worker->Position(), mousePos, d_gameGrid)) {
-                        path.markers.push(pos);
-                    }
+                    path.markers = GenerateAStarPath(
+                        d_worker->Position(),
+                        mousePos,
+                        [&](const Maths::ivec2& pos) {
+                            return d_gameGrid.At(pos.x, pos.y) != nullptr;
+                        }
+                    );
                 } else {
                     path.markers.push(mousePos);
                 }
                 e->Consume();
             }
             else if (e->Button() == Mouse::RIGHT) {
-                while (!path.markers.empty()) {
-                    path.markers.pop();
-                }
+                std::queue<Maths::vec3>().swap(path.markers);
                 e->Consume();
             }
         }

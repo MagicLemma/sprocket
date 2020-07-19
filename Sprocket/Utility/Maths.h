@@ -74,6 +74,7 @@ float Distance(const Maths::vec3& A, const Maths::vec3& B);
 
 float Length(const vec3& v);
 float Length(const vec2& v);
+float Length(const ivec2& v);
 float LengthSquare(const vec3& v);
 
 void Normalise(vec3& vec);
