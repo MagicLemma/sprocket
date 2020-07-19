@@ -32,16 +32,14 @@ std::queue<Maths::vec3> GenerateAStarPath(
 
     while (!openList.empty()) {
         auto currentIt = openList.begin();
-        current = *currentIt;
         
         for (auto it = openList.begin(); it != openList.end(); ++it) {
-            auto node = *it;
-            if (node->Score() <= current->Score()) {
+            if ((*it)->Score() <= (*currentIt)->Score()) {
                 currentIt = it;
-                current = node;
             }
         }
 
+        current = *currentIt;
         if (current->position == p2) { break; }
 
         closedList.push_back(current);
@@ -73,6 +71,12 @@ std::queue<Maths::vec3> GenerateAStarPath(
     }
 
     std::queue<Sprocket::Maths::vec3> path;
+
+    if (current->position != p2) {
+        SPKT_LOG_INFO("No path found!");
+        return path;
+    }
+
     std::vector<Sprocket::Maths::vec3> aStarPath;
 
     while (current != nullptr) {
