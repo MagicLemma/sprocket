@@ -5,6 +5,71 @@
 
 namespace {
 
+constexpr int ROWS = 50;
+constexpr int COLUMNS = 50;
+
+constexpr char MAP[ROWS + 1][COLUMNS + 1] = {
+    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr--rrrrrrrrr",
+    "rrrrrrrrrrrrrr-----rrrrrrrrrrrrrrrrrr-----rrrrrrrr",
+    "rrrrrrrrrr-------------rrrr-rrrr-rr----------rrrrr",
+    "rrrr-------------------------------------------rrr",
+
+    "rrrr--------------Trr-------T-----mmT---------rrrr",
+    "rrrrr------------rrr----T--rrrmrrmr---m-------rrrr",
+    "rrrrr----------------rrrrrrmrrrmr--mr---T------rrr",
+    "rrrrr-------------Trrrrrrrrrrr----T-----------rrrr",
+    "rrrrr----T------rrrrrrrrrr---rr----------------rrr",
+
+    "rrrrr--Ti----------rrr------rr-----------------rrr",
+    "rrrrr-------irrrr----------rrrrr----------------rr",
+    "rrrrr----irrrri--T---------rrrrr----------------rr",
+    "rrrrr------Tri---------------rrrr--------------rrr",
+    "rrrr------------iT-----------rr----------------rrr",
+
+    "rrrr-------------------------------------------rrr",
+    "rrrr------------------------------------------rrrr",
+    "rrrrr-----------------------------------------rrrr",
+    "rrrrr------------------------------------------rrr",
+    "rrrrr------------------------------------------rrr",
+
+    "rrrrr------------------------------------------rrr",
+    "rrrrr-------------------------------------------rr",
+    "rrrrr-------------------------------------------rr",
+    "rrrr-------------------------------------------rrr",
+    "rrrr-------------------------------------------rrr",
+
+    "rrrr--------------Trr-------T-----mmT---------rrrr",
+    "rrr--------------rrr----T--rrrmrrmr---m-------rrrr",
+    "rr-------------------rrrrrrmrrrmr--mr---T------rrr",
+    "rr----------------Trrrrrrrrrrr----T-----------rrrr",
+    "rr-------T------rrrrrrrrrr---rr----------------rrr",
+
+    "rrr----Ti----------rrr------rr-----------------rrr",
+    "rrr---------irrrr----------rrrrr----------------rr",
+    "rrrr-----irrrri--T---------rrrrr----------------rr",
+    "rrrr-------Tri---------------rrrr--------------rrr",
+    "rrr-------------iT-----------rr----------------rrr",
+
+    "rr---------------------------------------------rrr",
+    "rr--------------------------------------------rrrr",
+    "rr--------------------------------------------rrrr",
+    "rr---------------------------------------------rrr",
+    "rr---------------------------------------------rrr",
+
+    "rrr----Ti----------rrr------rr-----------------rrr",
+    "rrrr--------irrrr----------rrrrr----------------rr",
+    "rrrr-----irrrri--T---------rrrrr----------------rr",
+    "rrrr-------Tri---------------rrrr--------------rrr",
+    "rrrr------------iT-----------rr----------------rrr",
+
+    "rrrr-------------------------------------------rrr",
+    "rrrrrrrrr--------------rrrrrrrrr-------------rrrrr",
+    "rrrrrrrrrrrrr------rrrrrrrrrrrrrrr-------rrrrrrrrr",
+    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr--rrrrrrrrrrr",
+    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
+};
+
 Sprocket::Material GetTerrainMaterial()
 {
     Sprocket::Material dullGray;
@@ -94,6 +159,31 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         terrain->Add<SelectComponent>();
 
         d_entityManager.AddEntity(terrain);
+    }
+
+    for (int i = 0; i != ROWS; ++i) {
+        for (int j = 0; j != COLUMNS; ++j) {
+            char val = MAP[i][j];
+            if (val == '-') {
+                continue;
+            }
+            else if (val == 'T') {
+                AddTree({i - 25, j - 25});
+            }
+            else if (val == 'r') {
+                AddRock({i - 25, j - 25});
+            }
+            else if (val == 't') {
+                AddTin({i - 25, j - 25});
+            }
+            else if (val == 'i') {
+                AddIron({i - 25, j - 25});
+            }
+            else if (val == 'm') {
+                AddMithril({i - 25, j - 25});
+            }
+        
+        }
     }
 }
 
@@ -312,12 +402,13 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
 void WorldLayer::AddRockBase(
     const Sprocket::Maths::ivec2& pos,
-    const Sprocket::Texture& tex)
+    const Sprocket::Texture& tex,
+    const std::string& name)
 {
     using namespace Sprocket;
 
     auto newEntity = std::make_shared<Entity>();
-    newEntity->Name() = "Rock";
+    newEntity->Name() = name;
     newEntity->Position().y -= Random(0.0f, 0.5f);
     newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
     auto modelData = newEntity->Add<ModelComponent>();
@@ -335,23 +426,23 @@ void WorldLayer::AddRockBase(
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)
 {
     static auto tex = Sprocket::Texture("Resources/Textures/Rock.png");
-    AddRockBase(pos, tex);
+    AddRockBase(pos, tex, "Rock");
 }
 
 void WorldLayer::AddIron(const Sprocket::Maths::ivec2& pos)
 {
     static auto tex = Sprocket::Texture("Resources/Textures/Iron.png");
-    AddRockBase(pos, tex);
+    AddRockBase(pos, tex, "Iron");
 }
 
 void WorldLayer::AddTin(const Sprocket::Maths::ivec2& pos)
 {
     static auto tex = Sprocket::Texture("Resources/Textures/Tin.png");
-    AddRockBase(pos, tex);
+    AddRockBase(pos, tex, "Tin");
 }
 
 void WorldLayer::AddMithril(const Sprocket::Maths::ivec2& pos)
 {
     static auto tex = Sprocket::Texture("Resources/Textures/Mithril.png");
-    AddRockBase(pos, tex);
+    AddRockBase(pos, tex, "Mithril");
 }

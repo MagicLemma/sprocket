@@ -63,7 +63,7 @@ function OnUpdate(dt)
 
     if pos.y ~= ABS_VERT then
         local distance = ABS_VERT - pos.y
-        pos.y = pos.y + distance * 0.01
+        pos.y = pos.y + distance * dt * 2
     end
 
     SetLookAt(pos, TARGET)

@@ -57,7 +57,8 @@ public:
     void AddTree(const Sprocket::Maths::ivec2& pos);
 
     void AddRockBase(const Sprocket::Maths::ivec2& pos,
-                     const Sprocket::Texture& tex);
+                     const Sprocket::Texture& tex,
+                     const std::string& name);
     
     void AddRock(const Sprocket::Maths::ivec2& pos);
     void AddIron(const Sprocket::Maths::ivec2& pos);
