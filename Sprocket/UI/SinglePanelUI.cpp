@@ -49,7 +49,7 @@ template <typename T> T Interpolate(
 
 SinglePanelUI::SinglePanelUI(Window* window)
     : d_window(window)
-    , d_engine(window)
+    , d_engine(window, &d_keyboard, &d_mouse)
 {
     d_keyboard.ConsumeAll(false);
 }

@@ -97,6 +97,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 void WorldLayer::OnEvent(Sprocket::Event& event)
 {
     using namespace Sprocket;
+
+    d_hoveredEntityUI.OnEvent(event);
     d_mouse.OnEvent(event);
 
     if (auto e = event.As<WindowResizeEvent>()) {
@@ -144,21 +146,20 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
     d_entityManager.OnEvent(event);
     d_gameGrid.OnEvent(event);
-    d_hoveredEntityUI.OnEvent(event);
 }
 
 void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
+    Audio::SetListener(*d_camera);
 
+    d_hoveredEntityUI.OnUpdate(dt);
     d_gameGrid.OnUpdate(d_core.window, d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
-    d_hoveredEntityUI.OnUpdate(dt);
-
-    Audio::SetListener(*d_camera);
-
+    
     if (!d_paused) {
+
         float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
         float facSq = factor * factor;
         auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -205,27 +206,76 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Draw();
     }
 
-    if (!d_paused && d_gameGrid.Selected()) {
+    if (!d_paused) {
         d_hoveredEntityUI.StartFrame();
+
         auto mouse = d_mouse.GetMousePos();
+        float w = (float)d_core.window->Width();
+        float h = (float)d_core.window->Height();
 
-        float width = 200;
-        float height = 50;
-        float x = std::min(mouse.x, (float)(d_core.window->Width() - width - 10));
-        float y = std::min(mouse.y, (float)(d_core.window->Height() - height - 10));
+        if (d_gameGrid.Hovered()) {
+            float width = 200;
+            float height = 50;
+            float x = std::min(mouse.x, w - width - 10);
+            float y = std::min(mouse.y, h - height - 10);
 
-        Maths::vec4 region{x, y, width, height};
-        bool active = true;
-        bool draggable = false;
-        if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable)) {
-            
-            auto selected = d_gameGrid.Selected();
-            d_hoveredEntityUI.Text(selected->Name(), 36.0f, {0, 0, width, height});
+            Maths::vec4 region{x, y, width, height};
+            bool active = true;
+            bool draggable = false;
+            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable)) {
+                
+                auto hovered = d_gameGrid.Hovered();
+                d_hoveredEntityUI.Text(hovered->Name(), 36.0f, {0, 0, width, height});
 
-            d_hoveredEntityUI.EndPanel();
+                d_hoveredEntityUI.EndPanel();
+            }
         }
 
-        auto selected = d_gameGrid.Selected();
+        if (d_gameGrid.SelectedPosition().has_value()) {
+            float width = 0.25f * w;
+            float height = 0.6f * h;
+            float x = (1.0f - 0.25f) * w;
+            float y = ((1.0f - 0.6f) / 2) * h;
+
+            static auto tex = Texture("Resources/Textures/BetterTree.png");
+
+            Maths::vec4 region{x, y, width, height};
+            bool active = true;
+            bool draggable = false;
+            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable)) {
+                
+                auto selected = d_gameGrid.Selected();
+                if (d_hoveredEntityUI.Button("Add Tree", {0, 0, width, 50})) {
+                    d_gameGrid.DeleteSelected();
+
+                    auto newEntity = std::make_shared<Entity>();
+                    newEntity->Name() = "Tree";
+                    //newEntity->Orientation() = Maths::Rotate({0, 1, 0}, d(gen));
+                    auto modelData = newEntity->Add<ModelComponent>();
+                    modelData->model = d_modelManager.GetModel("GG_Cube");
+                    //modelData->scale = ef(gen);
+                    modelData->scale = 1.0f;
+                    modelData->material.texture = tex;
+                    modelData->material.shineDamper = 10.0f;
+                    modelData->material.reflectivity = 0.0f;
+                    newEntity->Add<SelectComponent>();
+                    d_entityManager.AddEntity(newEntity);
+
+                    auto pos = d_gameGrid.SelectedPosition().value();
+                    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+                }
+
+                if (d_hoveredEntityUI.Button("Add Rock", {0, 60, width, 50})) {
+                    d_gameGrid.DeleteSelected();
+                }
+
+                if (d_hoveredEntityUI.Button("Clear", {0, 120, width, 50})) {
+                    d_gameGrid.DeleteSelected();
+                }
+
+                d_hoveredEntityUI.EndPanel();
+            }
+        }
 
         d_hoveredEntityUI.EndFrame();
     }

@@ -49,16 +49,16 @@ template <typename T> T Interpolate(
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
-    , d_engine(window)
+    , d_engine(window, &d_keyboard, &d_mouse)
 {
     d_keyboard.ConsumeAll(false);
 }
 
 void SimpleUI::OnEvent(Event& event)
 {
+    d_engine.OnEvent(event);
     d_keyboard.OnEvent(event);
     d_mouse.OnEvent(event);
-    d_engine.OnEvent(event);
 }
 
 void SimpleUI::OnUpdate(double dt)
@@ -84,6 +84,7 @@ bool SimpleUI::StartPanel(
     bool* draggable)
 {
     d_engine.StartPanel(name, region, active, draggable);
+    d_keyboard.ConsumeAll(false);
 
     if(*active) {
         float thickness = 5.0f;

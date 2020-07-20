@@ -31,6 +31,10 @@ void MouseProxy::OnEvent(Event& event)
     else if (auto e = event.As<MouseMovedEvent>()) {
         d_positionTemp = {e->XPos(), e->YPos()};
     }
+
+    if (d_consumeEvents) {
+        event.Consume();
+    }
 }
 
 bool MouseProxy::IsButtonDown(int key) const

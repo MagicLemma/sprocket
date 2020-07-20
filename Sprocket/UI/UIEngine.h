@@ -94,8 +94,8 @@ class UIEngine
 {
     Window* d_window;
 
-    KeyboardProxy d_keyboard;
-    MouseProxy d_mouse;
+    KeyboardProxy* d_keyboard;
+    MouseProxy* d_mouse;
 
     Font d_font;
 
@@ -132,7 +132,7 @@ class UIEngine
         // be acted on next frame. These are consumed when retrieved.
 
 public:
-    UIEngine(Window* window);
+    UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse);
 
     WidgetInfo Register(const std::string& name, const Maths::vec4& region);
         // Registers a region that can respond to hovers and clicks.
