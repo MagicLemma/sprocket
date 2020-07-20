@@ -81,10 +81,6 @@ void GameGrid::OnEvent(Event& event)
 {
     if (event.IsConsumed()) { return; }
 
-    static std::uniform_real_distribution d(0.0f, 360.0f);
-    static std::uniform_real_distribution ef(1.0f, 1.3f);
-    static std::mt19937 gen;
-
     d_mouse.OnEvent(event);
     d_keyboard.OnEvent(event);
 

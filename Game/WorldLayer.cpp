@@ -213,25 +213,6 @@ void WorldLayer::OnUpdate(double dt)
         float w = (float)d_core.window->Width();
         float h = (float)d_core.window->Height();
 
-        if (d_gameGrid.Hovered()) {
-            float width = 200;
-            float height = 50;
-            float x = std::min(mouse.x - 5, w - width - 10);
-            float y = std::min(mouse.y - 5, h - height - 10);
-
-            Maths::vec4 region{x, y, width, height};
-            bool active = true;
-            bool draggable = false;
-            bool clickable = false;
-            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
-                
-                auto hovered = d_gameGrid.Hovered();
-                d_hoveredEntityUI.Text(hovered->Name(), 36.0f, {0, 0, width, height});
-
-                d_hoveredEntityUI.EndPanel();
-            }
-        }
-
         if (d_gameGrid.SelectedPosition().has_value()) {
             float width = 0.25f * w;
             float height = 0.6f * h;
@@ -239,6 +220,10 @@ void WorldLayer::OnUpdate(double dt)
             float y = ((1.0f - 0.6f) / 2) * h;
 
             static auto tex = Texture("Resources/Textures/BetterTree.png");
+
+            static std::uniform_real_distribution d(0.0f, 360.0f);
+            static std::uniform_real_distribution ef(1.0f, 1.3f);
+            static std::mt19937 gen;
 
             Maths::vec4 region{x, y, width, height};
             bool active = true;
@@ -252,10 +237,10 @@ void WorldLayer::OnUpdate(double dt)
 
                     auto newEntity = std::make_shared<Entity>();
                     newEntity->Name() = "Tree";
-                    //newEntity->Orientation() = Maths::Rotate({0, 1, 0}, d(gen));
+                    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, d(gen));
                     auto modelData = newEntity->Add<ModelComponent>();
                     modelData->model = d_modelManager.GetModel("GG_Cube");
-                    //modelData->scale = ef(gen);
+                    modelData->scale = ef(gen);
                     modelData->scale = 1.0f;
                     modelData->material.texture = tex;
                     modelData->material.shineDamper = 10.0f;
@@ -274,6 +259,25 @@ void WorldLayer::OnUpdate(double dt)
                 if (d_hoveredEntityUI.Button("Clear", {0, 120, width, 50})) {
                     d_gameGrid.DeleteSelected();
                 }
+
+                d_hoveredEntityUI.EndPanel();
+            }
+        }
+
+        if (d_gameGrid.Hovered()) {
+            float width = 200;
+            float height = 50;
+            float x = std::min(mouse.x - 5, w - width - 10);
+            float y = std::min(mouse.y - 5, h - height - 10);
+
+            Maths::vec4 region{x, y, width, height};
+            bool active = true;
+            bool draggable = false;
+            bool clickable = false;
+            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
+                
+                auto hovered = d_gameGrid.Hovered();
+                d_hoveredEntityUI.Text(hovered->Name(), 36.0f, {0, 0, width, height});
 
                 d_hoveredEntityUI.EndPanel();
             }
