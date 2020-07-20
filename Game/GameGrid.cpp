@@ -26,6 +26,7 @@ GameGrid::GameGrid(EntityManager* entityManager,
     : d_entityManager(entityManager)
     , d_modelManager(modelManager)
     , d_highlightSquare(std::make_shared<Entity>())
+    , d_hovered({0.0, 0.0})
 {
     d_highlightSquare->Name() = "Grid Highlighter";
     auto model = d_highlightSquare->Add<ModelComponent>();
@@ -54,10 +55,9 @@ void GameGrid::OnUpdate(Window* window, Entity* camera)
 
     float lambda = -cameraPos.y / direction.y;
     Maths::vec3 mousePos = cameraPos + lambda * direction;
-    d_x = (int)std::floor(mousePos.x);
-    d_z = (int)std::floor(mousePos.z);
+    d_hovered = {(int)std::floor(mousePos.x), (int)std::floor(mousePos.z)};
 
-    d_highlightSquare->Position() = { d_x + 0.5f, 0.05f, d_z + 0.5f };
+    d_highlightSquare->Position() = { d_hovered.x + 0.5f, 0.05f, d_hovered.y + 0.5f };
 }
 
 void GameGrid::OnEvent(Event& event)
@@ -74,7 +74,7 @@ void GameGrid::OnEvent(Event& event)
     d_keyboard.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
-        auto it = d_gridEntities.find({d_x, d_z});
+        auto it = d_gridEntities.find({d_hovered.x, d_hovered.y});
         if (e->Button() == Mouse::LEFT && it == d_gridEntities.end()) {                
             SPKT_LOG_INFO("Grid square empty!");
             auto newEntity = std::make_shared<Entity>();
@@ -88,7 +88,7 @@ void GameGrid::OnEvent(Event& event)
             modelData->material.reflectivity = 0.0f;
             newEntity->Add<SelectComponent>();
             d_entityManager->AddEntity(newEntity);
-            AddEntity(newEntity.get(), d_x, d_z);
+            AddEntity(newEntity.get(), d_hovered.x, d_hovered.y);
             e->Consume();
         }
         if (e->Button() == Mouse::RIGHT && it != d_gridEntities.end()) {
@@ -96,11 +96,11 @@ void GameGrid::OnEvent(Event& event)
             sound.Load("Resources/Audio/Break.ogg");
             static Sprocket::Audio::Source source;
             
-            source.SetPosition(d_x, 0, d_z);
+            source.SetPosition(d_hovered.x, 0, d_hovered.y);
             source.SetSound(sound);
             source.Play();
             it->second->Kill();
-            RemoveEntity(d_x, d_z);
+            RemoveEntity(d_hovered.x, d_hovered.y);
             e->Consume();
         }
     }
@@ -143,5 +143,5 @@ Sprocket::Entity* GameGrid::At(int x, int z) const
 
 Sprocket::Entity* GameGrid::Selected() const
 {
-    return At(d_x, d_z);
+    return At(d_hovered.x, d_hovered.y);
 }

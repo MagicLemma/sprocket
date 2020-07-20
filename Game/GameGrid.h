@@ -27,7 +27,7 @@ private:
     Sprocket::MouseProxy    d_mouse;
 
     std::shared_ptr<Sprocket::Entity> d_highlightSquare;
-    int d_x, d_z;
+    Sprocket::Maths::ivec2 d_hovered;
 
     std::size_t Key(int x, int z);
     GridMap d_gridEntities; 
