@@ -21,10 +21,8 @@ Model3D GetHoveredSquare()
 
 }
 
-GameGrid::GameGrid(EntityManager* entityManager,
-                   ModelManager*  modelManager)
+GameGrid::GameGrid(EntityManager* entityManager)
     : d_entityManager(entityManager)
-    , d_modelManager(modelManager)
     , d_hoveredSquare(std::make_shared<Entity>())
     , d_selectedSquare(std::make_shared<Entity>())
     , d_hovered({0.0, 0.0})
@@ -47,8 +45,6 @@ GameGrid::GameGrid(EntityManager* entityManager,
     model2->material.reflectivity = 0.0f;
     model2->scale = 0.5f;
     d_entityManager->AddEntity(d_selectedSquare);
-
-    d_modelManager->LoadModel("GG_Cube", "Resources/Models/BetterTree.obj");
 
     d_keyboard.ConsumeAll(false);
 }
@@ -85,7 +81,12 @@ void GameGrid::OnEvent(Event& event)
     d_keyboard.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
-        d_selected = d_hovered;
+        if (e->Button() == Mouse::LEFT) {
+            d_selected = d_hovered;
+        }
+        else {
+            d_selected = {};
+        }
     }
 }
 
@@ -98,7 +99,8 @@ void GameGrid::AddEntity(Sprocket::Entity* entity, int x, int z)
         auto c = entity->Add<GridComponent>();  // Mark it as in the grid.
         c->x = x;
         c->z = z;
-        entity->Position() = {x + 0.5f, 0.05f, z + 0.5f};
+        entity->Position().x = x + 0.5f;
+        entity->Position().z = z + 0.5f;
         d_gridEntities[{x, z}] = entity;
     }
 }

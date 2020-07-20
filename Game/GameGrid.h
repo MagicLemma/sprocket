@@ -36,10 +36,8 @@ private:
     std::size_t Key(int x, int z);
     GridMap d_gridEntities; 
 
-
 public:
-    GameGrid(Sprocket::EntityManager* entityManager,
-             Sprocket::ModelManager*  modelManager);
+    GameGrid(Sprocket::EntityManager* entityManager);
 
     void OnUpdate(Sprocket::Window* window,
                   Sprocket::Entity* camera);

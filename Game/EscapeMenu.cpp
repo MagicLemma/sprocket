@@ -78,8 +78,9 @@ void EscapeMenu::OnUpdate(double dt)
         d_ui.Slider("Slider", buttonRegion, &value1, 0, 100);
 
         buttonRegion.y += 60;
-        static float value2 = 84.0f;
-        d_ui.Dragger("Dragger", buttonRegion, &value2, 0.1f);
+        float angle = d_worldLayer->d_cycle.GetAngle();
+        d_ui.Dragger("Time of Day", buttonRegion, &angle, 0.1f);
+        d_worldLayer->d_cycle.SetAngle(angle);
 
         buttonRegion.y += 60;
         static bool check = false;
