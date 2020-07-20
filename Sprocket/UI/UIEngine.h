@@ -154,7 +154,8 @@ public:
     bool StartPanel(const std::string& name,
                     Maths::vec4* region,
                     bool* active,
-                    bool* draggable);
+                    bool* draggable,
+                    bool* clickable);
     void EndPanel();
 
     void DrawQuad(

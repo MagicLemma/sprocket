@@ -216,13 +216,14 @@ void WorldLayer::OnUpdate(double dt)
         if (d_gameGrid.Hovered()) {
             float width = 200;
             float height = 50;
-            float x = std::min(mouse.x, w - width - 10);
-            float y = std::min(mouse.y, h - height - 10);
+            float x = std::min(mouse.x - 5, w - width - 10);
+            float y = std::min(mouse.y - 5, h - height - 10);
 
             Maths::vec4 region{x, y, width, height};
             bool active = true;
             bool draggable = false;
-            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable)) {
+            bool clickable = false;
+            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
                 
                 auto hovered = d_gameGrid.Hovered();
                 d_hoveredEntityUI.Text(hovered->Name(), 36.0f, {0, 0, width, height});
@@ -242,7 +243,8 @@ void WorldLayer::OnUpdate(double dt)
             Maths::vec4 region{x, y, width, height};
             bool active = true;
             bool draggable = false;
-            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable)) {
+            bool clickable = true;
+            if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable, &clickable)) {
                 
                 auto selected = d_gameGrid.Selected();
                 if (d_hoveredEntityUI.Button("Add Tree", {0, 0, width, 50})) {

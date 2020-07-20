@@ -43,7 +43,7 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
 }
 
 WidgetInfo UIEngine::Register(const std::string& name,
-                                    const Maths::vec4& region)
+                              const Maths::vec4& region)
 {
     assert(d_currentPanel);
     
@@ -161,6 +161,12 @@ void UIEngine::EndFrame()
         d_mouse->ConsumeEvents(true);
     }
 
+    if (moveToFront > 0) {
+        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
+        d_panelOrder.erase(toMove);
+        d_panelOrder.push_back(moveToFront);
+    }
+
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
     rc.FaceCulling(false);
@@ -187,19 +193,14 @@ void UIEngine::EndFrame()
         }
     }
     d_buffer.Unbind();
-
-    if (moveToFront > 0) {
-        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
-        d_panelOrder.erase(toMove);
-        d_panelOrder.push_back(moveToFront);
-    }
 }
 
 bool UIEngine::StartPanel(
     const std::string& name,
     Maths::vec4* region,
     bool* active,
-    bool* draggable)
+    bool* draggable,
+    bool* clickable)
 {
     assert(!d_currentPanel);
     assert(region != nullptr);
@@ -220,14 +221,16 @@ bool UIEngine::StartPanel(
 
         d_currentPanel = &panel;
 
-        auto info = Register(
-            name,
-            {0, 0, region->z, region->w}
-        );
+        if (*clickable) {
+            auto info = Register(
+                name,
+                {0, 0, region->z, region->w}
+            );
 
-        if (info.mouseDown && *draggable) {
-            region->x += d_mouse->GetMouseOffset().x;
-            region->y += d_mouse->GetMouseOffset().y;
+            if (info.mouseDown && *draggable) {
+                region->x += d_mouse->GetMouseOffset().x;
+                region->y += d_mouse->GetMouseOffset().y;
+            }
         }
     }
 

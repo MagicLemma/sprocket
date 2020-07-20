@@ -81,9 +81,10 @@ bool SimpleUI::StartPanel(
     const std::string& name,
     Maths::vec4* region,
     bool* active,
-    bool* draggable)
+    bool* draggable,
+    bool* clickable)
 {
-    d_engine.StartPanel(name, region, active, draggable);
+    d_engine.StartPanel(name, region, active, draggable, clickable);
     d_keyboard.ConsumeAll(false);
 
     if(*active) {

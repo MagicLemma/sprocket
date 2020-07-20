@@ -73,9 +73,10 @@ void SinglePanelUI::StartFrame()
     Maths::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
     bool active = true;
     bool draggable = false;
+    bool clickable = true;
 
     d_engine.StartFrame();
-    d_engine.StartPanel(name, &region, &active, &draggable);
+    d_engine.StartPanel(name, &region, &active, &draggable, &clickable);
 }
 
 void SinglePanelUI::EndFrame()
