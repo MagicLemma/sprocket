@@ -53,4 +53,14 @@ public:
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
+
+    void AddTree(const Sprocket::Maths::ivec2& pos);
+
+    void AddRockBase(const Sprocket::Maths::ivec2& pos,
+                     const Sprocket::Texture& tex);
+    
+    void AddRock(const Sprocket::Maths::ivec2& pos);
+    void AddIron(const Sprocket::Maths::ivec2& pos);
+    void AddTin(const Sprocket::Maths::ivec2& pos);
+    void AddMithril(const Sprocket::Maths::ivec2& pos);
 };

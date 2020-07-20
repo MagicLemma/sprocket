@@ -222,8 +222,6 @@ void WorldLayer::OnUpdate(double dt)
             float x = w - width;
             float y = ((1.0f - 0.6f) / 2) * h;
 
-            static auto tex = Texture("Resources/Textures/BetterTree.png");
-            static auto rockTex = Texture("Resources/Textures/Rock.png");
             static auto ironTex = Texture("Resources/Textures/Iron.png");
             static auto tinTex = Texture("Resources/Textures/Tin.png");
             static auto mithrilTex = Texture("Resources/Textures/Mithril.png");
@@ -235,103 +233,30 @@ void WorldLayer::OnUpdate(double dt)
             if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable, &clickable)) {
                 
                 auto selected = d_gameGrid.Selected();
+                auto pos = d_gameGrid.SelectedPosition().value();
                 if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
                     d_gameGrid.DeleteSelected();
-
-                    auto newEntity = std::make_shared<Entity>();
-                    newEntity->Name() = "Tree";
-                    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
-                    auto modelData = newEntity->Add<ModelComponent>();
-                    modelData->model = d_modelManager.GetModel("GG_Tree");
-                    modelData->scale = Random(1.0f, 1.3f);
-                    modelData->material.texture = tex;
-                    modelData->material.shineDamper = 10.0f;
-                    modelData->material.reflectivity = 0.0f;
-                    newEntity->Add<SelectComponent>();
-                    d_entityManager.AddEntity(newEntity);
-
-                    auto pos = d_gameGrid.SelectedPosition().value();
-                    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+                    AddTree(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
                     d_gameGrid.DeleteSelected();
-
-                    auto newEntity = std::make_shared<Entity>();
-                    newEntity->Name() = "Rock";
-                    newEntity->Position().y -= Random(0.0f, 0.5f);
-                    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
-                    auto modelData = newEntity->Add<ModelComponent>();
-                    modelData->model = d_modelManager.GetModel("GG_Rock");
-                    modelData->scale = 1.1f;
-                    modelData->material.texture = rockTex;
-                    modelData->material.shineDamper = 10.0f;
-                    modelData->material.reflectivity = 0.0f;
-                    newEntity->Add<SelectComponent>();
-                    d_entityManager.AddEntity(newEntity);
-
-                    auto pos = d_gameGrid.SelectedPosition().value();
-                    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+                    AddRock(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
                     d_gameGrid.DeleteSelected();
-
-                    auto newEntity = std::make_shared<Entity>();
-                    newEntity->Name() = "Iron Ore";
-                    newEntity->Position().y -= Random(0.0f, 0.5f);
-                    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
-                    auto modelData = newEntity->Add<ModelComponent>();
-                    modelData->model = d_modelManager.GetModel("GG_Rock");
-                    modelData->scale = 1.1f;
-                    modelData->material.texture = ironTex;
-                    modelData->material.shineDamper = 10.0f;
-                    modelData->material.reflectivity = 0.0f;
-                    newEntity->Add<SelectComponent>();
-                    d_entityManager.AddEntity(newEntity);
-
-                    auto pos = d_gameGrid.SelectedPosition().value();
-                    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+                    AddIron(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
                     d_gameGrid.DeleteSelected();
-
-                    auto newEntity = std::make_shared<Entity>();
-                    newEntity->Name() = "Tin Ore";
-                    newEntity->Position().y -= Random(0.0f, 0.5f);
-                    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
-                    auto modelData = newEntity->Add<ModelComponent>();
-                    modelData->model = d_modelManager.GetModel("GG_Rock");
-                    modelData->scale = 1.1f;
-                    modelData->material.texture = tinTex;
-                    modelData->material.shineDamper = 10.0f;
-                    modelData->material.reflectivity = 0.0f;
-                    newEntity->Add<SelectComponent>();
-                    d_entityManager.AddEntity(newEntity);
-
-                    auto pos = d_gameGrid.SelectedPosition().value();
-                    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+                    AddTin(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
                     d_gameGrid.DeleteSelected();
-
-                    auto newEntity = std::make_shared<Entity>();
-                    newEntity->Name() = "Mirthil Ore";
-                    newEntity->Position().y -= Random(0.0f, 0.5f);
-                    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
-                    auto modelData = newEntity->Add<ModelComponent>();
-                    modelData->model = d_modelManager.GetModel("GG_Rock");
-                    modelData->scale = 1.1f;
-                    modelData->material.texture = mithrilTex;
-                    modelData->material.shineDamper = 10.0f;
-                    modelData->material.reflectivity = 0.0f;
-                    newEntity->Add<SelectComponent>();
-                    d_entityManager.AddEntity(newEntity);
-
-                    auto pos = d_gameGrid.SelectedPosition().value();
-                    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+                    AddMithril(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
@@ -363,4 +288,70 @@ void WorldLayer::OnUpdate(double dt)
 
         d_hoveredEntityUI.EndFrame();
     }
+}
+
+void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
+{
+    using namespace Sprocket;
+    static auto tex = Texture("Resources/Textures/BetterTree.png");
+
+    auto newEntity = std::make_shared<Entity>();
+    newEntity->Name() = "Tree";
+    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
+    auto modelData = newEntity->Add<ModelComponent>();
+    modelData->model = d_modelManager.GetModel("GG_Tree");
+    modelData->scale = Random(1.0f, 1.3f);
+    modelData->material.texture = tex;
+    modelData->material.shineDamper = 10.0f;
+    modelData->material.reflectivity = 0.0f;
+    newEntity->Add<SelectComponent>();
+    d_entityManager.AddEntity(newEntity);
+
+    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+}
+
+void WorldLayer::AddRockBase(
+    const Sprocket::Maths::ivec2& pos,
+    const Sprocket::Texture& tex)
+{
+    using namespace Sprocket;
+
+    auto newEntity = std::make_shared<Entity>();
+    newEntity->Name() = "Rock";
+    newEntity->Position().y -= Random(0.0f, 0.5f);
+    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
+    auto modelData = newEntity->Add<ModelComponent>();
+    modelData->model = d_modelManager.GetModel("GG_Rock");
+    modelData->scale = 1.1f;
+    modelData->material.texture = tex;
+    modelData->material.shineDamper = 10.0f;
+    modelData->material.reflectivity = 0.0f;
+    newEntity->Add<SelectComponent>();
+    d_entityManager.AddEntity(newEntity);
+
+    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+}
+
+void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)
+{
+    static auto tex = Sprocket::Texture("Resources/Textures/Rock.png");
+    AddRockBase(pos, tex);
+}
+
+void WorldLayer::AddIron(const Sprocket::Maths::ivec2& pos)
+{
+    static auto tex = Sprocket::Texture("Resources/Textures/Iron.png");
+    AddRockBase(pos, tex);
+}
+
+void WorldLayer::AddTin(const Sprocket::Maths::ivec2& pos)
+{
+    static auto tex = Sprocket::Texture("Resources/Textures/Tin.png");
+    AddRockBase(pos, tex);
+}
+
+void WorldLayer::AddMithril(const Sprocket::Maths::ivec2& pos)
+{
+    static auto tex = Sprocket::Texture("Resources/Textures/Mithril.png");
+    AddRockBase(pos, tex);
 }
