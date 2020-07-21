@@ -16,14 +16,14 @@
 
 namespace Sprocket {
 
-UIEngine::UIEngine(Window* window)
+UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     : d_window(window)
+    , d_keyboard(keyboard)
+    , d_mouse(mouse)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_font("Resources/Fonts/Coolvetica.ttf")
 {
-    d_keyboard.ConsumeAll(false);
-
     BufferLayout layout(sizeof(BufferVertex));
     layout.AddAttribute(DataType::FLOAT, 2);
     layout.AddAttribute(DataType::FLOAT, 4);
@@ -43,7 +43,7 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
 }
 
 WidgetInfo UIEngine::Register(const std::string& name,
-                                    const Maths::vec4& region)
+                              const Maths::vec4& region)
 {
     assert(d_currentPanel);
     
@@ -83,18 +83,16 @@ WidgetInfo UIEngine::Register(const std::string& name,
 
 void UIEngine::OnEvent(Event& event)
 {
-    d_keyboard.OnEvent(event);
-    d_mouse.OnEvent(event);
 }
 
 void UIEngine::OnUpdate(double dt)
 {
-    d_mouse.OnUpdate();
+    d_mouse->ConsumeEvents(false);
     d_time += dt;
     d_clickedTime += dt;
     d_hoveredTime += dt;
 
-    if (d_mouse.IsButtonReleased(Mouse::LEFT)) {
+    if (d_mouse->IsButtonReleased(Mouse::LEFT)) {
         d_clickedTime = 0.0;
         if (d_clicked > 0) {
             d_widgetTimes[d_clicked].unclickedTime = d_time;
@@ -123,8 +121,8 @@ void UIEngine::EndFrame()
 
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
-            auto hovered = d_mouse.InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
-            auto clicked = hovered && d_mouse.IsButtonClicked(Mouse::LEFT);
+            auto hovered = d_mouse->InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
+            auto clicked = hovered && d_mouse->IsButtonClicked(Mouse::LEFT);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
@@ -157,6 +155,16 @@ void UIEngine::EndFrame()
             d_widgetTimes[d_hovered].unhoveredTime = d_time;
             d_hovered = 0;
         }
+        d_mouse->ConsumeEvents(false);
+    }
+    else {
+        d_mouse->ConsumeEvents(true);
+    }
+
+    if (moveToFront > 0) {
+        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
+        d_panelOrder.erase(toMove);
+        d_panelOrder.push_back(moveToFront);
     }
 
     Sprocket::RenderContext rc;
@@ -185,19 +193,14 @@ void UIEngine::EndFrame()
         }
     }
     d_buffer.Unbind();
-
-    if (moveToFront > 0) {
-        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
-        d_panelOrder.erase(toMove);
-        d_panelOrder.push_back(moveToFront);
-    }
 }
 
 bool UIEngine::StartPanel(
     const std::string& name,
     Maths::vec4* region,
     bool* active,
-    bool* draggable)
+    bool* draggable,
+    bool* clickable)
 {
     assert(!d_currentPanel);
     assert(region != nullptr);
@@ -218,14 +221,16 @@ bool UIEngine::StartPanel(
 
         d_currentPanel = &panel;
 
-        auto info = Register(
-            name,
-            {0, 0, region->z, region->w}
-        );
+        if (*clickable) {
+            auto info = Register(
+                name,
+                {0, 0, region->z, region->w}
+            );
 
-        if (info.mouseDown && *draggable) {
-            region->x += d_mouse.GetMouseOffset().x;
-            region->y += d_mouse.GetMouseOffset().y;
+            if (info.mouseDown && *draggable) {
+                region->x += d_mouse->GetMouseOffset().x;
+                region->y += d_mouse->GetMouseOffset().y;
+            }
         }
     }
 

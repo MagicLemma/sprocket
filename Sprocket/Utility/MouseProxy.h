@@ -19,12 +19,16 @@ class MouseProxy
     Maths::vec2 d_positionCurr;
     Maths::vec2 d_positionPrev;
 
+    bool d_consumeEvents = false;
+
 public:
     MouseProxy();
 
     void OnUpdate();  // Call at the start of every frame
     void OnEvent(Event& event);
     bool IsButtonDown(int button) const;
+
+    void ConsumeEvents(bool value) { d_consumeEvents = value; }
 
     Maths::vec2 GetMousePos() const { return d_positionCurr; }
     Maths::vec2 GetMouseOffset() const { return d_positionCurr - d_positionPrev; }

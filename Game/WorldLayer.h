@@ -1,6 +1,7 @@
 #pragma once
 #include "GameGrid.h"
 #include "CircadianCycle.h"
+#include "PathFollower.h"
 
 #include <Sprocket.h>
 
@@ -14,6 +15,7 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     Sprocket::Entity* d_camera;
+    Sprocket::Entity* d_worker;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
@@ -27,6 +29,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::EntityManager d_entityManager;
     Sprocket::BasicSelector d_selector;
     Sprocket::ScriptRunner  d_scriptRunner;
+    PathFollower  d_pathFollower;
 
     // Additional world setup
     Sprocket::Lights         d_lights;
@@ -37,6 +40,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::MouseProxy d_mouse;
 
     GameGrid d_gameGrid;
+    Sprocket::SimpleUI d_hoveredEntityUI;
     
     // LAYER DATA
     bool d_paused = false;
@@ -49,4 +53,15 @@ public:
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
+
+    void AddTree(const Sprocket::Maths::ivec2& pos);
+
+    void AddRockBase(const Sprocket::Maths::ivec2& pos,
+                     const Sprocket::Texture& tex,
+                     const std::string& name);
+    
+    void AddRock(const Sprocket::Maths::ivec2& pos);
+    void AddIron(const Sprocket::Maths::ivec2& pos);
+    void AddTin(const Sprocket::Maths::ivec2& pos);
+    void AddMithril(const Sprocket::Maths::ivec2& pos);
 };

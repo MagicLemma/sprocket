@@ -183,6 +183,11 @@ float Distance(const vec2& A, const vec2& B)
     return glm::distance(A, B);
 }
 
+float Distance(const vec3& A, const vec3& B)
+{
+    return glm::distance(A, B);
+}
+
 float Length(const vec3& v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
@@ -192,6 +197,12 @@ float Length(const vec2& v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y);
 }
+
+float Length(const ivec2& v)
+{
+    return std::sqrt(v.x * v.x + v.y * v.y);
+}
+
 
 float LengthSquare(const vec3& v)
 {

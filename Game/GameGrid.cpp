@@ -21,28 +21,32 @@ Model3D GetHoveredSquare()
 
 }
 
-GameGrid::GameGrid(EntityManager* entityManager,
-                   ModelManager*  modelManager)
+GameGrid::GameGrid(EntityManager* entityManager)
     : d_entityManager(entityManager)
-    , d_modelManager(modelManager)
-    , d_highlightSquare(std::make_shared<Entity>())
+    , d_hoveredSquare(std::make_shared<Entity>())
+    , d_selectedSquare(std::make_shared<Entity>())
+    , d_hovered({0.0, 0.0})
+    , d_selected({})
 {
-    d_highlightSquare->Name() = "Grid Highlighter";
-    auto model = d_highlightSquare->Add<ModelComponent>();
-    model->model = GetHoveredSquare();
-    model->material.texture = Texture::White();
-    model->material.reflectivity = 0.0f;
-    model->scale = 0.5f;
-    d_entityManager->AddEntity(d_highlightSquare);
+    auto gridSqare = GetHoveredSquare();
 
-    d_modelManager->LoadModel("GG_Cube", "Resources/Models/BetterTree.obj");
+    d_hoveredSquare->Name() = "Hovered Grid Highlighter";
+    auto model1 = d_hoveredSquare->Add<ModelComponent>();
+    model1->model = gridSqare;
+    model1->material.texture = Texture::White();
+    model1->material.reflectivity = 0.0f;
+    model1->scale = 0.3f;
+    d_entityManager->AddEntity(d_hoveredSquare);
+
+    d_selectedSquare->Name() = "Selected Grid Highlighter";
+    auto model2 = d_selectedSquare->Add<ModelComponent>();
+    model2->model = gridSqare;
+    model2->material.texture = Texture::White();
+    model2->material.reflectivity = 0.0f;
+    model2->scale = 0.5f;
+    d_entityManager->AddEntity(d_selectedSquare);
 
     d_keyboard.ConsumeAll(false);
-}
-
-std::size_t GameGrid::Key(int x, int z)
-{
-    return (std::size_t(x) << 32) | (unsigned int )z;
 }
 
 void GameGrid::OnUpdate(Window* window, Entity* camera)
@@ -59,54 +63,29 @@ void GameGrid::OnUpdate(Window* window, Entity* camera)
 
     float lambda = -cameraPos.y / direction.y;
     Maths::vec3 mousePos = cameraPos + lambda * direction;
-    d_x = (int)std::floor(mousePos.x);
-    d_z = (int)std::floor(mousePos.z);
+    d_hovered = {(int)std::floor(mousePos.x), (int)std::floor(mousePos.z)};
 
-    d_highlightSquare->Position() = { d_x + 0.5f, 0.05f, d_z + 0.5f };
+    d_hoveredSquare->Position() = { d_hovered.x + 0.5f, 0.05f, d_hovered.y + 0.5f };
+    if (d_selected.has_value()) {
+        d_selectedSquare->Position() = { d_selected.value().x + 0.5f, 0.05f, d_selected.value().y + 0.5f };
+    } else {
+        d_selectedSquare->Position() = { 0.5f, -1.0f, 0.5f };
+    }
 }
 
 void GameGrid::OnEvent(Event& event)
 {
     if (event.IsConsumed()) { return; }
 
-    static std::uniform_real_distribution d(0.0f, 360.0f);
-    static std::uniform_real_distribution ef(1.0f, 1.3f);
-    static std::mt19937 gen;
-
-    static auto tex = Texture("Resources/Textures/BetterTree.png", false);
-
     d_mouse.OnEvent(event);
     d_keyboard.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
-        auto it = d_gridEntities.find(Key(d_x, d_z));
-        if (e->Button() == Mouse::LEFT && it == d_gridEntities.end()) {                
-            SPKT_LOG_INFO("Grid square empty!");
-            auto newEntity = std::make_shared<Entity>();
-            newEntity->Name() = "Tree";
-            newEntity->Orientation() = Maths::Rotate({0, 1, 0}, d(gen));
-            auto modelData = newEntity->Add<ModelComponent>();
-            modelData->model = d_modelManager->GetModel("GG_Cube");
-            modelData->scale = ef(gen);
-            modelData->material.texture = tex;
-            modelData->material.shineDamper = 10.0f;
-            modelData->material.reflectivity = 0.0f;
-            newEntity->Add<SelectComponent>();
-            d_entityManager->AddEntity(newEntity);
-            AddEntity(newEntity.get(), d_x, d_z);
-            e->Consume();
+        if (e->Button() == Mouse::LEFT) {
+            d_selected = d_hovered;
         }
-        if (e->Button() == Mouse::RIGHT && it != d_gridEntities.end()) {
-            static Sprocket::Audio::Sound sound;
-            sound.Load("Resources/Audio/Break.ogg");
-            static Sprocket::Audio::Source source;
-            
-            source.SetPosition(d_x, 0, d_z);
-            source.SetSound(sound);
-            source.Play();
-            it->second->Kill();
-            RemoveEntity(d_x, d_z);
-            e->Consume();
+        else {
+            d_selected = {};
         }
     }
 }
@@ -120,19 +99,52 @@ void GameGrid::AddEntity(Sprocket::Entity* entity, int x, int z)
         auto c = entity->Add<GridComponent>();  // Mark it as in the grid.
         c->x = x;
         c->z = z;
-        entity->Position() = {x + 0.5f, 0.05f, z + 0.5f};
-        d_gridEntities[Key(x, z)] = entity;
+        entity->Position().x = x + 0.5f;
+        entity->Position().z = z + 0.5f;
+        d_gridEntities[{x, z}] = entity;
     }
 }
 
 void GameGrid::RemoveEntity(int x, int z)
 {
-    auto it = d_gridEntities.find(Key(x, z));
+    auto it = d_gridEntities.find({x, z});
     if (it == d_gridEntities.end()) {
         SPKT_LOG_WARN("No entity exists at this coord!");
     }
     else {
         it->second->Remove<GridComponent>();
         d_gridEntities.erase(it);
+    }
+}
+
+Sprocket::Entity* GameGrid::At(int x, int z) const
+{
+    auto it = d_gridEntities.find({x, z});
+    if (it != d_gridEntities.end()) {
+        return it->second;
+    }
+    return nullptr;
+}
+
+Sprocket::Entity* GameGrid::Hovered() const
+{
+    return At(d_hovered.x, d_hovered.y);
+}
+
+Sprocket::Entity* GameGrid::Selected() const
+{
+    if (d_selected.has_value()) {
+        return At(d_selected.value().x, d_selected.value().y);
+    }
+    return nullptr;
+}
+
+void GameGrid::DeleteSelected()
+{
+    auto selected = Selected();
+    if (selected != nullptr) {
+        selected->Kill();
+        auto pos = SelectedPosition().value();
+        RemoveEntity(pos.x, pos.y);
     }
 }

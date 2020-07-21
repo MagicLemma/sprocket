@@ -49,7 +49,7 @@ template <typename T> T Interpolate(
 
 SinglePanelUI::SinglePanelUI(Window* window)
     : d_window(window)
-    , d_engine(window)
+    , d_engine(window, &d_keyboard, &d_mouse)
 {
     d_keyboard.ConsumeAll(false);
 }
@@ -73,9 +73,10 @@ void SinglePanelUI::StartFrame()
     Maths::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
     bool active = true;
     bool draggable = false;
+    bool clickable = true;
 
     d_engine.StartFrame();
-    d_engine.StartPanel(name, &region, &active, &draggable);
+    d_engine.StartPanel(name, &region, &active, &draggable, &clickable);
 }
 
 void SinglePanelUI::EndFrame()

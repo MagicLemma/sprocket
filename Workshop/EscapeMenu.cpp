@@ -50,7 +50,8 @@ void EscapeMenu::OnUpdate(double dt)
         static Maths::vec4 panelQuad{50, 50, 200, 200};
         static bool active = true;
         static bool draggable = true;
-        if (d_ui.StartPanel("Main", &panelQuad, &active, &draggable)) {
+        static bool clickable = true;
+        if (d_ui.StartPanel("Main", &panelQuad, &active, &draggable, &clickable)) {
 
             if (d_ui.Button("Toggle Mode", {10, 10, 180, 50})) {
                 switch (d_worldLayer->d_mode) {

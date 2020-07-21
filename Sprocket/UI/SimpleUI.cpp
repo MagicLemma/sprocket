@@ -49,16 +49,16 @@ template <typename T> T Interpolate(
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
-    , d_engine(window)
+    , d_engine(window, &d_keyboard, &d_mouse)
 {
     d_keyboard.ConsumeAll(false);
 }
 
 void SimpleUI::OnEvent(Event& event)
 {
+    d_engine.OnEvent(event);
     d_keyboard.OnEvent(event);
     d_mouse.OnEvent(event);
-    d_engine.OnEvent(event);
 }
 
 void SimpleUI::OnUpdate(double dt)
@@ -81,9 +81,11 @@ bool SimpleUI::StartPanel(
     const std::string& name,
     Maths::vec4* region,
     bool* active,
-    bool* draggable)
+    bool* draggable,
+    bool* clickable)
 {
-    d_engine.StartPanel(name, region, active, draggable);
+    d_engine.StartPanel(name, region, active, draggable, clickable);
+    d_keyboard.ConsumeAll(false);
 
     if(*active) {
         float thickness = 5.0f;
@@ -136,7 +138,7 @@ bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
     Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
     
     d_engine.DrawQuad(colour, shape);
-    d_engine.DrawText(name, 36.0f, info.quad, Alignment::RIGHT);
+    d_engine.DrawText(name, 36.0f, info.quad);
 
     return info.onClick;
 }
