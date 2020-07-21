@@ -30,18 +30,10 @@ void PhysicsComponentInfo(Sprocket::DevUI::Context& ui,
         ui.SameLine();
         ui.Checkbox("Frozen", &phys.frozen);
         ui.DragFloat3("Velocity", &phys.velocity, 0.005f);
-        ui.EndTreeNode();
-    }
-}
-
-void ColliderComponentInfo(Sprocket::DevUI::Context& ui,
-                           Sprocket::ColliderComponent& coll)
-{
-    if (ui.StartTreeNode("Collider")) {
-        ui.DragFloat("Mass", &coll.mass, 0.05f);
-        ui.SliderFloat("Bounciness", &coll.bounciness, 0.0f, 1.0f);
-        ui.SliderFloat("Friction Coeff", &coll.frictionCoefficient, 0.0f, 1.0f);
-        ui.SliderFloat("Roll Resistance", &coll.rollingResistance, 0.0f, 1.0f);
+        ui.DragFloat("Mass", &phys.mass, 0.05f);
+        ui.SliderFloat("Bounciness", &phys.bounciness, 0.0f, 1.0f);
+        ui.SliderFloat("Friction Coeff", &phys.frictionCoefficient, 0.0f, 1.0f);
+        ui.SliderFloat("Roll Resistance", &phys.rollingResistance, 0.0f, 1.0f);
         ui.EndTreeNode();
     }
 }
@@ -115,10 +107,6 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
         PhysicsComponentInfo(ui, entity.Get<PhysicsComponent>());
     }
 
-    if (entity.Has<ColliderComponent>()) {
-        ColliderComponentInfo(ui, entity.Get<ColliderComponent>());
-    }
-
     if (entity.Has<PlayerComponent>()) {
         PlayerComponentInfo(ui, entity.Get<PlayerComponent>());
     }
@@ -131,9 +119,6 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 
     if (ui.CollapsingHeader("Add Component")) {
         if (!entity.Has<PhysicsComponent>() && ui.Button("Physics")) {
-
-        }
-        if (!entity.Has<ColliderComponent>() && ui.Button("Colldier")) {
 
         }
     }

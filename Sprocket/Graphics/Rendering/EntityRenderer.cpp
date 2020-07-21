@@ -122,7 +122,7 @@ void EntityRenderer::Draw(const Entity& entity)
         DrawModel(entity);
     }
 
-    if (d_renderColliders && entity.Has<ColliderComponent>()) {
+    if (d_renderColliders && entity.Has<PhysicsComponent>()) {
         DrawCollider(entity);
     }
 }
@@ -174,7 +174,7 @@ void EntityRenderer::DrawCollider(const Entity& entity)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     d_shader.Bind();
-    auto& colliderData = entity.Get<ColliderComponent>();
+    auto& colliderData = entity.Get<PhysicsComponent>();
     if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
         DrawBox(entity, data);
     }

@@ -39,10 +39,7 @@ struct PhysicsComponent : public Component
     Maths::vec3 velocity = {0.0, 0.0, 0.0};
     bool        gravity  = true;
     bool        frozen   = false;
-};
 
-struct ColliderComponent : public Component
-{
     Collider collider            = EmptyCollider();
     float    mass                = 1.0f;
     float    bounciness          = 0.5f;

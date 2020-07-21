@@ -185,20 +185,13 @@ void PhysicsEngine::UpdateEntity(double dt, Entity& entity)
         else {
             bodyData->setType(rp3d::BodyType::DYNAMIC);
         }
-    }
-    else {
-        bodyData->setType(rp3d::BodyType::STATIC);
-    }
-    
-    if (entity.Has<ColliderComponent>()) {
-        const auto& collider = entity.Get<ColliderComponent>();
 
-        bodyData->setMass(collider.mass);
+        bodyData->setMass(physics.mass);
 
         auto& material = bodyData->getMaterial();
-        material.setBounciness(collider.bounciness);
-        material.setFrictionCoefficient(collider.frictionCoefficient);
-        material.setRollingResistance(collider.rollingResistance); 
+        material.setBounciness(physics.bounciness);
+        material.setFrictionCoefficient(physics.frictionCoefficient);
+        material.setRollingResistance(physics.rollingResistance); 
     }
 
     // Handle player movement updates.
@@ -209,7 +202,7 @@ void PhysicsEngine::UpdateEntity(double dt, Entity& entity)
 
 void PhysicsEngine::AddCollider(const Entity& entity)
 {
-    auto& colliderData = entity.Get<ColliderComponent>();
+    auto& colliderData = entity.Get<PhysicsComponent>();
 
     std::shared_ptr<rp3d::CollisionShape> collider = nullptr;
     if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
@@ -244,10 +237,9 @@ void PhysicsEngine::AddCollider(const Entity& entity)
 void PhysicsEngine::RegisterEntity(const Entity& entity)
 {
     auto hasPhysics = entity.Has<PhysicsComponent>();
-    auto hasCollider = entity.Has<ColliderComponent>();
 
-    if (!hasPhysics && !hasCollider) {
-        return;  // Entity must have physics or collider.
+    if (!hasPhysics) {
+        return;  // Entity must have physics.
     }
 
     auto& entry = d_impl->rigidBodies[entity.Id()];
@@ -266,17 +258,14 @@ void PhysicsEngine::RegisterEntity(const Entity& entity)
         entry->setAngularDamping(0.0f);
     }
 
-    if (hasCollider) {
-        AddCollider(entity); // No Collider to add.
-    }
+    AddCollider(entity); // No Collider to add.
 }
 
 void PhysicsEngine::DeregisterEntity(const Entity& entity)
 {
     auto hasPhysics = entity.Has<PhysicsComponent>();
-    auto hasCollider = entity.Has<ColliderComponent>();
 
-    if (!hasPhysics && !hasCollider) {
+    if (!hasPhysics) {
         return;  // Entity must have physics or collider.
     }
 
@@ -383,7 +372,7 @@ bool PhysicsEngine::IsOnFloor(const Entity* entity) const
 
 void PhysicsEngine::RefreshTransform(const Entity* entity)
 {
-    if (!entity->Has<PhysicsComponent>() && !entity->Has<ColliderComponent>()) {
+    if (!entity->Has<PhysicsComponent>()) {
         return;
     }
     
