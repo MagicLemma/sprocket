@@ -18,6 +18,7 @@ find_package(assimp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
+find_package(EnTT CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
@@ -116,6 +117,7 @@ target_link_libraries(Sprocket PUBLIC
                       imgui::imgui
                       sfml-system
                       sfml-audio
+                      EnTT::EnTT
                       ${LUA_LIBRARIES})
 
 target_include_directories(Sprocket PUBLIC

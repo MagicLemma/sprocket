@@ -122,7 +122,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto path = worker->Add<PathComponent>();
         path->speed = 3.0f;
-        path->markers.push({10.5f, 0.5f, 3.5f});
 
         auto modelData = worker->Add<ModelComponent>();
         modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
