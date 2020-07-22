@@ -45,6 +45,7 @@ public:
     ~PhysicsEngine() {}
 
     void UpdateEntity(double dt, Entity& entity) override;
+    void PostUpdateEntity(double dt, Entity& entity) override;
     void UpdateSystem(double dt) override;
 
     void RegisterEntity(const Entity& entity) override;

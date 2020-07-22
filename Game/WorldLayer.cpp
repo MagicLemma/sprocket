@@ -91,6 +91,23 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 {
     using namespace Sprocket;
 
+    struct TestStruct
+    {
+        int id = 5;
+    };
+
+    //NewScene scene;
+//
+    //auto e = scene.CreateEntity();
+//
+    //scene.OnCreate<TestStruct>([](entt::registry&, entt::entity){
+    //    SPKT_LOG_INFO("Added Test component!");
+    //});
+//
+    //scene.Add<TestStruct>(e);
+
+
+
     d_modelManager.LoadModel("GG_Tree", "Resources/Models/BetterTree.obj");
     d_modelManager.LoadModel("GG_Rock", "Resources/Models/Rock.obj");
 

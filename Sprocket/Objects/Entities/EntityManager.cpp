@@ -36,6 +36,12 @@ void EntityManager::OnUpdate(double dt)
     for (auto system : d_systems) {
         system->UpdateSystem(dt);
     }
+
+    for (auto& [id, entity] : d_entities) {
+        for (auto system : d_systems) {
+            system->PostUpdateEntity(dt, *entity);
+        }
+    }
 }
 
 void EntityManager::OnEvent(Event& event)

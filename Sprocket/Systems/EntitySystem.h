@@ -12,6 +12,9 @@ public:
     virtual void UpdateEntity(double dt, Entity& entity) {};
         // Called once per entity per frame and before the system updates.
 
+    virtual void PostUpdateEntity(double dt, Entity& entity) {};
+        // Called once per entity per frame and before the system updates.
+
     virtual void UpdateSystem(double dt) {};
         // Called once per frame, this should update any system speific data.
 

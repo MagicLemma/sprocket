@@ -66,8 +66,6 @@ class EventListener {
         /// engine will do several internal simulation steps. This method is
         /// called at the end of each internal simulation step.
         virtual void endInternalTick() {}
-
-        virtual void rigidBodyUpdated(const RigidBody* body) {}
 };
 
 }

@@ -65,21 +65,6 @@ public:
     float Fraction() const { return d_fraction; }
 };
 
-class EventListener : public rp3d::EventListener
-{
-public:
-    void rigidBodyUpdated(const rp3d::RigidBody* body) override
-    {
-        Entity* entity = reinterpret_cast<Entity*>(body->getUserData());
-        entity->Position() = Convert(body->getTransform().getPosition());
-        entity->Orientation() = Convert(body->getTransform().getOrientation());
-
-        if (entity->Has<PhysicsComponent>()) {
-            entity->Get<PhysicsComponent>().velocity = Convert(body->getLinearVelocity());
-        }
-    }
-};
-
 float GetSpeed(SpeedFactor s)
 {
     switch (s) {
@@ -117,8 +102,6 @@ struct PhysicsEngineImpl
     > rigidBodies; 
         // Lifetime of RidigBody managed by RapidPhysics3D?
 
-    EventListener eventListener;
-
     PhysicsEngineImpl(const Maths::vec3& gravity)
         : world(Convert(gravity))
     {}
@@ -133,7 +116,6 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
 {
     d_impl->world.setNbIterationsPositionSolver(5);
     d_impl->world.setNbIterationsVelocitySolver(8);
-    d_impl->world.setEventListener(&d_impl->eventListener);
 }
 
 void PhysicsEngine::UpdateSystem(double dt)
@@ -198,6 +180,18 @@ void PhysicsEngine::UpdateEntity(double dt, Entity& entity)
     if (entity.Has<PlayerComponent>()) {
         UpdatePlayer(dt, entity);
     }
+}
+
+void PhysicsEngine::PostUpdateEntity(double dt, Entity& entity)
+{
+    if (!entity.Has<PhysicsComponent>()) { return; }
+
+    auto& tr = entity.Get<TransformComponent>();
+    const auto& bodyData = d_impl->rigidBodies[entity.Id()];
+    tr.position = Convert(bodyData->getTransform().getPosition());
+    tr.orientation = Convert(bodyData->getTransform().getOrientation());
+
+    entity.Get<PhysicsComponent>().velocity = Convert(bodyData->getLinearVelocity());
 }
 
 void PhysicsEngine::AddCollider(const Entity& entity)
