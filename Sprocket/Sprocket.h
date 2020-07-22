@@ -19,11 +19,6 @@
 #include "UI/SinglePanelUI.h"
 #include "UI/DevUI.h"
 
-// ENTITIES
-#include "Entities/NewScene.h"
-#include "Entities/NewSystem.h"
-#include "Entities/Systems/PhysicsSystem.h"
-
 // EVENTS
 #include "Events/Event.h"
 #include "Events/KeyboardEvent.h"

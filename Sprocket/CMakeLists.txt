@@ -84,11 +84,6 @@ add_library(Sprocket STATIC
             Systems/ScriptRunner.cpp
             Systems/Selector.cpp
 
-            Entities/NewScene.cpp
-            Entities/NewSystem.cpp
-
-            Entities/Systems/PhysicsSystem.cpp
-
             Events/Event.cpp
             Events/WindowEvent.cpp
             Events/KeyboardEvent.cpp
@@ -131,8 +126,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Core
                            ./Display
                            ./Display/WidgetProperties
-                           ./Entities
-                           ./Entities/Systems
                            ./Events
                            ./Graphics
                            ./Graphics/Primitives

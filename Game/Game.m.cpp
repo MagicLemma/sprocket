@@ -4,11 +4,6 @@
 #include "EscapeMenu.h"
 #include "Palette.h"
 
-void l(entt::registry&, entt::entity)
-{
-    SPKT_LOG_INFO("Added component");
-}
-
 int main()
 {
     using namespace Sprocket;
