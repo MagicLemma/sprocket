@@ -27,6 +27,14 @@ struct Component {
     virtual ~Component() {}
 };
 
+struct TransformComponent : public Component
+{
+    Maths::vec3 position = {0, 0, 0};
+    Maths::quat orientation = Maths::identity;
+
+    Maths::mat4 Transform() const { return Maths::Transform(position, orientation); }
+};
+
 struct ModelComponent : public Component
 {
     Model3D  model;

@@ -133,7 +133,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto worker = std::make_shared<Entity>();
         worker->Name() = "Worker";
-        worker->Position() = {0.5f, 0.5f, 0.5f};
+
+        auto tr = worker->Add<TransformComponent>();
+        tr->position = {0.5f, 0.5f, 0.5f};
         
         worker->Add<SelectComponent>();
 
@@ -151,7 +153,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto camera = std::make_shared<Entity>();
         camera->Name() = "Camera";
-        camera->Position() = {0, 5, 0};
+
+        auto tr = camera->Add<TransformComponent>();
+        tr->position = {0, 5, 0};
 
         auto c = camera->Add<CameraComponent>();
       
@@ -165,7 +169,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto terrain = std::make_shared<Entity>();
         terrain->Name() = "Terrain";
-        terrain->Position() = {-25, 0, -25};
+
+        auto tr = terrain->Add<TransformComponent>();
+        tr->position = {-25, 0, -25};
 
         auto modelData = terrain->Add<ModelComponent>();
         modelData->scale = 1.0f;
@@ -215,8 +221,9 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     }
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
+        auto& tr = d_camera->Get<TransformComponent>();
         if (e->Mods() & KeyModifier::CTRL) {
-            Maths::vec3 cameraPos = d_camera->Position();
+            Maths::vec3 cameraPos = tr.position;
             Maths::vec3 direction = Maths::GetMouseRay(
                 d_mouse.GetMousePos(),
                 d_core.window->Width(),
@@ -233,9 +240,10 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
             if (e->Button() == Mouse::LEFT) {
                 std::queue<Maths::vec3>().swap(path.markers);
-                if (Maths::Distance(d_worker->Position(), mousePos) > 1.0f) {
+                auto pos = d_worker->Get<TransformComponent>().position;
+                if (Maths::Distance(pos, mousePos) > 1.0f) {
                     path.markers = GenerateAStarPath(
-                        d_worker->Position(),
+                        pos,
                         mousePos,
                         [&](const Maths::ivec2& pos) {
                             return d_gameGrid.At(pos.x, pos.y) != nullptr;
@@ -290,7 +298,7 @@ void WorldLayer::OnUpdate(double dt)
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    Maths::vec3 target = d_camera->Position() + lambda * Maths::Forwards(d_camera->Orientation());
+    Maths::vec3 target = d_camera->Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera->Get<TransformComponent>().orientation);
     d_shadowMapRenderer.BeginScene(d_lights.sun, target);
     for (const auto& [id, entity] : d_entityManager.Entities()) {
         d_shadowMapRenderer.Draw(*entity);
@@ -403,7 +411,10 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
     auto newEntity = std::make_shared<Entity>();
     newEntity->Name() = "Tree";
-    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
+
+    auto tr = newEntity->Add<TransformComponent>();
+    tr->orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
+
     auto modelData = newEntity->Add<ModelComponent>();
     modelData->model = d_modelManager.GetModel("GG_Tree");
     modelData->scale = Random(1.0f, 1.3f);
@@ -425,8 +436,11 @@ void WorldLayer::AddRockBase(
 
     auto newEntity = std::make_shared<Entity>();
     newEntity->Name() = name;
-    newEntity->Position().y -= Random(0.0f, 0.5f);
-    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
+
+    auto tr = newEntity->Add<TransformComponent>();
+    tr->position.y -= Random(0.0f, 0.5f);
+    tr->orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
+    
     auto modelData = newEntity->Add<ModelComponent>();
     modelData->model = d_modelManager.GetModel("GG_Rock");
     modelData->scale = 1.1f;

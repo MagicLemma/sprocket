@@ -17,9 +17,6 @@ class Entity
 
     bool              d_alive;
 
-    Maths::vec3 d_position;
-    Maths::quat d_orientation;
-
     std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
     
 public:
@@ -32,16 +29,6 @@ public:
 
     bool Alive() const { return d_alive; }
     void Kill() { d_alive = false; }
-
-    void SetPosition(const Maths::vec3& pos) { d_position = pos; }
-
-    const Maths::vec3& Position() const { return d_position; }
-    Maths::vec3& Position() { return d_position; }
-
-    const Maths::quat& Orientation() const { return d_orientation; }
-    Maths::quat& Orientation() { return d_orientation; }
-
-    Maths::mat4 Transform() const;
 
     template <typename T> T* Add();
     template <typename T> bool Has() const;

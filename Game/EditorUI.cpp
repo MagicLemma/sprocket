@@ -41,9 +41,10 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
     static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
 
-    if (ui.StartTreeNode("Transform")) {
-        ui.DragFloat3("Position", &entity.Position(), 0.005f);
-        Maths::vec3 eulerAngles = Maths::ToEuler(entity.Orientation());
+    if (entity.Has<TransformComponent>() && ui.StartTreeNode("Transform")) {
+        auto& tr = entity.Get<TransformComponent>();
+        ui.DragFloat3("Position", &tr.position, 0.005f);
+        Maths::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
         std::stringstream ss;
         ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
            << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
@@ -68,10 +69,13 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
         ui.EndTreeNode();
     }
 
-    Maths::mat4 origin = entity.Transform();
-    ui.Gizmo(&origin, view, proj, mode, coords);
-    entity.Position() = GetTranslation(origin);
-    entity.Orientation() = Normalise(ToQuat(mat3(origin)));
+    if (entity.Has<TransformComponent>()) {
+        auto& tr = entity.Get<TransformComponent>();
+        Maths::mat4 origin = tr.Transform();
+        ui.Gizmo(&origin, view, proj, mode, coords);
+        tr.position = GetTranslation(origin);
+        tr.orientation = Normalise(ToQuat(mat3(origin)));
+    }
     ui.Separator();
 
     if (ui.Button("Delete Entity")) {
@@ -90,7 +94,8 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
         if (ui.Button(name.c_str())) {
             SPKT_LOG_INFO("Added entity");
             auto entity = std::make_shared<Sprocket::Entity>();
-            entity->Position() = {10.0, 0.0, 10.0};
+            auto tr = entity->Add<Sprocket::TransformComponent>();
+            tr->position = {10.0, 0.0, 10.0};
             auto modelComp = entity->Add<Sprocket::ModelComponent>();
             modelComp->model = model;
 

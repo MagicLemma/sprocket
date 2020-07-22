@@ -28,9 +28,10 @@ int GetPosition(lua_State* L)
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
     Entity* entity = GetEntity(L);
-    lua_pushnumber(L, entity->Position().x);
-    lua_pushnumber(L, entity->Position().y);
-    lua_pushnumber(L, entity->Position().z);
+    auto& tr = entity->Get<TransformComponent>();
+    lua_pushnumber(L, tr.position.x);
+    lua_pushnumber(L, tr.position.y);
+    lua_pushnumber(L, tr.position.z);
     return 3;
 }
 
@@ -39,10 +40,11 @@ int SetPosition(lua_State* L)
     if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
 
     Entity* entity = GetEntity(L);
+    auto& tr = entity->Get<TransformComponent>();
     float x = (float)lua_tonumber(L, 1);
     float y = (float)lua_tonumber(L, 2);
     float z = (float)lua_tonumber(L, 3);
-    entity->SetPosition({x, y, z});
+    tr.position = {x, y, z};
     return 0;
 }
 
@@ -60,8 +62,9 @@ int SetLookAt(lua_State* L)
     float tz = (float)lua_tonumber(L, 6);
     Maths::quat q = Maths::LookAtQuat({px, py, pz}, {tx, ty, tz});
 
-    entity->Position() = {px, py, pz};
-    entity->Orientation() = q;
+    auto& tr = entity->Get<TransformComponent>();
+    tr.position = {px, py, pz};
+    tr.orientation = q;
     return 0;
 }
 
@@ -70,10 +73,10 @@ int RotateY(lua_State* L)
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); };
 
     Entity* entity = GetEntity(L);
+    auto& tr = entity->Get<TransformComponent>();
+
     float yaw = (float)lua_tonumber(L, 1);
-    auto orientation = entity->Orientation();
-    orientation = Maths::Rotate(orientation, {0, 1, 0}, Maths::Radians(yaw));
-    entity->Orientation() = orientation;
+    tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, Maths::Radians(yaw));
     return 0;
 }
 
@@ -81,7 +84,8 @@ int GetForwardsDir(lua_State* L)
 {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
-    auto forwards = Maths::Forwards(GetEntity(L)->Orientation());
+    auto& tr = GetEntity(L)->Get<TransformComponent>();
+    auto forwards = Maths::Forwards(tr.orientation);
     lua_pushnumber(L, forwards.x);
     lua_pushnumber(L, forwards.y);
     lua_pushnumber(L, forwards.z);
@@ -92,7 +96,11 @@ int GetRightDir(lua_State* L)
 {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
-    auto right = Maths::Right(GetEntity(L)->Orientation());
+    Entity* e = GetEntity(L);
+    SPKT_LOG_INFO("{}", e->Name());
+
+    auto& tr = GetEntity(L)->Get<TransformComponent>();
+    auto right = Maths::Right(tr.orientation);
     lua_pushnumber(L, right.x);
     lua_pushnumber(L, right.y);
     lua_pushnumber(L, right.z);

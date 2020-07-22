@@ -3,12 +3,14 @@
 void PathFollower::UpdateEntity(double dt, Sprocket::Entity& entity)
 {
     using namespace Sprocket;
+    if (!entity.Has<TransformComponent>()) { return; }
     if (!entity.Has<PathComponent>()) { return; }
 
+    auto& tr = entity.Get<TransformComponent>();
     auto& path = entity.Get<PathComponent>();
     if (path.markers.empty()) { return; }
     
-    Maths::vec3 direction = path.markers.front() - entity.Position();
+    Maths::vec3 direction = path.markers.front() - tr.position;
     Maths::Normalise(direction);
     Maths::vec3 advance = path.speed * (float)dt * direction;
 
@@ -16,10 +18,10 @@ void PathFollower::UpdateEntity(double dt, Sprocket::Entity& entity)
         return v.x*v.x + v.y*v.y + v.z*v.z;
     };
 
-    if (MagSq(advance) < MagSq(path.markers.front() - entity.Position())) {
-        entity.Position() += advance;
+    if (MagSq(advance) < MagSq(path.markers.front() - tr.position)) {
+        tr.position += advance;
     } else {
-        entity.Position() = path.markers.front();
+        tr.position = path.markers.front();
         path.markers.pop();
     }
 }

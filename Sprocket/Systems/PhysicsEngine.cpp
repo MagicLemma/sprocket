@@ -41,8 +41,9 @@ rp3d::Quaternion Convert(const Maths::quat& q)
 rp3d::Transform Transform(const Entity& entity)
 {
     rp3d::Transform t;
-    t.setPosition(Convert(entity.Position()));
-    t.setOrientation(Convert(entity.Orientation()));
+    auto tr = entity.Get<TransformComponent>();
+    t.setPosition(Convert(tr.position));
+    t.setOrientation(Convert(tr.orientation));
     return t;
 }
 
@@ -185,10 +186,12 @@ void PhysicsEngine::UpdateEntity(double dt, Entity& entity)
 void PhysicsEngine::PostUpdateEntity(double dt, Entity& entity)
 {
     if (!entity.Has<PhysicsComponent>()) { return; }
+    if (!entity.Has<TransformComponent>()) { return; }
 
     const auto& bodyData = d_impl->rigidBodies[entity.Id()];
-    entity.Position() = Convert(bodyData->getTransform().getPosition());
-    entity.Orientation() = Convert(bodyData->getTransform().getOrientation());
+    auto& tr = entity.Get<TransformComponent>();
+    tr.position = Convert(bodyData->getTransform().getPosition());
+    tr.orientation = Convert(bodyData->getTransform().getOrientation());
 
     entity.Get<PhysicsComponent>().velocity = Convert(bodyData->getLinearVelocity());
 }
@@ -340,7 +343,7 @@ void PhysicsEngine::MakeUpright(Entity* entity, float yaw)
         0.0f, Maths::Radians(yaw), 0.0f);
     transform.setOrientation(q);
     bodyData->setTransform(transform);
-    entity->Orientation() = Convert(q);
+    entity->Get<TransformComponent>().orientation = Convert(q);
 }
 
 bool PhysicsEngine::IsOnFloor(const Entity* entity) const
@@ -372,8 +375,8 @@ void PhysicsEngine::RefreshTransform(const Entity* entity)
     auto& bodyData = d_impl->rigidBodies[entity->Id()];
     bodyData->setTransform(
         rp3d::Transform(
-            Convert(entity->Position()),
-            Convert(entity->Orientation())
+            Convert(entity->Get<TransformComponent>().position),
+            Convert(entity->Get<TransformComponent>().orientation)
         )
     );
 }
