@@ -10,24 +10,7 @@
 
 namespace Sprocket {
 
-inline std::size_t Counter()
-{
-    static std::size_t id = 0;
-    return ++id;
-}
-
-template <typename T>
-inline std::size_t GetComponentTypeId() noexcept
-{
-    static std::size_t id = Counter();
-    return id;
-}
-
-struct Component {
-    virtual ~Component() {}
-};
-
-struct TransformComponent : public Component
+struct TransformComponent
 {
     Maths::vec3 position = {0, 0, 0};
     Maths::quat orientation = Maths::identity;
@@ -35,24 +18,24 @@ struct TransformComponent : public Component
     Maths::mat4 Transform() const { return Maths::Transform(position, orientation); }
 };
 
-struct NameComponent : public Component
+struct NameComponent
 {
     std::string name;
 };
 
-struct DeletableComponent : public Component
+struct DeletableComponent
 {
     bool alive = true;
 };
 
-struct ModelComponent : public Component
+struct ModelComponent
 {
     Model3D  model;
     Material material;
     float    scale = 1.0f;  // Affects the size of the model.
 };
 
-struct PhysicsComponent : public Component
+struct PhysicsComponent
 {
     Maths::vec3 velocity = {0.0, 0.0, 0.0};
     bool        gravity  = true;
@@ -65,7 +48,7 @@ struct PhysicsComponent : public Component
     float    rollingResistance   = 0.0f;
 };
 
-struct PlayerComponent : public Component
+struct PlayerComponent
 {
     bool movingForwards  = false;
     bool movingBackwards = false;
@@ -78,19 +61,19 @@ struct PlayerComponent : public Component
     float pitch           = 0.0f;
 };
 
-struct SelectComponent : public Component
+struct SelectComponent
 {
     bool selected = false;
     bool hovered = false;
 };
 
-struct ScriptComponent : public Component
+struct ScriptComponent
 {
     std::string script;
     bool active = true;
 };
 
-struct CameraComponent : public Component
+struct CameraComponent
 {
     Maths::mat4 projection;
     float       pitch = 0.0f; // Relative to the entities orientation.

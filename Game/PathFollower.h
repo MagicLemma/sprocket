@@ -3,7 +3,7 @@
 
 #include <queue>
 
-struct PathComponent : public Sprocket::Component
+struct PathComponent
 {
     std::queue<Sprocket::Maths::vec3> markers;
     float                             speed;

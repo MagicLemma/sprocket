@@ -10,14 +10,10 @@
 
 namespace Sprocket {
 
-constexpr std::size_t MAX_COMPONENTS = 64;
-
 class Entity
 {
     entt::registry* d_registry;
     entt::entity    d_entity;
-
-    std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
     
 public:
     Entity();
@@ -34,25 +30,26 @@ public:
 template <typename T>
 T* Entity::Add()
 {
-    auto component = std::make_shared<T>();
-    d_components[GetComponentTypeId<T>()] = component;
-    return component.get();
+    d_registry->assign<T>(d_entity);
+    return &d_registry->get<T>(d_entity);
 }
 
 template <typename T> bool Entity::Has() const
 {
-    return d_components[GetComponentTypeId<T>()] != nullptr;
+    if (d_registry->valid(d_entity)) {
+        return d_registry->has<T>(d_entity);
+    }
+    return false;
 }
 
 template <typename T> T& Entity::Get() const
 {
-    auto component = d_components[GetComponentTypeId<T>()];
-    return *static_cast<T*>(component.get());
+   return d_registry->get<T>(d_entity);
 }
 
 template <typename T> void Entity::Remove()
 {
-    d_components[GetComponentTypeId<T>()] = nullptr;
+    d_registry->remove_if_exists<T>(d_entity);
 }
 
 void Kill(Entity& e);

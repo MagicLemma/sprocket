@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <optional>
 
-struct GridComponent : public Sprocket::Component
+struct GridComponent
 {
     int x;
     int z;

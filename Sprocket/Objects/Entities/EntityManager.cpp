@@ -4,6 +4,7 @@ namespace Sprocket {
 
 EntityManager::EntityManager(const std::vector<EntitySystem*> systems)
     : d_systems(systems)
+    , d_registry()
 {
 }
 
@@ -15,7 +16,6 @@ std::shared_ptr<Entity> EntityManager::NewEntity()
 
 void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 {
-    d_entities.emplace(entity->Id(), entity);
     for (auto system : d_systems) {
         system->RegisterEntity(*entity);
     }
@@ -23,6 +23,9 @@ void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 
 void EntityManager::OnUpdate(double dt)
 {
+    d_registry.each([](auto entity) {
+
+    });
     auto it = d_entities.begin();
     while (it != d_entities.end()) {
         if (!Alive(*(it->second))) {
