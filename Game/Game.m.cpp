@@ -14,30 +14,6 @@ int main()
     using namespace Sprocket;
     Log::Init();
 
-    struct Temp
-    {
-        int x = 5;
-    };
-
-    struct X
-    {
-        int y = 5;
-
-        void f(entt::registry&, entt::entity) {
-            SPKT_LOG_INFO("{}", y);
-        }        
-    };
-
-    NewScene scene;
-    auto e = scene.CreateEntity();
-
-    X x;
-
-    scene.OnAdd<Temp, &X::f>(x);
-    scene.OnAdd<Temp, &l>();
-    scene.Add<Temp>(e);
-    return 0;
-
     Window window("Game!");
     SceneManager sceneManager;
     ModelManager modelManager;

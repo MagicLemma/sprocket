@@ -186,10 +186,9 @@ void PhysicsEngine::PostUpdateEntity(double dt, Entity& entity)
 {
     if (!entity.Has<PhysicsComponent>()) { return; }
 
-    auto& tr = entity.Get<TransformComponent>();
     const auto& bodyData = d_impl->rigidBodies[entity.Id()];
-    tr.position = Convert(bodyData->getTransform().getPosition());
-    tr.orientation = Convert(bodyData->getTransform().getOrientation());
+    entity.Position() = Convert(bodyData->getTransform().getPosition());
+    entity.Orientation() = Convert(bodyData->getTransform().getOrientation());
 
     entity.Get<PhysicsComponent>().velocity = Convert(bodyData->getLinearVelocity());
 }
