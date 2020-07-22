@@ -30,7 +30,8 @@ GameGrid::GameGrid(EntityManager* entityManager)
 {
     auto gridSqare = GetHoveredSquare();
 
-    d_hoveredSquare->Name() = "Hovered Grid Highlighter";
+    auto n1 = d_hoveredSquare->Add<NameComponent>();
+    n1->name = "Hovered Grid Highlighter";
     auto tr1 = d_hoveredSquare->Add<TransformComponent>();
     auto model1 = d_hoveredSquare->Add<ModelComponent>();
     model1->model = gridSqare;
@@ -39,7 +40,8 @@ GameGrid::GameGrid(EntityManager* entityManager)
     model1->scale = 0.3f;
     d_entityManager->AddEntity(d_hoveredSquare);
 
-    d_selectedSquare->Name() = "Selected Grid Highlighter";
+    auto n2 = d_selectedSquare->Add<NameComponent>();
+    n2->name = "Selected Grid Highlighter";
     auto tr2 = d_selectedSquare->Add<TransformComponent>();
     auto model2 = d_selectedSquare->Add<ModelComponent>();
     model2->model = gridSqare;

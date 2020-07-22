@@ -35,6 +35,11 @@ struct TransformComponent : public Component
     Maths::mat4 Transform() const { return Maths::Transform(position, orientation); }
 };
 
+struct NameComponent : public Component
+{
+    std::string name;
+};
+
 struct ModelComponent : public Component
 {
     Model3D  model;

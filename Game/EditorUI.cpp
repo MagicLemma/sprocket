@@ -12,15 +12,15 @@ void AddEntityToList(Sprocket::DevUI::Context& ui,
 {
     using namespace Sprocket;
     
-    ui.PushID(entity->Id());
-    if (ui.StartTreeNode(entity->Name())) {
-        if (entity->Has<SelectComponent>() && ui.Button("Select")) {
-            SPKT_LOG_INFO("Select clicked!");
-            selector.SetSelected(entity);
-        }
-        ui.EndTreeNode();
-    }
-    ui.PopID();         
+    //ui.PushID(entity->Id());
+    //if (ui.StartTreeNode(entity->Name())) {
+    //    if (entity->Has<SelectComponent>() && ui.Button("Select")) {
+    //        SPKT_LOG_INFO("Select clicked!");
+    //        selector.SetSelected(entity);
+    //    }
+    //    ui.EndTreeNode();
+    //}
+    //ui.PopID();         
 }
 
 void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
@@ -34,7 +34,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.StartWindow("Selected Entity");
     ui.Text("Name: ");
     ui.SameLine();
-    ui.TextModifiable(entity.Name());
+    //ui.TextModifiable(entity.Name());
     ui.Text("ID: " + std::to_string(entity.Id()));
     ui.Separator();
     

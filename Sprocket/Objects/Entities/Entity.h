@@ -22,9 +22,6 @@ class Entity
 public:
     Entity();
 
-    const std::string& Name() const { return d_name; }
-    std::string& Name() { return d_name; }
-
     std::size_t Id() const { return d_id; }
 
     bool Alive() const { return d_alive; }

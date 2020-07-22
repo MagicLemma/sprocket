@@ -64,7 +64,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->Name() = "Platform 1";
+
+        auto name = platform->Add<NameComponent>();
+        name->name = "Platform 1";
 
         auto tr = platform->Add<TransformComponent>();
         tr->position = {7.0, 0.0, -3.0};
@@ -88,7 +90,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->Name() = "Island";
+
+        auto name = platform->Add<NameComponent>();
+        name->name = "Island";
 
         auto tr = platform->Add<TransformComponent>();
         tr->position = {40.0, -10.0, 0.0};
@@ -104,7 +108,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->Name() = "Platform 2";
+        auto name = platform->Add<NameComponent>();
+        name->name = "Platform 2";
 
         auto tr = platform->Add<TransformComponent>();
         tr->position = {-5.0, 0.0, 5.0};
@@ -127,7 +132,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto platform = std::make_shared<Entity>();
-        platform->Name() = "Platform 3";
+
+        auto name = platform->Add<NameComponent>();
+        name->name = "Platform 3";
 
         auto tr = platform->Add<TransformComponent>();
         tr->position = {-5.0, 0.0, 5.0};
@@ -153,7 +160,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto crate = std::make_shared<Entity>();
-        crate->Name() = "Crate 1";
+
+        auto name = crate->Add<NameComponent>();
+        name->name = "Crate";
 
         auto tr = crate->Add<TransformComponent>();
         tr->position = {-5.0, 2.0, -3.0};
@@ -178,7 +187,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto crate = std::make_shared<Entity>();
-        crate->Name() = "Crate 2";
+
+        auto name = crate->Add<NameComponent>();
+        name->name = "Crate 2";
 
         auto tr = crate->Add<TransformComponent>();
         tr->position = {-1.0, 0.0, -3.0};
@@ -204,7 +215,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto crate = std::make_shared<Entity>();
-        crate->Name() = "Movable Crate";
+
+        auto name = crate->Add<NameComponent>();
+        name->name = "Crate 3 (M)";
 
         auto tr = crate->Add<TransformComponent>();
         tr->position = {8.0, 5.0, 7.0};
@@ -230,7 +243,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto player = std::make_shared<Entity>();
-        player->Name() = "Player";
+
+        auto name = player->Add<NameComponent>();
+        name->name = "Player";
 
         auto tr = player->Add<TransformComponent>();
         tr->position = {0.0f, 5.0f, 5.0f};
@@ -266,7 +281,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto observerCamera = std::make_shared<Entity>();
-        observerCamera->Name() = "Observer Camera";
+
+        auto name = observerCamera->Add<NameComponent>();
+        name->name = "Observer Camera";
 
         auto tr = observerCamera->Add<TransformComponent>();
 
@@ -281,7 +298,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto editorCamera = std::make_shared<Entity>();
-        editorCamera->Name() = "Editor Camera";
+
+        auto name = editorCamera->Add<NameComponent>();
+        name->name = "Editor Camera";
 
         auto tr = editorCamera->Add<TransformComponent>();
         tr->position = {10.0f, 2.0f, 0.0f};
@@ -302,7 +321,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto sphere = std::make_shared<Entity>();
         std::stringstream ss;
         ss << "Sphere " << i;
-        sphere->Name() = ss.str();
+
+        auto name = sphere->Add<NameComponent>();
+        name->name = ss.str();
 
         auto tr = sphere->Add<TransformComponent>();
         tr->position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};

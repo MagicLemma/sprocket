@@ -97,7 +97,6 @@ int GetRightDir(lua_State* L)
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
     Entity* e = GetEntity(L);
-    SPKT_LOG_INFO("{}", e->Name());
 
     auto& tr = GetEntity(L)->Get<TransformComponent>();
     auto right = Maths::Right(tr.orientation);

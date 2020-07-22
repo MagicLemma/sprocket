@@ -132,7 +132,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto worker = std::make_shared<Entity>();
-        worker->Name() = "Worker";
+
+        auto name = worker->Add<NameComponent>();
+        name->name = "Worker";
 
         auto tr = worker->Add<TransformComponent>();
         tr->position = {0.5f, 0.5f, 0.5f};
@@ -152,7 +154,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto camera = std::make_shared<Entity>();
-        camera->Name() = "Camera";
+
+        auto name = camera->Add<NameComponent>();
+        name->name = "Camera";
 
         auto tr = camera->Add<TransformComponent>();
         tr->position = {0, 5, 0};
@@ -168,7 +172,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     {
         auto terrain = std::make_shared<Entity>();
-        terrain->Name() = "Terrain";
+
+        auto name = terrain->Add<NameComponent>();
+        name->name = "Terrain";
 
         auto tr = terrain->Add<TransformComponent>();
         tr->position = {-25, 0, -25};
@@ -394,7 +400,12 @@ void WorldLayer::OnUpdate(double dt)
             if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
                 
                 auto hovered = d_gameGrid.Hovered();
-                d_hoveredEntityUI.Text(hovered->Name(), 36.0f, {0, 0, width, height});
+
+                std::string name = "Unnamed";
+                if (hovered->Has<NameComponent>()) {
+                    name = hovered->Get<NameComponent>().name;
+                }
+                d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
 
                 d_hoveredEntityUI.EndPanel();
             }
@@ -410,7 +421,9 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     static auto tex = Texture("Resources/Textures/BetterTree.png");
 
     auto newEntity = std::make_shared<Entity>();
-    newEntity->Name() = "Tree";
+
+    auto name = newEntity->Add<NameComponent>();
+    name->name = "Tree";
 
     auto tr = newEntity->Add<TransformComponent>();
     tr->orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
@@ -435,12 +448,13 @@ void WorldLayer::AddRockBase(
     using namespace Sprocket;
 
     auto newEntity = std::make_shared<Entity>();
-    newEntity->Name() = name;
+    auto n = newEntity->Add<NameComponent>();
+    n->name = name;
 
     auto tr = newEntity->Add<TransformComponent>();
     tr->position.y -= Random(0.0f, 0.5f);
     tr->orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
-    
+
     auto modelData = newEntity->Add<ModelComponent>();
     modelData->model = d_modelManager.GetModel("GG_Rock");
     modelData->scale = 1.1f;
