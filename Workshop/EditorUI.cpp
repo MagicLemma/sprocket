@@ -64,7 +64,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.Text("Name: ");
     ui.SameLine();
     //ui.TextModifiable(entity.Name());
-    ui.Text("ID: " + std::to_string(entity.Id()));
+    //ui.Text("ID: " + std::to_string(entity.Id()));
     ui.Separator();
     
     static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;

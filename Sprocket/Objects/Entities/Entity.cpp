@@ -13,7 +13,17 @@ std::size_t IdGenerator()
 }
 
 Entity::Entity()
-    : d_id(IdGenerator())
+    : d_registry(nullptr)
+    , d_entity(entt::null)
+{
+    for (std::size_t i = 0; i != MAX_COMPONENTS; ++i) {
+        d_components[i] = nullptr;
+    }
+}
+
+Entity::Entity(entt::registry* registry, entt::entity entity)
+    : d_registry(registry)
+    , d_entity(entity)
 {
     for (std::size_t i = 0; i != MAX_COMPONENTS; ++i) {
         d_components[i] = nullptr;

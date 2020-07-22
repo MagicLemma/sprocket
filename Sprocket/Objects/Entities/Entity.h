@@ -6,20 +6,24 @@
 #include <array>
 #include <utility>
 
+#include <entt/entt.hpp>
+
 namespace Sprocket {
 
 constexpr std::size_t MAX_COMPONENTS = 64;
 
 class Entity
 {
-    const std::size_t d_id;
+    entt::registry* d_registry;
+    entt::entity    d_entity;
 
     std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
     
 public:
     Entity();
+    Entity(entt::registry* registry, entt::entity entity);
 
-    std::size_t Id() const { return d_id; }
+    entt::entity Id() const { return d_entity; }
 
     template <typename T> T* Add();
     template <typename T> bool Has() const;

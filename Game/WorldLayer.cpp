@@ -131,7 +131,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianHoriz>();
 
     {
-        auto worker = std::make_shared<Entity>();
+        auto worker = d_entityManager.NewEntity();
 
         auto name = worker->Add<NameComponent>();
         name->name = "Worker";
@@ -153,7 +153,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto camera = std::make_shared<Entity>();
+        auto camera = d_entityManager.NewEntity();
 
         auto name = camera->Add<NameComponent>();
         name->name = "Camera";
@@ -171,7 +171,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto terrain = std::make_shared<Entity>();
+        auto terrain = d_entityManager.NewEntity();
 
         auto name = terrain->Add<NameComponent>();
         name->name = "Terrain";
@@ -420,7 +420,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     using namespace Sprocket;
     static auto tex = Texture("Resources/Textures/BetterTree.png");
 
-    auto newEntity = std::make_shared<Entity>();
+    auto newEntity = d_entityManager.NewEntity();
 
     auto name = newEntity->Add<NameComponent>();
     name->name = "Tree";
@@ -447,7 +447,7 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = std::make_shared<Entity>();
+    auto newEntity = d_entityManager.NewEntity();
     auto n = newEntity->Add<NameComponent>();
     n->name = name;
 

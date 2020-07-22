@@ -63,7 +63,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     auto floatingIslandModel = core.modelManager->LoadModel("Floating Island", "Resources/Models/FloatingIsland.obj");
 
     {
-        auto platform = std::make_shared<Entity>();
+        auto platform = entityManager.NewEntity();
 
         auto name = platform->Add<NameComponent>();
         name->name = "Platform 1";
@@ -91,7 +91,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto platform = std::make_shared<Entity>();
+        auto platform = entityManager.NewEntity();
 
         auto name = platform->Add<NameComponent>();
         name->name = "Island";
@@ -111,7 +111,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto platform = std::make_shared<Entity>();
+        auto platform = entityManager.NewEntity();
         auto name = platform->Add<NameComponent>();
         name->name = "Platform 2";
 
@@ -137,7 +137,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto platform = std::make_shared<Entity>();
+        auto platform = entityManager.NewEntity();
 
         auto name = platform->Add<NameComponent>();
         name->name = "Platform 3";
@@ -167,7 +167,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto crate = std::make_shared<Entity>();
+        auto crate = entityManager.NewEntity();
 
         auto name = crate->Add<NameComponent>();
         name->name = "Crate";
@@ -196,7 +196,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto crate = std::make_shared<Entity>();
+        auto crate = entityManager.NewEntity();
 
         auto name = crate->Add<NameComponent>();
         name->name = "Crate 2";
@@ -226,7 +226,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto crate = std::make_shared<Entity>();
+        auto crate = entityManager.NewEntity();
 
         auto name = crate->Add<NameComponent>();
         name->name = "Crate 3 (M)";
@@ -256,7 +256,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto player = std::make_shared<Entity>();
+        auto player = entityManager.NewEntity();
 
         auto name = player->Add<NameComponent>();
         name->name = "Player";
@@ -296,7 +296,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto observerCamera = std::make_shared<Entity>();
+        auto observerCamera = entityManager.NewEntity();
 
         auto name = observerCamera->Add<NameComponent>();
         name->name = "Observer Camera";
@@ -315,7 +315,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     }
 
     {
-        auto editorCamera = std::make_shared<Entity>();
+        auto editorCamera = entityManager.NewEntity();
 
         auto name = editorCamera->Add<NameComponent>();
         name->name = "Editor Camera";
@@ -338,7 +338,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     for (int i = 0; i != 5; ++i)
     {
-        auto sphere = std::make_shared<Entity>();
+        auto sphere = entityManager.NewEntity();
         std::stringstream ss;
         ss << "Sphere " << i;
 

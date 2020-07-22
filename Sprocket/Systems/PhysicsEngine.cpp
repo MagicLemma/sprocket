@@ -5,6 +5,8 @@
 
 #include "reactphysics3d.h"
 
+#include <entt/entt.hpp>
+
 namespace Sprocket {
 namespace {
 
@@ -93,13 +95,13 @@ struct PhysicsEngineImpl
     rp3d::DynamicsWorld world;
 
     std::unordered_map<
-        std::size_t, ColliderData
+        entt::entity, ColliderData
     > collisionShapes;
         // This is just to manage the lifetimes of the collision bodies. 
         // May want to enhance this in the future for some optimising.
 
     std::unordered_map<
-        std::size_t, rp3d::RigidBody*
+        entt::entity, rp3d::RigidBody*
     > rigidBodies; 
         // Lifetime of RidigBody managed by RapidPhysics3D?
 
