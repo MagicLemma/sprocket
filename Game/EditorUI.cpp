@@ -79,7 +79,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.Separator();
 
     if (ui.Button("Delete Entity")) {
-        entity.Kill();
+        Kill(entity);
     }
 
     ui.EndWindow();

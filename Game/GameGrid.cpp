@@ -154,7 +154,7 @@ void GameGrid::DeleteSelected()
 {
     auto selected = Selected();
     if (selected != nullptr) {
-        selected->Kill();
+        Kill(*selected);
         auto pos = SelectedPosition().value();
         RemoveEntity(pos.x, pos.y);
     }

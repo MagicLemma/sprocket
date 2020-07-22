@@ -39,11 +39,12 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
 void EscapeMenu::OnUpdate(double dt)
 {
     using namespace Sprocket;
+    
+    d_ui.OnUpdate(dt);
 
     if (d_worldLayer->d_paused) {
         d_core.window->SetCursorVisibility(true);
 
-        d_ui.OnUpdate(dt);
 
         d_ui.StartFrame();
 

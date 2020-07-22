@@ -12,10 +12,7 @@ constexpr std::size_t MAX_COMPONENTS = 64;
 
 class Entity
 {
-    std::string       d_name;
     const std::size_t d_id;
-
-    bool              d_alive;
 
     std::array<std::shared_ptr<Component>, MAX_COMPONENTS> d_components;
     
@@ -23,9 +20,6 @@ public:
     Entity();
 
     std::size_t Id() const { return d_id; }
-
-    bool Alive() const { return d_alive; }
-    void Kill() { d_alive = false; }
 
     template <typename T> T* Add();
     template <typename T> bool Has() const;
@@ -56,5 +50,8 @@ template <typename T> void Entity::Remove()
 {
     d_components[GetComponentTypeId<T>()] = nullptr;
 }
+
+void Kill(Entity& e);
+bool Alive(Entity& e);
 
 }

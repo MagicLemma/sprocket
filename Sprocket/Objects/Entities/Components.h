@@ -40,6 +40,11 @@ struct NameComponent : public Component
     std::string name;
 };
 
+struct DeletableComponent : public Component
+{
+    bool alive = true;
+};
+
 struct ModelComponent : public Component
 {
     Model3D  model;
