@@ -12,6 +12,32 @@ ScriptRunner::ScriptRunner()
     d_keyboard.ConsumeAll(false);
 }
 
+void ScriptRunner::OnStartup(EntityManager& manager)
+{
+    manager.OnAdd<ScriptComponent>([&](Entity& entity) {
+        auto& luaEngine = d_engines[entity.Id()];
+        luaEngine.SetKeyboard(&d_keyboard);
+        luaEngine.SetMouse(&d_mouse);
+        luaEngine.SetEntity(entity);
+        luaEngine.RunScript(entity.Get<ScriptComponent>().script);
+        luaEngine.CallInitFunction();
+    });
+
+    manager.OnRemove<ScriptComponent>([&](Entity& entity) {
+        d_engines.erase(entity.Id());
+    });
+}
+
+void ScriptRunner::OnUpdate(EntityManager& manager, double dt)
+{
+    d_mouse.OnUpdate();
+
+    manager.Each<ScriptComponent>([&](Entity& entity) {
+        auto& luaEngine = d_engines[entity.Id()];
+        luaEngine.CallOnUpdateFunction(dt);
+    });
+}
+
 void ScriptRunner::OnEvent(Event& event)
 {
     d_keyboard.OnEvent(event);
@@ -32,33 +58,6 @@ void ScriptRunner::OnEvent(Event& event)
             luaEngine.CallOnWindowResizeEvent(e);
         }
     }
-}
-
-void ScriptRunner::OnUpdate(EntityManager& manager, double dt)
-{
-    d_mouse.OnUpdate();
-
-    manager.Each<ScriptComponent>([&](Entity& entity) {
-        auto& luaEngine = d_engines[entity.Id()];
-        luaEngine.CallOnUpdateFunction(dt);
-    });
-}
-
-void ScriptRunner::RegisterEntity(const Entity& entity)
-{
-    if (!entity.Has<ScriptComponent>()) { return; }
-    auto& luaEngine = d_engines[entity.Id()];
-    luaEngine.SetKeyboard(&d_keyboard);
-    luaEngine.SetMouse(&d_mouse);
-    luaEngine.SetEntity(entity);
-    luaEngine.RunScript(entity.Get<ScriptComponent>().script);
-    luaEngine.CallInitFunction();
-}
-
-void ScriptRunner::DeregisterEntity(const Entity& entity)
-{
-    if (!entity.Has<ScriptComponent>()) { return; }
-    d_engines.erase(entity.Id());
 }
 
 }

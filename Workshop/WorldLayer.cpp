@@ -311,8 +311,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         observerCamera.Add<DeletableComponent>();
         observerCamera.Add<CameraComponent>();
   
-        auto& s = observerCamera.Add<ScriptComponent>();
-        s.script = "Resources/Scripts/FirstPersonCamera.lua";
+        ScriptComponent script;
+        script.script = "Resources/Scripts/FirstPersonCamera.lua";
+        observerCamera.Add<ScriptComponent>(script);
 
         d_observerCamera = observerCamera;
         entityManager.AddEntity(observerCamera);
@@ -330,9 +331,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         editorCamera.Add<DeletableComponent>();
         editorCamera.Add<CameraComponent>();
 
-        auto& s = editorCamera.Add<ScriptComponent>();
-        s.script = "Resources/Scripts/ThirdPersonCamera.lua";
-        s.active = false;
+        ScriptComponent script;
+        script.script = "Resources/Scripts/ThirdPersonCamera.lua";
+        script.active = false;
+        editorCamera.Add<ScriptComponent>(script);
 
         d_editorCamera = editorCamera;
         d_selector.SetCamera(d_editorCamera);

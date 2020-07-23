@@ -91,6 +91,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 {
     using namespace Sprocket;
 
+    d_entityManager.OnStartup();
+
     d_modelManager.LoadModel("GG_Tree", "Resources/Models/BetterTree.obj");
     d_modelManager.LoadModel("GG_Rock", "Resources/Models/Rock.obj");
 
@@ -146,8 +148,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& c = camera.Add<CameraComponent>();
       
-        auto& s = camera.Add<ScriptComponent>();
-        s.script = "Resources/Scripts/ThirdPersonCamera.lua";
+        ScriptComponent script;
+        script.script = "Resources/Scripts/ThirdPersonCamera.lua";
+        camera.Add<ScriptComponent>(script);
 
         d_camera = camera;
         d_entityManager.AddEntity(camera);
