@@ -11,11 +11,13 @@ EntityManager::EntityManager(const std::vector<EntitySystem*> systems)
 std::shared_ptr<Entity> EntityManager::NewEntity()
 {
     auto e = d_registry.create();
+    assert(d_registry.valid(e));
     return std::make_shared<Entity>(&d_registry, e);
 }
 
 void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 {
+    d_entities.emplace(entity->Id(), entity);
     for (auto system : d_systems) {
         system->RegisterEntity(*entity);
     }

@@ -16,7 +16,6 @@ class Entity
     entt::entity    d_entity;
     
 public:
-    Entity();
     Entity(entt::registry* registry, entt::entity entity);
 
     entt::entity Id() const { return d_entity; }
@@ -36,10 +35,7 @@ T* Entity::Add()
 
 template <typename T> bool Entity::Has() const
 {
-    if (d_registry->valid(d_entity)) {
-        return d_registry->has<T>(d_entity);
-    }
-    return false;
+    return d_registry->has<T>(d_entity);
 }
 
 template <typename T> T& Entity::Get() const

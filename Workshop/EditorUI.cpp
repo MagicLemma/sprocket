@@ -138,7 +138,7 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
     for (const auto& [name, model] : *models) {
         if (ui.Button(name.c_str())) {
             SPKT_LOG_INFO("Added entity");
-            auto entity = std::make_shared<Sprocket::Entity>();
+            auto entity = entities->NewEntity();
             auto tr = entity->Add<Sprocket::TransformComponent>();
             tr->position = {10.0, 0.0, 10.0};
             auto modelComp = entity->Add<Sprocket::ModelComponent>();
