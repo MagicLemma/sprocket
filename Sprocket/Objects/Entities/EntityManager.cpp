@@ -16,7 +16,6 @@ Entity EntityManager::NewEntity()
 
 void EntityManager::AddEntity(const Entity& entity)
 {
-    d_entities.emplace(entity.Id(), entity);
     for (auto system : d_systems) {
         system->RegisterEntity(entity);
     }
@@ -28,18 +27,14 @@ void EntityManager::OnUpdate(double dt)
         system->OnUpdate(*this, dt);
     }
 
-    auto it = d_entities.begin();
-    while (it != d_entities.end()) {
-        if (!Alive(it->second)) {
+    Each<DeletableComponent>([&](Entity& entity) {
+        if (!entity.Get<DeletableComponent>().alive) {
             for (auto system : d_systems) {
-                system->DeregisterEntity(it->second);
+                system->DeregisterEntity(entity);
             }
-            d_registry.destroy(it->first);
-            it = d_entities.erase(it);
-        } else {
-            ++it;
+            d_registry.destroy(entity.Id());
         }
-    }
+    });
 }
 
 void EntityManager::OnEvent(Event& event)
@@ -50,9 +45,9 @@ void EntityManager::OnEvent(Event& event)
 }
 
 void EntityManager::Draw(EntityRenderer* renderer) {
-    for (auto& [id, entity]: d_entities) {
+    Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         renderer->Draw(entity);
-    }
+    });
 }
 
 }
