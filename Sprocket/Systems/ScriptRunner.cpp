@@ -11,21 +11,6 @@ ScriptRunner::ScriptRunner()
     d_keyboard.ConsumeAll(false);
 }
 
-void ScriptRunner::UpdateEntity(double dt, Entity& entity)
-{
-    if (!entity.Has<ScriptComponent>()) {
-        return;
-    }
-
-    auto& luaEngine = d_engines[entity.Id()];
-    luaEngine.CallOnUpdateFunction(dt);
-}
-
-void ScriptRunner::UpdateSystem(double dt)
-{
-    d_mouse.OnUpdate();
-}
-
 void ScriptRunner::OnEvent(Event& event)
 {
     d_keyboard.OnEvent(event);
@@ -45,6 +30,18 @@ void ScriptRunner::OnEvent(Event& event)
         for (auto& [id, luaEngine] : d_engines) {
             luaEngine.CallOnWindowResizeEvent(e);
         }
+    }
+}
+
+void ScriptRunner::OnUpdate(std::map<entt::entity, Entity>& entities, double dt)
+{
+    d_mouse.OnUpdate();
+
+    for (auto& [id, entity] : entities) {
+        if (!entity.Has<ScriptComponent>()) { continue; }
+
+        auto& luaEngine = d_engines[entity.Id()];
+        luaEngine.CallOnUpdateFunction(dt);
     }
 }
 
