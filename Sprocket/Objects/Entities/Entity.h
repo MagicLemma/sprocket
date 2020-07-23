@@ -14,10 +14,13 @@ class Entity
 {
     entt::registry* d_registry;
     entt::entity    d_entity;
+
+    Entity(entt::registry* registry, entt::entity entity);
+        // Private constructor, all entities should be made via
+        // an entity manager.
     
 public:
     Entity(); // Returns a null entity.
-    Entity(entt::registry* registry, entt::entity entity);
 
     uint32_t Id() const { return entt::to_integral(d_entity); }
 
