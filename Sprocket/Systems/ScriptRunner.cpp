@@ -1,6 +1,7 @@
 #include "ScriptRunner.h"
 #include "Log.h"
 #include "LuaEngine.h"
+#include "EntityManager.h"
 
 #include <utility>
 
@@ -33,16 +34,14 @@ void ScriptRunner::OnEvent(Event& event)
     }
 }
 
-void ScriptRunner::OnUpdate(std::map<entt::entity, Entity>& entities, double dt)
+void ScriptRunner::OnUpdate(EntityManager& manager, double dt)
 {
     d_mouse.OnUpdate();
 
-    for (auto& [id, entity] : entities) {
-        if (!entity.Has<ScriptComponent>()) { continue; }
-
+    manager.Each<ScriptComponent>([&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.CallOnUpdateFunction(dt);
-    }
+    });
 }
 
 void ScriptRunner::RegisterEntity(const Entity& entity)
