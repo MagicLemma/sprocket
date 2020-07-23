@@ -7,8 +7,6 @@ namespace Sprocket {
 
 class PlayerMovement : public EntitySystem
 {
-    double d_deltaTime;
-
     bool d_enabled = true;
 
     KeyboardProxy d_keyboard;
@@ -18,8 +16,7 @@ public:
     PlayerMovement();
     ~PlayerMovement() {}
 
-    void UpdateEntity(double dt, Entity& entity) override;
-    void UpdateSystem(double dt) override;
+    void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) override;
 
     void OnEvent(Event& event) override;
 
