@@ -139,18 +139,18 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
         if (ui.Button(name.c_str())) {
             SPKT_LOG_INFO("Added entity");
             auto entity = entities->NewEntity();
-            auto tr = entity.Add<Sprocket::TransformComponent>();
-            tr->position = {10.0, 0.0, 10.0};
-            auto modelComp = entity.Add<Sprocket::ModelComponent>();
-            modelComp->model = model;
+            auto& tr = entity.Add<Sprocket::TransformComponent>();
+            tr.position = {10.0, 0.0, 10.0};
+            auto& modelComp = entity.Add<Sprocket::ModelComponent>();
+            modelComp.model = model;
 
             Sprocket::Material m;
             m.texture = Sprocket::Texture::White();
 
             entity.Add<Sprocket::SelectComponent>();
             
-            modelComp->material = m;
-            modelComp->scale = 1.0f; 
+            modelComp.material = m;
+            modelComp.scale = 1.0f; 
             entities->AddEntity(entity);
         }
     }

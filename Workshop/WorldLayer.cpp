@@ -64,72 +64,26 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto platform = entityManager.NewEntity();
 
-        auto name = platform.Add<NameComponent>();
-        name->name = "Platform 1";
+        auto& name = platform.Add<NameComponent>();
+        name.name = "Platform 1";
 
-        auto tr = platform.Add<TransformComponent>();
-        tr->position = {7.0, 0.0, -3.0};
-        tr->orientation = Maths::Rotate({1, 0, 0}, 6.0f);
-
-        platform.Add<DeletableComponent>();
-        
-        auto model = platform.Add<ModelComponent>();
-        model->model = platformModel;
-        model->material = dullGray;
-        model->scale = 1.0f;
-
-        auto phys = platform.Add<PhysicsComponent>();
-        phys->bounciness = 0.0f;
-        BoxCollider c;
-        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys->collider = c;
-        phys->frozen = true;
-
-        platform.Add<SelectComponent>();
-        entityManager.AddEntity(platform);
-    }
-
-    {
-        auto platform = entityManager.NewEntity();
-
-        auto name = platform.Add<NameComponent>();
-        name->name = "Island";
-
-        auto tr = platform.Add<TransformComponent>();
-        tr->position = {40.0, -10.0, 0.0};
+        auto& tr = platform.Add<TransformComponent>();
+        tr.position = {7.0, 0.0, -3.0};
+        tr.orientation = Maths::Rotate({1, 0, 0}, 6.0f);
 
         platform.Add<DeletableComponent>();
         
-        auto model = platform.Add<ModelComponent>();
-        model->model = floatingIslandModel;
-        model->material = islandMaterial;
-        model->scale = 0.5f;
+        auto& model = platform.Add<ModelComponent>();
+        model.model = platformModel;
+        model.material = dullGray;
+        model.scale = 1.0f;
 
-        platform.Add<SelectComponent>();
-        entityManager.AddEntity(platform);
-    }
-
-    {
-        auto platform = entityManager.NewEntity();
-        auto name = platform.Add<NameComponent>();
-        name->name = "Platform 2";
-
-        auto tr = platform.Add<TransformComponent>();
-        tr->position = {-5.0, 0.0, 5.0};
-
-        platform.Add<DeletableComponent>();
-
-        auto model = platform.Add<ModelComponent>();
-        model->model = platformModel;
-        model->material = dullGray;
-        model->scale = 1.0f;
-
-        auto phys = platform.Add<PhysicsComponent>();
-        phys->bounciness = 0.0f;
+        auto& phys = platform.Add<PhysicsComponent>();
+        phys.bounciness = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys->collider = c;
-        phys->frozen = true;
+        phys.collider = c;
+        phys.frozen = true;
 
         platform.Add<SelectComponent>();
         entityManager.AddEntity(platform);
@@ -138,28 +92,74 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto platform = entityManager.NewEntity();
 
-        auto name = platform.Add<NameComponent>();
-        name->name = "Platform 3";
+        auto& name = platform.Add<NameComponent>();
+        name.name = "Island";
 
-        auto tr = platform.Add<TransformComponent>();
-        tr->position = {-5.0, 0.0, 5.0};
-        tr->orientation = Maths::Rotate(tr->orientation, {0, 0, 1}, 80.0f);
-        tr->orientation = Maths::Rotate(tr->orientation, {0, 1, 0}, 90.0f);
+        auto& tr = platform.Add<TransformComponent>();
+        tr.position = {40.0, -10.0, 0.0};
+
+        platform.Add<DeletableComponent>();
+        
+        auto& model = platform.Add<ModelComponent>();
+        model.model = floatingIslandModel;
+        model.material = islandMaterial;
+        model.scale = 0.5f;
+
+        platform.Add<SelectComponent>();
+        entityManager.AddEntity(platform);
+    }
+
+    {
+        auto platform = entityManager.NewEntity();
+        auto& name = platform.Add<NameComponent>();
+        name.name = "Platform 2";
+
+        auto& tr = platform.Add<TransformComponent>();
+        tr.position = {-5.0, 0.0, 5.0};
 
         platform.Add<DeletableComponent>();
 
-        auto model = platform.Add<ModelComponent>();
-        model->model = platformModel;
-        model->material = dullGray;
-        model->scale = 1.0f;
+        auto& model = platform.Add<ModelComponent>();
+        model.model = platformModel;
+        model.material = dullGray;
+        model.scale = 1.0f;
 
-        auto phys = platform.Add<PhysicsComponent>();
-        phys->frozen = true;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.0f;
+        auto& phys = platform.Add<PhysicsComponent>();
+        phys.bounciness = 0.0f;
         BoxCollider c;
         c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys->collider = c;
+        phys.collider = c;
+        phys.frozen = true;
+
+        platform.Add<SelectComponent>();
+        entityManager.AddEntity(platform);
+    }
+
+    {
+        auto platform = entityManager.NewEntity();
+
+        auto& name = platform.Add<NameComponent>();
+        name.name = "Platform 3";
+
+        auto& tr = platform.Add<TransformComponent>();
+        tr.position = {-5.0, 0.0, 5.0};
+        tr.orientation = Maths::Rotate(tr.orientation, {0, 0, 1}, 80.0f);
+        tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, 90.0f);
+
+        platform.Add<DeletableComponent>();
+
+        auto& model = platform.Add<ModelComponent>();
+        model.model = platformModel;
+        model.material = dullGray;
+        model.scale = 1.0f;
+
+        auto& phys = platform.Add<PhysicsComponent>();
+        phys.frozen = true;
+        phys.bounciness = 0.0f;
+        phys.frictionCoefficient = 0.0f;
+        BoxCollider c;
+        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
+        phys.collider = c;
 
         platform.Add<SelectComponent>();
         entityManager.AddEntity(platform);
@@ -168,27 +168,27 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto crate = entityManager.NewEntity();
 
-        auto name = crate.Add<NameComponent>();
-        name->name = "Crate";
+        auto& name = crate.Add<NameComponent>();
+        name.name = "Crate";
 
-        auto tr = crate.Add<TransformComponent>();
-        tr->position = {-5.0, 2.0, -3.0};
-        tr->orientation = Maths::Rotate({0, 1, 0}, 45.0f);
+        auto& tr = crate.Add<TransformComponent>();
+        tr.position = {-5.0, 2.0, -3.0};
+        tr.orientation = Maths::Rotate({0, 1, 0}, 45.0f);
 
         crate.Add<DeletableComponent>();
 
-        auto model = crate.Add<ModelComponent>();
-        model->model = crateModel;
-        model->material = galaxy;
-        model->scale = 1.2f;
+        auto& model = crate.Add<ModelComponent>();
+        model.model = crateModel;
+        model.material = galaxy;
+        model.scale = 1.2f;
 
-        auto phys = crate.Add<PhysicsComponent>();
-        phys->frozen = true;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.0f;
+        auto& phys = crate.Add<PhysicsComponent>();
+        phys.frozen = true;
+        phys.bounciness = 0.0f;
+        phys.frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
-        phys->collider = c;
+        phys.collider = c;
 
         crate.Add<SelectComponent>();
         entityManager.AddEntity(crate);
@@ -197,28 +197,28 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto crate = entityManager.NewEntity();
 
-        auto name = crate.Add<NameComponent>();
-        name->name = "Crate 2";
+        auto& name = crate.Add<NameComponent>();
+        name.name = "Crate 2";
 
-        auto tr = crate.Add<TransformComponent>();
-        tr->position = {-1.0, 0.0, -3.0};
-        tr->orientation = Maths::Rotate({0, 1, 0}, 75.0f);
+        auto& tr = crate.Add<TransformComponent>();
+        tr.position = {-1.0, 0.0, -3.0};
+        tr.orientation = Maths::Rotate({0, 1, 0}, 75.0f);
 
         crate.Add<DeletableComponent>();
 
-        auto model = crate.Add<ModelComponent>();
-        model->model = crateModel;
-        model->material = field;
-        model->scale = 1.2f;
+        auto& model = crate.Add<ModelComponent>();
+        model.model = crateModel;
+        model.material = field;
+        model.scale = 1.2f;
 
-        auto phys = crate.Add<PhysicsComponent>();
-        phys->frozen = true;
-        phys->mass = 1000.0f;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.0f;
+        auto& phys = crate.Add<PhysicsComponent>();
+        phys.frozen = true;
+        phys.mass = 1000.0f;
+        phys.bounciness = 0.0f;
+        phys.frictionCoefficient = 0.0f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
-        phys->collider = c;
+        phys.collider = c;
 
         crate.Add<SelectComponent>();
         entityManager.AddEntity(crate);
@@ -227,28 +227,28 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto crate = entityManager.NewEntity();
 
-        auto name = crate.Add<NameComponent>();
-        name->name = "Crate 3 (M)";
+        auto& name = crate.Add<NameComponent>();
+        name.name = "Crate 3 (M)";
 
-        auto tr = crate.Add<TransformComponent>();
-        tr->position = {8.0, 5.0, 7.0};
-        tr->orientation = Maths::Rotate({0, 1, 0}, 75.0f);
+        auto& tr = crate.Add<TransformComponent>();
+        tr.position = {8.0, 5.0, 7.0};
+        tr.orientation = Maths::Rotate({0, 1, 0}, 75.0f);
 
         crate.Add<DeletableComponent>();
 
-        auto model = crate.Add<ModelComponent>();
-        model->model = crateModel;
-        model->material = field;
-        model->scale = 1.2f;
+        auto& model = crate.Add<ModelComponent>();
+        model.model = crateModel;
+        model.material = field;
+        model.scale = 1.2f;
 
-        auto phys = crate.Add<PhysicsComponent>();
-        phys->frozen = false;
-        phys->mass = 10000.0f;
-        phys->bounciness = 0.0f;
-        phys->frictionCoefficient = 0.2f;
+        auto& phys = crate.Add<PhysicsComponent>();
+        phys.frozen = false;
+        phys.mass = 10000.0f;
+        phys.bounciness = 0.0f;
+        phys.frictionCoefficient = 0.2f;
         BoxCollider c;
         c.halfExtents = {1.2, 1.2, 1.2};
-        phys->collider = c;
+        phys.collider = c;
 
         crate.Add<SelectComponent>();
         entityManager.AddEntity(crate);
@@ -257,36 +257,36 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto player = entityManager.NewEntity();
 
-        auto name = player.Add<NameComponent>();
-        name->name = "Player";
+        auto& name = player.Add<NameComponent>();
+        name.name = "Player";
 
-        auto tr = player.Add<TransformComponent>();
-        tr->position = {0.0f, 5.0f, 5.0f};
+        auto& tr = player.Add<TransformComponent>();
+        tr.position = {0.0f, 5.0f, 5.0f};
 
         player.Add<DeletableComponent>();
 
-        auto model = player.Add<ModelComponent>();
-        model->model = crateModel;
-        model->material = shinyGray;
-        model->scale = 0.3f;
+        auto& model = player.Add<ModelComponent>();
+        model.model = crateModel;
+        model.material = shinyGray;
+        model.scale = 0.3f;
 
-        auto phys = player.Add<PhysicsComponent>();
-        phys->frozen = false;
-        phys->mass = 60.0f;
-        phys->rollingResistance = 1.0f;
-        phys->frictionCoefficient = 0.4f;
-        phys->bounciness = 0.0f;
+        auto& phys = player.Add<PhysicsComponent>();
+        phys.frozen = false;
+        phys.mass = 60.0f;
+        phys.rollingResistance = 1.0f;
+        phys.frictionCoefficient = 0.4f;
+        phys.bounciness = 0.0f;
         {
             CapsuleCollider c;
             c.radius = 0.5f;
             c.height = 1.0f;
-            phys->collider = c;
+            phys.collider = c;
         }
 
         player.Add<PlayerComponent>();
 
-        auto c = player.Add<CameraComponent>();
-        c->projection = Maths::Perspective(core.window->AspectRatio(), 70, 0.1f, 1000.0f);
+        auto& c = player.Add<CameraComponent>();
+        c.projection = Maths::Perspective(core.window->AspectRatio(), 70, 0.1f, 1000.0f);
 
         player.Add<SelectComponent>();
 
@@ -297,17 +297,15 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto observerCamera = entityManager.NewEntity();
 
-        auto name = observerCamera.Add<NameComponent>();
-        name->name = "Observer Camera";
+        auto& name = observerCamera.Add<NameComponent>();
+        name.name = "Observer Camera";
 
-        auto tr = observerCamera.Add<TransformComponent>();
-
+        observerCamera.Add<TransformComponent>();
         observerCamera.Add<DeletableComponent>();
-
-        auto c = observerCamera.Add<CameraComponent>();
+        observerCamera.Add<CameraComponent>();
   
-        auto s = observerCamera.Add<ScriptComponent>();
-        s->script = "Resources/Scripts/FirstPersonCamera.lua";
+        auto& s = observerCamera.Add<ScriptComponent>();
+        s.script = "Resources/Scripts/FirstPersonCamera.lua";
 
         d_observerCamera = observerCamera;
         entityManager.AddEntity(observerCamera);
@@ -316,19 +314,18 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     {
         auto editorCamera = entityManager.NewEntity();
 
-        auto name = editorCamera.Add<NameComponent>();
-        name->name = "Editor Camera";
+        auto& name = editorCamera.Add<NameComponent>();
+        name.name = "Editor Camera";
 
-        auto tr = editorCamera.Add<TransformComponent>();
-        tr->position = {10.0f, 2.0f, 0.0f};
+        auto& tr = editorCamera.Add<TransformComponent>();
+        tr.position = {10.0f, 2.0f, 0.0f};
 
         editorCamera.Add<DeletableComponent>();
+        editorCamera.Add<CameraComponent>();
 
-        auto c = editorCamera.Add<CameraComponent>();
-
-        auto s = editorCamera.Add<ScriptComponent>();
-        s->script = "Resources/Scripts/ThirdPersonCamera.lua";
-        s->active = false;
+        auto& s = editorCamera.Add<ScriptComponent>();
+        s.script = "Resources/Scripts/ThirdPersonCamera.lua";
+        s.active = false;
 
         d_editorCamera = editorCamera;
         d_selector.SetCamera(&d_editorCamera);
@@ -341,30 +338,30 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         std::stringstream ss;
         ss << "Sphere " << i;
 
-        auto name = sphere.Add<NameComponent>();
-        name->name = ss.str();
+        auto& name = sphere.Add<NameComponent>();
+        name.name = ss.str();
 
-        auto tr = sphere.Add<TransformComponent>();
-        tr->position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
+        auto& tr = sphere.Add<TransformComponent>();
+        tr.position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
 
         sphere.Add<DeletableComponent>();
         
-        auto model = sphere.Add<ModelComponent>();
-        model->model = sphereModel;
-        model->material = shinyGray;
-        model->scale = 0.9f;
+        auto& model = sphere.Add<ModelComponent>();
+        model.model = sphereModel;
+        model.material = shinyGray;
+        model.scale = 0.9f;
 
-        auto phys = sphere.Add<PhysicsComponent>();
-        phys->mass = 20.0f;
+        auto& phys = sphere.Add<PhysicsComponent>();
+        phys.mass = 20.0f;
         SphereCollider c;
         c.radius = 1;
-        phys->collider = c;
+        phys.collider = c;
 
         sphere.Add<SelectComponent>();
         entityManager.AddEntity(sphere);
 
         if (i == 4) {
-            phys->velocity = {0, 20, 0};
+            phys.velocity = {0, 20, 0};
         }
     }
 
