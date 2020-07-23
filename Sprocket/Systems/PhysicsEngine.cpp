@@ -51,7 +51,7 @@ rp3d::Transform Convert(const TransformComponent& transform)
 
 class RaycastCB : public rp3d::RaycastCallback
 {
-    Entity* d_entity = nullptr;
+    //entt::entity d_entity = entt::null;
     float d_fraction = 10.0f;
 
 public:
@@ -59,12 +59,12 @@ public:
     {
         if (info.hitFraction < d_fraction) {  // This object is closer.
             d_fraction = info.hitFraction;
-            d_entity = reinterpret_cast<Entity*>(info.body->getUserData());
+            //d_entity = (entt::entity)info.body->getUserData();
         }
         return -1.0f;
     }
 
-    Entity* EntityPtr() const { return d_entity; }
+    //entt::entity EntityPtr() const { return d_entity; }
     float Fraction() const { return d_fraction; }
 };
 
@@ -95,13 +95,18 @@ struct PhysicsEngineImpl
     rp3d::DynamicsWorld world;
 
     std::unordered_map<
-        entt::entity, ColliderData
+        uint32_t, ColliderData
     > collisionShapes;
         // This is just to manage the lifetimes of the collision bodies. 
         // May want to enhance this in the future for some optimising.
 
     std::unordered_map<
-        entt::entity, rp3d::RigidBody*
+        uint32_t,
+        Entity
+    > registeredEntities;
+
+    std::unordered_map<
+        uint32_t, rp3d::RigidBody*
     > rigidBodies; 
         // Lifetime of RidigBody managed by RapidPhysics3D?
 
@@ -222,11 +227,14 @@ void PhysicsEngine::RegisterEntity(const Entity& entity)
         return;  // Entity must have physics.
     }
 
+    d_impl->registeredEntities[entity.Id()] = entity;
+
     auto& entry = d_impl->rigidBodies[entity.Id()];
     entry = d_impl->world.createRigidBody(Convert(transform));
 
-    // Give each RigidBody a pointer back to the original Entity object.
-    entry->setUserData(const_cast<void*>(reinterpret_cast<const void*>(&entity)));
+    // Give each RigidBody a ref back to the original Entity object.
+    entry->setUserData((void*)entity.Id());
+
     if (hasPhysics) {
         entry->setType(rp3d::BodyType::DYNAMIC);
     }
@@ -248,6 +256,8 @@ void PhysicsEngine::DeregisterEntity(const Entity& entity)
     if (!hasPhysics) {
         return;  // Entity must have physics or collider.
     }
+
+    d_impl->registeredEntities.erase(entity.Id());
 
     auto rigidBodyIt = d_impl->rigidBodies.find(entity.Id());
     if (rigidBodyIt == d_impl->rigidBodies.end()) {
@@ -277,7 +287,7 @@ Entity* PhysicsEngine::Raycast(const Maths::vec3& base,
     rp3d::Ray ray(start, end);
     RaycastCB cb;
     d_impl->world.raycast(ray, &cb);
-    return cb.EntityPtr();
+    return nullptr;//cb.EntityPtr();
 }
 
 void PhysicsEngine::UpdatePlayer(double dt, Entity& entity)
@@ -347,7 +357,7 @@ bool PhysicsEngine::IsOnFloor(const Entity* entity) const
     rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
     RaycastCB cb;
     d_impl->world.raycast(ray, &cb);
-    return cb.EntityPtr() != nullptr;
+    return true;//cb.EntityPtr() != nullptr;
 }
 
 void PhysicsEngine::RefreshTransform(const Entity* entity)

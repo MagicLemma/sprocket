@@ -19,7 +19,7 @@ public:
     Entity(); // Returns a null entity.
     Entity(entt::registry* registry, entt::entity entity);
 
-    entt::entity Id() const { return d_entity; }
+    uint32_t Id() const { return entt::to_integral(d_entity); }
 
     template <typename T> T& Add();
     template <typename T> bool Has() const;
@@ -29,7 +29,7 @@ public:
 
     bool Null() const { return d_entity == entt::null; }
 
-    void Init();
+    friend class EntityManager;
 };
 
 bool operator==(const Entity& lhs, const Entity& rhs);

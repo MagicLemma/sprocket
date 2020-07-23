@@ -32,7 +32,7 @@ void EntityManager::OnUpdate(double dt)
             for (auto system : d_systems) {
                 system->DeregisterEntity(entity);
             }
-            d_registry.destroy(entity.Id());
+            d_registry.destroy(entity.d_entity);
         }
     });
 }
