@@ -417,17 +417,18 @@ void WorldLayer::OnUpdate(double dt)
         d_core.window->SetCursorVisibility(d_mouseRequired);
         d_entityManager.OnUpdate(dt);
 
-        for (auto& [id, entity] : d_entityManager.Entities()) {
-            if (!entity.Has<TransformComponent>()) { continue; }
-
-            if (entity.Has<PlayerComponent>() && entity.Get<TransformComponent>().position.y < -2.0f) {
-                entity.Get<TransformComponent>().position = {0, 3, 0};
-                entity.Get<PhysicsComponent>().velocity = {0, 0, 0};
+        d_entityManager.Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
+            auto& transform = entity.Get<TransformComponent>();
+            auto& physics = entity.Get<PhysicsComponent>();
+            
+            if (entity.Has<PlayerComponent>() && transform.position.y < -2) {
+                transform.position = {0, 3, 0};
+                physics.velocity = {0, 0, 0};
             }
-            if (entity.Get<TransformComponent>().position.y < -50.0f) {
+            if (transform.position.y < -50) {
                 Kill(entity);
             }
-        }
+        });
     }
 
     if (d_paused) {
