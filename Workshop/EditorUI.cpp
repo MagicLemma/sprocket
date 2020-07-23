@@ -225,9 +225,9 @@ void EditorUI::OnUpdate(double dt)
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {
-        for (auto [id, entity] : d_worldLayer->d_entityManager.Entities()) {
+        d_worldLayer->d_entityManager.Each<SelectComponent>([&](Entity& entity) {
             AddEntityToList(d_ui, d_worldLayer->d_selector, &entity);      
-        }
+        });
     }
 
     d_ui.EndWindow();
