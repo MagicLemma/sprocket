@@ -15,10 +15,8 @@ public:
     BasicSelector();
     ~BasicSelector() {}
 
-    void DeregisterEntity(const Entity& entity) override;
-        // If we remove the entity that is currently selected, we need
-        // to deselect it.
-
+    void OnStartup(EntityManager& manager) override;
+    
     void SetSelected(Entity entity);
         // Sets the current selected Entity. If called with a nullptr,
         // it will clear the currently selected Entity.

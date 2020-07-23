@@ -1,4 +1,5 @@
 #include "BasicSelector.h"
+#include "EntityManager.h"
 
 namespace Sprocket {
 
@@ -7,9 +8,11 @@ BasicSelector::BasicSelector()
 {
 }
 
-void BasicSelector::DeregisterEntity(const Entity& entity)
+void BasicSelector::OnStartup(EntityManager& manager)
 {
-    if (entity == d_selectedEntity) { SetSelected(Entity()); }
+    manager.OnRemove<SelectComponent>([&](Entity& entity) {
+        if (entity == d_selectedEntity) { SetSelected(Entity()); }
+    });
 }
 
 void BasicSelector::SetSelected(Entity entity)
