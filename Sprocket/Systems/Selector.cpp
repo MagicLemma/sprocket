@@ -16,13 +16,13 @@ Selector::Selector(
 {
 }
 
-void Selector::OnUpdate(std::map<entt::entity, Entity>& entities, double dt)
+void Selector::OnUpdate(EntityManager& manager, double dt)
 {
     if (!d_enabled) {
         ClearHovered();
         ClearSelected();
     }
-    
+
     d_mouse.OnUpdate();
 }
 

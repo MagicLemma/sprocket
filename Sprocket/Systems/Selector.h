@@ -42,8 +42,7 @@ public:
     );
     ~Selector() {}
 
-    void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) override;
-
+    void OnUpdate(EntityManager& manager, double dt) override;
     void OnEvent(Event& event) override;
 
     void DeregisterEntity(const Entity& entity) override;

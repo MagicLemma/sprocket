@@ -1,18 +1,15 @@
 #include "PathFollower.h"
 
-void PathFollower::OnUpdate(std::map<entt::entity, Sprocket::Entity>& entities, double dt)
+void PathFollower::OnUpdate(Sprocket::EntityManager& manager, double dt)
 {
     using namespace Sprocket;
 
-    for (auto& [id, entity] : entities) {
-        if (!entity.Has<TransformComponent>()) { continue; }
-        if (!entity.Has<PathComponent>()) { continue; }
-
-        auto& tr = entity.Get<TransformComponent>();
+    manager.Each<TransformComponent, PathComponent>([&](Entity& entity) {
+        auto& transform = entity.Get<TransformComponent>();
         auto& path = entity.Get<PathComponent>();
-        if (path.markers.empty()) { continue; }
+        if (path.markers.empty()) { return; }
         
-        Maths::vec3 direction = path.markers.front() - tr.position;
+        Maths::vec3 direction = path.markers.front() - transform.position;
         Maths::Normalise(direction);
         Maths::vec3 advance = path.speed * (float)dt * direction;
 
@@ -20,11 +17,11 @@ void PathFollower::OnUpdate(std::map<entt::entity, Sprocket::Entity>& entities, 
             return v.x*v.x + v.y*v.y + v.z*v.z;
         };
 
-        if (MagSq(advance) < MagSq(path.markers.front() - tr.position)) {
-            tr.position += advance;
+        if (MagSq(advance) < MagSq(path.markers.front() - transform.position)) {
+            transform.position += advance;
         } else {
-            tr.position = path.markers.front();
+            transform.position = path.markers.front();
             path.markers.pop();
         }
-    }
+    });
 }
