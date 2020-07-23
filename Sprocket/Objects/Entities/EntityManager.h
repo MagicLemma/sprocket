@@ -37,14 +37,17 @@ public:
     const EntityMap& Entities() const { return d_entities; }
     EntityMap& Entities() { return d_entities; }
 
-    template <typename... Ts>
-    void Each(std::function<void(Entity&)> lambda)
-    {
-        for (auto& entity : d_registry.view<Ts...>())
-        {
-            lambda(Entity(&d_registry, entity));   
-        }
-    }
+    template <typename... Ts> void Each(std::function<void(Entity&)> lambda);
+
+    std::size_t EntityCount() const { return d_registry.alive(); }
 };
+
+template <typename... Ts>
+void EntityManager::Each(std::function<void(Entity&)> lambda)
+{
+    for (auto& entity : d_registry.view<Ts...>()) {
+        lambda(Entity(&d_registry, entity));   
+    }
+}
 
 }

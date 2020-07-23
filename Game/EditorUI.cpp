@@ -216,7 +216,7 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.StartWindow("Sprocket Editor", &open, flags);
     std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_entityManager.Entities().size();
+    ss << "Entities: " << d_worldLayer->d_entityManager.EntityCount();
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {

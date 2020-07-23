@@ -34,6 +34,7 @@ void EntityManager::OnUpdate(double dt)
             for (auto system : d_systems) {
                 system->DeregisterEntity(it->second);
             }
+            d_registry.destroy(it->first);
             it = d_entities.erase(it);
         } else {
             ++it;
