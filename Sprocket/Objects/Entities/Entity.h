@@ -22,6 +22,7 @@ public:
     uint32_t Id() const { return entt::to_integral(d_entity); }
 
     template <typename T> T& Add();
+    template <typename T> T& Add(const T& component);
     template <typename T> bool Has() const;
     template <typename T> T& Get();
     template <typename T> const T& Get() const;
@@ -38,6 +39,13 @@ template <typename T>
 T& Entity::Add()
 {
     d_registry->assign<T>(d_entity);
+    return d_registry->get<T>(d_entity);
+}
+
+template <typename T>
+T& Entity::Add(const T& component)
+{
+    d_registry->assign<T>(d_entity, component);
     return d_registry->get<T>(d_entity);
 }
 

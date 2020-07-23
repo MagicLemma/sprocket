@@ -12,6 +12,9 @@ class EntitySystem
 {
 public:
     EntitySystem() = default;
+
+    virtual void OnStartup(EntityManager& manager) {};
+        // Called once when the EntityManager starts up.
     
     virtual void OnUpdate(EntityManager& manager, double dt) {};
         // Called every tick of the game loop.

@@ -25,11 +25,12 @@ class WorldLayer : public Sprocket::Layer
 
     // WORLD
     // Entity management and systems
-    Sprocket::EntityManager  d_entityManager;
     Sprocket::PlayerMovement d_playerMovement;
     Sprocket::PhysicsEngine  d_physicsEngine;
     Sprocket::Selector       d_selector;
     Sprocket::ScriptRunner   d_scriptRunner;
+    
+    Sprocket::EntityManager  d_entityManager;
 
     // Additional world setup
     Sprocket::Skybox d_skybox;

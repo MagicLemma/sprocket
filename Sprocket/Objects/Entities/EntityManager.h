@@ -44,6 +44,7 @@ public:
     Entity NewEntity();
     void AddEntity(const Entity& entity);
 
+    void OnStartup();
     void OnUpdate(double dt);
     void OnEvent(Event& event);
 

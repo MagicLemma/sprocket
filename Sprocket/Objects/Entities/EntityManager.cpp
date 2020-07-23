@@ -21,6 +21,13 @@ void EntityManager::AddEntity(const Entity& entity)
     }
 }
 
+void EntityManager::OnStartup()
+{
+    for (auto& system : d_systems) {
+        system->OnStartup(*this);
+    }
+}
+
 void EntityManager::OnUpdate(double dt)
 {
     for (auto system : d_systems) {

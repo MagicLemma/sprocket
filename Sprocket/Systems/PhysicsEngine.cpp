@@ -126,6 +126,43 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     d_impl->world.setNbIterationsVelocitySolver(8);
 }
 
+void PhysicsEngine::OnStartup(EntityManager& manager)
+{
+    manager.OnAdd<PhysicsComponent>([&](Entity& entity) {
+        assert(entity.Has<TransformComponent>());
+
+        auto& transform = entity.Get<TransformComponent>();
+        auto& physics = entity.Get<PhysicsComponent>();
+
+        d_impl->registeredEntities[entity.Id()] = entity;
+        auto* e = &d_impl->registeredEntities[entity.Id()];
+
+        auto& entry = d_impl->rigidBodies[entity.Id()];
+        entry = d_impl->world.createRigidBody(Convert(transform));
+
+        // Give each RigidBody a ref back to the original Entity object.
+        entry->setUserData(static_cast<void*>(e));
+        entry->setType(physics.frozen ? rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC);
+
+        if (entity.Has<PlayerComponent>()) {
+            entry->setAngularDamping(0.0f);
+        }
+
+        AddCollider(entity);
+    });
+
+    manager.OnRemove<PhysicsComponent>([&](Entity& entity) {
+        auto& physics = entity.Get<PhysicsComponent>();
+
+        d_impl->registeredEntities.erase(entity.Id());
+
+        auto rigidBodyIt = d_impl->rigidBodies.find(entity.Id());
+        d_impl->world.destroyRigidBody(rigidBodyIt->second);
+        d_impl->rigidBodies.erase(rigidBodyIt);
+        // TODO: Clean up of collision bodies
+    });
+}
+
 void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
 {
     if (!d_running) { return; }
@@ -196,7 +233,6 @@ void PhysicsEngine::AddCollider(Entity entity)
         );
     }
     else {
-        SPKT_LOG_ERROR("Entity has a ColliderComponent but no collider!");
         return; // No collision data.
     }
 
@@ -211,58 +247,6 @@ void PhysicsEngine::AddCollider(Entity entity)
     data.collisionShape = collider;
     data.proxyShape = ps;
     d_impl->collisionShapes[entity.Id()] = data;
-}
-
-void PhysicsEngine::RegisterEntity(const Entity& entity)
-{
-    auto transform = entity.Get<TransformComponent>();
-    auto hasPhysics = entity.Has<PhysicsComponent>();
-
-    if (!hasPhysics) {
-        return;  // Entity must have physics.
-    }
-
-    d_impl->registeredEntities[entity.Id()] = entity;
-    auto* e = &d_impl->registeredEntities[entity.Id()];
-
-    auto& entry = d_impl->rigidBodies[entity.Id()];
-    entry = d_impl->world.createRigidBody(Convert(transform));
-
-    // Give each RigidBody a ref back to the original Entity object.
-    entry->setUserData(static_cast<void*>(e));
-
-    if (hasPhysics) {
-        entry->setType(rp3d::BodyType::DYNAMIC);
-    }
-    else {
-        entry->setType(rp3d::BodyType::STATIC);
-    }
-
-    if (entity.Has<PlayerComponent>()) {
-        entry->setAngularDamping(0.0f);
-    }
-
-    AddCollider(entity); // No Collider to add.
-}
-
-void PhysicsEngine::DeregisterEntity(const Entity& entity)
-{
-    auto hasPhysics = entity.Has<PhysicsComponent>();
-
-    if (!hasPhysics) {
-        return;  // Entity must have physics or collider.
-    }
-
-    d_impl->registeredEntities.erase(entity.Id());
-
-    auto rigidBodyIt = d_impl->rigidBodies.find(entity.Id());
-    if (rigidBodyIt == d_impl->rigidBodies.end()) {
-        return;  // Nothing to delete.
-    }
-
-    d_impl->world.destroyRigidBody(rigidBodyIt->second);
-    d_impl->rigidBodies.erase(rigidBodyIt);
-    // TODO: Clean up of collision bodies
 }
 
 void PhysicsEngine::Running(bool isRunning)
