@@ -11,17 +11,8 @@ class EntitySystem
 public:
     EntitySystem() = default;
     
-    virtual void UpdateEntity(double dt, Entity& entity) {};
-        // Called once per entity per frame and before the system updates.
-
-    virtual void PostUpdateEntity(double dt, Entity& entity) {};
-        // Called once per entity per frame and before the system updates.
-
-    virtual void UpdateSystem(double dt) {};
-        // Called once per frame, this should update any system speific data.
-
-    virtual void OnUpdate(std::map<entt::entity, Entity>& entities, double dt);
-        // To replace the three above functions.
+    virtual void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) {};
+        // Called every tick of the game loop.
 
     virtual void RegisterEntity(const Entity& entity) {};
     virtual void DeregisterEntity(const Entity& entity) {};

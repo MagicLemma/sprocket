@@ -2,6 +2,7 @@
 #include <Sprocket.h>
 
 #include <queue>
+#include <map>
 
 struct PathComponent
 {
@@ -12,6 +13,6 @@ struct PathComponent
 class PathFollower : public Sprocket::EntitySystem
 {
 public:
-    void UpdateEntity(double dt, Sprocket::Entity& entity) override;
+    void OnUpdate(std::map<entt::entity, Sprocket::Entity>& entities, double dt) override;
         // Called once per entity per frame and before the system updates.
 };

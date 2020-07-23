@@ -1,27 +1,30 @@
 #include "PathFollower.h"
 
-void PathFollower::UpdateEntity(double dt, Sprocket::Entity& entity)
+void PathFollower::OnUpdate(std::map<entt::entity, Sprocket::Entity>& entities, double dt)
 {
     using namespace Sprocket;
-    if (!entity.Has<TransformComponent>()) { return; }
-    if (!entity.Has<PathComponent>()) { return; }
 
-    auto& tr = entity.Get<TransformComponent>();
-    auto& path = entity.Get<PathComponent>();
-    if (path.markers.empty()) { return; }
-    
-    Maths::vec3 direction = path.markers.front() - tr.position;
-    Maths::Normalise(direction);
-    Maths::vec3 advance = path.speed * (float)dt * direction;
+    for (auto& [id, entity] : entities) {
+        if (!entity.Has<TransformComponent>()) { continue; }
+        if (!entity.Has<PathComponent>()) { continue; }
 
-    auto MagSq = [](const Maths::vec3& v) {
-        return v.x*v.x + v.y*v.y + v.z*v.z;
-    };
+        auto& tr = entity.Get<TransformComponent>();
+        auto& path = entity.Get<PathComponent>();
+        if (path.markers.empty()) { continue; }
+        
+        Maths::vec3 direction = path.markers.front() - tr.position;
+        Maths::Normalise(direction);
+        Maths::vec3 advance = path.speed * (float)dt * direction;
 
-    if (MagSq(advance) < MagSq(path.markers.front() - tr.position)) {
-        tr.position += advance;
-    } else {
-        tr.position = path.markers.front();
-        path.markers.pop();
+        auto MagSq = [](const Maths::vec3& v) {
+            return v.x*v.x + v.y*v.y + v.z*v.z;
+        };
+
+        if (MagSq(advance) < MagSq(path.markers.front() - tr.position)) {
+            tr.position += advance;
+        } else {
+            tr.position = path.markers.front();
+            path.markers.pop();
+        }
     }
 }
