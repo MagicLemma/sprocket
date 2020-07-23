@@ -44,9 +44,7 @@ public:
     PhysicsEngine(const Maths::vec3& gravity);
     ~PhysicsEngine() {}
 
-    void UpdateEntity(double dt, Entity& entity) override;
-    void PostUpdateEntity(double dt, Entity& entity) override;
-    void UpdateSystem(double dt) override;
+    void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) override;
 
     void RegisterEntity(const Entity& entity) override;
     void DeregisterEntity(const Entity& entity) override;
