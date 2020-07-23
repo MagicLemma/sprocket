@@ -91,6 +91,16 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 {
     using namespace Sprocket;
 
+    static int x = 0;
+    d_entityManager.OnAdd<TransformComponent>([&](Entity& entity) {
+        SPKT_LOG_INFO("Function called!!! {}", x);
+        ++x;
+    });
+
+    d_entityManager.OnAdd<TransformComponent>([](Entity& entity) {
+        SPKT_LOG_INFO("Function 2 called!!!");
+    });
+
     d_modelManager.LoadModel("GG_Tree", "Resources/Models/BetterTree.obj");
     d_modelManager.LoadModel("GG_Rock", "Resources/Models/Rock.obj");
 

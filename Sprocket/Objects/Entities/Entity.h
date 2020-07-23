@@ -28,6 +28,8 @@ public:
     template <typename T> void Remove();
 
     bool Null() const { return d_entity == entt::null; }
+
+    void Init();
 };
 
 template <typename T>
