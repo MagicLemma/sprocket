@@ -32,6 +32,8 @@ public:
     void Init();
 };
 
+bool operator==(const Entity& lhs, const Entity& rhs);
+
 template <typename T>
 T& Entity::Add()
 {

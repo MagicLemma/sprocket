@@ -38,4 +38,9 @@ bool Alive(Entity& e)
     return true;
 }
 
+bool operator==(const Entity& lhs, const Entity& rhs)
+{
+    return lhs.Id() == rhs.Id();
+}
+
 }

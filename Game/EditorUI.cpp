@@ -192,7 +192,7 @@ void EditorUI::OnEvent(Sprocket::Event& event)
 
     if (!event.IsConsumed()) {
         if (auto e = event.As<MouseButtonPressedEvent>()) {
-            d_worldLayer->d_selector.SetSelected(nullptr);
+            d_worldLayer->d_selector.SetSelected(Entity());
             // TODO: Do we want to consume this event here?
         }
     }
@@ -229,8 +229,10 @@ void EditorUI::OnUpdate(double dt)
 
     mat4 view = CameraUtils::MakeView(d_worldLayer->d_camera);
     mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_camera);
-    if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
-        SelectedEntityInfo(d_ui, *e, view, proj);
+
+    auto e = d_worldLayer->d_selector.SelectedEntity();
+    if (!e.Null()) {
+        SelectedEntityInfo(d_ui, e, view, proj);
     }
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
