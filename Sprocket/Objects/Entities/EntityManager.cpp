@@ -25,7 +25,7 @@ void EntityManager::AddEntity(const Entity& entity)
 void EntityManager::OnUpdate(double dt)
 {
     for (auto system : d_systems) {
-        system->OnUpdate(d_entities, dt);
+        system->OnUpdate(*this, dt);
     }
 
     auto it = d_entities.begin();

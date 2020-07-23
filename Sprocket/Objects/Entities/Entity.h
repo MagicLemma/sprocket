@@ -16,7 +16,7 @@ class Entity
     entt::entity    d_entity;
     
 public:
-    Entity();
+    Entity(); // Returns a null entity.
     Entity(entt::registry* registry, entt::entity entity);
 
     entt::entity Id() const { return d_entity; }

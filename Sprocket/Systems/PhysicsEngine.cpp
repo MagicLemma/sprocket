@@ -1,5 +1,6 @@
 #include "PhysicsEngine.h"
 #include "Components.h"
+#include "EntityManager.h"
 
 #include <variant>
 
@@ -119,6 +120,77 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
 {
     d_impl->world.setNbIterationsPositionSolver(5);
     d_impl->world.setNbIterationsVelocitySolver(8);
+}
+
+void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
+{
+    if (!d_running) {
+        return;
+    }
+
+    // Pre Update
+    manager.Each<PhysicsComponent>([&] (Entity& entity) {
+
+        const auto& physics = entity.Get<PhysicsComponent>();
+
+        auto bodyData = d_impl->rigidBodies[entity.Id()];
+        if (!bodyData) { return; }
+        
+        // Update the RigidBody corresponding to this Entity.
+        bodyData->setTransform(Transform(entity));
+
+        bodyData->setLinearVelocity(Convert(physics.velocity));
+        bodyData->enableGravity(physics.gravity);    
+
+        if (physics.frozen) {
+            bodyData->setType(rp3d::BodyType::STATIC);
+        }
+        else {
+            bodyData->setType(rp3d::BodyType::DYNAMIC);
+        }
+
+        bodyData->setMass(physics.mass);
+
+        auto& material = bodyData->getMaterial();
+        material.setBounciness(physics.bounciness);
+        material.setFrictionCoefficient(physics.frictionCoefficient);
+        material.setRollingResistance(physics.rollingResistance);
+
+        // Handle player movement updates.
+        if (entity.Has<PlayerComponent>()) {
+            UpdatePlayer(dt, entity);
+        }
+    });
+
+    // Update System
+    float speedFactor = GetSpeed(d_speedFactor);
+    float frameLength = dt * speedFactor;
+    d_lastFrameLength = 0;
+
+    static float accumulator = 0.0f;
+    accumulator += frameLength;
+
+    // First update the Physics World.
+    while (accumulator >= d_timeStep) {
+        d_impl->world.update(d_timeStep);
+        accumulator -= d_timeStep;
+        d_lastFrameLength += d_timeStep;
+    }
+
+    // Post Update
+    manager.Each<PhysicsComponent>([&] (Entity& entity) {
+
+        auto& physics = entity.Get<PhysicsComponent>();
+
+        if (!entity.Has<TransformComponent>()) { return; }
+
+        const auto& bodyData = d_impl->rigidBodies[entity.Id()];
+        auto& tr = entity.Get<TransformComponent>();
+        tr.position = Convert(bodyData->getTransform().getPosition());
+        tr.orientation = Convert(bodyData->getTransform().getOrientation());
+
+        physics.velocity = Convert(bodyData->getLinearVelocity());
+    });
 }
 
 void PhysicsEngine::OnUpdate(std::map<entt::entity, Entity>& entities, double dt)
