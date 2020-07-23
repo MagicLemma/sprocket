@@ -13,9 +13,7 @@ class EntitySystem
 public:
     EntitySystem() = default;
     
-    virtual void OnUpdate(EntityManager& manager, double dt);
-
-    virtual void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) {};
+    virtual void OnUpdate(EntityManager& manager, double dt) {};
         // Called every tick of the game loop.
 
     virtual void RegisterEntity(const Entity& entity) {};
