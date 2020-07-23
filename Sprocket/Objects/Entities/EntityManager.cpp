@@ -24,32 +24,16 @@ void EntityManager::AddEntity(const Entity& entity)
 
 void EntityManager::OnUpdate(double dt)
 {
-    d_registry.each([](auto entity) {
+    for (auto system : d_systems) {
+        system->OnUpdate(d_entities, dt);
+    }
 
-    });
     auto it = d_entities.begin();
     while (it != d_entities.end()) {
         if (!Alive(it->second)) {
-            for (auto system : d_systems) {
-                system->DeregisterEntity(it->second);
-            }
             it = d_entities.erase(it);
-        }
-        else {
-            for (auto system : d_systems) {
-                system->UpdateEntity(dt, it->second);
-            }
+        } else {
             ++it;
-        }
-    }
-
-    for (auto system : d_systems) {
-        system->UpdateSystem(dt);
-    }
-
-    for (auto& [id, entity] : d_entities) {
-        for (auto system : d_systems) {
-            system->PostUpdateEntity(dt, entity);
         }
     }
 }

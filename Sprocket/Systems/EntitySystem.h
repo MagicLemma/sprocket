@@ -2,6 +2,8 @@
 #include "Entity.h"
 #include "Event.h"
 
+#include <map>
+
 namespace Sprocket {
 
 class EntitySystem
@@ -17,6 +19,9 @@ public:
 
     virtual void UpdateSystem(double dt) {};
         // Called once per frame, this should update any system speific data.
+
+    void OnUpdate(std::map<entt::entity, Entity>& entities, double dt);
+        // To replace the three above functions.
 
     virtual void RegisterEntity(const Entity& entity) {};
     virtual void DeregisterEntity(const Entity& entity) {};
