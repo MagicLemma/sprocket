@@ -4,6 +4,7 @@
 #include "MouseProxy.h"
 #include "MouseEvent.h"
 #include "WindowEvent.h"
+#include "Entity.h"
 
 #include <string>
 
@@ -11,11 +12,11 @@ class lua_State;
 
 namespace Sprocket {
 
-class Entity;
-
 class LuaEngine
 {
     lua_State* d_L;
+
+    Entity d_entity;
 
 public:
     LuaEngine();

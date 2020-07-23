@@ -14,7 +14,7 @@ namespace Sprocket {
 class EntityManager
 {
 public:
-    using EntityMap = std::map<entt::entity, std::shared_ptr<Entity>>;
+    using EntityMap = std::map<entt::entity, Entity>;
 
 private:
     const std::vector<EntitySystem*> d_systems;
@@ -27,14 +27,15 @@ private:
 public:
     EntityManager(const std::vector<EntitySystem*> systems);
 
-    std::shared_ptr<Entity> NewEntity();
-    void AddEntity(std::shared_ptr<Entity> entity);
+    Entity NewEntity();
+    void AddEntity(const Entity& entity);
     void OnUpdate(double dt);
     void OnEvent(Event& event);
 
     void Draw(EntityRenderer* renderer);
 
     const EntityMap& Entities() const { return d_entities; }
+    EntityMap& Entities() { return d_entities; }
 };
 
 }

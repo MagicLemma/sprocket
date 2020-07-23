@@ -11,11 +11,11 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     // PLAYER MODE
-    Sprocket::Entity* d_playerCamera;
-    Sprocket::Entity* d_observerCamera;
-    Sprocket::Entity* d_editorCamera;
+    Sprocket::Entity d_playerCamera;
+    Sprocket::Entity d_observerCamera;
+    Sprocket::Entity d_editorCamera;
 
-    Sprocket::Entity* d_activeCamera;
+    Sprocket::Entity d_activeCamera;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;

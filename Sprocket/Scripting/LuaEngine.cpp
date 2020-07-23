@@ -194,7 +194,8 @@ void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
 
 void LuaEngine::SetEntity(const Entity& e)
 {
-    lua_pushlightuserdata(d_L, (void*)&e);
+    d_entity = e;
+    lua_pushlightuserdata(d_L, (void*)&d_entity);
     lua_setglobal(d_L, "__entity__");
 }
 

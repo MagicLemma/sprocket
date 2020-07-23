@@ -12,6 +12,12 @@ std::size_t IdGenerator()
 
 }
 
+Entity::Entity()
+    : d_registry(nullptr)
+    , d_entity(entt::null)
+{}
+
+
 Entity::Entity(entt::registry* registry, entt::entity entity)
     : d_registry(registry)
     , d_entity(entity)

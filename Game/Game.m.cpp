@@ -4,6 +4,8 @@
 #include "EscapeMenu.h"
 #include "Palette.h"
 
+#include <entt/entt.hpp>
+
 int main()
 {
     using namespace Sprocket;
@@ -12,6 +14,7 @@ int main()
     Window window("Game!");
     SceneManager sceneManager;
     ModelManager modelManager;
+
 
     window.SetCallback([&sceneManager](Event& event) {
         sceneManager.OnEvent(event);

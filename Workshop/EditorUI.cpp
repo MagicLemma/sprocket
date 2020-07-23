@@ -139,15 +139,15 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
         if (ui.Button(name.c_str())) {
             SPKT_LOG_INFO("Added entity");
             auto entity = entities->NewEntity();
-            auto tr = entity->Add<Sprocket::TransformComponent>();
+            auto tr = entity.Add<Sprocket::TransformComponent>();
             tr->position = {10.0, 0.0, 10.0};
-            auto modelComp = entity->Add<Sprocket::ModelComponent>();
+            auto modelComp = entity.Add<Sprocket::ModelComponent>();
             modelComp->model = model;
 
             Sprocket::Material m;
             m.texture = Sprocket::Texture::White();
 
-            entity->Add<Sprocket::SelectComponent>();
+            entity.Add<Sprocket::SelectComponent>();
             
             modelComp->material = m;
             modelComp->scale = 1.0f; 
@@ -226,14 +226,14 @@ void EditorUI::OnUpdate(double dt)
 
     if (d_ui.CollapsingHeader("Entity List")) {
         for (auto [id, entity] : d_worldLayer->d_entityManager.Entities()) {
-            AddEntityToList(d_ui, d_worldLayer->d_selector, entity.get());      
+            AddEntityToList(d_ui, d_worldLayer->d_selector, &entity);      
         }
     }
 
     d_ui.EndWindow();
 
-    mat4 view = CameraUtils::MakeView(*d_worldLayer->d_activeCamera);
-    mat4 proj = CameraUtils::MakeProj(*d_worldLayer->d_activeCamera);
+    mat4 view = CameraUtils::MakeView(d_worldLayer->d_activeCamera);
+    mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_activeCamera);
     if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
         SelectedEntityInfo(d_ui, *e, view, proj);
         d_worldLayer->d_physicsEngine.RefreshTransform(e);

@@ -60,8 +60,8 @@ void EscapeMenu::OnUpdate(double dt)
                         SPKT_LOG_INFO("Mode switched to Player");
                         d_worldLayer->d_mode = Mode::PLAYER;
 
-                        d_worldLayer->d_observerCamera->Get<ScriptComponent>().active = false;
-                        d_worldLayer->d_editorCamera->Get<ScriptComponent>().active = false;
+                        d_worldLayer->d_observerCamera.Get<ScriptComponent>().active = false;
+                        d_worldLayer->d_editorCamera.Get<ScriptComponent>().active = false;
                         d_worldLayer->d_activeCamera = d_worldLayer->d_playerCamera;
 
                         d_worldLayer->d_playerMovement.Enable(true);
@@ -73,8 +73,8 @@ void EscapeMenu::OnUpdate(double dt)
                         SPKT_LOG_INFO("Mode switched to Editor");
                         d_worldLayer->d_mode = Mode::EDITOR;
 
-                        d_worldLayer->d_observerCamera->Get<ScriptComponent>().active = false;
-                        d_worldLayer->d_editorCamera->Get<ScriptComponent>().active = true;
+                        d_worldLayer->d_observerCamera.Get<ScriptComponent>().active = false;
+                        d_worldLayer->d_editorCamera.Get<ScriptComponent>().active = true;
                         d_worldLayer->d_activeCamera = d_worldLayer->d_editorCamera;
 
                         d_worldLayer->d_playerMovement.Enable(false);
@@ -86,8 +86,8 @@ void EscapeMenu::OnUpdate(double dt)
                         SPKT_LOG_INFO("Mode switched to Observer");
                         d_worldLayer->d_mode = Mode::OBSERVER;
 
-                        d_worldLayer->d_observerCamera->Get<ScriptComponent>().active = true;
-                        d_worldLayer->d_editorCamera->Get<ScriptComponent>().active = false;
+                        d_worldLayer->d_observerCamera.Get<ScriptComponent>().active = true;
+                        d_worldLayer->d_editorCamera.Get<ScriptComponent>().active = false;
                         d_worldLayer->d_activeCamera = d_worldLayer->d_observerCamera;
 
                         d_worldLayer->d_playerMovement.Enable(false);

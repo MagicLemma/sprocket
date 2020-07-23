@@ -20,8 +20,8 @@ class WorldLayer : public Sprocket::Layer
     PathFollower  d_pathFollower;
     Sprocket::EntityManager d_entityManager;
 
-    Sprocket::Entity* d_camera;
-    Sprocket::Entity* d_worker;
+    Sprocket::Entity d_camera;
+    Sprocket::Entity d_worker;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
