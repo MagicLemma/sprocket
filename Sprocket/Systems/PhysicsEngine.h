@@ -45,7 +45,6 @@ public:
     ~PhysicsEngine() {}
 
     void OnUpdate(EntityManager& manager, double dt) override;
-    void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) override;
 
     void RegisterEntity(const Entity& entity) override;
     void DeregisterEntity(const Entity& entity) override;

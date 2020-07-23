@@ -37,10 +37,10 @@ public:
     const EntityMap& Entities() const { return d_entities; }
     EntityMap& Entities() { return d_entities; }
 
-    template <typename T>
+    template <typename... Ts>
     void Each(std::function<void(Entity&)> lambda)
     {
-        for (auto& entity : d_registry.view<T>())
+        for (auto& entity : d_registry.view<Ts...>())
         {
             lambda(Entity(&d_registry, entity));   
         }

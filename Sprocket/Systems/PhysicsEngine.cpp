@@ -41,12 +41,11 @@ rp3d::Quaternion Convert(const Maths::quat& q)
     return rp3d::Quaternion(q.x, q.y, q.z, q.w);
 }
 
-rp3d::Transform Transform(const Entity& entity)
+rp3d::Transform Convert(const TransformComponent& transform)
 {
     rp3d::Transform t;
-    auto tr = entity.Get<TransformComponent>();
-    t.setPosition(Convert(tr.position));
-    t.setOrientation(Convert(tr.orientation));
+    t.setPosition(Convert(transform.position));
+    t.setOrientation(Convert(transform.orientation));
     return t;
 }
 
@@ -124,31 +123,20 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
 
 void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
 {
-    if (!d_running) {
-        return;
-    }
+    if (!d_running) { return; }
 
     // Pre Update
-    manager.Each<PhysicsComponent>([&] (Entity& entity) {
-
+    manager.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
+        const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<PhysicsComponent>();
 
         auto bodyData = d_impl->rigidBodies[entity.Id()];
-        if (!bodyData) { return; }
         
         // Update the RigidBody corresponding to this Entity.
-        bodyData->setTransform(Transform(entity));
-
+        bodyData->setTransform(Convert(transform));
         bodyData->setLinearVelocity(Convert(physics.velocity));
         bodyData->enableGravity(physics.gravity);    
-
-        if (physics.frozen) {
-            bodyData->setType(rp3d::BodyType::STATIC);
-        }
-        else {
-            bodyData->setType(rp3d::BodyType::DYNAMIC);
-        }
-
+        bodyData->setType(physics.frozen ? rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC);
         bodyData->setMass(physics.mass);
 
         auto& material = bodyData->getMaterial();
@@ -178,89 +166,17 @@ void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
     }
 
     // Post Update
-    manager.Each<PhysicsComponent>([&] (Entity& entity) {
-
+    manager.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
+        auto& transform = entity.Get<TransformComponent>();
         auto& physics = entity.Get<PhysicsComponent>();
 
-        if (!entity.Has<TransformComponent>()) { return; }
-
         const auto& bodyData = d_impl->rigidBodies[entity.Id()];
-        auto& tr = entity.Get<TransformComponent>();
-        tr.position = Convert(bodyData->getTransform().getPosition());
-        tr.orientation = Convert(bodyData->getTransform().getOrientation());
+
+        transform.position = Convert(bodyData->getTransform().getPosition());
+        transform.orientation = Convert(bodyData->getTransform().getOrientation());
 
         physics.velocity = Convert(bodyData->getLinearVelocity());
     });
-}
-
-void PhysicsEngine::OnUpdate(std::map<entt::entity, Entity>& entities, double dt)
-{
-    if (!d_running) {
-        return;
-    }
-
-    // Pre Update
-    for (auto& [id, entity] : entities) {
-        auto bodyData = d_impl->rigidBodies[id];
-        if (!bodyData) { continue; }
-        
-        // Update the RigidBody corresponding to this Entity.
-        bodyData->setTransform(Transform(entity));
-
-        if (entity.Has<PhysicsComponent>()) {
-            const auto& physics = entity.Get<PhysicsComponent>();
-
-            bodyData->setLinearVelocity(Convert(physics.velocity));
-            bodyData->enableGravity(physics.gravity);    
-
-            if (physics.frozen) {
-                bodyData->setType(rp3d::BodyType::STATIC);
-            }
-            else {
-                bodyData->setType(rp3d::BodyType::DYNAMIC);
-            }
-
-            bodyData->setMass(physics.mass);
-
-            auto& material = bodyData->getMaterial();
-            material.setBounciness(physics.bounciness);
-            material.setFrictionCoefficient(physics.frictionCoefficient);
-            material.setRollingResistance(physics.rollingResistance); 
-        }
-
-        // Handle player movement updates.
-        if (entity.Has<PlayerComponent>()) {
-            UpdatePlayer(dt, entity);
-        }
-    }
-
-    // Update System
-    float speedFactor = GetSpeed(d_speedFactor);
-    float frameLength = dt * speedFactor;
-    d_lastFrameLength = 0;
-
-    static float accumulator = 0.0f;
-    accumulator += frameLength;
-
-    // First update the Physics World.
-    while (accumulator >= d_timeStep) {
-        d_impl->world.update(d_timeStep);
-        accumulator -= d_timeStep;
-        d_lastFrameLength += d_timeStep;
-    }
-
-    // Post Update
-    for (auto& [id, entity] : entities) {
-        if (!entity.Has<PhysicsComponent>()) { continue; }
-        if (!entity.Has<TransformComponent>()) { continue; }
-
-        const auto& bodyData = d_impl->rigidBodies[entity.Id()];
-        auto& tr = entity.Get<TransformComponent>();
-        tr.position = Convert(bodyData->getTransform().getPosition());
-        tr.orientation = Convert(bodyData->getTransform().getOrientation());
-
-        entity.Get<PhysicsComponent>().velocity = Convert(bodyData->getLinearVelocity());
-    }
 }
 
 void PhysicsEngine::AddCollider(const Entity& entity)
@@ -299,6 +215,7 @@ void PhysicsEngine::AddCollider(const Entity& entity)
 
 void PhysicsEngine::RegisterEntity(const Entity& entity)
 {
+    auto transform = entity.Get<TransformComponent>();
     auto hasPhysics = entity.Has<PhysicsComponent>();
 
     if (!hasPhysics) {
@@ -306,7 +223,7 @@ void PhysicsEngine::RegisterEntity(const Entity& entity)
     }
 
     auto& entry = d_impl->rigidBodies[entity.Id()];
-    entry = d_impl->world.createRigidBody(Transform(entity));
+    entry = d_impl->world.createRigidBody(Convert(transform));
 
     // Give each RigidBody a pointer back to the original Entity object.
     entry->setUserData(const_cast<void*>(reinterpret_cast<const void*>(&entity)));
