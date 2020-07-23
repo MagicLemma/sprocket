@@ -290,9 +290,9 @@ void WorldLayer::OnUpdate(double dt)
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     d_shadowMapRenderer.BeginScene(d_lights.sun, target);
-    for (const auto& [id, entity] : d_entityManager.Entities()) {
+    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_shadowMapRenderer.Draw(entity);
-    }
+    });
     d_shadowMapRenderer.EndScene(); 
 
     if (d_paused) {
@@ -304,9 +304,9 @@ void WorldLayer::OnUpdate(double dt)
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   
     );
-    for (const auto& [id, entity] : d_entityManager.Entities()) {
+    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
-    }
+    });
 
     if (d_paused) {
         d_postProcessor.Unbind();
