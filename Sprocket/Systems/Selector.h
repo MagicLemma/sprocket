@@ -42,7 +42,7 @@ public:
     );
     ~Selector() {}
 
-    void UpdateSystem(double dt) override;
+    void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) override;
 
     void OnEvent(Event& event) override;
 
