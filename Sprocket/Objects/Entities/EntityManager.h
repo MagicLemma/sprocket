@@ -39,10 +39,7 @@ private:
 public:
     EntityManager(const std::vector<EntitySystem*> systems);
     
-    entt::registry& Reg() { return d_registry; }
-
     Entity NewEntity();
-    void AddEntity(const Entity& entity);
 
     void OnStartup();
     void OnUpdate(double dt);

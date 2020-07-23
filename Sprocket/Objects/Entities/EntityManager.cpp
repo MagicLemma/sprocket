@@ -14,13 +14,6 @@ Entity EntityManager::NewEntity()
     return Entity(&d_registry, e);
 }
 
-void EntityManager::AddEntity(const Entity& entity)
-{
-    for (auto system : d_systems) {
-        system->RegisterEntity(entity);
-    }
-}
-
 void EntityManager::OnStartup()
 {
     for (auto& system : d_systems) {
@@ -36,9 +29,6 @@ void EntityManager::OnUpdate(double dt)
 
     Each<DeletableComponent>([&](Entity& entity) {
         if (!entity.Get<DeletableComponent>().alive) {
-            for (auto system : d_systems) {
-                system->DeregisterEntity(entity);
-            }
             d_registry.destroy(entity.d_entity);
         }
     });

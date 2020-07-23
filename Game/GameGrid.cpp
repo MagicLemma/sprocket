@@ -38,7 +38,6 @@ GameGrid::GameGrid(EntityManager* entityManager)
     model1.material.texture = Texture::White();
     model1.material.reflectivity = 0.0f;
     model1.scale = 0.3f;
-    d_entityManager->AddEntity(d_hoveredSquare);
 
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     n2.name = "Selected Grid Highlighter";
@@ -48,7 +47,6 @@ GameGrid::GameGrid(EntityManager* entityManager)
     model2.material.texture = Texture::White();
     model2.material.reflectivity = 0.0f;
     model2.scale = 0.5f;
-    d_entityManager->AddEntity(d_selectedSquare);
 
     d_keyboard.ConsumeAll(false);
 }

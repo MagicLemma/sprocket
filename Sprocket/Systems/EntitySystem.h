@@ -19,10 +19,6 @@ public:
     virtual void OnUpdate(EntityManager& manager, double dt) {};
         // Called every tick of the game loop.
 
-    virtual void RegisterEntity(const Entity& entity) {};
-    virtual void DeregisterEntity(const Entity& entity) {};
-        // Register and deregister entities with this system.
-
     virtual void OnEvent(Event& event) {};
         // Called with every event so systems can consume them.
 

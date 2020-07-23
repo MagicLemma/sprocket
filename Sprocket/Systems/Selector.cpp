@@ -1,6 +1,7 @@
 #include "Selector.h"
 #include "MouseEvent.h"
 #include "CameraUtils.h"
+#include "EntityManager.h"
 
 namespace Sprocket {
 
@@ -14,6 +15,14 @@ Selector::Selector(
     , d_hoveredEntity()
     , d_selectedEntity()
 {
+}
+
+void Selector::OnStartup(EntityManager& manager)
+{
+    manager.OnRemove<SelectComponent>([&](Entity& entity) {
+        if (entity == d_hoveredEntity) { ClearHovered(); }
+        if (entity == d_selectedEntity) { ClearSelected(); }
+    });
 }
 
 void Selector::OnUpdate(EntityManager& manager, double dt)
@@ -48,12 +57,6 @@ void Selector::OnEvent(Event& event)
     }
 }
 
-void Selector::DeregisterEntity(const Entity& entity)
-{
-    if (entity == d_hoveredEntity) { ClearHovered(); }
-    if (entity == d_selectedEntity) { ClearSelected(); }
-}
-
 void Selector::Enable(bool newEnabled)
 {
     d_enabled = newEnabled;
@@ -82,7 +85,7 @@ void Selector::SetHovered(Entity entity)
 {
     ClearHovered();
     if (entity.Null()) { return; }
-    
+
     if (entity.Has<SelectComponent>()) {
         d_hoveredEntity = entity;
         d_hoveredEntity.Get<SelectComponent>().hovered = true;

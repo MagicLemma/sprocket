@@ -105,8 +105,7 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
             entity.Add<Sprocket::SelectComponent>();
             
             modelComp.material = m;
-            modelComp.scale = 1.0f; 
-            entities->AddEntity(entity);
+            modelComp.scale = 1.0f;
         }
     }
     ui.EndWindow();

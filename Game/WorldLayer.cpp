@@ -133,7 +133,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         modelData.model = ModelManager::LoadModel("Resources/Models/Cube.obj");
         modelData.scale = 0.5f;
 
-        d_entityManager.AddEntity(worker);
         d_worker = worker;
     }
 
@@ -153,7 +152,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         camera.Add<ScriptComponent>(script);
 
         d_camera = camera;
-        d_entityManager.AddEntity(camera);
     }
 
     {
@@ -171,8 +169,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         modelData.material = GetTerrainMaterial();
         
         terrain.Add<SelectComponent>();
-
-        d_entityManager.AddEntity(terrain);
     }
 
     for (int i = 0; i != ROWS; ++i) {
@@ -426,7 +422,6 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     modelData.material.shineDamper = 10.0f;
     modelData.material.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
-    d_entityManager.AddEntity(newEntity);
 
     d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
 }
@@ -455,7 +450,6 @@ void WorldLayer::AddRockBase(
     modelData.material.shineDamper = 10.0f;
     modelData.material.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
-    d_entityManager.AddEntity(newEntity);
 
     d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
 }

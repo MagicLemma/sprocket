@@ -88,7 +88,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         platform.Add<PhysicsComponent>(phys);
 
         platform.Add<SelectComponent>();
-        entityManager.AddEntity(platform);
     }
 
     {
@@ -108,7 +107,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model.scale = 0.5f;
 
         platform.Add<SelectComponent>();
-        entityManager.AddEntity(platform);
     }
 
     {
@@ -135,7 +133,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         platform.Add<PhysicsComponent>(phys);
 
         platform.Add<SelectComponent>();
-        entityManager.AddEntity(platform);
     }
 
     {
@@ -165,7 +162,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         platform.Add<PhysicsComponent>(phys);
 
         platform.Add<SelectComponent>();
-        entityManager.AddEntity(platform);
     }
 
     {
@@ -195,7 +191,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         crate.Add<PhysicsComponent>(phys);
 
         crate.Add<SelectComponent>();
-        entityManager.AddEntity(crate);
     }
 
     {
@@ -226,7 +221,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         crate.Add<PhysicsComponent>(phys);
 
         crate.Add<SelectComponent>();
-        entityManager.AddEntity(crate);
     }
 
     {
@@ -257,7 +251,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         crate.Add<PhysicsComponent>(phys);
 
         crate.Add<SelectComponent>();
-        entityManager.AddEntity(crate);
     }
 
     {
@@ -298,7 +291,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         player.Add<SelectComponent>();
 
         d_playerCamera = player;
-        entityManager.AddEntity(player);
     }
 
     {
@@ -316,7 +308,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         observerCamera.Add<ScriptComponent>(script);
 
         d_observerCamera = observerCamera;
-        entityManager.AddEntity(observerCamera);
     }
 
     {
@@ -338,7 +329,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         d_editorCamera = editorCamera;
         d_selector.SetCamera(d_editorCamera);
-        entityManager.AddEntity(editorCamera);
     }
 
     for (int i = 0; i != 5; ++i)
@@ -370,7 +360,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         sphere.Add<PhysicsComponent>(phys);
 
         sphere.Add<SelectComponent>();
-        entityManager.AddEntity(sphere);
 
         if (i == 4) {
             phys.velocity = {0, 20, 0};

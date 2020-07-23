@@ -42,10 +42,9 @@ public:
     );
     ~Selector() {}
 
+    void OnStartup(EntityManager& manager) override;
     void OnUpdate(EntityManager& manager, double dt) override;
     void OnEvent(Event& event) override;
-
-    void DeregisterEntity(const Entity& entity) override;
 
     void Enable(bool newEnabled);
 
