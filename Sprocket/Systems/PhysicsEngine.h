@@ -32,11 +32,11 @@ class PhysicsEngine : public EntitySystem
     
     bool        d_running = false;
 
-    void UpdatePlayer(double dt, Entity& entity);
+    void UpdatePlayer(double dt, Entity entity);
         // If this Entity has a PlayerComponent, perform the
         // necessary updates.
 
-    void AddCollider(const Entity& entity);
+    void AddCollider(Entity entity);
         // Registers the collider on the entity with the
         // physics engine.
 
@@ -54,25 +54,25 @@ public:
 
     void SetSpeedFactor(SpeedFactor sf) { d_speedFactor = sf; }
 
-    Entity* Raycast(const Maths::vec3& base, const Maths::vec3& direction);
+    Entity Raycast(const Maths::vec3& base, const Maths::vec3& direction);
         // Given a position in the world and a direction from that point,
-        // return a pointer to the entity that it hits, or nullptr if it
+        // return a pointer to the entity that it hits, or null if it
         // does not.
 
     // Entity Manipulations
-    void ApplyForce(Entity* entity, const Maths::vec3& force);
+    void ApplyForce(Entity entity, const Maths::vec3& force);
         // Apply the given force to the centre of mass of the given Entity.
         // If the Entity has no PhysicsComponent, this is a noop.
 
-    void MakeUpright(Entity* entity, float yaw = 0);
+    void MakeUpright(Entity entity, float yaw = 0);
         // Sets the orientation of the given Entity to make it upright. The yaw
         // is the angle in degrees anti-clockwise from the negative Z axis.
 
-    bool IsOnFloor(const Entity* entity) const; 
+    bool IsOnFloor(Entity entity) const; 
         // Returns true if the given Entity is colliding with another
         // Entity directly below it. TODO: Make this more general.
 
-    void RefreshTransform(const Entity* entity);
+    void RefreshTransform(Entity entity);
 };
 
 }

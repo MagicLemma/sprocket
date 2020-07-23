@@ -328,7 +328,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         s.active = false;
 
         d_editorCamera = editorCamera;
-        d_selector.SetCamera(&d_editorCamera);
+        d_selector.SetCamera(d_editorCamera);
         entityManager.AddEntity(editorCamera);
     }
 

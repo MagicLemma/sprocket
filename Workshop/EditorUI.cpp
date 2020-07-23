@@ -234,8 +234,10 @@ void EditorUI::OnUpdate(double dt)
 
     mat4 view = CameraUtils::MakeView(d_worldLayer->d_activeCamera);
     mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_activeCamera);
-    if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
-        SelectedEntityInfo(d_ui, *e, view, proj);
+
+    auto e = d_worldLayer->d_selector.SelectedEntity();
+    if (!e.Null()) {
+        SelectedEntityInfo(d_ui, e, view, proj);
         d_worldLayer->d_physicsEngine.RefreshTransform(e);
     }
 

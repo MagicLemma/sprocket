@@ -43,7 +43,7 @@ T& Entity::Add()
 
 template <typename T> bool Entity::Has() const
 {
-    if (!d_registry->valid(d_entity)) {
+    if (d_entity == entt::null || !d_registry->valid(d_entity)) {
         return false;
     }
     return d_registry->has<T>(d_entity);
