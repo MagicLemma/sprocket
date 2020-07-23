@@ -34,9 +34,6 @@ public:
 
     void Draw(EntityRenderer* renderer);
 
-    const EntityMap& Entities() const { return d_entities; }
-    EntityMap& Entities() { return d_entities; }
-
     template <typename... Ts> void Each(std::function<void(Entity&)> lambda);
 
     std::size_t EntityCount() const { return d_registry.alive(); }
