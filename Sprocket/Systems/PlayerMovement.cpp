@@ -1,5 +1,6 @@
 #include "PlayerMovement.h"
 #include "KeyboardCodes.h"
+#include "EntityManager.h"
 #include "Log.h"
 
 namespace Sprocket {
@@ -8,16 +9,15 @@ PlayerMovement::PlayerMovement()
 {
 }
 
-void PlayerMovement::OnUpdate(std::map<entt::entity, Entity>& entities, double dt)
+void PlayerMovement::OnUpdate(EntityManager& manager, double dt)
 {
     d_mouse.OnUpdate();
 
-    for (auto& [id, entity] : entities) {
-        if (!entity.Has<PlayerComponent>()) { continue; }
+    manager.Each<PlayerComponent, PhysicsComponent>([&](Entity& entity) {
+        auto& player = entity.Get<PlayerComponent>();
+        auto& physics = entity.Get<PhysicsComponent>();
 
         float sensitivity = 0.15f;
-        auto& player = entity.Get<PlayerComponent>();
-        const auto& physics = entity.Get<PhysicsComponent>();
 
         if (d_enabled) {
             player.movingForwards = d_keyboard.IsKeyDown(Keyboard::W);
@@ -59,7 +59,7 @@ void PlayerMovement::OnUpdate(std::map<entt::entity, Entity>& entities, double d
         
         Maths::Normalise(direction);
         player.direction = direction;
-    }
+    });
 }
 
 void PlayerMovement::OnEvent(Event& event)

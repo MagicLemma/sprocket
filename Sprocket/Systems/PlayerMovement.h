@@ -16,7 +16,7 @@ public:
     PlayerMovement();
     ~PlayerMovement() {}
 
-    void OnUpdate(std::map<entt::entity, Entity>& entities, double dt) override;
+    void OnUpdate(EntityManager& manager, double dt) override;
     void OnEvent(Event& event) override;
 
     void Enable(bool newEnabled);
