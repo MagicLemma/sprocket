@@ -10,3 +10,4 @@
 - stb
 - sfml-system
 - sfml-audio
+- entt

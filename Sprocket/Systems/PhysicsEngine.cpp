@@ -324,17 +324,9 @@ bool PhysicsEngine::IsOnFloor(Entity entity) const
 
 void PhysicsEngine::RefreshTransform(Entity entity)
 {
-    if (!entity.Has<PhysicsComponent>()) {
-        return;
-    }
-    
+    if (!entity.Has<PhysicsComponent>()) { return; }
     auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    bodyData->setTransform(
-        rp3d::Transform(
-            Convert(entity.Get<TransformComponent>().position),
-            Convert(entity.Get<TransformComponent>().orientation)
-        )
-    );
+    bodyData->setTransform(Convert(entity.Get<TransformComponent>()));
 }
 
 }
