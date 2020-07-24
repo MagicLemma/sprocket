@@ -4,8 +4,6 @@
 #include "EscapeMenu.h"
 #include "Palette.h"
 
-#include <entt/entt.hpp>
-
 int main()
 {
     using namespace Sprocket;

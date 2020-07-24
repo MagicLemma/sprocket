@@ -12,6 +12,8 @@ namespace Sprocket {
 
 class Entity
 {
+    friend class EntityManager;
+    
     entt::registry* d_registry;
     entt::entity    d_entity;
 
@@ -32,11 +34,14 @@ public:
     template <typename T> void Remove();
 
     bool Null() const { return d_entity == entt::null; }
-
-    friend class EntityManager;
 };
 
+void Kill(Entity& e);
+bool Alive(Entity& e);
+
 bool operator==(const Entity& lhs, const Entity& rhs);
+
+// Template Function Definitions ===========================================
 
 template <typename T>
 T& Entity::Add()
@@ -74,8 +79,5 @@ template <typename T> void Entity::Remove()
 {
     d_registry->remove_if_exists<T>(d_entity);
 }
-
-void Kill(Entity& e);
-bool Alive(Entity& e);
 
 }

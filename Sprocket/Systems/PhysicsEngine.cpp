@@ -6,8 +6,6 @@
 
 #include "reactphysics3d.h"
 
-#include <entt/entt.hpp>
-
 namespace Sprocket {
 namespace {
 
