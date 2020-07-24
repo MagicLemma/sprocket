@@ -33,6 +33,7 @@ public:
 };
 
 bool operator==(const Entity& lhs, const Entity& rhs);
+bool operator==(Entity&& lhs, Entity&& rhs);
 
 // Template Function Definitions ===========================================
 
@@ -70,6 +71,9 @@ template <typename T> const T& Entity::Get() const
 
 template <typename T> void Entity::Remove()
 {
+    if (d_entity == entt::null || !d_registry->valid(d_entity)) {
+        return;
+    }
     d_registry->remove_if_exists<T>(d_entity);
 }
 

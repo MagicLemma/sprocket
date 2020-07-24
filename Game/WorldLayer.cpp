@@ -109,8 +109,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.sun.colour = {1.0, 0.945, 0.789};
     d_lights.sun.brightness = 0.8f;
 
-    d_lights.ambience.colour = {1.0, 1.0, 1.0};
-    d_lights.ambience.brightness = 0.1f;
+    d_lights.ambience.colour = SARAWAK;
+    d_lights.ambience.brightness = 0.4f;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
