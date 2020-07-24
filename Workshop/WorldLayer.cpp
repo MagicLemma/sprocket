@@ -71,8 +71,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& tr = platform.Add<TransformComponent>();
         tr.position = {7.0, 0.0, -3.0};
         tr.orientation = Maths::Rotate({1, 0, 0}, 6.0f);
-
-        platform.Add<DeletableComponent>();
         
         auto& model = platform.Add<ModelComponent>();
         model.model = platformModel;
@@ -99,7 +97,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& tr = platform.Add<TransformComponent>();
         tr.position = {40.0, -10.0, 0.0};
 
-        platform.Add<DeletableComponent>();
         
         auto& model = platform.Add<ModelComponent>();
         model.model = floatingIslandModel;
@@ -117,7 +114,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& tr = platform.Add<TransformComponent>();
         tr.position = {-5.0, 0.0, 5.0};
 
-        platform.Add<DeletableComponent>();
 
         auto& model = platform.Add<ModelComponent>();
         model.model = platformModel;
@@ -146,7 +142,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         tr.orientation = Maths::Rotate(tr.orientation, {0, 0, 1}, 80.0f);
         tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, 90.0f);
 
-        platform.Add<DeletableComponent>();
 
         auto& model = platform.Add<ModelComponent>();
         model.model = platformModel;
@@ -174,8 +169,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         tr.position = {-5.0, 2.0, -3.0};
         tr.orientation = Maths::Rotate({0, 1, 0}, 45.0f);
 
-        crate.Add<DeletableComponent>();
-
         auto& model = crate.Add<ModelComponent>();
         model.model = crateModel;
         model.material = galaxy;
@@ -202,8 +195,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& tr = crate.Add<TransformComponent>();
         tr.position = {-1.0, 0.0, -3.0};
         tr.orientation = Maths::Rotate({0, 1, 0}, 75.0f);
-
-        crate.Add<DeletableComponent>();
 
         auto& model = crate.Add<ModelComponent>();
         model.model = crateModel;
@@ -233,8 +224,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         tr.position = {8.0, 5.0, 7.0};
         tr.orientation = Maths::Rotate({0, 1, 0}, 75.0f);
 
-        crate.Add<DeletableComponent>();
-
         auto& model = crate.Add<ModelComponent>();
         model.model = crateModel;
         model.material = field;
@@ -261,8 +250,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& tr = player.Add<TransformComponent>();
         tr.position = {0.0f, 5.0f, 5.0f};
-
-        player.Add<DeletableComponent>();
 
         auto& model = player.Add<ModelComponent>();
         model.model = crateModel;
@@ -300,7 +287,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         name.name = "Observer Camera";
 
         observerCamera.Add<TransformComponent>();
-        observerCamera.Add<DeletableComponent>();
         observerCamera.Add<CameraComponent>();
   
         ScriptComponent script;
@@ -319,7 +305,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& tr = editorCamera.Add<TransformComponent>();
         tr.position = {10.0f, 2.0f, 0.0f};
 
-        editorCamera.Add<DeletableComponent>();
         editorCamera.Add<CameraComponent>();
 
         ScriptComponent script;
@@ -342,8 +327,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& tr = sphere.Add<TransformComponent>();
         tr.position = {0.0f, (float)i * 10.0f + 5.0f, 0.0f};
-
-        sphere.Add<DeletableComponent>();
         
         auto& model = sphere.Add<ModelComponent>();
         model.model = sphereModel;
@@ -427,7 +410,7 @@ void WorldLayer::OnUpdate(double dt)
                 physics.velocity = {0, 0, 0};
             }
             if (transform.position.y < -50) {
-                Kill(entity);
+                entity.Kill();
             }
         });
     }

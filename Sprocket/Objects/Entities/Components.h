@@ -23,11 +23,6 @@ struct NameComponent
     std::string name;
 };
 
-struct DeletableComponent
-{
-    bool alive = true;
-};
-
 struct ModelComponent
 {
     Model3D  model;

@@ -325,7 +325,8 @@ bool PhysicsEngine::IsOnFloor(Entity entity) const
 void PhysicsEngine::RefreshTransform(Entity entity)
 {
     if (!entity.Has<PhysicsComponent>()) { return; }
-    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
+
+    auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
     bodyData->setTransform(Convert(entity.Get<TransformComponent>()));
 }
 

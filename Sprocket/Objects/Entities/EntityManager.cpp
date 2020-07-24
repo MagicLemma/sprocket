@@ -26,12 +26,6 @@ void EntityManager::OnUpdate(double dt)
     for (auto system : d_systems) {
         system->OnUpdate(*this, dt);
     }
-
-    Each<DeletableComponent>([&](Entity& entity) {
-        if (!entity.Get<DeletableComponent>().alive) {
-            d_registry.destroy(entity.d_entity);
-        }
-    });
 }
 
 void EntityManager::OnEvent(Event& event)

@@ -410,8 +410,6 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     auto& name = newEntity.Add<NameComponent>();
     name.name = "Tree";
 
-    newEntity.Add<DeletableComponent>();
-
     auto& tr = newEntity.Add<TransformComponent>();
     tr.orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
 
@@ -440,8 +438,6 @@ void WorldLayer::AddRockBase(
     auto& tr = newEntity.Add<TransformComponent>();
     tr.position.y -= Random(0.0f, 0.5f);
     tr.orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
-
-    newEntity.Add<DeletableComponent>();
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = d_modelManager.GetModel("GG_Rock");

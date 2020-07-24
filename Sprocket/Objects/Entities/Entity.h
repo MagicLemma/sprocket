@@ -34,10 +34,9 @@ public:
     template <typename T> void Remove();
 
     bool Null() const { return d_entity == entt::null; }
-};
 
-void Kill(Entity& e);
-bool Alive(Entity& e);
+    void Kill() { d_registry->destroy(d_entity); }
+};
 
 bool operator==(const Entity& lhs, const Entity& rhs);
 
