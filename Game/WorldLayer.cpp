@@ -91,6 +91,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 {
     using namespace Sprocket;
 
+    d_entityManager.OnStartup();
+
     d_modelManager.LoadModel("GG_Tree", "Resources/Models/BetterTree.obj");
     d_modelManager.LoadModel("GG_Rock", "Resources/Models/Rock.obj");
 
@@ -107,57 +109,66 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.sun.colour = {1.0, 0.945, 0.789};
     d_lights.sun.brightness = 0.8f;
 
-    d_lights.ambience.colour = {1.0, 1.0, 1.0};
-    d_lights.ambience.brightness = 0.1f;
+    d_lights.ambience.colour = SARAWAK;
+    d_lights.ambience.brightness = 0.4f;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
 
     {
-        auto worker = std::make_shared<Entity>();
-        worker->Name() = "Worker";
-        worker->Position() = {0.5f, 0.5f, 0.5f};
+        auto worker = d_entityManager.NewEntity();
+
+        auto& name = worker.Add<NameComponent>();
+        name.name = "Worker";
+
+        auto& tr = worker.Add<TransformComponent>();
+        tr.position = {0.5f, 0.5f, 0.5f};
         
-        worker->Add<SelectComponent>();
+        worker.Add<SelectComponent>();
 
-        auto path = worker->Add<PathComponent>();
-        path->speed = 3.0f;
+        auto& path = worker.Add<PathComponent>();
+        path.speed = 3.0f;
 
-        auto modelData = worker->Add<ModelComponent>();
-        modelData->model = ModelManager::LoadModel("Resources/Models/Cube.obj");
-        modelData->scale = 0.5f;
+        auto& modelData = worker.Add<ModelComponent>();
+        modelData.model = ModelManager::LoadModel("Resources/Models/Cube.obj");
+        modelData.scale = 0.5f;
 
-        d_entityManager.AddEntity(worker);
-        d_worker = worker.get();
+        d_worker = worker;
     }
 
     {
-        auto camera = std::make_shared<Entity>();
-        camera->Name() = "Camera";
-        camera->Position() = {0, 5, 0};
+        auto camera = d_entityManager.NewEntity();
 
-        auto c = camera->Add<CameraComponent>();
+        auto& name = camera.Add<NameComponent>();
+        name.name = "Camera";
+
+        auto& tr = camera.Add<TransformComponent>();
+        tr.position = {0, 5, 0};
+
+        auto& c = camera.Add<CameraComponent>();
       
-        auto s = camera->Add<ScriptComponent>();
-        s->script = "Resources/Scripts/ThirdPersonCamera.lua";
+        ScriptComponent script;
+        script.script = "Resources/Scripts/ThirdPersonCamera.lua";
+        camera.Add<ScriptComponent>(script);
 
-        d_camera = camera.get();
-        d_entityManager.AddEntity(camera);
+        d_camera = camera;
     }
 
     {
-        auto terrain = std::make_shared<Entity>();
-        terrain->Name() = "Terrain";
-        terrain->Position() = {-25, 0, -25};
+        auto terrain = d_entityManager.NewEntity();
 
-        auto modelData = terrain->Add<ModelComponent>();
-        modelData->scale = 1.0f;
-        modelData->model = MakeTerrain(51, 1.0f);
-        modelData->material = GetTerrainMaterial();
+        auto& name = terrain.Add<NameComponent>();
+        name.name = "Terrain";
+
+        auto& tr = terrain.Add<TransformComponent>();
+        tr.position = {-25, 0, -25};
+
+        auto& modelData = terrain.Add<ModelComponent>();
+        modelData.scale = 1.0f;
+        modelData.model = MakeTerrain(51, 1.0f);
+        modelData.material = GetTerrainMaterial();
         
-        terrain->Add<SelectComponent>();
-
-        d_entityManager.AddEntity(terrain);
+        terrain.Add<SelectComponent>();
     }
 
     for (int i = 0; i != ROWS; ++i) {
@@ -198,30 +209,33 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     }
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
+        auto& tr = d_camera.Get<TransformComponent>();
         if (e->Mods() & KeyModifier::CTRL) {
-            Maths::vec3 cameraPos = d_camera->Position();
+            Maths::vec3 cameraPos = tr.position;
             Maths::vec3 direction = Maths::GetMouseRay(
                 d_mouse.GetMousePos(),
                 d_core.window->Width(),
                 d_core.window->Height(),
-                CameraUtils::MakeView(*d_camera),
-                CameraUtils::MakeProj(*d_camera)
+                CameraUtils::MakeView(d_camera),
+                CameraUtils::MakeProj(d_camera)
             );
 
             float lambda = -cameraPos.y / direction.y;
             Maths::vec3 mousePos = cameraPos + lambda * direction;
             mousePos.y = 0.5f;
             
-            auto& path = d_worker->Get<PathComponent>();
+            auto& path = d_worker.Get<PathComponent>();
 
             if (e->Button() == Mouse::LEFT) {
                 std::queue<Maths::vec3>().swap(path.markers);
-                if (Maths::Distance(d_worker->Position(), mousePos) > 1.0f) {
+                auto pos = d_worker.Get<TransformComponent>().position;
+                if (Maths::Distance(pos, mousePos) > 1.0f) {
                     path.markers = GenerateAStarPath(
-                        d_worker->Position(),
+                        pos,
                         mousePos,
                         [&](const Maths::ivec2& pos) {
-                            return d_gameGrid.At(pos.x, pos.y) != nullptr;
+                            auto e = d_gameGrid.At(pos.x, pos.y);
+                            return !e.Null();
                         }
                     );
                 } else {
@@ -243,10 +257,10 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
-    Audio::SetListener(*d_camera);
+    Audio::SetListener(d_camera);
 
     d_hoveredEntityUI.OnUpdate(dt);
-    d_gameGrid.OnUpdate(d_core.window, d_camera);
+    d_gameGrid.OnUpdate(d_core.window, &d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
     
@@ -273,25 +287,25 @@ void WorldLayer::OnUpdate(double dt)
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    Maths::vec3 target = d_camera->Position() + lambda * Maths::Forwards(d_camera->Orientation());
+    Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     d_shadowMapRenderer.BeginScene(d_lights.sun, target);
-    for (const auto& [id, entity] : d_entityManager.Entities()) {
-        d_shadowMapRenderer.Draw(*entity);
-    }
+    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+        d_shadowMapRenderer.Draw(entity);
+    });
     d_shadowMapRenderer.EndScene(); 
 
     if (d_paused) {
         d_postProcessor.Bind();
     }
 
-    d_entityRenderer.BeginScene(*d_camera, d_lights);
+    d_entityRenderer.BeginScene(d_camera, d_lights);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   
     );
-    for (const auto& [id, entity] : d_entityManager.Entities()) {
-        d_entityRenderer.Draw(*entity);
-    }
+    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+        d_entityRenderer.Draw(entity);
+    });
 
     if (d_paused) {
         d_postProcessor.Unbind();
@@ -356,7 +370,9 @@ void WorldLayer::OnUpdate(double dt)
             }
         }
 
-        if (d_gameGrid.Hovered()) {
+
+        auto hovered = d_gameGrid.Hovered();
+        if (!hovered.Null()) {
             float width = 200;
             float height = 50;
             float x = std::min(mouse.x - 5, w - width - 10);
@@ -369,7 +385,12 @@ void WorldLayer::OnUpdate(double dt)
             if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
                 
                 auto hovered = d_gameGrid.Hovered();
-                d_hoveredEntityUI.Text(hovered->Name(), 36.0f, {0, 0, width, height});
+
+                std::string name = "Unnamed";
+                if (hovered.Has<NameComponent>()) {
+                    name = hovered.Get<NameComponent>().name;
+                }
+                d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
 
                 d_hoveredEntityUI.EndPanel();
             }
@@ -384,19 +405,23 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     using namespace Sprocket;
     static auto tex = Texture("Resources/Textures/BetterTree.png");
 
-    auto newEntity = std::make_shared<Entity>();
-    newEntity->Name() = "Tree";
-    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
-    auto modelData = newEntity->Add<ModelComponent>();
-    modelData->model = d_modelManager.GetModel("GG_Tree");
-    modelData->scale = Random(1.0f, 1.3f);
-    modelData->material.texture = tex;
-    modelData->material.shineDamper = 10.0f;
-    modelData->material.reflectivity = 0.0f;
-    newEntity->Add<SelectComponent>();
-    d_entityManager.AddEntity(newEntity);
+    auto newEntity = d_entityManager.NewEntity();
 
-    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+    auto& name = newEntity.Add<NameComponent>();
+    name.name = "Tree";
+
+    auto& tr = newEntity.Add<TransformComponent>();
+    tr.orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
+
+    auto& modelData = newEntity.Add<ModelComponent>();
+    modelData.model = d_modelManager.GetModel("GG_Tree");
+    modelData.scale = Random(1.0f, 1.3f);
+    modelData.material.texture = tex;
+    modelData.material.shineDamper = 10.0f;
+    modelData.material.reflectivity = 0.0f;
+    newEntity.Add<SelectComponent>();
+
+    d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
 }
 
 void WorldLayer::AddRockBase(
@@ -406,20 +431,23 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = std::make_shared<Entity>();
-    newEntity->Name() = name;
-    newEntity->Position().y -= Random(0.0f, 0.5f);
-    newEntity->Orientation() = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
-    auto modelData = newEntity->Add<ModelComponent>();
-    modelData->model = d_modelManager.GetModel("GG_Rock");
-    modelData->scale = 1.1f;
-    modelData->material.texture = tex;
-    modelData->material.shineDamper = 10.0f;
-    modelData->material.reflectivity = 0.0f;
-    newEntity->Add<SelectComponent>();
-    d_entityManager.AddEntity(newEntity);
+    auto newEntity = d_entityManager.NewEntity();
+    auto& n = newEntity.Add<NameComponent>();
+    n.name = name;
 
-    d_gameGrid.AddEntity(newEntity.get(), pos.x, pos.y);
+    auto& tr = newEntity.Add<TransformComponent>();
+    tr.position.y -= Random(0.0f, 0.5f);
+    tr.orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
+
+    auto& modelData = newEntity.Add<ModelComponent>();
+    modelData.model = d_modelManager.GetModel("GG_Rock");
+    modelData.scale = 1.1f;
+    modelData.material.texture = tex;
+    modelData.material.shineDamper = 10.0f;
+    modelData.material.reflectivity = 0.0f;
+    newEntity.Add<SelectComponent>();
+
+    d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
 }
 
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)

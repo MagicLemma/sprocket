@@ -68,12 +68,12 @@ struct ContactManifoldListElement {
         }
 
         /// Return the contact manifold
-        ContactManifold* getContactManifold() const {
+        ContactManifold* getContactManifold() {
             return mContactManifold;
         }
 
         /// Return the next element in the linked-list
-        ContactManifoldListElement* getNext() const {
+        ContactManifoldListElement* getNext() {
             return mNext;
         }
 };

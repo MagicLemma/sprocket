@@ -1,4 +1,6 @@
 #include "ShadowMapRenderer.h"
+#include "TransformComponent.h"
+#include "ModelComponent.h"
 
 #include <glad/glad.h>
 
@@ -30,10 +32,11 @@ void ShadowMapRenderer::BeginScene(const DirectionalLight& light,
 
 void ShadowMapRenderer::Draw(const Entity& entity)
 {
+    if (!entity.Has<TransformComponent>()) { return; }
     if (!entity.Has<ModelComponent>()) { return; }
     const auto& model = entity.Get<ModelComponent>().model;
 
-    Maths::mat4 transform = entity.Transform();
+    Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
     transform = Maths::Scale(transform, entity.Get<ModelComponent>().scale);
     d_shader.LoadUniform("u_model_matrix", transform);
 

@@ -3,6 +3,8 @@
 #include "Entity.h"
 #include "Maths.h"
 
+#include "CameraComponent.h"
+
 #include <lua.hpp>
 
 namespace Sprocket {

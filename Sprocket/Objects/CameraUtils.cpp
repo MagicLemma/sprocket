@@ -1,19 +1,27 @@
 #include "CameraUtils.h"
+#include "Log.h"
+
+#include "TransformComponent.h"
+#include "CameraComponent.h"
 
 namespace Sprocket {
 namespace CameraUtils {
 
 Maths::mat4 MakeView(const Entity& entity)
 {
-    Maths::vec3 position = entity.Position();
-    Maths::quat orientation = entity.Orientation();
+    if (!entity.Has<TransformComponent>()) {
+        SPKT_LOG_ERROR("Camera has no transform component!");
+        return Maths::mat4{1.0};
+    }
+
+    auto tr = entity.Get<TransformComponent>();
 
     if (entity.Has<CameraComponent>()) {
         const auto& c = entity.Get<CameraComponent>();
-        orientation *= Maths::Rotate({1, 0, 0}, c.pitch);
+        tr.orientation *= Maths::Rotate({1, 0, 0}, c.pitch);
     }
 
-    return Maths::Inverse(Maths::Transform(position, orientation));   
+    return Maths::Inverse(tr.Transform());   
 }
 
 Maths::mat4 MakeProj(const Entity& entity)

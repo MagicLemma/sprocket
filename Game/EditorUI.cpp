@@ -12,15 +12,15 @@ void AddEntityToList(Sprocket::DevUI::Context& ui,
 {
     using namespace Sprocket;
     
-    ui.PushID(entity->Id());
-    if (ui.StartTreeNode(entity->Name())) {
-        if (entity->Has<SelectComponent>() && ui.Button("Select")) {
-            SPKT_LOG_INFO("Select clicked!");
-            selector.SetSelected(entity);
-        }
-        ui.EndTreeNode();
-    }
-    ui.PopID();         
+    //ui.PushID(entity->Id());
+    //if (ui.StartTreeNode(entity->Name())) {
+    //    if (entity->Has<SelectComponent>() && ui.Button("Select")) {
+    //        SPKT_LOG_INFO("Select clicked!");
+    //        selector.SetSelected(entity);
+    //    }
+    //    ui.EndTreeNode();
+    //}
+    //ui.PopID();         
 }
 
 void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
@@ -34,16 +34,17 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.StartWindow("Selected Entity");
     ui.Text("Name: ");
     ui.SameLine();
-    ui.TextModifiable(entity.Name());
-    ui.Text("ID: " + std::to_string(entity.Id()));
+    //ui.TextModifiable(entity.Name());
+    //ui.Text("ID: " + std::to_string(entity.Id()));
     ui.Separator();
     
     static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
     static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
 
-    if (ui.StartTreeNode("Transform")) {
-        ui.DragFloat3("Position", &entity.Position(), 0.005f);
-        Maths::vec3 eulerAngles = Maths::ToEuler(entity.Orientation());
+    if (entity.Has<TransformComponent>() && ui.StartTreeNode("Transform")) {
+        auto& tr = entity.Get<TransformComponent>();
+        ui.DragFloat3("Position", &tr.position, 0.005f);
+        Maths::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
         std::stringstream ss;
         ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
            << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
@@ -68,10 +69,13 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
         ui.EndTreeNode();
     }
 
-    Maths::mat4 origin = entity.Transform();
-    ui.Gizmo(&origin, view, proj, mode, coords);
-    entity.Position() = GetTranslation(origin);
-    entity.Orientation() = Normalise(ToQuat(mat3(origin)));
+    if (entity.Has<TransformComponent>()) {
+        auto& tr = entity.Get<TransformComponent>();
+        Maths::mat4 origin = tr.Transform();
+        ui.Gizmo(&origin, view, proj, mode, coords);
+        tr.position = GetTranslation(origin);
+        tr.orientation = Normalise(ToQuat(mat3(origin)));
+    }
     ui.Separator();
 
     if (ui.Button("Delete Entity")) {
@@ -89,19 +93,19 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
     for (const auto& [name, model] : *models) {
         if (ui.Button(name.c_str())) {
             SPKT_LOG_INFO("Added entity");
-            auto entity = std::make_shared<Sprocket::Entity>();
-            entity->Position() = {10.0, 0.0, 10.0};
-            auto modelComp = entity->Add<Sprocket::ModelComponent>();
-            modelComp->model = model;
+            auto entity = entities->NewEntity();
+            auto& tr = entity.Add<Sprocket::TransformComponent>();
+            tr.position = {10.0, 0.0, 10.0};
+            auto& modelComp = entity.Add<Sprocket::ModelComponent>();
+            modelComp.model = model;
 
             Sprocket::Material m;
             m.texture = Sprocket::Texture::White();
 
-            entity->Add<Sprocket::SelectComponent>();
+            entity.Add<Sprocket::SelectComponent>();
             
-            modelComp->material = m;
-            modelComp->scale = 1.0f; 
-            entities->AddEntity(entity);
+            modelComp.material = m;
+            modelComp.scale = 1.0f;
         }
     }
     ui.EndWindow();
@@ -187,7 +191,7 @@ void EditorUI::OnEvent(Sprocket::Event& event)
 
     if (!event.IsConsumed()) {
         if (auto e = event.As<MouseButtonPressedEvent>()) {
-            d_worldLayer->d_selector.SetSelected(nullptr);
+            d_worldLayer->d_selector.SetSelected(Entity());
             // TODO: Do we want to consume this event here?
         }
     }
@@ -211,21 +215,23 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.StartWindow("Sprocket Editor", &open, flags);
     std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_entityManager.Entities().size();
+    ss << "Entities: " << d_worldLayer->d_entityManager.Size();
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {
-        for (auto [id, entity] : d_worldLayer->d_entityManager.Entities()) {
-            AddEntityToList(d_ui, d_worldLayer->d_selector, entity.get());      
-        }
+        d_worldLayer->d_entityManager.Each<SelectComponent>([&](Entity& entity) {
+            AddEntityToList(d_ui, d_worldLayer->d_selector, &entity);      
+        });
     }
 
     d_ui.EndWindow();
 
-    mat4 view = CameraUtils::MakeView(*d_worldLayer->d_camera);
-    mat4 proj = CameraUtils::MakeProj(*d_worldLayer->d_camera);
-    if (auto e = d_worldLayer->d_selector.SelectedEntity()) {
-        SelectedEntityInfo(d_ui, *e, view, proj);
+    mat4 view = CameraUtils::MakeView(d_worldLayer->d_camera);
+    mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_camera);
+
+    auto e = d_worldLayer->d_selector.SelectedEntity();
+    if (!e.Null()) {
+        SelectedEntityInfo(d_ui, e, view, proj);
     }
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);

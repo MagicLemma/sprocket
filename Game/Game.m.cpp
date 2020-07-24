@@ -13,6 +13,7 @@ int main()
     SceneManager sceneManager;
     ModelManager modelManager;
 
+
     window.SetCallback([&sceneManager](Event& event) {
         sceneManager.OnEvent(event);
     });

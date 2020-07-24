@@ -1,0 +1,8 @@
+#include "TransformComponent.h"
+#include "ModelComponent.h"
+#include "NameComponent.h"
+#include "PhysicsComponent.h"
+#include "ScriptComponent.h"
+#include "SelectComponent.h"
+#include "CameraComponent.h"
+#include "PlayerComponent.h"

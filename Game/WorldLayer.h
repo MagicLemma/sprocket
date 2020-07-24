@@ -14,8 +14,14 @@ class WorldLayer : public Sprocket::Layer
 {
     Mode d_mode;
 
-    Sprocket::Entity* d_camera;
-    Sprocket::Entity* d_worker;
+    // Entity management and systems
+    Sprocket::BasicSelector d_selector;
+    Sprocket::ScriptRunner  d_scriptRunner;
+    PathFollower  d_pathFollower;
+    Sprocket::EntityManager d_entityManager;
+
+    Sprocket::Entity d_camera;
+    Sprocket::Entity d_worker;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
@@ -24,12 +30,6 @@ class WorldLayer : public Sprocket::Layer
 
     // MODELLING
     Sprocket::ModelManager d_modelManager;
-
-    // Entity management and systems
-    Sprocket::EntityManager d_entityManager;
-    Sprocket::BasicSelector d_selector;
-    Sprocket::ScriptRunner  d_scriptRunner;
-    PathFollower  d_pathFollower;
 
     // Additional world setup
     Sprocket::Lights         d_lights;

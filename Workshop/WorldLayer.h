@@ -11,11 +11,11 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     // PLAYER MODE
-    Sprocket::Entity* d_playerCamera;
-    Sprocket::Entity* d_observerCamera;
-    Sprocket::Entity* d_editorCamera;
+    Sprocket::Entity d_playerCamera;
+    Sprocket::Entity d_observerCamera;
+    Sprocket::Entity d_editorCamera;
 
-    Sprocket::Entity* d_activeCamera;
+    Sprocket::Entity d_activeCamera;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
@@ -25,11 +25,12 @@ class WorldLayer : public Sprocket::Layer
 
     // WORLD
     // Entity management and systems
-    Sprocket::EntityManager  d_entityManager;
     Sprocket::PlayerMovement d_playerMovement;
     Sprocket::PhysicsEngine  d_physicsEngine;
     Sprocket::Selector       d_selector;
     Sprocket::ScriptRunner   d_scriptRunner;
+    
+    Sprocket::EntityManager  d_entityManager;
 
     // Additional world setup
     Sprocket::Skybox d_skybox;

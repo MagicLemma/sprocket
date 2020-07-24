@@ -2,8 +2,9 @@
 #include <Sprocket.h>
 
 #include <queue>
+#include <map>
 
-struct PathComponent : public Sprocket::Component
+struct PathComponent
 {
     std::queue<Sprocket::Maths::vec3> markers;
     float                             speed;
@@ -12,6 +13,6 @@ struct PathComponent : public Sprocket::Component
 class PathFollower : public Sprocket::EntitySystem
 {
 public:
-    void UpdateEntity(double dt, Sprocket::Entity& entity) override;
+    void OnUpdate(Sprocket::EntityManager& manager, double dt) override;
         // Called once per entity per frame and before the system updates.
 };

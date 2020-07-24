@@ -1,4 +1,5 @@
 #include "Listener.h"
+#include "TransformComponent.h"
 
 #include <SFML/Audio.hpp>
 
@@ -7,10 +8,12 @@ namespace Audio {
 
 void SetListener(const Entity& entity)
 {
-    auto pos = entity.Position();
+    if (!entity.Has<TransformComponent>()) { return; }
+    auto tr = entity.Get<TransformComponent>();
+    auto pos = tr.position;
     sf::Listener::setPosition(pos.x, pos.y, pos.z);
 
-    auto dir = Maths::Forwards(entity.Orientation());
+    auto dir = Maths::Forwards(tr.orientation);
     sf::Listener::setDirection(dir.x, dir.y, dir.z);
 }
 
