@@ -82,31 +82,19 @@ float GetSpeed(SpeedFactor s)
 
 }
 
-struct ColliderData
+struct EntityData
 {
-    std::shared_ptr<rp3d::CollisionShape> collisionShape;
-    rp3d::ProxyShape*                     proxyShape;
+    Entity                                entity;
+    rp3d::RigidBody*                      rigidBody;
+    rp3d::ProxyShape*                     proxyShape     = nullptr;
+    std::shared_ptr<rp3d::CollisionShape> collisionShape = nullptr;
 };
 
 struct PhysicsEngineImpl
 {
     rp3d::DynamicsWorld world;
 
-    std::unordered_map<
-        uint32_t, ColliderData
-    > collisionShapes;
-        // This is just to manage the lifetimes of the collision bodies. 
-        // May want to enhance this in the future for some optimising.
-
-    std::unordered_map<
-        uint32_t,
-        Entity
-    > registeredEntities;
-
-    std::unordered_map<
-        uint32_t, rp3d::RigidBody*
-    > rigidBodies; 
-        // Lifetime of RidigBody managed by RapidPhysics3D?
+    std::unordered_map<uint32_t, EntityData> entityData;
 
     PhysicsEngineImpl(const Maths::vec3& gravity)
         : world(Convert(gravity))
@@ -132,10 +120,10 @@ void PhysicsEngine::OnStartup(EntityManager& manager)
         auto& transform = entity.Get<TransformComponent>();
         auto& physics = entity.Get<PhysicsComponent>();
 
-        d_impl->registeredEntities[entity.Id()] = entity;
-        auto* e = &d_impl->registeredEntities[entity.Id()];
+        d_impl->entityData[entity.Id()].entity = entity;
+        auto* e = &d_impl->entityData[entity.Id()].entity;
 
-        auto& entry = d_impl->rigidBodies[entity.Id()];
+        auto& entry = d_impl->entityData[entity.Id()].rigidBody;
         entry = d_impl->world.createRigidBody(Convert(transform));
 
         // Give each RigidBody a ref back to the original Entity object.
@@ -152,11 +140,9 @@ void PhysicsEngine::OnStartup(EntityManager& manager)
     manager.OnRemove<PhysicsComponent>([&](Entity& entity) {
         auto& physics = entity.Get<PhysicsComponent>();
 
-        d_impl->registeredEntities.erase(entity.Id());
-
-        auto rigidBodyIt = d_impl->rigidBodies.find(entity.Id());
-        d_impl->world.destroyRigidBody(rigidBodyIt->second);
-        d_impl->rigidBodies.erase(rigidBodyIt);
+        auto rigidBodyIt = d_impl->entityData.find(entity.Id());
+        d_impl->world.destroyRigidBody(rigidBodyIt->second.rigidBody);
+        d_impl->entityData.erase(rigidBodyIt);
         // TODO: Clean up of collision bodies
     });
 }
@@ -169,7 +155,7 @@ void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
     manager.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
         const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<PhysicsComponent>();
-        auto bodyData = d_impl->rigidBodies[entity.Id()];
+        auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
         
         bodyData->setTransform(Convert(transform));
         bodyData->setLinearVelocity(Convert(physics.velocity));
@@ -206,7 +192,7 @@ void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
     manager.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         auto& physics = entity.Get<PhysicsComponent>();
-        const auto& bodyData = d_impl->rigidBodies[entity.Id()];
+        const auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
 
         transform.position = Convert(bodyData->getTransform().getPosition());
         transform.orientation = Convert(bodyData->getTransform().getOrientation());
@@ -233,18 +219,14 @@ void PhysicsEngine::AddCollider(Entity entity)
     else {
         return; // No collision data.
     }
+    d_impl->entityData[entity.Id()].collisionShape = collider;
 
-    auto& entry = d_impl->rigidBodies[entity.Id()];
-    auto ps = entry->addCollisionShape(
+    auto entry = d_impl->entityData[entity.Id()].rigidBody;
+    d_impl->entityData[entity.Id()].proxyShape = entry->addCollisionShape(
         collider.get(),
         rp3d::Transform::identity(),
         colliderData.mass
     );
-
-    ColliderData data;
-    data.collisionShape = collider;
-    data.proxyShape = ps;
-    d_impl->collisionShapes[entity.Id()] = data;
 }
 
 void PhysicsEngine::Running(bool isRunning)
@@ -277,7 +259,7 @@ void PhysicsEngine::UpdatePlayer(double dt, Entity entity)
     const auto& player = entity.Get<PlayerComponent>();
     const auto& physics = entity.Get<PhysicsComponent>();
 
-    float mass = d_impl->rigidBodies[entity.Id()]->getMass();
+    float mass = d_impl->entityData[entity.Id()].rigidBody->getMass();
         // Sum of all colliders plus rigid body.
 
     MakeUpright(entity, player.yaw);
@@ -303,13 +285,13 @@ void PhysicsEngine::UpdatePlayer(double dt, Entity entity)
 
 void PhysicsEngine::ApplyForce(Entity entity, const Maths::vec3& force)
 {
-    auto& bodyData = d_impl->rigidBodies[entity.Id()];
+    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
     bodyData->applyForceToCenterOfMass(Convert(force));
 }
 
 void PhysicsEngine::MakeUpright(Entity entity, float yaw)
 {
-    auto& bodyData = d_impl->rigidBodies[entity.Id()];
+    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
     rp3d::Transform transform = bodyData->getTransform();
     rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(
         0.0f, Maths::Radians(yaw), 0.0f);
@@ -320,7 +302,7 @@ void PhysicsEngine::MakeUpright(Entity entity, float yaw)
 
 bool PhysicsEngine::IsOnFloor(Entity entity) const
 {
-    auto& bodyData = d_impl->rigidBodies[entity.Id()];
+    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
 
     // Get the point at the bottom of the rigid body.
     auto aabb = bodyData->getAABB();
@@ -346,7 +328,7 @@ void PhysicsEngine::RefreshTransform(Entity entity)
         return;
     }
     
-    auto& bodyData = d_impl->rigidBodies[entity.Id()];
+    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
     bodyData->setTransform(
         rp3d::Transform(
             Convert(entity.Get<TransformComponent>().position),
