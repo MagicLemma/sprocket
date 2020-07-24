@@ -21,9 +21,6 @@ public:
     >;
 
 private:
-    Sprocket::EntityManager* d_entityManager;
-    Sprocket::ModelManager*  d_modelManager;
-
     Sprocket::KeyboardProxy d_keyboard;
     Sprocket::MouseProxy    d_mouse;
 

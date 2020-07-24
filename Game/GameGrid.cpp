@@ -22,8 +22,7 @@ Model3D GetHoveredSquare()
 }
 
 GameGrid::GameGrid(EntityManager* entityManager)
-    : d_entityManager(entityManager)
-    , d_hoveredSquare(entityManager->NewEntity())
+    : d_hoveredSquare(entityManager->NewEntity())
     , d_selectedSquare(entityManager->NewEntity())
     , d_hovered({0.0, 0.0})
     , d_selected({})
