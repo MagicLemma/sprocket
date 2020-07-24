@@ -1,4 +1,6 @@
 #include "ShadowMapRenderer.h"
+#include "TransformComponent.h"
+#include "ModelComponent.h"
 
 #include <glad/glad.h>
 

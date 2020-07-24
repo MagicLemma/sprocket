@@ -6,6 +6,10 @@
 #include "Log.h"
 #include "Entity.h"
 
+#include "NameComponent.h"
+#include "CameraComponent.h"
+#include "ScriptComponent.h"
+
 #include <lua.hpp>
 
 namespace Sprocket {

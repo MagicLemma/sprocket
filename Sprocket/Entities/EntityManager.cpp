@@ -35,10 +35,9 @@ void EntityManager::OnEvent(Event& event)
     }
 }
 
-void EntityManager::Draw(EntityRenderer* renderer) {
-    Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        renderer->Draw(entity);
-    });
+std::size_t EntityManager::Size() const
+{
+    return d_registry.alive();
 }
 
 }

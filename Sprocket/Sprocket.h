@@ -19,6 +19,19 @@
 #include "UI/SinglePanelUI.h"
 #include "UI/DevUI.h"
 
+// ENTITIES
+#include "Entities/Entity.h"
+#include "Entities/EntityManager.h"
+#include "Entities/EntitySystem.h"
+
+#include "Entities/Components/AllComponents.h"
+
+#include "Entities/Systems/BasicSelector.h"
+#include "Entities/Systems/Selector.h"
+#include "Entities/Systems/PhysicsEngine.h"
+#include "Entities/Systems/PlayerMovement.h"
+#include "Entities/Systems/ScriptRunner.h"
+
 // EVENTS
 #include "Events/Event.h"
 #include "Events/KeyboardEvent.h"
@@ -75,19 +88,7 @@
 #include "Objects/Terrain.h"
 #include "Objects/Skybox.h"
 
-#include "Objects/Entities/Entity.h"
-#include "Objects/Entities/Components.h"
-#include "Objects/Entities/EntityManager.h"
-
-// SYSTEMS
-#include "Systems/EntitySystem.h"
-#include "Systems/PhysicsEngine.h"
-#include "Systems/Colliders.h"
-#include "Systems/PlayerMovement.h"
-#include "Systems/BasicSelector.h"
-#include "Systems/ScriptRunner.h"
-#include "Systems/Selector.h"
-
+// SCRIPTING
 #include "Scripting/LuaEngine.h"
 #include "Scripting/LuaGlobals.h"
 #include "Scripting/LuaTransform.h"

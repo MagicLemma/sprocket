@@ -1,7 +1,6 @@
 #pragma once
 #include "Entity.h"
 #include "EntitySystem.h"
-#include "EntityRenderer.h"
 #include "Event.h"
 
 #include <vector>
@@ -20,8 +19,7 @@ public:
     using EntityCallback = std::function<void(Entity&)>;
 
     using TypeFunctionMap = std::unordered_map<
-        std::type_index,
-        std::vector<EntityCallback>
+        std::type_index, std::vector<EntityCallback>
     >;
 
 private:
@@ -45,9 +43,7 @@ public:
     void OnUpdate(double dt);
     void OnEvent(Event& event);
 
-    void Draw(EntityRenderer* renderer);
-
-    std::size_t EntityCount() const { return d_registry.alive(); }
+    std::size_t Size() const;
 
     template <typename... Components> void Each(EntityCallback func);
         // Loops through all the entities that have the specified

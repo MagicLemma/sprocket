@@ -2,6 +2,8 @@
 #include "LuaGlobals.h"
 #include "Entity.h"
 
+#include "TransformComponent.h"
+
 #include <lua.hpp>
 
 namespace Sprocket {

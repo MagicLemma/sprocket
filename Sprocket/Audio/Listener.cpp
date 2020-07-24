@@ -1,4 +1,5 @@
 #include "Listener.h"
+#include "TransformComponent.h"
 
 #include <SFML/Audio.hpp>
 

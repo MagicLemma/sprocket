@@ -220,7 +220,7 @@ void EditorUI::OnUpdate(double dt)
     d_ui.Text(d_worldLayer->d_entityRenderer.ShowColliders() ? "YES" : "NO");
 
     std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_entityManager.EntityCount();
+    ss << "Entities: " << d_worldLayer->d_entityManager.Size();
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {

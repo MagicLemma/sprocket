@@ -43,6 +43,16 @@ add_library(Sprocket STATIC
             UI/SinglePanelUI.cpp
             UI/DevUI.cpp
 
+            Entities/Entity.cpp
+            Entities/EntityManager.cpp
+            Entities/EntitySystem.cpp
+
+            Entities/Systems/BasicSelector.cpp
+            Entities/Systems/Selector.cpp
+            Entities/Systems/PhysicsEngine.cpp
+            Entities/Systems/PlayerMovement.cpp
+            Entities/Systems/ScriptRunner.cpp
+
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
 
@@ -66,23 +76,11 @@ add_library(Sprocket STATIC
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
 
-            Objects/Entities/Entity.cpp
-            Objects/Entities/Components.cpp
-            Objects/Entities/EntityManager.cpp
-
             Objects/CameraUtils.cpp
             Objects/Light.cpp
             Objects/Material.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
-
-            Systems/EntitySystem.cpp
-            Systems/PhysicsEngine.cpp
-            Systems/Colliders.cpp
-            Systems/PlayerMovement.cpp
-            Systems/BasicSelector.cpp
-            Systems/ScriptRunner.cpp
-            Systems/Selector.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp
@@ -124,8 +122,9 @@ target_include_directories(Sprocket PUBLIC
                            .
                            ./Audio
                            ./Core
-                           ./Display
-                           ./Display/WidgetProperties
+                           ./Entities
+                           ./Entities/Components
+                           ./Entities/Systems
                            ./Events
                            ./Graphics
                            ./Graphics/Primitives
@@ -133,11 +132,9 @@ target_include_directories(Sprocket PUBLIC
                            ./Graphics/Shadows
                            ./Graphics/PostProcessing
                            ./Objects
-                           ./Objects/Entities
                            ./Objects/Lenses
                            ./Utility
                            ./Scripting
-                           ./Systems
                            ./UI
                            ./UI/Font
                            ./Vendor/ImGuizmo

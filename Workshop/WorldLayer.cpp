@@ -420,7 +420,10 @@ void WorldLayer::OnUpdate(double dt)
     }
 
     d_skyboxRenderer.Draw(d_skybox, d_activeCamera);
-    d_entityManager.Draw(&d_entityRenderer);
+
+    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+        d_entityRenderer.Draw(entity);
+    });
     
     if (d_paused) {
         d_postProcessor.Unbind();

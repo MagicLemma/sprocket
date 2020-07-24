@@ -1,6 +1,9 @@
 #include "PhysicsEngine.h"
-#include "Components.h"
+#include "Log.h"
 #include "EntityManager.h"
+#include "TransformComponent.h"
+#include "PhysicsComponent.h"
+#include "PlayerComponent.h"
 
 #include <variant>
 

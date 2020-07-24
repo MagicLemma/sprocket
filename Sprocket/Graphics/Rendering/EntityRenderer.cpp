@@ -1,9 +1,12 @@
 #include "EntityRenderer.h"
 #include "Maths.h"
-#include "Components.h"
 #include "ModelManager.h"
 #include "RenderContext.h"
 #include "CameraUtils.h"
+
+#include "TransformComponent.h"
+#include "ModelComponent.h"
+#include "SelectComponent.h"
 
 #include <glad/glad.h>
 

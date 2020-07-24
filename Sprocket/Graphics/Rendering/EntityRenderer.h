@@ -5,6 +5,9 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "PhysicsComponent.h"
+#include "ModelComponent.h"
+
 namespace Sprocket {
 
 class EntityRenderer

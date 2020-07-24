@@ -1,10 +1,4 @@
 #pragma once
-#include "Components.h"
-
-#include <vector>
-#include <memory>
-#include <array>
-#include <utility>
 
 #include <entt/entt.hpp>
 
