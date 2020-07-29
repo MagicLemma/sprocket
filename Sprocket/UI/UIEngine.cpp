@@ -218,7 +218,6 @@ bool UIEngine::StartPanel(
         panel.name = name;
         panel.hash = hash;
         panel.region = *region;
-
         d_currentPanel = &panel;
 
         if (*clickable) {
@@ -230,8 +229,10 @@ bool UIEngine::StartPanel(
             if (info.mouseDown && *draggable) {
                 region->x += d_mouse->GetMouseOffset().x;
                 region->y += d_mouse->GetMouseOffset().y;
+                d_currentPanel->region = *region;
             }
         }
+
     }
 
     return *active;
