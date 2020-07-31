@@ -13,37 +13,6 @@
 namespace Sprocket {
 namespace {
 
-void BindMaterial(Shader* shader, const Material& material)
-{
-    glActiveTexture(GL_TEXTURE0);
-    material.texture.Bind();
-    shader->LoadUniformInt("texture_sampler", 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    material.specularMap.Bind();
-    shader->LoadUniformInt("specular_sampler", 1);
-
-    glActiveTexture(GL_TEXTURE2);
-    material.normalMap.Bind();
-    shader->LoadUniformInt("normal_sampler", 2);
-
-    glActiveTexture(GL_TEXTURE0);
-}
-
-void UnbindMaterial(Shader* shader)
-{
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE0);
-}
-
 bool ShouldOutlineEntity(const Entity& entity)
 {
     if (!entity.Has<SelectComponent>()) {
@@ -80,6 +49,7 @@ void EntityRenderer::EnableShadows(
     d_shader.Bind();
     d_shader.LoadUniformInt("shadow_map", 3);
     d_shader.LoadUniform("u_light_proj_view", lightProjView);
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
@@ -164,14 +134,14 @@ void EntityRenderer::DrawModel(const Entity& entity)
     }
     d_shader.LoadUniform("u_brightness", brightness);
 
-    // Bind textures
-    BindMaterial(&d_shader, modelComp.material);
-
     auto model = d_modelManager->GetModel(modelComp.model);
+
+    glActiveTexture(GL_TEXTURE0);
+    modelComp.material.texture.Bind();
     model.Bind();
     glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
     model.Unbind();
-    UnbindMaterial(&d_shader);
+    modelComp.material.texture.Unbind();
 }
 
 void EntityRenderer::DrawCollider(const Entity& entity)

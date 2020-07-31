@@ -52,7 +52,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     Material galaxy;
     galaxy.texture = space;
-    galaxy.specularMap = spaceSpec;
 
     Material islandMaterial;
     islandMaterial.texture = Texture("Resources/Textures/FloatingIslandTex.png");

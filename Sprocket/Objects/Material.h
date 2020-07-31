@@ -5,10 +5,7 @@ namespace Sprocket {
     
 struct Material
 {
-    Texture texture;
-    Texture specularMap;
-    Texture normalMap;
-    
+    Texture texture;    
     float   shineDamper  = 1.0f;
     float   reflectivity = 0.0f;
 };
