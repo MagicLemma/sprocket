@@ -77,12 +77,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model.material = dullGray;
         model.scale = 1.0f;
 
-        BoxCollider c;
-        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-
         PhysicsComponent phys;
-        phys.collider = c;
         phys.frozen = true;
+        phys.collider = Collider::BOX;
+        phys.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         platform.Add<PhysicsComponent>(phys);
 
         platform.Add<SelectComponent>();
@@ -121,11 +119,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model.scale = 1.0f;
 
         PhysicsComponent phys;
-        phys.bounciness = 0.0f;
-        BoxCollider c;
-        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys.collider = c;
         phys.frozen = true;
+        phys.bounciness = 0.0f;
+        phys.collider = Collider::BOX;
+        phys.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         platform.Add<PhysicsComponent>(phys);
 
         platform.Add<SelectComponent>();
@@ -149,11 +146,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model.scale = 1.0f;
 
         PhysicsComponent phys;
-        phys.bounciness = 0.0f;
-        BoxCollider c;
-        c.halfExtents = {6.224951f, 0.293629f, 16.390110f};
-        phys.collider = c;
         phys.frozen = true;
+        phys.bounciness = 0.0f;
+        phys.collider = Collider::BOX;
+        phys.halfExtents = {6.224951f, 0.293629f, 16.390110f};
         platform.Add<PhysicsComponent>(phys);
 
         platform.Add<SelectComponent>();
@@ -178,9 +174,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         phys.frozen = true;
         phys.bounciness = 0.0f;
         phys.frictionCoefficient = 0.0f;
-        BoxCollider c;
-        c.halfExtents = {1.2, 1.2, 1.2};
-        phys.collider = c;
+        phys.collider = Collider::BOX;
+        phys.halfExtents = {1.2, 1.2, 1.2};
         crate.Add<PhysicsComponent>(phys);
 
         crate.Add<SelectComponent>();
@@ -206,9 +201,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         phys.mass = 1000.0f;
         phys.bounciness = 0.0f;
         phys.frictionCoefficient = 0.0f;
-        BoxCollider c;
-        c.halfExtents = {1.2, 1.2, 1.2};
-        phys.collider = c;
+        phys.collider = Collider::BOX;
+        phys.halfExtents = {1.2, 1.2, 1.2};
         crate.Add<PhysicsComponent>(phys);
 
         crate.Add<SelectComponent>();
@@ -234,9 +228,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         phys.mass = 10000.0f;
         phys.bounciness = 0.0f;
         phys.frictionCoefficient = 0.2f;
-        BoxCollider c;
-        c.halfExtents = {1.2, 1.2, 1.2};
-        phys.collider = c;
+        phys.collider = Collider::BOX;
+        phys.halfExtents = {1.2, 1.2, 1.2};
         crate.Add<PhysicsComponent>(phys);
 
         crate.Add<SelectComponent>();
@@ -262,12 +255,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         phys.rollingResistance = 1.0f;
         phys.frictionCoefficient = 0.4f;
         phys.bounciness = 0.0f;
-        {
-            CapsuleCollider c;
-            c.radius = 0.5f;
-            c.height = 1.0f;
-            phys.collider = c;
-        }
+        phys.collider = Collider::CAPSULE;
+        phys.radius = 0.5f;
+        phys.height = 1.0f;
         player.Add<PhysicsComponent>(phys);
 
         player.Add<PlayerComponent>();
@@ -333,13 +323,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         model.material = shinyGray;
         model.scale = 0.9f;
 
-        SphereCollider c;
-        c.radius = 1;
-
         PhysicsComponent phys;
-        phys.collider = c;
         phys.mass = 20.0f;
-
+        phys.collider = Collider::SPHERE;
+        phys.radius = 1;
         sphere.Add<PhysicsComponent>(phys);
 
         sphere.Add<SelectComponent>();

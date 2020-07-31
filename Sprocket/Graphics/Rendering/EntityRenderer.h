@@ -20,9 +20,9 @@ class EntityRenderer
     void DrawModel    (const Entity& entity);
     void DrawCollider (const Entity& entity);
 
-    void DrawBox      (const Entity& entity, const BoxCollider* collider);
-    void DrawSphere   (const Entity& entity, const SphereCollider* collider);
-    void DrawCapsule  (const Entity& entity, const CapsuleCollider* collider);
+    void DrawBox      (const Entity& entity);
+    void DrawSphere   (const Entity& entity);
+    void DrawCapsule  (const Entity& entity);
 
 public:
     EntityRenderer(Window* window);
@@ -34,7 +34,6 @@ public:
     void BeginScene(const Entity& camera, const Lights& light);
 
     void EnableShadows(const Texture& shadowMap, const Maths::mat4& lightProjView);
-
 
     void Draw(const Entity& entity);
 
