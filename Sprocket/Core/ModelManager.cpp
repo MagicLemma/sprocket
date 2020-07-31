@@ -79,7 +79,7 @@ Model3D ModelManager::GetModel(const std::string& path)
         return it->second;
     }
     Model3D model = LoadModel(path);
-    d_loadedModels.insert(std::make_pair(path, model));
+    d_loadedModels.emplace(path, model);
     return model;   
 }
 

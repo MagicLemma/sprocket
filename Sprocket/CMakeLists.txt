@@ -28,6 +28,7 @@ add_library(Sprocket STATIC
             Core/Window.cpp
             Core/SceneManager.cpp
             Core/ModelManager.cpp
+            Core/TextureManager.cpp
             Core/Layer.cpp
             Core/Scene.cpp
 

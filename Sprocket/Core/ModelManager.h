@@ -1,6 +1,5 @@
 #pragma once
 #include "Model3D.h"
-#include "Texture.h"
 
 #include <string>
 #include <vector>
