@@ -18,8 +18,8 @@ GameGrid::GameGrid(EntityManager* entityManager)
     auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
     model1.model = gridSqare;
-    model1.material.texture = Texture::White();
-    model1.material.reflectivity = 0.0f;
+    model1.texture = Texture::White();
+    model1.reflectivity = 0.0f;
     model1.scale = 0.3f;
 
     auto& n2 = d_selectedSquare.Add<NameComponent>();
@@ -27,8 +27,8 @@ GameGrid::GameGrid(EntityManager* entityManager)
     auto& tr2 = d_selectedSquare.Add<TransformComponent>();
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
     model2.model = gridSqare;
-    model2.material.texture = Texture::White();
-    model2.material.reflectivity = 0.0f;
+    model2.texture = Texture::White();
+    model2.reflectivity = 0.0f;
     model2.scale = 0.5f;
 
     d_keyboard.ConsumeAll(false);

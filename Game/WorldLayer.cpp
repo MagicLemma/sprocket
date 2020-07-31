@@ -70,13 +70,6 @@ constexpr char MAP[ROWS + 1][COLUMNS + 1] = {
     "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
 };
 
-Sprocket::Material GetTerrainMaterial()
-{
-    Sprocket::Material dullGray;
-    dullGray.texture = Sprocket::Texture("Resources/Textures/Green.PNG");
-    return dullGray;
-}
-
 }
 
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
@@ -163,7 +156,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& modelData = terrain.Add<ModelComponent>();
         modelData.scale = 25.0f;
         modelData.model = "Resources/Models/Square.obj";
-        modelData.material = GetTerrainMaterial();
+        modelData.texture = Sprocket::Texture("Resources/Textures/Green.PNG");
         
         terrain.Add<SelectComponent>();
     }
@@ -413,9 +406,9 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/BetterTree.obj";
     modelData.scale = Random(1.0f, 1.3f);
-    modelData.material.texture = tex;
-    modelData.material.shineDamper = 10.0f;
-    modelData.material.reflectivity = 0.0f;
+    modelData.texture = tex;
+    modelData.shineDamper = 10.0f;
+    modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
     d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
@@ -439,9 +432,9 @@ void WorldLayer::AddRockBase(
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/Rock.obj";
     modelData.scale = 1.1f;
-    modelData.material.texture = tex;
-    modelData.material.shineDamper = 10.0f;
-    modelData.material.reflectivity = 0.0f;
+    modelData.texture = tex;
+    modelData.shineDamper = 10.0f;
+    modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
     d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);

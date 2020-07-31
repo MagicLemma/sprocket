@@ -38,23 +38,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     Texture space("Resources/Textures/Space.PNG");
     Texture spaceSpec("Resources/Textures/SpaceSpec.PNG");
     Texture gray("Resources/Textures/PlainGray.PNG");
-
-    Material dullGray;
-    dullGray.texture = gray;
-
-    Material shinyGray;
-    shinyGray.texture = gray;
-    shinyGray.reflectivity = 2.0f;
-    shinyGray.shineDamper = 3.0f;
-
-    Material field;
-    field.texture = green;
-
-    Material galaxy;
-    galaxy.texture = space;
-
-    Material islandMaterial;
-    islandMaterial.texture = Texture("Resources/Textures/FloatingIslandTex.png");
+    Texture islandMaterial("Resources/Textures/FloatingIslandTex.png");
 
     std::string platformModel = "Resources/Models/Platform.obj";
     std::string crateModel = "Resources/Models/Cube.obj";
@@ -73,7 +57,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         
         auto& model = platform.Add<ModelComponent>();
         model.model = platformModel;
-        model.material = dullGray;
+        model.texture = gray;
         model.scale = 1.0f;
 
         PhysicsComponent phys;
@@ -97,7 +81,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         
         auto& model = platform.Add<ModelComponent>();
         model.model = floatingIslandModel;
-        model.material = islandMaterial;
+        model.texture = islandMaterial;
         model.scale = 0.5f;
 
         platform.Add<SelectComponent>();
@@ -114,7 +98,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& model = platform.Add<ModelComponent>();
         model.model = platformModel;
-        model.material = dullGray;
+        model.texture = gray;
         model.scale = 1.0f;
 
         PhysicsComponent phys;
@@ -141,7 +125,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& model = platform.Add<ModelComponent>();
         model.model = platformModel;
-        model.material = dullGray;
+        model.texture = gray;
         model.scale = 1.0f;
 
         PhysicsComponent phys;
@@ -166,7 +150,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& model = crate.Add<ModelComponent>();
         model.model = crateModel;
-        model.material = galaxy;
+        model.texture = space;
         model.scale = 1.2f;
 
         PhysicsComponent phys;
@@ -192,7 +176,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& model = crate.Add<ModelComponent>();
         model.model = crateModel;
-        model.material = field;
+        model.texture = green;
         model.scale = 1.2f;
 
         PhysicsComponent phys;
@@ -219,7 +203,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& model = crate.Add<ModelComponent>();
         model.model = crateModel;
-        model.material = field;
+        model.texture = green;
         model.scale = 1.2f;
 
         PhysicsComponent phys;
@@ -245,7 +229,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
         auto& model = player.Add<ModelComponent>();
         model.model = crateModel;
-        model.material = shinyGray;
+        model.texture = gray;
         model.scale = 0.3f;
 
         PhysicsComponent phys;
@@ -319,8 +303,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         
         auto& model = sphere.Add<ModelComponent>();
         model.model = sphereModel;
-        model.material = shinyGray;
         model.scale = 0.9f;
+        model.texture = gray;
+        model.reflectivity = 2.0f;
+        model.shineDamper = 3.0f;
 
         PhysicsComponent phys;
         phys.mass = 20.0f;

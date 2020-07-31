@@ -120,8 +120,8 @@ void EntityRenderer::DrawModel(const Entity& entity)
 
     d_shader.Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
-	d_shader.LoadUniform("u_shine_dampner", modelComp.material.shineDamper);
-	d_shader.LoadUniform("u_reflectivity", modelComp.material.reflectivity);
+	d_shader.LoadUniform("u_shine_dampner", modelComp.shineDamper);
+	d_shader.LoadUniform("u_reflectivity", modelComp.reflectivity);
 
     float brightness = 1.0f;
     if (entity.Has<SelectComponent>()) {
@@ -137,11 +137,11 @@ void EntityRenderer::DrawModel(const Entity& entity)
     auto model = d_modelManager->GetModel(modelComp.model);
 
     glActiveTexture(GL_TEXTURE0);
-    modelComp.material.texture.Bind();
+    modelComp.texture.Bind();
     model.Bind();
     glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
     model.Unbind();
-    modelComp.material.texture.Unbind();
+    modelComp.texture.Unbind();
 }
 
 void EntityRenderer::DrawCollider(const Entity& entity)
