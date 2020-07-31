@@ -10,9 +10,9 @@ int main()
     Log::Init();
 
     Window window("Game!");
-    SceneManager sceneManager;
-    ModelManager modelManager;
-
+    SceneManager   sceneManager;
+    ModelManager   modelManager;
+    TextureManager textureManager;
 
     window.SetCallback([&sceneManager](Event& event) {
         sceneManager.OnEvent(event);
@@ -22,6 +22,7 @@ int main()
     core.window = &window;
     core.sceneManager = &sceneManager;
     core.modelManager = &modelManager;
+    core.textureManager = &textureManager;
 
     auto world = sceneManager.AddScene("World");
     auto worldLayer = world->Add<WorldLayer>(core);

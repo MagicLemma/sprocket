@@ -6,6 +6,7 @@
 #include "Core/Window.h"
 #include "Core/SceneManager.h"
 #include "Core/ModelManager.h"
+#include "Core/TextureManager.h"
 #include "Core/Layer.h"
 #include "Core/Scene.h"
 
@@ -21,10 +22,9 @@
 
 // ENTITIES
 #include "Entities/Entity.h"
+#include "Entities/Components.h"
 #include "Entities/EntityManager.h"
 #include "Entities/EntitySystem.h"
-
-#include "Entities/Components/AllComponents.h"
 
 #include "Entities/Systems/BasicSelector.h"
 #include "Entities/Systems/Selector.h"
@@ -83,7 +83,6 @@
 
 // OBJECTS
 #include "Objects/CameraUtils.h"
-#include "Objects/Material.h"
 #include "Objects/Light.h"
 #include "Objects/Terrain.h"
 #include "Objects/Skybox.h"

@@ -9,6 +9,7 @@ int main()
     Sprocket::Window window("Workshop");
     Sprocket::SceneManager sceneManager;
     Sprocket::ModelManager modelManager;
+    Sprocket::TextureManager textureManager;
 
     window.SetCallback([&sceneManager](Sprocket::Event& event) {
         sceneManager.OnEvent(event);
@@ -18,6 +19,7 @@ int main()
     core.window = &window;
     core.sceneManager = &sceneManager;
     core.modelManager = &modelManager;
+    core.textureManager = &textureManager;
 
     auto world = sceneManager.AddScene("World");
     auto worldLayer = world->Add<WorldLayer>(core);

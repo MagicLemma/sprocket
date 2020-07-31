@@ -1,6 +1,5 @@
 #pragma once
 #include "Model3D.h"
-#include "Texture.h"
 
 #include <string>
 #include <vector>
@@ -20,10 +19,9 @@ public:
     static Model3D LoadModel(const std::string& path);
         // Loads a model without caching it.
 
-    Model3D LoadModel(const std::string& name,
-                      const std::string& path);
-
-    Model3D GetModel(const std::string& name) const;
+    Model3D GetModel(const std::string& path);
+        // Returns the model in the specified path. If it has not beed loaded
+        // it will be loaded and stored internally.
 
     // Lower camel case to match STL iterators
     Map::iterator begin();

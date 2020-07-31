@@ -3,46 +3,12 @@
 #include "ModelManager.h"
 #include "RenderContext.h"
 #include "CameraUtils.h"
-
-#include "TransformComponent.h"
-#include "ModelComponent.h"
-#include "SelectComponent.h"
+#include "Components.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
 namespace {
-
-void BindMaterial(Shader* shader, const Material& material)
-{
-    glActiveTexture(GL_TEXTURE0);
-    material.texture.Bind();
-    shader->LoadUniformInt("texture_sampler", 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    material.specularMap.Bind();
-    shader->LoadUniformInt("specular_sampler", 1);
-
-    glActiveTexture(GL_TEXTURE2);
-    material.normalMap.Bind();
-    shader->LoadUniformInt("normal_sampler", 2);
-
-    glActiveTexture(GL_TEXTURE0);
-}
-
-void UnbindMaterial(Shader* shader)
-{
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE0);
-}
 
 bool ShouldOutlineEntity(const Entity& entity)
 {
@@ -56,8 +22,12 @@ bool ShouldOutlineEntity(const Entity& entity)
 
 }
 
-EntityRenderer::EntityRenderer(Window* window)
+EntityRenderer::EntityRenderer(Window* window,
+                               ModelManager* modelManager,
+                               TextureManager* textureManager)
     : d_window(window)
+    , d_modelManager(modelManager)
+    , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert",
                "Resources/Shaders/Entity.frag")
     , d_renderColliders(false)
@@ -79,6 +49,7 @@ void EntityRenderer::EnableShadows(
     d_shader.Bind();
     d_shader.LoadUniformInt("shadow_map", 3);
     d_shader.LoadUniform("u_light_proj_view", lightProjView);
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
@@ -144,13 +115,14 @@ void EntityRenderer::DrawModel(const Entity& entity)
     glStencilMask(outline ? 0xFF : 0x00);
 
     auto& modelComp = entity.Get<ModelComponent>();
-    Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+    auto tr = entity.Get<TransformComponent>();
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, modelComp.scale);
 
     d_shader.Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
-	d_shader.LoadUniform("u_shine_dampner", modelComp.material.shineDamper);
-	d_shader.LoadUniform("u_reflectivity", modelComp.material.reflectivity);
+	d_shader.LoadUniform("u_shine_dampner", modelComp.shineDamper);
+	d_shader.LoadUniform("u_reflectivity", modelComp.reflectivity);
 
     float brightness = 1.0f;
     if (entity.Has<SelectComponent>()) {
@@ -163,12 +135,15 @@ void EntityRenderer::DrawModel(const Entity& entity)
     }
     d_shader.LoadUniform("u_brightness", brightness);
 
-    // Bind textures
-    BindMaterial(&d_shader, modelComp.material);
-    modelComp.model.Bind();
-    glDrawElements(GL_TRIANGLES, (int)modelComp.model.VertexCount(), GL_UNSIGNED_INT, nullptr);
-    modelComp.model.Unbind();
-    UnbindMaterial(&d_shader);
+    auto model = d_modelManager->GetModel(modelComp.model);
+    auto texture = d_textureManager->GetTexture(modelComp.texture);
+
+    glActiveTexture(GL_TEXTURE0);
+    texture.Bind();
+    model.Bind();
+    glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
+    model.Unbind();
+    texture.Unbind();
 }
 
 void EntityRenderer::DrawCollider(const Entity& entity)
@@ -195,7 +170,8 @@ void EntityRenderer::DrawBox(const Entity& entity)
     const auto& physics = entity.Get<PhysicsComponent>();
     static auto s_cube = ModelManager::LoadModel("Resources/Models/Cube.obj");
 
-    Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+    auto tr = entity.Get<TransformComponent>();
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, physics.halfExtents);
 
     s_cube.Bind();
@@ -211,7 +187,8 @@ void EntityRenderer::DrawSphere(const Entity& entity)
     const auto& physics = entity.Get<PhysicsComponent>();
     static auto s_sphere = ModelManager::LoadModel("Resources/Models/LowPolySphere.obj");
 
-    Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+    auto tr = entity.Get<TransformComponent>();
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, physics.radius);
     
     s_sphere.Bind();
@@ -231,7 +208,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
     Texture::White().Bind();
     {  // Top Hemisphere
         s_hemisphere.Bind();
-        Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+        auto tr = entity.Get<TransformComponent>();
+        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform = Maths::Translate(transform, {0.0, physics.height/2, 0.0});
         transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
@@ -241,7 +219,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
 
     {  // Middle Cylinder
         s_cylinder.Bind();
-        Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+        auto tr = entity.Get<TransformComponent>();
+        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform = Maths::Scale(transform, {physics.radius, physics.height, physics.radius});
         d_shader.LoadUniform("u_model_matrix", transform);
         glDrawElements(GL_TRIANGLES, (int)s_cylinder.VertexCount(), GL_UNSIGNED_INT, nullptr);
@@ -250,7 +229,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
 
     {  // Bottom Hemisphere
         s_hemisphere.Bind();
-        Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+        auto tr = entity.Get<TransformComponent>();
+        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform = Maths::Translate(transform, {0.0, -physics.height/2, 0.0});
         transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
         transform = Maths::Scale(transform, physics.radius);

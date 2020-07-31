@@ -4,7 +4,7 @@
 #include "EntityManager.h"
 #include "LuaEngine.h"
 #include "EntityManager.h"
-#include "ScriptComponent.h"
+#include "Components.h"
 
 #include <utility>
 

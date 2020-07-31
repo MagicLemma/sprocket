@@ -1,8 +1,7 @@
 #include "LuaTransform.h"
 #include "LuaGlobals.h"
 #include "Entity.h"
-
-#include "TransformComponent.h"
+#include "Components.h"
 
 #include <lua.hpp>
 

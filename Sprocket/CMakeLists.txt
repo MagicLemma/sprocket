@@ -28,6 +28,7 @@ add_library(Sprocket STATIC
             Core/Window.cpp
             Core/SceneManager.cpp
             Core/ModelManager.cpp
+            Core/TextureManager.cpp
             Core/Layer.cpp
             Core/Scene.cpp
 
@@ -78,7 +79,6 @@ add_library(Sprocket STATIC
 
             Objects/CameraUtils.cpp
             Objects/Light.cpp
-            Objects/Material.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
 
@@ -123,7 +123,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Audio
                            ./Core
                            ./Entities
-                           ./Entities/Components
                            ./Entities/Systems
                            ./Events
                            ./Graphics

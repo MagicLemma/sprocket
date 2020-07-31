@@ -2,7 +2,7 @@
 #include "MouseEvent.h"
 #include "CameraUtils.h"
 #include "EntityManager.h"
-#include "SelectComponent.h"
+#include "Components.h"
 
 namespace Sprocket {
 

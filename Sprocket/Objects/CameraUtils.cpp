@@ -1,8 +1,6 @@
 #include "CameraUtils.h"
 #include "Log.h"
-
-#include "TransformComponent.h"
-#include "CameraComponent.h"
+#include "Components.h"
 
 namespace Sprocket {
 namespace CameraUtils {
@@ -21,7 +19,7 @@ Maths::mat4 MakeView(const Entity& entity)
         tr.orientation *= Maths::Rotate({1, 0, 0}, c.pitch);
     }
 
-    return Maths::Inverse(tr.Transform());   
+    return Maths::Inverse(Maths::Transform(tr.position, tr.orientation));   
 }
 
 Maths::mat4 MakeProj(const Entity& entity)

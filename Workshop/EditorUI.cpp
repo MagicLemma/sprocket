@@ -101,7 +101,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
-        Maths::mat4 origin = tr.Transform();
+        Maths::mat4 origin = Maths::Transform(tr.position, tr.position);
         ui.Gizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
         tr.orientation = Normalise(ToQuat(mat3(origin)));
@@ -142,15 +142,10 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
             auto& tr = entity.Add<Sprocket::TransformComponent>();
             tr.position = {10.0, 0.0, 10.0};
             auto& modelComp = entity.Add<Sprocket::ModelComponent>();
-            modelComp.model = model;
-
-            Sprocket::Material m;
-            m.texture = Sprocket::Texture::White();
+            modelComp.model = name;
+            modelComp.scale = 1.0f;
 
             entity.Add<Sprocket::SelectComponent>();
-            
-            modelComp.material = m;
-            modelComp.scale = 1.0f; 
         }
     }
     ui.EndWindow();

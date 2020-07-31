@@ -1,6 +1,6 @@
 #include "BasicSelector.h"
 #include "EntityManager.h"
-#include "SelectComponent.h"
+#include "Components.h"
 #include "Log.h"
 
 namespace Sprocket {

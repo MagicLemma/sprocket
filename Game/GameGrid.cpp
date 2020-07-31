@@ -5,37 +5,20 @@
 
 using namespace Sprocket;
 
-namespace {
-
-Model3D GetHoveredSquare()
-{
-    Vertex3DBuffer vb = {
-        {{-1, 0, 1},  {0, 1, 0}, {0, 0}}, // Top left
-        {{1, 0, 1},   {0, 1, 0}, {1, 0}}, // Top right
-        {{-1, 0, -1}, {0, 1, 0}, {0, 1}}, // Bottom left
-        {{1, 0, -1},  {0, 1, 0}, {1, 1}}  // Bottom right
-    };
-    IndexBuffer ib = { 0, 1, 2, 3, 2, 1 };
-    return Model3D(vb, ib);
-}
-
-}
-
 GameGrid::GameGrid(EntityManager* entityManager)
     : d_hoveredSquare(entityManager->NewEntity())
     , d_selectedSquare(entityManager->NewEntity())
     , d_hovered({0.0, 0.0})
     , d_selected({})
 {
-    auto gridSqare = GetHoveredSquare();
+    std::string gridSqare = "Resources/Models/Square.obj";
 
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     n1.name = "Hovered Grid Highlighter";
     auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
     model1.model = gridSqare;
-    model1.material.texture = Texture::White();
-    model1.material.reflectivity = 0.0f;
+    model1.reflectivity = 0.0f;
     model1.scale = 0.3f;
 
     auto& n2 = d_selectedSquare.Add<NameComponent>();
@@ -43,8 +26,7 @@ GameGrid::GameGrid(EntityManager* entityManager)
     auto& tr2 = d_selectedSquare.Add<TransformComponent>();
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
     model2.model = gridSqare;
-    model2.material.texture = Texture::White();
-    model2.material.reflectivity = 0.0f;
+    model2.reflectivity = 0.0f;
     model2.scale = 0.5f;
 
     d_keyboard.ConsumeAll(false);

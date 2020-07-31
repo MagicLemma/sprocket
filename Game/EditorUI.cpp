@@ -4,38 +4,43 @@
 
 #include <sstream>
 
+using namespace Sprocket;
+
 namespace {
 
-void AddEntityToList(Sprocket::DevUI::Context& ui,
-                     Sprocket::BasicSelector& selector,
-                     Sprocket::Entity* entity)
+std::string EntityName(Entity& entity)
 {
-    using namespace Sprocket;
-    
-    //ui.PushID(entity->Id());
-    //if (ui.StartTreeNode(entity->Name())) {
-    //    if (entity->Has<SelectComponent>() && ui.Button("Select")) {
-    //        SPKT_LOG_INFO("Select clicked!");
-    //        selector.SetSelected(entity);
-    //    }
-    //    ui.EndTreeNode();
-    //}
-    //ui.PopID();         
+    if (entity.Has<NameComponent>()) {
+        return entity.Get<NameComponent>().name;
+    }
+    return "Unnamed";
 }
 
-void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
-                        Sprocket::Entity& entity,
-                        const Sprocket::Maths::mat4& view,
-                        const Sprocket::Maths::mat4& proj)
+void AddEntityToList(DevUI::Context& ui, BasicSelector& selector, Entity& entity)
 {
-    using namespace Sprocket;
+    ui.PushID(entity.Id());
+    if (ui.StartTreeNode(EntityName(entity))) {
+        if (entity.Has<SelectComponent>() && ui.Button("Select")) {
+            SPKT_LOG_INFO("Select clicked!");
+            selector.SetSelected(entity);
+        }
+        ui.EndTreeNode();
+    }
+    ui.PopID();         
+}
+
+void SelectedEntityInfo(DevUI::Context& ui,
+                        Entity& entity,
+                        const Maths::mat4& view,
+                        const Maths::mat4& proj)
+{
     using namespace Maths;
 
     ui.StartWindow("Selected Entity");
     ui.Text("Name: ");
     ui.SameLine();
-    //ui.TextModifiable(entity.Name());
-    //ui.Text("ID: " + std::to_string(entity.Id()));
+    ui.Text(EntityName(entity));
+    ui.Text("ID: " + std::to_string(entity.Id()));
     ui.Separator();
     
     static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
@@ -71,7 +76,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
-        Maths::mat4 origin = tr.Transform();
+        Maths::mat4 origin = Maths::Transform(tr.position, tr.orientation);
         ui.Gizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
         tr.orientation = Normalise(ToQuat(mat3(origin)));
@@ -85,35 +90,9 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     ui.EndWindow();
 }
 
-void AddEntityPanel(Sprocket::DevUI::Context& ui,
-                    Sprocket::EntityManager* entities,
-                    Sprocket::ModelManager* models)
-{
-    ui.StartWindow("Add Entity");
-    for (const auto& [name, model] : *models) {
-        if (ui.Button(name.c_str())) {
-            SPKT_LOG_INFO("Added entity");
-            auto entity = entities->NewEntity();
-            auto& tr = entity.Add<Sprocket::TransformComponent>();
-            tr.position = {10.0, 0.0, 10.0};
-            auto& modelComp = entity.Add<Sprocket::ModelComponent>();
-            modelComp.model = model;
-
-            Sprocket::Material m;
-            m.texture = Sprocket::Texture::White();
-
-            entity.Add<Sprocket::SelectComponent>();
-            
-            modelComp.material = m;
-            modelComp.scale = 1.0f;
-        }
-    }
-    ui.EndWindow();
-}
-
-void SunInfoPanel(Sprocket::DevUI::Context& ui,
-                  Sprocket::DirectionalLight& sun,
-                  Sprocket::CircadianCycle& cycle)
+void SunInfoPanel(DevUI::Context& ui,
+                  DirectionalLight& sun,
+                  CircadianCycle& cycle)
 {
     ui.StartWindow("Sun");
 
@@ -138,8 +117,7 @@ void SunInfoPanel(Sprocket::DevUI::Context& ui,
     ui.EndWindow();
 }
 
-void ShaderInfoPanel(Sprocket::DevUI::Context& ui,
-                     Sprocket::Shader& shader)
+void ShaderInfoPanel(DevUI::Context& ui, Shader& shader)
 {
     static std::string compileStatus;
 
@@ -171,7 +149,7 @@ void ShaderInfoPanel(Sprocket::DevUI::Context& ui,
 
 }
 
-EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
+EditorUI::EditorUI(const CoreSystems& core, WorldLayer* worldLayer)
     : Layer(core)
     , d_worldLayer(worldLayer)
     , d_ui(core.window)
@@ -179,10 +157,8 @@ EditorUI::EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer)
 {  
 }
 
-void EditorUI::OnEvent(Sprocket::Event& event)
+void EditorUI::OnEvent(Event& event)
 {
-    using namespace Sprocket;
-
     if (d_worldLayer->d_mode != Mode::EDITOR) {
         return;
     }
@@ -204,7 +180,6 @@ void EditorUI::OnUpdate(double dt)
         return;
     }
 
-    using namespace Sprocket;
     using namespace Maths;
 
     d_ui.OnUpdate(dt);
@@ -220,7 +195,7 @@ void EditorUI::OnUpdate(double dt)
 
     if (d_ui.CollapsingHeader("Entity List")) {
         d_worldLayer->d_entityManager.Each<SelectComponent>([&](Entity& entity) {
-            AddEntityToList(d_ui, d_worldLayer->d_selector, &entity);      
+            AddEntityToList(d_ui, d_worldLayer->d_selector, entity);      
         });
     }
 
@@ -234,7 +209,6 @@ void EditorUI::OnUpdate(double dt)
         SelectedEntityInfo(d_ui, e, view, proj);
     }
 
-    AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
     SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_cycle);
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 

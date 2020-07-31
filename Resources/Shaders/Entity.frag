@@ -8,8 +8,6 @@ in vec3  p_to_light_vector[5];
 layout(location = 0) out vec4 out_colour;
 
 uniform sampler2D texture_sampler;
-uniform sampler2D specular_sampler;
-uniform sampler2D normal_sampler;
 
 // Lighting Information
 uniform vec3 u_light_colour[5];
@@ -85,7 +83,6 @@ void main()
 
         // Specular lighting calculation
         float specular_factor = dot(reflected_light_direction, unit_to_camera);
-        float reflectivity = texture(specular_sampler, p_texture_coords).r;
         specular_factor = max(specular_factor, 0.0);
         specular_factor = pow(specular_factor, u_shine_dampner) / attenuation;
         total_specular = total_specular + vec4(specular_factor * u_reflectivity * u_light_colour[i], 1.0);

@@ -70,31 +70,21 @@ constexpr char MAP[ROWS + 1][COLUMNS + 1] = {
     "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
 };
 
-Sprocket::Material GetTerrainMaterial()
-{
-    Sprocket::Material dullGray;
-    dullGray.texture = Sprocket::Texture("Resources/Textures/Green.PNG");
-    return dullGray;
-}
-
 }
 
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
-    , d_entityRenderer(core.window)
+    , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower})
     , d_gameGrid(&d_entityManager)
-    , d_shadowMapRenderer(core.window)
+    , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
 {
     using namespace Sprocket;
 
     d_entityManager.OnStartup();
-
-    d_modelManager.LoadModel("GG_Tree", "Resources/Models/BetterTree.obj");
-    d_modelManager.LoadModel("GG_Rock", "Resources/Models/Rock.obj");
 
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
@@ -130,7 +120,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         path.speed = 3.0f;
 
         auto& modelData = worker.Add<ModelComponent>();
-        modelData.model = ModelManager::LoadModel("Resources/Models/Cube.obj");
+        modelData.model = "Resources/Models/Cube.obj";
         modelData.scale = 0.5f;
 
         d_worker = worker;
@@ -161,12 +151,12 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         name.name = "Terrain";
 
         auto& tr = terrain.Add<TransformComponent>();
-        tr.position = {-25, 0, -25};
+        tr.position = {0, 0, 0};
 
         auto& modelData = terrain.Add<ModelComponent>();
-        modelData.scale = 1.0f;
-        modelData.model = MakeTerrain(51, 1.0f);
-        modelData.material = GetTerrainMaterial();
+        modelData.scale = 25.0f;
+        modelData.model = "Resources/Models/Square.obj";
+        modelData.texture = "Resources/Textures/Green.PNG";
         
         terrain.Add<SelectComponent>();
     }
@@ -403,7 +393,7 @@ void WorldLayer::OnUpdate(double dt)
 void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 {
     using namespace Sprocket;
-    static auto tex = Texture("Resources/Textures/BetterTree.png");
+    static std::string tex = "Resources/Textures/BetterTree.png";
 
     auto newEntity = d_entityManager.NewEntity();
 
@@ -414,11 +404,11 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     tr.orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
 
     auto& modelData = newEntity.Add<ModelComponent>();
-    modelData.model = d_modelManager.GetModel("GG_Tree");
+    modelData.model = "Resources/Models/BetterTree.obj";
     modelData.scale = Random(1.0f, 1.3f);
-    modelData.material.texture = tex;
-    modelData.material.shineDamper = 10.0f;
-    modelData.material.reflectivity = 0.0f;
+    modelData.texture = tex;
+    modelData.shineDamper = 10.0f;
+    modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
     d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
@@ -426,7 +416,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
 void WorldLayer::AddRockBase(
     const Sprocket::Maths::ivec2& pos,
-    const Sprocket::Texture& tex,
+    const std::string& tex,
     const std::string& name)
 {
     using namespace Sprocket;
@@ -440,11 +430,11 @@ void WorldLayer::AddRockBase(
     tr.orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
 
     auto& modelData = newEntity.Add<ModelComponent>();
-    modelData.model = d_modelManager.GetModel("GG_Rock");
+    modelData.model = "Resources/Models/Rock.obj";
     modelData.scale = 1.1f;
-    modelData.material.texture = tex;
-    modelData.material.shineDamper = 10.0f;
-    modelData.material.reflectivity = 0.0f;
+    modelData.texture = tex;
+    modelData.shineDamper = 10.0f;
+    modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
     d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
@@ -452,24 +442,24 @@ void WorldLayer::AddRockBase(
 
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Rock.png");
+    static std::string tex = "Resources/Textures/Rock.png";
     AddRockBase(pos, tex, "Rock");
 }
 
 void WorldLayer::AddIron(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Iron.png");
+    static std::string tex = "Resources/Textures/Iron.png";
     AddRockBase(pos, tex, "Iron");
 }
 
 void WorldLayer::AddTin(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Tin.png");
+    static std::string tex = "Resources/Textures/Tin.png";
     AddRockBase(pos, tex, "Tin");
 }
 
 void WorldLayer::AddMithril(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Mithril.png");
+    static std::string tex = "Resources/Textures/Mithril.png";
     AddRockBase(pos, tex, "Mithril");
 }
