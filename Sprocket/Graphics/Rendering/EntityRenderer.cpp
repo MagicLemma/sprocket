@@ -25,9 +25,12 @@ bool ShouldOutlineEntity(const Entity& entity)
 
 }
 
-EntityRenderer::EntityRenderer(Window* window, ModelManager* modelManager)
+EntityRenderer::EntityRenderer(Window* window,
+                               ModelManager* modelManager,
+                               TextureManager* textureManager)
     : d_window(window)
     , d_modelManager(modelManager)
+    , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert",
                "Resources/Shaders/Entity.frag")
     , d_renderColliders(false)
@@ -135,13 +138,14 @@ void EntityRenderer::DrawModel(const Entity& entity)
     d_shader.LoadUniform("u_brightness", brightness);
 
     auto model = d_modelManager->GetModel(modelComp.model);
+    auto texture = d_textureManager->GetTexture(modelComp.texture);
 
     glActiveTexture(GL_TEXTURE0);
-    modelComp.texture.Bind();
+    texture.Bind();
     model.Bind();
     glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
     model.Unbind();
-    modelComp.texture.Unbind();
+    texture.Unbind();
 }
 
 void EntityRenderer::DrawCollider(const Entity& entity)

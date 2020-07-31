@@ -6,9 +6,12 @@
 
 namespace Sprocket {
 
-ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
+ShadowMapRenderer::ShadowMapRenderer(Window* window,
+                                     ModelManager* modelManager,
+                                     TextureManager* textureManager)
     : d_window(window)
     , d_modelManager(modelManager)
+    , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/ShadowMap.vert",
                "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.

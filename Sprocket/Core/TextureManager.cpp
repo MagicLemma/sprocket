@@ -9,6 +9,8 @@ namespace Sprocket {
 
 Texture TextureManager::GetTexture(const std::string& path)
 {
+    if (path == "") { return Texture::White(); }
+    
     auto it = d_loadedTextures.find(path);
     if (it != d_loadedTextures.end()) {
         return it->second;

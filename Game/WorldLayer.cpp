@@ -75,11 +75,11 @@ constexpr char MAP[ROWS + 1][COLUMNS + 1] = {
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
-    , d_entityRenderer(core.window, core.modelManager)
+    , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower})
     , d_gameGrid(&d_entityManager)
-    , d_shadowMapRenderer(core.window, core.modelManager)
+    , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
 {
     using namespace Sprocket;
@@ -156,7 +156,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& modelData = terrain.Add<ModelComponent>();
         modelData.scale = 25.0f;
         modelData.model = "Resources/Models/Square.obj";
-        modelData.texture = Sprocket::Texture("Resources/Textures/Green.PNG");
+        modelData.texture = "Resources/Textures/Green.PNG";
         
         terrain.Add<SelectComponent>();
     }
@@ -393,7 +393,7 @@ void WorldLayer::OnUpdate(double dt)
 void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 {
     using namespace Sprocket;
-    static auto tex = Texture("Resources/Textures/BetterTree.png");
+    static std::string tex = "Resources/Textures/BetterTree.png";
 
     auto newEntity = d_entityManager.NewEntity();
 
@@ -416,7 +416,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
 void WorldLayer::AddRockBase(
     const Sprocket::Maths::ivec2& pos,
-    const Sprocket::Texture& tex,
+    const std::string& tex,
     const std::string& name)
 {
     using namespace Sprocket;
@@ -442,24 +442,24 @@ void WorldLayer::AddRockBase(
 
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Rock.png");
+    static std::string tex = "Resources/Textures/Rock.png";
     AddRockBase(pos, tex, "Rock");
 }
 
 void WorldLayer::AddIron(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Iron.png");
+    static std::string tex = "Resources/Textures/Iron.png";
     AddRockBase(pos, tex, "Iron");
 }
 
 void WorldLayer::AddTin(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Tin.png");
+    static std::string tex = "Resources/Textures/Tin.png";
     AddRockBase(pos, tex, "Tin");
 }
 
 void WorldLayer::AddMithril(const Sprocket::Maths::ivec2& pos)
 {
-    static auto tex = Sprocket::Texture("Resources/Textures/Mithril.png");
+    static std::string tex = "Resources/Textures/Mithril.png";
     AddRockBase(pos, tex, "Mithril");
 }

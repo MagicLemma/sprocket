@@ -1,6 +1,4 @@
 #pragma once
-#include "Model3D.h"
-#include "Texture.h"
 
 #include <string>
 
@@ -11,7 +9,7 @@ struct ModelComponent
     std::string model;
     float       scale = 1.0f;
 
-    Texture     texture;    
+    std::string texture      = "";    
     float       shineDamper  = 1.0f;
     float       reflectivity = 0.0f;
 };

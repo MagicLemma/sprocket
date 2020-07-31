@@ -3,7 +3,7 @@
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::OBSERVER)
-    , d_entityRenderer(core.window, core.modelManager)
+    , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_skyboxRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_skybox({
@@ -34,11 +34,11 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     auto& entityManager = d_entityManager;
 
-    Texture green("Resources/Textures/Green.PNG");
-    Texture space("Resources/Textures/Space.PNG");
-    Texture spaceSpec("Resources/Textures/SpaceSpec.PNG");
-    Texture gray("Resources/Textures/PlainGray.PNG");
-    Texture islandMaterial("Resources/Textures/FloatingIslandTex.png");
+    std::string green = "Resources/Textures/Green.PNG";
+    std::string space = "Resources/Textures/Space.PNG";
+    std::string spaceSpec = "Resources/Textures/SpaceSpec.PNG";
+    std::string gray = "Resources/Textures/PlainGray.PNG";
+    std::string islandMaterial = "Resources/Textures/FloatingIslandTex.png";
 
     std::string platformModel = "Resources/Models/Platform.obj";
     std::string crateModel = "Resources/Models/Cube.obj";
