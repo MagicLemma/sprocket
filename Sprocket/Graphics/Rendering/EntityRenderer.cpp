@@ -118,7 +118,8 @@ void EntityRenderer::DrawModel(const Entity& entity)
     glStencilMask(outline ? 0xFF : 0x00);
 
     auto& modelComp = entity.Get<ModelComponent>();
-    Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+    auto tr = entity.Get<TransformComponent>();
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, modelComp.scale);
 
     d_shader.Bind();
@@ -172,7 +173,8 @@ void EntityRenderer::DrawBox(const Entity& entity)
     const auto& physics = entity.Get<PhysicsComponent>();
     static auto s_cube = ModelManager::LoadModel("Resources/Models/Cube.obj");
 
-    Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+    auto tr = entity.Get<TransformComponent>();
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, physics.halfExtents);
 
     s_cube.Bind();
@@ -188,7 +190,8 @@ void EntityRenderer::DrawSphere(const Entity& entity)
     const auto& physics = entity.Get<PhysicsComponent>();
     static auto s_sphere = ModelManager::LoadModel("Resources/Models/LowPolySphere.obj");
 
-    Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+    auto tr = entity.Get<TransformComponent>();
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, physics.radius);
     
     s_sphere.Bind();
@@ -208,7 +211,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
     Texture::White().Bind();
     {  // Top Hemisphere
         s_hemisphere.Bind();
-        Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+        auto tr = entity.Get<TransformComponent>();
+        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform = Maths::Translate(transform, {0.0, physics.height/2, 0.0});
         transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
@@ -218,7 +222,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
 
     {  // Middle Cylinder
         s_cylinder.Bind();
-        Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+        auto tr = entity.Get<TransformComponent>();
+        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform = Maths::Scale(transform, {physics.radius, physics.height, physics.radius});
         d_shader.LoadUniform("u_model_matrix", transform);
         glDrawElements(GL_TRIANGLES, (int)s_cylinder.VertexCount(), GL_UNSIGNED_INT, nullptr);
@@ -227,7 +232,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
 
     {  // Bottom Hemisphere
         s_hemisphere.Bind();
-        Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
+        auto tr = entity.Get<TransformComponent>();
+        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform = Maths::Translate(transform, {0.0, -physics.height/2, 0.0});
         transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
         transform = Maths::Scale(transform, physics.radius);
