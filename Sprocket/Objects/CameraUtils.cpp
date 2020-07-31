@@ -1,8 +1,6 @@
 #include "CameraUtils.h"
 #include "Log.h"
-
-#include "TransformComponent.h"
-#include "CameraComponent.h"
+#include "Components.h"
 
 namespace Sprocket {
 namespace CameraUtils {

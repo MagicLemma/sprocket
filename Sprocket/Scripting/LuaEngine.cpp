@@ -5,10 +5,7 @@
 #include "LuaCamera.h"
 #include "Log.h"
 #include "Entity.h"
-
-#include "NameComponent.h"
-#include "CameraComponent.h"
-#include "ScriptComponent.h"
+#include "Components.h"
 
 #include <lua.hpp>
 

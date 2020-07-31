@@ -22,10 +22,9 @@
 
 // ENTITIES
 #include "Entities/Entity.h"
+#include "Entities/Components.h"
 #include "Entities/EntityManager.h"
 #include "Entities/EntitySystem.h"
-
-#include "Entities/Components/AllComponents.h"
 
 #include "Entities/Systems/BasicSelector.h"
 #include "Entities/Systems/Selector.h"

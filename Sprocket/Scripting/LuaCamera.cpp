@@ -2,8 +2,7 @@
 #include "LuaGlobals.h"
 #include "Entity.h"
 #include "Maths.h"
-
-#include "CameraComponent.h"
+#include "Components.h"
 
 #include <lua.hpp>
 

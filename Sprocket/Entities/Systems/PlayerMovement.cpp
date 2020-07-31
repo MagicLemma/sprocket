@@ -1,9 +1,7 @@
 #include "PlayerMovement.h"
 #include "KeyboardCodes.h"
 #include "EntityManager.h"
-#include "PlayerComponent.h"
-#include "PhysicsComponent.h"
-#include "CameraComponent.h"
+#include "Components.h"
 #include "Log.h"
 
 namespace Sprocket {

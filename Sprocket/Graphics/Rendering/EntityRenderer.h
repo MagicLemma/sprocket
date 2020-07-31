@@ -6,9 +6,7 @@
 #include "Texture.h"
 #include "ModelManager.h"
 #include "TextureManager.h"
-
-#include "PhysicsComponent.h"
-#include "ModelComponent.h"
+#include "Components.h"
 
 namespace Sprocket {
 

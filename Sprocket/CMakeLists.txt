@@ -123,7 +123,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Audio
                            ./Core
                            ./Entities
-                           ./Entities/Components
                            ./Entities/Systems
                            ./Events
                            ./Graphics
