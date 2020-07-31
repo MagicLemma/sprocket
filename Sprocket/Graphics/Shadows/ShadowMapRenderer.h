@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Entity.h"
 #include "DepthBuffer.h"
+#include "ModelManager.h"
 
 #include <memory>
 
@@ -11,7 +12,9 @@ namespace Sprocket {
 
 class ShadowMapRenderer
 {
-    Window* d_window;
+    Window*       d_window;
+    ModelManager* d_modelManager;
+
     Shader  d_shader;
 
     Maths::mat4 d_lightViewMatrix;
@@ -20,7 +23,7 @@ class ShadowMapRenderer
     DepthBuffer d_shadowMap;
 
 public:
-    ShadowMapRenderer(Window* window);
+    ShadowMapRenderer(Window* window, ModelManager* modelManager);
 
     void BeginScene(const DirectionalLight& light, const Maths::vec3& centre);
         // Called before any draw calls. The light is the light

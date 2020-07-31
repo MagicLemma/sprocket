@@ -72,27 +72,15 @@ Model3D ModelManager::LoadModel(const std::string& path)
     return ProcessMesh(scene, scene->mMeshes[0]);
 }
 
-Model3D ModelManager::LoadModel(const std::string& name,
-                                const std::string& path)
+Model3D ModelManager::GetModel(const std::string& path)
 {
-    auto it = d_loadedModels.find(name);
+    auto it = d_loadedModels.find(path);
     if (it != d_loadedModels.end()) {
-        SPKT_LOG_ERROR("Tried to cache a model as '{}', which exists!", name);
         return it->second;
     }
     Model3D model = LoadModel(path);
-    d_loadedModels.insert(std::make_pair(name, model));
+    d_loadedModels.insert(std::make_pair(path, model));
     return model;   
-}
-
-Model3D ModelManager::GetModel(const std::string& name) const
-{
-    auto it = d_loadedModels.find(name);
-    if (it == d_loadedModels.end()) {
-        SPKT_LOG_ERROR("Tried to load model '{}', which does not exist!", name);
-        return Model3D();
-    }
-    return it->second;
 }
 
 ModelManager::Map::iterator ModelManager::begin()

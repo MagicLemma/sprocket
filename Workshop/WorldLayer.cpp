@@ -3,7 +3,7 @@
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::OBSERVER)
-    , d_entityRenderer(core.window)
+    , d_entityRenderer(core.window, core.modelManager)
     , d_skyboxRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_skybox({
@@ -57,10 +57,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     Material islandMaterial;
     islandMaterial.texture = Texture("Resources/Textures/FloatingIslandTex.png");
 
-    auto platformModel = core.modelManager->LoadModel("Platform", "Resources/Models/Platform.obj");
-    auto crateModel = core.modelManager->LoadModel("Crate", "Resources/Models/Cube.obj");
-    auto sphereModel = core.modelManager->LoadModel("Sphere", "Resources/Models/Sphere.obj");
-    auto floatingIslandModel = core.modelManager->LoadModel("Floating Island", "Resources/Models/FloatingIsland.obj");
+    std::string platformModel = "Resources/Models/Platform.obj";
+    std::string crateModel = "Resources/Models/Cube.obj";
+    std::string sphereModel = "Resources/Models/Sphere.obj";
+    std::string floatingIslandModel = "Resources/Models/FloatingIsland.obj";
 
     {
         auto platform = entityManager.NewEntity();

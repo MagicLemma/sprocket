@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "ModelManager.h"
 
 #include "PhysicsComponent.h"
 #include "ModelComponent.h"
@@ -12,7 +13,9 @@ namespace Sprocket {
 
 class EntityRenderer
 {
-    Window* d_window;
+    Window*       d_window;
+    ModelManager* d_modelManager;
+
     Shader  d_shader;
 
     bool d_renderColliders;
@@ -25,7 +28,7 @@ class EntityRenderer
     void DrawCapsule  (const Entity& entity);
 
 public:
-    EntityRenderer(Window* window);
+    EntityRenderer(Window* window, ModelManager* modelManager);
 
     void RenderColliders(bool value);
 

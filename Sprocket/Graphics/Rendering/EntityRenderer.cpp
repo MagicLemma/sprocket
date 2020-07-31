@@ -56,8 +56,9 @@ bool ShouldOutlineEntity(const Entity& entity)
 
 }
 
-EntityRenderer::EntityRenderer(Window* window)
+EntityRenderer::EntityRenderer(Window* window, ModelManager* modelManager)
     : d_window(window)
+    , d_modelManager(modelManager)
     , d_shader("Resources/Shaders/Entity.vert",
                "Resources/Shaders/Entity.frag")
     , d_renderColliders(false)
@@ -165,9 +166,11 @@ void EntityRenderer::DrawModel(const Entity& entity)
 
     // Bind textures
     BindMaterial(&d_shader, modelComp.material);
-    modelComp.model.Bind();
-    glDrawElements(GL_TRIANGLES, (int)modelComp.model.VertexCount(), GL_UNSIGNED_INT, nullptr);
-    modelComp.model.Unbind();
+
+    auto model = d_modelManager->GetModel(modelComp.model);
+    model.Bind();
+    glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
+    model.Unbind();
     UnbindMaterial(&d_shader);
 }
 

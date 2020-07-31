@@ -82,19 +82,16 @@ Sprocket::Material GetTerrainMaterial()
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
-    , d_entityRenderer(core.window)
+    , d_entityRenderer(core.window, core.modelManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower})
     , d_gameGrid(&d_entityManager)
-    , d_shadowMapRenderer(core.window)
+    , d_shadowMapRenderer(core.window, core.modelManager)
     , d_hoveredEntityUI(core.window)
 {
     using namespace Sprocket;
 
     d_entityManager.OnStartup();
-
-    d_modelManager.LoadModel("GG_Tree", "Resources/Models/BetterTree.obj");
-    d_modelManager.LoadModel("GG_Rock", "Resources/Models/Rock.obj");
 
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
@@ -130,7 +127,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         path.speed = 3.0f;
 
         auto& modelData = worker.Add<ModelComponent>();
-        modelData.model = ModelManager::LoadModel("Resources/Models/Cube.obj");
+        modelData.model = "Resources/Models/Cube.obj";
         modelData.scale = 0.5f;
 
         d_worker = worker;
@@ -161,11 +158,11 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         name.name = "Terrain";
 
         auto& tr = terrain.Add<TransformComponent>();
-        tr.position = {-25, 0, -25};
+        tr.position = {0, 0, 0};
 
         auto& modelData = terrain.Add<ModelComponent>();
-        modelData.scale = 1.0f;
-        modelData.model = MakeTerrain(51, 1.0f);
+        modelData.scale = 25.0f;
+        modelData.model = "Resources/Models/Square.obj";
         modelData.material = GetTerrainMaterial();
         
         terrain.Add<SelectComponent>();
@@ -414,7 +411,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     tr.orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
 
     auto& modelData = newEntity.Add<ModelComponent>();
-    modelData.model = d_modelManager.GetModel("GG_Tree");
+    modelData.model = "Resources/Models/BetterTree.obj";
     modelData.scale = Random(1.0f, 1.3f);
     modelData.material.texture = tex;
     modelData.material.shineDamper = 10.0f;
@@ -440,7 +437,7 @@ void WorldLayer::AddRockBase(
     tr.orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
 
     auto& modelData = newEntity.Add<ModelComponent>();
-    modelData.model = d_modelManager.GetModel("GG_Rock");
+    modelData.model = "Resources/Models/Rock.obj";
     modelData.scale = 1.1f;
     modelData.material.texture = tex;
     modelData.material.shineDamper = 10.0f;

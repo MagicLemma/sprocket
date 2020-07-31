@@ -142,7 +142,7 @@ void AddEntityPanel(Sprocket::DevUI::Context& ui,
             auto& tr = entity.Add<Sprocket::TransformComponent>();
             tr.position = {10.0, 0.0, 10.0};
             auto& modelComp = entity.Add<Sprocket::ModelComponent>();
-            modelComp.model = model;
+            modelComp.model = name;
 
             Sprocket::Material m;
             m.texture = Sprocket::Texture::White();

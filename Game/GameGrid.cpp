@@ -5,29 +5,13 @@
 
 using namespace Sprocket;
 
-namespace {
-
-Model3D GetHoveredSquare()
-{
-    Vertex3DBuffer vb = {
-        {{-1, 0, 1},  {0, 1, 0}, {0, 0}}, // Top left
-        {{1, 0, 1},   {0, 1, 0}, {1, 0}}, // Top right
-        {{-1, 0, -1}, {0, 1, 0}, {0, 1}}, // Bottom left
-        {{1, 0, -1},  {0, 1, 0}, {1, 1}}  // Bottom right
-    };
-    IndexBuffer ib = { 0, 1, 2, 3, 2, 1 };
-    return Model3D(vb, ib);
-}
-
-}
-
 GameGrid::GameGrid(EntityManager* entityManager)
     : d_hoveredSquare(entityManager->NewEntity())
     , d_selectedSquare(entityManager->NewEntity())
     , d_hovered({0.0, 0.0})
     , d_selected({})
 {
-    auto gridSqare = GetHoveredSquare();
+    std::string gridSqare = "Resources/Models/Square.obj";
 
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     n1.name = "Hovered Grid Highlighter";
