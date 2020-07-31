@@ -74,6 +74,8 @@ Model3D ModelManager::LoadModel(const std::string& path)
 
 Model3D ModelManager::GetModel(const std::string& path)
 {
+    if (path == "") { return Model3D(); }
+    
     auto it = d_loadedModels.find(path);
     if (it != d_loadedModels.end()) {
         return it->second;
