@@ -1,36 +1,15 @@
 #pragma once
 #include "Maths.h"
 
-#include <variant>
-
 namespace Sprocket {
 
-struct BoxCollider
+enum class Collider
 {
-    Maths::vec3 halfExtents;
+    NONE,
+    SPHERE,
+    CAPSULE,
+    BOX
 };
-
-struct SphereCollider
-{
-    float radius;
-};
-
-struct CapsuleCollider
-{
-    float radius;
-    float height;
-};
-
-struct EmptyCollider
-{
-};
-
-using Collider = std::variant<
-    BoxCollider,
-    SphereCollider,
-    CapsuleCollider,
-    EmptyCollider
->;
 
 struct PhysicsComponent
 {
@@ -38,11 +17,17 @@ struct PhysicsComponent
     bool        gravity  = true;
     bool        frozen   = false;
 
-    Collider collider            = EmptyCollider();
-    float    mass                = 1.0f;
-    float    bounciness          = 0.5f;
-    float    frictionCoefficient = 0.3f;
-    float    rollingResistance   = 0.0f;
+    // Not all of these attributes (halfExtends, radius, height) are used
+    // by all component types.
+    Collider collider       = Collider::NONE;
+    Maths::vec3 halfExtents = {0.0, 0.0, 0.0};
+    float radius            = 1.0f;
+    float height            = 1.0f;
+
+    float mass                = 1.0f;
+    float bounciness          = 0.5f;
+    float frictionCoefficient = 0.3f;
+    float rollingResistance   = 0.0f;
 };
 
 }

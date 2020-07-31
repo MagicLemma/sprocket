@@ -205,18 +205,18 @@ void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
 
 void PhysicsEngine::AddCollider(Entity entity)
 {
-    auto& colliderData = entity.Get<PhysicsComponent>();
+    auto& physics = entity.Get<PhysicsComponent>();
 
     std::shared_ptr<rp3d::CollisionShape> collider = nullptr;
-    if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
-        collider = std::make_shared<rp3d::BoxShape>(Convert(data->halfExtents));
+    if (physics.collider == Collider::BOX) {
+        collider = std::make_shared<rp3d::BoxShape>(Convert(physics.halfExtents));
     }
-    else if (auto data = std::get_if<SphereCollider>(&colliderData.collider)) {
-        collider = std::make_shared<rp3d::SphereShape>(data->radius);
+    else if (physics.collider == Collider::SPHERE) {
+        collider = std::make_shared<rp3d::SphereShape>(physics.radius);
     }
-    else if (auto data = std::get_if<CapsuleCollider>(&colliderData.collider)) {
+    else if (physics.collider == Collider::CAPSULE) {
         collider = std::make_shared<rp3d::CapsuleShape>(
-            data->radius, data->height
+            physics.radius, physics.height
         );
     }
     else {
@@ -228,7 +228,7 @@ void PhysicsEngine::AddCollider(Entity entity)
     d_impl->entityData[entity.Id()].proxyShape = entry->addCollisionShape(
         collider.get(),
         rp3d::Transform::identity(),
-        colliderData.mass
+        physics.mass
     );
 }
 

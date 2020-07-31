@@ -177,25 +177,26 @@ void EntityRenderer::DrawCollider(const Entity& entity)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     d_shader.Bind();
-    auto& colliderData = entity.Get<PhysicsComponent>();
-    if (auto data = std::get_if<BoxCollider>(&colliderData.collider)) {
-        DrawBox(entity, data);
+    auto& physics = entity.Get<PhysicsComponent>();
+    if (physics.collider == Collider::BOX) {
+        DrawBox(entity);
     }
-    else if (auto data = std::get_if<SphereCollider>(&colliderData.collider)) {
-        DrawSphere(entity, data);
+    else if (physics.collider == Collider::SPHERE) {
+        DrawSphere(entity);
     }
-    else if (auto data = std::get_if<CapsuleCollider>(&colliderData.collider)) {
-        DrawCapsule(entity, data);
+    else if (physics.collider == Collider::CAPSULE) {
+        DrawCapsule(entity);
     }
     d_shader.Unbind();
 }
 
-void EntityRenderer::DrawBox(const Entity& entity, const BoxCollider* collider)
+void EntityRenderer::DrawBox(const Entity& entity)
 {
+    const auto& physics = entity.Get<PhysicsComponent>();
     static auto s_cube = ModelManager::LoadModel("Resources/Models/Cube.obj");
 
     Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
-    transform = Maths::Scale(transform, collider->halfExtents);
+    transform = Maths::Scale(transform, physics.halfExtents);
 
     s_cube.Bind();
     Texture::White().Bind();
@@ -205,12 +206,13 @@ void EntityRenderer::DrawBox(const Entity& entity, const BoxCollider* collider)
     s_cube.Unbind();
 }
 
-void EntityRenderer::DrawSphere(const Entity& entity, const SphereCollider* collider)
+void EntityRenderer::DrawSphere(const Entity& entity)
 {
+    const auto& physics = entity.Get<PhysicsComponent>();
     static auto s_sphere = ModelManager::LoadModel("Resources/Models/LowPolySphere.obj");
 
     Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
-    transform = Maths::Scale(transform, collider->radius);
+    transform = Maths::Scale(transform, physics.radius);
     
     s_sphere.Bind();
     Texture::White().Bind();
@@ -220,8 +222,9 @@ void EntityRenderer::DrawSphere(const Entity& entity, const SphereCollider* coll
     s_sphere.Unbind();
 }
 
-void EntityRenderer::DrawCapsule(const Entity& entity, const CapsuleCollider* collider)
+void EntityRenderer::DrawCapsule(const Entity& entity)
 {
+    const auto& physics = entity.Get<PhysicsComponent>();
     static auto s_hemisphere = ModelManager::LoadModel("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = ModelManager::LoadModel("Resources/Models/Cylinder.obj");
 
@@ -229,8 +232,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity, const CapsuleCollider* co
     {  // Top Hemisphere
         s_hemisphere.Bind();
         Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
-        transform = Maths::Translate(transform, {0.0, collider->height/2, 0.0});
-        transform = Maths::Scale(transform, collider->radius);
+        transform = Maths::Translate(transform, {0.0, physics.height/2, 0.0});
+        transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
         glDrawElements(GL_TRIANGLES, (int)s_hemisphere.VertexCount(), GL_UNSIGNED_INT, nullptr);
         s_hemisphere.Unbind();
@@ -239,7 +242,7 @@ void EntityRenderer::DrawCapsule(const Entity& entity, const CapsuleCollider* co
     {  // Middle Cylinder
         s_cylinder.Bind();
         Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
-        transform = Maths::Scale(transform, {collider->radius, collider->height, collider->radius});
+        transform = Maths::Scale(transform, {physics.radius, physics.height, physics.radius});
         d_shader.LoadUniform("u_model_matrix", transform);
         glDrawElements(GL_TRIANGLES, (int)s_cylinder.VertexCount(), GL_UNSIGNED_INT, nullptr);
         s_cylinder.Unbind();
@@ -248,9 +251,9 @@ void EntityRenderer::DrawCapsule(const Entity& entity, const CapsuleCollider* co
     {  // Bottom Hemisphere
         s_hemisphere.Bind();
         Maths::mat4 transform = entity.Get<TransformComponent>().Transform();
-        transform = Maths::Translate(transform, {0.0, -collider->height/2, 0.0});
+        transform = Maths::Translate(transform, {0.0, -physics.height/2, 0.0});
         transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
-        transform = Maths::Scale(transform, collider->radius);
+        transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
         glDrawElements(GL_TRIANGLES, (int)s_hemisphere.VertexCount(), GL_UNSIGNED_INT, nullptr);
         s_hemisphere.Unbind();

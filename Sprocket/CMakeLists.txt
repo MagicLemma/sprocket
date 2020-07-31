@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 project(Sprocket)
 add_subdirectory(Vendor/reactphysics3d)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
 
