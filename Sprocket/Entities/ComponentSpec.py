@@ -41,18 +41,18 @@ class ScriptComponent(Component):
     active: bool = True
 
 class PlayerComponent(Component):
-    movingForwards:  bool = False
-    movingBackwards: bool = False
-    movingLeft:      bool = False
-    movingRight:     bool = False
-    jumping:         bool = False
+    movingForwards:  bool  = False
+    movingBackwards: bool  = False
+    movingLeft:      bool  = False
+    movingRight:     bool  = False
+    jumping:         bool  = False
 
-    direction:       Vec3 = Vec3(0, 0, 0)
+    direction:       Vec3  = Vec3(0, 0, 0)
     yaw:             float = 0.0
     pitch:           float = 0.0
 
 class CameraComponent(Component):
-    projection:      Mat4 = None
+    projection:      Mat4  = None
     pitch:           float = 0.0
 
 class SelectComponent(Component):
