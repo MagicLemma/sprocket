@@ -52,8 +52,8 @@ class PlayerComponent(Component):
     pitch:           float = 0.0
 
 class CameraComponent(Component):
-    projection:      Mat4  = None
-    pitch:           float = 0.0
+    projection: Mat4  = None
+    pitch:      float = 0.0
 
 class SelectComponent(Component):
     selected: bool = False
