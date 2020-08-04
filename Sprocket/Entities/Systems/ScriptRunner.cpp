@@ -31,9 +31,10 @@ void ScriptRunner::OnStartup(EntityManager& manager)
     });
 }
 
-void ScriptRunner::OnUpdate(EntityManager& manager, double dt)
+void ScriptRunner::OnUpdate(EntityManager& manager, double dt, bool active)
 {
     d_mouse.OnUpdate();
+    if (!active) { return; }
 
     manager.Each<ScriptComponent>([&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];

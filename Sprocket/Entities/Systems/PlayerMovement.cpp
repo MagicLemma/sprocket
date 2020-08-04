@@ -10,9 +10,10 @@ PlayerMovement::PlayerMovement()
 {
 }
 
-void PlayerMovement::OnUpdate(EntityManager& manager, double dt)
+void PlayerMovement::OnUpdate(EntityManager& manager, double dt, bool active)
 {
     d_mouse.OnUpdate();
+    if (!active) { return; }
 
     manager.Each<PlayerComponent, PhysicsComponent>([&](Entity& entity) {
         auto& player = entity.Get<PlayerComponent>();

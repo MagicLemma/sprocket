@@ -26,9 +26,9 @@ void Selector::OnStartup(EntityManager& manager)
     });
 }
 
-void Selector::OnUpdate(EntityManager& manager, double dt)
+void Selector::OnUpdate(EntityManager& manager, double dt, bool active)
 {
-    if (!d_enabled) {
+    if (!d_enabled || !active) {
         ClearHovered();
         ClearSelected();
     }

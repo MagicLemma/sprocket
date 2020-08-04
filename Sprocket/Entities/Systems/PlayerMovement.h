@@ -16,7 +16,7 @@ public:
     PlayerMovement();
     ~PlayerMovement() {}
 
-    void OnUpdate(EntityManager& manager, double dt) override;
+    void OnUpdate(EntityManager& manager, double dt, bool active) override;
     void OnEvent(Event& event) override;
 
     void Enable(bool newEnabled);

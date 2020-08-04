@@ -14,7 +14,7 @@ public:
     virtual void OnStartup(EntityManager& manager) {};
         // Called once when the EntityManager starts up.
     
-    virtual void OnUpdate(EntityManager& manager, double dt) {};
+    virtual void OnUpdate(EntityManager& manager, double dt, bool active) {};
         // Called every tick of the game loop.
 
     virtual void OnEvent(Event& event) {};

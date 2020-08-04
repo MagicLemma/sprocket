@@ -104,9 +104,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.ambience.brightness = 0.4f;
 
     d_renderer.GetLights() = d_lights;
-
-    d_postProcessor.AddEffect<GaussianVert>();
-    d_postProcessor.AddEffect<GaussianHoriz>();
+    d_renderer.AddEffect<GaussianVert>();
+    d_renderer.AddEffect<GaussianHoriz>();
 
     {
         auto worker = d_entityManager.NewEntity();
@@ -259,7 +258,6 @@ void WorldLayer::OnUpdate(double dt)
     d_cycle.OnUpdate(dt);
     
     if (!d_paused) {
-
         float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
         float facSq = factor * factor;
         auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -277,36 +275,10 @@ void WorldLayer::OnUpdate(double dt)
 
         Maths::Normalise(d_lights.sun.direction);
         d_renderer.GetLights() = d_lights;
-        
-        d_entityManager.OnUpdate(dt);
     }
 
-    // Create the Shadow Map
-    //float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    //Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    //d_shadowMapRenderer.BeginScene(d_lights.sun, target);
-    //d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-    //    d_shadowMapRenderer.Draw(entity);
-    //});
-    //d_shadowMapRenderer.EndScene(); 
-
-    //if (d_paused) {
-    //    d_postProcessor.Bind();
-    //}
-//
-    //d_entityRenderer.BeginScene(d_camera, d_lights);
-    //d_entityRenderer.EnableShadows(
-    //    d_shadowMapRenderer.GetShadowMap(),
-    //    d_shadowMapRenderer.GetLightProjViewMatrix()   
-    //);
-    //d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-    //    d_entityRenderer.Draw(entity);
-    //});
-//
-    //if (d_paused) {
-    //    d_postProcessor.Unbind();
-    //    d_postProcessor.Draw();
-    //}
+    d_renderer.EnablePostProcessor(d_paused);
+    d_entityManager.OnUpdate(dt, !d_paused);
 
     if (!d_paused) {
         d_hoveredEntityUI.StartFrame();

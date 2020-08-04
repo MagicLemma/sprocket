@@ -19,7 +19,7 @@ public:
     ScriptRunner();
 
     void OnStartup(EntityManager& manager) override;
-    void OnUpdate(EntityManager& manager, double dt) override;
+    void OnUpdate(EntityManager& manager, double dt, bool active) override;
     void OnEvent(Event& event) override;
 };
 

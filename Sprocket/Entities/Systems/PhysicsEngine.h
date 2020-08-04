@@ -46,7 +46,7 @@ public:
 
     void OnStartup(EntityManager& manager) override;
 
-    void OnUpdate(EntityManager& manager, double dt) override;
+    void OnUpdate(EntityManager& manager, double dt, bool active) override;
 
     void Running(bool isRunning);
     bool Running() const { return d_running; }

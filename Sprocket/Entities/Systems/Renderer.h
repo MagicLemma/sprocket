@@ -9,6 +9,7 @@
 #include "Components.h"
 #include "EntitySystem.h"
 #include "ShadowMapRenderer.h"
+#include "PostProcessor.h"
 
 namespace Sprocket {
 
@@ -28,6 +29,9 @@ class Renderer : public EntitySystem
     ShadowMapRenderer d_shadowMap;
     bool d_renderShadows = true;
 
+    PostProcessor d_postProcessor;
+    bool d_postProcessEffects = false;
+
     void DrawModel    (const Entity& entity);
     void DrawCollider (const Entity& entity);
 
@@ -42,11 +46,17 @@ public:
         TextureManager* textureManager
     );
     
-    virtual void OnUpdate(EntityManager& manager, double dt) override;
+    virtual void OnUpdate(EntityManager& manager, double dt, bool active) override;
 
     void SetCamera(Entity& camera) { d_camera = camera; }
-    
+
+    void EnableShadows(bool val) { d_renderShadows = val; }
+    void EnablePostProcessor(bool val) { d_postProcessEffects = val; }
+
     Lights& GetLights() { return d_lights; }
+
+    template <typename T>
+    void AddEffect() { d_postProcessor.AddEffect<T>(); }
 };
 
 }

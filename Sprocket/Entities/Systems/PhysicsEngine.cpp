@@ -148,9 +148,9 @@ void PhysicsEngine::OnStartup(EntityManager& manager)
     });
 }
 
-void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
+void PhysicsEngine::OnUpdate(EntityManager& manager, double dt, bool active)
 {
-    if (!d_running) { return; }
+    if (!d_running || !active) { return; }
 
     // Pre Update
     manager.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {

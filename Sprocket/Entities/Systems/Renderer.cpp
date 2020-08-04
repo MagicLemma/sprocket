@@ -16,10 +16,11 @@ Renderer::Renderer(Window* window,
     , d_shader("Resources/Shaders/Entity.vert",
                "Resources/Shaders/Entity.frag")
     , d_shadowMap(window, modelManager, textureManager)
+    , d_postProcessor(window->Width(), window->Height())
 {
 }
 
-void Renderer::OnUpdate(EntityManager& manager, double dt)
+void Renderer::OnUpdate(EntityManager& manager, double dt, bool active)
 {
     if (d_camera == Entity()) { return; } // No camera
 
@@ -31,6 +32,10 @@ void Renderer::OnUpdate(EntityManager& manager, double dt)
             d_shadowMap.Draw(entity);
         });
         d_shadowMap.EndScene();
+    }
+
+    if (d_postProcessEffects) {
+        d_postProcessor.Bind();
     }
 
     Maths::mat4 view = CameraUtils::MakeView(d_camera);
@@ -109,6 +114,11 @@ void Renderer::OnUpdate(EntityManager& manager, double dt)
         model.Unbind();
         texture.Unbind();
     });
+
+    if (d_postProcessEffects) {
+        d_postProcessor.Unbind();
+        d_postProcessor.Draw();
+    }
 
     d_shader.Unbind();
 };

@@ -371,7 +371,7 @@ void WorldLayer::OnUpdate(double dt)
     if (!d_paused) {
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_core.window->SetCursorVisibility(d_mouseRequired);
-        d_entityManager.OnUpdate(dt);
+        d_entityManager.OnUpdate(dt, true);
 
         d_entityManager.Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();

@@ -13,6 +13,6 @@ struct PathComponent
 class PathFollower : public Sprocket::EntitySystem
 {
 public:
-    void OnUpdate(Sprocket::EntityManager& manager, double dt) override;
+    void OnUpdate(Sprocket::EntityManager& manager, double dt, bool active) override;
         // Called once per entity per frame and before the system updates.
 };

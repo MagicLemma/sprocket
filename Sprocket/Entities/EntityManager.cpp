@@ -21,10 +21,10 @@ void EntityManager::OnStartup()
     }
 }
 
-void EntityManager::OnUpdate(double dt)
+void EntityManager::OnUpdate(double dt, bool active)
 {
     for (auto system : d_systems) {
-        system->OnUpdate(*this, dt);
+        system->OnUpdate(*this, dt, active);
     }
 }
 

@@ -1,8 +1,9 @@
 #include "PathFollower.h"
 
-void PathFollower::OnUpdate(Sprocket::EntityManager& manager, double dt)
+void PathFollower::OnUpdate(Sprocket::EntityManager& manager, double dt, bool active)
 {
     using namespace Sprocket;
+    if (!active) { return; }
 
     manager.Each<TransformComponent, PathComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
