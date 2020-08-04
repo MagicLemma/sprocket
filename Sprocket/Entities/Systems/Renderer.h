@@ -8,6 +8,7 @@
 #include "TextureManager.h"
 #include "Components.h"
 #include "EntitySystem.h"
+#include "ShadowMapRenderer.h"
 
 namespace Sprocket {
 
@@ -23,6 +24,9 @@ class Renderer : public EntitySystem
 
     Entity d_camera;
     Lights d_lights;
+
+    ShadowMapRenderer d_shadowMap;
+    bool d_renderShadows = true;
 
     void DrawModel    (const Entity& entity);
     void DrawCollider (const Entity& entity);
@@ -41,7 +45,8 @@ public:
     virtual void OnUpdate(EntityManager& manager, double dt) override;
 
     void SetCamera(Entity& camera) { d_camera = camera; }
-    void SetLights(const Lights& lights) { d_lights = lights; }
+    
+    Lights& GetLights() { return d_lights; }
 };
 
 }

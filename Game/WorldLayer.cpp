@@ -103,7 +103,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.ambience.colour = SARAWAK;
     d_lights.ambience.brightness = 0.4f;
 
-    d_renderer.SetLights(d_lights);
+    d_renderer.GetLights() = d_lights;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
@@ -276,6 +276,8 @@ void WorldLayer::OnUpdate(double dt)
         }
 
         Maths::Normalise(d_lights.sun.direction);
+        d_renderer.GetLights() = d_lights;
+        
         d_entityManager.OnUpdate(dt);
     }
 

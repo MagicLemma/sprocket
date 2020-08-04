@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "EntityManager.h"
 #include "CameraUtils.h"
+#include "RenderContext.h"
 
 #include <glad/glad.h>
 
@@ -14,12 +15,23 @@ Renderer::Renderer(Window* window,
     , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert",
                "Resources/Shaders/Entity.frag")
+    , d_shadowMap(window, modelManager, textureManager)
 {
 }
 
 void Renderer::OnUpdate(EntityManager& manager, double dt)
 {
     if (d_camera == Entity()) { return; } // No camera
+
+    if (d_renderShadows) {
+        float lambda = 5.0f; // TODO: Calculate the floor intersection point
+        Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
+        d_shadowMap.BeginScene(d_lights.sun, target);
+        manager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+            d_shadowMap.Draw(entity);
+        });
+        d_shadowMap.EndScene();
+    }
 
     Maths::mat4 view = CameraUtils::MakeView(d_camera);
     Maths::mat4 proj = CameraUtils::MakeProj(d_camera);
@@ -53,24 +65,25 @@ void Renderer::OnUpdate(EntityManager& manager, double dt)
 		}
 	}
 
-    manager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glEnable(GL_DEPTH_TEST);
+    if (d_renderShadows) {
+        glActiveTexture(GL_TEXTURE3);
+        d_shadowMap.GetShadowMap().Bind();
+        d_shader.LoadUniformInt("shadow_map", 3);
+        d_shader.LoadUniform("u_light_proj_view", d_shadowMap.GetLightProjViewMatrix());
+        glActiveTexture(GL_TEXTURE0);
+    }
 
-        //glEnable(GL_STENCIL_TEST);
-        //glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-        //glStencilFunc(GL_ALWAYS, 1, 0xFF);
-//
-        //bool outline = ShouldOutlineEntity(entity);
-        //glStencilMask(outline ? 0xFF : 0x00);
+    RenderContext rc;
+    rc.FaceCulling(true);
+    rc.DepthTesting(true);
+
+    manager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
 
         auto& modelComp = entity.Get<ModelComponent>();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform = Maths::Scale(transform, modelComp.scale);
 
-        d_shader.Bind();
         d_shader.LoadUniform("u_model_matrix", transform);
         d_shader.LoadUniform("u_shine_dampner", modelComp.shineDamper);
         d_shader.LoadUniform("u_reflectivity", modelComp.reflectivity);
@@ -96,6 +109,8 @@ void Renderer::OnUpdate(EntityManager& manager, double dt)
         model.Unbind();
         texture.Unbind();
     });
+
+    d_shader.Unbind();
 };
 
 }
