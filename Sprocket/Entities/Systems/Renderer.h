@@ -46,12 +46,17 @@ public:
         TextureManager* textureManager
     );
     
-    virtual void OnUpdate(EntityManager& manager, double dt, bool active) override;
+    void OnUpdate(EntityManager& manager, double dt, bool active) override;
+    void OnEvent(Event& event) override;
 
     void SetCamera(Entity& camera) { d_camera = camera; }
 
     void EnableShadows(bool val) { d_renderShadows = val; }
     void EnablePostProcessor(bool val) { d_postProcessEffects = val; }
+
+    ShadowMapRenderer& GetShadowMap() { return d_shadowMap; }
+    PostProcessor& GetPostProcessor() { return d_postProcessor; }
+    Shader& GetShader() { return d_shader; }
 
     Lights& GetLights() { return d_lights; }
 

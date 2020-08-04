@@ -75,12 +75,9 @@ constexpr char MAP[ROWS + 1][COLUMNS + 1] = {
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
-    //, d_entityRenderer(core.window, core.modelManager, core.textureManager)
-    , d_postProcessor(core.window->Width(), core.window->Height())
     , d_renderer(core.window, core.modelManager, core.textureManager)
     , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower, &d_renderer})
     , d_gameGrid(&d_entityManager)
-    , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
 {
     using namespace Sprocket;
@@ -196,10 +193,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
     d_hoveredEntityUI.OnEvent(event);
     d_mouse.OnEvent(event);
-
-    if (auto e = event.As<WindowResizeEvent>()) {
-        d_postProcessor.SetScreenSize(e->Width(), e->Height());
-    }
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         auto& tr = d_camera.Get<TransformComponent>();

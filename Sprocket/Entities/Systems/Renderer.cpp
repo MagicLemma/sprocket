@@ -2,6 +2,7 @@
 #include "EntityManager.h"
 #include "CameraUtils.h"
 #include "RenderContext.h"
+#include "WindowEvent.h"
 
 #include <glad/glad.h>
 
@@ -122,5 +123,12 @@ void Renderer::OnUpdate(EntityManager& manager, double dt, bool active)
 
     d_shader.Unbind();
 };
+
+void Renderer::OnEvent(Event& event)
+{
+    if (auto e = event.As<WindowResizeEvent>()) {
+        d_postProcessor.SetScreenSize(e->Width(), e->Height());
+    }
+}
 
 }

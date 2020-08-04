@@ -210,14 +210,12 @@ void EditorUI::OnUpdate(double dt)
     }
 
     SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_cycle);
-    //ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
+    ShaderInfoPanel(d_ui, d_worldLayer->d_renderer.GetShader());
 
     d_ui.StartWindow("Shadow Map", &open);
-
-    auto shadowMap = d_worldLayer->d_shadowMapRenderer.GetShadowMap();
+    auto& shadowMap = d_worldLayer->d_renderer.GetShadowMap().GetShadowMap();
     ImTextureID id = (void*)(intptr_t)shadowMap.Id();
     ImGui::Image(id, ImVec2(shadowMap.Width(), shadowMap.Height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
-
     d_ui.EndWindow();
 
     d_ui.DemoWindow();
