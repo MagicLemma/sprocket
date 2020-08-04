@@ -1,5 +1,6 @@
 #include "ShadowMapRenderer.h"
 #include "Components.h"
+#include "EntityManager.h"
 
 #include <glad/glad.h>
 
@@ -57,6 +58,22 @@ void ShadowMapRenderer::EndScene()
 {
     d_shadowMap.Unbind();
     d_shader.Unbind();
+}
+
+void ShadowMapRenderer::Generate(
+    EntityManager& manager,
+    const Entity& camera,
+    const DirectionalLight& sun)
+{
+    auto& transform = camera.Get<TransformComponent>();
+    float lambda = 5.0f; // TODO: Calculate the floor intersection point
+    Maths::vec3 target = transform.position + lambda * Maths::Forwards(transform.orientation);
+    
+    BeginScene(sun, target);
+    manager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+        Draw(entity);
+    });
+    EndScene();
 }
 
 Maths::mat4 ShadowMapRenderer::GetLightProjViewMatrix() const

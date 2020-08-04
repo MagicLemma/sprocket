@@ -20,15 +20,18 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
     , d_playerMovement()
     , d_selector(core.window, &d_physicsEngine)
+    , d_renderer(core.window, core.modelManager, core.textureManager)
     , d_entityManager({
         &d_playerMovement,
         &d_physicsEngine,
         &d_selector,
-        &d_scriptRunner
+        &d_scriptRunner,
+        &d_renderer
     })
 {
     using namespace Sprocket;
 
+    d_renderer.EnableShadows(false);
     d_entityManager.OnStartup();
     d_playerMovement.Enable(false);
 
@@ -332,8 +335,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_lights.sun.colour = {1.0, 1.0, 1.0};
     d_lights.sun.brightness = 0.2f;
 
-    d_postProcessor.AddEffect<GaussianVert>();
-    d_postProcessor.AddEffect<GaussianHoriz>();
+    d_renderer.GetLights() = d_lights;
+    d_renderer.AddEffect<GaussianVert>();
+    d_renderer.AddEffect<GaussianHoriz>();
 
     if (d_mode == Mode::EDITOR) {
         d_activeCamera = d_editorCamera;
@@ -344,6 +348,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     else {
         d_activeCamera = d_playerCamera;
     }
+    d_renderer.SetCamera(d_activeCamera);
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -366,12 +371,11 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.BeginScene(d_activeCamera, d_lights);
+    //d_entityRenderer.BeginScene(d_activeCamera, d_lights);
 
     if (!d_paused) {
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_core.window->SetCursorVisibility(d_mouseRequired);
-        d_entityManager.OnUpdate(dt, true);
 
         d_entityManager.Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
@@ -387,18 +391,10 @@ void WorldLayer::OnUpdate(double dt)
         });
     }
 
-    if (d_paused) {
-        d_postProcessor.Bind();
-    }
-
     d_skyboxRenderer.Draw(d_skybox, d_activeCamera);
+    d_entityManager.OnUpdate(dt, !d_paused);
 
     d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
-    
-    if (d_paused) {
-        d_postProcessor.Unbind();
-        d_postProcessor.Draw();
-    }
 }

@@ -286,10 +286,6 @@ void WorldLayer::OnUpdate(double dt)
             float x = w - width;
             float y = ((1.0f - 0.6f) / 2) * h;
 
-            static auto ironTex = Texture("Resources/Textures/Iron.png");
-            static auto tinTex = Texture("Resources/Textures/Tin.png");
-            static auto mithrilTex = Texture("Resources/Textures/Mithril.png");
-
             Maths::vec4 region{x, y, width, height};
             bool active = true;
             bool draggable = false;

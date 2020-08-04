@@ -96,6 +96,7 @@ void EscapeMenu::OnUpdate(double dt)
 
                     } break;
                 }
+                d_worldLayer->d_renderer.SetCamera(d_worldLayer->d_activeCamera);
             }
 
             d_ui.EndPanel();

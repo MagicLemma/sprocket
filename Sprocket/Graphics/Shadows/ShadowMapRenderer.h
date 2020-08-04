@@ -11,6 +11,8 @@
 
 namespace Sprocket {
 
+class EntityManager;
+
 class ShadowMapRenderer
 {
     Window*         d_window;
@@ -41,6 +43,11 @@ public:
 
     void EndScene();
         // Called after all draw calls.
+
+    void Generate(
+        EntityManager& manager,
+        const Entity& camera,
+        const DirectionalLight& sun);
 
     Maths::mat4 GetLightProjViewMatrix() const;
     Texture     GetShadowMap() const;

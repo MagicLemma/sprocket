@@ -26,13 +26,7 @@ void Renderer::OnUpdate(EntityManager& manager, double dt, bool active)
     if (d_camera == Entity()) { return; } // No camera
 
     if (d_renderShadows) {
-        float lambda = 5.0f; // TODO: Calculate the floor intersection point
-        Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-        d_shadowMap.BeginScene(d_lights.sun, target);
-        manager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-            d_shadowMap.Draw(entity);
-        });
-        d_shadowMap.EndScene();
+        d_shadowMap.Generate(manager, d_camera, d_lights.sun);
     }
 
     if (d_postProcessEffects) {
@@ -112,8 +106,6 @@ void Renderer::OnUpdate(EntityManager& manager, double dt, bool active)
         texture.Bind();
         model.Bind();
         glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
-        model.Unbind();
-        texture.Unbind();
     });
 
     if (d_postProcessEffects) {
