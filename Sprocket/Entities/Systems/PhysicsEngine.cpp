@@ -263,8 +263,6 @@ void PhysicsEngine::UpdatePlayer(double dt, Entity entity)
     float mass = d_impl->entityData[entity.Id()].rigidBody->getMass();
         // Sum of all colliders plus rigid body.
 
-    MakeUpright(entity, player.yaw);
-    
     bool onFloor = IsOnFloor(entity);
 
     if (player.direction.length() != 0.0f || onFloor) {
@@ -282,6 +280,8 @@ void PhysicsEngine::UpdatePlayer(double dt, Entity entity)
         Maths::vec3 acceleration = dv / d_lastFrameLength;
         ApplyForce(entity, mass * acceleration);
     }
+
+    MakeUpright(entity, player.yaw);
 }
 
 void PhysicsEngine::ApplyForce(Entity entity, const Maths::vec3& force)

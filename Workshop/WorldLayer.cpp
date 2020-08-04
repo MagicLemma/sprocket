@@ -367,8 +367,6 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    //d_entityRenderer.BeginScene(d_activeCamera, d_lights);
-
     if (!d_paused) {
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_core.window->SetCursorVisibility(d_mouseRequired);
