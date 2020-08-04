@@ -1,5 +1,6 @@
 #pragma once
 #include "Texture.h"
+#include "CubeMap.h"
 
 #include <string>
 #include <vector>
@@ -10,10 +11,12 @@ namespace Sprocket {
 class TextureManager
 {
 public:
-    using Map = std::map<std::string, Texture>;
+    using TexMap = std::map<std::string, Texture>;
+    using CubeMap = std::map<std::string, CubeMap>;
 
 private:
-    Map d_loadedTextures;
+    TexMap  d_loadedTextures;
+    CubeMap d_loadedCubeMaps;
 
 public:
     Texture GetTexture(const std::string& path);
