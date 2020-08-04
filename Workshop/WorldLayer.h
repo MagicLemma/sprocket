@@ -18,10 +18,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::Entity d_activeCamera;
     
     // RENDERING
-    Sprocket::EntityRenderer  d_entityRenderer;
     Sprocket::SkyboxRenderer  d_skyboxRenderer;
-
-    Sprocket::PostProcessor   d_postProcessor;
 
     // WORLD
     // Entity management and systems

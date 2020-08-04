@@ -3,9 +3,7 @@
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::OBSERVER)
-    , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_skyboxRenderer(core.window)
-    , d_postProcessor(core.window->Width(), core.window->Height())
     , d_skybox({
         Sprocket::ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         Sprocket::CubeMap({
@@ -356,8 +354,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     using namespace Sprocket;
 
     if (auto e = event.As<WindowResizeEvent>()) {
-        d_postProcessor.SetScreenSize(e->Width(), e->Height());
-
         // We only do the player camera here as the observer and editor
         // projection matrices are updated via scripts.
         d_playerCamera.Get<CameraComponent>().projection =
@@ -393,8 +389,4 @@ void WorldLayer::OnUpdate(double dt)
 
     d_skyboxRenderer.Draw(d_skybox, d_activeCamera);
     d_entityManager.OnUpdate(dt, !d_paused);
-
-    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        d_entityRenderer.Draw(entity);
-    });
 }

@@ -206,13 +206,13 @@ void EditorUI::OnUpdate(double dt)
     d_ui.SameLine();
     d_ui.Text(d_worldLayer->d_physicsEngine.Running() ? "YES" : "NO");
 
-    if (d_ui.Button("Show Colliders")) {
-        auto entityRenderer = &d_worldLayer->d_entityRenderer;
-        bool wireframe = entityRenderer->ShowColliders();
-        entityRenderer->RenderColliders(!wireframe);
-    }
-    d_ui.SameLine();
-    d_ui.Text(d_worldLayer->d_entityRenderer.ShowColliders() ? "YES" : "NO");
+    //if (d_ui.Button("Show Colliders")) {
+    //    auto entityRenderer = &d_worldLayer->d_entityRenderer;
+    //    bool wireframe = entityRenderer->ShowColliders();
+    //    entityRenderer->RenderColliders(!wireframe);
+    //}
+    //d_ui.SameLine();
+    //d_ui.Text(d_worldLayer->d_entityRenderer.ShowColliders() ? "YES" : "NO");
 
     std::stringstream ss;
     ss << "Entities: " << d_worldLayer->d_entityManager.Size();
