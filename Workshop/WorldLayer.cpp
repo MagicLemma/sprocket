@@ -388,5 +388,6 @@ void WorldLayer::OnUpdate(double dt)
     }
 
     d_skyboxRenderer.Draw(d_skybox, d_activeCamera);
+    d_renderer.EnablePostProcessor(d_paused);
     d_entityManager.OnUpdate(dt, !d_paused);
 }
