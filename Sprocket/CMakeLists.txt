@@ -48,6 +48,7 @@ add_library(Sprocket STATIC
             Entities/EntityManager.cpp
             Entities/EntitySystem.cpp
 
+            Entities/Systems/Renderer.cpp
             Entities/Systems/BasicSelector.cpp
             Entities/Systems/Selector.cpp
             Entities/Systems/PhysicsEngine.cpp

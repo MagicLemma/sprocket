@@ -210,7 +210,7 @@ void EditorUI::OnUpdate(double dt)
     }
 
     SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_cycle);
-    ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
+    //ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
     d_ui.StartWindow("Shadow Map", &open);
 

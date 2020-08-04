@@ -75,9 +75,10 @@ constexpr char MAP[ROWS + 1][COLUMNS + 1] = {
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
-    , d_entityRenderer(core.window, core.modelManager, core.textureManager)
+    //, d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower})
+    , d_renderer(core.window, core.modelManager, core.textureManager)
+    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower, &d_renderer})
     , d_gameGrid(&d_entityManager)
     , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
@@ -101,6 +102,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     d_lights.ambience.colour = SARAWAK;
     d_lights.ambience.brightness = 0.4f;
+
+    d_renderer.SetLights(d_lights);
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
@@ -142,6 +145,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         camera.Add<ScriptComponent>(script);
 
         d_camera = camera;
+        d_renderer.SetCamera(d_camera);
     }
 
     {
@@ -276,31 +280,31 @@ void WorldLayer::OnUpdate(double dt)
     }
 
     // Create the Shadow Map
-    float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    d_shadowMapRenderer.BeginScene(d_lights.sun, target);
-    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        d_shadowMapRenderer.Draw(entity);
-    });
-    d_shadowMapRenderer.EndScene(); 
+    //float lambda = 5.0f; // TODO: Calculate the floor intersection point
+    //Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
+    //d_shadowMapRenderer.BeginScene(d_lights.sun, target);
+    //d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    //    d_shadowMapRenderer.Draw(entity);
+    //});
+    //d_shadowMapRenderer.EndScene(); 
 
-    if (d_paused) {
-        d_postProcessor.Bind();
-    }
-
-    d_entityRenderer.BeginScene(d_camera, d_lights);
-    d_entityRenderer.EnableShadows(
-        d_shadowMapRenderer.GetShadowMap(),
-        d_shadowMapRenderer.GetLightProjViewMatrix()   
-    );
-    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        d_entityRenderer.Draw(entity);
-    });
-
-    if (d_paused) {
-        d_postProcessor.Unbind();
-        d_postProcessor.Draw();
-    }
+    //if (d_paused) {
+    //    d_postProcessor.Bind();
+    //}
+//
+    //d_entityRenderer.BeginScene(d_camera, d_lights);
+    //d_entityRenderer.EnableShadows(
+    //    d_shadowMapRenderer.GetShadowMap(),
+    //    d_shadowMapRenderer.GetLightProjViewMatrix()   
+    //);
+    //d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    //    d_entityRenderer.Draw(entity);
+    //});
+//
+    //if (d_paused) {
+    //    d_postProcessor.Unbind();
+    //    d_postProcessor.Draw();
+    //}
 
     if (!d_paused) {
         d_hoveredEntityUI.StartFrame();

@@ -17,14 +17,15 @@ class WorldLayer : public Sprocket::Layer
     // Entity management and systems
     Sprocket::BasicSelector d_selector;
     Sprocket::ScriptRunner  d_scriptRunner;
-    PathFollower  d_pathFollower;
+    PathFollower            d_pathFollower;
+    Sprocket::Renderer      d_renderer;
     Sprocket::EntityManager d_entityManager;
 
     Sprocket::Entity d_camera;
     Sprocket::Entity d_worker;
     
     // RENDERING
-    Sprocket::EntityRenderer  d_entityRenderer;
+    //Sprocket::EntityRenderer  d_entityRenderer;
 
     Sprocket::PostProcessor   d_postProcessor;
 

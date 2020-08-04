@@ -2,8 +2,6 @@
 #include "Entity.h"
 #include "Event.h"
 
-#include <map>
-
 namespace Sprocket {
 
 class EntityManager;

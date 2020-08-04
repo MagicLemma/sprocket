@@ -26,6 +26,7 @@
 #include "Entities/EntityManager.h"
 #include "Entities/EntitySystem.h"
 
+#include "Entities/Systems/Renderer.h"
 #include "Entities/Systems/BasicSelector.h"
 #include "Entities/Systems/Selector.h"
 #include "Entities/Systems/PhysicsEngine.h"
