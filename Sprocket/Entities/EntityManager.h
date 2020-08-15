@@ -50,6 +50,8 @@ public:
         // components and calls the given lambda with each entity
         // as the argument.
 
+    void All(EntityCallback func);
+
     template <typename T> void OnAdd(EntityCallback func);
     template <typename T> void OnRemove(EntityCallback func);
         // Register functions that will get called whenever

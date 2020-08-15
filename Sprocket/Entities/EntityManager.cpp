@@ -40,4 +40,11 @@ std::size_t EntityManager::Size() const
     return d_registry.alive();
 }
 
+void EntityManager::All(EntityCallback func)
+{
+    d_registry.each([&](auto entity) {
+        func(Entity(&d_registry, entity));
+    });
+}
+
 }

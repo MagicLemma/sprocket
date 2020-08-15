@@ -4,6 +4,11 @@
 
 namespace Sprocket {
 
+struct NameComponent
+{
+    std::string name;
+};
+
 struct TransformComponent
 {
     Maths::vec3 position = {0, 0, 0};
@@ -43,11 +48,6 @@ struct PhysicsComponent
     float bounciness          = 0.5f;
     float frictionCoefficient = 0.3f;
     float rollingResistance   = 0.0f;
-};
-
-struct NameComponent
-{
-    std::string name;
 };
 
 struct ScriptComponent
