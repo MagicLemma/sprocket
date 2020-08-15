@@ -19,6 +19,7 @@ find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
 find_package(EnTT CONFIG REQUIRED)
+find_package(yaml-cpp CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
@@ -47,6 +48,7 @@ add_library(Sprocket STATIC
             Entities/Entity.cpp
             Entities/EntityManager.cpp
             Entities/EntitySystem.cpp
+            Entities/Serialiser.cpp
 
             Entities/Systems/BasicSelector.cpp
             Entities/Systems/Selector.cpp
@@ -116,6 +118,7 @@ target_link_libraries(Sprocket PUBLIC
                       sfml-system
                       sfml-audio
                       EnTT::EnTT
+                      yaml-cpp
                       ${LUA_LIBRARIES})
 
 target_include_directories(Sprocket PUBLIC

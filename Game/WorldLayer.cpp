@@ -242,6 +242,9 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
     d_entityManager.OnEvent(event);
     d_gameGrid.OnEvent(event);
+
+    Serialiser serialiser(&d_entityManager);
+    serialiser.Serialise("Resources/Scene.yaml");
 }
 
 void WorldLayer::OnUpdate(double dt)
