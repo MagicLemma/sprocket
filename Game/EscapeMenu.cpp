@@ -83,8 +83,11 @@ void EscapeMenu::OnUpdate(double dt)
         d_worldLayer->d_cycle.SetAngle(angle);
 
         buttonRegion.y += 60;
-        static bool check = false;
-        d_ui.Checkbox("Checkbox", buttonRegion, &check);
+        if (d_ui.Button("Save", buttonRegion)) {
+            SPKT_LOG_INFO("Saving...");
+            d_worldLayer->d_serialiser.Serialise("Resources/Scene.yaml");
+            SPKT_LOG_INFO("  Done!");
+        }
 
         buttonRegion.y += 60;
         d_ui.Checkbox("Volume Panel", buttonRegion, &showVolume);

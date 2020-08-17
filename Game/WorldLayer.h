@@ -21,6 +21,8 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::GameGrid      d_gameGrid;
     Sprocket::EntityManager d_entityManager;
 
+    Sprocket::Serialiser d_serialiser;
+
     Sprocket::Entity d_camera;
     Sprocket::Entity d_worker;
     

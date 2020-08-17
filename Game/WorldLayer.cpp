@@ -81,6 +81,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower, &d_gameGrid})
     , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
+    , d_serialiser(&d_entityManager)
 {
     using namespace Sprocket;
 
@@ -105,9 +106,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
 
-
-    Serialiser s(&d_entityManager);
-    s.Deserialise("Resources/Scene.yaml");
+    d_serialiser.Deserialise("Resources/Scene.yaml");
 
 #if 0
     {

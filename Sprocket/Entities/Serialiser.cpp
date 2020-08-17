@@ -282,11 +282,8 @@ void Serialiser::Serialise(const std::string& file)
         }
         if (entity.Has<SelectComponent>()) {
             const auto& select = entity.Get<SelectComponent>();
-            out << YAML::Key << "Select";
-            out << YAML::BeginMap;
-            out << MapEntry("Selected", select.selected);
-            out << MapEntry("Hovered", select.hovered);
-            out << YAML::EndMap;
+            // No need to store the values.
+            out << YAML::Key << "Select" << true;
         }
         if (entity.Has<PathComponent>()) {
             const auto& path = entity.Get<PathComponent>();
@@ -396,14 +393,13 @@ void Serialiser::Deserialise(const std::string& file)
         auto select = entity["Select"];
         if (select) {
             SelectComponent sc;
-            sc.selected = select["Selected"].as<bool>();
-            sc.hovered = select["Hovered"].as<bool>();
             e.Add(sc);
         }
 
         auto path = entity["Path"];
         if (path) {
             PathComponent pc;
+            // TODO Sort this
             //pc.markers = path["Markers"].as<std::queue<Maths::vec3>>();
             pc.speed = path["Speed"].as<float>();
             e.Add(pc);
