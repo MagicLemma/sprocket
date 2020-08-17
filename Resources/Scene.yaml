@@ -1,6 +1,21 @@
 Scene: Scene Name
 Entities:
   - Name:
+      Name: Mithril
+    Transform:
+      Position: [5.5, -0.4073618, 7.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Mithril.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 5
+      Z: 7
+  - Name:
       Name: Tree
     Transform:
       Position: [-5.5, 0, 15.5]
@@ -79,8 +94,8 @@ Entities:
   - Name:
       Name: Camera
     Transform:
-      Position: [11.14783, 6.000003, 13.98844]
-      Orientation: [0.8828601, -0.2942868, 0.3472145, 0.1157382]
+      Position: [9.032249, 6.99847, 1.018959]
+      Orientation: [-0.1078979, 0.04053437, -0.9298828, -0.3493322]
     Script:
       Script: Resources/Scripts/ThirdPersonCamera.lua
       Active: true

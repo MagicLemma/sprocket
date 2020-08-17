@@ -37,7 +37,25 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
 
-    d_serialiser.Deserialise("Resources/Scene.yaml");
+    LoadScene("Resources/Scene.yaml");
+}
+
+void WorldLayer::SaveScene()
+{
+    SPKT_LOG_INFO("Saving...");
+    d_serialiser.Serialise(d_sceneFile);
+    SPKT_LOG_INFO("  Done!");
+}
+
+void WorldLayer::LoadScene(const std::string& sceneFile)
+{
+    using namespace Sprocket;
+
+    d_selector.SetSelected(Entity());
+    d_paused = false;
+
+    d_sceneFile = sceneFile;
+    d_serialiser.Deserialise(sceneFile);
 
     d_entityManager.Each<NameComponent>([&](Entity& entity) {
         const auto& name = entity.Get<NameComponent>();

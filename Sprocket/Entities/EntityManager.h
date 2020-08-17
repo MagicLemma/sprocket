@@ -57,6 +57,8 @@ public:
         // Register functions that will get called whenever
         // a component of type T is added/removed to/from an
         // Entity.
+
+    void Clear();
 };
 
 template <typename... Components>

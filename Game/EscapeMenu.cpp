@@ -1,5 +1,6 @@
 #include "EscapeMenu.h"
 #include "Palette.h"
+#include "FileBrowser.h"
 
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                        WorldLayer* worldLayer) 
@@ -84,9 +85,13 @@ void EscapeMenu::OnUpdate(double dt)
 
         buttonRegion.y += 60;
         if (d_ui.Button("Save", buttonRegion)) {
-            SPKT_LOG_INFO("Saving...");
-            d_worldLayer->d_serialiser.Serialise("Resources/Scene.yaml");
-            SPKT_LOG_INFO("  Done!");
+            d_worldLayer->SaveScene();
+        }
+
+        buttonRegion.y += 60;
+        if (d_ui.Button("Open", buttonRegion)) {
+            std::string newScene = OpenFile(d_worldLayer->d_core.window, "");
+            d_worldLayer->LoadScene(newScene);
         }
 
         buttonRegion.y += 60;

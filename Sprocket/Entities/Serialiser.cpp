@@ -312,6 +312,8 @@ void Serialiser::Serialise(const std::string& file)
 
 void Serialiser::Deserialise(const std::string& file)
 {
+    d_scene->Clear();
+
     std::ifstream stream(file);
     std::stringstream sstream;
     sstream << stream.rdbuf();

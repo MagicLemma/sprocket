@@ -1,4 +1,5 @@
 #include "EntityManager.h"
+#include "Components.h"
 
 namespace Sprocket {
 
@@ -44,6 +45,15 @@ void EntityManager::All(EntityCallback func)
 {
     d_registry.each([&](auto entity) {
         func(Entity(&d_registry, entity));
+    });
+}
+
+void EntityManager::Clear()
+{
+    d_registry.each([&](auto entity) {
+        if (!d_registry.has<TemporaryComponent>(entity)) {
+            d_registry.destroy(entity);
+        }
     });
 }
 
