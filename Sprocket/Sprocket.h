@@ -45,6 +45,7 @@
 #include "Utility/Adaptors.h"
 #include "Utility/Log.h"
 #include "Utility/Colour.h"
+#include "Utility/FileBrowser.h"
 #include "Utility/HashPair.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"

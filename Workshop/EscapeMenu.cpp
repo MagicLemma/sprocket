@@ -1,4 +1,5 @@
 #include "EscapeMenu.h"
+#include "FileBrowser.h"
 
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                        WorldLayer* worldLayer,
@@ -101,6 +102,8 @@ void EscapeMenu::OnUpdate(double dt)
 
             region.y += 60;
             if (d_ui.Button("Open", region)) {
+                std::string filename = OpenFile(d_core.window, "");
+                SPKT_LOG_INFO("Got file: {}", filename);
             }
 
             d_ui.EndPanel();
