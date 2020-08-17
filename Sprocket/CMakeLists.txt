@@ -55,6 +55,8 @@ add_library(Sprocket STATIC
             Entities/Systems/PhysicsEngine.cpp
             Entities/Systems/PlayerMovement.cpp
             Entities/Systems/ScriptRunner.cpp
+            Entities/Systems/GameGrid.cpp
+            Entities/Systems/PathFollower.cpp
 
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp

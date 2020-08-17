@@ -17,7 +17,8 @@ class WorldLayer : public Sprocket::Layer
     // Entity management and systems
     Sprocket::BasicSelector d_selector;
     Sprocket::ScriptRunner  d_scriptRunner;
-    PathFollower  d_pathFollower;
+    Sprocket::PathFollower  d_pathFollower;
+    Sprocket::GameGrid      d_gameGrid;
     Sprocket::EntityManager d_entityManager;
 
     Sprocket::Entity d_camera;
@@ -39,7 +40,6 @@ class WorldLayer : public Sprocket::Layer
 
     Sprocket::MouseProxy d_mouse;
 
-    GameGrid d_gameGrid;
     Sprocket::SimpleUI d_hoveredEntityUI;
     
     // LAYER DATA

@@ -1,6 +1,7 @@
 #pragma once
 #include "Maths.h"
 #include <string>
+#include <queue>
 
 namespace Sprocket {
 
@@ -84,6 +85,18 @@ struct SelectComponent
 {
     bool selected = false;
     bool hovered = false;
+};
+
+struct PathComponent
+{
+    std::queue<Maths::vec3> markers;
+    float                   speed;
+};
+
+struct GridComponent
+{
+    int x;
+    int z;
 };
 
 }

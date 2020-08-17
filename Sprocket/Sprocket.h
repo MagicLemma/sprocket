@@ -32,6 +32,8 @@
 #include "Entities/Systems/PhysicsEngine.h"
 #include "Entities/Systems/PlayerMovement.h"
 #include "Entities/Systems/ScriptRunner.h"
+#include "Entities/Systems/GameGrid.h"
+#include "Entities/Systems/PathFollower.h"
 
 // EVENTS
 #include "Events/Event.h"

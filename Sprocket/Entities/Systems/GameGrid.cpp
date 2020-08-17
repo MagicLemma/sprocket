@@ -1,11 +1,16 @@
 #include "GameGrid.h"
 #include "CameraUtils.h"
+#include "Components.h"
+#include "EntityManager.h"
+#include "MouseEvent.h"
+#include "MouseCodes.h"
+#include "Log.h"
 
 #include <random>
 
-using namespace Sprocket;
+namespace Sprocket {
 
-GameGrid::GameGrid(Sprocket::Window* window)
+GameGrid::GameGrid(Window* window)
     : d_window(window)
     , d_hovered({0.0, 0.0})
     , d_selected({})
@@ -13,7 +18,7 @@ GameGrid::GameGrid(Sprocket::Window* window)
     d_keyboard.ConsumeAll(false);
 }
 
-void GameGrid::OnStartup(Sprocket::EntityManager& manager)
+void GameGrid::OnStartup(EntityManager& manager)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
@@ -38,7 +43,7 @@ void GameGrid::OnStartup(Sprocket::EntityManager& manager)
     model2.scale = 0.5f;
 }
 
-void GameGrid::OnUpdate(Sprocket::EntityManager& manager, double dt)
+void GameGrid::OnUpdate(Sprocket::EntityManager&, double)
 {
     auto& camTr = d_camera.Get<TransformComponent>();
 
@@ -143,4 +148,6 @@ void GameGrid::DeleteSelected()
         auto pos = SelectedPosition().value();
         RemoveEntity(pos.x, pos.y);
     }
+}
+
 }
