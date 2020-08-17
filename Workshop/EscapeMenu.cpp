@@ -54,7 +54,8 @@ void EscapeMenu::OnUpdate(double dt)
         static bool clickable = true;
         if (d_ui.StartPanel("Main", &panelQuad, &active, &draggable, &clickable)) {
 
-            if (d_ui.Button("Toggle Mode", {10, 10, 180, 50})) {
+            Maths::ivec4 region = {10, 10, 180, 50};
+            if (d_ui.Button("Toggle Mode", region)) {
                 switch (d_worldLayer->d_mode) {
                     case Mode::OBSERVER: {
                         SPKT_LOG_INFO("Mode switched to Player");
@@ -96,6 +97,10 @@ void EscapeMenu::OnUpdate(double dt)
 
                     } break;
                 }
+            }
+
+            region.y += 60;
+            if (d_ui.Button("Open", region)) {
             }
 
             d_ui.EndPanel();

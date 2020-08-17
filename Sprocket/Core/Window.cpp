@@ -216,4 +216,33 @@ void Window::SetClipboardData(const std::string& text)
 	glfwSetClipboardString(d_impl->window, text.c_str());
 }
 
+void* Window::NativeWindow() const
+{
+	return d_impl->window;
+}
+
+#if 0
+std::string Window::OpenFile(const char* filter) const
+{
+	//OPENFILENAMEA ofn;       // common dialog box structure
+	//CHAR szFile[260] = { 0 };       // if using TCHAR macros
+//
+	//// Initialize OPENFILENAME
+	//ZeroMemory(&ofn, sizeof(OPENFILENAME));
+	//ofn.lStructSize = sizeof(OPENFILENAME);
+	//ofn.hwndOwner = glfwGetWin32Window(d_impl->window);
+	//ofn.lpstrFile = szFile;
+	//ofn.nMaxFile = sizeof(szFile);
+	//ofn.lpstrFilter = filter;
+	//ofn.nFilterIndex = 1;
+	//ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+//
+	//if (GetOpenFileNameA(&ofn) == TRUE)
+	//{
+	//	return ofn.lpstrFile;
+	//}
+	return std::string();
+}
+#endif
+
 }

@@ -1,0 +1,336 @@
+Scene: Scene Name
+Entities:
+  - Name:
+      Name: Sphere 4
+    Transform:
+      Position: [0, 45, 0]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Sphere.obj
+      Scale: 0.9
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 3
+      Reflectivity: 2
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: false
+      Collider: 1
+      HalfExtents: [0, 0, 0]
+      Radius: 1
+      Height: 1
+      Mass: 20
+      Bounciness: 0.5
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Sphere 3
+    Transform:
+      Position: [0, 35, 0]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Sphere.obj
+      Scale: 0.9
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 3
+      Reflectivity: 2
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: false
+      Collider: 1
+      HalfExtents: [0, 0, 0]
+      Radius: 1
+      Height: 1
+      Mass: 20
+      Bounciness: 0.5
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Sphere 2
+    Transform:
+      Position: [0, 25, 0]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Sphere.obj
+      Scale: 0.9
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 3
+      Reflectivity: 2
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: false
+      Collider: 1
+      HalfExtents: [0, 0, 0]
+      Radius: 1
+      Height: 1
+      Mass: 20
+      Bounciness: 0.5
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Sphere 1
+    Transform:
+      Position: [0, 15, 0]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Sphere.obj
+      Scale: 0.9
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 3
+      Reflectivity: 2
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: false
+      Collider: 1
+      HalfExtents: [0, 0, 0]
+      Radius: 1
+      Height: 1
+      Mass: 20
+      Bounciness: 0.5
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Sphere 0
+    Transform:
+      Position: [0, 5, 0]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Sphere.obj
+      Scale: 0.9
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 3
+      Reflectivity: 2
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: false
+      Collider: 1
+      HalfExtents: [0, 0, 0]
+      Radius: 1
+      Height: 1
+      Mass: 20
+      Bounciness: 0.5
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Editor Camera
+    Transform:
+      Position: [10, 2, 0]
+      Orientation: [1, 0, 0, 0]
+    Script:
+      Script: Resources/Scripts/ThirdPersonCamera.lua
+      Active: false
+    Camera:
+      Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+      Pitch: 0
+  - Name:
+      Name: Observer Camera
+    Transform:
+      Position: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+    Script:
+      Script: Resources/Scripts/FirstPersonCamera.lua
+      Active: true
+    Camera:
+      Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+      Pitch: 0
+  - Name:
+      Name: Player
+    Transform:
+      Position: [0, 5, 5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Cube.obj
+      Scale: 0.3
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: false
+      Collider: 2
+      HalfExtents: [0, 0, 0]
+      Radius: 0.5
+      Height: 1
+      Mass: 60
+      Bounciness: 0
+      FrictionCoefficient: 0.4
+      RollingResistance: 1
+    Player:
+      MovingForwards: false
+      MovingBackwards: false
+      MovingLeft: false
+      MovingRight: false
+      Jumping: false
+      Direction: [0, 0, 0]
+      Yaw: 0
+      Pitch: 0
+    Camera:
+      Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+      Pitch: 0
+    Select: true
+  - Name:
+      Name: Crate 3 (M)
+    Transform:
+      Position: [8, 5, 7]
+      Orientation: [0.7933533, 0, 0.6087614, 0]
+    Model:
+      Model: Resources/Models/Cube.obj
+      Scale: 1.2
+      Texture: Resources/Textures/Green.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: false
+      Collider: 3
+      HalfExtents: [1.2, 1.2, 1.2]
+      Radius: 1
+      Height: 1
+      Mass: 10000
+      Bounciness: 0
+      FrictionCoefficient: 0.2
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Crate 2
+    Transform:
+      Position: [-1, 0, -3]
+      Orientation: [0.7933533, 0, 0.6087614, 0]
+    Model:
+      Model: Resources/Models/Cube.obj
+      Scale: 1.2
+      Texture: Resources/Textures/Green.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: true
+      Collider: 3
+      HalfExtents: [1.2, 1.2, 1.2]
+      Radius: 1
+      Height: 1
+      Mass: 1000
+      Bounciness: 0
+      FrictionCoefficient: 0
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Crate
+    Transform:
+      Position: [-5, 2, -3]
+      Orientation: [0.9238795, 0, 0.3826835, 0]
+    Model:
+      Model: Resources/Models/Cube.obj
+      Scale: 1.2
+      Texture: Resources/Textures/Space.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: true
+      Collider: 3
+      HalfExtents: [1.2, 1.2, 1.2]
+      Radius: 1
+      Height: 1
+      Mass: 1
+      Bounciness: 0
+      FrictionCoefficient: 0
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Platform 3
+    Transform:
+      Position: [-5, 0, 5]
+      Orientation: [0.5416752, -0.4545195, 0.5416752, 0.4545195]
+    Model:
+      Model: Resources/Models/Platform.obj
+      Scale: 1
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: true
+      Collider: 3
+      HalfExtents: [6.224951, 0.293629, 16.39011]
+      Radius: 1
+      Height: 1
+      Mass: 1
+      Bounciness: 0
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Platform 2
+    Transform:
+      Position: [-5, 0, 5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Platform.obj
+      Scale: 1
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: true
+      Collider: 3
+      HalfExtents: [6.224951, 0.293629, 16.39011]
+      Radius: 1
+      Height: 1
+      Mass: 1
+      Bounciness: 0
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
+  - Name:
+      Name: Island
+    Transform:
+      Position: [40, -10, 0]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/FloatingIsland.obj
+      Scale: 0.5
+      Texture: Resources/Textures/FloatingIslandTex.png
+      ShineDamper: 1
+      Reflectivity: 0
+    Select: true
+  - Name:
+      Name: Platform 1
+    Transform:
+      Position: [7, 0, -3]
+      Orientation: [0.9986295, 0.05233596, 0, 0]
+    Model:
+      Model: Resources/Models/Platform.obj
+      Scale: 1
+      Texture: Resources/Textures/PlainGray.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Physics:
+      Velocity: [0, 0, 0]
+      Gravity: true
+      Frozen: true
+      Collider: 3
+      HalfExtents: [6.224951, 0.293629, 16.39011]
+      Radius: 1
+      Height: 1
+      Mass: 1
+      Bounciness: 0.5
+      FrictionCoefficient: 0.3
+      RollingResistance: 0
+    Select: true
