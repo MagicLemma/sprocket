@@ -55,12 +55,6 @@ void GameGrid::OnStartup(EntityManager& manager)
         const auto& gc = entity.Get<GridComponent>();
 
         assert(entity.Has<TransformComponent>());
-        
-        if (d_gridEntities.contains({gc.x, gc.z})) {
-            std::string existing = Name(At(gc.x, gc.z));
-            std::string clashed = Name(entity);
-            SPKT_LOG_FATAL("Tried to insert {} as ({}, {}) but {} was there", clashed, gc.x, gc.z, existing);
-        }
         assert(!d_gridEntities.contains({gc.x, gc.z}));
     
         transform.position.x = gc.x + 0.5f;

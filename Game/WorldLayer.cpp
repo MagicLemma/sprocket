@@ -109,6 +109,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     Serialiser s(&d_entityManager);
     s.Deserialise("Resources/Scene.yaml");
 
+#if 0
     {
         auto worker = d_entityManager.NewEntity();
 
@@ -128,7 +129,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         modelData.scale = 0.5f;
     }
 
-#if 0
     {
         auto camera = d_entityManager.NewEntity();
 

@@ -15393,3 +15393,19 @@ Entities:
     Camera:
       Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
       Pitch: 0
+  - Name:
+      Name: Worker
+    Transform:
+      Position: [0.5, 0.5, 0.5]
+      Orientation: [1, 0, 0, 0]
+    Select:
+      Selected: false
+      Hovered: false
+    Path:
+      Speed: 3
+    Model:
+      Model: Resources/Models/Cube.obj
+      Scale: 0.5
+      Texture: Resources/Textures/White.PNG
+      ShineDamper: 1
+      Reflectivity: 0

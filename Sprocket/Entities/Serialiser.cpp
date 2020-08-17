@@ -81,32 +81,6 @@ struct convert<Sprocket::Maths::quat>
     }
 };
 
-template<typename T>
-struct convert<std::queue<T>>
-{
-    static Node encode(const std::queue<T>& rhs)
-    {
-        Node n;
-        auto copy = rhs;
-        while (!copy.empty()) {
-            n.push_back(copy.front());
-            copy.pop();
-        }
-        return n;
-    }
-
-    static bool decode(const Node& node, std::queue<T>& rhs)
-    {
-        if (!node.IsSequence() || node.size() != 4)
-            return false;
-
-        for (const auto& obj : node) {
-            rhs.push(obj.as<T>());
-        }
-        return true;
-    }
-};
-
 template<>
 struct convert<Sprocket::Maths::mat4>
 {
@@ -415,7 +389,6 @@ void Serialiser::Deserialise(const std::string& file)
         if (camera) {
             CameraComponent cc;
             cc.projection = camera["Projection"].as<Maths::mat4>();
-            //cc.projection = Maths::Perspective(16.0f/9.0f, 70.0f, 0.1f, 1000.0f);
             cc.pitch = camera["Pitch"].as<float>();
             e.Add(cc);
         }
@@ -428,27 +401,23 @@ void Serialiser::Deserialise(const std::string& file)
             e.Add(sc);
         }
 
-#if 0
         auto path = entity["Path"];
         if (path) {
             PathComponent pc;
-            pc.markers = path["Markers"].as<std::queue<Maths::vec3>>();
+            //pc.markers = path["Markers"].as<std::queue<Maths::vec3>>();
             pc.speed = path["Speed"].as<float>();
             e.Add(pc);
         }
-#endif
 
         auto grid = entity["Grid"];
         if (grid) {
             GridComponent gc;
             gc.x = grid["X"].as<int>();
             gc.z = grid["Z"].as<int>();
-            SPKT_LOG_INFO("Grid {} {}", gc.x, gc.z);
             e.Add(gc);
         }
 
-        // This needs to get added last as scripts may access other
-        // components.
+        // This needs to get added last as scripts may access other components.
         auto script = entity["Script"];
         if (script) {
             ScriptComponent sc;
