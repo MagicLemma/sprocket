@@ -128,6 +128,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         modelData.scale = 0.5f;
     }
 
+#if 0
     {
         auto camera = d_entityManager.NewEntity();
 
@@ -143,7 +144,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         script.script = "Resources/Scripts/ThirdPersonCamera.lua";
         camera.Add<ScriptComponent>(script);
     }
-#if 0
     {
         auto terrain = d_entityManager.NewEntity();
 

@@ -397,16 +397,6 @@ void Serialiser::Deserialise(const std::string& file)
             e.Add(pc);
         }
 
-#if 0
-        auto script = entity["Script"];
-        if (script) {
-            ScriptComponent sc;
-            sc.script = script["Script"].as<std::string>();
-            sc.active = script["Active"].as<bool>();
-            e.Add(sc);
-        }        
-#endif
-
         auto player = entity["Player"];
         if (player) {
             PlayerComponent pc;
@@ -425,6 +415,7 @@ void Serialiser::Deserialise(const std::string& file)
         if (camera) {
             CameraComponent cc;
             cc.projection = camera["Projection"].as<Maths::mat4>();
+            //cc.projection = Maths::Perspective(16.0f/9.0f, 70.0f, 0.1f, 1000.0f);
             cc.pitch = camera["Pitch"].as<float>();
             e.Add(cc);
         }
@@ -454,6 +445,16 @@ void Serialiser::Deserialise(const std::string& file)
             gc.z = grid["Z"].as<int>();
             SPKT_LOG_INFO("Grid {} {}", gc.x, gc.z);
             e.Add(gc);
+        }
+
+        // This needs to get added last as scripts may access other
+        // components.
+        auto script = entity["Script"];
+        if (script) {
+            ScriptComponent sc;
+            sc.script = script["Script"].as<std::string>();
+            sc.active = script["Active"].as<bool>();
+            e.Add(sc);
         }
     }
 }
