@@ -1,69 +1,69 @@
 Scene: Scene Name
 Entities:
   - Name:
-      Name: Iron
+      Name: Tree
     Transform:
-      Position: [-3.5, -0.4175043, -19.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
+      Position: [-5.5, 0, 15.5]
+      Orientation: [0.9107856, 0, 0.4128797, 0]
     Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Iron.png
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.271738
+      Texture: Resources/Textures/BetterTree.png
       ShineDamper: 10
       Reflectivity: 0
     Select: true
     Grid:
-      X: -4
-      Z: -20
+      X: -6
+      Z: 15
   - Name:
-      Name: Iron
+      Name: Rock
     Transform:
-      Position: [-3.5, -0.452896, -18.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Iron.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -4
-      Z: -19
-  - Name:
-      Name: Iron
-    Transform:
-      Position: [-3.5, -0.0677385, -17.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Iron.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -4
-      Z: -18
-  - Name:
-      Name: Iron
-    Transform:
-      Position: [-3.5, -0.4073618, -16.5]
+      Position: [-5.5, -0.4073618, 14.5]
       Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
-      Texture: Resources/Textures/Iron.png
+      Texture: Resources/Textures/Rock.png
       ShineDamper: 10
       Reflectivity: 0
     Select: true
     Grid:
-      X: -4
-      Z: -17
+      X: -6
+      Z: 14
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [0.5, 0, -0.5]
+      Orientation: [-0.8686448, 0, 0.4954354, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.038096
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 0
+      Z: -1
+  - Name:
+      Name: Mithril
+    Transform:
+      Position: [-1.5, -0.4844339, 3.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Mithril.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -2
+      Z: 3
   - Name:
       Name: Worker
     Transform:
-      Position: [0.5, 0.5, 0.5]
+      Position: [7.03126, 0.5, 7.699016]
       Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Cube.obj
@@ -79,8 +79,8 @@ Entities:
   - Name:
       Name: Camera
     Transform:
-      Position: [4.298388, 4.999996, -19.12159]
-      Orientation: [-0.560977, 0.160886, -0.7805793, -0.223867]
+      Position: [11.14783, 6.000003, 13.98844]
+      Orientation: [0.8828601, -0.2942868, 0.3472145, 0.1157382]
     Script:
       Script: Resources/Scripts/ThirdPersonCamera.lua
       Active: true
@@ -7885,36 +7885,6 @@ Entities:
       X: 2
       Z: -1
   - Name:
-      Name: Rock
-    Transform:
-      Position: [2.5, -0.3268787, 0.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: 2
-      Z: 0
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [2.5, -0.000798952, 1.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: 2
-      Z: 1
-  - Name:
       Name: Mithril
     Transform:
       Position: [2.5, -0.247087, 2.5]
@@ -8232,51 +8202,6 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [3.5, -0.2007598, 0.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: 3
-      Z: 0
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [3.5, -0.4523611, 1.5]
-      Orientation: [-0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: 3
-      Z: 1
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [3.5, -0.1322383, 2.5]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: 3
-      Z: 2
-  - Name:
-      Name: Rock
-    Transform:
       Position: [3.5, -0.3049333, 3.5]
       Orientation: [-0.7071068, 0, 0.7071068, 0]
     Model:
@@ -8559,21 +8484,6 @@ Entities:
     Grid:
       X: 4
       Z: -1
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [4.5, -0.4814987, 0.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: 4
-      Z: 0
   - Name:
       Name: Rock
     Transform:
@@ -13659,138 +13569,3 @@ Entities:
     Grid:
       X: 24
       Z: 24
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-1.5, -0.4073618, -13.5]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -2
-      Z: -14
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-2.5, -0.0677385, -13.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -3
-      Z: -14
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-2.5, -0.452896, -14.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -3
-      Z: -15
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-1.5, -0.4175043, -14.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -2
-      Z: -15
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-2.5, -0.06349341, -15.5]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -3
-      Z: -16
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-1.5, -0.4844339, -15.5]
-      Orientation: [-0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -2
-      Z: -16
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-3.5, -0.4566879, -13.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -4
-      Z: -14
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-3.5, -0.110517, -14.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -4
-      Z: -15
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [-3.5, -0.3161796, -15.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -4
-      Z: -16
