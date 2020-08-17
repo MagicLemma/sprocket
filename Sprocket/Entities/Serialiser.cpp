@@ -24,6 +24,20 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::quat& q)
 }
 
 template <typename T>
+YAML::Emitter& operator<<(YAML::Emitter& out, const std::queue<T> q)
+{
+    auto copy = q;
+    out << YAML::BeginSeq;
+    while (!copy.empty()) {
+        auto obj = copy.front();
+        copy.pop();
+        out << obj;
+    }
+    out << YAML::EndSeq;
+    return out;
+}
+
+template <typename T>
 struct MapEntry
 {
     const char* key;
@@ -51,7 +65,7 @@ void Serialiser::Serialise(const std::string& file)
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     d_scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
-        
+
         out << YAML::BeginMap;
         out << YAML::Key << "ID" << YAML::Value << entity.Id();
         if (entity.Has<NameComponent>()) {
@@ -132,6 +146,22 @@ void Serialiser::Serialise(const std::string& file)
             out << YAML::BeginMap;
             out << MapEntry("Selected", select.selected);
             out << MapEntry("Hovered", select.hovered);
+            out << YAML::EndMap;
+        }
+        if (entity.Has<PathComponent>()) {
+            const auto& path = entity.Get<PathComponent>();
+            out << YAML::Key << "Path";
+            out << YAML::BeginMap;
+            out << MapEntry("Markers", path.markers);
+            out << MapEntry("Speed", path.speed);
+            out << YAML::EndMap;
+        }
+        if (entity.Has<GridComponent>()) {
+            const auto& grid = entity.Get<GridComponent>();
+            out << YAML::Key << "Grid";
+            out << YAML::BeginMap;
+            out << MapEntry("X", grid.x);
+            out << MapEntry("Z", grid.z);
             out << YAML::EndMap;
         }
         out << YAML::EndMap;

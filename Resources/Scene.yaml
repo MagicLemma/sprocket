@@ -15,6 +15,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 24
   - ID: 907
     Name:
       Name: Rock
@@ -30,6 +33,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 23
   - ID: 906
     Name:
       Name: Rock
@@ -45,6 +51,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 22
   - ID: 905
     Name:
       Name: Rock
@@ -60,6 +69,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 21
   - ID: 904
     Name:
       Name: Rock
@@ -75,6 +87,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 20
   - ID: 903
     Name:
       Name: Rock
@@ -90,6 +105,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 19
   - ID: 902
     Name:
       Name: Rock
@@ -105,6 +123,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 18
   - ID: 901
     Name:
       Name: Rock
@@ -120,6 +141,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 17
   - ID: 900
     Name:
       Name: Rock
@@ -135,6 +159,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 16
   - ID: 899
     Name:
       Name: Rock
@@ -150,6 +177,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 15
   - ID: 898
     Name:
       Name: Rock
@@ -165,6 +195,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 14
   - ID: 897
     Name:
       Name: Rock
@@ -180,6 +213,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 13
   - ID: 896
     Name:
       Name: Rock
@@ -195,6 +231,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 12
   - ID: 895
     Name:
       Name: Rock
@@ -210,6 +249,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 11
   - ID: 894
     Name:
       Name: Rock
@@ -225,6 +267,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 10
   - ID: 893
     Name:
       Name: Rock
@@ -240,6 +285,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 9
   - ID: 892
     Name:
       Name: Rock
@@ -255,6 +303,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 8
   - ID: 891
     Name:
       Name: Rock
@@ -270,6 +321,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 7
   - ID: 890
     Name:
       Name: Rock
@@ -285,6 +339,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 6
   - ID: 889
     Name:
       Name: Rock
@@ -300,6 +357,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 5
   - ID: 888
     Name:
       Name: Rock
@@ -315,6 +375,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 4
   - ID: 887
     Name:
       Name: Rock
@@ -330,6 +393,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 3
   - ID: 886
     Name:
       Name: Rock
@@ -345,6 +411,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 2
   - ID: 885
     Name:
       Name: Rock
@@ -360,6 +429,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 1
   - ID: 884
     Name:
       Name: Rock
@@ -375,6 +447,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: 0
   - ID: 883
     Name:
       Name: Rock
@@ -390,6 +465,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -1
   - ID: 882
     Name:
       Name: Rock
@@ -405,6 +483,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -2
   - ID: 881
     Name:
       Name: Rock
@@ -420,6 +501,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -3
   - ID: 880
     Name:
       Name: Rock
@@ -435,6 +519,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -4
   - ID: 879
     Name:
       Name: Rock
@@ -450,6 +537,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -5
   - ID: 878
     Name:
       Name: Rock
@@ -465,6 +555,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -6
   - ID: 877
     Name:
       Name: Rock
@@ -480,6 +573,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -7
   - ID: 876
     Name:
       Name: Rock
@@ -495,6 +591,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -8
   - ID: 875
     Name:
       Name: Rock
@@ -510,6 +609,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -9
   - ID: 874
     Name:
       Name: Rock
@@ -525,6 +627,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -10
   - ID: 873
     Name:
       Name: Rock
@@ -540,6 +645,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -11
   - ID: 872
     Name:
       Name: Rock
@@ -555,6 +663,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -12
   - ID: 871
     Name:
       Name: Rock
@@ -570,6 +681,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -13
   - ID: 870
     Name:
       Name: Rock
@@ -585,6 +699,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -14
   - ID: 869
     Name:
       Name: Rock
@@ -600,6 +717,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -15
   - ID: 868
     Name:
       Name: Rock
@@ -615,6 +735,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -16
   - ID: 867
     Name:
       Name: Rock
@@ -630,6 +753,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -17
   - ID: 866
     Name:
       Name: Rock
@@ -645,6 +771,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -18
   - ID: 865
     Name:
       Name: Rock
@@ -660,6 +789,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -19
   - ID: 864
     Name:
       Name: Rock
@@ -675,6 +807,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -20
   - ID: 863
     Name:
       Name: Rock
@@ -690,6 +825,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -21
   - ID: 862
     Name:
       Name: Rock
@@ -705,6 +843,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -22
   - ID: 861
     Name:
       Name: Rock
@@ -720,6 +861,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -23
   - ID: 860
     Name:
       Name: Rock
@@ -735,6 +879,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -24
   - ID: 859
     Name:
       Name: Rock
@@ -750,6 +897,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 24
+      Z: -25
   - ID: 858
     Name:
       Name: Rock
@@ -765,6 +915,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 24
   - ID: 857
     Name:
       Name: Rock
@@ -780,6 +933,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 23
   - ID: 856
     Name:
       Name: Rock
@@ -795,6 +951,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 22
   - ID: 855
     Name:
       Name: Rock
@@ -810,6 +969,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 21
   - ID: 854
     Name:
       Name: Rock
@@ -825,6 +987,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 20
   - ID: 853
     Name:
       Name: Rock
@@ -840,6 +1005,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 19
   - ID: 852
     Name:
       Name: Rock
@@ -855,6 +1023,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 18
   - ID: 851
     Name:
       Name: Rock
@@ -870,6 +1041,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 17
   - ID: 850
     Name:
       Name: Rock
@@ -885,6 +1059,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 16
   - ID: 849
     Name:
       Name: Rock
@@ -900,6 +1077,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 15
   - ID: 848
     Name:
       Name: Rock
@@ -915,6 +1095,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 14
   - ID: 847
     Name:
       Name: Rock
@@ -930,6 +1113,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 11
   - ID: 846
     Name:
       Name: Rock
@@ -945,6 +1131,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 10
   - ID: 845
     Name:
       Name: Rock
@@ -960,6 +1149,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 9
   - ID: 844
     Name:
       Name: Rock
@@ -975,6 +1167,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 8
   - ID: 843
     Name:
       Name: Rock
@@ -990,6 +1185,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 7
   - ID: 842
     Name:
       Name: Rock
@@ -1005,6 +1203,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 6
   - ID: 841
     Name:
       Name: Rock
@@ -1020,6 +1221,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 5
   - ID: 840
     Name:
       Name: Rock
@@ -1035,6 +1239,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 4
   - ID: 839
     Name:
       Name: Rock
@@ -1050,6 +1257,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 3
   - ID: 838
     Name:
       Name: Rock
@@ -1065,6 +1275,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 2
   - ID: 837
     Name:
       Name: Rock
@@ -1080,6 +1293,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 1
   - ID: 836
     Name:
       Name: Rock
@@ -1095,6 +1311,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: 0
   - ID: 835
     Name:
       Name: Rock
@@ -1110,6 +1329,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -1
   - ID: 834
     Name:
       Name: Rock
@@ -1125,6 +1347,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -2
   - ID: 833
     Name:
       Name: Rock
@@ -1140,6 +1365,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -3
   - ID: 832
     Name:
       Name: Rock
@@ -1155,6 +1383,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -4
   - ID: 831
     Name:
       Name: Rock
@@ -1170,6 +1401,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -5
   - ID: 830
     Name:
       Name: Rock
@@ -1185,6 +1419,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -6
   - ID: 829
     Name:
       Name: Rock
@@ -1200,6 +1437,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -7
   - ID: 828
     Name:
       Name: Rock
@@ -1215,6 +1455,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -8
   - ID: 827
     Name:
       Name: Rock
@@ -1230,6 +1473,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -9
   - ID: 826
     Name:
       Name: Rock
@@ -1245,6 +1491,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -10
   - ID: 825
     Name:
       Name: Rock
@@ -1260,6 +1509,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -11
   - ID: 824
     Name:
       Name: Rock
@@ -1275,6 +1527,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -12
   - ID: 823
     Name:
       Name: Rock
@@ -1290,6 +1545,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -13
   - ID: 822
     Name:
       Name: Rock
@@ -1305,6 +1563,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -14
   - ID: 821
     Name:
       Name: Rock
@@ -1320,6 +1581,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -15
   - ID: 820
     Name:
       Name: Rock
@@ -1335,6 +1599,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -16
   - ID: 819
     Name:
       Name: Rock
@@ -1350,6 +1617,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -17
   - ID: 818
     Name:
       Name: Rock
@@ -1365,6 +1635,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -18
   - ID: 817
     Name:
       Name: Rock
@@ -1380,6 +1653,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -19
   - ID: 816
     Name:
       Name: Rock
@@ -1395,6 +1671,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -20
   - ID: 815
     Name:
       Name: Rock
@@ -1410,6 +1689,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -21
   - ID: 814
     Name:
       Name: Rock
@@ -1425,6 +1707,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -22
   - ID: 813
     Name:
       Name: Rock
@@ -1440,6 +1725,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -23
   - ID: 812
     Name:
       Name: Rock
@@ -1455,6 +1743,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -24
   - ID: 811
     Name:
       Name: Rock
@@ -1470,6 +1761,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 23
+      Z: -25
   - ID: 810
     Name:
       Name: Rock
@@ -1485,6 +1779,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 24
   - ID: 809
     Name:
       Name: Rock
@@ -1500,6 +1797,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 23
   - ID: 808
     Name:
       Name: Rock
@@ -1515,6 +1815,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 22
   - ID: 807
     Name:
       Name: Rock
@@ -1530,6 +1833,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 21
   - ID: 806
     Name:
       Name: Rock
@@ -1545,6 +1851,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 20
   - ID: 805
     Name:
       Name: Rock
@@ -1560,6 +1869,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 19
   - ID: 804
     Name:
       Name: Rock
@@ -1575,6 +1887,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 18
   - ID: 803
     Name:
       Name: Rock
@@ -1590,6 +1905,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 17
   - ID: 802
     Name:
       Name: Rock
@@ -1605,6 +1923,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 16
   - ID: 801
     Name:
       Name: Rock
@@ -1620,6 +1941,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 8
   - ID: 800
     Name:
       Name: Rock
@@ -1635,6 +1959,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 7
   - ID: 799
     Name:
       Name: Rock
@@ -1650,6 +1977,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 6
   - ID: 798
     Name:
       Name: Rock
@@ -1665,6 +1995,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 5
   - ID: 797
     Name:
       Name: Rock
@@ -1680,6 +2013,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 4
   - ID: 796
     Name:
       Name: Rock
@@ -1695,6 +2031,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 3
   - ID: 795
     Name:
       Name: Rock
@@ -1710,6 +2049,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 2
   - ID: 794
     Name:
       Name: Rock
@@ -1725,6 +2067,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 1
   - ID: 793
     Name:
       Name: Rock
@@ -1740,6 +2085,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: 0
   - ID: 792
     Name:
       Name: Rock
@@ -1755,6 +2103,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -1
   - ID: 791
     Name:
       Name: Rock
@@ -1770,6 +2121,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -2
   - ID: 790
     Name:
       Name: Rock
@@ -1785,6 +2139,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -3
   - ID: 789
     Name:
       Name: Rock
@@ -1800,6 +2157,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -4
   - ID: 788
     Name:
       Name: Rock
@@ -1815,6 +2175,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -5
   - ID: 787
     Name:
       Name: Rock
@@ -1830,6 +2193,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -6
   - ID: 786
     Name:
       Name: Rock
@@ -1845,6 +2211,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -13
   - ID: 785
     Name:
       Name: Rock
@@ -1860,6 +2229,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -14
   - ID: 784
     Name:
       Name: Rock
@@ -1875,6 +2247,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -15
   - ID: 783
     Name:
       Name: Rock
@@ -1890,6 +2265,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -16
   - ID: 782
     Name:
       Name: Rock
@@ -1905,6 +2283,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -17
   - ID: 781
     Name:
       Name: Rock
@@ -1920,6 +2301,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -18
   - ID: 780
     Name:
       Name: Rock
@@ -1935,6 +2319,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -19
   - ID: 779
     Name:
       Name: Rock
@@ -1950,6 +2337,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -20
   - ID: 778
     Name:
       Name: Rock
@@ -1965,6 +2355,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -21
   - ID: 777
     Name:
       Name: Rock
@@ -1980,6 +2373,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -22
   - ID: 776
     Name:
       Name: Rock
@@ -1995,6 +2391,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -23
   - ID: 775
     Name:
       Name: Rock
@@ -2010,6 +2409,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -24
   - ID: 774
     Name:
       Name: Rock
@@ -2025,6 +2427,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 22
+      Z: -25
   - ID: 773
     Name:
       Name: Rock
@@ -2040,6 +2445,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 24
   - ID: 772
     Name:
       Name: Rock
@@ -2055,6 +2463,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 23
   - ID: 771
     Name:
       Name: Rock
@@ -2070,6 +2481,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 22
   - ID: 770
     Name:
       Name: Rock
@@ -2085,6 +2499,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 21
   - ID: 769
     Name:
       Name: Rock
@@ -2100,6 +2517,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 20
   - ID: 768
     Name:
       Name: Rock
@@ -2115,6 +2535,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 6
   - ID: 767
     Name:
       Name: Rock
@@ -2130,6 +2553,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 5
   - ID: 766
     Name:
       Name: Rock
@@ -2145,6 +2571,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 4
   - ID: 765
     Name:
       Name: Rock
@@ -2160,6 +2589,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 3
   - ID: 764
     Name:
       Name: Rock
@@ -2175,6 +2607,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 2
   - ID: 763
     Name:
       Name: Rock
@@ -2190,6 +2625,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 1
   - ID: 762
     Name:
       Name: Rock
@@ -2205,6 +2643,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: 0
   - ID: 761
     Name:
       Name: Rock
@@ -2220,6 +2661,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -1
   - ID: 760
     Name:
       Name: Rock
@@ -2235,6 +2679,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -2
   - ID: 759
     Name:
       Name: Rock
@@ -2250,6 +2697,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -17
   - ID: 758
     Name:
       Name: Rock
@@ -2265,6 +2715,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -18
   - ID: 757
     Name:
       Name: Rock
@@ -2280,6 +2733,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -19
   - ID: 756
     Name:
       Name: Rock
@@ -2295,6 +2751,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -20
   - ID: 755
     Name:
       Name: Rock
@@ -2310,6 +2769,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -21
   - ID: 754
     Name:
       Name: Rock
@@ -2325,6 +2787,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -22
   - ID: 753
     Name:
       Name: Rock
@@ -2340,6 +2805,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -23
   - ID: 752
     Name:
       Name: Rock
@@ -2355,6 +2823,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -24
   - ID: 751
     Name:
       Name: Rock
@@ -2370,6 +2841,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 21
+      Z: -25
   - ID: 750
     Name:
       Name: Rock
@@ -2385,6 +2859,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 20
+      Z: 24
   - ID: 749
     Name:
       Name: Rock
@@ -2400,6 +2877,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 20
+      Z: 23
   - ID: 748
     Name:
       Name: Rock
@@ -2415,6 +2895,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 20
+      Z: 22
   - ID: 747
     Name:
       Name: Rock
@@ -2430,6 +2913,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 20
+      Z: -22
   - ID: 746
     Name:
       Name: Rock
@@ -2445,6 +2931,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 20
+      Z: -23
   - ID: 745
     Name:
       Name: Rock
@@ -2460,6 +2949,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 20
+      Z: -24
   - ID: 744
     Name:
       Name: Rock
@@ -2475,6 +2967,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 20
+      Z: -25
   - ID: 743
     Name:
       Name: Rock
@@ -2490,6 +2985,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: 24
   - ID: 742
     Name:
       Name: Rock
@@ -2505,6 +3003,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: 23
   - ID: 741
     Name:
       Name: Rock
@@ -2520,6 +3021,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: 22
   - ID: 740
     Name:
       Name: Rock
@@ -2535,6 +3039,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: 5
   - ID: 739
     Name:
       Name: Rock
@@ -2550,6 +3057,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: 4
   - ID: 738
     Name:
       Name: Tree
@@ -2565,6 +3075,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: -8
   - ID: 737
     Name:
       Name: Iron
@@ -2580,6 +3093,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: -9
   - ID: 736
     Name:
       Name: Rock
@@ -2595,6 +3111,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: -22
   - ID: 735
     Name:
       Name: Rock
@@ -2610,6 +3129,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: -23
   - ID: 734
     Name:
       Name: Rock
@@ -2625,6 +3147,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: -24
   - ID: 733
     Name:
       Name: Rock
@@ -2640,6 +3165,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 19
+      Z: -25
   - ID: 732
     Name:
       Name: Rock
@@ -2655,6 +3183,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: 24
   - ID: 731
     Name:
       Name: Rock
@@ -2670,6 +3201,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: 23
   - ID: 730
     Name:
       Name: Rock
@@ -2685,6 +3219,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: 22
   - ID: 729
     Name:
       Name: Rock
@@ -2700,6 +3237,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: 7
   - ID: 728
     Name:
       Name: Rock
@@ -2715,6 +3255,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: 6
   - ID: 727
     Name:
       Name: Rock
@@ -2730,6 +3273,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: 5
   - ID: 726
     Name:
       Name: Rock
@@ -2745,6 +3291,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: 4
   - ID: 725
     Name:
       Name: Iron
@@ -2760,6 +3309,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: -12
   - ID: 724
     Name:
       Name: Rock
@@ -2775,6 +3327,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: -13
   - ID: 723
     Name:
       Name: Tree
@@ -2790,6 +3345,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: -14
   - ID: 722
     Name:
       Name: Rock
@@ -2805,6 +3363,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: -22
   - ID: 721
     Name:
       Name: Rock
@@ -2820,6 +3381,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: -23
   - ID: 720
     Name:
       Name: Rock
@@ -2835,6 +3399,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: -24
   - ID: 719
     Name:
       Name: Rock
@@ -2850,6 +3417,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 18
+      Z: -25
   - ID: 718
     Name:
       Name: Rock
@@ -2865,6 +3435,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: 24
   - ID: 717
     Name:
       Name: Rock
@@ -2880,6 +3453,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: 23
   - ID: 716
     Name:
       Name: Rock
@@ -2895,6 +3471,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: 6
   - ID: 715
     Name:
       Name: Rock
@@ -2910,6 +3489,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: 5
   - ID: 714
     Name:
       Name: Rock
@@ -2925,6 +3507,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: 4
   - ID: 713
     Name:
       Name: Rock
@@ -2940,6 +3525,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: 3
   - ID: 712
     Name:
       Name: Rock
@@ -2955,6 +3543,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: 2
   - ID: 711
     Name:
       Name: Tree
@@ -2970,6 +3561,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -8
   - ID: 710
     Name:
       Name: Iron
@@ -2985,6 +3579,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -11
   - ID: 709
     Name:
       Name: Rock
@@ -3000,6 +3597,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -12
   - ID: 708
     Name:
       Name: Rock
@@ -3015,6 +3615,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -13
   - ID: 707
     Name:
       Name: Rock
@@ -3030,6 +3633,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -14
   - ID: 706
     Name:
       Name: Rock
@@ -3045,6 +3651,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -15
   - ID: 705
     Name:
       Name: Iron
@@ -3060,6 +3669,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -16
   - ID: 704
     Name:
       Name: Rock
@@ -3075,6 +3687,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -22
   - ID: 703
     Name:
       Name: Rock
@@ -3090,6 +3705,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -23
   - ID: 702
     Name:
       Name: Rock
@@ -3105,6 +3723,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -24
   - ID: 701
     Name:
       Name: Rock
@@ -3120,6 +3741,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 17
+      Z: -25
   - ID: 700
     Name:
       Name: Rock
@@ -3135,6 +3759,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: 24
   - ID: 699
     Name:
       Name: Rock
@@ -3150,6 +3777,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: 23
   - ID: 698
     Name:
       Name: Rock
@@ -3165,6 +3795,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: 6
   - ID: 697
     Name:
       Name: Rock
@@ -3180,6 +3813,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: 5
   - ID: 696
     Name:
       Name: Rock
@@ -3195,6 +3831,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: 4
   - ID: 695
     Name:
       Name: Rock
@@ -3210,6 +3849,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: 3
   - ID: 694
     Name:
       Name: Rock
@@ -3225,6 +3867,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: 2
   - ID: 693
     Name:
       Name: Rock
@@ -3240,6 +3885,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -9
   - ID: 692
     Name:
       Name: Rock
@@ -3255,6 +3903,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -10
   - ID: 691
     Name:
       Name: Rock
@@ -3270,6 +3921,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -11
   - ID: 690
     Name:
       Name: Rock
@@ -3285,6 +3939,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -12
   - ID: 689
     Name:
       Name: Iron
@@ -3300,6 +3957,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -13
   - ID: 688
     Name:
       Name: Rock
@@ -3315,6 +3975,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -22
   - ID: 687
     Name:
       Name: Rock
@@ -3330,6 +3993,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -23
   - ID: 686
     Name:
       Name: Rock
@@ -3345,6 +4011,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -24
   - ID: 685
     Name:
       Name: Rock
@@ -3360,6 +4029,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 16
+      Z: -25
   - ID: 684
     Name:
       Name: Rock
@@ -3375,6 +4047,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: 24
   - ID: 683
     Name:
       Name: Rock
@@ -3390,6 +4065,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: 23
   - ID: 682
     Name:
       Name: Rock
@@ -3405,6 +4083,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: 22
   - ID: 681
     Name:
       Name: Rock
@@ -3420,6 +4101,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: 4
   - ID: 680
     Name:
       Name: Rock
@@ -3435,6 +4119,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: 3
   - ID: 679
     Name:
       Name: Rock
@@ -3450,6 +4137,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -4
   - ID: 678
     Name:
       Name: Rock
@@ -3465,6 +4155,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -5
   - ID: 677
     Name:
       Name: Rock
@@ -3480,6 +4173,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -6
   - ID: 676
     Name:
       Name: Iron
@@ -3495,6 +4191,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -17
   - ID: 675
     Name:
       Name: Tree
@@ -3510,6 +4209,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -18
   - ID: 674
     Name:
       Name: Rock
@@ -3525,6 +4227,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -23
   - ID: 673
     Name:
       Name: Rock
@@ -3540,6 +4245,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -24
   - ID: 672
     Name:
       Name: Rock
@@ -3555,6 +4263,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 15
+      Z: -25
   - ID: 671
     Name:
       Name: Rock
@@ -3570,6 +4281,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 14
+      Z: 24
   - ID: 670
     Name:
       Name: Rock
@@ -3585,6 +4299,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 14
+      Z: 23
   - ID: 669
     Name:
       Name: Rock
@@ -3600,6 +4317,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 14
+      Z: 22
   - ID: 668
     Name:
       Name: Rock
@@ -3615,6 +4335,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 14
+      Z: -24
   - ID: 667
     Name:
       Name: Rock
@@ -3630,6 +4353,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 14
+      Z: -25
   - ID: 666
     Name:
       Name: Rock
@@ -3645,6 +4371,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 13
+      Z: 24
   - ID: 665
     Name:
       Name: Rock
@@ -3660,6 +4389,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 13
+      Z: 23
   - ID: 664
     Name:
       Name: Rock
@@ -3675,6 +4407,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 13
+      Z: 22
   - ID: 663
     Name:
       Name: Rock
@@ -3690,6 +4425,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 13
+      Z: -24
   - ID: 662
     Name:
       Name: Rock
@@ -3705,6 +4443,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 13
+      Z: -25
   - ID: 661
     Name:
       Name: Rock
@@ -3720,6 +4461,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 12
+      Z: 24
   - ID: 660
     Name:
       Name: Rock
@@ -3735,6 +4479,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 12
+      Z: 23
   - ID: 659
     Name:
       Name: Rock
@@ -3750,6 +4497,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 12
+      Z: 22
   - ID: 658
     Name:
       Name: Rock
@@ -3765,6 +4515,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 12
+      Z: 21
   - ID: 657
     Name:
       Name: Rock
@@ -3780,6 +4533,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 12
+      Z: -24
   - ID: 656
     Name:
       Name: Rock
@@ -3795,6 +4551,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 12
+      Z: -25
   - ID: 655
     Name:
       Name: Rock
@@ -3810,6 +4569,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 11
+      Z: 24
   - ID: 654
     Name:
       Name: Rock
@@ -3825,6 +4587,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 11
+      Z: 23
   - ID: 653
     Name:
       Name: Rock
@@ -3840,6 +4605,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 11
+      Z: 22
   - ID: 652
     Name:
       Name: Rock
@@ -3855,6 +4623,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 11
+      Z: 21
   - ID: 651
     Name:
       Name: Rock
@@ -3870,6 +4641,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 11
+      Z: -24
   - ID: 650
     Name:
       Name: Rock
@@ -3885,6 +4659,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 11
+      Z: -25
   - ID: 649
     Name:
       Name: Rock
@@ -3900,6 +4677,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 10
+      Z: 24
   - ID: 648
     Name:
       Name: Rock
@@ -3915,6 +4695,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 10
+      Z: 23
   - ID: 647
     Name:
       Name: Rock
@@ -3930,6 +4713,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 10
+      Z: 22
   - ID: 646
     Name:
       Name: Rock
@@ -3945,6 +4731,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 10
+      Z: -24
   - ID: 645
     Name:
       Name: Rock
@@ -3960,6 +4749,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 10
+      Z: -25
   - ID: 644
     Name:
       Name: Rock
@@ -3975,6 +4767,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: 24
   - ID: 643
     Name:
       Name: Rock
@@ -3990,6 +4785,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: 23
   - ID: 642
     Name:
       Name: Rock
@@ -4005,6 +4803,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: 22
   - ID: 641
     Name:
       Name: Rock
@@ -4020,6 +4821,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: 5
   - ID: 640
     Name:
       Name: Rock
@@ -4035,6 +4839,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: 4
   - ID: 639
     Name:
       Name: Tree
@@ -4050,6 +4857,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: -8
   - ID: 638
     Name:
       Name: Iron
@@ -4065,6 +4875,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: -9
   - ID: 637
     Name:
       Name: Rock
@@ -4080,6 +4893,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: -23
   - ID: 636
     Name:
       Name: Rock
@@ -4095,6 +4911,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: -24
   - ID: 635
     Name:
       Name: Rock
@@ -4110,6 +4929,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 9
+      Z: -25
   - ID: 634
     Name:
       Name: Rock
@@ -4125,6 +4947,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: 24
   - ID: 633
     Name:
       Name: Rock
@@ -4140,6 +4965,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: 23
   - ID: 632
     Name:
       Name: Rock
@@ -4155,6 +4983,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: 22
   - ID: 631
     Name:
       Name: Rock
@@ -4170,6 +5001,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: 7
   - ID: 630
     Name:
       Name: Rock
@@ -4185,6 +5019,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: 6
   - ID: 629
     Name:
       Name: Rock
@@ -4200,6 +5037,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: 5
   - ID: 628
     Name:
       Name: Rock
@@ -4215,6 +5055,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: 4
   - ID: 627
     Name:
       Name: Iron
@@ -4230,6 +5073,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: -12
   - ID: 626
     Name:
       Name: Rock
@@ -4245,6 +5091,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: -13
   - ID: 625
     Name:
       Name: Tree
@@ -4260,6 +5109,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: -14
   - ID: 624
     Name:
       Name: Rock
@@ -4275,6 +5127,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: -22
   - ID: 623
     Name:
       Name: Rock
@@ -4290,6 +5145,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: -23
   - ID: 622
     Name:
       Name: Rock
@@ -4305,6 +5163,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: -24
   - ID: 621
     Name:
       Name: Rock
@@ -4320,6 +5181,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 8
+      Z: -25
   - ID: 620
     Name:
       Name: Rock
@@ -4335,6 +5199,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: 24
   - ID: 619
     Name:
       Name: Rock
@@ -4350,6 +5217,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: 23
   - ID: 618
     Name:
       Name: Rock
@@ -4365,6 +5235,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: 6
   - ID: 617
     Name:
       Name: Rock
@@ -4380,6 +5253,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: 5
   - ID: 616
     Name:
       Name: Rock
@@ -4395,6 +5271,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: 4
   - ID: 615
     Name:
       Name: Rock
@@ -4410,6 +5289,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: 3
   - ID: 614
     Name:
       Name: Rock
@@ -4425,6 +5307,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: 2
   - ID: 613
     Name:
       Name: Tree
@@ -4440,6 +5325,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -8
   - ID: 612
     Name:
       Name: Iron
@@ -4455,6 +5343,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -11
   - ID: 611
     Name:
       Name: Rock
@@ -4470,6 +5361,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -12
   - ID: 610
     Name:
       Name: Rock
@@ -4485,6 +5379,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -13
   - ID: 609
     Name:
       Name: Rock
@@ -4500,6 +5397,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -14
   - ID: 608
     Name:
       Name: Rock
@@ -4515,6 +5415,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -15
   - ID: 607
     Name:
       Name: Iron
@@ -4530,6 +5433,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -16
   - ID: 606
     Name:
       Name: Rock
@@ -4545,6 +5451,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -22
   - ID: 605
     Name:
       Name: Rock
@@ -4560,6 +5469,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -23
   - ID: 604
     Name:
       Name: Rock
@@ -4575,6 +5487,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -24
   - ID: 603
     Name:
       Name: Rock
@@ -4590,6 +5505,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 7
+      Z: -25
   - ID: 602
     Name:
       Name: Rock
@@ -4605,6 +5523,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: 24
   - ID: 601
     Name:
       Name: Rock
@@ -4620,6 +5541,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: 23
   - ID: 600
     Name:
       Name: Rock
@@ -4635,6 +5559,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: 6
   - ID: 599
     Name:
       Name: Rock
@@ -4650,6 +5577,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: 5
   - ID: 598
     Name:
       Name: Rock
@@ -4665,6 +5595,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: 4
   - ID: 597
     Name:
       Name: Rock
@@ -4680,6 +5613,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: 3
   - ID: 596
     Name:
       Name: Rock
@@ -4695,6 +5631,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: 2
   - ID: 595
     Name:
       Name: Rock
@@ -4710,6 +5649,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -9
   - ID: 594
     Name:
       Name: Rock
@@ -4725,6 +5667,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -10
   - ID: 593
     Name:
       Name: Rock
@@ -4740,6 +5685,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -11
   - ID: 592
     Name:
       Name: Rock
@@ -4755,6 +5703,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -12
   - ID: 591
     Name:
       Name: Iron
@@ -4770,6 +5721,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -13
   - ID: 590
     Name:
       Name: Rock
@@ -4785,6 +5739,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -23
   - ID: 589
     Name:
       Name: Rock
@@ -4800,6 +5757,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -24
   - ID: 588
     Name:
       Name: Rock
@@ -4815,6 +5775,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 6
+      Z: -25
   - ID: 587
     Name:
       Name: Rock
@@ -4830,6 +5793,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: 24
   - ID: 586
     Name:
       Name: Rock
@@ -4845,6 +5811,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: 23
   - ID: 585
     Name:
       Name: Rock
@@ -4860,6 +5829,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: 22
   - ID: 584
     Name:
       Name: Rock
@@ -4875,6 +5847,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: 4
   - ID: 583
     Name:
       Name: Rock
@@ -4890,6 +5865,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: 3
   - ID: 582
     Name:
       Name: Rock
@@ -4905,6 +5883,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -4
   - ID: 581
     Name:
       Name: Rock
@@ -4920,6 +5901,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -5
   - ID: 580
     Name:
       Name: Rock
@@ -4935,6 +5919,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -6
   - ID: 579
     Name:
       Name: Iron
@@ -4950,6 +5937,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -17
   - ID: 578
     Name:
       Name: Tree
@@ -4965,6 +5955,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -18
   - ID: 577
     Name:
       Name: Rock
@@ -4980,6 +5973,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -23
   - ID: 576
     Name:
       Name: Rock
@@ -4995,6 +5991,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -24
   - ID: 575
     Name:
       Name: Rock
@@ -5010,6 +6009,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 5
+      Z: -25
   - ID: 574
     Name:
       Name: Rock
@@ -5025,6 +6027,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: 24
   - ID: 573
     Name:
       Name: Rock
@@ -5040,6 +6045,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: 23
   - ID: 572
     Name:
       Name: Rock
@@ -5055,6 +6063,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: 22
   - ID: 571
     Name:
       Name: Rock
@@ -5070,6 +6081,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: 5
   - ID: 570
     Name:
       Name: Rock
@@ -5085,6 +6099,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: 4
   - ID: 569
     Name:
       Name: Rock
@@ -5100,6 +6117,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: 0
   - ID: 568
     Name:
       Name: Rock
@@ -5115,6 +6135,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -1
   - ID: 567
     Name:
       Name: Rock
@@ -5130,6 +6153,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -2
   - ID: 566
     Name:
       Name: Rock
@@ -5145,6 +6171,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -3
   - ID: 565
     Name:
       Name: Rock
@@ -5160,6 +6189,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -4
   - ID: 564
     Name:
       Name: Rock
@@ -5175,6 +6207,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -5
   - ID: 563
     Name:
       Name: Rock
@@ -5190,6 +6225,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -6
   - ID: 562
     Name:
       Name: Rock
@@ -5205,6 +6243,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -7
   - ID: 561
     Name:
       Name: Rock
@@ -5220,6 +6261,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -8
   - ID: 560
     Name:
       Name: Rock
@@ -5235,6 +6279,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -9
   - ID: 559
     Name:
       Name: Tree
@@ -5250,6 +6297,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -16
   - ID: 558
     Name:
       Name: Rock
@@ -5265,6 +6315,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -24
   - ID: 557
     Name:
       Name: Rock
@@ -5280,6 +6333,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 4
+      Z: -25
   - ID: 556
     Name:
       Name: Rock
@@ -5295,6 +6351,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 24
   - ID: 555
     Name:
       Name: Rock
@@ -5310,6 +6369,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 23
   - ID: 554
     Name:
       Name: Rock
@@ -5325,6 +6387,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 22
   - ID: 553
     Name:
       Name: Rock
@@ -5340,6 +6405,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 21
   - ID: 552
     Name:
       Name: Tree
@@ -5355,6 +6423,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 9
   - ID: 551
     Name:
       Name: Rock
@@ -5370,6 +6441,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 4
   - ID: 550
     Name:
       Name: Rock
@@ -5385,6 +6459,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 3
   - ID: 549
     Name:
       Name: Rock
@@ -5400,6 +6477,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 2
   - ID: 548
     Name:
       Name: Rock
@@ -5415,6 +6495,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 1
   - ID: 547
     Name:
       Name: Rock
@@ -5430,6 +6513,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: 0
   - ID: 546
     Name:
       Name: Rock
@@ -5445,6 +6531,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -1
   - ID: 545
     Name:
       Name: Rock
@@ -5460,6 +6549,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -2
   - ID: 544
     Name:
       Name: Rock
@@ -5475,6 +6567,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -3
   - ID: 543
     Name:
       Name: Rock
@@ -5490,6 +6585,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -4
   - ID: 542
     Name:
       Name: Rock
@@ -5505,6 +6603,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -5
   - ID: 541
     Name:
       Name: Rock
@@ -5520,6 +6621,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -6
   - ID: 540
     Name:
       Name: Tree
@@ -5535,6 +6639,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -7
   - ID: 539
     Name:
       Name: Rock
@@ -5550,6 +6657,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -24
   - ID: 538
     Name:
       Name: Rock
@@ -5565,6 +6675,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 3
+      Z: -25
   - ID: 537
     Name:
       Name: Rock
@@ -5580,6 +6693,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 24
   - ID: 536
     Name:
       Name: Rock
@@ -5595,6 +6711,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 23
   - ID: 535
     Name:
       Name: Rock
@@ -5610,6 +6729,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 22
   - ID: 534
     Name:
       Name: Tree
@@ -5625,6 +6747,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 15
   - ID: 533
     Name:
       Name: Rock
@@ -5640,6 +6765,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 11
   - ID: 532
     Name:
       Name: Mithril
@@ -5655,6 +6783,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 10
   - ID: 531
     Name:
       Name: Rock
@@ -5670,6 +6801,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 7
   - ID: 530
     Name:
       Name: Mithril
@@ -5685,6 +6819,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 6
   - ID: 529
     Name:
       Name: Rock
@@ -5700,6 +6837,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 5
   - ID: 528
     Name:
       Name: Rock
@@ -5715,6 +6855,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 4
   - ID: 527
     Name:
       Name: Rock
@@ -5730,6 +6873,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 3
   - ID: 526
     Name:
       Name: Mithril
@@ -5745,6 +6891,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 2
   - ID: 525
     Name:
       Name: Rock
@@ -5760,6 +6909,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 1
   - ID: 524
     Name:
       Name: Rock
@@ -5775,6 +6927,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: 0
   - ID: 523
     Name:
       Name: Rock
@@ -5790,6 +6945,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: -1
   - ID: 522
     Name:
       Name: Rock
@@ -5805,6 +6963,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: -2
   - ID: 521
     Name:
       Name: Rock
@@ -5820,6 +6981,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: -3
   - ID: 520
     Name:
       Name: Rock
@@ -5835,6 +6999,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: -4
   - ID: 519
     Name:
       Name: Rock
@@ -5850,6 +7017,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: -24
   - ID: 518
     Name:
       Name: Rock
@@ -5865,6 +7035,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 2
+      Z: -25
   - ID: 517
     Name:
       Name: Rock
@@ -5880,6 +7053,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 24
   - ID: 516
     Name:
       Name: Rock
@@ -5895,6 +7071,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 23
   - ID: 515
     Name:
       Name: Rock
@@ -5910,6 +7089,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 22
   - ID: 514
     Name:
       Name: Rock
@@ -5925,6 +7107,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 21
   - ID: 513
     Name:
       Name: Mithril
@@ -5940,6 +7125,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 13
   - ID: 512
     Name:
       Name: Rock
@@ -5955,6 +7143,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 9
   - ID: 511
     Name:
       Name: Mithril
@@ -5970,6 +7161,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 8
   - ID: 510
     Name:
       Name: Rock
@@ -5985,6 +7179,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 7
   - ID: 509
     Name:
       Name: Rock
@@ -6000,6 +7197,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 6
   - ID: 508
     Name:
       Name: Mithril
@@ -6015,6 +7215,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 5
   - ID: 507
     Name:
       Name: Rock
@@ -6030,6 +7233,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 4
   - ID: 506
     Name:
       Name: Rock
@@ -6045,6 +7251,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 3
   - ID: 505
     Name:
       Name: Rock
@@ -6060,6 +7269,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: 2
   - ID: 504
     Name:
       Name: Tree
@@ -6075,6 +7287,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: -1
   - ID: 503
     Name:
       Name: Rock
@@ -6090,6 +7305,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: -6
   - ID: 502
     Name:
       Name: Rock
@@ -6105,6 +7323,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: -7
   - ID: 501
     Name:
       Name: Rock
@@ -6120,6 +7341,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: -8
   - ID: 500
     Name:
       Name: Rock
@@ -6135,6 +7359,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: -23
   - ID: 499
     Name:
       Name: Rock
@@ -6150,6 +7377,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: -24
   - ID: 498
     Name:
       Name: Rock
@@ -6165,6 +7395,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 1
+      Z: -25
   - ID: 497
     Name:
       Name: Rock
@@ -6180,6 +7413,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 24
   - ID: 496
     Name:
       Name: Rock
@@ -6195,6 +7431,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 23
   - ID: 495
     Name:
       Name: Rock
@@ -6210,6 +7449,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 22
   - ID: 494
     Name:
       Name: Rock
@@ -6225,6 +7467,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 21
   - ID: 493
     Name:
       Name: Tree
@@ -6240,6 +7485,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 11
   - ID: 492
     Name:
       Name: Mithril
@@ -6255,6 +7503,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 10
   - ID: 491
     Name:
       Name: Mithril
@@ -6270,6 +7521,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 9
   - ID: 490
     Name:
       Name: Tree
@@ -6285,6 +7539,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: 3
   - ID: 489
     Name:
       Name: Rock
@@ -6300,6 +7557,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: -5
   - ID: 488
     Name:
       Name: Rock
@@ -6315,6 +7575,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: -6
   - ID: 487
     Name:
       Name: Tree
@@ -6330,6 +7593,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: -7
   - ID: 486
     Name:
       Name: Rock
@@ -6345,6 +7611,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: -22
   - ID: 485
     Name:
       Name: Rock
@@ -6360,6 +7629,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: -23
   - ID: 484
     Name:
       Name: Rock
@@ -6375,6 +7647,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: -24
   - ID: 483
     Name:
       Name: Rock
@@ -6390,6 +7665,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: 0
+      Z: -25
   - ID: 482
     Name:
       Name: Rock
@@ -6405,6 +7683,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -1
+      Z: 24
   - ID: 481
     Name:
       Name: Rock
@@ -6420,6 +7701,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -1
+      Z: 23
   - ID: 480
     Name:
       Name: Rock
@@ -6435,6 +7719,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -1
+      Z: 22
   - ID: 479
     Name:
       Name: Rock
@@ -6450,6 +7737,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -1
+      Z: -22
   - ID: 478
     Name:
       Name: Rock
@@ -6465,6 +7755,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -1
+      Z: -23
   - ID: 477
     Name:
       Name: Rock
@@ -6480,6 +7773,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -1
+      Z: -24
   - ID: 476
     Name:
       Name: Rock
@@ -6495,6 +7791,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -1
+      Z: -25
   - ID: 475
     Name:
       Name: Rock
@@ -6510,6 +7809,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: 24
   - ID: 474
     Name:
       Name: Rock
@@ -6525,6 +7827,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: 23
   - ID: 473
     Name:
       Name: Rock
@@ -6540,6 +7845,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: 22
   - ID: 472
     Name:
       Name: Tree
@@ -6555,6 +7863,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: -6
   - ID: 471
     Name:
       Name: Rock
@@ -6570,6 +7881,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: -22
   - ID: 470
     Name:
       Name: Rock
@@ -6585,6 +7899,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: -23
   - ID: 469
     Name:
       Name: Rock
@@ -6600,6 +7917,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: -24
   - ID: 468
     Name:
       Name: Rock
@@ -6615,6 +7935,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -2
+      Z: -25
   - ID: 467
     Name:
       Name: Rock
@@ -6630,6 +7953,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: 24
   - ID: 466
     Name:
       Name: Rock
@@ -6645,6 +7971,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: 23
   - ID: 465
     Name:
       Name: Tin
@@ -6660,6 +7989,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: 1
   - ID: 464
     Name:
       Name: Tree
@@ -6675,6 +8007,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -1
   - ID: 463
     Name:
       Name: Rock
@@ -6690,6 +8025,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -3
   - ID: 462
     Name:
       Name: Rock
@@ -6705,6 +8043,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -4
   - ID: 461
     Name:
       Name: Tin
@@ -6720,6 +8061,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -5
   - ID: 460
     Name:
       Name: Rock
@@ -6735,6 +8079,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -21
   - ID: 459
     Name:
       Name: Rock
@@ -6750,6 +8097,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -22
   - ID: 458
     Name:
       Name: Rock
@@ -6765,6 +8115,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -23
   - ID: 457
     Name:
       Name: Rock
@@ -6780,6 +8133,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -24
   - ID: 456
     Name:
       Name: Rock
@@ -6795,6 +8151,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -3
+      Z: -25
   - ID: 455
     Name:
       Name: Rock
@@ -6810,6 +8169,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: 24
   - ID: 454
     Name:
       Name: Rock
@@ -6825,6 +8187,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: 23
   - ID: 453
     Name:
       Name: Tin
@@ -6840,6 +8205,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: 2
   - ID: 452
     Name:
       Name: Rock
@@ -6855,6 +8223,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: 1
   - ID: 451
     Name:
       Name: Rock
@@ -6870,6 +8241,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: 0
   - ID: 450
     Name:
       Name: Rock
@@ -6885,6 +8259,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: -1
   - ID: 449
     Name:
       Name: Tree
@@ -6900,6 +8277,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: -4
   - ID: 448
     Name:
       Name: Rock
@@ -6915,6 +8295,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: -21
   - ID: 447
     Name:
       Name: Rock
@@ -6930,6 +8313,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: -22
   - ID: 446
     Name:
       Name: Rock
@@ -6945,6 +8331,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: -23
   - ID: 445
     Name:
       Name: Rock
@@ -6960,6 +8349,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: -24
   - ID: 444
     Name:
       Name: Rock
@@ -6975,6 +8367,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -4
+      Z: -25
   - ID: 443
     Name:
       Name: Rock
@@ -6990,6 +8385,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: 24
   - ID: 442
     Name:
       Name: Rock
@@ -7005,6 +8403,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: 23
   - ID: 441
     Name:
       Name: Rock
@@ -7020,6 +8421,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: 22
   - ID: 440
     Name:
       Name: Rock
@@ -7035,6 +8439,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: 3
   - ID: 439
     Name:
       Name: Rock
@@ -7050,6 +8457,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: 2
   - ID: 438
     Name:
       Name: Rock
@@ -7065,6 +8475,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: 1
   - ID: 437
     Name:
       Name: Rock
@@ -7080,6 +8493,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: 0
   - ID: 436
     Name:
       Name: Rock
@@ -7095,6 +8511,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: -1
   - ID: 435
     Name:
       Name: Rock
@@ -7110,6 +8529,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: -2
   - ID: 434
     Name:
       Name: Rock
@@ -7125,6 +8547,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: -21
   - ID: 433
     Name:
       Name: Rock
@@ -7140,6 +8565,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: -22
   - ID: 432
     Name:
       Name: Rock
@@ -7155,6 +8583,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: -23
   - ID: 431
     Name:
       Name: Rock
@@ -7170,6 +8601,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: -24
   - ID: 430
     Name:
       Name: Rock
@@ -7185,6 +8619,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -5
+      Z: -25
   - ID: 429
     Name:
       Name: Rock
@@ -7200,6 +8637,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 24
   - ID: 428
     Name:
       Name: Rock
@@ -7215,6 +8655,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 23
   - ID: 427
     Name:
       Name: Rock
@@ -7230,6 +8673,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 22
   - ID: 426
     Name:
       Name: Rock
@@ -7245,6 +8691,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 4
   - ID: 425
     Name:
       Name: Tin
@@ -7260,6 +8709,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 3
   - ID: 424
     Name:
       Name: Rock
@@ -7275,6 +8727,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 2
   - ID: 423
     Name:
       Name: Rock
@@ -7290,6 +8745,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 1
   - ID: 422
     Name:
       Name: Rock
@@ -7305,6 +8763,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: 0
   - ID: 421
     Name:
       Name: Rock
@@ -7320,6 +8781,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -1
   - ID: 420
     Name:
       Name: Rock
@@ -7335,6 +8799,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -2
   - ID: 419
     Name:
       Name: Rock
@@ -7350,6 +8817,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -3
   - ID: 418
     Name:
       Name: Rock
@@ -7365,6 +8835,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -4
   - ID: 417
     Name:
       Name: Rock
@@ -7380,6 +8853,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -5
   - ID: 416
     Name:
       Name: Tree
@@ -7395,6 +8871,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -6
   - ID: 415
     Name:
       Name: Rock
@@ -7410,6 +8889,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -21
   - ID: 414
     Name:
       Name: Rock
@@ -7425,6 +8907,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -22
   - ID: 413
     Name:
       Name: Rock
@@ -7440,6 +8925,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -23
   - ID: 412
     Name:
       Name: Rock
@@ -7455,6 +8943,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -24
   - ID: 411
     Name:
       Name: Rock
@@ -7470,6 +8961,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -6
+      Z: -25
   - ID: 410
     Name:
       Name: Rock
@@ -7485,6 +8979,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 24
   - ID: 409
     Name:
       Name: Rock
@@ -7500,6 +8997,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 23
   - ID: 408
     Name:
       Name: Rock
@@ -7515,6 +9015,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 22
   - ID: 407
     Name:
       Name: Rock
@@ -7530,6 +9033,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 5
   - ID: 406
     Name:
       Name: Tin
@@ -7545,6 +9051,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 4
   - ID: 405
     Name:
       Name: Rock
@@ -7560,6 +9069,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 3
   - ID: 404
     Name:
       Name: Rock
@@ -7575,6 +9087,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 2
   - ID: 403
     Name:
       Name: Rock
@@ -7590,6 +9105,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 1
   - ID: 402
     Name:
       Name: Rock
@@ -7605,6 +9123,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: 0
   - ID: 401
     Name:
       Name: Rock
@@ -7620,6 +9141,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: -1
   - ID: 400
     Name:
       Name: Tin
@@ -7635,6 +9159,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: -2
   - ID: 399
     Name:
       Name: Rock
@@ -7650,6 +9177,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: -21
   - ID: 398
     Name:
       Name: Rock
@@ -7665,6 +9195,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: -22
   - ID: 397
     Name:
       Name: Rock
@@ -7680,6 +9213,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: -23
   - ID: 396
     Name:
       Name: Rock
@@ -7695,6 +9231,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: -24
   - ID: 395
     Name:
       Name: Rock
@@ -7710,6 +9249,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -7
+      Z: -25
   - ID: 394
     Name:
       Name: Rock
@@ -7725,6 +9267,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 24
   - ID: 393
     Name:
       Name: Rock
@@ -7740,6 +9285,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 23
   - ID: 392
     Name:
       Name: Rock
@@ -7755,6 +9303,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 22
   - ID: 391
     Name:
       Name: Rock
@@ -7770,6 +9321,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 21
   - ID: 390
     Name:
       Name: Rock
@@ -7785,6 +9339,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 3
   - ID: 389
     Name:
       Name: Rock
@@ -7800,6 +9357,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 2
   - ID: 388
     Name:
       Name: Rock
@@ -7815,6 +9375,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 1
   - ID: 387
     Name:
       Name: Rock
@@ -7830,6 +9393,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: 0
   - ID: 386
     Name:
       Name: Rock
@@ -7845,6 +9411,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: -1
   - ID: 385
     Name:
       Name: Tree
@@ -7860,6 +9429,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: -4
   - ID: 384
     Name:
       Name: Rock
@@ -7875,6 +9447,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: -21
   - ID: 383
     Name:
       Name: Rock
@@ -7890,6 +9465,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: -22
   - ID: 382
     Name:
       Name: Rock
@@ -7905,6 +9483,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: -23
   - ID: 381
     Name:
       Name: Rock
@@ -7920,6 +9501,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: -24
   - ID: 380
     Name:
       Name: Rock
@@ -7935,6 +9519,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -8
+      Z: -25
   - ID: 379
     Name:
       Name: Rock
@@ -7950,6 +9537,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 24
   - ID: 378
     Name:
       Name: Rock
@@ -7965,6 +9555,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 23
   - ID: 377
     Name:
       Name: Rock
@@ -7980,6 +9573,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 22
   - ID: 376
     Name:
       Name: Rock
@@ -7995,6 +9591,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 21
   - ID: 375
     Name:
       Name: Tin
@@ -8010,6 +9609,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 6
   - ID: 374
     Name:
       Name: Rock
@@ -8025,6 +9627,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 5
   - ID: 373
     Name:
       Name: Rock
@@ -8040,6 +9645,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 2
   - ID: 372
     Name:
       Name: Rock
@@ -8055,6 +9663,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 1
   - ID: 371
     Name:
       Name: Rock
@@ -8070,6 +9681,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: 0
   - ID: 370
     Name:
       Name: Tin
@@ -8085,6 +9699,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: -1
   - ID: 369
     Name:
       Name: Tree
@@ -8100,6 +9717,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: -7
   - ID: 368
     Name:
       Name: Rock
@@ -8115,6 +9735,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: -22
   - ID: 367
     Name:
       Name: Rock
@@ -8130,6 +9753,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: -23
   - ID: 366
     Name:
       Name: Rock
@@ -8145,6 +9771,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: -24
   - ID: 365
     Name:
       Name: Rock
@@ -8160,6 +9789,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -9
+      Z: -25
   - ID: 364
     Name:
       Name: Rock
@@ -8175,6 +9807,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: 24
   - ID: 363
     Name:
       Name: Rock
@@ -8190,6 +9825,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: 23
   - ID: 362
     Name:
       Name: Rock
@@ -8205,6 +9843,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: 22
   - ID: 361
     Name:
       Name: Rock
@@ -8220,6 +9861,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: 5
   - ID: 360
     Name:
       Name: Tin
@@ -8235,6 +9879,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: 1
   - ID: 359
     Name:
       Name: Tree
@@ -8250,6 +9897,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: -3
   - ID: 358
     Name:
       Name: Rock
@@ -8265,6 +9915,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: -22
   - ID: 357
     Name:
       Name: Rock
@@ -8280,6 +9933,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: -23
   - ID: 356
     Name:
       Name: Rock
@@ -8295,6 +9951,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: -24
   - ID: 355
     Name:
       Name: Rock
@@ -8310,6 +9969,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -10
+      Z: -25
   - ID: 354
     Name:
       Name: Rock
@@ -8325,6 +9987,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: 24
   - ID: 353
     Name:
       Name: Rock
@@ -8340,6 +10005,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: 23
   - ID: 352
     Name:
       Name: Rock
@@ -8355,6 +10023,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: 22
   - ID: 351
     Name:
       Name: Rock
@@ -8370,6 +10041,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: 5
   - ID: 350
     Name:
       Name: Rock
@@ -8385,6 +10059,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: 4
   - ID: 349
     Name:
       Name: Tree
@@ -8400,6 +10077,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: -8
   - ID: 348
     Name:
       Name: Iron
@@ -8415,6 +10095,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: -9
   - ID: 347
     Name:
       Name: Rock
@@ -8430,6 +10113,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: -22
   - ID: 346
     Name:
       Name: Rock
@@ -8445,6 +10131,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: -23
   - ID: 345
     Name:
       Name: Rock
@@ -8460,6 +10149,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: -24
   - ID: 344
     Name:
       Name: Rock
@@ -8475,6 +10167,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -11
+      Z: -25
   - ID: 343
     Name:
       Name: Rock
@@ -8490,6 +10185,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: 24
   - ID: 342
     Name:
       Name: Rock
@@ -8505,6 +10203,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: 23
   - ID: 341
     Name:
       Name: Rock
@@ -8520,6 +10221,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: 22
   - ID: 340
     Name:
       Name: Rock
@@ -8535,6 +10239,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: 7
   - ID: 339
     Name:
       Name: Rock
@@ -8550,6 +10257,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: 6
   - ID: 338
     Name:
       Name: Rock
@@ -8565,6 +10275,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: 5
   - ID: 337
     Name:
       Name: Rock
@@ -8580,6 +10293,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: 4
   - ID: 336
     Name:
       Name: Iron
@@ -8595,6 +10311,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -12
   - ID: 335
     Name:
       Name: Rock
@@ -8610,6 +10329,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -13
   - ID: 334
     Name:
       Name: Tree
@@ -8625,6 +10347,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -14
   - ID: 333
     Name:
       Name: Rock
@@ -8640,6 +10365,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -21
   - ID: 332
     Name:
       Name: Rock
@@ -8655,6 +10383,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -22
   - ID: 331
     Name:
       Name: Rock
@@ -8670,6 +10401,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -23
   - ID: 330
     Name:
       Name: Rock
@@ -8685,6 +10419,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -24
   - ID: 329
     Name:
       Name: Rock
@@ -8700,6 +10437,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -12
+      Z: -25
   - ID: 328
     Name:
       Name: Rock
@@ -8715,6 +10455,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: 24
   - ID: 327
     Name:
       Name: Rock
@@ -8730,6 +10473,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: 23
   - ID: 326
     Name:
       Name: Rock
@@ -8745,6 +10491,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: 6
   - ID: 325
     Name:
       Name: Rock
@@ -8760,6 +10509,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: 5
   - ID: 324
     Name:
       Name: Rock
@@ -8775,6 +10527,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: 4
   - ID: 323
     Name:
       Name: Rock
@@ -8790,6 +10545,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: 3
   - ID: 322
     Name:
       Name: Rock
@@ -8805,6 +10563,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: 2
   - ID: 321
     Name:
       Name: Tree
@@ -8820,6 +10581,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -8
   - ID: 320
     Name:
       Name: Iron
@@ -8835,6 +10599,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -11
   - ID: 319
     Name:
       Name: Rock
@@ -8850,6 +10617,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -12
   - ID: 318
     Name:
       Name: Rock
@@ -8865,6 +10635,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -13
   - ID: 317
     Name:
       Name: Rock
@@ -8880,6 +10653,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -14
   - ID: 316
     Name:
       Name: Rock
@@ -8895,6 +10671,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -15
   - ID: 315
     Name:
       Name: Iron
@@ -8910,6 +10689,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -16
   - ID: 314
     Name:
       Name: Rock
@@ -8925,6 +10707,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -21
   - ID: 313
     Name:
       Name: Rock
@@ -8940,6 +10725,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -22
   - ID: 312
     Name:
       Name: Rock
@@ -8955,6 +10743,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -23
   - ID: 311
     Name:
       Name: Rock
@@ -8970,6 +10761,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -24
   - ID: 310
     Name:
       Name: Rock
@@ -8985,6 +10779,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -13
+      Z: -25
   - ID: 309
     Name:
       Name: Rock
@@ -9000,6 +10797,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: 24
   - ID: 308
     Name:
       Name: Rock
@@ -9015,6 +10815,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: 23
   - ID: 307
     Name:
       Name: Rock
@@ -9030,6 +10833,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: 6
   - ID: 306
     Name:
       Name: Rock
@@ -9045,6 +10851,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: 5
   - ID: 305
     Name:
       Name: Rock
@@ -9060,6 +10869,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: 4
   - ID: 304
     Name:
       Name: Rock
@@ -9075,6 +10887,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: 3
   - ID: 303
     Name:
       Name: Rock
@@ -9090,6 +10905,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: 2
   - ID: 302
     Name:
       Name: Rock
@@ -9105,6 +10923,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -9
   - ID: 301
     Name:
       Name: Rock
@@ -9120,6 +10941,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -10
   - ID: 300
     Name:
       Name: Rock
@@ -9135,6 +10959,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -11
   - ID: 299
     Name:
       Name: Rock
@@ -9150,6 +10977,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -12
   - ID: 298
     Name:
       Name: Iron
@@ -9165,6 +10995,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -13
   - ID: 297
     Name:
       Name: Rock
@@ -9180,6 +11013,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -21
   - ID: 296
     Name:
       Name: Rock
@@ -9195,6 +11031,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -22
   - ID: 295
     Name:
       Name: Rock
@@ -9210,6 +11049,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -23
   - ID: 294
     Name:
       Name: Rock
@@ -9225,6 +11067,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -24
   - ID: 293
     Name:
       Name: Rock
@@ -9240,6 +11085,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -14
+      Z: -25
   - ID: 292
     Name:
       Name: Rock
@@ -9255,6 +11103,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: 24
   - ID: 291
     Name:
       Name: Rock
@@ -9270,6 +11121,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: 23
   - ID: 290
     Name:
       Name: Rock
@@ -9285,6 +11139,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: 22
   - ID: 289
     Name:
       Name: Rock
@@ -9300,6 +11157,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: 4
   - ID: 288
     Name:
       Name: Rock
@@ -9315,6 +11175,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: 3
   - ID: 287
     Name:
       Name: Rock
@@ -9330,6 +11193,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -4
   - ID: 286
     Name:
       Name: Rock
@@ -9345,6 +11211,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -5
   - ID: 285
     Name:
       Name: Rock
@@ -9360,6 +11229,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -6
   - ID: 284
     Name:
       Name: Iron
@@ -9375,6 +11247,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -17
   - ID: 283
     Name:
       Name: Tree
@@ -9390,6 +11265,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -18
   - ID: 282
     Name:
       Name: Rock
@@ -9405,6 +11283,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -21
   - ID: 281
     Name:
       Name: Rock
@@ -9420,6 +11301,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -22
   - ID: 280
     Name:
       Name: Rock
@@ -9435,6 +11319,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -23
   - ID: 279
     Name:
       Name: Rock
@@ -9450,6 +11337,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -24
   - ID: 278
     Name:
       Name: Rock
@@ -9465,6 +11355,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -15
+      Z: -25
   - ID: 277
     Name:
       Name: Rock
@@ -9480,6 +11373,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: 24
   - ID: 276
     Name:
       Name: Rock
@@ -9495,6 +11391,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: 23
   - ID: 275
     Name:
       Name: Rock
@@ -9510,6 +11409,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: 22
   - ID: 274
     Name:
       Name: Rock
@@ -9525,6 +11427,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: 5
   - ID: 273
     Name:
       Name: Rock
@@ -9540,6 +11445,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: 4
   - ID: 272
     Name:
       Name: Rock
@@ -9555,6 +11463,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: 0
   - ID: 271
     Name:
       Name: Rock
@@ -9570,6 +11481,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -1
   - ID: 270
     Name:
       Name: Rock
@@ -9585,6 +11499,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -2
   - ID: 269
     Name:
       Name: Rock
@@ -9600,6 +11517,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -3
   - ID: 268
     Name:
       Name: Rock
@@ -9615,6 +11535,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -4
   - ID: 267
     Name:
       Name: Rock
@@ -9630,6 +11553,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -5
   - ID: 266
     Name:
       Name: Rock
@@ -9645,6 +11571,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -6
   - ID: 265
     Name:
       Name: Rock
@@ -9660,6 +11589,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -7
   - ID: 264
     Name:
       Name: Rock
@@ -9675,6 +11607,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -8
   - ID: 263
     Name:
       Name: Rock
@@ -9690,6 +11625,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -9
   - ID: 262
     Name:
       Name: Tree
@@ -9705,6 +11643,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -16
   - ID: 261
     Name:
       Name: Rock
@@ -9720,6 +11661,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -21
   - ID: 260
     Name:
       Name: Rock
@@ -9735,6 +11679,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -22
   - ID: 259
     Name:
       Name: Rock
@@ -9750,6 +11697,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -23
   - ID: 258
     Name:
       Name: Rock
@@ -9765,6 +11715,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -24
   - ID: 257
     Name:
       Name: Rock
@@ -9780,6 +11733,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -16
+      Z: -25
   - ID: 256
     Name:
       Name: Rock
@@ -9795,6 +11751,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 24
   - ID: 255
     Name:
       Name: Rock
@@ -9810,6 +11769,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 23
   - ID: 254
     Name:
       Name: Rock
@@ -9825,6 +11787,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 22
   - ID: 253
     Name:
       Name: Rock
@@ -9840,6 +11805,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 21
   - ID: 252
     Name:
       Name: Tree
@@ -9855,6 +11823,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 9
   - ID: 251
     Name:
       Name: Rock
@@ -9870,6 +11841,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 4
   - ID: 250
     Name:
       Name: Rock
@@ -9885,6 +11859,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 3
   - ID: 249
     Name:
       Name: Rock
@@ -9900,6 +11877,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 2
   - ID: 248
     Name:
       Name: Rock
@@ -9915,6 +11895,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 1
   - ID: 247
     Name:
       Name: Rock
@@ -9930,6 +11913,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: 0
   - ID: 246
     Name:
       Name: Rock
@@ -9945,6 +11931,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -1
   - ID: 245
     Name:
       Name: Rock
@@ -9960,6 +11949,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -2
   - ID: 244
     Name:
       Name: Rock
@@ -9975,6 +11967,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -3
   - ID: 243
     Name:
       Name: Rock
@@ -9990,6 +11985,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -4
   - ID: 242
     Name:
       Name: Rock
@@ -10005,6 +12003,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -5
   - ID: 241
     Name:
       Name: Rock
@@ -10020,6 +12021,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -6
   - ID: 240
     Name:
       Name: Tree
@@ -10035,6 +12039,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -7
   - ID: 239
     Name:
       Name: Rock
@@ -10050,6 +12057,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -21
   - ID: 238
     Name:
       Name: Rock
@@ -10065,6 +12075,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -22
   - ID: 237
     Name:
       Name: Rock
@@ -10080,6 +12093,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -23
   - ID: 236
     Name:
       Name: Rock
@@ -10095,6 +12111,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -24
   - ID: 235
     Name:
       Name: Rock
@@ -10110,6 +12129,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -17
+      Z: -25
   - ID: 234
     Name:
       Name: Rock
@@ -10125,6 +12147,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 24
   - ID: 233
     Name:
       Name: Rock
@@ -10140,6 +12165,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 23
   - ID: 232
     Name:
       Name: Rock
@@ -10155,6 +12183,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 22
   - ID: 231
     Name:
       Name: Tree
@@ -10170,6 +12201,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 15
   - ID: 230
     Name:
       Name: Rock
@@ -10185,6 +12219,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 11
   - ID: 229
     Name:
       Name: Mithril
@@ -10200,6 +12237,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 10
   - ID: 228
     Name:
       Name: Rock
@@ -10215,6 +12255,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 7
   - ID: 227
     Name:
       Name: Mithril
@@ -10230,6 +12273,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 6
   - ID: 226
     Name:
       Name: Rock
@@ -10245,6 +12291,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 5
   - ID: 225
     Name:
       Name: Rock
@@ -10260,6 +12309,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 4
   - ID: 224
     Name:
       Name: Rock
@@ -10275,6 +12327,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 3
   - ID: 223
     Name:
       Name: Mithril
@@ -10290,6 +12345,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 2
   - ID: 222
     Name:
       Name: Rock
@@ -10305,6 +12363,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 1
   - ID: 221
     Name:
       Name: Rock
@@ -10320,6 +12381,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: 0
   - ID: 220
     Name:
       Name: Rock
@@ -10335,6 +12399,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -1
   - ID: 219
     Name:
       Name: Rock
@@ -10350,6 +12417,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -2
   - ID: 218
     Name:
       Name: Rock
@@ -10365,6 +12435,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -3
   - ID: 217
     Name:
       Name: Rock
@@ -10380,6 +12453,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -4
   - ID: 216
     Name:
       Name: Rock
@@ -10395,6 +12471,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -21
   - ID: 215
     Name:
       Name: Rock
@@ -10410,6 +12489,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -22
   - ID: 214
     Name:
       Name: Rock
@@ -10425,6 +12507,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -23
   - ID: 213
     Name:
       Name: Rock
@@ -10440,6 +12525,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -24
   - ID: 212
     Name:
       Name: Rock
@@ -10455,6 +12543,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -18
+      Z: -25
   - ID: 211
     Name:
       Name: Rock
@@ -10470,6 +12561,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 24
   - ID: 210
     Name:
       Name: Rock
@@ -10485,6 +12579,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 23
   - ID: 209
     Name:
       Name: Rock
@@ -10500,6 +12597,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 22
   - ID: 208
     Name:
       Name: Rock
@@ -10515,6 +12615,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 21
   - ID: 207
     Name:
       Name: Mithril
@@ -10530,6 +12633,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 13
   - ID: 206
     Name:
       Name: Rock
@@ -10545,6 +12651,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 9
   - ID: 205
     Name:
       Name: Mithril
@@ -10560,6 +12669,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 8
   - ID: 204
     Name:
       Name: Rock
@@ -10575,6 +12687,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 7
   - ID: 203
     Name:
       Name: Rock
@@ -10590,6 +12705,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 6
   - ID: 202
     Name:
       Name: Mithril
@@ -10605,6 +12723,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 5
   - ID: 201
     Name:
       Name: Rock
@@ -10620,6 +12741,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 4
   - ID: 200
     Name:
       Name: Rock
@@ -10635,6 +12759,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 3
   - ID: 199
     Name:
       Name: Rock
@@ -10650,6 +12777,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: 2
   - ID: 198
     Name:
       Name: Tree
@@ -10665,6 +12795,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -1
   - ID: 197
     Name:
       Name: Rock
@@ -10680,6 +12813,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -6
   - ID: 196
     Name:
       Name: Rock
@@ -10695,6 +12831,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -7
   - ID: 195
     Name:
       Name: Rock
@@ -10710,6 +12849,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -8
   - ID: 194
     Name:
       Name: Rock
@@ -10725,6 +12867,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -21
   - ID: 193
     Name:
       Name: Rock
@@ -10740,6 +12885,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -22
   - ID: 192
     Name:
       Name: Rock
@@ -10755,6 +12903,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -23
   - ID: 191
     Name:
       Name: Rock
@@ -10770,6 +12921,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -24
   - ID: 190
     Name:
       Name: Rock
@@ -10785,6 +12939,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -19
+      Z: -25
   - ID: 189
     Name:
       Name: Rock
@@ -10800,6 +12957,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 24
   - ID: 188
     Name:
       Name: Rock
@@ -10815,6 +12975,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 23
   - ID: 187
     Name:
       Name: Rock
@@ -10830,6 +12993,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 22
   - ID: 186
     Name:
       Name: Rock
@@ -10845,6 +13011,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 21
   - ID: 185
     Name:
       Name: Tree
@@ -10860,6 +13029,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 11
   - ID: 184
     Name:
       Name: Mithril
@@ -10875,6 +13047,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 10
   - ID: 183
     Name:
       Name: Mithril
@@ -10890,6 +13065,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 9
   - ID: 182
     Name:
       Name: Tree
@@ -10905,6 +13083,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: 3
   - ID: 181
     Name:
       Name: Rock
@@ -10920,6 +13101,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: -5
   - ID: 180
     Name:
       Name: Rock
@@ -10935,6 +13119,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: -6
   - ID: 179
     Name:
       Name: Tree
@@ -10950,6 +13137,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: -7
   - ID: 178
     Name:
       Name: Rock
@@ -10965,6 +13155,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: -22
   - ID: 177
     Name:
       Name: Rock
@@ -10980,6 +13173,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: -23
   - ID: 176
     Name:
       Name: Rock
@@ -10995,6 +13191,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: -24
   - ID: 175
     Name:
       Name: Rock
@@ -11010,6 +13209,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -20
+      Z: -25
   - ID: 174
     Name:
       Name: Rock
@@ -11025,6 +13227,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -21
+      Z: 24
   - ID: 173
     Name:
       Name: Rock
@@ -11040,6 +13245,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -21
+      Z: 23
   - ID: 172
     Name:
       Name: Rock
@@ -11055,6 +13263,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -21
+      Z: 22
   - ID: 171
     Name:
       Name: Rock
@@ -11070,6 +13281,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -21
+      Z: -22
   - ID: 170
     Name:
       Name: Rock
@@ -11085,6 +13299,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -21
+      Z: -23
   - ID: 169
     Name:
       Name: Rock
@@ -11100,6 +13317,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -21
+      Z: -24
   - ID: 168
     Name:
       Name: Rock
@@ -11115,6 +13335,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -21
+      Z: -25
   - ID: 167
     Name:
       Name: Rock
@@ -11130,6 +13353,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 24
   - ID: 166
     Name:
       Name: Rock
@@ -11145,6 +13371,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 23
   - ID: 165
     Name:
       Name: Rock
@@ -11160,6 +13389,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 22
   - ID: 164
     Name:
       Name: Rock
@@ -11175,6 +13407,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 21
   - ID: 163
     Name:
       Name: Rock
@@ -11190,6 +13425,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 20
   - ID: 162
     Name:
       Name: Rock
@@ -11205,6 +13443,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 9
   - ID: 161
     Name:
       Name: Rock
@@ -11220,6 +13461,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 8
   - ID: 160
     Name:
       Name: Rock
@@ -11235,6 +13479,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 6
   - ID: 159
     Name:
       Name: Rock
@@ -11250,6 +13497,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 5
   - ID: 158
     Name:
       Name: Rock
@@ -11265,6 +13515,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 4
   - ID: 157
     Name:
       Name: Rock
@@ -11280,6 +13533,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 3
   - ID: 156
     Name:
       Name: Rock
@@ -11295,6 +13551,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 1
   - ID: 155
     Name:
       Name: Rock
@@ -11310,6 +13569,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: 0
   - ID: 154
     Name:
       Name: Rock
@@ -11325,6 +13587,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -1
   - ID: 153
     Name:
       Name: Rock
@@ -11340,6 +13605,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -2
   - ID: 152
     Name:
       Name: Rock
@@ -11355,6 +13623,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -16
   - ID: 151
     Name:
       Name: Rock
@@ -11370,6 +13641,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -17
   - ID: 150
     Name:
       Name: Rock
@@ -11385,6 +13659,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -18
   - ID: 149
     Name:
       Name: Rock
@@ -11400,6 +13677,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -19
   - ID: 148
     Name:
       Name: Rock
@@ -11415,6 +13695,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -20
   - ID: 147
     Name:
       Name: Rock
@@ -11430,6 +13713,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -21
   - ID: 146
     Name:
       Name: Rock
@@ -11445,6 +13731,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -22
   - ID: 145
     Name:
       Name: Rock
@@ -11460,6 +13749,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -23
   - ID: 144
     Name:
       Name: Rock
@@ -11475,6 +13767,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -24
   - ID: 143
     Name:
       Name: Rock
@@ -11490,6 +13785,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -22
+      Z: -25
   - ID: 142
     Name:
       Name: Rock
@@ -11505,6 +13803,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 24
   - ID: 141
     Name:
       Name: Rock
@@ -11520,6 +13821,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 23
   - ID: 140
     Name:
       Name: Rock
@@ -11535,6 +13839,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 22
   - ID: 139
     Name:
       Name: Rock
@@ -11550,6 +13857,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 21
   - ID: 138
     Name:
       Name: Rock
@@ -11565,6 +13875,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 20
   - ID: 137
     Name:
       Name: Rock
@@ -11580,6 +13893,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 19
   - ID: 136
     Name:
       Name: Rock
@@ -11595,6 +13911,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 18
   - ID: 135
     Name:
       Name: Rock
@@ -11610,6 +13929,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 17
   - ID: 134
     Name:
       Name: Rock
@@ -11625,6 +13947,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 11
   - ID: 133
     Name:
       Name: Rock
@@ -11640,6 +13965,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 10
   - ID: 132
     Name:
       Name: Rock
@@ -11655,6 +13983,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 9
   - ID: 131
     Name:
       Name: Rock
@@ -11670,6 +14001,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 8
   - ID: 130
     Name:
       Name: Rock
@@ -11685,6 +14019,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 7
   - ID: 129
     Name:
       Name: Rock
@@ -11700,6 +14037,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 6
   - ID: 128
     Name:
       Name: Rock
@@ -11715,6 +14055,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 5
   - ID: 127
     Name:
       Name: Rock
@@ -11730,6 +14073,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 4
   - ID: 126
     Name:
       Name: Rock
@@ -11745,6 +14091,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 3
   - ID: 125
     Name:
       Name: Rock
@@ -11760,6 +14109,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 2
   - ID: 124
     Name:
       Name: Rock
@@ -11775,6 +14127,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 1
   - ID: 123
     Name:
       Name: Rock
@@ -11790,6 +14145,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: 0
   - ID: 122
     Name:
       Name: Rock
@@ -11805,6 +14163,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -1
   - ID: 121
     Name:
       Name: Rock
@@ -11820,6 +14181,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -2
   - ID: 120
     Name:
       Name: Rock
@@ -11835,6 +14199,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -3
   - ID: 119
     Name:
       Name: Rock
@@ -11850,6 +14217,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -4
   - ID: 118
     Name:
       Name: Rock
@@ -11865,6 +14235,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -5
   - ID: 117
     Name:
       Name: Rock
@@ -11880,6 +14253,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -6
   - ID: 116
     Name:
       Name: Rock
@@ -11895,6 +14271,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -12
   - ID: 115
     Name:
       Name: Rock
@@ -11910,6 +14289,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -13
   - ID: 114
     Name:
       Name: Rock
@@ -11925,6 +14307,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -14
   - ID: 113
     Name:
       Name: Rock
@@ -11940,6 +14325,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -15
   - ID: 112
     Name:
       Name: Rock
@@ -11955,6 +14343,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -16
   - ID: 111
     Name:
       Name: Rock
@@ -11970,6 +14361,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -17
   - ID: 110
     Name:
       Name: Rock
@@ -11985,6 +14379,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -18
   - ID: 109
     Name:
       Name: Rock
@@ -12000,6 +14397,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -19
   - ID: 108
     Name:
       Name: Rock
@@ -12015,6 +14415,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -20
   - ID: 107
     Name:
       Name: Rock
@@ -12030,6 +14433,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -21
   - ID: 106
     Name:
       Name: Rock
@@ -12045,6 +14451,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -22
   - ID: 105
     Name:
       Name: Rock
@@ -12060,6 +14469,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -23
   - ID: 104
     Name:
       Name: Rock
@@ -12075,6 +14487,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -24
   - ID: 103
     Name:
       Name: Rock
@@ -12090,6 +14505,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -23
+      Z: -25
   - ID: 102
     Name:
       Name: Rock
@@ -12105,6 +14523,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 24
   - ID: 101
     Name:
       Name: Rock
@@ -12120,6 +14541,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 23
   - ID: 100
     Name:
       Name: Rock
@@ -12135,6 +14559,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 22
   - ID: 99
     Name:
       Name: Rock
@@ -12150,6 +14577,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 21
   - ID: 98
     Name:
       Name: Rock
@@ -12165,6 +14595,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 20
   - ID: 97
     Name:
       Name: Rock
@@ -12180,6 +14613,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 19
   - ID: 96
     Name:
       Name: Rock
@@ -12195,6 +14631,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 18
   - ID: 95
     Name:
       Name: Rock
@@ -12210,6 +14649,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 17
   - ID: 94
     Name:
       Name: Rock
@@ -12225,6 +14667,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 16
   - ID: 93
     Name:
       Name: Rock
@@ -12240,6 +14685,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 13
   - ID: 92
     Name:
       Name: Rock
@@ -12255,6 +14703,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 12
   - ID: 91
     Name:
       Name: Rock
@@ -12270,6 +14721,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 11
   - ID: 90
     Name:
       Name: Rock
@@ -12285,6 +14739,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 10
   - ID: 89
     Name:
       Name: Rock
@@ -12300,6 +14757,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 9
   - ID: 88
     Name:
       Name: Rock
@@ -12315,6 +14775,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 8
   - ID: 87
     Name:
       Name: Rock
@@ -12330,6 +14793,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 7
   - ID: 86
     Name:
       Name: Rock
@@ -12345,6 +14811,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 6
   - ID: 85
     Name:
       Name: Rock
@@ -12360,6 +14829,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 5
   - ID: 84
     Name:
       Name: Rock
@@ -12375,6 +14847,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 4
   - ID: 83
     Name:
       Name: Rock
@@ -12390,6 +14865,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 3
   - ID: 82
     Name:
       Name: Rock
@@ -12405,6 +14883,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 2
   - ID: 81
     Name:
       Name: Rock
@@ -12420,6 +14901,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 1
   - ID: 80
     Name:
       Name: Rock
@@ -12435,6 +14919,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: 0
   - ID: 79
     Name:
       Name: Rock
@@ -12450,6 +14937,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -1
   - ID: 78
     Name:
       Name: Rock
@@ -12465,6 +14955,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -2
   - ID: 77
     Name:
       Name: Rock
@@ -12480,6 +14973,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -3
   - ID: 76
     Name:
       Name: Rock
@@ -12495,6 +14991,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -4
   - ID: 75
     Name:
       Name: Rock
@@ -12510,6 +15009,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -5
   - ID: 74
     Name:
       Name: Rock
@@ -12525,6 +15027,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -6
   - ID: 73
     Name:
       Name: Rock
@@ -12540,6 +15045,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -7
   - ID: 72
     Name:
       Name: Rock
@@ -12555,6 +15063,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -8
   - ID: 71
     Name:
       Name: Rock
@@ -12570,6 +15081,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -9
   - ID: 70
     Name:
       Name: Rock
@@ -12585,6 +15099,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -10
   - ID: 69
     Name:
       Name: Rock
@@ -12600,6 +15117,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -11
   - ID: 68
     Name:
       Name: Rock
@@ -12615,6 +15135,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -12
   - ID: 67
     Name:
       Name: Rock
@@ -12630,6 +15153,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -13
   - ID: 66
     Name:
       Name: Rock
@@ -12645,6 +15171,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -14
   - ID: 65
     Name:
       Name: Rock
@@ -12660,6 +15189,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -15
   - ID: 64
     Name:
       Name: Rock
@@ -12675,6 +15207,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -16
   - ID: 63
     Name:
       Name: Rock
@@ -12690,6 +15225,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -17
   - ID: 62
     Name:
       Name: Rock
@@ -12705,6 +15243,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -18
   - ID: 61
     Name:
       Name: Rock
@@ -12720,6 +15261,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -19
   - ID: 60
     Name:
       Name: Rock
@@ -12735,6 +15279,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -20
   - ID: 59
     Name:
       Name: Rock
@@ -12750,6 +15297,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -21
   - ID: 58
     Name:
       Name: Rock
@@ -12765,6 +15315,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -22
   - ID: 57
     Name:
       Name: Rock
@@ -12780,6 +15333,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -23
   - ID: 56
     Name:
       Name: Rock
@@ -12795,6 +15351,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -24
   - ID: 55
     Name:
       Name: Rock
@@ -12810,6 +15369,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -24
+      Z: -25
   - ID: 54
     Name:
       Name: Rock
@@ -12825,6 +15387,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 24
   - ID: 53
     Name:
       Name: Rock
@@ -12840,6 +15405,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 23
   - ID: 52
     Name:
       Name: Rock
@@ -12855,6 +15423,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 22
   - ID: 51
     Name:
       Name: Rock
@@ -12870,6 +15441,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 21
   - ID: 50
     Name:
       Name: Rock
@@ -12885,6 +15459,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 20
   - ID: 49
     Name:
       Name: Rock
@@ -12900,6 +15477,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 19
   - ID: 48
     Name:
       Name: Rock
@@ -12915,6 +15495,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 18
   - ID: 47
     Name:
       Name: Rock
@@ -12930,6 +15513,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 17
   - ID: 46
     Name:
       Name: Rock
@@ -12945,6 +15531,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 16
   - ID: 45
     Name:
       Name: Rock
@@ -12960,6 +15549,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 15
   - ID: 44
     Name:
       Name: Rock
@@ -12975,6 +15567,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 14
   - ID: 43
     Name:
       Name: Rock
@@ -12990,6 +15585,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 13
   - ID: 42
     Name:
       Name: Rock
@@ -13005,6 +15603,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 12
   - ID: 41
     Name:
       Name: Rock
@@ -13020,6 +15621,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 11
   - ID: 40
     Name:
       Name: Rock
@@ -13035,6 +15639,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 10
   - ID: 39
     Name:
       Name: Rock
@@ -13050,6 +15657,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 9
   - ID: 38
     Name:
       Name: Rock
@@ -13065,6 +15675,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 8
   - ID: 37
     Name:
       Name: Rock
@@ -13080,6 +15693,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 7
   - ID: 36
     Name:
       Name: Rock
@@ -13095,6 +15711,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 6
   - ID: 35
     Name:
       Name: Rock
@@ -13110,6 +15729,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 5
   - ID: 34
     Name:
       Name: Rock
@@ -13125,6 +15747,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 4
   - ID: 33
     Name:
       Name: Rock
@@ -13140,6 +15765,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 3
   - ID: 32
     Name:
       Name: Rock
@@ -13155,6 +15783,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 2
   - ID: 31
     Name:
       Name: Rock
@@ -13170,6 +15801,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 1
   - ID: 30
     Name:
       Name: Rock
@@ -13185,6 +15819,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: 0
   - ID: 29
     Name:
       Name: Rock
@@ -13200,6 +15837,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -1
   - ID: 28
     Name:
       Name: Rock
@@ -13215,6 +15855,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -2
   - ID: 27
     Name:
       Name: Rock
@@ -13230,6 +15873,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -3
   - ID: 26
     Name:
       Name: Rock
@@ -13245,6 +15891,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -4
   - ID: 25
     Name:
       Name: Rock
@@ -13260,6 +15909,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -5
   - ID: 24
     Name:
       Name: Rock
@@ -13275,6 +15927,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -6
   - ID: 23
     Name:
       Name: Rock
@@ -13290,6 +15945,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -7
   - ID: 22
     Name:
       Name: Rock
@@ -13305,6 +15963,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -8
   - ID: 21
     Name:
       Name: Rock
@@ -13320,6 +15981,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -9
   - ID: 20
     Name:
       Name: Rock
@@ -13335,6 +15999,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -10
   - ID: 19
     Name:
       Name: Rock
@@ -13350,6 +16017,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -11
   - ID: 18
     Name:
       Name: Rock
@@ -13365,6 +16035,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -12
   - ID: 17
     Name:
       Name: Rock
@@ -13380,6 +16053,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -13
   - ID: 16
     Name:
       Name: Rock
@@ -13395,6 +16071,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -14
   - ID: 15
     Name:
       Name: Rock
@@ -13410,6 +16089,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -15
   - ID: 14
     Name:
       Name: Rock
@@ -13425,6 +16107,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -16
   - ID: 13
     Name:
       Name: Rock
@@ -13440,6 +16125,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -17
   - ID: 12
     Name:
       Name: Rock
@@ -13455,6 +16143,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -18
   - ID: 11
     Name:
       Name: Rock
@@ -13470,6 +16161,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -19
   - ID: 10
     Name:
       Name: Rock
@@ -13485,6 +16179,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -20
   - ID: 9
     Name:
       Name: Rock
@@ -13500,6 +16197,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -21
   - ID: 8
     Name:
       Name: Rock
@@ -13515,6 +16215,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -22
   - ID: 7
     Name:
       Name: Rock
@@ -13530,6 +16233,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -23
   - ID: 6
     Name:
       Name: Rock
@@ -13545,6 +16251,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -24
   - ID: 5
     Name:
       Name: Rock
@@ -13560,6 +16269,9 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Grid:
+      X: -25
+      Z: -25
   - ID: 4
     Name:
       Name: Terrain
@@ -13602,3 +16314,7 @@ Entities:
     Select:
       Selected: false
       Hovered: false
+    Path:
+      Markers:
+        []
+      Speed: 3
