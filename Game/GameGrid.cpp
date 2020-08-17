@@ -5,37 +5,40 @@
 
 using namespace Sprocket;
 
-GameGrid::GameGrid(EntityManager* entityManager, Sprocket::Window* window)
+GameGrid::GameGrid(Sprocket::Window* window)
     : d_window(window)
-    , d_hoveredSquare(entityManager->NewEntity())
-    , d_selectedSquare(entityManager->NewEntity())
     , d_hovered({0.0, 0.0})
     , d_selected({})
 {
-    std::string gridSqare = "Resources/Models/Square.obj";
+    d_keyboard.ConsumeAll(false);
+}
 
+void GameGrid::OnStartup(Sprocket::EntityManager& manager)
+{
+    std::string gridSquare = "Resources/Models/Square.obj";
+
+    d_hoveredSquare = manager.NewEntity();
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
     auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
-    model1.model = gridSqare;
+    model1.model = gridSquare;
     model1.reflectivity = 0.0f;
     model1.scale = 0.3f;
 
+    d_selectedSquare = manager.NewEntity();
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
     auto& tr2 = d_selectedSquare.Add<TransformComponent>();
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
-    model2.model = gridSqare;
+    model2.model = gridSquare;
     model2.reflectivity = 0.0f;
     model2.scale = 0.5f;
-
-    d_keyboard.ConsumeAll(false);
 }
 
-void GameGrid::OnUpdate()
+void GameGrid::OnUpdate(Sprocket::EntityManager& manager, double dt)
 {
     auto& camTr = d_camera.Get<TransformComponent>();
 

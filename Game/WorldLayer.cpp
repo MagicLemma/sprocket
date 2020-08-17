@@ -77,8 +77,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower})
-    , d_gameGrid(&d_entityManager, core.window)
+    , d_gameGrid(core.window)
+    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower, &d_gameGrid})
     , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
 {
@@ -254,7 +254,6 @@ void WorldLayer::OnUpdate(double dt)
     Audio::SetListener(d_camera);
 
     d_hoveredEntityUI.OnUpdate(dt);
-    d_gameGrid.OnUpdate();
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
     

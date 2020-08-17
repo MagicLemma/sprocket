@@ -11,7 +11,7 @@ struct GridComponent
     int z;
 };
 
-class GameGrid
+class GameGrid : public Sprocket::EntitySystem
 {
 public:
     using GridMap = std::unordered_map<
@@ -37,11 +37,11 @@ private:
     GridMap d_gridEntities; 
 
 public:
-    GameGrid(Sprocket::EntityManager* entityManager, Sprocket::Window* window);
+    GameGrid(Sprocket::Window* window);
 
-    void OnUpdate();
-
-    void OnEvent(Sprocket::Event& event);
+    void OnStartup(Sprocket::EntityManager& manager) override;
+    void OnUpdate(Sprocket::EntityManager& manager, double dt) override;
+    void OnEvent(Sprocket::Event& event) override;
 
     Sprocket::Entity At(int x, int z) const;
 
