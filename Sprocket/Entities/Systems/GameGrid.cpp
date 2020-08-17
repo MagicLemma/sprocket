@@ -11,6 +11,13 @@
 
 namespace Sprocket {
 
+std::string Name(const Entity& e) {
+    if (e.Has<NameComponent>()) {
+        return e.Get<NameComponent>().name;
+    }
+    return "Entity";
+}
+
 GameGrid::GameGrid(Window* window)
     : d_window(window)
     , d_hovered({0.0, 0.0})
@@ -48,6 +55,12 @@ void GameGrid::OnStartup(EntityManager& manager)
         const auto& gc = entity.Get<GridComponent>();
 
         assert(entity.Has<TransformComponent>());
+        
+        if (d_gridEntities.contains({gc.x, gc.z})) {
+            std::string existing = Name(At(gc.x, gc.z));
+            std::string clashed = Name(entity);
+            SPKT_LOG_FATAL("Tried to insert {} as ({}, {}) but {} was there", clashed, gc.x, gc.z, existing);
+        }
         assert(!d_gridEntities.contains({gc.x, gc.z}));
     
         transform.position.x = gc.x + 0.5f;

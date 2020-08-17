@@ -1,10 +1,166 @@
 #include "Serialiser.h"
 #include "Log.h"
 #include "Components.h"
+#include "Maths.h"
 
 #include <yaml-cpp/yaml.h>
 
 #include <fstream>
+
+namespace YAML {
+
+template<>
+struct convert<Sprocket::Maths::vec2>
+{
+    static Node encode(const Sprocket::Maths::vec2& rhs)
+    {
+        Node n;
+        n.push_back(rhs.x);
+        n.push_back(rhs.y);
+        return n;
+    }
+
+    static bool decode(const Node& node, Sprocket::Maths::vec2& rhs)
+    {
+        if (!node.IsSequence() || node.size() != 2)
+            return false;
+
+        rhs.x = node[0].as<float>();
+        rhs.y = node[1].as<float>();
+        return true;
+    }
+};
+
+template<>
+struct convert<Sprocket::Maths::vec3>
+{
+    static Node encode(const Sprocket::Maths::vec3& rhs)
+    {
+        Node n;
+        n.push_back(rhs.x);
+        n.push_back(rhs.y);
+        n.push_back(rhs.z);
+        return n;
+    }
+
+    static bool decode(const Node& node, Sprocket::Maths::vec3& rhs)
+    {
+        if (!node.IsSequence() || node.size() != 3)
+            return false;
+
+        rhs.x = node[0].as<float>();
+        rhs.y = node[1].as<float>();
+        rhs.z = node[2].as<float>();
+        return true;
+    }
+};
+
+template<>
+struct convert<Sprocket::Maths::quat>
+{
+    static Node encode(const Sprocket::Maths::quat& rhs)
+    {
+        Node n;
+        n.push_back(rhs.w);
+        n.push_back(rhs.x);
+        n.push_back(rhs.y);
+        n.push_back(rhs.z);
+        return n;
+    }
+
+    static bool decode(const Node& node, Sprocket::Maths::quat& rhs)
+    {
+        if (!node.IsSequence() || node.size() != 4)
+            return false;
+
+        rhs.w = node[0].as<float>();
+        rhs.x = node[1].as<float>();
+        rhs.y = node[2].as<float>();
+        rhs.z = node[3].as<float>();
+        return true;
+    }
+};
+
+template<typename T>
+struct convert<std::queue<T>>
+{
+    static Node encode(const std::queue<T>& rhs)
+    {
+        Node n;
+        auto copy = rhs;
+        while (!copy.empty()) {
+            n.push_back(copy.front());
+            copy.pop();
+        }
+        return n;
+    }
+
+    static bool decode(const Node& node, std::queue<T>& rhs)
+    {
+        if (!node.IsSequence() || node.size() != 4)
+            return false;
+
+        for (const auto& obj : node) {
+            rhs.push(obj.as<T>());
+        }
+        return true;
+    }
+};
+
+template<>
+struct convert<Sprocket::Maths::mat4>
+{
+    static Node encode(const Sprocket::Maths::mat4& rhs)
+    {
+        Node n;
+        n.push_back(rhs[0][0]);
+        n.push_back(rhs[0][1]);
+        n.push_back(rhs[0][2]);
+        n.push_back(rhs[0][3]);
+
+        n.push_back(rhs[1][0]);
+        n.push_back(rhs[1][1]);
+        n.push_back(rhs[1][2]);
+        n.push_back(rhs[1][3]);
+
+        n.push_back(rhs[2][0]);
+        n.push_back(rhs[2][1]);
+        n.push_back(rhs[2][2]);
+        n.push_back(rhs[2][3]);
+
+        n.push_back(rhs[3][0]);
+        n.push_back(rhs[3][1]);
+        n.push_back(rhs[3][2]);
+        n.push_back(rhs[3][3]);
+        return n;
+    }
+
+    static bool decode(const Node& node, Sprocket::Maths::mat4& rhs)
+    {
+        if (!node.IsSequence() || node.size() != 16)
+            return false;
+
+        rhs[0][0] = node[0].as<float>();
+        rhs[0][1] = node[1].as<float>();
+        rhs[0][2] = node[2].as<float>();
+        rhs[0][3] = node[3].as<float>();
+        rhs[1][0] = node[4].as<float>();
+        rhs[1][1] = node[5].as<float>();
+        rhs[1][2] = node[6].as<float>();
+        rhs[1][3] = node[7].as<float>();
+        rhs[2][0] = node[8].as<float>();
+        rhs[2][1] = node[9].as<float>();
+        rhs[2][2] = node[10].as<float>();
+        rhs[2][3] = node[11].as<float>();
+        rhs[3][0] = node[12].as<float>();
+        rhs[3][1] = node[13].as<float>();
+        rhs[3][2] = node[14].as<float>();
+        rhs[3][3] = node[15].as<float>();
+        return true;
+    }
+};
+
+}
 
 namespace Sprocket {
 namespace {
@@ -20,6 +176,17 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::quat& q)
 {
     out << YAML::Flow;
     out << YAML::BeginSeq << q.w << q.x << q.y << q.z << YAML::EndSeq;
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::mat4& m)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << m[0][0] << m[0][1] << m[0][2] << m[0][3]
+                          << m[1][0] << m[1][1] << m[1][2] << m[1][3]
+                          << m[2][0] << m[2][1] << m[2][2] << m[2][3]
+                          << m[3][0] << m[3][1] << m[3][2] << m[3][3]
+                          << YAML::EndSeq;
     return out;
 }
 
@@ -67,7 +234,6 @@ void Serialiser::Serialise(const std::string& file)
         if (entity.Has<TemporaryComponent>()) { return; }
 
         out << YAML::BeginMap;
-        out << YAML::Key << "ID" << YAML::Value << entity.Id();
         if (entity.Has<NameComponent>()) {
             const auto& name = entity.Get<NameComponent>();
             out << YAML::Key << "Name" << YAML::BeginMap;
@@ -175,8 +341,121 @@ void Serialiser::Serialise(const std::string& file)
 
 void Serialiser::Deserialise(const std::string& file)
 {
-    SPKT_LOG_ERROR("Deserialising not yet implemented");
-    // TODO
+    std::ifstream stream(file);
+    std::stringstream sstream;
+    sstream << stream.rdbuf();
+
+    YAML::Node data = YAML::Load(sstream.str());
+    if (!data["Entities"]) {
+        return; // TODO: Error checking
+    }
+
+    auto entities = data["Entities"];
+    for (auto entity : entities) {
+        Entity e = d_scene->NewEntity();
+
+        auto name = entity["Name"];
+        if (name) {
+            NameComponent nc;
+            nc.name = name["Name"].as<std::string>();
+            e.Add(nc);
+        }
+
+        auto transform = entity["Transform"];
+        if (transform) {
+            TransformComponent tc;
+            tc.position = transform["Position"].as<Maths::vec3>();
+            tc.orientation = transform["Orientation"].as<Maths::quat>();
+            e.Add(tc);
+        }
+
+        auto model = entity["Model"];
+        if (model) {
+            ModelComponent mc;
+            mc.model = model["Model"].as<std::string>();
+            mc.scale = model["Scale"].as<float>();
+            mc.texture = model["Texture"].as<std::string>();
+            mc.shineDamper = model["ShineDamper"].as<float>();
+            mc.reflectivity = model["Reflectivity"].as<float>();
+            e.Add(mc);
+        }
+
+        auto physics = entity["Physics"];
+        if (physics) {
+            PhysicsComponent pc;
+            pc.velocity = physics["Velocity"].as<Maths::vec3>();
+            pc.gravity = physics["Gravity"].as<bool>();
+            pc.frozen = physics["Frozen"].as<bool>();
+            pc.collider = static_cast<Collider>(physics["Collider"].as<int>());
+            pc.halfExtents = physics["HalfExtents"].as<Maths::vec3>();
+            pc.radius = physics["Radius"].as<float>();
+            pc.height = physics["Height"].as<float>();
+            pc.mass = physics["Mass"].as<float>();
+            pc.bounciness = physics["Bounciness"].as<float>();
+            pc.frictionCoefficient = physics["FrictionCoefficient"].as<float>();
+            pc.rollingResistance = physics["RollingResistance"].as<float>();
+            e.Add(pc);
+        }
+
+#if 0
+        auto script = entity["Script"];
+        if (script) {
+            ScriptComponent sc;
+            sc.script = script["Script"].as<std::string>();
+            sc.active = script["Active"].as<bool>();
+            e.Add(sc);
+        }        
+#endif
+
+        auto player = entity["Player"];
+        if (player) {
+            PlayerComponent pc;
+            pc.movingForwards = player["MovingForwards"].as<bool>();
+            pc.movingBackwards = player["MovingBackwards"].as<bool>();
+            pc.movingLeft = player["MovingLeft"].as<bool>();
+            pc.movingRight = player["MovingRight"].as<bool>();
+            pc.jumping = player["Jumping"].as<bool>();
+            pc.direction = player["Direction"].as<Maths::vec3>();
+            pc.yaw = player["Yaw"].as<float>();
+            pc.pitch = player["Pitch"].as<float>();
+            e.Add(pc);
+        }
+
+        auto camera = entity["Camera"];
+        if (camera) {
+            CameraComponent cc;
+            cc.projection = camera["Projection"].as<Maths::mat4>();
+            cc.pitch = camera["Pitch"].as<float>();
+            e.Add(cc);
+        }
+
+        auto select = entity["Select"];
+        if (select) {
+            SelectComponent sc;
+            sc.selected = select["Selected"].as<bool>();
+            sc.hovered = select["Hovered"].as<bool>();
+            e.Add(sc);
+        }
+
+#if 0
+        auto path = entity["Path"];
+        if (path) {
+            PathComponent pc;
+            pc.markers = path["Markers"].as<std::queue<Maths::vec3>>();
+            pc.speed = path["Speed"].as<float>();
+            e.Add(pc);
+        }
+#endif
+
+        auto grid = entity["Grid"];
+        if (grid) {
+            GridComponent gc;
+            gc.x = grid["X"].as<int>();
+            gc.z = grid["Z"].as<int>();
+            SPKT_LOG_INFO("Grid {} {}", gc.x, gc.z);
+            e.Add(gc);
+        }
+    }
 }
 
 }

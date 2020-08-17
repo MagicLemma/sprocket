@@ -1,7 +1,6 @@
 Scene: Scene Name
 Entities:
-  - ID: 908
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.4587122, 24.5]
@@ -18,8 +17,7 @@ Entities:
     Grid:
       X: 24
       Z: 24
-  - ID: 907
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1659886, 23.5]
@@ -36,8 +34,7 @@ Entities:
     Grid:
       X: 24
       Z: 23
-  - ID: 906
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1214248, 22.5]
@@ -54,8 +51,7 @@ Entities:
     Grid:
       X: 24
       Z: 22
-  - ID: 905
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3779624, 21.5]
@@ -72,8 +68,7 @@ Entities:
     Grid:
       X: 24
       Z: 21
-  - ID: 904
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3692134, 20.5]
@@ -90,8 +85,7 @@ Entities:
     Grid:
       X: 24
       Z: 20
-  - ID: 903
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2714311, 19.5]
@@ -108,8 +102,7 @@ Entities:
     Grid:
       X: 24
       Z: 19
-  - ID: 902
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.09587263, 18.5]
@@ -126,8 +119,7 @@ Entities:
     Grid:
       X: 24
       Z: 18
-  - ID: 901
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.141847, 17.5]
@@ -144,8 +136,7 @@ Entities:
     Grid:
       X: 24
       Z: 17
-  - ID: 900
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3036946, 16.5]
@@ -162,8 +153,7 @@ Entities:
     Grid:
       X: 24
       Z: 16
-  - ID: 899
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3615121, 15.5]
@@ -180,8 +170,7 @@ Entities:
     Grid:
       X: 24
       Z: 15
-  - ID: 898
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1705623, 14.5]
@@ -198,8 +187,7 @@ Entities:
     Grid:
       X: 24
       Z: 14
-  - ID: 897
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.270126, 13.5]
@@ -216,8 +204,7 @@ Entities:
     Grid:
       X: 24
       Z: 13
-  - ID: 896
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.0763606, 12.5]
@@ -234,8 +221,7 @@ Entities:
     Grid:
       X: 24
       Z: 12
-  - ID: 895
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1078146, 11.5]
@@ -252,8 +238,7 @@ Entities:
     Grid:
       X: 24
       Z: 11
-  - ID: 894
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.236743, 10.5]
@@ -270,8 +255,7 @@ Entities:
     Grid:
       X: 24
       Z: 10
-  - ID: 893
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.203751, 9.5]
@@ -288,8 +272,7 @@ Entities:
     Grid:
       X: 24
       Z: 9
-  - ID: 892
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.360879, 8.5]
@@ -306,8 +289,7 @@ Entities:
     Grid:
       X: 24
       Z: 8
-  - ID: 891
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2431855, 7.5]
@@ -324,8 +306,7 @@ Entities:
     Grid:
       X: 24
       Z: 7
-  - ID: 890
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.08793721, 6.5]
@@ -342,8 +323,7 @@ Entities:
     Grid:
       X: 24
       Z: 6
-  - ID: 889
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.4032255, 5.5]
@@ -360,8 +340,7 @@ Entities:
     Grid:
       X: 24
       Z: 5
-  - ID: 888
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.01788137, 4.5]
@@ -378,8 +357,7 @@ Entities:
     Grid:
       X: 24
       Z: 4
-  - ID: 887
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1237925, 3.5]
@@ -396,8 +374,7 @@ Entities:
     Grid:
       X: 24
       Z: 3
-  - ID: 886
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2356786, 2.5]
@@ -414,8 +391,7 @@ Entities:
     Grid:
       X: 24
       Z: 2
-  - ID: 885
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1075545, 1.5]
@@ -432,8 +408,7 @@ Entities:
     Grid:
       X: 24
       Z: 1
-  - ID: 884
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3923697, 0.5]
@@ -450,8 +425,7 @@ Entities:
     Grid:
       X: 24
       Z: 0
-  - ID: 883
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1523318, -0.5]
@@ -468,8 +442,7 @@ Entities:
     Grid:
       X: 24
       Z: -1
-  - ID: 882
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1612359, -1.5]
@@ -486,8 +459,7 @@ Entities:
     Grid:
       X: 24
       Z: -2
-  - ID: 881
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.4854721, -2.5]
@@ -504,8 +476,7 @@ Entities:
     Grid:
       X: 24
       Z: -3
-  - ID: 880
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3850799, -3.5]
@@ -522,8 +493,7 @@ Entities:
     Grid:
       X: 24
       Z: -4
-  - ID: 879
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.223212, -4.5]
@@ -540,8 +510,7 @@ Entities:
     Grid:
       X: 24
       Z: -5
-  - ID: 878
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2304582, -5.5]
@@ -558,8 +527,7 @@ Entities:
     Grid:
       X: 24
       Z: -6
-  - ID: 877
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.001500603, -6.5]
@@ -576,8 +544,7 @@ Entities:
     Grid:
       X: 24
       Z: -7
-  - ID: 876
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2121745, -7.5]
@@ -594,8 +561,7 @@ Entities:
     Grid:
       X: 24
       Z: -8
-  - ID: 875
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2345078, -8.5]
@@ -612,8 +578,7 @@ Entities:
     Grid:
       X: 24
       Z: -9
-  - ID: 874
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2312246, -9.5]
@@ -630,8 +595,7 @@ Entities:
     Grid:
       X: 24
       Z: -10
-  - ID: 873
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1363335, -10.5]
@@ -648,8 +612,7 @@ Entities:
     Grid:
       X: 24
       Z: -11
-  - ID: 872
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.0005755287, -11.5]
@@ -666,8 +629,7 @@ Entities:
     Grid:
       X: 24
       Z: -12
-  - ID: 871
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3276066, -12.5]
@@ -684,8 +646,7 @@ Entities:
     Grid:
       X: 24
       Z: -13
-  - ID: 870
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.4579956, -13.5]
@@ -702,8 +663,7 @@ Entities:
     Grid:
       X: 24
       Z: -14
-  - ID: 869
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.4922263, -14.5]
@@ -720,8 +680,7 @@ Entities:
     Grid:
       X: 24
       Z: -15
-  - ID: 868
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1933856, -15.5]
@@ -738,8 +697,7 @@ Entities:
     Grid:
       X: 24
       Z: -16
-  - ID: 867
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3559404, -16.5]
@@ -756,8 +714,7 @@ Entities:
     Grid:
       X: 24
       Z: -17
-  - ID: 866
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3010852, -17.5]
@@ -774,8 +731,7 @@ Entities:
     Grid:
       X: 24
       Z: -18
-  - ID: 865
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.115316, -18.5]
@@ -792,8 +748,7 @@ Entities:
     Grid:
       X: 24
       Z: -19
-  - ID: 864
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.003357659, -19.5]
@@ -810,8 +765,7 @@ Entities:
     Grid:
       X: 24
       Z: -20
-  - ID: 863
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2550544, -20.5]
@@ -828,8 +782,7 @@ Entities:
     Grid:
       X: 24
       Z: -21
-  - ID: 862
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.337666, -21.5]
@@ -846,8 +799,7 @@ Entities:
     Grid:
       X: 24
       Z: -22
-  - ID: 861
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.2244759, -22.5]
@@ -864,8 +816,7 @@ Entities:
     Grid:
       X: 24
       Z: -23
-  - ID: 860
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.3902598, -23.5]
@@ -882,8 +833,7 @@ Entities:
     Grid:
       X: 24
       Z: -24
-  - ID: 859
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [24.5, -0.1131137, -24.5]
@@ -900,8 +850,7 @@ Entities:
     Grid:
       X: 24
       Z: -25
-  - ID: 858
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1722312, 24.5]
@@ -918,8 +867,7 @@ Entities:
     Grid:
       X: 23
       Z: 24
-  - ID: 857
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3950509, 23.5]
@@ -936,8 +884,7 @@ Entities:
     Grid:
       X: 23
       Z: 23
-  - ID: 856
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.4221961, 22.5]
@@ -954,8 +901,7 @@ Entities:
     Grid:
       X: 23
       Z: 22
-  - ID: 855
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1519126, 21.5]
@@ -972,8 +918,7 @@ Entities:
     Grid:
       X: 23
       Z: 21
-  - ID: 854
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3339164, 20.5]
@@ -990,8 +935,7 @@ Entities:
     Grid:
       X: 23
       Z: 20
-  - ID: 853
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.4591383, 19.5]
@@ -1008,8 +952,7 @@ Entities:
     Grid:
       X: 23
       Z: 19
-  - ID: 852
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.11202, 18.5]
@@ -1026,8 +969,7 @@ Entities:
     Grid:
       X: 23
       Z: 18
-  - ID: 851
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.4676071, 17.5]
@@ -1044,8 +986,7 @@ Entities:
     Grid:
       X: 23
       Z: 17
-  - ID: 850
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1273951, 16.5]
@@ -1062,8 +1003,7 @@ Entities:
     Grid:
       X: 23
       Z: 16
-  - ID: 849
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.4522374, 15.5]
@@ -1080,8 +1020,7 @@ Entities:
     Grid:
       X: 23
       Z: 15
-  - ID: 848
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.03399638, 14.5]
@@ -1098,8 +1037,7 @@ Entities:
     Grid:
       X: 23
       Z: 14
-  - ID: 847
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2453096, 11.5]
@@ -1116,8 +1054,7 @@ Entities:
     Grid:
       X: 23
       Z: 11
-  - ID: 846
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3475702, 10.5]
@@ -1134,8 +1071,7 @@ Entities:
     Grid:
       X: 23
       Z: 10
-  - ID: 845
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3068721, 9.5]
@@ -1152,8 +1088,7 @@ Entities:
     Grid:
       X: 23
       Z: 9
-  - ID: 844
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3359041, 8.5]
@@ -1170,8 +1105,7 @@ Entities:
     Grid:
       X: 23
       Z: 8
-  - ID: 843
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.02772071, 7.5]
@@ -1188,8 +1122,7 @@ Entities:
     Grid:
       X: 23
       Z: 7
-  - ID: 842
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1445323, 6.5]
@@ -1206,8 +1139,7 @@ Entities:
     Grid:
       X: 23
       Z: 6
-  - ID: 841
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2373592, 5.5]
@@ -1224,8 +1156,7 @@ Entities:
     Grid:
       X: 23
       Z: 5
-  - ID: 840
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3380612, 4.5]
@@ -1242,8 +1173,7 @@ Entities:
     Grid:
       X: 23
       Z: 4
-  - ID: 839
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2078813, 3.5]
@@ -1260,8 +1190,7 @@ Entities:
     Grid:
       X: 23
       Z: 3
-  - ID: 838
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1203535, 2.5]
@@ -1278,8 +1207,7 @@ Entities:
     Grid:
       X: 23
       Z: 2
-  - ID: 837
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.362453, 1.5]
@@ -1296,8 +1224,7 @@ Entities:
     Grid:
       X: 23
       Z: 1
-  - ID: 836
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.478847, 0.5]
@@ -1314,8 +1241,7 @@ Entities:
     Grid:
       X: 23
       Z: 0
-  - ID: 835
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1340882, -0.5]
@@ -1332,8 +1258,7 @@ Entities:
     Grid:
       X: 23
       Z: -1
-  - ID: 834
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3188545, -1.5]
@@ -1350,8 +1275,7 @@ Entities:
     Grid:
       X: 23
       Z: -2
-  - ID: 833
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3781408, -2.5]
@@ -1368,8 +1292,7 @@ Entities:
     Grid:
       X: 23
       Z: -3
-  - ID: 832
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.4718113, -3.5]
@@ -1386,8 +1309,7 @@ Entities:
     Grid:
       X: 23
       Z: -4
-  - ID: 831
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.4849186, -4.5]
@@ -1404,8 +1326,7 @@ Entities:
     Grid:
       X: 23
       Z: -5
-  - ID: 830
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2590261, -5.5]
@@ -1422,8 +1343,7 @@ Entities:
     Grid:
       X: 23
       Z: -6
-  - ID: 829
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.06019084, -6.5]
@@ -1440,8 +1360,7 @@ Entities:
     Grid:
       X: 23
       Z: -7
-  - ID: 828
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.4376858, -7.5]
@@ -1458,8 +1377,7 @@ Entities:
     Grid:
       X: 23
       Z: -8
-  - ID: 827
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.04722038, -8.5]
@@ -1476,8 +1394,7 @@ Entities:
     Grid:
       X: 23
       Z: -9
-  - ID: 826
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2287122, -9.5]
@@ -1494,8 +1411,7 @@ Entities:
     Grid:
       X: 23
       Z: -10
-  - ID: 825
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.06540273, -10.5]
@@ -1512,8 +1428,7 @@ Entities:
     Grid:
       X: 23
       Z: -11
-  - ID: 824
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2635714, -11.5]
@@ -1530,8 +1445,7 @@ Entities:
     Grid:
       X: 23
       Z: -12
-  - ID: 823
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2416876, -12.5]
@@ -1548,8 +1462,7 @@ Entities:
     Grid:
       X: 23
       Z: -13
-  - ID: 822
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2200426, -13.5]
@@ -1566,8 +1479,7 @@ Entities:
     Grid:
       X: 23
       Z: -14
-  - ID: 821
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1310244, -14.5]
@@ -1584,8 +1496,7 @@ Entities:
     Grid:
       X: 23
       Z: -15
-  - ID: 820
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1405026, -15.5]
@@ -1602,8 +1513,7 @@ Entities:
     Grid:
       X: 23
       Z: -16
-  - ID: 819
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2635214, -16.5]
@@ -1620,8 +1530,7 @@ Entities:
     Grid:
       X: 23
       Z: -17
-  - ID: 818
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.07682836, -17.5]
@@ -1638,8 +1547,7 @@ Entities:
     Grid:
       X: 23
       Z: -18
-  - ID: 817
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.03457003, -18.5]
@@ -1656,8 +1564,7 @@ Entities:
     Grid:
       X: 23
       Z: -19
-  - ID: 816
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.1332358, -19.5]
@@ -1674,8 +1581,7 @@ Entities:
     Grid:
       X: 23
       Z: -20
-  - ID: 815
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.03394242, -20.5]
@@ -1692,8 +1598,7 @@ Entities:
     Grid:
       X: 23
       Z: -21
-  - ID: 814
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.04541164, -21.5]
@@ -1710,8 +1615,7 @@ Entities:
     Grid:
       X: 23
       Z: -22
-  - ID: 813
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.3490734, -22.5]
@@ -1728,8 +1632,7 @@ Entities:
     Grid:
       X: 23
       Z: -23
-  - ID: 812
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2117265, -23.5]
@@ -1746,8 +1649,7 @@ Entities:
     Grid:
       X: 23
       Z: -24
-  - ID: 811
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [23.5, -0.2294681, -24.5]
@@ -1764,8 +1666,7 @@ Entities:
     Grid:
       X: 23
       Z: -25
-  - ID: 810
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3894011, 24.5]
@@ -1782,8 +1683,7 @@ Entities:
     Grid:
       X: 22
       Z: 24
-  - ID: 809
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.03942119, 23.5]
@@ -1800,8 +1700,7 @@ Entities:
     Grid:
       X: 22
       Z: 23
-  - ID: 808
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3054793, 22.5]
@@ -1818,8 +1717,7 @@ Entities:
     Grid:
       X: 22
       Z: 22
-  - ID: 807
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3406357, 21.5]
@@ -1836,8 +1734,7 @@ Entities:
     Grid:
       X: 22
       Z: 21
-  - ID: 806
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.0528146, 20.5]
@@ -1854,8 +1751,7 @@ Entities:
     Grid:
       X: 22
       Z: 20
-  - ID: 805
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3414832, 19.5]
@@ -1872,8 +1768,7 @@ Entities:
     Grid:
       X: 22
       Z: 19
-  - ID: 804
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.1625728, 18.5]
@@ -1890,8 +1785,7 @@ Entities:
     Grid:
       X: 22
       Z: 18
-  - ID: 803
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3743046, 17.5]
@@ -1908,8 +1802,7 @@ Entities:
     Grid:
       X: 22
       Z: 17
-  - ID: 802
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.265667, 16.5]
@@ -1926,8 +1819,7 @@ Entities:
     Grid:
       X: 22
       Z: 16
-  - ID: 801
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.1661696, 8.5]
@@ -1944,8 +1836,7 @@ Entities:
     Grid:
       X: 22
       Z: 8
-  - ID: 800
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.4843247, 7.5]
@@ -1962,8 +1853,7 @@ Entities:
     Grid:
       X: 22
       Z: 7
-  - ID: 799
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.1227874, 6.5]
@@ -1980,8 +1870,7 @@ Entities:
     Grid:
       X: 22
       Z: 6
-  - ID: 798
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3591795, 5.5]
@@ -1998,8 +1887,7 @@ Entities:
     Grid:
       X: 22
       Z: 5
-  - ID: 797
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.362227, 4.5]
@@ -2016,8 +1904,7 @@ Entities:
     Grid:
       X: 22
       Z: 4
-  - ID: 796
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.4099906, 3.5]
@@ -2034,8 +1921,7 @@ Entities:
     Grid:
       X: 22
       Z: 3
-  - ID: 795
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.2580239, 2.5]
@@ -2052,8 +1938,7 @@ Entities:
     Grid:
       X: 22
       Z: 2
-  - ID: 794
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.2038096, 1.5]
@@ -2070,8 +1955,7 @@ Entities:
     Grid:
       X: 22
       Z: 1
-  - ID: 793
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.4972527, 0.5]
@@ -2088,8 +1972,7 @@ Entities:
     Grid:
       X: 22
       Z: 0
-  - ID: 792
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3272229, -0.5]
@@ -2106,8 +1989,7 @@ Entities:
     Grid:
       X: 22
       Z: -1
-  - ID: 791
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.31556, -1.5]
@@ -2124,8 +2006,7 @@ Entities:
     Grid:
       X: 22
       Z: -2
-  - ID: 790
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.2654321, -2.5]
@@ -2142,8 +2023,7 @@ Entities:
     Grid:
       X: 22
       Z: -3
-  - ID: 789
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.1626639, -3.5]
@@ -2160,8 +2040,7 @@ Entities:
     Grid:
       X: 22
       Z: -4
-  - ID: 788
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.1597999, -4.5]
@@ -2178,8 +2057,7 @@ Entities:
     Grid:
       X: 22
       Z: -5
-  - ID: 787
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.1480838, -5.5]
@@ -2196,8 +2074,7 @@ Entities:
     Grid:
       X: 22
       Z: -6
-  - ID: 786
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.03440305, -12.5]
@@ -2214,8 +2091,7 @@ Entities:
     Grid:
       X: 22
       Z: -13
-  - ID: 785
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.2644603, -13.5]
@@ -2232,8 +2108,7 @@ Entities:
     Grid:
       X: 22
       Z: -14
-  - ID: 784
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.01680192, -14.5]
@@ -2250,8 +2125,7 @@ Entities:
     Grid:
       X: 22
       Z: -15
-  - ID: 783
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3166817, -15.5]
@@ -2268,8 +2142,7 @@ Entities:
     Grid:
       X: 22
       Z: -16
-  - ID: 782
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3192654, -16.5]
@@ -2286,8 +2159,7 @@ Entities:
     Grid:
       X: 22
       Z: -17
-  - ID: 781
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.03609013, -17.5]
@@ -2304,8 +2176,7 @@ Entities:
     Grid:
       X: 22
       Z: -18
-  - ID: 780
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3499439, -18.5]
@@ -2322,8 +2193,7 @@ Entities:
     Grid:
       X: 22
       Z: -19
-  - ID: 779
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.317251, -19.5]
@@ -2340,8 +2210,7 @@ Entities:
     Grid:
       X: 22
       Z: -20
-  - ID: 778
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3479747, -20.5]
@@ -2358,8 +2227,7 @@ Entities:
     Grid:
       X: 22
       Z: -21
-  - ID: 777
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.3742526, -21.5]
@@ -2376,8 +2244,7 @@ Entities:
     Grid:
       X: 22
       Z: -22
-  - ID: 776
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.2354621, -22.5]
@@ -2394,8 +2261,7 @@ Entities:
     Grid:
       X: 22
       Z: -23
-  - ID: 775
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.4873772, -23.5]
@@ -2412,8 +2278,7 @@ Entities:
     Grid:
       X: 22
       Z: -24
-  - ID: 774
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [22.5, -0.2992618, -24.5]
@@ -2430,8 +2295,7 @@ Entities:
     Grid:
       X: 22
       Z: -25
-  - ID: 773
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.3882269, 24.5]
@@ -2448,8 +2312,7 @@ Entities:
     Grid:
       X: 21
       Z: 24
-  - ID: 772
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.04711467, 23.5]
@@ -2466,8 +2329,7 @@ Entities:
     Grid:
       X: 21
       Z: 23
-  - ID: 771
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.1973639, 22.5]
@@ -2484,8 +2346,7 @@ Entities:
     Grid:
       X: 21
       Z: 22
-  - ID: 770
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.2114428, 21.5]
@@ -2502,8 +2363,7 @@ Entities:
     Grid:
       X: 21
       Z: 21
-  - ID: 769
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.2145633, 20.5]
@@ -2520,8 +2380,7 @@ Entities:
     Grid:
       X: 21
       Z: 20
-  - ID: 768
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.0893831, 6.5]
@@ -2538,8 +2397,7 @@ Entities:
     Grid:
       X: 21
       Z: 6
-  - ID: 767
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.244092, 5.5]
@@ -2556,8 +2414,7 @@ Entities:
     Grid:
       X: 21
       Z: 5
-  - ID: 766
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.08074237, 4.5]
@@ -2574,8 +2431,7 @@ Entities:
     Grid:
       X: 21
       Z: 4
-  - ID: 765
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.2458761, 3.5]
@@ -2592,8 +2448,7 @@ Entities:
     Grid:
       X: 21
       Z: 3
-  - ID: 764
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.1563594, 2.5]
@@ -2610,8 +2465,7 @@ Entities:
     Grid:
       X: 21
       Z: 2
-  - ID: 763
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.3849828, 1.5]
@@ -2628,8 +2482,7 @@ Entities:
     Grid:
       X: 21
       Z: 1
-  - ID: 762
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.2126297, 0.5]
@@ -2646,8 +2499,7 @@ Entities:
     Grid:
       X: 21
       Z: 0
-  - ID: 761
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.0244916, -0.5]
@@ -2664,8 +2516,7 @@ Entities:
     Grid:
       X: 21
       Z: -1
-  - ID: 760
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.0112563, -1.5]
@@ -2682,8 +2533,7 @@ Entities:
     Grid:
       X: 21
       Z: -2
-  - ID: 759
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.2933825, -16.5]
@@ -2700,8 +2550,7 @@ Entities:
     Grid:
       X: 21
       Z: -17
-  - ID: 758
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.2971781, -17.5]
@@ -2718,8 +2567,7 @@ Entities:
     Grid:
       X: 21
       Z: -18
-  - ID: 757
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.3296053, -18.5]
@@ -2736,8 +2584,7 @@ Entities:
     Grid:
       X: 21
       Z: -19
-  - ID: 756
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.130364, -19.5]
@@ -2754,8 +2601,7 @@ Entities:
     Grid:
       X: 21
       Z: -20
-  - ID: 755
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.1633683, -20.5]
@@ -2772,8 +2618,7 @@ Entities:
     Grid:
       X: 21
       Z: -21
-  - ID: 754
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.4088803, -21.5]
@@ -2790,8 +2635,7 @@ Entities:
     Grid:
       X: 21
       Z: -22
-  - ID: 753
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.1633496, -22.5]
@@ -2808,8 +2652,7 @@ Entities:
     Grid:
       X: 21
       Z: -23
-  - ID: 752
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.4398269, -23.5]
@@ -2826,8 +2669,7 @@ Entities:
     Grid:
       X: 21
       Z: -24
-  - ID: 751
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [21.5, -0.4240444, -24.5]
@@ -2844,8 +2686,7 @@ Entities:
     Grid:
       X: 21
       Z: -25
-  - ID: 750
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [20.5, -0.4531541, 24.5]
@@ -2862,8 +2703,7 @@ Entities:
     Grid:
       X: 20
       Z: 24
-  - ID: 749
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [20.5, -0.1874063, 23.5]
@@ -2880,8 +2720,7 @@ Entities:
     Grid:
       X: 20
       Z: 23
-  - ID: 748
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [20.5, -0.05388451, 22.5]
@@ -2898,8 +2737,7 @@ Entities:
     Grid:
       X: 20
       Z: 22
-  - ID: 747
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [20.5, -0.4535543, -21.5]
@@ -2916,8 +2754,7 @@ Entities:
     Grid:
       X: 20
       Z: -22
-  - ID: 746
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [20.5, -0.2920347, -22.5]
@@ -2934,8 +2771,7 @@ Entities:
     Grid:
       X: 20
       Z: -23
-  - ID: 745
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [20.5, -0.1018799, -23.5]
@@ -2952,8 +2788,7 @@ Entities:
     Grid:
       X: 20
       Z: -24
-  - ID: 744
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [20.5, -0.1719385, -24.5]
@@ -2970,8 +2805,7 @@ Entities:
     Grid:
       X: 20
       Z: -25
-  - ID: 743
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.3864505, 24.5]
@@ -2988,8 +2822,7 @@ Entities:
     Grid:
       X: 19
       Z: 24
-  - ID: 742
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.3651244, 23.5]
@@ -3006,8 +2839,7 @@ Entities:
     Grid:
       X: 19
       Z: 23
-  - ID: 741
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.449718, 22.5]
@@ -3024,8 +2856,7 @@ Entities:
     Grid:
       X: 19
       Z: 22
-  - ID: 740
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.4913317, 5.5]
@@ -3042,8 +2873,7 @@ Entities:
     Grid:
       X: 19
       Z: 5
-  - ID: 739
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.2660488, 4.5]
@@ -3060,8 +2890,7 @@ Entities:
     Grid:
       X: 19
       Z: 4
-  - ID: 738
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [19.5, 0, -7.5]
@@ -3078,8 +2907,7 @@ Entities:
     Grid:
       X: 19
       Z: -8
-  - ID: 737
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [19.5, -0.1326405, -8.5]
@@ -3096,8 +2924,7 @@ Entities:
     Grid:
       X: 19
       Z: -9
-  - ID: 736
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.2363846, -21.5]
@@ -3114,8 +2941,7 @@ Entities:
     Grid:
       X: 19
       Z: -22
-  - ID: 735
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.3085454, -22.5]
@@ -3132,8 +2958,7 @@ Entities:
     Grid:
       X: 19
       Z: -23
-  - ID: 734
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.03903347, -23.5]
@@ -3150,8 +2975,7 @@ Entities:
     Grid:
       X: 19
       Z: -24
-  - ID: 733
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [19.5, -0.1452203, -24.5]
@@ -3168,8 +2992,7 @@ Entities:
     Grid:
       X: 19
       Z: -25
-  - ID: 732
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.3273618, 24.5]
@@ -3186,8 +3009,7 @@ Entities:
     Grid:
       X: 18
       Z: 24
-  - ID: 731
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.1259031, 23.5]
@@ -3204,8 +3026,7 @@ Entities:
     Grid:
       X: 18
       Z: 23
-  - ID: 730
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.3736656, 22.5]
@@ -3222,8 +3043,7 @@ Entities:
     Grid:
       X: 18
       Z: 22
-  - ID: 729
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.2914932, 7.5]
@@ -3240,8 +3060,7 @@ Entities:
     Grid:
       X: 18
       Z: 7
-  - ID: 728
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.009105882, 6.5]
@@ -3258,8 +3077,7 @@ Entities:
     Grid:
       X: 18
       Z: 6
-  - ID: 727
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.1923096, 5.5]
@@ -3276,8 +3094,7 @@ Entities:
     Grid:
       X: 18
       Z: 5
-  - ID: 726
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.2389979, 4.5]
@@ -3294,8 +3111,7 @@ Entities:
     Grid:
       X: 18
       Z: 4
-  - ID: 725
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [18.5, -0.1130938, -11.5]
@@ -3312,8 +3128,7 @@ Entities:
     Grid:
       X: 18
       Z: -12
-  - ID: 724
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.1173828, -12.5]
@@ -3330,8 +3145,7 @@ Entities:
     Grid:
       X: 18
       Z: -13
-  - ID: 723
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [18.5, 0, -13.5]
@@ -3348,8 +3162,7 @@ Entities:
     Grid:
       X: 18
       Z: -14
-  - ID: 722
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.06030581, -21.5]
@@ -3366,8 +3179,7 @@ Entities:
     Grid:
       X: 18
       Z: -22
-  - ID: 721
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.4387865, -22.5]
@@ -3384,8 +3196,7 @@ Entities:
     Grid:
       X: 18
       Z: -23
-  - ID: 720
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.241011, -23.5]
@@ -3402,8 +3213,7 @@ Entities:
     Grid:
       X: 18
       Z: -24
-  - ID: 719
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [18.5, -0.3634466, -24.5]
@@ -3420,8 +3230,7 @@ Entities:
     Grid:
       X: 18
       Z: -25
-  - ID: 718
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.2141265, 24.5]
@@ -3438,8 +3247,7 @@ Entities:
     Grid:
       X: 17
       Z: 24
-  - ID: 717
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.2979905, 23.5]
@@ -3456,8 +3264,7 @@ Entities:
     Grid:
       X: 17
       Z: 23
-  - ID: 716
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.09546185, 6.5]
@@ -3474,8 +3281,7 @@ Entities:
     Grid:
       X: 17
       Z: 6
-  - ID: 715
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.08658151, 5.5]
@@ -3492,8 +3298,7 @@ Entities:
     Grid:
       X: 17
       Z: 5
-  - ID: 714
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.1881361, 4.5]
@@ -3510,8 +3315,7 @@ Entities:
     Grid:
       X: 17
       Z: 4
-  - ID: 713
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.1168377, 3.5]
@@ -3528,8 +3332,7 @@ Entities:
     Grid:
       X: 17
       Z: 3
-  - ID: 712
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.3223823, 2.5]
@@ -3546,8 +3349,7 @@ Entities:
     Grid:
       X: 17
       Z: 2
-  - ID: 711
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [17.5, 0, -7.5]
@@ -3564,8 +3366,7 @@ Entities:
     Grid:
       X: 17
       Z: -8
-  - ID: 710
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [17.5, -0.167899, -10.5]
@@ -3582,8 +3383,7 @@ Entities:
     Grid:
       X: 17
       Z: -11
-  - ID: 709
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.07820248, -11.5]
@@ -3600,8 +3400,7 @@ Entities:
     Grid:
       X: 17
       Z: -12
-  - ID: 708
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.2489347, -12.5]
@@ -3618,8 +3417,7 @@ Entities:
     Grid:
       X: 17
       Z: -13
-  - ID: 707
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.490819, -13.5]
@@ -3636,8 +3434,7 @@ Entities:
     Grid:
       X: 17
       Z: -14
-  - ID: 706
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.2648815, -14.5]
@@ -3654,8 +3451,7 @@ Entities:
     Grid:
       X: 17
       Z: -15
-  - ID: 705
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [17.5, -0.230363, -15.5]
@@ -3672,8 +3468,7 @@ Entities:
     Grid:
       X: 17
       Z: -16
-  - ID: 704
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.3171517, -21.5]
@@ -3690,8 +3485,7 @@ Entities:
     Grid:
       X: 17
       Z: -22
-  - ID: 703
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.1844583, -22.5]
@@ -3708,8 +3502,7 @@ Entities:
     Grid:
       X: 17
       Z: -23
-  - ID: 702
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.2282552, -23.5]
@@ -3726,8 +3519,7 @@ Entities:
     Grid:
       X: 17
       Z: -24
-  - ID: 701
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [17.5, -0.09521663, -24.5]
@@ -3744,8 +3536,7 @@ Entities:
     Grid:
       X: 17
       Z: -25
-  - ID: 700
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.004157223, 24.5]
@@ -3762,8 +3553,7 @@ Entities:
     Grid:
       X: 16
       Z: 24
-  - ID: 699
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.3345877, 23.5]
@@ -3780,8 +3570,7 @@ Entities:
     Grid:
       X: 16
       Z: 23
-  - ID: 698
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.04497645, 6.5]
@@ -3798,8 +3587,7 @@ Entities:
     Grid:
       X: 16
       Z: 6
-  - ID: 697
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.4409333, 5.5]
@@ -3816,8 +3604,7 @@ Entities:
     Grid:
       X: 16
       Z: 5
-  - ID: 696
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.06578078, 4.5]
@@ -3834,8 +3621,7 @@ Entities:
     Grid:
       X: 16
       Z: 4
-  - ID: 695
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.2805999, 3.5]
@@ -3852,8 +3638,7 @@ Entities:
     Grid:
       X: 16
       Z: 3
-  - ID: 694
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.03127162, 2.5]
@@ -3870,8 +3655,7 @@ Entities:
     Grid:
       X: 16
       Z: 2
-  - ID: 693
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.01630041, -8.5]
@@ -3888,8 +3672,7 @@ Entities:
     Grid:
       X: 16
       Z: -9
-  - ID: 692
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.3696488, -9.5]
@@ -3906,8 +3689,7 @@ Entities:
     Grid:
       X: 16
       Z: -10
-  - ID: 691
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.08556053, -10.5]
@@ -3924,8 +3706,7 @@ Entities:
     Grid:
       X: 16
       Z: -11
-  - ID: 690
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.3371065, -11.5]
@@ -3942,8 +3723,7 @@ Entities:
     Grid:
       X: 16
       Z: -12
-  - ID: 689
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [16.5, -0.4995402, -12.5]
@@ -3960,8 +3740,7 @@ Entities:
     Grid:
       X: 16
       Z: -13
-  - ID: 688
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.4408627, -21.5]
@@ -3978,8 +3757,7 @@ Entities:
     Grid:
       X: 16
       Z: -22
-  - ID: 687
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.0640072, -22.5]
@@ -3996,8 +3774,7 @@ Entities:
     Grid:
       X: 16
       Z: -23
-  - ID: 686
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.1563385, -23.5]
@@ -4014,8 +3791,7 @@ Entities:
     Grid:
       X: 16
       Z: -24
-  - ID: 685
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [16.5, -0.08906623, -24.5]
@@ -4032,8 +3808,7 @@ Entities:
     Grid:
       X: 16
       Z: -25
-  - ID: 684
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.09273799, 24.5]
@@ -4050,8 +3825,7 @@ Entities:
     Grid:
       X: 15
       Z: 24
-  - ID: 683
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.333264, 23.5]
@@ -4068,8 +3842,7 @@ Entities:
     Grid:
       X: 15
       Z: 23
-  - ID: 682
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.4114296, 22.5]
@@ -4086,8 +3859,7 @@ Entities:
     Grid:
       X: 15
       Z: 22
-  - ID: 681
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.3490528, 4.5]
@@ -4104,8 +3876,7 @@ Entities:
     Grid:
       X: 15
       Z: 4
-  - ID: 680
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.1213618, 3.5]
@@ -4122,8 +3893,7 @@ Entities:
     Grid:
       X: 15
       Z: 3
-  - ID: 679
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.2695632, -3.5]
@@ -4140,8 +3910,7 @@ Entities:
     Grid:
       X: 15
       Z: -4
-  - ID: 678
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.3688954, -4.5]
@@ -4158,8 +3927,7 @@ Entities:
     Grid:
       X: 15
       Z: -5
-  - ID: 677
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.3331694, -5.5]
@@ -4176,8 +3944,7 @@ Entities:
     Grid:
       X: 15
       Z: -6
-  - ID: 676
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [15.5, -0.06032446, -16.5]
@@ -4194,8 +3961,7 @@ Entities:
     Grid:
       X: 15
       Z: -17
-  - ID: 675
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [15.5, 0, -17.5]
@@ -4212,8 +3978,7 @@ Entities:
     Grid:
       X: 15
       Z: -18
-  - ID: 674
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.1507275, -22.5]
@@ -4230,8 +3995,7 @@ Entities:
     Grid:
       X: 15
       Z: -23
-  - ID: 673
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.2771901, -23.5]
@@ -4248,8 +4012,7 @@ Entities:
     Grid:
       X: 15
       Z: -24
-  - ID: 672
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [15.5, -0.4915262, -24.5]
@@ -4266,8 +4029,7 @@ Entities:
     Grid:
       X: 15
       Z: -25
-  - ID: 671
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [14.5, -0.2833887, 24.5]
@@ -4284,8 +4046,7 @@ Entities:
     Grid:
       X: 14
       Z: 24
-  - ID: 670
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [14.5, -0.2088721, 23.5]
@@ -4302,8 +4063,7 @@ Entities:
     Grid:
       X: 14
       Z: 23
-  - ID: 669
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [14.5, -0.06561092, 22.5]
@@ -4320,8 +4080,7 @@ Entities:
     Grid:
       X: 14
       Z: 22
-  - ID: 668
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [14.5, -0.4713685, -23.5]
@@ -4338,8 +4097,7 @@ Entities:
     Grid:
       X: 14
       Z: -24
-  - ID: 667
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [14.5, -0.2991844, -24.5]
@@ -4356,8 +4114,7 @@ Entities:
     Grid:
       X: 14
       Z: -25
-  - ID: 666
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [13.5, -0.2739354, 24.5]
@@ -4374,8 +4131,7 @@ Entities:
     Grid:
       X: 13
       Z: 24
-  - ID: 665
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [13.5, -0.2819825, 23.5]
@@ -4392,8 +4148,7 @@ Entities:
     Grid:
       X: 13
       Z: 23
-  - ID: 664
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [13.5, -0.2114178, 22.5]
@@ -4410,8 +4165,7 @@ Entities:
     Grid:
       X: 13
       Z: 22
-  - ID: 663
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [13.5, -0.4859387, -23.5]
@@ -4428,8 +4182,7 @@ Entities:
     Grid:
       X: 13
       Z: -24
-  - ID: 662
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [13.5, -0.1345597, -24.5]
@@ -4446,8 +4199,7 @@ Entities:
     Grid:
       X: 13
       Z: -25
-  - ID: 661
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [12.5, -0.08334913, 24.5]
@@ -4464,8 +4216,7 @@ Entities:
     Grid:
       X: 12
       Z: 24
-  - ID: 660
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [12.5, -0.3689291, 23.5]
@@ -4482,8 +4233,7 @@ Entities:
     Grid:
       X: 12
       Z: 23
-  - ID: 659
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [12.5, -0.4732886, 22.5]
@@ -4500,8 +4250,7 @@ Entities:
     Grid:
       X: 12
       Z: 22
-  - ID: 658
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [12.5, -0.0263385, 21.5]
@@ -4518,8 +4267,7 @@ Entities:
     Grid:
       X: 12
       Z: 21
-  - ID: 657
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [12.5, -0.1962345, -23.5]
@@ -4536,8 +4284,7 @@ Entities:
     Grid:
       X: 12
       Z: -24
-  - ID: 656
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [12.5, -0.460166, -24.5]
@@ -4554,8 +4301,7 @@ Entities:
     Grid:
       X: 12
       Z: -25
-  - ID: 655
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [11.5, -0.4390253, 24.5]
@@ -4572,8 +4318,7 @@ Entities:
     Grid:
       X: 11
       Z: 24
-  - ID: 654
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [11.5, -0.4758152, 23.5]
@@ -4590,8 +4335,7 @@ Entities:
     Grid:
       X: 11
       Z: 23
-  - ID: 653
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [11.5, -0.3081361, 22.5]
@@ -4608,8 +4352,7 @@ Entities:
     Grid:
       X: 11
       Z: 22
-  - ID: 652
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [11.5, -0.1697467, 21.5]
@@ -4626,8 +4369,7 @@ Entities:
     Grid:
       X: 11
       Z: 21
-  - ID: 651
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [11.5, -0.1020986, -23.5]
@@ -4644,8 +4386,7 @@ Entities:
     Grid:
       X: 11
       Z: -24
-  - ID: 650
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [11.5, -0.2448438, -24.5]
@@ -4662,8 +4403,7 @@ Entities:
     Grid:
       X: 11
       Z: -25
-  - ID: 649
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [10.5, -0.4321537, 24.5]
@@ -4680,8 +4420,7 @@ Entities:
     Grid:
       X: 10
       Z: 24
-  - ID: 648
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [10.5, -0.0990592, 23.5]
@@ -4698,8 +4437,7 @@ Entities:
     Grid:
       X: 10
       Z: 23
-  - ID: 647
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [10.5, -0.09766238, 22.5]
@@ -4716,8 +4454,7 @@ Entities:
     Grid:
       X: 10
       Z: 22
-  - ID: 646
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [10.5, -0.1862049, -23.5]
@@ -4734,8 +4471,7 @@ Entities:
     Grid:
       X: 10
       Z: -24
-  - ID: 645
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [10.5, -0.2463948, -24.5]
@@ -4752,8 +4488,7 @@ Entities:
     Grid:
       X: 10
       Z: -25
-  - ID: 644
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.05310817, 24.5]
@@ -4770,8 +4505,7 @@ Entities:
     Grid:
       X: 9
       Z: 24
-  - ID: 643
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.08605891, 23.5]
@@ -4788,8 +4522,7 @@ Entities:
     Grid:
       X: 9
       Z: 23
-  - ID: 642
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.0835842, 22.5]
@@ -4806,8 +4539,7 @@ Entities:
     Grid:
       X: 9
       Z: 22
-  - ID: 641
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.1466941, 5.5]
@@ -4824,8 +4556,7 @@ Entities:
     Grid:
       X: 9
       Z: 5
-  - ID: 640
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.4920319, 4.5]
@@ -4842,8 +4573,7 @@ Entities:
     Grid:
       X: 9
       Z: 4
-  - ID: 639
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [9.5, 0, -7.5]
@@ -4860,8 +4590,7 @@ Entities:
     Grid:
       X: 9
       Z: -8
-  - ID: 638
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [9.5, -0.1796622, -8.5]
@@ -4878,8 +4607,7 @@ Entities:
     Grid:
       X: 9
       Z: -9
-  - ID: 637
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.2158256, -22.5]
@@ -4896,8 +4624,7 @@ Entities:
     Grid:
       X: 9
       Z: -23
-  - ID: 636
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.4123158, -23.5]
@@ -4914,8 +4641,7 @@ Entities:
     Grid:
       X: 9
       Z: -24
-  - ID: 635
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [9.5, -0.145992, -24.5]
@@ -4932,8 +4658,7 @@ Entities:
     Grid:
       X: 9
       Z: -25
-  - ID: 634
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.2575119, 24.5]
@@ -4950,8 +4675,7 @@ Entities:
     Grid:
       X: 8
       Z: 24
-  - ID: 633
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.3139867, 23.5]
@@ -4968,8 +4692,7 @@ Entities:
     Grid:
       X: 8
       Z: 23
-  - ID: 632
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.09040935, 22.5]
@@ -4986,8 +4709,7 @@ Entities:
     Grid:
       X: 8
       Z: 22
-  - ID: 631
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.3284299, 7.5]
@@ -5004,8 +4726,7 @@ Entities:
     Grid:
       X: 8
       Z: 7
-  - ID: 630
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.3086396, 6.5]
@@ -5022,8 +4743,7 @@ Entities:
     Grid:
       X: 8
       Z: 6
-  - ID: 629
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.2083997, 5.5]
@@ -5040,8 +4760,7 @@ Entities:
     Grid:
       X: 8
       Z: 5
-  - ID: 628
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.4544683, 4.5]
@@ -5058,8 +4777,7 @@ Entities:
     Grid:
       X: 8
       Z: 4
-  - ID: 627
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [8.5, -0.2634379, -11.5]
@@ -5076,8 +4794,7 @@ Entities:
     Grid:
       X: 8
       Z: -12
-  - ID: 626
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.4290496, -12.5]
@@ -5094,8 +4811,7 @@ Entities:
     Grid:
       X: 8
       Z: -13
-  - ID: 625
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [8.5, 0, -13.5]
@@ -5112,8 +4828,7 @@ Entities:
     Grid:
       X: 8
       Z: -14
-  - ID: 624
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.03023559, -21.5]
@@ -5130,8 +4845,7 @@ Entities:
     Grid:
       X: 8
       Z: -22
-  - ID: 623
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.1984909, -22.5]
@@ -5148,8 +4862,7 @@ Entities:
     Grid:
       X: 8
       Z: -23
-  - ID: 622
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.4016822, -23.5]
@@ -5166,8 +4879,7 @@ Entities:
     Grid:
       X: 8
       Z: -24
-  - ID: 621
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [8.5, -0.09454209, -24.5]
@@ -5184,8 +4896,7 @@ Entities:
     Grid:
       X: 8
       Z: -25
-  - ID: 620
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.4156899, 24.5]
@@ -5202,8 +4913,7 @@ Entities:
     Grid:
       X: 7
       Z: 24
-  - ID: 619
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.3086025, 23.5]
@@ -5220,8 +4930,7 @@ Entities:
     Grid:
       X: 7
       Z: 23
-  - ID: 618
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.1954689, 6.5]
@@ -5238,8 +4947,7 @@ Entities:
     Grid:
       X: 7
       Z: 6
-  - ID: 617
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.356952, 5.5]
@@ -5256,8 +4964,7 @@ Entities:
     Grid:
       X: 7
       Z: 5
-  - ID: 616
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.08669431, 4.5]
@@ -5274,8 +4981,7 @@ Entities:
     Grid:
       X: 7
       Z: 4
-  - ID: 615
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.03825199, 3.5]
@@ -5292,8 +4998,7 @@ Entities:
     Grid:
       X: 7
       Z: 3
-  - ID: 614
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.0665855, 2.5]
@@ -5310,8 +5015,7 @@ Entities:
     Grid:
       X: 7
       Z: 2
-  - ID: 613
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [7.5, 0, -7.5]
@@ -5328,8 +5032,7 @@ Entities:
     Grid:
       X: 7
       Z: -8
-  - ID: 612
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [7.5, -0.2529597, -10.5]
@@ -5346,8 +5049,7 @@ Entities:
     Grid:
       X: 7
       Z: -11
-  - ID: 611
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.4126569, -11.5]
@@ -5364,8 +5066,7 @@ Entities:
     Grid:
       X: 7
       Z: -12
-  - ID: 610
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.1221598, -12.5]
@@ -5382,8 +5083,7 @@ Entities:
     Grid:
       X: 7
       Z: -13
-  - ID: 609
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.2161957, -13.5]
@@ -5400,8 +5100,7 @@ Entities:
     Grid:
       X: 7
       Z: -14
-  - ID: 608
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.2184665, -14.5]
@@ -5418,8 +5117,7 @@ Entities:
     Grid:
       X: 7
       Z: -15
-  - ID: 607
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [7.5, -0.2268988, -15.5]
@@ -5436,8 +5134,7 @@ Entities:
     Grid:
       X: 7
       Z: -16
-  - ID: 606
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.2363661, -21.5]
@@ -5454,8 +5151,7 @@ Entities:
     Grid:
       X: 7
       Z: -22
-  - ID: 605
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.4001653, -22.5]
@@ -5472,8 +5168,7 @@ Entities:
     Grid:
       X: 7
       Z: -23
-  - ID: 604
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.3215905, -23.5]
@@ -5490,8 +5185,7 @@ Entities:
     Grid:
       X: 7
       Z: -24
-  - ID: 603
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [7.5, -0.3244957, -24.5]
@@ -5508,8 +5202,7 @@ Entities:
     Grid:
       X: 7
       Z: -25
-  - ID: 602
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.0711086, 24.5]
@@ -5526,8 +5219,7 @@ Entities:
     Grid:
       X: 6
       Z: 24
-  - ID: 601
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.4864873, 23.5]
@@ -5544,8 +5236,7 @@ Entities:
     Grid:
       X: 6
       Z: 23
-  - ID: 600
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.4680275, 6.5]
@@ -5562,8 +5253,7 @@ Entities:
     Grid:
       X: 6
       Z: 6
-  - ID: 599
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.2592975, 5.5]
@@ -5580,8 +5270,7 @@ Entities:
     Grid:
       X: 6
       Z: 5
-  - ID: 598
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.2111092, 4.5]
@@ -5598,8 +5287,7 @@ Entities:
     Grid:
       X: 6
       Z: 4
-  - ID: 597
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.3298026, 3.5]
@@ -5616,8 +5304,7 @@ Entities:
     Grid:
       X: 6
       Z: 3
-  - ID: 596
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.0975537, 2.5]
@@ -5634,8 +5321,7 @@ Entities:
     Grid:
       X: 6
       Z: 2
-  - ID: 595
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.07493272, -8.5]
@@ -5652,8 +5338,7 @@ Entities:
     Grid:
       X: 6
       Z: -9
-  - ID: 594
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.3523619, -9.5]
@@ -5670,8 +5355,7 @@ Entities:
     Grid:
       X: 6
       Z: -10
-  - ID: 593
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.3612198, -10.5]
@@ -5688,8 +5372,7 @@ Entities:
     Grid:
       X: 6
       Z: -11
-  - ID: 592
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.1159443, -11.5]
@@ -5706,8 +5389,7 @@ Entities:
     Grid:
       X: 6
       Z: -12
-  - ID: 591
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [6.5, -0.4087735, -12.5]
@@ -5724,8 +5406,7 @@ Entities:
     Grid:
       X: 6
       Z: -13
-  - ID: 590
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.03276223, -22.5]
@@ -5742,8 +5423,7 @@ Entities:
     Grid:
       X: 6
       Z: -23
-  - ID: 589
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.4090743, -23.5]
@@ -5760,8 +5440,7 @@ Entities:
     Grid:
       X: 6
       Z: -24
-  - ID: 588
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [6.5, -0.1448447, -24.5]
@@ -5778,8 +5457,7 @@ Entities:
     Grid:
       X: 6
       Z: -25
-  - ID: 587
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.04836502, 24.5]
@@ -5796,8 +5474,7 @@ Entities:
     Grid:
       X: 5
       Z: 24
-  - ID: 586
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.333557, 23.5]
@@ -5814,8 +5491,7 @@ Entities:
     Grid:
       X: 5
       Z: 23
-  - ID: 585
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.2608249, 22.5]
@@ -5832,8 +5508,7 @@ Entities:
     Grid:
       X: 5
       Z: 22
-  - ID: 584
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.4673013, 4.5]
@@ -5850,8 +5525,7 @@ Entities:
     Grid:
       X: 5
       Z: 4
-  - ID: 583
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.03572273, 3.5]
@@ -5868,8 +5542,7 @@ Entities:
     Grid:
       X: 5
       Z: 3
-  - ID: 582
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.4359026, -3.5]
@@ -5886,8 +5559,7 @@ Entities:
     Grid:
       X: 5
       Z: -4
-  - ID: 581
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.02121557, -4.5]
@@ -5904,8 +5576,7 @@ Entities:
     Grid:
       X: 5
       Z: -5
-  - ID: 580
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.2673605, -5.5]
@@ -5922,8 +5593,7 @@ Entities:
     Grid:
       X: 5
       Z: -6
-  - ID: 579
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [5.5, -0.340986, -16.5]
@@ -5940,8 +5610,7 @@ Entities:
     Grid:
       X: 5
       Z: -17
-  - ID: 578
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [5.5, 0, -17.5]
@@ -5958,8 +5627,7 @@ Entities:
     Grid:
       X: 5
       Z: -18
-  - ID: 577
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.1591161, -22.5]
@@ -5976,8 +5644,7 @@ Entities:
     Grid:
       X: 5
       Z: -23
-  - ID: 576
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.2355442, -23.5]
@@ -5994,8 +5661,7 @@ Entities:
     Grid:
       X: 5
       Z: -24
-  - ID: 575
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [5.5, -0.1612665, -24.5]
@@ -6012,8 +5678,7 @@ Entities:
     Grid:
       X: 5
       Z: -25
-  - ID: 574
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.2502358, 24.5]
@@ -6030,8 +5695,7 @@ Entities:
     Grid:
       X: 4
       Z: 24
-  - ID: 573
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.3734521, 23.5]
@@ -6048,8 +5712,7 @@ Entities:
     Grid:
       X: 4
       Z: 23
-  - ID: 572
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.3563472, 22.5]
@@ -6066,8 +5729,7 @@ Entities:
     Grid:
       X: 4
       Z: 22
-  - ID: 571
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.1162002, 5.5]
@@ -6084,8 +5746,7 @@ Entities:
     Grid:
       X: 4
       Z: 5
-  - ID: 570
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.4893403, 4.5]
@@ -6102,8 +5763,7 @@ Entities:
     Grid:
       X: 4
       Z: 4
-  - ID: 569
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.4814987, 0.5]
@@ -6120,8 +5780,7 @@ Entities:
     Grid:
       X: 4
       Z: 0
-  - ID: 568
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.08396357, -0.5]
@@ -6138,8 +5797,7 @@ Entities:
     Grid:
       X: 4
       Z: -1
-  - ID: 567
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.155078, -1.5]
@@ -6156,8 +5814,7 @@ Entities:
     Grid:
       X: 4
       Z: -2
-  - ID: 566
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.2449507, -2.5]
@@ -6174,8 +5831,7 @@ Entities:
     Grid:
       X: 4
       Z: -3
-  - ID: 565
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.298029, -3.5]
@@ -6192,8 +5848,7 @@ Entities:
     Grid:
       X: 4
       Z: -4
-  - ID: 564
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.01433708, -4.5]
@@ -6210,8 +5865,7 @@ Entities:
     Grid:
       X: 4
       Z: -5
-  - ID: 563
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.2511812, -5.5]
@@ -6228,8 +5882,7 @@ Entities:
     Grid:
       X: 4
       Z: -6
-  - ID: 562
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.443256, -6.5]
@@ -6246,8 +5899,7 @@ Entities:
     Grid:
       X: 4
       Z: -7
-  - ID: 561
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.1665026, -7.5]
@@ -6264,8 +5916,7 @@ Entities:
     Grid:
       X: 4
       Z: -8
-  - ID: 560
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.119966, -8.5]
@@ -6282,8 +5933,7 @@ Entities:
     Grid:
       X: 4
       Z: -9
-  - ID: 559
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [4.5, 0, -15.5]
@@ -6300,8 +5950,7 @@ Entities:
     Grid:
       X: 4
       Z: -16
-  - ID: 558
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.2572598, -23.5]
@@ -6318,8 +5967,7 @@ Entities:
     Grid:
       X: 4
       Z: -24
-  - ID: 557
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [4.5, -0.2883607, -24.5]
@@ -6336,8 +5984,7 @@ Entities:
     Grid:
       X: 4
       Z: -25
-  - ID: 556
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.2442009, 24.5]
@@ -6354,8 +6001,7 @@ Entities:
     Grid:
       X: 3
       Z: 24
-  - ID: 555
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.4027447, 23.5]
@@ -6372,8 +6018,7 @@ Entities:
     Grid:
       X: 3
       Z: 23
-  - ID: 554
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.3054581, 22.5]
@@ -6390,8 +6035,7 @@ Entities:
     Grid:
       X: 3
       Z: 22
-  - ID: 553
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.4297211, 21.5]
@@ -6408,8 +6052,7 @@ Entities:
     Grid:
       X: 3
       Z: 21
-  - ID: 552
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [3.5, 0, 9.5]
@@ -6426,8 +6069,7 @@ Entities:
     Grid:
       X: 3
       Z: 9
-  - ID: 551
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.4671253, 4.5]
@@ -6444,8 +6086,7 @@ Entities:
     Grid:
       X: 3
       Z: 4
-  - ID: 550
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.3049333, 3.5]
@@ -6462,8 +6103,7 @@ Entities:
     Grid:
       X: 3
       Z: 3
-  - ID: 549
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.1322383, 2.5]
@@ -6480,8 +6120,7 @@ Entities:
     Grid:
       X: 3
       Z: 2
-  - ID: 548
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.4523611, 1.5]
@@ -6498,8 +6137,7 @@ Entities:
     Grid:
       X: 3
       Z: 1
-  - ID: 547
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.2007598, 0.5]
@@ -6516,8 +6154,7 @@ Entities:
     Grid:
       X: 3
       Z: 0
-  - ID: 546
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.2399611, -0.5]
@@ -6534,8 +6171,7 @@ Entities:
     Grid:
       X: 3
       Z: -1
-  - ID: 545
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.1269716, -1.5]
@@ -6552,8 +6188,7 @@ Entities:
     Grid:
       X: 3
       Z: -2
-  - ID: 544
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.2500112, -2.5]
@@ -6570,8 +6205,7 @@ Entities:
     Grid:
       X: 3
       Z: -3
-  - ID: 543
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.3449006, -3.5]
@@ -6588,8 +6222,7 @@ Entities:
     Grid:
       X: 3
       Z: -4
-  - ID: 542
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.3720371, -4.5]
@@ -6606,8 +6239,7 @@ Entities:
     Grid:
       X: 3
       Z: -5
-  - ID: 541
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.2119892, -5.5]
@@ -6624,8 +6256,7 @@ Entities:
     Grid:
       X: 3
       Z: -6
-  - ID: 540
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [3.5, 0, -6.5]
@@ -6642,8 +6273,7 @@ Entities:
     Grid:
       X: 3
       Z: -7
-  - ID: 539
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.09890492, -23.5]
@@ -6660,8 +6290,7 @@ Entities:
     Grid:
       X: 3
       Z: -24
-  - ID: 538
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [3.5, -0.03272253, -24.5]
@@ -6678,8 +6307,7 @@ Entities:
     Grid:
       X: 3
       Z: -25
-  - ID: 537
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.3493729, 24.5]
@@ -6696,8 +6324,7 @@ Entities:
     Grid:
       X: 2
       Z: 24
-  - ID: 536
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.3599855, 23.5]
@@ -6714,8 +6341,7 @@ Entities:
     Grid:
       X: 2
       Z: 23
-  - ID: 535
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.1670815, 22.5]
@@ -6732,8 +6358,7 @@ Entities:
     Grid:
       X: 2
       Z: 22
-  - ID: 534
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [2.5, 0, 15.5]
@@ -6750,8 +6375,7 @@ Entities:
     Grid:
       X: 2
       Z: 15
-  - ID: 533
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.1923776, 11.5]
@@ -6768,8 +6392,7 @@ Entities:
     Grid:
       X: 2
       Z: 11
-  - ID: 532
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [2.5, -0.4518603, 10.5]
@@ -6786,8 +6409,7 @@ Entities:
     Grid:
       X: 2
       Z: 10
-  - ID: 531
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.04934952, 7.5]
@@ -6804,8 +6426,7 @@ Entities:
     Grid:
       X: 2
       Z: 7
-  - ID: 530
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [2.5, -0.3575186, 6.5]
@@ -6822,8 +6443,7 @@ Entities:
     Grid:
       X: 2
       Z: 6
-  - ID: 529
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.1432933, 5.5]
@@ -6840,8 +6460,7 @@ Entities:
     Grid:
       X: 2
       Z: 5
-  - ID: 528
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.3895259, 4.5]
@@ -6858,8 +6477,7 @@ Entities:
     Grid:
       X: 2
       Z: 4
-  - ID: 527
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.006269402, 3.5]
@@ -6876,8 +6494,7 @@ Entities:
     Grid:
       X: 2
       Z: 3
-  - ID: 526
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [2.5, -0.247087, 2.5]
@@ -6894,8 +6511,7 @@ Entities:
     Grid:
       X: 2
       Z: 2
-  - ID: 525
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.000798952, 1.5]
@@ -6912,8 +6528,7 @@ Entities:
     Grid:
       X: 2
       Z: 1
-  - ID: 524
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.3268787, 0.5]
@@ -6930,8 +6545,7 @@ Entities:
     Grid:
       X: 2
       Z: 0
-  - ID: 523
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.2509872, -0.5]
@@ -6948,8 +6562,7 @@ Entities:
     Grid:
       X: 2
       Z: -1
-  - ID: 522
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.05338093, -1.5]
@@ -6966,8 +6579,7 @@ Entities:
     Grid:
       X: 2
       Z: -2
-  - ID: 521
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.1153822, -2.5]
@@ -6984,8 +6596,7 @@ Entities:
     Grid:
       X: 2
       Z: -3
-  - ID: 520
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.3606138, -3.5]
@@ -7002,8 +6613,7 @@ Entities:
     Grid:
       X: 2
       Z: -4
-  - ID: 519
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.4235548, -23.5]
@@ -7020,8 +6630,7 @@ Entities:
     Grid:
       X: 2
       Z: -24
-  - ID: 518
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [2.5, -0.06827657, -24.5]
@@ -7038,8 +6647,7 @@ Entities:
     Grid:
       X: 2
       Z: -25
-  - ID: 517
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.1459804, 24.5]
@@ -7056,8 +6664,7 @@ Entities:
     Grid:
       X: 1
       Z: 24
-  - ID: 516
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.339864, 23.5]
@@ -7074,8 +6681,7 @@ Entities:
     Grid:
       X: 1
       Z: 23
-  - ID: 515
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.06453308, 22.5]
@@ -7092,8 +6698,7 @@ Entities:
     Grid:
       X: 1
       Z: 22
-  - ID: 514
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.1676784, 21.5]
@@ -7110,8 +6715,7 @@ Entities:
     Grid:
       X: 1
       Z: 21
-  - ID: 513
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [1.5, -0.1638989, 13.5]
@@ -7128,8 +6732,7 @@ Entities:
     Grid:
       X: 1
       Z: 13
-  - ID: 512
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.1309356, 9.5]
@@ -7146,8 +6749,7 @@ Entities:
     Grid:
       X: 1
       Z: 9
-  - ID: 511
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [1.5, -0.3834271, 8.5]
@@ -7164,8 +6766,7 @@ Entities:
     Grid:
       X: 1
       Z: 8
-  - ID: 510
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.04935614, 7.5]
@@ -7182,8 +6783,7 @@ Entities:
     Grid:
       X: 1
       Z: 7
-  - ID: 509
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.2914232, 6.5]
@@ -7200,8 +6800,7 @@ Entities:
     Grid:
       X: 1
       Z: 6
-  - ID: 508
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [1.5, -0.3980919, 5.5]
@@ -7218,8 +6817,7 @@ Entities:
     Grid:
       X: 1
       Z: 5
-  - ID: 507
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.009033135, 4.5]
@@ -7236,8 +6834,7 @@ Entities:
     Grid:
       X: 1
       Z: 4
-  - ID: 506
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.4566434, 3.5]
@@ -7254,8 +6851,7 @@ Entities:
     Grid:
       X: 1
       Z: 3
-  - ID: 505
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.4796108, 2.5]
@@ -7272,8 +6868,7 @@ Entities:
     Grid:
       X: 1
       Z: 2
-  - ID: 504
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [1.5, 0, -0.5]
@@ -7290,8 +6885,7 @@ Entities:
     Grid:
       X: 1
       Z: -1
-  - ID: 503
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.01886943, -5.5]
@@ -7308,8 +6902,7 @@ Entities:
     Grid:
       X: 1
       Z: -6
-  - ID: 502
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.3846216, -6.5]
@@ -7326,8 +6919,7 @@ Entities:
     Grid:
       X: 1
       Z: -7
-  - ID: 501
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.493991, -7.5]
@@ -7344,8 +6936,7 @@ Entities:
     Grid:
       X: 1
       Z: -8
-  - ID: 500
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.07578708, -22.5]
@@ -7362,8 +6953,7 @@ Entities:
     Grid:
       X: 1
       Z: -23
-  - ID: 499
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.1837183, -23.5]
@@ -7380,8 +6970,7 @@ Entities:
     Grid:
       X: 1
       Z: -24
-  - ID: 498
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [1.5, -0.3182343, -24.5]
@@ -7398,8 +6987,7 @@ Entities:
     Grid:
       X: 1
       Z: -25
-  - ID: 497
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.1977576, 24.5]
@@ -7416,8 +7004,7 @@ Entities:
     Grid:
       X: 0
       Z: 24
-  - ID: 496
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.1495259, 23.5]
@@ -7434,8 +7021,7 @@ Entities:
     Grid:
       X: 0
       Z: 23
-  - ID: 495
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.3395678, 22.5]
@@ -7452,8 +7038,7 @@ Entities:
     Grid:
       X: 0
       Z: 22
-  - ID: 494
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.08507614, 21.5]
@@ -7470,8 +7055,7 @@ Entities:
     Grid:
       X: 0
       Z: 21
-  - ID: 493
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [0.5, 0, 11.5]
@@ -7488,8 +7072,7 @@ Entities:
     Grid:
       X: 0
       Z: 11
-  - ID: 492
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [0.5, -0.2444489, 10.5]
@@ -7506,8 +7089,7 @@ Entities:
     Grid:
       X: 0
       Z: 10
-  - ID: 491
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [0.5, -0.2007857, 9.5]
@@ -7524,8 +7106,7 @@ Entities:
     Grid:
       X: 0
       Z: 9
-  - ID: 490
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [0.5, 0, 3.5]
@@ -7542,8 +7123,7 @@ Entities:
     Grid:
       X: 0
       Z: 3
-  - ID: 489
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.2605679, -4.5]
@@ -7560,8 +7140,7 @@ Entities:
     Grid:
       X: 0
       Z: -5
-  - ID: 488
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.1132757, -5.5]
@@ -7578,8 +7157,7 @@ Entities:
     Grid:
       X: 0
       Z: -6
-  - ID: 487
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [0.5, 0, -6.5]
@@ -7596,8 +7174,7 @@ Entities:
     Grid:
       X: 0
       Z: -7
-  - ID: 486
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.4815443, -21.5]
@@ -7614,8 +7191,7 @@ Entities:
     Grid:
       X: 0
       Z: -22
-  - ID: 485
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.1068864, -22.5]
@@ -7632,8 +7208,7 @@ Entities:
     Grid:
       X: 0
       Z: -23
-  - ID: 484
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.2294244, -23.5]
@@ -7650,8 +7225,7 @@ Entities:
     Grid:
       X: 0
       Z: -24
-  - ID: 483
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [0.5, -0.4843202, -24.5]
@@ -7668,8 +7242,7 @@ Entities:
     Grid:
       X: 0
       Z: -25
-  - ID: 482
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-0.5, -0.1186418, 24.5]
@@ -7686,8 +7259,7 @@ Entities:
     Grid:
       X: -1
       Z: 24
-  - ID: 481
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-0.5, -0.1408137, 23.5]
@@ -7704,8 +7276,7 @@ Entities:
     Grid:
       X: -1
       Z: 23
-  - ID: 480
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-0.5, -0.2892625, 22.5]
@@ -7722,8 +7293,7 @@ Entities:
     Grid:
       X: -1
       Z: 22
-  - ID: 479
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-0.5, -0.172164, -21.5]
@@ -7740,8 +7310,7 @@ Entities:
     Grid:
       X: -1
       Z: -22
-  - ID: 478
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-0.5, -0.2443045, -22.5]
@@ -7758,8 +7327,7 @@ Entities:
     Grid:
       X: -1
       Z: -23
-  - ID: 477
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-0.5, -0.05036924, -23.5]
@@ -7776,8 +7344,7 @@ Entities:
     Grid:
       X: -1
       Z: -24
-  - ID: 476
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-0.5, -0.3651654, -24.5]
@@ -7794,8 +7361,7 @@ Entities:
     Grid:
       X: -1
       Z: -25
-  - ID: 475
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-1.5, -0.1220691, 24.5]
@@ -7812,8 +7378,7 @@ Entities:
     Grid:
       X: -2
       Z: 24
-  - ID: 474
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-1.5, -0.4644271, 23.5]
@@ -7830,8 +7395,7 @@ Entities:
     Grid:
       X: -2
       Z: 23
-  - ID: 473
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-1.5, -0.1329603, 22.5]
@@ -7848,8 +7412,7 @@ Entities:
     Grid:
       X: -2
       Z: 22
-  - ID: 472
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-1.5, 0, -5.5]
@@ -7866,8 +7429,7 @@ Entities:
     Grid:
       X: -2
       Z: -6
-  - ID: 471
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-1.5, -0.4005073, -21.5]
@@ -7884,8 +7446,7 @@ Entities:
     Grid:
       X: -2
       Z: -22
-  - ID: 470
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-1.5, -0.09078649, -22.5]
@@ -7902,8 +7463,7 @@ Entities:
     Grid:
       X: -2
       Z: -23
-  - ID: 469
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-1.5, -0.1312411, -23.5]
@@ -7920,8 +7480,7 @@ Entities:
     Grid:
       X: -2
       Z: -24
-  - ID: 468
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-1.5, -0.4967674, -24.5]
@@ -7938,8 +7497,7 @@ Entities:
     Grid:
       X: -2
       Z: -25
-  - ID: 467
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.04275789, 24.5]
@@ -7956,8 +7514,7 @@ Entities:
     Grid:
       X: -3
       Z: 24
-  - ID: 466
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.05659627, 23.5]
@@ -7974,8 +7531,7 @@ Entities:
     Grid:
       X: -3
       Z: 23
-  - ID: 465
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-2.5, -0.2539291, 1.5]
@@ -7992,8 +7548,7 @@ Entities:
     Grid:
       X: -3
       Z: 1
-  - ID: 464
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-2.5, 0, -0.5]
@@ -8010,8 +7565,7 @@ Entities:
     Grid:
       X: -3
       Z: -1
-  - ID: 463
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.210095, -2.5]
@@ -8028,8 +7582,7 @@ Entities:
     Grid:
       X: -3
       Z: -3
-  - ID: 462
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.1593892, -3.5]
@@ -8046,8 +7599,7 @@ Entities:
     Grid:
       X: -3
       Z: -4
-  - ID: 461
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-2.5, -0.3278899, -4.5]
@@ -8064,8 +7616,7 @@ Entities:
     Grid:
       X: -3
       Z: -5
-  - ID: 460
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.1483379, -20.5]
@@ -8082,8 +7633,7 @@ Entities:
     Grid:
       X: -3
       Z: -21
-  - ID: 459
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.1624818, -21.5]
@@ -8100,8 +7650,7 @@ Entities:
     Grid:
       X: -3
       Z: -22
-  - ID: 458
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.05870883, -22.5]
@@ -8118,8 +7667,7 @@ Entities:
     Grid:
       X: -3
       Z: -23
-  - ID: 457
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.4156072, -23.5]
@@ -8136,8 +7684,7 @@ Entities:
     Grid:
       X: -3
       Z: -24
-  - ID: 456
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-2.5, -0.1108734, -24.5]
@@ -8154,8 +7701,7 @@ Entities:
     Grid:
       X: -3
       Z: -25
-  - ID: 455
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.0837779, 24.5]
@@ -8172,8 +7718,7 @@ Entities:
     Grid:
       X: -4
       Z: 24
-  - ID: 454
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.3556079, 23.5]
@@ -8190,8 +7735,7 @@ Entities:
     Grid:
       X: -4
       Z: 23
-  - ID: 453
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-3.5, -0.3986821, 2.5]
@@ -8208,8 +7752,7 @@ Entities:
     Grid:
       X: -4
       Z: 2
-  - ID: 452
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.3014216, 1.5]
@@ -8226,8 +7769,7 @@ Entities:
     Grid:
       X: -4
       Z: 1
-  - ID: 451
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.02102706, 0.5]
@@ -8244,8 +7786,7 @@ Entities:
     Grid:
       X: -4
       Z: 0
-  - ID: 450
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.1311059, -0.5]
@@ -8262,8 +7803,7 @@ Entities:
     Grid:
       X: -4
       Z: -1
-  - ID: 449
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-3.5, 0, -3.5]
@@ -8280,8 +7820,7 @@ Entities:
     Grid:
       X: -4
       Z: -4
-  - ID: 448
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.06686819, -20.5]
@@ -8298,8 +7837,7 @@ Entities:
     Grid:
       X: -4
       Z: -21
-  - ID: 447
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.2043599, -21.5]
@@ -8316,8 +7854,7 @@ Entities:
     Grid:
       X: -4
       Z: -22
-  - ID: 446
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.08116426, -22.5]
@@ -8334,8 +7871,7 @@ Entities:
     Grid:
       X: -4
       Z: -23
-  - ID: 445
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.1290323, -23.5]
@@ -8352,8 +7888,7 @@ Entities:
     Grid:
       X: -4
       Z: -24
-  - ID: 444
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-3.5, -0.3536608, -24.5]
@@ -8370,8 +7905,7 @@ Entities:
     Grid:
       X: -4
       Z: -25
-  - ID: 443
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.05555961, 24.5]
@@ -8388,8 +7922,7 @@ Entities:
     Grid:
       X: -5
       Z: 24
-  - ID: 442
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.3402033, 23.5]
@@ -8406,8 +7939,7 @@ Entities:
     Grid:
       X: -5
       Z: 23
-  - ID: 441
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.219435, 22.5]
@@ -8424,8 +7956,7 @@ Entities:
     Grid:
       X: -5
       Z: 22
-  - ID: 440
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.1773191, 3.5]
@@ -8442,8 +7973,7 @@ Entities:
     Grid:
       X: -5
       Z: 3
-  - ID: 439
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.4898742, 2.5]
@@ -8460,8 +7990,7 @@ Entities:
     Grid:
       X: -5
       Z: 2
-  - ID: 438
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.3633272, 1.5]
@@ -8478,8 +8007,7 @@ Entities:
     Grid:
       X: -5
       Z: 1
-  - ID: 437
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.4524405, 0.5]
@@ -8496,8 +8024,7 @@ Entities:
     Grid:
       X: -5
       Z: 0
-  - ID: 436
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.2921911, -0.5]
@@ -8514,8 +8041,7 @@ Entities:
     Grid:
       X: -5
       Z: -1
-  - ID: 435
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.09240816, -1.5]
@@ -8532,8 +8058,7 @@ Entities:
     Grid:
       X: -5
       Z: -2
-  - ID: 434
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.3165318, -20.5]
@@ -8550,8 +8075,7 @@ Entities:
     Grid:
       X: -5
       Z: -21
-  - ID: 433
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.2151037, -21.5]
@@ -8568,8 +8092,7 @@ Entities:
     Grid:
       X: -5
       Z: -22
-  - ID: 432
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.3222753, -22.5]
@@ -8586,8 +8109,7 @@ Entities:
     Grid:
       X: -5
       Z: -23
-  - ID: 431
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.4616898, -23.5]
@@ -8604,8 +8126,7 @@ Entities:
     Grid:
       X: -5
       Z: -24
-  - ID: 430
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-4.5, -0.04491158, -24.5]
@@ -8622,8 +8143,7 @@ Entities:
     Grid:
       X: -5
       Z: -25
-  - ID: 429
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.1555512, 24.5]
@@ -8640,8 +8160,7 @@ Entities:
     Grid:
       X: -6
       Z: 24
-  - ID: 428
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.2365075, 23.5]
@@ -8658,8 +8177,7 @@ Entities:
     Grid:
       X: -6
       Z: 23
-  - ID: 427
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.2178493, 22.5]
@@ -8676,8 +8194,7 @@ Entities:
     Grid:
       X: -6
       Z: 22
-  - ID: 426
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.3998266, 4.5]
@@ -8694,8 +8211,7 @@ Entities:
     Grid:
       X: -6
       Z: 4
-  - ID: 425
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-5.5, -0.1138321, 3.5]
@@ -8712,8 +8228,7 @@ Entities:
     Grid:
       X: -6
       Z: 3
-  - ID: 424
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.1197512, 2.5]
@@ -8730,8 +8245,7 @@ Entities:
     Grid:
       X: -6
       Z: 2
-  - ID: 423
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.08535402, 1.5]
@@ -8748,8 +8262,7 @@ Entities:
     Grid:
       X: -6
       Z: 1
-  - ID: 422
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.07391451, 0.5]
@@ -8766,8 +8279,7 @@ Entities:
     Grid:
       X: -6
       Z: 0
-  - ID: 421
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.1129609, -0.5]
@@ -8784,8 +8296,7 @@ Entities:
     Grid:
       X: -6
       Z: -1
-  - ID: 420
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.2206117, -1.5]
@@ -8802,8 +8313,7 @@ Entities:
     Grid:
       X: -6
       Z: -2
-  - ID: 419
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.09738214, -2.5]
@@ -8820,8 +8330,7 @@ Entities:
     Grid:
       X: -6
       Z: -3
-  - ID: 418
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.4429991, -3.5]
@@ -8838,8 +8347,7 @@ Entities:
     Grid:
       X: -6
       Z: -4
-  - ID: 417
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.4221544, -4.5]
@@ -8856,8 +8364,7 @@ Entities:
     Grid:
       X: -6
       Z: -5
-  - ID: 416
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-5.5, 0, -5.5]
@@ -8874,8 +8381,7 @@ Entities:
     Grid:
       X: -6
       Z: -6
-  - ID: 415
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.4500916, -20.5]
@@ -8892,8 +8398,7 @@ Entities:
     Grid:
       X: -6
       Z: -21
-  - ID: 414
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.2354617, -21.5]
@@ -8910,8 +8415,7 @@ Entities:
     Grid:
       X: -6
       Z: -22
-  - ID: 413
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.009225422, -22.5]
@@ -8928,8 +8432,7 @@ Entities:
     Grid:
       X: -6
       Z: -23
-  - ID: 412
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.1506232, -23.5]
@@ -8946,8 +8449,7 @@ Entities:
     Grid:
       X: -6
       Z: -24
-  - ID: 411
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-5.5, -0.270069, -24.5]
@@ -8964,8 +8466,7 @@ Entities:
     Grid:
       X: -6
       Z: -25
-  - ID: 410
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.1038711, 24.5]
@@ -8982,8 +8483,7 @@ Entities:
     Grid:
       X: -7
       Z: 24
-  - ID: 409
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.238319, 23.5]
@@ -9000,8 +8500,7 @@ Entities:
     Grid:
       X: -7
       Z: 23
-  - ID: 408
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.2935224, 22.5]
@@ -9018,8 +8517,7 @@ Entities:
     Grid:
       X: -7
       Z: 22
-  - ID: 407
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.3898447, 5.5]
@@ -9036,8 +8534,7 @@ Entities:
     Grid:
       X: -7
       Z: 5
-  - ID: 406
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-6.5, -0.3112375, 4.5]
@@ -9054,8 +8551,7 @@ Entities:
     Grid:
       X: -7
       Z: 4
-  - ID: 405
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.1943076, 3.5]
@@ -9072,8 +8568,7 @@ Entities:
     Grid:
       X: -7
       Z: 3
-  - ID: 404
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.2750782, 2.5]
@@ -9090,8 +8585,7 @@ Entities:
     Grid:
       X: -7
       Z: 2
-  - ID: 403
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.008260292, 1.5]
@@ -9108,8 +8602,7 @@ Entities:
     Grid:
       X: -7
       Z: 1
-  - ID: 402
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.4379714, 0.5]
@@ -9126,8 +8619,7 @@ Entities:
     Grid:
       X: -7
       Z: 0
-  - ID: 401
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.120038, -0.5]
@@ -9144,8 +8636,7 @@ Entities:
     Grid:
       X: -7
       Z: -1
-  - ID: 400
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-6.5, -0.4695008, -1.5]
@@ -9162,8 +8653,7 @@ Entities:
     Grid:
       X: -7
       Z: -2
-  - ID: 399
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.495055, -20.5]
@@ -9180,8 +8670,7 @@ Entities:
     Grid:
       X: -7
       Z: -21
-  - ID: 398
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.1753636, -21.5]
@@ -9198,8 +8687,7 @@ Entities:
     Grid:
       X: -7
       Z: -22
-  - ID: 397
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.4744625, -22.5]
@@ -9216,8 +8704,7 @@ Entities:
     Grid:
       X: -7
       Z: -23
-  - ID: 396
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.2664128, -23.5]
@@ -9234,8 +8721,7 @@ Entities:
     Grid:
       X: -7
       Z: -24
-  - ID: 395
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-6.5, -0.09993643, -24.5]
@@ -9252,8 +8738,7 @@ Entities:
     Grid:
       X: -7
       Z: -25
-  - ID: 394
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.4057902, 24.5]
@@ -9270,8 +8755,7 @@ Entities:
     Grid:
       X: -8
       Z: 24
-  - ID: 393
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.07007192, 23.5]
@@ -9288,8 +8772,7 @@ Entities:
     Grid:
       X: -8
       Z: 23
-  - ID: 392
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.1893047, 22.5]
@@ -9306,8 +8789,7 @@ Entities:
     Grid:
       X: -8
       Z: 22
-  - ID: 391
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.2719027, 21.5]
@@ -9324,8 +8806,7 @@ Entities:
     Grid:
       X: -8
       Z: 21
-  - ID: 390
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.3221591, 3.5]
@@ -9342,8 +8823,7 @@ Entities:
     Grid:
       X: -8
       Z: 3
-  - ID: 389
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.4585589, 2.5]
@@ -9360,8 +8840,7 @@ Entities:
     Grid:
       X: -8
       Z: 2
-  - ID: 388
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.3974157, 1.5]
@@ -9378,8 +8857,7 @@ Entities:
     Grid:
       X: -8
       Z: 1
-  - ID: 387
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.1804304, 0.5]
@@ -9396,8 +8874,7 @@ Entities:
     Grid:
       X: -8
       Z: 0
-  - ID: 386
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.4088139, -0.5]
@@ -9414,8 +8891,7 @@ Entities:
     Grid:
       X: -8
       Z: -1
-  - ID: 385
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-7.5, 0, -3.5]
@@ -9432,8 +8908,7 @@ Entities:
     Grid:
       X: -8
       Z: -4
-  - ID: 384
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.1967949, -20.5]
@@ -9450,8 +8925,7 @@ Entities:
     Grid:
       X: -8
       Z: -21
-  - ID: 383
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.2542543, -21.5]
@@ -9468,8 +8942,7 @@ Entities:
     Grid:
       X: -8
       Z: -22
-  - ID: 382
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.05403096, -22.5]
@@ -9486,8 +8959,7 @@ Entities:
     Grid:
       X: -8
       Z: -23
-  - ID: 381
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.1531747, -23.5]
@@ -9504,8 +8976,7 @@ Entities:
     Grid:
       X: -8
       Z: -24
-  - ID: 380
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-7.5, -0.3778949, -24.5]
@@ -9522,8 +8993,7 @@ Entities:
     Grid:
       X: -8
       Z: -25
-  - ID: 379
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.2233919, 24.5]
@@ -9540,8 +9010,7 @@ Entities:
     Grid:
       X: -9
       Z: 24
-  - ID: 378
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.2443089, 23.5]
@@ -9558,8 +9027,7 @@ Entities:
     Grid:
       X: -9
       Z: 23
-  - ID: 377
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.2179293, 22.5]
@@ -9576,8 +9044,7 @@ Entities:
     Grid:
       X: -9
       Z: 22
-  - ID: 376
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.4552825, 21.5]
@@ -9594,8 +9061,7 @@ Entities:
     Grid:
       X: -9
       Z: 21
-  - ID: 375
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-8.5, -0.2433958, 6.5]
@@ -9612,8 +9078,7 @@ Entities:
     Grid:
       X: -9
       Z: 6
-  - ID: 374
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.151807, 5.5]
@@ -9630,8 +9095,7 @@ Entities:
     Grid:
       X: -9
       Z: 5
-  - ID: 373
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.3878563, 2.5]
@@ -9648,8 +9112,7 @@ Entities:
     Grid:
       X: -9
       Z: 2
-  - ID: 372
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.2292484, 1.5]
@@ -9666,8 +9129,7 @@ Entities:
     Grid:
       X: -9
       Z: 1
-  - ID: 371
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.464693, 0.5]
@@ -9684,8 +9146,7 @@ Entities:
     Grid:
       X: -9
       Z: 0
-  - ID: 370
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-8.5, -0.1897094, -0.5]
@@ -9702,8 +9163,7 @@ Entities:
     Grid:
       X: -9
       Z: -1
-  - ID: 369
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-8.5, 0, -6.5]
@@ -9720,8 +9180,7 @@ Entities:
     Grid:
       X: -9
       Z: -7
-  - ID: 368
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.3901137, -21.5]
@@ -9738,8 +9197,7 @@ Entities:
     Grid:
       X: -9
       Z: -22
-  - ID: 367
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.4078845, -22.5]
@@ -9756,8 +9214,7 @@ Entities:
     Grid:
       X: -9
       Z: -23
-  - ID: 366
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.3128093, -23.5]
@@ -9774,8 +9231,7 @@ Entities:
     Grid:
       X: -9
       Z: -24
-  - ID: 365
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-8.5, -0.1719649, -24.5]
@@ -9792,8 +9248,7 @@ Entities:
     Grid:
       X: -9
       Z: -25
-  - ID: 364
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.1842423, 24.5]
@@ -9810,8 +9265,7 @@ Entities:
     Grid:
       X: -10
       Z: 24
-  - ID: 363
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.1928553, 23.5]
@@ -9828,8 +9282,7 @@ Entities:
     Grid:
       X: -10
       Z: 23
-  - ID: 362
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.09175558, 22.5]
@@ -9846,8 +9299,7 @@ Entities:
     Grid:
       X: -10
       Z: 22
-  - ID: 361
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.156254, 5.5]
@@ -9864,8 +9316,7 @@ Entities:
     Grid:
       X: -10
       Z: 5
-  - ID: 360
-    Name:
+  - Name:
       Name: Tin
     Transform:
       Position: [-9.5, -0.3433877, 1.5]
@@ -9882,8 +9333,7 @@ Entities:
     Grid:
       X: -10
       Z: 1
-  - ID: 359
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-9.5, 0, -2.5]
@@ -9900,8 +9350,7 @@ Entities:
     Grid:
       X: -10
       Z: -3
-  - ID: 358
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.3117178, -21.5]
@@ -9918,8 +9367,7 @@ Entities:
     Grid:
       X: -10
       Z: -22
-  - ID: 357
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.3723464, -22.5]
@@ -9936,8 +9384,7 @@ Entities:
     Grid:
       X: -10
       Z: -23
-  - ID: 356
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.1439025, -23.5]
@@ -9954,8 +9401,7 @@ Entities:
     Grid:
       X: -10
       Z: -24
-  - ID: 355
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-9.5, -0.1481604, -24.5]
@@ -9972,8 +9418,7 @@ Entities:
     Grid:
       X: -10
       Z: -25
-  - ID: 354
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.359235, 24.5]
@@ -9990,8 +9435,7 @@ Entities:
     Grid:
       X: -11
       Z: 24
-  - ID: 353
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.2735044, 23.5]
@@ -10008,8 +9452,7 @@ Entities:
     Grid:
       X: -11
       Z: 23
-  - ID: 352
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.1892502, 22.5]
@@ -10026,8 +9469,7 @@ Entities:
     Grid:
       X: -11
       Z: 22
-  - ID: 351
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.2254619, 5.5]
@@ -10044,8 +9486,7 @@ Entities:
     Grid:
       X: -11
       Z: 5
-  - ID: 350
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.2466634, 4.5]
@@ -10062,8 +9503,7 @@ Entities:
     Grid:
       X: -11
       Z: 4
-  - ID: 349
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-10.5, 0, -7.5]
@@ -10080,8 +9520,7 @@ Entities:
     Grid:
       X: -11
       Z: -8
-  - ID: 348
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [-10.5, -0.3658612, -8.5]
@@ -10098,8 +9537,7 @@ Entities:
     Grid:
       X: -11
       Z: -9
-  - ID: 347
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.1291479, -21.5]
@@ -10116,8 +9554,7 @@ Entities:
     Grid:
       X: -11
       Z: -22
-  - ID: 346
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.3245578, -22.5]
@@ -10134,8 +9571,7 @@ Entities:
     Grid:
       X: -11
       Z: -23
-  - ID: 345
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.4045686, -23.5]
@@ -10152,8 +9588,7 @@ Entities:
     Grid:
       X: -11
       Z: -24
-  - ID: 344
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-10.5, -0.08449502, -24.5]
@@ -10170,8 +9605,7 @@ Entities:
     Grid:
       X: -11
       Z: -25
-  - ID: 343
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.4542168, 24.5]
@@ -10188,8 +9622,7 @@ Entities:
     Grid:
       X: -12
       Z: 24
-  - ID: 342
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.0215119, 23.5]
@@ -10206,8 +9639,7 @@ Entities:
     Grid:
       X: -12
       Z: 23
-  - ID: 341
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.2024907, 22.5]
@@ -10224,8 +9656,7 @@ Entities:
     Grid:
       X: -12
       Z: 22
-  - ID: 340
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.007701721, 7.5]
@@ -10242,8 +9673,7 @@ Entities:
     Grid:
       X: -12
       Z: 7
-  - ID: 339
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.1612554, 6.5]
@@ -10260,8 +9690,7 @@ Entities:
     Grid:
       X: -12
       Z: 6
-  - ID: 338
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.410597, 5.5]
@@ -10278,8 +9707,7 @@ Entities:
     Grid:
       X: -12
       Z: 5
-  - ID: 337
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.02657628, 4.5]
@@ -10296,8 +9724,7 @@ Entities:
     Grid:
       X: -12
       Z: 4
-  - ID: 336
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [-11.5, -0.1765793, -11.5]
@@ -10314,8 +9741,7 @@ Entities:
     Grid:
       X: -12
       Z: -12
-  - ID: 335
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.2764406, -12.5]
@@ -10332,8 +9758,7 @@ Entities:
     Grid:
       X: -12
       Z: -13
-  - ID: 334
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-11.5, 0, -13.5]
@@ -10350,8 +9775,7 @@ Entities:
     Grid:
       X: -12
       Z: -14
-  - ID: 333
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.02988977, -20.5]
@@ -10368,8 +9792,7 @@ Entities:
     Grid:
       X: -12
       Z: -21
-  - ID: 332
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.3787518, -21.5]
@@ -10386,8 +9809,7 @@ Entities:
     Grid:
       X: -12
       Z: -22
-  - ID: 331
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.2876043, -22.5]
@@ -10404,8 +9826,7 @@ Entities:
     Grid:
       X: -12
       Z: -23
-  - ID: 330
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.3259843, -23.5]
@@ -10422,8 +9843,7 @@ Entities:
     Grid:
       X: -12
       Z: -24
-  - ID: 329
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-11.5, -0.4780673, -24.5]
@@ -10440,8 +9860,7 @@ Entities:
     Grid:
       X: -12
       Z: -25
-  - ID: 328
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.4774717, 24.5]
@@ -10458,8 +9877,7 @@ Entities:
     Grid:
       X: -13
       Z: 24
-  - ID: 327
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.4710253, 23.5]
@@ -10476,8 +9894,7 @@ Entities:
     Grid:
       X: -13
       Z: 23
-  - ID: 326
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.2451507, 6.5]
@@ -10494,8 +9911,7 @@ Entities:
     Grid:
       X: -13
       Z: 6
-  - ID: 325
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.06598665, 5.5]
@@ -10512,8 +9928,7 @@ Entities:
     Grid:
       X: -13
       Z: 5
-  - ID: 324
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.11171, 4.5]
@@ -10530,8 +9945,7 @@ Entities:
     Grid:
       X: -13
       Z: 4
-  - ID: 323
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.04822727, 3.5]
@@ -10548,8 +9962,7 @@ Entities:
     Grid:
       X: -13
       Z: 3
-  - ID: 322
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.246221, 2.5]
@@ -10566,8 +9979,7 @@ Entities:
     Grid:
       X: -13
       Z: 2
-  - ID: 321
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-12.5, 0, -7.5]
@@ -10584,8 +9996,7 @@ Entities:
     Grid:
       X: -13
       Z: -8
-  - ID: 320
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [-12.5, -0.1208456, -10.5]
@@ -10602,8 +10013,7 @@ Entities:
     Grid:
       X: -13
       Z: -11
-  - ID: 319
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.1051509, -11.5]
@@ -10620,8 +10030,7 @@ Entities:
     Grid:
       X: -13
       Z: -12
-  - ID: 318
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.1948694, -12.5]
@@ -10638,8 +10047,7 @@ Entities:
     Grid:
       X: -13
       Z: -13
-  - ID: 317
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.438682, -13.5]
@@ -10656,8 +10064,7 @@ Entities:
     Grid:
       X: -13
       Z: -14
-  - ID: 316
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.390126, -14.5]
@@ -10674,8 +10081,7 @@ Entities:
     Grid:
       X: -13
       Z: -15
-  - ID: 315
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [-12.5, -0.08143606, -15.5]
@@ -10692,8 +10098,7 @@ Entities:
     Grid:
       X: -13
       Z: -16
-  - ID: 314
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.05560138, -20.5]
@@ -10710,8 +10115,7 @@ Entities:
     Grid:
       X: -13
       Z: -21
-  - ID: 313
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.01663428, -21.5]
@@ -10728,8 +10132,7 @@ Entities:
     Grid:
       X: -13
       Z: -22
-  - ID: 312
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.1846234, -22.5]
@@ -10746,8 +10149,7 @@ Entities:
     Grid:
       X: -13
       Z: -23
-  - ID: 311
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.1719198, -23.5]
@@ -10764,8 +10166,7 @@ Entities:
     Grid:
       X: -13
       Z: -24
-  - ID: 310
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-12.5, -0.4500269, -24.5]
@@ -10782,8 +10183,7 @@ Entities:
     Grid:
       X: -13
       Z: -25
-  - ID: 309
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.4438631, 24.5]
@@ -10800,8 +10200,7 @@ Entities:
     Grid:
       X: -14
       Z: 24
-  - ID: 308
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.1688597, 23.5]
@@ -10818,8 +10217,7 @@ Entities:
     Grid:
       X: -14
       Z: 23
-  - ID: 307
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.2720281, 6.5]
@@ -10836,8 +10234,7 @@ Entities:
     Grid:
       X: -14
       Z: 6
-  - ID: 306
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.2446263, 5.5]
@@ -10854,8 +10251,7 @@ Entities:
     Grid:
       X: -14
       Z: 5
-  - ID: 305
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.1239238, 4.5]
@@ -10872,8 +10268,7 @@ Entities:
     Grid:
       X: -14
       Z: 4
-  - ID: 304
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.245432, 3.5]
@@ -10890,8 +10285,7 @@ Entities:
     Grid:
       X: -14
       Z: 3
-  - ID: 303
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.02397214, 2.5]
@@ -10908,8 +10302,7 @@ Entities:
     Grid:
       X: -14
       Z: 2
-  - ID: 302
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.4723936, -8.5]
@@ -10926,8 +10319,7 @@ Entities:
     Grid:
       X: -14
       Z: -9
-  - ID: 301
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.1509137, -9.5]
@@ -10944,8 +10336,7 @@ Entities:
     Grid:
       X: -14
       Z: -10
-  - ID: 300
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.4513581, -10.5]
@@ -10962,8 +10353,7 @@ Entities:
     Grid:
       X: -14
       Z: -11
-  - ID: 299
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.4117277, -11.5]
@@ -10980,8 +10370,7 @@ Entities:
     Grid:
       X: -14
       Z: -12
-  - ID: 298
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [-13.5, -0.02482721, -12.5]
@@ -10998,8 +10387,7 @@ Entities:
     Grid:
       X: -14
       Z: -13
-  - ID: 297
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.4908616, -20.5]
@@ -11016,8 +10404,7 @@ Entities:
     Grid:
       X: -14
       Z: -21
-  - ID: 296
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.2086335, -21.5]
@@ -11034,8 +10421,7 @@ Entities:
     Grid:
       X: -14
       Z: -22
-  - ID: 295
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.4113025, -22.5]
@@ -11052,8 +10438,7 @@ Entities:
     Grid:
       X: -14
       Z: -23
-  - ID: 294
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.1199763, -23.5]
@@ -11070,8 +10455,7 @@ Entities:
     Grid:
       X: -14
       Z: -24
-  - ID: 293
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-13.5, -0.2523855, -24.5]
@@ -11088,8 +10472,7 @@ Entities:
     Grid:
       X: -14
       Z: -25
-  - ID: 292
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.0919539, 24.5]
@@ -11106,8 +10489,7 @@ Entities:
     Grid:
       X: -15
       Z: 24
-  - ID: 291
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.126478, 23.5]
@@ -11124,8 +10506,7 @@ Entities:
     Grid:
       X: -15
       Z: 23
-  - ID: 290
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.06165947, 22.5]
@@ -11142,8 +10523,7 @@ Entities:
     Grid:
       X: -15
       Z: 22
-  - ID: 289
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.02023556, 4.5]
@@ -11160,8 +10540,7 @@ Entities:
     Grid:
       X: -15
       Z: 4
-  - ID: 288
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.1199581, 3.5]
@@ -11178,8 +10557,7 @@ Entities:
     Grid:
       X: -15
       Z: 3
-  - ID: 287
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.3812107, -3.5]
@@ -11196,8 +10574,7 @@ Entities:
     Grid:
       X: -15
       Z: -4
-  - ID: 286
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.03798334, -4.5]
@@ -11214,8 +10591,7 @@ Entities:
     Grid:
       X: -15
       Z: -5
-  - ID: 285
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.1911665, -5.5]
@@ -11232,8 +10608,7 @@ Entities:
     Grid:
       X: -15
       Z: -6
-  - ID: 284
-    Name:
+  - Name:
       Name: Iron
     Transform:
       Position: [-14.5, -0.200904, -16.5]
@@ -11250,8 +10625,7 @@ Entities:
     Grid:
       X: -15
       Z: -17
-  - ID: 283
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-14.5, 0, -17.5]
@@ -11268,8 +10642,7 @@ Entities:
     Grid:
       X: -15
       Z: -18
-  - ID: 282
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.0997756, -20.5]
@@ -11286,8 +10659,7 @@ Entities:
     Grid:
       X: -15
       Z: -21
-  - ID: 281
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.1754762, -21.5]
@@ -11304,8 +10676,7 @@ Entities:
     Grid:
       X: -15
       Z: -22
-  - ID: 280
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.2193334, -22.5]
@@ -11322,8 +10693,7 @@ Entities:
     Grid:
       X: -15
       Z: -23
-  - ID: 279
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.3110276, -23.5]
@@ -11340,8 +10710,7 @@ Entities:
     Grid:
       X: -15
       Z: -24
-  - ID: 278
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-14.5, -0.2669666, -24.5]
@@ -11358,8 +10727,7 @@ Entities:
     Grid:
       X: -15
       Z: -25
-  - ID: 277
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.4265155, 24.5]
@@ -11376,8 +10744,7 @@ Entities:
     Grid:
       X: -16
       Z: 24
-  - ID: 276
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.3401435, 23.5]
@@ -11394,8 +10761,7 @@ Entities:
     Grid:
       X: -16
       Z: 23
-  - ID: 275
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.0724774, 22.5]
@@ -11412,8 +10778,7 @@ Entities:
     Grid:
       X: -16
       Z: 22
-  - ID: 274
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.004046956, 5.5]
@@ -11430,8 +10795,7 @@ Entities:
     Grid:
       X: -16
       Z: 5
-  - ID: 273
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.2749301, 4.5]
@@ -11448,8 +10812,7 @@ Entities:
     Grid:
       X: -16
       Z: 4
-  - ID: 272
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.3136922, 0.5]
@@ -11466,8 +10829,7 @@ Entities:
     Grid:
       X: -16
       Z: 0
-  - ID: 271
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.2898523, -0.5]
@@ -11484,8 +10846,7 @@ Entities:
     Grid:
       X: -16
       Z: -1
-  - ID: 270
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.03877851, -1.5]
@@ -11502,8 +10863,7 @@ Entities:
     Grid:
       X: -16
       Z: -2
-  - ID: 269
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.4346461, -2.5]
@@ -11520,8 +10880,7 @@ Entities:
     Grid:
       X: -16
       Z: -3
-  - ID: 268
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.4010557, -3.5]
@@ -11538,8 +10897,7 @@ Entities:
     Grid:
       X: -16
       Z: -4
-  - ID: 267
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.06803428, -4.5]
@@ -11556,8 +10914,7 @@ Entities:
     Grid:
       X: -16
       Z: -5
-  - ID: 266
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.1413366, -5.5]
@@ -11574,8 +10931,7 @@ Entities:
     Grid:
       X: -16
       Z: -6
-  - ID: 265
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.07276949, -6.5]
@@ -11592,8 +10948,7 @@ Entities:
     Grid:
       X: -16
       Z: -7
-  - ID: 264
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.04767759, -7.5]
@@ -11610,8 +10965,7 @@ Entities:
     Grid:
       X: -16
       Z: -8
-  - ID: 263
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.1319015, -8.5]
@@ -11628,8 +10982,7 @@ Entities:
     Grid:
       X: -16
       Z: -9
-  - ID: 262
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-15.5, 0, -15.5]
@@ -11646,8 +10999,7 @@ Entities:
     Grid:
       X: -16
       Z: -16
-  - ID: 261
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.06649802, -20.5]
@@ -11664,8 +11016,7 @@ Entities:
     Grid:
       X: -16
       Z: -21
-  - ID: 260
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.4553238, -21.5]
@@ -11682,8 +11033,7 @@ Entities:
     Grid:
       X: -16
       Z: -22
-  - ID: 259
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.3749705, -22.5]
@@ -11700,8 +11050,7 @@ Entities:
     Grid:
       X: -16
       Z: -23
-  - ID: 258
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.2157069, -23.5]
@@ -11718,8 +11067,7 @@ Entities:
     Grid:
       X: -16
       Z: -24
-  - ID: 257
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-15.5, -0.3300597, -24.5]
@@ -11736,8 +11084,7 @@ Entities:
     Grid:
       X: -16
       Z: -25
-  - ID: 256
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.4000342, 24.5]
@@ -11754,8 +11101,7 @@ Entities:
     Grid:
       X: -17
       Z: 24
-  - ID: 255
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.02252977, 23.5]
@@ -11772,8 +11118,7 @@ Entities:
     Grid:
       X: -17
       Z: 23
-  - ID: 254
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.1299352, 22.5]
@@ -11790,8 +11135,7 @@ Entities:
     Grid:
       X: -17
       Z: 22
-  - ID: 253
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.4279376, 21.5]
@@ -11808,8 +11152,7 @@ Entities:
     Grid:
       X: -17
       Z: 21
-  - ID: 252
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-16.5, 0, 9.5]
@@ -11826,8 +11169,7 @@ Entities:
     Grid:
       X: -17
       Z: 9
-  - ID: 251
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.04221793, 4.5]
@@ -11844,8 +11186,7 @@ Entities:
     Grid:
       X: -17
       Z: 4
-  - ID: 250
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.3397599, 3.5]
@@ -11862,8 +11203,7 @@ Entities:
     Grid:
       X: -17
       Z: 3
-  - ID: 249
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.4343474, 2.5]
@@ -11880,8 +11220,7 @@ Entities:
     Grid:
       X: -17
       Z: 2
-  - ID: 248
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.1815932, 1.5]
@@ -11898,8 +11237,7 @@ Entities:
     Grid:
       X: -17
       Z: 1
-  - ID: 247
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.4086516, 0.5]
@@ -11916,8 +11254,7 @@ Entities:
     Grid:
       X: -17
       Z: 0
-  - ID: 246
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.488501, -0.5]
@@ -11934,8 +11271,7 @@ Entities:
     Grid:
       X: -17
       Z: -1
-  - ID: 245
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.3874552, -1.5]
@@ -11952,8 +11288,7 @@ Entities:
     Grid:
       X: -17
       Z: -2
-  - ID: 244
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.01715866, -2.5]
@@ -11970,8 +11305,7 @@ Entities:
     Grid:
       X: -17
       Z: -3
-  - ID: 243
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.002317113, -3.5]
@@ -11988,8 +11322,7 @@ Entities:
     Grid:
       X: -17
       Z: -4
-  - ID: 242
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.4899628, -4.5]
@@ -12006,8 +11339,7 @@ Entities:
     Grid:
       X: -17
       Z: -5
-  - ID: 241
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.480949, -5.5]
@@ -12024,8 +11356,7 @@ Entities:
     Grid:
       X: -17
       Z: -6
-  - ID: 240
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-16.5, 0, -6.5]
@@ -12042,8 +11373,7 @@ Entities:
     Grid:
       X: -17
       Z: -7
-  - ID: 239
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.3021157, -20.5]
@@ -12060,8 +11390,7 @@ Entities:
     Grid:
       X: -17
       Z: -21
-  - ID: 238
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.2213391, -21.5]
@@ -12078,8 +11407,7 @@ Entities:
     Grid:
       X: -17
       Z: -22
-  - ID: 237
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.4272255, -22.5]
@@ -12096,8 +11424,7 @@ Entities:
     Grid:
       X: -17
       Z: -23
-  - ID: 236
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.03908776, -23.5]
@@ -12114,8 +11441,7 @@ Entities:
     Grid:
       X: -17
       Z: -24
-  - ID: 235
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-16.5, -0.2237922, -24.5]
@@ -12132,8 +11458,7 @@ Entities:
     Grid:
       X: -17
       Z: -25
-  - ID: 234
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.4980673, 24.5]
@@ -12150,8 +11475,7 @@ Entities:
     Grid:
       X: -18
       Z: 24
-  - ID: 233
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.273296, 23.5]
@@ -12168,8 +11492,7 @@ Entities:
     Grid:
       X: -18
       Z: 23
-  - ID: 232
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.2691712, 22.5]
@@ -12186,8 +11509,7 @@ Entities:
     Grid:
       X: -18
       Z: 22
-  - ID: 231
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-17.5, 0, 15.5]
@@ -12204,8 +11526,7 @@ Entities:
     Grid:
       X: -18
       Z: 15
-  - ID: 230
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.251595, 11.5]
@@ -12222,8 +11543,7 @@ Entities:
     Grid:
       X: -18
       Z: 11
-  - ID: 229
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-17.5, -0.07618901, 10.5]
@@ -12240,8 +11560,7 @@ Entities:
     Grid:
       X: -18
       Z: 10
-  - ID: 228
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.2791344, 7.5]
@@ -12258,8 +11577,7 @@ Entities:
     Grid:
       X: -18
       Z: 7
-  - ID: 227
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-17.5, -0.4566687, 6.5]
@@ -12276,8 +11594,7 @@ Entities:
     Grid:
       X: -18
       Z: 6
-  - ID: 226
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.2527493, 5.5]
@@ -12294,8 +11611,7 @@ Entities:
     Grid:
       X: -18
       Z: 5
-  - ID: 225
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.1144885, 4.5]
@@ -12312,8 +11628,7 @@ Entities:
     Grid:
       X: -18
       Z: 4
-  - ID: 224
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.4562888, 3.5]
@@ -12330,8 +11645,7 @@ Entities:
     Grid:
       X: -18
       Z: 3
-  - ID: 223
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-17.5, -0.04191069, 2.5]
@@ -12348,8 +11662,7 @@ Entities:
     Grid:
       X: -18
       Z: 2
-  - ID: 222
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.3602467, 1.5]
@@ -12366,8 +11679,7 @@ Entities:
     Grid:
       X: -18
       Z: 1
-  - ID: 221
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.2252708, 0.5]
@@ -12384,8 +11696,7 @@ Entities:
     Grid:
       X: -18
       Z: 0
-  - ID: 220
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.4941897, -0.5]
@@ -12402,8 +11713,7 @@ Entities:
     Grid:
       X: -18
       Z: -1
-  - ID: 219
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.3740758, -1.5]
@@ -12420,8 +11730,7 @@ Entities:
     Grid:
       X: -18
       Z: -2
-  - ID: 218
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.3580503, -2.5]
@@ -12438,8 +11747,7 @@ Entities:
     Grid:
       X: -18
       Z: -3
-  - ID: 217
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.3446073, -3.5]
@@ -12456,8 +11764,7 @@ Entities:
     Grid:
       X: -18
       Z: -4
-  - ID: 216
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.264921, -20.5]
@@ -12474,8 +11781,7 @@ Entities:
     Grid:
       X: -18
       Z: -21
-  - ID: 215
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.3270395, -21.5]
@@ -12492,8 +11798,7 @@ Entities:
     Grid:
       X: -18
       Z: -22
-  - ID: 214
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.1701099, -22.5]
@@ -12510,8 +11815,7 @@ Entities:
     Grid:
       X: -18
       Z: -23
-  - ID: 213
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.1314856, -23.5]
@@ -12528,8 +11832,7 @@ Entities:
     Grid:
       X: -18
       Z: -24
-  - ID: 212
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-17.5, -0.2359784, -24.5]
@@ -12546,8 +11849,7 @@ Entities:
     Grid:
       X: -18
       Z: -25
-  - ID: 211
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.300991, 24.5]
@@ -12564,8 +11866,7 @@ Entities:
     Grid:
       X: -19
       Z: 24
-  - ID: 210
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.05977359, 23.5]
@@ -12582,8 +11883,7 @@ Entities:
     Grid:
       X: -19
       Z: 23
-  - ID: 209
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.08282436, 22.5]
@@ -12600,8 +11900,7 @@ Entities:
     Grid:
       X: -19
       Z: 22
-  - ID: 208
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.31018, 21.5]
@@ -12618,8 +11917,7 @@ Entities:
     Grid:
       X: -19
       Z: 21
-  - ID: 207
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-18.5, -0.2642666, 13.5]
@@ -12636,8 +11934,7 @@ Entities:
     Grid:
       X: -19
       Z: 13
-  - ID: 206
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.4313391, 9.5]
@@ -12654,8 +11951,7 @@ Entities:
     Grid:
       X: -19
       Z: 9
-  - ID: 205
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-18.5, -0.1556075, 8.5]
@@ -12672,8 +11968,7 @@ Entities:
     Grid:
       X: -19
       Z: 8
-  - ID: 204
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.2180588, 7.5]
@@ -12690,8 +11985,7 @@ Entities:
     Grid:
       X: -19
       Z: 7
-  - ID: 203
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.3971423, 6.5]
@@ -12708,8 +12002,7 @@ Entities:
     Grid:
       X: -19
       Z: 6
-  - ID: 202
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-18.5, -0.4637464, 5.5]
@@ -12726,8 +12019,7 @@ Entities:
     Grid:
       X: -19
       Z: 5
-  - ID: 201
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.08109115, 4.5]
@@ -12744,8 +12036,7 @@ Entities:
     Grid:
       X: -19
       Z: 4
-  - ID: 200
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.1942849, 3.5]
@@ -12762,8 +12053,7 @@ Entities:
     Grid:
       X: -19
       Z: 3
-  - ID: 199
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.1685613, 2.5]
@@ -12780,8 +12070,7 @@ Entities:
     Grid:
       X: -19
       Z: 2
-  - ID: 198
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-18.5, 0, -0.5]
@@ -12798,8 +12087,7 @@ Entities:
     Grid:
       X: -19
       Z: -1
-  - ID: 197
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.193648, -5.5]
@@ -12816,8 +12104,7 @@ Entities:
     Grid:
       X: -19
       Z: -6
-  - ID: 196
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.2346953, -6.5]
@@ -12834,8 +12121,7 @@ Entities:
     Grid:
       X: -19
       Z: -7
-  - ID: 195
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.1974541, -7.5]
@@ -12852,8 +12138,7 @@ Entities:
     Grid:
       X: -19
       Z: -8
-  - ID: 194
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.2844118, -20.5]
@@ -12870,8 +12155,7 @@ Entities:
     Grid:
       X: -19
       Z: -21
-  - ID: 193
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.07721921, -21.5]
@@ -12888,8 +12172,7 @@ Entities:
     Grid:
       X: -19
       Z: -22
-  - ID: 192
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.0649531, -22.5]
@@ -12906,8 +12189,7 @@ Entities:
     Grid:
       X: -19
       Z: -23
-  - ID: 191
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.4824832, -23.5]
@@ -12924,8 +12206,7 @@ Entities:
     Grid:
       X: -19
       Z: -24
-  - ID: 190
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-18.5, -0.4670053, -24.5]
@@ -12942,8 +12223,7 @@ Entities:
     Grid:
       X: -19
       Z: -25
-  - ID: 189
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.1781726, 24.5]
@@ -12960,8 +12240,7 @@ Entities:
     Grid:
       X: -20
       Z: 24
-  - ID: 188
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.3895836, 23.5]
@@ -12978,8 +12257,7 @@ Entities:
     Grid:
       X: -20
       Z: 23
-  - ID: 187
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.2964119, 22.5]
@@ -12996,8 +12274,7 @@ Entities:
     Grid:
       X: -20
       Z: 22
-  - ID: 186
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.2653988, 21.5]
@@ -13014,8 +12291,7 @@ Entities:
     Grid:
       X: -20
       Z: 21
-  - ID: 185
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-19.5, 0, 11.5]
@@ -13032,8 +12308,7 @@ Entities:
     Grid:
       X: -20
       Z: 11
-  - ID: 184
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-19.5, -0.2021043, 10.5]
@@ -13050,8 +12325,7 @@ Entities:
     Grid:
       X: -20
       Z: 10
-  - ID: 183
-    Name:
+  - Name:
       Name: Mithril
     Transform:
       Position: [-19.5, -0.03792715, 9.5]
@@ -13068,8 +12342,7 @@ Entities:
     Grid:
       X: -20
       Z: 9
-  - ID: 182
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-19.5, 0, 3.5]
@@ -13086,8 +12359,7 @@ Entities:
     Grid:
       X: -20
       Z: 3
-  - ID: 181
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.104034, -4.5]
@@ -13104,8 +12376,7 @@ Entities:
     Grid:
       X: -20
       Z: -5
-  - ID: 180
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.1902229, -5.5]
@@ -13122,8 +12393,7 @@ Entities:
     Grid:
       X: -20
       Z: -6
-  - ID: 179
-    Name:
+  - Name:
       Name: Tree
     Transform:
       Position: [-19.5, 0, -6.5]
@@ -13140,8 +12410,7 @@ Entities:
     Grid:
       X: -20
       Z: -7
-  - ID: 178
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.1961602, -21.5]
@@ -13158,8 +12427,7 @@ Entities:
     Grid:
       X: -20
       Z: -22
-  - ID: 177
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.3786001, -22.5]
@@ -13176,8 +12444,7 @@ Entities:
     Grid:
       X: -20
       Z: -23
-  - ID: 176
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.3399099, -23.5]
@@ -13194,8 +12461,7 @@ Entities:
     Grid:
       X: -20
       Z: -24
-  - ID: 175
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-19.5, -0.1429195, -24.5]
@@ -13212,8 +12478,7 @@ Entities:
     Grid:
       X: -20
       Z: -25
-  - ID: 174
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-20.5, -0.3476164, 24.5]
@@ -13230,8 +12495,7 @@ Entities:
     Grid:
       X: -21
       Z: 24
-  - ID: 173
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-20.5, -0.4585968, 23.5]
@@ -13248,8 +12512,7 @@ Entities:
     Grid:
       X: -21
       Z: 23
-  - ID: 172
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-20.5, -0.3663993, 22.5]
@@ -13266,8 +12529,7 @@ Entities:
     Grid:
       X: -21
       Z: 22
-  - ID: 171
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-20.5, -0.2748618, -21.5]
@@ -13284,8 +12546,7 @@ Entities:
     Grid:
       X: -21
       Z: -22
-  - ID: 170
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-20.5, -0.2972518, -22.5]
@@ -13302,8 +12563,7 @@ Entities:
     Grid:
       X: -21
       Z: -23
-  - ID: 169
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-20.5, -0.292632, -23.5]
@@ -13320,8 +12580,7 @@ Entities:
     Grid:
       X: -21
       Z: -24
-  - ID: 168
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-20.5, -0.3967988, -24.5]
@@ -13338,8 +12597,7 @@ Entities:
     Grid:
       X: -21
       Z: -25
-  - ID: 167
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4154143, 24.5]
@@ -13356,8 +12614,7 @@ Entities:
     Grid:
       X: -22
       Z: 24
-  - ID: 166
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.03379769, 23.5]
@@ -13374,8 +12631,7 @@ Entities:
     Grid:
       X: -22
       Z: 23
-  - ID: 165
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1758298, 22.5]
@@ -13392,8 +12648,7 @@ Entities:
     Grid:
       X: -22
       Z: 22
-  - ID: 164
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4937298, 21.5]
@@ -13410,8 +12665,7 @@ Entities:
     Grid:
       X: -22
       Z: 21
-  - ID: 163
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.2366444, 20.5]
@@ -13428,8 +12682,7 @@ Entities:
     Grid:
       X: -22
       Z: 20
-  - ID: 162
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.3894489, 9.5]
@@ -13446,8 +12699,7 @@ Entities:
     Grid:
       X: -22
       Z: 9
-  - ID: 161
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.3080224, 8.5]
@@ -13464,8 +12716,7 @@ Entities:
     Grid:
       X: -22
       Z: 8
-  - ID: 160
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4775088, 6.5]
@@ -13482,8 +12733,7 @@ Entities:
     Grid:
       X: -22
       Z: 6
-  - ID: 159
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1255419, 5.5]
@@ -13500,8 +12750,7 @@ Entities:
     Grid:
       X: -22
       Z: 5
-  - ID: 158
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4242339, 4.5]
@@ -13518,8 +12767,7 @@ Entities:
     Grid:
       X: -22
       Z: 4
-  - ID: 157
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.09829763, 3.5]
@@ -13536,8 +12784,7 @@ Entities:
     Grid:
       X: -22
       Z: 3
-  - ID: 156
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4536824, 1.5]
@@ -13554,8 +12801,7 @@ Entities:
     Grid:
       X: -22
       Z: 1
-  - ID: 155
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1749919, 0.5]
@@ -13572,8 +12818,7 @@ Entities:
     Grid:
       X: -22
       Z: 0
-  - ID: 154
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1086189, -0.5]
@@ -13590,8 +12835,7 @@ Entities:
     Grid:
       X: -22
       Z: -1
-  - ID: 153
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4646318, -1.5]
@@ -13608,8 +12852,7 @@ Entities:
     Grid:
       X: -22
       Z: -2
-  - ID: 152
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.006769563, -15.5]
@@ -13626,8 +12869,7 @@ Entities:
     Grid:
       X: -22
       Z: -16
-  - ID: 151
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1217625, -16.5]
@@ -13644,8 +12886,7 @@ Entities:
     Grid:
       X: -22
       Z: -17
-  - ID: 150
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1499159, -17.5]
@@ -13662,8 +12903,7 @@ Entities:
     Grid:
       X: -22
       Z: -18
-  - ID: 149
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4071424, -18.5]
@@ -13680,8 +12920,7 @@ Entities:
     Grid:
       X: -22
       Z: -19
-  - ID: 148
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1662241, -19.5]
@@ -13698,8 +12937,7 @@ Entities:
     Grid:
       X: -22
       Z: -20
-  - ID: 147
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1271411, -20.5]
@@ -13716,8 +12954,7 @@ Entities:
     Grid:
       X: -22
       Z: -21
-  - ID: 146
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4942608, -21.5]
@@ -13734,8 +12971,7 @@ Entities:
     Grid:
       X: -22
       Z: -22
-  - ID: 145
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4203586, -22.5]
@@ -13752,8 +12988,7 @@ Entities:
     Grid:
       X: -22
       Z: -23
-  - ID: 144
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.4048673, -23.5]
@@ -13770,8 +13005,7 @@ Entities:
     Grid:
       X: -22
       Z: -24
-  - ID: 143
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-21.5, -0.1287541, -24.5]
@@ -13788,8 +13022,7 @@ Entities:
     Grid:
       X: -22
       Z: -25
-  - ID: 142
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.115078, 24.5]
@@ -13806,8 +13039,7 @@ Entities:
     Grid:
       X: -23
       Z: 24
-  - ID: 141
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.074647, 23.5]
@@ -13824,8 +13056,7 @@ Entities:
     Grid:
       X: -23
       Z: 23
-  - ID: 140
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3808656, 22.5]
@@ -13842,8 +13073,7 @@ Entities:
     Grid:
       X: -23
       Z: 22
-  - ID: 139
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.06931222, 21.5]
@@ -13860,8 +13090,7 @@ Entities:
     Grid:
       X: -23
       Z: 21
-  - ID: 138
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.07902879, 20.5]
@@ -13878,8 +13107,7 @@ Entities:
     Grid:
       X: -23
       Z: 20
-  - ID: 137
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2736078, 19.5]
@@ -13896,8 +13124,7 @@ Entities:
     Grid:
       X: -23
       Z: 19
-  - ID: 136
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2904783, 18.5]
@@ -13914,8 +13141,7 @@ Entities:
     Grid:
       X: -23
       Z: 18
-  - ID: 135
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.4796457, 17.5]
@@ -13932,8 +13158,7 @@ Entities:
     Grid:
       X: -23
       Z: 17
-  - ID: 134
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2115826, 11.5]
@@ -13950,8 +13175,7 @@ Entities:
     Grid:
       X: -23
       Z: 11
-  - ID: 133
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.4454516, 10.5]
@@ -13968,8 +13192,7 @@ Entities:
     Grid:
       X: -23
       Z: 10
-  - ID: 132
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2063333, 9.5]
@@ -13986,8 +13209,7 @@ Entities:
     Grid:
       X: -23
       Z: 9
-  - ID: 131
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3495384, 8.5]
@@ -14004,8 +13226,7 @@ Entities:
     Grid:
       X: -23
       Z: 8
-  - ID: 130
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.470037, 7.5]
@@ -14022,8 +13243,7 @@ Entities:
     Grid:
       X: -23
       Z: 7
-  - ID: 129
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2529785, 6.5]
@@ -14040,8 +13260,7 @@ Entities:
     Grid:
       X: -23
       Z: 6
-  - ID: 128
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.4104204, 5.5]
@@ -14058,8 +13277,7 @@ Entities:
     Grid:
       X: -23
       Z: 5
-  - ID: 127
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.1275476, 4.5]
@@ -14076,8 +13294,7 @@ Entities:
     Grid:
       X: -23
       Z: 4
-  - ID: 126
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.410623, 3.5]
@@ -14094,8 +13311,7 @@ Entities:
     Grid:
       X: -23
       Z: 3
-  - ID: 125
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3756335, 2.5]
@@ -14112,8 +13328,7 @@ Entities:
     Grid:
       X: -23
       Z: 2
-  - ID: 124
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.008886948, 1.5]
@@ -14130,8 +13345,7 @@ Entities:
     Grid:
       X: -23
       Z: 1
-  - ID: 123
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.111906, 0.5]
@@ -14148,8 +13362,7 @@ Entities:
     Grid:
       X: -23
       Z: 0
-  - ID: 122
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.4040878, -0.5]
@@ -14166,8 +13379,7 @@ Entities:
     Grid:
       X: -23
       Z: -1
-  - ID: 121
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2926339, -1.5]
@@ -14184,8 +13396,7 @@ Entities:
     Grid:
       X: -23
       Z: -2
-  - ID: 120
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.4383787, -2.5]
@@ -14202,8 +13413,7 @@ Entities:
     Grid:
       X: -23
       Z: -3
-  - ID: 119
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.1701929, -3.5]
@@ -14220,8 +13430,7 @@ Entities:
     Grid:
       X: -23
       Z: -4
-  - ID: 118
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2868773, -4.5]
@@ -14238,8 +13447,7 @@ Entities:
     Grid:
       X: -23
       Z: -5
-  - ID: 117
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.479872, -5.5]
@@ -14256,8 +13464,7 @@ Entities:
     Grid:
       X: -23
       Z: -6
-  - ID: 116
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3869586, -11.5]
@@ -14274,8 +13481,7 @@ Entities:
     Grid:
       X: -23
       Z: -12
-  - ID: 115
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.249182, -12.5]
@@ -14292,8 +13498,7 @@ Entities:
     Grid:
       X: -23
       Z: -13
-  - ID: 114
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.2280164, -13.5]
@@ -14310,8 +13515,7 @@ Entities:
     Grid:
       X: -23
       Z: -14
-  - ID: 113
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.05949884, -14.5]
@@ -14328,8 +13532,7 @@ Entities:
     Grid:
       X: -23
       Z: -15
-  - ID: 112
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3219805, -15.5]
@@ -14346,8 +13549,7 @@ Entities:
     Grid:
       X: -23
       Z: -16
-  - ID: 111
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.08130587, -16.5]
@@ -14364,8 +13566,7 @@ Entities:
     Grid:
       X: -23
       Z: -17
-  - ID: 110
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3553519, -17.5]
@@ -14382,8 +13583,7 @@ Entities:
     Grid:
       X: -23
       Z: -18
-  - ID: 109
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.327549, -18.5]
@@ -14400,8 +13600,7 @@ Entities:
     Grid:
       X: -23
       Z: -19
-  - ID: 108
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.001409216, -19.5]
@@ -14418,8 +13617,7 @@ Entities:
     Grid:
       X: -23
       Z: -20
-  - ID: 107
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3398513, -20.5]
@@ -14436,8 +13634,7 @@ Entities:
     Grid:
       X: -23
       Z: -21
-  - ID: 106
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3528871, -21.5]
@@ -14454,8 +13651,7 @@ Entities:
     Grid:
       X: -23
       Z: -22
-  - ID: 105
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.1380125, -22.5]
@@ -14472,8 +13668,7 @@ Entities:
     Grid:
       X: -23
       Z: -23
-  - ID: 104
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.4037655, -23.5]
@@ -14490,8 +13685,7 @@ Entities:
     Grid:
       X: -23
       Z: -24
-  - ID: 103
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-22.5, -0.3773433, -24.5]
@@ -14508,8 +13702,7 @@ Entities:
     Grid:
       X: -23
       Z: -25
-  - ID: 102
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.4604374, 24.5]
@@ -14526,8 +13719,7 @@ Entities:
     Grid:
       X: -24
       Z: 24
-  - ID: 101
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3546824, 23.5]
@@ -14544,8 +13736,7 @@ Entities:
     Grid:
       X: -24
       Z: 23
-  - ID: 100
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3969875, 22.5]
@@ -14562,8 +13753,7 @@ Entities:
     Grid:
       X: -24
       Z: 22
-  - ID: 99
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3231565, 21.5]
@@ -14580,8 +13770,7 @@ Entities:
     Grid:
       X: -24
       Z: 21
-  - ID: 98
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2437845, 20.5]
@@ -14598,8 +13787,7 @@ Entities:
     Grid:
       X: -24
       Z: 20
-  - ID: 97
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2227931, 19.5]
@@ -14616,8 +13804,7 @@ Entities:
     Grid:
       X: -24
       Z: 19
-  - ID: 96
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2289946, 18.5]
@@ -14634,8 +13821,7 @@ Entities:
     Grid:
       X: -24
       Z: 18
-  - ID: 95
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2448822, 17.5]
@@ -14652,8 +13838,7 @@ Entities:
     Grid:
       X: -24
       Z: 17
-  - ID: 94
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2043656, 16.5]
@@ -14670,8 +13855,7 @@ Entities:
     Grid:
       X: -24
       Z: 16
-  - ID: 93
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.0934363, 13.5]
@@ -14688,8 +13872,7 @@ Entities:
     Grid:
       X: -24
       Z: 13
-  - ID: 92
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.01822063, 12.5]
@@ -14706,8 +13889,7 @@ Entities:
     Grid:
       X: -24
       Z: 12
-  - ID: 91
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3976, 11.5]
@@ -14724,8 +13906,7 @@ Entities:
     Grid:
       X: -24
       Z: 11
-  - ID: 90
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.02560821, 10.5]
@@ -14742,8 +13923,7 @@ Entities:
     Grid:
       X: -24
       Z: 10
-  - ID: 89
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3827584, 9.5]
@@ -14760,8 +13940,7 @@ Entities:
     Grid:
       X: -24
       Z: 9
-  - ID: 88
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.1051045, 8.5]
@@ -14778,8 +13957,7 @@ Entities:
     Grid:
       X: -24
       Z: 8
-  - ID: 87
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.1907792, 7.5]
@@ -14796,8 +13974,7 @@ Entities:
     Grid:
       X: -24
       Z: 7
-  - ID: 86
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.06294832, 6.5]
@@ -14814,8 +13991,7 @@ Entities:
     Grid:
       X: -24
       Z: 6
-  - ID: 85
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2193722, 5.5]
@@ -14832,8 +14008,7 @@ Entities:
     Grid:
       X: -24
       Z: 5
-  - ID: 84
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3318028, 4.5]
@@ -14850,8 +14025,7 @@ Entities:
     Grid:
       X: -24
       Z: 4
-  - ID: 83
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.01722304, 3.5]
@@ -14868,8 +14042,7 @@ Entities:
     Grid:
       X: -24
       Z: 3
-  - ID: 82
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2452945, 2.5]
@@ -14886,8 +14059,7 @@ Entities:
     Grid:
       X: -24
       Z: 2
-  - ID: 81
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.475111, 1.5]
@@ -14904,8 +14076,7 @@ Entities:
     Grid:
       X: -24
       Z: 1
-  - ID: 80
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.381875, 0.5]
@@ -14922,8 +14093,7 @@ Entities:
     Grid:
       X: -24
       Z: 0
-  - ID: 79
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.1585497, -0.5]
@@ -14940,8 +14110,7 @@ Entities:
     Grid:
       X: -24
       Z: -1
-  - ID: 78
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.06259138, -1.5]
@@ -14958,8 +14127,7 @@ Entities:
     Grid:
       X: -24
       Z: -2
-  - ID: 77
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3474143, -2.5]
@@ -14976,8 +14144,7 @@ Entities:
     Grid:
       X: -24
       Z: -3
-  - ID: 76
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.4109516, -3.5]
@@ -14994,8 +14161,7 @@ Entities:
     Grid:
       X: -24
       Z: -4
-  - ID: 75
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.4117289, -4.5]
@@ -15012,8 +14178,7 @@ Entities:
     Grid:
       X: -24
       Z: -5
-  - ID: 74
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.4970343, -5.5]
@@ -15030,8 +14195,7 @@ Entities:
     Grid:
       X: -24
       Z: -6
-  - ID: 73
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.04856589, -6.5]
@@ -15048,8 +14212,7 @@ Entities:
     Grid:
       X: -24
       Z: -7
-  - ID: 72
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.07455699, -7.5]
@@ -15066,8 +14229,7 @@ Entities:
     Grid:
       X: -24
       Z: -8
-  - ID: 71
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.02308569, -8.5]
@@ -15084,8 +14246,7 @@ Entities:
     Grid:
       X: -24
       Z: -9
-  - ID: 70
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.4362144, -9.5]
@@ -15102,8 +14263,7 @@ Entities:
     Grid:
       X: -24
       Z: -10
-  - ID: 69
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.1384615, -10.5]
@@ -15120,8 +14280,7 @@ Entities:
     Grid:
       X: -24
       Z: -11
-  - ID: 68
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.1582752, -11.5]
@@ -15138,8 +14297,7 @@ Entities:
     Grid:
       X: -24
       Z: -12
-  - ID: 67
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.01591642, -12.5]
@@ -15156,8 +14314,7 @@ Entities:
     Grid:
       X: -24
       Z: -13
-  - ID: 66
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3986399, -13.5]
@@ -15174,8 +14331,7 @@ Entities:
     Grid:
       X: -24
       Z: -14
-  - ID: 65
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3530231, -14.5]
@@ -15192,8 +14348,7 @@ Entities:
     Grid:
       X: -24
       Z: -15
-  - ID: 64
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.1509566, -15.5]
@@ -15210,8 +14365,7 @@ Entities:
     Grid:
       X: -24
       Z: -16
-  - ID: 63
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.08559334, -16.5]
@@ -15228,8 +14382,7 @@ Entities:
     Grid:
       X: -24
       Z: -17
-  - ID: 62
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.08693258, -17.5]
@@ -15246,8 +14399,7 @@ Entities:
     Grid:
       X: -24
       Z: -18
-  - ID: 61
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3277389, -18.5]
@@ -15264,8 +14416,7 @@ Entities:
     Grid:
       X: -24
       Z: -19
-  - ID: 60
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2110438, -19.5]
@@ -15282,8 +14433,7 @@ Entities:
     Grid:
       X: -24
       Z: -20
-  - ID: 59
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.1961135, -20.5]
@@ -15300,8 +14450,7 @@ Entities:
     Grid:
       X: -24
       Z: -21
-  - ID: 58
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.2373793, -21.5]
@@ -15318,8 +14467,7 @@ Entities:
     Grid:
       X: -24
       Z: -22
-  - ID: 57
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3715662, -22.5]
@@ -15336,8 +14484,7 @@ Entities:
     Grid:
       X: -24
       Z: -23
-  - ID: 56
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3703236, -23.5]
@@ -15354,8 +14501,7 @@ Entities:
     Grid:
       X: -24
       Z: -24
-  - ID: 55
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-23.5, -0.3788701, -24.5]
@@ -15372,8 +14518,7 @@ Entities:
     Grid:
       X: -24
       Z: -25
-  - ID: 54
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.1993693, 24.5]
@@ -15390,8 +14535,7 @@ Entities:
     Grid:
       X: -25
       Z: 24
-  - ID: 53
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3393676, 23.5]
@@ -15408,8 +14552,7 @@ Entities:
     Grid:
       X: -25
       Z: 23
-  - ID: 52
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3406798, 22.5]
@@ -15426,8 +14569,7 @@ Entities:
     Grid:
       X: -25
       Z: 22
-  - ID: 51
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4669966, 21.5]
@@ -15444,8 +14586,7 @@ Entities:
     Grid:
       X: -25
       Z: 21
-  - ID: 50
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.1059622, 20.5]
@@ -15462,8 +14603,7 @@ Entities:
     Grid:
       X: -25
       Z: 20
-  - ID: 49
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4245647, 19.5]
@@ -15480,8 +14620,7 @@ Entities:
     Grid:
       X: -25
       Z: 19
-  - ID: 48
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.180647, 18.5]
@@ -15498,8 +14637,7 @@ Entities:
     Grid:
       X: -25
       Z: 18
-  - ID: 47
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.01785584, 17.5]
@@ -15516,8 +14654,7 @@ Entities:
     Grid:
       X: -25
       Z: 17
-  - ID: 46
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3989643, 16.5]
@@ -15534,8 +14671,7 @@ Entities:
     Grid:
       X: -25
       Z: 16
-  - ID: 45
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3278703, 15.5]
@@ -15552,8 +14688,7 @@ Entities:
     Grid:
       X: -25
       Z: 15
-  - ID: 44
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.2518314, 14.5]
@@ -15570,8 +14705,7 @@ Entities:
     Grid:
       X: -25
       Z: 14
-  - ID: 43
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4797462, 13.5]
@@ -15588,8 +14722,7 @@ Entities:
     Grid:
       X: -25
       Z: 13
-  - ID: 42
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4392153, 12.5]
@@ -15606,8 +14739,7 @@ Entities:
     Grid:
       X: -25
       Z: 12
-  - ID: 41
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3961037, 11.5]
@@ -15624,8 +14756,7 @@ Entities:
     Grid:
       X: -25
       Z: 11
-  - ID: 40
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3198817, 10.5]
@@ -15642,8 +14773,7 @@ Entities:
     Grid:
       X: -25
       Z: 10
-  - ID: 39
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4578678, 9.5]
@@ -15660,8 +14790,7 @@ Entities:
     Grid:
       X: -25
       Z: 9
-  - ID: 38
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.05623226, 8.5]
@@ -15678,8 +14807,7 @@ Entities:
     Grid:
       X: -25
       Z: 8
-  - ID: 37
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.2108806, 7.5]
@@ -15696,8 +14824,7 @@ Entities:
     Grid:
       X: -25
       Z: 7
-  - ID: 36
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.002391742, 6.5]
@@ -15714,8 +14841,7 @@ Entities:
     Grid:
       X: -25
       Z: 6
-  - ID: 35
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.07094317, 5.5]
@@ -15732,8 +14858,7 @@ Entities:
     Grid:
       X: -25
       Z: 5
-  - ID: 34
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.1485147, 4.5]
@@ -15750,8 +14875,7 @@ Entities:
     Grid:
       X: -25
       Z: 4
-  - ID: 33
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4001402, 3.5]
@@ -15768,8 +14892,7 @@ Entities:
     Grid:
       X: -25
       Z: 3
-  - ID: 32
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3990529, 2.5]
@@ -15786,8 +14909,7 @@ Entities:
     Grid:
       X: -25
       Z: 2
-  - ID: 31
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.2426878, 1.5]
@@ -15804,8 +14926,7 @@ Entities:
     Grid:
       X: -25
       Z: 1
-  - ID: 30
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.05493088, 0.5]
@@ -15822,8 +14943,7 @@ Entities:
     Grid:
       X: -25
       Z: 0
-  - ID: 29
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4785835, -0.5]
@@ -15840,8 +14960,7 @@ Entities:
     Grid:
       X: -25
       Z: -1
-  - ID: 28
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4905548, -1.5]
@@ -15858,8 +14977,7 @@ Entities:
     Grid:
       X: -25
       Z: -2
-  - ID: 27
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4852964, -2.5]
@@ -15876,8 +14994,7 @@ Entities:
     Grid:
       X: -25
       Z: -3
-  - ID: 26
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3629195, -3.5]
@@ -15894,8 +15011,7 @@ Entities:
     Grid:
       X: -25
       Z: -4
-  - ID: 25
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.07880654, -4.5]
@@ -15912,8 +15028,7 @@ Entities:
     Grid:
       X: -25
       Z: -5
-  - ID: 24
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4838475, -5.5]
@@ -15930,8 +15045,7 @@ Entities:
     Grid:
       X: -25
       Z: -6
-  - ID: 23
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4824443, -6.5]
@@ -15948,8 +15062,7 @@ Entities:
     Grid:
       X: -25
       Z: -7
-  - ID: 22
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4982307, -7.5]
@@ -15966,8 +15079,7 @@ Entities:
     Grid:
       X: -25
       Z: -8
-  - ID: 21
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4787534, -8.5]
@@ -15984,8 +15096,7 @@ Entities:
     Grid:
       X: -25
       Z: -9
-  - ID: 20
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4964406, -9.5]
@@ -16002,8 +15113,7 @@ Entities:
     Grid:
       X: -25
       Z: -10
-  - ID: 19
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.2734407, -10.5]
@@ -16020,8 +15130,7 @@ Entities:
     Grid:
       X: -25
       Z: -11
-  - ID: 18
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.09419098, -11.5]
@@ -16038,8 +15147,7 @@ Entities:
     Grid:
       X: -25
       Z: -12
-  - ID: 17
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.1392491, -12.5]
@@ -16056,8 +15164,7 @@ Entities:
     Grid:
       X: -25
       Z: -13
-  - ID: 16
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.2736103, -13.5]
@@ -16074,8 +15181,7 @@ Entities:
     Grid:
       X: -25
       Z: -14
-  - ID: 15
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.0487702, -14.5]
@@ -16092,8 +15198,7 @@ Entities:
     Grid:
       X: -25
       Z: -15
-  - ID: 14
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.1540835, -15.5]
@@ -16110,8 +15215,7 @@ Entities:
     Grid:
       X: -25
       Z: -16
-  - ID: 13
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.3161796, -16.5]
@@ -16128,8 +15232,7 @@ Entities:
     Grid:
       X: -25
       Z: -17
-  - ID: 12
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.110517, -17.5]
@@ -16146,8 +15249,7 @@ Entities:
     Grid:
       X: -25
       Z: -18
-  - ID: 11
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4566879, -18.5]
@@ -16164,8 +15266,7 @@ Entities:
     Grid:
       X: -25
       Z: -19
-  - ID: 10
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4844339, -19.5]
@@ -16182,8 +15283,7 @@ Entities:
     Grid:
       X: -25
       Z: -20
-  - ID: 9
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.06349341, -20.5]
@@ -16200,8 +15300,7 @@ Entities:
     Grid:
       X: -25
       Z: -21
-  - ID: 8
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4175043, -21.5]
@@ -16218,8 +15317,7 @@ Entities:
     Grid:
       X: -25
       Z: -22
-  - ID: 7
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.452896, -22.5]
@@ -16236,8 +15334,7 @@ Entities:
     Grid:
       X: -25
       Z: -23
-  - ID: 6
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.0677385, -23.5]
@@ -16254,8 +15351,7 @@ Entities:
     Grid:
       X: -25
       Z: -24
-  - ID: 5
-    Name:
+  - Name:
       Name: Rock
     Transform:
       Position: [-24.5, -0.4073618, -24.5]
@@ -16272,8 +15368,7 @@ Entities:
     Grid:
       X: -25
       Z: -25
-  - ID: 4
-    Name:
+  - Name:
       Name: Terrain
     Transform:
       Position: [0, 0, 0]
@@ -16287,34 +15382,14 @@ Entities:
     Select:
       Selected: false
       Hovered: false
-  - ID: 3
-    Name:
-      Name: Camera
-    Transform:
-      Position: [0, 5, 0]
-      Orientation: [1, 0, 0, 0]
-    Script:
-      Script: Resources/Scripts/ThirdPersonCamera.lua
-      Active: true
-    Camera:
-      Projection: [0.9079514, 0, 0, 0]
-      Pitch: 0
-  - ID: 2
-    Name:
-      Name: Worker
-    Transform:
-      Position: [0.5, 0.5, 0.5]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Cube.obj
-      Scale: 0.5
-      Texture: ""
-      ShineDamper: 1
-      Reflectivity: 0
-    Select:
-      Selected: false
-      Hovered: false
-    Path:
-      Markers:
-        []
-      Speed: 3
+#  - Name:
+#      Name: Camera
+#    Transform:
+#      Position: [0, 5, 0]
+#      Orientation: [1, 0, 0, 0]
+#    Script:
+#      Script: Resources/Scripts/ThirdPersonCamera.lua
+#      Active: true
+#    Camera:
+#      Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+#      Pitch: 0

@@ -105,6 +105,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
 
+
+    Serialiser s(&d_entityManager);
+    s.Deserialise("Resources/Scene.yaml");
+
     {
         auto worker = d_entityManager.NewEntity();
 
@@ -139,7 +143,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         script.script = "Resources/Scripts/ThirdPersonCamera.lua";
         camera.Add<ScriptComponent>(script);
     }
-
+#if 0
     {
         auto terrain = d_entityManager.NewEntity();
 
@@ -157,30 +161,31 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         terrain.Add<SelectComponent>();
     }
 
-    //for (int i = 0; i != ROWS; ++i) {
-    //    for (int j = 0; j != COLUMNS; ++j) {
-    //        char val = MAP[i][j];
-    //        if (val == '-') {
-    //            continue;
-    //        }
-    //        else if (val == 'T') {
-    //            AddTree({i - 25, j - 25});
-    //        }
-    //        else if (val == 'r') {
-    //            AddRock({i - 25, j - 25});
-    //        }
-    //        else if (val == 't') {
-    //            AddTin({i - 25, j - 25});
-    //        }
-    //        else if (val == 'i') {
-    //            AddIron({i - 25, j - 25});
-    //        }
-    //        else if (val == 'm') {
-    //            AddMithril({i - 25, j - 25});
-    //        }
-    //    
-    //    }
-    //}
+    for (int i = 0; i != ROWS; ++i) {
+        for (int j = 0; j != COLUMNS; ++j) {
+            char val = MAP[i][j];
+            if (val == '-') {
+                continue;
+            }
+            else if (val == 'T') {
+                AddTree({i - 25, j - 25});
+            }
+            else if (val == 'r') {
+                AddRock({i - 25, j - 25});
+            }
+            else if (val == 't') {
+                AddTin({i - 25, j - 25});
+            }
+            else if (val == 'i') {
+                AddIron({i - 25, j - 25});
+            }
+            else if (val == 'm') {
+                AddMithril({i - 25, j - 25});
+            }
+        
+        }
+    }
+#endif
 
     d_entityManager.Each<NameComponent>([&](Entity& entity) {
         const auto& name = entity.Get<NameComponent>();
@@ -192,6 +197,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
             d_gameGrid.SetCamera(entity);
         }
     });
+
+    assert(!d_worker.Null());
+    assert(!d_camera.Null());
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
