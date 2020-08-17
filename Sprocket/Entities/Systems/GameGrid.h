@@ -25,14 +25,12 @@ private:
     MouseProxy    d_mouse;
 
     Entity d_camera;
-
     Entity d_hoveredSquare;
-    Maths::ivec2 d_hovered;
-
     Entity d_selectedSquare;
+
+    Maths::ivec2 d_hovered; // TODO: make optional
     std::optional<Maths::ivec2> d_selected;
 
-    std::size_t Key(int x, int z);
     GridMap d_gridEntities; 
 
 public:
@@ -44,7 +42,6 @@ public:
 
     Entity At(int x, int z) const;
 
-    void AddEntity(Entity* entity, int x, int z);
     void RemoveEntity(int x, int z);
 
     void SetCamera(Entity entity) { d_camera = entity; }

@@ -413,7 +413,8 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
-    d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
+    GridComponent gc = {pos.x, pos.y};
+    newEntity.Add(gc);
 }
 
 void WorldLayer::AddRockBase(
@@ -439,7 +440,8 @@ void WorldLayer::AddRockBase(
     modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
-    d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
+    GridComponent gc = {pos.x, pos.y};
+    newEntity.Add(gc);
 }
 
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)

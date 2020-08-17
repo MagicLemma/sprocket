@@ -7,6 +7,7 @@
 #include "Log.h"
 
 #include <random>
+#include <cassert>
 
 namespace Sprocket {
 
@@ -41,6 +42,18 @@ void GameGrid::OnStartup(EntityManager& manager)
     model2.model = gridSquare;
     model2.reflectivity = 0.0f;
     model2.scale = 0.5f;
+
+    manager.OnAdd<GridComponent>([&](Entity& entity) {
+        auto& transform = entity.Get<TransformComponent>();
+        const auto& gc = entity.Get<GridComponent>();
+
+        assert(entity.Has<TransformComponent>());
+        assert(!d_gridEntities.contains({gc.x, gc.z}));
+    
+        transform.position.x = gc.x + 0.5f;
+        transform.position.z = gc.z + 0.5f;
+        d_gridEntities[{gc.x, gc.z}] = entity;
+    });
 }
 
 void GameGrid::OnUpdate(Sprocket::EntityManager&, double)
@@ -83,26 +96,6 @@ void GameGrid::OnEvent(Event& event)
         else {
             d_selected = {};
         }
-    }
-}
-
-void GameGrid::AddEntity(Sprocket::Entity* entity, int x, int z)
-{
-    if (!entity->Has<TransformComponent>()) {
-        SPKT_LOG_ERROR("Entity cannot go in grid, no transform!");
-        return;
-    }
-
-    if (entity->Has<GridComponent>()) {
-        SPKT_LOG_WARN("Entity already in grid!");
-    }
-    else {
-        auto& c = entity->Add<GridComponent>();  // Mark it as in the grid.
-        c.x = x;
-        c.z = z;
-        entity->Get<TransformComponent>().position.x = x + 0.5f;
-        entity->Get<TransformComponent>().position.z = z + 0.5f;
-        d_gridEntities[{x, z}] = *entity;
     }
 }
 
