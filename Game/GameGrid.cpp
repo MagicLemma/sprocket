@@ -5,8 +5,9 @@
 
 using namespace Sprocket;
 
-GameGrid::GameGrid(EntityManager* entityManager)
-    : d_hoveredSquare(entityManager->NewEntity())
+GameGrid::GameGrid(EntityManager* entityManager, Sprocket::Window* window)
+    : d_window(window)
+    , d_hoveredSquare(entityManager->NewEntity())
     , d_selectedSquare(entityManager->NewEntity())
     , d_hovered({0.0, 0.0})
     , d_selected({})
@@ -34,18 +35,18 @@ GameGrid::GameGrid(EntityManager* entityManager)
     d_keyboard.ConsumeAll(false);
 }
 
-void GameGrid::OnUpdate(Window* window, Entity* camera)
+void GameGrid::OnUpdate()
 {
-    auto& camTr = camera->Get<TransformComponent>();
+    auto& camTr = d_camera.Get<TransformComponent>();
 
     d_mouse.OnUpdate();
     Maths::vec3 cameraPos = camTr.position;
     Maths::vec3 direction = Maths::GetMouseRay(
         d_mouse.GetMousePos(),
-        window->Width(),
-        window->Height(),
-        CameraUtils::MakeView(*camera),
-        CameraUtils::MakeProj(*camera)
+        d_window->Width(),
+        d_window->Height(),
+        CameraUtils::MakeView(d_camera),
+        CameraUtils::MakeProj(d_camera)
     );
 
     float lambda = -cameraPos.y / direction.y;

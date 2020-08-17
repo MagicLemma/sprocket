@@ -21,8 +21,11 @@ public:
     >;
 
 private:
+    Sprocket::Window*       d_window;
     Sprocket::KeyboardProxy d_keyboard;
     Sprocket::MouseProxy    d_mouse;
+
+    Sprocket::Entity d_camera;
 
     Sprocket::Entity d_hoveredSquare;
     Sprocket::Maths::ivec2 d_hovered;
@@ -34,10 +37,9 @@ private:
     GridMap d_gridEntities; 
 
 public:
-    GameGrid(Sprocket::EntityManager* entityManager);
+    GameGrid(Sprocket::EntityManager* entityManager, Sprocket::Window* window);
 
-    void OnUpdate(Sprocket::Window* window,
-                  Sprocket::Entity* camera);
+    void OnUpdate();
 
     void OnEvent(Sprocket::Event& event);
 
@@ -45,6 +47,8 @@ public:
 
     void AddEntity(Sprocket::Entity* entity, int x, int z);
     void RemoveEntity(int x, int z);
+
+    void SetCamera(Sprocket::Entity entity) { d_camera = entity; }
 
     Sprocket::Entity Hovered() const;
     Sprocket::Entity Selected() const;
