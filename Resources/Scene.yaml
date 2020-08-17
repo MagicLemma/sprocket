@@ -13602,27 +13602,3 @@ Entities:
     Select:
       Selected: false
       Hovered: false
-  - ID: 1
-    Name:
-      Name: Selected Grid Highlighter
-    Transform:
-      Position: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Square.obj
-      Scale: 0.5
-      Texture: ""
-      ShineDamper: 1
-      Reflectivity: 0
-  - ID: 0
-    Name:
-      Name: Hovered Grid Highlighter
-    Transform:
-      Position: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Square.obj
-      Scale: 0.3
-      Texture: ""
-      ShineDamper: 1
-      Reflectivity: 0

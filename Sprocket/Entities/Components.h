@@ -4,6 +4,11 @@
 
 namespace Sprocket {
 
+// A flag component to say to the serialiser that an entity with this should not get saved.
+struct TemporaryComponent
+{
+};
+
 struct NameComponent
 {
     std::string name;

@@ -14,6 +14,7 @@ GameGrid::GameGrid(EntityManager* entityManager)
     std::string gridSqare = "Resources/Models/Square.obj";
 
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
+    d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
     auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
@@ -22,6 +23,7 @@ GameGrid::GameGrid(EntityManager* entityManager)
     model1.scale = 0.3f;
 
     auto& n2 = d_selectedSquare.Add<NameComponent>();
+    d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
     auto& tr2 = d_selectedSquare.Add<TransformComponent>();
     auto& model2 = d_selectedSquare.Add<ModelComponent>();

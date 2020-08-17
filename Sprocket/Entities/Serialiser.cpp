@@ -50,6 +50,8 @@ void Serialiser::Serialise(const std::string& file)
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     d_scene->All([&](Entity& entity) {
+        if (entity.Has<TemporaryComponent>()) { return; }
+        
         out << YAML::BeginMap;
         out << YAML::Key << "ID" << YAML::Value << entity.Id();
         if (entity.Has<NameComponent>()) {
