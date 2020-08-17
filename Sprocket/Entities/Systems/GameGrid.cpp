@@ -54,6 +54,18 @@ void GameGrid::OnStartup(EntityManager& manager)
         transform.position.z = gc.z + 0.5f;
         d_gridEntities[{gc.x, gc.z}] = entity;
     });
+
+    manager.OnRemove<GridComponent>([&](Entity& entity) {
+        auto& gc = entity.Get<GridComponent>();
+
+        auto it = d_gridEntities.find({gc.x, gc.z});
+        if (it == d_gridEntities.end()) {
+            SPKT_LOG_WARN("No entity exists at this coord!");
+        }
+        else {
+            d_gridEntities.erase(it);
+        }
+    });
 }
 
 void GameGrid::OnUpdate(Sprocket::EntityManager&, double)
@@ -99,18 +111,6 @@ void GameGrid::OnEvent(Event& event)
     }
 }
 
-void GameGrid::RemoveEntity(int x, int z)
-{
-    auto it = d_gridEntities.find({x, z});
-    if (it == d_gridEntities.end()) {
-        SPKT_LOG_WARN("No entity exists at this coord!");
-    }
-    else {
-        it->second.Remove<GridComponent>();
-        d_gridEntities.erase(it);
-    }
-}
-
 Sprocket::Entity GameGrid::At(int x, int z) const
 {
     auto it = d_gridEntities.find({x, z});
@@ -131,16 +131,6 @@ Sprocket::Entity GameGrid::Selected() const
         return At(d_selected.value().x, d_selected.value().y);
     }
     return Sprocket::Entity();
-}
-
-void GameGrid::DeleteSelected()
-{
-    auto selected = Selected();
-    if (!selected.Null()) {
-        selected.Kill();
-        auto pos = SelectedPosition().value();
-        RemoveEntity(pos.x, pos.y);
-    }
 }
 
 }

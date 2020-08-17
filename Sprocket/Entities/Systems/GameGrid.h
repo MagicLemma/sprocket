@@ -42,16 +42,12 @@ public:
 
     Entity At(int x, int z) const;
 
-    void RemoveEntity(int x, int z);
-
     void SetCamera(Entity entity) { d_camera = entity; }
 
     Entity Hovered() const;
     Entity Selected() const;
 
     std::optional<Maths::ivec2> SelectedPosition() const { return d_selected; }
-
-    void DeleteSelected();
 };
 
 }

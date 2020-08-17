@@ -122,8 +122,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         auto& modelData = worker.Add<ModelComponent>();
         modelData.model = "Resources/Models/Cube.obj";
         modelData.scale = 0.5f;
-
-        d_worker = worker;
     }
 
     {
@@ -140,9 +138,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         ScriptComponent script;
         script.script = "Resources/Scripts/ThirdPersonCamera.lua";
         camera.Add<ScriptComponent>(script);
-
-        d_camera = camera;
-        d_gameGrid.SetCamera(camera);
     }
 
     {
@@ -186,6 +181,17 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         
         }
     }
+
+    d_entityManager.Each<NameComponent>([&](Entity& entity) {
+        const auto& name = entity.Get<NameComponent>();
+        if (name.name == "Worker") {
+            d_worker = entity;
+        }
+        else if (name.name == "Camera") {
+            d_camera = entity;
+            d_gameGrid.SetCamera(entity);
+        }
+    });
 
     Serialiser serialiser(&d_entityManager);
     serialiser.Serialise("Resources/Scene.yaml");
@@ -312,14 +318,12 @@ void WorldLayer::OnUpdate(double dt)
         float h = (float)d_core.window->Height();
 
         if (d_gameGrid.SelectedPosition().has_value()) {
+            auto selected = d_gameGrid.Selected();
+
             float width = 0.15f * w;
             float height = 0.6f * h;
             float x = w - width;
             float y = ((1.0f - 0.6f) / 2) * h;
-
-            static auto ironTex = Texture("Resources/Textures/Iron.png");
-            static auto tinTex = Texture("Resources/Textures/Tin.png");
-            static auto mithrilTex = Texture("Resources/Textures/Mithril.png");
 
             Maths::vec4 region{x, y, width, height};
             bool active = true;
@@ -327,35 +331,34 @@ void WorldLayer::OnUpdate(double dt)
             bool clickable = true;
             if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable, &clickable)) {
                 
-                auto selected = d_gameGrid.Selected();
                 auto pos = d_gameGrid.SelectedPosition().value();
                 if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddTree(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddRock(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddIron(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddTin(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddMithril(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                 }
 
                 d_hoveredEntityUI.EndPanel();
@@ -376,8 +379,6 @@ void WorldLayer::OnUpdate(double dt)
             bool clickable = false;
             if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
                 
-                auto hovered = d_gameGrid.Hovered();
-
                 std::string name = "Unnamed";
                 if (hovered.Has<NameComponent>()) {
                     name = hovered.Get<NameComponent>().name;

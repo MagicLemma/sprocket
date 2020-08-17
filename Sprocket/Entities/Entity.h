@@ -29,7 +29,7 @@ public:
 
     bool Null() const { return d_entity == entt::null; }
 
-    void Kill() { d_registry->destroy(d_entity); }
+    void Kill();
 };
 
 bool operator==(const Entity& lhs, const Entity& rhs);
