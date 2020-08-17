@@ -157,30 +157,30 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         terrain.Add<SelectComponent>();
     }
 
-    for (int i = 0; i != ROWS; ++i) {
-        for (int j = 0; j != COLUMNS; ++j) {
-            char val = MAP[i][j];
-            if (val == '-') {
-                continue;
-            }
-            else if (val == 'T') {
-                AddTree({i - 25, j - 25});
-            }
-            else if (val == 'r') {
-                AddRock({i - 25, j - 25});
-            }
-            else if (val == 't') {
-                AddTin({i - 25, j - 25});
-            }
-            else if (val == 'i') {
-                AddIron({i - 25, j - 25});
-            }
-            else if (val == 'm') {
-                AddMithril({i - 25, j - 25});
-            }
-        
-        }
-    }
+    //for (int i = 0; i != ROWS; ++i) {
+    //    for (int j = 0; j != COLUMNS; ++j) {
+    //        char val = MAP[i][j];
+    //        if (val == '-') {
+    //            continue;
+    //        }
+    //        else if (val == 'T') {
+    //            AddTree({i - 25, j - 25});
+    //        }
+    //        else if (val == 'r') {
+    //            AddRock({i - 25, j - 25});
+    //        }
+    //        else if (val == 't') {
+    //            AddTin({i - 25, j - 25});
+    //        }
+    //        else if (val == 'i') {
+    //            AddIron({i - 25, j - 25});
+    //        }
+    //        else if (val == 'm') {
+    //            AddMithril({i - 25, j - 25});
+    //        }
+    //    
+    //    }
+    //}
 
     d_entityManager.Each<NameComponent>([&](Entity& entity) {
         const auto& name = entity.Get<NameComponent>();
@@ -192,9 +192,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
             d_gameGrid.SetCamera(entity);
         }
     });
-
-    Serialiser serialiser(&d_entityManager);
-    serialiser.Serialise("Resources/Scene.yaml");
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
