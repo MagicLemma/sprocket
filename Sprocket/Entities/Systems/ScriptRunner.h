@@ -18,8 +18,8 @@ class ScriptRunner : public EntitySystem
 public:
     ScriptRunner();
 
-    void OnStartup(Scene& manager) override;
-    void OnUpdate(Scene& manager, double dt) override;
+    void OnStartup(Scene& scene) override;
+    void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Event& event) override;
 };
 

@@ -6,10 +6,7 @@
 
 namespace Sprocket {
 
-Selector::Selector(
-    Window* window,
-    PhysicsEngine* physicsEngine
-)
+Selector::Selector(Window* window, PhysicsEngine* physicsEngine)
     : d_window(window)
     , d_physicsEngine(physicsEngine)
     , d_enabled(false)

@@ -26,11 +26,11 @@ GameGrid::GameGrid(Window* window)
     d_keyboard.ConsumeAll(false);
 }
 
-void GameGrid::OnStartup(Scene& manager)
+void GameGrid::OnStartup(Scene& scene)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
-    d_hoveredSquare = manager.NewEntity();
+    d_hoveredSquare = scene.NewEntity();
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
@@ -40,7 +40,7 @@ void GameGrid::OnStartup(Scene& manager)
     model1.reflectivity = 0.0f;
     model1.scale = 0.3f;
 
-    d_selectedSquare = manager.NewEntity();
+    d_selectedSquare = scene.NewEntity();
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
@@ -50,7 +50,7 @@ void GameGrid::OnStartup(Scene& manager)
     model2.reflectivity = 0.0f;
     model2.scale = 0.5f;
 
-    manager.OnAdd<GridComponent>([&](Entity& entity) {
+    scene.OnAdd<GridComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         const auto& gc = entity.Get<GridComponent>();
 
@@ -62,7 +62,7 @@ void GameGrid::OnStartup(Scene& manager)
         d_gridEntities[{gc.x, gc.z}] = entity;
     });
 
-    manager.OnRemove<GridComponent>([&](Entity& entity) {
+    scene.OnRemove<GridComponent>([&](Entity& entity) {
         auto& gc = entity.Get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});

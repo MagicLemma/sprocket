@@ -10,11 +10,11 @@ PlayerMovement::PlayerMovement()
 {
 }
 
-void PlayerMovement::OnUpdate(Scene& manager, double dt)
+void PlayerMovement::OnUpdate(Scene& scene, double dt)
 {
     d_mouse.OnUpdate();
 
-    manager.Each<PlayerComponent, PhysicsComponent>([&](Entity& entity) {
+    scene.Each<PlayerComponent, PhysicsComponent>([&](Entity& entity) {
         auto& player = entity.Get<PlayerComponent>();
         auto& physics = entity.Get<PhysicsComponent>();
 

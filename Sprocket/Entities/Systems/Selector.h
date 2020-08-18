@@ -36,14 +36,11 @@ class Selector : public EntitySystem
         // over, and a nullptr if there isn't one.
 
 public:
-    Selector(
-        Window* window,
-        PhysicsEngine* physicsEngine
-    );
+    Selector(Window* window, PhysicsEngine* physicsEngine);
     ~Selector() {}
 
-    void OnStartup(Scene& manager) override;
-    void OnUpdate(Scene& manager, double dt) override;
+    void OnStartup(Scene& scene) override;
+    void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Event& event) override;
 
     void Enable(bool newEnabled);

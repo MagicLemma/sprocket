@@ -14,9 +14,9 @@ ScriptRunner::ScriptRunner()
     d_keyboard.ConsumeAll(false);
 }
 
-void ScriptRunner::OnStartup(Scene& manager)
+void ScriptRunner::OnStartup(Scene& scene)
 {
-    manager.OnAdd<ScriptComponent>([&](Entity& entity) {
+    scene.OnAdd<ScriptComponent>([&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.SetKeyboard(&d_keyboard);
         luaEngine.SetMouse(&d_mouse);
@@ -25,16 +25,16 @@ void ScriptRunner::OnStartup(Scene& manager)
         luaEngine.CallInitFunction();
     });
 
-    manager.OnRemove<ScriptComponent>([&](Entity& entity) {
+    scene.OnRemove<ScriptComponent>([&](Entity& entity) {
         d_engines.erase(entity.Id());
     });
 }
 
-void ScriptRunner::OnUpdate(Scene& manager, double dt)
+void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
     d_mouse.OnUpdate();
 
-    manager.Each<ScriptComponent>([&](Entity& entity) {
+    scene.Each<ScriptComponent>([&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.CallOnUpdateFunction(dt);
     });

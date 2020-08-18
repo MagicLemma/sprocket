@@ -36,8 +36,8 @@ private:
 public:
     GameGrid(Window* window);
 
-    void OnStartup(Scene& manager) override;
-    void OnUpdate(Scene& manager, double dt) override;
+    void OnStartup(Scene& scene) override;
+    void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Event& event) override;
 
     Entity At(int x, int z) const;

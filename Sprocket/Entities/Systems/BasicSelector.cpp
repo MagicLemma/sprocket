@@ -10,9 +10,9 @@ BasicSelector::BasicSelector()
 {
 }
 
-void BasicSelector::OnStartup(Scene& manager)
+void BasicSelector::OnStartup(Scene& scene)
 {
-    manager.OnRemove<SelectComponent>([&](Entity& entity) {
+    scene.OnRemove<SelectComponent>([&](Entity& entity) {
         if (entity == d_selectedEntity) { SetSelected(Entity()); }
     });
 }
