@@ -19,20 +19,20 @@
 #include "UI/SinglePanelUI.h"
 #include "UI/DevUI.h"
 
-// ENTITIES
-#include "Entities/Entity.h"
-#include "Entities/Components.h"
-#include "Entities/Scene.h"
-#include "Entities/EntitySystem.h"
-#include "Entities/Serialiser.h"
+// SCENE
+#include "Scene/Entity.h"
+#include "Scene/Components.h"
+#include "Scene/Scene.h"
+#include "Scene/EntitySystem.h"
+#include "Scene/Serialiser.h"
 
-#include "Entities/Systems/BasicSelector.h"
-#include "Entities/Systems/Selector.h"
-#include "Entities/Systems/PhysicsEngine.h"
-#include "Entities/Systems/PlayerMovement.h"
-#include "Entities/Systems/ScriptRunner.h"
-#include "Entities/Systems/GameGrid.h"
-#include "Entities/Systems/PathFollower.h"
+#include "Scene/Systems/BasicSelector.h"
+#include "Scene/Systems/Selector.h"
+#include "Scene/Systems/PhysicsEngine.h"
+#include "Scene/Systems/PlayerMovement.h"
+#include "Scene/Systems/ScriptRunner.h"
+#include "Scene/Systems/GameGrid.h"
+#include "Scene/Systems/PathFollower.h"
 
 // EVENTS
 #include "Events/Event.h"

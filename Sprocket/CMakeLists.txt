@@ -44,18 +44,18 @@ add_library(Sprocket STATIC
             UI/SinglePanelUI.cpp
             UI/DevUI.cpp
 
-            Entities/Entity.cpp
-            Entities/Scene.cpp
-            Entities/EntitySystem.cpp
-            Entities/Serialiser.cpp
+            Scene/Entity.cpp
+            Scene/Scene.cpp
+            Scene/EntitySystem.cpp
+            Scene/Serialiser.cpp
 
-            Entities/Systems/BasicSelector.cpp
-            Entities/Systems/Selector.cpp
-            Entities/Systems/PhysicsEngine.cpp
-            Entities/Systems/PlayerMovement.cpp
-            Entities/Systems/ScriptRunner.cpp
-            Entities/Systems/GameGrid.cpp
-            Entities/Systems/PathFollower.cpp
+            Scene/Systems/BasicSelector.cpp
+            Scene/Systems/Selector.cpp
+            Scene/Systems/PhysicsEngine.cpp
+            Scene/Systems/PlayerMovement.cpp
+            Scene/Systems/ScriptRunner.cpp
+            Scene/Systems/GameGrid.cpp
+            Scene/Systems/PathFollower.cpp
 
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
@@ -127,8 +127,8 @@ target_include_directories(Sprocket PUBLIC
                            .
                            ./Audio
                            ./Core
-                           ./Entities
-                           ./Entities/Systems
+                           ./Scene
+                           ./Scene/Systems
                            ./Events
                            ./Graphics
                            ./Graphics/Primitives

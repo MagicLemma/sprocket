@@ -31,14 +31,8 @@ struct ModelComponent
     float       reflectivity = 0.0f;
 };
 
-enum class Collider
-{
-    NONE,
-    SPHERE,
-    CAPSULE,
-    BOX
-};
 
+enum class Collider { NONE, SPHERE, CAPSULE, BOX };
 struct PhysicsComponent
 {
     Maths::vec3 velocity      = {0.0, 0.0, 0.0};
@@ -46,6 +40,7 @@ struct PhysicsComponent
     bool frozen               = false;
     
     Collider collider         = Collider::NONE;
+    
     Maths::vec3 halfExtents   = {0.0, 0.0, 0.0};
     float radius              = 1.0f;
     float height              = 1.0f;
