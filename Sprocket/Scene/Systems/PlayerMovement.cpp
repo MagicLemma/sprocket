@@ -6,7 +6,8 @@
 
 namespace Sprocket {
 
-PlayerMovement::PlayerMovement()
+PlayerMovement::PlayerMovement(PhysicsEngine* physicsEngine)
+    : d_physicsEngine(physicsEngine)
 {
 }
 

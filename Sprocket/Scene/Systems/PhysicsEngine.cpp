@@ -168,10 +168,6 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         material.setBounciness(physics.bounciness);
         material.setFrictionCoefficient(physics.frictionCoefficient);
         material.setRollingResistance(physics.rollingResistance);
-
-        if (entity.Has<PlayerComponent>()) { // Handle player movement updates.
-            UpdatePlayer(dt, entity);
-        }
     });
 
     // Update System
@@ -198,6 +194,10 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         transform.position = Convert(bodyData->getTransform().getPosition());
         transform.orientation = Convert(bodyData->getTransform().getOrientation());
         physics.velocity = Convert(bodyData->getLinearVelocity());
+
+        if (entity.Has<PlayerComponent>()) { // Handle player movement updates.
+            UpdatePlayer(dt, entity);
+        }
     });
 }
 
