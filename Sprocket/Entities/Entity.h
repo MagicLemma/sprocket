@@ -6,7 +6,7 @@ namespace Sprocket {
 
 class Entity
 {
-    friend class EntityManager;
+    friend class Scene;
     
     entt::registry* d_registry;
     entt::entity    d_entity;

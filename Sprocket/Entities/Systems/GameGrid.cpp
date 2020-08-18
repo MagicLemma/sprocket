@@ -1,7 +1,7 @@
 #include "GameGrid.h"
 #include "CameraUtils.h"
 #include "Components.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "MouseEvent.h"
 #include "MouseCodes.h"
 #include "Log.h"
@@ -26,7 +26,7 @@ GameGrid::GameGrid(Window* window)
     d_keyboard.ConsumeAll(false);
 }
 
-void GameGrid::OnStartup(EntityManager& manager)
+void GameGrid::OnStartup(Scene& manager)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
@@ -75,7 +75,7 @@ void GameGrid::OnStartup(EntityManager& manager)
     });
 }
 
-void GameGrid::OnUpdate(Sprocket::EntityManager&, double)
+void GameGrid::OnUpdate(Sprocket::Scene&, double)
 {
     auto& camTr = d_camera.Get<TransformComponent>();
 

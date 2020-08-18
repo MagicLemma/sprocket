@@ -64,6 +64,20 @@
         "fstream": "cpp",
         "set": "cpp",
         "xtree": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "complex": "cpp",
+        "deque": "cpp",
+        "filesystem": "cpp",
+        "forward_list": "cpp",
+        "future": "cpp",
+        "iomanip": "cpp",
+        "numeric": "cpp",
+        "optional": "cpp",
+        "queue": "cpp",
+        "random": "cpp",
+        "regex": "cpp",
+        "typeindex": "cpp",
+        "unordered_set": "cpp",
+        "valarray": "cpp"
     }
 }

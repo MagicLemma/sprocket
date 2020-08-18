@@ -22,7 +22,7 @@
 // ENTITIES
 #include "Entities/Entity.h"
 #include "Entities/Components.h"
-#include "Entities/EntityManager.h"
+#include "Entities/Scene.h"
 #include "Entities/EntitySystem.h"
 #include "Entities/Serialiser.h"
 

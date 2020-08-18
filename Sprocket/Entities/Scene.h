@@ -13,7 +13,7 @@
 
 namespace Sprocket {
     
-class EntityManager
+class Scene
 {
 public:
     using EntityCallback = std::function<void(Entity&)>;
@@ -35,7 +35,7 @@ private:
     template <typename T> void OnRemoveCB(entt::registry& r, entt::entity e);
 
 public:
-    EntityManager(const std::vector<EntitySystem*> systems);
+    Scene(const std::vector<EntitySystem*> systems);
     
     Entity NewEntity();
 
@@ -62,7 +62,7 @@ public:
 };
 
 template <typename... Components>
-void EntityManager::Each(EntityCallback lambda)
+void Scene::Each(EntityCallback lambda)
 {
     for (auto& entity : d_registry.view<Components...>()) {
         lambda(Entity(&d_registry, entity));   
@@ -70,31 +70,31 @@ void EntityManager::Each(EntityCallback lambda)
 }
 
 template <typename T>
-void EntityManager::OnAdd(EntityCallback func)
+void Scene::OnAdd(EntityCallback func)
 {
     auto it = d_addFunctions.find(typeid(T));
     if (it == d_addFunctions.end()) {
         // Register the signal when we add the first function.
         d_registry.on_construct<T>()
-            .connect<&EntityManager::OnAddCB<T>>(*this);
+            .connect<&Scene::OnAddCB<T>>(*this);
     }
     d_addFunctions[typeid(T)].push_back(func);
 }
 
 template <typename T>
-void EntityManager::OnRemove(EntityCallback func)
+void Scene::OnRemove(EntityCallback func)
 {
     auto it = d_removeFunctions.find(typeid(T));
     if (it == d_removeFunctions.end()) {
         // Register the signal when we add the first function.
         d_registry.on_destroy<T>()
-            .connect<&EntityManager::OnRemoveCB<T>>(*this);
+            .connect<&Scene::OnRemoveCB<T>>(*this);
     }
     d_removeFunctions[typeid(T)].push_back(func);
 }
 
 template <typename T>
-void EntityManager::OnAddCB(entt::registry& r, entt::entity e)
+void Scene::OnAddCB(entt::registry& r, entt::entity e)
 {
     auto it = d_addFunctions.find(typeid(T));
     if (it != d_addFunctions.end()) {
@@ -105,7 +105,7 @@ void EntityManager::OnAddCB(entt::registry& r, entt::entity e)
 }
 
 template <typename T>
-void EntityManager::OnRemoveCB(entt::registry& r, entt::entity e)
+void Scene::OnRemoveCB(entt::registry& r, entt::entity e)
 {
     auto it = d_removeFunctions.find(typeid(T));
     if (it != d_removeFunctions.end()) {

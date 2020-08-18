@@ -42,8 +42,8 @@ public:
     );
     ~Selector() {}
 
-    void OnStartup(EntityManager& manager) override;
-    void OnUpdate(EntityManager& manager, double dt) override;
+    void OnStartup(Scene& manager) override;
+    void OnUpdate(Scene& manager, double dt) override;
     void OnEvent(Event& event) override;
 
     void Enable(bool newEnabled);

@@ -1,6 +1,6 @@
 #include "PhysicsEngine.h"
 #include "Log.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "Components.h"
 
 #include <variant>
@@ -113,7 +113,7 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     d_impl->world.setNbIterationsVelocitySolver(8);
 }
 
-void PhysicsEngine::OnStartup(EntityManager& manager)
+void PhysicsEngine::OnStartup(Scene& manager)
 {
     manager.OnAdd<PhysicsComponent>([&](Entity& entity) {
         assert(entity.Has<TransformComponent>());
@@ -148,7 +148,7 @@ void PhysicsEngine::OnStartup(EntityManager& manager)
     });
 }
 
-void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
+void PhysicsEngine::OnUpdate(Scene& manager, double dt)
 {
     if (!d_running) { return; }
 

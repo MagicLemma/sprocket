@@ -1,54 +1,54 @@
-#include "EntityManager.h"
+#include "Scene.h"
 #include "Components.h"
 
 namespace Sprocket {
 
-EntityManager::EntityManager(const std::vector<EntitySystem*> systems)
+Scene::Scene(const std::vector<EntitySystem*> systems)
     : d_systems(systems)
     , d_registry()
 {
 }
 
-Entity EntityManager::NewEntity()
+Entity Scene::NewEntity()
 {
     auto e = d_registry.create();
     return Entity(&d_registry, e);
 }
 
-void EntityManager::OnStartup()
+void Scene::OnStartup()
 {
     for (auto& system : d_systems) {
         system->OnStartup(*this);
     }
 }
 
-void EntityManager::OnUpdate(double dt)
+void Scene::OnUpdate(double dt)
 {
     for (auto system : d_systems) {
         system->OnUpdate(*this, dt);
     }
 }
 
-void EntityManager::OnEvent(Event& event)
+void Scene::OnEvent(Event& event)
 {
     for (auto system : d_systems) {
         system->OnEvent(event);
     }
 }
 
-std::size_t EntityManager::Size() const
+std::size_t Scene::Size() const
 {
     return d_registry.alive();
 }
 
-void EntityManager::All(EntityCallback func)
+void Scene::All(EntityCallback func)
 {
     d_registry.each([&](auto entity) {
         func(Entity(&d_registry, entity));
     });
 }
 
-void EntityManager::Clear()
+void Scene::Clear()
 {
     d_registry.each([&](auto entity) {
         if (!d_registry.has<TemporaryComponent>(entity)) {

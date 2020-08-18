@@ -29,7 +29,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::PhysicsEngine  d_physicsEngine;
     Sprocket::Selector       d_selector;
     Sprocket::ScriptRunner   d_scriptRunner;
-    Sprocket::EntityManager  d_entityManager;
+    Sprocket::Scene  d_entityManager;
 
     Sprocket::Serialiser d_serialiser;
 

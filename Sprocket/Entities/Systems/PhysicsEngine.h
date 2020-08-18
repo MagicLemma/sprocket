@@ -44,9 +44,9 @@ public:
     PhysicsEngine(const Maths::vec3& gravity);
     ~PhysicsEngine() {}
 
-    void OnStartup(EntityManager& manager) override;
+    void OnStartup(Scene& manager) override;
 
-    void OnUpdate(EntityManager& manager, double dt) override;
+    void OnUpdate(Scene& manager, double dt) override;
 
     void Running(bool isRunning);
     bool Running() const { return d_running; }

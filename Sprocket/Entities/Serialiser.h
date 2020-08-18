@@ -1,5 +1,5 @@
 #pragma once
-#include "EntityManager.h"
+#include "Scene.h"
 
 #include <string>
 
@@ -7,10 +7,10 @@ namespace Sprocket {
 
 class Serialiser
 {
-    EntityManager* d_scene;
+    Scene* d_scene;
 
 public:
-    Serialiser(EntityManager* scene) : d_scene(scene) {}
+    Serialiser(Scene* scene) : d_scene(scene) {}
 
     void Serialise(const std::string& file);
         // Writes the current scene to the given file.

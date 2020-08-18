@@ -131,7 +131,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 }
 
 void AddEntityPanel(Sprocket::DevUI::Context& ui,
-                    Sprocket::EntityManager* entities,
+                    Sprocket::Scene* entities,
                     Sprocket::ModelManager* models)
 {
     ui.StartWindow("Add Entity");

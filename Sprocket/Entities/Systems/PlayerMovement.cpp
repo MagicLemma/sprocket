@@ -1,6 +1,6 @@
 #include "PlayerMovement.h"
 #include "KeyboardCodes.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "Components.h"
 #include "Log.h"
 
@@ -10,7 +10,7 @@ PlayerMovement::PlayerMovement()
 {
 }
 
-void PlayerMovement::OnUpdate(EntityManager& manager, double dt)
+void PlayerMovement::OnUpdate(Scene& manager, double dt)
 {
     d_mouse.OnUpdate();
 

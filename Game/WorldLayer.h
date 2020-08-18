@@ -19,7 +19,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::ScriptRunner  d_scriptRunner;
     Sprocket::PathFollower  d_pathFollower;
     Sprocket::GameGrid      d_gameGrid;
-    Sprocket::EntityManager d_entityManager;
+    Sprocket::Scene d_entityManager;
 
     Sprocket::Serialiser d_serialiser;
 

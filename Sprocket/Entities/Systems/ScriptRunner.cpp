@@ -1,9 +1,8 @@
 #include "ScriptRunner.h"
 #include "Log.h"
 #include "Entity.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "LuaEngine.h"
-#include "EntityManager.h"
 #include "Components.h"
 
 #include <utility>
@@ -15,7 +14,7 @@ ScriptRunner::ScriptRunner()
     d_keyboard.ConsumeAll(false);
 }
 
-void ScriptRunner::OnStartup(EntityManager& manager)
+void ScriptRunner::OnStartup(Scene& manager)
 {
     manager.OnAdd<ScriptComponent>([&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
@@ -31,7 +30,7 @@ void ScriptRunner::OnStartup(EntityManager& manager)
     });
 }
 
-void ScriptRunner::OnUpdate(EntityManager& manager, double dt)
+void ScriptRunner::OnUpdate(Scene& manager, double dt)
 {
     d_mouse.OnUpdate();
 

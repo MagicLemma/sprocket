@@ -6,17 +6,17 @@
 
 namespace Sprocket {
 
-class EntityManager;
+class Scene;
 
 class EntitySystem
 {
 public:
     EntitySystem() = default;
 
-    virtual void OnStartup(EntityManager& manager) {};
+    virtual void OnStartup(Scene& manager) {};
         // Called once when the EntityManager starts up.
     
-    virtual void OnUpdate(EntityManager& manager, double dt) {};
+    virtual void OnUpdate(Scene& manager, double dt) {};
         // Called every tick of the game loop.
 
     virtual void OnEvent(Event& event) {};

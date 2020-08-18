@@ -45,7 +45,7 @@ add_library(Sprocket STATIC
             UI/DevUI.cpp
 
             Entities/Entity.cpp
-            Entities/EntityManager.cpp
+            Entities/Scene.cpp
             Entities/EntitySystem.cpp
             Entities/Serialiser.cpp
 
