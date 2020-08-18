@@ -21,6 +21,8 @@ void PlayerMovement::OnUpdate(Scene& scene, double dt)
         auto& player = entity.Get<PlayerComponent>();
         auto& physics = entity.Get<PhysicsComponent>();
 
+        if (!d_enabled) { return; }
+
         player.yaw -= d_mouse.GetMouseOffset().x * 0.15f;
 
         if (entity.Has<CameraComponent>()) {

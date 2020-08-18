@@ -70,14 +70,7 @@ void Serialiser::Serialise(const std::string& file)
         if (entity.Has<PlayerComponent>()) {
             const auto& player = entity.Get<PlayerComponent>();
             out << YAML::Key << "Player" << YAML::BeginMap;
-            out << YAML::Key << "MovingForwards" << YAML::Value << player.movingForwards;
-            out << YAML::Key << "MovingBackwards" << YAML::Value << player.movingBackwards;
-            out << YAML::Key << "MovingLeft" << YAML::Value << player.movingLeft;
-            out << YAML::Key << "MovingRight" << YAML::Value << player.movingRight;
-            out << YAML::Key << "Jumping" << YAML::Value << player.jumping;
-            out << YAML::Key << "Direction" << YAML::Value << player.direction;
             out << YAML::Key << "Yaw" << YAML::Value << player.yaw;
-            out << YAML::Key << "Pitch" << YAML::Value << player.pitch;
             out << YAML::EndMap;
         }
         if (entity.Has<CameraComponent>()) {
@@ -173,14 +166,7 @@ void Serialiser::Deserialise(const std::string& file)
 
         if (auto player = entity["Player"]) {
             PlayerComponent pc;
-            pc.movingForwards = player["MovingForwards"].as<bool>();
-            pc.movingBackwards = player["MovingBackwards"].as<bool>();
-            pc.movingLeft = player["MovingLeft"].as<bool>();
-            pc.movingRight = player["MovingRight"].as<bool>();
-            pc.jumping = player["Jumping"].as<bool>();
-            pc.direction = player["Direction"].as<Maths::vec3>();
-            pc.yaw = player["Yaw"].as<float>();
-            pc.pitch = player["Pitch"].as<float>();
+            pc.yaw = player["Yaw"].as<float>();;
             e.Add(pc);
         }
 

@@ -166,14 +166,7 @@ Entities:
       FrictionCoefficient: 0.4
       RollingResistance: 1
     Player:
-      MovingForwards: false
-      MovingBackwards: false
-      MovingLeft: false
-      MovingRight: false
-      Jumping: false
-      Direction: [0, 0, 0]
       Yaw: 0
-      Pitch: 0
     Camera:
       Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
       Pitch: 0

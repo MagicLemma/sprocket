@@ -43,11 +43,7 @@ void PlayerComponentInfo(Sprocket::DevUI::Context& ui,
 {
     using namespace Sprocket::Maths;
     if (ui.StartTreeNode("Player")) {
-        ui.Text("Moving Forwards: " + ToString(play.movingForwards));
-        ui.Text("Moving Backwards: " + ToString(play.movingBackwards));
-        ui.Text("Moving Left: " + ToString(play.movingLeft));
-        ui.Text("Moving Right: " + ToString(play.movingRight));
-        ui.Text("Jumping: " + ToString(play.jumping));
+        ui.Text("Yaw: " + ToString(play.yaw));
         ui.EndTreeNode();
     }
 }
