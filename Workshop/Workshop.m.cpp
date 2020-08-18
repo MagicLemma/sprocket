@@ -5,36 +5,36 @@
 
 int main()
 {
-    Sprocket::Log::Init();
-    Sprocket::Window window("Workshop");
-    Sprocket::SceneManager sceneManager;
-    Sprocket::ModelManager modelManager;
-    Sprocket::TextureManager textureManager;
+    using namespace Sprocket;
+    Log::Init();
 
-    window.SetCallback([&sceneManager](Sprocket::Event& event) {
-        sceneManager.OnEvent(event);
+    Window window("Workshop");
+    ModelManager modelManager;
+    TextureManager textureManager;
+
+    App app;
+
+    window.SetCallback([&app](Event& event) {
+        app.OnEvent(event);
     });
 
-    Sprocket::CoreSystems core;
+    CoreSystems core;
     core.window = &window;
-    core.sceneManager = &sceneManager;
     core.modelManager = &modelManager;
     core.textureManager = &textureManager;
 
-    auto world = sceneManager.AddScene("World");
-    auto worldLayer = world->Add<WorldLayer>(core);
-    auto editorUi = world->Add<EditorUI>(core, worldLayer.get());
-    world->Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
-    sceneManager.SetActiveScene("World");
+    auto worldLayer = app.Add<WorldLayer>(core);
+    auto editorUi = app.Add<EditorUI>(core, worldLayer.get());
+    app.Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
 
-    Sprocket::Stopwatch watch;
+    Stopwatch watch;
     watch.PrintFramerate(false);
 
     while (window.Running()) {
         window.Clear();
         
         watch.OnUpdate();
-        sceneManager.OnUpdate(watch.DeltaTime());
+        app.OnUpdate(watch.DeltaTime());
 
         window.OnUpdate();
     }

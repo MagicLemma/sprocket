@@ -19,18 +19,18 @@ find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
 find_package(EnTT CONFIG REQUIRED)
+find_package(yaml-cpp CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
 
+            Core/App.cpp
             Core/CoreSystems.cpp
             Core/Window.cpp
-            Core/SceneManager.cpp
             Core/ModelManager.cpp
             Core/TextureManager.cpp
             Core/Layer.cpp
-            Core/Scene.cpp
 
             Audio/Listener.cpp
             Audio/Music.cpp
@@ -44,15 +44,18 @@ add_library(Sprocket STATIC
             UI/SinglePanelUI.cpp
             UI/DevUI.cpp
 
-            Entities/Entity.cpp
-            Entities/EntityManager.cpp
-            Entities/EntitySystem.cpp
+            Scene/Entity.cpp
+            Scene/Scene.cpp
+            Scene/EntitySystem.cpp
+            Scene/Serialiser.cpp
 
-            Entities/Systems/BasicSelector.cpp
-            Entities/Systems/Selector.cpp
-            Entities/Systems/PhysicsEngine.cpp
-            Entities/Systems/PlayerMovement.cpp
-            Entities/Systems/ScriptRunner.cpp
+            Scene/Systems/BasicSelector.cpp
+            Scene/Systems/Selector.cpp
+            Scene/Systems/PhysicsEngine.cpp
+            Scene/Systems/PlayerMovement.cpp
+            Scene/Systems/ScriptRunner.cpp
+            Scene/Systems/GameGrid.cpp
+            Scene/Systems/PathFollower.cpp
 
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
@@ -89,12 +92,14 @@ add_library(Sprocket STATIC
             
             Utility/Log.cpp
             Utility/Colour.cpp
+            Utility/FileBrowser.cpp
             Utility/KeyboardProxy.cpp
             Utility/MouseProxy.cpp
             Utility/Random.cpp
             Utility/Maths.cpp
             Utility/Stopwatch.cpp
             Utility/Tokenize.cpp
+            Utility/Yaml.cpp
 
             Scripting/LuaEngine.cpp
             Scripting/LuaGlobals.cpp
@@ -116,14 +121,15 @@ target_link_libraries(Sprocket PUBLIC
                       sfml-system
                       sfml-audio
                       EnTT::EnTT
+                      yaml-cpp
                       ${LUA_LIBRARIES})
 
 target_include_directories(Sprocket PUBLIC
                            .
                            ./Audio
                            ./Core
-                           ./Entities
-                           ./Entities/Systems
+                           ./Scene
+                           ./Scene/Systems
                            ./Events
                            ./Graphics
                            ./Graphics/Primitives

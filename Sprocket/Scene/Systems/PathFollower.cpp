@@ -1,10 +1,12 @@
 #include "PathFollower.h"
+#include "Components.h"
+#include "Maths.h"
 
-void PathFollower::OnUpdate(Sprocket::EntityManager& manager, double dt)
+namespace Sprocket {
+
+void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt)
 {
-    using namespace Sprocket;
-
-    manager.Each<TransformComponent, PathComponent>([&](Entity& entity) {
+    scene.Each<TransformComponent, PathComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         auto& path = entity.Get<PathComponent>();
         if (path.markers.empty()) { return; }
@@ -24,4 +26,6 @@ void PathFollower::OnUpdate(Sprocket::EntityManager& manager, double dt)
             path.markers.pop();
         }
     });
+}
+
 }

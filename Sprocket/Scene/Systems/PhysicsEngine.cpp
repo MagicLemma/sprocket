@@ -1,6 +1,6 @@
 #include "PhysicsEngine.h"
 #include "Log.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "Components.h"
 
 #include <variant>
@@ -113,9 +113,9 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     d_impl->world.setNbIterationsVelocitySolver(8);
 }
 
-void PhysicsEngine::OnStartup(EntityManager& manager)
+void PhysicsEngine::OnStartup(Scene& scene)
 {
-    manager.OnAdd<PhysicsComponent>([&](Entity& entity) {
+    scene.OnAdd<PhysicsComponent>([&](Entity& entity) {
         assert(entity.Has<TransformComponent>());
 
         auto& transform = entity.Get<TransformComponent>();
@@ -138,7 +138,7 @@ void PhysicsEngine::OnStartup(EntityManager& manager)
         AddCollider(entity);
     });
 
-    manager.OnRemove<PhysicsComponent>([&](Entity& entity) {
+    scene.OnRemove<PhysicsComponent>([&](Entity& entity) {
         auto& physics = entity.Get<PhysicsComponent>();
 
         auto rigidBodyIt = d_impl->entityData.find(entity.Id());
@@ -148,12 +148,12 @@ void PhysicsEngine::OnStartup(EntityManager& manager)
     });
 }
 
-void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
+void PhysicsEngine::OnUpdate(Scene& scene, double dt)
 {
     if (!d_running) { return; }
 
     // Pre Update
-    manager.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
+    scene.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
         const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<PhysicsComponent>();
         auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
@@ -190,7 +190,7 @@ void PhysicsEngine::OnUpdate(EntityManager& manager, double dt)
     }
 
     // Post Update
-    manager.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
+    scene.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         auto& physics = entity.Get<PhysicsComponent>();
         const auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;

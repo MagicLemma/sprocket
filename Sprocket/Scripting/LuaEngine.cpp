@@ -84,7 +84,7 @@ void LuaEngine::RunScript(const std::string& filename)
 
 void LuaEngine::CallInitFunction()
 {
-    SPKT_LOG_INFO("Calling init!");
+    SPKT_LOG_INFO("LuaEngine: Calling init!");
 
     lua_getglobal(d_L, "Init");
     

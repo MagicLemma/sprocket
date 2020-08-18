@@ -3,84 +3,16 @@
 #include "PathFollower.h"
 #include "PathCalculator.h"
 
-namespace {
-
-constexpr int ROWS = 50;
-constexpr int COLUMNS = 50;
-
-constexpr char MAP[ROWS + 1][COLUMNS + 1] = {
-    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
-    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr--rrrrrrrrr",
-    "rrrrrrrrrrrrrr-----rrrrrrrrrrrrrrrrrr-----rrrrrrrr",
-    "rrrrrrrrrr-------------rrrr-rrrr-rr----------rrrrr",
-    "rrrr-------------------------------------------rrr",
-
-    "rrrr--------------Trr-------T-----mmT---------rrrr",
-    "rrrrr------------rrr----T--rrrmrrmr---m-------rrrr",
-    "rrrrr----------------rrrrrrmrrrmr--mr---T------rrr",
-    "rrrrr-------------Trrrrrrrrrrr----T-----------rrrr",
-    "rrrrr----T------rrrrrrrrrr---rr----------------rrr",
-
-    "rrrrr--Ti----------rrr------rr-----------------rrr",
-    "rrrrr-------irrrr----------rrrrr----------------rr",
-    "rrrrr----irrrri--T---------rrrrr----------------rr",
-    "rrrrr------Tri---------------rrrr--------------rrr",
-    "rrrr------------iT-----------rr----------------rrr",
-
-    "rrrr------------------T---t---r----------------rrr",
-    "rrrr--------------T-----trrr--rt--------------rrrr",
-    "rrrrr----------------T--rrrrr-----------------rrrr",
-    "rrrrr------------------trrrrrtr----------------rrr",
-    "rrrrr--------------Trrrrrrrrtr-----------------rrr",
-
-    "rrrrr------------------rrrrrr------------------rrr",
-    "rrrrr----------------T--rrrt--------------------rr",
-    "rrrrr---------------trr-T-t---------------------rr",
-    "rrrr---------------T---------------------------rrr",
-    "rrrr-------------------------------------------rrr",
-
-    "rrrr--------------Trr-------T-----mmT---------rrrr",
-    "rrr--------------rrr----T--rrrmrrmr---m-------rrrr",
-    "rr-------------------rrrrrrmrrrmr--mr---T------rrr",
-    "rr----------------Trrrrrrrrrrr----T-----------rrrr",
-    "rr-------T------rrrrrrrrrr---rr----------------rrr",
-
-    "rrr----Ti----------rrr------rr-----------------rrr",
-    "rrr---------irrrr----------rrrrr----------------rr",
-    "rrrr-----irrrri--T---------rrrrr----------------rr",
-    "rrrr-------Tri---------------rrrr--------------rrr",
-    "rrr-------------iT-----------rr----------------rrr",
-
-    "rr---------------------------------------------rrr",
-    "rr--------------------------------------------rrrr",
-    "rr--------------------------------------------rrrr",
-    "rr---------------------------------------------rrr",
-    "rr---------------------------------------------rrr",
-
-    "rrr----Ti----------rrr------rr-----------------rrr",
-    "rrrr--------irrrr----------rrrrr----------------rr",
-    "rrrr-----irrrri--T---------rrrrr----------------rr",
-    "rrrr-------Tri---------------rrrr--------------rrr",
-    "rrrr------------iT-----------rr----------------rrr",
-
-    "rrrr-------------------------------------------rrr",
-    "rrrrrrrrr--------------rrrrrrrrr-------------rrrrr",
-    "rrrrrrrrrrrrr------rrrrrrrrrrrrrrr-------rrrrrrrrr",
-    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr--rrrrrrrrrrr",
-    "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
-};
-
-}
-
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower})
-    , d_gameGrid(&d_entityManager)
+    , d_gameGrid(core.window)
+    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower, &d_gameGrid})
     , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
+    , d_serialiser(&d_entityManager)
 {
     using namespace Sprocket;
 
@@ -105,86 +37,39 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
 
-    {
-        auto worker = d_entityManager.NewEntity();
+    LoadScene("Resources/Scene.yaml");
+}
 
-        auto& name = worker.Add<NameComponent>();
-        name.name = "Worker";
+void WorldLayer::SaveScene()
+{
+    SPKT_LOG_INFO("Saving...");
+    d_serialiser.Serialise(d_sceneFile);
+    SPKT_LOG_INFO("  Done!");
+}
 
-        auto& tr = worker.Add<TransformComponent>();
-        tr.position = {0.5f, 0.5f, 0.5f};
-        
-        worker.Add<SelectComponent>();
+void WorldLayer::LoadScene(const std::string& sceneFile)
+{
+    using namespace Sprocket;
 
-        auto& path = worker.Add<PathComponent>();
-        path.speed = 3.0f;
+    d_selector.SetSelected(Entity());
+    d_paused = false;
 
-        auto& modelData = worker.Add<ModelComponent>();
-        modelData.model = "Resources/Models/Cube.obj";
-        modelData.scale = 0.5f;
+    d_sceneFile = sceneFile;
+    d_serialiser.Deserialise(sceneFile);
 
-        d_worker = worker;
-    }
-
-    {
-        auto camera = d_entityManager.NewEntity();
-
-        auto& name = camera.Add<NameComponent>();
-        name.name = "Camera";
-
-        auto& tr = camera.Add<TransformComponent>();
-        tr.position = {0, 5, 0};
-
-        auto& c = camera.Add<CameraComponent>();
-      
-        ScriptComponent script;
-        script.script = "Resources/Scripts/ThirdPersonCamera.lua";
-        camera.Add<ScriptComponent>(script);
-
-        d_camera = camera;
-    }
-
-    {
-        auto terrain = d_entityManager.NewEntity();
-
-        auto& name = terrain.Add<NameComponent>();
-        name.name = "Terrain";
-
-        auto& tr = terrain.Add<TransformComponent>();
-        tr.position = {0, 0, 0};
-
-        auto& modelData = terrain.Add<ModelComponent>();
-        modelData.scale = 25.0f;
-        modelData.model = "Resources/Models/Square.obj";
-        modelData.texture = "Resources/Textures/Green.PNG";
-        
-        terrain.Add<SelectComponent>();
-    }
-
-    for (int i = 0; i != ROWS; ++i) {
-        for (int j = 0; j != COLUMNS; ++j) {
-            char val = MAP[i][j];
-            if (val == '-') {
-                continue;
-            }
-            else if (val == 'T') {
-                AddTree({i - 25, j - 25});
-            }
-            else if (val == 'r') {
-                AddRock({i - 25, j - 25});
-            }
-            else if (val == 't') {
-                AddTin({i - 25, j - 25});
-            }
-            else if (val == 'i') {
-                AddIron({i - 25, j - 25});
-            }
-            else if (val == 'm') {
-                AddMithril({i - 25, j - 25});
-            }
-        
+    d_entityManager.Each<NameComponent>([&](Entity& entity) {
+        const auto& name = entity.Get<NameComponent>();
+        if (name.name == "Worker") {
+            d_worker = entity;
         }
-    }
+        else if (name.name == "Camera") {
+            d_camera = entity;
+            d_gameGrid.SetCamera(entity);
+        }
+    });
+
+    assert(!d_worker.Null());
+    assert(!d_camera.Null());
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -241,7 +126,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     }
 
     d_entityManager.OnEvent(event);
-    d_gameGrid.OnEvent(event);
 }
 
 void WorldLayer::OnUpdate(double dt)
@@ -250,7 +134,6 @@ void WorldLayer::OnUpdate(double dt)
     Audio::SetListener(d_camera);
 
     d_hoveredEntityUI.OnUpdate(dt);
-    d_gameGrid.OnUpdate(d_core.window, &d_camera);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
     
@@ -310,14 +193,12 @@ void WorldLayer::OnUpdate(double dt)
         float h = (float)d_core.window->Height();
 
         if (d_gameGrid.SelectedPosition().has_value()) {
+            auto selected = d_gameGrid.Selected();
+
             float width = 0.15f * w;
             float height = 0.6f * h;
             float x = w - width;
             float y = ((1.0f - 0.6f) / 2) * h;
-
-            static auto ironTex = Texture("Resources/Textures/Iron.png");
-            static auto tinTex = Texture("Resources/Textures/Tin.png");
-            static auto mithrilTex = Texture("Resources/Textures/Mithril.png");
 
             Maths::vec4 region{x, y, width, height};
             bool active = true;
@@ -325,35 +206,34 @@ void WorldLayer::OnUpdate(double dt)
             bool clickable = true;
             if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable, &clickable)) {
                 
-                auto selected = d_gameGrid.Selected();
                 auto pos = d_gameGrid.SelectedPosition().value();
                 if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddTree(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddRock(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddIron(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddTin(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                     AddMithril(pos);
                 }
 
                 if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                    d_gameGrid.DeleteSelected();
+                    selected.Kill();
                 }
 
                 d_hoveredEntityUI.EndPanel();
@@ -374,8 +254,6 @@ void WorldLayer::OnUpdate(double dt)
             bool clickable = false;
             if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
                 
-                auto hovered = d_gameGrid.Hovered();
-
                 std::string name = "Unnamed";
                 if (hovered.Has<NameComponent>()) {
                     name = hovered.Get<NameComponent>().name;
@@ -411,7 +289,8 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
-    d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
+    GridComponent gc = {pos.x, pos.y};
+    newEntity.Add(gc);
 }
 
 void WorldLayer::AddRockBase(
@@ -437,7 +316,8 @@ void WorldLayer::AddRockBase(
     modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
-    d_gameGrid.AddEntity(&newEntity, pos.x, pos.y);
+    GridComponent gc = {pos.x, pos.y};
+    newEntity.Add(gc);
 }
 
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)

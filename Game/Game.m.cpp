@@ -10,25 +10,23 @@ int main()
     Log::Init();
 
     Window window("Game!");
-    SceneManager   sceneManager;
     ModelManager   modelManager;
     TextureManager textureManager;
 
-    window.SetCallback([&sceneManager](Event& event) {
-        sceneManager.OnEvent(event);
+    App app;
+    
+    window.SetCallback([&app](Event& event) {
+        app.OnEvent(event);
     });
 
     CoreSystems core;
     core.window = &window;
-    core.sceneManager = &sceneManager;
     core.modelManager = &modelManager;
     core.textureManager = &textureManager;
 
-    auto world = sceneManager.AddScene("World");
-    auto worldLayer = world->Add<WorldLayer>(core);
-    auto editorUi = world->Add<EditorUI>(core, worldLayer.get());
-    world->Add<EscapeMenu>(core, worldLayer.get());
-    sceneManager.SetActiveScene("World");
+    auto worldLayer = app.Add<WorldLayer>(core);
+    auto editorUi = app.Add<EditorUI>(core, worldLayer.get());
+    app.Add<EscapeMenu>(core, worldLayer.get());
  
     Stopwatch watch;
 
@@ -40,7 +38,7 @@ int main()
         window.Clear();
         
         watch.OnUpdate();
-        sceneManager.OnUpdate(watch.DeltaTime());
+        app.OnUpdate(watch.DeltaTime());
 
         std::string name = "Game! FPS: " + std::to_string(watch.Framerate());
         window.SetWindowName(name);

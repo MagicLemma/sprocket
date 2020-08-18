@@ -17,8 +17,11 @@ class WorldLayer : public Sprocket::Layer
     // Entity management and systems
     Sprocket::BasicSelector d_selector;
     Sprocket::ScriptRunner  d_scriptRunner;
-    PathFollower  d_pathFollower;
-    Sprocket::EntityManager d_entityManager;
+    Sprocket::PathFollower  d_pathFollower;
+    Sprocket::GameGrid      d_gameGrid;
+    Sprocket::Scene d_entityManager;
+
+    Sprocket::Serialiser d_serialiser;
 
     Sprocket::Entity d_camera;
     Sprocket::Entity d_worker;
@@ -39,11 +42,12 @@ class WorldLayer : public Sprocket::Layer
 
     Sprocket::MouseProxy d_mouse;
 
-    GameGrid d_gameGrid;
     Sprocket::SimpleUI d_hoveredEntityUI;
     
     // LAYER DATA
     bool d_paused = false;
+
+    std::string d_sceneFile = "";
 
     friend class EscapeMenu;
     friend class EditorUI;
@@ -53,6 +57,9 @@ public:
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
+
+    void SaveScene();
+    void LoadScene(const std::string& sceneFile);
 
     void AddTree(const Sprocket::Maths::ivec2& pos);
 

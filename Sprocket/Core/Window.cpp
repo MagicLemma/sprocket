@@ -216,4 +216,9 @@ void Window::SetClipboardData(const std::string& text)
 	glfwSetClipboardString(d_impl->window, text.c_str());
 }
 
+void* Window::NativeWindow() const
+{
+	return d_impl->window;
+}
+
 }

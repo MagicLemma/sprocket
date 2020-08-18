@@ -1,6 +1,6 @@
 #include "PlayerMovement.h"
 #include "KeyboardCodes.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "Components.h"
 #include "Log.h"
 
@@ -10,11 +10,11 @@ PlayerMovement::PlayerMovement()
 {
 }
 
-void PlayerMovement::OnUpdate(EntityManager& manager, double dt)
+void PlayerMovement::OnUpdate(Scene& scene, double dt)
 {
     d_mouse.OnUpdate();
 
-    manager.Each<PlayerComponent, PhysicsComponent>([&](Entity& entity) {
+    scene.Each<PlayerComponent, PhysicsComponent>([&](Entity& entity) {
         auto& player = entity.Get<PlayerComponent>();
         auto& physics = entity.Get<PhysicsComponent>();
 

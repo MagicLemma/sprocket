@@ -13,6 +13,13 @@ Entity::Entity(entt::registry* registry, entt::entity entity)
     , d_entity(entity)
 {}
 
+void Entity::Kill()
+{
+    if (!Null()) {
+        d_registry->destroy(d_entity);
+    }
+}
+
 bool operator==(Entity&& lhs, Entity&& rhs)
 {
     return lhs.Id() == rhs.Id();
@@ -22,6 +29,5 @@ bool operator==(const Entity& lhs, const Entity& rhs)
 {
     return lhs.Id() == rhs.Id();
 }
-
 
 }

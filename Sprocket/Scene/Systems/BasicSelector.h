@@ -15,7 +15,7 @@ public:
     BasicSelector();
     ~BasicSelector() {}
 
-    void OnStartup(EntityManager& manager) override;
+    void OnStartup(Scene& scene) override;
     
     void SetSelected(Entity entity);
         // Sets the current selected Entity. If called with a nullptr,

@@ -1,49 +1,92 @@
 #include "GameGrid.h"
 #include "CameraUtils.h"
+#include "Components.h"
+#include "Scene.h"
+#include "MouseEvent.h"
+#include "MouseCodes.h"
+#include "Log.h"
 
 #include <random>
+#include <cassert>
 
-using namespace Sprocket;
+namespace Sprocket {
 
-GameGrid::GameGrid(EntityManager* entityManager)
-    : d_hoveredSquare(entityManager->NewEntity())
-    , d_selectedSquare(entityManager->NewEntity())
+std::string Name(const Entity& e) {
+    if (e.Has<NameComponent>()) {
+        return e.Get<NameComponent>().name;
+    }
+    return "Entity";
+}
+
+GameGrid::GameGrid(Window* window)
+    : d_window(window)
     , d_hovered({0.0, 0.0})
     , d_selected({})
 {
-    std::string gridSqare = "Resources/Models/Square.obj";
-
-    auto& n1 = d_hoveredSquare.Add<NameComponent>();
-    n1.name = "Hovered Grid Highlighter";
-    auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
-    auto& model1 = d_hoveredSquare.Add<ModelComponent>();
-    model1.model = gridSqare;
-    model1.reflectivity = 0.0f;
-    model1.scale = 0.3f;
-
-    auto& n2 = d_selectedSquare.Add<NameComponent>();
-    n2.name = "Selected Grid Highlighter";
-    auto& tr2 = d_selectedSquare.Add<TransformComponent>();
-    auto& model2 = d_selectedSquare.Add<ModelComponent>();
-    model2.model = gridSqare;
-    model2.reflectivity = 0.0f;
-    model2.scale = 0.5f;
-
     d_keyboard.ConsumeAll(false);
 }
 
-void GameGrid::OnUpdate(Window* window, Entity* camera)
+void GameGrid::OnStartup(Scene& scene)
 {
-    auto& camTr = camera->Get<TransformComponent>();
+    std::string gridSquare = "Resources/Models/Square.obj";
+
+    d_hoveredSquare = scene.NewEntity();
+    auto& n1 = d_hoveredSquare.Add<NameComponent>();
+    d_hoveredSquare.Add<TemporaryComponent>();
+    n1.name = "Hovered Grid Highlighter";
+    auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
+    auto& model1 = d_hoveredSquare.Add<ModelComponent>();
+    model1.model = gridSquare;
+    model1.reflectivity = 0.0f;
+    model1.scale = 0.3f;
+
+    d_selectedSquare = scene.NewEntity();
+    auto& n2 = d_selectedSquare.Add<NameComponent>();
+    d_selectedSquare.Add<TemporaryComponent>();
+    n2.name = "Selected Grid Highlighter";
+    auto& tr2 = d_selectedSquare.Add<TransformComponent>();
+    auto& model2 = d_selectedSquare.Add<ModelComponent>();
+    model2.model = gridSquare;
+    model2.reflectivity = 0.0f;
+    model2.scale = 0.5f;
+
+    scene.OnAdd<GridComponent>([&](Entity& entity) {
+        auto& transform = entity.Get<TransformComponent>();
+        const auto& gc = entity.Get<GridComponent>();
+
+        assert(entity.Has<TransformComponent>());
+        assert(!d_gridEntities.contains({gc.x, gc.z}));
+    
+        transform.position.x = gc.x + 0.5f;
+        transform.position.z = gc.z + 0.5f;
+        d_gridEntities[{gc.x, gc.z}] = entity;
+    });
+
+    scene.OnRemove<GridComponent>([&](Entity& entity) {
+        auto& gc = entity.Get<GridComponent>();
+
+        auto it = d_gridEntities.find({gc.x, gc.z});
+        if (it == d_gridEntities.end()) {
+            SPKT_LOG_WARN("No entity exists at this coord!");
+        }
+        else {
+            d_gridEntities.erase(it);
+        }
+    });
+}
+
+void GameGrid::OnUpdate(Sprocket::Scene&, double)
+{
+    auto& camTr = d_camera.Get<TransformComponent>();
 
     d_mouse.OnUpdate();
     Maths::vec3 cameraPos = camTr.position;
     Maths::vec3 direction = Maths::GetMouseRay(
         d_mouse.GetMousePos(),
-        window->Width(),
-        window->Height(),
-        CameraUtils::MakeView(*camera),
-        CameraUtils::MakeProj(*camera)
+        d_window->Width(),
+        d_window->Height(),
+        CameraUtils::MakeView(d_camera),
+        CameraUtils::MakeProj(d_camera)
     );
 
     float lambda = -cameraPos.y / direction.y;
@@ -75,38 +118,6 @@ void GameGrid::OnEvent(Event& event)
     }
 }
 
-void GameGrid::AddEntity(Sprocket::Entity* entity, int x, int z)
-{
-    if (!entity->Has<TransformComponent>()) {
-        SPKT_LOG_ERROR("Entity cannot go in grid, no transform!");
-        return;
-    }
-
-    if (entity->Has<GridComponent>()) {
-        SPKT_LOG_WARN("Entity already in grid!");
-    }
-    else {
-        auto& c = entity->Add<GridComponent>();  // Mark it as in the grid.
-        c.x = x;
-        c.z = z;
-        entity->Get<TransformComponent>().position.x = x + 0.5f;
-        entity->Get<TransformComponent>().position.z = z + 0.5f;
-        d_gridEntities[{x, z}] = *entity;
-    }
-}
-
-void GameGrid::RemoveEntity(int x, int z)
-{
-    auto it = d_gridEntities.find({x, z});
-    if (it == d_gridEntities.end()) {
-        SPKT_LOG_WARN("No entity exists at this coord!");
-    }
-    else {
-        it->second.Remove<GridComponent>();
-        d_gridEntities.erase(it);
-    }
-}
-
 Sprocket::Entity GameGrid::At(int x, int z) const
 {
     auto it = d_gridEntities.find({x, z});
@@ -129,12 +140,4 @@ Sprocket::Entity GameGrid::Selected() const
     return Sprocket::Entity();
 }
 
-void GameGrid::DeleteSelected()
-{
-    auto selected = Selected();
-    if (!selected.Null()) {
-        selected.Kill();
-        auto pos = SelectedPosition().value();
-        RemoveEntity(pos.x, pos.y);
-    }
 }

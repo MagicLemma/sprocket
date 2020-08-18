@@ -6,7 +6,7 @@ namespace Sprocket {
 
 class Entity
 {
-    friend class EntityManager;
+    friend class Scene;
     
     entt::registry* d_registry;
     entt::entity    d_entity;
@@ -29,7 +29,7 @@ public:
 
     bool Null() const { return d_entity == entt::null; }
 
-    void Kill() { d_registry->destroy(d_entity); }
+    void Kill();
 };
 
 bool operator==(const Entity& lhs, const Entity& rhs);

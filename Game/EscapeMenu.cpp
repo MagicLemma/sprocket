@@ -1,5 +1,6 @@
 #include "EscapeMenu.h"
 #include "Palette.h"
+#include "FileBrowser.h"
 
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                        WorldLayer* worldLayer) 
@@ -83,8 +84,15 @@ void EscapeMenu::OnUpdate(double dt)
         d_worldLayer->d_cycle.SetAngle(angle);
 
         buttonRegion.y += 60;
-        static bool check = false;
-        d_ui.Checkbox("Checkbox", buttonRegion, &check);
+        if (d_ui.Button("Save", buttonRegion)) {
+            d_worldLayer->SaveScene();
+        }
+
+        buttonRegion.y += 60;
+        if (d_ui.Button("Open", buttonRegion)) {
+            std::string newScene = OpenFile(d_worldLayer->d_core.window, "");
+            d_worldLayer->LoadScene(newScene);
+        }
 
         buttonRegion.y += 60;
         d_ui.Checkbox("Volume Panel", buttonRegion, &showVolume);

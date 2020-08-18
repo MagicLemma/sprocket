@@ -11,3 +11,4 @@
 - sfml-system
 - sfml-audio
 - entt
+- yaml-cpp

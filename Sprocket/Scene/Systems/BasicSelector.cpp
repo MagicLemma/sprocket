@@ -1,5 +1,5 @@
 #include "BasicSelector.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "Components.h"
 #include "Log.h"
 
@@ -10,9 +10,9 @@ BasicSelector::BasicSelector()
 {
 }
 
-void BasicSelector::OnStartup(EntityManager& manager)
+void BasicSelector::OnStartup(Scene& scene)
 {
-    manager.OnRemove<SelectComponent>([&](Entity& entity) {
+    scene.OnRemove<SelectComponent>([&](Entity& entity) {
         if (entity == d_selectedEntity) { SetSelected(Entity()); }
     });
 }

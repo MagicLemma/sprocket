@@ -3,12 +3,11 @@
 //
 
 // CORE
+#include "Core/App.h"
 #include "Core/Window.h"
-#include "Core/SceneManager.h"
 #include "Core/ModelManager.h"
 #include "Core/TextureManager.h"
 #include "Core/Layer.h"
-#include "Core/Scene.h"
 
 // UI
 #include "UI/Font/FontAtlas.h"
@@ -20,17 +19,20 @@
 #include "UI/SinglePanelUI.h"
 #include "UI/DevUI.h"
 
-// ENTITIES
-#include "Entities/Entity.h"
-#include "Entities/Components.h"
-#include "Entities/EntityManager.h"
-#include "Entities/EntitySystem.h"
+// SCENE
+#include "Scene/Entity.h"
+#include "Scene/Components.h"
+#include "Scene/Scene.h"
+#include "Scene/EntitySystem.h"
+#include "Scene/Serialiser.h"
 
-#include "Entities/Systems/BasicSelector.h"
-#include "Entities/Systems/Selector.h"
-#include "Entities/Systems/PhysicsEngine.h"
-#include "Entities/Systems/PlayerMovement.h"
-#include "Entities/Systems/ScriptRunner.h"
+#include "Scene/Systems/BasicSelector.h"
+#include "Scene/Systems/Selector.h"
+#include "Scene/Systems/PhysicsEngine.h"
+#include "Scene/Systems/PlayerMovement.h"
+#include "Scene/Systems/ScriptRunner.h"
+#include "Scene/Systems/GameGrid.h"
+#include "Scene/Systems/PathFollower.h"
 
 // EVENTS
 #include "Events/Event.h"
@@ -42,6 +44,7 @@
 #include "Utility/Adaptors.h"
 #include "Utility/Log.h"
 #include "Utility/Colour.h"
+#include "Utility/FileBrowser.h"
 #include "Utility/HashPair.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"
@@ -51,6 +54,7 @@
 #include "Utility/MouseCodes.h"
 #include "Utility/Stopwatch.h"
 #include "Utility/Tokenize.h"
+#include "Utility/Yaml.h"
 
 // GRAPHICS
 #include "Graphics/RenderContext.h"

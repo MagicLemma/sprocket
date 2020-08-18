@@ -1,8 +1,19 @@
 #pragma once
 #include "Maths.h"
 #include <string>
+#include <queue>
 
 namespace Sprocket {
+
+// A flag component to say to the serialiser that an entity with this should not get saved.
+struct TemporaryComponent
+{
+};
+
+struct NameComponent
+{
+    std::string name;
+};
 
 struct TransformComponent
 {
@@ -20,14 +31,8 @@ struct ModelComponent
     float       reflectivity = 0.0f;
 };
 
-enum class Collider
-{
-    NONE,
-    SPHERE,
-    CAPSULE,
-    BOX
-};
 
+enum class Collider { NONE, SPHERE, CAPSULE, BOX };
 struct PhysicsComponent
 {
     Maths::vec3 velocity      = {0.0, 0.0, 0.0};
@@ -35,6 +40,7 @@ struct PhysicsComponent
     bool frozen               = false;
     
     Collider collider         = Collider::NONE;
+    
     Maths::vec3 halfExtents   = {0.0, 0.0, 0.0};
     float radius              = 1.0f;
     float height              = 1.0f;
@@ -43,11 +49,6 @@ struct PhysicsComponent
     float bounciness          = 0.5f;
     float frictionCoefficient = 0.3f;
     float rollingResistance   = 0.0f;
-};
-
-struct NameComponent
-{
-    std::string name;
 };
 
 struct ScriptComponent
@@ -79,6 +80,18 @@ struct SelectComponent
 {
     bool selected = false;
     bool hovered = false;
+};
+
+struct PathComponent
+{
+    std::queue<Maths::vec3> markers;
+    float                   speed;
+};
+
+struct GridComponent
+{
+    int x;
+    int z;
 };
 
 }

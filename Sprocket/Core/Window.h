@@ -71,6 +71,9 @@ public:
 	// Clipboard Utilities
 	const char* GetClipboardData();
 	void SetClipboardData(const std::string& text);
+
+	// Low level Utilities
+	void* NativeWindow() const;
 };
 
 }

@@ -8,7 +8,7 @@ namespace Sprocket {
 
 using LayerPtr = std::shared_ptr<Layer>;
 
-class Scene
+class App
 {
     std::vector<LayerPtr> d_layers;
 
@@ -30,7 +30,7 @@ public:
 };
 
 template <typename T, typename... Args>
-std::shared_ptr<T> Scene::Add(Args&&... args)
+std::shared_ptr<T> App::Add(Args&&... args)
 {
     auto layer = std::make_shared<T>(std::forward<Args>(args)...);
     d_layers.push_back(layer);

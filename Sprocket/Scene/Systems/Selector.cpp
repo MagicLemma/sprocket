@@ -1,15 +1,12 @@
 #include "Selector.h"
 #include "MouseEvent.h"
 #include "CameraUtils.h"
-#include "EntityManager.h"
+#include "Scene.h"
 #include "Components.h"
 
 namespace Sprocket {
 
-Selector::Selector(
-    Window* window,
-    PhysicsEngine* physicsEngine
-)
+Selector::Selector(Window* window, PhysicsEngine* physicsEngine)
     : d_window(window)
     , d_physicsEngine(physicsEngine)
     , d_enabled(false)
@@ -18,7 +15,7 @@ Selector::Selector(
 {
 }
 
-void Selector::OnStartup(EntityManager& manager)
+void Selector::OnStartup(Scene& manager)
 {
     manager.OnRemove<SelectComponent>([&](Entity& entity) {
         if (entity == d_hoveredEntity) { ClearHovered(); }
@@ -26,7 +23,7 @@ void Selector::OnStartup(EntityManager& manager)
     });
 }
 
-void Selector::OnUpdate(EntityManager& manager, double dt)
+void Selector::OnUpdate(Scene& manager, double dt)
 {
     if (!d_enabled) {
         ClearHovered();
