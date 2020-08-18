@@ -49,6 +49,10 @@ struct PhysicsComponent
     float bounciness          = 0.5f;
     float frictionCoefficient = 0.3f;
     float rollingResistance   = 0.0f;
+
+    // Runtime info
+    Maths::vec3 force         = {0.0, 0.0, 0.0};
+    bool onFloor              = false;
 };
 
 struct ScriptComponent

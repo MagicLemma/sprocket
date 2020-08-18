@@ -46,21 +46,19 @@ void PlayerMovement::OnUpdate(Scene& scene, double dt)
         if (d_keyboard.IsKeyDown(Keyboard::A)) { direction -= right; }
         Maths::Normalise(direction);
 
-        bool onFloor = d_physicsEngine->IsOnFloor(entity);
-
         Maths::vec3 dv = {0.0, 0.0, 0.0};
 
-        if (direction.length() != 0.0f || onFloor) {
+        if (direction.length() != 0.0f || physics.onFloor) {
             dv += 3.0f * direction - physics.velocity;
             dv.y = 0.0f;  // Only consider horizontal movement.
         }
 
         // Jumping
-        if (onFloor && d_keyboard.IsKeyDown(Keyboard::SPACE)) {
+        if (physics.onFloor && d_keyboard.IsKeyDown(Keyboard::SPACE)) {
             dv += (6.0f - physics.velocity.y) * Maths::vec3(0, 1, 0);
         }
         
-        d_physicsEngine->ApplyForce(entity, physics.mass * dv);
+        physics.force += physics.mass * dv;
     });
 }
 

@@ -168,6 +168,8 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         material.setBounciness(physics.bounciness);
         material.setFrictionCoefficient(physics.frictionCoefficient);
         material.setRollingResistance(physics.rollingResistance);
+
+        ApplyForce(entity, physics.force);
     });
 
     // Update System
@@ -194,6 +196,9 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         transform.position = Convert(bodyData->getTransform().getPosition());
         transform.orientation = Convert(bodyData->getTransform().getOrientation());
         physics.velocity = Convert(bodyData->getLinearVelocity());
+        
+        physics.force = {0.0, 0.0, 0.0};
+        physics.onFloor = IsOnFloor(entity);
     });
 }
 
