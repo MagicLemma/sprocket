@@ -13,9 +13,7 @@ using SceneManagerJob = std::function<void(SceneManager*)>;
 
 class SceneManager
 {
-    std::unordered_map<std::string, std::unique_ptr<Scene>> d_scenes;
-
-    std::string d_activeSceneName;
+    Scene d_scene;
 
     SceneManager(SceneManager&&) = delete;
     SceneManager(const SceneManager&) = delete;
@@ -25,15 +23,8 @@ class SceneManager
 public:
     SceneManager();
 
-    Scene* AddScene(const std::string& name);
+    Scene* Scene() { return &d_scene; };
         // Create a new scene with the given name and return a pointer to it.
-
-    bool SetActiveScene(const std::string& name);
-        // Set the scene with the given name to be the active scene. If no
-        // scene with the given name exists, this is a no-op and false is
-        // returned.
-
-    bool DoesSceneExist(const std::string& name) const;
 
     void OnUpdate(double dt);
         // Updates and draws the active scene.

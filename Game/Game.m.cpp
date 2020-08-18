@@ -24,11 +24,10 @@ int main()
     core.modelManager = &modelManager;
     core.textureManager = &textureManager;
 
-    auto world = sceneManager.AddScene("World");
+    auto world = sceneManager.Scene();
     auto worldLayer = world->Add<WorldLayer>(core);
     auto editorUi = world->Add<EditorUI>(core, worldLayer.get());
     world->Add<EscapeMenu>(core, worldLayer.get());
-    sceneManager.SetActiveScene("World");
  
     Stopwatch watch;
 
