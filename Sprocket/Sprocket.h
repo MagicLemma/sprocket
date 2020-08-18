@@ -3,11 +3,11 @@
 //
 
 // CORE
+#include "Core/App.h"
 #include "Core/Window.h"
 #include "Core/ModelManager.h"
 #include "Core/TextureManager.h"
 #include "Core/Layer.h"
-#include "Core/Scene.h"
 
 // UI
 #include "UI/Font/FontAtlas.h"

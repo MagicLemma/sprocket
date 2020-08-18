@@ -12,10 +12,10 @@ int main()
     ModelManager modelManager;
     TextureManager textureManager;
 
-    Scene scene;
+    App app;
 
-    window.SetCallback([&scene](Event& event) {
-        scene.OnEvent(event);
+    window.SetCallback([&app](Event& event) {
+        app.OnEvent(event);
     });
 
     CoreSystems core;
@@ -23,9 +23,9 @@ int main()
     core.modelManager = &modelManager;
     core.textureManager = &textureManager;
 
-    auto worldLayer = scene.Add<WorldLayer>(core);
-    auto editorUi = scene.Add<EditorUI>(core, worldLayer.get());
-    scene.Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
+    auto worldLayer = app.Add<WorldLayer>(core);
+    auto editorUi = app.Add<EditorUI>(core, worldLayer.get());
+    app.Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
 
     Stopwatch watch;
     watch.PrintFramerate(false);
@@ -34,7 +34,7 @@ int main()
         window.Clear();
         
         watch.OnUpdate();
-        scene.OnUpdate(watch.DeltaTime());
+        app.OnUpdate(watch.DeltaTime());
 
         window.OnUpdate();
     }

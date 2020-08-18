@@ -1,8 +1,8 @@
-#include "Scene.h"
+#include "App.h"
 
 namespace Sprocket {
 
-void Scene::OnEvent(Event& event)
+void App::OnEvent(Event& event)
 {
     for (size_t i = d_layers.size(); i != 0;) {
         --i;
@@ -10,7 +10,7 @@ void Scene::OnEvent(Event& event)
     }
 }
 
-void Scene::OnUpdate(double dt)
+void App::OnUpdate(double dt)
 { 
     for (size_t i = 0; i != d_layers.size(); ++i) {
         d_layers[i]->OnUpdate(dt);
