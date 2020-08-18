@@ -57,7 +57,9 @@ public:
     // Entity Manipulations
     void ApplyForce(Entity entity, const Maths::vec3& force);
         // Apply the given force to the centre of mass of the given Entity.
-        // If the Entity has no PhysicsComponent, this is a noop.
+        // If the Entity has no PhysicsComponent, this is a noop. The
+        // force should not be divided by dt as the physics engine will do
+        // this itself.
 
     void MakeUpright(Entity entity, float yaw = 0);
         // Sets the orientation of the given Entity to make it upright. The yaw
@@ -68,10 +70,6 @@ public:
         // Entity directly below it. TODO: Make this more general.
 
     void RefreshTransform(Entity entity);
-
-    float LastFrameLength() const;
-        // Returns the length of the last frame in the physics engine.
-        // This could be zero if the physics engine did not advance.
 };
 
 }

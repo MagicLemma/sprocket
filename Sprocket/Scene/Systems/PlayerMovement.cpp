@@ -46,27 +46,21 @@ void PlayerMovement::OnUpdate(Scene& scene, double dt)
         if (d_keyboard.IsKeyDown(Keyboard::A)) { direction -= right; }
         Maths::Normalise(direction);
 
-        float pdt = d_physicsEngine->LastFrameLength(); // Physics dt
-        if (pdt == 0) {
-            return; // Physics engine not advanced this frame.
-        }
-
         bool onFloor = d_physicsEngine->IsOnFloor(entity);
+
+        Maths::vec3 dv = {0.0, 0.0, 0.0};
+
         if (direction.length() != 0.0f || onFloor) {
-            float speed = 3.0f;
-            Maths::vec3 dv = (speed * direction) - physics.velocity;
+            dv += 3.0f * direction - physics.velocity;
             dv.y = 0.0f;  // Only consider horizontal movement.
-            Maths::vec3 acceleration = dv / pdt;
-            d_physicsEngine->ApplyForce(entity, physics.mass * acceleration);
         }
 
         // Jumping
         if (onFloor && d_keyboard.IsKeyDown(Keyboard::SPACE)) {
-            float speed = 6.0f;
-            Maths::vec3 dv = (speed - physics.velocity.y) * Maths::vec3(0, 1, 0);
-            Maths::vec3 acceleration = dv / pdt;
-            d_physicsEngine->ApplyForce(entity, physics.mass * acceleration);
+            dv += (6.0f - physics.velocity.y) * Maths::vec3(0, 1, 0);
         }
+        
+        d_physicsEngine->ApplyForce(entity, physics.mass * dv);
     });
 }
 

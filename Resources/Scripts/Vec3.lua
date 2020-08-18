@@ -18,6 +18,14 @@ Vec3_meta.__mul = function(a, b)
     end
 end
 
+Vec3_meta.__div = function(a, b)
+    if type(b) == 'number' then
+        return Vec3(a.x / b, a.y / b, a.z / b)
+    else
+        return nil
+    end
+end
+
 function Vec3(x, y, z)
     return setmetatable({x=x, y=y, z=z}, Vec3_meta)
 end

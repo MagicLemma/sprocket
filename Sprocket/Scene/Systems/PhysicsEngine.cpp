@@ -249,8 +249,13 @@ Entity PhysicsEngine::Raycast(const Maths::vec3& base,
 
 void PhysicsEngine::ApplyForce(Entity entity, const Maths::vec3& force)
 {
+    if (d_lastFrameLength == 0) {
+        return; // Don't apply force if the physics engine didn't advance.
+    }
+
+    auto f = force / d_lastFrameLength;
     auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    bodyData->applyForceToCenterOfMass(Convert(force));
+    bodyData->applyForceToCenterOfMass(Convert(f));
 }
 
 void PhysicsEngine::MakeUpright(Entity entity, float yaw)
@@ -260,7 +265,7 @@ void PhysicsEngine::MakeUpright(Entity entity, float yaw)
     rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(
         0.0f, Maths::Radians(yaw), 0.0f);
     transform.setOrientation(q);
-    bodyData->setTransform(transform);
+    //bodyData->setTransform(transform);
     entity.Get<TransformComponent>().orientation = Convert(q);
 }
 
@@ -292,11 +297,6 @@ void PhysicsEngine::RefreshTransform(Entity entity)
 
     auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
     bodyData->setTransform(Convert(entity.Get<TransformComponent>()));
-}
-
-float PhysicsEngine::LastFrameLength() const
-{
-    return d_lastFrameLength;
 }
 
 }
