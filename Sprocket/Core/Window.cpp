@@ -221,12 +221,4 @@ void* Window::NativeWindow() const
 	return d_impl->window;
 }
 
-#if 0
-std::string Window::OpenFile(const char* filter) const
-{
-
-	return std::string();
-}
-#endif
-
 }
