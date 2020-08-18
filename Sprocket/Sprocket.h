@@ -54,6 +54,7 @@
 #include "Utility/MouseCodes.h"
 #include "Utility/Stopwatch.h"
 #include "Utility/Tokenize.h"
+#include "Utility/Yaml.h"
 
 // GRAPHICS
 #include "Graphics/RenderContext.h"
