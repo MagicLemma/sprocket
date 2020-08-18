@@ -1,129 +1,24 @@
 Scene: Scene Name
 Entities:
   - Name:
-      Name: Rock
+      Name: Tin
     Transform:
-      Position: [-0.2665894, -0.6791617, 0.68319, -0.0303447]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -4
-      Z: -2
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [-0.6363258, -0.6997452, 0.3242355, -0.01781546]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -5
-      Z: -1
-  - Name:
-      Name: Iron
-    Transform:
-      Position: [-0.4773237, -0.5544813, 0.5456249, 0.4086636]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Iron.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -5
-      Z: -2
-  - Name:
-      Name: Iron
-    Transform:
-      Position: [-0.2183771, -0.9247681, 0.2733437, -0.1496615]
+      Position: [-2.5, -0.4073618, -3.5]
       Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
-      Texture: Resources/Textures/Iron.png
+      Texture: Resources/Textures/Tin.png
       ShineDamper: 10
       Reflectivity: 0
     Select: true
     Grid:
-      X: -4
-      Z: -1
-  - Name:
-      Name: Tree
-    Transform:
-      Position: [-0.09593737, -0.03961426, -0.3795996, -0.91931]
-      Orientation: [0.9107856, 0, 0.4128797, 0]
-    Model:
-      Model: Resources/Models/BetterTree.obj
-      Scale: 1.271738
-      Texture: Resources/Textures/BetterTree.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -6
-      Z: 15
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [-0.4505402, -0.3661602, -0.201463, -0.7888935]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -6
-      Z: 14
-  - Name:
-      Name: Tree
-    Transform:
-      Position: [0.9387913, 0.2397128, -0.06120872, -0.2397128]
-      Orientation: [-0.8686448, 0, 0.4954354, 0]
-    Model:
-      Model: Resources/Models/BetterTree.obj
-      Scale: 1.038096
-      Texture: Resources/Textures/BetterTree.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: 0
-      Z: -1
-  - Name:
-      Name: Mithril
-    Transform:
-      Position: [0.03426307, 0.2906418, -0.6198615, 0.7280969]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Mithril.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -2
-      Z: 3
+      X: -3
+      Z: -4
   - Name:
       Name: Worker
     Transform:
-      Position: [0.743987, 0.1192023, 0.4051628, 0.5178006]
+      Position: [-8.353926, 0.5, -1.460907]
       Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Cube.obj
@@ -133,14 +28,12 @@ Entities:
       Reflectivity: 0
     Select: true
     Path:
-      Markers:
-        []
       Speed: 3
   - Name:
       Name: Camera
     Transform:
-      Position: [-0.01229629, 0.789583, 0.5901422, 0.1677489]
-      Orientation: [-0.4201834, 0.1400611, -0.8505563, -0.2835187]
+      Position: [-9.820555, 2.999626, -8.527444]
+      Orientation: [0.4744679, -0.08602738, -0.8620046, -0.156293]
     Script:
       Script: Resources/Scripts/ThirdPersonCamera.lua
       Active: true
@@ -150,7 +43,7 @@ Entities:
   - Name:
       Name: Terrain
     Transform:
-      Position: [1, 0, 0, 0]
+      Position: [0, 0, 0]
       Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Square.obj
@@ -159,108 +52,3 @@ Entities:
       ShineDamper: 1
       Reflectivity: 0
     Select: true
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [0.864955, 0.3493752, -0.08790183, 0.3493752]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -25
-      Z: -25
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [0.6428307, 0.2364042, 0.2045311, 0.6993202]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -25
-      Z: -24
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [0.1654886, 0.2828124, 0.2397123, 0.9138756]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -25
-      Z: -23
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [0.129867, -0.2889315, -0.9034222, 0.2889315]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -3
-      Z: 2
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [0.1548817, 0.234496, -0.897329, 0.3403293]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -3
-      Z: 3
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [-0.3397368, 0.5368745, -0.4235978, 0.6456853]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -2
-      Z: 4
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [-0.6022283, 0.1792637, -0.1730822, 0.7584379]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -1
-      Z: 4

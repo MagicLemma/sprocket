@@ -1,6 +1,906 @@
 Scene: Scene Name
 Entities:
   - Name:
+      Name: Tree
+    Transform:
+      Position: [-2.5, 0, 14.5]
+      Orientation: [0.7897523, 0, 0.6134259, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.229655
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -3
+      Z: 14
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [-5.5, 0, 11.5]
+      Orientation: [0.9227979, 0, 0.3852844, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.114468
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -6
+      Z: 11
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [-16.5, 0, 20.5]
+      Orientation: [-0.4916484, 0, 0.8707938, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.131623
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -17
+      Z: 20
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [-11.5, 0, 14.5]
+      Orientation: [0.0295611, 0, 0.999563, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.010334
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -12
+      Z: 14
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [-3.5, 0, 21.5]
+      Orientation: [-0.7369825, 0, 0.6759118, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.285067
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -4
+      Z: 21
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-2.5, -0.1585497, 15.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -3
+      Z: 15
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-6.5, -0.06259138, 11.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -7
+      Z: 11
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-7.5, -0.3474143, 11.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -8
+      Z: 11
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-9.5, -0.4109516, 11.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -10
+      Z: 11
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-8.5, -0.4117289, 11.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -9
+      Z: 11
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-17.5, -0.4970343, 21.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -18
+      Z: 21
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-15.5, -0.04856589, 20.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -16
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-14.5, -0.07455699, 19.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -15
+      Z: 19
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-15.5, -0.02308569, 21.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -16
+      Z: 21
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-11.5, -0.4362144, 15.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -12
+      Z: 15
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-13.5, -0.1384615, 18.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -14
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-13.5, -0.1582752, 19.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -14
+      Z: 19
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-2.5, -0.01591642, 19.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -3
+      Z: 19
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-12.5, -0.3393676, 22.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -13
+      Z: 22
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-14.5, -0.3406798, 21.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -15
+      Z: 21
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-14.5, -0.4669966, 20.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -15
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-13.5, -0.1059622, 20.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -14
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-4.5, -0.4245647, 21.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -5
+      Z: 21
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-4.5, -0.180647, 19.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -5
+      Z: 19
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-4.5, -0.01785584, 20.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -5
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-7.5, -0.2518314, 20.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -8
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-8.5, -0.4797462, 20.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -9
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-9.5, -0.4392153, 20.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -10
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-10.5, -0.3961037, 20.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -11
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-11.5, -0.3198817, 20.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -12
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-12.5, -0.4578678, 20.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -13
+      Z: 20
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-12.5, -0.05623226, 19.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -13
+      Z: 19
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-12.5, -0.2108806, 18.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -13
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-12.5, -0.002391742, 17.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -13
+      Z: 17
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-12.5, -0.07094317, 16.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -13
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-11.5, -0.1485147, 16.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -12
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-10.5, -0.4001402, 18.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -11
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-8.5, -0.3990529, 18.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -9
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-9.5, -0.2426878, 18.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -10
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-7.5, -0.05493088, 18.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -8
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-6.5, -0.4785835, 18.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -7
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-5.5, -0.4905548, 18.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -6
+      Z: 18
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-5.5, -0.4852964, 17.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -6
+      Z: 17
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-5.5, -0.3629195, 16.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -6
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-7.5, -0.07880654, 16.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -8
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-8.5, -0.4964406, 16.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -9
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-9.5, -0.2734407, 16.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -10
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-10.5, -0.09419098, 16.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -11
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-10.5, -0.1392491, 15.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -11
+      Z: 15
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-10.5, -0.2736103, 14.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -11
+      Z: 14
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-10.5, -0.0487702, 13.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -11
+      Z: 13
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-10.5, -0.1540835, 12.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -11
+      Z: 12
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-9.5, -0.3161796, 12.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -10
+      Z: 12
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-8.5, -0.110517, 12.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -9
+      Z: 12
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-7.5, -0.4566879, 12.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -8
+      Z: 12
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-6.5, -0.4844339, 12.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -7
+      Z: 12
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-5.5, -0.06349341, 12.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -6
+      Z: 12
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-8.5, -0.4175043, 14.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -9
+      Z: 14
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-7.5, -0.452896, 14.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -8
+      Z: 14
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [-6.5, -0.0677385, 14.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: -7
+      Z: 14
+  - Name:
       Name: Mithril
     Transform:
       Position: [5.5, -0.3990529, -2.5]
@@ -31,14 +931,14 @@ Entities:
       X: 5
       Z: 7
   - Name:
-      Name: Tree
+      Name: Rock
     Transform:
-      Position: [-5.5, 0, 15.5]
-      Orientation: [0.9107856, 0, 0.4128797, 0]
+      Position: [-5.5, -0.4838475, 15.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
-      Model: Resources/Models/BetterTree.obj
-      Scale: 1.271738
-      Texture: Resources/Textures/BetterTree.png
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
       ShineDamper: 10
       Reflectivity: 0
     Select: true
@@ -93,7 +993,7 @@ Entities:
   - Name:
       Name: Worker
     Transform:
-      Position: [0.8456995, 0.5, -2.810925]
+      Position: [-0.3982291, 0.5, 14.81276]
       Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Cube.obj
@@ -103,14 +1003,12 @@ Entities:
       Reflectivity: 0
     Select: true
     Path:
-      Markers:
-        []
       Speed: 3
   - Name:
       Name: Camera
     Transform:
-      Position: [13.32084, 5.651491, -4.517176]
-      Orientation: [-0.4564166, 0.1449539, -0.8366966, -0.2657274]
+      Position: [-14.80552, 8.394621, 8.303211]
+      Orientation: [0.2655004, -0.1137356, -0.8800301, -0.3769892]
     Script:
       Script: Resources/Scripts/ThirdPersonCamera.lua
       Active: true
@@ -4677,8 +5575,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-13.5, -0.1688597, 23.5]
-      Orientation: [1, 0, 0, 0]
+      Position: [-2.5, -0.3986399, 18.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -4687,8 +5585,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -14
-      Z: 23
+      X: -3
+      Z: 18
   - Name:
       Name: Rock
     Transform:
@@ -4962,8 +5860,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-12.5, -0.4710253, 23.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
+      Position: [-2.5, -0.3530231, 17.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -4972,8 +5870,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -13
-      Z: 23
+      X: -3
+      Z: 17
   - Name:
       Name: Rock
     Transform:
@@ -5187,8 +6085,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-11.5, -0.0215119, 23.5]
-      Orientation: [1, 0, 0, 0]
+      Position: [-2.5, -0.1509566, 16.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -5197,8 +6095,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -12
-      Z: 23
+      X: -3
+      Z: 16
   - Name:
       Name: Rock
     Transform:
@@ -5352,8 +6250,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-10.5, -0.2735044, 23.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
+      Position: [-3.5, -0.08693258, 15.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -5362,8 +6260,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -11
-      Z: 23
+      X: -4
+      Z: 15
   - Name:
       Name: Rock
     Transform:
@@ -5502,7 +6400,7 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-9.5, -0.1928553, 23.5]
+      Position: [-3.5, -0.08559334, 16.5]
       Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
@@ -5512,8 +6410,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -10
-      Z: 23
+      X: -4
+      Z: 16
   - Name:
       Name: Rock
     Transform:
@@ -5697,8 +6595,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-8.5, -0.4552825, 21.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
+      Position: [-4.5, -0.3989643, 18.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -5707,8 +6605,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -9
-      Z: 21
+      X: -5
+      Z: 18
   - Name:
       Name: Rock
     Transform:
@@ -5727,8 +6625,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-8.5, -0.2443089, 23.5]
-      Orientation: [-0.7071068, 0, 0.7071068, 0]
+      Position: [-3.5, -0.3277389, 14.5]
+      Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -5737,8 +6635,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -9
-      Z: 23
+      X: -4
+      Z: 14
   - Name:
       Name: Rock
     Transform:
@@ -5922,8 +6820,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-7.5, -0.2719027, 21.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
+      Position: [-6.5, -0.3278703, 20.5]
+      Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -5932,8 +6830,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -8
-      Z: 21
+      X: -7
+      Z: 20
   - Name:
       Name: Rock
     Transform:
@@ -5952,8 +6850,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-7.5, -0.07007192, 23.5]
-      Orientation: [-0.7071068, 0, 0.7071068, 0]
+      Position: [-3.5, -0.2110438, 13.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -5962,8 +6860,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -8
-      Z: 23
+      X: -4
+      Z: 13
   - Name:
       Name: Rock
     Transform:
@@ -6192,8 +7090,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-6.5, -0.238319, 23.5]
-      Orientation: [-0.7071068, 0, 0.7071068, 0]
+      Position: [-3.5, -0.1961135, 12.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -6202,8 +7100,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -7
-      Z: 23
+      X: -4
+      Z: 12
   - Name:
       Name: Rock
     Transform:
@@ -6477,8 +7375,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-5.5, -0.2365075, 23.5]
-      Orientation: [0.7071068, 0, 0.7071068, 0]
+      Position: [-4.5, -0.2373793, 12.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -6487,13 +7385,13 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -6
-      Z: 23
+      X: -5
+      Z: 12
   - Name:
       Name: Rock
     Transform:
-      Position: [-5.5, -0.1555512, 24.5]
-      Orientation: [-0.7071068, 0, 0.7071068, 0]
+      Position: [-5.5, -0.3715662, 24.5]
+      Orientation: [1, 0, 0, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -6687,7 +7585,7 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-4.5, -0.3402033, 23.5]
+      Position: [-3.5, -0.3788701, 22.5]
       Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
@@ -6697,8 +7595,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -5
-      Z: 23
+      X: -4
+      Z: 22
   - Name:
       Name: Rock
     Transform:
@@ -6867,8 +7765,8 @@ Entities:
   - Name:
       Name: Rock
     Transform:
-      Position: [-3.5, -0.3556079, 23.5]
-      Orientation: [-0.7071068, 0, 0.7071068, 0]
+      Position: [-2.5, -0.1993693, 22.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
@@ -6877,8 +7775,8 @@ Entities:
       Reflectivity: 0
     Select: true
     Grid:
-      X: -4
-      Z: 23
+      X: -3
+      Z: 22
   - Name:
       Name: Rock
     Transform:
@@ -13599,3 +14497,798 @@ Entities:
     Grid:
       X: 24
       Z: 24
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [12.5, -0.4073618, 13.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 13
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [13.5, -0.0677385, 14.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 14
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [12.5, -0.452896, 14.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 14
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [13.5, -0.4175043, 12.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 12
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [14.5, -0.06349341, 15.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 14
+      Z: 15
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [11.5, -0.4844339, 15.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 15
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [10.5, -0.4566879, 15.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 10
+      Z: 15
+  - Name:
+      Name: Tin
+    Transform:
+      Position: [12.5, -0.3530231, 15.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Tin.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 15
+  - Name:
+      Name: Tin
+    Transform:
+      Position: [13.5, -0.3986399, 15.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Tin.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 15
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [14.5, 0, 14.5]
+      Orientation: [-0.99975, 0, 0.02236243, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.287252
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 14
+      Z: 14
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [13.5, 0, 13.5]
+      Orientation: [-0.9999382, 0, 0.0111169, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.289467
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 13
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [11.5, 0, 13.5]
+      Orientation: [-0.9948544, 0, 0.1013153, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.047284
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 13
+  - Name:
+      Name: Tin
+    Transform:
+      Position: [11.5, -0.1509566, 14.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Tin.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 14
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [10.5, 0, 14.5]
+      Orientation: [-0.9982396, 0, 0.05931081, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.28715
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 10
+      Z: 14
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [15.5, 0, 15.5]
+      Orientation: [0.9410278, 0, 0.3383293, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.145613
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 15
+      Z: 15
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [15.5, 0, 14.5]
+      Orientation: [-0.805505, 0, 0.592589, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.240084
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 15
+      Z: 14
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [14.5, 0, 16.5]
+      Orientation: [0.5953096, 0, 0.8034964, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.042566
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 14
+      Z: 16
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [13.5, 0, 16.5]
+      Orientation: [0.9998871, 0, 0.01502719, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.126528
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 16
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [12.5, 0, 16.5]
+      Orientation: [0.9382299, 0, 0.3460124, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.274721
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 16
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [12.5, 0, 12.5]
+      Orientation: [-0.4251064, 0, 0.9051434, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.237662
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 12
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [13.5, 0, 11.5]
+      Orientation: [-0.9279503, 0, 0.3727039, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.287848
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 11
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [13.5, 0, 10.5]
+      Orientation: [-0.01150647, 0, 0.9999338, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.196722
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 10
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [14.5, 0, 13.5]
+      Orientation: [-0.8051748, 0, 0.5930375, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.010713
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 14
+      Z: 13
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [14.5, 0, 12.5]
+      Orientation: [0.4220974, 0, 0.9065505, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.254739
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 14
+      Z: 12
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [16.5, 0, 15.5]
+      Orientation: [0.7864353, 0, 0.6176727, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.280198
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 16
+      Z: 15
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [11.5, 0, 16.5]
+      Orientation: [-0.539428, 0, 0.8420317, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.203621
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 16
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [13.5, 0, 17.5]
+      Orientation: [0.3127837, 0, 0.9498244, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.227322
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 13
+      Z: 17
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [15.5, 0, 16.5]
+      Orientation: [-0.686028, 0, 0.7275751, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.22294
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 15
+      Z: 16
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [14.5, 0, 17.5]
+      Orientation: [0.07921477, 0, 0.9968576, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.117668
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 14
+      Z: 17
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [10.5, -0.2110438, 16.5]
+      Orientation: [0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 10
+      Z: 16
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [9.5, 0, 15.5]
+      Orientation: [-0.469256, 0, 0.8830622, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.05216
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 9
+      Z: 15
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [12.5, 0, 17.5]
+      Orientation: [0.9894984, 0, 0.1445436, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.044734
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 17
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [11.5, 0, 17.5]
+      Orientation: [0.9538023, 0, 0.3004348, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.298221
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 17
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [10.5, 0, 17.5]
+      Orientation: [-0.8500988, 0, 0.5266233, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.246571
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 10
+      Z: 17
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [9.5, 0, 16.5]
+      Orientation: [-0.5745647, 0, 0.8184592, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.037555
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 9
+      Z: 16
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [10.5, -0.1585497, 11.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 10
+      Z: 11
+  - Name:
+      Name: Tin
+    Transform:
+      Position: [9.5, -0.381875, 11.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Tin.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 9
+      Z: 11
+  - Name:
+      Name: Tin
+    Transform:
+      Position: [10.5, -0.475111, 10.5]
+      Orientation: [-0.7071068, 0, 0.7071068, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Tin.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 10
+      Z: 10
+  - Name:
+      Name: Rock
+    Transform:
+      Position: [11.5, -0.2452945, 11.5]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Rock.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 11
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [9.5, 0, 12.5]
+      Orientation: [0.9941504, 0, 0.1080045, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.199082
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 9
+      Z: 12
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [11.5, 0, 12.5]
+      Orientation: [0.1912548, 0, 0.9815404, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.037769
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 12
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [10.5, 0, 12.5]
+      Orientation: [0.363568, 0, 0.9315677, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.063063
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 10
+      Z: 12
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [12.5, 0, 11.5]
+      Orientation: [-0.7407228, 0, 0.6718107, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.015365
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 11
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [9.5, 0, 10.5]
+      Orientation: [-0.8000616, 0, 0.5999178, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.010932
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 9
+      Z: 10
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [8.5, 0, 11.5]
+      Orientation: [0.832563, 0, 0.5539303, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.122619
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 8
+      Z: 11
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [11.5, 0, 10.5]
+      Orientation: [-0.4436398, 0, 0.8962052, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.238192
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 11
+      Z: 10
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [7.5, 0, 11.5]
+      Orientation: [0.1701146, 0, 0.9854243, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.146271
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 7
+      Z: 11
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [12.5, 0, 10.5]
+      Orientation: [-0.6113292, 0, 0.7913764, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.276262
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 10
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [12.5, 0, 9.5]
+      Orientation: [-0.7174409, 0, 0.6966194, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.242259
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 9
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [12.5, 0, 8.5]
+      Orientation: [0.6469958, 0, 0.7624936, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.211732
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 12
+      Z: 8
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [15.5, 0, 9.5]
+      Orientation: [-0.535038, 0, 0.844828, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.000846
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 15
+      Z: 9
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [18.5, 0, 12.5]
+      Orientation: [-0.4682019, 0, 0.8836215, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.213211
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 18
+      Z: 12
+  - Name:
+      Name: Tree
+    Transform:
+      Position: [17.5, 0, 19.5]
+      Orientation: [0.8723244, 0, 0.4889275, 0]
+    Model:
+      Model: Resources/Models/BetterTree.obj
+      Scale: 1.193188
+      Texture: Resources/Textures/BetterTree.png
+      ShineDamper: 10
+      Reflectivity: 0
+    Select: true
+    Grid:
+      X: 17
+      Z: 19

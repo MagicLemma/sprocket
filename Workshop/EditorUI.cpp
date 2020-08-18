@@ -101,7 +101,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
-        Maths::mat4 origin = Maths::Transform(tr.position, tr.position);
+        Maths::mat4 origin = Maths::Transform(tr.position, tr.orientation);
         ui.Gizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
         tr.orientation = Normalise(ToQuat(mat3(origin)));
