@@ -327,23 +327,20 @@ void Serialiser::Deserialise(const std::string& file)
     for (auto entity : entities) {
         Entity e = d_scene->NewEntity();
 
-        auto name = entity["Name"];
-        if (name) {
+        if (auto name = entity["Name"]) {
             NameComponent nc;
             nc.name = name["Name"].as<std::string>();
             e.Add(nc);
         }
 
-        auto transform = entity["Transform"];
-        if (transform) {
+        if (auto transform = entity["Transform"]) {
             TransformComponent tc;
             tc.position = transform["Position"].as<Maths::vec3>();
             tc.orientation = transform["Orientation"].as<Maths::quat>();
             e.Add(tc);
         }
 
-        auto model = entity["Model"];
-        if (model) {
+        if (auto model = entity["Model"]) {
             ModelComponent mc;
             mc.model = model["Model"].as<std::string>();
             mc.scale = model["Scale"].as<float>();
@@ -353,8 +350,7 @@ void Serialiser::Deserialise(const std::string& file)
             e.Add(mc);
         }
 
-        auto physics = entity["Physics"];
-        if (physics) {
+        if (auto physics = entity["Physics"]) {
             PhysicsComponent pc;
             pc.velocity = physics["Velocity"].as<Maths::vec3>();
             pc.gravity = physics["Gravity"].as<bool>();
@@ -370,8 +366,7 @@ void Serialiser::Deserialise(const std::string& file)
             e.Add(pc);
         }
 
-        auto player = entity["Player"];
-        if (player) {
+        if (auto player = entity["Player"]) {
             PlayerComponent pc;
             pc.movingForwards = player["MovingForwards"].as<bool>();
             pc.movingBackwards = player["MovingBackwards"].as<bool>();
@@ -384,31 +379,26 @@ void Serialiser::Deserialise(const std::string& file)
             e.Add(pc);
         }
 
-        auto camera = entity["Camera"];
-        if (camera) {
+        if (auto camera = entity["Camera"]) {
             CameraComponent cc;
             cc.projection = camera["Projection"].as<Maths::mat4>();
             cc.pitch = camera["Pitch"].as<float>();
             e.Add(cc);
         }
 
-        auto select = entity["Select"];
-        if (select) {
+        if (auto select = entity["Select"]) {
             SelectComponent sc;
             e.Add(sc);
         }
 
-        auto path = entity["Path"];
-        if (path) {
-            PathComponent pc;
-            // TODO Sort this
+        if (auto path = entity["Path"]) {
+            PathComponent pc; // TODO Sort this
             //pc.markers = path["Markers"].as<std::queue<Maths::vec3>>();
             pc.speed = path["Speed"].as<float>();
             e.Add(pc);
         }
 
-        auto grid = entity["Grid"];
-        if (grid) {
+        if (auto grid = entity["Grid"]) {
             GridComponent gc;
             gc.x = grid["X"].as<int>();
             gc.z = grid["Z"].as<int>();
@@ -416,8 +406,7 @@ void Serialiser::Deserialise(const std::string& file)
         }
 
         // This needs to get added last as scripts may access other components.
-        auto script = entity["Script"];
-        if (script) {
+        if (auto script = entity["Script"]) {
             ScriptComponent sc;
             sc.script = script["Script"].as<std::string>();
             sc.active = script["Active"].as<bool>();
