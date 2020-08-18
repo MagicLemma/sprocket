@@ -32,10 +32,6 @@ class PhysicsEngine : public EntitySystem
     
     bool        d_running = false;
 
-    void UpdatePlayer(double dt, Entity entity);
-        // If this Entity has a PlayerComponent, perform the
-        // necessary updates.
-
     void AddCollider(Entity entity);
         // Registers the collider on the entity with the
         // physics engine.
@@ -72,6 +68,10 @@ public:
         // Entity directly below it. TODO: Make this more general.
 
     void RefreshTransform(Entity entity);
+
+    float LastFrameLength() const;
+        // Returns the length of the last frame in the physics engine.
+        // This could be zero if the physics engine did not advance.
 };
 
 }

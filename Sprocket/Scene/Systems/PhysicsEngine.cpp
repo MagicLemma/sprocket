@@ -194,10 +194,6 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         transform.position = Convert(bodyData->getTransform().getPosition());
         transform.orientation = Convert(bodyData->getTransform().getOrientation());
         physics.velocity = Convert(bodyData->getLinearVelocity());
-
-        if (entity.Has<PlayerComponent>()) { // Handle player movement updates.
-            UpdatePlayer(dt, entity);
-        }
     });
 }
 
@@ -251,39 +247,6 @@ Entity PhysicsEngine::Raycast(const Maths::vec3& base,
     return cb.GetEntity();
 }
 
-void PhysicsEngine::UpdatePlayer(double dt, Entity entity)
-{
-    if (d_lastFrameLength == 0) {
-        return;  // Physics engine not advanced this frame.
-    }
-
-    const auto& player = entity.Get<PlayerComponent>();
-    const auto& physics = entity.Get<PhysicsComponent>();
-
-    float mass = d_impl->entityData[entity.Id()].rigidBody->getMass();
-        // Sum of all colliders plus rigid body.
-
-    MakeUpright(entity, player.yaw);
-    
-    bool onFloor = IsOnFloor(entity);
-
-    if (player.direction.length() != 0.0f || onFloor) {
-        float speed = 3.0f;
-        Maths::vec3 dv = (speed * player.direction) - physics.velocity;
-        dv.y = 0.0f;  // Only consider horizontal movement.
-        Maths::vec3 acceleration = dv / d_lastFrameLength;
-        ApplyForce(entity, mass * acceleration);
-    }
-
-    // Jumping
-    if (onFloor && player.jumping) {
-        float speed = 6.0f;
-        Maths::vec3 dv = (speed - physics.velocity.y) * Maths::vec3(0, 1, 0);
-        Maths::vec3 acceleration = dv / d_lastFrameLength;
-        ApplyForce(entity, mass * acceleration);
-    }
-}
-
 void PhysicsEngine::ApplyForce(Entity entity, const Maths::vec3& force)
 {
     auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
@@ -329,6 +292,11 @@ void PhysicsEngine::RefreshTransform(Entity entity)
 
     auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
     bodyData->setTransform(Convert(entity.Get<TransformComponent>()));
+}
+
+float PhysicsEngine::LastFrameLength() const
+{
+    return d_lastFrameLength;
 }
 
 }
