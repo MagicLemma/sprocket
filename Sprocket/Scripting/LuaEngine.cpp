@@ -53,6 +53,7 @@ LuaEngine::LuaEngine()
     luaL_openlibs(d_L);
 
     // Core Sprocket Constants and Helper Functions
+    luaL_dofile(d_L, "Resources/Scripts/Class.lua");
     luaL_dofile(d_L, "Resources/Scripts/Vec3.lua");
     luaL_dofile(d_L, "Resources/Scripts/Sprocket.lua");
 

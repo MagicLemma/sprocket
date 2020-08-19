@@ -1,33 +1,25 @@
-local Vec3_meta = {}
+Vec3 = Class(function(self, x, y, z)
+    self.x = x
+    self.y = y
+    self.z = z
+end)
 
-Vec3_meta.__add = function(a, b)
-    return Vec3(a.x + b.x, a.y + b.y, a.z + b.z)
+function Vec3:__add(other)
+    return Vec3(self.x + other.x, self.y + other.y, self.z + other.z)
 end
 
-Vec3_meta.__sub = function(a, b)
-    return Vec3(a.x - b.x, a.y - b.y, a.z - b.z)
+function Vec3:__sub(other)
+    return Vec3(self.x - other.x, self.y - other.y, self.z - other.z)
 end
 
-Vec3_meta.__mul = function(a, b)
-    if type(a) == 'number' then
-        return Vec3(a * b.x, a * b.y, a * b.z)
-    elseif type(b) == 'number' then
-        return Vec3(a.x * b, a.y * b, a.z * b)
+function Vec3:__mul(other)
+    if type(self) == 'number' then
+        return Vec3(self * other.x, self * other.y, self * other.z)
+    elseif type(other) == 'number' then
+        return Vec3(self.x * other, self.y * other, self.z * other)
     else
-        return Vec3(a.x * b.x, a.y * b.y, a.z * b.z)
+        return Vec3(self.x * other.x, self.y * other.y, self.z * other.z)
     end
-end
-
-Vec3_meta.__div = function(a, b)
-    if type(b) == 'number' then
-        return Vec3(a.x / b, a.y / b, a.z / b)
-    else
-        return nil
-    end
-end
-
-function Vec3(x, y, z)
-    return setmetatable({x=x, y=y, z=z}, Vec3_meta)
 end
 
 function Mag(vector)
