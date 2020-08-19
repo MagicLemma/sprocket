@@ -228,7 +228,6 @@ void EditorUI::OnUpdate(double dt)
     auto e = d_worldLayer->d_selector.SelectedEntity();
     if (!e.Null()) {
         SelectedEntityInfo(d_ui, e, view, proj);
-        d_worldLayer->d_physicsEngine.RefreshTransform(e);
     }
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);

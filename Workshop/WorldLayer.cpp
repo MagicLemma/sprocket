@@ -18,7 +18,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         })
     })
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
-    , d_playerMovement(&d_physicsEngine)
+    , d_playerMovement()
     , d_selector(core.window, &d_physicsEngine)
     , d_entityManager({
         &d_physicsEngine,

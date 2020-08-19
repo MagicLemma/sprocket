@@ -8,8 +8,7 @@
 
 namespace Sprocket {
 
-PlayerMovement::PlayerMovement(PhysicsEngine* physicsEngine)
-    : d_physicsEngine(physicsEngine)
+PlayerMovement::PlayerMovement()
 {
 }
 
@@ -30,7 +29,8 @@ void PlayerMovement::OnUpdate(Scene& scene, double dt)
             Maths::Clamp(entity.Get<CameraComponent>().pitch, -89.0f, 89.0f);
         }
 
-        d_physicsEngine->MakeUpright(entity, player.yaw);
+        entity.Get<TransformComponent>().orientation =
+            Maths::quat(Maths::vec3{0.0, Maths::Radians(player.yaw), 0.0});
         
         // Update the direction
         float cosYaw = Maths::Cosd(player.yaw);

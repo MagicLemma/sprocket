@@ -36,12 +36,15 @@ class PhysicsEngine : public EntitySystem
         // Registers the collider on the entity with the
         // physics engine.
 
+    bool IsOnFloor(Entity entity) const; 
+        // Returns true if the given Entity is colliding with another
+        // Entity directly below it. TODO: Make this more general.
+
 public:
     PhysicsEngine(const Maths::vec3& gravity);
     ~PhysicsEngine() {}
 
     void OnStartup(Scene& scene) override;
-
     void OnUpdate(Scene& scene, double dt) override;
 
     void Running(bool isRunning);
@@ -53,23 +56,6 @@ public:
         // Given a position in the world and a direction from that point,
         // return a pointer to the entity that it hits, or null if it
         // does not.
-
-    // Entity Manipulations
-    void ApplyForce(Entity entity, const Maths::vec3& force);
-        // Apply the given force to the centre of mass of the given Entity.
-        // If the Entity has no PhysicsComponent, this is a noop. The
-        // force should not be divided by dt as the physics engine will do
-        // this itself.
-
-    void MakeUpright(Entity entity, float yaw = 0);
-        // Sets the orientation of the given Entity to make it upright. The yaw
-        // is the angle in degrees anti-clockwise from the negative Z axis.
-
-    bool IsOnFloor(Entity entity) const; 
-        // Returns true if the given Entity is colliding with another
-        // Entity directly below it. TODO: Make this more general.
-
-    void RefreshTransform(Entity entity);
 };
 
 }

@@ -131,10 +131,6 @@ void PhysicsEngine::OnStartup(Scene& scene)
         entry->setUserData(static_cast<void*>(e));
         entry->setType(physics.frozen ? rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC);
 
-        if (entity.Has<PlayerComponent>()) {
-            entry->setAngularDamping(0.0f);
-        }
-
         AddCollider(entity);
     });
 
@@ -150,9 +146,9 @@ void PhysicsEngine::OnStartup(Scene& scene)
 
 void PhysicsEngine::OnUpdate(Scene& scene, double dt)
 {
-    if (!d_running) { return; }
-
     // Pre Update
+    // Do this even if not running so that the physics engine stays up
+    // to date with the scene.
     scene.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
         const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<PhysicsComponent>();
@@ -169,9 +165,14 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         material.setFrictionCoefficient(physics.frictionCoefficient);
         material.setRollingResistance(physics.rollingResistance);
 
-        ApplyForce(entity, physics.force);
+        if (d_lastFrameLength > 0) {
+            auto f = physics.force / d_lastFrameLength;
+            bodyData->applyForceToCenterOfMass(Convert(f));
+        }
     });
 
+    if (!d_running) { return; }
+    
     // Update System
     float speedFactor = GetSpeed(d_speedFactor);
     float frameLength = dt * speedFactor;
@@ -196,7 +197,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         transform.position = Convert(bodyData->getTransform().getPosition());
         transform.orientation = Convert(bodyData->getTransform().getOrientation());
         physics.velocity = Convert(bodyData->getLinearVelocity());
-        
+
         physics.force = {0.0, 0.0, 0.0};
         physics.onFloor = IsOnFloor(entity);
     });
@@ -252,28 +253,6 @@ Entity PhysicsEngine::Raycast(const Maths::vec3& base,
     return cb.GetEntity();
 }
 
-void PhysicsEngine::ApplyForce(Entity entity, const Maths::vec3& force)
-{
-    if (d_lastFrameLength == 0) {
-        return; // Don't apply force if the physics engine didn't advance.
-    }
-
-    auto f = force / d_lastFrameLength;
-    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    bodyData->applyForceToCenterOfMass(Convert(f));
-}
-
-void PhysicsEngine::MakeUpright(Entity entity, float yaw)
-{
-    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    rp3d::Transform transform = bodyData->getTransform();
-    rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(
-        0.0f, Maths::Radians(yaw), 0.0f);
-    transform.setOrientation(q);
-    //bodyData->setTransform(transform);
-    entity.Get<TransformComponent>().orientation = Convert(q);
-}
-
 bool PhysicsEngine::IsOnFloor(Entity entity) const
 {
     auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
@@ -294,14 +273,6 @@ bool PhysicsEngine::IsOnFloor(Entity entity) const
 
     auto e = cb.GetEntity();
     return !e.Null();
-}
-
-void PhysicsEngine::RefreshTransform(Entity entity)
-{
-    if (!entity.Has<PhysicsComponent>()) { return; }
-
-    auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    bodyData->setTransform(Convert(entity.Get<TransformComponent>()));
 }
 
 }
