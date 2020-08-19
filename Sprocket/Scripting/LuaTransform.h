@@ -40,5 +40,9 @@ int GetRightDir(lua_State* L);
     // Args: 0
     // Rets: 3- The x, y, z of the entity's right vector.
 
+int MakeUpright(lua_State* L);
+    // Args: 1 - yaw
+    // Rets: 0
+
 }
 }

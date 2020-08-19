@@ -28,13 +28,13 @@ function OnUpdate(dt)
     local horizSpeed = ROTATION_SPEED * dt
     local moveSpeed = MOVEMENT_SPEED * dt
 
-    -- forwards vector
+    -- forwards Vec3
     local f = TARGET - pos
 
     f.y = 0
     f = Normalised(f)
 
-    -- right vector
+    -- right Vec3
     local up = Vec3(0, 1, 0)
     local r = Cross(f, up)
 

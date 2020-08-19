@@ -25,7 +25,6 @@ class WorldLayer : public Sprocket::Layer
 
     // WORLD
     // Entity management and systems
-    Sprocket::PlayerMovement d_playerMovement;
     Sprocket::PhysicsEngine  d_physicsEngine;
     Sprocket::Selector       d_selector;
     Sprocket::ScriptRunner   d_scriptRunner;

@@ -1,6 +1,7 @@
 #include "LuaTransform.h"
 #include "LuaGlobals.h"
 #include "Entity.h"
+#include "Log.h"
 #include "Components.h"
 
 #include <lua.hpp>
@@ -20,6 +21,7 @@ void RegisterTransformFunctions(lua_State* L)
     lua_register(L, "Lua_GetRightDir", &Lua::GetRightDir);
 
     lua_register(L, "RotateY", &Lua::RotateY);
+    lua_register(L, "MakeUpright", &Lua::MakeUpright);
 }
 
 namespace Lua {
@@ -105,6 +107,15 @@ int GetRightDir(lua_State* L)
     lua_pushnumber(L, right.y);
     lua_pushnumber(L, right.z);
     return 3;
+}
+
+int MakeUpright(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    auto& tr = GetEntity(L)->Get<TransformComponent>();
+    float yaw = (float)lua_tonumber(L, 1);
+    tr.orientation = Maths::quat(Maths::vec3(0, yaw, 0));
+    return 0;
 }
 
 }

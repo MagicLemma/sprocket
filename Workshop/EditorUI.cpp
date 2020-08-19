@@ -38,20 +38,6 @@ void PhysicsComponentInfo(Sprocket::DevUI::Context& ui,
     }
 }
 
-void PlayerComponentInfo(Sprocket::DevUI::Context& ui,
-                          Sprocket::PlayerComponent& play)
-{
-    using namespace Sprocket::Maths;
-    if (ui.StartTreeNode("Player")) {
-        ui.Text("Moving Forwards: " + ToString(play.movingForwards));
-        ui.Text("Moving Backwards: " + ToString(play.movingBackwards));
-        ui.Text("Moving Left: " + ToString(play.movingLeft));
-        ui.Text("Moving Right: " + ToString(play.movingRight));
-        ui.Text("Jumping: " + ToString(play.jumping));
-        ui.EndTreeNode();
-    }
-}
-
 void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
                         Sprocket::Entity& entity,
                         const Sprocket::Maths::mat4& view,
@@ -101,7 +87,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
-        Maths::mat4 origin = Maths::Transform(tr.position, tr.position);
+        Maths::mat4 origin = Maths::Transform(tr.position, tr.orientation);
         ui.Gizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
         tr.orientation = Normalise(ToQuat(mat3(origin)));
@@ -109,10 +95,6 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 
     if (entity.Has<PhysicsComponent>()) {
         PhysicsComponentInfo(ui, entity.Get<PhysicsComponent>());
-    }
-
-    if (entity.Has<PlayerComponent>()) {
-        PlayerComponentInfo(ui, entity.Get<PlayerComponent>());
     }
 
     ui.Separator();
@@ -232,7 +214,6 @@ void EditorUI::OnUpdate(double dt)
     auto e = d_worldLayer->d_selector.SelectedEntity();
     if (!e.Null()) {
         SelectedEntityInfo(d_ui, e, view, proj);
-        d_worldLayer->d_physicsEngine.RefreshTransform(e);
     }
 
     AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);

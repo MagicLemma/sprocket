@@ -49,25 +49,16 @@ struct PhysicsComponent
     float bounciness          = 0.5f;
     float frictionCoefficient = 0.3f;
     float rollingResistance   = 0.0f;
+
+    // Runtime info
+    Maths::vec3 force         = {0.0, 0.0, 0.0};
+    bool onFloor              = false;
 };
 
 struct ScriptComponent
 {
     std::string script;
     bool        active = true;
-};
-
-struct PlayerComponent
-{
-    bool movingForwards  = false;
-    bool movingBackwards = false;
-    bool movingLeft      = false;
-    bool movingRight     = false;
-    bool jumping         = false;
-
-    Maths::vec3 direction = {0.0, 0.0, 0.0};
-    float yaw             = 0.0f;
-    float pitch           = 0.0f;
 };
 
 struct CameraComponent

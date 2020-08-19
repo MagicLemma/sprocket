@@ -52,7 +52,6 @@ add_library(Sprocket STATIC
             Scene/Systems/BasicSelector.cpp
             Scene/Systems/Selector.cpp
             Scene/Systems/PhysicsEngine.cpp
-            Scene/Systems/PlayerMovement.cpp
             Scene/Systems/ScriptRunner.cpp
             Scene/Systems/GameGrid.cpp
             Scene/Systems/PathFollower.cpp
@@ -106,6 +105,7 @@ add_library(Sprocket STATIC
             Scripting/LuaTransform.cpp
             Scripting/LuaInput.cpp
             Scripting/LuaCamera.cpp
+            Scripting/LuaPhysics.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp)
 

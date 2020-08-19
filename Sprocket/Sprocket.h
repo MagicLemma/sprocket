@@ -29,7 +29,6 @@
 #include "Scene/Systems/BasicSelector.h"
 #include "Scene/Systems/Selector.h"
 #include "Scene/Systems/PhysicsEngine.h"
-#include "Scene/Systems/PlayerMovement.h"
 #include "Scene/Systems/ScriptRunner.h"
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/PathFollower.h"
@@ -97,6 +96,7 @@
 #include "Scripting/LuaTransform.h"
 #include "Scripting/LuaInput.h"
 #include "Scripting/LuaCamera.h"
+#include "Scripting/LuaPhysics.h"
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"

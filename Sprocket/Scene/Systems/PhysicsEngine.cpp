@@ -67,20 +67,6 @@ public:
     float Fraction() const { return d_fraction; }
 };
 
-float GetSpeed(SpeedFactor s)
-{
-    switch (s) {
-        case SpeedFactor::QUARTER:   return 0.25f;
-        case SpeedFactor::HALF:      return 0.5f;
-        case SpeedFactor::NORMAL:    return 1.0f;
-        case SpeedFactor::DOUBLE:    return 2.0f;
-        case SpeedFactor::QUADRUPLE: return 4.0f;
-    }
-
-    SPKT_LOG_ERROR("Speed not found! Returning 1.0f");
-    return 1.0f;
-};
-
 }
 
 struct EntityData
@@ -106,7 +92,6 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     : d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
     , d_timeStep(1.0f / 120.0f)
     , d_lastFrameLength(0)
-    , d_speedFactor(SpeedFactor::NORMAL)
     , d_running(true)
 {
     d_impl->world.setNbIterationsPositionSolver(5);
@@ -117,30 +102,18 @@ void PhysicsEngine::OnStartup(Scene& scene)
 {
     scene.OnAdd<PhysicsComponent>([&](Entity& entity) {
         assert(entity.Has<TransformComponent>());
-
         auto& transform = entity.Get<TransformComponent>();
-        auto& physics = entity.Get<PhysicsComponent>();
 
-        d_impl->entityData[entity.Id()].entity = entity;
-        auto* e = &d_impl->entityData[entity.Id()].entity;
+        auto& entry = d_impl->entityData[entity.Id()];
+        entry.entity = entity;
+        entry.rigidBody = d_impl->world.createRigidBody(Convert(transform));
 
-        auto& entry = d_impl->entityData[entity.Id()].rigidBody;
-        entry = d_impl->world.createRigidBody(Convert(transform));
-
-        // Give each RigidBody a ref back to the original Entity object.
-        entry->setUserData(static_cast<void*>(e));
-        entry->setType(physics.frozen ? rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC);
-
-        if (entity.Has<PlayerComponent>()) {
-            entry->setAngularDamping(0.0f);
-        }
+        entry.rigidBody->setUserData(static_cast<void*>(&entry.entity));
 
         AddCollider(entity);
     });
 
     scene.OnRemove<PhysicsComponent>([&](Entity& entity) {
-        auto& physics = entity.Get<PhysicsComponent>();
-
         auto rigidBodyIt = d_impl->entityData.find(entity.Id());
         d_impl->world.destroyRigidBody(rigidBodyIt->second.rigidBody);
         d_impl->entityData.erase(rigidBodyIt);
@@ -150,9 +123,9 @@ void PhysicsEngine::OnStartup(Scene& scene)
 
 void PhysicsEngine::OnUpdate(Scene& scene, double dt)
 {
-    if (!d_running) { return; }
-
     // Pre Update
+    // Do this even if not running so that the physics engine stays up
+    // to date with the scene.
     scene.Each<TransformComponent, PhysicsComponent>([&] (Entity& entity) {
         const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<PhysicsComponent>();
@@ -169,18 +142,19 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         material.setFrictionCoefficient(physics.frictionCoefficient);
         material.setRollingResistance(physics.rollingResistance);
 
-        if (entity.Has<PlayerComponent>()) { // Handle player movement updates.
-            UpdatePlayer(dt, entity);
+        if (d_lastFrameLength > 0) {
+            auto f = physics.force / d_lastFrameLength;
+            bodyData->applyForceToCenterOfMass(Convert(f));
         }
     });
 
+    if (!d_running) { return; }
+    
     // Update System
-    float speedFactor = GetSpeed(d_speedFactor);
-    float frameLength = dt * speedFactor;
     d_lastFrameLength = 0;
 
     static float accumulator = 0.0f;
-    accumulator += frameLength;
+    accumulator += dt;
 
     // First update the Physics World.
     while (accumulator >= d_timeStep) {
@@ -198,6 +172,9 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         transform.position = Convert(bodyData->getTransform().getPosition());
         transform.orientation = Convert(bodyData->getTransform().getOrientation());
         physics.velocity = Convert(bodyData->getLinearVelocity());
+
+        physics.force = {0.0, 0.0, 0.0};
+        physics.onFloor = IsOnFloor(entity);
     });
 }
 
@@ -251,62 +228,10 @@ Entity PhysicsEngine::Raycast(const Maths::vec3& base,
     return cb.GetEntity();
 }
 
-void PhysicsEngine::UpdatePlayer(double dt, Entity entity)
-{
-    if (d_lastFrameLength == 0) {
-        return;  // Physics engine not advanced this frame.
-    }
-
-    const auto& player = entity.Get<PlayerComponent>();
-    const auto& physics = entity.Get<PhysicsComponent>();
-
-    float mass = d_impl->entityData[entity.Id()].rigidBody->getMass();
-        // Sum of all colliders plus rigid body.
-
-    MakeUpright(entity, player.yaw);
-    
-    bool onFloor = IsOnFloor(entity);
-
-    if (player.direction.length() != 0.0f || onFloor) {
-        float speed = 3.0f;
-        Maths::vec3 dv = (speed * player.direction) - physics.velocity;
-        dv.y = 0.0f;  // Only consider horizontal movement.
-        Maths::vec3 acceleration = dv / d_lastFrameLength;
-        ApplyForce(entity, mass * acceleration);
-    }
-
-    // Jumping
-    if (onFloor && player.jumping) {
-        float speed = 6.0f;
-        Maths::vec3 dv = (speed - physics.velocity.y) * Maths::vec3(0, 1, 0);
-        Maths::vec3 acceleration = dv / d_lastFrameLength;
-        ApplyForce(entity, mass * acceleration);
-    }
-}
-
-void PhysicsEngine::ApplyForce(Entity entity, const Maths::vec3& force)
-{
-    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    bodyData->applyForceToCenterOfMass(Convert(force));
-}
-
-void PhysicsEngine::MakeUpright(Entity entity, float yaw)
-{
-    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    rp3d::Transform transform = bodyData->getTransform();
-    rp3d::Quaternion q = rp3d::Quaternion::fromEulerAngles(
-        0.0f, Maths::Radians(yaw), 0.0f);
-    transform.setOrientation(q);
-    bodyData->setTransform(transform);
-    entity.Get<TransformComponent>().orientation = Convert(q);
-}
-
 bool PhysicsEngine::IsOnFloor(Entity entity) const
 {
-    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-
     // Get the point at the bottom of the rigid body.
-    auto aabb = bodyData->getAABB();
+    auto aabb = d_impl->entityData[entity.Id()].rigidBody->getAABB();
     rp3d::Vector3 playerBase = aabb.getCenter();
     playerBase.y = aabb.getMin().y;
 
@@ -318,17 +243,7 @@ bool PhysicsEngine::IsOnFloor(Entity entity) const
     rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
     RaycastCB cb;
     d_impl->world.raycast(ray, &cb);
-
-    auto e = cb.GetEntity();
-    return !e.Null();
-}
-
-void PhysicsEngine::RefreshTransform(Entity entity)
-{
-    if (!entity.Has<PhysicsComponent>()) { return; }
-
-    auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
-    bodyData->setTransform(Convert(entity.Get<TransformComponent>()));
+    return !cb.GetEntity().Null();
 }
 
 }
