@@ -67,20 +67,6 @@ public:
     float Fraction() const { return d_fraction; }
 };
 
-float GetSpeed(SpeedFactor s)
-{
-    switch (s) {
-        case SpeedFactor::QUARTER:   return 0.25f;
-        case SpeedFactor::HALF:      return 0.5f;
-        case SpeedFactor::NORMAL:    return 1.0f;
-        case SpeedFactor::DOUBLE:    return 2.0f;
-        case SpeedFactor::QUADRUPLE: return 4.0f;
-    }
-
-    SPKT_LOG_ERROR("Speed not found! Returning 1.0f");
-    return 1.0f;
-};
-
 }
 
 struct EntityData
@@ -106,7 +92,6 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
     : d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
     , d_timeStep(1.0f / 120.0f)
     , d_lastFrameLength(0)
-    , d_speedFactor(SpeedFactor::NORMAL)
     , d_running(true)
 {
     d_impl->world.setNbIterationsPositionSolver(5);
@@ -174,12 +159,10 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     if (!d_running) { return; }
     
     // Update System
-    float speedFactor = GetSpeed(d_speedFactor);
-    float frameLength = dt * speedFactor;
     d_lastFrameLength = 0;
 
     static float accumulator = 0.0f;
-    accumulator += frameLength;
+    accumulator += dt;
 
     // First update the Physics World.
     while (accumulator >= d_timeStep) {

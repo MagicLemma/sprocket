@@ -10,15 +10,6 @@
 
 namespace Sprocket {
 
-enum class SpeedFactor
-{
-    QUARTER,
-    HALF,
-    NORMAL,
-    DOUBLE,
-    QUADRUPLE
-};
-
 struct PhysicsEngineImpl;
 
 class PhysicsEngine : public EntitySystem
@@ -26,7 +17,6 @@ class PhysicsEngine : public EntitySystem
     std::shared_ptr<PhysicsEngineImpl> d_impl;
 
     const float d_timeStep;
-    SpeedFactor d_speedFactor;
 
     float       d_lastFrameLength;
     
@@ -49,8 +39,6 @@ public:
 
     void Running(bool isRunning);
     bool Running() const { return d_running; }
-
-    void SetSpeedFactor(SpeedFactor sf) { d_speedFactor = sf; }
 
     Entity Raycast(const Maths::vec3& base, const Maths::vec3& direction);
         // Given a position in the world and a direction from that point,
