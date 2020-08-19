@@ -230,10 +230,8 @@ Entity PhysicsEngine::Raycast(const Maths::vec3& base,
 
 bool PhysicsEngine::IsOnFloor(Entity entity) const
 {
-    auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
-
     // Get the point at the bottom of the rigid body.
-    auto aabb = bodyData->getAABB();
+    auto aabb = d_impl->entityData[entity.Id()].rigidBody->getAABB();
     rp3d::Vector3 playerBase = aabb.getCenter();
     playerBase.y = aabb.getMin().y;
 
@@ -245,9 +243,7 @@ bool PhysicsEngine::IsOnFloor(Entity entity) const
     rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
     RaycastCB cb;
     d_impl->world.raycast(ray, &cb);
-
-    auto e = cb.GetEntity();
-    return !e.Null();
+    return !cb.GetEntity().Null();
 }
 
 }
