@@ -13,6 +13,13 @@ namespace Sprocket {
 
 namespace {
 
+void DoFile(lua_State* L, const char* file)
+{
+    if (luaL_dofile(L, file)) {
+        SPKT_LOG_ERROR("[Lua]: Could not load {}", lua_tostring(L, -1));
+    }
+}
+
 void PrintErrors(lua_State* L, int rc)
 {
     Entity* e = GetEntity(L);
@@ -53,9 +60,9 @@ LuaEngine::LuaEngine()
     luaL_openlibs(d_L);
 
     // Core Sprocket Constants and Helper Functions
-    luaL_dofile(d_L, "Resources/Scripts/Sprocket_Base.lua");
-    luaL_dofile(d_L, "Resources/Scripts/Sprocket_Maths.lua");
-    luaL_dofile(d_L, "Resources/Scripts/Sprocket_Bindings.lua");
+    DoFile(d_L, "Resources/Scripts/Sprocket_Base.lua");
+    DoFile(d_L, "Resources/Scripts/Sprocket_Maths.lua");
+    DoFile(d_L, "Resources/Scripts/Sprocket_Bindings.lua");
 
     RegisterTransformFunctions(d_L);
     RegisterInputFunctions(d_L);
@@ -80,7 +87,7 @@ LuaEngine::~LuaEngine()
 
 void LuaEngine::RunScript(const std::string& filename)
 {
-    luaL_dofile(d_L, filename.c_str());
+    DoFile(d_L, filename.c_str());
 }
 
 void LuaEngine::CallInitFunction()
