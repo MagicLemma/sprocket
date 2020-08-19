@@ -5,8 +5,13 @@ namespace Sprocket {
 
 class CameraSystem : public EntitySystem
 {
+    float d_aspectRatio;
+
 public:
-    void OnEvent(Scene& scene, Event& event) override;
+    CameraSystem(float aspectRatio) : d_aspectRatio(aspectRatio) {}
+
+    void OnUpdate(Scene& scene, double dt) override;
+    void OnEvent(Event& event) override;
 };
 
 }

@@ -28,10 +28,11 @@
 
 #include "Scene/Systems/BasicSelector.h"
 #include "Scene/Systems/Selector.h"
+#include "Scene/Systems/CameraSystem.h"
 #include "Scene/Systems/PhysicsEngine.h"
-#include "Scene/Systems/ScriptRunner.h"
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/PathFollower.h"
+#include "Scene/Systems/ScriptRunner.h"
 
 // EVENTS
 #include "Events/Event.h"

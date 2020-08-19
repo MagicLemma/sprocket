@@ -27,6 +27,7 @@ class WorldLayer : public Sprocket::Layer
     // Entity management and systems
     Sprocket::PhysicsEngine  d_physicsEngine;
     Sprocket::Selector       d_selector;
+    Sprocket::CameraSystem   d_cameraSystem;
     Sprocket::ScriptRunner   d_scriptRunner;
     Sprocket::Scene  d_entityManager;
 
