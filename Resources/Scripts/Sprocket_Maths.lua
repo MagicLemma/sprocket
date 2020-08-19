@@ -38,6 +38,10 @@ function Cross(a, b)
     )
 end
 
+function Clamp(value, low, high)
+    return math.min(high, math.max(value, low))
+end
+
 function Normalised(vector)
     local mag = Mag(vector)
     return Vec3(vector.x / mag, vector.y / mag, vector.z / mag)
