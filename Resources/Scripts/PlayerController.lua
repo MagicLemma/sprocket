@@ -1,12 +1,5 @@
 function Init()
     YAW = 0.0
-
-    -- Projection matrix setup
-    ASPECT_RATIO = 16 / 9
-    FOV = 70
-    NEAR_PLANE = 0.1
-    FAR_PLANE = 1000
-    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
 end
 
 function OnUpdate(dt)
@@ -53,8 +46,4 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods) end
 
 function OnMouseScrolledEvent(consumed, xOffset, yOffset) end
 
-function OnWindowResizeEvent(consumed, width, height)
-    ASPECT_RATIO = width / height
-    SetPerspectiveCamera(ASPECT_RATIO, FOV, NEAR_PLANE, FAR_PLANE)
-    return false
-end
+function OnWindowResizeEvent(consumed, width, height) end

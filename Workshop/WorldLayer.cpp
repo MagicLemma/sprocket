@@ -23,6 +23,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityManager({
         &d_physicsEngine,
         &d_selector,
+        &d_cameraSystem,
         &d_scriptRunner
     })
     , d_serialiser(&d_entityManager)
@@ -74,15 +75,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
 {
-    using namespace Sprocket;
-
-    if (auto e = event.As<WindowResizeEvent>()) {
+    if (auto e = event.As<Sprocket::WindowResizeEvent>()) {
         d_postProcessor.SetScreenSize(e->Width(), e->Height());
-
-        // We only do the player camera here as the observer and editor
-        // projection matrices are updated via scripts.
-        //d_playerCamera.Get<CameraComponent>().projection =
-        //    Maths::Perspective(e->AspectRatio(), 70, 0.1f, 1000.0f);
     }
 
     d_entityManager.OnEvent(event);
@@ -95,9 +89,9 @@ void WorldLayer::OnUpdate(double dt)
     d_entityRenderer.BeginScene(d_activeCamera, d_lights);
 
     if (!d_paused) {
+        d_entityManager.OnUpdate(dt);
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_core.window->SetCursorVisibility(d_mouseRequired);
-        d_entityManager.OnUpdate(dt);
 
         d_entityManager.Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();

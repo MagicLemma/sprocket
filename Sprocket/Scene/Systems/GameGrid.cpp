@@ -101,7 +101,7 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double)
     }
 }
 
-void GameGrid::OnEvent(Event& event)
+void GameGrid::OnEvent(Scene& scene, Event& event)
 {
     if (event.IsConsumed()) { return; }
 

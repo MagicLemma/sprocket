@@ -40,7 +40,7 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
     });
 }
 
-void ScriptRunner::OnEvent(Event& event)
+void ScriptRunner::OnEvent(Scene& scene, Event& event)
 {
     d_keyboard.OnEvent(event);
     d_mouse.OnEvent(event);

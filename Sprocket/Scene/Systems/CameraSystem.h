@@ -8,10 +8,9 @@ class CameraSystem : public EntitySystem
     float d_aspectRatio;
 
 public:
-    CameraSystem(float aspectRatio) : d_aspectRatio(aspectRatio) {}
-
-    void OnUpdate(Scene& scene, double dt) override;
-    void OnEvent(Event& event) override;
+    CameraSystem(float aspectRatio);
+    void OnStartup(Scene& scene) override;
+    void OnEvent(Scene& scene, Event& event) override;
 };
 
 }
