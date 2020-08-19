@@ -20,13 +20,5 @@ int SetPitch(lua_State* L);
     // Args: 1 - The new value for the pitch.
     // Rets: 0
 
-int SetPerspectiveCamera(lua_State* L);
-    // Args: 4 - Aspect ratio, FoV, near plane and far plane
-    // Rets: 0
-
-int SetOrthographicCamera(lua_State* L);
-    // Args: 6 - Left, right, bottom, top, near and far
-    // Rets: 0
-
 }
 }
