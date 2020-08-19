@@ -36,6 +36,7 @@ public:
 
     // Keyboard Events
 
+    // Setters
     void SetEntity(const Entity& e);
     void SetKeyboard(KeyboardProxy* k);
     void SetMouse(MouseProxy* m);

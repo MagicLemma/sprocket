@@ -9,14 +9,21 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_gameGrid(core.window)
-    , d_entityManager({&d_selector, &d_scriptRunner, &d_pathFollower, &d_gameGrid})
+    , d_cameraSystem(core.window->AspectRatio())
     , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
     , d_hoveredEntityUI(core.window)
-    , d_serialiser(&d_entityManager)
+    , d_scene({
+        &d_selector,
+        &d_pathFollower,
+        &d_gameGrid,
+        &d_scriptRunner,
+        &d_cameraSystem
+    })
+    , d_serialiser(&d_scene)
 {
     using namespace Sprocket;
 
-    d_entityManager.OnStartup();
+    d_scene.OnStartup();
 
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
@@ -57,7 +64,7 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
     d_sceneFile = sceneFile;
     d_serialiser.Deserialise(sceneFile);
 
-    d_entityManager.Each<NameComponent>([&](Entity& entity) {
+    d_scene.Each<NameComponent>([&](Entity& entity) {
         const auto& name = entity.Get<NameComponent>();
         if (name.name == "Worker") {
             d_worker = entity;
@@ -125,7 +132,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         }
     }
 
-    d_entityManager.OnEvent(event);
+    d_scene.OnEvent(event);
 }
 
 void WorldLayer::OnUpdate(double dt)
@@ -155,14 +162,14 @@ void WorldLayer::OnUpdate(double dt)
         }
 
         Maths::Normalise(d_lights.sun.direction);
-        d_entityManager.OnUpdate(dt);
+        d_scene.OnUpdate(dt);
     }
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     d_shadowMapRenderer.BeginScene(d_lights.sun, target);
-    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_shadowMapRenderer.Draw(entity);
     });
     d_shadowMapRenderer.EndScene(); 
@@ -176,7 +183,7 @@ void WorldLayer::OnUpdate(double dt)
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   
     );
-    d_entityManager.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
 
@@ -273,7 +280,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     using namespace Sprocket;
     static std::string tex = "Resources/Textures/BetterTree.png";
 
-    auto newEntity = d_entityManager.NewEntity();
+    auto newEntity = d_scene.NewEntity();
 
     auto& name = newEntity.Add<NameComponent>();
     name.name = "Tree";
@@ -300,7 +307,7 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_entityManager.NewEntity();
+    auto newEntity = d_scene.NewEntity();
     auto& n = newEntity.Add<NameComponent>();
     n.name = name;
 

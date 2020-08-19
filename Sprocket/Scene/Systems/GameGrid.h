@@ -38,7 +38,7 @@ public:
 
     void OnStartup(Scene& scene) override;
     void OnUpdate(Scene& scene, double dt) override;
-    void OnEvent(Event& event) override;
+    void OnEvent(Scene& scene, Event& event) override;
 
     Entity At(int x, int z) const;
 

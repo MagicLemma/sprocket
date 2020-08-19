@@ -33,7 +33,7 @@ void Selector::OnUpdate(Scene& manager, double dt)
     d_mouse.OnUpdate();
 }
 
-void Selector::OnEvent(Event& event)
+void Selector::OnEvent(Scene& scene, Event& event)
 {
     if (!d_enabled) { return; }
 

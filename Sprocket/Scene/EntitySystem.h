@@ -13,13 +13,13 @@ class EntitySystem
 public:
     EntitySystem() = default;
 
-    virtual void OnStartup(Scene& manager) {};
+    virtual void OnStartup(Scene& scene) {};
         // Called once when the EntityManager starts up.
     
-    virtual void OnUpdate(Scene& manager, double dt) {};
+    virtual void OnUpdate(Scene& scene, double dt) {};
         // Called every tick of the game loop.
 
-    virtual void OnEvent(Event& event) {};
+    virtual void OnEvent(Scene& scene, Event& event) {};
         // Called with every event so systems can consume them.
 
 private:

@@ -32,7 +32,7 @@ void Scene::OnUpdate(double dt)
 void Scene::OnEvent(Event& event)
 {
     for (auto system : d_systems) {
-        system->OnEvent(event);
+        system->OnEvent(*this, event);
     }
 }
 

@@ -64,6 +64,7 @@ struct ScriptComponent
 struct CameraComponent
 {
     Maths::mat4 projection;
+    float       fov = 70.0f;
     float       pitch = 0.0f;
 };
 
