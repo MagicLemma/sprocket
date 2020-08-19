@@ -71,6 +71,7 @@ void Serialiser::Serialise(const std::string& file)
             const auto& camera = entity.Get<CameraComponent>();
             out << YAML::Key << "Camera" << YAML::BeginMap;
             out << YAML::Key << "Projection" << YAML::Value << camera.projection;
+            out << YAML::Key << "FOV" << YAML::Value << camera.fov;
             out << YAML::Key << "Pitch" << YAML::Value << camera.pitch;
             out << YAML::EndMap;
         }
@@ -161,6 +162,7 @@ void Serialiser::Deserialise(const std::string& file)
         if (auto camera = entity["Camera"]) {
             CameraComponent cc;
             cc.projection = camera["Projection"].as<Maths::mat4>();
+            cc.pitch = camera["FOV"].as<float>();
             cc.pitch = camera["Pitch"].as<float>();
             e.Add(cc);
         }

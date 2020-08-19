@@ -130,6 +130,7 @@ Entities:
       Active: false
     Camera:
       Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+      FOV: 70
       Pitch: 0
   - Name:
       Name: Observer Camera
@@ -141,6 +142,7 @@ Entities:
       Active: true
     Camera:
       Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+      FOV: 70
       Pitch: 0
   - Name:
       Name: Player
@@ -172,6 +174,7 @@ Entities:
       Yaw: 0
     Camera:
       Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+      FOV: 70
       Pitch: 0
     Select: true
   - Name:
