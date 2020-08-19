@@ -18,11 +18,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
         })
     })
     , d_physicsEngine(Sprocket::Maths::vec3(0.0, -9.81, 0.0))
-    , d_playerMovement()
     , d_selector(core.window, &d_physicsEngine)
     , d_entityManager({
         &d_physicsEngine,
-        &d_playerMovement,
         &d_selector,
         &d_scriptRunner
     })
@@ -31,7 +29,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     using namespace Sprocket;
 
     d_entityManager.OnStartup();
-    d_playerMovement.Enable(false);
 
     d_serialiser.Deserialise("Resources/WorkshopScene.yaml");
 
@@ -105,7 +102,7 @@ void WorldLayer::OnUpdate(double dt)
             auto& transform = entity.Get<TransformComponent>();
             auto& physics = entity.Get<PhysicsComponent>();
             
-            if (entity.Has<PlayerComponent>() && transform.position.y < -2) {
+            if (entity.Has<CameraComponent>() && transform.position.y < -2) {
                 transform.position = {0, 3, 0};
                 physics.velocity = {0, 0, 0};
             }

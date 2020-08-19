@@ -38,16 +38,6 @@ void PhysicsComponentInfo(Sprocket::DevUI::Context& ui,
     }
 }
 
-void PlayerComponentInfo(Sprocket::DevUI::Context& ui,
-                          Sprocket::PlayerComponent& play)
-{
-    using namespace Sprocket::Maths;
-    if (ui.StartTreeNode("Player")) {
-        ui.Text("Yaw: " + ToString(play.yaw));
-        ui.EndTreeNode();
-    }
-}
-
 void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
                         Sprocket::Entity& entity,
                         const Sprocket::Maths::mat4& view,
@@ -105,10 +95,6 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
 
     if (entity.Has<PhysicsComponent>()) {
         PhysicsComponentInfo(ui, entity.Get<PhysicsComponent>());
-    }
-
-    if (entity.Has<PlayerComponent>()) {
-        PlayerComponentInfo(ui, entity.Get<PlayerComponent>());
     }
 
     ui.Separator();

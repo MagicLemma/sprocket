@@ -67,12 +67,6 @@ void Serialiser::Serialise(const std::string& file)
             out << YAML::Key << "Active" << YAML::Value << script.active;
             out << YAML::EndMap;
         }
-        if (entity.Has<PlayerComponent>()) {
-            const auto& player = entity.Get<PlayerComponent>();
-            out << YAML::Key << "Player" << YAML::BeginMap;
-            out << YAML::Key << "Yaw" << YAML::Value << player.yaw;
-            out << YAML::EndMap;
-        }
         if (entity.Has<CameraComponent>()) {
             const auto& camera = entity.Get<CameraComponent>();
             out << YAML::Key << "Camera" << YAML::BeginMap;
@@ -161,12 +155,6 @@ void Serialiser::Deserialise(const std::string& file)
             pc.bounciness = physics["Bounciness"].as<float>();
             pc.frictionCoefficient = physics["FrictionCoefficient"].as<float>();
             pc.rollingResistance = physics["RollingResistance"].as<float>();
-            e.Add(pc);
-        }
-
-        if (auto player = entity["Player"]) {
-            PlayerComponent pc;
-            pc.yaw = player["Yaw"].as<float>();;
             e.Add(pc);
         }
 

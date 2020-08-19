@@ -61,11 +61,6 @@ struct ScriptComponent
     bool        active = true;
 };
 
-struct PlayerComponent
-{
-    float yaw = 0.0f;
-};
-
 struct CameraComponent
 {
     Maths::mat4 projection;
