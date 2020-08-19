@@ -1,20 +1,43 @@
 Scene: Scene Name
 Entities:
   - Name:
-      Name: Tin
+      Name: Rock
     Transform:
-      Position: [-2.5, -0.4073618, -3.5]
-      Orientation: [1, 0, 0, 0]
+      Position: [-2.5, -0.0677385, -0.5]
+      Orientation: [-4.371139e-08, 0, 1, 0]
     Model:
       Model: Resources/Models/Rock.obj
       Scale: 1.1
-      Texture: Resources/Textures/Tin.png
+      Texture: Resources/Textures/Rock.png
       ShineDamper: 10
       Reflectivity: 0
     Select: true
     Grid:
       X: -3
-      Z: -4
+      Z: -1
+  - Name:
+      Name: Terrain
+    Transform:
+      Position: [0, 0, 0]
+      Orientation: [1, 0, 0, 0]
+    Model:
+      Model: Resources/Models/Square.obj
+      Scale: 25
+      Texture: Resources/Textures/Green.PNG
+      ShineDamper: 1
+      Reflectivity: 0
+    Select: true
+  - Name:
+      Name: Camera
+    Transform:
+      Position: [3.469407, 5.9606, 7.74303]
+      Orientation: [0.8538309, -0.2831124, 0.4146308, 0.1374829]
+    Script:
+      Script: Resources/Scripts/ThirdPersonCamera.lua
+      Active: true
+    Camera:
+      Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
+      Pitch: 0
   - Name:
       Name: Worker
     Transform:
@@ -30,25 +53,17 @@ Entities:
     Path:
       Speed: 3
   - Name:
-      Name: Camera
+      Name: Tin
     Transform:
-      Position: [-9.820555, 2.999626, -8.527444]
-      Orientation: [0.4744679, -0.08602738, -0.8620046, -0.156293]
-    Script:
-      Script: Resources/Scripts/ThirdPersonCamera.lua
-      Active: true
-    Camera:
-      Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
-      Pitch: 0
-  - Name:
-      Name: Terrain
-    Transform:
-      Position: [0, 0, 0]
+      Position: [-2.5, -0.4073618, -3.5]
       Orientation: [1, 0, 0, 0]
     Model:
-      Model: Resources/Models/Square.obj
-      Scale: 25
-      Texture: Resources/Textures/Green.PNG
-      ShineDamper: 1
+      Model: Resources/Models/Rock.obj
+      Scale: 1.1
+      Texture: Resources/Textures/Tin.png
+      ShineDamper: 10
       Reflectivity: 0
     Select: true
+    Grid:
+      X: -3
+      Z: -4

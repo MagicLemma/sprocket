@@ -3,6 +3,7 @@
 #include "LuaTransform.h"
 #include "LuaInput.h"
 #include "LuaCamera.h"
+#include "LuaPhysics.h"
 #include "Log.h"
 #include "Entity.h"
 #include "Components.h"
@@ -41,6 +42,10 @@ void PrintErrors(lua_State* L, int rc)
         std::string err = lua_tostring(L, -1);
         SPKT_LOG_ERROR("[Lua]: Error handler func failed for {}: {}", name, err);
     }
+    else if (rc != LUA_OK) {
+        std::string err = lua_tostring(L, -1);
+        SPKT_LOG_ERROR("[Lua]: Unknown error for {}: {}", name, err);
+    }
 }
 
 template<typename T> int Lua_Has(lua_State* L)
@@ -69,6 +74,9 @@ LuaEngine::LuaEngine()
 
     lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
     RegisterCameraFunctions(d_L);
+
+    lua_register(d_L, "HasPhysics", &Lua_Has<PhysicsComponent>);
+    RegisterPhysicsFunctions(d_L);
 
     lua_pushnil(d_L);
     lua_setglobal(d_L, "__keyboard__");
@@ -103,7 +111,8 @@ void LuaEngine::CallInitFunction()
         return;
     }
 
-    lua_pcall(d_L, 0, 0, 0);
+    int rc = lua_pcall(d_L, 0, 0, 0);
+    PrintErrors(d_L, rc);
 }
 
 void LuaEngine::CallOnUpdateFunction(double dt)
@@ -122,7 +131,9 @@ void LuaEngine::CallOnUpdateFunction(double dt)
     }
 
     lua_pushnumber(d_L, dt);
-    lua_pcall(d_L, 1, 0, 0);
+
+    int rc = lua_pcall(d_L, 1, 0, 0);
+    PrintErrors(d_L, rc);
 }
 
 void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)

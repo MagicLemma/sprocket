@@ -106,6 +106,7 @@ add_library(Sprocket STATIC
             Scripting/LuaTransform.cpp
             Scripting/LuaInput.cpp
             Scripting/LuaCamera.cpp
+            Scripting/LuaPhysics.cpp
             
             Vendor/ImGuizmo/ImGuizmo.cpp)
 

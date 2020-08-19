@@ -147,6 +147,9 @@ Entities:
     Transform:
       Position: [0, 5, 5]
       Orientation: [1, 0, 0, 0]
+    Script:
+      Script: Resources/Scripts/PlayerController.lua
+      Active: false
     Model:
       Model: Resources/Models/Cube.obj
       Scale: 0.3

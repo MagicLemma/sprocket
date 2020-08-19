@@ -83,8 +83,8 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
         // We only do the player camera here as the observer and editor
         // projection matrices are updated via scripts.
-        d_playerCamera.Get<CameraComponent>().projection =
-            Maths::Perspective(e->AspectRatio(), 70, 0.1f, 1000.0f);
+        //d_playerCamera.Get<CameraComponent>().projection =
+        //    Maths::Perspective(e->AspectRatio(), 70, 0.1f, 1000.0f);
     }
 
     d_entityManager.OnEvent(event);

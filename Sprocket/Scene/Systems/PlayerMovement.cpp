@@ -14,6 +14,7 @@ PlayerMovement::PlayerMovement()
 
 void PlayerMovement::OnUpdate(Scene& scene, double dt)
 {
+    return;
     d_mouse.OnUpdate();
 
     scene.Each<PlayerComponent, PhysicsComponent>([&](Entity& entity) {

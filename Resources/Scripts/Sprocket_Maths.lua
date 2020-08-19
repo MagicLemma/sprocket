@@ -44,5 +44,8 @@ end
 
 function Normalised(vector)
     local mag = Mag(vector)
+    if mag == 0 then
+        return Vec3(0, 0, 0)
+    end
     return Vec3(vector.x / mag, vector.y / mag, vector.z / mag)
 end

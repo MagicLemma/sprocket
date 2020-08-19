@@ -97,6 +97,7 @@
 #include "Scripting/LuaTransform.h"
 #include "Scripting/LuaInput.h"
 #include "Scripting/LuaCamera.h"
+#include "Scripting/LuaPhysics.h"
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"

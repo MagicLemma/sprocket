@@ -1,5 +1,5 @@
 function Init()
-    YAW = 0
+    YAW = 0.0
 
     -- Projection matrix setup
     ASPECT_RATIO = 16 / 9
@@ -18,10 +18,10 @@ function OnUpdate(dt)
     pitch = Clamp(pitch - 0.15 * dy, -89, 89)
     SetPitch(pitch)
 
-    MakeUpright(YAW) -- TODO
+    MakeUpright(math.rad(YAW))
 
-    local cosYaw = math.cos(math.radians(YAW))
-    local sinYaw = math.sin(math.radians(YAW))
+    local cosYaw = math.cos(math.rad(YAW))
+    local sinYaw = math.sin(math.rad(YAW))
     
     local forwards = Vec3(-sinYaw, 0, -cosYaw)
     local right = Vec3(cosYaw, 0, -sinYaw)
@@ -33,20 +33,20 @@ function OnUpdate(dt)
     if IsKeyDown(KEYBOARD_A) then dir = dir - right end
     dir = Normalised(dir)
 
-    local onFloor = IsOnFloor() -- TODO
-
+    local physics = GetPhysicsComponent()
     local dv = Vec3(0, 0, 0)
 
-    if Mag(dv) ~= 0 or onFloor then
-        dv = dv + 3 * dir - GetVelocity() -- TODO
-        dy.y = 0 -- Only consider horizontal movement
+    if Mag(dir) > 0 or physics.onFloor then
+        dv = dv + 3 * dir - physics.velocity
+        dv.y = 0
     end
 
-    if onFloor and IsKeyDown(KEYBOARD_SPACE) then 
-        dv = dv + (6 - GetVelocity().y) * Vec3(0, 1, 0) 
+    if physics.onFloor and IsKeyDown(KEYBOARD_SPACE) then 
+        dv.y = (6 - physics.velocity.y)
     end
 
-    ApplyForce(GetMass() * dv) -- TODO
+    physics.force = physics.force + (physics.mass * dv)
+    SetPhysicsComponent(physics)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
