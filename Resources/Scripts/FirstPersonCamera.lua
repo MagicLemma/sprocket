@@ -33,9 +33,9 @@ function OnUpdate(dt)
     local dx, dy = GetMouseOffset()
     RotateY(-10 * dx)
 
-    local pitch = GetPitch()
-    pitch = Clamp(pitch - 0.15 * dy, -89, 89)
-    SetPitch(pitch)
+    local camera = GetCameraComponent()
+    camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
+    SetCameraComponent(camera)
     
     SetPosition(pos)
 end

@@ -9,15 +9,12 @@ void RegisterCameraFunctions(lua_State* L);
 
 namespace Lua {
 
-// Functions that will be reigstered with all Lua engines for accessing
-// and setting the camera component.
-
-int GetPitch(lua_State* L);
+int GetCameraComponent(lua_State* L);
     // Args: 0
-    // Rets: 1 - The pitch value on the CameraComponent.
+    // Rets: 2 - Pitch and FOV
 
-int SetPitch(lua_State* L);
-    // Args: 1 - The new value for the pitch.
+int SetCameraComponent(lua_State* L);
+    // Args: 2 - See above
     // Rets: 0
 
 }

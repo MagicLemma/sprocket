@@ -41,3 +41,17 @@ end
 function SetPhysicsComponent(pc)
     Lua_SetPhysicsComponent(pc.velocity.x, pc.velocity.y, pc.velocity.z, pc.gravity, pc.frozen, pc.mass, pc.bounciness, pc.frictionCoefficient, pc.rollingResistance, pc.force.x, pc.force.y, pc.force.z, pc.onFloor)
 end
+
+CameraComponent = Class(function(self, fov, pitch)
+    self.fov = fov
+    self.pitch = pitch
+end)
+
+function GetCameraComponent()
+    fov, pitch = Lua_GetCameraComponent()
+    return CameraComponent(fov, pitch)
+end
+
+function SetCameraComponent(cc)
+    Lua_SetCameraComponent(cc.fov, cc.pitch)
+end

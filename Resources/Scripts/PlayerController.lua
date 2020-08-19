@@ -7,9 +7,9 @@ function OnUpdate(dt)
     
     YAW = YAW - dx * 0.15
 
-    local pitch = GetPitch()
-    pitch = Clamp(pitch - 0.15 * dy, -89, 89)
-    SetPitch(pitch)
+    local camera = GetCameraComponent()
+    camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
+    SetCameraComponent(camera)
 
     MakeUpright(math.rad(YAW))
 
