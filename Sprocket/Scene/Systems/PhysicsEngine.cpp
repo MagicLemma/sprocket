@@ -102,26 +102,18 @@ void PhysicsEngine::OnStartup(Scene& scene)
 {
     scene.OnAdd<PhysicsComponent>([&](Entity& entity) {
         assert(entity.Has<TransformComponent>());
-
         auto& transform = entity.Get<TransformComponent>();
-        auto& physics = entity.Get<PhysicsComponent>();
 
-        d_impl->entityData[entity.Id()].entity = entity;
-        auto* e = &d_impl->entityData[entity.Id()].entity;
+        auto& entry = d_impl->entityData[entity.Id()];
+        entry.entity = entity;
+        entry.rigidBody = d_impl->world.createRigidBody(Convert(transform));
 
-        auto& entry = d_impl->entityData[entity.Id()].rigidBody;
-        entry = d_impl->world.createRigidBody(Convert(transform));
-
-        // Give each RigidBody a ref back to the original Entity object.
-        entry->setUserData(static_cast<void*>(e));
-        entry->setType(physics.frozen ? rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC);
+        entry.rigidBody->setUserData(static_cast<void*>(&entry.entity));
 
         AddCollider(entity);
     });
 
     scene.OnRemove<PhysicsComponent>([&](Entity& entity) {
-        auto& physics = entity.Get<PhysicsComponent>();
-
         auto rigidBodyIt = d_impl->entityData.find(entity.Id());
         d_impl->world.destroyRigidBody(rigidBodyIt->second.rigidBody);
         d_impl->entityData.erase(rigidBodyIt);
