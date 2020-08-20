@@ -155,7 +155,6 @@ void Serialiser::Deserialise(const std::string& file)
 
         if (auto camera = entity["CameraComponent"]) {
             CameraComponent cc;
-            // Projection does not need to be stored
             cc.pitch = camera["fov"].as<float>();
             cc.pitch = camera["pitch"].as<float>();
             e.Add(cc);

@@ -2,6 +2,7 @@ import json
 import os
 
 from Datamatic import definitions
+from Datamatic import serialiser
 
 sprocket = os.path.abspath(os.path.dirname(__file__))
 
@@ -11,4 +12,4 @@ serialiser_cpp = os.path.join(sprocket, "Scene", "Serialiser.cpp")
 with open("ComponentSpec.json") as specfile:
     spec = json.loads(specfile.read())
 
-definitions.generate(spec, components_h)
+serialiser.generate(spec, components_h)
