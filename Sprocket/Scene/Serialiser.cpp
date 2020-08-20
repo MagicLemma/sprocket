@@ -13,9 +13,6 @@ void Serialiser::Serialise(const std::string& file)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Scene";
-    out << YAML::Value << "Scene Name";
-
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     d_scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
@@ -82,7 +79,6 @@ void Serialiser::Serialise(const std::string& file)
         if (entity.Has<PathComponent>()) {
             const auto& path = entity.Get<PathComponent>();
             out << YAML::Key << "Path" << YAML::BeginMap;
-            //out << YAML::Key << "Markers" << YAML::Value << path.markers; TODO - Fix this
             out << YAML::Key << "Speed" << YAML::Value << path.speed;
             out << YAML::EndMap;
         }
@@ -172,8 +168,7 @@ void Serialiser::Deserialise(const std::string& file)
         }
 
         if (auto path = entity["Path"]) {
-            PathComponent pc; // TODO Sort this
-            //pc.markers = path["Markers"].as<std::queue<Maths::vec3>>();
+            PathComponent pc;
             pc.speed = path["Speed"].as<float>();
             e.Add(pc);
         }

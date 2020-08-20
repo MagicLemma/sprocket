@@ -185,7 +185,8 @@
             "Attributes": [
                 {
                     "Name": "markers",
-                    "Type": "std::queue<Maths::vec3>"
+                    "Type": "std::queue<Maths::vec3>",
+                    "Savable": false
                 },
                 {
                     "Name": "speed",
