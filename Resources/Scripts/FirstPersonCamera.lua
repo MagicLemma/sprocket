@@ -1,34 +1,35 @@
 function Init() end
 
 function OnUpdate(dt)
-    local pos = GetPosition()
-
     local f = GetForwardsDir()
     f.y = 0
     f = Normalised(f)
-
+    
     local speed = 10 * dt
-
     local r = GetRightDir()
-
+    
+    local transform = GetTransformComponent()
+    local new_pos = transform.position
     if IsKeyDown(KEYBOARD_W) then
-        pos = pos + speed * f
+        new_pos = new_pos + speed * f
     end
     if IsKeyDown(KEYBOARD_S) then
-        pos = pos - speed * f
+        new_pos = new_pos - speed * f
     end
     if IsKeyDown(KEYBOARD_D) then
-        pos = pos + speed * r
+        new_pos = new_pos + speed * r
     end
     if IsKeyDown(KEYBOARD_A) then
-        pos = pos - speed * r
+        new_pos = new_pos - speed * r
     end
     if IsKeyDown(KEYBOARD_SPACE) then
-        pos.y = pos.y + speed
+        new_pos.y = new_pos.y + speed
     end
     if IsKeyDown(KEYBOARD_LSHIFT) then
-        pos.y = pos.y - speed
+        new_pos.y = new_pos.y - speed
     end
+    transform.position = new_pos
+    SetTransformComponent(transform)
 
     local dx, dy = GetMouseOffset()
     RotateY(-10 * dx)
@@ -37,7 +38,6 @@ function OnUpdate(dt)
     camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
     SetCameraComponent(camera)
     
-    SetPosition(pos)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end

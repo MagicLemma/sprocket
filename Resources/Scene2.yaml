@@ -1,44 +1,20 @@
 Entities:
   - NameComponent:
-      name: Tin
+      name: Rock
     TransformComponent:
-      position: [-2.5, -0.4073618, -3.5]
-      orientation: [1, 0, 0, 0]
+      position: [-2.5, -0.0677385, -0.5]
+      orientation: [-4.371139e-08, 0, 1, 0]
     ModelComponent:
       model: Resources/Models/Rock.obj
       scale: 1.1
-      texture: Resources/Textures/Tin.png
+      texture: Resources/Textures/Rock.png
       shineDamper: 10
       reflectivity: 0
-    SelectComponent: true
+    SelectComponent:
+      {}
     GridComponent:
       x: -3
-      z: -4
-  - NameComponent:
-      name: Worker
-    TransformComponent:
-      position: [-8.353926, 0.5, -1.460907]
-      orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Cube.obj
-      scale: 0.5
-      texture: Resources/Textures/White.PNG
-      shineDamper: 1
-      reflectivity: 0
-    SelectComponent: true
-    PathComponent:
-      speed: 3
-  - NameComponent:
-      name: Camera
-    TransformComponent:
-      position: [8, 5.9606, 0]
-      orientation: [0.6711728, -0.2225468, 0.6711728, 0.2225468]
-    ScriptComponent:
-      script: Resources/Scripts/ThirdPersonCamera.lua
-      active: true
-    CameraComponent:
-      fov: 70
-      pitch: 0
+      z: -1
   - NameComponent:
       name: Terrain
     TransformComponent:
@@ -50,19 +26,47 @@ Entities:
       texture: Resources/Textures/Green.PNG
       shineDamper: 1
       reflectivity: 0
-    SelectComponent: true
+    SelectComponent:
+      {}
   - NameComponent:
-      name: Rock
+      name: Camera
     TransformComponent:
-      position: [-2.5, -0.0677385, -0.5]
-      orientation: [-4.371139e-08, 0, 1, 0]
+      position: [-10.96848, 4.900082, -10.8341]
+      orientation: [0.3819551, -0.1076789, -0.8834509, -0.2490582]
+    ScriptComponent:
+      script: Resources/Scripts/ThirdPersonCamera.lua
+      active: true
+    CameraComponent:
+      fov: 70
+      pitch: 0
+  - NameComponent:
+      name: Worker
+    TransformComponent:
+      position: [-8.353926, 0.5, -1.460907]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      scale: 0.5
+      texture: Resources/Textures/White.PNG
+      shineDamper: 1
+      reflectivity: 0
+    SelectComponent:
+      {}
+    PathComponent:
+      speed: 3
+  - NameComponent:
+      name: Tin
+    TransformComponent:
+      position: [-2.5, -0.4073618, -3.5]
+      orientation: [1, 0, 0, 0]
     ModelComponent:
       model: Resources/Models/Rock.obj
       scale: 1.1
-      texture: Resources/Textures/Rock.png
+      texture: Resources/Textures/Tin.png
       shineDamper: 10
       reflectivity: 0
-    SelectComponent: true
+    SelectComponent:
+      {}
     GridComponent:
       x: -3
-      z: -1
+      z: -4
