@@ -20,7 +20,7 @@ struct NameComponent
 struct TransformComponent
 {
     Maths::vec3 position = {0, 0, 0};
-    Maths::quat orientation = Maths::identity;
+    Maths::quat orientation = {0, 0, 0, 1};
 };
 
 enum class Collider { NONE, SPHERE, CAPSULE, BOX };
@@ -52,10 +52,6 @@ struct ModelComponent {
     std::string texture = "";
     float shineDamper = 1.0f;
     float reflectivity = 0.0f;
-};
-
-struct NameComponent {
-    std::string name;
 };
 
 struct ScriptComponent {

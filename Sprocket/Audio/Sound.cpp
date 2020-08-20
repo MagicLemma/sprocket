@@ -1,6 +1,8 @@
 #include "Sound.h"
 
 #include <SFML/Audio.hpp>
+#include <iostream>
+#include <sstream>
 
 namespace Sprocket {
 namespace Audio {
@@ -33,31 +35,37 @@ Source::Source()
 
 void Source::SetSound(const Sound& sound)
 {
+    return;
     d_impl->sound.setBuffer(sound.d_impl->buffer);
 }
 
 void Source::SetPosition(float x, float y, float z)
 {
+    return;
     d_impl->sound.setPosition({x, y, z});
 }
 
 void Source::SetPosition(const Maths::vec3& position)
 {
+    return;
     SetPosition(position.x, position.y, position.z);
 }
 
 void Source::Play() const
 {
+    return;
     d_impl->sound.play();
 }
 
 void Source::Pause() const
 {
+    return;
     d_impl->sound.pause();
 }
 
 void Source::Stop() const
 {
+    return;
     d_impl->sound.stop();
 }
 
