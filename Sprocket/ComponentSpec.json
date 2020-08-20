@@ -5,7 +5,8 @@
     "Components": [
         {
             "Name": "TemporaryComponent",
-            "Attributes": []
+            "Attributes": [],
+            "Scriptable": false
         },
         {
             "Name": "NameComponent",
@@ -143,7 +144,8 @@
                     "Type": "bool",
                     "Default": true
                 }
-            ]
+            ],
+            "Scriptable": false
         },
         {
             "Name": "CameraComponent",

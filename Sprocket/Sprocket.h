@@ -93,6 +93,7 @@
 
 // SCRIPTING
 #include "Scripting/LuaEngine.h"
+#include "Scripting/LuaComponents.h"
 #include "Scripting/LuaGlobals.h"
 #include "Scripting/LuaTransform.h"
 #include "Scripting/LuaInput.h"
