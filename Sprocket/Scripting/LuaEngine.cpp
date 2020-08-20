@@ -4,6 +4,7 @@
 #include "LuaInput.h"
 #include "LuaCamera.h"
 #include "LuaPhysics.h"
+#include "LuaComponents.h"
 #include "Log.h"
 #include "Entity.h"
 #include "Components.h"
@@ -68,15 +69,18 @@ LuaEngine::LuaEngine()
     DoFile(d_L, "Sprocket/Scripting/Sprocket_Base.lua");
     DoFile(d_L, "Sprocket/Scripting/Sprocket_Maths.lua");
     DoFile(d_L, "Sprocket/Scripting/Sprocket_Bindings.lua");
+    DoFile(d_L, "Sprocket/Scripting/Sprocket_Components.lua");
 
     RegisterTransformFunctions(d_L);
     RegisterInputFunctions(d_L);
 
     lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
-    RegisterCameraFunctions(d_L);
+    //RegisterCameraFunctions(d_L);
 
     lua_register(d_L, "HasPhysics", &Lua_Has<PhysicsComponent>);
-    RegisterPhysicsFunctions(d_L);
+    //RegisterPhysicsFunctions(d_L);
+
+    RegisterComponentFunctions(d_L);
 
     lua_pushnil(d_L);
     lua_setglobal(d_L, "__keyboard__");

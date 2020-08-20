@@ -54,9 +54,9 @@ def generate(spec, output):
             if not attr.get("Scriptable", True):
                 continue
             if attr["Type"] == "Maths::vec3":
-                args.extend([f'self.{n}.x', f'self.{n}.y', f'self.{n}.z'])
+                args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
             else:
-                args.append(f'self.{attr["Name"]}')
+                args.append(f'c.{attr["Name"]}')
         out += ", ".join(args)
         out += ')\n'
         out += "end\n\n"

@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-20 23:53:20.361987
+-- GENERATED FILE @ 2020-08-21 00:14:30.098773
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -9,7 +9,7 @@ function GetNameComponent()
 end
 
 function SetNameComponent(c)
-    Lua_SetNameComponent(self.name)
+    Lua_SetNameComponent(c.name)
 end
 
 TransformComponent = Class(function(self, position_x, position_y, position_z)
@@ -22,7 +22,7 @@ function GetTransformComponent()
 end
 
 function SetTransformComponent(c)
-    Lua_SetTransformComponent(self.position.x, self.position.y, self.position.z)
+    Lua_SetTransformComponent(c.position.x, c.position.y, c.position.z)
 end
 
 ModelComponent = Class(function(self, model, scale, texture, shineDamper, reflectivity)
@@ -39,7 +39,7 @@ function GetModelComponent()
 end
 
 function SetModelComponent(c)
-    Lua_SetModelComponent(self.model, self.scale, self.texture, self.shineDamper, self.reflectivity)
+    Lua_SetModelComponent(c.model, c.scale, c.texture, c.shineDamper, c.reflectivity)
 end
 
 PhysicsComponent = Class(function(self, velocity_x, velocity_y, velocity_z, gravity, frozen, mass, bounciness, frictionCoefficient, rollingResistance, force_x, force_y, force_z, onFloor)
@@ -60,7 +60,7 @@ function GetPhysicsComponent()
 end
 
 function SetPhysicsComponent(c)
-    Lua_SetPhysicsComponent(self.velocity.x, self.velocity.y, self.velocity.z, self.gravity, self.frozen, self.mass, self.bounciness, self.frictionCoefficient, self.rollingResistance, self.force.x, self.force.y, self.force.z, self.onFloor)
+    Lua_SetPhysicsComponent(c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.mass, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
 end
 
 CameraComponent = Class(function(self, fov, pitch)
@@ -74,7 +74,7 @@ function GetCameraComponent()
 end
 
 function SetCameraComponent(c)
-    Lua_SetCameraComponent(self.fov, self.pitch)
+    Lua_SetCameraComponent(c.fov, c.pitch)
 end
 
 SelectComponent = Class(function(self, selected, hovered)
@@ -88,7 +88,7 @@ function GetSelectComponent()
 end
 
 function SetSelectComponent(c)
-    Lua_SetSelectComponent(self.selected, self.hovered)
+    Lua_SetSelectComponent(c.selected, c.hovered)
 end
 
 PathComponent = Class(function(self, speed)
@@ -101,7 +101,7 @@ function GetPathComponent()
 end
 
 function SetPathComponent(c)
-    Lua_SetPathComponent(self.speed)
+    Lua_SetPathComponent(c.speed)
 end
 
 GridComponent = Class(function(self, x, z)
@@ -115,6 +115,6 @@ function GetGridComponent()
 end
 
 function SetGridComponent(c)
-    Lua_SetGridComponent(self.x, self.z)
+    Lua_SetGridComponent(c.x, c.z)
 end
 
