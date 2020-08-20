@@ -24,7 +24,6 @@ float GetMasterVolume()
 
 void SetMasterVolume(float volume)
 {
-    return;
     sf::Listener::setGlobalVolume(volume);
 }
 

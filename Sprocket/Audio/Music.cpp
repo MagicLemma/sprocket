@@ -22,19 +22,16 @@ bool Music::Load(const std::string& filename)
 
 void Music::Play() const
 {
-    return;
     d_impl->music.play();
 }
 
 void Music::Pause() const
 {
-    return;
     d_impl->music.pause();
 }
 
 void Music::Stop() const
 {
-    return;
     d_impl->music.stop();
 }
 
