@@ -89,7 +89,7 @@ def generate_cpp(spec, output):
         
         # Getter
         out += f"int Get{name}(lua_State* L)\n{{\n"
-        out += '    if (!CheckArgCould(L, 0)) { return luaL_error(L, "Bad number of args"); }\n'
+        out += '    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }\n'
         out += f'    assert(GetEntity(L)->Has<{name}>());\n\n'
         out += f'    const auto& c = GetEntity(L)->Get<{name}>();\n'
 
@@ -105,6 +105,9 @@ def generate_cpp(spec, output):
                 count += 1
                 out += f'    lua_pushnumber(L, c.{attr["Name"]}.z);\n'
                 count += 1
+            elif attr["Type"] == "std::string":
+                out += f'    lua_pushstring(L, c.{attr["Name"]}.c_str());\n'
+                count += 1
             else:
                 out += f'    {get_lua_pushfunc(attr)}(L, c.{attr["Name"]});\n'
                 count += 1
@@ -114,7 +117,7 @@ def generate_cpp(spec, output):
 
         # Setter
         out += f"int Set{name}(lua_State* L)\n{{\n"
-        out += f'    if (!CheckArgCould(L, {num_attrs})) {{ return luaL_error(L, "Bad number of args"); }}\n\n'
+        out += f'    if (!CheckArgCount(L, {num_attrs})) {{ return luaL_error(L, "Bad number of args"); }}\n\n'
         out += f'    auto& c = GetEntity(L)->Get<{name}>();\n'
         count = 1
         for attr in attrs:
@@ -128,10 +131,15 @@ def generate_cpp(spec, output):
                 count += 1
                 out += f'    c.{attr["Name"]}.z = (float)lua_tonumber(L, {count});\n'
                 count += 1
+            elif attr["Type"] == "std::string":
+                out += f'    c.{attr["Name"]} = std::string({get_lua_tofunc(attr)}(L, {count}));\n'
+                count += 1
             else:
                 out += f'    c.{attr["Name"]} = ({attr["Type"]}){get_lua_tofunc(attr)}(L, {count});\n'
                 count += 1
         out += "    return 0;\n"
         out += "}\n\n"
     out += footer
-    print(out)
+
+    with open(output, "w") as outfile:
+        outfile.write(out)

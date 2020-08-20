@@ -65,9 +65,9 @@ LuaEngine::LuaEngine()
     luaL_openlibs(d_L);
 
     // Core Sprocket Constants and Helper Functions
-    DoFile(d_L, "Resources/Scripts/Sprocket_Base.lua");
-    DoFile(d_L, "Resources/Scripts/Sprocket_Maths.lua");
-    DoFile(d_L, "Resources/Scripts/Sprocket_Bindings.lua");
+    DoFile(d_L, "Sprocket/Scripting/Sprocket_Base.lua");
+    DoFile(d_L, "Sprocket/Scripting/Sprocket_Maths.lua");
+    DoFile(d_L, "Sprocket/Scripting/Sprocket_Bindings.lua");
 
     RegisterTransformFunctions(d_L);
     RegisterInputFunctions(d_L);
