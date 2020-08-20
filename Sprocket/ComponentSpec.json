@@ -27,7 +27,7 @@
                 {
                     "Name": "orientation",
                     "Type": "Maths::quat",
-                    "Default": [0, 0, 0, 1]
+                    "Default": [1, 0, 0, 0]
                 }
             ]
         },
@@ -171,12 +171,14 @@
                 {
                     "Name": "selected",
                     "Type": "bool",
-                    "Default": false
+                    "Default": false,
+                    "Savable": false
                 },
                 {
                     "Name": "hovered",
                     "Type": "bool",
-                    "Default": false
+                    "Default": false,
+                    "Savable": false
                 }
             ]
         },

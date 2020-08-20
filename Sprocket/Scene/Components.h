@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-20 20:41:06.398068
+// GENERATED FILE @ 2020-08-20 22:00:45.679297
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -28,7 +28,7 @@ struct NameComponent
 struct TransformComponent
 {
     Maths::vec3 position = {0.0f, 0.0f, 0.0f};
-    Maths::quat orientation = {0.0f, 0.0f, 0.0f, 1.0f};
+    Maths::quat orientation = {1.0f, 0.0f, 0.0f, 0.0f};
 };
 
 struct ModelComponent
