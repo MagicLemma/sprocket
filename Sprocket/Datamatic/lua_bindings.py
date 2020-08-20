@@ -21,11 +21,23 @@ namespace Lua {
 
 """
 
-footer = """
-
-}
+footer = """}
 }
 """
+
+def get_lua_pushfunc(attr):
+    if attr["Type"] in {"int", "float"}:
+        return "lua_pushnumber"
+    if attr["Type"] == "bool":
+        return "lua_pushboolean"
+    return "lua_pushstring"
+
+def get_lua_tofunc(attr):
+    if attr["Type"] in {"int", "float"}:
+        return "lua_tonumber"
+    if attr["Type"] == "bool":
+        return "lua_toboolean"
+    return "lua_tostring"
 
 def generate_header(spec, output):
     out = f"// GENERATED FILE @ {datetime.now()}\n"
@@ -57,13 +69,69 @@ def generate_cpp(spec, output):
     out += middle
     for component in spec["Components"]:
         name = component["Name"]
+        attrs = component["Attributes"]
+
+        num_attrs = 0
+        for attr in attrs:
+            if not attr.get("Scriptable", True):
+                continue
+            if attr["Type"] in {"Maths::vec4", "Maths::quat"}:
+                num_attrs += 4
+            elif attr["Type"] == "Maths::vec3":
+                num_attrs += 3
+            elif attr["Type"] == "Maths::vec2":
+                num_attrs += 2
+            else:
+                num_attrs += 1
+
         if not component.get("Scriptable", True):
             continue
+        
+        # Getter
         out += f"int Get{name}(lua_State* L)\n{{\n"
-        out += "    x\n"
+        out += '    if (!CheckArgCould(L, 0)) { return luaL_error(L, "Bad number of args"); }\n'
+        out += f'    assert(GetEntity(L)->Has<{name}>());\n\n'
+        out += f'    const auto& c = GetEntity(L)->Get<{name}>();\n'
+
+        count = 1
+        for attr in attrs:
+            if not attr.get("Scriptable", True):
+                continue
+
+            if attr["Type"] == "Maths::vec3":
+                out += f'    lua_pushnumber(L, c.{attr["Name"]}.x);\n'
+                count += 1
+                out += f'    lua_pushnumber(L, c.{attr["Name"]}.y);\n'
+                count += 1
+                out += f'    lua_pushnumber(L, c.{attr["Name"]}.z);\n'
+                count += 1
+            else:
+                out += f'    {get_lua_pushfunc(attr)}(L, c.{attr["Name"]});\n'
+                count += 1
+
+        out += f'    return {num_attrs};\n'
         out += "}\n\n"
+
+        # Setter
         out += f"int Set{name}(lua_State* L)\n{{\n"
-        out += "    x\n"
+        out += f'    if (!CheckArgCould(L, {num_attrs})) {{ return luaL_error(L, "Bad number of args"); }}\n\n'
+        out += f'    auto& c = GetEntity(L)->Get<{name}>();\n'
+        count = 1
+        for attr in attrs:
+            if not attr.get("Scriptable", True):
+                continue
+
+            if attr["Type"] == "Maths::vec3":
+                out += f'    c.{attr["Name"]}.x = (float)lua_tonumber(L, {count});\n'
+                count += 1
+                out += f'    c.{attr["Name"]}.y = (float)lua_tonumber(L, {count});\n'
+                count += 1
+                out += f'    c.{attr["Name"]}.z = (float)lua_tonumber(L, {count});\n'
+                count += 1
+            else:
+                out += f'    c.{attr["Name"]} = ({attr["Type"]}){get_lua_tofunc(attr)}(L, {count});\n'
+                count += 1
+        out += "    return 0;\n"
         out += "}\n\n"
     out += footer
     print(out)

@@ -28,7 +28,8 @@
                 {
                     "Name": "orientation",
                     "Type": "Maths::quat",
-                    "Default": [1, 0, 0, 0]
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
                 }
             ]
         },
@@ -81,22 +82,26 @@
                 {
                     "Name": "collider",
                     "Type": "Collider",
-                    "Default": "NONE"
+                    "Default": "NONE",
+                    "Scriptable": false
                 },
                 {
                     "Name": "halfExtents",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
                 },
                 {
                     "Name": "radius",
                     "Type": "float",
-                    "Default": 1.0
+                    "Default": 1.0,
+                    "Scriptable": false
                 },
                 {
                     "Name": "height",
                     "Type": "float",
-                    "Default": 1.0
+                    "Default": 1.0,
+                    "Scriptable": false
                 },
                 {
                     "Name": "mass",
@@ -153,7 +158,8 @@
                 {
                     "Name": "projection",
                     "Type": "Maths::mat4",
-                    "Savable": false
+                    "Savable": false,
+                    "Scriptable": false
                 },
                 {
                     "Name": "fov",
@@ -190,7 +196,8 @@
                 {
                     "Name": "markers",
                     "Type": "std::queue<Maths::vec3>",
-                    "Savable": false
+                    "Savable": false,
+                    "Scriptable": false
                 },
                 {
                     "Name": "speed",
