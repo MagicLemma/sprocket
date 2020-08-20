@@ -1,7 +1,5 @@
-// GENERATED - DO NOT EDIT
 #pragma once
 #include "Maths.h"
-#include <vector>
 #include <string>
 #include <queue>
 
@@ -20,8 +18,19 @@ struct NameComponent
 struct TransformComponent
 {
     Maths::vec3 position = {0, 0, 0};
-    Maths::quat orientation = {0, 0, 0, 1};
+    Maths::quat orientation = Maths::identity;
 };
+
+struct ModelComponent
+{
+    std::string model        = "";
+    float       scale        = 1.0f;
+
+    std::string texture      = "";    
+    float       shineDamper  = 1.0f;
+    float       reflectivity = 0.0f;
+};
+
 
 enum class Collider { NONE, SPHERE, CAPSULE, BOX };
 struct PhysicsComponent
@@ -46,17 +55,10 @@ struct PhysicsComponent
     bool onFloor              = false;
 };
 
-struct ModelComponent {
-    std::string model = "";
-    float scale = 1.0f;
-    std::string texture = "";
-    float shineDamper = 1.0f;
-    float reflectivity = 0.0f;
-};
-
-struct ScriptComponent {
+struct ScriptComponent
+{
     std::string script;
-    bool active = true;
+    bool        active = true;
 };
 
 struct CameraComponent
@@ -66,7 +68,8 @@ struct CameraComponent
     float       pitch = 0.0f;
 };
 
-struct SelectComponent {
+struct SelectComponent
+{
     bool selected = false;
     bool hovered = false;
 };
