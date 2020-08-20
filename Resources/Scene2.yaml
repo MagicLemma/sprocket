@@ -1,70 +1,68 @@
-Scene: Scene Name
 Entities:
-  - Name:
-      Name: Rock
-    Transform:
-      Position: [-2.5, -0.0677385, -0.5]
-      Orientation: [-4.371139e-08, 0, 1, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Rock.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -3
-      Z: -1
-  - Name:
-      Name: Terrain
-    Transform:
-      Position: [0, 0, 0]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Square.obj
-      Scale: 25
-      Texture: Resources/Textures/Green.PNG
-      ShineDamper: 1
-      Reflectivity: 0
-    Select: true
-  - Name:
-      Name: Camera
-    Transform:
-      Position: [3.469407, 5.9606, 7.74303]
-      Orientation: [0.8538309, -0.2831124, 0.4146308, 0.1374829]
-    Script:
-      Script: Resources/Scripts/ThirdPersonCamera.lua
-      Active: true
-    Camera:
-      Projection: [1.187173, 0, 0, 0, 0, 2.11053, 0, 0, 0, 0, -1.0002, -1, 0, 0, -0.20002, 0]
-      FOV: 70
-      Pitch: 0
-  - Name:
-      Name: Worker
-    Transform:
-      Position: [-8.353926, 0.5, -1.460907]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Cube.obj
-      Scale: 0.5
-      Texture: Resources/Textures/White.PNG
-      ShineDamper: 1
-      Reflectivity: 0
-    Select: true
-    Path:
-      Speed: 3
-  - Name:
-      Name: Tin
-    Transform:
-      Position: [-2.5, -0.4073618, -3.5]
-      Orientation: [1, 0, 0, 0]
-    Model:
-      Model: Resources/Models/Rock.obj
-      Scale: 1.1
-      Texture: Resources/Textures/Tin.png
-      ShineDamper: 10
-      Reflectivity: 0
-    Select: true
-    Grid:
-      X: -3
-      Z: -4
+  - NameComponent:
+      name: Tin
+    TransformComponent:
+      position: [-2.5, -0.4073618, -3.5]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Rock.obj
+      scale: 1.1
+      texture: Resources/Textures/Tin.png
+      shineDamper: 10
+      reflectivity: 0
+    SelectComponent: true
+    GridComponent:
+      x: -3
+      z: -4
+  - NameComponent:
+      name: Worker
+    TransformComponent:
+      position: [-8.353926, 0.5, -1.460907]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      scale: 0.5
+      texture: Resources/Textures/White.PNG
+      shineDamper: 1
+      reflectivity: 0
+    SelectComponent: true
+    PathComponent:
+      speed: 3
+  - NameComponent:
+      name: Camera
+    TransformComponent:
+      position: [8, 5.9606, 0]
+      orientation: [0.6711728, -0.2225468, 0.6711728, 0.2225468]
+    ScriptComponent:
+      script: Resources/Scripts/ThirdPersonCamera.lua
+      active: true
+    CameraComponent:
+      fov: 70
+      pitch: 0
+  - NameComponent:
+      name: Terrain
+    TransformComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Square.obj
+      scale: 25
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    SelectComponent: true
+  - NameComponent:
+      name: Rock
+    TransformComponent:
+      position: [-2.5, -0.0677385, -0.5]
+      orientation: [-4.371139e-08, 0, 1, 0]
+    ModelComponent:
+      model: Resources/Models/Rock.obj
+      scale: 1.1
+      texture: Resources/Textures/Rock.png
+      shineDamper: 10
+      reflectivity: 0
+    SelectComponent: true
+    GridComponent:
+      x: -3
+      z: -1
