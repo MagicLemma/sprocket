@@ -22,7 +22,7 @@ Entities:
       bounciness: 0.5
       frictionCoefficient: 0.3
       rollingResistance: 0
-    Select: true
+    SelectComponent: 
   - NameComponent:
       name: Sphere 3
     TransformComponent:
@@ -46,6 +46,7 @@ Entities:
       bounciness: 0.5
       frictionCoefficient: 0.3
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Sphere 2
     TransformComponent:
@@ -69,6 +70,7 @@ Entities:
       bounciness: 0.5
       frictionCoefficient: 0.3
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Sphere 1
     TransformComponent:
@@ -92,6 +94,7 @@ Entities:
       bounciness: 0.5
       frictionCoefficient: 0.3
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Sphere 0
     TransformComponent:
@@ -115,6 +118,7 @@ Entities:
       bounciness: 0.5
       frictionCoefficient: 0.3
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Editor Camera
     TransformComponent:
@@ -137,6 +141,7 @@ Entities:
     CameraComponent:
       fov: 70
       pitch: 0
+    SelectComponent: 
   - NameComponent:
       name: Player
     TransformComponent:
@@ -166,6 +171,7 @@ Entities:
     CameraComponent:
       fov: 70
       pitch: 0
+    SelectComponent: 
   - NameComponent:
       name: Crate 3 (M)
     TransformComponent:
@@ -189,6 +195,7 @@ Entities:
       bounciness: 0
       frictionCoefficient: 0.2
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Crate 2
     TransformComponent:
@@ -212,6 +219,7 @@ Entities:
       bounciness: 0
       frictionCoefficient: 0
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Crate
     TransformComponent:
@@ -235,6 +243,7 @@ Entities:
       bounciness: 0
       frictionCoefficient: 0
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Platform 3
     TransformComponent:
@@ -258,6 +267,7 @@ Entities:
       bounciness: 0
       frictionCoefficient: 0.3
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Platform 2
     TransformComponent:
@@ -281,6 +291,7 @@ Entities:
       bounciness: 0
       frictionCoefficient: 0.3
       rollingResistance: 0
+    SelectComponent: 
   - NameComponent:
       name: Island
     TransformComponent:
@@ -292,6 +303,7 @@ Entities:
       texture: Resources/Textures/FloatingIslandTex.png
       shineDamper: 1
       reflectivity: 0
+    SelectComponent: 
   - NameComponent:
       name: Platform 1
     TransformComponent:
@@ -315,3 +327,4 @@ Entities:
       bounciness: 0.5
       frictionCoefficient: 0.3
       rollingResistance: 0
+    SelectComponent: 

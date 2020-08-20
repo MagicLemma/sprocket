@@ -2,8 +2,6 @@
 #include "LuaGlobals.h"
 #include "LuaTransform.h"
 #include "LuaInput.h"
-#include "LuaCamera.h"
-#include "LuaPhysics.h"
 #include "LuaComponents.h"
 #include "Log.h"
 #include "Entity.h"
@@ -75,10 +73,8 @@ LuaEngine::LuaEngine()
     RegisterInputFunctions(d_L);
 
     lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
-    //RegisterCameraFunctions(d_L);
 
     lua_register(d_L, "HasPhysics", &Lua_Has<PhysicsComponent>);
-    //RegisterPhysicsFunctions(d_L);
 
     RegisterComponentFunctions(d_L);
 
