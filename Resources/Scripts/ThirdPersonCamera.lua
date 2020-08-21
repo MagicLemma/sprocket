@@ -14,7 +14,7 @@ function Init()
 end
 
 function OnUpdate(dt)
-    local pos = GetPosition()
+    local pos = GetTransformComponent().position
 
     if ABS_VERT == nil then ABS_VERT = pos.y end
 

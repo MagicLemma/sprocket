@@ -12,14 +12,6 @@ namespace Lua {
 // and settings the position/orientation of the Entity corresponding to
 // this lua state.
 
-int GetPosition(lua_State* L);
-    // Args: 0
-    // Rets: 3 - The x, y, z world coordinates of the entity.
-
-int SetPosition(lua_State* L);
-    // Args: 3 - The new x, y, z world coordinates of the entity.
-    // Rets: 0
-
 int SetLookAt(lua_State* L);
     // Args: 6 - Position x, y, z, and Target x, y, z.
     // Rets: 0

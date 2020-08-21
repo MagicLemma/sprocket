@@ -1,0 +1,222 @@
+{
+    "Enums": {
+        "Collider": ["NONE", "SPHERE", "CAPSULE", "BOX"]
+    },
+    "Components": [
+        {
+            "Name": "TemporaryComponent",
+            "Attributes": [],
+            "Scriptable": false
+        },
+        {
+            "Name": "NameComponent",
+            "Attributes": [
+                {
+                    "Name": "name",
+                    "Type": "std::string"
+                }
+            ]
+        },
+        {
+            "Name": "TransformComponent",
+            "Attributes": [
+                {
+                    "Name": "position",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0]
+                },
+                {
+                    "Name": "orientation",
+                    "Type": "Maths::quat",
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
+                }
+            ]
+        },
+        {
+            "Name": "ModelComponent",
+            "Attributes": [
+                {
+                    "Name": "model",
+                    "Type": "std::string"
+                },
+                {
+                    "Name": "scale",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "texture",
+                    "Type": "std::string"
+                },
+                {
+                    "Name": "shineDamper",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "reflectivity",
+                    "Type": "float",
+                    "Default": 0.0
+                }
+            ] 
+        },
+        {
+            "Name": "PhysicsComponent",
+            "Attributes": [
+                {
+                    "Name": "velocity",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0]
+                },
+                {
+                    "Name": "gravity",
+                    "Type": "bool",
+                    "Default": true
+                },
+                {
+                    "Name": "frozen",
+                    "Type": "bool",
+                    "Default": false
+                },
+                {
+                    "Name": "collider",
+                    "Type": "Collider",
+                    "Default": "NONE",
+                    "Scriptable": false
+                },
+                {
+                    "Name": "halfExtents",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
+                },
+                {
+                    "Name": "radius",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
+                },
+                {
+                    "Name": "height",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
+                },
+                {
+                    "Name": "mass",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "bounciness",
+                    "Type": "float",
+                    "Default": 0.5
+                },
+                {
+                    "Name": "frictionCoefficient",
+                    "Type": "float",
+                    "Default": 0.3
+                },
+                {
+                    "Name": "rollingResistance",
+                    "Type": "float",
+                    "Default": 0.0
+                },
+                {
+                    "Name": "force",
+                    "Type": "Maths::vec3",
+                    "Default": [0.0, 0.0, 0.0],
+                    "Savable": false
+                },
+                {
+                    "Name": "onFloor",
+                    "Type": "bool",
+                    "Default": false,
+                    "Savable": false
+                }
+            ]
+        },
+        {
+            "Name": "ScriptComponent",
+            "Attributes": [
+                {
+                    "Name": "script",
+                    "Type": "std::string"
+                },
+                {
+                    "Name": "active",
+                    "Type": "bool",
+                    "Default": true
+                }
+            ],
+            "Scriptable": false
+        },
+        {
+            "Name": "CameraComponent",
+            "Attributes": [
+                {
+                    "Name": "projection",
+                    "Type": "Maths::mat4",
+                    "Savable": false,
+                    "Scriptable": false
+                },
+                {
+                    "Name": "fov",
+                    "Type": "float",
+                    "Default": 70.0
+                },
+                {
+                    "Name": "pitch",
+                    "Type": "float",
+                    "Default": 0.0
+                }
+            ]
+        },
+        {
+            "Name": "SelectComponent",
+            "Attributes": [
+                {
+                    "Name": "selected",
+                    "Type": "bool",
+                    "Default": false,
+                    "Savable": false
+                },
+                {
+                    "Name": "hovered",
+                    "Type": "bool",
+                    "Default": false,
+                    "Savable": false
+                }
+            ]
+        },
+        {
+            "Name": "PathComponent",
+            "Attributes": [
+                {
+                    "Name": "markers",
+                    "Type": "std::queue<Maths::vec3>",
+                    "Savable": false,
+                    "Scriptable": false
+                },
+                {
+                    "Name": "speed",
+                    "Type": "float"
+                }
+            ]
+        },
+        {
+            "Name": "GridComponent",
+            "Attributes": [
+                {
+                    "Name": "x",
+                    "Type": "int"
+                },
+                {
+                    "Name": "z",
+                    "Type": "int"
+                }
+            ]
+        }
+    ]
+}

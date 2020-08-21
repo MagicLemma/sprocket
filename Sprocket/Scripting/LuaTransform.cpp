@@ -13,8 +13,6 @@ void RegisterTransformFunctions(lua_State* L)
     // Most of these are prefixed with Lua_ as they get wrapped in the
     // Lua world so the args and return values are Vec3 objects. See
     // Sprocket.lua for the wrappings.
-    lua_register(L, "Lua_GetPosition", &Lua::GetPosition);
-    lua_register(L, "Lua_SetPosition", &Lua::SetPosition);
     lua_register(L, "Lua_SetLookAt", &Lua::SetLookAt);
     
     lua_register(L, "Lua_GetForwardsDir", &Lua::GetForwardsDir);
@@ -25,31 +23,6 @@ void RegisterTransformFunctions(lua_State* L)
 }
 
 namespace Lua {
-
-int GetPosition(lua_State* L)
-{
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-
-    Entity* entity = GetEntity(L);
-    auto& tr = entity->Get<TransformComponent>();
-    lua_pushnumber(L, tr.position.x);
-    lua_pushnumber(L, tr.position.y);
-    lua_pushnumber(L, tr.position.z);
-    return 3;
-}
-
-int SetPosition(lua_State* L)
-{
-    if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
-
-    Entity* entity = GetEntity(L);
-    auto& tr = entity->Get<TransformComponent>();
-    float x = (float)lua_tonumber(L, 1);
-    float y = (float)lua_tonumber(L, 2);
-    float z = (float)lua_tonumber(L, 3);
-    tr.position = {x, y, z};
-    return 0;
-}
 
 int SetLookAt(lua_State* L)
 {
