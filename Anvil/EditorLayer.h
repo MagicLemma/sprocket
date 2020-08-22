@@ -1,5 +1,6 @@
 #pragma once
 #include <Sprocket.h>
+#include "Camera.h"
 
 #include <memory>
 #include <random>
@@ -8,21 +9,20 @@ namespace Sprocket {
 
 class EditorLayer : public Layer
 {
-    Entity d_runtimeCamera;
-    
-    // Rendering
-    EntityRenderer  d_entityRenderer;
-    SkyboxRenderer  d_skyboxRenderer;
+    Camera d_editorCamera;
 
-    PostProcessor   d_postProcessor;
+    // Rendering
+    EntityRenderer d_entityRenderer;
+    SkyboxRenderer d_skyboxRenderer;
 
     // Scene
-    PhysicsEngine  d_physicsEngine;
-    Selector       d_selector;
-    CameraSystem   d_cameraSystem;
-    ScriptRunner   d_scriptRunner;
+    PhysicsEngine d_physicsEngine;
+    Selector      d_selector;
+    CameraSystem  d_cameraSystem;
+    ScriptRunner  d_scriptRunner;
 
-    Scene          d_scene;
+    Scene  d_scene;
+    Entity d_camera;
 
     Serialiser d_serialiser;
 

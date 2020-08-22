@@ -34,7 +34,6 @@ void EscapeMenu::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
 
     if (d_editorLayer->d_paused) {
-        d_core.window->SetCursorVisibility(true);
         d_ui.StartFrame();
 
         static Maths::vec4 panelQuad{50, 50, 200, 50};

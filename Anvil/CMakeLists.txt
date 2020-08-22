@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Anvil
                Anvil.m.cpp
+               Camera.cpp
                EditorLayer.cpp
                EscapeMenu.cpp)
 
