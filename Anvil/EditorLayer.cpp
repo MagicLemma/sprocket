@@ -28,6 +28,8 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     })
     , d_serialiser(&d_scene)
     , d_editorCamera(core.window, {0.0, 0.0, 0.0})
+    , d_viewport(1280, 720)
+    , d_ui(core.window)
 {
     d_core.window->SetCursorVisibility(true);
     
@@ -51,12 +53,19 @@ EditorLayer::EditorLayer(const CoreSystems& core)
 
 void EditorLayer::OnEvent(Event& event)
 {
+    if (auto e = event.As<WindowResizeEvent>()) {
+        d_viewport.SetScreenSize(e->Width(), e->Height());
+    }
+    
+    d_ui.OnEvent(event);
     d_scene.OnEvent(event);
     d_editorCamera.OnEvent(event);
 }
 
 void EditorLayer::OnUpdate(double dt)
 {
+    d_ui.OnUpdate(dt);
+    
     if (!d_paused) {
         d_scene.OnUpdate(dt);
         d_editorCamera.OnUpdate(dt);
@@ -77,12 +86,31 @@ void EditorLayer::OnUpdate(double dt)
         });
     }
 
+    d_viewport.Bind();
     //d_entityRenderer.BeginScene(d_camera, d_lights);
     d_entityRenderer.BeginScene(d_editorCamera.Proj(), d_editorCamera.View(), d_lights);
     d_skyboxRenderer.Draw(d_skybox, d_camera);
     d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
+    d_viewport.Unbind();
+
+    d_ui.StartFrame();
+
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    bool open = true;
+    ImGui::SetNextWindowPos({0.0, 0.0});
+    ImGui::SetNextWindowSize({(float)d_core.window->Width()/2.0f, (float)d_core.window->Height()/2.0f});
+    if (ImGui::Begin("Viewport", &open, window_flags)) {
+        ImGui::Image(
+            (ImTextureID)(intptr_t)d_viewport.GetTexture().Id(),
+            {(float)d_core.window->Width()/2.0f, (float)d_core.window->Height()/2.0f},
+            {0, 1}, {1, 0}
+        );
+        ImGui::End();
+    }
+    d_ui.EndFrame();    
 }
 
 }

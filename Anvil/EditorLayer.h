@@ -15,6 +15,9 @@ class EditorLayer : public Layer
     EntityRenderer d_entityRenderer;
     SkyboxRenderer d_skyboxRenderer;
 
+    FrameBuffer d_viewport;
+    DevUI::Context d_ui;
+
     // Scene
     PhysicsEngine d_physicsEngine;
     Selector      d_selector;
