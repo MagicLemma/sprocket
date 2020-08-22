@@ -182,11 +182,11 @@ void EditorUI::OnUpdate(double dt)
     d_ui.StartWindow("Sprocket Editor", &open, flags);
     if (d_ui.Button("Physics Engine")) {
         auto& physics = d_worldLayer->d_physicsEngine;
-        bool isRunning = physics.Running();
-        physics.Running(!isRunning);
+        bool isRunning = physics->Running();
+        physics->Running(!isRunning);
     }
     d_ui.SameLine();
-    d_ui.Text(d_worldLayer->d_physicsEngine.Running() ? "YES" : "NO");
+    d_ui.Text(d_worldLayer->d_physicsEngine->Running() ? "YES" : "NO");
 
     if (d_ui.Button("Show Colliders")) {
         auto entityRenderer = &d_worldLayer->d_entityRenderer;
@@ -197,12 +197,12 @@ void EditorUI::OnUpdate(double dt)
     d_ui.Text(d_worldLayer->d_entityRenderer.ShowColliders() ? "YES" : "NO");
 
     std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_entityManager.Size();
+    ss << "Entities: " << d_worldLayer->d_scene.Size();
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {
-        d_worldLayer->d_entityManager.Each<SelectComponent>([&](Entity& entity) {
-            AddEntityToList(d_ui, d_worldLayer->d_selector, &entity);      
+        d_worldLayer->d_scene.Each<SelectComponent>([&](Entity& entity) {
+            AddEntityToList(d_ui, *d_worldLayer->d_selector, &entity);      
         });
     }
 
@@ -211,12 +211,12 @@ void EditorUI::OnUpdate(double dt)
     mat4 view = CameraUtils::MakeView(d_worldLayer->d_activeCamera);
     mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_activeCamera);
 
-    auto e = d_worldLayer->d_selector.SelectedEntity();
+    auto e = d_worldLayer->d_selector->SelectedEntity();
     if (!e.Null()) {
         SelectedEntityInfo(d_ui, e, view, proj);
     }
 
-    AddEntityPanel(d_ui, &d_worldLayer->d_entityManager, d_modelManager);
+    AddEntityPanel(d_ui, &d_worldLayer->d_scene, d_modelManager);
 
     SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_sunAngle);
 

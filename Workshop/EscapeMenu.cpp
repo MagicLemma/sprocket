@@ -68,7 +68,7 @@ void EscapeMenu::OnUpdate(double dt)
                         d_worldLayer->d_activeCamera = d_worldLayer->d_playerCamera;
 
                         d_worldLayer->d_mouseRequired = false;
-                        d_worldLayer->d_selector.Enable(false);
+                        d_worldLayer->d_selector->Enable(false);
 
                     } break;
                     case Mode::PLAYER: {
@@ -81,7 +81,7 @@ void EscapeMenu::OnUpdate(double dt)
                         d_worldLayer->d_activeCamera = d_worldLayer->d_editorCamera;
 
                         d_worldLayer->d_mouseRequired = true;
-                        d_worldLayer->d_selector.Enable(true);
+                        d_worldLayer->d_selector->Enable(true);
 
                     } break;
                     case Mode::EDITOR: {
@@ -94,7 +94,7 @@ void EscapeMenu::OnUpdate(double dt)
                         d_worldLayer->d_activeCamera = d_worldLayer->d_observerCamera;
 
                         d_worldLayer->d_mouseRequired = false;
-                        d_worldLayer->d_selector.Enable(false);
+                        d_worldLayer->d_selector->Enable(false);
 
                     } break;
                 }

@@ -3,6 +3,7 @@
 #include "EntitySystem.h"
 #include "Event.h"
 
+#include <memory>
 #include <vector>
 #include <functional>
 #include <typeindex>
@@ -23,8 +24,7 @@ public:
     >;
 
 private:
-    const std::vector<EntitySystem*> d_systems;
-        // All systems must be given at creation.
+    std::vector<std::shared_ptr<EntitySystem>> d_systems;
 
     TypeFunctionMap d_addFunctions;
     TypeFunctionMap d_removeFunctions;
@@ -35,9 +35,12 @@ private:
     template <typename T> void OnRemoveCB(entt::registry& r, entt::entity e);
 
 public:
-    Scene(const std::vector<EntitySystem*> systems);
+    Scene();
     
     Entity NewEntity();
+
+    void AddSystem(std::shared_ptr<EntitySystem> system);
+    void ClearSystems();
 
     void OnStartup();
     void OnUpdate(double dt);

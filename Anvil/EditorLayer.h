@@ -21,11 +21,6 @@ class EditorLayer : public Layer
     bool d_isViewportFocused = false;
 
     // Scene
-    PhysicsEngine d_physicsEngine;
-    Selector      d_selector;
-    CameraSystem  d_cameraSystem;
-    ScriptRunner  d_scriptRunner;
-
     Scene  d_scene;
     Entity d_camera;
 

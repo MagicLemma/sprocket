@@ -17,21 +17,24 @@ EditorLayer::EditorLayer(const CoreSystems& core)
             "Resources/Textures/Skybox/Skybox_Z_Neg.png"
         })
     })
-    , d_physicsEngine(Maths::vec3(0.0, -9.81, 0.0))
-    , d_cameraSystem(core.window->AspectRatio())
-    , d_selector(core.window, &d_physicsEngine)
-    , d_scene({
-        &d_physicsEngine,
-        &d_selector,
-        &d_cameraSystem,
-        &d_scriptRunner
-    })
     , d_serialiser(&d_scene)
     , d_editorCamera(core.window, {0.0, 0.0, 0.0})
     , d_viewport(1280, 720)
     , d_ui(core.window)
 {
     d_core.window->SetCursorVisibility(true);
+
+    auto physicsEngine = std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0});
+    d_scene.AddSystem(physicsEngine);
+
+    auto selector = std::make_shared<Selector>(core.window, physicsEngine.get());
+    d_scene.AddSystem(selector);
+
+    auto cameraSystem = std::make_shared<CameraSystem>(core.window->AspectRatio());
+    d_scene.AddSystem(cameraSystem);
+
+    auto scriptRunner = std::make_shared<ScriptRunner>();
+    d_scene.AddSystem(scriptRunner);
     
     d_serialiser.Deserialise("Resources/Anvil.yaml");
     d_scene.OnStartup();

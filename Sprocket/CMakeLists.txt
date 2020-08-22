@@ -46,6 +46,7 @@ add_library(Sprocket STATIC
 
             Scene/Entity.cpp
             Scene/Scene.cpp
+            Scene/SceneManager.cpp
             Scene/EntitySystem.cpp
             Scene/Serialiser.cpp
 

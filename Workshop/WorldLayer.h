@@ -25,11 +25,11 @@ class WorldLayer : public Sprocket::Layer
 
     // WORLD
     // Entity management and systems
-    Sprocket::PhysicsEngine  d_physicsEngine;
-    Sprocket::Selector       d_selector;
-    Sprocket::CameraSystem   d_cameraSystem;
-    Sprocket::ScriptRunner   d_scriptRunner;
-    Sprocket::Scene  d_entityManager;
+    std::shared_ptr<Sprocket::PhysicsEngine> d_physicsEngine;
+    std::shared_ptr<Sprocket::Selector>      d_selector;
+    std::shared_ptr<Sprocket::CameraSystem>  d_cameraSystem;
+    std::shared_ptr<Sprocket::ScriptRunner>  d_scriptRunner;
+    Sprocket::Scene  d_scene;
 
     Sprocket::Serialiser d_serialiser;
 

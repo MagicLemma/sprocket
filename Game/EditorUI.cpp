@@ -167,7 +167,7 @@ void EditorUI::OnEvent(Event& event)
 
     if (!event.IsConsumed()) {
         if (auto e = event.As<MouseButtonPressedEvent>()) {
-            d_worldLayer->d_selector.SetSelected(Entity());
+            d_worldLayer->d_selector->SetSelected(Entity());
             // TODO: Do we want to consume this event here?
         }
     }
@@ -195,7 +195,7 @@ void EditorUI::OnUpdate(double dt)
 
     if (d_ui.CollapsingHeader("Entity List")) {
         d_worldLayer->d_scene.Each<SelectComponent>([&](Entity& entity) {
-            AddEntityToList(d_ui, d_worldLayer->d_selector, entity);      
+            AddEntityToList(d_ui, *d_worldLayer->d_selector, entity);      
         });
     }
 
@@ -204,7 +204,7 @@ void EditorUI::OnUpdate(double dt)
     mat4 view = CameraUtils::MakeView(d_worldLayer->d_camera);
     mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_camera);
 
-    auto e = d_worldLayer->d_selector.SelectedEntity();
+    auto e = d_worldLayer->d_selector->SelectedEntity();
     if (!e.Null()) {
         SelectedEntityInfo(d_ui, e, view, proj);
     }
