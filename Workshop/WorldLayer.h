@@ -29,9 +29,8 @@ class WorldLayer : public Sprocket::Layer
     std::shared_ptr<Sprocket::Selector>      d_selector;
     std::shared_ptr<Sprocket::CameraSystem>  d_cameraSystem;
     std::shared_ptr<Sprocket::ScriptRunner>  d_scriptRunner;
-    Sprocket::Scene  d_scene;
-
-    Sprocket::Serialiser d_serialiser;
+    
+    std::shared_ptr<Sprocket::Scene> d_scene;
 
     // Additional world setup
     Sprocket::Skybox d_skybox;

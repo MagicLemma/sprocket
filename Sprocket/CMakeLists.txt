@@ -48,7 +48,7 @@ add_library(Sprocket STATIC
             Scene/Scene.cpp
             Scene/SceneManager.cpp
             Scene/EntitySystem.cpp
-            Scene/Serialiser.cpp
+            Scene/Loader.cpp
 
             Scene/Systems/BasicSelector.cpp
             Scene/Systems/CameraSystem.cpp

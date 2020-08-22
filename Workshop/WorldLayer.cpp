@@ -21,19 +21,19 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(core.window->AspectRatio()))
     , d_selector(std::make_shared<Sprocket::Selector>(core.window, d_physicsEngine.get()))
     , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>())
-    , d_serialiser(&d_scene)
 {
     using namespace Sprocket;
 
-    d_scene.AddSystem(d_physicsEngine);
-    d_scene.AddSystem(d_selector);
-    d_scene.AddSystem(d_cameraSystem);
-    d_scene.AddSystem(d_scriptRunner);
+    d_scene = std::make_shared<Scene>();
+    d_scene->AddSystem(d_physicsEngine);
+    d_scene->AddSystem(d_selector);
+    d_scene->AddSystem(d_cameraSystem);
+    d_scene->AddSystem(d_scriptRunner);
 
-    d_serialiser.Deserialise("Resources/WorkshopScene.yaml");
-    d_scene.OnStartup();
+    Loader::Load("Resources/WorkshopScene.yaml", d_scene);
+    d_scene->OnStartup();
 
-    d_scene.Each<NameComponent>([&](Entity& entity) {
+    d_scene->Each<NameComponent>([&](Entity& entity) {
         const auto& name = entity.Get<NameComponent>().name;
         if (name == "Editor Camera") {
             d_editorCamera = entity;
@@ -78,7 +78,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         d_postProcessor.SetScreenSize(e->Width(), e->Height());
     }
 
-    d_scene.OnEvent(event);
+    d_scene->OnEvent(event);
 }
 
 void WorldLayer::OnUpdate(double dt)
@@ -88,11 +88,11 @@ void WorldLayer::OnUpdate(double dt)
     d_entityRenderer.BeginScene(d_activeCamera, d_lights);
 
     if (!d_paused) {
-        d_scene.OnUpdate(dt);
+        d_scene->OnUpdate(dt);
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_core.window->SetCursorVisibility(d_mouseRequired);
 
-        d_scene.Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
+        d_scene->Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
             auto& physics = entity.Get<PhysicsComponent>();
             
@@ -112,7 +112,7 @@ void WorldLayer::OnUpdate(double dt)
 
     d_skyboxRenderer.Draw(d_skybox, d_activeCamera);
 
-    d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
     

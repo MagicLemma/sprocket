@@ -17,32 +17,34 @@ EditorLayer::EditorLayer(const CoreSystems& core)
             "Resources/Textures/Skybox/Skybox_Z_Neg.png"
         })
     })
-    , d_serialiser(&d_scene)
     , d_editorCamera(core.window, {0.0, 0.0, 0.0})
     , d_viewport(1280, 720)
     , d_ui(core.window)
 {
     d_core.window->SetCursorVisibility(true);
 
+    d_scene = std::make_shared<Scene>();
+
     auto physicsEngine = std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0});
-    d_scene.AddSystem(physicsEngine);
+    d_scene->AddSystem(physicsEngine);
 
     auto selector = std::make_shared<Selector>(core.window, physicsEngine.get());
-    d_scene.AddSystem(selector);
+    d_scene->AddSystem(selector);
 
     auto cameraSystem = std::make_shared<CameraSystem>(core.window->AspectRatio());
-    d_scene.AddSystem(cameraSystem);
+    d_scene->AddSystem(cameraSystem);
 
     auto scriptRunner = std::make_shared<ScriptRunner>();
-    d_scene.AddSystem(scriptRunner);
+    d_scene->AddSystem(scriptRunner);
     
-    d_serialiser.Deserialise("Resources/Anvil.yaml");
-    d_scene.OnStartup();
+    Loader::Load("Resources/Anvil.yaml", d_scene);
 
-    d_scene.Each<CameraComponent>([&](Entity& entity) {
+    d_scene->OnStartup();
+
+    d_scene->Each<CameraComponent>([&](Entity& entity) {
         d_camera = entity;
     });
-
+    
     d_lights.points.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
     d_lights.points.push_back({{-7.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
     d_lights.points.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
@@ -60,7 +62,7 @@ void EditorLayer::OnEvent(Event& event)
     }
 
     d_ui.OnEvent(event);
-    d_scene.OnEvent(event);
+    d_scene->OnEvent(event);
     d_editorCamera.OnEvent(event);
 }
 
@@ -69,7 +71,7 @@ void EditorLayer::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
     
     if (!d_paused) {
-        d_scene.OnUpdate(dt);
+        d_scene->OnUpdate(dt);
 
         if (d_isViewportFocused) {
             d_editorCamera.OnUpdate(dt);
@@ -77,7 +79,7 @@ void EditorLayer::OnUpdate(double dt)
         
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
 
-        d_scene.Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
+        d_scene->Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
             auto& physics = entity.Get<PhysicsComponent>();
             
@@ -94,7 +96,7 @@ void EditorLayer::OnUpdate(double dt)
     d_viewport.Bind();
     d_entityRenderer.BeginScene(d_editorCamera.Proj(), d_editorCamera.View(), d_lights);
     d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
-    d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
     d_viewport.Unbind();

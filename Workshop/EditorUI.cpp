@@ -197,11 +197,11 @@ void EditorUI::OnUpdate(double dt)
     d_ui.Text(d_worldLayer->d_entityRenderer.ShowColliders() ? "YES" : "NO");
 
     std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_scene.Size();
+    ss << "Entities: " << d_worldLayer->d_scene->Size();
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {
-        d_worldLayer->d_scene.Each<SelectComponent>([&](Entity& entity) {
+        d_worldLayer->d_scene->Each<SelectComponent>([&](Entity& entity) {
             AddEntityToList(d_ui, *d_worldLayer->d_selector, &entity);      
         });
     }
@@ -216,7 +216,7 @@ void EditorUI::OnUpdate(double dt)
         SelectedEntityInfo(d_ui, e, view, proj);
     }
 
-    AddEntityPanel(d_ui, &d_worldLayer->d_scene, d_modelManager);
+    AddEntityPanel(d_ui, d_worldLayer->d_scene.get(), d_modelManager);
 
     SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_sunAngle);
 

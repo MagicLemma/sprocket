@@ -190,11 +190,11 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.StartWindow("Sprocket Editor", &open, flags);
     std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_scene.Size();
+    ss << "Entities: " << d_worldLayer->d_scene->Size();
     d_ui.Text(ss.str());
 
     if (d_ui.CollapsingHeader("Entity List")) {
-        d_worldLayer->d_scene.Each<SelectComponent>([&](Entity& entity) {
+        d_worldLayer->d_scene->Each<SelectComponent>([&](Entity& entity) {
             AddEntityToList(d_ui, *d_worldLayer->d_selector, entity);      
         });
     }

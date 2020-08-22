@@ -21,10 +21,8 @@ class EditorLayer : public Layer
     bool d_isViewportFocused = false;
 
     // Scene
-    Scene  d_scene;
+    std::shared_ptr<Scene> d_scene;
     Entity d_camera;
-
-    Serialiser d_serialiser;
 
     // Additional world setup
     Skybox d_skybox;

@@ -21,9 +21,7 @@ class WorldLayer : public Sprocket::Layer
     std::shared_ptr<Sprocket::PathFollower>  d_pathFollower;
     std::shared_ptr<Sprocket::GameGrid>      d_gameGrid;
     
-    Sprocket::Scene         d_scene;
-
-    Sprocket::Serialiser d_serialiser;
+    std::shared_ptr<Sprocket::Scene> d_scene;
 
     Sprocket::Entity d_camera;
     Sprocket::Entity d_worker;
