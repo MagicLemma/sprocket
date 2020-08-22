@@ -90,9 +90,8 @@ void EditorLayer::OnUpdate(double dt)
     }
 
     d_viewport.Bind();
-    //d_entityRenderer.BeginScene(d_camera, d_lights);
     d_entityRenderer.BeginScene(d_editorCamera.Proj(), d_editorCamera.View(), d_lights);
-    d_skyboxRenderer.Draw(d_skybox, d_camera);
+    d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
     d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });

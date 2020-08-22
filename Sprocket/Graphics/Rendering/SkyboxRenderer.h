@@ -19,6 +19,7 @@ public:
     SkyboxRenderer(Window* window);
 
     void Draw(const Skybox& skybox, const Entity& camera);
+    void Draw(const Skybox& skybox, const Maths::mat4& proj, const Maths::mat4& view);
 };
 
 }
