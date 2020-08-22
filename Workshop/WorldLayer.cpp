@@ -30,9 +30,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 {
     using namespace Sprocket;
 
-    d_entityManager.OnStartup();
-
     d_serialiser.Deserialise("Resources/WorkshopScene.yaml");
+    d_entityManager.OnStartup();
 
     d_entityManager.Each<NameComponent>([&](Entity& entity) {
         const auto& name = entity.Get<NameComponent>().name;

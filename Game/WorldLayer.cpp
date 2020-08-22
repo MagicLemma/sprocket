@@ -23,8 +23,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 {
     using namespace Sprocket;
 
-    d_scene.OnStartup();
-
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
     theme.baseColour = CLEAR_BLUE;
@@ -45,6 +43,8 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianHoriz>();
 
     LoadScene("Resources/Scene.yaml");
+    
+    d_scene.OnStartup();
 }
 
 void WorldLayer::SaveScene()
