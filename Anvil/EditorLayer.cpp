@@ -130,10 +130,22 @@ void EditorLayer::OnUpdate(double dt)
 
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("New")) {
+                
+            }
+            if (ImGui::MenuItem("Open")) {
+                
+            }
+            if (ImGui::MenuItem("Save")) {
+                
+            }
+            if (ImGui::MenuItem("Save As")) {
+                
+            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Scene")) {
-            if (ImGui::Button("Run")) {
+            if (ImGui::MenuItem("Run")) {
                 auto runningScene = std::make_shared<Scene>();
                 Loader::Copy(d_scene, runningScene);
                 d_activeScene = runningScene;
