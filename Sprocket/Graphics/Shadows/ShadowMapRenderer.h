@@ -25,11 +25,7 @@ class ShadowMapRenderer
     DepthBuffer d_shadowMap;
 
 public:
-    ShadowMapRenderer(
-        Window* window,
-        ModelManager* modelManager,
-        TextureManager* textureManager
-    );
+    ShadowMapRenderer(Window* window, ModelManager* modelManager);
 
     void BeginScene(const DirectionalLight& light, const Maths::vec3& centre);
         // Called before any draw calls. The light is the light

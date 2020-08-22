@@ -10,7 +10,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_gameGrid(core.window)
     , d_cameraSystem(core.window->AspectRatio())
-    , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
+    , d_shadowMapRenderer(core.window, core.modelManager)
     , d_hoveredEntityUI(core.window)
     , d_scene({
         &d_selector,
