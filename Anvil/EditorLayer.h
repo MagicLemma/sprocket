@@ -4,35 +4,37 @@
 #include <memory>
 #include <random>
 
+namespace Sprocket {
+
 enum class Mode { PLAYER, OBSERVER, EDITOR };
 
-class WorldLayer : public Sprocket::Layer
+class WorldLayer : public Layer
 {
     Mode d_mode;
 
-    Sprocket::Entity d_camera;
+    Entity d_camera;
     
     // RENDERING
-    Sprocket::EntityRenderer  d_entityRenderer;
-    Sprocket::SkyboxRenderer  d_skyboxRenderer;
+    EntityRenderer  d_entityRenderer;
+    SkyboxRenderer  d_skyboxRenderer;
 
-    Sprocket::PostProcessor   d_postProcessor;
+    PostProcessor   d_postProcessor;
 
     // WORLD
     // Entity management and systems
-    Sprocket::PhysicsEngine  d_physicsEngine;
-    Sprocket::Selector       d_selector;
-    Sprocket::CameraSystem   d_cameraSystem;
-    Sprocket::ScriptRunner   d_scriptRunner;
-    
-    Sprocket::Scene          d_scene;
+    PhysicsEngine  d_physicsEngine;
+    Selector       d_selector;
+    CameraSystem   d_cameraSystem;
+    ScriptRunner   d_scriptRunner;
 
-    Sprocket::Serialiser d_serialiser;
+    Scene          d_scene;
+
+    Serialiser d_serialiser;
 
     // Additional world setup
-    Sprocket::Skybox d_skybox;
-    Sprocket::Lights d_lights;
-    float            d_sunAngle = 45.0f;
+    Skybox d_skybox;
+    Lights d_lights;
+    float  d_sunAngle = 45.0f;
     
     // LAYER DATA
     bool d_paused = false;
@@ -47,3 +49,5 @@ public:
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
 };
+
+}

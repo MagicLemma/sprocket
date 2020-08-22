@@ -4,17 +4,21 @@
 
 #include <memory>
 
-class EscapeMenu : public Sprocket::Layer
+namespace Sprocket {
+
+class EscapeMenu : public Layer
 {
     WorldLayer* d_worldLayer;
     EditorUI* d_editorUi;
     
-    Sprocket::SimpleUI d_ui;
+    SimpleUI d_ui;
 
 public:
-    EscapeMenu(const Sprocket::CoreSystems& core,
+    EscapeMenu(const CoreSystems& core,
                WorldLayer* worldLayer);
 
-    void OnEvent(Sprocket::Event& event) override;
+    void OnEvent(Event& event) override;
     void OnUpdate(double dt) override;
 };
+
+}

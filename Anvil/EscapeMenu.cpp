@@ -1,13 +1,13 @@
 #include "EscapeMenu.h"
 
-EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
+namespace Sprocket {
+
+EscapeMenu::EscapeMenu(const CoreSystems& core,
                        WorldLayer* worldLayer) 
     : Layer(core)
     , d_worldLayer(worldLayer)
     , d_ui(core.window)
 {
-    using namespace Sprocket;
-
     SimpleUITheme theme;
     theme.backgroundColour = FromHex(0x2C3A47);
     theme.baseColour       = FromHex(0x1B9CFC);
@@ -16,10 +16,8 @@ EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
     d_ui.SetTheme(theme);
 }
 
-void EscapeMenu::OnEvent(Sprocket::Event& event)
+void EscapeMenu::OnEvent(Event& event)
 {
-    using namespace Sprocket;
-
     if (auto e = event.As<KeyboardButtonPressedEvent>()) {
         if (!e->IsConsumed() && e->Key() == Keyboard::ESC) {
             d_worldLayer->d_paused = !d_worldLayer->d_paused;
@@ -28,16 +26,11 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
     }
 
     d_ui.OnEvent(event);
-
-    if (d_worldLayer->d_paused) {
-        event.Consume();
-    }
+    if (d_worldLayer->d_paused) { event.Consume(); }
 }
 
 void EscapeMenu::OnUpdate(double dt)
 {
-    using namespace Sprocket;
-    
     d_ui.OnUpdate(dt);
 
     if (d_worldLayer->d_paused) {
@@ -45,10 +38,8 @@ void EscapeMenu::OnUpdate(double dt)
         d_ui.StartFrame();
 
         static Maths::vec4 panelQuad{50, 50, 200, 50};
-        static bool active = true;
-        static bool draggable = true;
-        static bool clickable = true;
-        if (d_ui.StartPanel("Main", &panelQuad, &active, &draggable, &clickable)) {
+        static bool x = true;
+        if (d_ui.StartPanel("Main", &panelQuad, &x, &x, &x)) {
             Maths::ivec4 region = {10, 10, 180, 30};
             d_ui.Text("Paused", 36.0f, region);
             d_ui.EndPanel();
@@ -56,4 +47,6 @@ void EscapeMenu::OnUpdate(double dt)
 
         d_ui.EndFrame();
     }
+}
+
 }
