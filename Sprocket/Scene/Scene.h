@@ -36,6 +36,7 @@ private:
 
 public:
     Scene();
+    ~Scene();
     
     Entity NewEntity();
 

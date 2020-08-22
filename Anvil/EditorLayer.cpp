@@ -23,27 +23,16 @@ EditorLayer::EditorLayer(const CoreSystems& core)
 {
     d_core.window->SetCursorVisibility(true);
 
-    d_scene = std::make_shared<Scene>();
-
-    auto physicsEngine = std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0});
-    d_scene->AddSystem(physicsEngine);
-
-    auto selector = std::make_shared<Selector>(core.window, physicsEngine.get());
-    d_scene->AddSystem(selector);
-
-    auto cameraSystem = std::make_shared<CameraSystem>(core.window->AspectRatio());
-    d_scene->AddSystem(cameraSystem);
-
-    auto scriptRunner = std::make_shared<ScriptRunner>();
-    d_scene->AddSystem(scriptRunner);
-    
+    d_scene = std::make_shared<Scene>();    
     Loader::Load("Resources/Anvil.yaml", d_scene);
 
     d_scene->OnStartup();
 
     d_scene->Each<CameraComponent>([&](Entity& entity) {
-        d_camera = entity;
+        d_runtimeCamera = entity;
     });
+
+    d_activeScene = d_scene;
     
     d_lights.points.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
     d_lights.points.push_back({{-7.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
@@ -61,9 +50,20 @@ void EditorLayer::OnEvent(Event& event)
         d_viewport.SetScreenSize(e->Width(), e->Height());
     }
 
+    if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+        if (e->Key() == Keyboard::ESC && d_playingGame) {
+            d_playingGame = false;
+            d_activeScene = d_scene;
+            d_core.window->SetCursorVisibility(true);
+            e->Consume();
+        }
+    }
+
     d_ui.OnEvent(event);
-    d_scene->OnEvent(event);
-    d_editorCamera.OnEvent(event);
+    d_activeScene->OnEvent(event);
+    if (!d_playingGame) {
+        d_editorCamera.OnEvent(event);
+    }
 }
 
 void EditorLayer::OnUpdate(double dt)
@@ -71,15 +71,15 @@ void EditorLayer::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
     
     if (!d_paused) {
-        d_scene->OnUpdate(dt);
+        d_activeScene->OnUpdate(dt);
 
-        if (d_isViewportFocused) {
+        if (d_isViewportFocused && !d_playingGame) {
             d_editorCamera.OnUpdate(dt);
         }
         
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
 
-        d_scene->Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
+        d_activeScene->Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
             auto& physics = entity.Get<PhysicsComponent>();
             
@@ -94,9 +94,16 @@ void EditorLayer::OnUpdate(double dt)
     }
 
     d_viewport.Bind();
-    d_entityRenderer.BeginScene(d_editorCamera.Proj(), d_editorCamera.View(), d_lights);
-    d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
-    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    if (d_playingGame) {
+        d_entityRenderer.BeginScene(d_runtimeCamera, d_lights);
+        d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
+    }
+    else {
+        d_entityRenderer.BeginScene(d_editorCamera.Proj(), d_editorCamera.View(), d_lights);
+        d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
+    }
+
+    d_activeScene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
     d_viewport.Unbind();
@@ -105,7 +112,6 @@ void EditorLayer::OnUpdate(double dt)
 
     auto& style = ImGui::GetStyle();
     style.WindowRounding = 0.0f;
-    style.WindowPadding = {0.0f, 0.0f};
 
     ImGuiWindowFlags viewportFlags = 
         ImGuiWindowFlags_NoDecoration |
@@ -127,6 +133,28 @@ void EditorLayer::OnUpdate(double dt)
         if (ImGui::BeginMenu("File")) {
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu("Scene")) {
+            if (ImGui::Button("Run")) {
+                auto runningScene = std::make_shared<Scene>();
+                Loader::Copy(d_scene, runningScene);
+                d_activeScene = runningScene;
+                
+                auto physicsEngine = std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0});
+                d_activeScene->AddSystem(physicsEngine);
+                d_activeScene->AddSystem(std::make_shared<Selector>(d_core.window, physicsEngine.get()));
+                d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
+                d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
+
+                d_activeScene->OnStartup();
+                d_playingGame = true;
+
+                d_activeScene->Each<Sprocket::CameraComponent>([&](Entity& entity) {
+                    d_runtimeCamera = entity;
+                });
+                d_core.window->SetCursorVisibility(false);
+            }
+            ImGui::EndMenu();
+        }
         ImGui::EndMainMenuBar();
     }
 
@@ -135,6 +163,7 @@ void EditorLayer::OnUpdate(double dt)
 
     ImGui::SetNextWindowPos({0.0, menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
     if (ImGui::Begin("Viewport", &open, viewportFlags)) {
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
@@ -146,11 +175,11 @@ void EditorLayer::OnUpdate(double dt)
         );
         ImGui::End();
     }
+    ImGui::PopStyleVar();
 
     ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
     ImGui::SetNextWindowSize({0.2f * w, h - menuBarHeight});
     if (ImGui::Begin("Inspector", &open, inspectorFlags)) {
-
         ImGui::End();
     }
 

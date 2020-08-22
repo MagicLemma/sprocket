@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Components.h"
+#include "Log.h"
 
 namespace Sprocket {
 
@@ -7,6 +8,11 @@ Scene::Scene()
     : d_systems()
     , d_registry()
 {
+}
+
+Scene::~Scene()
+{
+    SPKT_LOG_INFO("Deleting scene");
 }
 
 Entity Scene::NewEntity()

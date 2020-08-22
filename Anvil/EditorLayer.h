@@ -21,8 +21,9 @@ class EditorLayer : public Layer
     bool d_isViewportFocused = false;
 
     // Scene
+    std::shared_ptr<Scene> d_activeScene;
     std::shared_ptr<Scene> d_scene;
-    Entity d_camera;
+    Entity d_runtimeCamera;
 
     // Additional world setup
     Skybox d_skybox;
@@ -32,6 +33,8 @@ class EditorLayer : public Layer
     // LAYER DATA
     bool d_paused = false;
     bool d_mouseRequired = false;
+
+    bool d_playingGame = false;
 
     friend class EscapeMenu;
 
