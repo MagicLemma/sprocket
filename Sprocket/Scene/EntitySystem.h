@@ -14,7 +14,8 @@ public:
     EntitySystem() = default;
 
     virtual void OnStartup(Scene& scene) {};
-        // Called once when the EntityManager starts up.
+        // Called once when starting the scene. There may be
+        // entities in the scene by this point.
     
     virtual void OnUpdate(Scene& scene, double dt) {};
         // Called every tick of the game loop.

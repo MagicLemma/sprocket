@@ -100,7 +100,7 @@ PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
 
 void PhysicsEngine::OnStartup(Scene& scene)
 {
-    scene.OnAdd<PhysicsComponent>([&](Entity& entity) {
+    auto addPhysics = [&](Entity& entity) {
         assert(entity.Has<TransformComponent>());
         auto& transform = entity.Get<TransformComponent>();
 
@@ -111,7 +111,11 @@ void PhysicsEngine::OnStartup(Scene& scene)
         entry.rigidBody->setUserData(static_cast<void*>(&entry.entity));
 
         AddCollider(entity);
-    });
+    };
+
+    scene.Each<PhysicsComponent>(addPhysics);
+
+    scene.OnAdd<PhysicsComponent>(addPhysics);
 
     scene.OnRemove<PhysicsComponent>([&](Entity& entity) {
         auto rigidBodyIt = d_impl->entityData.find(entity.Id());

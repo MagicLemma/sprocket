@@ -50,7 +50,7 @@ void GameGrid::OnStartup(Scene& scene)
     model2.reflectivity = 0.0f;
     model2.scale = 0.5f;
 
-    scene.OnAdd<GridComponent>([&](Entity& entity) {
+    auto addGrid = [&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         const auto& gc = entity.Get<GridComponent>();
 
@@ -60,7 +60,11 @@ void GameGrid::OnStartup(Scene& scene)
         transform.position.x = gc.x + 0.5f;
         transform.position.z = gc.z + 0.5f;
         d_gridEntities[{gc.x, gc.z}] = entity;
-    });
+    };
+
+    scene.Each<GridComponent>(addGrid);
+
+    scene.OnAdd<GridComponent>(addGrid);
 
     scene.OnRemove<GridComponent>([&](Entity& entity) {
         auto& gc = entity.Get<GridComponent>();

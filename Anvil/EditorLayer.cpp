@@ -24,7 +24,7 @@ EditorLayer::EditorLayer(const CoreSystems& core)
         &d_physicsEngine,
         &d_selector,
         &d_cameraSystem,
-        //&d_scriptRunner
+        &d_scriptRunner
     })
     , d_serialiser(&d_scene)
     , d_editorCamera(core.window, {0.0, 0.0, 0.0})
@@ -33,9 +33,8 @@ EditorLayer::EditorLayer(const CoreSystems& core)
 {
     d_core.window->SetCursorVisibility(true);
     
-    d_scene.OnStartup();
-    d_selector.Enable(true);
     d_serialiser.Deserialise("Resources/Anvil.yaml");
+    d_scene.OnStartup();
 
     d_scene.Each<CameraComponent>([&](Entity& entity) {
         d_camera = entity;
