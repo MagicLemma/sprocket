@@ -2,9 +2,8 @@
 
 namespace Sprocket {
 
-WorldLayer::WorldLayer(const CoreSystems& core) 
+EditorLayer::EditorLayer(const CoreSystems& core) 
     : Layer(core)
-    , d_mode(Mode::OBSERVER)
     , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_skyboxRenderer(core.window)
     , d_postProcessor(core.window->Width(), core.window->Height())
@@ -37,7 +36,7 @@ WorldLayer::WorldLayer(const CoreSystems& core)
     d_serialiser.Deserialise("Resources/Anvil.yaml");
 
     d_scene.Each<CameraComponent>([&](Entity& entity) {
-        d_camera = entity;
+        d_runtimeCamera = entity;
     });
 
     core.window->SetCursorVisibility(false);
@@ -55,7 +54,7 @@ WorldLayer::WorldLayer(const CoreSystems& core)
     d_postProcessor.AddEffect<GaussianHoriz>();
 }
 
-void WorldLayer::OnEvent(Event& event)
+void EditorLayer::OnEvent(Event& event)
 {
     if (auto e = event.As<WindowResizeEvent>()) {
         d_postProcessor.SetScreenSize(e->Width(), e->Height());
@@ -64,7 +63,7 @@ void WorldLayer::OnEvent(Event& event)
     d_scene.OnEvent(event);
 }
 
-void WorldLayer::OnUpdate(double dt)
+void EditorLayer::OnUpdate(double dt)
 {
     if (!d_paused) {
         d_scene.OnUpdate(dt);
@@ -85,8 +84,8 @@ void WorldLayer::OnUpdate(double dt)
         });
     }
 
-    d_entityRenderer.BeginScene(d_camera, d_lights);
-    d_skyboxRenderer.Draw(d_skybox, d_camera);
+    d_entityRenderer.BeginScene(d_runtimeCamera, d_lights);
+    d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });

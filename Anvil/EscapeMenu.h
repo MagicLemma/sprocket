@@ -8,14 +8,11 @@ namespace Sprocket {
 
 class EscapeMenu : public Layer
 {
-    WorldLayer* d_worldLayer;
-    EditorUI* d_editorUi;
-    
+    EditorLayer* d_editorLayer;
     SimpleUI d_ui;
 
 public:
-    EscapeMenu(const CoreSystems& core,
-               WorldLayer* worldLayer);
+    EscapeMenu(const CoreSystems& core, EditorLayer* worldLayer);
 
     void OnEvent(Event& event) override;
     void OnUpdate(double dt) override;

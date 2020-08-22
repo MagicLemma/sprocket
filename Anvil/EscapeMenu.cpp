@@ -3,9 +3,9 @@
 namespace Sprocket {
 
 EscapeMenu::EscapeMenu(const CoreSystems& core,
-                       WorldLayer* worldLayer) 
+                       EditorLayer* editorLayer) 
     : Layer(core)
-    , d_worldLayer(worldLayer)
+    , d_editorLayer(editorLayer)
     , d_ui(core.window)
 {
     SimpleUITheme theme;
@@ -20,20 +20,20 @@ void EscapeMenu::OnEvent(Event& event)
 {
     if (auto e = event.As<KeyboardButtonPressedEvent>()) {
         if (!e->IsConsumed() && e->Key() == Keyboard::ESC) {
-            d_worldLayer->d_paused = !d_worldLayer->d_paused;
+            d_editorLayer->d_paused = !d_editorLayer->d_paused;
             e->Consume();
         }
     }
 
     d_ui.OnEvent(event);
-    if (d_worldLayer->d_paused) { event.Consume(); }
+    if (d_editorLayer->d_paused) { event.Consume(); }
 }
 
 void EscapeMenu::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
 
-    if (d_worldLayer->d_paused) {
+    if (d_editorLayer->d_paused) {
         d_core.window->SetCursorVisibility(true);
         d_ui.StartFrame();
 

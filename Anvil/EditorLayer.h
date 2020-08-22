@@ -6,22 +6,17 @@
 
 namespace Sprocket {
 
-enum class Mode { PLAYER, OBSERVER, EDITOR };
-
-class WorldLayer : public Layer
+class EditorLayer : public Layer
 {
-    Mode d_mode;
-
-    Entity d_camera;
+    Entity d_runtimeCamera;
     
-    // RENDERING
+    // Rendering
     EntityRenderer  d_entityRenderer;
     SkyboxRenderer  d_skyboxRenderer;
 
     PostProcessor   d_postProcessor;
 
-    // WORLD
-    // Entity management and systems
+    // Scene
     PhysicsEngine  d_physicsEngine;
     Selector       d_selector;
     CameraSystem   d_cameraSystem;
@@ -41,10 +36,9 @@ class WorldLayer : public Layer
     bool d_mouseRequired = false;
 
     friend class EscapeMenu;
-    friend class EditorUI;
 
 public:
-    WorldLayer(const Sprocket::CoreSystems& core);
+    EditorLayer(const Sprocket::CoreSystems& core);
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;

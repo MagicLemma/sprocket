@@ -22,7 +22,7 @@ int main()
     core.modelManager = &modelManager;
     core.textureManager = &textureManager;
 
-    auto worldLayer = app.Add<WorldLayer>(core);
+    auto worldLayer = app.Add<EditorLayer>(core);
     app.Add<EscapeMenu>(core, worldLayer.get());
 
     Stopwatch watch;
