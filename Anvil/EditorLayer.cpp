@@ -113,18 +113,17 @@ void EditorLayer::OnUpdate(double dt)
     auto& style = ImGui::GetStyle();
     style.WindowRounding = 0.0f;
 
-    ImGuiWindowFlags viewportFlags = 
-        ImGuiWindowFlags_NoDecoration |
+    ImGuiWindowFlags flags = 
         ImGuiWindowFlags_NoNav |
+        ImGuiWindowFlags_NoNavFocus |
+        ImGuiWindowFlags_NoNavInputs |
+        ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoScrollWithMouse |
-        ImGuiWindowFlags_NoBackground;
-
-    ImGuiWindowFlags inspectorFlags = 
-        ImGuiWindowFlags_NoDecoration |
-        ImGuiWindowFlags_NoNav |
-        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoScrollWithMouse;
+    if (d_playingGame) {
+        flags |= ImGuiWindowFlags_NoDecoration;
+    }
 
     bool open = true;
     float menuBarHeight = 19.0f;
@@ -164,7 +163,7 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowPos({0.0, menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-    if (ImGui::Begin("Viewport", &open, viewportFlags)) {
+    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoScrollbar)) {
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
@@ -179,13 +178,13 @@ void EditorLayer::OnUpdate(double dt)
 
     ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
     ImGui::SetNextWindowSize({0.2f * w, h - menuBarHeight});
-    if (ImGui::Begin("Inspector", &open, inspectorFlags)) {
+    if (ImGui::Begin("Inspector", &open, flags)) {
         ImGui::End();
     }
 
     ImGui::SetNextWindowPos({0.0, 0.8f * h + menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
-    if (ImGui::Begin("BottomPanel", &open, inspectorFlags)) {
+    if (ImGui::Begin("BottomPanel", &open, flags)) {
 
         ImGui::End();
     }
