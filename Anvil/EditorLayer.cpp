@@ -56,7 +56,7 @@ void EditorLayer::OnEvent(Event& event)
     if (auto e = event.As<WindowResizeEvent>()) {
         d_viewport.SetScreenSize(e->Width(), e->Height());
     }
-    
+
     d_ui.OnEvent(event);
     d_scene.OnEvent(event);
     d_editorCamera.OnEvent(event);
@@ -68,7 +68,10 @@ void EditorLayer::OnUpdate(double dt)
     
     if (!d_paused) {
         d_scene.OnUpdate(dt);
-        d_editorCamera.OnUpdate(dt);
+
+        if (d_isViewportFocused) {
+            d_editorCamera.OnUpdate(dt);
+        }
         
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
 
@@ -97,19 +100,64 @@ void EditorLayer::OnUpdate(double dt)
 
     d_ui.StartFrame();
 
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
-    window_flags |= ImGuiWindowFlags_NoMove;
+    auto& style = ImGui::GetStyle();
+    style.WindowRounding = 0.0f;
+    style.WindowPadding = {0.0f, 0.0f};
+
+    ImGuiWindowFlags viewportFlags = 
+        ImGuiWindowFlags_NoDecoration |
+        ImGuiWindowFlags_NoNav |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoScrollWithMouse |
+        ImGuiWindowFlags_NoBackground;
+
+    ImGuiWindowFlags inspectorFlags = 
+        ImGuiWindowFlags_NoDecoration |
+        ImGuiWindowFlags_NoNav |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoScrollWithMouse;
+
     bool open = true;
-    ImGui::SetNextWindowPos({0.0, 0.0});
-    ImGui::SetNextWindowSize({(float)d_core.window->Width()/2.0f, (float)d_core.window->Height()/2.0f});
-    if (ImGui::Begin("Viewport", &open, window_flags)) {
+    float menuBarHeight = 19.0f;
+
+    if (ImGui::BeginMainMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+            ImGui::EndMenu();
+        }
+        ImGui::EndMainMenuBar();
+    }
+
+    float w = (float)d_core.window->Width();
+    float h = (float)d_core.window->Height();
+
+    ImGui::SetNextWindowPos({0.0, menuBarHeight});
+    ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
+    if (ImGui::Begin("Viewport", &open, viewportFlags)) {
+        d_isViewportHovered = ImGui::IsWindowHovered();
+        d_isViewportFocused = ImGui::IsWindowFocused();
+        d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
         ImGui::Image(
             (ImTextureID)(intptr_t)d_viewport.GetTexture().Id(),
-            {(float)d_core.window->Width()/2.0f, (float)d_core.window->Height()/2.0f},
+            {0.8f * w, 0.8f * h},
             {0, 1}, {1, 0}
         );
         ImGui::End();
     }
+
+    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
+    ImGui::SetNextWindowSize({0.2f * w, h - menuBarHeight});
+    if (ImGui::Begin("Inspector", &open, inspectorFlags)) {
+
+        ImGui::End();
+    }
+
+    ImGui::SetNextWindowPos({0.0, 0.8f * h + menuBarHeight});
+    ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
+    if (ImGui::Begin("BottomPanel", &open, inspectorFlags)) {
+
+        ImGui::End();
+    }
+
     d_ui.EndFrame();    
 }
 

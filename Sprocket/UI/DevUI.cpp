@@ -213,12 +213,14 @@ void Context::OnEvent(Event& event)
         }
     }
 
-    if (event.In<EventCategory::KEYBOARD>() && io.WantCaptureKeyboard) {
-        event.Consume();
-    }
+    if (d_blockEvents) {
+        if (event.In<EventCategory::KEYBOARD>() && io.WantCaptureKeyboard) {
+            event.Consume();
+        }
 
-    if (event.In<EventCategory::MOUSE>() && io.WantCaptureMouse) {
-        event.Consume();
+        if (event.In<EventCategory::MOUSE>() && io.WantCaptureMouse) {
+            event.Consume();
+        }
     }
 }
 

@@ -17,6 +17,8 @@ class EditorLayer : public Layer
 
     FrameBuffer d_viewport;
     DevUI::Context d_ui;
+    bool d_isViewportHovered = false;
+    bool d_isViewportFocused = false;
 
     // Scene
     PhysicsEngine d_physicsEngine;

@@ -13,6 +13,7 @@ int main()
 
     App app;
 
+    window.SetClearColour({0.5, 0.5, 0.5});
     window.SetCallback([&app](Event& event) {
         app.OnEvent(event);
     });

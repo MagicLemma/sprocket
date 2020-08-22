@@ -20,12 +20,15 @@ enum class GizmoCoords { WORLD, LOCAL };
 class Context
 {
     std::shared_ptr<DevUIData> d_impl;
+    bool d_blockEvents = true;
 
 public:
     Context(Window* window);
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);
+
+    void BlockEvents(bool val) { d_blockEvents = val; }
 
     void StartFrame();
     void EndFrame();
