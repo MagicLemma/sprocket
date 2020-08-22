@@ -26,7 +26,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
         out << YAML::BeginMap;
 """
 
-middle = """
+middle1 = """
         out << YAML::EndMap;
     });
     out << YAML::EndSeq;
@@ -54,8 +54,20 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         Entity e = scene->NewEntity();
 """
 
-footer = """
+middle2 = """
     }
+}
+
+void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
+{
+    target->Clear();
+
+    source->All([&](Entity& entity) {
+        Entity e = target->NewEntity();
+"""
+
+footer = """
+    });
 }
 
 }
@@ -96,14 +108,24 @@ def write_deserialiser(component, enums):
     out += "        }\n"
     return out
 
+def write_copy(component):
+    name = component["Name"]
+    out = f"        if (entity.Has<{name}>()) {{\n"
+    out += f"            e.Add<{name}>(entity.Get<{name}>());\n"
+    out += "        }\n"
+    return out
+
 def generate(spec, output):
     out = f"// GENERATED FILE @ {datetime.now()}"
     out += header
     for component in spec["Components"]:
         out += write_serialiser(component, spec["Enums"])
-    out += middle
+    out += middle1
     for component in spec["Components"]:
         out += write_deserialiser(component, spec["Enums"])
+    out += middle2
+    for component in spec["Components"]:
+        out += write_copy(component)
     out += footer
     
     with open(output, "w") as outfile:

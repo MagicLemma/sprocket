@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-22 21:08:37.394432
+// GENERATED FILE @ 2020-08-22 21:32:44.777024
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -192,6 +192,46 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
 
     }
+}
+
+void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
+{
+    target->Clear();
+
+    source->All([&](Entity& entity) {
+        Entity e = target->NewEntity();
+        if (entity.Has<TemporaryComponent>()) {
+            e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
+        }
+        if (entity.Has<NameComponent>()) {
+            e.Add<NameComponent>(entity.Get<NameComponent>());
+        }
+        if (entity.Has<TransformComponent>()) {
+            e.Add<TransformComponent>(entity.Get<TransformComponent>());
+        }
+        if (entity.Has<ModelComponent>()) {
+            e.Add<ModelComponent>(entity.Get<ModelComponent>());
+        }
+        if (entity.Has<PhysicsComponent>()) {
+            e.Add<PhysicsComponent>(entity.Get<PhysicsComponent>());
+        }
+        if (entity.Has<ScriptComponent>()) {
+            e.Add<ScriptComponent>(entity.Get<ScriptComponent>());
+        }
+        if (entity.Has<CameraComponent>()) {
+            e.Add<CameraComponent>(entity.Get<CameraComponent>());
+        }
+        if (entity.Has<SelectComponent>()) {
+            e.Add<SelectComponent>(entity.Get<SelectComponent>());
+        }
+        if (entity.Has<PathComponent>()) {
+            e.Add<PathComponent>(entity.Get<PathComponent>());
+        }
+        if (entity.Has<GridComponent>()) {
+            e.Add<GridComponent>(entity.Get<GridComponent>());
+        }
+
+    });
 }
 
 }
