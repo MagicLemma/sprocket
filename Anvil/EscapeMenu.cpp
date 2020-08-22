@@ -1,12 +1,9 @@
 #include "EscapeMenu.h"
-#include "FileBrowser.h"
 
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
-                       WorldLayer* worldLayer,
-                       EditorUI* editorUi) 
+                       WorldLayer* worldLayer) 
     : Layer(core)
     , d_worldLayer(worldLayer)
-    , d_editorUi(editorUi)
     , d_ui(core.window)
 {
     using namespace Sprocket;
@@ -45,8 +42,6 @@ void EscapeMenu::OnUpdate(double dt)
 
     if (d_worldLayer->d_paused) {
         d_core.window->SetCursorVisibility(true);
-
-
         d_ui.StartFrame();
 
         static Maths::vec4 panelQuad{50, 50, 200, 50};

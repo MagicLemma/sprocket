@@ -1,6 +1,5 @@
 #include <Sprocket.h>
-#include "WorldLayer.h"
-#include "EditorUI.h"
+#include "EditorLayer.h"
 #include "EscapeMenu.h"
 
 int main()
@@ -24,8 +23,7 @@ int main()
     core.textureManager = &textureManager;
 
     auto worldLayer = app.Add<WorldLayer>(core);
-    auto editorUi = app.Add<EditorUI>(core, worldLayer.get());
-    app.Add<EscapeMenu>(core, worldLayer.get(), editorUi.get());
+    app.Add<EscapeMenu>(core, worldLayer.get());
 
     Stopwatch watch;
     watch.PrintFramerate(false);
