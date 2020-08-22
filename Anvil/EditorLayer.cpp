@@ -24,7 +24,7 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     d_core.window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<Scene>();    
-    Loader::Load("Resources/Anvil.yaml", d_scene);
+    Loader::Load(d_sceneFile, d_scene);
 
     d_scene->OnStartup();
 
@@ -134,10 +134,18 @@ void EditorLayer::OnUpdate(double dt)
                 
             }
             if (ImGui::MenuItem("Open")) {
-                
+                std::string file = OpenFile(d_core.window, "");
+                if (!file.empty()) {
+                    SPKT_LOG_INFO("Loading...");
+                    d_sceneFile = file;
+                    Loader::Load(file, d_scene);
+                    SPKT_LOG_INFO("...done!");
+                }
             }
             if (ImGui::MenuItem("Save")) {
-                
+                SPKT_LOG_INFO("Saving...");
+                Loader::Save(d_sceneFile, d_scene);
+                SPKT_LOG_INFO("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
                 

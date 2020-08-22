@@ -59,6 +59,21 @@ void Camera::OnUpdate(double dt)
         d_yaw += horizSpeed;
     }
 
+    if (d_keyboard.IsKeyDown(Keyboard::SPACE)) {
+        d_position.y += d_moveSpeed * dt;
+        d_target.y += d_moveSpeed * dt;
+        d_absVert += d_moveSpeed * dt;
+        d_absMin += d_moveSpeed * dt;
+        d_absMax += d_moveSpeed * dt;
+    }
+    if (d_keyboard.IsKeyDown(Keyboard::LSHIFT)) {
+        d_position.y -= d_moveSpeed * dt;
+        d_target.y -= d_moveSpeed * dt;
+        d_absVert -= d_moveSpeed * dt;
+        d_absMin -= d_moveSpeed * dt;
+        d_absMax -= d_moveSpeed * dt;
+    }
+
     d_position.x = d_target.x + d_distance * Maths::Cosd(d_yaw);
     d_position.z = d_target.z + d_distance * Maths::Sind(d_yaw);
 
