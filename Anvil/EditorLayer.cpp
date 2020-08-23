@@ -1,6 +1,17 @@
 #include "EditorLayer.h"
 
 namespace Sprocket {
+namespace {
+
+std::string Name(const Entity& entity)
+{
+    if (entity.Has<NameComponent>()) {
+        return entity.Get<NameComponent>().name;
+    }
+    return "Entity";
+}
+
+}
 
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : Layer(core)
@@ -51,10 +62,15 @@ void EditorLayer::OnEvent(Event& event)
     }
 
     if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-        if (e->Key() == Keyboard::ESC && d_playingGame) {
-            d_playingGame = false;
-            d_activeScene = d_scene;
-            d_core.window->SetCursorVisibility(true);
+        if (e->Key() == Keyboard::ESC) {
+            if (d_playingGame) {
+                d_playingGame = false;
+                d_activeScene = d_scene;
+                d_core.window->SetCursorVisibility(true);
+            }
+            else {
+                d_selected = Entity();
+            }
             e->Consume();
         }
     }
@@ -69,6 +85,9 @@ void EditorLayer::OnEvent(Event& event)
 void EditorLayer::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
+
+    std::string windowName = "Anvil: " + d_sceneFile;
+    d_core.window->SetWindowName(windowName);
     
     if (!d_paused) {
         d_activeScene->OnUpdate(dt);
@@ -119,8 +138,7 @@ void EditorLayer::OnUpdate(double dt)
         ImGuiWindowFlags_NoNavInputs |
         ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoResize |
-        ImGuiWindowFlags_NoScrollWithMouse;
+        ImGuiWindowFlags_NoResize;
     if (d_playingGame) {
         flags |= ImGuiWindowFlags_NoDecoration;
     }
@@ -131,24 +149,36 @@ void EditorLayer::OnUpdate(double dt)
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
-                
+                std::string file = SaveFile(d_core.window, "*.yaml");
+                if (!file.empty()) {
+                    SPKT_LOG_INFO("Creating {}...", d_sceneFile);
+                    d_sceneFile = file;
+                    d_scene->Clear();
+                    SPKT_LOG_INFO("...done!");
+                }
             }
             if (ImGui::MenuItem("Open")) {
-                std::string file = OpenFile(d_core.window, "");
+                std::string file = OpenFile(d_core.window, "*.yaml");
                 if (!file.empty()) {
-                    SPKT_LOG_INFO("Loading...");
+                    SPKT_LOG_INFO("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
                     Loader::Load(file, d_scene);
                     SPKT_LOG_INFO("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
-                SPKT_LOG_INFO("Saving...");
+                SPKT_LOG_INFO("Saving {}...", d_sceneFile);
                 Loader::Save(d_sceneFile, d_scene);
                 SPKT_LOG_INFO("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
-                
+                std::string file = SaveFile(d_core.window, "*.yaml");
+                if (!file.empty()) {
+                    SPKT_LOG_INFO("Saving as {}...", file);
+                    d_sceneFile = file;
+                    Loader::Save(file, d_scene);
+                    SPKT_LOG_INFO("...done!");
+                }
             }
             ImGui::EndMenu();
         }
@@ -183,7 +213,7 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowPos({0.0, menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoScrollbar)) {
+    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
@@ -197,19 +227,117 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::PopStyleVar();
 
     ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
-    ImGui::SetNextWindowSize({0.2f * w, h - menuBarHeight});
+    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
+    if (ImGui::Begin("Entities", &open, flags)) {
+        d_scene->All([&](Entity& entity) {
+            AddEntityToList(entity);
+        });
+        ImGui::End();
+    }
+
+    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight + (h - menuBarHeight)/2.0f});
+    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
     if (ImGui::Begin("Inspector", &open, flags)) {
+        if (!d_selected.Null()) {
+            EntityInspector(d_selected);
+        }
+        else {
+            ImGui::Text("No Entity Selected");
+        }
         ImGui::End();
     }
 
     ImGui::SetNextWindowPos({0.0, 0.8f * h + menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
     if (ImGui::Begin("BottomPanel", &open, flags)) {
-
         ImGui::End();
     }
 
     d_ui.EndFrame();    
+}
+
+void EditorLayer::AddEntityToList(const Entity& entity)
+{
+    if (ImGui::TreeNode(Name(entity).c_str())) {
+        if (ImGui::Button("Select")) {
+            d_selected = entity;
+        }
+        ImGui::TreePop();
+    }
+}
+
+void EditorLayer::EntityInspector(Entity& entity)
+{
+    if (entity.Has<NameComponent>()) {
+        if (ImGui::CollapsingHeader("Name")) {
+            auto& c = entity.Get<NameComponent>();
+            if (ImGui::Button("Delete")) {
+                entity.Remove<NameComponent>();
+            }
+        }
+    }
+    if (entity.Has<TransformComponent>()) {
+        if (ImGui::CollapsingHeader("Transform")) {
+            auto& c = entity.Get<TransformComponent>();
+            ImGui::DragFloat3("Transform", &c.position.x, 0.1f);
+            ImGui::DragFloat4("Orientation", &c.orientation.x, 0.1f);
+            if (ImGui::Button("Delete")) {
+                entity.Remove<TransformComponent>();
+            }
+        }
+    }
+    if (entity.Has<ModelComponent>()) {
+        if (ImGui::CollapsingHeader("Model")) {
+            auto& c = entity.Get<ModelComponent>();
+            ImGui::DragFloat("Scale", &c.scale, 0.1f);
+            ImGui::DragFloat("Shine Damper", &c.shineDamper, 0.1f);
+            ImGui::DragFloat("Reflectivity", &c.reflectivity, 0.1f);
+            if (ImGui::Button("Delete")) {
+                entity.Remove<ModelComponent>();
+            }
+        }
+    }
+    if (entity.Has<PhysicsComponent>()) {
+        if (ImGui::CollapsingHeader("Physics")) {
+            auto& c = entity.Get<PhysicsComponent>();
+            if (ImGui::Button("Delete")) {
+                entity.Remove<PhysicsComponent>();
+            }
+        }
+    }
+    if (entity.Has<ScriptComponent>()) {
+        if (ImGui::CollapsingHeader("Script")) {
+            auto& c = entity.Get<ScriptComponent>();
+            if (ImGui::Button("Delete")) {
+                entity.Remove<ScriptComponent>();
+            }
+        }
+    }
+    if (entity.Has<CameraComponent>()) {
+        if (ImGui::CollapsingHeader("Camera")) {
+            auto& c = entity.Get<CameraComponent>();
+            if (ImGui::Button("Delete")) {
+                entity.Remove<CameraComponent>();
+            }
+        }
+    }
+    if (entity.Has<SelectComponent>()) {
+        if (ImGui::CollapsingHeader("Select")) {
+            auto& c = entity.Get<SelectComponent>();
+            if (ImGui::Button("Delete")) {
+                entity.Remove<SelectComponent>();
+            }
+        }
+    }
+    if (entity.Has<PathComponent>()) {
+        if (ImGui::CollapsingHeader("Path")) {
+            auto& c = entity.Get<PathComponent>();
+            if (ImGui::Button("Delete")) {
+                entity.Remove<PathComponent>();
+            }
+        }
+    }
+    ImGui::Separator();
 }
 
 }

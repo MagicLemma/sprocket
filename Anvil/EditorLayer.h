@@ -37,7 +37,9 @@ class EditorLayer : public Layer
 
     bool d_playingGame = false;
 
-    friend class EscapeMenu;
+    void AddEntityToList(const Entity& entity);
+    void EntityInspector(Entity& entity);
+    Entity d_selected;
 
 public:
     EditorLayer(const Sprocket::CoreSystems& core);
