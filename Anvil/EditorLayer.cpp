@@ -222,6 +222,11 @@ void EditorLayer::OnUpdate(double dt)
             {0.8f * w, 0.8f * h},
             {0, 1}, {1, 0}
         );
+        float rw = ImGui::GetWindowWidth();
+        float rh = ImGui::GetWindowHeight();
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
         ImGui::End();
     }
     ImGui::PopStyleVar();
@@ -270,6 +275,9 @@ void EditorLayer::AddEntityToList(const Entity& entity)
 
 void EditorLayer::EntityInspector(Entity& entity)
 {
+    static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
+    static DevUI::GizmoMode mode = DevUI::GizmoMode::ROTATION;
+
     if (entity.Has<NameComponent>()) {
         if (ImGui::CollapsingHeader("Name")) {
             auto& c = entity.Get<NameComponent>();
@@ -279,14 +287,19 @@ void EditorLayer::EntityInspector(Entity& entity)
         }
     }
     if (entity.Has<TransformComponent>()) {
+        auto& c = entity.Get<TransformComponent>();
         if (ImGui::CollapsingHeader("Transform")) {
-            auto& c = entity.Get<TransformComponent>();
             ImGui::DragFloat3("Transform", &c.position.x, 0.1f);
             ImGui::DragFloat4("Orientation", &c.orientation.x, 0.1f);
             if (ImGui::Button("Delete")) {
                 entity.Remove<TransformComponent>();
             }
         }
+
+        auto tr = Maths::Transform(c.position, c.orientation);
+        d_ui.Gizmo(&tr, d_editorCamera.View(), d_editorCamera.Proj(), mode, coords);
+        c.position = Maths::GetTranslation(tr);
+        c.orientation = Maths::ToQuat(Maths::mat3(tr));
     }
     if (entity.Has<ModelComponent>()) {
         if (ImGui::CollapsingHeader("Model")) {
