@@ -258,12 +258,14 @@ void EditorLayer::OnUpdate(double dt)
 
 void EditorLayer::AddEntityToList(const Entity& entity)
 {
+    ImGui::PushID(entity.Id());
     if (ImGui::TreeNode(Name(entity).c_str())) {
         if (ImGui::Button("Select")) {
             d_selected = entity;
         }
         ImGui::TreePop();
     }
+    ImGui::PopID();
 }
 
 void EditorLayer::EntityInspector(Entity& entity)
@@ -338,6 +340,10 @@ void EditorLayer::EntityInspector(Entity& entity)
         }
     }
     ImGui::Separator();
+    if (ImGui::Button("Delete Entity")) {
+        entity.Kill();
+        d_selected = Entity();
+    }
 }
 
 }
