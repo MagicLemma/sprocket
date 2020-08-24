@@ -15,15 +15,13 @@ class WorldLayer : public Sprocket::Layer
     Mode d_mode;
 
     // Entity management and systems
-    Sprocket::CameraSystem  d_cameraSystem;
-    Sprocket::BasicSelector d_selector;
-    Sprocket::ScriptRunner  d_scriptRunner;
-    Sprocket::PathFollower  d_pathFollower;
-    Sprocket::GameGrid      d_gameGrid;
+    std::shared_ptr<Sprocket::CameraSystem>  d_cameraSystem;
+    std::shared_ptr<Sprocket::BasicSelector> d_selector;
+    std::shared_ptr<Sprocket::ScriptRunner>  d_scriptRunner;
+    std::shared_ptr<Sprocket::PathFollower>  d_pathFollower;
+    std::shared_ptr<Sprocket::GameGrid>      d_gameGrid;
     
-    Sprocket::Scene         d_scene;
-
-    Sprocket::Serialiser d_serialiser;
+    std::shared_ptr<Sprocket::Scene> d_scene;
 
     Sprocket::Entity d_camera;
     Sprocket::Entity d_worker;

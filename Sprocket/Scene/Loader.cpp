@@ -1,21 +1,24 @@
-// GENERATED FILE @ 2020-08-21 00:14:30.087095
-#include "Serialiser.h"
+// GENERATED FILE @ 2020-08-22 21:32:44.777024
+#include "Loader.h"
 #include "Log.h"
 #include "Components.h"
 #include "Maths.h"
 #include "Yaml.h"
+#include "Scene.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <memory>
 
 namespace Sprocket {
+namespace Loader {
 
-void Serialiser::Serialise(const std::string& file)
+void Save(const std::string& file, std::shared_ptr<Scene> scene)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    d_scene->All([&](Entity& entity) {
+    scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
 
         out << YAML::BeginMap;
@@ -105,9 +108,9 @@ void Serialiser::Serialise(const std::string& file)
     fout << out.c_str();
 }
 
-void Serialiser::Deserialise(const std::string& file)
+void Load(const std::string& file, std::shared_ptr<Scene> scene)
 {
-    d_scene->Clear();
+    scene->Clear();
 
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -120,7 +123,7 @@ void Serialiser::Deserialise(const std::string& file)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        Entity e = d_scene->NewEntity();
+        Entity e = scene->NewEntity();
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add(c);
@@ -191,4 +194,45 @@ void Serialiser::Deserialise(const std::string& file)
     }
 }
 
+void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
+{
+    target->Clear();
+
+    source->All([&](Entity& entity) {
+        Entity e = target->NewEntity();
+        if (entity.Has<TemporaryComponent>()) {
+            e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
+        }
+        if (entity.Has<NameComponent>()) {
+            e.Add<NameComponent>(entity.Get<NameComponent>());
+        }
+        if (entity.Has<TransformComponent>()) {
+            e.Add<TransformComponent>(entity.Get<TransformComponent>());
+        }
+        if (entity.Has<ModelComponent>()) {
+            e.Add<ModelComponent>(entity.Get<ModelComponent>());
+        }
+        if (entity.Has<PhysicsComponent>()) {
+            e.Add<PhysicsComponent>(entity.Get<PhysicsComponent>());
+        }
+        if (entity.Has<ScriptComponent>()) {
+            e.Add<ScriptComponent>(entity.Get<ScriptComponent>());
+        }
+        if (entity.Has<CameraComponent>()) {
+            e.Add<CameraComponent>(entity.Get<CameraComponent>());
+        }
+        if (entity.Has<SelectComponent>()) {
+            e.Add<SelectComponent>(entity.Get<SelectComponent>());
+        }
+        if (entity.Has<PathComponent>()) {
+            e.Add<PathComponent>(entity.Get<PathComponent>());
+        }
+        if (entity.Has<GridComponent>()) {
+            e.Add<GridComponent>(entity.Get<GridComponent>());
+        }
+
+    });
+}
+
+}
 }

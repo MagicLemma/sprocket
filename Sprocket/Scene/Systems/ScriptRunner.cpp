@@ -16,14 +16,20 @@ ScriptRunner::ScriptRunner()
 
 void ScriptRunner::OnStartup(Scene& scene)
 {
-    scene.OnAdd<ScriptComponent>([&](Entity& entity) {
+    auto AddScript = [&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.SetKeyboard(&d_keyboard);
         luaEngine.SetMouse(&d_mouse);
         luaEngine.SetEntity(entity);
         luaEngine.RunScript(entity.Get<ScriptComponent>().script);
         luaEngine.CallInitFunction();
-    });
+    };
+
+    scene.Each<ScriptComponent>(AddScript);
+        // Register all existing scripts
+
+    scene.OnAdd<ScriptComponent>(AddScript);
+        // If a new script gets added to an entity, resiter that too.
 
     scene.OnRemove<ScriptComponent>([&](Entity& entity) {
         d_engines.erase(entity.Id());

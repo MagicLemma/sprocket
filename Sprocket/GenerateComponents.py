@@ -9,7 +9,7 @@ from Datamatic import lua_bindings
 sprocket = os.path.abspath(os.path.dirname(__file__))
 
 components_h = os.path.join(sprocket, "Scene", "Components.h")
-serialiser_cpp = os.path.join(sprocket, "Scene", "Serialiser.cpp")
+serialiser_cpp = os.path.join(sprocket, "Scene", "Loader.cpp")
 lua_h = os.path.join(sprocket, "Scripting", "LuaComponents.h")
 lua_cpp = os.path.join(sprocket, "Scripting", "LuaComponents.cpp")
 lua = os.path.join(sprocket, "Scripting", "Sprocket_Components.lua")

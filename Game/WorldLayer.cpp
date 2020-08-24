@@ -6,24 +6,25 @@
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
+    , d_scene(std::make_shared<Sprocket::Scene>())
     , d_entityRenderer(core.window, core.modelManager, core.textureManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_gameGrid(core.window)
-    , d_cameraSystem(core.window->AspectRatio())
-    , d_shadowMapRenderer(core.window, core.modelManager, core.textureManager)
+    , d_gameGrid(std::make_shared<Sprocket::GameGrid>(core.window))
+    , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(core.window->AspectRatio()))
+    , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>())
+    , d_pathFollower(std::make_shared<Sprocket::PathFollower>())
+    , d_selector(std::make_shared<Sprocket::BasicSelector>())
+    , d_shadowMapRenderer(core.window, core.modelManager)
     , d_hoveredEntityUI(core.window)
-    , d_scene({
-        &d_selector,
-        &d_pathFollower,
-        &d_gameGrid,
-        &d_scriptRunner,
-        &d_cameraSystem
-    })
-    , d_serialiser(&d_scene)
 {
     using namespace Sprocket;
 
-    d_scene.OnStartup();
+    d_scene->AddSystem(d_selector);
+    d_scene->AddSystem(d_pathFollower);
+    d_scene->AddSystem(d_gameGrid);
+    d_scene->AddSystem(d_scriptRunner);
+    d_scene->AddSystem(d_cameraSystem);
+    LoadScene("Resources/Scene.yaml");
 
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
@@ -44,13 +45,13 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
 
-    LoadScene("Resources/Scene.yaml");
+    d_scene->OnStartup();
 }
 
 void WorldLayer::SaveScene()
 {
     SPKT_LOG_INFO("Saving...");
-    d_serialiser.Serialise(d_sceneFile);
+    Sprocket::Loader::Save(d_sceneFile, d_scene);
     SPKT_LOG_INFO("  Done!");
 }
 
@@ -58,20 +59,20 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
 {
     using namespace Sprocket;
 
-    d_selector.SetSelected(Entity());
+    d_selector->SetSelected(Entity());
     d_paused = false;
 
     d_sceneFile = sceneFile;
-    d_serialiser.Deserialise(sceneFile);
+    Loader::Load(sceneFile, d_scene);
 
-    d_scene.Each<NameComponent>([&](Entity& entity) {
+    d_scene->Each<NameComponent>([&](Entity& entity) {
         const auto& name = entity.Get<NameComponent>();
         if (name.name == "Worker") {
             d_worker = entity;
         }
         else if (name.name == "Camera") {
             d_camera = entity;
-            d_gameGrid.SetCamera(entity);
+            d_gameGrid->SetCamera(entity);
         }
     });
 
@@ -116,7 +117,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                         pos,
                         mousePos,
                         [&](const Maths::ivec2& pos) {
-                            auto e = d_gameGrid.At(pos.x, pos.y);
+                            auto e = d_gameGrid->At(pos.x, pos.y);
                             return !e.Null();
                         }
                     );
@@ -132,7 +133,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         }
     }
 
-    d_scene.OnEvent(event);
+    d_scene->OnEvent(event);
 }
 
 void WorldLayer::OnUpdate(double dt)
@@ -162,14 +163,14 @@ void WorldLayer::OnUpdate(double dt)
         }
 
         Maths::Normalise(d_lights.sun.direction);
-        d_scene.OnUpdate(dt);
+        d_scene->OnUpdate(dt);
     }
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     d_shadowMapRenderer.BeginScene(d_lights.sun, target);
-    d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_shadowMapRenderer.Draw(entity);
     });
     d_shadowMapRenderer.EndScene(); 
@@ -183,7 +184,7 @@ void WorldLayer::OnUpdate(double dt)
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   
     );
-    d_scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
 
@@ -199,8 +200,8 @@ void WorldLayer::OnUpdate(double dt)
         float w = (float)d_core.window->Width();
         float h = (float)d_core.window->Height();
 
-        if (d_gameGrid.SelectedPosition().has_value()) {
-            auto selected = d_gameGrid.Selected();
+        if (d_gameGrid->SelectedPosition().has_value()) {
+            auto selected = d_gameGrid->Selected();
 
             float width = 0.15f * w;
             float height = 0.6f * h;
@@ -213,7 +214,7 @@ void WorldLayer::OnUpdate(double dt)
             bool clickable = true;
             if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable, &clickable)) {
                 
-                auto pos = d_gameGrid.SelectedPosition().value();
+                auto pos = d_gameGrid->SelectedPosition().value();
                 if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
                     selected.Kill();
                     AddTree(pos);
@@ -248,7 +249,7 @@ void WorldLayer::OnUpdate(double dt)
         }
 
 
-        auto hovered = d_gameGrid.Hovered();
+        auto hovered = d_gameGrid->Hovered();
         if (!hovered.Null()) {
             float width = 200;
             float height = 50;
@@ -280,7 +281,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     using namespace Sprocket;
     static std::string tex = "Resources/Textures/BetterTree.png";
 
-    auto newEntity = d_scene.NewEntity();
+    auto newEntity = d_scene->NewEntity();
 
     auto& name = newEntity.Add<NameComponent>();
     name.name = "Tree";
@@ -307,7 +308,7 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.NewEntity();
+    auto newEntity = d_scene->NewEntity();
     auto& n = newEntity.Add<NameComponent>();
     n.name = name;
 

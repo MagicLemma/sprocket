@@ -38,7 +38,8 @@ public:
 
     bool ShowColliders() const { return d_renderColliders; }
 
-    void BeginScene(const Entity& camera, const Lights& light);
+    void BeginScene(const Entity& camera, const Lights& lights);
+    void BeginScene(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights);
 
     void EnableShadows(const Texture& shadowMap, const Maths::mat4& lightProjView);
 

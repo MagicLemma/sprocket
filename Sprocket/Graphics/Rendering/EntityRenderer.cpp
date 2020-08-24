@@ -28,8 +28,7 @@ EntityRenderer::EntityRenderer(Window* window,
     : d_window(window)
     , d_modelManager(modelManager)
     , d_textureManager(textureManager)
-    , d_shader("Resources/Shaders/Entity.vert",
-               "Resources/Shaders/Entity.frag")
+    , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
     , d_renderColliders(false)
 {
 }
@@ -52,11 +51,8 @@ void EntityRenderer::EnableShadows(
     glActiveTexture(GL_TEXTURE0);
 }
 
-void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
+void EntityRenderer::BeginScene(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights)
 {
-    Maths::mat4 view = CameraUtils::MakeView(camera);
-    Maths::mat4 proj = CameraUtils::MakeProj(camera);
-
     unsigned int MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
@@ -86,6 +82,13 @@ void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
 		}
 	}
     d_shader.Unbind();
+}
+
+void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
+{
+    Maths::mat4 proj = CameraUtils::MakeProj(camera);
+    Maths::mat4 view = CameraUtils::MakeView(camera);
+    BeginScene(proj, view, lights);
 }
 
 void EntityRenderer::Draw(const Entity& entity)

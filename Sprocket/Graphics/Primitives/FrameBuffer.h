@@ -25,6 +25,8 @@ public:
     void BindTexture() const;
     void UnbindTexture() const;
 
+    Texture GetTexture() const { return Texture(d_width, d_height, d_texture); }
+
     void SetScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
 

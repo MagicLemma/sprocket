@@ -40,6 +40,9 @@ public:
     void SetEntity(const Entity& e);
     void SetKeyboard(KeyboardProxy* k);
     void SetMouse(MouseProxy* m);
+
+    // Do not copy these things
+    LuaEngine(LuaEngine&&) = delete;
 };
 
 }

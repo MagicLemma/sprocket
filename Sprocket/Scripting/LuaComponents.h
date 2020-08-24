@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-21 00:14:30.091287
+// GENERATED FILE @ 2020-08-22 21:32:44.796973
 class lua_State;
 
 namespace Sprocket {

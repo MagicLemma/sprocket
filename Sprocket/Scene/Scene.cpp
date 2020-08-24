@@ -1,12 +1,18 @@
 #include "Scene.h"
 #include "Components.h"
+#include "Log.h"
 
 namespace Sprocket {
 
-Scene::Scene(const std::vector<EntitySystem*> systems)
-    : d_systems(systems)
+Scene::Scene()
+    : d_systems()
     , d_registry()
 {
+}
+
+Scene::~Scene()
+{
+    SPKT_LOG_INFO("Deleting scene");
 }
 
 Entity Scene::NewEntity()
@@ -15,9 +21,19 @@ Entity Scene::NewEntity()
     return Entity(&d_registry, e);
 }
 
+void Scene::AddSystem(std::shared_ptr<EntitySystem> system)
+{
+    d_systems.push_back(system);
+}
+
+void Scene::ClearSystems()
+{
+    d_systems.clear();
+}
+
 void Scene::OnStartup()
 {
-    for (auto& system : d_systems) {
+    for (auto system : d_systems) {
         system->OnStartup(*this);
     }
 }

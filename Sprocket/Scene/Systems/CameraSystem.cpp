@@ -12,12 +12,16 @@ CameraSystem::CameraSystem(float aspectRatio)
 
 void CameraSystem::OnStartup(Scene& scene)
 {
-    scene.OnAdd<CameraComponent>([&](Entity& entity) {
+    auto addCamera = [&](Entity& entity) {
         auto& camera = entity.Get<CameraComponent>();
         camera.projection = Maths::Perspective(
             d_aspectRatio, camera.fov, 0.1f, 1000.0f
         );
-    });
+    };
+
+    scene.Each<CameraComponent>(addCamera);
+
+    scene.OnAdd<CameraComponent>(addCamera);
 }
 
 void CameraSystem::OnEvent(Scene& scene, Event& event)

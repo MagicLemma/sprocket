@@ -5,14 +5,10 @@
 
 namespace Sprocket {
 
-ShadowMapRenderer::ShadowMapRenderer(Window* window,
-                                     ModelManager* modelManager,
-                                     TextureManager* textureManager)
+ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
     : d_window(window)
     , d_modelManager(modelManager)
-    , d_textureManager(textureManager)
-    , d_shader("Resources/Shaders/ShadowMap.vert",
-               "Resources/Shaders/ShadowMap.frag")
+    , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.
     , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
     , d_shadowMap(window, 4096, 4096)
