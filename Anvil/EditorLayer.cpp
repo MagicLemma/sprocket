@@ -300,6 +300,7 @@ void EditorLayer::EntityInspector(Entity& entity)
         d_ui.Gizmo(&tr, d_editorCamera.View(), d_editorCamera.Proj(), mode, coords);
         c.position = Maths::GetTranslation(tr);
         c.orientation = Maths::ToQuat(Maths::mat3(tr));
+        Maths::Normalise(c.orientation);
     }
     if (entity.Has<ModelComponent>()) {
         if (ImGui::CollapsingHeader("Model")) {
