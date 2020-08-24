@@ -188,9 +188,7 @@ void EditorLayer::OnUpdate(double dt)
                 Loader::Copy(d_scene, runningScene);
                 d_activeScene = runningScene;
                 
-                auto physicsEngine = std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0});
-                d_activeScene->AddSystem(physicsEngine);
-                d_activeScene->AddSystem(std::make_shared<Selector>(d_core.window, physicsEngine.get()));
+                d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0}));
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
                 d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
 
