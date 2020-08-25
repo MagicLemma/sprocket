@@ -78,6 +78,7 @@ void EntityRenderer::BeginScene(
 		d_shader.LoadUniform(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
         d_shader.LoadUniform(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
         d_shader.LoadUniform(ArrayName("u_light_attenuation", i), {1.0f, 0.0f, 0.0f});
+        d_shader.LoadUniform(ArrayName("u_light_brightness", i), 0.0f);
 	}
     std::size_t i = 0;
     scene.Each<TransformComponent, LightComponent>([&](Entity& entity) {
@@ -87,6 +88,7 @@ void EntityRenderer::BeginScene(
             d_shader.LoadUniform(ArrayName("u_light_pos", i), position);
 			d_shader.LoadUniform(ArrayName("u_light_colour", i), light.colour);
 			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), light.attenuation);
+            d_shader.LoadUniform(ArrayName("u_light_brightness", i), light.brightness);
         }
     });
     d_shader.Unbind();

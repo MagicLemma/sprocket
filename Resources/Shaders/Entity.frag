@@ -12,6 +12,7 @@ uniform sampler2D texture_sampler;
 // Lighting Information
 uniform vec3 u_light_colour[5];
 uniform vec3 u_light_attenuation[5];
+uniform float u_light_brightness[5];
 
 uniform vec3  u_sun_direction;
 uniform vec3  u_sun_colour;
@@ -79,7 +80,7 @@ void main()
         // Diffuse lighting calculation
         float diffuse_factor = dot(unit_to_light, unit_normal);
         diffuse_factor = max(diffuse_factor, 0.0) / attenuation;
-        total_diffuse = total_diffuse + vec4(diffuse_factor * u_light_colour[i], 1.0);
+        total_diffuse += u_light_brightness[i] * vec4(diffuse_factor * u_light_colour[i], 1.0);
 
         // Specular lighting calculation
         float specular_factor = dot(reflected_light_direction, unit_to_camera);

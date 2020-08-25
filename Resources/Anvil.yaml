@@ -318,3 +318,31 @@ Entities:
       rollingResistance: 0
     SelectComponent:
       {}
+  - TransformComponent:
+      position: [5, 1, 0]
+      orientation: [1, 0, 0, 0]
+    LightComponent:
+      colour: [1, 0, 0]
+      attenuation: [1, 0, 0]
+      brightness: 2
+  - TransformComponent:
+      position: [-7, 1, 0]
+      orientation: [1, 0, 0, 0]
+    LightComponent:
+      colour: [0, 0, 1]
+      attenuation: [1, 0, 0]
+      brightness: 2
+  - TransformComponent:
+      position: [8, 4, 2]
+      orientation: [1, 0, 0, 0]
+    LightComponent:
+      colour: [0.3019608, 0.7921569, 0.2117647]
+      attenuation: [1, 0, 0]
+      brightness: 1
+  - TransformComponent:
+      position: [40, 20, 0]
+      orientation: [1, 0, 0, 0]
+    LightComponent:
+      colour: [0.7843137, 0.7843137, 0.7843137]
+      attenuation: [1, 0, 0]
+      brightness: 0.7
