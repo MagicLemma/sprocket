@@ -85,7 +85,7 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.BeginScene(d_activeCamera, d_lights);
+    d_entityRenderer.BeginScene(d_activeCamera, d_lights, *d_scene);
 
     if (!d_paused) {
         d_scene->OnUpdate(dt);

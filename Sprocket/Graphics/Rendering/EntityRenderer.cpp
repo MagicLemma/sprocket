@@ -4,6 +4,7 @@
 #include "RenderContext.h"
 #include "CameraUtils.h"
 #include "Components.h"
+#include "Scene.h"
 
 #include <glad/glad.h>
 
@@ -51,7 +52,11 @@ void EntityRenderer::EnableShadows(
     glActiveTexture(GL_TEXTURE0);
 }
 
-void EntityRenderer::BeginScene(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights)
+void EntityRenderer::BeginScene(
+    const Maths::mat4& proj,
+    const Maths::mat4& view,
+    const Lights& lights,
+    Scene& scene)
 {
     unsigned int MAX_NUM_LIGHTS = 5;
 
@@ -69,26 +74,29 @@ void EntityRenderer::BeginScene(const Maths::mat4& proj, const Maths::mat4& view
     d_shader.LoadUniform("u_ambience_brightness", lights.ambience.brightness);
     
     // Load point lights to shader
-    for (size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
-		if (i < lights.points.size()) {
-			d_shader.LoadUniform(ArrayName("u_light_pos", i), lights.points[i].position);
-			d_shader.LoadUniform(ArrayName("u_light_colour", i), lights.points[i].colour);
-			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), lights.points[i].attenuation);
-		}
-		else {  // "Empty" lights to pad the array
-			d_shader.LoadUniform(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-			d_shader.LoadUniform(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), {1.0f, 0.0f, 0.0f});
-		}
+    for (std::size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
+		d_shader.LoadUniform(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
+        d_shader.LoadUniform(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
+        d_shader.LoadUniform(ArrayName("u_light_attenuation", i), {1.0f, 0.0f, 0.0f});
 	}
+    std::size_t i = 0;
+    scene.Each<TransformComponent, LightComponent>([&](Entity& entity) {
+        if (i++ < MAX_NUM_LIGHTS) {
+            auto position = entity.Get<TransformComponent>().position;
+            auto light = entity.Get<LightComponent>();
+            d_shader.LoadUniform(ArrayName("u_light_pos", i), position);
+			d_shader.LoadUniform(ArrayName("u_light_colour", i), light.colour);
+			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), light.attenuation);
+        }
+    });
     d_shader.Unbind();
 }
 
-void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights)
+void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights, Scene& scene)
 {
     Maths::mat4 proj = CameraUtils::MakeProj(camera);
     Maths::mat4 view = CameraUtils::MakeView(camera);
-    BeginScene(proj, view, lights);
+    BeginScene(proj, view, lights, scene);
 }
 
 void EntityRenderer::Draw(const Entity& entity)
