@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-22 21:32:44.777024
+// GENERATED FILE @ 2020-08-25 01:16:47.637277
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -98,6 +98,14 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "z" << YAML::Value << c.z;
             out << YAML::EndMap;
         }
+        if(entity.Has<LightComponent>()) {
+            const auto& c = entity.Get<LightComponent>();
+            out << YAML::Key << "LightComponent" << YAML::BeginMap;
+            out << YAML::Key << "colour" << YAML::Value << c.colour;
+            out << YAML::Key << "attenuation" << YAML::Value << c.attenuation;
+            out << YAML::Key << "brightness" << YAML::Value << c.brightness;
+            out << YAML::EndMap;
+        }
 
         out << YAML::EndMap;
     });
@@ -190,6 +198,13 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.z = spec["z"].as<int>();
             e.Add(c);
         }
+        if (auto spec = entity["LightComponent"]) {
+            LightComponent c;
+            c.colour = spec["colour"].as<Maths::vec3>();
+            c.attenuation = spec["attenuation"].as<Maths::vec3>();
+            c.brightness = spec["brightness"].as<float>();
+            e.Add(c);
+        }
 
     }
 }
@@ -229,6 +244,9 @@ void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
         }
         if (entity.Has<GridComponent>()) {
             e.Add<GridComponent>(entity.Get<GridComponent>());
+        }
+        if (entity.Has<LightComponent>()) {
+            e.Add<LightComponent>(entity.Get<LightComponent>());
         }
 
     });

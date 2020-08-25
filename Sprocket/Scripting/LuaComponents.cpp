@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-22 21:32:44.802957
+// GENERATED FILE @ 2020-08-25 01:16:47.665171
 
 #include "LuaComponents.h"
 #include "LuaGlobals.h"
@@ -35,6 +35,9 @@ void RegisterComponentFunctions(lua_State* L)
 
     lua_register(L, "Lua_GetGridComponent", &Lua::GetGridComponent);
     lua_register(L, "Lua_SetGridComponent", &Lua::SetGridComponent);
+
+    lua_register(L, "Lua_GetLightComponent", &Lua::GetLightComponent);
+    lua_register(L, "Lua_SetLightComponent", &Lua::SetLightComponent);
 
 }
 
@@ -231,6 +234,37 @@ int SetGridComponent(lua_State* L)
     auto& c = GetEntity(L)->Get<GridComponent>();
     c.x = (int)lua_tonumber(L, 1);
     c.z = (int)lua_tonumber(L, 2);
+    return 0;
+}
+
+int GetLightComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
+    assert(GetEntity(L)->Has<LightComponent>());
+
+    const auto& c = GetEntity(L)->Get<LightComponent>();
+    lua_pushnumber(L, c.colour.x);
+    lua_pushnumber(L, c.colour.y);
+    lua_pushnumber(L, c.colour.z);
+    lua_pushnumber(L, c.attenuation.x);
+    lua_pushnumber(L, c.attenuation.y);
+    lua_pushnumber(L, c.attenuation.z);
+    lua_pushnumber(L, c.brightness);
+    return 7;
+}
+
+int SetLightComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
+
+    auto& c = GetEntity(L)->Get<LightComponent>();
+    c.colour.x = (float)lua_tonumber(L, 1);
+    c.colour.y = (float)lua_tonumber(L, 2);
+    c.colour.z = (float)lua_tonumber(L, 3);
+    c.attenuation.x = (float)lua_tonumber(L, 4);
+    c.attenuation.y = (float)lua_tonumber(L, 5);
+    c.attenuation.z = (float)lua_tonumber(L, 6);
+    c.brightness = (float)lua_tonumber(L, 7);
     return 0;
 }
 

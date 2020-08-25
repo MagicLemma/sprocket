@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-22 21:32:44.806973
+-- GENERATED FILE @ 2020-08-25 01:16:47.674147
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -116,5 +116,20 @@ end
 
 function SetGridComponent(c)
     Lua_SetGridComponent(c.x, c.z)
+end
+
+LightComponent = Class(function(self, colour_x, colour_y, colour_z, attenuation_x, attenuation_y, attenuation_z, brightness)
+    self.colour = Vec3(colour_x, colour_y, colour_z)
+    self.attenuation = Vec3(attenuation_x, attenuation_y, attenuation_z)
+    self.brightness = brightness
+end)
+
+function GetLightComponent()
+    x0, x1, x2, x3, x4, x5, x6 = Lua_GetLightComponent()
+    return LightComponent(x0, x1, x2, x3, x4, x5, x6)
+end
+
+function SetLightComponent(c)
+    Lua_SetLightComponent(c.colour.x, c.colour.y, c.colour.z, c.attenuation.x, c.attenuation.y, c.attenuation.z, c.brightness)
 end
 

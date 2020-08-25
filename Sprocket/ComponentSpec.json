@@ -217,6 +217,26 @@
                     "Type": "int"
                 }
             ]
+        },
+        {
+            "Name": "LightComponent",
+            "Attributes": [
+                {
+                    "Name": "colour",
+                    "Type": "Maths::vec3",
+                    "Subtype": "Colour"
+                },
+                {
+                    "Name": "attenuation",
+                    "Type": "Maths::vec3",
+                    "Default": [1, 0, 0]
+                },
+                {
+                    "Name": "brightness",
+                    "Type": "float",
+                    "Default": 1.0
+                }
+            ]
         }
     ]
 }
