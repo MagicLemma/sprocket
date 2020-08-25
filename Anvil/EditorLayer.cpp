@@ -339,15 +339,19 @@ void EditorLayer::EntityInspector(Entity& entity)
             ImGui::DragFloat3("Velocity", &c.velocity.x);
             ImGui::Checkbox("Gravity", &c.gravity);
             ImGui::Checkbox("Frozen", &c.frozen);
+            ImGui::DragFloat("Mass", &c.mass);
+            ImGui::SliderFloat("Bounciness", &c.bounciness, 0.0, 1.0);
+            ImGui::SliderFloat("Friction Coefficient", &c.frictionCoefficient, 0.0, 1.0);
+            ImGui::SliderFloat("Rolling Resistance", &c.rollingResistance, 0.0, 1.0);
             if (ImGui::Button("Delete")) { entity.Remove<PhysicsComponent>(); }
         }
     }
     if (entity.Has<ScriptComponent>()) {
         if (ImGui::CollapsingHeader("Script")) {
             auto& c = entity.Get<ScriptComponent>();
-            if (ImGui::Button("Delete")) {
-                entity.Remove<ScriptComponent>();
-            }
+            ImGuiXtra::File("Script", d_core.window, &c.script, "*.lua");
+            ImGui::Checkbox("Active", &c.active);
+            if (ImGui::Button("Delete")) { entity.Remove<ScriptComponent>(); }
         }
     }
     if (entity.Has<CameraComponent>()) {
@@ -357,6 +361,35 @@ void EditorLayer::EntityInspector(Entity& entity)
                 entity.Remove<CameraComponent>();
             }
         }
+    }
+    if (entity.Has<LightComponent>()) {
+        if (ImGui::CollapsingHeader("Light")) {
+            auto& c = entity.Get<LightComponent>();
+            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::DragFloat3("Attenuation", &c.attenuation.x);
+            ImGui::DragFloat("Brightness", &c.brightness);
+            if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
+        }
+    }
+    ImGui::Separator();
+    if (ImGui::BeginMenu("Add Component")) {
+        if (!entity.Has<TransformComponent>() && ImGui::MenuItem("Transform")) {
+            TransformComponent c;
+            entity.Add(c);
+        }
+        if (!entity.Has<ModelComponent>() && ImGui::MenuItem("Model")) {
+            ModelComponent c;
+            entity.Add(c);
+        }
+        if (!entity.Has<ScriptComponent>() && ImGui::MenuItem("Script")) {
+            ScriptComponent c;
+            entity.Add(c);
+        }
+        if (!entity.Has<LightComponent>() && ImGui::MenuItem("Light")) {
+            LightComponent c;
+            entity.Add(c);
+        }
+        ImGui::EndMenu();
     }
     ImGui::Separator();
     if (ImGui::Button("Delete Entity")) {
