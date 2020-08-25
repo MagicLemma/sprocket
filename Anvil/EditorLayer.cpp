@@ -292,10 +292,26 @@ void EditorLayer::EntityInspector(Entity& entity)
         if (ImGui::CollapsingHeader("Transform")) {
             ImGui::DragFloat3("Transform", &c.position.x, 0.1f);
             ImGui::DragFloat4("Orientation", &c.orientation.x, 0.1f);
+            if (ImGui::RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
+                mode = DevUI::GizmoMode::TRANSLATION;
+            }
+            ImGui::SameLine();
+            if (ImGui::RadioButton("Rotate", mode == DevUI::GizmoMode::ROTATION)) {
+                mode = DevUI::GizmoMode::ROTATION;
+            }
+
+            if (ImGui::RadioButton("World", coords == DevUI::GizmoCoords::WORLD)) {
+                coords = DevUI::GizmoCoords::WORLD;
+            }
+            ImGui::SameLine();
+            if (ImGui::RadioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
+                coords = DevUI::GizmoCoords::LOCAL;
+            }
             if (ImGui::Button("Delete")) {
                 entity.Remove<TransformComponent>();
             }
         }
+
 
         auto tr = Maths::Transform(c.position, c.orientation);
         d_ui.Gizmo(&tr, d_editorCamera.View(), d_editorCamera.Proj(), mode, coords);
