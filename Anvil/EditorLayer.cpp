@@ -245,7 +245,10 @@ void EditorLayer::OnUpdate(double dt)
             EntityInspector(d_selected);
         }
         else {
-            ImGui::Text("No Entity Selected");
+            if (ImGui::Button("New Entity")) {
+                auto e = d_scene->NewEntity();
+                d_selected = e;
+            }
         }
         ImGui::End();
     }
