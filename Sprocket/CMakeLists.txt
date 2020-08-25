@@ -43,6 +43,7 @@ add_library(Sprocket STATIC
             UI/SimpleUI.cpp
             UI/SinglePanelUI.cpp
             UI/DevUI.cpp
+            UI/ImGuiHelpers.cpp
 
             Scene/Entity.cpp
             Scene/Scene.cpp

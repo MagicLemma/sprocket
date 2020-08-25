@@ -1,4 +1,6 @@
 #include "EditorLayer.h"
+#include "FileBrowser.h"
+#include "ImGuiHelpers.cpp"
 
 namespace Sprocket {
 namespace {
@@ -211,7 +213,7 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowPos({0.0, menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
+    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
@@ -312,30 +314,32 @@ void EditorLayer::EntityInspector(Entity& entity)
             }
         }
 
-
-        auto tr = Maths::Transform(c.position, c.orientation);
-        d_ui.Gizmo(&tr, d_editorCamera.View(), d_editorCamera.Proj(), mode, coords);
-        c.position = Maths::GetTranslation(tr);
-        c.orientation = Maths::ToQuat(Maths::mat3(tr));
-        Maths::Normalise(c.orientation);
+        if (!d_playingGame) {
+            auto tr = Maths::Transform(c.position, c.orientation);
+            d_ui.Gizmo(&tr, d_editorCamera.View(), d_editorCamera.Proj(), mode, coords);
+            c.position = Maths::GetTranslation(tr);
+            c.orientation = Maths::ToQuat(Maths::mat3(tr));
+            Maths::Normalise(c.orientation);
+        }
     }
     if (entity.Has<ModelComponent>()) {
         if (ImGui::CollapsingHeader("Model")) {
             auto& c = entity.Get<ModelComponent>();
+            ImGuiXtra::File("Model", d_core.window, &c.model, "*.obj");
             ImGui::DragFloat("Scale", &c.scale, 0.1f);
+            ImGuiXtra::File("Texture", d_core.window, &c.texture, "*.png");
             ImGui::DragFloat("Shine Damper", &c.shineDamper, 0.1f);
             ImGui::DragFloat("Reflectivity", &c.reflectivity, 0.1f);
-            if (ImGui::Button("Delete")) {
-                entity.Remove<ModelComponent>();
-            }
+            if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }
         }
     }
     if (entity.Has<PhysicsComponent>()) {
         if (ImGui::CollapsingHeader("Physics")) {
             auto& c = entity.Get<PhysicsComponent>();
-            if (ImGui::Button("Delete")) {
-                entity.Remove<PhysicsComponent>();
-            }
+            ImGui::DragFloat3("Velocity", &c.velocity.x);
+            ImGui::Checkbox("Gravity", &c.gravity);
+            ImGui::Checkbox("Frozen", &c.frozen);
+            if (ImGui::Button("Delete")) { entity.Remove<PhysicsComponent>(); }
         }
     }
     if (entity.Has<ScriptComponent>()) {
@@ -351,22 +355,6 @@ void EditorLayer::EntityInspector(Entity& entity)
             auto& c = entity.Get<CameraComponent>();
             if (ImGui::Button("Delete")) {
                 entity.Remove<CameraComponent>();
-            }
-        }
-    }
-    if (entity.Has<SelectComponent>()) {
-        if (ImGui::CollapsingHeader("Select")) {
-            auto& c = entity.Get<SelectComponent>();
-            if (ImGui::Button("Delete")) {
-                entity.Remove<SelectComponent>();
-            }
-        }
-    }
-    if (entity.Has<PathComponent>()) {
-        if (ImGui::CollapsingHeader("Path")) {
-            auto& c = entity.Get<PathComponent>();
-            if (ImGui::Button("Delete")) {
-                entity.Remove<PathComponent>();
             }
         }
     }
