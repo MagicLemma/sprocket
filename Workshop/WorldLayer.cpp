@@ -48,7 +48,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     });
 
     core.window->SetCursorVisibility(false);
-    
+
     d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
     d_lights.sun.colour = {1.0, 1.0, 1.0};
     d_lights.sun.brightness = 0.2f;

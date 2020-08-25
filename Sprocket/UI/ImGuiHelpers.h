@@ -11,5 +11,7 @@ void File(const std::string& name,
           std::string* file,
           const char* filter);
 
+void TextModifiable(std::string& text);
+
 }
 }

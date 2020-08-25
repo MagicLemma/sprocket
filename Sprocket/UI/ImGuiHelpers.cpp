@@ -23,5 +23,13 @@ void File(const std::string& name,
     ImGui::PopID();
 }
 
+void TextModifiable(std::string& text)
+{
+    char nameStr[128] = "";
+    std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
+    ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
+    text = std::string(nameStr);
+}
+
 }
 }

@@ -82,7 +82,7 @@ void EntityRenderer::BeginScene(
 	}
     std::size_t i = 0;
     scene.Each<TransformComponent, LightComponent>([&](Entity& entity) {
-        if (i++ < MAX_NUM_LIGHTS) {
+        if (i < MAX_NUM_LIGHTS) {
             auto position = entity.Get<TransformComponent>().position;
             auto light = entity.Get<LightComponent>();
             d_shader.LoadUniform(ArrayName("u_light_pos", i), position);
@@ -90,6 +90,7 @@ void EntityRenderer::BeginScene(
 			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), light.attenuation);
             d_shader.LoadUniform(ArrayName("u_light_brightness", i), light.brightness);
         }
+        ++i;
     });
     d_shader.Unbind();
 }
@@ -128,6 +129,11 @@ void EntityRenderer::DrawModel(const Entity& entity)
     glStencilMask(outline ? 0xFF : 0x00);
 
     auto& modelComp = entity.Get<ModelComponent>();
+
+    if (modelComp.model.empty()) {
+        return;
+    }
+
     auto tr = entity.Get<TransformComponent>();
     Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, modelComp.scale);

@@ -279,9 +279,8 @@ void EditorLayer::EntityInspector(Entity& entity)
     if (entity.Has<NameComponent>()) {
         if (ImGui::CollapsingHeader("Name")) {
             auto& c = entity.Get<NameComponent>();
-            if (ImGui::Button("Delete")) {
-                entity.Remove<NameComponent>();
-            }
+            ImGuiXtra::TextModifiable(c.name);
+            if (ImGui::Button("Delete")) { entity.Remove<NameComponent>(); }
         }
     }
     if (entity.Has<TransformComponent>()) {
@@ -368,6 +367,10 @@ void EditorLayer::EntityInspector(Entity& entity)
     }
     ImGui::Separator();
     if (ImGui::BeginMenu("Add Component")) {
+        if (!entity.Has<NameComponent>() && ImGui::MenuItem("Name")) {
+            NameComponent c;
+            entity.Add(c);
+        }
         if (!entity.Has<TransformComponent>() && ImGui::MenuItem("Transform")) {
             TransformComponent c;
             entity.Add(c);

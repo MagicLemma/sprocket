@@ -1,309 +1,40 @@
 Entities:
   - NameComponent:
-      name: Sphere 4
+      name: Sun
     TransformComponent:
-      position: [0, 45, 0]
+      position: [40, 20, 0]
       orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      collider: 1
-      halfExtents: [0, 0, 0]
-      radius: 1
-      height: 1
-      mass: 20
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SelectComponent: 
+    LightComponent:
+      colour: [0.8222222, 0.822214, 0.822214]
+      attenuation: [1, 0, 0]
+      brightness: 1
   - NameComponent:
-      name: Sphere 3
+      name: Green Light
     TransformComponent:
-      position: [0, 35, 0]
+      position: [8, 4, 0]
       orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      collider: 1
-      halfExtents: [0, 0, 0]
-      radius: 1
-      height: 1
-      mass: 20
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SelectComponent: 
+    LightComponent:
+      colour: [0.3568628, 0.772549, 0.2117647]
+      attenuation: [1, 0, 0]
+      brightness: 1
   - NameComponent:
-      name: Sphere 2
+      name: Blue Light
     TransformComponent:
-      position: [0, 25, 0]
+      position: [-7, 1, 0]
       orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      collider: 1
-      halfExtents: [0, 0, 0]
-      radius: 1
-      height: 1
-      mass: 20
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SelectComponent: 
+    LightComponent:
+      colour: [0, 0, 1]
+      attenuation: [1, 0, 0]
+      brightness: 1
   - NameComponent:
-      name: Sphere 1
+      name: Red Light
     TransformComponent:
-      position: [0, 15, 0]
+      position: [5, 1, 0]
       orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      collider: 1
-      halfExtents: [0, 0, 0]
-      radius: 1
-      height: 1
-      mass: 20
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Sphere 0
-    TransformComponent:
-      position: [0, 5, 0]
-      orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      collider: 1
-      halfExtents: [0, 0, 0]
-      radius: 1
-      height: 1
-      mass: 20
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Editor Camera
-    TransformComponent:
-      position: [10, 2, 0]
-      orientation: [1, 0, 0, 0]
-    ScriptComponent:
-      script: Resources/Scripts/ThirdPersonCamera.lua
-      active: false
-    CameraComponent:
-      fov: 70
-      pitch: 0
-  - NameComponent:
-      name: Observer Camera
-    TransformComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-    ScriptComponent:
-      script: Resources/Scripts/FirstPersonCamera.lua
-      active: true
-    CameraComponent:
-      fov: 70
-      pitch: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Player
-    TransformComponent:
-      position: [0, 5, 5]
-      orientation: [1, 0, 0, 0]
-    ScriptComponent:
-      script: Resources/Scripts/PlayerController.lua
-      active: false
-    ModelComponent:
-      model: Resources/Models/Cube.obj
-      scale: 0.3
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 1
-      reflectivity: 0
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      collider: 2
-      halfExtents: [0, 0, 0]
-      radius: 0.5
-      height: 1
-      mass: 60
-      bounciness: 0
-      frictionCoefficient: 0.4
-      rollingResistance: 1
-    CameraComponent:
-      fov: 70
-      pitch: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Crate 3 (M)
-    TransformComponent:
-      position: [8, 5, 7]
-      orientation: [0.7933533, 0, 0.6087614, 0]
-    ModelComponent:
-      model: Resources/Models/Cube.obj
-      scale: 1.2
-      texture: Resources/Textures/Green.PNG
-      shineDamper: 1
-      reflectivity: 0
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      collider: 3
-      halfExtents: [1.2, 1.2, 1.2]
-      radius: 1
-      height: 1
-      mass: 10000
-      bounciness: 0
-      frictionCoefficient: 0.2
-      rollingResistance: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Crate 2
-    TransformComponent:
-      position: [-1, 0, -3]
-      orientation: [0.7933533, 0, 0.6087614, 0]
-    ModelComponent:
-      model: Resources/Models/Cube.obj
-      scale: 1.2
-      texture: Resources/Textures/Green.PNG
-      shineDamper: 1
-      reflectivity: 0
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      collider: 3
-      halfExtents: [1.2, 1.2, 1.2]
-      radius: 1
-      height: 1
-      mass: 1000
-      bounciness: 0
-      frictionCoefficient: 0
-      rollingResistance: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Crate
-    TransformComponent:
-      position: [-5, 2, -3]
-      orientation: [0.9238795, 0, 0.3826835, 0]
-    ModelComponent:
-      model: Resources/Models/Cube.obj
-      scale: 1.2
-      texture: Resources/Textures/Space.PNG
-      shineDamper: 1
-      reflectivity: 0
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      collider: 3
-      halfExtents: [1.2, 1.2, 1.2]
-      radius: 1
-      height: 1
-      mass: 1
-      bounciness: 0
-      frictionCoefficient: 0
-      rollingResistance: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Platform 3
-    TransformComponent:
-      position: [-5, 0, 5]
-      orientation: [0.5416752, -0.4545195, 0.5416752, 0.4545195]
-    ModelComponent:
-      model: Resources/Models/Platform.obj
-      scale: 1
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 1
-      reflectivity: 0
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      collider: 3
-      halfExtents: [6.224951, 0.293629, 16.39011]
-      radius: 1
-      height: 1
-      mass: 1
-      bounciness: 0
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Platform 2
-    TransformComponent:
-      position: [-5, 0, 5]
-      orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Platform.obj
-      scale: 1
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 1
-      reflectivity: 0
-    PhysicsComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      collider: 3
-      halfExtents: [6.224951, 0.293629, 16.39011]
-      radius: 1
-      height: 1
-      mass: 1
-      bounciness: 0
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SelectComponent: 
-  - NameComponent:
-      name: Island
-    TransformComponent:
-      position: [40, -10, 0]
-      orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/FloatingIsland.obj
-      scale: 0.5
-      texture: Resources/Textures/FloatingIslandTex.png
-      shineDamper: 1
-      reflectivity: 0
-    SelectComponent: 
+    LightComponent:
+      colour: [1, 0, 0]
+      attenuation: [1, 0, 0]
+      brightness: 1
   - NameComponent:
       name: Platform 1
     TransformComponent:
@@ -327,4 +58,323 @@ Entities:
       bounciness: 0.5
       frictionCoefficient: 0.3
       rollingResistance: 0
-    SelectComponent: 
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Island
+    TransformComponent:
+      position: [40, -10, 0]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/FloatingIsland.obj
+      scale: 0.5
+      texture: Resources/Textures/FloatingIslandTex.png
+      shineDamper: 1
+      reflectivity: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Platform 2
+    TransformComponent:
+      position: [-5, 0, 5]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Platform.obj
+      scale: 1
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 1
+      reflectivity: 0
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      collider: 3
+      halfExtents: [6.224951, 0.293629, 16.39011]
+      radius: 1
+      height: 1
+      mass: 1
+      bounciness: 0
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Platform 3
+    TransformComponent:
+      position: [-5, 0, 5]
+      orientation: [0.5416752, -0.4545195, 0.5416752, 0.4545195]
+    ModelComponent:
+      model: Resources/Models/Platform.obj
+      scale: 1
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 1
+      reflectivity: 0
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      collider: 3
+      halfExtents: [6.224951, 0.293629, 16.39011]
+      radius: 1
+      height: 1
+      mass: 1
+      bounciness: 0
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate
+    TransformComponent:
+      position: [-5, 2, -3]
+      orientation: [0.9238795, 0, 0.3826835, 0]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      scale: 1.2
+      texture: Resources/Textures/Space.PNG
+      shineDamper: 1
+      reflectivity: 0
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      collider: 3
+      halfExtents: [1.2, 1.2, 1.2]
+      radius: 1
+      height: 1
+      mass: 1
+      bounciness: 0
+      frictionCoefficient: 0
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 2
+    TransformComponent:
+      position: [-1, 0, -3]
+      orientation: [0.7933533, 0, 0.6087614, 0]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      scale: 1.2
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      collider: 3
+      halfExtents: [1.2, 1.2, 1.2]
+      radius: 1
+      height: 1
+      mass: 1000
+      bounciness: 0
+      frictionCoefficient: 0
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 3 (M)
+    TransformComponent:
+      position: [8, 5, 7]
+      orientation: [0.7933533, 0, 0.6087614, 0]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      scale: 1.2
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      collider: 3
+      halfExtents: [1.2, 1.2, 1.2]
+      radius: 1
+      height: 1
+      mass: 10000
+      bounciness: 0
+      frictionCoefficient: 0.2
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Player
+    TransformComponent:
+      position: [0, 5, 5]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      scale: 0.3
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 1
+      reflectivity: 0
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      collider: 2
+      halfExtents: [0, 0, 0]
+      radius: 0.5
+      height: 1
+      mass: 60
+      bounciness: 0
+      frictionCoefficient: 0.4
+      rollingResistance: 1
+    ScriptComponent:
+      script: Resources/Scripts/PlayerController.lua
+      active: false
+    CameraComponent:
+      fov: 70
+      pitch: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Observer Camera
+    TransformComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+    ScriptComponent:
+      script: Resources/Scripts/FirstPersonCamera.lua
+      active: true
+    CameraComponent:
+      fov: 70
+      pitch: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Editor Camera
+    TransformComponent:
+      position: [10, 2, 0]
+      orientation: [1, 0, 0, 0]
+    ScriptComponent:
+      script: Resources/Scripts/ThirdPersonCamera.lua
+      active: false
+    CameraComponent:
+      fov: 70
+      pitch: 0
+  - NameComponent:
+      name: Sphere 0
+    TransformComponent:
+      position: [0, 5, 0]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      scale: 0.9
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      collider: 1
+      halfExtents: [0, 0, 0]
+      radius: 1
+      height: 1
+      mass: 20
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 1
+    TransformComponent:
+      position: [0, 15, 0]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      scale: 0.9
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      collider: 1
+      halfExtents: [0, 0, 0]
+      radius: 1
+      height: 1
+      mass: 20
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 2
+    TransformComponent:
+      position: [0, 25, 0]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      scale: 0.9
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      collider: 1
+      halfExtents: [0, 0, 0]
+      radius: 1
+      height: 1
+      mass: 20
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 3
+    TransformComponent:
+      position: [0, 35, 0]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      scale: 0.9
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      collider: 1
+      halfExtents: [0, 0, 0]
+      radius: 1
+      height: 1
+      mass: 20
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 4
+    TransformComponent:
+      position: [0, 45, 0]
+      orientation: [1, 0, 0, 0]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      scale: 0.9
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    PhysicsComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      collider: 1
+      halfExtents: [0, 0, 0]
+      radius: 1
+      height: 1
+      mass: 20
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SelectComponent:
+      {}
