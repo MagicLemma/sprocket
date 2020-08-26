@@ -7,7 +7,12 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(Anvil
                Anvil.m.cpp
                Camera.cpp
-               EditorLayer.cpp)
+               EditorLayer.cpp
+               
+               Panels/EntityList.cpp
+               Panels/Inspector.cpp)
 
 target_link_libraries(Anvil PRIVATE Sprocket)
-target_include_directories(Anvil PUBLIC .)
+target_include_directories(Anvil PUBLIC
+                           .
+                           ./Panels)

@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Texture.h"
+#include "DevUI.h"
 
 #include <string>
 
@@ -27,6 +28,7 @@ void Image(const Texture& image,
 
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
+void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords);
 
 // Displays a quaternion in Euler angles form.
 void Euler(const std::string& name, Maths::quat* q);

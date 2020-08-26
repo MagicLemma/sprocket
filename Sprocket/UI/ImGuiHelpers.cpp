@@ -58,6 +58,25 @@ void SetGuizmo()
     ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
 }
 
+void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords)
+{
+    if (ImGui::RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
+        mode = DevUI::GizmoMode::TRANSLATION;
+    }
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Rotate", mode == DevUI::GizmoMode::ROTATION)) {
+        mode = DevUI::GizmoMode::ROTATION;
+    }
+
+    if (ImGui::RadioButton("World", coords == DevUI::GizmoCoords::WORLD)) {
+        coords = DevUI::GizmoCoords::WORLD;
+    }
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
+        coords = DevUI::GizmoCoords::LOCAL;
+    }
+}
+
 void Euler(const std::string& name, Maths::quat* q)
 {
     Maths::vec3 euler = Maths::ToEuler(*q);

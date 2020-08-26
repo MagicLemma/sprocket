@@ -90,6 +90,8 @@ void SetFontAtlas(ImGuiIO& io, Texture& fontAtlas)
     io.Fonts->TexID = Cast(fontAtlas.Id());
 }
 
+}
+
 ImGuizmo::OPERATION GetMode(GizmoMode mode)
 {
     switch (mode) {
@@ -112,8 +114,6 @@ ImGuizmo::MODE GetCoords(GizmoCoords coords)
             return ImGuizmo::MODE::WORLD;
         }
     }
-}
-
 }
 
 struct DevUIData
