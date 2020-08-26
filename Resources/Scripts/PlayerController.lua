@@ -26,7 +26,7 @@ function OnUpdate(dt)
     if IsKeyDown(KEYBOARD_A) then dir = dir - right end
     dir = Normalised(dir)
 
-    local physics = GetPhysicsComponent()
+    local physics = GetRigidBody3DComponent()
     local dv = Vec3(0, 0, 0)
 
     if Mag(dir) > 0 or physics.onFloor then
@@ -38,8 +38,8 @@ function OnUpdate(dt)
         dv.y = (6 - physics.velocity.y)
     end
 
-    physics.force = physics.force + (physics.mass * dv)
-    SetPhysicsComponent(physics)
+    physics.force = physics.force + (10 * dv) -- TODO: Replace 10 with mass
+    SetRigidBody3DComponent(physics)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end

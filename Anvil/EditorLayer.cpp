@@ -95,9 +95,9 @@ void EditorLayer::OnUpdate(double dt)
         
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
 
-        d_activeScene->Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
+        d_activeScene->Each<TransformComponent, RigidBody3DComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
-            auto& physics = entity.Get<PhysicsComponent>();
+            auto& physics = entity.Get<RigidBody3DComponent>();
             
             if (entity.Has<CameraComponent>() && transform.position.y < -2) {
                 transform.position = {0, 3, 0};
@@ -321,17 +321,28 @@ void EditorLayer::EntityInspector(Entity& entity)
             if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }
         }
     }
-    if (entity.Has<PhysicsComponent>()) {
-        if (ImGui::CollapsingHeader("Physics")) {
-            auto& c = entity.Get<PhysicsComponent>();
+    if (entity.Has<RigidBody3DComponent>()) {
+        if (ImGui::CollapsingHeader("RigidBody3D")) {
+            auto& c = entity.Get<RigidBody3DComponent>();
             ImGui::DragFloat3("Velocity", &c.velocity.x);
             ImGui::Checkbox("Gravity", &c.gravity);
             ImGui::Checkbox("Frozen", &c.frozen);
-            ImGui::DragFloat("Mass", &c.mass);
             ImGui::SliderFloat("Bounciness", &c.bounciness, 0.0, 1.0);
             ImGui::SliderFloat("Friction Coefficient", &c.frictionCoefficient, 0.0, 1.0);
             ImGui::SliderFloat("Rolling Resistance", &c.rollingResistance, 0.0, 1.0);
-            if (ImGui::Button("Delete")) { entity.Remove<PhysicsComponent>(); }
+            if (ImGui::Button("Delete")) { entity.Remove<RigidBody3DComponent>(); }
+        }
+    }
+    if (entity.Has<BoxCollider3DComponent>()) {
+        if (ImGui::CollapsingHeader("BoxCollider3D")) {
+        }
+    }
+    if (entity.Has<SphereCollider3DComponent>()) {
+        if (ImGui::CollapsingHeader("SphereCollider3D")) {
+        }
+    }
+    if (entity.Has<CapsuleCollider3DComponent>()) {
+        if (ImGui::CollapsingHeader("CapsuleCollider3D")) {
         }
     }
     if (entity.Has<ScriptComponent>()) {

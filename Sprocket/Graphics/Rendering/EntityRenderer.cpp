@@ -110,7 +110,7 @@ void EntityRenderer::Draw(const Entity& entity)
         DrawModel(entity);
     }
 
-    if (d_renderColliders && entity.Has<PhysicsComponent>()) {
+    if (d_renderColliders) {
         DrawCollider(entity);
     }
 }
@@ -171,14 +171,13 @@ void EntityRenderer::DrawCollider(const Entity& entity)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     d_shader.Bind();
-    auto& physics = entity.Get<PhysicsComponent>();
-    if (physics.collider == Collider::BOX) {
+    if (entity.Has<BoxCollider3DComponent>()) {
         DrawBox(entity);
     }
-    else if (physics.collider == Collider::SPHERE) {
+    else if (entity.Has<SphereCollider3DComponent>()) {
         DrawSphere(entity);
     }
-    else if (physics.collider == Collider::CAPSULE) {
+    else if (entity.Has<CapsuleCollider3DComponent>()) {
         DrawCapsule(entity);
     }
     d_shader.Unbind();
@@ -186,7 +185,7 @@ void EntityRenderer::DrawCollider(const Entity& entity)
 
 void EntityRenderer::DrawBox(const Entity& entity)
 {
-    const auto& physics = entity.Get<PhysicsComponent>();
+    const auto& physics = entity.Get<BoxCollider3DComponent>();
     static auto s_cube = ModelManager::LoadModel("Resources/Models/Cube.obj");
 
     auto tr = entity.Get<TransformComponent>();
@@ -203,7 +202,7 @@ void EntityRenderer::DrawBox(const Entity& entity)
 
 void EntityRenderer::DrawSphere(const Entity& entity)
 {
-    const auto& physics = entity.Get<PhysicsComponent>();
+    const auto& physics = entity.Get<SphereCollider3DComponent>();
     static auto s_sphere = ModelManager::LoadModel("Resources/Models/LowPolySphere.obj");
 
     auto tr = entity.Get<TransformComponent>();
@@ -220,7 +219,7 @@ void EntityRenderer::DrawSphere(const Entity& entity)
 
 void EntityRenderer::DrawCapsule(const Entity& entity)
 {
-    const auto& physics = entity.Get<PhysicsComponent>();
+    const auto& physics = entity.Get<CapsuleCollider3DComponent>();
     static auto s_hemisphere = ModelManager::LoadModel("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = ModelManager::LoadModel("Resources/Models/Cylinder.obj");
 

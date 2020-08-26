@@ -22,10 +22,6 @@ class PhysicsEngine : public EntitySystem
     
     bool        d_running = false;
 
-    void AddCollider(Entity entity);
-        // Registers the collider on the entity with the
-        // physics engine.
-
     bool IsOnFloor(Entity entity) const; 
         // Returns true if the given Entity is colliding with another
         // Entity directly below it. TODO: Make this more general.

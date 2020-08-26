@@ -74,8 +74,6 @@ LuaEngine::LuaEngine()
 
     lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
 
-    lua_register(d_L, "HasPhysics", &Lua_Has<PhysicsComponent>);
-
     RegisterComponentFunctions(d_L);
 
     lua_pushnil(d_L);

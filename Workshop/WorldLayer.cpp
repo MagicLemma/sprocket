@@ -87,9 +87,9 @@ void WorldLayer::OnUpdate(double dt)
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_core.window->SetCursorVisibility(d_mouseRequired);
 
-        d_scene->Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
+        d_scene->Each<TransformComponent, RigidBody3DComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
-            auto& physics = entity.Get<PhysicsComponent>();
+            auto& physics = entity.Get<RigidBody3DComponent>();
             
             if (entity.Has<CameraComponent>() && transform.position.y < -2) {
                 transform.position = {0, 3, 0};

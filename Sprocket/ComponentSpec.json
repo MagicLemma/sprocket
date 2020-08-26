@@ -1,5 +1,5 @@
 {
-    "Version": 0,
+    "Version": 1,
     "Enums": {
         "Collider": ["NONE", "SPHERE", "CAPSULE", "BOX"]
     },
@@ -63,7 +63,7 @@
             ] 
         },
         {
-            "Name": "PhysicsComponent",
+            "Name": "RigidBody3DComponent",
             "Attributes": [
                 {
                     "Name": "velocity",
@@ -79,35 +79,6 @@
                     "Name": "frozen",
                     "Type": "bool",
                     "Default": false
-                },
-                {
-                    "Name": "collider",
-                    "Type": "Collider",
-                    "Default": "NONE",
-                    "Scriptable": false
-                },
-                {
-                    "Name": "halfExtents",
-                    "Type": "Maths::vec3",
-                    "Default": [0, 0, 0],
-                    "Scriptable": false
-                },
-                {
-                    "Name": "radius",
-                    "Type": "float",
-                    "Default": 1.0,
-                    "Scriptable": false
-                },
-                {
-                    "Name": "height",
-                    "Type": "float",
-                    "Default": 1.0,
-                    "Scriptable": false
-                },
-                {
-                    "Name": "mass",
-                    "Type": "float",
-                    "Default": 1.0
                 },
                 {
                     "Name": "bounciness",
@@ -135,6 +106,60 @@
                     "Type": "bool",
                     "Default": false,
                     "Savable": false
+                }
+            ]
+        },
+        {
+            "Name": "BoxCollider3DComponent",
+            "Attributes": [
+                {
+                    "Name": "mass",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "halfExtents",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
+                }
+            ]
+        },
+        {
+            "Name": "SphereCollider3DComponent",
+            "Attributes": [
+                {
+                    "Name": "mass",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "radius",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
+                }
+            ]
+        },
+        {
+            "Name": "CapsuleCollider3DComponent",
+            "Attributes": [
+                {
+                    "Name": "mass",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "radius",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
+                },
+                {
+                    "Name": "height",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
                 }
             ]
         },

@@ -21,6 +21,9 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
+"""
+
+middle0 = """
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
 
@@ -46,7 +49,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     sstream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(sstream.str());
-    UpdateScene(&data);
+    UpdateScene(data);
     if (!data["Entities"]) {
         return; // TODO: Error checking
     }
@@ -118,8 +121,11 @@ def write_copy(component):
     return out
 
 def generate(spec, output):
+    version = spec.get("Version", 0)
     out = f"// GENERATED FILE @ {datetime.now()}"
     out += header
+    out += f'out << YAML::Key << "Version" << YAML::Value << {version};'
+    out += middle0
     for component in spec["Components"]:
         out += write_serialiser(component, spec["Enums"])
     out += middle1

@@ -1,10 +1,11 @@
-// GENERATED FILE @ 2020-08-26 01:00:31.754278
+// GENERATED FILE @ 2020-08-26 13:16:17.923701
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
 #include "Maths.h"
 #include "Yaml.h"
 #include "Scene.h"
+#include "Updater.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -18,6 +19,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
+out << YAML::Key << "Version" << YAML::Value << 1;
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
 
@@ -50,20 +52,37 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "reflectivity" << YAML::Value << c.reflectivity;
             out << YAML::EndMap;
         }
-        if(entity.Has<PhysicsComponent>()) {
-            const auto& c = entity.Get<PhysicsComponent>();
-            out << YAML::Key << "PhysicsComponent" << YAML::BeginMap;
+        if(entity.Has<RigidBody3DComponent>()) {
+            const auto& c = entity.Get<RigidBody3DComponent>();
+            out << YAML::Key << "RigidBody3DComponent" << YAML::BeginMap;
             out << YAML::Key << "velocity" << YAML::Value << c.velocity;
             out << YAML::Key << "gravity" << YAML::Value << c.gravity;
             out << YAML::Key << "frozen" << YAML::Value << c.frozen;
-            out << YAML::Key << "collider" << YAML::Value << static_cast<int>(c.collider);
-            out << YAML::Key << "halfExtents" << YAML::Value << c.halfExtents;
-            out << YAML::Key << "radius" << YAML::Value << c.radius;
-            out << YAML::Key << "height" << YAML::Value << c.height;
-            out << YAML::Key << "mass" << YAML::Value << c.mass;
             out << YAML::Key << "bounciness" << YAML::Value << c.bounciness;
             out << YAML::Key << "frictionCoefficient" << YAML::Value << c.frictionCoefficient;
             out << YAML::Key << "rollingResistance" << YAML::Value << c.rollingResistance;
+            out << YAML::EndMap;
+        }
+        if(entity.Has<BoxCollider3DComponent>()) {
+            const auto& c = entity.Get<BoxCollider3DComponent>();
+            out << YAML::Key << "BoxCollider3DComponent" << YAML::BeginMap;
+            out << YAML::Key << "mass" << YAML::Value << c.mass;
+            out << YAML::Key << "halfExtents" << YAML::Value << c.halfExtents;
+            out << YAML::EndMap;
+        }
+        if(entity.Has<SphereCollider3DComponent>()) {
+            const auto& c = entity.Get<SphereCollider3DComponent>();
+            out << YAML::Key << "SphereCollider3DComponent" << YAML::BeginMap;
+            out << YAML::Key << "mass" << YAML::Value << c.mass;
+            out << YAML::Key << "radius" << YAML::Value << c.radius;
+            out << YAML::EndMap;
+        }
+        if(entity.Has<CapsuleCollider3DComponent>()) {
+            const auto& c = entity.Get<CapsuleCollider3DComponent>();
+            out << YAML::Key << "CapsuleCollider3DComponent" << YAML::BeginMap;
+            out << YAML::Key << "mass" << YAML::Value << c.mass;
+            out << YAML::Key << "radius" << YAML::Value << c.radius;
+            out << YAML::Key << "height" << YAML::Value << c.height;
             out << YAML::EndMap;
         }
         if(entity.Has<ScriptComponent>()) {
@@ -125,6 +144,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     sstream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(sstream.str());
+    UpdateScene(data);
     if (!data["Entities"]) {
         return; // TODO: Error checking
     }
@@ -156,19 +176,33 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.reflectivity = spec["reflectivity"].as<float>();
             e.Add(c);
         }
-        if (auto spec = entity["PhysicsComponent"]) {
-            PhysicsComponent c;
+        if (auto spec = entity["RigidBody3DComponent"]) {
+            RigidBody3DComponent c;
             c.velocity = spec["velocity"].as<Maths::vec3>();
             c.gravity = spec["gravity"].as<bool>();
             c.frozen = spec["frozen"].as<bool>();
-            c.collider = static_cast<Collider>(spec["collider"].as<int>());
-            c.halfExtents = spec["halfExtents"].as<Maths::vec3>();
-            c.radius = spec["radius"].as<float>();
-            c.height = spec["height"].as<float>();
-            c.mass = spec["mass"].as<float>();
             c.bounciness = spec["bounciness"].as<float>();
             c.frictionCoefficient = spec["frictionCoefficient"].as<float>();
             c.rollingResistance = spec["rollingResistance"].as<float>();
+            e.Add(c);
+        }
+        if (auto spec = entity["BoxCollider3DComponent"]) {
+            BoxCollider3DComponent c;
+            c.mass = spec["mass"].as<float>();
+            c.halfExtents = spec["halfExtents"].as<Maths::vec3>();
+            e.Add(c);
+        }
+        if (auto spec = entity["SphereCollider3DComponent"]) {
+            SphereCollider3DComponent c;
+            c.mass = spec["mass"].as<float>();
+            c.radius = spec["radius"].as<float>();
+            e.Add(c);
+        }
+        if (auto spec = entity["CapsuleCollider3DComponent"]) {
+            CapsuleCollider3DComponent c;
+            c.mass = spec["mass"].as<float>();
+            c.radius = spec["radius"].as<float>();
+            c.height = spec["height"].as<float>();
             e.Add(c);
         }
         if (auto spec = entity["ScriptComponent"]) {
@@ -227,8 +261,17 @@ void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
         if (entity.Has<ModelComponent>()) {
             e.Add<ModelComponent>(entity.Get<ModelComponent>());
         }
-        if (entity.Has<PhysicsComponent>()) {
-            e.Add<PhysicsComponent>(entity.Get<PhysicsComponent>());
+        if (entity.Has<RigidBody3DComponent>()) {
+            e.Add<RigidBody3DComponent>(entity.Get<RigidBody3DComponent>());
+        }
+        if (entity.Has<BoxCollider3DComponent>()) {
+            e.Add<BoxCollider3DComponent>(entity.Get<BoxCollider3DComponent>());
+        }
+        if (entity.Has<SphereCollider3DComponent>()) {
+            e.Add<SphereCollider3DComponent>(entity.Get<SphereCollider3DComponent>());
+        }
+        if (entity.Has<CapsuleCollider3DComponent>()) {
+            e.Add<CapsuleCollider3DComponent>(entity.Get<CapsuleCollider3DComponent>());
         }
         if (entity.Has<ScriptComponent>()) {
             e.Add<ScriptComponent>(entity.Get<ScriptComponent>());
