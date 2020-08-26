@@ -405,6 +405,7 @@ void EditorLayer::EntityInspector(Entity& entity)
         }
     }
     ImGui::Separator();
+
     if (ImGui::BeginMenu("Add Component")) {
         if (!entity.Has<NameComponent>() && ImGui::MenuItem("Name")) {
             NameComponent c;

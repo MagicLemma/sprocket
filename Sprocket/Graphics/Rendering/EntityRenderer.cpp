@@ -174,10 +174,10 @@ void EntityRenderer::DrawCollider(const Entity& entity)
     if (entity.Has<BoxCollider3DComponent>()) {
         DrawBox(entity);
     }
-    else if (entity.Has<SphereCollider3DComponent>()) {
+    if (entity.Has<SphereCollider3DComponent>()) {
         DrawSphere(entity);
     }
-    else if (entity.Has<CapsuleCollider3DComponent>()) {
+    if (entity.Has<CapsuleCollider3DComponent>()) {
         DrawCapsule(entity);
     }
     d_shader.Unbind();
