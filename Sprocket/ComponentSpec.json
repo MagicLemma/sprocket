@@ -1,4 +1,5 @@
 {
+    "Version": 0,
     "Enums": {
         "Collider": ["NONE", "SPHERE", "CAPSULE", "BOX"]
     },

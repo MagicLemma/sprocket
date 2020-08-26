@@ -7,6 +7,7 @@ header = """
 #include "Maths.h"
 #include "Yaml.h"
 #include "Scene.h"
+#include "Updater.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -45,6 +46,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     sstream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(sstream.str());
+    UpdateScene(&data);
     if (!data["Entities"]) {
         return; // TODO: Error checking
     }

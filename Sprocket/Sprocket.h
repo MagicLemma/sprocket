@@ -25,6 +25,7 @@
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 #include "Scene/Loader.h"
+#include "Scene/Updater.h"
 #include "Scene/EntitySystem.h"
 
 #include "Scene/Systems/BasicSelector.h"
