@@ -9,7 +9,6 @@ add_executable(Anvil
                Camera.cpp
                EditorLayer.cpp
                
-               Panels/EntityList.cpp
                Panels/Inspector.cpp)
 
 target_link_libraries(Anvil PRIVATE Sprocket)

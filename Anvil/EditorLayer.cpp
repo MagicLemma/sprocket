@@ -258,9 +258,4 @@ void EditorLayer::AddEntityToList(const Entity& entity)
     ImGui::PopID();
 }
 
-void EditorLayer::EntityInspector(Entity& entity)
-{
-    
-}
-
 }
