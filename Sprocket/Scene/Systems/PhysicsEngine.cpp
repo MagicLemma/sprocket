@@ -73,8 +73,18 @@ struct EntityData
 {
     Entity                                entity;
     rp3d::RigidBody*                      rigidBody;
-    rp3d::ProxyShape*                     proxyShape     = nullptr;
-    std::shared_ptr<rp3d::CollisionShape> collisionShape = nullptr;
+
+    // Box
+    rp3d::ProxyShape*                     boxProxyShape     = nullptr;
+    std::shared_ptr<rp3d::CollisionShape> boxCollisionShape = nullptr;
+
+    // Sphere
+    rp3d::ProxyShape*                     sphereProxyShape     = nullptr;
+    std::shared_ptr<rp3d::CollisionShape> sphereCollisionShape = nullptr;
+
+    // Capsule
+    rp3d::ProxyShape*                     capsuleProxyShape     = nullptr;
+    std::shared_ptr<rp3d::CollisionShape> capsuleCollisionShape = nullptr;
 };
 
 struct PhysicsEngineImpl
@@ -133,22 +143,22 @@ void PhysicsEngine::OnStartup(Scene& scene)
         collider = std::make_shared<rp3d::BoxShape>(Convert(box.halfExtents));
 
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
-        d_impl->entityData[entity.Id()].proxyShape = entry->addCollisionShape(
+        d_impl->entityData[entity.Id()].boxProxyShape = entry->addCollisionShape(
             collider.get(),
             rp3d::Transform::identity(),
             box.mass
         );
-        d_impl->entityData[entity.Id()].collisionShape = collider;
+        d_impl->entityData[entity.Id()].boxCollisionShape = collider;
     };
 
     scene.Each<BoxCollider3DComponent>(addBox);
     scene.OnAdd<BoxCollider3DComponent>(addBox);
 
     scene.OnRemove<BoxCollider3DComponent>([&](Entity& entity) {
-        auto c = d_impl->entityData[entity.Id()].proxyShape;
+        auto c = d_impl->entityData[entity.Id()].boxProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
-            d_impl->entityData[entity.Id()].proxyShape = nullptr;
+            d_impl->entityData[entity.Id()].boxCollisionShape = nullptr;
         }
     });
 
@@ -162,22 +172,22 @@ void PhysicsEngine::OnStartup(Scene& scene)
         collider = std::make_shared<rp3d::SphereShape>(sphere.radius);
 
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
-        d_impl->entityData[entity.Id()].proxyShape = entry->addCollisionShape(
+        d_impl->entityData[entity.Id()].sphereProxyShape = entry->addCollisionShape(
             collider.get(),
             rp3d::Transform::identity(),
             sphere.mass
         );
-        d_impl->entityData[entity.Id()].collisionShape = collider;
+        d_impl->entityData[entity.Id()].sphereCollisionShape = collider;
     };
 
     scene.Each<SphereCollider3DComponent>(addSphere);
     scene.OnAdd<SphereCollider3DComponent>(addSphere);
 
     scene.OnRemove<SphereCollider3DComponent>([&](Entity& entity) {
-        auto c = d_impl->entityData[entity.Id()].proxyShape;
+        auto c = d_impl->entityData[entity.Id()].sphereProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
-            d_impl->entityData[entity.Id()].proxyShape = nullptr;
+            d_impl->entityData[entity.Id()].sphereCollisionShape = nullptr;
         }
     });
 
@@ -193,22 +203,22 @@ void PhysicsEngine::OnStartup(Scene& scene)
         );
 
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
-        d_impl->entityData[entity.Id()].proxyShape = entry->addCollisionShape(
+        d_impl->entityData[entity.Id()].capsuleProxyShape = entry->addCollisionShape(
             collider.get(),
             rp3d::Transform::identity(),
             capsule.mass
         );
-        d_impl->entityData[entity.Id()].collisionShape = collider;
+        d_impl->entityData[entity.Id()].capsuleCollisionShape = collider;
     };
 
     scene.Each<CapsuleCollider3DComponent>(addCapsule);
     scene.OnAdd<CapsuleCollider3DComponent>(addCapsule);
 
     scene.OnRemove<CapsuleCollider3DComponent>([&](Entity& entity) {
-        auto c = d_impl->entityData[entity.Id()].proxyShape;
+        auto c = d_impl->entityData[entity.Id()].capsuleProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
-            d_impl->entityData[entity.Id()].proxyShape = nullptr;
+            d_impl->entityData[entity.Id()].capsuleCollisionShape = nullptr;
         }
     });
 }
