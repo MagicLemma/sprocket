@@ -121,7 +121,7 @@ void EditorLayer::OnUpdate(double dt)
         d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
     }
 
-    d_activeScene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    d_activeScene->Each<TransformComponent>([&](Entity& entity) {
         d_entityRenderer.Draw(entity);
     });
     d_viewport.Unbind();

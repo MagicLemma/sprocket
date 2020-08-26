@@ -6,6 +6,6 @@ function OnUpdate(dt)
     TIME = TIME + dt
 
     light = GetLightComponent()
-    light.brightness = math.sin(10 * TIME)
+    light.brightness = 15 * math.sin(10 * TIME) + 15
     SetLightComponent(light)
 end

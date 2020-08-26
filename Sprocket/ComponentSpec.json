@@ -124,7 +124,8 @@
                 {
                     "Name": "position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
                 },
                 {
                     "Name": "orientation",
@@ -152,7 +153,8 @@
                 {
                     "Name": "position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
                 },
                 {
                     "Name": "orientation",
@@ -180,7 +182,8 @@
                 {
                     "Name": "position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
                 },
                 {
                     "Name": "orientation",

@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-26 18:04:48.281217
+// GENERATED FILE @ 2020-08-26 19:13:35.067564
 
 #include "LuaComponents.h"
 #include "LuaGlobals.h"
@@ -168,22 +168,16 @@ int GetBoxCollider3DComponent(lua_State* L)
     assert(GetEntity(L)->Has<BoxCollider3DComponent>());
 
     const auto& c = GetEntity(L)->Get<BoxCollider3DComponent>();
-    lua_pushnumber(L, c.position.x);
-    lua_pushnumber(L, c.position.y);
-    lua_pushnumber(L, c.position.z);
     lua_pushnumber(L, c.mass);
-    return 4;
+    return 1;
 }
 
 int SetBoxCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 4)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     auto& c = GetEntity(L)->Get<BoxCollider3DComponent>();
-    c.position.x = (float)lua_tonumber(L, 1);
-    c.position.y = (float)lua_tonumber(L, 2);
-    c.position.z = (float)lua_tonumber(L, 3);
-    c.mass = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 1);
     return 0;
 }
 
@@ -193,22 +187,16 @@ int GetSphereCollider3DComponent(lua_State* L)
     assert(GetEntity(L)->Has<SphereCollider3DComponent>());
 
     const auto& c = GetEntity(L)->Get<SphereCollider3DComponent>();
-    lua_pushnumber(L, c.position.x);
-    lua_pushnumber(L, c.position.y);
-    lua_pushnumber(L, c.position.z);
     lua_pushnumber(L, c.mass);
-    return 4;
+    return 1;
 }
 
 int SetSphereCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 4)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     auto& c = GetEntity(L)->Get<SphereCollider3DComponent>();
-    c.position.x = (float)lua_tonumber(L, 1);
-    c.position.y = (float)lua_tonumber(L, 2);
-    c.position.z = (float)lua_tonumber(L, 3);
-    c.mass = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 1);
     return 0;
 }
 
@@ -218,22 +206,16 @@ int GetCapsuleCollider3DComponent(lua_State* L)
     assert(GetEntity(L)->Has<CapsuleCollider3DComponent>());
 
     const auto& c = GetEntity(L)->Get<CapsuleCollider3DComponent>();
-    lua_pushnumber(L, c.position.x);
-    lua_pushnumber(L, c.position.y);
-    lua_pushnumber(L, c.position.z);
     lua_pushnumber(L, c.mass);
-    return 4;
+    return 1;
 }
 
 int SetCapsuleCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 4)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     auto& c = GetEntity(L)->Get<CapsuleCollider3DComponent>();
-    c.position.x = (float)lua_tonumber(L, 1);
-    c.position.y = (float)lua_tonumber(L, 2);
-    c.position.z = (float)lua_tonumber(L, 3);
-    c.mass = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 1);
     return 0;
 }
 

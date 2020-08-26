@@ -22,10 +22,10 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Entities" << YAML::BeginSeq;
 """
 
 middle0 = """
+    out << YAML::Key << "Entities" << YAML::BeginSeq;
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
 
