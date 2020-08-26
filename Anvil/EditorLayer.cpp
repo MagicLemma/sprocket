@@ -214,16 +214,8 @@ void EditorLayer::OnUpdate(double dt)
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
-        ImGui::Image(
-            (ImTextureID)(intptr_t)d_viewport.GetTexture().Id(),
-            {0.8f * w, 0.8f * h},
-            {0, 1}, {1, 0}
-        );
-        float rw = ImGui::GetWindowWidth();
-        float rh = ImGui::GetWindowHeight();
-        ImGuizmo::SetDrawlist();
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
+        ImGuiXtra::Image(d_viewport.GetTexture(), {0.8f * w, 0.8f * h});
+        ImGuiXtra::SetGuizmo();
         ImGui::End();
     }
     ImGui::PopStyleVar();
