@@ -231,7 +231,9 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     scene.Each<TransformComponent, RigidBody3DComponent>([&] (Entity& entity) {
         const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<RigidBody3DComponent>();
-        auto bodyData = d_impl->entityData[entity.Id()].rigidBody;
+
+        auto& entry = d_impl->entityData[entity.Id()];
+        auto bodyData = entry.rigidBody;
         
         bodyData->setTransform(Convert(transform));
         bodyData->setLinearVelocity(Convert(physics.velocity));

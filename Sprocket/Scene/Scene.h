@@ -27,11 +27,13 @@ private:
     std::vector<std::shared_ptr<EntitySystem>> d_systems;
 
     TypeFunctionMap d_addFunctions;
+    TypeFunctionMap d_updateFunctions;
     TypeFunctionMap d_removeFunctions;
 
     entt::registry d_registry;
 
     template <typename T> void OnAddCB(entt::registry& r, entt::entity e);
+    template <typename T> void OnUpdateCB(entt::registry& r, entt::entity e);
     template <typename T> void OnRemoveCB(entt::registry& r, entt::entity e);
 
 public:
@@ -57,6 +59,7 @@ public:
     void All(EntityCallback func);
 
     template <typename T> void OnAdd(EntityCallback func);
+    template <typename T> void OnUpdate(EntityCallback func);
     template <typename T> void OnRemove(EntityCallback func);
         // Register functions that will get called whenever
         // a component of type T is added/removed to/from an
@@ -86,6 +89,18 @@ void Scene::OnAdd(EntityCallback func)
 }
 
 template <typename T>
+void Scene::OnUpdate(EntityCallback func)
+{
+    auto it = d_updateFunctions.find(typeid(T));
+    if (it == d_updateFunctions.end()) {
+        // Register the signal when we add the first function.
+        d_registry.on_construct<T>()
+            .connect<&Scene::OnUpdateCB<T>>(*this);
+    }
+    d_updateFunctions[typeid(T)].push_back(func);
+}
+
+template <typename T>
 void Scene::OnRemove(EntityCallback func)
 {
     auto it = d_removeFunctions.find(typeid(T));
@@ -102,6 +117,17 @@ void Scene::OnAddCB(entt::registry& r, entt::entity e)
 {
     auto it = d_addFunctions.find(typeid(T));
     if (it != d_addFunctions.end()) {
+        for (auto f : it->second) {
+            f(Entity(&r, e));
+        }
+    }
+}
+
+template <typename T>
+void Scene::OnUpdateCB(entt::registry& r, entt::entity e)
+{
+    auto it = d_updateFunctions.find(typeid(T));
+    if (it != d_updateFunctions.end()) {
         for (auto f : it->second) {
             f(Entity(&r, e));
         }
