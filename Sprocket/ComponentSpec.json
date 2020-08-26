@@ -16,6 +16,7 @@
             "Attributes": [
                 {
                     "Name": "name",
+                    "DisplayName": "Name",
                     "Type": "std::string"
                 }
             ]
@@ -26,11 +27,13 @@
             "Attributes": [
                 {
                     "Name": "position",
+                    "DisplayName": "Position",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0]
                 },
                 {
                     "Name": "orientation",
+                    "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1, 0, 0, 0],
                     "Scriptable": false
@@ -43,24 +46,33 @@
             "Attributes": [
                 {
                     "Name": "model",
-                    "Type": "std::string"
+                    "DisplayName": "Model",
+                    "Type": "std::string",
+                    "Subtype": "File",
+                    "Data": "*.obj"
                 },
                 {
                     "Name": "scale",
+                    "DisplayName": "Scale",
                     "Type": "float",
                     "Default": 1.0
                 },
                 {
                     "Name": "texture",
-                    "Type": "std::string"
+                    "DisplayName": "Texture",
+                    "Type": "std::string",
+                    "Subtype": "File",
+                    "Data": "*.png"
                 },
                 {
                     "Name": "shineDamper",
+                    "DisplayName": "Shine Damper",
                     "Type": "float",
                     "Default": 1.0
                 },
                 {
                     "Name": "reflectivity",
+                    "DisplayName": "Reflectivity",
                     "Type": "float",
                     "Default": 0.0
                 }
@@ -72,45 +84,53 @@
             "Attributes": [
                 {
                     "Name": "velocity",
+                    "DisplayName": "Velocity",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0]
                 },
                 {
                     "Name": "gravity",
+                    "DisplayName": "Gravity",
                     "Type": "bool",
                     "Default": true
                 },
                 {
                     "Name": "frozen",
+                    "DisplayName": "Frozen",
                     "Type": "bool",
                     "Default": false
                 },
                 {
                     "Name": "bounciness",
+                    "DisplayName": "Bounciness",
                     "Type": "float",
                     "Default": 0.5,
                     "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "frictionCoefficient",
+                    "DisplayName": "Friction Coefficient",
                     "Type": "float",
                     "Default": 0.3,
                     "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "rollingResistance",
+                    "DisplayName": "Rolling Resistance",
                     "Type": "float",
                     "Default": 0.0,
                     "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "force",
+                    "DisplayName": "Force",
                     "Type": "Maths::vec3",
                     "Default": [0.0, 0.0, 0.0],
                     "Savable": false
                 },
                 {
                     "Name": "onFloor",
+                    "DisplayName": "OnFloor",
                     "Type": "bool",
                     "Default": false,
                     "Savable": false
@@ -123,23 +143,27 @@
             "Attributes": [
                 {
                     "Name": "position",
+                    "DisplayName": "Position",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0],
                     "Scriptable": false
                 },
                 {
                     "Name": "orientation",
+                    "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1, 0, 0, 0],
                     "Scriptable": false
                 },
                 {
                     "Name": "mass",
+                    "DisplayName": "Mass",
                     "Type": "float",
                     "Default": 1.0
                 },
                 {
                     "Name": "halfExtents",
+                    "DisplayName": "Half Extents",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0],
                     "Scriptable": false
@@ -152,23 +176,27 @@
             "Attributes": [
                 {
                     "Name": "position",
+                    "DisplayName": "Position",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0],
                     "Scriptable": false
                 },
                 {
                     "Name": "orientation",
+                    "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1, 0, 0, 0],
                     "Scriptable": false
                 },
                 {
                     "Name": "mass",
+                    "DisplayName": "Mass",
                     "Type": "float",
                     "Default": 1.0
                 },
                 {
                     "Name": "radius",
+                    "DisplayName": "Radius",
                     "Type": "float",
                     "Default": 1.0,
                     "Scriptable": false
@@ -181,29 +209,34 @@
             "Attributes": [
                 {
                     "Name": "position",
+                    "DisplayName": "Position",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0],
                     "Scriptable": false
                 },
                 {
                     "Name": "orientation",
+                    "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1, 0, 0, 0],
                     "Scriptable": false
                 },
                 {
                     "Name": "mass",
+                    "DisplayName": "Mass",
                     "Type": "float",
                     "Default": 1.0
                 },
                 {
                     "Name": "radius",
+                    "DisplayName": "Radius",
                     "Type": "float",
                     "Default": 1.0,
                     "Scriptable": false
                 },
                 {
                     "Name": "height",
+                    "DisplayName": "Height",
                     "Type": "float",
                     "Default": 1.0,
                     "Scriptable": false
@@ -216,10 +249,14 @@
             "Attributes": [
                 {
                     "Name": "script",
-                    "Type": "std::string"
+                    "DisplayName": "Script",
+                    "Type": "std::string",
+                    "Subtype": "File",
+                    "Data": "*.lua"
                 },
                 {
                     "Name": "active",
+                    "DisplayName": "Active",
                     "Type": "bool",
                     "Default": true
                 }
@@ -232,17 +269,20 @@
             "Attributes": [
                 {
                     "Name": "projection",
+                    "DisplayName": "Projection",
                     "Type": "Maths::mat4",
                     "Savable": false,
                     "Scriptable": false
                 },
                 {
                     "Name": "fov",
+                    "DisplayName": "FOV",
                     "Type": "float",
                     "Default": 70.0
                 },
                 {
                     "Name": "pitch",
+                    "DisplayName": "Pitch",
                     "Type": "float",
                     "Default": 0.0
                 }
@@ -254,12 +294,14 @@
             "Attributes": [
                 {
                     "Name": "selected",
+                    "DisplayName": "Selected",
                     "Type": "bool",
                     "Default": false,
                     "Savable": false
                 },
                 {
                     "Name": "hovered",
+                    "DisplayName": "Hovered",
                     "Type": "bool",
                     "Default": false,
                     "Savable": false
@@ -272,13 +314,16 @@
             "Attributes": [
                 {
                     "Name": "markers",
+                    "DisplayName": "Markers",
                     "Type": "std::queue<Maths::vec3>",
                     "Savable": false,
                     "Scriptable": false
                 },
                 {
                     "Name": "speed",
-                    "Type": "float"
+                    "DisplayName": "Speed",
+                    "Type": "float",
+                    "Default": 0.0
                 }
             ]
         },
@@ -288,11 +333,15 @@
             "Attributes": [
                 {
                     "Name": "x",
-                    "Type": "int"
+                    "DisplayName": "X",
+                    "Type": "int",
+                    "Default": 0
                 },
                 {
                     "Name": "z",
-                    "Type": "int"
+                    "DisplayName": "Z",
+                    "Type": "int",
+                    "Default": 0
                 }
             ]
         },
@@ -302,17 +351,20 @@
             "Attributes": [
                 {
                     "Name": "colour",
+                    "DisplayName": "Colour",
                     "Type": "Maths::vec3",
                     "Subtype": "Colour",
                     "Default": [1, 1, 1]
                 },
                 {
                     "Name": "attenuation",
+                    "DisplayName": "Attenuation",
                     "Type": "Maths::vec3",
                     "Default": [1, 0, 0]
                 },
                 {
                     "Name": "brightness",
+                    "DisplayName": "Brightness",
                     "Type": "float",
                     "Default": 1.0
                 }
