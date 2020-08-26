@@ -109,6 +109,8 @@ void EditorLayer::OnUpdate(double dt)
         });
     }
 
+    d_entityRenderer.RenderColliders(!d_playingGame);
+
     d_viewport.Bind();
     if (d_playingGame) {
         d_entityRenderer.BeginScene(d_runtimeCamera, d_lights, *d_activeScene);

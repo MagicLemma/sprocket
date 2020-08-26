@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-25 01:16:47.622950
+// GENERATED FILE @ 2020-08-26 01:00:31.749295
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -90,7 +90,7 @@ struct GridComponent
 
 struct LightComponent
 {
-    Maths::vec3 colour;
+    Maths::vec3 colour = {1.0f, 1.0f, 1.0f};
     Maths::vec3 attenuation = {1.0f, 0.0f, 0.0f};
     float brightness = 1.0f;
 };

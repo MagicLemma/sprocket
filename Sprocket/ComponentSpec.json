@@ -224,7 +224,8 @@
                 {
                     "Name": "colour",
                     "Type": "Maths::vec3",
-                    "Subtype": "Colour"
+                    "Subtype": "Colour",
+                    "Default": [1, 1, 1]
                 },
                 {
                     "Name": "attenuation",

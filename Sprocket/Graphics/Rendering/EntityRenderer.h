@@ -34,6 +34,7 @@ public:
         TextureManager* textureManager
     );
 
+    // If true, wireframes of the physics colliders will be rendered.
     void RenderColliders(bool value);
 
     bool ShowColliders() const { return d_renderColliders; }
