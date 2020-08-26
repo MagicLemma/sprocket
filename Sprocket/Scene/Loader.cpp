@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-26 13:16:17.923701
+// GENERATED FILE @ 2020-08-26 18:04:48.268252
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -19,7 +19,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-out << YAML::Key << "Version" << YAML::Value << 1;
+    out << YAML::Key << "Version" << YAML::Value << 1;
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
 
@@ -66,6 +66,8 @@ out << YAML::Key << "Version" << YAML::Value << 1;
         if(entity.Has<BoxCollider3DComponent>()) {
             const auto& c = entity.Get<BoxCollider3DComponent>();
             out << YAML::Key << "BoxCollider3DComponent" << YAML::BeginMap;
+            out << YAML::Key << "position" << YAML::Value << c.position;
+            out << YAML::Key << "orientation" << YAML::Value << c.orientation;
             out << YAML::Key << "mass" << YAML::Value << c.mass;
             out << YAML::Key << "halfExtents" << YAML::Value << c.halfExtents;
             out << YAML::EndMap;
@@ -73,6 +75,8 @@ out << YAML::Key << "Version" << YAML::Value << 1;
         if(entity.Has<SphereCollider3DComponent>()) {
             const auto& c = entity.Get<SphereCollider3DComponent>();
             out << YAML::Key << "SphereCollider3DComponent" << YAML::BeginMap;
+            out << YAML::Key << "position" << YAML::Value << c.position;
+            out << YAML::Key << "orientation" << YAML::Value << c.orientation;
             out << YAML::Key << "mass" << YAML::Value << c.mass;
             out << YAML::Key << "radius" << YAML::Value << c.radius;
             out << YAML::EndMap;
@@ -80,6 +84,8 @@ out << YAML::Key << "Version" << YAML::Value << 1;
         if(entity.Has<CapsuleCollider3DComponent>()) {
             const auto& c = entity.Get<CapsuleCollider3DComponent>();
             out << YAML::Key << "CapsuleCollider3DComponent" << YAML::BeginMap;
+            out << YAML::Key << "position" << YAML::Value << c.position;
+            out << YAML::Key << "orientation" << YAML::Value << c.orientation;
             out << YAML::Key << "mass" << YAML::Value << c.mass;
             out << YAML::Key << "radius" << YAML::Value << c.radius;
             out << YAML::Key << "height" << YAML::Value << c.height;
@@ -163,58 +169,64 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["TransformComponent"]) {
             TransformComponent c;
-            c.position = spec["position"].as<Maths::vec3>();
-            c.orientation = spec["orientation"].as<Maths::quat>();
+            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
             e.Add(c);
         }
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
             c.model = spec["model"].as<std::string>();
-            c.scale = spec["scale"].as<float>();
+            c.scale = spec["scale"] ? spec["scale"].as<float>() : 1.0f;
             c.texture = spec["texture"].as<std::string>();
-            c.shineDamper = spec["shineDamper"].as<float>();
-            c.reflectivity = spec["reflectivity"].as<float>();
+            c.shineDamper = spec["shineDamper"] ? spec["shineDamper"].as<float>() : 1.0f;
+            c.reflectivity = spec["reflectivity"] ? spec["reflectivity"].as<float>() : 0.0f;
             e.Add(c);
         }
         if (auto spec = entity["RigidBody3DComponent"]) {
             RigidBody3DComponent c;
-            c.velocity = spec["velocity"].as<Maths::vec3>();
-            c.gravity = spec["gravity"].as<bool>();
-            c.frozen = spec["frozen"].as<bool>();
-            c.bounciness = spec["bounciness"].as<float>();
-            c.frictionCoefficient = spec["frictionCoefficient"].as<float>();
-            c.rollingResistance = spec["rollingResistance"].as<float>();
+            c.velocity = spec["velocity"] ? spec["velocity"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.gravity = spec["gravity"] ? spec["gravity"].as<bool>() : true;
+            c.frozen = spec["frozen"] ? spec["frozen"].as<bool>() : false;
+            c.bounciness = spec["bounciness"] ? spec["bounciness"].as<float>() : 0.5f;
+            c.frictionCoefficient = spec["frictionCoefficient"] ? spec["frictionCoefficient"].as<float>() : 0.3f;
+            c.rollingResistance = spec["rollingResistance"] ? spec["rollingResistance"].as<float>() : 0.0f;
             e.Add(c);
         }
         if (auto spec = entity["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
-            c.mass = spec["mass"].as<float>();
-            c.halfExtents = spec["halfExtents"].as<Maths::vec3>();
+            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
+            c.halfExtents = spec["halfExtents"] ? spec["halfExtents"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
             e.Add(c);
         }
         if (auto spec = entity["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
-            c.mass = spec["mass"].as<float>();
-            c.radius = spec["radius"].as<float>();
+            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
+            c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
             e.Add(c);
         }
         if (auto spec = entity["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
-            c.mass = spec["mass"].as<float>();
-            c.radius = spec["radius"].as<float>();
-            c.height = spec["height"].as<float>();
+            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
+            c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
+            c.height = spec["height"] ? spec["height"].as<float>() : 1.0f;
             e.Add(c);
         }
         if (auto spec = entity["ScriptComponent"]) {
             ScriptComponent c;
             c.script = spec["script"].as<std::string>();
-            c.active = spec["active"].as<bool>();
+            c.active = spec["active"] ? spec["active"].as<bool>() : true;
             e.Add(c);
         }
         if (auto spec = entity["CameraComponent"]) {
             CameraComponent c;
-            c.fov = spec["fov"].as<float>();
-            c.pitch = spec["pitch"].as<float>();
+            c.fov = spec["fov"] ? spec["fov"].as<float>() : 70.0f;
+            c.pitch = spec["pitch"] ? spec["pitch"].as<float>() : 0.0f;
             e.Add(c);
         }
         if (auto spec = entity["SelectComponent"]) {
@@ -234,9 +246,9 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["LightComponent"]) {
             LightComponent c;
-            c.colour = spec["colour"].as<Maths::vec3>();
-            c.attenuation = spec["attenuation"].as<Maths::vec3>();
-            c.brightness = spec["brightness"].as<float>();
+            c.colour = spec["colour"] ? spec["colour"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
+            c.attenuation = spec["attenuation"] ? spec["attenuation"].as<Maths::vec3>() : Maths::vec3{1.0f, 0.0f, 0.0f};
+            c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add(c);
         }
 

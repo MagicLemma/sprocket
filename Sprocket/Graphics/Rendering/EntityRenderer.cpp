@@ -110,7 +110,7 @@ void EntityRenderer::Draw(const Entity& entity)
         DrawModel(entity);
     }
 
-    if (d_renderColliders) {
+    if (true || d_renderColliders) {
         DrawCollider(entity);
     }
 }
@@ -191,6 +191,8 @@ void EntityRenderer::DrawBox(const Entity& entity)
     auto tr = entity.Get<TransformComponent>();
     Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform = Maths::Scale(transform, physics.halfExtents);
+    transform *= Maths::Transform(physics.position, physics.orientation);
+    
 
     s_cube.Bind();
     Texture::White().Bind();

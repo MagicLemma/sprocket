@@ -40,12 +40,17 @@ rp3d::Quaternion Convert(const Maths::quat& q)
     return rp3d::Quaternion(q.x, q.y, q.z, q.w);
 }
 
-rp3d::Transform Convert(const TransformComponent& transform)
+rp3d::Transform Convert(const Maths::vec3& position, const Maths::quat& orientation)
 {
     rp3d::Transform t;
-    t.setPosition(Convert(transform.position));
-    t.setOrientation(Convert(transform.orientation));
+    t.setPosition(Convert(position));
+    t.setOrientation(Convert(orientation));
     return t;
+}
+
+rp3d::Transform Convert(const TransformComponent& transform)
+{
+    return Convert(transform.position, transform.orientation);
 }
 
 class RaycastCB : public rp3d::RaycastCallback
@@ -145,7 +150,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
         d_impl->entityData[entity.Id()].boxProxyShape = entry->addCollisionShape(
             collider.get(),
-            rp3d::Transform::identity(),
+            Convert(box.position, box.orientation),
             box.mass
         );
         d_impl->entityData[entity.Id()].boxCollisionShape = collider;
@@ -174,7 +179,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
         d_impl->entityData[entity.Id()].sphereProxyShape = entry->addCollisionShape(
             collider.get(),
-            rp3d::Transform::identity(),
+            Convert(sphere.position, sphere.orientation),
             sphere.mass
         );
         d_impl->entityData[entity.Id()].sphereCollisionShape = collider;
@@ -205,7 +210,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
         d_impl->entityData[entity.Id()].capsuleProxyShape = entry->addCollisionShape(
             collider.get(),
-            rp3d::Transform::identity(),
+            Convert(capsule.position, capsule.orientation),
             capsule.mass
         );
         d_impl->entityData[entity.Id()].capsuleCollisionShape = collider;

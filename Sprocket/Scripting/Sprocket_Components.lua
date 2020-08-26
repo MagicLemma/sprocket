@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-26 13:16:17.937664
+-- GENERATED FILE @ 2020-08-26 18:04:48.285206
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -62,43 +62,46 @@ function SetRigidBody3DComponent(c)
     Lua_SetRigidBody3DComponent(c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
 end
 
-BoxCollider3DComponent = Class(function(self, mass)
+BoxCollider3DComponent = Class(function(self, position_x, position_y, position_z, mass)
+    self.position = Vec3(position_x, position_y, position_z)
     self.mass = mass
 end)
 
 function GetBoxCollider3DComponent()
-    x0 = Lua_GetBoxCollider3DComponent()
-    return BoxCollider3DComponent(x0)
+    x0, x1, x2, x3 = Lua_GetBoxCollider3DComponent()
+    return BoxCollider3DComponent(x0, x1, x2, x3)
 end
 
 function SetBoxCollider3DComponent(c)
-    Lua_SetBoxCollider3DComponent(c.mass)
+    Lua_SetBoxCollider3DComponent(c.position.x, c.position.y, c.position.z, c.mass)
 end
 
-SphereCollider3DComponent = Class(function(self, mass)
+SphereCollider3DComponent = Class(function(self, position_x, position_y, position_z, mass)
+    self.position = Vec3(position_x, position_y, position_z)
     self.mass = mass
 end)
 
 function GetSphereCollider3DComponent()
-    x0 = Lua_GetSphereCollider3DComponent()
-    return SphereCollider3DComponent(x0)
+    x0, x1, x2, x3 = Lua_GetSphereCollider3DComponent()
+    return SphereCollider3DComponent(x0, x1, x2, x3)
 end
 
 function SetSphereCollider3DComponent(c)
-    Lua_SetSphereCollider3DComponent(c.mass)
+    Lua_SetSphereCollider3DComponent(c.position.x, c.position.y, c.position.z, c.mass)
 end
 
-CapsuleCollider3DComponent = Class(function(self, mass)
+CapsuleCollider3DComponent = Class(function(self, position_x, position_y, position_z, mass)
+    self.position = Vec3(position_x, position_y, position_z)
     self.mass = mass
 end)
 
 function GetCapsuleCollider3DComponent()
-    x0 = Lua_GetCapsuleCollider3DComponent()
-    return CapsuleCollider3DComponent(x0)
+    x0, x1, x2, x3 = Lua_GetCapsuleCollider3DComponent()
+    return CapsuleCollider3DComponent(x0, x1, x2, x3)
 end
 
 function SetCapsuleCollider3DComponent(c)
-    Lua_SetCapsuleCollider3DComponent(c.mass)
+    Lua_SetCapsuleCollider3DComponent(c.position.x, c.position.y, c.position.z, c.mass)
 end
 
 CameraComponent = Class(function(self, fov, pitch)

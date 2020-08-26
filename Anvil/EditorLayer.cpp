@@ -336,18 +336,21 @@ void EditorLayer::EntityInspector(Entity& entity)
     if (entity.Has<BoxCollider3DComponent>()) {
         if (ImGui::CollapsingHeader("BoxCollider3D")) {
             auto& c = entity.Get<BoxCollider3DComponent>();
-            ImGui::DragFloat3("Velocity", &c.halfExtents.x, 0.01f);
+            ImGui::DragFloat3("Position", &c.position.x, 0.01f);
+            ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.01f);
         }
     }
     if (entity.Has<SphereCollider3DComponent>()) {
         if (ImGui::CollapsingHeader("SphereCollider3D")) {
             auto& c = entity.Get<SphereCollider3DComponent>();
+            ImGui::DragFloat3("Position", &c.position.x, 0.01f);
             ImGui::DragFloat("Radius", &c.radius, 0.01f);
         }
     }
     if (entity.Has<CapsuleCollider3DComponent>()) {
         if (ImGui::CollapsingHeader("CapsuleCollider3D")) {
             auto& c = entity.Get<CapsuleCollider3DComponent>();
+            ImGui::DragFloat3("Position", &c.position.x, 0.01f);
             ImGui::DragFloat("Radius", &c.radius, 0.01f);
             ImGui::DragFloat("Height", &c.height, 0.01f);
         }

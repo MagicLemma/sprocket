@@ -6,11 +6,13 @@
     "Components": [
         {
             "Name": "TemporaryComponent",
+            "DisplayName": "Temporary",
             "Attributes": [],
             "Scriptable": false
         },
         {
             "Name": "NameComponent",
+            "DisplayName": "Name",
             "Attributes": [
                 {
                     "Name": "name",
@@ -20,6 +22,7 @@
         },
         {
             "Name": "TransformComponent",
+            "DisplayName": "Transform",
             "Attributes": [
                 {
                     "Name": "position",
@@ -36,6 +39,7 @@
         },
         {
             "Name": "ModelComponent",
+            "DisplayName": "Model",
             "Attributes": [
                 {
                     "Name": "model",
@@ -64,6 +68,7 @@
         },
         {
             "Name": "RigidBody3DComponent",
+            "DisplayName": "Rigid Body 3D",
             "Attributes": [
                 {
                     "Name": "velocity",
@@ -83,17 +88,20 @@
                 {
                     "Name": "bounciness",
                     "Type": "float",
-                    "Default": 0.5
+                    "Default": 0.5,
+                    "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "frictionCoefficient",
                     "Type": "float",
-                    "Default": 0.3
+                    "Default": 0.3,
+                    "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "rollingResistance",
                     "Type": "float",
-                    "Default": 0.0
+                    "Default": 0.0,
+                    "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "force",
@@ -111,7 +119,19 @@
         },
         {
             "Name": "BoxCollider3DComponent",
+            "DisplayName": "Box Collider 3D",
             "Attributes": [
+                {
+                    "Name": "position",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0]
+                },
+                {
+                    "Name": "orientation",
+                    "Type": "Maths::quat",
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
+                },
                 {
                     "Name": "mass",
                     "Type": "float",
@@ -127,7 +147,19 @@
         },
         {
             "Name": "SphereCollider3DComponent",
+            "DisplayName": "Sphere Collider 3D",
             "Attributes": [
+                {
+                    "Name": "position",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0]
+                },
+                {
+                    "Name": "orientation",
+                    "Type": "Maths::quat",
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
+                },
                 {
                     "Name": "mass",
                     "Type": "float",
@@ -143,7 +175,19 @@
         },
         {
             "Name": "CapsuleCollider3DComponent",
+            "DisplayName": "Capsule Collider 3D",
             "Attributes": [
+                {
+                    "Name": "position",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0]
+                },
+                {
+                    "Name": "orientation",
+                    "Type": "Maths::quat",
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
+                },
                 {
                     "Name": "mass",
                     "Type": "float",
@@ -165,6 +209,7 @@
         },
         {
             "Name": "ScriptComponent",
+            "DisplayName": "Script",
             "Attributes": [
                 {
                     "Name": "script",
@@ -180,6 +225,7 @@
         },
         {
             "Name": "CameraComponent",
+            "DisplayName": "Camera",
             "Attributes": [
                 {
                     "Name": "projection",
@@ -201,6 +247,7 @@
         },
         {
             "Name": "SelectComponent",
+            "DisplayName": "Select",
             "Attributes": [
                 {
                     "Name": "selected",
@@ -218,6 +265,7 @@
         },
         {
             "Name": "PathComponent",
+            "DisplayName": "Path",
             "Attributes": [
                 {
                     "Name": "markers",
@@ -233,6 +281,7 @@
         },
         {
             "Name": "GridComponent",
+            "DisplayName": "Grid",
             "Attributes": [
                 {
                     "Name": "x",
@@ -246,6 +295,7 @@
         },
         {
             "Name": "LightComponent",
+            "DisplayName": "Light",
             "Attributes": [
                 {
                     "Name": "colour",

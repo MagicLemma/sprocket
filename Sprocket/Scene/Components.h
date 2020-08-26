@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-26 13:16:17.919688
+// GENERATED FILE @ 2020-08-26 18:04:48.260273
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -27,8 +27,8 @@ struct NameComponent
 
 struct TransformComponent
 {
-    Maths::vec3 position = {0.0f, 0.0f, 0.0f};
-    Maths::quat orientation = {1.0f, 0.0f, 0.0f, 0.0f};
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
 };
 
 struct ModelComponent
@@ -42,30 +42,36 @@ struct ModelComponent
 
 struct RigidBody3DComponent
 {
-    Maths::vec3 velocity = {0.0f, 0.0f, 0.0f};
+    Maths::vec3 velocity = Maths::vec3{0.0f, 0.0f, 0.0f};
     bool gravity = true;
     bool frozen = false;
     float bounciness = 0.5f;
     float frictionCoefficient = 0.3f;
     float rollingResistance = 0.0f;
-    Maths::vec3 force = {0.0f, 0.0f, 0.0f};
+    Maths::vec3 force = Maths::vec3{0.0f, 0.0f, 0.0f};
     bool onFloor = false;
 };
 
 struct BoxCollider3DComponent
 {
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
-    Maths::vec3 halfExtents = {0.0f, 0.0f, 0.0f};
+    Maths::vec3 halfExtents = Maths::vec3{0.0f, 0.0f, 0.0f};
 };
 
 struct SphereCollider3DComponent
 {
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     float radius = 1.0f;
 };
 
 struct CapsuleCollider3DComponent
 {
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     float radius = 1.0f;
     float height = 1.0f;
@@ -104,8 +110,8 @@ struct GridComponent
 
 struct LightComponent
 {
-    Maths::vec3 colour = {1.0f, 1.0f, 1.0f};
-    Maths::vec3 attenuation = {1.0f, 0.0f, 0.0f};
+    Maths::vec3 colour = Maths::vec3{1.0f, 1.0f, 1.0f};
+    Maths::vec3 attenuation = Maths::vec3{1.0f, 0.0f, 0.0f};
     float brightness = 1.0f;
 };
 
