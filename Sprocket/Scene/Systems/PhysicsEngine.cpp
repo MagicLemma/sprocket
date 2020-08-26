@@ -114,10 +114,13 @@ void PhysicsEngine::OnStartup(Scene& scene)
     scene.OnAdd<RigidBody3DComponent>(addPhysics);
 
     scene.OnRemove<RigidBody3DComponent>([&](Entity& entity) {
+        entity.Remove<BoxCollider3DComponent>();
+        entity.Remove<SphereCollider3DComponent>();
+        entity.Remove<CapsuleCollider3DComponent>();
+
         auto rigidBodyIt = d_impl->entityData.find(entity.Id());
         d_impl->world.destroyRigidBody(rigidBodyIt->second.rigidBody);
         d_impl->entityData.erase(rigidBodyIt);
-        // TODO: Clean up of collision bodies
     });
 
     auto addBox = [&](Entity& entity) {
@@ -141,6 +144,14 @@ void PhysicsEngine::OnStartup(Scene& scene)
     scene.Each<BoxCollider3DComponent>(addBox);
     scene.OnAdd<BoxCollider3DComponent>(addBox);
 
+    scene.OnRemove<BoxCollider3DComponent>([&](Entity& entity) {
+        auto c = d_impl->entityData[entity.Id()].proxyShape;
+        if (c != nullptr) {
+            d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
+            d_impl->entityData[entity.Id()].proxyShape = nullptr;
+        }
+    });
+
     auto addSphere = [&](Entity& entity) {
         assert(entity.Has<TransformComponent>());
         assert(entity.Has<RigidBody3DComponent>());
@@ -161,6 +172,14 @@ void PhysicsEngine::OnStartup(Scene& scene)
 
     scene.Each<SphereCollider3DComponent>(addSphere);
     scene.OnAdd<SphereCollider3DComponent>(addSphere);
+
+    scene.OnRemove<SphereCollider3DComponent>([&](Entity& entity) {
+        auto c = d_impl->entityData[entity.Id()].proxyShape;
+        if (c != nullptr) {
+            d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
+            d_impl->entityData[entity.Id()].proxyShape = nullptr;
+        }
+    });
 
     auto addCapsule = [&](Entity& entity) {
         assert(entity.Has<TransformComponent>());
@@ -184,6 +203,14 @@ void PhysicsEngine::OnStartup(Scene& scene)
 
     scene.Each<CapsuleCollider3DComponent>(addCapsule);
     scene.OnAdd<CapsuleCollider3DComponent>(addCapsule);
+
+    scene.OnRemove<CapsuleCollider3DComponent>([&](Entity& entity) {
+        auto c = d_impl->entityData[entity.Id()].proxyShape;
+        if (c != nullptr) {
+            d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
+            d_impl->entityData[entity.Id()].proxyShape = nullptr;
+        }
+    });
 }
 
 void PhysicsEngine::OnUpdate(Scene& scene, double dt)
