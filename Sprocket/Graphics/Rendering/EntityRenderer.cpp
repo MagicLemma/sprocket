@@ -190,9 +190,8 @@ void EntityRenderer::DrawBox(const Entity& entity)
 
     auto tr = entity.Get<TransformComponent>();
     Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-    transform = Maths::Scale(transform, physics.halfExtents);
     transform *= Maths::Transform(physics.position, physics.orientation);
-    
+    transform = Maths::Scale(transform, physics.halfExtents);
 
     s_cube.Bind();
     Texture::White().Bind();
@@ -209,6 +208,7 @@ void EntityRenderer::DrawSphere(const Entity& entity)
 
     auto tr = entity.Get<TransformComponent>();
     Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+    transform *= Maths::Transform(physics.position, physics.orientation);
     transform = Maths::Scale(transform, physics.radius);
     
     s_sphere.Bind();
@@ -230,6 +230,7 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
         s_hemisphere.Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+        transform *= Maths::Transform(physics.position, physics.orientation);
         transform = Maths::Translate(transform, {0.0, physics.height/2, 0.0});
         transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
@@ -241,6 +242,7 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
         s_cylinder.Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+        transform *= Maths::Transform(physics.position, physics.orientation);
         transform = Maths::Scale(transform, {physics.radius, physics.height, physics.radius});
         d_shader.LoadUniform("u_model_matrix", transform);
         glDrawElements(GL_TRIANGLES, (int)s_cylinder.VertexCount(), GL_UNSIGNED_INT, nullptr);
@@ -251,6 +253,7 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
         s_hemisphere.Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+        transform *= Maths::Transform(physics.position, physics.orientation);
         transform = Maths::Translate(transform, {0.0, -physics.height/2, 0.0});
         transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
         transform = Maths::Scale(transform, physics.radius);

@@ -58,5 +58,12 @@ void SetGuizmo()
     ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
 }
 
+void Euler(const std::string& name, Maths::quat* q)
+{
+    Maths::vec3 euler = Maths::ToEuler(*q);
+    ImGui::DragFloat3("Orientation", &euler.x, 0.01f);
+    *q = Maths::quat(euler);
+}
+
 }
 }

@@ -28,5 +28,8 @@ void Image(const Texture& image,
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
 
+// Displays a quaternion in Euler angles form.
+void Euler(const std::string& name, Maths::quat* q);
+
 }
 }
