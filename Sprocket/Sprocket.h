@@ -18,7 +18,7 @@
 #include "UI/SimpleUI.h"
 #include "UI/SinglePanelUI.h"
 #include "UI/DevUI.h"
-#include "UI/ImGuiHelpers.h"
+#include "UI/ImGuiXtra.h"
 
 // SCENE
 #include "Scene/Entity.h"

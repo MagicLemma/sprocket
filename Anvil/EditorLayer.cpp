@@ -1,7 +1,7 @@
 #include "EditorLayer.h"
 #include "Inspector.h"
 #include "FileBrowser.h"
-#include "ImGuiHelpers.cpp"
+#include "ImGuiXtra.cpp"
 
 namespace Sprocket {
 namespace {

@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-26 19:13:35.071554
+-- GENERATED FILE @ 2020-08-27 01:16:57.184069
 NameComponent = Class(function(self, name)
     self.name = name
 end)

@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-26 19:13:35.052605
+// GENERATED FILE @ 2020-08-27 01:16:57.161131
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -99,13 +99,13 @@ struct SelectComponent
 struct PathComponent
 {
     std::queue<Maths::vec3> markers;
-    float speed;
+    float speed = 0.0f;
 };
 
 struct GridComponent
 {
-    int x;
-    int z;
+    int x = 0;
+    int z = 0;
 };
 
 struct LightComponent

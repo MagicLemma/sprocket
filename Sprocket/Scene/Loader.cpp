@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-26 19:13:35.056596
+// GENERATED FILE @ 2020-08-27 01:16:57.165120
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -235,13 +235,13 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["PathComponent"]) {
             PathComponent c;
-            c.speed = spec["speed"].as<float>();
+            c.speed = spec["speed"] ? spec["speed"].as<float>() : 0.0f;
             e.Add(c);
         }
         if (auto spec = entity["GridComponent"]) {
             GridComponent c;
-            c.x = spec["x"].as<int>();
-            c.z = spec["z"].as<int>();
+            c.x = spec["x"] ? spec["x"].as<int>() : 0;
+            c.z = spec["z"] ? spec["z"].as<int>() : 0;
             e.Add(c);
         }
         if (auto spec = entity["LightComponent"]) {

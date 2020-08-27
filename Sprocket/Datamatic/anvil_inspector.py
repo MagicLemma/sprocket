@@ -3,7 +3,7 @@ from datetime import datetime
 header = """
 #include "Inspector.h"
 #include "EditorLayer.h"
-#include "ImGuiHelpers.h"
+#include "ImGuiXtra.h"
 #include "Maths.h"
 #include "Components.h"
 #include "DevUI.h"
