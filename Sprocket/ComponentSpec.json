@@ -1,32 +1,39 @@
 {
+    "Version": 1,
     "Enums": {
         "Collider": ["NONE", "SPHERE", "CAPSULE", "BOX"]
     },
     "Components": [
         {
             "Name": "TemporaryComponent",
+            "DisplayName": "Temporary",
             "Attributes": [],
             "Scriptable": false
         },
         {
             "Name": "NameComponent",
+            "DisplayName": "Name",
             "Attributes": [
                 {
                     "Name": "name",
+                    "DisplayName": "Name",
                     "Type": "std::string"
                 }
             ]
         },
         {
             "Name": "TransformComponent",
+            "DisplayName": "Transform",
             "Attributes": [
                 {
                     "Name": "position",
+                    "DisplayName": "Position",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0]
                 },
                 {
                     "Name": "orientation",
+                    "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1, 0, 0, 0],
                     "Scriptable": false
@@ -35,102 +42,95 @@
         },
         {
             "Name": "ModelComponent",
+            "DisplayName": "Model",
             "Attributes": [
                 {
                     "Name": "model",
-                    "Type": "std::string"
+                    "DisplayName": "Model",
+                    "Type": "std::string",
+                    "Subtype": "File",
+                    "Data": "*.obj"
                 },
                 {
                     "Name": "scale",
+                    "DisplayName": "Scale",
                     "Type": "float",
                     "Default": 1.0
                 },
                 {
                     "Name": "texture",
-                    "Type": "std::string"
+                    "DisplayName": "Texture",
+                    "Type": "std::string",
+                    "Subtype": "File",
+                    "Data": "*.png"
                 },
                 {
                     "Name": "shineDamper",
+                    "DisplayName": "Shine Damper",
                     "Type": "float",
                     "Default": 1.0
                 },
                 {
                     "Name": "reflectivity",
+                    "DisplayName": "Reflectivity",
                     "Type": "float",
                     "Default": 0.0
                 }
             ] 
         },
         {
-            "Name": "PhysicsComponent",
+            "Name": "RigidBody3DComponent",
+            "DisplayName": "Rigid Body 3D",
             "Attributes": [
                 {
                     "Name": "velocity",
+                    "DisplayName": "Velocity",
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0]
                 },
                 {
                     "Name": "gravity",
+                    "DisplayName": "Gravity",
                     "Type": "bool",
                     "Default": true
                 },
                 {
                     "Name": "frozen",
+                    "DisplayName": "Frozen",
                     "Type": "bool",
                     "Default": false
                 },
                 {
-                    "Name": "collider",
-                    "Type": "Collider",
-                    "Default": "NONE",
-                    "Scriptable": false
-                },
-                {
-                    "Name": "halfExtents",
-                    "Type": "Maths::vec3",
-                    "Default": [0, 0, 0],
-                    "Scriptable": false
-                },
-                {
-                    "Name": "radius",
-                    "Type": "float",
-                    "Default": 1.0,
-                    "Scriptable": false
-                },
-                {
-                    "Name": "height",
-                    "Type": "float",
-                    "Default": 1.0,
-                    "Scriptable": false
-                },
-                {
-                    "Name": "mass",
-                    "Type": "float",
-                    "Default": 1.0
-                },
-                {
                     "Name": "bounciness",
+                    "DisplayName": "Bounciness",
                     "Type": "float",
-                    "Default": 0.5
+                    "Default": 0.5,
+                    "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "frictionCoefficient",
+                    "DisplayName": "Friction Coefficient",
                     "Type": "float",
-                    "Default": 0.3
+                    "Default": 0.3,
+                    "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "rollingResistance",
+                    "DisplayName": "Rolling Resistance",
                     "Type": "float",
-                    "Default": 0.0
+                    "Default": 0.0,
+                    "Limits": [0.0, 1.0]
                 },
                 {
                     "Name": "force",
+                    "DisplayName": "Force",
                     "Type": "Maths::vec3",
                     "Default": [0.0, 0.0, 0.0],
                     "Savable": false
                 },
                 {
                     "Name": "onFloor",
+                    "DisplayName": "OnFloor",
                     "Type": "bool",
                     "Default": false,
                     "Savable": false
@@ -138,14 +138,125 @@
             ]
         },
         {
+            "Name": "BoxCollider3DComponent",
+            "DisplayName": "Box Collider 3D",
+            "Attributes": [
+                {
+                    "Name": "position",
+                    "DisplayName": "Position",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
+                },
+                {
+                    "Name": "orientation",
+                    "DisplayName": "Orientation",
+                    "Type": "Maths::quat",
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
+                },
+                {
+                    "Name": "mass",
+                    "DisplayName": "Mass",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "halfExtents",
+                    "DisplayName": "Half Extents",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
+                }
+            ]
+        },
+        {
+            "Name": "SphereCollider3DComponent",
+            "DisplayName": "Sphere Collider 3D",
+            "Attributes": [
+                {
+                    "Name": "position",
+                    "DisplayName": "Position",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
+                },
+                {
+                    "Name": "orientation",
+                    "DisplayName": "Orientation",
+                    "Type": "Maths::quat",
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
+                },
+                {
+                    "Name": "mass",
+                    "DisplayName": "Mass",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "radius",
+                    "DisplayName": "Radius",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
+                }
+            ]
+        },
+        {
+            "Name": "CapsuleCollider3DComponent",
+            "DisplayName": "Capsule Collider 3D",
+            "Attributes": [
+                {
+                    "Name": "position",
+                    "DisplayName": "Position",
+                    "Type": "Maths::vec3",
+                    "Default": [0, 0, 0],
+                    "Scriptable": false
+                },
+                {
+                    "Name": "orientation",
+                    "DisplayName": "Orientation",
+                    "Type": "Maths::quat",
+                    "Default": [1, 0, 0, 0],
+                    "Scriptable": false
+                },
+                {
+                    "Name": "mass",
+                    "DisplayName": "Mass",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "radius",
+                    "DisplayName": "Radius",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
+                },
+                {
+                    "Name": "height",
+                    "DisplayName": "Height",
+                    "Type": "float",
+                    "Default": 1.0,
+                    "Scriptable": false
+                }
+            ]
+        },
+        {
             "Name": "ScriptComponent",
+            "DisplayName": "Script",
             "Attributes": [
                 {
                     "Name": "script",
-                    "Type": "std::string"
+                    "DisplayName": "Script",
+                    "Type": "std::string",
+                    "Subtype": "File",
+                    "Data": "*.lua"
                 },
                 {
                     "Name": "active",
+                    "DisplayName": "Active",
                     "Type": "bool",
                     "Default": true
                 }
@@ -154,20 +265,24 @@
         },
         {
             "Name": "CameraComponent",
+            "DisplayName": "Camera",
             "Attributes": [
                 {
                     "Name": "projection",
+                    "DisplayName": "Projection",
                     "Type": "Maths::mat4",
                     "Savable": false,
                     "Scriptable": false
                 },
                 {
                     "Name": "fov",
+                    "DisplayName": "FOV",
                     "Type": "float",
                     "Default": 70.0
                 },
                 {
                     "Name": "pitch",
+                    "DisplayName": "Pitch",
                     "Type": "float",
                     "Default": 0.0
                 }
@@ -175,15 +290,18 @@
         },
         {
             "Name": "SelectComponent",
+            "DisplayName": "Select",
             "Attributes": [
                 {
                     "Name": "selected",
+                    "DisplayName": "Selected",
                     "Type": "bool",
                     "Default": false,
                     "Savable": false
                 },
                 {
                     "Name": "hovered",
+                    "DisplayName": "Hovered",
                     "Type": "bool",
                     "Default": false,
                     "Savable": false
@@ -192,29 +310,63 @@
         },
         {
             "Name": "PathComponent",
+            "DisplayName": "Path",
             "Attributes": [
                 {
                     "Name": "markers",
+                    "DisplayName": "Markers",
                     "Type": "std::queue<Maths::vec3>",
                     "Savable": false,
                     "Scriptable": false
                 },
                 {
                     "Name": "speed",
-                    "Type": "float"
+                    "DisplayName": "Speed",
+                    "Type": "float",
+                    "Default": 0.0
                 }
             ]
         },
         {
             "Name": "GridComponent",
+            "DisplayName": "Grid",
             "Attributes": [
                 {
                     "Name": "x",
-                    "Type": "int"
+                    "DisplayName": "X",
+                    "Type": "int",
+                    "Default": 0
                 },
                 {
                     "Name": "z",
-                    "Type": "int"
+                    "DisplayName": "Z",
+                    "Type": "int",
+                    "Default": 0
+                }
+            ]
+        },
+        {
+            "Name": "LightComponent",
+            "DisplayName": "Light",
+            "Attributes": [
+                {
+                    "Name": "colour",
+                    "DisplayName": "Colour",
+                    "Type": "Maths::vec3",
+                    "Subtype": "Colour",
+                    "Default": [1, 1, 1]
+                },
+                {
+                    "Name": "attenuation",
+                    "DisplayName": "Attenuation",
+                    "Type": "Maths::vec3",
+                    "Default": [1, 0, 0]
+                },
+                {
+                    "Name": "brightness",
+                    "DisplayName": "Brightness",
+                    "Type": "float",
+                    "Default": 1.0
                 }
             ]
         }

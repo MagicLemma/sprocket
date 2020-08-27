@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-22 21:32:44.796973
+// GENERATED FILE @ 2020-08-27 01:16:57.176090
 class lua_State;
 
 namespace Sprocket {
@@ -17,8 +17,17 @@ int SetTransformComponent(lua_State* L);
 int GetModelComponent(lua_State* L);
 int SetModelComponent(lua_State* L);
 
-int GetPhysicsComponent(lua_State* L);
-int SetPhysicsComponent(lua_State* L);
+int GetRigidBody3DComponent(lua_State* L);
+int SetRigidBody3DComponent(lua_State* L);
+
+int GetBoxCollider3DComponent(lua_State* L);
+int SetBoxCollider3DComponent(lua_State* L);
+
+int GetSphereCollider3DComponent(lua_State* L);
+int SetSphereCollider3DComponent(lua_State* L);
+
+int GetCapsuleCollider3DComponent(lua_State* L);
+int SetCapsuleCollider3DComponent(lua_State* L);
 
 int GetCameraComponent(lua_State* L);
 int SetCameraComponent(lua_State* L);
@@ -31,6 +40,9 @@ int SetPathComponent(lua_State* L);
 
 int GetGridComponent(lua_State* L);
 int SetGridComponent(lua_State* L);
+
+int GetLightComponent(lua_State* L);
+int SetLightComponent(lua_State* L);
 
 }
 }

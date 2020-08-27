@@ -1,45 +1,54 @@
 Entities:
   - NameComponent:
-      name: Sun
+      name: Purple Light
+    TransformComponent:
+      position: [46.8, 2.5, -20.1]
+      orientation: [1, 0, 0, 0]
+    LightComponent:
+      colour: [0.9331822, 0, 1]
+      attenuation: [1, 0.01, 0]
+      brightness: 1
+  - NameComponent:
+      name: White Light
     TransformComponent:
       position: [40, 20, 0]
       orientation: [1, 0, 0, 0]
     LightComponent:
-      colour: [0.8222222, 0.822214, 0.822214]
+      colour: [1, 0.99999, 0.99999]
       attenuation: [1, 0, 0]
-      brightness: 1
+      brightness: 0.7
   - NameComponent:
       name: Green Light
     TransformComponent:
-      position: [8, 4, 0]
+      position: [8, 4, 2]
       orientation: [1, 0, 0, 0]
     LightComponent:
-      colour: [0.3568628, 0.772549, 0.2117647]
+      colour: [0.3019608, 0.7921569, 0.2117647]
       attenuation: [1, 0, 0]
       brightness: 1
   - NameComponent:
       name: Blue Light
     TransformComponent:
-      position: [-7, 1, 0]
+      position: [-7, 1.8, 0]
       orientation: [1, 0, 0, 0]
     LightComponent:
       colour: [0, 0, 1]
       attenuation: [1, 0, 0]
-      brightness: 1
+      brightness: 2
   - NameComponent:
       name: Red Light
     TransformComponent:
-      position: [5, 1, 0]
+      position: [5.4, 1, 0]
       orientation: [1, 0, 0, 0]
     LightComponent:
       colour: [1, 0, 0]
       attenuation: [1, 0, 0]
-      brightness: 1
+      brightness: 2
   - NameComponent:
       name: Platform 1
     TransformComponent:
       position: [7, 0, -3]
-      orientation: [0.9986295, 0.05233596, 0, 0]
+      orientation: [0.9986296, 0.05233571, 0, 0]
     ModelComponent:
       model: Resources/Models/Platform.obj
       scale: 1
@@ -55,7 +64,7 @@ Entities:
       radius: 1
       height: 1
       mass: 1
-      bounciness: 0.5
+      bounciness: 0
       frictionCoefficient: 0.3
       rollingResistance: 0
     SelectComponent:
@@ -68,7 +77,7 @@ Entities:
     ModelComponent:
       model: Resources/Models/FloatingIsland.obj
       scale: 0.5
-      texture: Resources/Textures/FloatingIslandTex.png
+      texture: D:\dev\Sprocket\Resources\Textures\Green.png
       shineDamper: 1
       reflectivity: 0
     SelectComponent:
@@ -151,7 +160,7 @@ Entities:
   - NameComponent:
       name: Crate 2
     TransformComponent:
-      position: [-1, 0, -3]
+      position: [-1.2, 0.3, 2.2]
       orientation: [0.7933533, 0, 0.6087614, 0]
     ModelComponent:
       model: Resources/Models/Cube.obj
@@ -223,36 +232,12 @@ Entities:
       rollingResistance: 1
     ScriptComponent:
       script: Resources/Scripts/PlayerController.lua
-      active: false
-    CameraComponent:
-      fov: 70
-      pitch: 0
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Observer Camera
-    TransformComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-    ScriptComponent:
-      script: Resources/Scripts/FirstPersonCamera.lua
       active: true
     CameraComponent:
       fov: 70
       pitch: 0
     SelectComponent:
       {}
-  - NameComponent:
-      name: Editor Camera
-    TransformComponent:
-      position: [10, 2, 0]
-      orientation: [1, 0, 0, 0]
-    ScriptComponent:
-      script: Resources/Scripts/ThirdPersonCamera.lua
-      active: false
-    CameraComponent:
-      fov: 70
-      pitch: 0
   - NameComponent:
       name: Sphere 0
     TransformComponent:

@@ -179,7 +179,7 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    d_entityRenderer.BeginScene(d_camera, d_lights);
+    d_entityRenderer.BeginScene(d_camera, d_lights, *d_scene);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   

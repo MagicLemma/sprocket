@@ -49,11 +49,6 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     core.window->SetCursorVisibility(false);
 
-    d_lights.points.push_back({{5.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
-    d_lights.points.push_back({{-7.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
-    d_lights.points.push_back({{8.0f, 4.0f, 2.0f}, {0.3f, 0.8f, 0.2f}, {1.0f, 0.0f, 0.0f}});
-    d_lights.points.push_back({{40.0, 20.0, 0.0}, {0.8f, 0.8f, 0.8f}, {1.0f, 0.0f, 0.0f}});
-
     d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
     d_lights.sun.colour = {1.0, 1.0, 1.0};
     d_lights.sun.brightness = 0.2f;
@@ -85,16 +80,16 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.BeginScene(d_activeCamera, d_lights);
+    d_entityRenderer.BeginScene(d_activeCamera, d_lights, *d_scene);
 
     if (!d_paused) {
         d_scene->OnUpdate(dt);
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
         d_core.window->SetCursorVisibility(d_mouseRequired);
 
-        d_scene->Each<TransformComponent, PhysicsComponent>([&](Entity& entity) {
+        d_scene->Each<TransformComponent, RigidBody3DComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
-            auto& physics = entity.Get<PhysicsComponent>();
+            auto& physics = entity.Get<RigidBody3DComponent>();
             
             if (entity.Has<CameraComponent>() && transform.position.y < -2) {
                 transform.position = {0, 3, 0};

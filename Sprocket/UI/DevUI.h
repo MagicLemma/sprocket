@@ -7,6 +7,10 @@
 #include "Resources.h"
 #include "StreamBuffer.h"
 
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <ImGuizmo.h>
+
 #include <memory>
 
 namespace Sprocket {
@@ -16,6 +20,9 @@ struct DevUIData;
 
 enum class GizmoMode { TRANSLATION, ROTATION };
 enum class GizmoCoords { WORLD, LOCAL };
+
+ImGuizmo::OPERATION GetMode(GizmoMode mode);
+ImGuizmo::MODE GetCoords(GizmoCoords coords);
 
 class Context
 {

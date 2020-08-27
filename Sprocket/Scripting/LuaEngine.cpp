@@ -74,8 +74,6 @@ LuaEngine::LuaEngine()
 
     lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
 
-    lua_register(d_L, "HasPhysics", &Lua_Has<PhysicsComponent>);
-
     RegisterComponentFunctions(d_L);
 
     lua_pushnil(d_L);
@@ -95,6 +93,11 @@ LuaEngine::~LuaEngine()
 
 void LuaEngine::RunScript(const std::string& filename)
 {
+    if (filename.empty()) {
+        SPKT_LOG_WARN("Tried to start an empty script!");
+        return;
+    }
+    
     DoFile(d_L, filename.c_str());
 }
 

@@ -38,7 +38,6 @@ class EditorLayer : public Layer
     bool d_playingGame = false;
 
     void AddEntityToList(const Entity& entity);
-    void EntityInspector(Entity& entity);
     Entity d_selected;
 
 public:
@@ -46,6 +45,17 @@ public:
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
+
+    Entity Selected() { return d_selected; }
+    void SetSelected(Entity e) { d_selected = e; }
+    void ClearSelected() { d_selected = Entity(); }
+
+    bool IsGameRunning() const { return d_playingGame; }
+
+    Camera& GetEditorCamera() { return d_editorCamera; }
+    Window* GetWindow() { return d_core.window; }
+
+    std::shared_ptr<Scene> GetScene() { return d_activeScene; }
 };
 
 }

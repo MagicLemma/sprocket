@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-22 21:32:44.773035
+// GENERATED FILE @ 2020-08-27 01:16:57.161131
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -27,8 +27,8 @@ struct NameComponent
 
 struct TransformComponent
 {
-    Maths::vec3 position = {0.0f, 0.0f, 0.0f};
-    Maths::quat orientation = {1.0f, 0.0f, 0.0f, 0.0f};
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
 };
 
 struct ModelComponent
@@ -40,21 +40,41 @@ struct ModelComponent
     float reflectivity = 0.0f;
 };
 
-struct PhysicsComponent
+struct RigidBody3DComponent
 {
-    Maths::vec3 velocity = {0.0f, 0.0f, 0.0f};
+    Maths::vec3 velocity = Maths::vec3{0.0f, 0.0f, 0.0f};
     bool gravity = true;
     bool frozen = false;
-    Collider collider = Collider::NONE;
-    Maths::vec3 halfExtents = {0.0f, 0.0f, 0.0f};
-    float radius = 1.0f;
-    float height = 1.0f;
-    float mass = 1.0f;
     float bounciness = 0.5f;
     float frictionCoefficient = 0.3f;
     float rollingResistance = 0.0f;
-    Maths::vec3 force = {0.0f, 0.0f, 0.0f};
+    Maths::vec3 force = Maths::vec3{0.0f, 0.0f, 0.0f};
     bool onFloor = false;
+};
+
+struct BoxCollider3DComponent
+{
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    float mass = 1.0f;
+    Maths::vec3 halfExtents = Maths::vec3{0.0f, 0.0f, 0.0f};
+};
+
+struct SphereCollider3DComponent
+{
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    float mass = 1.0f;
+    float radius = 1.0f;
+};
+
+struct CapsuleCollider3DComponent
+{
+    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    float mass = 1.0f;
+    float radius = 1.0f;
+    float height = 1.0f;
 };
 
 struct ScriptComponent
@@ -79,13 +99,20 @@ struct SelectComponent
 struct PathComponent
 {
     std::queue<Maths::vec3> markers;
-    float speed;
+    float speed = 0.0f;
 };
 
 struct GridComponent
 {
-    int x;
-    int z;
+    int x = 0;
+    int z = 0;
+};
+
+struct LightComponent
+{
+    Maths::vec3 colour = Maths::vec3{1.0f, 1.0f, 1.0f};
+    Maths::vec3 attenuation = Maths::vec3{1.0f, 0.0f, 0.0f};
+    float brightness = 1.0f;
 };
 
 }

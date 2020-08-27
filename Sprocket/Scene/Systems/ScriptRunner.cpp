@@ -29,7 +29,7 @@ void ScriptRunner::OnStartup(Scene& scene)
         // Register all existing scripts
 
     scene.OnAdd<ScriptComponent>(AddScript);
-        // If a new script gets added to an entity, resiter that too.
+        // If a new script gets added to an entity, register that too.
 
     scene.OnRemove<ScriptComponent>([&](Entity& entity) {
         d_engines.erase(entity.Id());

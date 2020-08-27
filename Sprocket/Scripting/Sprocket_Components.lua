@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-22 21:32:44.806973
+-- GENERATED FILE @ 2020-08-27 01:16:57.184069
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -42,11 +42,10 @@ function SetModelComponent(c)
     Lua_SetModelComponent(c.model, c.scale, c.texture, c.shineDamper, c.reflectivity)
 end
 
-PhysicsComponent = Class(function(self, velocity_x, velocity_y, velocity_z, gravity, frozen, mass, bounciness, frictionCoefficient, rollingResistance, force_x, force_y, force_z, onFloor)
+RigidBody3DComponent = Class(function(self, velocity_x, velocity_y, velocity_z, gravity, frozen, bounciness, frictionCoefficient, rollingResistance, force_x, force_y, force_z, onFloor)
     self.velocity = Vec3(velocity_x, velocity_y, velocity_z)
     self.gravity = gravity
     self.frozen = frozen
-    self.mass = mass
     self.bounciness = bounciness
     self.frictionCoefficient = frictionCoefficient
     self.rollingResistance = rollingResistance
@@ -54,13 +53,52 @@ PhysicsComponent = Class(function(self, velocity_x, velocity_y, velocity_z, grav
     self.onFloor = onFloor
 end)
 
-function GetPhysicsComponent()
-    x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = Lua_GetPhysicsComponent()
-    return PhysicsComponent(x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12)
+function GetRigidBody3DComponent()
+    x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = Lua_GetRigidBody3DComponent()
+    return RigidBody3DComponent(x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11)
 end
 
-function SetPhysicsComponent(c)
-    Lua_SetPhysicsComponent(c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.mass, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
+function SetRigidBody3DComponent(c)
+    Lua_SetRigidBody3DComponent(c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
+end
+
+BoxCollider3DComponent = Class(function(self, mass)
+    self.mass = mass
+end)
+
+function GetBoxCollider3DComponent()
+    x0 = Lua_GetBoxCollider3DComponent()
+    return BoxCollider3DComponent(x0)
+end
+
+function SetBoxCollider3DComponent(c)
+    Lua_SetBoxCollider3DComponent(c.mass)
+end
+
+SphereCollider3DComponent = Class(function(self, mass)
+    self.mass = mass
+end)
+
+function GetSphereCollider3DComponent()
+    x0 = Lua_GetSphereCollider3DComponent()
+    return SphereCollider3DComponent(x0)
+end
+
+function SetSphereCollider3DComponent(c)
+    Lua_SetSphereCollider3DComponent(c.mass)
+end
+
+CapsuleCollider3DComponent = Class(function(self, mass)
+    self.mass = mass
+end)
+
+function GetCapsuleCollider3DComponent()
+    x0 = Lua_GetCapsuleCollider3DComponent()
+    return CapsuleCollider3DComponent(x0)
+end
+
+function SetCapsuleCollider3DComponent(c)
+    Lua_SetCapsuleCollider3DComponent(c.mass)
 end
 
 CameraComponent = Class(function(self, fov, pitch)
@@ -116,5 +154,20 @@ end
 
 function SetGridComponent(c)
     Lua_SetGridComponent(c.x, c.z)
+end
+
+LightComponent = Class(function(self, colour_x, colour_y, colour_z, attenuation_x, attenuation_y, attenuation_z, brightness)
+    self.colour = Vec3(colour_x, colour_y, colour_z)
+    self.attenuation = Vec3(attenuation_x, attenuation_y, attenuation_z)
+    self.brightness = brightness
+end)
+
+function GetLightComponent()
+    x0, x1, x2, x3, x4, x5, x6 = Lua_GetLightComponent()
+    return LightComponent(x0, x1, x2, x3, x4, x5, x6)
+end
+
+function SetLightComponent(c)
+    Lua_SetLightComponent(c.colour.x, c.colour.y, c.colour.z, c.attenuation.x, c.attenuation.y, c.attenuation.z, c.brightness)
 end
 

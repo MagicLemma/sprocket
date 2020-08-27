@@ -23,14 +23,13 @@ void AddEntityToList(Sprocket::DevUI::Context& ui,
 }
 
 void PhysicsComponentInfo(Sprocket::DevUI::Context& ui,
-                          Sprocket::PhysicsComponent& phys)
+                          Sprocket::RigidBody3DComponent& phys)
 {
     if (ui.StartTreeNode("Physics")) {
         ui.Checkbox("Gravity", &phys.gravity);
         ui.SameLine();
         ui.Checkbox("Frozen", &phys.frozen);
         ui.DragFloat3("Velocity", &phys.velocity, 0.005f);
-        ui.DragFloat("Mass", &phys.mass, 0.05f);
         ui.SliderFloat("Bounciness", &phys.bounciness, 0.0f, 1.0f);
         ui.SliderFloat("Friction Coeff", &phys.frictionCoefficient, 0.0f, 1.0f);
         ui.SliderFloat("Roll Resistance", &phys.rollingResistance, 0.0f, 1.0f);
@@ -93,8 +92,8 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
         tr.orientation = Normalise(ToQuat(mat3(origin)));
     }
 
-    if (entity.Has<PhysicsComponent>()) {
-        PhysicsComponentInfo(ui, entity.Get<PhysicsComponent>());
+    if (entity.Has<RigidBody3DComponent>()) {
+        PhysicsComponentInfo(ui, entity.Get<RigidBody3DComponent>());
     }
 
     ui.Separator();
@@ -104,7 +103,7 @@ void SelectedEntityInfo(Sprocket::DevUI::Context& ui,
     }
 
     if (ui.CollapsingHeader("Add Component")) {
-        if (!entity.Has<PhysicsComponent>() && ui.Button("Physics")) {
+        if (!entity.Has<RigidBody3DComponent>() && ui.Button("Physics")) {
 
         }
     }
