@@ -56,5 +56,20 @@ def generate(spec, output):
         out += ')\n'
         out += "end\n\n"
 
+        out += f'function Add{name}(entity, c)\n'
+        out += f'    Lua_Add{name}(entity, '
+        args = []
+        for attr in component["Attributes"]:
+            n = attr["Name"]
+            if not attr.get("Scriptable", True):
+                continue
+            if attr["Type"] == "Maths::vec3":
+                args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
+            else:
+                args.append(f'c.{attr["Name"]}')
+        out += ", ".join(args)
+        out += ')\n'
+        out += "end\n\n"
+
     with open(output, "w") as outfile:
         outfile.write(out)

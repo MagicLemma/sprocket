@@ -5,6 +5,7 @@ function Init(entity)
     TIME = 0.0
 
     SPAWN_POINT = Vec3(-11, 2, 3)
+    ENTITY = entity
 end
 
 function OnUpdate(entity, dt)
@@ -58,12 +59,27 @@ function OnUpdate(entity, dt)
         SetTransformComponent(entity, transform)
     end
 
-    if IsKeyDown(KEYBOARD_Z) then
-        local newEntity = NewEntity()
-    end
 end
 
-function OnMouseButtonPressedEvent(consumed, button, action, mods) end
+function OnMouseButtonPressedEvent(consumed, button, action, mods)
+    if consumed then return false end
+
+    local newEntity = NewEntity()
+
+    local f = GetForwardsDir(ENTITY)
+    local spawn = GetTransformComponent(ENTITY).position
+
+    local tc = TransformComponent(spawn + f, Vec3(0.2, 0.2, 0.2))
+    AddTransformComponent(newEntity, tc)
+
+    local mc = ModelComponent("Resources/Models/Sphere.obj", "", 1, 1)
+    AddModelComponent(newEntity, mc)
+
+    local rbc = RigidBody3DComponent(10 * f, true, false, 0.5, 0.3, 0.0, Vec3(0, 0, 0), false)
+    AddRigidBody3DComponent(newEntity, rbc)
+
+    return true
+end
 
 function OnMouseScrolledEvent(consumed, xOffset, yOffset) end
 
