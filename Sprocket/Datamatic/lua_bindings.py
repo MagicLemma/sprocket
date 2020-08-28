@@ -4,46 +4,41 @@ def generate(spec, output):
     out = f"-- GENERATED FILE @ {datetime.now()}\n"
     for component in spec["Components"]:
         num_attrs = 0
+        constructor_sig = []
         for attr in component["Attributes"]:
             if not attr.get("Scriptable", True):
                 continue
-            if attr["Type"] in {"Maths::vec4", "Maths::quat"}:
+            if attr["Type"]  == "Maths::vec4":
+                constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
                 num_attrs += 4
             elif attr["Type"] == "Maths::vec3":
+                constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
                 num_attrs += 3
             elif attr["Type"] == "Maths::vec2":
+                constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
                 num_attrs += 2
             else:
+                constructor_sig.append(f"x{num_attrs}")
                 num_attrs += 1
 
         name = component["Name"]
         if not component.get("Scriptable", True):
             continue
         out += f'{component["Name"]} = Class(function(self, '
-        args = []
-        for attr in component["Attributes"]:
-            n = attr["Name"]
-            if not attr.get("Scriptable", True):
-                continue
-            if attr["Type"] == "Maths::vec3":
-                args.extend([f'{n}_x', f'{n}_y', f'{n}_z'])
-            else:
-                args.append(attr["Name"])
+        
+        args = [attr["Name"] for attr in component["Attributes"] if attr.get("Scriptable", True)]
         out += ", ".join(args) + ")\n"
+
         for attr in component["Attributes"]:
-            n = attr["Name"]
-            if not attr.get("Scriptable", True):
-                continue
-            if attr["Type"] == "Maths::vec3":
-                out += f'    self.{n} = Vec3({n}_x, {n}_y, {n}_z)\n'
-            else:
+            if attr.get("Scriptable", True):
+                n = attr["Name"]
                 out += f'    self.{n} = {n}\n'
         out += "end)\n\n"
 
         out += f'function Get{name}(entity)\n'
         pack = ", ".join([f'x{i}' for i in range(num_attrs)])
         out += "    " + pack + f" = Lua_Get{name}(entity)\n"
-        out += f'    return {name}({pack})\n'
+        out += f'    return {name}({", ".join(constructor_sig)})\n'
         out += "end\n\n"
 
         out += f'function Set{name}(entity, c)\n'

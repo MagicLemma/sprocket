@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-28 21:25:35.972335
+-- GENERATED FILE @ 2020-08-28 22:24:01.689777
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -12,13 +12,13 @@ function SetNameComponent(entity, c)
     Lua_SetNameComponent(entity, c.name)
 end
 
-TransformComponent = Class(function(self, position_x, position_y, position_z)
-    self.position = Vec3(position_x, position_y, position_z)
+TransformComponent = Class(function(self, position)
+    self.position = position
 end)
 
 function GetTransformComponent(entity)
     x0, x1, x2 = Lua_GetTransformComponent(entity)
-    return TransformComponent(x0, x1, x2)
+    return TransformComponent(Vec3(x0, x1, x2))
 end
 
 function SetTransformComponent(entity, c)
@@ -41,20 +41,20 @@ function SetModelComponent(entity, c)
     Lua_SetModelComponent(entity, c.model, c.texture, c.shineDamper, c.reflectivity)
 end
 
-RigidBody3DComponent = Class(function(self, velocity_x, velocity_y, velocity_z, gravity, frozen, bounciness, frictionCoefficient, rollingResistance, force_x, force_y, force_z, onFloor)
-    self.velocity = Vec3(velocity_x, velocity_y, velocity_z)
+RigidBody3DComponent = Class(function(self, velocity, gravity, frozen, bounciness, frictionCoefficient, rollingResistance, force, onFloor)
+    self.velocity = velocity
     self.gravity = gravity
     self.frozen = frozen
     self.bounciness = bounciness
     self.frictionCoefficient = frictionCoefficient
     self.rollingResistance = rollingResistance
-    self.force = Vec3(force_x, force_y, force_z)
+    self.force = force
     self.onFloor = onFloor
 end)
 
 function GetRigidBody3DComponent(entity)
     x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = Lua_GetRigidBody3DComponent(entity)
-    return RigidBody3DComponent(x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11)
+    return RigidBody3DComponent(Vec3(x0, x1, x2), x3, x4, x5, x6, x7, Vec3(x8, x9, x10), x11)
 end
 
 function SetRigidBody3DComponent(entity, c)
@@ -155,15 +155,15 @@ function SetGridComponent(entity, c)
     Lua_SetGridComponent(entity, c.x, c.z)
 end
 
-LightComponent = Class(function(self, colour_x, colour_y, colour_z, attenuation_x, attenuation_y, attenuation_z, brightness)
-    self.colour = Vec3(colour_x, colour_y, colour_z)
-    self.attenuation = Vec3(attenuation_x, attenuation_y, attenuation_z)
+LightComponent = Class(function(self, colour, attenuation, brightness)
+    self.colour = colour
+    self.attenuation = attenuation
     self.brightness = brightness
 end)
 
 function GetLightComponent(entity)
     x0, x1, x2, x3, x4, x5, x6 = Lua_GetLightComponent(entity)
-    return LightComponent(x0, x1, x2, x3, x4, x5, x6)
+    return LightComponent(Vec3(x0, x1, x2), Vec3(x3, x4, x5), x6)
 end
 
 function SetLightComponent(entity, c)
