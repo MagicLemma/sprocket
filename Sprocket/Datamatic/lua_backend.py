@@ -11,6 +11,18 @@ header = """
 #include <cassert>
 
 namespace Sprocket {
+namespace {
+
+template<typename T> int Lua_Has(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    lua_pushboolean(L, entity.Has<T>());
+    return 1;
+}
+
+}
 
 void RegisterComponentFunctions(lua_State* L)
 {
@@ -68,7 +80,8 @@ def generate_cpp(spec, output):
         name = component["Name"]
         out += f'    lua_register(L, "Lua_Get{name}", &Lua::Get{name});\n'
         out += f'    lua_register(L, "Lua_Set{name}", &Lua::Set{name});\n'
-        out += f'    lua_register(L, "Lua_Add{name}", &Lua::Add{name});\n\n'
+        out += f'    lua_register(L, "Lua_Add{name}", &Lua::Add{name});\n'
+        out += f'    lua_register(L, "Has{name}", &Lua_Has<{name}>);\n\n'
     out += middle
     for component in spec["Components"]:
         name = component["Name"]

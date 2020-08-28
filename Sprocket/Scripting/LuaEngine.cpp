@@ -48,15 +48,6 @@ void PrintErrors(lua_State* L, int rc)
     }
 }
 
-template<typename T> int Lua_Has(lua_State* L)
-{
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-
-    Entity* entity = GetEntity(L);
-    lua_pushboolean(L, entity->Has<T>());
-    return 0;
-}
-
 }
 
 LuaEngine::LuaEngine()
@@ -72,9 +63,6 @@ LuaEngine::LuaEngine()
 
     RegisterTransformFunctions(d_L);
     RegisterInputFunctions(d_L);
-
-    lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
-
     RegisterComponentFunctions(d_L);
     RegisterEntityFunctions(d_L);
 

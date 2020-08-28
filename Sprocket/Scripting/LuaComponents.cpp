@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-28 23:20:10.790752
+// GENERATED FILE @ 2020-08-29 00:29:19.437753
 
 #include "LuaComponents.h"
 #include "LuaGlobals.h"
@@ -10,56 +10,80 @@
 #include <cassert>
 
 namespace Sprocket {
+namespace {
+
+template<typename T> int Lua_Has(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    lua_pushboolean(L, entity.Has<T>());
+    return 1;
+}
+
+}
 
 void RegisterComponentFunctions(lua_State* L)
 {
     lua_register(L, "Lua_GetNameComponent", &Lua::GetNameComponent);
     lua_register(L, "Lua_SetNameComponent", &Lua::SetNameComponent);
     lua_register(L, "Lua_AddNameComponent", &Lua::AddNameComponent);
+    lua_register(L, "HasNameComponent", &Lua_Has<NameComponent>);
 
     lua_register(L, "Lua_GetTransformComponent", &Lua::GetTransformComponent);
     lua_register(L, "Lua_SetTransformComponent", &Lua::SetTransformComponent);
     lua_register(L, "Lua_AddTransformComponent", &Lua::AddTransformComponent);
+    lua_register(L, "HasTransformComponent", &Lua_Has<TransformComponent>);
 
     lua_register(L, "Lua_GetModelComponent", &Lua::GetModelComponent);
     lua_register(L, "Lua_SetModelComponent", &Lua::SetModelComponent);
     lua_register(L, "Lua_AddModelComponent", &Lua::AddModelComponent);
+    lua_register(L, "HasModelComponent", &Lua_Has<ModelComponent>);
 
     lua_register(L, "Lua_GetRigidBody3DComponent", &Lua::GetRigidBody3DComponent);
     lua_register(L, "Lua_SetRigidBody3DComponent", &Lua::SetRigidBody3DComponent);
     lua_register(L, "Lua_AddRigidBody3DComponent", &Lua::AddRigidBody3DComponent);
+    lua_register(L, "HasRigidBody3DComponent", &Lua_Has<RigidBody3DComponent>);
 
     lua_register(L, "Lua_GetBoxCollider3DComponent", &Lua::GetBoxCollider3DComponent);
     lua_register(L, "Lua_SetBoxCollider3DComponent", &Lua::SetBoxCollider3DComponent);
     lua_register(L, "Lua_AddBoxCollider3DComponent", &Lua::AddBoxCollider3DComponent);
+    lua_register(L, "HasBoxCollider3DComponent", &Lua_Has<BoxCollider3DComponent>);
 
     lua_register(L, "Lua_GetSphereCollider3DComponent", &Lua::GetSphereCollider3DComponent);
     lua_register(L, "Lua_SetSphereCollider3DComponent", &Lua::SetSphereCollider3DComponent);
     lua_register(L, "Lua_AddSphereCollider3DComponent", &Lua::AddSphereCollider3DComponent);
+    lua_register(L, "HasSphereCollider3DComponent", &Lua_Has<SphereCollider3DComponent>);
 
     lua_register(L, "Lua_GetCapsuleCollider3DComponent", &Lua::GetCapsuleCollider3DComponent);
     lua_register(L, "Lua_SetCapsuleCollider3DComponent", &Lua::SetCapsuleCollider3DComponent);
     lua_register(L, "Lua_AddCapsuleCollider3DComponent", &Lua::AddCapsuleCollider3DComponent);
+    lua_register(L, "HasCapsuleCollider3DComponent", &Lua_Has<CapsuleCollider3DComponent>);
 
     lua_register(L, "Lua_GetCameraComponent", &Lua::GetCameraComponent);
     lua_register(L, "Lua_SetCameraComponent", &Lua::SetCameraComponent);
     lua_register(L, "Lua_AddCameraComponent", &Lua::AddCameraComponent);
+    lua_register(L, "HasCameraComponent", &Lua_Has<CameraComponent>);
 
     lua_register(L, "Lua_GetSelectComponent", &Lua::GetSelectComponent);
     lua_register(L, "Lua_SetSelectComponent", &Lua::SetSelectComponent);
     lua_register(L, "Lua_AddSelectComponent", &Lua::AddSelectComponent);
+    lua_register(L, "HasSelectComponent", &Lua_Has<SelectComponent>);
 
     lua_register(L, "Lua_GetPathComponent", &Lua::GetPathComponent);
     lua_register(L, "Lua_SetPathComponent", &Lua::SetPathComponent);
     lua_register(L, "Lua_AddPathComponent", &Lua::AddPathComponent);
+    lua_register(L, "HasPathComponent", &Lua_Has<PathComponent>);
 
     lua_register(L, "Lua_GetGridComponent", &Lua::GetGridComponent);
     lua_register(L, "Lua_SetGridComponent", &Lua::SetGridComponent);
     lua_register(L, "Lua_AddGridComponent", &Lua::AddGridComponent);
+    lua_register(L, "HasGridComponent", &Lua_Has<GridComponent>);
 
     lua_register(L, "Lua_GetLightComponent", &Lua::GetLightComponent);
     lua_register(L, "Lua_SetLightComponent", &Lua::SetLightComponent);
     lua_register(L, "Lua_AddLightComponent", &Lua::AddLightComponent);
+    lua_register(L, "HasLightComponent", &Lua_Has<LightComponent>);
 
 }
 
