@@ -125,10 +125,7 @@ void LuaEngine::CallInitFunction()
 
 void LuaEngine::CallOnUpdateFunction(double dt)
 {
-    if (!d_entity.Get<ScriptComponent>().active) {
-        return;
-    }
-
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnUpdate");
     
     if (!lua_isfunction(d_L, -1)) {
@@ -145,10 +142,7 @@ void LuaEngine::CallOnUpdateFunction(double dt)
 
 void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) {
-        return;
-    }
-
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnWindowResizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -166,12 +160,84 @@ void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
-void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
+void LuaEngine::CallOnWindowClosedEvent(WindowClosedEvent* e)
+{}
+
+void LuaEngine::CallOnWindowGotFocusEvent(WindowGotFocusEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) {
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnWindowGotFocusEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
         return;
     }
+    
+    lua_pushboolean(d_L, e->IsConsumed());
 
+    int rc = lua_pcall(d_L, 1, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnWindowLostFocusEvent(WindowLostFocusEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnWindowLostFocusEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+    
+    lua_pushboolean(d_L, e->IsConsumed());
+
+    int rc = lua_pcall(d_L, 1, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnWindowMaximizeEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+    
+    lua_pushboolean(d_L, e->IsConsumed());
+
+    int rc = lua_pcall(d_L, 1, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
+{
+        if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnWindowMinimizeEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+    
+    lua_pushboolean(d_L, e->IsConsumed());
+
+    int rc = lua_pcall(d_L, 1, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnMouseButtonPressedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -190,12 +256,51 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
-void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
+
+void LuaEngine::CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) {
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "MouseButtonReleasedEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
         return;
     }
+    
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->Button());
+    lua_pushnumber(d_L, e->Action());
+    lua_pushnumber(d_L, e->Mods());
 
+    int rc = lua_pcall(d_L, 4, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnMouseMovedEvent(MouseMovedEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnMouseMovedEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+    
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->XPos());
+    lua_pushnumber(d_L, e->YPos());
+
+    int rc = lua_pcall(d_L, 3, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnMouseScrolledEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -208,6 +313,88 @@ void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
     lua_pushnumber(d_L, e->YOffset());
 
     int rc = lua_pcall(d_L, 3, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnKeyboardButtonPressedEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->Key());
+    lua_pushnumber(d_L, e->Scancode());
+    lua_pushnumber(d_L, e->Mods());
+
+    int rc = lua_pcall(d_L, 4, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnKeyboardButtonReleasedEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->Key());
+    lua_pushnumber(d_L, e->Scancode());
+    lua_pushnumber(d_L, e->Mods());
+
+    int rc = lua_pcall(d_L, 4, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnKeyboardButtonHeldEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->Key());
+    lua_pushnumber(d_L, e->Scancode());
+    lua_pushnumber(d_L, e->Mods());
+
+    int rc = lua_pcall(d_L, 4, 1, 0);
+    PrintErrors(d_L, rc);
+
+    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+}
+
+void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
+{
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
+    lua_getglobal(d_L, "OnKeyboardKeyTypedEvent");
+
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+
+    lua_pushboolean(d_L, e->IsConsumed());
+    lua_pushnumber(d_L, e->Key());
+
+    int rc = lua_pcall(d_L, 2, 1, 0);
     PrintErrors(d_L, rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }

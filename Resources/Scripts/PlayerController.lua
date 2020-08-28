@@ -85,7 +85,3 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     Forget(newEntity)
     return true
 end
-
-function OnMouseScrolledEvent(consumed, xOffset, yOffset) end
-
-function OnWindowResizeEvent(consumed, width, height) end

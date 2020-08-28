@@ -51,9 +51,52 @@ void ScriptRunner::OnEvent(Scene& scene, Event& event)
     d_keyboard.OnEvent(event);
     d_mouse.OnEvent(event);
 
-    if (auto e = event.As<MouseButtonPressedEvent>()) {
+    // WINDOW EVENTS
+    if (auto e = event.As<WindowResizeEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnWindowResizeEvent(e);
+        }
+    }
+    else if (auto e = event.As<WindowClosedEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnWindowClosedEvent(e);
+        }
+    }
+    else if (auto e = event.As<WindowGotFocusEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnWindowGotFocusEvent(e);
+        }
+    }
+    else if (auto e = event.As<WindowLostFocusEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnWindowLostFocusEvent(e);
+        }
+    }
+    else if (auto e = event.As<WindowMaximizeEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnWindowMaximizeEvent(e);
+        }
+    }
+    else if (auto e = event.As<WindowMinimizeEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnWindowMinimizeEvent(e);
+        }
+    }
+
+    // MOUSE EVENTS
+    else if (auto e = event.As<MouseButtonPressedEvent>()) {
         for (auto& [id, luaEngine] : d_engines) {
             luaEngine.CallOnMouseButtonPressedEvent(e);
+        }
+    }
+    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnMouseButtonReleasedEvent(e);
+        }
+    }
+    else if (auto e = event.As<MouseMovedEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnMouseMovedEvent(e);
         }
     }
     else if (auto e = event.As<MouseScrolledEvent>()) {
@@ -61,9 +104,26 @@ void ScriptRunner::OnEvent(Scene& scene, Event& event)
             luaEngine.CallOnMouseScrolledEvent(e);
         }
     }
-    else if (auto e = event.As<WindowResizeEvent>()) {
+        
+    // KEYBOARD
+    else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
         for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnWindowResizeEvent(e);
+            luaEngine.CallOnKeyboardButtonPressedEvent(e);
+        }
+    }
+    else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnKeyboardButtonReleasedEvent(e);
+        }
+    }
+    else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnKeyboardButtonHeldEvent(e);
+        }
+    }
+    else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
+        for (auto& [id, luaEngine] : d_engines) {
+            luaEngine.CallOnKeyboardKeyTypedEvent(e);
         }
     }
 }
