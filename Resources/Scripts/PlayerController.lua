@@ -68,6 +68,7 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
 
     local f = GetForwardsDir(ENTITY)
     local spawn = GetTransformComponent(ENTITY).position
+    local base_velocity = GetRigidBody3DComponent(ENTITY).velocity
 
     local tc = TransformComponent(spawn + f, Vec3(0.2, 0.2, 0.2))
     AddTransformComponent(newEntity, tc)
@@ -75,8 +76,11 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     local mc = ModelComponent("Resources/Models/Sphere.obj", "", 1, 1)
     AddModelComponent(newEntity, mc)
 
-    local rbc = RigidBody3DComponent(10 * f, true, false, 0.5, 0.3, 0.0, Vec3(0, 0, 0), false)
+    local rbc = RigidBody3DComponent(10 * f + base_velocity, true, false, 0.5, 0.3, 0.0, Vec3(0, 0, 0), false)
     AddRigidBody3DComponent(newEntity, rbc)
+
+    local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 5, 0.2)
+    AddSphereCollider3DComponent(newEntity, sc)
 
     return true
 end

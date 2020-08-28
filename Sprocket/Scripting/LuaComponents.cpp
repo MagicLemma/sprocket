@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-28 23:10:37.950902
+// GENERATED FILE @ 2020-08-28 23:20:10.790752
 
 #include "LuaComponents.h"
 #include "LuaGlobals.h"
@@ -265,29 +265,50 @@ int GetBoxCollider3DComponent(lua_State* L)
     assert(e.Has<BoxCollider3DComponent>());
 
     const auto& c = e.Get<BoxCollider3DComponent>();
+    lua_pushnumber(L, c.position.x);
+    lua_pushnumber(L, c.position.y);
+    lua_pushnumber(L, c.position.z);
     lua_pushnumber(L, c.mass);
-    return 1;
+    lua_pushnumber(L, c.halfExtents.x);
+    lua_pushnumber(L, c.halfExtents.y);
+    lua_pushnumber(L, c.halfExtents.z);
+    lua_pushboolean(L, c.applyScale);
+    return 8;
 }
 
 int SetBoxCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 9)) { return luaL_error(L, "Bad number of args"); }
 
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<BoxCollider3DComponent>();
-    c.mass = (float)lua_tonumber(L, 2);
+    c.position.x = (float)lua_tonumber(L, 2);
+    c.position.y = (float)lua_tonumber(L, 3);
+    c.position.z = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 5);
+    c.halfExtents.x = (float)lua_tonumber(L, 6);
+    c.halfExtents.y = (float)lua_tonumber(L, 7);
+    c.halfExtents.z = (float)lua_tonumber(L, 8);
+    c.applyScale = (bool)lua_toboolean(L, 9);
     return 0;
 }
 
 int AddBoxCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 9)) { return luaL_error(L, "Bad number of args"); }
 
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<BoxCollider3DComponent>());
 
     BoxCollider3DComponent c;
-    c.mass = (float)lua_tonumber(L, 2);
+    c.position.x = (float)lua_tonumber(L, 2);
+    c.position.y = (float)lua_tonumber(L, 3);
+    c.position.z = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 5);
+    c.halfExtents.x = (float)lua_tonumber(L, 6);
+    c.halfExtents.y = (float)lua_tonumber(L, 7);
+    c.halfExtents.z = (float)lua_tonumber(L, 8);
+    c.applyScale = (bool)lua_toboolean(L, 9);
     e.Add(c);
     return 0;
 }
@@ -299,29 +320,41 @@ int GetSphereCollider3DComponent(lua_State* L)
     assert(e.Has<SphereCollider3DComponent>());
 
     const auto& c = e.Get<SphereCollider3DComponent>();
+    lua_pushnumber(L, c.position.x);
+    lua_pushnumber(L, c.position.y);
+    lua_pushnumber(L, c.position.z);
     lua_pushnumber(L, c.mass);
-    return 1;
+    lua_pushnumber(L, c.radius);
+    return 5;
 }
 
 int SetSphereCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 6)) { return luaL_error(L, "Bad number of args"); }
 
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<SphereCollider3DComponent>();
-    c.mass = (float)lua_tonumber(L, 2);
+    c.position.x = (float)lua_tonumber(L, 2);
+    c.position.y = (float)lua_tonumber(L, 3);
+    c.position.z = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 5);
+    c.radius = (float)lua_tonumber(L, 6);
     return 0;
 }
 
 int AddSphereCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 6)) { return luaL_error(L, "Bad number of args"); }
 
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<SphereCollider3DComponent>());
 
     SphereCollider3DComponent c;
-    c.mass = (float)lua_tonumber(L, 2);
+    c.position.x = (float)lua_tonumber(L, 2);
+    c.position.y = (float)lua_tonumber(L, 3);
+    c.position.z = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 5);
+    c.radius = (float)lua_tonumber(L, 6);
     e.Add(c);
     return 0;
 }
@@ -333,29 +366,44 @@ int GetCapsuleCollider3DComponent(lua_State* L)
     assert(e.Has<CapsuleCollider3DComponent>());
 
     const auto& c = e.Get<CapsuleCollider3DComponent>();
+    lua_pushnumber(L, c.position.x);
+    lua_pushnumber(L, c.position.y);
+    lua_pushnumber(L, c.position.z);
     lua_pushnumber(L, c.mass);
-    return 1;
+    lua_pushnumber(L, c.radius);
+    lua_pushnumber(L, c.height);
+    return 6;
 }
 
 int SetCapsuleCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<CapsuleCollider3DComponent>();
-    c.mass = (float)lua_tonumber(L, 2);
+    c.position.x = (float)lua_tonumber(L, 2);
+    c.position.y = (float)lua_tonumber(L, 3);
+    c.position.z = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 5);
+    c.radius = (float)lua_tonumber(L, 6);
+    c.height = (float)lua_tonumber(L, 7);
     return 0;
 }
 
 int AddCapsuleCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<CapsuleCollider3DComponent>());
 
     CapsuleCollider3DComponent c;
-    c.mass = (float)lua_tonumber(L, 2);
+    c.position.x = (float)lua_tonumber(L, 2);
+    c.position.y = (float)lua_tonumber(L, 3);
+    c.position.z = (float)lua_tonumber(L, 4);
+    c.mass = (float)lua_tonumber(L, 5);
+    c.radius = (float)lua_tonumber(L, 6);
+    c.height = (float)lua_tonumber(L, 7);
     e.Add(c);
     return 0;
 }
