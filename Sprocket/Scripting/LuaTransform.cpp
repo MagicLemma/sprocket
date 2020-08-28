@@ -62,7 +62,15 @@ int GetForwardsDir(lua_State* L)
 
     Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& tr = entity.Get<TransformComponent>();
-    auto forwards = Maths::Forwards(tr.orientation);
+    auto o = tr.orientation;
+    
+    if (entity.Has<CameraComponent>()) {
+        auto pitch = entity.Get<CameraComponent>().pitch;
+        o *= Maths::Rotate({1, 0, 0}, pitch);
+    }
+
+    auto forwards = Maths::Forwards(o);
+
     lua_pushnumber(L, forwards.x);
     lua_pushnumber(L, forwards.y);
     lua_pushnumber(L, forwards.z);

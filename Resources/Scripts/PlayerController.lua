@@ -76,12 +76,13 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     local mc = ModelComponent("Resources/Models/Sphere.obj", "", 1, 1)
     AddModelComponent(newEntity, mc)
 
-    local rbc = RigidBody3DComponent(10 * f + base_velocity, true, false, 0.5, 0.3, 0.0, Vec3(0, 0, 0), false)
+    local rbc = RigidBody3DComponent(10 * f + base_velocity, true, false, 0.65, 0.0, 0.5, Vec3(0, 0, 0), false)
     AddRigidBody3DComponent(newEntity, rbc)
 
-    local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 5, 0.2)
+    local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 2, 0.2)
     AddSphereCollider3DComponent(newEntity, sc)
 
+    Forget(newEntity)
     return true
 end
 
