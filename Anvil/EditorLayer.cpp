@@ -96,14 +96,8 @@ void EditorLayer::OnUpdate(double dt)
         
         d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
 
-        d_activeScene->Each<TransformComponent, RigidBody3DComponent>([&](Entity& entity) {
+        d_activeScene->Each<TransformComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
-            auto& physics = entity.Get<RigidBody3DComponent>();
-            
-            if (entity.Has<CameraComponent>() && transform.position.y < -2) {
-                transform.position = {0, 3, 0};
-                physics.velocity = {0, 0, 0};
-            }
             if (transform.position.y < -50) {
                 entity.Kill();
             }

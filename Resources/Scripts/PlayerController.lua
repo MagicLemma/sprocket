@@ -3,6 +3,8 @@ function Init()
     YAW = math.deg(-math.asin(f.x))
 
     TIME = 0.0
+
+    SPAWN_POINT = Vec3(-11, 2, 3)
 end
 
 function OnUpdate(dt)
@@ -49,6 +51,12 @@ function OnUpdate(dt)
 
     physics.force = physics.force + (10 * dv) -- TODO: Replace 10 with mass
     SetRigidBody3DComponent(physics)
+
+    local transform = GetTransformComponent()
+    if transform.position.y < -1 then
+        transform.position = SPAWN_POINT
+        SetTransformComponent(transform)
+    end
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end
