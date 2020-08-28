@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-28 13:43:38.424042
+// GENERATED FILE @ 2020-08-28 16:33:03.948551
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -70,6 +70,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "orientation" << YAML::Value << c.orientation;
             out << YAML::Key << "mass" << YAML::Value << c.mass;
             out << YAML::Key << "halfExtents" << YAML::Value << c.halfExtents;
+            out << YAML::Key << "applyScale" << YAML::Value << c.applyScale;
             out << YAML::EndMap;
         }
         if(entity.Has<SphereCollider3DComponent>()) {
@@ -198,6 +199,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.halfExtents = spec["halfExtents"] ? spec["halfExtents"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.applyScale = spec["applyScale"] ? spec["applyScale"].as<bool>() : true;
             e.Add(c);
         }
         if (auto spec = entity["SphereCollider3DComponent"]) {
@@ -255,55 +257,60 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     }
 }
 
+Entity Copy(std::shared_ptr<Scene> scene, Entity entity)
+{
+    Entity e = scene->NewEntity();
+    if (entity.Has<TemporaryComponent>()) {
+        e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
+    }
+    if (entity.Has<NameComponent>()) {
+        e.Add<NameComponent>(entity.Get<NameComponent>());
+    }
+    if (entity.Has<TransformComponent>()) {
+        e.Add<TransformComponent>(entity.Get<TransformComponent>());
+    }
+    if (entity.Has<ModelComponent>()) {
+        e.Add<ModelComponent>(entity.Get<ModelComponent>());
+    }
+    if (entity.Has<RigidBody3DComponent>()) {
+        e.Add<RigidBody3DComponent>(entity.Get<RigidBody3DComponent>());
+    }
+    if (entity.Has<BoxCollider3DComponent>()) {
+        e.Add<BoxCollider3DComponent>(entity.Get<BoxCollider3DComponent>());
+    }
+    if (entity.Has<SphereCollider3DComponent>()) {
+        e.Add<SphereCollider3DComponent>(entity.Get<SphereCollider3DComponent>());
+    }
+    if (entity.Has<CapsuleCollider3DComponent>()) {
+        e.Add<CapsuleCollider3DComponent>(entity.Get<CapsuleCollider3DComponent>());
+    }
+    if (entity.Has<ScriptComponent>()) {
+        e.Add<ScriptComponent>(entity.Get<ScriptComponent>());
+    }
+    if (entity.Has<CameraComponent>()) {
+        e.Add<CameraComponent>(entity.Get<CameraComponent>());
+    }
+    if (entity.Has<SelectComponent>()) {
+        e.Add<SelectComponent>(entity.Get<SelectComponent>());
+    }
+    if (entity.Has<PathComponent>()) {
+        e.Add<PathComponent>(entity.Get<PathComponent>());
+    }
+    if (entity.Has<GridComponent>()) {
+        e.Add<GridComponent>(entity.Get<GridComponent>());
+    }
+    if (entity.Has<LightComponent>()) {
+        e.Add<LightComponent>(entity.Get<LightComponent>());
+    }
+
+    return e;
+}
+
 void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
 {
     target->Clear();
-
     source->All([&](Entity& entity) {
-        Entity e = target->NewEntity();
-        if (entity.Has<TemporaryComponent>()) {
-            e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
-        }
-        if (entity.Has<NameComponent>()) {
-            e.Add<NameComponent>(entity.Get<NameComponent>());
-        }
-        if (entity.Has<TransformComponent>()) {
-            e.Add<TransformComponent>(entity.Get<TransformComponent>());
-        }
-        if (entity.Has<ModelComponent>()) {
-            e.Add<ModelComponent>(entity.Get<ModelComponent>());
-        }
-        if (entity.Has<RigidBody3DComponent>()) {
-            e.Add<RigidBody3DComponent>(entity.Get<RigidBody3DComponent>());
-        }
-        if (entity.Has<BoxCollider3DComponent>()) {
-            e.Add<BoxCollider3DComponent>(entity.Get<BoxCollider3DComponent>());
-        }
-        if (entity.Has<SphereCollider3DComponent>()) {
-            e.Add<SphereCollider3DComponent>(entity.Get<SphereCollider3DComponent>());
-        }
-        if (entity.Has<CapsuleCollider3DComponent>()) {
-            e.Add<CapsuleCollider3DComponent>(entity.Get<CapsuleCollider3DComponent>());
-        }
-        if (entity.Has<ScriptComponent>()) {
-            e.Add<ScriptComponent>(entity.Get<ScriptComponent>());
-        }
-        if (entity.Has<CameraComponent>()) {
-            e.Add<CameraComponent>(entity.Get<CameraComponent>());
-        }
-        if (entity.Has<SelectComponent>()) {
-            e.Add<SelectComponent>(entity.Get<SelectComponent>());
-        }
-        if (entity.Has<PathComponent>()) {
-            e.Add<PathComponent>(entity.Get<PathComponent>());
-        }
-        if (entity.Has<GridComponent>()) {
-            e.Add<GridComponent>(entity.Get<GridComponent>());
-        }
-        if (entity.Has<LightComponent>()) {
-            e.Add<LightComponent>(entity.Get<LightComponent>());
-        }
-
+        Copy(target, entity);
     });
 }
 

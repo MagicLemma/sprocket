@@ -1,9 +1,18 @@
 function Init()
-    YAW = 0.0
+    local f = GetForwardsDir()
+    YAW = math.deg(-math.asin(f.x))
+
+    TIME = 0.0
 end
 
 function OnUpdate(dt)
-    local dx, dy = GetMouseOffset()
+    TIME = TIME + dt
+
+    local dx = 0
+    local dy = 0
+    if TIME > 0.2 then
+        dx, dy = GetMouseOffset()
+    end
     
     YAW = YAW - dx * 0.15
 

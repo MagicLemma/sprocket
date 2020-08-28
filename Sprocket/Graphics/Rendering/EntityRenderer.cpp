@@ -191,6 +191,9 @@ void EntityRenderer::DrawBox(const Entity& entity)
     Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform *= Maths::Transform(physics.position, physics.orientation);
     transform = Maths::Scale(transform, physics.halfExtents);
+    if (physics.applyScale) {
+        transform = Maths::Scale(transform, tr.scale);
+    }
 
     s_cube.Bind();
     Texture::White().Bind();

@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-28 13:43:38.445971
+// GENERATED FILE @ 2020-08-28 16:33:03.970491
 
 #include "Inspector.h"
 #include "EditorLayer.h"
@@ -6,6 +6,7 @@
 #include "Maths.h"
 #include "Components.h"
 #include "DevUI.h"
+#include "Loader.h"
 
 #include <imgui.h>
 
@@ -95,6 +96,7 @@ void ShowInspector(EditorLayer& editor)
         ImGuiXtra::Euler("Orientation", &c.orientation);
         ImGui::DragFloat("Mass", &c.mass, 0.1f);
         ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.1f);
+        ImGui::Checkbox("Apply Scale", &c.applyScale);
         if (ImGui::Button("Delete")) { entity.Remove<BoxCollider3DComponent>(); }
         ImGui::PopID();
     }
@@ -229,6 +231,10 @@ void ShowInspector(EditorLayer& editor)
         ImGui::EndMenu();
     }
     ImGui::Separator();
+    if (ImGui::Button("Duplicate")) {
+        Entity copy = Loader::Copy(editor.GetScene(), entity);
+        editor.SetSelected(copy);
+    }
     if (ImGui::Button("Delete Entity")) {
         entity.Kill();
         editor.ClearSelected();

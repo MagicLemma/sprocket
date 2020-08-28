@@ -1,138 +1,222 @@
+Version: 2
 Entities:
-  - Version: 1
   - NameComponent:
-      name: Sphere 4
+      name: White Light
     TransformComponent:
-      position: [0, 45, 0]
+      position: [40, 20, 0]
       orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
+    LightComponent:
+      colour: [1, 0.99999, 0.99999]
+      attenuation: [1, 0, 0]
+      brightness: 0.7
+  - NameComponent:
+      name: Green Light
+    TransformComponent:
+      position: [8, 4, 2]
+      orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
+    LightComponent:
+      colour: [0.3532071, 0.5777777, 0.310716]
+      attenuation: [1, 0, 0]
+      brightness: 1
+  - NameComponent:
+      name: Blue Light
+    TransformComponent:
+      position: [-7, 1.8, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
+    LightComponent:
+      colour: [0, 0, 1]
+      attenuation: [1, 0, 0]
+      brightness: 2
+  - NameComponent:
+      name: Red Light
+    TransformComponent:
+      position: [5.4, 1, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
+    LightComponent:
+      colour: [1, 0, 0]
+      attenuation: [1, 0, 0]
+      brightness: 2
+  - NameComponent:
+      name: Platform 1
+    TransformComponent:
+      position: [12.86896, 0, 4.999661]
+      orientation: [1, 0, 0, 0]
+      scale: [1, 0.9999998, 0.9999998]
     ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
+      model: Resources/Models/Platform.obj
       texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
+      shineDamper: 1
+      reflectivity: 0
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
-      frozen: false
-      bounciness: 0.5
+      frozen: true
+      bounciness: 0
       frictionCoefficient: 0.3
       rollingResistance: 0
-    SphereCollider3DComponent:
+    BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
+      mass: 1
+      halfExtents: [6.224951, 0.293629, 16.39011]
+      applyScale: true
     SelectComponent:
       {}
   - NameComponent:
-      name: Sphere 3
+      name: Island
     TransformComponent:
-      position: [0, 35, 0]
+      position: [40, -10, 0]
       orientation: [1, 0, 0, 0]
+      scale: [0.5, 0.5, 0.5]
     ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SphereCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
+      model: Resources/Models/FloatingIsland.obj
+      texture: D:\dev\Sprocket\Resources\Textures\Green.png
+      shineDamper: 1
+      reflectivity: 0
     SelectComponent:
       {}
   - NameComponent:
-      name: Sphere 2
+      name: Platform 2
     TransformComponent:
-      position: [0, 25, 0]
+      position: [-5, 0, 5]
       orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
     ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
+      model: Resources/Models/Platform.obj
       texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
+      shineDamper: 1
+      reflectivity: 0
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
-      frozen: false
-      bounciness: 0.5
+      frozen: true
+      bounciness: 0
       frictionCoefficient: 0.3
       rollingResistance: 0
-    SphereCollider3DComponent:
+    BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
+      mass: 1
+      halfExtents: [6.224951, 0.293629, 16.39011]
+      applyScale: true
     SelectComponent:
       {}
   - NameComponent:
-      name: Sphere 1
+      name: Platform 3
     TransformComponent:
-      position: [0, 15, 0]
-      orientation: [1, 0, 0, 0]
+      position: [-5, 0, 5]
+      orientation: [0.5416752, -0.4545195, 0.5416752, 0.4545195]
+      scale: [1, 1, 1]
     ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
+      model: Resources/Models/Platform.obj
       texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
+      shineDamper: 1
+      reflectivity: 0
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
-      frozen: false
-      bounciness: 0.5
+      frozen: true
+      bounciness: 0
       frictionCoefficient: 0.3
       rollingResistance: 0
-    SphereCollider3DComponent:
+    BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
+      mass: 1
+      halfExtents: [6.224951, 0.293629, 16.39011]
+      applyScale: true
     SelectComponent:
       {}
   - NameComponent:
-      name: Sphere 0
+      name: Crate
     TransformComponent:
-      position: [0, 5, 0]
-      orientation: [1, 0, 0, 0]
+      position: [-5, 2, -3]
+      orientation: [0.9700029, 0, 0.2430935, 0]
+      scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
-      model: Resources/Models/Sphere.obj
-      scale: 0.9
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Space.PNG
+      shineDamper: 1
+      reflectivity: 0
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
-      frozen: false
-      bounciness: 0.5
-      frictionCoefficient: 0.3
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0
       rollingResistance: 0
-    SphereCollider3DComponent:
+    BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 2
+    TransformComponent:
+      position: [4.338203, 0.02311182, -5.717224]
+      orientation: [0.7933534, 0, 0.6087613, 0]
+      scale: [1.494947, 0.6160595, 6.666203]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1000
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 3 (M)
+    TransformComponent:
+      position: [3.874476, -0.0833931, 18.86059]
+      orientation: [1, 0, 0, 0]
+      scale: [3.949931, 0.948213, 0.2955239]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0.2
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 10000
+      halfExtents: [1, 1, 1]
+      applyScale: true
     SelectComponent:
       {}
   - NameComponent:
       name: Player
     TransformComponent:
       position: [0, 5, 5]
-      orientation: [1, 0, 0, 0]
+      orientation: [0.7213115, 0, -0.6926109, 0]
+      scale: [0.3, 0.3, 0.2999997]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      scale: 0.3
       texture: Resources/Textures/PlainGray.PNG
       shineDamper: 1
       reflectivity: 0
@@ -158,20 +242,146 @@ Entities:
     SelectComponent:
       {}
   - NameComponent:
+      name: Sphere 0
+    TransformComponent:
+      position: [0, 5, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [0.9, 0.9, 0.9]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 20
+      radius: 1
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 1
+    TransformComponent:
+      position: [0, 15, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [0.9, 0.9, 0.9]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 20
+      radius: 1
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 2
+    TransformComponent:
+      position: [0, 25, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [0.9, 0.9, 0.9]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 20
+      radius: 1
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 3
+    TransformComponent:
+      position: [0, 35, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [0.9, 0.9, 0.9]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 20
+      radius: 1
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 4
+    TransformComponent:
+      position: [0, 45, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [0.9, 0.9, 0.9]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 20
+      radius: 1
+    SelectComponent:
+      {}
+  - {}
+  - NameComponent:
       name: Crate 3 (M)
     TransformComponent:
-      position: [8, 5, 7]
-      orientation: [0.7933533, 0, 0.6087614, 0]
+      position: [3.874476, -0.0833931, 17.59401]
+      orientation: [1, 0, 0, 0]
+      scale: [3.949931, 0.948213, 0.2955239]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      scale: 1.2
       texture: Resources/Textures/Green.PNG
       shineDamper: 1
       reflectivity: 0
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
-      frozen: false
+      frozen: true
       bounciness: 0
       frictionCoefficient: 0.2
       rollingResistance: 0
@@ -179,17 +389,18 @@ Entities:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
       mass: 10000
-      halfExtents: [1.2, 1.2, 1.2]
+      halfExtents: [1, 1, 1]
+      applyScale: true
     SelectComponent:
       {}
   - NameComponent:
-      name: Crate 2
+      name: Crate 3 (M)
     TransformComponent:
-      position: [-1.2, 0.3, 2.2]
-      orientation: [0.7933533, 0, 0.6087614, 0]
+      position: [3.874476, -0.0833931, 16.36953]
+      orientation: [1, 0, 0, 0]
+      scale: [3.949931, 0.948213, 0.2955239]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      scale: 1.2
       texture: Resources/Textures/Green.PNG
       shineDamper: 1
       reflectivity: 0
@@ -198,161 +409,13 @@ Entities:
       gravity: true
       frozen: true
       bounciness: 0
-      frictionCoefficient: 0
+      frictionCoefficient: 0.2
       rollingResistance: 0
     BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
-      mass: 1000
-      halfExtents: [1.2, 1.2, 1.2]
+      mass: 10000
+      halfExtents: [1, 1, 1]
+      applyScale: true
     SelectComponent:
       {}
-  - NameComponent:
-      name: Crate
-    TransformComponent:
-      position: [-5, 2, -3]
-      orientation: [0.9238795, 0, 0.3826835, 0]
-    ModelComponent:
-      model: Resources/Models/Cube.obj
-      scale: 1.2
-      texture: Resources/Textures/Space.PNG
-      shineDamper: 1
-      reflectivity: 0
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      bounciness: 0
-      frictionCoefficient: 0
-      rollingResistance: 0
-    BoxCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 1
-      halfExtents: [1.2, 1.2, 1.2]
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Platform 3
-    TransformComponent:
-      position: [-5, 0, 5]
-      orientation: [0.5416752, -0.4545195, 0.5416752, 0.4545195]
-    ModelComponent:
-      model: Resources/Models/Platform.obj
-      scale: 1
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 1
-      reflectivity: 0
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      bounciness: 0
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    BoxCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 1
-      halfExtents: [6.224951, 0.293629, 16.39011]
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Platform 2
-    TransformComponent:
-      position: [-5, 0, 5]
-      orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Platform.obj
-      scale: 1
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 1
-      reflectivity: 0
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      bounciness: 0
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    BoxCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 1
-      halfExtents: [6.224951, 0.293629, 16.39011]
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Island
-    TransformComponent:
-      position: [40, -10, 0]
-      orientation: [1, 0, 0, 0]
-    ModelComponent:
-      model: Resources/Models/FloatingIsland.obj
-      scale: 0.5
-      texture: D:\dev\Sprocket\Resources\Textures\Green.png
-      shineDamper: 1
-      reflectivity: 0
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Platform 1
-    TransformComponent:
-      position: [7, 0, -3]
-      orientation: [0.9986296, 0.05233571, 0, 0]
-    ModelComponent:
-      model: Resources/Models/Platform.obj
-      scale: 1
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 1
-      reflectivity: 0
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: true
-      bounciness: 0
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    BoxCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 1
-      halfExtents: [6.224951, 0.293629, 16.39011]
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Red Light
-    TransformComponent:
-      position: [5.4, 1, 0]
-      orientation: [1, 0, 0, 0]
-    LightComponent:
-      colour: [1, 0, 0]
-      attenuation: [1, 0, 0]
-      brightness: 2
-  - NameComponent:
-      name: Blue Light
-    TransformComponent:
-      position: [-7, 1.8, 0]
-      orientation: [1, 0, 0, 0]
-    LightComponent:
-      colour: [0, 0, 1]
-      attenuation: [1, 0, 0]
-      brightness: 2
-  - NameComponent:
-      name: Green Light
-    TransformComponent:
-      position: [8, 4, 2]
-      orientation: [1, 0, 0, 0]
-    LightComponent:
-      colour: [0.3019608, 0.7921569, 0.2117647]
-      attenuation: [1, 0, 0]
-      brightness: 1
-  - NameComponent:
-      name: White Light
-    TransformComponent:
-      position: [40, 20, 0]
-      orientation: [1, 0, 0, 0]
-    LightComponent:
-      colour: [1, 0.99999, 0.99999]
-      attenuation: [1, 0, 0]
-      brightness: 0.7

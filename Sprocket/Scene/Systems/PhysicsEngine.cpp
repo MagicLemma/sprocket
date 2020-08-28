@@ -145,7 +145,11 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto& box = entity.Get<BoxCollider3DComponent>();
 
         std::shared_ptr<rp3d::CollisionShape> collider;
-        collider = std::make_shared<rp3d::BoxShape>(Convert(box.halfExtents));
+        Maths::vec3 dimensions = box.halfExtents;
+        if (box.applyScale) {
+            dimensions *= transform.scale;
+        }
+        collider = std::make_shared<rp3d::BoxShape>(Convert(dimensions));
 
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
         d_impl->entityData[entity.Id()].boxProxyShape = entry->addCollisionShape(

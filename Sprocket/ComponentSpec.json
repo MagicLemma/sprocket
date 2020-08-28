@@ -168,6 +168,13 @@
                     "Type": "Maths::vec3",
                     "Default": [0, 0, 0],
                     "Scriptable": false
+                },
+                {
+                    "Name": "applyScale",
+                    "DisplayName": "Apply Scale",
+                    "Type": "bool",
+                    "Default": true,
+                    "Scriptable": false
                 }
             ]
         },

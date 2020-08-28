@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-28 13:43:38.420041
+// GENERATED FILE @ 2020-08-28 16:33:03.941571
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -58,6 +58,7 @@ struct BoxCollider3DComponent
     Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     Maths::vec3 halfExtents = Maths::vec3{0.0f, 0.0f, 0.0f};
+    bool applyScale = true;
 };
 
 struct SphereCollider3DComponent

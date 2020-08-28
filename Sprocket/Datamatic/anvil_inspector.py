@@ -64,6 +64,10 @@ footer = """
         ImGui::EndMenu();
     }
     ImGui::Separator();
+    if (ImGui::Button("Duplicate")) {
+        Entity copy = Loader::Copy(editor.GetScene(), entity);
+        editor.SetSelected(copy);
+    }
     if (ImGui::Button("Delete Entity")) {
         entity.Kill();
         editor.ClearSelected();

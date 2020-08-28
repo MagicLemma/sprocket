@@ -28,8 +28,10 @@ public:
     template <typename T> void Remove();
 
     bool Null() const { return d_entity == entt::null; }
-
     void Kill();
+
+    // Creates a new empty entity in the same scene as this one. This is NOT a copy.
+    Entity NewEntity();
 };
 
 bool operator==(const Entity& lhs, const Entity& rhs);
