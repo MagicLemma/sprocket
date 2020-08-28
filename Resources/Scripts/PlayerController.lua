@@ -41,7 +41,7 @@ function OnUpdate(dt)
     local dv = Vec3(0, 0, 0)
 
     if Mag(dir) > 0 or physics.onFloor then
-        dv = dv + 3 * dir - physics.velocity
+        dv = dv + 6 * dir - physics.velocity
         dv.y = 0
     end
 
