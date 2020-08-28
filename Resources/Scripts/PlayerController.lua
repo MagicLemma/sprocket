@@ -57,6 +57,10 @@ function OnUpdate(entity, dt)
         transform.position = SPAWN_POINT
         SetTransformComponent(entity, transform)
     end
+
+    if IsKeyDown(KEYBOARD_Z) then
+        local newEntity = NewEntity()
+    end
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end

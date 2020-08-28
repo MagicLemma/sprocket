@@ -1,5 +1,6 @@
 #include "LuaEngine.h"
 #include "LuaGlobals.h"
+#include "LuaEntity.h"
 #include "LuaTransform.h"
 #include "LuaInput.h"
 #include "LuaComponents.h"
@@ -75,6 +76,7 @@ LuaEngine::LuaEngine()
     lua_register(d_L, "HasCamera", &Lua_Has<CameraComponent>);
 
     RegisterComponentFunctions(d_L);
+    RegisterEntityFunctions(d_L);
 
     lua_pushnil(d_L);
     lua_setglobal(d_L, "__keyboard__");
@@ -84,6 +86,9 @@ LuaEngine::LuaEngine()
 
     lua_pushnil(d_L);
     lua_setglobal(d_L, "__entity__");
+
+    lua_pushlightuserdata(d_L, &d_spawnedEntities);
+    lua_setglobal(d_L, "__spawned_entities__");
 }
 
 LuaEngine::~LuaEngine()

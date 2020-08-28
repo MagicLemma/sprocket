@@ -95,6 +95,7 @@
 
 // SCRIPTING
 #include "Scripting/LuaEngine.h"
+#include "Scripting/LuaEntity.h"
 #include "Scripting/LuaComponents.h"
 #include "Scripting/LuaGlobals.h"
 #include "Scripting/LuaTransform.h"

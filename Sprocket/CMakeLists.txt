@@ -104,6 +104,7 @@ add_library(Sprocket STATIC
             Utility/Yaml.cpp
 
             Scripting/LuaEngine.cpp
+            Scripting/LuaEntity.cpp
             Scripting/LuaComponents.cpp
             Scripting/LuaGlobals.cpp
             Scripting/LuaTransform.cpp

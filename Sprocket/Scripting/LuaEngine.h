@@ -7,6 +7,7 @@
 #include "Entity.h"
 
 #include <string>
+#include <unordered_map>
 
 class lua_State;
 
@@ -17,6 +18,10 @@ class LuaEngine
     lua_State* d_L;
 
     Entity d_entity;
+
+    // Entities created in scripts by this entity. These are stored
+    // as handles are needed to make them accessible in Lua.
+    std::unordered_map<std::uint32_t, Entity> d_spawnedEntities;
 
 public:
     LuaEngine();
