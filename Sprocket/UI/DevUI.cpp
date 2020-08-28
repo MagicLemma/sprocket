@@ -97,6 +97,7 @@ ImGuizmo::OPERATION GetMode(GizmoMode mode)
     switch (mode) {
         case GizmoMode::TRANSLATION: return ImGuizmo::OPERATION::TRANSLATE;
         case GizmoMode::ROTATION:    return ImGuizmo::OPERATION::ROTATE;
+        case GizmoMode::SCALE:    return ImGuizmo::OPERATION::SCALE;
         default: {
             SPKT_LOG_ERROR("Unknown GizmoMode!");
             return ImGuizmo::OPERATION::TRANSLATE;

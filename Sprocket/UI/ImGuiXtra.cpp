@@ -67,6 +67,10 @@ void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords)
     if (ImGui::RadioButton("Rotate", mode == DevUI::GizmoMode::ROTATION)) {
         mode = DevUI::GizmoMode::ROTATION;
     }
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Scale", mode == DevUI::GizmoMode::SCALE)) {
+        mode = DevUI::GizmoMode::SCALE;
+    }
 
     if (ImGui::RadioButton("World", coords == DevUI::GizmoCoords::WORLD)) {
         coords = DevUI::GizmoCoords::WORLD;

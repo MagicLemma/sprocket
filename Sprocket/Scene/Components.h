@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-27 01:16:57.161131
+// GENERATED FILE @ 2020-08-28 16:33:03.941571
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -29,12 +29,12 @@ struct TransformComponent
 {
     Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
     Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    Maths::vec3 scale = Maths::vec3{1.0f, 1.0f, 1.0f};
 };
 
 struct ModelComponent
 {
     std::string model;
-    float scale = 1.0f;
     std::string texture;
     float shineDamper = 1.0f;
     float reflectivity = 0.0f;
@@ -58,6 +58,7 @@ struct BoxCollider3DComponent
     Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     Maths::vec3 halfExtents = Maths::vec3{0.0f, 0.0f, 0.0f};
+    bool applyScale = true;
 };
 
 struct SphereCollider3DComponent

@@ -135,8 +135,7 @@ void EntityRenderer::DrawModel(const Entity& entity)
     }
 
     auto tr = entity.Get<TransformComponent>();
-    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-    transform = Maths::Scale(transform, modelComp.scale);
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation, tr.scale);
 
     d_shader.Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
@@ -192,6 +191,9 @@ void EntityRenderer::DrawBox(const Entity& entity)
     Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
     transform *= Maths::Transform(physics.position, physics.orientation);
     transform = Maths::Scale(transform, physics.halfExtents);
+    if (physics.applyScale) {
+        transform = Maths::Scale(transform, tr.scale);
+    }
 
     s_cube.Bind();
     Texture::White().Bind();

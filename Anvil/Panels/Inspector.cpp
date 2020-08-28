@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-27 01:16:57.190054
+// GENERATED FILE @ 2020-08-28 16:33:03.970491
 
 #include "Inspector.h"
 #include "EditorLayer.h"
@@ -6,6 +6,7 @@
 #include "Maths.h"
 #include "Components.h"
 #include "DevUI.h"
+#include "Loader.h"
 
 #include <imgui.h>
 
@@ -45,6 +46,7 @@ void ShowInspector(EditorLayer& editor)
             ImGui::PushID(1000000);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
+            ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
             ImGuiXtra::GuizmoSettings(mode, coords);
             if (ImGui::Button("Delete")) { entity.Remove<TransformComponent>(); }
             ImGui::PopID();
@@ -52,7 +54,7 @@ void ShowInspector(EditorLayer& editor)
 
         if (!editor.IsGameRunning()) {
             auto& camera = editor.GetEditorCamera();
-            auto tr = Maths::Transform(c.position, c.orientation);
+            auto tr = Maths::Transform(c.position, c.orientation, c.scale);
             ImGuizmo::Manipulate(
                 Maths::Cast(camera.View()),
                 Maths::Cast(camera.Proj()),
@@ -60,16 +62,13 @@ void ShowInspector(EditorLayer& editor)
                 GetCoords(coords),
                 Maths::Cast(tr)
             );
-            c.position = Maths::GetTranslation(tr);
-            c.orientation = Maths::ToQuat(Maths::mat3(tr));
-            Maths::Normalise(c.orientation);
+            Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
         }
     }
     if (entity.Has<ModelComponent>() && ImGui::CollapsingHeader("Model")) {
         ImGui::PushID(3);
         auto& c = entity.Get<ModelComponent>();
         ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.obj");
-        ImGui::DragFloat("Scale", &c.scale, 0.1f);
         ImGuiXtra::File("Texture", editor.GetWindow(), &c.texture, "*.png");
         ImGui::DragFloat("Shine Damper", &c.shineDamper, 0.1f);
         ImGui::DragFloat("Reflectivity", &c.reflectivity, 0.1f);
@@ -97,6 +96,7 @@ void ShowInspector(EditorLayer& editor)
         ImGuiXtra::Euler("Orientation", &c.orientation);
         ImGui::DragFloat("Mass", &c.mass, 0.1f);
         ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.1f);
+        ImGui::Checkbox("Apply Scale", &c.applyScale);
         if (ImGui::Button("Delete")) { entity.Remove<BoxCollider3DComponent>(); }
         ImGui::PopID();
     }
@@ -231,6 +231,10 @@ void ShowInspector(EditorLayer& editor)
         ImGui::EndMenu();
     }
     ImGui::Separator();
+    if (ImGui::Button("Duplicate")) {
+        Entity copy = Loader::Copy(editor.GetScene(), entity);
+        editor.SetSelected(copy);
+    }
     if (ImGui::Button("Delete Entity")) {
         entity.Kill();
         editor.ClearSelected();

@@ -30,4 +30,10 @@ bool operator==(const Entity& lhs, const Entity& rhs)
     return lhs.Id() == rhs.Id();
 }
 
+Entity Entity::NewEntity()
+{
+    auto e = d_registry->create();
+    return Entity(d_registry, e);
+}
+
 }
