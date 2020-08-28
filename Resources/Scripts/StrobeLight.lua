@@ -1,4 +1,4 @@
-function Init()
+function Init(entity)
     TIME = 0.0
 end
 

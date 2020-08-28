@@ -1,12 +1,12 @@
-function Init() end
+function Init(entity) end
 
 function OnUpdate(entity, dt)
-    local f = GetForwardsDir()
+    local f = GetForwardsDir(entity)
     f.y = 0
     f = Normalised(f)
     
     local speed = 10 * dt
-    local r = GetRightDir()
+    local r = GetRightDir(entity)
     
     local transform = GetTransformComponent(entity)
     local new_pos = transform.position
@@ -20,7 +20,7 @@ function OnUpdate(entity, dt)
     SetTransformComponent(entity, transform)
 
     local dx, dy = GetMouseOffset()
-    RotateY(-10 * dx)
+    RotateY(entity, -10 * dx)
 
     local camera = GetCameraComponent(entity)
     camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)

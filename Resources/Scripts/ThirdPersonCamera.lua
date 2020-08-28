@@ -1,4 +1,4 @@
-function Init()
+function Init(entity)
     DISTANCE = 8
     MOVEMENT_SPEED = 10
     ROTATION_SPEED = 90
@@ -59,7 +59,7 @@ function OnUpdate(entity, dt)
         pos.y = pos.y + distance * dt * 2
     end
 
-    SetLookAt(pos, TARGET)
+    SetLookAt(entity, pos, TARGET)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end

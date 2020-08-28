@@ -109,18 +109,18 @@ void LuaEngine::CallInitFunction()
     
     if (!lua_isfunction(d_L, -1)) {
         lua_pop(d_L, -1);
-        //SPKT_LOG_TRACE("[Lua]: Init not implemented for {}",
-        //               GetEntity(d_L)->Name());
         return;
     }
 
-    int rc = lua_pcall(d_L, 0, 0, 0);
+    lua_pushlightuserdata(d_L, &d_entity);
+
+    int rc = lua_pcall(d_L, 1, 0, 0);
     PrintErrors(d_L, rc);
 }
 
 void LuaEngine::CallOnUpdateFunction(double dt)
 {
-    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+    if (!d_entity.Get<ScriptComponent>().active) {
         return;
     }
 
@@ -128,8 +128,6 @@ void LuaEngine::CallOnUpdateFunction(double dt)
     
     if (!lua_isfunction(d_L, -1)) {
         lua_pop(d_L, -1);
-        //SPKT_LOG_TRACE("[Lua]: OnUpdate not implemented for {}",
-        //               GetEntity(d_L)->Name());
         return;
     }
 
@@ -142,7 +140,7 @@ void LuaEngine::CallOnUpdateFunction(double dt)
 
 void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
 {
-    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+    if (!d_entity.Get<ScriptComponent>().active) {
         return;
     }
 
@@ -150,9 +148,6 @@ void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
 
     if (!lua_isfunction(d_L, -1)) {
         lua_pop(d_L, -1);
-        //SPKT_LOG_TRACE("[Lua]: OnWindowResizeEvent not "
-        //               "implemented for {}",
-        //               GetEntity(d_L)->Name());
         return;
     }
 
@@ -168,7 +163,7 @@ void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
 
 void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
 {
-    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+    if (!d_entity.Get<ScriptComponent>().active) {
         return;
     }
 
@@ -176,9 +171,7 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
 
     if (!lua_isfunction(d_L, -1)) {
         lua_pop(d_L, -1);
-        //SPKT_LOG_TRACE("[Lua]: OnMouseButtonPressedEvent not "
-        //               "implemented for {}",
-        //               GetEntity(d_L)->Name());
+        return;
     }
     
     lua_pushboolean(d_L, e->IsConsumed());
@@ -194,16 +187,15 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
 
 void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
 {
-    if (!GetEntity(d_L)->Get<ScriptComponent>().active) {
+    if (!d_entity.Get<ScriptComponent>().active) {
         return;
     }
 
     lua_getglobal(d_L, "OnMouseScrolledEvent");
 
     if (!lua_isfunction(d_L, -1)) {
-        //SPKT_LOG_TRACE("[Lua]: OnMouseScrolledEvent not "
-        //               "implemented for {}",
-        //               GetEntity(d_L)->Name());
+        lua_pop(d_L, -1);
+        return;
     }
     
     lua_pushboolean(d_L, e->IsConsumed());

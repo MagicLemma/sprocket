@@ -1,5 +1,5 @@
-function Init()
-    local f = GetForwardsDir()
+function Init(entity)
+    local f = GetForwardsDir(entity)
     YAW = math.deg(-math.asin(f.x))
 
     TIME = 0.0
@@ -22,7 +22,7 @@ function OnUpdate(entity, dt)
     camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
     SetCameraComponent(entity, camera)
 
-    MakeUpright(math.rad(YAW))
+    MakeUpright(entity, math.rad(YAW))
 
     local cosYaw = math.cos(math.rad(YAW))
     local sinYaw = math.sin(math.rad(YAW))

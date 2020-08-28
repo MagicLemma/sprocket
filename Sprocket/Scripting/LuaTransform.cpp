@@ -26,19 +26,19 @@ namespace Lua {
 
 int SetLookAt(lua_State* L)
 {
-    if (!CheckArgCount(L, 6)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
-    Entity* entity = GetEntity(L);
-    float px = (float)lua_tonumber(L, 1);
-    float py = (float)lua_tonumber(L, 2);
-    float pz = (float)lua_tonumber(L, 3);
+    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    float px = (float)lua_tonumber(L, 2);
+    float py = (float)lua_tonumber(L, 3);
+    float pz = (float)lua_tonumber(L, 4);
 
-    float tx = (float)lua_tonumber(L, 4);
-    float ty = (float)lua_tonumber(L, 5);
-    float tz = (float)lua_tonumber(L, 6);
+    float tx = (float)lua_tonumber(L, 5);
+    float ty = (float)lua_tonumber(L, 6);
+    float tz = (float)lua_tonumber(L, 7);
     Maths::quat q = Maths::LookAtQuat({px, py, pz}, {tx, ty, tz});
 
-    auto& tr = entity->Get<TransformComponent>();
+    auto& tr = entity.Get<TransformComponent>();
     tr.position = {px, py, pz};
     tr.orientation = q;
     return 0;
@@ -46,21 +46,22 @@ int SetLookAt(lua_State* L)
 
 int RotateY(lua_State* L)
 {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); };
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
-    Entity* entity = GetEntity(L);
-    auto& tr = entity->Get<TransformComponent>();
+    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& tr = entity.Get<TransformComponent>();
 
-    float yaw = (float)lua_tonumber(L, 1);
+    float yaw = (float)lua_tonumber(L, 2);
     tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, Maths::Radians(yaw));
     return 0;
 }
 
 int GetForwardsDir(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& tr = GetEntity(L)->Get<TransformComponent>();
+    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& tr = entity.Get<TransformComponent>();
     auto forwards = Maths::Forwards(tr.orientation);
     lua_pushnumber(L, forwards.x);
     lua_pushnumber(L, forwards.y);
@@ -70,11 +71,10 @@ int GetForwardsDir(lua_State* L)
 
 int GetRightDir(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    Entity* e = GetEntity(L);
-
-    auto& tr = GetEntity(L)->Get<TransformComponent>();
+    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& tr = entity.Get<TransformComponent>();
     auto right = Maths::Right(tr.orientation);
     lua_pushnumber(L, right.x);
     lua_pushnumber(L, right.y);
@@ -84,9 +84,10 @@ int GetRightDir(lua_State* L)
 
 int MakeUpright(lua_State* L)
 {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    auto& tr = GetEntity(L)->Get<TransformComponent>();
-    float yaw = (float)lua_tonumber(L, 1);
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& tr = entity.Get<TransformComponent>();
+    float yaw = (float)lua_tonumber(L, 2);
     tr.orientation = Maths::quat(Maths::vec3(0, yaw, 0));
     return 0;
 }
