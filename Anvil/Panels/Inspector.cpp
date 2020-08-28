@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-28 16:33:03.970491
+// GENERATED FILE @ 2020-08-28 21:25:35.983330
 
 #include "Inspector.h"
 #include "EditorLayer.h"
@@ -6,7 +6,6 @@
 #include "Maths.h"
 #include "Components.h"
 #include "DevUI.h"
-#include "Loader.h"
 
 #include <imgui.h>
 

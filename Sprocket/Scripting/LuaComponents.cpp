@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-28 16:33:03.960520
+// GENERATED FILE @ 2020-08-28 21:25:35.967374
 
 #include "LuaComponents.h"
 #include "LuaGlobals.h"
@@ -54,29 +54,32 @@ namespace Lua {
 
 int GetNameComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<NameComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<NameComponent>());
 
-    const auto& c = GetEntity(L)->Get<NameComponent>();
+    const auto& c = e.Get<NameComponent>();
     lua_pushstring(L, c.name.c_str());
     return 1;
 }
 
 int SetNameComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<NameComponent>();
-    c.name = std::string(lua_tostring(L, 1));
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<NameComponent>();
+    c.name = std::string(lua_tostring(L, 2));
     return 0;
 }
 
 int GetTransformComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<TransformComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<TransformComponent>());
 
-    const auto& c = GetEntity(L)->Get<TransformComponent>();
+    const auto& c = e.Get<TransformComponent>();
     lua_pushnumber(L, c.position.x);
     lua_pushnumber(L, c.position.y);
     lua_pushnumber(L, c.position.z);
@@ -85,21 +88,23 @@ int GetTransformComponent(lua_State* L)
 
 int SetTransformComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 4)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<TransformComponent>();
-    c.position.x = (float)lua_tonumber(L, 1);
-    c.position.y = (float)lua_tonumber(L, 2);
-    c.position.z = (float)lua_tonumber(L, 3);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<TransformComponent>();
+    c.position.x = (float)lua_tonumber(L, 2);
+    c.position.y = (float)lua_tonumber(L, 3);
+    c.position.z = (float)lua_tonumber(L, 4);
     return 0;
 }
 
 int GetModelComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<ModelComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<ModelComponent>());
 
-    const auto& c = GetEntity(L)->Get<ModelComponent>();
+    const auto& c = e.Get<ModelComponent>();
     lua_pushstring(L, c.model.c_str());
     lua_pushstring(L, c.texture.c_str());
     lua_pushnumber(L, c.shineDamper);
@@ -109,22 +114,24 @@ int GetModelComponent(lua_State* L)
 
 int SetModelComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 4)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 5)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<ModelComponent>();
-    c.model = std::string(lua_tostring(L, 1));
-    c.texture = std::string(lua_tostring(L, 2));
-    c.shineDamper = (float)lua_tonumber(L, 3);
-    c.reflectivity = (float)lua_tonumber(L, 4);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<ModelComponent>();
+    c.model = std::string(lua_tostring(L, 2));
+    c.texture = std::string(lua_tostring(L, 3));
+    c.shineDamper = (float)lua_tonumber(L, 4);
+    c.reflectivity = (float)lua_tonumber(L, 5);
     return 0;
 }
 
 int GetRigidBody3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<RigidBody3DComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<RigidBody3DComponent>());
 
-    const auto& c = GetEntity(L)->Get<RigidBody3DComponent>();
+    const auto& c = e.Get<RigidBody3DComponent>();
     lua_pushnumber(L, c.velocity.x);
     lua_pushnumber(L, c.velocity.y);
     lua_pushnumber(L, c.velocity.z);
@@ -142,87 +149,95 @@ int GetRigidBody3DComponent(lua_State* L)
 
 int SetRigidBody3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 12)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 13)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<RigidBody3DComponent>();
-    c.velocity.x = (float)lua_tonumber(L, 1);
-    c.velocity.y = (float)lua_tonumber(L, 2);
-    c.velocity.z = (float)lua_tonumber(L, 3);
-    c.gravity = (bool)lua_toboolean(L, 4);
-    c.frozen = (bool)lua_toboolean(L, 5);
-    c.bounciness = (float)lua_tonumber(L, 6);
-    c.frictionCoefficient = (float)lua_tonumber(L, 7);
-    c.rollingResistance = (float)lua_tonumber(L, 8);
-    c.force.x = (float)lua_tonumber(L, 9);
-    c.force.y = (float)lua_tonumber(L, 10);
-    c.force.z = (float)lua_tonumber(L, 11);
-    c.onFloor = (bool)lua_toboolean(L, 12);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<RigidBody3DComponent>();
+    c.velocity.x = (float)lua_tonumber(L, 2);
+    c.velocity.y = (float)lua_tonumber(L, 3);
+    c.velocity.z = (float)lua_tonumber(L, 4);
+    c.gravity = (bool)lua_toboolean(L, 5);
+    c.frozen = (bool)lua_toboolean(L, 6);
+    c.bounciness = (float)lua_tonumber(L, 7);
+    c.frictionCoefficient = (float)lua_tonumber(L, 8);
+    c.rollingResistance = (float)lua_tonumber(L, 9);
+    c.force.x = (float)lua_tonumber(L, 10);
+    c.force.y = (float)lua_tonumber(L, 11);
+    c.force.z = (float)lua_tonumber(L, 12);
+    c.onFloor = (bool)lua_toboolean(L, 13);
     return 0;
 }
 
 int GetBoxCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<BoxCollider3DComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<BoxCollider3DComponent>());
 
-    const auto& c = GetEntity(L)->Get<BoxCollider3DComponent>();
+    const auto& c = e.Get<BoxCollider3DComponent>();
     lua_pushnumber(L, c.mass);
     return 1;
 }
 
 int SetBoxCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<BoxCollider3DComponent>();
-    c.mass = (float)lua_tonumber(L, 1);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<BoxCollider3DComponent>();
+    c.mass = (float)lua_tonumber(L, 2);
     return 0;
 }
 
 int GetSphereCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<SphereCollider3DComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<SphereCollider3DComponent>());
 
-    const auto& c = GetEntity(L)->Get<SphereCollider3DComponent>();
+    const auto& c = e.Get<SphereCollider3DComponent>();
     lua_pushnumber(L, c.mass);
     return 1;
 }
 
 int SetSphereCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<SphereCollider3DComponent>();
-    c.mass = (float)lua_tonumber(L, 1);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<SphereCollider3DComponent>();
+    c.mass = (float)lua_tonumber(L, 2);
     return 0;
 }
 
 int GetCapsuleCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<CapsuleCollider3DComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<CapsuleCollider3DComponent>());
 
-    const auto& c = GetEntity(L)->Get<CapsuleCollider3DComponent>();
+    const auto& c = e.Get<CapsuleCollider3DComponent>();
     lua_pushnumber(L, c.mass);
     return 1;
 }
 
 int SetCapsuleCollider3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<CapsuleCollider3DComponent>();
-    c.mass = (float)lua_tonumber(L, 1);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<CapsuleCollider3DComponent>();
+    c.mass = (float)lua_tonumber(L, 2);
     return 0;
 }
 
 int GetCameraComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<CameraComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<CameraComponent>());
 
-    const auto& c = GetEntity(L)->Get<CameraComponent>();
+    const auto& c = e.Get<CameraComponent>();
     lua_pushnumber(L, c.fov);
     lua_pushnumber(L, c.pitch);
     return 2;
@@ -230,20 +245,22 @@ int GetCameraComponent(lua_State* L)
 
 int SetCameraComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<CameraComponent>();
-    c.fov = (float)lua_tonumber(L, 1);
-    c.pitch = (float)lua_tonumber(L, 2);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<CameraComponent>();
+    c.fov = (float)lua_tonumber(L, 2);
+    c.pitch = (float)lua_tonumber(L, 3);
     return 0;
 }
 
 int GetSelectComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<SelectComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<SelectComponent>());
 
-    const auto& c = GetEntity(L)->Get<SelectComponent>();
+    const auto& c = e.Get<SelectComponent>();
     lua_pushboolean(L, c.selected);
     lua_pushboolean(L, c.hovered);
     return 2;
@@ -251,39 +268,43 @@ int GetSelectComponent(lua_State* L)
 
 int SetSelectComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<SelectComponent>();
-    c.selected = (bool)lua_toboolean(L, 1);
-    c.hovered = (bool)lua_toboolean(L, 2);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<SelectComponent>();
+    c.selected = (bool)lua_toboolean(L, 2);
+    c.hovered = (bool)lua_toboolean(L, 3);
     return 0;
 }
 
 int GetPathComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<PathComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<PathComponent>());
 
-    const auto& c = GetEntity(L)->Get<PathComponent>();
+    const auto& c = e.Get<PathComponent>();
     lua_pushnumber(L, c.speed);
     return 1;
 }
 
 int SetPathComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<PathComponent>();
-    c.speed = (float)lua_tonumber(L, 1);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<PathComponent>();
+    c.speed = (float)lua_tonumber(L, 2);
     return 0;
 }
 
 int GetGridComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<GridComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<GridComponent>());
 
-    const auto& c = GetEntity(L)->Get<GridComponent>();
+    const auto& c = e.Get<GridComponent>();
     lua_pushnumber(L, c.x);
     lua_pushnumber(L, c.z);
     return 2;
@@ -291,20 +312,22 @@ int GetGridComponent(lua_State* L)
 
 int SetGridComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<GridComponent>();
-    c.x = (int)lua_tonumber(L, 1);
-    c.z = (int)lua_tonumber(L, 2);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<GridComponent>();
+    c.x = (int)lua_tonumber(L, 2);
+    c.z = (int)lua_tonumber(L, 3);
     return 0;
 }
 
 int GetLightComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    assert(GetEntity(L)->Has<LightComponent>());
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<LightComponent>());
 
-    const auto& c = GetEntity(L)->Get<LightComponent>();
+    const auto& c = e.Get<LightComponent>();
     lua_pushnumber(L, c.colour.x);
     lua_pushnumber(L, c.colour.y);
     lua_pushnumber(L, c.colour.z);
@@ -317,16 +340,17 @@ int GetLightComponent(lua_State* L)
 
 int SetLightComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 8)) { return luaL_error(L, "Bad number of args"); }
 
-    auto& c = GetEntity(L)->Get<LightComponent>();
-    c.colour.x = (float)lua_tonumber(L, 1);
-    c.colour.y = (float)lua_tonumber(L, 2);
-    c.colour.z = (float)lua_tonumber(L, 3);
-    c.attenuation.x = (float)lua_tonumber(L, 4);
-    c.attenuation.y = (float)lua_tonumber(L, 5);
-    c.attenuation.z = (float)lua_tonumber(L, 6);
-    c.brightness = (float)lua_tonumber(L, 7);
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<LightComponent>();
+    c.colour.x = (float)lua_tonumber(L, 2);
+    c.colour.y = (float)lua_tonumber(L, 3);
+    c.colour.z = (float)lua_tonumber(L, 4);
+    c.attenuation.x = (float)lua_tonumber(L, 5);
+    c.attenuation.y = (float)lua_tonumber(L, 6);
+    c.attenuation.z = (float)lua_tonumber(L, 7);
+    c.brightness = (float)lua_tonumber(L, 8);
     return 0;
 }
 

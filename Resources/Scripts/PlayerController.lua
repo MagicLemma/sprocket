@@ -7,7 +7,7 @@ function Init()
     SPAWN_POINT = Vec3(-11, 2, 3)
 end
 
-function OnUpdate(dt)
+function OnUpdate(entity, dt)
     TIME = TIME + dt
 
     local dx = 0
@@ -18,9 +18,9 @@ function OnUpdate(dt)
     
     YAW = YAW - dx * 0.15
 
-    local camera = GetCameraComponent()
+    local camera = GetCameraComponent(entity)
     camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
-    SetCameraComponent(camera)
+    SetCameraComponent(entity, camera)
 
     MakeUpright(math.rad(YAW))
 
@@ -37,7 +37,7 @@ function OnUpdate(dt)
     if IsKeyDown(KEYBOARD_A) then dir = dir - right end
     dir = Normalised(dir)
 
-    local physics = GetRigidBody3DComponent()
+    local physics = GetRigidBody3DComponent(entity)
     local dv = Vec3(0, 0, 0)
 
     if Mag(dir) > 0 or physics.onFloor then
@@ -50,12 +50,12 @@ function OnUpdate(dt)
     end
 
     physics.force = physics.force + (10 * dv) -- TODO: Replace 10 with mass
-    SetRigidBody3DComponent(physics)
+    SetRigidBody3DComponent(entity, physics)
 
-    local transform = GetTransformComponent()
+    local transform = GetTransformComponent(entity)
     if transform.position.y < -1 then
         transform.position = SPAWN_POINT
-        SetTransformComponent(transform)
+        SetTransformComponent(entity, transform)
     end
 end
 

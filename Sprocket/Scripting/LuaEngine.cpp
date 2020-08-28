@@ -133,9 +133,10 @@ void LuaEngine::CallOnUpdateFunction(double dt)
         return;
     }
 
+    lua_pushlightuserdata(d_L, &d_entity);
     lua_pushnumber(d_L, dt);
 
-    int rc = lua_pcall(d_L, 1, 0, 0);
+    int rc = lua_pcall(d_L, 2, 0, 0);
     PrintErrors(d_L, rc);
 }
 

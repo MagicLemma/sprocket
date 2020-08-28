@@ -13,8 +13,8 @@ function Init()
     HORIZ = 0 -- Parametrized yaw
 end
 
-function OnUpdate(dt)
-    local pos = GetTransformComponent().position
+function OnUpdate(entity, dt)
+    local pos = GetTransformComponent(entity).position
 
     if ABS_VERT == nil then ABS_VERT = pos.y end
 

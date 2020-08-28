@@ -89,9 +89,10 @@ def generate_cpp(spec, output):
         
         # Getter
         out += f"int Get{name}(lua_State* L)\n{{\n"
-        out += '    if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }\n'
-        out += f'    assert(GetEntity(L)->Has<{name}>());\n\n'
-        out += f'    const auto& c = GetEntity(L)->Get<{name}>();\n'
+        out += '    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }\n'
+        out += f'    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));\n'
+        out += f'    assert(e.Has<{name}>());\n\n'
+        out += f'    const auto& c = e.Get<{name}>();\n'
 
         count = 1
         for attr in attrs:
@@ -117,9 +118,10 @@ def generate_cpp(spec, output):
 
         # Setter
         out += f"int Set{name}(lua_State* L)\n{{\n"
-        out += f'    if (!CheckArgCount(L, {num_attrs})) {{ return luaL_error(L, "Bad number of args"); }}\n\n'
-        out += f'    auto& c = GetEntity(L)->Get<{name}>();\n'
-        count = 1
+        out += f'    if (!CheckArgCount(L, {num_attrs + 1})) {{ return luaL_error(L, "Bad number of args"); }}\n\n'
+        out += f'    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));\n'
+        out += f'    auto& c = e.Get<{name}>();\n'
+        count = 2
         for attr in attrs:
             if not attr.get("Scriptable", True):
                 continue

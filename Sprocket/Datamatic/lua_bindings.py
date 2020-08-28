@@ -40,14 +40,14 @@ def generate(spec, output):
                 out += f'    self.{n} = {n}\n'
         out += "end)\n\n"
 
-        out += f'function Get{name}()\n'
+        out += f'function Get{name}(entity)\n'
         pack = ", ".join([f'x{i}' for i in range(num_attrs)])
-        out += "    " + pack + f" = Lua_Get{name}()\n"
+        out += "    " + pack + f" = Lua_Get{name}(entity)\n"
         out += f'    return {name}({pack})\n'
         out += "end\n\n"
 
-        out += f'function Set{name}(c)\n'
-        out += f'    Lua_Set{name}('
+        out += f'function Set{name}(entity, c)\n'
+        out += f'    Lua_Set{name}(entity, '
         args = []
         for attr in component["Attributes"]:
             n = attr["Name"]
