@@ -1,5 +1,5 @@
 {
-    "Version": 1,
+    "Version": 2,
     "Enums": {
         "Collider": ["NONE", "SPHERE", "CAPSULE", "BOX"]
     },
@@ -37,6 +37,13 @@
                     "Type": "Maths::quat",
                     "Default": [1, 0, 0, 0],
                     "Scriptable": false
+                },
+                {
+                    "Name": "scale",
+                    "DisplayName": "Scale",
+                    "Type": "Maths::vec3",
+                    "Default": [1, 1, 1],
+                    "Scriptable": false
                 }
             ]
         },
@@ -50,12 +57,6 @@
                     "Type": "std::string",
                     "Subtype": "File",
                     "Data": "*.obj"
-                },
-                {
-                    "Name": "scale",
-                    "DisplayName": "Scale",
-                    "Type": "float",
-                    "Default": 1.0
                 },
                 {
                     "Name": "texture",

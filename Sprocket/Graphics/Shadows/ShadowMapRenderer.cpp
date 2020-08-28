@@ -36,8 +36,7 @@ void ShadowMapRenderer::Draw(const Entity& entity)
     const auto& modelComponent = entity.Get<ModelComponent>();
 
     auto tr = entity.Get<TransformComponent>();
-    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-    transform = Maths::Scale(transform, entity.Get<ModelComponent>().scale);
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation, tr.scale);
     d_shader.LoadUniform("u_model_matrix", transform);
 
     auto model = d_modelManager->GetModel(modelComponent.model);

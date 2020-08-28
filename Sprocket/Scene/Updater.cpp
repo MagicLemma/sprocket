@@ -46,6 +46,25 @@ void UpdateScene(YAML::Node& scene)
         ++version;
     }
 
+    // 1 -> 2: Move scale from ModelComponent to TransformComponent
+    // and make it a vec3
+    if (version == 1) {
+        SPKT_LOG_INFO("Update file to version 2");
+        for (auto& entity : scene["Entities"]) {
+            auto& transform = entity["TransformComponent"];
+            auto& model = entity["ModelComponent"];
+            if (model["scale"]) {
+                auto scale = model["scale"];
+                transform["scale"].reset();
+                transform["scale"].push_back(scale.as<float>());
+                transform["scale"].push_back(scale.as<float>());
+                transform["scale"].push_back(scale.as<float>());
+            }
+            model.remove("scale");
+        }
+        ++version;
+    }
+
     scene["Version"] = version;
 }
     

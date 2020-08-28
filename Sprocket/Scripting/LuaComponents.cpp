@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-27 01:16:57.180080
+// GENERATED FILE @ 2020-08-28 13:43:38.434972
 
 #include "LuaComponents.h"
 #include "LuaGlobals.h"
@@ -101,23 +101,21 @@ int GetModelComponent(lua_State* L)
 
     const auto& c = GetEntity(L)->Get<ModelComponent>();
     lua_pushstring(L, c.model.c_str());
-    lua_pushnumber(L, c.scale);
     lua_pushstring(L, c.texture.c_str());
     lua_pushnumber(L, c.shineDamper);
     lua_pushnumber(L, c.reflectivity);
-    return 5;
+    return 4;
 }
 
 int SetModelComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, 5)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 4)) { return luaL_error(L, "Bad number of args"); }
 
     auto& c = GetEntity(L)->Get<ModelComponent>();
     c.model = std::string(lua_tostring(L, 1));
-    c.scale = (float)lua_tonumber(L, 2);
-    c.texture = std::string(lua_tostring(L, 3));
-    c.shineDamper = (float)lua_tonumber(L, 4);
-    c.reflectivity = (float)lua_tonumber(L, 5);
+    c.texture = std::string(lua_tostring(L, 2));
+    c.shineDamper = (float)lua_tonumber(L, 3);
+    c.reflectivity = (float)lua_tonumber(L, 4);
     return 0;
 }
 

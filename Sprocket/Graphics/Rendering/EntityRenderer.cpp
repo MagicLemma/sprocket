@@ -135,8 +135,7 @@ void EntityRenderer::DrawModel(const Entity& entity)
     }
 
     auto tr = entity.Get<TransformComponent>();
-    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-    transform = Maths::Scale(transform, modelComp.scale);
+    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation, tr.scale);
 
     d_shader.Bind();
     d_shader.LoadUniform("u_model_matrix", transform);

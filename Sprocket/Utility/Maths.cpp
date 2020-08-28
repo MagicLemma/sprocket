@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <glm/trigonometric.hpp>
 
 namespace Sprocket {
@@ -43,13 +44,14 @@ mat4 Transpose(const mat4& matrix)
 }
 
 // Matrix Constructors
-mat4 Transform(const vec3& position, const quat& orientation)
+mat4 Transform(const vec3& position, const quat& orientation, const vec3& scale)
 {
     mat4 m = ToMat3(orientation);
     m[3][0] = position.x;
     m[3][1] = position.y;
     m[3][2] = position.z;
     m[3][3] = 1.0f;
+    m = Maths::Scale(m, scale);
     return m;
 }
 
@@ -155,6 +157,13 @@ quat ToQuat(const mat3& m)
 vec3 ToEuler(const quat& q)
 {
     return glm::eulerAngles(q);
+}
+
+void Decompose(const mat4& matrix, vec3* position, quat* orientation, vec3* scale)
+{
+    vec3 skew;
+    vec4 perspective;
+    glm::decompose(matrix, *scale, *orientation, *position, skew, perspective);
 }
 
 float* Cast(const mat3& m)

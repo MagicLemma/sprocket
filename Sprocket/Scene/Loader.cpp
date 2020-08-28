@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-27 01:16:57.165120
+// GENERATED FILE @ 2020-08-28 13:43:38.424042
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -18,7 +18,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Version" << YAML::Value << 1;
+    out << YAML::Key << "Version" << YAML::Value << 2;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
@@ -40,13 +40,13 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "TransformComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
             out << YAML::Key << "orientation" << YAML::Value << c.orientation;
+            out << YAML::Key << "scale" << YAML::Value << c.scale;
             out << YAML::EndMap;
         }
         if(entity.Has<ModelComponent>()) {
             const auto& c = entity.Get<ModelComponent>();
             out << YAML::Key << "ModelComponent" << YAML::BeginMap;
             out << YAML::Key << "model" << YAML::Value << c.model;
-            out << YAML::Key << "scale" << YAML::Value << c.scale;
             out << YAML::Key << "texture" << YAML::Value << c.texture;
             out << YAML::Key << "shineDamper" << YAML::Value << c.shineDamper;
             out << YAML::Key << "reflectivity" << YAML::Value << c.reflectivity;
@@ -171,12 +171,12 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             TransformComponent c;
             c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
             c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.scale = spec["scale"] ? spec["scale"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
             e.Add(c);
         }
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
             c.model = spec["model"].as<std::string>();
-            c.scale = spec["scale"] ? spec["scale"].as<float>() : 1.0f;
             c.texture = spec["texture"].as<std::string>();
             c.shineDamper = spec["shineDamper"] ? spec["shineDamper"].as<float>() : 1.0f;
             c.reflectivity = spec["reflectivity"] ? spec["reflectivity"].as<float>() : 0.0f;

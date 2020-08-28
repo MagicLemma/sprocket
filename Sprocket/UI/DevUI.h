@@ -18,7 +18,7 @@ namespace DevUI {
 
 struct DevUIData;
 
-enum class GizmoMode { TRANSLATION, ROTATION };
+enum class GizmoMode { TRANSLATION, ROTATION, SCALE };
 enum class GizmoCoords { WORLD, LOCAL };
 
 ImGuizmo::OPERATION GetMode(GizmoMode mode);

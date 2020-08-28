@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-27 01:16:57.184069
+-- GENERATED FILE @ 2020-08-28 13:43:38.438962
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -25,21 +25,20 @@ function SetTransformComponent(c)
     Lua_SetTransformComponent(c.position.x, c.position.y, c.position.z)
 end
 
-ModelComponent = Class(function(self, model, scale, texture, shineDamper, reflectivity)
+ModelComponent = Class(function(self, model, texture, shineDamper, reflectivity)
     self.model = model
-    self.scale = scale
     self.texture = texture
     self.shineDamper = shineDamper
     self.reflectivity = reflectivity
 end)
 
 function GetModelComponent()
-    x0, x1, x2, x3, x4 = Lua_GetModelComponent()
-    return ModelComponent(x0, x1, x2, x3, x4)
+    x0, x1, x2, x3 = Lua_GetModelComponent()
+    return ModelComponent(x0, x1, x2, x3)
 end
 
 function SetModelComponent(c)
-    Lua_SetModelComponent(c.model, c.scale, c.texture, c.shineDamper, c.reflectivity)
+    Lua_SetModelComponent(c.model, c.texture, c.shineDamper, c.reflectivity)
 end
 
 RigidBody3DComponent = Class(function(self, velocity_x, velocity_y, velocity_z, gravity, frozen, bounciness, frictionCoefficient, rollingResistance, force_x, force_y, force_z, onFloor)

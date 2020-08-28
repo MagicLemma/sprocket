@@ -32,7 +32,7 @@ mat4 Inverse(const mat4& matrix);
 mat4 Transpose(const mat4& matrix);
 
 // Matrix Constructors
-mat4 Transform(const vec3& position, const quat& orientation);
+mat4 Transform(const vec3& position, const quat& orientation, const vec3& scale = {1.0f, 1.0f, 1.0f});
 mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane);
 mat4 View(const vec3& position, float pitch, float yaw, float roll);
 mat4 LookAt(const vec3& position, const vec3& target, const vec3& up = {0, 1, 0});
@@ -61,6 +61,8 @@ mat3 ToMat3(const quat& q);
 mat4 ToMat4(const quat& q);
 quat ToQuat(const mat3& m);
 vec3 ToEuler(const quat& q);
+
+void Decompose(const mat4& matrix, vec3* position, quat* orientation, vec3* scale);
 
 float* Cast(const mat3& m);
 float* Cast(const mat4& m);

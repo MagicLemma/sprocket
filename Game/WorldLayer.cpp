@@ -288,10 +288,11 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
     auto& tr = newEntity.Add<TransformComponent>();
     tr.orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
+    float r = Random(1.0f, 1.3f);
+    tr.scale = {r, r, r};
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/BetterTree.obj";
-    modelData.scale = Random(1.0f, 1.3f);
     modelData.texture = tex;
     modelData.shineDamper = 10.0f;
     modelData.reflectivity = 0.0f;
@@ -315,10 +316,10 @@ void WorldLayer::AddRockBase(
     auto& tr = newEntity.Add<TransformComponent>();
     tr.position.y -= Random(0.0f, 0.5f);
     tr.orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
+    tr.scale = {1.1f, 1.1f, 1.1f};
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/Rock.obj";
-    modelData.scale = 1.1f;
     modelData.texture = tex;
     modelData.shineDamper = 10.0f;
     modelData.reflectivity = 0.0f;

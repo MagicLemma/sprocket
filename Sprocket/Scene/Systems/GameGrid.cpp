@@ -35,20 +35,20 @@ void GameGrid::OnStartup(Scene& scene)
     d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
     auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
+    tr1.scale = {0.3f, 0.3f, 0.3f};
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
     model1.model = gridSquare;
     model1.reflectivity = 0.0f;
-    model1.scale = 0.3f;
 
     d_selectedSquare = scene.NewEntity();
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
     auto& tr2 = d_selectedSquare.Add<TransformComponent>();
+    tr2.scale = {0.5f, 0.5f, 0.5f};
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
     model2.model = gridSquare;
     model2.reflectivity = 0.0f;
-    model2.scale = 0.5f;
 
     auto addGrid = [&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
