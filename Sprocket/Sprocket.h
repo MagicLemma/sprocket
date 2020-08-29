@@ -70,6 +70,7 @@
 #include "Graphics/CubeMap.h"
 #include "Graphics/FrameBuffer.h"
 #include "Graphics/StreamBuffer.h"
+#include "Graphics/VertexArray.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"

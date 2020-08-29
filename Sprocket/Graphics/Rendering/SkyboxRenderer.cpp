@@ -28,11 +28,11 @@ void SkyboxRenderer::Draw(const Skybox& skybox,
     d_shader.LoadUniform("projectionMatrix", proj);
     d_shader.LoadUniform("viewMatrix", view2);
 
-    skybox.model.Bind();
+    skybox.model->Bind();
     skybox.texture.Bind();
-    glDrawElements(GL_TRIANGLES, skybox.model.VertexCount(), GL_UNSIGNED_INT, (const void*)0);
+    glDrawElements(GL_TRIANGLES, skybox.model->VertexCount(), GL_UNSIGNED_INT, (const void*)0);
     skybox.texture.Unbind();
-    skybox.model.Unbind();
+    skybox.model->Unbind();
 
     d_shader.Unbind();
 }

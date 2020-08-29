@@ -73,4 +73,25 @@ bool Model3D::operator==(const Model3D& other) const
     return d_vao->Value() == other.d_vao->Value();
 }
 
+void Model3D::Load() const
+{
+    // Bind the VBO, set the attrib pointers in the VAO, then unbind
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, position));
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, normal));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
+                          (void*)offsetof(Vertex3D, textureCoords));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Set the index buffer pointer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
+}
+
 }

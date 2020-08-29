@@ -7,6 +7,7 @@
 #include "ModelManager.h"
 #include "TextureManager.h"
 #include "Components.h"
+#include "VertexArray.h"
 
 namespace Sprocket {
 
@@ -19,6 +20,8 @@ class EntityRenderer
     Shader  d_shader;
 
     bool d_renderColliders;
+
+    std::unique_ptr<VertexArray> d_vao;
 
     void DrawModel    (const Entity& entity);
     void DrawCollider (const Entity& entity);

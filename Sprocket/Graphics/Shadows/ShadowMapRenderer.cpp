@@ -41,11 +41,11 @@ void ShadowMapRenderer::Draw(const Entity& entity)
 
     auto model = d_modelManager->GetModel(modelComponent.model);
 
-    model.Bind();
+    model->Bind();
     glCullFace(GL_FRONT);
-    glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, (int)model->VertexCount(), GL_UNSIGNED_INT, nullptr);
     glCullFace(GL_BACK);
-    model.Unbind();
+    model->Unbind();
 }
 
 void ShadowMapRenderer::EndScene()

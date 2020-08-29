@@ -43,6 +43,10 @@ public:
     void Bind() const;
     void Unbind() const;
 
+    // Sets the attrib pointers and index buffer in the current bound
+    // VAO to this model.
+    void Load() const;
+
     // CPU STORAGE ACCESS
     const Vertex3DBuffer& VertexBufferData() const { return *d_vertexData.get(); }
     const IndexBuffer& IndexBufferData() const { return *d_indexData.get(); }

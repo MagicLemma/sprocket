@@ -26,7 +26,8 @@ bool ShouldOutlineEntity(const Entity& entity)
 EntityRenderer::EntityRenderer(Window* window,
                                ModelManager* modelManager,
                                TextureManager* textureManager)
-    : d_window(window)
+    : d_vao(std::make_unique<VertexArray>())
+    , d_window(window)
     , d_modelManager(modelManager)
     , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
@@ -159,9 +160,10 @@ void EntityRenderer::DrawModel(const Entity& entity)
 
     glActiveTexture(GL_TEXTURE0);
     texture.Bind();
-    model.Bind();
-    glDrawElements(GL_TRIANGLES, (int)model.VertexCount(), GL_UNSIGNED_INT, nullptr);
-    model.Unbind();
+
+    d_vao->SetModel(model);
+    d_vao->Draw();
+    
     texture.Unbind();
 }
 
@@ -196,12 +198,12 @@ void EntityRenderer::DrawBox(const Entity& entity)
         transform = Maths::Scale(transform, tr.scale);
     }
 
-    s_cube.Bind();
+    s_cube->Bind();
     Texture::White().Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
-    glDrawElements(GL_TRIANGLES, (int)s_cube.VertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, (int)s_cube->VertexCount(), GL_UNSIGNED_INT, nullptr);
     Texture::White().Unbind();
-    s_cube.Unbind();
+    s_cube->Unbind();
 }
 
 void EntityRenderer::DrawSphere(const Entity& entity)
@@ -214,12 +216,12 @@ void EntityRenderer::DrawSphere(const Entity& entity)
     transform *= Maths::Transform(physics.position, physics.orientation);
     transform = Maths::Scale(transform, physics.radius);
     
-    s_sphere.Bind();
+    s_sphere->Bind();
     Texture::White().Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
-    glDrawElements(GL_TRIANGLES, (int)s_sphere.VertexCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, (int)s_sphere->VertexCount(), GL_UNSIGNED_INT, nullptr);
     Texture::White().Unbind();
-    s_sphere.Unbind();
+    s_sphere->Unbind();
 }
 
 void EntityRenderer::DrawCapsule(const Entity& entity)
@@ -230,30 +232,30 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
 
     Texture::White().Bind();
     {  // Top Hemisphere
-        s_hemisphere.Bind();
+        s_hemisphere->Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(physics.position, physics.orientation);
         transform = Maths::Translate(transform, {0.0, physics.height/2, 0.0});
         transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, (int)s_hemisphere.VertexCount(), GL_UNSIGNED_INT, nullptr);
-        s_hemisphere.Unbind();
+        glDrawElements(GL_TRIANGLES, (int)s_hemisphere->VertexCount(), GL_UNSIGNED_INT, nullptr);
+        s_hemisphere->Unbind();
     }
 
     {  // Middle Cylinder
-        s_cylinder.Bind();
+        s_cylinder->Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(physics.position, physics.orientation);
         transform = Maths::Scale(transform, {physics.radius, physics.height, physics.radius});
         d_shader.LoadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, (int)s_cylinder.VertexCount(), GL_UNSIGNED_INT, nullptr);
-        s_cylinder.Unbind();
+        glDrawElements(GL_TRIANGLES, (int)s_cylinder->VertexCount(), GL_UNSIGNED_INT, nullptr);
+        s_cylinder->Unbind();
     }
 
     {  // Bottom Hemisphere
-        s_hemisphere.Bind();
+        s_hemisphere->Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(physics.position, physics.orientation);
@@ -261,8 +263,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
         transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
         transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, (int)s_hemisphere.VertexCount(), GL_UNSIGNED_INT, nullptr);
-        s_hemisphere.Unbind();
+        glDrawElements(GL_TRIANGLES, (int)s_hemisphere->VertexCount(), GL_UNSIGNED_INT, nullptr);
+        s_hemisphere->Unbind();
     }
     Texture::White().Unbind();   
 }
