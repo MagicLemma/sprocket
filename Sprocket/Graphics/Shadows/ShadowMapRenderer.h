@@ -6,6 +6,7 @@
 #include "DepthBuffer.h"
 #include "ModelManager.h"
 #include "TextureManager.h"
+#include "Scene.h"
 
 #include <memory>
 
@@ -27,7 +28,7 @@ class ShadowMapRenderer
 public:
     ShadowMapRenderer(Window* window, ModelManager* modelManager);
 
-    void BeginScene(const DirectionalLight& light, const Maths::vec3& centre);
+    void BeginScene(const Sun& sun, const Maths::vec3& centre);
         // Called before any draw calls. The light is the light
         // casting the shadow and the centre is the middle of the
         // shadow box.

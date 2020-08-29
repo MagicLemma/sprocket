@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "EntitySystem.h"
 #include "Event.h"
+#include "Maths.h"
 
 #include <memory>
 #include <vector>
@@ -13,6 +14,13 @@
 #include <entt/entt.hpp>
 
 namespace Sprocket {
+
+struct Sun
+{
+    Maths::vec3 direction;
+    Maths::vec3 colour;
+    float       brightness;
+};
     
 class Scene
 {
@@ -31,6 +39,8 @@ private:
     TypeFunctionMap d_removeFunctions;
 
     entt::registry d_registry;
+
+    Sun d_sun;
 
     template <typename T> void OnAddCB(entt::registry& r, entt::entity e);
     template <typename T> void OnUpdateCB(entt::registry& r, entt::entity e);
@@ -66,6 +76,9 @@ public:
         // Entity.
 
     void Clear();
+
+    Sun& GetSun() { return d_sun; }
+    const Sun& GetSun() const { return d_sun; }
 };
 
 template <typename... Components>

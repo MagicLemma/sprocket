@@ -220,12 +220,7 @@ float LengthSquare(const vec3& v)
 
 void Normalise(vec3& vec)
 {
-    float length = Length(vec);
-    if (length != 0) {
-        vec.x /= length;
-        vec.y /= length;
-        vec.z /= length;
-    }
+    vec = glm::normalize(vec);
 }
 
 // Trig

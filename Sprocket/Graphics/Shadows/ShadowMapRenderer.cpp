@@ -15,10 +15,10 @@ ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
 {
 }
 
-void ShadowMapRenderer::BeginScene(const DirectionalLight& light,
+void ShadowMapRenderer::BeginScene(const Sun& sun,
                                    const Maths::vec3& centre)
 {
-    d_lightViewMatrix = Maths::LookAt(centre - light.direction, centre);
+    d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
 
     d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", d_lightProjMatrix);
