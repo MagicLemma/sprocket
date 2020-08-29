@@ -1,13 +1,14 @@
-function Init()
-    local f = GetForwardsDir()
+function Init(entity)
+    local f = GetForwardsDir(entity)
     YAW = math.deg(-math.asin(f.x))
 
     TIME = 0.0
 
     SPAWN_POINT = Vec3(-11, 2, 3)
+    ENTITY = entity
 end
 
-function OnUpdate(dt)
+function OnUpdate(entity, dt)
     TIME = TIME + dt
 
     local dx = 0
@@ -18,11 +19,11 @@ function OnUpdate(dt)
     
     YAW = YAW - dx * 0.15
 
-    local camera = GetCameraComponent()
+    local camera = GetCameraComponent(entity)
     camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
-    SetCameraComponent(camera)
+    SetCameraComponent(entity, camera)
 
-    MakeUpright(math.rad(YAW))
+    MakeUpright(entity, math.rad(YAW))
 
     local cosYaw = math.cos(math.rad(YAW))
     local sinYaw = math.sin(math.rad(YAW))
@@ -37,11 +38,11 @@ function OnUpdate(dt)
     if IsKeyDown(KEYBOARD_A) then dir = dir - right end
     dir = Normalised(dir)
 
-    local physics = GetRigidBody3DComponent()
+    local physics = GetRigidBody3DComponent(entity)
     local dv = Vec3(0, 0, 0)
 
     if Mag(dir) > 0 or physics.onFloor then
-        dv = dv + 3 * dir - physics.velocity
+        dv = dv + 6 * dir - physics.velocity
         dv.y = 0
     end
 
@@ -50,17 +51,37 @@ function OnUpdate(dt)
     end
 
     physics.force = physics.force + (10 * dv) -- TODO: Replace 10 with mass
-    SetRigidBody3DComponent(physics)
+    SetRigidBody3DComponent(entity, physics)
 
-    local transform = GetTransformComponent()
+    local transform = GetTransformComponent(entity)
     if transform.position.y < -1 then
         transform.position = SPAWN_POINT
-        SetTransformComponent(transform)
+        SetTransformComponent(entity, transform)
     end
+
 end
 
-function OnMouseButtonPressedEvent(consumed, button, action, mods) end
+function OnMouseButtonPressedEvent(consumed, button, action, mods)
+    if consumed then return false end
 
-function OnMouseScrolledEvent(consumed, xOffset, yOffset) end
+    local newEntity = NewEntity()
 
-function OnWindowResizeEvent(consumed, width, height) end
+    local dir = GetForwardsDir(ENTITY)
+    local pos = GetTransformComponent(ENTITY).position
+    local vel = GetRigidBody3DComponent(ENTITY).velocity
+    
+    local tc = TransformComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
+    AddTransformComponent(newEntity, tc)
+
+    local mc = ModelComponent("Resources/Models/Sphere.obj", "", 1, 1)
+    AddModelComponent(newEntity, mc)
+
+    local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.0, 0.5, Vec3(0, 0, 0), false)
+    AddRigidBody3DComponent(newEntity, rbc)
+
+    local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 2, 0.1)
+    AddSphereCollider3DComponent(newEntity, sc)
+
+    Forget(newEntity)
+    return true
+end

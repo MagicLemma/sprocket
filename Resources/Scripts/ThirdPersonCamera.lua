@@ -1,4 +1,4 @@
-function Init()
+function Init(entity)
     DISTANCE = 8
     MOVEMENT_SPEED = 10
     ROTATION_SPEED = 90
@@ -13,8 +13,8 @@ function Init()
     HORIZ = 0 -- Parametrized yaw
 end
 
-function OnUpdate(dt)
-    local pos = GetTransformComponent().position
+function OnUpdate(entity, dt)
+    local pos = GetTransformComponent(entity).position
 
     if ABS_VERT == nil then ABS_VERT = pos.y end
 
@@ -59,7 +59,7 @@ function OnUpdate(dt)
         pos.y = pos.y + distance * dt * 2
     end
 
-    SetLookAt(pos, TARGET)
+    SetLookAt(entity, pos, TARGET)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods) end

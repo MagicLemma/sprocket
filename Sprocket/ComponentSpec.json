@@ -42,8 +42,7 @@
                     "Name": "scale",
                     "DisplayName": "Scale",
                     "Type": "Maths::vec3",
-                    "Default": [1, 1, 1],
-                    "Scriptable": false
+                    "Default": [1, 1, 1]
                 }
             ]
         },
@@ -146,8 +145,7 @@
                     "Name": "position",
                     "DisplayName": "Position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0],
-                    "Scriptable": false
+                    "Default": [0, 0, 0]
                 },
                 {
                     "Name": "orientation",
@@ -166,15 +164,13 @@
                     "Name": "halfExtents",
                     "DisplayName": "Half Extents",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0],
-                    "Scriptable": false
+                    "Default": [0, 0, 0]
                 },
                 {
                     "Name": "applyScale",
                     "DisplayName": "Apply Scale",
                     "Type": "bool",
-                    "Default": true,
-                    "Scriptable": false
+                    "Default": true
                 }
             ]
         },
@@ -186,8 +182,7 @@
                     "Name": "position",
                     "DisplayName": "Position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0],
-                    "Scriptable": false
+                    "Default": [0, 0, 0]
                 },
                 {
                     "Name": "orientation",
@@ -206,8 +201,7 @@
                     "Name": "radius",
                     "DisplayName": "Radius",
                     "Type": "float",
-                    "Default": 1.0,
-                    "Scriptable": false
+                    "Default": 1.0
                 }
             ]
         },
@@ -219,8 +213,7 @@
                     "Name": "position",
                     "DisplayName": "Position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0],
-                    "Scriptable": false
+                    "Default": [0, 0, 0]
                 },
                 {
                     "Name": "orientation",
@@ -239,15 +232,13 @@
                     "Name": "radius",
                     "DisplayName": "Radius",
                     "Type": "float",
-                    "Default": 1.0,
-                    "Scriptable": false
+                    "Default": 1.0
                 },
                 {
                     "Name": "height",
                     "DisplayName": "Height",
                     "Type": "float",
-                    "Default": 1.0,
-                    "Scriptable": false
+                    "Default": 1.0
                 }
             ]
         },

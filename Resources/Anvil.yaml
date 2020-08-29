@@ -1,49 +1,290 @@
 Version: 2
 Entities:
   - NameComponent:
+      name: Tree
+    TransformComponent:
+      position: [-4.764427, 0.301929, -26.94802]
+      orientation: [0.9677961, 0, 0.2517355, 0]
+      scale: [4.208998, 4.209, 4.208998]
+    ModelComponent:
+      model: D:\dev\Sprocket\Resources\Models\BetterTree.obj
+      texture: D:\dev\Sprocket\Resources\Textures\BetterTree.png
+      shineDamper: 1
+      reflectivity: 0
+  - NameComponent:
+      name: Tree
+    TransformComponent:
+      position: [-14.01267, 0.3019291, -13.35674]
+      orientation: [0.9726272, 0, 0.2323713, 0]
+      scale: [3.049998, 3.05, 3.049998]
+    ModelComponent:
+      model: D:\dev\Sprocket\Resources\Models\BetterTree.obj
+      texture: D:\dev\Sprocket\Resources\Textures\BetterTree.png
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 2.4, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [0.25, 0.8, 0.25]
+      applyScale: true
+  - NameComponent:
+      name: Sphere 0
+    TransformComponent:
+      position: [-12.44487, 2.686496, 12.44196]
+      orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0.196
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 20
+      radius: 1
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Sphere 0
+    TransformComponent:
+      position: [-8.352023, 2.686497, 12.41776]
+      orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
+    ModelComponent:
+      model: Resources/Models/Sphere.obj
+      texture: Resources/Textures/PlainGray.PNG
+      shineDamper: 3
+      reflectivity: 2
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.5
+      frictionCoefficient: 0.3
+      rollingResistance: 0.196
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 20
+      radius: 1
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate
+    TransformComponent:
+      position: [-18.92559, -1.5, 10.18482]
+      orientation: [0.9999999, 0, -0.0002423458, 0]
+      scale: [1.107292, 1.107288, 1.107292]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Space.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 3 (M)
+    TransformComponent:
+      position: [-22.48153, -1.756183, 6.635912]
+      orientation: [1, 0, 0, 0]
+      scale: [4.8, 0.3, 4.8]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0.2
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 10000
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 3 (M)
+    TransformComponent:
+      position: [-27.19478, -0.7553418, 6.675583]
+      orientation: [0.7069847, -1.843148e-11, 0.7072288, -1.843148e-11]
+      scale: [4.99997, 0.948213, 0.2955133]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0.2
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 10000
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 3 (M)
+    TransformComponent:
+      position: [-17.76336, -0.7553418, 6.675583]
+      orientation: [0.7069847, -1.843148e-11, 0.7072288, -1.843148e-11]
+      scale: [4.99997, 0.948213, 0.2955133]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0.2
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 10000
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 3 (M)
+    TransformComponent:
+      position: [-22.48153, -0.7553417, 1.987747]
+      orientation: [1, 0, 0, 0]
+      scale: [5, 0.948213, 0.2955239]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0.2
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 10000
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate 3 (M)
+    TransformComponent:
+      position: [-22.48153, -0.7553417, 11.35812]
+      orientation: [1, 0, 0, 0]
+      scale: [5, 0.948213, 0.2955239]
+    ModelComponent:
+      model: Resources/Models/Cube.obj
+      texture: Resources/Textures/Green.PNG
+      shineDamper: 1
+      reflectivity: 0
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: true
+      bounciness: 0
+      frictionCoefficient: 0.2
+      rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 10000
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
       name: White Light
     TransformComponent:
-      position: [40, 20, 0]
+      position: [-1.681064, 18.88199, -2.199954]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     LightComponent:
-      colour: [1, 0.99999, 0.99999]
-      attenuation: [1, 0, 0]
-      brightness: 0.7
+      colour: [0.904, 0.7333333, 1]
+      attenuation: [1, 0.1, 0.1]
+      brightness: 33.5
   - NameComponent:
       name: Green Light
     TransformComponent:
-      position: [8, 4, 2]
+      position: [0, 10.83041, -32.66968]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     LightComponent:
-      colour: [0.3532071, 0.5777777, 0.310716]
-      attenuation: [1, 0, 0]
-      brightness: 1
+      colour: [0.4666666, 0.4085649, 0.07051852]
+      attenuation: [1, 0.1, 0.1]
+      brightness: 18.4
   - NameComponent:
       name: Blue Light
     TransformComponent:
-      position: [-7, 1.8, 0]
+      position: [-14, 5, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     LightComponent:
       colour: [0, 0, 1]
-      attenuation: [1, 0, 0]
+      attenuation: [1, 0.1, 0.1]
       brightness: 2
   - NameComponent:
       name: Red Light
     TransformComponent:
-      position: [5.4, 1, 0]
+      position: [14, 5, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     LightComponent:
       colour: [1, 0, 0]
-      attenuation: [1, 0, 0]
+      attenuation: [1, 0.1, 0.1]
       brightness: 2
   - NameComponent:
       name: Platform 1
     TransformComponent:
-      position: [12.86896, 0, 4.999661]
+      position: [10, 0, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 0.9999998, 0.9999998]
     ModelComponent:
@@ -69,7 +310,7 @@ Entities:
   - NameComponent:
       name: Island
     TransformComponent:
-      position: [40, -10, 0]
+      position: [0, -7, -30]
       orientation: [1, 0, 0, 0]
       scale: [0.5, 0.5, 0.5]
     ModelComponent:
@@ -82,7 +323,7 @@ Entities:
   - NameComponent:
       name: Platform 2
     TransformComponent:
-      position: [-5, 0, 5]
+      position: [-10, 0, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     ModelComponent:
@@ -108,9 +349,9 @@ Entities:
   - NameComponent:
       name: Platform 3
     TransformComponent:
-      position: [-5, 0, 5]
-      orientation: [0.5416752, -0.4545195, 0.5416752, 0.4545195]
-      scale: [1, 1, 1]
+      position: [0, 0, 16]
+      orientation: [0.509327, -0.4903919, 0.5095264, -0.4903923]
+      scale: [0.999959, 0.9998766, 1]
     ModelComponent:
       model: Resources/Models/Platform.obj
       texture: Resources/Textures/PlainGray.PNG
@@ -134,8 +375,8 @@ Entities:
   - NameComponent:
       name: Crate
     TransformComponent:
-      position: [-5, 2, -3]
-      orientation: [0.9700029, 0, 0.2430935, 0]
+      position: [0.1443546, -0.2796395, 1.891524e-06]
+      orientation: [0.9700029, 0, 0.2430934, 0]
       scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
       model: Resources/Models/Cube.obj
@@ -160,7 +401,7 @@ Entities:
   - NameComponent:
       name: Crate 2
     TransformComponent:
-      position: [4.338203, 0.02311182, -5.717224]
+      position: [-0.1458986, 0.02311094, -8.724297]
       orientation: [0.7933534, 0, 0.6087613, 0]
       scale: [1.494947, 0.6160595, 6.666203]
     ModelComponent:
@@ -186,9 +427,9 @@ Entities:
   - NameComponent:
       name: Crate 3 (M)
     TransformComponent:
-      position: [3.874476, -0.0833931, 18.86059]
+      position: [0, 0, 8]
       orientation: [1, 0, 0, 0]
-      scale: [3.949931, 0.948213, 0.2955239]
+      scale: [5, 0.948213, 0.2955239]
     ModelComponent:
       model: Resources/Models/Cube.obj
       texture: Resources/Textures/Green.PNG
@@ -212,9 +453,9 @@ Entities:
   - NameComponent:
       name: Player
     TransformComponent:
-      position: [0, 5, 5]
-      orientation: [0.7213115, 0, -0.6926109, 0]
-      scale: [0.3, 0.3, 0.2999997]
+      position: [-14.72964, 1.646085, -0.107402]
+      orientation: [0.7213101, 0, -0.6926123, 0]
+      scale: [0.2999891, 0.3, 0.2999891]
     ModelComponent:
       model: Resources/Models/Cube.obj
       texture: Resources/Textures/PlainGray.PNG
@@ -244,9 +485,9 @@ Entities:
   - NameComponent:
       name: Sphere 0
     TransformComponent:
-      position: [0, 5, 0]
+      position: [8.317802, 2.695279, 3.716028]
       orientation: [1, 0, 0, 0]
-      scale: [0.9, 0.9, 0.9]
+      scale: [1, 1, 1]
     ModelComponent:
       model: Resources/Models/Sphere.obj
       texture: Resources/Textures/PlainGray.PNG
@@ -258,107 +499,7 @@ Entities:
       frozen: false
       bounciness: 0.5
       frictionCoefficient: 0.3
-      rollingResistance: 0
-    SphereCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Sphere 1
-    TransformComponent:
-      position: [0, 15, 0]
-      orientation: [1, 0, 0, 0]
-      scale: [0.9, 0.9, 0.9]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SphereCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Sphere 2
-    TransformComponent:
-      position: [0, 25, 0]
-      orientation: [1, 0, 0, 0]
-      scale: [0.9, 0.9, 0.9]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SphereCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Sphere 3
-    TransformComponent:
-      position: [0, 35, 0]
-      orientation: [1, 0, 0, 0]
-      scale: [0.9, 0.9, 0.9]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SphereCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 20
-      radius: 1
-    SelectComponent:
-      {}
-  - NameComponent:
-      name: Sphere 4
-    TransformComponent:
-      position: [0, 45, 0]
-      orientation: [1, 0, 0, 0]
-      scale: [0.9, 0.9, 0.9]
-    ModelComponent:
-      model: Resources/Models/Sphere.obj
-      texture: Resources/Textures/PlainGray.PNG
-      shineDamper: 3
-      reflectivity: 2
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      bounciness: 0.5
-      frictionCoefficient: 0.3
-      rollingResistance: 0
+      rollingResistance: 0.196
     SphereCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
@@ -370,9 +511,9 @@ Entities:
   - NameComponent:
       name: Crate 3 (M)
     TransformComponent:
-      position: [3.874476, -0.0833931, 17.59401]
+      position: [0, 0, 9]
       orientation: [1, 0, 0, 0]
-      scale: [3.949931, 0.948213, 0.2955239]
+      scale: [5, 0.948213, 0.2955239]
     ModelComponent:
       model: Resources/Models/Cube.obj
       texture: Resources/Textures/Green.PNG
@@ -396,9 +537,9 @@ Entities:
   - NameComponent:
       name: Crate 3 (M)
     TransformComponent:
-      position: [3.874476, -0.0833931, 16.36953]
+      position: [0, 0, 10]
       orientation: [1, 0, 0, 0]
-      scale: [3.949931, 0.948213, 0.2955239]
+      scale: [5, 0.948213, 0.2955239]
     ModelComponent:
       model: Resources/Models/Cube.obj
       texture: Resources/Textures/Green.PNG

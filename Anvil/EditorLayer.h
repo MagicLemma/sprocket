@@ -36,6 +36,7 @@ class EditorLayer : public Layer
     bool d_mouseRequired = false;
 
     bool d_playingGame = false;
+    bool d_showColliders = false;
 
     void AddEntityToList(const Entity& entity);
     Entity d_selected;

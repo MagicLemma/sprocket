@@ -110,7 +110,7 @@ void EntityRenderer::Draw(const Entity& entity)
         DrawModel(entity);
     }
 
-    if (true || d_renderColliders) {
+    if (d_renderColliders) {
         DrawCollider(entity);
     }
 }

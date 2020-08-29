@@ -104,7 +104,7 @@ void EditorLayer::OnUpdate(double dt)
         });
     }
 
-    d_entityRenderer.RenderColliders(!d_playingGame);
+    d_entityRenderer.RenderColliders(d_showColliders);
 
     d_viewport.Bind();
     if (d_playingGame) {
@@ -234,6 +234,7 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowPos({0.0, 0.8f * h + menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
     if (ImGui::Begin("BottomPanel", &open, flags)) {
+        ImGui::Checkbox("Show Colliders", &d_showColliders);
         ImGui::End();
     }
 
