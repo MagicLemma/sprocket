@@ -3,7 +3,9 @@
 #include "Skybox.h"
 #include "Entity.h"
 #include "Shader.h"
+#include "VertexArray.h"
 
+#include <memory>
 
 namespace Sprocket {
 
@@ -14,6 +16,8 @@ class SkyboxRenderer
 
     Shader d_shader;
         // Shader used to draw entities.
+
+    std::unique_ptr<VertexArray> d_vao;
 
 public:
     SkyboxRenderer(Window* window);
