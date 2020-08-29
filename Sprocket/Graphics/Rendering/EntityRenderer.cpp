@@ -163,7 +163,7 @@ void EntityRenderer::DrawModel(const Entity& entity)
 
     d_vao->SetModel(model);
     d_vao->Draw();
-    
+
     texture.Unbind();
 }
 
@@ -198,12 +198,11 @@ void EntityRenderer::DrawBox(const Entity& entity)
         transform = Maths::Scale(transform, tr.scale);
     }
 
-    s_cube->Bind();
     Texture::White().Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
-    glDrawElements(GL_TRIANGLES, (int)s_cube->VertexCount(), GL_UNSIGNED_INT, nullptr);
+    d_vao->SetModel(s_cube);
+    d_vao->Draw();
     Texture::White().Unbind();
-    s_cube->Unbind();
 }
 
 void EntityRenderer::DrawSphere(const Entity& entity)
@@ -216,12 +215,11 @@ void EntityRenderer::DrawSphere(const Entity& entity)
     transform *= Maths::Transform(physics.position, physics.orientation);
     transform = Maths::Scale(transform, physics.radius);
     
-    s_sphere->Bind();
     Texture::White().Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
-    glDrawElements(GL_TRIANGLES, (int)s_sphere->VertexCount(), GL_UNSIGNED_INT, nullptr);
+    d_vao->SetModel(s_sphere);
+    d_vao->Draw();
     Texture::White().Unbind();
-    s_sphere->Unbind();
 }
 
 void EntityRenderer::DrawCapsule(const Entity& entity)
@@ -232,30 +230,27 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
 
     Texture::White().Bind();
     {  // Top Hemisphere
-        s_hemisphere->Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(physics.position, physics.orientation);
         transform = Maths::Translate(transform, {0.0, physics.height/2, 0.0});
         transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, (int)s_hemisphere->VertexCount(), GL_UNSIGNED_INT, nullptr);
-        s_hemisphere->Unbind();
+        d_vao->SetModel(s_hemisphere);
+        d_vao->Draw();
     }
 
     {  // Middle Cylinder
-        s_cylinder->Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(physics.position, physics.orientation);
         transform = Maths::Scale(transform, {physics.radius, physics.height, physics.radius});
         d_shader.LoadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, (int)s_cylinder->VertexCount(), GL_UNSIGNED_INT, nullptr);
-        s_cylinder->Unbind();
+        d_vao->SetModel(s_cylinder);
+        d_vao->Draw();
     }
 
     {  // Bottom Hemisphere
-        s_hemisphere->Bind();
         auto tr = entity.Get<TransformComponent>();
         Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(physics.position, physics.orientation);
@@ -263,8 +258,8 @@ void EntityRenderer::DrawCapsule(const Entity& entity)
         transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
         transform = Maths::Scale(transform, physics.radius);
         d_shader.LoadUniform("u_model_matrix", transform);
-        glDrawElements(GL_TRIANGLES, (int)s_hemisphere->VertexCount(), GL_UNSIGNED_INT, nullptr);
-        s_hemisphere->Unbind();
+        d_vao->SetModel(s_hemisphere);
+        d_vao->Draw();
     }
     Texture::White().Unbind();   
 }

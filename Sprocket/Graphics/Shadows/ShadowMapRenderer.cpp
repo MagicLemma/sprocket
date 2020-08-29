@@ -12,6 +12,7 @@ ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
     , d_lightViewMatrix() // Will be populated after starting a scene.
     , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
     , d_shadowMap(window, 4096, 4096)
+    , d_vao(std::make_unique<VertexArray>())
 {
 }
 
@@ -41,11 +42,15 @@ void ShadowMapRenderer::Draw(const Entity& entity)
 
     auto model = d_modelManager->GetModel(modelComponent.model);
 
-    model->Bind();
+    //model->Bind();
     glCullFace(GL_FRONT);
-    glDrawElements(GL_TRIANGLES, (int)model->VertexCount(), GL_UNSIGNED_INT, nullptr);
+
+    d_vao->SetModel(model);
+    d_vao->Draw();
+
+    //glDrawElements(GL_TRIANGLES, (int)model->VertexCount(), GL_UNSIGNED_INT, nullptr);
     glCullFace(GL_BACK);
-    model->Unbind();
+    //model->Unbind();
 }
 
 void ShadowMapRenderer::EndScene()

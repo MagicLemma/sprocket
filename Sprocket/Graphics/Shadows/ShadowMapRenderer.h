@@ -7,6 +7,7 @@
 #include "ModelManager.h"
 #include "TextureManager.h"
 #include "Scene.h"
+#include "VertexArray.h"
 
 #include <memory>
 
@@ -24,6 +25,8 @@ class ShadowMapRenderer
     Maths::mat4 d_lightProjMatrix;
 
     DepthBuffer d_shadowMap;
+
+    std::unique_ptr<VertexArray> d_vao;
 
 public:
     ShadowMapRenderer(Window* window, ModelManager* modelManager);

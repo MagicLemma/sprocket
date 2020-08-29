@@ -20,7 +20,6 @@ using IndexBuffer = std::vector<unsigned int>;
 class Model3D
 {
     // GPU STORAGE
-    std::shared_ptr<VAO> d_vao;
     std::shared_ptr<VBO> d_vertexBuffer;
     std::shared_ptr<VBO> d_indexBuffer;
 
@@ -39,13 +38,10 @@ public:
 
     std::size_t VertexCount() const { return d_indexData->size(); }
 
-    // GPU STORAGE ACCESS
+    // Binds the vertex buffer and index buffer. This will set the index
+    // buffer in the currently bound vertex array but does not set any
+    // attrib pointers.
     void Bind() const;
-    void Unbind() const;
-
-    // Sets the attrib pointers and index buffer in the current bound
-    // VAO to this model.
-    void Load() const;
 
     // CPU STORAGE ACCESS
     const Vertex3DBuffer& VertexBufferData() const { return *d_vertexData.get(); }
