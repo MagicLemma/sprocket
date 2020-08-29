@@ -164,7 +164,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     if (auto sun = data["Sun"]) {
         scene->GetSun().direction = sun["direction"] ? sun["direction"].as<Maths::vec3>() : Maths::vec3{0.0, -1.0, 0.0};
         scene->GetSun().colour = sun["colour"] ? sun["colour"].as<Maths::vec3>() : Maths::vec3{1.0, 1.0, 1.0};
-        scene->GetSun().brightness = sun["brightness"] ? sun["brightness"].as<float>() : 1.0f;
+        scene->GetSun().brightness = sun["brightness"] ? sun["brightness"].as<float>() : 0.0f;
     }
 
     if (!data["Entities"]) {
