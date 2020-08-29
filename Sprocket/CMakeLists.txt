@@ -61,16 +61,15 @@ add_library(Sprocket STATIC
 
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
-
-            Graphics/Primitives/BufferLayout.cpp
-            Graphics/Primitives/DepthBuffer.cpp
-            Graphics/Primitives/Resources.cpp
-            Graphics/Primitives/Model2D.cpp
-            Graphics/Primitives/Model3D.cpp
-            Graphics/Primitives/Texture.cpp
-            Graphics/Primitives/CubeMap.cpp
-            Graphics/Primitives/FrameBuffer.cpp
-            Graphics/Primitives/StreamBuffer.cpp
+            Graphics/BufferLayout.cpp
+            Graphics/DepthBuffer.cpp
+            Graphics/Resources.cpp
+            Graphics/Model2D.cpp
+            Graphics/Model3D.cpp
+            Graphics/Texture.cpp
+            Graphics/CubeMap.cpp
+            Graphics/FrameBuffer.cpp
+            Graphics/StreamBuffer.cpp
 
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
@@ -135,7 +134,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Scene/Systems
                            ./Events
                            ./Graphics
-                           ./Graphics/Primitives
                            ./Graphics/Rendering
                            ./Graphics/Shadows
                            ./Graphics/PostProcessing

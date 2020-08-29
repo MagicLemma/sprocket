@@ -65,9 +65,10 @@ void EntityRenderer::BeginScene(
     d_shader.LoadUniform("u_view_matrix", view);
 
     // Load sun to shader
-    d_shader.LoadUniform("u_sun_direction", lights.sun.direction);
-    d_shader.LoadUniform("u_sun_colour", lights.sun.colour);
-    d_shader.LoadUniform("u_sun_brightness", lights.sun.brightness);
+    const auto& sun = scene.GetSun();
+    d_shader.LoadUniform("u_sun_direction", sun.direction);
+    d_shader.LoadUniform("u_sun_colour", sun.colour);
+    d_shader.LoadUniform("u_sun_brightness", sun.brightness);
 
     // Load ambience to shader
     d_shader.LoadUniform("u_ambience_colour", lights.ambience.colour);

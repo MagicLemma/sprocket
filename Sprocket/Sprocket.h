@@ -61,6 +61,15 @@
 // GRAPHICS
 #include "Graphics/RenderContext.h"
 #include "Graphics/Shader.h"
+#include "Graphics/BufferLayout.h"
+#include "Graphics/DepthBuffer.h"
+#include "Graphics/Resources.h"
+#include "Graphics/Model2D.h"
+#include "Graphics/Model3D.h"
+#include "Graphics/Texture.h"
+#include "Graphics/CubeMap.h"
+#include "Graphics/FrameBuffer.h"
+#include "Graphics/StreamBuffer.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"
@@ -68,16 +77,6 @@
 #include "Graphics/PostProcessing/Negative.h"
 
 #include "Graphics/Shadows/ShadowMapRenderer.h"
-
-#include "Graphics/Primitives/BufferLayout.h"
-#include "Graphics/Primitives/DepthBuffer.h"
-#include "Graphics/Primitives/Resources.h"
-#include "Graphics/Primitives/Model2D.h"
-#include "Graphics/Primitives/Model3D.h"
-#include "Graphics/Primitives/Texture.h"
-#include "Graphics/Primitives/CubeMap.h"
-#include "Graphics/Primitives/FrameBuffer.h"
-#include "Graphics/Primitives/StreamBuffer.h"
 
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"

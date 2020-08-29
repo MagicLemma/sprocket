@@ -35,9 +35,10 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
 
     d_cycle.SetAngle(190.0f);
 
-    d_lights.sun.direction = d_cycle.GetSunDir();
-    d_lights.sun.colour = {1.0, 0.945, 0.789};
-    d_lights.sun.brightness = 0.8f;
+    auto& sun = d_scene->GetSun();
+    sun.direction = d_cycle.GetSunDir();
+    sun.colour = {1.0, 0.945, 0.789};
+    sun.brightness = 0.8f;
 
     d_lights.ambience.colour = SARAWAK;
     d_lights.ambience.brightness = 0.4f;
@@ -144,6 +145,7 @@ void WorldLayer::OnUpdate(double dt)
     d_hoveredEntityUI.OnUpdate(dt);
     d_mouse.OnUpdate();
     d_cycle.OnUpdate(dt);
+    auto& sun = d_scene->GetSun();
     
     if (!d_paused) {
 
@@ -152,24 +154,24 @@ void WorldLayer::OnUpdate(double dt)
         auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
         d_core.window->SetClearColour(skyColour);
         if (d_cycle.IsDay()) {
-            d_lights.sun.direction = d_cycle.GetSunDir();
-            d_lights.sun.colour = {1.0, 0.945, 0.789};
-            d_lights.sun.brightness = 0.8f;
+            sun.direction = d_cycle.GetSunDir();
+            sun.colour = {1.0, 0.945, 0.789};
+            sun.brightness = 0.8f;
         }
         else {
-            d_lights.sun.direction = -d_cycle.GetSunDir();
-            d_lights.sun.colour = {0.5, 0.57, 0.98};
-            d_lights.sun.brightness = 0.1f;
+            sun.direction = -d_cycle.GetSunDir();
+            sun.colour = {0.5, 0.57, 0.98};
+            sun.brightness = 0.1f;
         }
 
-        Maths::Normalise(d_lights.sun.direction);
+        Maths::Normalise(sun.direction);
         d_scene->OnUpdate(dt);
     }
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    d_shadowMapRenderer.BeginScene(d_lights.sun, target);
+    d_shadowMapRenderer.BeginScene(sun, target);
     d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         d_shadowMapRenderer.Draw(entity);
     });

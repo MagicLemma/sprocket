@@ -235,6 +235,11 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
     if (ImGui::Begin("BottomPanel", &open, flags)) {
         ImGui::Checkbox("Show Colliders", &d_showColliders);
+        auto& sun = d_activeScene->GetSun();
+        ImGui::DragFloat3("Sun Direction", &sun.direction.x);
+        Maths::Normalise(sun.direction);
+        ImGui::ColorEdit3("Sun Colour", &sun.colour.x);
+        ImGui::DragFloat("Sun Brightness", &sun.brightness, 0.01f);
         ImGui::End();
     }
 
