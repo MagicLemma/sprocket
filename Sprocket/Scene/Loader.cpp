@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-30 15:28:51.691089
+// GENERATED FILE @ 2020-08-30 16:16:44.708666
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -144,6 +144,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "ParticleComponent" << YAML::BeginMap;
             out << YAML::Key << "interval" << YAML::Value << c.interval;
             out << YAML::Key << "velocity" << YAML::Value << c.velocity;
+            out << YAML::Key << "velocityNoise" << YAML::Value << c.velocityNoise;
             out << YAML::Key << "acceleration" << YAML::Value << c.acceleration;
             out << YAML::Key << "scale" << YAML::Value << c.scale;
             out << YAML::Key << "life" << YAML::Value << c.life;
@@ -281,6 +282,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             ParticleComponent c;
             c.interval = spec["interval"] ? spec["interval"].as<float>() : 1.0f;
             c.velocity = spec["velocity"] ? spec["velocity"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.velocityNoise = spec["velocityNoise"] ? spec["velocityNoise"].as<float>() : 0.0f;
             c.acceleration = spec["acceleration"] ? spec["acceleration"].as<Maths::vec3>() : Maths::vec3{0.0f, -9.81f, 0.0f};
             c.scale = spec["scale"] ? spec["scale"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
             c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;

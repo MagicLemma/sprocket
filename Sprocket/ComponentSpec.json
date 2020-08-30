@@ -386,6 +386,12 @@
                     "Default": [0.0, 0.0, 0.0]
                 },
                 {
+                    "Name": "velocityNoise",
+                    "DisplayName": "Velocity Noise",
+                    "Type": "float",
+                    "Default": 0.0
+                },
+                {
                     "Name": "acceleration",
                     "DisplayName": "Acceleration",
                     "Type": "Maths::vec3",
@@ -404,10 +410,10 @@
                     "Default": 1.0
                 },
                 {
-                    "Name": "sinceLastEmit",
-                    "DisplayName": "Since Last Emit",
+                    "Name": "accumulator",
+                    "DisplayName": "Accumulator",
                     "Type": "float",
-                    "Default": -1.0,
+                    "Default": 0.0,
                     "Scriptable": false,
                     "Savable": false
                 }

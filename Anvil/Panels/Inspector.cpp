@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-30 15:28:51.715025
+// GENERATED FILE @ 2020-08-30 16:16:44.739564
 
 #include "Inspector.h"
 #include "EditorLayer.h"
@@ -171,10 +171,11 @@ void ShowInspector(EditorLayer& editor)
         auto& c = entity.Get<ParticleComponent>();
         ImGui::DragFloat("Interval", &c.interval, 0.1f);
         ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
+        ImGui::DragFloat("Velocity Noise", &c.velocityNoise, 0.1f);
         ImGui::DragFloat3("Acceleration", &c.acceleration.x, 0.1f);
         ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
         ImGui::DragFloat("Life", &c.life, 0.1f);
-        ImGui::DragFloat("Since Last Emit", &c.sinceLastEmit, 0.1f);
+        ImGui::DragFloat("Accumulator", &c.accumulator, 0.1f);
         if (ImGui::Button("Delete")) { entity.Remove<ParticleComponent>(); }
         ImGui::PopID();
     }

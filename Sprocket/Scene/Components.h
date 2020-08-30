@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-30 15:28:51.686137
+// GENERATED FILE @ 2020-08-30 16:16:44.703687
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -120,10 +120,11 @@ struct ParticleComponent
 {
     float interval = 1.0f;
     Maths::vec3 velocity = Maths::vec3{0.0f, 0.0f, 0.0f};
+    float velocityNoise = 0.0f;
     Maths::vec3 acceleration = Maths::vec3{0.0f, -9.81f, 0.0f};
     Maths::vec3 scale = Maths::vec3{1.0f, 1.0f, 1.0f};
     float life = 1.0f;
-    float sinceLastEmit = -1.0f;
+    float accumulator = 0.0f;
 };
 
 }
