@@ -108,17 +108,13 @@ void EditorLayer::OnUpdate(double dt)
 
     d_viewport.Bind();
     if (d_playingGame) {
-        d_entityRenderer.BeginScene(d_runtimeCamera, d_lights, *d_activeScene);
+        d_entityRenderer.Draw(d_runtimeCamera, d_lights, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     }
     else {
-        d_entityRenderer.BeginScene(d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
+        d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
     }
-
-    d_activeScene->Each<TransformComponent>([&](Entity& entity) {
-        d_entityRenderer.Draw(entity);
-    });
     d_viewport.Unbind();
 
     d_ui.StartFrame();

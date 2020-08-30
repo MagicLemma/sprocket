@@ -80,7 +80,6 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.BeginScene(d_activeCamera, d_lights, *d_scene);
 
     if (!d_paused) {
         d_scene->OnUpdate(dt);
@@ -105,6 +104,7 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
+    d_entityRenderer.Draw(d_activeCamera, d_lights, *d_scene);
     d_skyboxRenderer.Draw(d_skybox, d_activeCamera);
 
     d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {

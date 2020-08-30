@@ -53,7 +53,7 @@ void EntityRenderer::EnableShadows(
     glActiveTexture(GL_TEXTURE0);
 }
 
-void EntityRenderer::BeginScene(
+void EntityRenderer::Draw(
     const Maths::mat4& proj,
     const Maths::mat4& view,
     const Lights& lights,
@@ -94,14 +94,18 @@ void EntityRenderer::BeginScene(
         }
         ++i;
     });
+
+    scene.Each<TransformComponent>([&](Entity& entity) {
+        Draw(entity);
+    });
     d_shader.Unbind();
 }
 
-void EntityRenderer::BeginScene(const Entity& camera, const Lights& lights, Scene& scene)
+void EntityRenderer::Draw(const Entity& camera, const Lights& lights, Scene& scene)
 {
     Maths::mat4 proj = CameraUtils::MakeProj(camera);
     Maths::mat4 view = CameraUtils::MakeView(camera);
-    BeginScene(proj, view, lights, scene);
+    Draw(proj, view, lights, scene);
 }
 
 void EntityRenderer::Draw(const Entity& entity)

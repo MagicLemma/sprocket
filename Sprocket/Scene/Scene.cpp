@@ -44,7 +44,7 @@ void Scene::OnUpdate(double dt)
 
     if (d_sinceLastSort > 5.0) {
         d_registry.sort<ModelComponent>([](const auto& lhs, const auto& rhs) {
-            return lhs.model < rhs.model;
+            return lhs.model < rhs.model || (lhs.model == rhs.model && lhs.texture < rhs.texture);
         });
         d_sinceLastSort -= 5.0f;
         SPKT_LOG_INFO("Sorted");

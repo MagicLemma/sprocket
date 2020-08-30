@@ -181,14 +181,11 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
-    d_entityRenderer.BeginScene(d_camera, d_lights, *d_scene);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   
     );
-    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        d_entityRenderer.Draw(entity);
-    });
+    d_entityRenderer.Draw(d_camera, d_lights, *d_scene);
 
     if (d_paused) {
         d_postProcessor.Unbind();
