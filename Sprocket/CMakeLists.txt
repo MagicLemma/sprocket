@@ -70,6 +70,7 @@ add_library(Sprocket STATIC
             Graphics/CubeMap.cpp
             Graphics/FrameBuffer.cpp
             Graphics/InstanceBuffer.cpp
+            Graphics/ParticleManager.cpp
             Graphics/ShadowMap.cpp
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp

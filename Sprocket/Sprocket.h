@@ -71,6 +71,7 @@
 #include "Graphics/FrameBuffer.h"
 #include "Graphics/InstanceBuffer.h"
 #include "Graphics/ShadowMap.h"
+#include "Graphics/ParticleManager.h"
 #include "Graphics/StreamBuffer.h"
 #include "Graphics/VertexArray.h"
 
