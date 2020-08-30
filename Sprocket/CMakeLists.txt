@@ -70,6 +70,7 @@ add_library(Sprocket STATIC
             Graphics/CubeMap.cpp
             Graphics/FrameBuffer.cpp
             Graphics/InstanceBuffer.cpp
+            Graphics/ShadowMap.cpp
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp
 
@@ -77,7 +78,6 @@ add_library(Sprocket STATIC
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
 
-            Graphics/Shadows/ShadowMapRenderer.cpp
             
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp

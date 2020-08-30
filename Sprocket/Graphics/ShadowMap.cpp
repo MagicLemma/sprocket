@@ -1,4 +1,4 @@
-#include "ShadowMapRenderer.h"
+#include "ShadowMap.h"
 #include "Components.h"
 #include "RenderContext.h"
 

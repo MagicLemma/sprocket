@@ -70,6 +70,7 @@
 #include "Graphics/CubeMap.h"
 #include "Graphics/FrameBuffer.h"
 #include "Graphics/InstanceBuffer.h"
+#include "Graphics/ShadowMap.h"
 #include "Graphics/StreamBuffer.h"
 #include "Graphics/VertexArray.h"
 
@@ -78,7 +79,6 @@
 #include "Graphics/PostProcessing/GaussianBlur.h"
 #include "Graphics/PostProcessing/Negative.h"
 
-#include "Graphics/Shadows/ShadowMapRenderer.h"
 
 #include "Graphics/Rendering/ColliderRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
