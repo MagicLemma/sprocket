@@ -40,6 +40,16 @@ void Scene::OnStartup()
 
 void Scene::OnUpdate(double dt)
 {
+    d_sinceLastSort += dt;
+
+    if (d_sinceLastSort > 5.0) {
+        d_registry.sort<ModelComponent>([](const auto& lhs, const auto& rhs) {
+            return lhs.model < rhs.model;
+        });
+        d_sinceLastSort -= 5.0f;
+        SPKT_LOG_INFO("Sorted");
+    }
+
     for (auto system : d_systems) {
         system->OnUpdate(*this, dt);
     }

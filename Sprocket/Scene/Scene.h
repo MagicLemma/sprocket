@@ -42,6 +42,8 @@ private:
 
     Sun d_sun;
 
+    double d_sinceLastSort = 0.0f;
+
     template <typename T> void OnAddCB(entt::registry& r, entt::entity e);
     template <typename T> void OnUpdateCB(entt::registry& r, entt::entity e);
     template <typename T> void OnRemoveCB(entt::registry& r, entt::entity e);
