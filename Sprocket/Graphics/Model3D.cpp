@@ -6,12 +6,17 @@ namespace Sprocket {
 
 Model3D::Model3D(const Vertex3DBuffer& vertices,
                  const IndexBuffer& indices)
+    : d_vertexBuffer(std::make_shared<VBO>())
+    , d_indexBuffer(std::make_shared<VBO>())
+    , d_count(indices.size())
 {
-    d_vertexBuffer = LoadVertexBuffer(vertices);
-    d_indexBuffer = LoadIndexBuffer(indices);
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    d_vertexData = std::make_shared<Vertex3DBuffer>(vertices);
-    d_indexData = std::make_shared<IndexBuffer>(indices);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 Model3D::Model3D()
@@ -22,23 +27,6 @@ void Model3D::Bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
-}
-
-std::shared_ptr<VBO> Model3D::LoadVertexBuffer(const Vertex3DBuffer& vertices)
-{
-    auto vertexBuffer = std::make_shared<VBO>();
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->Value());
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-    return vertexBuffer;
-}
-
-std::shared_ptr<VBO> Model3D::LoadIndexBuffer(const IndexBuffer& indices)
-{
-    auto indexBuffer = std::make_shared<VBO>();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->Value());
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-
-    return indexBuffer;
 }
 
 bool Model3D::operator==(const Model3D& other) const
