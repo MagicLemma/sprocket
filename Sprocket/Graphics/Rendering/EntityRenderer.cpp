@@ -95,10 +95,12 @@ void EntityRenderer::Draw(
 
         if (mc.model != currentModelStr) {
             d_vao->SetModel(d_modelManager->GetModel(mc.model));
+            currentModelStr = mc.model;
         }
 
         if (mc.texture != currentTextureStr) {
             d_textureManager->GetTexture(mc.texture).Bind();
+            currentTextureStr = mc.texture;
         }
 
         d_shader.LoadUniform("u_model_position", tc.position);
