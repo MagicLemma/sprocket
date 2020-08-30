@@ -16,16 +16,12 @@ Model2D::Model2D(const Vertex2DBuffer& vertices)
 
     // Set Vertex Attributes in the VAO
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
                           (void*)offsetof(Vertex2D, position));
 
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
                           (void*)offsetof(Vertex2D, texture));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex2D),
-                          (void*)offsetof(Vertex2D, colour));
 
     glBindVertexArray(0);
 }
