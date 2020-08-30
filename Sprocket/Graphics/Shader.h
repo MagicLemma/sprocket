@@ -48,6 +48,7 @@ public:
     void LoadUniform(const std::string& name, const Maths::vec2& vector) const;
     void LoadUniform(const std::string& name, const Maths::vec3& vector) const;
     void LoadUniform(const std::string& name, const Maths::vec4& vector) const;
+    void LoadUniform(const std::string& name, const Maths::quat& quat) const;
     void LoadUniform(const std::string& name, const Maths::mat4& matrix) const;
 };
 

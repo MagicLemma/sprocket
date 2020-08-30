@@ -21,8 +21,6 @@ class EntityRenderer
 
     std::unique_ptr<VertexArray> d_vao;
 
-    void DrawModel    (const Entity& entity);
-
 public:
     EntityRenderer(
         Window* window,

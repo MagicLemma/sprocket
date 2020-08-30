@@ -9,7 +9,10 @@ out vec3  p_surface_normal;
 out vec3  p_to_camera_vector;
 out vec3  p_to_light_vector[5];
 
-uniform mat4 u_model_matrix;
+uniform vec3 u_model_position;
+uniform vec4 u_model_orientation;
+uniform vec3 u_model_scale;
+
 uniform mat4 u_proj_matrix;
 uniform mat4 u_view_matrix;
 uniform vec3 u_light_pos[5];
@@ -18,13 +21,51 @@ uniform vec3 u_light_pos[5];
 uniform mat4 u_light_proj_view;
 out vec4 p_light_space_pos;
 
+mat4 Transform(vec3 p, vec4 o, vec3 s)
+{
+    mat4 matrix;
+
+    float oxx = o.x * o.x;
+    float oyy = o.y * o.y;
+    float ozz = o.z * o.z;
+    float oxz = o.x * o.z;
+    float oxy = o.x * o.y;
+    float oyz = o.y * o.z;
+    float owx = o.w * o.x;
+    float owy = o.w * o.y;
+    float owz = o.w * o.z;
+
+    matrix[0][0] = s.x * (1 - 2 * (oyy + ozz));
+    matrix[0][1] = s.x * (2 * (oxy + owz));
+    matrix[0][2] = s.x * (2 * (oxz - owy));
+    matrix[0][3] = 0;
+
+    matrix[1][0] = s.y * (2 * (oxy - owx));
+    matrix[1][1] = s.y * (1 - 2 * (oxx + ozz));
+    matrix[1][2] = s.y * (2 * (oyz + owx));
+    matrix[1][3] = 0;
+
+    matrix[2][0] = s.z * (2 * (oxz + owy));
+    matrix[2][1] = s.z * (2 * (oyz - owx));
+    matrix[2][2] = s.z * (1 - 2 * (oxx + oyy));
+    matrix[2][3] = 0;
+
+    matrix[3][0] = p.x;
+    matrix[3][1] = p.y;
+    matrix[3][2] = p.z;
+    matrix[3][3] = 1;
+
+    return matrix;
+}
+
 void main()
 {
-    vec4 world_pos = u_model_matrix * vec4(position, 1.0);
+    mat4 transform = Transform(u_model_position, u_model_orientation, u_model_scale);
+    vec4 world_pos = transform * vec4(position, 1.0);
     gl_Position = u_proj_matrix * u_view_matrix * world_pos;
     
     p_texture_coords = texture_coords;
-    p_surface_normal = (u_model_matrix * vec4(normal, 0.0)).xyz;
+    p_surface_normal = (transform * vec4(normal, 0.0)).xyz;
     p_to_camera_vector = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
 
     p_light_space_pos = u_light_proj_view * world_pos;

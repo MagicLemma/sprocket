@@ -82,8 +82,31 @@ void EntityRenderer::Draw(
         ++i;
     }
 
+    d_shader.Bind();
+    std::string currentModelStr;
+    std::string currentTextureStr;
+
+    Texture currentTexture = Texture::White();
+
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        DrawModel(entity);
+        const auto& tc = entity.Get<TransformComponent>();
+        const auto& mc = entity.Get<ModelComponent>();
+        if (mc.model.empty()) { return; }
+
+        if (mc.model != currentModelStr) {
+            d_vao->SetModel(d_modelManager->GetModel(mc.model));
+        }
+
+        if (mc.texture != currentTextureStr) {
+            d_textureManager->GetTexture(mc.texture).Bind();
+        }
+
+        d_shader.LoadUniform("u_model_position", tc.position);
+        d_shader.LoadUniform("u_model_orientation", tc.orientation);
+        d_shader.LoadUniform("u_model_scale", tc.scale);
+        d_shader.LoadUniform("u_shine_dampner", mc.shineDamper);
+        d_shader.LoadUniform("u_reflectivity", mc.reflectivity);
+        d_vao->Draw();
     });
 
     d_shader.Unbind();
@@ -94,31 +117,6 @@ void EntityRenderer::Draw(const Entity& camera, const Lights& lights, Scene& sce
     Maths::mat4 proj = CameraUtils::MakeProj(camera);
     Maths::mat4 view = CameraUtils::MakeView(camera);
     Draw(proj, view, lights, scene);
-}
-
-void EntityRenderer::DrawModel(const Entity& entity)
-{
-    const auto tr = entity.Get<TransformComponent>();
-    const auto& modelComp = entity.Get<ModelComponent>();
-    if (modelComp.model.empty()) { return; }
-
-    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation, tr.scale);
-
-    d_shader.Bind();
-    d_shader.LoadUniform("u_model_matrix", transform);
-	d_shader.LoadUniform("u_shine_dampner", modelComp.shineDamper);
-	d_shader.LoadUniform("u_reflectivity", modelComp.reflectivity);
-
-    auto model = d_modelManager->GetModel(modelComp.model);
-    auto texture = d_textureManager->GetTexture(modelComp.texture);
-
-    glActiveTexture(GL_TEXTURE0);
-    texture.Bind();
-
-    d_vao->SetModel(model);
-    d_vao->Draw();
-
-    texture.Unbind();
 }
 
 }
