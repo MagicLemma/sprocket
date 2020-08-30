@@ -4,22 +4,23 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace Sprocket {
 
 class ModelManager
 {
 public:
-    using Map = std::map<std::string, Model3D>;
+    using Map = std::map<std::string, std::shared_ptr<Model3D>>;
 
 private:
     Map d_loadedModels;
 
 public:
-    static Model3D LoadModel(const std::string& path);
+    static std::shared_ptr<Model3D> LoadModel(const std::string& path);
         // Loads a model without caching it.
 
-    Model3D GetModel(const std::string& path);
+    std::shared_ptr<Model3D> GetModel(const std::string& path);
         // Returns the model in the specified path. If it has not beed loaded
         // it will be loaded and stored internally.
 

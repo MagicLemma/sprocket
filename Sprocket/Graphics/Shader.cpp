@@ -122,6 +122,11 @@ void Shader::LoadUniform(const std::string& name, const Maths::vec4& vector) con
 	glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 }
 
+void Shader::LoadUniform(const std::string& name, const Maths::quat& quat) const
+{
+	glUniform4f(GetUniformLocation(name), quat.x, quat.y, quat.z, quat.w);
+}
+
 void Shader::LoadUniform(const std::string& name, const Maths::mat4& matrix) const
 {
 	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);

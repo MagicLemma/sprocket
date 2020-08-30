@@ -171,24 +171,17 @@ void WorldLayer::OnUpdate(double dt)
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    d_shadowMapRenderer.BeginScene(sun, target);
-    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        d_shadowMapRenderer.Draw(entity);
-    });
-    d_shadowMapRenderer.EndScene(); 
+    d_shadowMapRenderer.Draw(sun, target, *d_scene);
 
     if (d_paused) {
         d_postProcessor.Bind();
     }
 
-    d_entityRenderer.BeginScene(d_camera, d_lights, *d_scene);
     d_entityRenderer.EnableShadows(
         d_shadowMapRenderer.GetShadowMap(),
         d_shadowMapRenderer.GetLightProjViewMatrix()   
     );
-    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        d_entityRenderer.Draw(entity);
-    });
+    d_entityRenderer.Draw(d_camera, d_lights, *d_scene);
 
     if (d_paused) {
         d_postProcessor.Unbind();

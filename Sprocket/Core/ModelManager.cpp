@@ -16,7 +16,7 @@ bool IsSceneValid(const aiScene* scene)
            scene->mRootNode;
 }
 
-Model3D ProcessMesh(const aiScene* scene, aiMesh* mesh)
+std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene, aiMesh* mesh)
 {    
     Vertex3DBuffer vertices;
     IndexBuffer    indices;
@@ -48,12 +48,12 @@ Model3D ProcessMesh(const aiScene* scene, aiMesh* mesh)
         }
     }
 
-    return Model3D(vertices, indices);
+    return std::make_shared<Model3D>(vertices, indices);
 }
 
 }
 
-Model3D ModelManager::LoadModel(const std::string& path)
+std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
 {
     Assimp::Importer importer;
     int flags = aiProcess_Triangulate | aiProcess_FlipUVs;
@@ -61,26 +61,26 @@ Model3D ModelManager::LoadModel(const std::string& path)
 
     if (!IsSceneValid(scene)) {
         SPKT_LOG_ERROR("ERROR::ASSIMP::{}", importer.GetErrorString());
-        return Model3D();
+        return std::make_shared<Model3D>();
     }
 
     if (scene->mNumMeshes != 1) {
         SPKT_LOG_ERROR("File does not have exactly one mesh, not supported!");
-        return Model3D();
+        return std::make_shared<Model3D>();
     }
 
     return ProcessMesh(scene, scene->mMeshes[0]);
 }
 
-Model3D ModelManager::GetModel(const std::string& path)
+std::shared_ptr<Model3D> ModelManager::GetModel(const std::string& path)
 {
-    if (path == "") { return Model3D(); }
+    if (path == "") { return std::make_shared<Model3D>(); }
     
     auto it = d_loadedModels.find(path);
     if (it != d_loadedModels.end()) {
         return it->second;
     }
-    Model3D model = LoadModel(path);
+    auto model = LoadModel(path);
     d_loadedModels.emplace(path, model);
     return model;   
 }

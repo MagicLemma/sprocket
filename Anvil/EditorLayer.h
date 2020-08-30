@@ -14,6 +14,7 @@ class EditorLayer : public Layer
     // Rendering
     EntityRenderer d_entityRenderer;
     SkyboxRenderer d_skyboxRenderer;
+    ColliderRenderer d_colliderRenderer;
 
     FrameBuffer d_viewport;
     DevUI::Context d_ui;

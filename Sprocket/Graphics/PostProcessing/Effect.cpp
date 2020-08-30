@@ -10,29 +10,23 @@ Vertex2DBuffer GetQuad()
 {
     return Vertex2DBuffer{
         {
-            Maths::vec2{-1.0f, -1.0f},
-            Maths::vec2{0.0f, 0.0f},
-            Maths::vec3{1.0f, 1.0f, 1.0f}
+            Maths::vec3{-1.0f, -1.0f, 0.0f},
+            Maths::vec2{0.0f, 0.0f}
         }, {
-            Maths::vec2{1.0f, -1.0f},
-            Maths::vec2{1.0f, 0.0f},
-            Maths::vec3{1.0f, 1.0f, 1.0f}
+            Maths::vec3{1.0f, -1.0f, 0.0f},
+            Maths::vec2{1.0f, 0.0f}
         }, {
-            Maths::vec2{1.0f, 1.0f},
-            Maths::vec2{1.0f, 1.0f},
-            Maths::vec3{1.0f, 1.0f, 1.0f}
+            Maths::vec3{1.0f, 1.0f, 0.0f},
+            Maths::vec2{1.0f, 1.0f}
         }, {
-            Maths::vec2{1.0f, 1.0f},
-            Maths::vec2{1.0f, 1.0f},
-            Maths::vec3{1.0f, 1.0f, 1.0f}
+            Maths::vec3{1.0f, 1.0f, 0.0f},
+            Maths::vec2{1.0f, 1.0f}
         }, {
-            Maths::vec2{-1.0f, 1.0f},
-            Maths::vec2{0.0f, 1.0f},
-            Maths::vec3{1.0f, 1.0f, 1.0f}
+            Maths::vec3{-1.0f, 1.0f, 0.0f},
+            Maths::vec2{0.0f, 1.0f}
         }, {
-            Maths::vec2{-1.0f, -1.0f},
-            Maths::vec2{0.0f, 0.0f},
-            Maths::vec3{1.0f, 1.0f, 1.0f}
+            Maths::vec3{-1.0f, -1.0f, 0.0f},
+            Maths::vec2{0.0f, 0.0f}
         }
     };
 }

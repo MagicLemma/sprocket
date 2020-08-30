@@ -4,7 +4,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     : Sprocket::Layer(core)
     , d_mode(Mode::OBSERVER)
     , d_entityRenderer(core.window, core.modelManager, core.textureManager)
-    , d_skyboxRenderer(core.window)
+    , d_skyboxRenderer()
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_skybox({
         Sprocket::ModelManager::LoadModel("Resources/Models/Skybox.obj"),
@@ -80,7 +80,6 @@ void WorldLayer::OnUpdate(double dt)
 {
     using namespace Sprocket;
     
-    d_entityRenderer.BeginScene(d_activeCamera, d_lights, *d_scene);
 
     if (!d_paused) {
         d_scene->OnUpdate(dt);
@@ -105,11 +104,8 @@ void WorldLayer::OnUpdate(double dt)
         d_postProcessor.Bind();
     }
 
+    d_entityRenderer.Draw(d_activeCamera, d_lights, *d_scene);
     d_skyboxRenderer.Draw(d_skybox, d_activeCamera);
-
-    d_scene->Each<TransformComponent, ModelComponent>([&](Entity& entity) {
-        d_entityRenderer.Draw(entity);
-    });
     
     if (d_paused) {
         d_postProcessor.Unbind();

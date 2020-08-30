@@ -8,14 +8,14 @@ namespace Sprocket {
 
 struct Vertex2D
 {
-    Maths::vec2 position;
+    Maths::vec3 position;
     Maths::vec2 texture;
-    Maths::vec3 colour;
 };
 
 using Vertex2DBuffer = std::vector<Vertex2D>;
 
-class Model2D 
+class Model2D
+// TODO: Remove this basically useless class.
 {
     std::shared_ptr<VAO> d_vao;
     std::shared_ptr<VBO> d_vertexBuffer;

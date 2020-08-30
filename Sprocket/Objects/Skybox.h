@@ -2,11 +2,13 @@
 #include "Model3D.h"
 #include "CubeMap.h"
 
+#include <memory>
+
 namespace Sprocket {
 
 struct Skybox
 {
-    Model3D model;
+    std::shared_ptr<Model3D> model;
     CubeMap texture;
 };
 

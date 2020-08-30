@@ -6,15 +6,17 @@ namespace Sprocket {
 
 Model3D::Model3D(const Vertex3DBuffer& vertices,
                  const IndexBuffer& indices)
+    : d_vertexBuffer(std::make_shared<VBO>())
+    , d_indexBuffer(std::make_shared<VBO>())
+    , d_count(indices.size())
 {
-    d_vao = std::make_shared<VAO>();
-    glBindVertexArray(d_vao->Value());
-    d_vertexBuffer = LoadVertexBuffer(vertices);
-    d_indexBuffer = LoadIndexBuffer(indices);
-    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    d_vertexData = std::make_shared<Vertex3DBuffer>(vertices);
-    d_indexData = std::make_shared<IndexBuffer>(indices);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 Model3D::Model3D()
@@ -23,54 +25,15 @@ Model3D::Model3D()
 
 void Model3D::Bind() const
 {
-    if (d_vao) {
-        glBindVertexArray(d_vao->Value());
-    }
-    else {
-        glBindVertexArray(0);
-    }
-}
-
-void Model3D::Unbind() const
-{
-    glBindVertexArray(0);
-}
-
-std::shared_ptr<VBO> Model3D::LoadVertexBuffer(const Vertex3DBuffer& vertices)
-{
-    auto vertexBuffer = std::make_shared<VBO>();
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer->Value());
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex3D) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-
-    // Set Vertex Attributes in the VAO
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          (void*)offsetof(Vertex3D, position));
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          (void*)offsetof(Vertex3D, normal));
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex3D),
-                          (void*)offsetof(Vertex3D, textureCoords));
-
-    return vertexBuffer;
-}
-
-std::shared_ptr<VBO> Model3D::LoadIndexBuffer(const IndexBuffer& indices)
-{
-    auto indexBuffer = std::make_shared<VBO>();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->Value());
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-
-    return indexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
 }
 
 bool Model3D::operator==(const Model3D& other) const
 {
     // Two models are the same if they point to the same VAO.
-    return d_vao->Value() == other.d_vao->Value();
+    return d_vertexBuffer->Value() == other.d_vertexBuffer->Value() &&
+           d_indexBuffer->Value() == other.d_indexBuffer->Value();
 }
 
 }

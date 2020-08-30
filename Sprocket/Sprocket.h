@@ -69,7 +69,9 @@
 #include "Graphics/Texture.h"
 #include "Graphics/CubeMap.h"
 #include "Graphics/FrameBuffer.h"
+#include "Graphics/InstanceBuffer.h"
 #include "Graphics/StreamBuffer.h"
+#include "Graphics/VertexArray.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"
@@ -78,6 +80,7 @@
 
 #include "Graphics/Shadows/ShadowMapRenderer.h"
 
+#include "Graphics/Rendering/ColliderRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
