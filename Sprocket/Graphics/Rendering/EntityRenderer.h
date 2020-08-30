@@ -7,6 +7,7 @@
 #include "TextureManager.h"
 #include "Components.h"
 #include "VertexArray.h"
+#include "ShadowMap.h"
 
 namespace Sprocket {
 
@@ -30,7 +31,7 @@ public:
     void Draw(const Entity& camera, const Lights& lights, Scene& scene);
     void Draw(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights, Scene& scene);
 
-    void EnableShadows(const Texture& shadowMap, const Maths::mat4& lightProjView);
+    void EnableShadows(const ShadowMap& shadowMap);
 
     Shader& GetShader() { return d_shader; }
 };

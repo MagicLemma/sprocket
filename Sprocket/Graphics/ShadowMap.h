@@ -13,7 +13,7 @@
 
 namespace Sprocket {
 
-class ShadowMapRenderer
+class ShadowMap
 {
     Window*         d_window;
     ModelManager*   d_modelManager;
@@ -30,7 +30,7 @@ class ShadowMapRenderer
     std::shared_ptr<InstanceBuffer> d_instanceBuffer;
 
 public:
-    ShadowMapRenderer(Window* window, ModelManager* modelManager);
+    ShadowMap(Window* window, ModelManager* modelManager);
 
     void Draw(const Sun& sun, const Maths::vec3& centre, Scene& scene);
 

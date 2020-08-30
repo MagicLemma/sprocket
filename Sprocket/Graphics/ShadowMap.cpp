@@ -6,7 +6,7 @@
 
 namespace Sprocket {
 
-ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
+ShadowMap::ShadowMap(Window* window, ModelManager* modelManager)
     : d_window(window)
     , d_modelManager(modelManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
@@ -18,7 +18,7 @@ ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
 {
 }
 
-void ShadowMapRenderer::Draw(
+void ShadowMap::Draw(
     const Sun& sun,
     const Maths::vec3& centre,
     Scene& scene)
@@ -71,12 +71,12 @@ void ShadowMapRenderer::Draw(
     d_shader.Unbind();
 }
 
-Maths::mat4 ShadowMapRenderer::GetLightProjViewMatrix() const
+Maths::mat4 ShadowMap::GetLightProjViewMatrix() const
 {
     return d_lightProjMatrix * d_lightViewMatrix;
 }
 
-Texture ShadowMapRenderer::GetShadowMap() const
+Texture ShadowMap::GetShadowMap() const
 {
     return d_shadowMap.GetShadowMap();
 }

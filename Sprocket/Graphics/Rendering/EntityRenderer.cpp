@@ -5,6 +5,7 @@
 #include "CameraUtils.h"
 #include "Components.h"
 #include "Scene.h"
+#include "ShadowMap.h"
 
 #include <glad/glad.h>
 
@@ -20,16 +21,14 @@ EntityRenderer::EntityRenderer(ModelManager* modelManager,
 {
 }
 
-void EntityRenderer::EnableShadows(
-    const Texture& shadowMap,
-    const Maths::mat4& lightProjView)
+void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     glActiveTexture(GL_TEXTURE3);
-    shadowMap.Bind();
+    shadowMap.GetShadowMap().Bind();
  
     d_shader.Bind();
     d_shader.LoadUniformInt("shadow_map", 3);
-    d_shader.LoadUniform("u_light_proj_view", lightProjView);
+    d_shader.LoadUniform("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     glActiveTexture(GL_TEXTURE0);
 }
 

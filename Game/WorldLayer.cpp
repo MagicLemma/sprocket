@@ -14,7 +14,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>())
     , d_pathFollower(std::make_shared<Sprocket::PathFollower>())
     , d_selector(std::make_shared<Sprocket::BasicSelector>())
-    , d_shadowMapRenderer(core.window, core.modelManager)
+    , d_shadowMap(core.window, core.modelManager)
     , d_hoveredEntityUI(core.window)
 {
     using namespace Sprocket;
@@ -171,16 +171,13 @@ void WorldLayer::OnUpdate(double dt)
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    d_shadowMapRenderer.Draw(sun, target, *d_scene);
+    d_shadowMap.Draw(sun, target, *d_scene);
 
     if (d_paused) {
         d_postProcessor.Bind();
     }
 
-    d_entityRenderer.EnableShadows(
-        d_shadowMapRenderer.GetShadowMap(),
-        d_shadowMapRenderer.GetLightProjViewMatrix()   
-    );
+    d_entityRenderer.EnableShadows(d_shadowMap);
     d_entityRenderer.Draw(d_camera, d_lights, *d_scene);
 
     if (d_paused) {
