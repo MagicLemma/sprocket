@@ -26,12 +26,8 @@ class ParticleManager
 {
     static constexpr int NUM_PARTICLES = 10000;
 
-    Shader d_shader;
-
     std::array<Particle, NUM_PARTICLES> d_particles;
     std::size_t                         d_index = NUM_PARTICLES - 1;
-
-    std::unique_ptr<VertexArray> d_vao;
 
     std::shared_ptr<Model3D>        d_model;
     std::shared_ptr<InstanceBuffer> d_instances;
@@ -41,8 +37,10 @@ public:
 
     void Emit(const Particle& particle);
 
-    void Draw(double dt, const Entity& camera, const Lights& lights, Scene& scene);
-    void Draw(double dt, const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights, Scene& scene);
+    void OnUpdate(double dt);
+
+    std::shared_ptr<Model3D> GetModel() const { return d_model; }
+    std::shared_ptr<InstanceBuffer> GetInstances() const { return d_instances; }
 
 };
 

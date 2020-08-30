@@ -120,6 +120,12 @@ void EntityRenderer::Draw(
     d_vao->Draw();
     d_instanceBuffer->Clear();
 
+    if (d_particleManager != nullptr) {
+        d_vao->SetModel(d_particleManager->GetModel());
+        d_vao->SetInstances(d_particleManager->GetInstances());
+        d_vao->Draw();
+    }
+
     d_shader.Unbind();
 }
 
@@ -128,6 +134,11 @@ void EntityRenderer::Draw(const Entity& camera, const Lights& lights, Scene& sce
     Maths::mat4 proj = CameraUtils::MakeProj(camera);
     Maths::mat4 view = CameraUtils::MakeView(camera);
     Draw(proj, view, lights, scene);
+}
+
+void EntityRenderer::EnableParticles(ParticleManager* particleManager)
+{
+    d_particleManager = particleManager;
 }
 
 }

@@ -88,6 +88,7 @@ void EditorLayer::OnUpdate(double dt)
     
     if (!d_paused) {
         d_activeScene->OnUpdate(dt);
+        d_particleManager.OnUpdate(dt);
 
         if (d_isViewportFocused && !d_playingGame) {
             d_editorCamera.OnUpdate(dt);
@@ -103,25 +104,12 @@ void EditorLayer::OnUpdate(double dt)
         });
     }
 
-    static double sinceLastEmit = 0.0;
-    sinceLastEmit += dt;
-    while (sinceLastEmit > 0.01) {
-        float r = Random<float>(1.0f, 3.0f);
-        Particle p;
-        p.position = {0.0, 10.0, 0.0};
-        p.velocity = Random<Maths::vec3>(Maths::vec3{-1, -1, -1}, Maths::vec3{1, 1, 1});
-        p.acceleration = {0.0, -9.81, 0.0};
-        p.scale = {r, r, r};
-        p.life = 10.0;
-        d_particles.Emit(p);
-        sinceLastEmit -= 0.01;
-    }
+    d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_viewport.Bind();
     if (d_playingGame) {
         d_entityRenderer.Draw(d_runtimeCamera, d_lights, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
-        d_particles.Draw(dt, d_runtimeCamera, d_lights, *d_activeScene);
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_runtimeCamera, *d_activeScene);
         }
@@ -129,7 +117,6 @@ void EditorLayer::OnUpdate(double dt)
     else {
         d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
-        d_particles.Draw(dt, d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
         }
@@ -202,6 +189,7 @@ void EditorLayer::OnUpdate(double dt)
                 d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0}));
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
                 d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
+                d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
 
                 d_activeScene->OnStartup();
                 d_playingGame = true;

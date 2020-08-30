@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-29 00:29:19.433791
+// GENERATED FILE @ 2020-08-30 15:28:51.700065
 class lua_State;
 
 namespace Sprocket {
@@ -55,6 +55,10 @@ int AddGridComponent(lua_State* L);
 int GetLightComponent(lua_State* L);
 int SetLightComponent(lua_State* L);
 int AddLightComponent(lua_State* L);
+
+int GetParticleComponent(lua_State* L);
+int SetParticleComponent(lua_State* L);
+int AddParticleComponent(lua_State* L);
 
 }
 }

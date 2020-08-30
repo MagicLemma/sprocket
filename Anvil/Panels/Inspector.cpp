@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-29 00:29:19.449719
+// GENERATED FILE @ 2020-08-30 15:28:51.715025
 
 #include "Inspector.h"
 #include "EditorLayer.h"
@@ -166,6 +166,18 @@ void ShowInspector(EditorLayer& editor)
         if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
         ImGui::PopID();
     }
+    if (entity.Has<ParticleComponent>() && ImGui::CollapsingHeader("Particle")) {
+        ImGui::PushID(14);
+        auto& c = entity.Get<ParticleComponent>();
+        ImGui::DragFloat("Interval", &c.interval, 0.1f);
+        ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
+        ImGui::DragFloat3("Acceleration", &c.acceleration.x, 0.1f);
+        ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
+        ImGui::DragFloat("Life", &c.life, 0.1f);
+        ImGui::DragFloat("Since Last Emit", &c.sinceLastEmit, 0.1f);
+        if (ImGui::Button("Delete")) { entity.Remove<ParticleComponent>(); }
+        ImGui::PopID();
+    }
  
     ImGui::Separator();
 
@@ -224,6 +236,10 @@ void ShowInspector(EditorLayer& editor)
         }
         if (!entity.Has<LightComponent>() && ImGui::MenuItem("Light")) {
             LightComponent c;
+            entity.Add(c);
+        }
+        if (!entity.Has<ParticleComponent>() && ImGui::MenuItem("Particle")) {
+            ParticleComponent c;
             entity.Add(c);
         }
 

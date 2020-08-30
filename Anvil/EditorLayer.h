@@ -16,7 +16,7 @@ class EditorLayer : public Layer
     SkyboxRenderer d_skyboxRenderer;
     ColliderRenderer d_colliderRenderer;
 
-    ParticleManager d_particles;
+    ParticleManager d_particleManager;
 
     FrameBuffer d_viewport;
     DevUI::Context d_ui;

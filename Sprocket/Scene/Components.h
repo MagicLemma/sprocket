@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-29 00:29:19.419799
+// GENERATED FILE @ 2020-08-30 15:28:51.686137
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -114,6 +114,16 @@ struct LightComponent
     Maths::vec3 colour = Maths::vec3{1.0f, 1.0f, 1.0f};
     Maths::vec3 attenuation = Maths::vec3{1.0f, 0.0f, 0.0f};
     float brightness = 1.0f;
+};
+
+struct ParticleComponent
+{
+    float interval = 1.0f;
+    Maths::vec3 velocity = Maths::vec3{0.0f, 0.0f, 0.0f};
+    Maths::vec3 acceleration = Maths::vec3{0.0f, -9.81f, 0.0f};
+    Maths::vec3 scale = Maths::vec3{1.0f, 1.0f, 1.0f};
+    float life = 1.0f;
+    float sinceLastEmit = -1.0f;
 };
 
 }

@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-29 00:29:19.437753
+// GENERATED FILE @ 2020-08-30 15:28:51.704055
 
 #include "LuaComponents.h"
 #include "LuaGlobals.h"
@@ -84,6 +84,11 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_SetLightComponent", &Lua::SetLightComponent);
     lua_register(L, "Lua_AddLightComponent", &Lua::AddLightComponent);
     lua_register(L, "HasLightComponent", &Lua_Has<LightComponent>);
+
+    lua_register(L, "Lua_GetParticleComponent", &Lua::GetParticleComponent);
+    lua_register(L, "Lua_SetParticleComponent", &Lua::SetParticleComponent);
+    lua_register(L, "Lua_AddParticleComponent", &Lua::AddParticleComponent);
+    lua_register(L, "HasParticleComponent", &Lua_Has<ParticleComponent>);
 
 }
 
@@ -625,6 +630,70 @@ int AddLightComponent(lua_State* L)
     c.attenuation.y = (float)lua_tonumber(L, 6);
     c.attenuation.z = (float)lua_tonumber(L, 7);
     c.brightness = (float)lua_tonumber(L, 8);
+    e.Add(c);
+    return 0;
+}
+
+int GetParticleComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<ParticleComponent>());
+
+    const auto& c = e.Get<ParticleComponent>();
+    lua_pushnumber(L, c.interval);
+    lua_pushnumber(L, c.velocity.x);
+    lua_pushnumber(L, c.velocity.y);
+    lua_pushnumber(L, c.velocity.z);
+    lua_pushnumber(L, c.acceleration.x);
+    lua_pushnumber(L, c.acceleration.y);
+    lua_pushnumber(L, c.acceleration.z);
+    lua_pushnumber(L, c.scale.x);
+    lua_pushnumber(L, c.scale.y);
+    lua_pushnumber(L, c.scale.z);
+    lua_pushnumber(L, c.life);
+    return 11;
+}
+
+int SetParticleComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 12)) { return luaL_error(L, "Bad number of args"); }
+
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<ParticleComponent>();
+    c.interval = (float)lua_tonumber(L, 2);
+    c.velocity.x = (float)lua_tonumber(L, 3);
+    c.velocity.y = (float)lua_tonumber(L, 4);
+    c.velocity.z = (float)lua_tonumber(L, 5);
+    c.acceleration.x = (float)lua_tonumber(L, 6);
+    c.acceleration.y = (float)lua_tonumber(L, 7);
+    c.acceleration.z = (float)lua_tonumber(L, 8);
+    c.scale.x = (float)lua_tonumber(L, 9);
+    c.scale.y = (float)lua_tonumber(L, 10);
+    c.scale.z = (float)lua_tonumber(L, 11);
+    c.life = (float)lua_tonumber(L, 12);
+    return 0;
+}
+
+int AddParticleComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 12)) { return luaL_error(L, "Bad number of args"); }
+
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(!e.Has<ParticleComponent>());
+
+    ParticleComponent c;
+    c.interval = (float)lua_tonumber(L, 2);
+    c.velocity.x = (float)lua_tonumber(L, 3);
+    c.velocity.y = (float)lua_tonumber(L, 4);
+    c.velocity.z = (float)lua_tonumber(L, 5);
+    c.acceleration.x = (float)lua_tonumber(L, 6);
+    c.acceleration.y = (float)lua_tonumber(L, 7);
+    c.acceleration.z = (float)lua_tonumber(L, 8);
+    c.scale.x = (float)lua_tonumber(L, 9);
+    c.scale.y = (float)lua_tonumber(L, 10);
+    c.scale.z = (float)lua_tonumber(L, 11);
+    c.life = (float)lua_tonumber(L, 12);
     e.Add(c);
     return 0;
 }

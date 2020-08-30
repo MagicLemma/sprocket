@@ -8,13 +8,15 @@
 #include "Components.h"
 #include "VertexArray.h"
 #include "ShadowMap.h"
+#include "ParticleManager.h"
 
 namespace Sprocket {
 
 class EntityRenderer
 {
-    ModelManager*   d_modelManager;
-    TextureManager* d_textureManager;
+    ModelManager*    d_modelManager;
+    TextureManager*  d_textureManager;
+    ParticleManager* d_particleManager;
 
     Shader  d_shader;
 
@@ -32,6 +34,7 @@ public:
     void Draw(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights, Scene& scene);
 
     void EnableShadows(const ShadowMap& shadowMap);
+    void EnableParticles(ParticleManager* particleManager);
 
     Shader& GetShader() { return d_shader; }
 };
