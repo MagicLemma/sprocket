@@ -27,20 +27,12 @@ class ShadowMapRenderer
     DepthBuffer d_shadowMap;
 
     std::unique_ptr<VertexArray> d_vao;
+    std::shared_ptr<InstanceBuffer> d_instanceBuffer;
 
 public:
     ShadowMapRenderer(Window* window, ModelManager* modelManager);
 
-    void BeginScene(const Sun& sun, const Maths::vec3& centre);
-        // Called before any draw calls. The light is the light
-        // casting the shadow and the centre is the middle of the
-        // shadow box.
-
-    void Draw(const Entity& entity);
-        // Draw the entity.
-
-    void EndScene();
-        // Called after all draw calls.
+    void Draw(const Sun& sun, const Maths::vec3& centre, Scene& scene);
 
     Maths::mat4 GetLightProjViewMatrix() const;
     Texture     GetShadowMap() const;

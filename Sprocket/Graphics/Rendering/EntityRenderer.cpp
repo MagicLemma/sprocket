@@ -84,16 +84,15 @@ void EntityRenderer::Draw(
     }
 
     d_shader.Bind();
-    d_instanceBuffer->Clear();
 
-    std::string currentModelStr;
+    std::string currentModel;
     std::string currentTexture;
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.model.empty()) { return; }
 
-        bool changedModel = mc.model != currentModelStr;
+        bool changedModel = mc.model != currentModel;
         bool changedTexture = mc.texture != currentTexture;
 
         if (changedModel || changedTexture) {
@@ -104,7 +103,7 @@ void EntityRenderer::Draw(
 
         if (changedModel) {
             d_vao->SetModel(d_modelManager->GetModel(mc.model));
-            currentModelStr = mc.model;
+            currentModel = mc.model;
         }
 
         if (changedTexture) {

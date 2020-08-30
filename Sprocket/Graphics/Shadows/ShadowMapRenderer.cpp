@@ -13,11 +13,12 @@ ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
     , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
     , d_shadowMap(window, 4096, 4096)
     , d_vao(std::make_unique<VertexArray>())
+    , d_instanceBuffer(std::make_shared<InstanceBuffer>())
 {
 }
 
-void ShadowMapRenderer::BeginScene(const Sun& sun,
-                                   const Maths::vec3& centre)
+void ShadowMapRenderer::Draw(const Sun& sun,
+                                   const Maths::vec3& centre, Scene& scene)
 {
     d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
 
@@ -28,33 +29,37 @@ void ShadowMapRenderer::BeginScene(const Sun& sun,
     d_shadowMap.Bind();
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
-}
-
-void ShadowMapRenderer::Draw(const Entity& entity)
-{
-    if (!entity.Has<TransformComponent>()) { return; }
-    if (!entity.Has<ModelComponent>()) { return; }
-    const auto& modelComponent = entity.Get<ModelComponent>();
-
-    auto tr = entity.Get<TransformComponent>();
-    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation, tr.scale);
-    d_shader.LoadUniform("u_model_matrix", transform);
-
-    auto model = d_modelManager->GetModel(modelComponent.model);
-
-    //model->Bind();
     glCullFace(GL_FRONT);
 
-    d_vao->SetModel(model);
+    std::string currentModel;
+    scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+        const auto& tc = entity.Get<TransformComponent>();
+        const auto& mc = entity.Get<ModelComponent>();
+        if (mc.model.empty()) { return; }
+
+        if(mc.model != currentModel) {
+            d_vao->SetInstances(d_instanceBuffer);
+            d_vao->Draw();
+            d_instanceBuffer->Clear();
+
+            d_vao->SetModel(d_modelManager->GetModel(mc.model));
+            currentModel = mc.model;
+        }
+
+        d_instanceBuffer->Add({
+            tc.position,
+            tc.orientation,
+            tc.scale,
+            mc.shineDamper,
+            mc.reflectivity
+        });
+    });
+
+    d_vao->SetInstances(d_instanceBuffer);
     d_vao->Draw();
+    d_instanceBuffer->Clear();
 
-    //glDrawElements(GL_TRIANGLES, (int)model->VertexCount(), GL_UNSIGNED_INT, nullptr);
     glCullFace(GL_BACK);
-    //model->Unbind();
-}
-
-void ShadowMapRenderer::EndScene()
-{
     d_shadowMap.Unbind();
     d_shader.Unbind();
 }
