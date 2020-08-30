@@ -35,8 +35,6 @@ public:
 
     void EnableShadows(const Texture& shadowMap, const Maths::mat4& lightProjView);
 
-    void Draw(const Entity& entity);
-
     Shader& GetShader() { return d_shader; }
 };
 

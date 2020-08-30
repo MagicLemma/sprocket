@@ -25,9 +25,6 @@ uniform float u_ambience_brightness;
 uniform float u_shine_dampner;
 uniform float u_reflectivity;
 
-// Highlighting
-uniform float u_brightness;
-
 // Shadows
 in vec4 p_light_space_pos;
 uniform sampler2D shadow_map;
@@ -110,8 +107,4 @@ void main()
     if (proj_coords.z > 1.0) { shadow = 0.0; }
 
     out_colour = (ambience + (1.0 - shadow) * (total_diffuse + total_specular)) * colour;
-    
-    if (u_brightness > 1) {
-        out_colour += u_brightness * vec4(0.1, 0.1, 0.1, 1.0);
-    }
 }

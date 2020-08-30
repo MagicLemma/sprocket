@@ -40,6 +40,11 @@ void EntityRenderer::Draw(
     const Lights& lights,
     Scene& scene)
 {
+    RenderContext rc;
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+
     unsigned int MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
@@ -57,12 +62,6 @@ void EntityRenderer::Draw(
     d_shader.LoadUniform("u_ambience_brightness", lights.ambience.brightness);
     
     // Load point lights to shader
-    for (std::size_t i = 0; i != MAX_NUM_LIGHTS; ++i) {
-		d_shader.LoadUniform(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-        d_shader.LoadUniform(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        d_shader.LoadUniform(ArrayName("u_light_attenuation", i), {1.0f, 0.0f, 0.0f});
-        d_shader.LoadUniform(ArrayName("u_light_brightness", i), 0.0f);
-	}
     std::size_t i = 0;
     scene.Each<TransformComponent, LightComponent>([&](Entity& entity) {
         if (i < MAX_NUM_LIGHTS) {
@@ -72,13 +71,21 @@ void EntityRenderer::Draw(
 			d_shader.LoadUniform(ArrayName("u_light_colour", i), light.colour);
 			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), light.attenuation);
             d_shader.LoadUniform(ArrayName("u_light_brightness", i), light.brightness);
+            ++i;
         }
+    });
+    while (i < MAX_NUM_LIGHTS) {
+        d_shader.LoadUniform(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
+        d_shader.LoadUniform(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
+        d_shader.LoadUniform(ArrayName("u_light_attenuation", i), {1.0f, 0.0f, 0.0f});
+        d_shader.LoadUniform(ArrayName("u_light_brightness", i), 0.0f);
         ++i;
+    }
+
+    scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+        DrawModel(entity);
     });
 
-    scene.Each<TransformComponent>([&](Entity& entity) {
-        Draw(entity);
-    });
     d_shader.Unbind();
 }
 
@@ -89,45 +96,18 @@ void EntityRenderer::Draw(const Entity& camera, const Lights& lights, Scene& sce
     Draw(proj, view, lights, scene);
 }
 
-void EntityRenderer::Draw(const Entity& entity)
-{    
-    RenderContext rc; 
-
-    if (entity.Has<ModelComponent>()) {
-        DrawModel(entity);
-    }
-}
-
 void EntityRenderer::DrawModel(const Entity& entity)
 {
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
+    const auto tr = entity.Get<TransformComponent>();
+    const auto& modelComp = entity.Get<ModelComponent>();
+    if (modelComp.model.empty()) { return; }
 
-    auto& modelComp = entity.Get<ModelComponent>();
-
-    if (modelComp.model.empty()) {
-        return;
-    }
-
-    auto tr = entity.Get<TransformComponent>();
     Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation, tr.scale);
 
     d_shader.Bind();
     d_shader.LoadUniform("u_model_matrix", transform);
 	d_shader.LoadUniform("u_shine_dampner", modelComp.shineDamper);
 	d_shader.LoadUniform("u_reflectivity", modelComp.reflectivity);
-
-    float brightness = 1.0f;
-    if (entity.Has<SelectComponent>()) {
-        auto data = entity.Get<SelectComponent>();
-        if (data.selected) {
-            brightness = 1.5f;
-        } else if (data.hovered) {
-            brightness = 1.25f;
-        }
-    }
-    d_shader.LoadUniform("u_brightness", brightness);
 
     auto model = d_modelManager->GetModel(modelComp.model);
     auto texture = d_textureManager->GetTexture(modelComp.texture);
