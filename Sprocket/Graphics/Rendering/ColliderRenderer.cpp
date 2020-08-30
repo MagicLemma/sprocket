@@ -1,18 +1,17 @@
 #include "ColliderRenderer.h"
 #include "Maths.h"
-#include "ModelManager.h"
 #include "RenderContext.h"
 #include "CameraUtils.h"
 #include "Components.h"
-#include "Scene.h"
+#include "Texture.h"
+#include "ModelManager.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
 
-ColliderRenderer::ColliderRenderer(Window* window)
+ColliderRenderer::ColliderRenderer()
     : d_vao(std::make_unique<VertexArray>())
-    , d_window(window)
     , d_shader("Resources/Shaders/Collider.vert", "Resources/Shaders/Collider.frag")
 {
 }
@@ -30,8 +29,6 @@ void ColliderRenderer::Draw(
     d_shader.Bind();
     d_shader.LoadUniform("u_proj_matrix", proj);
     d_shader.LoadUniform("u_view_matrix", view);
-
-    Texture::White().Bind();
     
     static auto s_cube = ModelManager::LoadModel("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube);

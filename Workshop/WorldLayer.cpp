@@ -3,7 +3,7 @@
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::OBSERVER)
-    , d_entityRenderer(core.window, core.modelManager, core.textureManager)
+    , d_entityRenderer(core.modelManager, core.textureManager)
     , d_skyboxRenderer()
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_skybox({

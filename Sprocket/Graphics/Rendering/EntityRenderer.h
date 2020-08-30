@@ -1,5 +1,4 @@
 #pragma once
-#include "Window.h"
 #include "Entity.h"
 #include "Light.h"
 #include "Shader.h"
@@ -13,7 +12,6 @@ namespace Sprocket {
 
 class EntityRenderer
 {
-    Window*         d_window;
     ModelManager*   d_modelManager;
     TextureManager* d_textureManager;
 
@@ -25,7 +23,6 @@ class EntityRenderer
 
 public:
     EntityRenderer(
-        Window* window,
         ModelManager* modelManager,
         TextureManager* textureManager
     );

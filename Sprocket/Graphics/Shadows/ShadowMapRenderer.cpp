@@ -1,5 +1,6 @@
 #include "ShadowMapRenderer.h"
 #include "Components.h"
+#include "RenderContext.h"
 
 #include <glad/glad.h>
 
@@ -17,9 +18,15 @@ ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
 {
 }
 
-void ShadowMapRenderer::Draw(const Sun& sun,
-                                   const Maths::vec3& centre, Scene& scene)
+void ShadowMapRenderer::Draw(
+    const Sun& sun,
+    const Maths::vec3& centre,
+    Scene& scene)
 {
+    RenderContext rc;
+    rc.DepthTesting(true);
+    rc.FaceCulling(true);
+
     d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
 
     d_shader.Bind();

@@ -10,11 +10,9 @@
 
 namespace Sprocket {
 
-EntityRenderer::EntityRenderer(Window* window,
-                               ModelManager* modelManager,
+EntityRenderer::EntityRenderer(ModelManager* modelManager,
                                TextureManager* textureManager)
     : d_vao(std::make_unique<VertexArray>())
-    , d_window(window)
     , d_modelManager(modelManager)
     , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
@@ -42,9 +40,8 @@ void EntityRenderer::Draw(
     Scene& scene)
 {
     RenderContext rc;
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
+    rc.FaceCulling(true);
+    rc.DepthTesting(true);
 
     unsigned int MAX_NUM_LIGHTS = 5;
 
