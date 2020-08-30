@@ -44,7 +44,7 @@ void VertexArray::SetInstances(std::shared_ptr<InstanceBuffer> instanceData)
 
     glEnableVertexAttribArray(4);
     glVertexAttribDivisor(4, 1);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(InstanceData),
                           (void*)offsetof(InstanceData, orientation));
 
     glEnableVertexAttribArray(5);
