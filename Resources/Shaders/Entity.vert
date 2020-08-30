@@ -43,7 +43,7 @@ mat4 Transform(vec3 p, vec4 o, vec3 s)
     matrix[0][2] = s.x * (2 * (oxz - owy));
     matrix[0][3] = 0;
 
-    matrix[1][0] = s.y * (2 * (oxy - owx));
+    matrix[1][0] = s.y * (2 * (oxy - owz));
     matrix[1][1] = s.y * (1 - 2 * (oxx + ozz));
     matrix[1][2] = s.y * (2 * (oyz + owx));
     matrix[1][3] = 0;
