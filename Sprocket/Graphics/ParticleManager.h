@@ -14,18 +14,17 @@ namespace Sprocket {
 
 struct Particle
 {
-    Maths::vec3 position;
-    Maths::vec3 velocity;
+    Maths::vec3 position      = {0.0, 0.0, 0.0};
+    Maths::vec3 velocity      = {0.0, 0.0, 0.0};
+    Maths::vec3 acceleration  = {0.0, 0.0, 0.0};
+    Maths::vec3 scale         = {1.0, 1.0, 1.0};
 
-    double life;
-
-    Particle(const Maths::vec3& p, const Maths::vec3& v, double l);
-    Particle();
+    double life = -1.0;
 };
 
 class ParticleManager
 {
-    static constexpr int NUM_PARTICLES = 1000;
+    static constexpr int NUM_PARTICLES = 10000;
 
     Shader d_shader;
 

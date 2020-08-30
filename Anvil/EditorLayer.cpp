@@ -104,11 +104,17 @@ void EditorLayer::OnUpdate(double dt)
     }
 
     static double sinceLastEmit = 0.0;
-    sinceLastEmit  += dt;
-    if (sinceLastEmit > 1.0) {
-        d_particles.Emit(Particle{{0.0, 10.0, 0.0}, {0.0, 1.0, 0.0}, 1.0});
-        sinceLastEmit -= 1.0;
-        SPKT_LOG_INFO("Emitting");
+    sinceLastEmit += dt;
+    while (sinceLastEmit > 0.01) {
+        float r = Random<float>(1.0f, 3.0f);
+        Particle p;
+        p.position = {0.0, 10.0, 0.0};
+        p.velocity = Random<Maths::vec3>(Maths::vec3{-1, -1, -1}, Maths::vec3{1, 1, 1});
+        p.acceleration = {0.0, -9.81, 0.0};
+        p.scale = {r, r, r};
+        p.life = 10.0;
+        d_particles.Emit(p);
+        sinceLastEmit -= 0.01;
     }
 
     d_viewport.Bind();

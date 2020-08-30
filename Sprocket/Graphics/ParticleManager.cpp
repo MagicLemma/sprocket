@@ -3,21 +3,10 @@
 #include "RenderContext.h"
 #include "Components.h"
 #include "Light.h"
+#include "Random.h"
 #include "CameraUtils.h"
 
 namespace Sprocket {
-
-Particle::Particle(const Maths::vec3&p , const Maths::vec3& v, double l)
-    : position(p)
-    , velocity(v)
-    , life(l)
-{}
-
-Particle::Particle()
-    : position({0.0, 0.0, 0.0})
-    , velocity({0.0, 0.0, 0.0})
-    , life(-1.0f)
-{}
     
 ParticleManager::ParticleManager()
     : d_vao(std::make_unique<VertexArray>())
@@ -33,6 +22,7 @@ void ParticleManager::Emit(const Particle& particle)
     auto& p = d_particles[d_index];
     p.position = particle.position;
     p.velocity = particle.velocity;
+    p.scale = particle.scale;
     p.life = particle.life;
     d_index = --d_index % NUM_PARTICLES;
 }
@@ -93,11 +83,14 @@ void ParticleManager::Draw(double dt, const Maths::mat4& proj, const Maths::mat4
     for (auto& particle : d_particles) {
         particle.life -= dt;
         particle.position += particle.velocity * (float)dt;
+        particle.velocity += particle.acceleration * (float)dt;
+
+        float r = Random<float>(1.0f, 3.0f);
         if (particle.life > 0.0) {
             d_instances->Add({
                 particle.position,
                 {0.0, 0.0, 0.0, 1.0},
-                {1.0, 1.0, 1.0},
+                particle.scale,
                 1.0,
                 1.0
             });
