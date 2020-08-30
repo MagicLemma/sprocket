@@ -103,10 +103,19 @@ void EditorLayer::OnUpdate(double dt)
         });
     }
 
+    static double sinceLastEmit = 0.0;
+    sinceLastEmit  += dt;
+    if (sinceLastEmit > 1.0) {
+        d_particles.Emit(Particle{{0.0, 10.0, 0.0}, {0.0, 1.0, 0.0}, 1.0});
+        sinceLastEmit -= 1.0;
+        SPKT_LOG_INFO("Emitting");
+    }
+
     d_viewport.Bind();
     if (d_playingGame) {
         d_entityRenderer.Draw(d_runtimeCamera, d_lights, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
+        d_particles.Draw(dt, d_runtimeCamera, d_lights, *d_activeScene);
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_runtimeCamera, *d_activeScene);
         }
@@ -114,10 +123,13 @@ void EditorLayer::OnUpdate(double dt)
     else {
         d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
+        d_particles.Draw(dt, d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
         }
     }
+
+
     d_viewport.Unbind();
 
     d_ui.StartFrame();

@@ -22,7 +22,7 @@ class InstanceBuffer
     std::vector<InstanceData> d_data;
 
 public:
-    InstanceBuffer();
+    InstanceBuffer(std::size_t initialSize = 1000);
 
     void Bind();
     void Clear();

@@ -4,12 +4,12 @@
 
 namespace Sprocket {
 
-InstanceBuffer::InstanceBuffer()
+InstanceBuffer::InstanceBuffer(std::size_t initialSize)
     : d_buffer(std::make_shared<VBO>())
 {
-    d_data.reserve(1000);
+    d_data.reserve(initialSize);
     glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
-    glBufferData(GL_ARRAY_BUFFER, sizeof(InstanceData) * 1000, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(InstanceData) * initialSize, nullptr, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

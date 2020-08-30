@@ -16,6 +16,8 @@ class EditorLayer : public Layer
     SkyboxRenderer d_skyboxRenderer;
     ColliderRenderer d_colliderRenderer;
 
+    ParticleManager d_particles;
+
     FrameBuffer d_viewport;
     DevUI::Context d_ui;
     bool d_isViewportHovered = false;
