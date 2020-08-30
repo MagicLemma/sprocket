@@ -19,17 +19,11 @@ class ColliderRenderer
 
     std::unique_ptr<VertexArray> d_vao;
 
-    void DrawBox      (const Entity& entity);
-    void DrawSphere   (const Entity& entity);
-    void DrawCapsule  (const Entity& entity);
-
 public:
     ColliderRenderer(Window* window);
 
     void Draw(const Entity& camera, const Lights& lights, Scene& scene);
     void Draw(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights, Scene& scene);
-
-    void Draw(const Entity& entity);
 
     Shader& GetShader() { return d_shader; }
 };
