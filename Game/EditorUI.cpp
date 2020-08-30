@@ -214,7 +214,7 @@ void EditorUI::OnUpdate(double dt)
 
     d_ui.StartWindow("Shadow Map", &open);
 
-    auto shadowMap = d_worldLayer->d_shadowMapRenderer.GetShadowMap();
+    auto shadowMap = d_worldLayer->d_shadowMap.GetShadowMap();
     ImTextureID id = (void*)(intptr_t)shadowMap.Id();
     ImGui::Image(id, ImVec2(shadowMap.Width(), shadowMap.Height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
 

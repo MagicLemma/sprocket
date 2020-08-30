@@ -5,16 +5,15 @@
 #include "CameraUtils.h"
 #include "Components.h"
 #include "Scene.h"
+#include "ShadowMap.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
 
-EntityRenderer::EntityRenderer(Window* window,
-                               ModelManager* modelManager,
+EntityRenderer::EntityRenderer(ModelManager* modelManager,
                                TextureManager* textureManager)
     : d_vao(std::make_unique<VertexArray>())
-    , d_window(window)
     , d_modelManager(modelManager)
     , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
@@ -22,16 +21,14 @@ EntityRenderer::EntityRenderer(Window* window,
 {
 }
 
-void EntityRenderer::EnableShadows(
-    const Texture& shadowMap,
-    const Maths::mat4& lightProjView)
+void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     glActiveTexture(GL_TEXTURE3);
-    shadowMap.Bind();
+    shadowMap.GetShadowMap().Bind();
  
     d_shader.Bind();
     d_shader.LoadUniformInt("shadow_map", 3);
-    d_shader.LoadUniform("u_light_proj_view", lightProjView);
+    d_shader.LoadUniform("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     glActiveTexture(GL_TEXTURE0);
 }
 
@@ -42,9 +39,8 @@ void EntityRenderer::Draw(
     Scene& scene)
 {
     RenderContext rc;
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
+    rc.FaceCulling(true);
+    rc.DepthTesting(true);
 
     unsigned int MAX_NUM_LIGHTS = 5;
 

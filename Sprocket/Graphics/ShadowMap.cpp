@@ -1,11 +1,12 @@
-#include "ShadowMapRenderer.h"
+#include "ShadowMap.h"
 #include "Components.h"
+#include "RenderContext.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
 
-ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
+ShadowMap::ShadowMap(Window* window, ModelManager* modelManager)
     : d_window(window)
     , d_modelManager(modelManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
@@ -17,9 +18,15 @@ ShadowMapRenderer::ShadowMapRenderer(Window* window, ModelManager* modelManager)
 {
 }
 
-void ShadowMapRenderer::Draw(const Sun& sun,
-                                   const Maths::vec3& centre, Scene& scene)
+void ShadowMap::Draw(
+    const Sun& sun,
+    const Maths::vec3& centre,
+    Scene& scene)
 {
+    RenderContext rc;
+    rc.DepthTesting(true);
+    rc.FaceCulling(true);
+
     d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
 
     d_shader.Bind();
@@ -64,12 +71,12 @@ void ShadowMapRenderer::Draw(const Sun& sun,
     d_shader.Unbind();
 }
 
-Maths::mat4 ShadowMapRenderer::GetLightProjViewMatrix() const
+Maths::mat4 ShadowMap::GetLightProjViewMatrix() const
 {
     return d_lightProjMatrix * d_lightViewMatrix;
 }
 
-Texture ShadowMapRenderer::GetShadowMap() const
+Texture ShadowMap::GetShadowMap() const
 {
     return d_shadowMap.GetShadowMap();
 }

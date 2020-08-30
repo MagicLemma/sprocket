@@ -1,5 +1,4 @@
 #pragma once
-#include "Window.h"
 #include "Entity.h"
 #include "Light.h"
 #include "Shader.h"
@@ -8,12 +7,12 @@
 #include "TextureManager.h"
 #include "Components.h"
 #include "VertexArray.h"
+#include "ShadowMap.h"
 
 namespace Sprocket {
 
 class EntityRenderer
 {
-    Window*         d_window;
     ModelManager*   d_modelManager;
     TextureManager* d_textureManager;
 
@@ -25,7 +24,6 @@ class EntityRenderer
 
 public:
     EntityRenderer(
-        Window* window,
         ModelManager* modelManager,
         TextureManager* textureManager
     );
@@ -33,7 +31,7 @@ public:
     void Draw(const Entity& camera, const Lights& lights, Scene& scene);
     void Draw(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights, Scene& scene);
 
-    void EnableShadows(const Texture& shadowMap, const Maths::mat4& lightProjView);
+    void EnableShadows(const ShadowMap& shadowMap);
 
     Shader& GetShader() { return d_shader; }
 };
