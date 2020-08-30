@@ -69,6 +69,7 @@ add_library(Sprocket STATIC
             Graphics/Texture.cpp
             Graphics/CubeMap.cpp
             Graphics/FrameBuffer.cpp
+            Graphics/InstanceBuffer.cpp
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp
 

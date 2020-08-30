@@ -20,6 +20,8 @@ class EntityRenderer
     Shader  d_shader;
 
     std::unique_ptr<VertexArray> d_vao;
+    
+    std::shared_ptr<InstanceBuffer> d_instanceBuffer;
 
 public:
     EntityRenderer(

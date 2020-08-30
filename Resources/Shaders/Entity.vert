@@ -3,15 +3,18 @@
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texture_coords;
+layout(location = 3) in vec3 model_position;
+layout(location = 4) in vec4 model_orientation;
+layout(location = 5) in vec3 model_scale;
+layout(location = 6) in float shine_damper;
+layout(location = 7) in float reflectivity;
 
 out vec2  p_texture_coords;
 out vec3  p_surface_normal;
 out vec3  p_to_camera_vector;
 out vec3  p_to_light_vector[5];
-
-uniform vec3 u_model_position;
-uniform vec4 u_model_orientation;
-uniform vec3 u_model_scale;
+out float p_shine_damper;
+out float p_reflectivity;
 
 uniform mat4 u_proj_matrix;
 uniform mat4 u_view_matrix;
@@ -60,7 +63,7 @@ mat4 Transform(vec3 p, vec4 o, vec3 s)
 
 void main()
 {
-    mat4 transform = Transform(u_model_position, u_model_orientation, u_model_scale);
+    mat4 transform = Transform(model_position, model_orientation, model_scale);
     vec4 world_pos = transform * vec4(position, 1.0);
     gl_Position = u_proj_matrix * u_view_matrix * world_pos;
     
@@ -73,4 +76,7 @@ void main()
     for (int i = 0; i != 5; i++) {
         p_to_light_vector[i] = u_light_pos[i] - world_pos.xyz;
     }
+
+    p_shine_damper = shine_damper;
+    p_reflectivity = reflectivity;
 }

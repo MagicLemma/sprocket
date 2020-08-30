@@ -18,6 +18,7 @@ EntityRenderer::EntityRenderer(Window* window,
     , d_modelManager(modelManager)
     , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
+    , d_instanceBuffer(std::make_shared<InstanceBuffer>())
 {
 }
 
@@ -83,33 +84,46 @@ void EntityRenderer::Draw(
     }
 
     d_shader.Bind();
+    d_instanceBuffer->Clear();
+
     std::string currentModelStr;
-    std::string currentTextureStr;
-
-    Texture currentTexture = Texture::White();
-
+    std::string currentTexture;
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.model.empty()) { return; }
 
-        if (mc.model != currentModelStr) {
+        bool changedModel = mc.model != currentModelStr;
+        bool changedTexture = mc.texture != currentTexture;
+
+        if (changedModel || changedTexture) {
+            d_vao->SetInstances(d_instanceBuffer);
+            d_vao->Draw();
+            d_instanceBuffer->Clear();
+        }
+
+        if (changedModel) {
             d_vao->SetModel(d_modelManager->GetModel(mc.model));
             currentModelStr = mc.model;
         }
 
-        if (mc.texture != currentTextureStr) {
+        if (changedTexture) {
             d_textureManager->GetTexture(mc.texture).Bind();
-            currentTextureStr = mc.texture;
+            currentTexture = mc.texture;
         }
 
-        d_shader.LoadUniform("u_model_position", tc.position);
-        d_shader.LoadUniform("u_model_orientation", tc.orientation);
-        d_shader.LoadUniform("u_model_scale", tc.scale);
-        d_shader.LoadUniform("u_shine_dampner", mc.shineDamper);
-        d_shader.LoadUniform("u_reflectivity", mc.reflectivity);
-        d_vao->Draw();
+        d_instanceBuffer->Add({
+            tc.position,
+            tc.orientation,
+            tc.scale,
+            mc.shineDamper,
+            mc.reflectivity
+        });
     });
+
+    d_vao->SetInstances(d_instanceBuffer);
+    d_vao->Draw();
+    d_instanceBuffer->Clear();
 
     d_shader.Unbind();
 }

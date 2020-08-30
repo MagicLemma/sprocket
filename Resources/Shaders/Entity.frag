@@ -4,6 +4,8 @@ in vec2  p_texture_coords;
 in vec3  p_surface_normal;
 in vec3  p_to_camera_vector;
 in vec3  p_to_light_vector[5];
+in float p_shine_damper;
+in float p_reflectivity;
 
 layout(location = 0) out vec4 out_colour;
 
@@ -20,10 +22,6 @@ uniform float u_sun_brightness;
 
 uniform vec3  u_ambience_colour;
 uniform float u_ambience_brightness;
-
-// Texture/Lighting Information
-uniform float u_shine_dampner;
-uniform float u_reflectivity;
 
 // Shadows
 in vec4 p_light_space_pos;
@@ -82,8 +80,8 @@ void main()
         // Specular lighting calculation
         float specular_factor = dot(reflected_light_direction, unit_to_camera);
         specular_factor = max(specular_factor, 0.0);
-        specular_factor = pow(specular_factor, u_shine_dampner) / attenuation;
-        total_specular = total_specular + vec4(specular_factor * u_reflectivity * u_light_colour[i], 1.0);
+        specular_factor = pow(specular_factor, p_shine_damper) / attenuation;
+        total_specular = total_specular + vec4(specular_factor * p_reflectivity * u_light_colour[i], 1.0);
     }
 
     // Shadows

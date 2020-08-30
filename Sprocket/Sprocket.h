@@ -69,6 +69,7 @@
 #include "Graphics/Texture.h"
 #include "Graphics/CubeMap.h"
 #include "Graphics/FrameBuffer.h"
+#include "Graphics/InstanceBuffer.h"
 #include "Graphics/StreamBuffer.h"
 #include "Graphics/VertexArray.h"
 
