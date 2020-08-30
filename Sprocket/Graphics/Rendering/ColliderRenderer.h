@@ -1,7 +1,6 @@
 #pragma once
 #include "Window.h"
 #include "Entity.h"
-#include "Light.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "ModelManager.h"
@@ -22,8 +21,8 @@ class ColliderRenderer
 public:
     ColliderRenderer(Window* window);
 
-    void Draw(const Entity& camera, const Lights& lights, Scene& scene);
-    void Draw(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights, Scene& scene);
+    void Draw(const Entity& camera, Scene& scene);
+    void Draw(const Maths::mat4& proj, const Maths::mat4& view, Scene& scene);
 
     Shader& GetShader() { return d_shader; }
 };
