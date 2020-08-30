@@ -72,6 +72,7 @@ add_library(Sprocket STATIC
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp
 
+            Graphics/Rendering/ColliderRenderer.cpp
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
 

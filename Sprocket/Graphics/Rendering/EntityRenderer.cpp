@@ -9,19 +9,6 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
-namespace {
-
-bool ShouldOutlineEntity(const Entity& entity)
-{
-    if (!entity.Has<SelectComponent>()) {
-        return false;
-    }
-
-    auto& s = entity.Get<SelectComponent>();
-    return s.hovered || s.selected;
-}
-
-}
 
 EntityRenderer::EntityRenderer(Window* window,
                                ModelManager* modelManager,
@@ -31,13 +18,7 @@ EntityRenderer::EntityRenderer(Window* window,
     , d_modelManager(modelManager)
     , d_textureManager(textureManager)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
-    , d_renderColliders(false)
 {
-}
-
-void EntityRenderer::RenderColliders(bool value)
-{
-    d_renderColliders = value;
 }
 
 void EntityRenderer::EnableShadows(
@@ -115,10 +96,6 @@ void EntityRenderer::Draw(const Entity& entity)
     if (entity.Has<ModelComponent>()) {
         DrawModel(entity);
     }
-
-    if (d_renderColliders) {
-        DrawCollider(entity);
-    }
 }
 
 void EntityRenderer::DrawModel(const Entity& entity)
@@ -126,13 +103,6 @@ void EntityRenderer::DrawModel(const Entity& entity)
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
-
-    glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-
-    bool outline = ShouldOutlineEntity(entity);
-    glStencilMask(outline ? 0xFF : 0x00);
 
     auto& modelComp = entity.Get<ModelComponent>();
 
@@ -169,103 +139,6 @@ void EntityRenderer::DrawModel(const Entity& entity)
     d_vao->Draw();
 
     texture.Unbind();
-}
-
-void EntityRenderer::DrawCollider(const Entity& entity)
-{
-    RenderContext rc;  // New render context for colliders.
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    d_shader.Bind();
-    if (entity.Has<BoxCollider3DComponent>()) {
-        DrawBox(entity);
-    }
-    if (entity.Has<SphereCollider3DComponent>()) {
-        DrawSphere(entity);
-    }
-    if (entity.Has<CapsuleCollider3DComponent>()) {
-        DrawCapsule(entity);
-    }
-    d_shader.Unbind();
-}
-
-void EntityRenderer::DrawBox(const Entity& entity)
-{
-    const auto& physics = entity.Get<BoxCollider3DComponent>();
-    static auto s_cube = ModelManager::LoadModel("Resources/Models/Cube.obj");
-
-    auto tr = entity.Get<TransformComponent>();
-    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-    transform *= Maths::Transform(physics.position, physics.orientation);
-    transform = Maths::Scale(transform, physics.halfExtents);
-    if (physics.applyScale) {
-        transform = Maths::Scale(transform, tr.scale);
-    }
-
-    Texture::White().Bind();
-    d_shader.LoadUniform("u_model_matrix", transform);
-    d_vao->SetModel(s_cube);
-    d_vao->Draw();
-    Texture::White().Unbind();
-}
-
-void EntityRenderer::DrawSphere(const Entity& entity)
-{
-    const auto& physics = entity.Get<SphereCollider3DComponent>();
-    static auto s_sphere = ModelManager::LoadModel("Resources/Models/LowPolySphere.obj");
-
-    auto tr = entity.Get<TransformComponent>();
-    Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-    transform *= Maths::Transform(physics.position, physics.orientation);
-    transform = Maths::Scale(transform, physics.radius);
-    
-    Texture::White().Bind();
-    d_shader.LoadUniform("u_model_matrix", transform);
-    d_vao->SetModel(s_sphere);
-    d_vao->Draw();
-    Texture::White().Unbind();
-}
-
-void EntityRenderer::DrawCapsule(const Entity& entity)
-{
-    const auto& physics = entity.Get<CapsuleCollider3DComponent>();
-    static auto s_hemisphere = ModelManager::LoadModel("Resources/Models/Hemisphere.obj");
-    static auto s_cylinder = ModelManager::LoadModel("Resources/Models/Cylinder.obj");
-
-    Texture::White().Bind();
-    {  // Top Hemisphere
-        auto tr = entity.Get<TransformComponent>();
-        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-        transform *= Maths::Transform(physics.position, physics.orientation);
-        transform = Maths::Translate(transform, {0.0, physics.height/2, 0.0});
-        transform = Maths::Scale(transform, physics.radius);
-        d_shader.LoadUniform("u_model_matrix", transform);
-        d_vao->SetModel(s_hemisphere);
-        d_vao->Draw();
-    }
-
-    {  // Middle Cylinder
-        auto tr = entity.Get<TransformComponent>();
-        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-        transform *= Maths::Transform(physics.position, physics.orientation);
-        transform = Maths::Scale(transform, {physics.radius, physics.height, physics.radius});
-        d_shader.LoadUniform("u_model_matrix", transform);
-        d_vao->SetModel(s_cylinder);
-        d_vao->Draw();
-    }
-
-    {  // Bottom Hemisphere
-        auto tr = entity.Get<TransformComponent>();
-        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-        transform *= Maths::Transform(physics.position, physics.orientation);
-        transform = Maths::Translate(transform, {0.0, -physics.height/2, 0.0});
-        transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
-        transform = Maths::Scale(transform, physics.radius);
-        d_shader.LoadUniform("u_model_matrix", transform);
-        d_vao->SetModel(s_hemisphere);
-        d_vao->Draw();
-    }
-    Texture::White().Unbind();   
 }
 
 }

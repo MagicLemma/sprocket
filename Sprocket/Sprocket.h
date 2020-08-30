@@ -79,6 +79,7 @@
 
 #include "Graphics/Shadows/ShadowMapRenderer.h"
 
+#include "Graphics/Rendering/ColliderRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
