@@ -5,28 +5,42 @@
 namespace Sprocket {
 
 enum class DataType { FLOAT, UBYTE };
+enum class DataRate { VERTEX, INSTANCE };
+
+struct LayoutAttribute
+{
+    DataType     type;
+    unsigned int count;
+    DataRate     rate;
+};
 
 class BufferLayout
 {
-    using DataPair = std::pair<DataType, unsigned int>;
+    const unsigned int d_vertexSize;                       
+    const unsigned int d_startingIndex;
 
-    const unsigned int    d_vertexSize;                       
-    unsigned int          d_currentSize;
-    std::vector<DataPair> d_dataTypes;
+    unsigned int                  d_currentSize;
+    std::vector<LayoutAttribute> d_attributes;
 
 public:
-    BufferLayout(unsigned int vertexSize);
+    BufferLayout(unsigned int vertexSize, unsigned int startingIndex = 0);
 
-    void AddAttribute(DataType type, unsigned int count);
-        // Append an attribute to the end of the layout.
+    // Append an attribute to the end of the layout.
+    void AddAttribute(DataType type, unsigned int count, DataRate rate = DataRate::VERTEX);
 
+    // Returns true if the sum of the attributes equals the
+    // vertex size and false otherwise.
     bool Validate() const;
-        // Returns true if the sum of the attributes equals the
-        // vertex size and false otherwise.
 
+    // Sets the attribute pointers of the currently bound VAO
+    // and VBO to match this BufferLayout.
     void SetAttributes() const;
-        // Sets the attribute pointers of the currently bound VAO
-        // and VBO to match this BufferLayout.
+
+    // Returns the starting index of this buffer layout.
+    unsigned int GetStartingIndex() const;
+
+    // Returns the vector describing this layout.
+    std::vector<LayoutAttribute> GetLayout() const;
 };
     
 }

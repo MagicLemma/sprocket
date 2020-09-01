@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "BufferLayout.h"
 #include "Resources.h"
 
 #include <vector>
@@ -18,6 +19,7 @@ struct InstanceData
 class InstanceBuffer
 {
     std::shared_ptr<VBO> d_buffer;
+    BufferLayout d_layout;
 
     std::vector<InstanceData> d_data;
 
@@ -28,6 +30,8 @@ public:
     void Clear();
 
     void Add(const InstanceData& data);
+
+    BufferLayout GetLayout() const;
 
     std::size_t Size() const { return d_data.size(); }
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Maths.h"
 #include "Resources.h"
+#include "BufferLayout.h"
 
 #include <vector>
 #include <string>
@@ -23,6 +24,8 @@ class Model3D
     std::shared_ptr<VBO> d_vertexBuffer;
     std::shared_ptr<VBO> d_indexBuffer;
 
+    BufferLayout d_layout; // This describes the layout of a Vertex3D array.
+
     std::size_t d_count;
 
 public:
@@ -39,6 +42,8 @@ public:
     void Bind() const;
 
     bool operator==(const Model3D& other) const;
+
+    BufferLayout GetLayout() const;
 };
 
 }
