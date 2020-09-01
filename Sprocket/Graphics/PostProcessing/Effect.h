@@ -11,7 +11,6 @@ namespace Sprocket {
 class Effect
 {
     FrameBuffer d_frameBuffer;
-    Model2D     d_quad;
 
 protected:
 

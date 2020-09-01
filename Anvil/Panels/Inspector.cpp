@@ -24,7 +24,7 @@ void ShowInspector(EditorLayer& editor)
     }
 
     static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
-    static DevUI::GizmoMode mode = DevUI::GizmoMode::ROTATION;
+    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
     if (entity.Has<TemporaryComponent>() && ImGui::CollapsingHeader("Temporary")) {
         ImGui::PushID(0);
         auto& c = entity.Get<TemporaryComponent>();

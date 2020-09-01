@@ -16,6 +16,7 @@ EntityRenderer::EntityRenderer(ModelManager* modelManager,
     : d_vao(std::make_unique<VertexArray>())
     , d_modelManager(modelManager)
     , d_textureManager(textureManager)
+    , d_particleManager(nullptr)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
     , d_instanceBuffer(std::make_shared<InstanceBuffer>())
 {

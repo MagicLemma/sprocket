@@ -36,9 +36,6 @@ public:
 
     std::size_t VertexCount() const { return d_count; }
 
-    // Binds the vertex buffer and index buffer. This will set the index
-    // buffer in the currently bound vertex array but does not set any
-    // attrib pointers.
     void Bind() const;
 
     bool operator==(const Model3D& other) const;

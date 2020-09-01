@@ -4,41 +4,12 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
-namespace {
-
-Vertex2DBuffer GetQuad()
-{
-    return Vertex2DBuffer{
-        {
-            Maths::vec3{-1.0f, -1.0f, 0.0f},
-            Maths::vec2{0.0f, 0.0f}
-        }, {
-            Maths::vec3{1.0f, -1.0f, 0.0f},
-            Maths::vec2{1.0f, 0.0f}
-        }, {
-            Maths::vec3{1.0f, 1.0f, 0.0f},
-            Maths::vec2{1.0f, 1.0f}
-        }, {
-            Maths::vec3{1.0f, 1.0f, 0.0f},
-            Maths::vec2{1.0f, 1.0f}
-        }, {
-            Maths::vec3{-1.0f, 1.0f, 0.0f},
-            Maths::vec2{0.0f, 1.0f}
-        }, {
-            Maths::vec3{-1.0f, -1.0f, 0.0f},
-            Maths::vec2{0.0f, 0.0f}
-        }
-    };
-}
-
-}
 
 Effect::Effect(int width, int height,
                const std::string& vertShader,
                const std::string& fragShader)
     : d_frameBuffer(width, height)
     , d_shader(vertShader, fragShader)
-    , d_quad(GetQuad())
 {
 }
 
@@ -55,7 +26,6 @@ void Effect::UnbindForWrite() const
 void Effect::BindForRead() const
 {
     d_shader.Bind();
-    d_quad.Bind();
     d_frameBuffer.BindTexture();
     SetUniforms();
 }
@@ -63,7 +33,6 @@ void Effect::BindForRead() const
 void Effect::UnbindForRead() const
 {
     d_frameBuffer.UnbindTexture();
-    d_quad.Unbind();
     d_shader.Unbind();
 }
 
