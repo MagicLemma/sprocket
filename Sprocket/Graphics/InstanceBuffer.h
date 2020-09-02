@@ -16,16 +16,23 @@ struct InstanceData
     float       reflectivity;
 };
 
+enum class BufferUsage { STATIC, DYNAMIC };
+
 class InstanceBuffer
 {
     std::shared_ptr<VBO> d_buffer;
 
     BufferLayout d_layout;
+    BufferUsage  d_usage;
+    
     std::size_t d_instanceCount;
     std::size_t d_instanceSize;
 
 public:
-    InstanceBuffer(const BufferLayout& layout);
+    InstanceBuffer(
+        const BufferLayout& layout,
+        const BufferUsage& usage
+    );
 
     void Bind();
 

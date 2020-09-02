@@ -19,7 +19,7 @@ class BufferLayout
     const unsigned int d_vertexSize;                       
     const unsigned int d_startingIndex;
 
-    unsigned int                  d_currentSize;
+    unsigned int                 d_currentSize;
     std::vector<LayoutAttribute> d_attributes;
 
 public:

@@ -22,7 +22,7 @@ std::shared_ptr<InstanceBuffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
-    return std::make_shared<InstanceBuffer>(layout);
+    return std::make_shared<InstanceBuffer>(layout, BufferUsage::DYNAMIC);
 }
 
 }
