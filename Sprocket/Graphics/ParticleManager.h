@@ -32,6 +32,8 @@ class ParticleManager
     std::shared_ptr<Model3D>        d_model;
     std::shared_ptr<InstanceBuffer> d_instances;
 
+    std::vector<InstanceData> d_instanceData;
+
 public:
     ParticleManager();
 

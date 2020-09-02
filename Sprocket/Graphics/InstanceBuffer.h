@@ -19,21 +19,31 @@ struct InstanceData
 class InstanceBuffer
 {
     std::shared_ptr<VBO> d_buffer;
-    BufferLayout d_layout;
 
-    std::vector<InstanceData> d_data;
+    BufferLayout d_layout;
+    std::size_t d_instanceCount;
+    std::size_t d_instanceSize;
 
 public:
-    InstanceBuffer(std::size_t initialSize = 1000);
+    InstanceBuffer(const BufferLayout& layout);
 
     void Bind();
-    void Clear();
 
-    void Add(const InstanceData& data);
+    void SetData(
+        std::size_t instanceCount,
+        std::size_t instanceSize,
+        const void* data
+    );
 
-    BufferLayout GetLayout() const;
+    template <typename T> void SetData(const std::vector<T>& data);
 
-    std::size_t Size() const { return d_data.size(); }
+    std::size_t Size() const { return d_instanceCount; }
 };
+
+template <typename T>
+void InstanceBuffer::SetData(const std::vector<T>& data)
+{
+    SetData(data.size(), sizeof(T), data.data());
+}
 
 }

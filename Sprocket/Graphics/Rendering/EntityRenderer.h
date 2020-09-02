@@ -23,6 +23,7 @@ class EntityRenderer
     std::unique_ptr<VertexArray> d_vao;
     
     std::shared_ptr<InstanceBuffer> d_instanceBuffer;
+    std::vector<InstanceData> d_instanceData;
 
 public:
     EntityRenderer(

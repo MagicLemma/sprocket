@@ -4,45 +4,38 @@
 
 namespace Sprocket {
 
-InstanceBuffer::InstanceBuffer(std::size_t initialSize)
+InstanceBuffer::InstanceBuffer(const BufferLayout& layout)
     : d_buffer(std::make_shared<VBO>())
-    , d_layout(sizeof(InstanceData), 3)
+    , d_layout(layout)
+    , d_instanceCount(0)
+    , d_instanceSize(0)
 {
-    d_data.reserve(initialSize);
     glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
-    glBufferData(GL_ARRAY_BUFFER, sizeof(InstanceData) * initialSize, nullptr, GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    d_layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    d_layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
-    d_layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    d_layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
-    d_layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
+    // This will resize next time we set the data.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(InstanceData) * 1000, nullptr, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     assert(d_layout.Validate());
 }
 
 void InstanceBuffer::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
-    glBufferData(GL_ARRAY_BUFFER, sizeof(InstanceData) * d_data.size(), d_data.data(), GL_DYNAMIC_DRAW);
     d_layout.SetAttributes();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void InstanceBuffer::Clear()
+void InstanceBuffer::SetData(
+    std::size_t instanceCount,
+    std::size_t instanceSize,
+    const void* data
+)
 {
-    d_data.clear();
+    d_instanceCount = instanceCount;
+    d_instanceSize = instanceSize;
+    glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
+    glBufferData(GL_ARRAY_BUFFER, instanceCount * instanceSize, data, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
-void InstanceBuffer::Add(const InstanceData& data)
-{
-    d_data.push_back(data);
-}
-
-BufferLayout InstanceBuffer::GetLayout() const
-{
-    return d_layout;
-}
-
 
 }

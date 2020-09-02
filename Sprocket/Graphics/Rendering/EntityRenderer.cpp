@@ -10,6 +10,22 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
+namespace {
+
+std::shared_ptr<InstanceBuffer> GetInstanceBuffer()
+{
+    BufferLayout layout(sizeof(InstanceData), 3);
+    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
+    assert(layout.Validate());
+
+    return std::make_shared<InstanceBuffer>(layout);
+}
+
+}
 
 EntityRenderer::EntityRenderer(ModelManager* modelManager,
                                TextureManager* textureManager)
@@ -18,7 +34,7 @@ EntityRenderer::EntityRenderer(ModelManager* modelManager,
     , d_textureManager(textureManager)
     , d_particleManager(nullptr)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
-    , d_instanceBuffer(std::make_shared<InstanceBuffer>())
+    , d_instanceBuffer(GetInstanceBuffer())
 {
 }
 
@@ -93,9 +109,10 @@ void EntityRenderer::Draw(
         bool changedTexture = mc.texture != currentTexture;
 
         if (changedModel || changedTexture) {
+            d_instanceBuffer->SetData(d_instanceData);
             d_vao->SetInstances(d_instanceBuffer);
             d_vao->Draw();
-            d_instanceBuffer->Clear();
+            d_instanceData.clear();
         }
 
         if (changedModel) {
@@ -108,7 +125,7 @@ void EntityRenderer::Draw(
             currentTexture = mc.texture;
         }
 
-        d_instanceBuffer->Add({
+        d_instanceData.push_back({
             tc.position,
             tc.orientation,
             tc.scale,
@@ -117,9 +134,10 @@ void EntityRenderer::Draw(
         });
     });
 
+    d_instanceBuffer->SetData(d_instanceData);
     d_vao->SetInstances(d_instanceBuffer);
     d_vao->Draw();
-    d_instanceBuffer->Clear();
+    d_instanceData.clear();
 
     if (d_particleManager != nullptr) {
         d_vao->SetModel(d_particleManager->GetModel());

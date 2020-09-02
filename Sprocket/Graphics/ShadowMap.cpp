@@ -5,6 +5,22 @@
 #include <glad/glad.h>
 
 namespace Sprocket {
+namespace {
+
+std::shared_ptr<InstanceBuffer> GetInstanceBuffer()
+{
+    BufferLayout layout(sizeof(InstanceData), 3);
+    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
+    assert(layout.Validate());
+
+    return std::make_shared<InstanceBuffer>(layout);
+}
+
+}
 
 ShadowMap::ShadowMap(Window* window, ModelManager* modelManager)
     : d_window(window)
@@ -14,7 +30,7 @@ ShadowMap::ShadowMap(Window* window, ModelManager* modelManager)
     , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
     , d_shadowMap(window, 8192, 8192)
     , d_vao(std::make_unique<VertexArray>())
-    , d_instanceBuffer(std::make_shared<InstanceBuffer>())
+    , d_instanceBuffer(GetInstanceBuffer())
 {
 }
 
@@ -45,15 +61,16 @@ void ShadowMap::Draw(
         if (mc.model.empty()) { return; }
 
         if(mc.model != currentModel) {
+            d_instanceBuffer->SetData(d_instanceData);
             d_vao->SetInstances(d_instanceBuffer);
             d_vao->Draw();
-            d_instanceBuffer->Clear();
+            d_instanceData.clear();
 
             d_vao->SetModel(d_modelManager->GetModel(mc.model));
             currentModel = mc.model;
         }
 
-        d_instanceBuffer->Add({
+        d_instanceData.push_back({
             tc.position,
             tc.orientation,
             tc.scale,
@@ -62,9 +79,10 @@ void ShadowMap::Draw(
         });
     });
 
+    d_instanceBuffer->SetData(d_instanceData);
     d_vao->SetInstances(d_instanceBuffer);
     d_vao->Draw();
-    d_instanceBuffer->Clear();
+    d_instanceData.clear();
 
     glCullFace(GL_BACK);
     d_shadowMap.Unbind();

@@ -7,10 +7,26 @@
 #include "CameraUtils.h"
 
 namespace Sprocket {
+namespace {
+
+std::shared_ptr<InstanceBuffer> GetInstanceBuffer()
+{
+    BufferLayout layout(sizeof(InstanceData), 3);
+    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
+    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
+    assert(layout.Validate());
+
+    return std::make_shared<InstanceBuffer>(layout);
+}
+
+}
 
 ParticleManager::ParticleManager()
     : d_model(ModelManager::LoadModel("Resources/Models/Particle.obj"))
-    , d_instances(std::make_shared<InstanceBuffer>(NUM_PARTICLES))
+    , d_instances(GetInstanceBuffer())
 {
 }
 
@@ -27,14 +43,14 @@ void ParticleManager::Emit(const Particle& particle)
 
 void ParticleManager::OnUpdate(double dt)
 {
-    d_instances->Clear();
+    d_instanceData.clear();
     for (auto& particle : d_particles) {
         particle.life -= dt;
         particle.position += particle.velocity * (float)dt;
         particle.velocity += particle.acceleration * (float)dt;
         float r = Random<float>(1.0f, 3.0f);
         if (particle.life > 0.0) {
-            d_instances->Add({
+            d_instanceData.push_back({
                 particle.position,
                 {0.0, 0.0, 0.0, 1.0},
                 particle.scale,
@@ -43,6 +59,7 @@ void ParticleManager::OnUpdate(double dt)
             });
         }
     }
+    d_instances->SetData(d_instanceData);
 }
 
 }
