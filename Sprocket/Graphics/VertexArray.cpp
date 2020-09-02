@@ -17,7 +17,7 @@ void VertexArray::SetModel(std::shared_ptr<Model3D> model)
     glBindVertexArray(0);
 }
 
-void VertexArray::SetInstances(std::shared_ptr<InstanceBuffer> instanceData)
+void VertexArray::SetInstances(std::shared_ptr<Buffer> instanceData)
 {
     d_instances = instanceData;
     glBindVertexArray(d_vao->Value());

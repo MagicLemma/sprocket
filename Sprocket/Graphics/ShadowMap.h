@@ -27,7 +27,7 @@ class ShadowMap
     DepthBuffer d_shadowMap;
 
     std::unique_ptr<VertexArray> d_vao;
-    std::shared_ptr<InstanceBuffer> d_instanceBuffer;
+    std::shared_ptr<Buffer> d_instanceBuffer;
 
     std::vector<InstanceData> d_instanceData;
 

@@ -130,18 +130,14 @@ struct DevUIData
         // Buffer used to store the render data created by ImGui
         // for rendering it.
 
-    BufferLayout bufferLayout;
-        // Describes the layout of the buffer above.
-
     DevUIData()
         : shader("Resources/Shaders/DevGUI.vert",
                  "Resources/Shaders/DevGUI.frag")
-        , bufferLayout(sizeof(ImDrawVert))
     {
+        BufferLayout bufferLayout(sizeof(ImDrawVert));
         bufferLayout.AddAttribute(DataType::FLOAT, 2);
         bufferLayout.AddAttribute(DataType::FLOAT, 2);
         bufferLayout.AddAttribute(DataType::UBYTE, 4);
-
         buffer.SetBufferLayout(bufferLayout);
     }
 };

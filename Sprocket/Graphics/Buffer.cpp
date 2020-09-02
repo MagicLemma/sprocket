@@ -1,4 +1,4 @@
-#include "InstanceBuffer.h"
+#include "Buffer.h"
 
 #include <glad/glad.h>
 
@@ -15,7 +15,7 @@ int GetUsage(BufferUsage usage)
 
 }
 
-InstanceBuffer::InstanceBuffer(
+Buffer::Buffer(
     const BufferLayout& layout,
     const BufferUsage& usage
 )
@@ -25,22 +25,17 @@ InstanceBuffer::InstanceBuffer(
     , d_instanceCount(0)
     , d_instanceSize(0)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
-
-    // This will resize next time we set the data.
-    glBufferData(GL_ARRAY_BUFFER, sizeof(InstanceData) * 1000, nullptr, GetUsage(d_usage));
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     assert(d_layout.Validate());
 }
 
-void InstanceBuffer::Bind()
+void Buffer::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
     d_layout.SetAttributes();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void InstanceBuffer::SetData(
+void Buffer::SetData(
     std::size_t instanceCount,
     std::size_t instanceSize,
     const void* data

@@ -18,7 +18,7 @@ struct InstanceData
 
 enum class BufferUsage { STATIC, DYNAMIC };
 
-class InstanceBuffer
+class Buffer
 {
     std::shared_ptr<VBO> d_buffer;
 
@@ -29,7 +29,7 @@ class InstanceBuffer
     std::size_t d_instanceSize;
 
 public:
-    InstanceBuffer(
+    Buffer(
         const BufferLayout& layout,
         const BufferUsage& usage
     );
@@ -48,7 +48,7 @@ public:
 };
 
 template <typename T>
-void InstanceBuffer::SetData(const std::vector<T>& data)
+void Buffer::SetData(const std::vector<T>& data)
 {
     SetData(data.size(), sizeof(T), data.data());
 }

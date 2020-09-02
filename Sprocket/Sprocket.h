@@ -60,9 +60,10 @@
 #include "Utility/Yaml.h"
 
 // GRAPHICS
+#include "Graphics/Buffer.h"
+#include "Graphics/BufferLayout.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/Shader.h"
-#include "Graphics/BufferLayout.h"
 #include "Graphics/DepthBuffer.h"
 #include "Graphics/Resources.h"
 #include "Graphics/Model2D.h"
@@ -70,7 +71,6 @@
 #include "Graphics/Texture.h"
 #include "Graphics/CubeMap.h"
 #include "Graphics/FrameBuffer.h"
-#include "Graphics/InstanceBuffer.h"
 #include "Graphics/ShadowMap.h"
 #include "Graphics/ParticleManager.h"
 #include "Graphics/StreamBuffer.h"

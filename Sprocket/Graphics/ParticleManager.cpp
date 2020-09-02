@@ -9,7 +9,7 @@
 namespace Sprocket {
 namespace {
 
-std::shared_ptr<InstanceBuffer> GetInstanceBuffer()
+std::shared_ptr<Buffer> GetInstanceBuffer()
 {
     BufferLayout layout(sizeof(InstanceData), 3);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
@@ -19,7 +19,7 @@ std::shared_ptr<InstanceBuffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
-    return std::make_shared<InstanceBuffer>(layout, BufferUsage::DYNAMIC);
+    return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
 }
 
 }
