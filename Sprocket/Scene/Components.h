@@ -1,19 +1,10 @@
-// GENERATED FILE @ 2020-08-30 16:16:44.703687
+// GENERATED FILE @ 2020-09-03 23:34:27.412764
 #pragma once
 #include "Maths.h"
 #include <queue>
 #include <string>
 
 namespace Sprocket{
-
-// Enums
-enum class Collider
-{
-    NONE,
-    SPHERE,
-    CAPSULE,
-    BOX,
-};
 
 // Components
 struct TemporaryComponent
@@ -22,7 +13,7 @@ struct TemporaryComponent
 
 struct NameComponent
 {
-    std::string name;
+    std::string name = "Entity";
 };
 
 struct TransformComponent
@@ -34,8 +25,8 @@ struct TransformComponent
 
 struct ModelComponent
 {
-    std::string model;
-    std::string texture;
+    std::string model = "";
+    std::string texture = "";
     float shineDamper = 1.0f;
     float reflectivity = 0.0f;
 };
@@ -80,7 +71,7 @@ struct CapsuleCollider3DComponent
 
 struct ScriptComponent
 {
-    std::string script;
+    std::string script = "";
     bool active = true;
 };
 
@@ -99,7 +90,7 @@ struct SelectComponent
 
 struct PathComponent
 {
-    std::queue<Maths::vec3> markers;
+    std::queue<Maths::vec3> markers = {};
     float speed = 0.0f;
 };
 

@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-09-03 20:37:56.749287
+// GENERATED FILE @ 2020-09-03 23:34:27.417751
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -189,7 +189,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["NameComponent"]) {
             NameComponent c;
-            c.name = spec["name"].as<std::string>();
+            c.name = spec["name"] ? spec["name"].as<std::string>() : "Entity";
             e.Add(c);
         }
         if (auto spec = entity["TransformComponent"]) {
@@ -201,8 +201,8 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
-            c.model = spec["model"].as<std::string>();
-            c.texture = spec["texture"].as<std::string>();
+            c.model = spec["model"] ? spec["model"].as<std::string>() : "";
+            c.texture = spec["texture"] ? spec["texture"].as<std::string>() : "";
             c.shineDamper = spec["shineDamper"] ? spec["shineDamper"].as<float>() : 1.0f;
             c.reflectivity = spec["reflectivity"] ? spec["reflectivity"].as<float>() : 0.0f;
             e.Add(c);
@@ -245,7 +245,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["ScriptComponent"]) {
             ScriptComponent c;
-            c.script = spec["script"].as<std::string>();
+            c.script = spec["script"] ? spec["script"].as<std::string>() : "";
             c.active = spec["active"] ? spec["active"].as<bool>() : true;
             e.Add(c);
         }
