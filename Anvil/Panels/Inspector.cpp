@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-29 00:29:19.449719
+// GENERATED FILE @ 2020-08-30 16:16:44.739564
 
 #include "Inspector.h"
 #include "EditorLayer.h"
@@ -24,7 +24,7 @@ void ShowInspector(EditorLayer& editor)
     }
 
     static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
-    static DevUI::GizmoMode mode = DevUI::GizmoMode::ROTATION;
+    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
     if (entity.Has<TemporaryComponent>() && ImGui::CollapsingHeader("Temporary")) {
         ImGui::PushID(0);
         auto& c = entity.Get<TemporaryComponent>();
@@ -166,6 +166,19 @@ void ShowInspector(EditorLayer& editor)
         if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
         ImGui::PopID();
     }
+    if (entity.Has<ParticleComponent>() && ImGui::CollapsingHeader("Particle")) {
+        ImGui::PushID(14);
+        auto& c = entity.Get<ParticleComponent>();
+        ImGui::DragFloat("Interval", &c.interval, 0.1f);
+        ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
+        ImGui::DragFloat("Velocity Noise", &c.velocityNoise, 0.1f);
+        ImGui::DragFloat3("Acceleration", &c.acceleration.x, 0.1f);
+        ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
+        ImGui::DragFloat("Life", &c.life, 0.1f);
+        ImGui::DragFloat("Accumulator", &c.accumulator, 0.1f);
+        if (ImGui::Button("Delete")) { entity.Remove<ParticleComponent>(); }
+        ImGui::PopID();
+    }
  
     ImGui::Separator();
 
@@ -224,6 +237,10 @@ void ShowInspector(EditorLayer& editor)
         }
         if (!entity.Has<LightComponent>() && ImGui::MenuItem("Light")) {
             LightComponent c;
+            entity.Add(c);
+        }
+        if (!entity.Has<ParticleComponent>() && ImGui::MenuItem("Particle")) {
+            ParticleComponent c;
             entity.Add(c);
         }
 

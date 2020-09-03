@@ -4,6 +4,5 @@ project(Sprocket)
 set(CMAKE_BUILD_TYPE Release)
 
 add_subdirectory(Sprocket)
-add_subdirectory(Workshop)
 add_subdirectory(Game)
 add_subdirectory(Anvil)

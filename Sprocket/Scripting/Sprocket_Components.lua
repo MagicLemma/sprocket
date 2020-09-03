@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-29 00:29:19.442740
+-- GENERATED FILE @ 2020-08-30 16:16:44.731583
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -225,5 +225,27 @@ end
 
 function AddLightComponent(entity, c)
     Lua_AddLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.attenuation.x, c.attenuation.y, c.attenuation.z, c.brightness)
+end
+
+ParticleComponent = Class(function(self, interval, velocity, velocityNoise, acceleration, scale, life)
+    self.interval = interval
+    self.velocity = velocity
+    self.velocityNoise = velocityNoise
+    self.acceleration = acceleration
+    self.scale = scale
+    self.life = life
+end)
+
+function GetParticleComponent(entity)
+    x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = Lua_GetParticleComponent(entity)
+    return ParticleComponent(x0, Vec3(x1, x2, x3), x4, Vec3(x5, x6, x7), Vec3(x8, x9, x10), x11)
+end
+
+function SetParticleComponent(entity, c)
+    Lua_SetParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
+end
+
+function AddParticleComponent(entity, c)
+    Lua_AddParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
 end
 

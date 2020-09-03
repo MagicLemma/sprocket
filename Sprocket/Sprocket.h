@@ -31,6 +31,7 @@
 #include "Scene/Systems/BasicSelector.h"
 #include "Scene/Systems/Selector.h"
 #include "Scene/Systems/CameraSystem.h"
+#include "Scene/Systems/ParticleSystem.h"
 #include "Scene/Systems/PhysicsEngine.h"
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/PathFollower.h"
@@ -59,9 +60,10 @@
 #include "Utility/Yaml.h"
 
 // GRAPHICS
+#include "Graphics/Buffer.h"
+#include "Graphics/BufferLayout.h"
 #include "Graphics/RenderContext.h"
 #include "Graphics/Shader.h"
-#include "Graphics/BufferLayout.h"
 #include "Graphics/DepthBuffer.h"
 #include "Graphics/Resources.h"
 #include "Graphics/Model2D.h"
@@ -69,8 +71,8 @@
 #include "Graphics/Texture.h"
 #include "Graphics/CubeMap.h"
 #include "Graphics/FrameBuffer.h"
-#include "Graphics/InstanceBuffer.h"
 #include "Graphics/ShadowMap.h"
+#include "Graphics/ParticleManager.h"
 #include "Graphics/StreamBuffer.h"
 #include "Graphics/VertexArray.h"
 

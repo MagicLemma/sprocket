@@ -88,6 +88,7 @@ void EditorLayer::OnUpdate(double dt)
     
     if (!d_paused) {
         d_activeScene->OnUpdate(dt);
+        d_particleManager.OnUpdate(dt);
 
         if (d_isViewportFocused && !d_playingGame) {
             d_editorCamera.OnUpdate(dt);
@@ -102,6 +103,8 @@ void EditorLayer::OnUpdate(double dt)
             }
         });
     }
+
+    d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_viewport.Bind();
     if (d_playingGame) {
@@ -118,6 +121,8 @@ void EditorLayer::OnUpdate(double dt)
             d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
         }
     }
+
+
     d_viewport.Unbind();
 
     d_ui.StartFrame();
@@ -184,6 +189,7 @@ void EditorLayer::OnUpdate(double dt)
                 d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0}));
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
                 d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
+                d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
 
                 d_activeScene->OnStartup();
                 d_playingGame = true;

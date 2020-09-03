@@ -54,14 +54,16 @@ add_library(Sprocket STATIC
             Scene/Systems/BasicSelector.cpp
             Scene/Systems/CameraSystem.cpp
             Scene/Systems/Selector.cpp
+            Scene/Systems/ParticleSystem.cpp
             Scene/Systems/PhysicsEngine.cpp
             Scene/Systems/ScriptRunner.cpp
             Scene/Systems/GameGrid.cpp
             Scene/Systems/PathFollower.cpp
 
+            Graphics/Buffer.cpp
+            Graphics/BufferLayout.cpp
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
-            Graphics/BufferLayout.cpp
             Graphics/DepthBuffer.cpp
             Graphics/Resources.cpp
             Graphics/Model2D.cpp
@@ -69,7 +71,7 @@ add_library(Sprocket STATIC
             Graphics/Texture.cpp
             Graphics/CubeMap.cpp
             Graphics/FrameBuffer.cpp
-            Graphics/InstanceBuffer.cpp
+            Graphics/ParticleManager.cpp
             Graphics/ShadowMap.cpp
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp

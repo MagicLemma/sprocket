@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-29 00:29:19.424789
+// GENERATED FILE @ 2020-08-30 16:16:44.708666
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -19,7 +19,6 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Version" << YAML::Value << 2;
-
     const auto& sun = scene->GetSun();
     out << YAML::Key << "Sun" << YAML::BeginMap;
     out << YAML::Key << "direction" << YAML::Value << sun.direction;
@@ -140,6 +139,17 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
             out << YAML::EndMap;
         }
+        if(entity.Has<ParticleComponent>()) {
+            const auto& c = entity.Get<ParticleComponent>();
+            out << YAML::Key << "ParticleComponent" << YAML::BeginMap;
+            out << YAML::Key << "interval" << YAML::Value << c.interval;
+            out << YAML::Key << "velocity" << YAML::Value << c.velocity;
+            out << YAML::Key << "velocityNoise" << YAML::Value << c.velocityNoise;
+            out << YAML::Key << "acceleration" << YAML::Value << c.acceleration;
+            out << YAML::Key << "scale" << YAML::Value << c.scale;
+            out << YAML::Key << "life" << YAML::Value << c.life;
+            out << YAML::EndMap;
+        }
 
         out << YAML::EndMap;
     });
@@ -164,7 +174,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     if (auto sun = data["Sun"]) {
         scene->GetSun().direction = sun["direction"] ? sun["direction"].as<Maths::vec3>() : Maths::vec3{0.0, -1.0, 0.0};
         scene->GetSun().colour = sun["colour"] ? sun["colour"].as<Maths::vec3>() : Maths::vec3{1.0, 1.0, 1.0};
-        scene->GetSun().brightness = sun["brightness"] ? sun["brightness"].as<float>() : 0.0f;
+        scene->GetSun().brightness = sun["brightness"] ? sun["brightness"].as<float>() : 1.0f;
     }
 
     if (!data["Entities"]) {
@@ -268,6 +278,16 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add(c);
         }
+        if (auto spec = entity["ParticleComponent"]) {
+            ParticleComponent c;
+            c.interval = spec["interval"] ? spec["interval"].as<float>() : 1.0f;
+            c.velocity = spec["velocity"] ? spec["velocity"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.velocityNoise = spec["velocityNoise"] ? spec["velocityNoise"].as<float>() : 0.0f;
+            c.acceleration = spec["acceleration"] ? spec["acceleration"].as<Maths::vec3>() : Maths::vec3{0.0f, -9.81f, 0.0f};
+            c.scale = spec["scale"] ? spec["scale"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
+            c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;
+            e.Add(c);
+        }
 
     }
 }
@@ -316,6 +336,9 @@ Entity Copy(std::shared_ptr<Scene> scene, Entity entity)
     }
     if (entity.Has<LightComponent>()) {
         e.Add<LightComponent>(entity.Get<LightComponent>());
+    }
+    if (entity.Has<ParticleComponent>()) {
+        e.Add<ParticleComponent>(entity.Get<ParticleComponent>());
     }
 
     return e;

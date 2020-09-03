@@ -35,16 +35,16 @@ unsigned int getSize(DataType type)
 
 }
 
-BufferLayout::BufferLayout(unsigned int vertexSize)
+BufferLayout::BufferLayout(unsigned int vertexSize, unsigned int startingIndex)
     : d_vertexSize(vertexSize)
+    , d_startingIndex(startingIndex)
     , d_currentSize(0)
-    , d_dataTypes()
 {   
 }
 
-void BufferLayout::AddAttribute(DataType type, unsigned int count)
+void BufferLayout::AddAttribute(DataType type, unsigned int count, DataRate rate)
 {
-    d_dataTypes.push_back(std::make_pair(type, count));
+    d_attributes.push_back({type, count, rate});
     d_currentSize += count * getSize(type);
 }
 
@@ -56,18 +56,21 @@ bool BufferLayout::Validate() const
 void BufferLayout::SetAttributes() const
 {
     unsigned int offset = 0;
-    unsigned int index = 0;
-    for (const auto& data : d_dataTypes) {
+    unsigned int index = d_startingIndex;
+    for (const auto& data : d_attributes) {
         glEnableVertexAttribArray(index);
         glVertexAttribPointer(
             index,
-            data.second,
-            getType(data.first),
-            getNormalised(data.first),
+            data.count,
+            getType(data.type),
+            getNormalised(data.type),
             d_vertexSize,
             (void*)offset
         );
-        offset += data.second * getSize(data.first);
+        if (data.rate == DataRate::INSTANCE) {
+            glVertexAttribDivisor(index, 1);
+        }
+        offset += data.count * getSize(data.type);
         ++index;
     }
     

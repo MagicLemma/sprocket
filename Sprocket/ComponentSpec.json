@@ -368,6 +368,56 @@
                     "Default": 1.0
                 }
             ]
+        },
+        {
+            "Name": "ParticleComponent",
+            "DisplayName": "Particle",
+            "Attributes": [
+                {
+                    "Name": "interval",
+                    "DisplayName": "Interval",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "velocity",
+                    "DisplayName": "Velocity",
+                    "Type": "Maths::vec3",
+                    "Default": [0.0, 0.0, 0.0]
+                },
+                {
+                    "Name": "velocityNoise",
+                    "DisplayName": "Velocity Noise",
+                    "Type": "float",
+                    "Default": 0.0
+                },
+                {
+                    "Name": "acceleration",
+                    "DisplayName": "Acceleration",
+                    "Type": "Maths::vec3",
+                    "Default": [0.0, -9.81, 0.0]
+                },
+                {
+                    "Name": "scale",
+                    "DisplayName": "Scale",
+                    "Type": "Maths::vec3",
+                    "Default": [1, 1, 1]
+                },
+                {
+                    "Name": "life",
+                    "DisplayName": "Life",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "accumulator",
+                    "DisplayName": "Accumulator",
+                    "Type": "float",
+                    "Default": 0.0,
+                    "Scriptable": false,
+                    "Savable": false
+                }
+            ]
         }
     ]
 }
