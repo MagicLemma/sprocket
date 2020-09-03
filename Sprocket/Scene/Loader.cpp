@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-30 16:16:44.708666
+// GENERATED FILE @ 2020-09-03 20:37:56.749287
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -29,7 +29,6 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
-
         out << YAML::BeginMap;
         if(entity.Has<TemporaryComponent>()) {
             const auto& c = entity.Get<TemporaryComponent>();
