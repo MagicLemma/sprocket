@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-09-03 23:34:27.417751
+// GENERATED FILE
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"
@@ -30,18 +30,18 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
-        if(entity.Has<TemporaryComponent>()) {
+        if (entity.Has<TemporaryComponent>()) {
             const auto& c = entity.Get<TemporaryComponent>();
             out << YAML::Key << "TemporaryComponent" << YAML::BeginMap;
             out << YAML::EndMap;
         }
-        if(entity.Has<NameComponent>()) {
+        if (entity.Has<NameComponent>()) {
             const auto& c = entity.Get<NameComponent>();
             out << YAML::Key << "NameComponent" << YAML::BeginMap;
             out << YAML::Key << "name" << YAML::Value << c.name;
             out << YAML::EndMap;
         }
-        if(entity.Has<TransformComponent>()) {
+        if (entity.Has<TransformComponent>()) {
             const auto& c = entity.Get<TransformComponent>();
             out << YAML::Key << "TransformComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
@@ -49,7 +49,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "scale" << YAML::Value << c.scale;
             out << YAML::EndMap;
         }
-        if(entity.Has<ModelComponent>()) {
+        if (entity.Has<ModelComponent>()) {
             const auto& c = entity.Get<ModelComponent>();
             out << YAML::Key << "ModelComponent" << YAML::BeginMap;
             out << YAML::Key << "model" << YAML::Value << c.model;
@@ -58,7 +58,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "reflectivity" << YAML::Value << c.reflectivity;
             out << YAML::EndMap;
         }
-        if(entity.Has<RigidBody3DComponent>()) {
+        if (entity.Has<RigidBody3DComponent>()) {
             const auto& c = entity.Get<RigidBody3DComponent>();
             out << YAML::Key << "RigidBody3DComponent" << YAML::BeginMap;
             out << YAML::Key << "velocity" << YAML::Value << c.velocity;
@@ -69,7 +69,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "rollingResistance" << YAML::Value << c.rollingResistance;
             out << YAML::EndMap;
         }
-        if(entity.Has<BoxCollider3DComponent>()) {
+        if (entity.Has<BoxCollider3DComponent>()) {
             const auto& c = entity.Get<BoxCollider3DComponent>();
             out << YAML::Key << "BoxCollider3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
@@ -79,7 +79,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "applyScale" << YAML::Value << c.applyScale;
             out << YAML::EndMap;
         }
-        if(entity.Has<SphereCollider3DComponent>()) {
+        if (entity.Has<SphereCollider3DComponent>()) {
             const auto& c = entity.Get<SphereCollider3DComponent>();
             out << YAML::Key << "SphereCollider3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
@@ -88,7 +88,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "radius" << YAML::Value << c.radius;
             out << YAML::EndMap;
         }
-        if(entity.Has<CapsuleCollider3DComponent>()) {
+        if (entity.Has<CapsuleCollider3DComponent>()) {
             const auto& c = entity.Get<CapsuleCollider3DComponent>();
             out << YAML::Key << "CapsuleCollider3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
@@ -98,39 +98,39 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "height" << YAML::Value << c.height;
             out << YAML::EndMap;
         }
-        if(entity.Has<ScriptComponent>()) {
+        if (entity.Has<ScriptComponent>()) {
             const auto& c = entity.Get<ScriptComponent>();
             out << YAML::Key << "ScriptComponent" << YAML::BeginMap;
             out << YAML::Key << "script" << YAML::Value << c.script;
             out << YAML::Key << "active" << YAML::Value << c.active;
             out << YAML::EndMap;
         }
-        if(entity.Has<CameraComponent>()) {
+        if (entity.Has<CameraComponent>()) {
             const auto& c = entity.Get<CameraComponent>();
             out << YAML::Key << "CameraComponent" << YAML::BeginMap;
             out << YAML::Key << "fov" << YAML::Value << c.fov;
             out << YAML::Key << "pitch" << YAML::Value << c.pitch;
             out << YAML::EndMap;
         }
-        if(entity.Has<SelectComponent>()) {
+        if (entity.Has<SelectComponent>()) {
             const auto& c = entity.Get<SelectComponent>();
             out << YAML::Key << "SelectComponent" << YAML::BeginMap;
             out << YAML::EndMap;
         }
-        if(entity.Has<PathComponent>()) {
+        if (entity.Has<PathComponent>()) {
             const auto& c = entity.Get<PathComponent>();
             out << YAML::Key << "PathComponent" << YAML::BeginMap;
             out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
-        if(entity.Has<GridComponent>()) {
+        if (entity.Has<GridComponent>()) {
             const auto& c = entity.Get<GridComponent>();
             out << YAML::Key << "GridComponent" << YAML::BeginMap;
             out << YAML::Key << "x" << YAML::Value << c.x;
             out << YAML::Key << "z" << YAML::Value << c.z;
             out << YAML::EndMap;
         }
-        if(entity.Has<LightComponent>()) {
+        if (entity.Has<LightComponent>()) {
             const auto& c = entity.Get<LightComponent>();
             out << YAML::Key << "LightComponent" << YAML::BeginMap;
             out << YAML::Key << "colour" << YAML::Value << c.colour;
@@ -138,7 +138,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
             out << YAML::EndMap;
         }
-        if(entity.Has<ParticleComponent>()) {
+        if (entity.Has<ParticleComponent>()) {
             const auto& c = entity.Get<ParticleComponent>();
             out << YAML::Key << "ParticleComponent" << YAML::BeginMap;
             out << YAML::Key << "interval" << YAML::Value << c.interval;
@@ -149,7 +149,6 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "life" << YAML::Value << c.life;
             out << YAML::EndMap;
         }
-
         out << YAML::EndMap;
     });
     out << YAML::EndSeq;
@@ -185,19 +184,16 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         Entity e = scene->NewEntity();
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
-            e.Add(c);
         }
         if (auto spec = entity["NameComponent"]) {
             NameComponent c;
             c.name = spec["name"] ? spec["name"].as<std::string>() : "Entity";
-            e.Add(c);
         }
         if (auto spec = entity["TransformComponent"]) {
             TransformComponent c;
             c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
             c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.scale = spec["scale"] ? spec["scale"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
-            e.Add(c);
         }
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
@@ -205,7 +201,6 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.texture = spec["texture"] ? spec["texture"].as<std::string>() : "";
             c.shineDamper = spec["shineDamper"] ? spec["shineDamper"].as<float>() : 1.0f;
             c.reflectivity = spec["reflectivity"] ? spec["reflectivity"].as<float>() : 0.0f;
-            e.Add(c);
         }
         if (auto spec = entity["RigidBody3DComponent"]) {
             RigidBody3DComponent c;
@@ -215,7 +210,6 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.bounciness = spec["bounciness"] ? spec["bounciness"].as<float>() : 0.5f;
             c.frictionCoefficient = spec["frictionCoefficient"] ? spec["frictionCoefficient"].as<float>() : 0.3f;
             c.rollingResistance = spec["rollingResistance"] ? spec["rollingResistance"].as<float>() : 0.0f;
-            e.Add(c);
         }
         if (auto spec = entity["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
@@ -224,7 +218,6 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.halfExtents = spec["halfExtents"] ? spec["halfExtents"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
             c.applyScale = spec["applyScale"] ? spec["applyScale"].as<bool>() : true;
-            e.Add(c);
         }
         if (auto spec = entity["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
@@ -232,7 +225,6 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
-            e.Add(c);
         }
         if (auto spec = entity["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
@@ -241,41 +233,34 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
             c.height = spec["height"] ? spec["height"].as<float>() : 1.0f;
-            e.Add(c);
         }
         if (auto spec = entity["ScriptComponent"]) {
             ScriptComponent c;
             c.script = spec["script"] ? spec["script"].as<std::string>() : "";
             c.active = spec["active"] ? spec["active"].as<bool>() : true;
-            e.Add(c);
         }
         if (auto spec = entity["CameraComponent"]) {
             CameraComponent c;
             c.fov = spec["fov"] ? spec["fov"].as<float>() : 70.0f;
             c.pitch = spec["pitch"] ? spec["pitch"].as<float>() : 0.0f;
-            e.Add(c);
         }
         if (auto spec = entity["SelectComponent"]) {
             SelectComponent c;
-            e.Add(c);
         }
         if (auto spec = entity["PathComponent"]) {
             PathComponent c;
             c.speed = spec["speed"] ? spec["speed"].as<float>() : 0.0f;
-            e.Add(c);
         }
         if (auto spec = entity["GridComponent"]) {
             GridComponent c;
             c.x = spec["x"] ? spec["x"].as<int>() : 0;
             c.z = spec["z"] ? spec["z"].as<int>() : 0;
-            e.Add(c);
         }
         if (auto spec = entity["LightComponent"]) {
             LightComponent c;
             c.colour = spec["colour"] ? spec["colour"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
             c.attenuation = spec["attenuation"] ? spec["attenuation"].as<Maths::vec3>() : Maths::vec3{1.0f, 0.0f, 0.0f};
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
-            e.Add(c);
         }
         if (auto spec = entity["ParticleComponent"]) {
             ParticleComponent c;
@@ -285,9 +270,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.acceleration = spec["acceleration"] ? spec["acceleration"].as<Maths::vec3>() : Maths::vec3{0.0f, -9.81f, 0.0f};
             c.scale = spec["scale"] ? spec["scale"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
             c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;
-            e.Add(c);
         }
-
     }
 }
 
@@ -339,7 +322,6 @@ Entity Copy(std::shared_ptr<Scene> scene, Entity entity)
     if (entity.Has<ParticleComponent>()) {
         e.Add<ParticleComponent>(entity.Get<ParticleComponent>());
     }
-
     return e;
 }
 
