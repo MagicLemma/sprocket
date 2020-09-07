@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-09-03 23:34:27.412764
+// GENERATED FILE
 #pragma once
 #include "Maths.h"
 #include <queue>
@@ -77,7 +77,7 @@ struct ScriptComponent
 
 struct CameraComponent
 {
-    Maths::mat4 projection;
+    Maths::mat4 projection = {};
     float fov = 70.0f;
     float pitch = 0.0f;
 };
@@ -117,5 +117,6 @@ struct ParticleComponent
     float life = 1.0f;
     float accumulator = 0.0f;
 };
+
 
 }

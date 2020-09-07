@@ -12,36 +12,36 @@ namespace Sprocket {
 namespace {
 
 // PUSH
-void Push(lua_State* L, int value, int& count)
+int Push(lua_State* L, int value)
 {
     lua_pushnumber(L, value);
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, float value, int& count)
+int Push(lua_State* L, float value)
 {
     lua_pushnumber(L, value);
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, const std::string& value, int& count)
+int Push(lua_State* L, const std::string& value)
 {
     lua_pushstring(L, value.c_str());
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, const bool& value, int& count)
+int Push(lua_State* L, const bool& value)
 {
     lua_pushboolean(L, value);
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, const Maths::vec3& value, int& count)
+int Push(lua_State* L, const Maths::vec3& value)
 {
     lua_pushnumber(L, value.x);
     lua_pushnumber(L, value.y);
     lua_pushnumber(L, value.z);
-    count += 3;
+    return 3;
 }
 
 // PULL
@@ -91,7 +91,7 @@ template <> Maths::quat Pull(lua_State* L, int& count)
 // DIMENSION
 template <typename T> constexpr int Dimension()
 {
-    SPKT_LOG_ERROR("SHOULD NOT BE HERE");
+    static_assert(sizeof(T) == -1);
     return 0;
 }
 
@@ -146,8 +146,7 @@ int Get{{Comp.Name}}(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<{{Comp.Name}}>();
-    Push(L, c.{{Attr.Name}}, count);
-
+    count += Push(L, c.{{Attr.Name}});
     return count;
 }
 

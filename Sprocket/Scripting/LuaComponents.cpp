@@ -13,36 +13,36 @@ namespace Sprocket {
 namespace {
 
 // PUSH
-void Push(lua_State* L, int value, int& count)
+int Push(lua_State* L, int value)
 {
     lua_pushnumber(L, value);
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, float value, int& count)
+int Push(lua_State* L, float value)
 {
     lua_pushnumber(L, value);
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, const std::string& value, int& count)
+int Push(lua_State* L, const std::string& value)
 {
     lua_pushstring(L, value.c_str());
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, const bool& value, int& count)
+int Push(lua_State* L, const bool& value)
 {
     lua_pushboolean(L, value);
-    ++count;
+    return 1;
 }
 
-void Push(lua_State* L, const Maths::vec3& value, int& count)
+int Push(lua_State* L, const Maths::vec3& value)
 {
     lua_pushnumber(L, value.x);
     lua_pushnumber(L, value.y);
     lua_pushnumber(L, value.z);
-    count += 3;
+    return 3;
 }
 
 // PULL
@@ -92,7 +92,7 @@ template <> Maths::quat Pull(lua_State* L, int& count)
 // DIMENSION
 template <typename T> constexpr int Dimension()
 {
-    SPKT_LOG_ERROR("SHOULD NOT BE HERE");
+    static_assert(sizeof(T) == -1);
     return 0;
 }
 
@@ -339,7 +339,6 @@ int GetTemporaryComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<TemporaryComponent>();
-
     return count;
 }
 
@@ -375,8 +374,7 @@ int GetNameComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<NameComponent>();
-    Push(L, c.name, count);
-
+    count += Push(L, c.name);
     return count;
 }
 
@@ -414,9 +412,8 @@ int GetTransformComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<TransformComponent>();
-    Push(L, c.position, count);
-    Push(L, c.scale, count);
-
+    count += Push(L, c.position);
+    count += Push(L, c.scale);
     return count;
 }
 
@@ -456,11 +453,10 @@ int GetModelComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<ModelComponent>();
-    Push(L, c.model, count);
-    Push(L, c.texture, count);
-    Push(L, c.shineDamper, count);
-    Push(L, c.reflectivity, count);
-
+    count += Push(L, c.model);
+    count += Push(L, c.texture);
+    count += Push(L, c.shineDamper);
+    count += Push(L, c.reflectivity);
     return count;
 }
 
@@ -504,15 +500,14 @@ int GetRigidBody3DComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<RigidBody3DComponent>();
-    Push(L, c.velocity, count);
-    Push(L, c.gravity, count);
-    Push(L, c.frozen, count);
-    Push(L, c.bounciness, count);
-    Push(L, c.frictionCoefficient, count);
-    Push(L, c.rollingResistance, count);
-    Push(L, c.force, count);
-    Push(L, c.onFloor, count);
-
+    count += Push(L, c.velocity);
+    count += Push(L, c.gravity);
+    count += Push(L, c.frozen);
+    count += Push(L, c.bounciness);
+    count += Push(L, c.frictionCoefficient);
+    count += Push(L, c.rollingResistance);
+    count += Push(L, c.force);
+    count += Push(L, c.onFloor);
     return count;
 }
 
@@ -564,11 +559,10 @@ int GetBoxCollider3DComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<BoxCollider3DComponent>();
-    Push(L, c.position, count);
-    Push(L, c.mass, count);
-    Push(L, c.halfExtents, count);
-    Push(L, c.applyScale, count);
-
+    count += Push(L, c.position);
+    count += Push(L, c.mass);
+    count += Push(L, c.halfExtents);
+    count += Push(L, c.applyScale);
     return count;
 }
 
@@ -612,10 +606,9 @@ int GetSphereCollider3DComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<SphereCollider3DComponent>();
-    Push(L, c.position, count);
-    Push(L, c.mass, count);
-    Push(L, c.radius, count);
-
+    count += Push(L, c.position);
+    count += Push(L, c.mass);
+    count += Push(L, c.radius);
     return count;
 }
 
@@ -657,11 +650,10 @@ int GetCapsuleCollider3DComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<CapsuleCollider3DComponent>();
-    Push(L, c.position, count);
-    Push(L, c.mass, count);
-    Push(L, c.radius, count);
-    Push(L, c.height, count);
-
+    count += Push(L, c.position);
+    count += Push(L, c.mass);
+    count += Push(L, c.radius);
+    count += Push(L, c.height);
     return count;
 }
 
@@ -705,9 +697,8 @@ int GetScriptComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<ScriptComponent>();
-    Push(L, c.script, count);
-    Push(L, c.active, count);
-
+    count += Push(L, c.script);
+    count += Push(L, c.active);
     return count;
 }
 
@@ -747,9 +738,8 @@ int GetCameraComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<CameraComponent>();
-    Push(L, c.fov, count);
-    Push(L, c.pitch, count);
-
+    count += Push(L, c.fov);
+    count += Push(L, c.pitch);
     return count;
 }
 
@@ -789,9 +779,8 @@ int GetSelectComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<SelectComponent>();
-    Push(L, c.selected, count);
-    Push(L, c.hovered, count);
-
+    count += Push(L, c.selected);
+    count += Push(L, c.hovered);
     return count;
 }
 
@@ -831,8 +820,7 @@ int GetPathComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<PathComponent>();
-    Push(L, c.speed, count);
-
+    count += Push(L, c.speed);
     return count;
 }
 
@@ -870,9 +858,8 @@ int GetGridComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<GridComponent>();
-    Push(L, c.x, count);
-    Push(L, c.z, count);
-
+    count += Push(L, c.x);
+    count += Push(L, c.z);
     return count;
 }
 
@@ -912,10 +899,9 @@ int GetLightComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<LightComponent>();
-    Push(L, c.colour, count);
-    Push(L, c.attenuation, count);
-    Push(L, c.brightness, count);
-
+    count += Push(L, c.colour);
+    count += Push(L, c.attenuation);
+    count += Push(L, c.brightness);
     return count;
 }
 
@@ -957,13 +943,12 @@ int GetParticleComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<ParticleComponent>();
-    Push(L, c.interval, count);
-    Push(L, c.velocity, count);
-    Push(L, c.velocityNoise, count);
-    Push(L, c.acceleration, count);
-    Push(L, c.scale, count);
-    Push(L, c.life, count);
-
+    count += Push(L, c.interval);
+    count += Push(L, c.velocity);
+    count += Push(L, c.velocityNoise);
+    count += Push(L, c.acceleration);
+    count += Push(L, c.scale);
+    count += Push(L, c.life);
     return count;
 }
 
