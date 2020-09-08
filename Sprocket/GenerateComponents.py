@@ -4,15 +4,12 @@ import os.path as op
 from Datamatic import SchemaValidator
 
 from Datamatic import Gen_Loader
-from Datamatic import anvil_inspector
 
 from Datamatic import Plugin
 from Datamatic.Plugins import Lua, Inspector
 
 sprocket = op.abspath(op.dirname(__file__))
 sprocket_base = op.dirname(sprocket)
-
-#inspector = op.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
 
 with open("ComponentSpec.json") as specfile:
     spec = json.loads(specfile.read())
