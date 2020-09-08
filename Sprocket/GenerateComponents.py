@@ -12,9 +12,8 @@ from Datamatic import anvil_inspector
 sprocket = os.path.abspath(os.path.dirname(__file__))
 sprocket_base = os.path.dirname(sprocket)
 
-components_h = os.path.join(sprocket, "Scene", "Components.h")
-lua = os.path.join(sprocket, "Scripting", "Sprocket_Components.lua")
-inspector = os.path.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
+#lua = os.path.join(sprocket, "Scripting", "Sprocket_Components.lua")
+#inspector = os.path.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
 
 with open("ComponentSpec.json") as specfile:
     spec = json.loads(specfile.read())
