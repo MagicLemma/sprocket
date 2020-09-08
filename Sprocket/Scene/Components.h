@@ -77,7 +77,7 @@ struct ScriptComponent
 
 struct CameraComponent
 {
-    Maths::mat4 projection = {};
+    Maths::mat4 projection = Maths::mat4{1.0};
     float fov = 70.0f;
     float pitch = 0.0f;
 };
@@ -90,7 +90,7 @@ struct SelectComponent
 
 struct PathComponent
 {
-    std::queue<Maths::vec3> markers = {};
+    std::queue<Maths::vec3> markers = std::queue<Maths::vec3>{};
     float speed = 0.0f;
 };
 

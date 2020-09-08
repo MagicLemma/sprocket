@@ -585,7 +585,7 @@ Entities:
       rollingResistance: 1
     CapsuleCollider3DComponent:
       position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
+      orientation: [0, 0, 0, 1]
       mass: 60
       radius: 0.5
       height: 1
