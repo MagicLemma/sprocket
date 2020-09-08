@@ -1,9 +1,4 @@
 -- GENERATED FILE
-TemporaryComponent = Class(function(self, )
-end)
-
-
-
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -147,13 +142,6 @@ end
 function AddCapsuleCollider3DComponent(entity, c)
     Lua_AddCapsuleCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius, c.height)
 end
-
-
-ScriptComponent = Class(function(self, script, active)
-    self.script = script
-    self.active = active
-end)
-
 
 
 CameraComponent = Class(function(self, fov, pitch)

@@ -103,12 +103,6 @@ template <> constexpr int Dimension<std::string>() { return 1; }
 template <> constexpr int Dimension<Maths::vec3>() { return 3; }
 template <> constexpr int Dimension<Maths::quat>() { return 4; }
 
-constexpr int TemporaryComponentDimension()
-{
-    int count = 0;
-    return count;
-}
-
 constexpr int NameComponentDimension()
 {
     int count = 0;
@@ -174,14 +168,6 @@ constexpr int CapsuleCollider3DComponentDimension()
     count += Dimension<float>(); // mass
     count += Dimension<float>(); // radius
     count += Dimension<float>(); // height
-    return count;
-}
-
-constexpr int ScriptComponentDimension()
-{
-    int count = 0;
-    count += Dimension<std::string>(); // script
-    count += Dimension<bool>(); // active
     return count;
 }
 
@@ -251,11 +237,6 @@ template<typename T> int Lua_Has(lua_State* L)
 
 void RegisterComponentFunctions(lua_State* L)
 {
-    lua_register(L, "Lua_GetTemporaryComponent", &Lua::GetTemporaryComponent);
-    lua_register(L, "Lua_SetTemporaryComponent", &Lua::SetTemporaryComponent);
-    lua_register(L, "Lua_AddTemporaryComponent", &Lua::AddTemporaryComponent);
-    lua_register(L, "HasTemporaryComponent", &Lua_Has<TemporaryComponent>);
-
     lua_register(L, "Lua_GetNameComponent", &Lua::GetNameComponent);
     lua_register(L, "Lua_SetNameComponent", &Lua::SetNameComponent);
     lua_register(L, "Lua_AddNameComponent", &Lua::AddNameComponent);
@@ -291,11 +272,6 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_AddCapsuleCollider3DComponent", &Lua::AddCapsuleCollider3DComponent);
     lua_register(L, "HasCapsuleCollider3DComponent", &Lua_Has<CapsuleCollider3DComponent>);
 
-    lua_register(L, "Lua_GetScriptComponent", &Lua::GetScriptComponent);
-    lua_register(L, "Lua_SetScriptComponent", &Lua::SetScriptComponent);
-    lua_register(L, "Lua_AddScriptComponent", &Lua::AddScriptComponent);
-    lua_register(L, "HasScriptComponent", &Lua_Has<ScriptComponent>);
-
     lua_register(L, "Lua_GetCameraComponent", &Lua::GetCameraComponent);
     lua_register(L, "Lua_SetCameraComponent", &Lua::SetCameraComponent);
     lua_register(L, "Lua_AddCameraComponent", &Lua::AddCameraComponent);
@@ -329,41 +305,6 @@ void RegisterComponentFunctions(lua_State* L)
 }
 
 namespace Lua {
-
-int GetTemporaryComponent(lua_State* L)
-{
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
-    assert(e.Has<TemporaryComponent>());
-
-    int count = 0;
-    const auto& c = e.Get<TemporaryComponent>();
-    return count;
-}
-
-int SetTemporaryComponent(lua_State* L)
-{
-    if (!CheckArgCount(L, TemporaryComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
-
-    int count = 2;
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
-    auto& c = e.Get<TemporaryComponent>();
-    return 0;
-}
-
-int AddTemporaryComponent(lua_State* L)
-{
-    if (!CheckArgCount(L, TemporaryComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
-
-    int count = 2;
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
-    assert(!e.Has<TemporaryComponent>());
-
-    TemporaryComponent c;
-    e.Add(c);
-    return 0;
-}
 
 int GetNameComponent(lua_State* L)
 {
@@ -684,47 +625,6 @@ int AddCapsuleCollider3DComponent(lua_State* L)
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
     c.height = Pull<float>(L, count);
-    e.Add(c);
-    return 0;
-}
-
-int GetScriptComponent(lua_State* L)
-{
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
-    assert(e.Has<ScriptComponent>());
-
-    int count = 0;
-    const auto& c = e.Get<ScriptComponent>();
-    count += Push(L, c.script);
-    count += Push(L, c.active);
-    return count;
-}
-
-int SetScriptComponent(lua_State* L)
-{
-    if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
-
-    int count = 2;
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
-    auto& c = e.Get<ScriptComponent>();
-    c.script = Pull<std::string>(L, count);
-    c.active = Pull<bool>(L, count);
-    return 0;
-}
-
-int AddScriptComponent(lua_State* L)
-{
-    if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
-
-    int count = 2;
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
-    assert(!e.Has<ScriptComponent>());
-
-    ScriptComponent c;
-    c.script = Pull<std::string>(L, count);
-    c.active = Pull<bool>(L, count);
     e.Add(c);
     return 0;
 }
