@@ -1,10 +1,9 @@
 import json
 import os.path as op
+from pathlib import Path
 
 from Datamatic import SchemaValidator
-
 from Datamatic import Gen_Loader
-
 from Datamatic import Plugin
 from Datamatic.Plugins import Lua, Inspector
 
@@ -16,26 +15,7 @@ with open("ComponentSpec.json") as specfile:
 
 SchemaValidator.validate(spec)
 
-components_h_src = op.join(sprocket, "Scene", "Components.dm.h")
-components_h_dst = op.join(sprocket, "Scene", "Components.h")
-Gen_Loader.generate(spec, components_h_src, components_h_dst)
+for file in Path(sprocket_base).glob("**/*.dm.*"):
+    Gen_Loader.generate(spec, str(file))
 
-loader_src = op.join(sprocket, "Scene", "Loader.dm.cpp")
-loader_dst = op.join(sprocket, "Scene", "Loader.cpp")
-Gen_Loader.generate(spec, loader_src, loader_dst)
-
-script_h_src = op.join(sprocket, "Scripting", "LuaComponents.dm.h")
-script_h_dst = op.join(sprocket, "Scripting", "LuaComponents.h")
-Gen_Loader.generate(spec, script_h_src, script_h_dst)
-
-script_cpp_src = op.join(sprocket, "Scripting", "LuaComponents.dm.cpp")
-script_cpp_dst = op.join(sprocket, "Scripting", "LuaComponents.cpp")
-Gen_Loader.generate(spec, script_cpp_src, script_cpp_dst)
-
-script_lua_src = op.join(sprocket, "Scripting", "Sprocket_Components.dm.lua")
-script_lua_dst = op.join(sprocket, "Scripting", "Sprocket_Components.lua")
-Gen_Loader.generate(spec, script_lua_src, script_lua_dst)
-
-anvil_inspector_src = op.join(sprocket_base, "Anvil", "Panels", "Inspector.dm.cpp")
-anvil_inspector_dst = op.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
-Gen_Loader.generate(spec, anvil_inspector_src, anvil_inspector_dst)
+print("Done!")
