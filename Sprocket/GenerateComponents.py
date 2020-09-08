@@ -1,31 +1,18 @@
 import json
-import os
 import os.path as op
 
 from Datamatic import SchemaValidator
 
-from Datamatic import definitions
 from Datamatic import Gen_Loader
-from Datamatic import lua_bindings
 from Datamatic import anvil_inspector
 
 from Datamatic import Plugin
+from Datamatic.Plugins import Lua
 
-sprocket = os.path.abspath(os.path.dirname(__file__))
-sprocket_base = os.path.dirname(sprocket)
+sprocket = op.abspath(op.dirname(__file__))
+sprocket_base = op.dirname(sprocket)
 
-#lua = os.path.join(sprocket, "Scripting", "Sprocket_Components.lua")
-#inspector = os.path.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
-
-class Lua(Plugin.Plugin):
-    
-    @staticmethod
-    def Sig(comp):
-        return ", ".join(attr['Name'] for attr in comp['Attributes'])
-
-    @staticmethod
-    def Impl(comp):
-        return "IMPL"
+#inspector = op.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
 
 with open("ComponentSpec.json") as specfile:
     spec = json.loads(specfile.read())
