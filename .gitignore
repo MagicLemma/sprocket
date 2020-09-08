@@ -1,4 +1,4 @@
 build
 imgui.ini
-Resrouces/*.yaml
-Sprocket/Entities/__pycache__
+Sprocket/Datamatic/Plugins/__pycache__
+Sprocket/Datamatic/__pycache__
