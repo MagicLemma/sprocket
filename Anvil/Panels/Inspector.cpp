@@ -1,5 +1,4 @@
-// GENERATED FILE @ 2020-09-03 23:34:27.448667
-
+// GENERATED FILE
 #include "Inspector.h"
 #include "EditorLayer.h"
 #include "ImGuiXtra.h"
@@ -10,6 +9,29 @@
 #include <imgui.h>
 
 namespace Sprocket {
+namespace {
+
+void ShowGuizmo(
+    EditorLayer& editor,
+    TransformComponent& c,
+    DevUI::GizmoMode mode,
+    DevUI::GizmoCoords coords)
+{
+    if (!editor.IsGameRunning()) {
+        auto& camera = editor.GetEditorCamera();
+        auto tr = Maths::Transform(c.position, c.orientation, c.scale);
+        ImGuizmo::Manipulate(
+            Maths::Cast(camera.View()),
+            Maths::Cast(camera.Proj()),
+            GetMode(mode),
+            GetCoords(coords),
+            Maths::Cast(tr)
+        );
+        Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
+    }
+}
+
+}
 
 void ShowInspector(EditorLayer& editor)
 {
@@ -22,27 +44,37 @@ void ShowInspector(EditorLayer& editor)
         }
         return;
     }
+    int count = 0;
 
     static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
     static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
-    if (entity.Has<TemporaryComponent>() && ImGui::CollapsingHeader("Temporary")) {
-        ImGui::PushID(0);
+    if (entity.Has<TemporaryComponent>()) {
         auto& c = entity.Get<TemporaryComponent>();
-        if (ImGui::Button("Delete")) { entity.Remove<TemporaryComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Temporary")) {
+            ImGui::PushID(count++);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<TemporaryComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<NameComponent>() && ImGui::CollapsingHeader("Name")) {
-        ImGui::PushID(1);
+
+    if (entity.Has<NameComponent>()) {
         auto& c = entity.Get<NameComponent>();
-        ImGuiXtra::TextModifiable(c.name);
-        if (ImGui::Button("Delete")) { entity.Remove<NameComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Name")) {
+            ImGui::PushID(count++);
+            ImGuiXtra::TextModifiable(c.name);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<NameComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
 
     if (entity.Has<TransformComponent>()) {
         auto& c = entity.Get<TransformComponent>();
         if (ImGui::CollapsingHeader("Transform")) {
-            ImGui::PushID(1000000);
+            ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
@@ -50,136 +82,188 @@ void ShowInspector(EditorLayer& editor)
             if (ImGui::Button("Delete")) { entity.Remove<TransformComponent>(); }
             ImGui::PopID();
         }
+        ShowGuizmo(editor, c, mode, coords);
+    }
 
-        if (!editor.IsGameRunning()) {
-            auto& camera = editor.GetEditorCamera();
-            auto tr = Maths::Transform(c.position, c.orientation, c.scale);
-            ImGuizmo::Manipulate(
-                Maths::Cast(camera.View()),
-                Maths::Cast(camera.Proj()),
-                GetMode(mode),
-                GetCoords(coords),
-                Maths::Cast(tr)
-            );
-            Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
-        }
-    }
-    if (entity.Has<ModelComponent>() && ImGui::CollapsingHeader("Model")) {
-        ImGui::PushID(3);
+    if (entity.Has<ModelComponent>()) {
         auto& c = entity.Get<ModelComponent>();
-        ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.obj");
-        ImGuiXtra::File("Texture", editor.GetWindow(), &c.texture, "*.png");
-        ImGui::DragFloat("Shine Damper", &c.shineDamper, 0.1f);
-        ImGui::DragFloat("Reflectivity", &c.reflectivity, 0.1f);
-        if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Model")) {
+            ImGui::PushID(count++);
+            ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.obj");
+            ImGuiXtra::File("Texture", editor.GetWindow(), &c.texture, "*.png");
+            ImGui::DragFloat("Shine Damper", &c.shineDamper, 0.1f);
+            ImGui::DragFloat("Reflectivity", &c.reflectivity, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<RigidBody3DComponent>() && ImGui::CollapsingHeader("Rigid Body 3D")) {
-        ImGui::PushID(4);
+
+    if (entity.Has<RigidBody3DComponent>()) {
         auto& c = entity.Get<RigidBody3DComponent>();
-        ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
-        ImGui::Checkbox("Gravity", &c.gravity);
-        ImGui::Checkbox("Frozen", &c.frozen);
-        ImGui::SliderFloat("Bounciness", &c.bounciness, 0.0f, 1.0f);
-        ImGui::SliderFloat("Friction Coefficient", &c.frictionCoefficient, 0.0f, 1.0f);
-        ImGui::SliderFloat("Rolling Resistance", &c.rollingResistance, 0.0f, 1.0f);
-        ImGui::DragFloat3("Force", &c.force.x, 0.1f);
-        ImGui::Checkbox("OnFloor", &c.onFloor);
-        if (ImGui::Button("Delete")) { entity.Remove<RigidBody3DComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Rigid Body 3D")) {
+            ImGui::PushID(count++);
+            ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
+            ImGui::Checkbox("Gravity", &c.gravity);
+            ImGui::Checkbox("Frozen", &c.frozen);
+            ImGui::SliderFloat("Bounciness", &c.bounciness, 0.0f, 1.0f);
+            ImGui::SliderFloat("Friction Coefficient", &c.frictionCoefficient, 0.0f, 1.0f);
+            ImGui::SliderFloat("Rolling Resistance", &c.rollingResistance, 0.0f, 1.0f);
+            ImGui::DragFloat3("Force", &c.force.x, 0.1f);
+            ImGui::Checkbox("OnFloor", &c.onFloor);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<RigidBody3DComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<BoxCollider3DComponent>() && ImGui::CollapsingHeader("Box Collider 3D")) {
-        ImGui::PushID(5);
+
+    if (entity.Has<BoxCollider3DComponent>()) {
         auto& c = entity.Get<BoxCollider3DComponent>();
-        ImGui::DragFloat3("Position", &c.position.x, 0.1f);
-        ImGuiXtra::Euler("Orientation", &c.orientation);
-        ImGui::DragFloat("Mass", &c.mass, 0.1f);
-        ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.1f);
-        ImGui::Checkbox("Apply Scale", &c.applyScale);
-        if (ImGui::Button("Delete")) { entity.Remove<BoxCollider3DComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Box Collider 3D")) {
+            ImGui::PushID(count++);
+            ImGui::DragFloat3("Position", &c.position.x, 0.1f);
+            ImGuiXtra::Euler("Orientation", &c.orientation);
+            ImGui::DragFloat("Mass", &c.mass, 0.1f);
+            ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.1f);
+            ImGui::Checkbox("Apply Scale", &c.applyScale);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<BoxCollider3DComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<SphereCollider3DComponent>() && ImGui::CollapsingHeader("Sphere Collider 3D")) {
-        ImGui::PushID(6);
+
+    if (entity.Has<SphereCollider3DComponent>()) {
         auto& c = entity.Get<SphereCollider3DComponent>();
-        ImGui::DragFloat3("Position", &c.position.x, 0.1f);
-        ImGuiXtra::Euler("Orientation", &c.orientation);
-        ImGui::DragFloat("Mass", &c.mass, 0.1f);
-        ImGui::DragFloat("Radius", &c.radius, 0.1f);
-        if (ImGui::Button("Delete")) { entity.Remove<SphereCollider3DComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Sphere Collider 3D")) {
+            ImGui::PushID(count++);
+            ImGui::DragFloat3("Position", &c.position.x, 0.1f);
+            ImGuiXtra::Euler("Orientation", &c.orientation);
+            ImGui::DragFloat("Mass", &c.mass, 0.1f);
+            ImGui::DragFloat("Radius", &c.radius, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<SphereCollider3DComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<CapsuleCollider3DComponent>() && ImGui::CollapsingHeader("Capsule Collider 3D")) {
-        ImGui::PushID(7);
+
+    if (entity.Has<CapsuleCollider3DComponent>()) {
         auto& c = entity.Get<CapsuleCollider3DComponent>();
-        ImGui::DragFloat3("Position", &c.position.x, 0.1f);
-        ImGuiXtra::Euler("Orientation", &c.orientation);
-        ImGui::DragFloat("Mass", &c.mass, 0.1f);
-        ImGui::DragFloat("Radius", &c.radius, 0.1f);
-        ImGui::DragFloat("Height", &c.height, 0.1f);
-        if (ImGui::Button("Delete")) { entity.Remove<CapsuleCollider3DComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Capsule Collider 3D")) {
+            ImGui::PushID(count++);
+            ImGui::DragFloat3("Position", &c.position.x, 0.1f);
+            ImGuiXtra::Euler("Orientation", &c.orientation);
+            ImGui::DragFloat("Mass", &c.mass, 0.1f);
+            ImGui::DragFloat("Radius", &c.radius, 0.1f);
+            ImGui::DragFloat("Height", &c.height, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<CapsuleCollider3DComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<ScriptComponent>() && ImGui::CollapsingHeader("Script")) {
-        ImGui::PushID(8);
+
+    if (entity.Has<ScriptComponent>()) {
         auto& c = entity.Get<ScriptComponent>();
-        ImGuiXtra::File("Script", editor.GetWindow(), &c.script, "*.lua");
-        ImGui::Checkbox("Active", &c.active);
-        if (ImGui::Button("Delete")) { entity.Remove<ScriptComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Script")) {
+            ImGui::PushID(count++);
+            ImGuiXtra::File("Script", editor.GetWindow(), &c.script, "*.lua");
+            ImGui::Checkbox("Active", &c.active);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<ScriptComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<CameraComponent>() && ImGui::CollapsingHeader("Camera")) {
-        ImGui::PushID(9);
+
+    if (entity.Has<CameraComponent>()) {
         auto& c = entity.Get<CameraComponent>();
-        ImGui::DragFloat("FOV", &c.fov, 0.1f);
-        ImGui::DragFloat("Pitch", &c.pitch, 0.1f);
-        if (ImGui::Button("Delete")) { entity.Remove<CameraComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Camera")) {
+            ImGui::PushID(count++);
+            ;
+            ImGui::DragFloat("FOV", &c.fov, 0.1f);
+            ImGui::DragFloat("Pitch", &c.pitch, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<CameraComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<SelectComponent>() && ImGui::CollapsingHeader("Select")) {
-        ImGui::PushID(10);
+
+    if (entity.Has<SelectComponent>()) {
         auto& c = entity.Get<SelectComponent>();
-        ImGui::Checkbox("Selected", &c.selected);
-        ImGui::Checkbox("Hovered", &c.hovered);
-        if (ImGui::Button("Delete")) { entity.Remove<SelectComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Select")) {
+            ImGui::PushID(count++);
+            ImGui::Checkbox("Selected", &c.selected);
+            ImGui::Checkbox("Hovered", &c.hovered);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<SelectComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<PathComponent>() && ImGui::CollapsingHeader("Path")) {
-        ImGui::PushID(11);
+
+    if (entity.Has<PathComponent>()) {
         auto& c = entity.Get<PathComponent>();
-        ImGui::DragFloat("Speed", &c.speed, 0.1f);
-        if (ImGui::Button("Delete")) { entity.Remove<PathComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Path")) {
+            ImGui::PushID(count++);
+            ;
+            ImGui::DragFloat("Speed", &c.speed, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<PathComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<GridComponent>() && ImGui::CollapsingHeader("Grid")) {
-        ImGui::PushID(12);
+
+    if (entity.Has<GridComponent>()) {
         auto& c = entity.Get<GridComponent>();
-        if (ImGui::Button("Delete")) { entity.Remove<GridComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Grid")) {
+            ImGui::PushID(count++);
+            ;
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.Remove<GridComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<LightComponent>() && ImGui::CollapsingHeader("Light")) {
-        ImGui::PushID(13);
+
+    if (entity.Has<LightComponent>()) {
         auto& c = entity.Get<LightComponent>();
-        ImGui::ColorPicker3("Colour", &c.colour.r);
-        ImGui::DragFloat3("Attenuation", &c.attenuation.x, 0.1f);
-        ImGui::DragFloat("Brightness", &c.brightness, 0.1f);
-        if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Light")) {
+            ImGui::PushID(count++);
+            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::DragFloat3("Attenuation", &c.attenuation.x, 0.1f);
+            ImGui::DragFloat("Brightness", &c.brightness, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
-    if (entity.Has<ParticleComponent>() && ImGui::CollapsingHeader("Particle")) {
-        ImGui::PushID(14);
+
+    if (entity.Has<ParticleComponent>()) {
         auto& c = entity.Get<ParticleComponent>();
-        ImGui::DragFloat("Interval", &c.interval, 0.1f);
-        ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
-        ImGui::DragFloat("Velocity Noise", &c.velocityNoise, 0.1f);
-        ImGui::DragFloat3("Acceleration", &c.acceleration.x, 0.1f);
-        ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
-        ImGui::DragFloat("Life", &c.life, 0.1f);
-        ImGui::DragFloat("Accumulator", &c.accumulator, 0.1f);
-        if (ImGui::Button("Delete")) { entity.Remove<ParticleComponent>(); }
-        ImGui::PopID();
+        if (ImGui::CollapsingHeader("Particle")) {
+            ImGui::PushID(count++);
+            ImGui::DragFloat("Interval", &c.interval, 0.1f);
+            ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
+            ImGui::DragFloat("Velocity Noise", &c.velocityNoise, 0.1f);
+            ImGui::DragFloat3("Acceleration", &c.acceleration.x, 0.1f);
+            ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
+            ImGui::DragFloat("Life", &c.life, 0.1f);
+            ImGui::DragFloat("Accumulator", &c.accumulator, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<ParticleComponent>(); }
+            ImGui::PopID();
+        }
+        
     }
- 
+
     ImGui::Separator();
 
     if (ImGui::BeginMenu("Add Component")) {
@@ -243,7 +327,6 @@ void ShowInspector(EditorLayer& editor)
             ParticleComponent c;
             entity.Add(c);
         }
-
         ImGui::EndMenu();
     }
     ImGui::Separator();
@@ -256,5 +339,5 @@ void ShowInspector(EditorLayer& editor)
         editor.ClearSelected();
     }
 }
-    
+
 }

@@ -7,7 +7,7 @@ from Datamatic import Gen_Loader
 from Datamatic import anvil_inspector
 
 from Datamatic import Plugin
-from Datamatic.Plugins import Lua
+from Datamatic.Plugins import Lua, Inspector
 
 sprocket = op.abspath(op.dirname(__file__))
 sprocket_base = op.dirname(sprocket)
@@ -38,3 +38,7 @@ Gen_Loader.generate(spec, script_cpp_src, script_cpp_dst)
 script_lua_src = op.join(sprocket, "Scripting", "Sprocket_Components.dm.lua")
 script_lua_dst = op.join(sprocket, "Scripting", "Sprocket_Components.lua")
 Gen_Loader.generate(spec, script_lua_src, script_lua_dst)
+
+anvil_inspector_src = op.join(sprocket_base, "Anvil", "Panels", "Inspector.dm.cpp")
+anvil_inspector_dst = op.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
+Gen_Loader.generate(spec, anvil_inspector_src, anvil_inspector_dst)
