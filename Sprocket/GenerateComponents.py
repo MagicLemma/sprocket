@@ -9,11 +9,23 @@ from Datamatic import Gen_Loader
 from Datamatic import lua_bindings
 from Datamatic import anvil_inspector
 
+from Datamatic import Plugin
+
 sprocket = os.path.abspath(os.path.dirname(__file__))
 sprocket_base = os.path.dirname(sprocket)
 
 #lua = os.path.join(sprocket, "Scripting", "Sprocket_Components.lua")
 #inspector = os.path.join(sprocket_base, "Anvil", "Panels", "Inspector.cpp")
+
+class Lua(Plugin.Plugin):
+    
+    @staticmethod
+    def Sig(comp):
+        return ", ".join(attr['Name'] for attr in comp['Attributes'])
+
+    @staticmethod
+    def Impl(comp):
+        return "IMPL"
 
 with open("ComponentSpec.json") as specfile:
     spec = json.loads(specfile.read())
@@ -35,3 +47,7 @@ Gen_Loader.generate(spec, script_h_src, script_h_dst)
 script_cpp_src = op.join(sprocket, "Scripting", "LuaComponents.dm.cpp")
 script_cpp_dst = op.join(sprocket, "Scripting", "LuaComponents.cpp")
 Gen_Loader.generate(spec, script_cpp_src, script_cpp_dst)
+
+script_lua_src = op.join(sprocket, "Scripting", "Sprocket_Components.dm.lua")
+script_lua_dst = op.join(sprocket, "Scripting", "Sprocket_Components.lua")
+Gen_Loader.generate(spec, script_lua_src, script_lua_dst)
