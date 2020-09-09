@@ -89,8 +89,8 @@ void ShowInspector(EditorLayer& editor)
         auto& c = entity.Get<ModelComponent>();
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.obj");
-            ImGuiXtra::File("Texture", editor.GetWindow(), &c.texture, "*.png");
+            ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "{'Subtype': 'File', 'Filter': '*.obj'}");
+            ImGuiXtra::File("Texture", editor.GetWindow(), &c.texture, "{'Subtype': 'File', 'Filter': '*.png'}");
             ImGui::DragFloat("Shine Damper", &c.shineDamper, 0.1f);
             ImGui::DragFloat("Reflectivity", &c.reflectivity, 0.1f);
             
@@ -170,7 +170,7 @@ void ShowInspector(EditorLayer& editor)
         auto& c = entity.Get<ScriptComponent>();
         if (ImGui::CollapsingHeader("Script")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Script", editor.GetWindow(), &c.script, "*.lua");
+            ImGuiXtra::File("Script", editor.GetWindow(), &c.script, "{'Subtype': 'File', 'Filter': '*.lua'}");
             ImGui::Checkbox("Active", &c.active);
             
             if (ImGui::Button("Delete")) { entity.Remove<ScriptComponent>(); }

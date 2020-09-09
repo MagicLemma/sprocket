@@ -53,16 +53,20 @@
                     "DisplayName": "Model",
                     "Type": "std::string",
                     "Default": "",
-                    "Subtype": "File",
-                    "Data": "*.obj"
+                    "Data": {
+                        "Subtype": "File",
+                        "Filter": "*.obj"
+                    }
                 },
                 {
                     "Name": "texture",
                     "DisplayName": "Texture",
                     "Type": "std::string",
                     "Default": "",
-                    "Subtype": "File",
-                    "Data": "*.png"
+                    "Data": {
+                        "Subtype": "File",
+                        "Filter": "*.png"
+                    }
                 },
                 {
                     "Name": "shineDamper",
@@ -105,21 +109,27 @@
                     "DisplayName": "Bounciness",
                     "Type": "float",
                     "Default": 0.5,
-                    "Limits": [0.0, 1.0]
+                    "Data": {
+                        "Limits": [0.0, 1.0]
+                    }
                 },
                 {
                     "Name": "frictionCoefficient",
                     "DisplayName": "Friction Coefficient",
                     "Type": "float",
                     "Default": 0.3,
-                    "Limits": [0.0, 1.0]
+                    "Data": {
+                        "Limits": [0.0, 1.0]
+                    }
                 },
                 {
                     "Name": "rollingResistance",
                     "DisplayName": "Rolling Resistance",
                     "Type": "float",
                     "Default": 0.0,
-                    "Limits": [0.0, 1.0]
+                    "Data": {
+                        "Limits": [0.0, 1.0]
+                    }
                 },
                 {
                     "Name": "force",
@@ -252,8 +262,10 @@
                     "DisplayName": "Script",
                     "Type": "std::string",
                     "Default": "",
-                    "Subtype": "File",
-                    "Data": "*.lua"
+                    "Data": {
+                        "Subtype": "File",
+                        "Filter": "*.lua"
+                    }
                 },
                 {
                     "Name": "active",
@@ -355,8 +367,10 @@
                     "Name": "colour",
                     "DisplayName": "Colour",
                     "Type": "Maths::vec3",
-                    "Subtype": "Colour",
-                    "Default": [1.0, 1.0, 1.0]
+                    "Default": [1.0, 1.0, 1.0],
+                    "Data": {
+                        "Subtype": "Colour"
+                    }
                 },
                 {
                     "Name": "attenuation",
