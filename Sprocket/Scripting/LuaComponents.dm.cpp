@@ -45,46 +45,46 @@ int Push(lua_State* L, const Maths::vec3& value)
 }
 
 // PULL
-template <typename T> T Pull(lua_State* L, int count)
+template <typename T> T Pull(lua_State* L, int& count)
 {
     static_assert(sizeof(T) == -1);
     return T();
 }
 
-template <> int Pull(lua_State* L, int count)
+template <> int Pull(lua_State* L, int& count)
 {
-    return (int)lua_tonumber(L, count);
+    return (int)lua_tonumber(L, count++);
 }
 
-template <> float Pull(lua_State* L, int count)
+template <> float Pull(lua_State* L, int& count)
 {
-    return (float)lua_tonumber(L, count);
+    return (float)lua_tonumber(L, count++);
 }
 
-template <> std::string Pull(lua_State* L, int count)
+template <> std::string Pull(lua_State* L, int& count)
 {
-    return std::string(lua_tostring(L, count));
+    return std::string(lua_tostring(L, count++));
 }
 
-template <> bool Pull(lua_State* L, int count)
+template <> bool Pull(lua_State* L, int& count)
 {
-    return (bool)lua_toboolean(L, count);
+    return (bool)lua_toboolean(L, count++);
 }
 
-template <> Maths::vec3 Pull(lua_State* L, int count)
+template <> Maths::vec3 Pull(lua_State* L, int& count)
 {
-    float x = (float)lua_tonumber(L, count);
-    float y = (float)lua_tonumber(L, count);
-    float z = (float)lua_tonumber(L, count);
+    float x = (float)lua_tonumber(L, count++);
+    float y = (float)lua_tonumber(L, count++);
+    float z = (float)lua_tonumber(L, count++);
     return {x, y, z};
 }
 
-template <> Maths::quat Pull(lua_State* L, int count)
+template <> Maths::quat Pull(lua_State* L, int& count)
 {
-    float x = (float)lua_tonumber(L, count);
-    float y = (float)lua_tonumber(L, count);
-    float z = (float)lua_tonumber(L, count);
-    float w = (float)lua_tonumber(L, count);
+    float x = (float)lua_tonumber(L, count++);
+    float y = (float)lua_tonumber(L, count++);
+    float z = (float)lua_tonumber(L, count++);
+    float w = (float)lua_tonumber(L, count++);
     return {x, y, z, w};
 }
 
@@ -157,7 +157,7 @@ int Set{{Comp.Name}}(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<{{Comp.Name}}>();
-    c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count++);
+    c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
     return 0;
 }
 
@@ -170,7 +170,7 @@ int Add{{Comp.Name}}(lua_State* L)
     assert(!e.Has<{{Comp.Name}}>());
 
     {{Comp.Name}} c;
-    c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count++);
+    c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
     e.Add(c);
     return 0;
 }
