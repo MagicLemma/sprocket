@@ -46,46 +46,46 @@ int Push(lua_State* L, const Maths::vec3& value)
 }
 
 // PULL
-template <typename T> T Pull(lua_State* L, int& count)
+template <typename T> T Pull(lua_State* L, int count)
 {
     static_assert(sizeof(T) == -1);
     return T();
 }
 
-template <> int Pull(lua_State* L, int& count)
+template <> int Pull(lua_State* L, int count)
 {
-    return (int)lua_tonumber(L, count++);
+    return (int)lua_tonumber(L, count);
 }
 
-template <> float Pull(lua_State* L, int& count)
+template <> float Pull(lua_State* L, int count)
 {
-    return (float)lua_tonumber(L, count++);
+    return (float)lua_tonumber(L, count);
 }
 
-template <> std::string Pull(lua_State* L, int& count)
+template <> std::string Pull(lua_State* L, int count)
 {
-    return std::string(lua_tostring(L, count++));
+    return std::string(lua_tostring(L, count));
 }
 
-template <> bool Pull(lua_State* L, int& count)
+template <> bool Pull(lua_State* L, int count)
 {
-    return (bool)lua_toboolean(L, count++);
+    return (bool)lua_toboolean(L, count);
 }
 
-template <> Maths::vec3 Pull(lua_State* L, int& count)
+template <> Maths::vec3 Pull(lua_State* L, int count)
 {
-    float x = (float)lua_tonumber(L, count++);
-    float y = (float)lua_tonumber(L, count++);
-    float z = (float)lua_tonumber(L, count++);
+    float x = (float)lua_tonumber(L, count);
+    float y = (float)lua_tonumber(L, count);
+    float z = (float)lua_tonumber(L, count);
     return {x, y, z};
 }
 
-template <> Maths::quat Pull(lua_State* L, int& count)
+template <> Maths::quat Pull(lua_State* L, int count)
 {
-    float x = (float)lua_tonumber(L, count++);
-    float y = (float)lua_tonumber(L, count++);
-    float z = (float)lua_tonumber(L, count++);
-    float w = (float)lua_tonumber(L, count++);
+    float x = (float)lua_tonumber(L, count);
+    float y = (float)lua_tonumber(L, count);
+    float z = (float)lua_tonumber(L, count);
+    float w = (float)lua_tonumber(L, count);
     return {x, y, z, w};
 }
 
@@ -326,7 +326,7 @@ int SetNameComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<NameComponent>();
-    c.name = Pull<std::string>(L, count);
+    c.name = Pull<std::string>(L, count++);
     return 0;
 }
 
@@ -339,7 +339,7 @@ int AddNameComponent(lua_State* L)
     assert(!e.Has<NameComponent>());
 
     NameComponent c;
-    c.name = Pull<std::string>(L, count);
+    c.name = Pull<std::string>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -365,8 +365,8 @@ int SetTransformComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<TransformComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.scale = Pull<Maths::vec3>(L, count++);
     return 0;
 }
 
@@ -379,8 +379,8 @@ int AddTransformComponent(lua_State* L)
     assert(!e.Has<TransformComponent>());
 
     TransformComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.scale = Pull<Maths::vec3>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -408,10 +408,10 @@ int SetModelComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ModelComponent>();
-    c.model = Pull<std::string>(L, count);
-    c.texture = Pull<std::string>(L, count);
-    c.shineDamper = Pull<float>(L, count);
-    c.reflectivity = Pull<float>(L, count);
+    c.model = Pull<std::string>(L, count++);
+    c.texture = Pull<std::string>(L, count++);
+    c.shineDamper = Pull<float>(L, count++);
+    c.reflectivity = Pull<float>(L, count++);
     return 0;
 }
 
@@ -424,10 +424,10 @@ int AddModelComponent(lua_State* L)
     assert(!e.Has<ModelComponent>());
 
     ModelComponent c;
-    c.model = Pull<std::string>(L, count);
-    c.texture = Pull<std::string>(L, count);
-    c.shineDamper = Pull<float>(L, count);
-    c.reflectivity = Pull<float>(L, count);
+    c.model = Pull<std::string>(L, count++);
+    c.texture = Pull<std::string>(L, count++);
+    c.shineDamper = Pull<float>(L, count++);
+    c.reflectivity = Pull<float>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -459,14 +459,14 @@ int SetRigidBody3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<RigidBody3DComponent>();
-    c.velocity = Pull<Maths::vec3>(L, count);
-    c.gravity = Pull<bool>(L, count);
-    c.frozen = Pull<bool>(L, count);
-    c.bounciness = Pull<float>(L, count);
-    c.frictionCoefficient = Pull<float>(L, count);
-    c.rollingResistance = Pull<float>(L, count);
-    c.force = Pull<Maths::vec3>(L, count);
-    c.onFloor = Pull<bool>(L, count);
+    c.velocity = Pull<Maths::vec3>(L, count++);
+    c.gravity = Pull<bool>(L, count++);
+    c.frozen = Pull<bool>(L, count++);
+    c.bounciness = Pull<float>(L, count++);
+    c.frictionCoefficient = Pull<float>(L, count++);
+    c.rollingResistance = Pull<float>(L, count++);
+    c.force = Pull<Maths::vec3>(L, count++);
+    c.onFloor = Pull<bool>(L, count++);
     return 0;
 }
 
@@ -479,14 +479,14 @@ int AddRigidBody3DComponent(lua_State* L)
     assert(!e.Has<RigidBody3DComponent>());
 
     RigidBody3DComponent c;
-    c.velocity = Pull<Maths::vec3>(L, count);
-    c.gravity = Pull<bool>(L, count);
-    c.frozen = Pull<bool>(L, count);
-    c.bounciness = Pull<float>(L, count);
-    c.frictionCoefficient = Pull<float>(L, count);
-    c.rollingResistance = Pull<float>(L, count);
-    c.force = Pull<Maths::vec3>(L, count);
-    c.onFloor = Pull<bool>(L, count);
+    c.velocity = Pull<Maths::vec3>(L, count++);
+    c.gravity = Pull<bool>(L, count++);
+    c.frozen = Pull<bool>(L, count++);
+    c.bounciness = Pull<float>(L, count++);
+    c.frictionCoefficient = Pull<float>(L, count++);
+    c.rollingResistance = Pull<float>(L, count++);
+    c.force = Pull<Maths::vec3>(L, count++);
+    c.onFloor = Pull<bool>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -514,10 +514,10 @@ int SetBoxCollider3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<BoxCollider3DComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
-    c.mass = Pull<float>(L, count);
-    c.halfExtents = Pull<Maths::vec3>(L, count);
-    c.applyScale = Pull<bool>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.mass = Pull<float>(L, count++);
+    c.halfExtents = Pull<Maths::vec3>(L, count++);
+    c.applyScale = Pull<bool>(L, count++);
     return 0;
 }
 
@@ -530,10 +530,10 @@ int AddBoxCollider3DComponent(lua_State* L)
     assert(!e.Has<BoxCollider3DComponent>());
 
     BoxCollider3DComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
-    c.mass = Pull<float>(L, count);
-    c.halfExtents = Pull<Maths::vec3>(L, count);
-    c.applyScale = Pull<bool>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.mass = Pull<float>(L, count++);
+    c.halfExtents = Pull<Maths::vec3>(L, count++);
+    c.applyScale = Pull<bool>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -560,9 +560,9 @@ int SetSphereCollider3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<SphereCollider3DComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
-    c.mass = Pull<float>(L, count);
-    c.radius = Pull<float>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.mass = Pull<float>(L, count++);
+    c.radius = Pull<float>(L, count++);
     return 0;
 }
 
@@ -575,9 +575,9 @@ int AddSphereCollider3DComponent(lua_State* L)
     assert(!e.Has<SphereCollider3DComponent>());
 
     SphereCollider3DComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
-    c.mass = Pull<float>(L, count);
-    c.radius = Pull<float>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.mass = Pull<float>(L, count++);
+    c.radius = Pull<float>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -605,10 +605,10 @@ int SetCapsuleCollider3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<CapsuleCollider3DComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
-    c.mass = Pull<float>(L, count);
-    c.radius = Pull<float>(L, count);
-    c.height = Pull<float>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.mass = Pull<float>(L, count++);
+    c.radius = Pull<float>(L, count++);
+    c.height = Pull<float>(L, count++);
     return 0;
 }
 
@@ -621,10 +621,10 @@ int AddCapsuleCollider3DComponent(lua_State* L)
     assert(!e.Has<CapsuleCollider3DComponent>());
 
     CapsuleCollider3DComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
-    c.mass = Pull<float>(L, count);
-    c.radius = Pull<float>(L, count);
-    c.height = Pull<float>(L, count);
+    c.position = Pull<Maths::vec3>(L, count++);
+    c.mass = Pull<float>(L, count++);
+    c.radius = Pull<float>(L, count++);
+    c.height = Pull<float>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -650,8 +650,8 @@ int SetCameraComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<CameraComponent>();
-    c.fov = Pull<float>(L, count);
-    c.pitch = Pull<float>(L, count);
+    c.fov = Pull<float>(L, count++);
+    c.pitch = Pull<float>(L, count++);
     return 0;
 }
 
@@ -664,8 +664,8 @@ int AddCameraComponent(lua_State* L)
     assert(!e.Has<CameraComponent>());
 
     CameraComponent c;
-    c.fov = Pull<float>(L, count);
-    c.pitch = Pull<float>(L, count);
+    c.fov = Pull<float>(L, count++);
+    c.pitch = Pull<float>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -691,8 +691,8 @@ int SetSelectComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<SelectComponent>();
-    c.selected = Pull<bool>(L, count);
-    c.hovered = Pull<bool>(L, count);
+    c.selected = Pull<bool>(L, count++);
+    c.hovered = Pull<bool>(L, count++);
     return 0;
 }
 
@@ -705,8 +705,8 @@ int AddSelectComponent(lua_State* L)
     assert(!e.Has<SelectComponent>());
 
     SelectComponent c;
-    c.selected = Pull<bool>(L, count);
-    c.hovered = Pull<bool>(L, count);
+    c.selected = Pull<bool>(L, count++);
+    c.hovered = Pull<bool>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -731,7 +731,7 @@ int SetPathComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<PathComponent>();
-    c.speed = Pull<float>(L, count);
+    c.speed = Pull<float>(L, count++);
     return 0;
 }
 
@@ -744,7 +744,7 @@ int AddPathComponent(lua_State* L)
     assert(!e.Has<PathComponent>());
 
     PathComponent c;
-    c.speed = Pull<float>(L, count);
+    c.speed = Pull<float>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -770,8 +770,8 @@ int SetGridComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<GridComponent>();
-    c.x = Pull<int>(L, count);
-    c.z = Pull<int>(L, count);
+    c.x = Pull<int>(L, count++);
+    c.z = Pull<int>(L, count++);
     return 0;
 }
 
@@ -784,8 +784,8 @@ int AddGridComponent(lua_State* L)
     assert(!e.Has<GridComponent>());
 
     GridComponent c;
-    c.x = Pull<int>(L, count);
-    c.z = Pull<int>(L, count);
+    c.x = Pull<int>(L, count++);
+    c.z = Pull<int>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -812,9 +812,9 @@ int SetLightComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<LightComponent>();
-    c.colour = Pull<Maths::vec3>(L, count);
-    c.attenuation = Pull<Maths::vec3>(L, count);
-    c.brightness = Pull<float>(L, count);
+    c.colour = Pull<Maths::vec3>(L, count++);
+    c.attenuation = Pull<Maths::vec3>(L, count++);
+    c.brightness = Pull<float>(L, count++);
     return 0;
 }
 
@@ -827,9 +827,9 @@ int AddLightComponent(lua_State* L)
     assert(!e.Has<LightComponent>());
 
     LightComponent c;
-    c.colour = Pull<Maths::vec3>(L, count);
-    c.attenuation = Pull<Maths::vec3>(L, count);
-    c.brightness = Pull<float>(L, count);
+    c.colour = Pull<Maths::vec3>(L, count++);
+    c.attenuation = Pull<Maths::vec3>(L, count++);
+    c.brightness = Pull<float>(L, count++);
     e.Add(c);
     return 0;
 }
@@ -859,12 +859,12 @@ int SetParticleComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ParticleComponent>();
-    c.interval = Pull<float>(L, count);
-    c.velocity = Pull<Maths::vec3>(L, count);
-    c.velocityNoise = Pull<float>(L, count);
-    c.acceleration = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
-    c.life = Pull<float>(L, count);
+    c.interval = Pull<float>(L, count++);
+    c.velocity = Pull<Maths::vec3>(L, count++);
+    c.velocityNoise = Pull<float>(L, count++);
+    c.acceleration = Pull<Maths::vec3>(L, count++);
+    c.scale = Pull<Maths::vec3>(L, count++);
+    c.life = Pull<float>(L, count++);
     return 0;
 }
 
@@ -877,12 +877,12 @@ int AddParticleComponent(lua_State* L)
     assert(!e.Has<ParticleComponent>());
 
     ParticleComponent c;
-    c.interval = Pull<float>(L, count);
-    c.velocity = Pull<Maths::vec3>(L, count);
-    c.velocityNoise = Pull<float>(L, count);
-    c.acceleration = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
-    c.life = Pull<float>(L, count);
+    c.interval = Pull<float>(L, count++);
+    c.velocity = Pull<Maths::vec3>(L, count++);
+    c.velocityNoise = Pull<float>(L, count++);
+    c.acceleration = Pull<Maths::vec3>(L, count++);
+    c.scale = Pull<Maths::vec3>(L, count++);
+    c.life = Pull<float>(L, count++);
     e.Add(c);
     return 0;
 }
