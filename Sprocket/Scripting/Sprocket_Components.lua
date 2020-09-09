@@ -1,4 +1,4 @@
--- GENERATED FILE @ 2020-08-30 16:16:44.731583
+-- GENERATED FILE
 NameComponent = Class(function(self, name)
     self.name = name
 end)
@@ -15,6 +15,7 @@ end
 function AddNameComponent(entity, c)
     Lua_AddNameComponent(entity, c.name)
 end
+
 
 TransformComponent = Class(function(self, position, scale)
     self.position = position
@@ -33,6 +34,7 @@ end
 function AddTransformComponent(entity, c)
     Lua_AddTransformComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
 end
+
 
 ModelComponent = Class(function(self, model, texture, shineDamper, reflectivity)
     self.model = model
@@ -53,6 +55,7 @@ end
 function AddModelComponent(entity, c)
     Lua_AddModelComponent(entity, c.model, c.texture, c.shineDamper, c.reflectivity)
 end
+
 
 RigidBody3DComponent = Class(function(self, velocity, gravity, frozen, bounciness, frictionCoefficient, rollingResistance, force, onFloor)
     self.velocity = velocity
@@ -78,6 +81,7 @@ function AddRigidBody3DComponent(entity, c)
     Lua_AddRigidBody3DComponent(entity, c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
 end
 
+
 BoxCollider3DComponent = Class(function(self, position, mass, halfExtents, applyScale)
     self.position = position
     self.mass = mass
@@ -98,6 +102,7 @@ function AddBoxCollider3DComponent(entity, c)
     Lua_AddBoxCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.halfExtents.x, c.halfExtents.y, c.halfExtents.z, c.applyScale)
 end
 
+
 SphereCollider3DComponent = Class(function(self, position, mass, radius)
     self.position = position
     self.mass = mass
@@ -116,6 +121,7 @@ end
 function AddSphereCollider3DComponent(entity, c)
     Lua_AddSphereCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius)
 end
+
 
 CapsuleCollider3DComponent = Class(function(self, position, mass, radius, height)
     self.position = position
@@ -137,6 +143,7 @@ function AddCapsuleCollider3DComponent(entity, c)
     Lua_AddCapsuleCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius, c.height)
 end
 
+
 CameraComponent = Class(function(self, fov, pitch)
     self.fov = fov
     self.pitch = pitch
@@ -154,6 +161,7 @@ end
 function AddCameraComponent(entity, c)
     Lua_AddCameraComponent(entity, c.fov, c.pitch)
 end
+
 
 SelectComponent = Class(function(self, selected, hovered)
     self.selected = selected
@@ -173,6 +181,7 @@ function AddSelectComponent(entity, c)
     Lua_AddSelectComponent(entity, c.selected, c.hovered)
 end
 
+
 PathComponent = Class(function(self, speed)
     self.speed = speed
 end)
@@ -189,6 +198,7 @@ end
 function AddPathComponent(entity, c)
     Lua_AddPathComponent(entity, c.speed)
 end
+
 
 GridComponent = Class(function(self, x, z)
     self.x = x
@@ -208,6 +218,7 @@ function AddGridComponent(entity, c)
     Lua_AddGridComponent(entity, c.x, c.z)
 end
 
+
 LightComponent = Class(function(self, colour, attenuation, brightness)
     self.colour = colour
     self.attenuation = attenuation
@@ -226,6 +237,7 @@ end
 function AddLightComponent(entity, c)
     Lua_AddLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.attenuation.x, c.attenuation.y, c.attenuation.z, c.brightness)
 end
+
 
 ParticleComponent = Class(function(self, interval, velocity, velocityNoise, acceleration, scale, life)
     self.interval = interval
@@ -248,4 +260,5 @@ end
 function AddParticleComponent(entity, c)
     Lua_AddParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
 end
+
 

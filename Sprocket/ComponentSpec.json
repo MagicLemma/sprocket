@@ -1,14 +1,11 @@
 {
     "Version": 2,
-    "Enums": {
-        "Collider": ["NONE", "SPHERE", "CAPSULE", "BOX"]
-    },
     "Components": [
         {
             "Name": "TemporaryComponent",
             "DisplayName": "Temporary",
-            "Attributes": [],
-            "Scriptable": false
+            "Scriptable": false,
+            "Attributes": []
         },
         {
             "Name": "NameComponent",
@@ -17,7 +14,8 @@
                 {
                     "Name": "name",
                     "DisplayName": "Name",
-                    "Type": "std::string"
+                    "Type": "std::string",
+                    "Default": "Entity"
                 }
             ]
         },
@@ -29,20 +27,20 @@
                     "Name": "position",
                     "DisplayName": "Position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0.0, 0.0, 0.0]
                 },
                 {
                     "Name": "orientation",
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
-                    "Default": [1, 0, 0, 0],
+                    "Default": [1.0, 0.0, 0.0, 0.0],
                     "Scriptable": false
                 },
                 {
                     "Name": "scale",
                     "DisplayName": "Scale",
                     "Type": "Maths::vec3",
-                    "Default": [1, 1, 1]
+                    "Default": [1.0, 1.0, 1.0]
                 }
             ]
         },
@@ -54,15 +52,21 @@
                     "Name": "model",
                     "DisplayName": "Model",
                     "Type": "std::string",
-                    "Subtype": "File",
-                    "Data": "*.obj"
+                    "Default": "",
+                    "Data": {
+                        "Subtype": "File",
+                        "Filter": "*.obj"
+                    }
                 },
                 {
                     "Name": "texture",
                     "DisplayName": "Texture",
                     "Type": "std::string",
-                    "Subtype": "File",
-                    "Data": "*.png"
+                    "Default": "",
+                    "Data": {
+                        "Subtype": "File",
+                        "Filter": "*.png"
+                    }
                 },
                 {
                     "Name": "shineDamper",
@@ -86,7 +90,7 @@
                     "Name": "velocity",
                     "DisplayName": "Velocity",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0.0, 0.0, 0.0]
                 },
                 {
                     "Name": "gravity",
@@ -105,21 +109,27 @@
                     "DisplayName": "Bounciness",
                     "Type": "float",
                     "Default": 0.5,
-                    "Limits": [0.0, 1.0]
+                    "Data": {
+                        "Limits": [0.0, 1.0]
+                    }
                 },
                 {
                     "Name": "frictionCoefficient",
                     "DisplayName": "Friction Coefficient",
                     "Type": "float",
                     "Default": 0.3,
-                    "Limits": [0.0, 1.0]
+                    "Data": {
+                        "Limits": [0.0, 1.0]
+                    }
                 },
                 {
                     "Name": "rollingResistance",
                     "DisplayName": "Rolling Resistance",
                     "Type": "float",
                     "Default": 0.0,
-                    "Limits": [0.0, 1.0]
+                    "Data": {
+                        "Limits": [0.0, 1.0]
+                    }
                 },
                 {
                     "Name": "force",
@@ -145,13 +155,13 @@
                     "Name": "position",
                     "DisplayName": "Position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0.0, 0.0, 0.0]
                 },
                 {
                     "Name": "orientation",
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
-                    "Default": [1, 0, 0, 0],
+                    "Default": [1.0, 0.0, 0.0, 0.0],
                     "Scriptable": false
                 },
                 {
@@ -164,7 +174,7 @@
                     "Name": "halfExtents",
                     "DisplayName": "Half Extents",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0.0, 0.0, 0.0]
                 },
                 {
                     "Name": "applyScale",
@@ -182,13 +192,13 @@
                     "Name": "position",
                     "DisplayName": "Position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0.0, 0.0, 0.0]
                 },
                 {
                     "Name": "orientation",
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
-                    "Default": [1, 0, 0, 0],
+                    "Default": [1.0, 0.0, 0.0, 0.0],
                     "Scriptable": false
                 },
                 {
@@ -213,13 +223,13 @@
                     "Name": "position",
                     "DisplayName": "Position",
                     "Type": "Maths::vec3",
-                    "Default": [0, 0, 0]
+                    "Default": [0.0, 0.0, 0.0]
                 },
                 {
                     "Name": "orientation",
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
-                    "Default": [1, 0, 0, 0],
+                    "Default": [1.0, 0.0, 0.0, 0.0],
                     "Scriptable": false
                 },
                 {
@@ -245,13 +255,17 @@
         {
             "Name": "ScriptComponent",
             "DisplayName": "Script",
+            "Scriptable": false,
             "Attributes": [
                 {
                     "Name": "script",
                     "DisplayName": "Script",
                     "Type": "std::string",
-                    "Subtype": "File",
-                    "Data": "*.lua"
+                    "Default": "",
+                    "Data": {
+                        "Subtype": "File",
+                        "Filter": "*.lua"
+                    }
                 },
                 {
                     "Name": "active",
@@ -259,8 +273,7 @@
                     "Type": "bool",
                     "Default": true
                 }
-            ],
-            "Scriptable": false
+            ]
         },
         {
             "Name": "CameraComponent",
@@ -270,6 +283,7 @@
                     "Name": "projection",
                     "DisplayName": "Projection",
                     "Type": "Maths::mat4",
+                    "Default": null,
                     "Savable": false,
                     "Scriptable": false
                 },
@@ -315,6 +329,7 @@
                     "Name": "markers",
                     "DisplayName": "Markers",
                     "Type": "std::queue<Maths::vec3>",
+                    "Default": [],
                     "Savable": false,
                     "Scriptable": false
                 },
@@ -352,14 +367,16 @@
                     "Name": "colour",
                     "DisplayName": "Colour",
                     "Type": "Maths::vec3",
-                    "Subtype": "Colour",
-                    "Default": [1, 1, 1]
+                    "Default": [1.0, 1.0, 1.0],
+                    "Data": {
+                        "Subtype": "Colour"
+                    }
                 },
                 {
                     "Name": "attenuation",
                     "DisplayName": "Attenuation",
                     "Type": "Maths::vec3",
-                    "Default": [1, 0, 0]
+                    "Default": [1.0, 0.0, 0.0]
                 },
                 {
                     "Name": "brightness",
@@ -401,7 +418,7 @@
                     "Name": "scale",
                     "DisplayName": "Scale",
                     "Type": "Maths::vec3",
-                    "Default": [1, 1, 1]
+                    "Default": [1.0, 1.0, 1.0]
                 },
                 {
                     "Name": "life",

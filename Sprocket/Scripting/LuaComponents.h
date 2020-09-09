@@ -1,4 +1,4 @@
-// GENERATED FILE @ 2020-08-30 16:16:44.720613
+// GENERATED FILE
 class lua_State;
 
 namespace Sprocket {
@@ -7,6 +7,10 @@ void RegisterComponentFunctions(lua_State* L);
     // Register all the functions in this header with the given lua state.
 
 namespace Lua {
+
+int GetTemporaryComponent(lua_State* L);
+int SetTemporaryComponent(lua_State* L);
+int AddTemporaryComponent(lua_State* L);
 
 int GetNameComponent(lua_State* L);
 int SetNameComponent(lua_State* L);
@@ -36,6 +40,10 @@ int GetCapsuleCollider3DComponent(lua_State* L);
 int SetCapsuleCollider3DComponent(lua_State* L);
 int AddCapsuleCollider3DComponent(lua_State* L);
 
+int GetScriptComponent(lua_State* L);
+int SetScriptComponent(lua_State* L);
+int AddScriptComponent(lua_State* L);
+
 int GetCameraComponent(lua_State* L);
 int SetCameraComponent(lua_State* L);
 int AddCameraComponent(lua_State* L);
@@ -59,6 +67,7 @@ int AddLightComponent(lua_State* L);
 int GetParticleComponent(lua_State* L);
 int SetParticleComponent(lua_State* L);
 int AddParticleComponent(lua_State* L);
+
 
 }
 }
