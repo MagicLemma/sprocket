@@ -20,12 +20,14 @@ class Inspector(Plugin):
         name = attr["Name"]
         display = attr["DisplayName"]
         cpp_type = attr["Type"]
-        cpp_subtype = attr.get("Data", {}).get("Subtype")
-        limits = attr.get("Data", {}).get("Limits")
+
+        data = attr.get("Data", {})
+        cpp_subtype = data.get("Subtype")
+        limits = data.get("Limits")
 
         if cpp_type == "std::string":
             if cpp_subtype == "File":
-                filt = attr["Data"]
+                filt = data.get("Filter")
                 return f'ImGuiXtra::File("{display}", editor.GetWindow(), &c.{name}, "{filt}")'
             return f'ImGuiXtra::TextModifiable(c.{name})'
         if cpp_type == "float":
