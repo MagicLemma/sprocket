@@ -28,7 +28,7 @@ class Lua(Plugin):
                 num_attrs += 1
 
         name = comp["Name"]
-        if not attr["Flags"]["SCRIPTABLE"]:
+        if not comp["Flags"]["SCRIPTABLE"]:
             return out
 
         out += f'function Get{name}(entity)\n'
