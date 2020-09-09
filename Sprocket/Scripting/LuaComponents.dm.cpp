@@ -102,7 +102,7 @@ template <> constexpr int Dimension<std::string>() { return 1; }
 template <> constexpr int Dimension<Maths::vec3>() { return 3; }
 template <> constexpr int Dimension<Maths::quat>() { return 4; }
 
-#ifdef DATAMATIC_BLOCK SCRIPTABLE
+#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
 constexpr int {{Comp.Name}}Dimension()
 {
     int count = 0;
@@ -125,7 +125,7 @@ template<typename T> int Lua_Has(lua_State* L)
 
 void RegisterComponentFunctions(lua_State* L)
 {
-#ifdef DATAMATIC_BLOCK SCRIPTABLE
+#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
     lua_register(L, "Lua_Get{{Comp.Name}}", &Lua::Get{{Comp.Name}});
     lua_register(L, "Lua_Set{{Comp.Name}}", &Lua::Set{{Comp.Name}});
     lua_register(L, "Lua_Add{{Comp.Name}}", &Lua::Add{{Comp.Name}});
@@ -136,7 +136,7 @@ void RegisterComponentFunctions(lua_State* L)
 
 namespace Lua {
 
-#ifdef DATAMATIC_BLOCK SCRIPTABLE
+#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
 int Get{{Comp.Name}}(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }

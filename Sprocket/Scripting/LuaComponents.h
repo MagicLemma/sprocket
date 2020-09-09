@@ -8,10 +8,6 @@ void RegisterComponentFunctions(lua_State* L);
 
 namespace Lua {
 
-int GetTemporaryComponent(lua_State* L);
-int SetTemporaryComponent(lua_State* L);
-int AddTemporaryComponent(lua_State* L);
-
 int GetNameComponent(lua_State* L);
 int SetNameComponent(lua_State* L);
 int AddNameComponent(lua_State* L);
@@ -39,10 +35,6 @@ int AddSphereCollider3DComponent(lua_State* L);
 int GetCapsuleCollider3DComponent(lua_State* L);
 int SetCapsuleCollider3DComponent(lua_State* L);
 int AddCapsuleCollider3DComponent(lua_State* L);
-
-int GetScriptComponent(lua_State* L);
-int SetScriptComponent(lua_State* L);
-int AddScriptComponent(lua_State* L);
 
 int GetCameraComponent(lua_State* L);
 int SetCameraComponent(lua_State* L);

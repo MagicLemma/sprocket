@@ -1,10 +1,22 @@
 {
     "Version": 2,
+    "Flags": [
+        {
+            "Name": "SCRIPTABLE",
+            "Default": true
+        },
+        {
+            "Name": "SAVABLE",
+            "Default": true
+        }
+    ],
     "Components": [
         {
             "Name": "TemporaryComponent",
             "DisplayName": "Temporary",
-            "Scriptable": false,
+            "Flags": {
+                "SCRIPTABLE": false
+            },
             "Attributes": []
         },
         {
@@ -34,7 +46,9 @@
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Scriptable": false
+                    "Flags": {
+                        "SCRIPTABLE": false
+                    }
                 },
                 {
                     "Name": "scale",
@@ -53,7 +67,7 @@
                     "DisplayName": "Model",
                     "Type": "std::string",
                     "Default": "",
-                    "Data": {
+                    "Custom": {
                         "Subtype": "File",
                         "Filter": "*.obj"
                     }
@@ -63,7 +77,7 @@
                     "DisplayName": "Texture",
                     "Type": "std::string",
                     "Default": "",
-                    "Data": {
+                    "Custom": {
                         "Subtype": "File",
                         "Filter": "*.png"
                     }
@@ -109,7 +123,7 @@
                     "DisplayName": "Bounciness",
                     "Type": "float",
                     "Default": 0.5,
-                    "Data": {
+                    "Custom": {
                         "Limits": [0.0, 1.0]
                     }
                 },
@@ -118,7 +132,7 @@
                     "DisplayName": "Friction Coefficient",
                     "Type": "float",
                     "Default": 0.3,
-                    "Data": {
+                    "Custom": {
                         "Limits": [0.0, 1.0]
                     }
                 },
@@ -127,7 +141,7 @@
                     "DisplayName": "Rolling Resistance",
                     "Type": "float",
                     "Default": 0.0,
-                    "Data": {
+                    "Custom": {
                         "Limits": [0.0, 1.0]
                     }
                 },
@@ -136,14 +150,18 @@
                     "DisplayName": "Force",
                     "Type": "Maths::vec3",
                     "Default": [0.0, 0.0, 0.0],
-                    "Savable": false
+                    "Flags": {
+                        "SAVABLE": false
+                    }
                 },
                 {
                     "Name": "onFloor",
                     "DisplayName": "OnFloor",
                     "Type": "bool",
                     "Default": false,
-                    "Savable": false
+                    "Flags": {
+                        "SAVABLE": false
+                    }
                 }
             ]
         },
@@ -162,7 +180,9 @@
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Scriptable": false
+                    "Flags": {
+                        "SCRIPTABLE": false
+                    }
                 },
                 {
                     "Name": "mass",
@@ -199,7 +219,9 @@
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Scriptable": false
+                    "Flags": {
+                        "SCRIPTABLE": false
+                    }
                 },
                 {
                     "Name": "mass",
@@ -230,7 +252,9 @@
                     "DisplayName": "Orientation",
                     "Type": "Maths::quat",
                     "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Scriptable": false
+                    "Flags": {
+                        "SCRIPTABLE": false
+                    }
                 },
                 {
                     "Name": "mass",
@@ -255,14 +279,16 @@
         {
             "Name": "ScriptComponent",
             "DisplayName": "Script",
-            "Scriptable": false,
+            "Flags": {
+                "SCRIPTABLE": false
+            },
             "Attributes": [
                 {
                     "Name": "script",
                     "DisplayName": "Script",
                     "Type": "std::string",
                     "Default": "",
-                    "Data": {
+                    "Custom": {
                         "Subtype": "File",
                         "Filter": "*.lua"
                     }
@@ -284,8 +310,10 @@
                     "DisplayName": "Projection",
                     "Type": "Maths::mat4",
                     "Default": null,
-                    "Savable": false,
-                    "Scriptable": false
+                    "Flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
                 },
                 {
                     "Name": "fov",
@@ -310,14 +338,18 @@
                     "DisplayName": "Selected",
                     "Type": "bool",
                     "Default": false,
-                    "Savable": false
+                    "Flags": {
+                        "SAVABLE": false
+                    }
                 },
                 {
                     "Name": "hovered",
                     "DisplayName": "Hovered",
                     "Type": "bool",
                     "Default": false,
-                    "Savable": false
+                    "Flags": {
+                        "SAVABLE": false
+                    }
                 }
             ]
         },
@@ -330,8 +362,10 @@
                     "DisplayName": "Markers",
                     "Type": "std::queue<Maths::vec3>",
                     "Default": [],
-                    "Savable": false,
-                    "Scriptable": false
+                    "Flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
                 },
                 {
                     "Name": "speed",
@@ -368,7 +402,7 @@
                     "DisplayName": "Colour",
                     "Type": "Maths::vec3",
                     "Default": [1.0, 1.0, 1.0],
-                    "Data": {
+                    "Custom": {
                         "Subtype": "Colour"
                     }
                 },
@@ -431,8 +465,10 @@
                     "DisplayName": "Accumulator",
                     "Type": "float",
                     "Default": 0.0,
-                    "Scriptable": false,
-                    "Savable": false
+                    "Flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
                 }
             ]
         }

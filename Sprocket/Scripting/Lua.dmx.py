@@ -4,7 +4,7 @@ class Lua(Plugin):
     
     @compmethod
     def Sig(comp, flags):
-        return ", ".join(attr['Name'] for attr in comp['Attributes'] if attr.get('Scriptable', True))
+        return ", ".join(attr['Name'] for attr in comp['Attributes'] if attr["Flags"]["SCRIPTABLE"])
 
     @compmethod
     def Impl(comp, flags):
@@ -12,7 +12,7 @@ class Lua(Plugin):
         num_attrs = 0
         constructor_sig = []
         for attr in comp["Attributes"]:
-            if not attr.get("Scriptable", True):
+            if not attr["Flags"]["SCRIPTABLE"]:
                 continue
             if attr["Type"]  == "Maths::vec4":
                 constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
@@ -28,7 +28,7 @@ class Lua(Plugin):
                 num_attrs += 1
 
         name = comp["Name"]
-        if not comp.get("Scriptable", True):
+        if not comp["Flags"]["SCRIPTABLE"]:
             return out
 
         out += f'function Get{name}(entity)\n'
@@ -42,7 +42,7 @@ class Lua(Plugin):
         args = []
         for attr in comp["Attributes"]:
             n = attr["Name"]
-            if not attr.get("Scriptable", True):
+            if not attr["Flags"]["SCRIPTABLE"]:
                 continue
             if attr["Type"] == "Maths::vec3":
                 args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
@@ -57,7 +57,7 @@ class Lua(Plugin):
         args = []
         for attr in comp["Attributes"]:
             n = attr["Name"]
-            if not attr.get("Scriptable", True):
+            if not attr["Flags"]["SCRIPTABLE"]:
                 continue
             if attr["Type"] == "Maths::vec3":
                 args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
