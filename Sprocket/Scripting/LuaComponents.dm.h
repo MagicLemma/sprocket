@@ -7,7 +7,7 @@ void RegisterComponentFunctions(lua_State* L);
 
 namespace Lua {
 
-#ifdef DATAMATIC_BLOCK
+#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
 int Get{{Comp.Name}}(lua_State* L);
 int Set{{Comp.Name}}(lua_State* L);
 int Add{{Comp.Name}}(lua_State* L);

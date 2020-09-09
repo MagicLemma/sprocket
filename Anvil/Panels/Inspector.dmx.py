@@ -21,7 +21,7 @@ class Inspector(Plugin):
         display = attr["DisplayName"]
         cpp_type = attr["Type"]
 
-        data = attr.get("Data", {})
+        data = attr.get("Custom", {})
         cpp_subtype = data.get("Subtype")
         limits = data.get("Limits")
 

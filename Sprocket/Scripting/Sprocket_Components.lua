@@ -248,17 +248,5 @@ ParticleComponent = Class(function(self, interval, velocity, velocityNoise, acce
     self.life = life
 end)
 
-function GetParticleComponent(entity)
-    x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = Lua_GetParticleComponent(entity)
-    return ParticleComponent(x0, Vec3(x1, x2, x3), x4, Vec3(x5, x6, x7), Vec3(x8, x9, x10), x11)
-end
-
-function SetParticleComponent(entity, c)
-    Lua_SetParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
-end
-
-function AddParticleComponent(entity, c)
-    Lua_AddParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
-end
 
 

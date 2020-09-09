@@ -29,7 +29,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     scene->All([&](Entity& entity) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
-#ifdef DATAMATIC_BLOCK SAVABLE
+#ifdef DATAMATIC_BLOCK SAVABLE=true
         if (entity.Has<{{Comp.Name}}>()) {
             const auto& c = entity.Get<{{Comp.Name}}>();
             out << YAML::Key << "{{Comp.Name}}" << YAML::BeginMap;
@@ -70,7 +70,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     auto entities = data["Entities"];
     for (auto entity : entities) {
         Entity e = scene->NewEntity();
-#ifdef DATAMATIC_BLOCK SAVABLE
+#ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
             c.{{Attr.Name}} = spec["{{Attr.Name}}"] ? spec["{{Attr.Name}}"].as<{{Attr.Type}}>() : {{Attr.Default}};
