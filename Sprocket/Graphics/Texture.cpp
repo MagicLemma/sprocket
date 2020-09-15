@@ -11,6 +11,7 @@ namespace Sprocket {
 
 Texture::Texture(const std::string& pngFile, bool flip)
     : d_texture(std::make_shared<TEX>())
+    , d_file(pngFile)
 {
     glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
