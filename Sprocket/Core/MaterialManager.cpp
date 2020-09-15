@@ -69,15 +69,14 @@ std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
 void MaterialManager::SaveMaterial(const std::string& file, std::shared_ptr<Material> material)
 {
     YAML::Emitter out;
+    auto K = YAML::Key, V = YAML::Value;
+
     assert(material->albedoMap.IsFromFile());
     assert(material->normalMap.IsFromFile());
     assert(material->metallicMap.IsFromFile());
     assert(material->roughnessMap.IsFromFile());
 
     out << YAML::BeginMap;
-
-    auto K = YAML::Key;
-    auto V = YAML::Value;
 
     out << K << "AlbedoMap" << V << material->albedoMap.Filepath()
         << K << "NormalMap" << V << material->normalMap.Filepath()
