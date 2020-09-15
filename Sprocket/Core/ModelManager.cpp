@@ -56,7 +56,15 @@ std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene, aiMesh* mesh)
 std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
 {
     Assimp::Importer importer;
-    int flags = aiProcess_Triangulate | aiProcess_FlipUVs;
+    int flags = 
+        aiProcess_Triangulate |
+        aiProcess_FlipUVs |
+        aiProcess_CalcTangentSpace |
+        aiProcess_GenUVCoords |
+        aiProcess_GenNormals |
+        aiProcess_OptimizeMeshes |
+        aiProcess_ValidateDataStructure;
+
     const aiScene* scene = importer.ReadFile(path, flags);
 
     if (!IsSceneValid(scene)) {
