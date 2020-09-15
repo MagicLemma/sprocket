@@ -84,8 +84,9 @@ void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords)
 void Euler(const std::string& name, Maths::quat* q)
 {
     Maths::vec3 euler = Maths::ToEuler(*q);
-    ImGui::DragFloat3("Orientation", &euler.x, 0.01f);
-    *q = Maths::quat(euler);
+    if (ImGui::DragFloat3("Orientation", &euler.x, 0.01f)) {
+        *q = Maths::quat(euler);
+    }
 }
 
 }
