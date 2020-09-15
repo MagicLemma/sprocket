@@ -33,6 +33,16 @@ std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene, aiMesh* mesh)
         vertex.normal.y = mesh->mNormals[i].y;
         vertex.normal.z = mesh->mNormals[i].z;
 
+        if (mesh->HasTangentsAndBitangents()) {
+            vertex.tangent.x = mesh->mTangents[i].x;
+            vertex.tangent.y = mesh->mTangents[i].y;
+            vertex.tangent.z = mesh->mTangents[i].z;
+
+            vertex.bitangent.x = mesh->mBitangents[i].x;
+            vertex.bitangent.y = mesh->mBitangents[i].y;
+            vertex.bitangent.z = mesh->mBitangents[i].z;
+        }
+
         // TODO: Add error checking code here to make sure the texture exists
         vertex.textureCoords.x = mesh->mTextureCoords[0][i].x;
         vertex.textureCoords.y = mesh->mTextureCoords[0][i].y;
@@ -62,7 +72,6 @@ std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
         aiProcess_CalcTangentSpace |
         aiProcess_GenUVCoords |
         aiProcess_GenNormals |
-        aiProcess_OptimizeMeshes |
         aiProcess_ValidateDataStructure;
 
     const aiScene* scene = importer.ReadFile(path, flags);

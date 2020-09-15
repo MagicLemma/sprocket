@@ -14,7 +14,7 @@ namespace {
 
 std::shared_ptr<Buffer> GetInstanceBuffer()
 {
-    BufferLayout layout(sizeof(InstanceData), 3);
+    BufferLayout layout(sizeof(InstanceData), 5);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);

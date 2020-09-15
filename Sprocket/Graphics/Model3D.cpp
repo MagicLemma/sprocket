@@ -22,6 +22,8 @@ Model3D::Model3D(const Vertex3DBuffer& vertices,
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
     assert(d_layout.Validate());
 }
@@ -29,6 +31,8 @@ Model3D::Model3D(const Vertex3DBuffer& vertices,
 Model3D::Model3D()
     : d_layout(sizeof(Vertex3D), 0)
 {
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);

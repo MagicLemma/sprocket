@@ -2,12 +2,15 @@
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
-layout(location = 2) in vec2 texture_coords;
-layout(location = 3) in vec3 model_position;
-layout(location = 4) in vec4 model_orientation;
-layout(location = 5) in vec3 model_scale;
-layout(location = 6) in float shine_damper;
-layout(location = 7) in float reflectivity;
+layout(location = 2) in vec3 tangent;
+layout(location = 3) in vec3 bitangent;
+layout(location = 4) in vec2 texture_coords;
+
+layout(location = 5) in vec3 model_position;
+layout(location = 6) in vec4 model_orientation;
+layout(location = 7) in vec3 model_scale;
+layout(location = 8) in float shine_damper;
+layout(location = 9) in float reflectivity;
 
 out vec2  p_texture_coords;
 out vec3  p_surface_normal;
