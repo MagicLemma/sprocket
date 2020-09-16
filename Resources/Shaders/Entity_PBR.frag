@@ -1,6 +1,5 @@
 #version 400 core
 
-in vec2  p_texture_coords;
 in vec3  p_surface_normal;
 in vec3  p_to_camera_vector;
 in vec3  p_to_light_vector[5];
@@ -54,7 +53,7 @@ void main()
     vec3 unit_to_camera = normalize(p_to_camera_vector);
 
     // Colour prior to lighting
-    vec4 colour = texture(texture_sampler, p_texture_coords);
+    vec4 colour = texture(texture_sampler, p_data.texture_coords);
 
     // Ambience
     vec4 ambience = vec4(u_ambience_brightness * u_ambience_colour, 1.0);

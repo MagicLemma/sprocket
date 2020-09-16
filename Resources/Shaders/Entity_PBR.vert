@@ -10,7 +10,6 @@ layout(location = 5) in vec3 model_position;
 layout(location = 6) in vec4 model_orientation;
 layout(location = 7) in vec3 model_scale;
 
-out vec2 p_texture_coords;
 out vec3 p_surface_normal;
 out vec3 p_to_camera_vector;
 out vec3 p_to_light_vector[5];
@@ -91,7 +90,6 @@ void main()
     p_data.tangent = tangent;
     p_data.bitangent = bitangent;
 
-    p_texture_coords = texture_coords;
     p_surface_normal = (model_matrix * vec4(normal, 0.0)).xyz;
     p_to_camera_vector = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
 
