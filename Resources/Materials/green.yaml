@@ -1,0 +1,13 @@
+AlbedoMap: Resources/Textures/Green.PNG
+NormalMap: ""
+MetallicMap: ""
+RoughnessMap: ""
+
+UseAlbedoMap: true
+UseNormalMap: false
+UseMetallicMap: false
+UseRoughnessMap: false
+
+Albedo: [1.0, 1.0, 1.0]
+Metallic: 0
+Roughness: 1

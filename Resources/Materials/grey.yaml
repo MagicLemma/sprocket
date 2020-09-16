@@ -1,0 +1,13 @@
+AlbedoMap: Resources/Textures/PlainGray.PNG
+NormalMap: ""
+MetallicMap: ""
+RoughnessMap: ""
+
+UseAlbedoMap: true
+UseNormalMap: false
+UseMetallicMap: false
+UseRoughnessMap: false
+
+Albedo: [1.0, 1.0, 1.0]
+Metallic: 2
+Roughness: 3

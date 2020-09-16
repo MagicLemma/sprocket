@@ -271,7 +271,6 @@ void WorldLayer::OnUpdate(double dt)
 void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 {
     using namespace Sprocket;
-    static std::string tex = "Resources/Textures/BetterTree.png";
 
     auto newEntity = d_scene->NewEntity();
 
@@ -285,6 +284,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/BetterTree.obj";
+    modelData.material = "Resources/Materials/tree.yaml";
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
@@ -293,7 +293,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
 void WorldLayer::AddRockBase(
     const Sprocket::Maths::ivec2& pos,
-    const std::string& tex,
+    const std::string& material,
     const std::string& name)
 {
     using namespace Sprocket;
@@ -309,6 +309,7 @@ void WorldLayer::AddRockBase(
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/Rock.obj";
+    modelData.material = material;
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
@@ -317,24 +318,24 @@ void WorldLayer::AddRockBase(
 
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Rock.png";
-    AddRockBase(pos, tex, "Rock");
+    static std::string material = "Resources/Materials/rock.yaml";
+    AddRockBase(pos, material, "Rock");
 }
 
 void WorldLayer::AddIron(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Iron.png";
-    AddRockBase(pos, tex, "Iron");
+    static std::string material = "Resources/Materials/iron.yaml";
+    AddRockBase(pos, material, "Iron");
 }
 
 void WorldLayer::AddTin(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Tin.png";
-    AddRockBase(pos, tex, "Tin");
+    static std::string material = "Resources/Materials/tin.yaml";
+    AddRockBase(pos, material, "Tin");
 }
 
 void WorldLayer::AddMithril(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Mithril.png";
-    AddRockBase(pos, tex, "Mithril");
+    static std::string material = "Resources/Materials/mithril.yaml";
+    AddRockBase(pos, material, "Mithril");
 }
