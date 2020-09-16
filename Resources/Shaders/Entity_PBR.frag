@@ -1,6 +1,5 @@
 #version 400 core
 
-in vec3  p_surface_normal;
 in vec3  p_to_camera_vector;
 in vec3  p_to_light_vector[5];
 
@@ -49,7 +48,7 @@ float cutoff(float value, float low, float high) {
 void main()
 {
     // Surface information
-    vec3 unit_normal = normalize(p_surface_normal);
+    vec3 unit_normal = normalize(p_data.world_normal);
     vec3 unit_to_camera = normalize(p_to_camera_vector);
 
     // Colour prior to lighting
@@ -102,7 +101,7 @@ void main()
     vec3 proj_coords = p_light_space_pos.xyz / p_light_space_pos.w;
     proj_coords = 0.5 * proj_coords + 0.5;
     float current_depth = proj_coords.z;
-    float d = dot(p_surface_normal, -u_sun_direction);
+    float d = dot(p_data.world_normal, -u_sun_direction);
     //float bias = max(0.005 * (1.0 - d), 0.001);
     float bias = 0.0;
     
