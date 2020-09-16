@@ -97,7 +97,7 @@ ImGuizmo::OPERATION GetMode(GizmoMode mode)
     switch (mode) {
         case GizmoMode::TRANSLATION: return ImGuizmo::OPERATION::TRANSLATE;
         case GizmoMode::ROTATION:    return ImGuizmo::OPERATION::ROTATE;
-        case GizmoMode::SCALE:    return ImGuizmo::OPERATION::SCALE;
+        case GizmoMode::SCALE:       return ImGuizmo::OPERATION::SCALE;
         default: {
             SPKT_LOG_ERROR("Unknown GizmoMode!");
             return ImGuizmo::OPERATION::TRANSLATE;
@@ -257,7 +257,7 @@ void Context::EndFrame()
     auto proj = Sprocket::Maths::Ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
 
     d_impl->shader.Bind();
-    d_impl->shader.LoadUniform("Texture", 0);
+    d_impl->shader.LoadUniformSampler("Texture", 0);
     d_impl->shader.LoadUniform("ProjMtx", proj);
 
     d_impl->buffer.Bind();

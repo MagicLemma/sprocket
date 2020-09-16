@@ -43,6 +43,7 @@ public:
     void Unbind() const;
 
     // Shader Uniform Setters
+    void LoadUniformSampler(const std::string& name, int value) const;
     void LoadUniformInt(const std::string& name, int value) const;
     void LoadUniform(const std::string& name, float value) const;
     void LoadUniform(const std::string& name, const Maths::vec2& vector) const;

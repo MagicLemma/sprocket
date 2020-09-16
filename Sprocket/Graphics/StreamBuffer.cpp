@@ -59,7 +59,7 @@ void StreamBuffer::SetIndexData(std::size_t size, const void* data)
 
 void StreamBuffer::Draw(int count) const
 {
-    glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+    //glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 
 }

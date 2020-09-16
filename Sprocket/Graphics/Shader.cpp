@@ -102,6 +102,11 @@ void Shader::LoadUniform(const std::string& name, float value) const
 	glUniform1f(GetUniformLocation(name), value);
 }
 
+void Shader::LoadUniformSampler(const std::string& name, int value) const
+{
+	glProgramUniform1i(d_programId, GetUniformLocation(name), value);
+}
+
 void Shader::LoadUniformInt(const std::string& name, int value) const
 {
 	glUniform1i(GetUniformLocation(name), value);

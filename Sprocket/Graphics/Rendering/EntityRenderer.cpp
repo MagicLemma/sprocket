@@ -42,7 +42,7 @@ void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
     shadowMap.GetShadowMap().Bind();
  
     d_shader.Bind();
-    d_shader.LoadUniformInt("shadow_map", 3);
+    d_shader.LoadUniformSampler("shadow_map", 3);
     d_shader.LoadUniform("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     glActiveTexture(GL_TEXTURE0);
 }
