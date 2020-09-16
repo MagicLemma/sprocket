@@ -3,6 +3,8 @@
 #include "PathFollower.h"
 #include "PathCalculator.h"
 
+#include <cmath>
+
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
@@ -156,13 +158,12 @@ void WorldLayer::OnUpdate(double dt)
         if (d_cycle.IsDay()) {
             sun.direction = d_cycle.GetSunDir();
             sun.colour = {1.0, 0.945, 0.789};
-            sun.brightness = 0.8f;
         }
         else {
             sun.direction = -d_cycle.GetSunDir();
             sun.colour = {0.5, 0.57, 0.98};
-            sun.brightness = 0.1f;
         }
+        sun.brightness = std::abs(Maths::Cosd(d_cycle.GetAngle()));
 
         Maths::Normalise(sun.direction);
         d_scene->OnUpdate(dt);

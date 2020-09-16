@@ -27,7 +27,6 @@ uniform float     u_roughness;
 // Lighting Information
 uniform vec3  u_light_pos[5];
 uniform vec3  u_light_colour[5];
-uniform vec3  u_light_attenuation[5];
 uniform float u_light_brightness[5];
 
 uniform vec3  u_sun_direction;
@@ -42,11 +41,6 @@ uniform sampler2D shadow_map;
 
 const float PI = 3.14159265359;
 const int MAX_NUM_LIGHTS = 5;
-
-// Takes a value between 
-float cutoff(float value, float low, float high) {
-    return clamp((value - low) / (high - low), 0.0, 1.0);
-}
 
 vec3 fresnel_schlick(float cosTheta, vec3 F0)
 {
@@ -88,6 +82,27 @@ float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness)
     return ggx1 * ggx2;
 }
 
+vec3 calculate_light(
+    vec3 F0, vec3 N, vec3 V, vec3 L, vec3 H,
+    vec3 albedo, vec3 radiance)
+{
+    // cook-torrance brdf
+    float NDF = distribution_ggx(N, H, u_roughness);
+    float G = geometry_smith(N, V, L, u_roughness);
+    vec3 F = fresnel_schlick(max(dot(H, V), 0.0), F0);
+
+    vec3 kS = F;
+    vec3 kD = (vec3(1.0) - kS) * (1.0 - u_metallic);
+
+    vec3 numerator = NDF * G * F;
+    float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+    vec3 specular = numerator / max(denominator, 0.001);
+
+    // add to radiance Lo
+    float NdotL = max(dot(N, L), 0.0);
+    return (kD * albedo / PI + specular) * radiance * NdotL;
+}
+
 void main()
 {
     vec3 albedo = texture(texture_sampler, p_data.texture_coords).xyz;
@@ -100,31 +115,24 @@ void main()
     
     // reflectance
     vec3 Lo = vec3(0.0);
+
+    // sun
+    {
+        vec3 L = normalize(u_sun_direction);
+        vec3 H = normalize(V + L);
+        vec3 radiance = u_sun_brightness * u_sun_colour;
+        Lo += calculate_light(F0, N, V, L, H, albedo, radiance);
+    }
+
+    // point lights
     for (int i = 0; i != MAX_NUM_LIGHTS; ++i)
     {
-        // radiance
         vec3 L = normalize(u_light_pos[i] - p_data.world_position);
         vec3 H = normalize(V + L);
         float dist = length(u_light_pos[i] - p_data.world_position);
         float attenuation = 1.0 / (dist * dist);
         vec3 radiance = u_light_brightness[i] * u_light_colour[i] * attenuation;
-
-        // cook-torrance brdf
-        float NDF = distribution_ggx(N, H, u_roughness);
-        float G = geometry_smith(N, V, L, u_roughness);
-        vec3 F = fresnel_schlick(max(dot(H, V), 0.0), F0);
-
-        vec3 kS = F;
-        vec3 kD = vec3(1.0) - kS;
-        kD *= 1.0 - u_metallic;
-
-        vec3 numerator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-        vec3 specular = numerator / max(denominator, 0.001);
-
-        // add to radiance Lo
-        float NdotL = max(dot(N, L), 0.0);
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+        Lo += calculate_light(F0, N, V, L, H, albedo, radiance);
     }
 
     vec3 ambient = vec3(0.03) * albedo;// * ao;
