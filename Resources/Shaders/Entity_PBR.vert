@@ -81,6 +81,15 @@ void main()
     gl_Position = u_proj_matrix * u_view_matrix * world_pos;
     
     p_data.world_position = vec3(world_pos);
+    p_data.texture_coords = texture_coords;
+    
+    p_data.world_normal = mat3(model_matrix) * normal;
+    p_data.world_tangent = mat3(model_matrix) * tangent;
+    p_data.world_bitangent = mat3(model_matrix) * bitangent;
+
+    p_data.normal = normal;
+    p_data.tangent = tangent;
+    p_data.bitangent = bitangent;
 
     p_texture_coords = texture_coords;
     p_surface_normal = (model_matrix * vec4(normal, 0.0)).xyz;
