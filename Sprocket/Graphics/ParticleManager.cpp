@@ -15,8 +15,6 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
     return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
@@ -53,9 +51,7 @@ void ParticleManager::OnUpdate(double dt)
             d_instanceData.push_back({
                 particle.position,
                 {0.0, 0.0, 0.0, 1.0},
-                particle.scale,
-                1.0,
-                1.0
+                particle.scale
             });
         }
     }

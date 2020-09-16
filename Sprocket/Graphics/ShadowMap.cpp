@@ -13,8 +13,6 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
     return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
@@ -73,9 +71,7 @@ void ShadowMap::Draw(
         d_instanceData.push_back({
             tc.position,
             tc.orientation,
-            tc.scale,
-            mc.shineDamper,
-            mc.reflectivity
+            tc.scale
         });
     });
 

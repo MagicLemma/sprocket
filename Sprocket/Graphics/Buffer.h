@@ -12,8 +12,6 @@ struct InstanceData
     Maths::vec3 position;
     Maths::quat orientation;
     Maths::vec3 scale;
-    float       shineDamper;
-    float       reflectivity;
 };
 
 enum class BufferUsage { STATIC, DYNAMIC };

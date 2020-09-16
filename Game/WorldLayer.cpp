@@ -7,7 +7,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
     , d_scene(std::make_shared<Sprocket::Scene>())
-    , d_entityRenderer(core.modelManager, core.textureManager)
+    , d_entityRenderer(core.modelManager, core.materialManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_gameGrid(std::make_shared<Sprocket::GameGrid>(core.window))
     , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(core.window->AspectRatio()))
@@ -285,9 +285,6 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/BetterTree.obj";
-    modelData.texture = tex;
-    modelData.shineDamper = 10.0f;
-    modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
@@ -312,9 +309,6 @@ void WorldLayer::AddRockBase(
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/Rock.obj";
-    modelData.texture = tex;
-    modelData.shineDamper = 10.0f;
-    modelData.reflectivity = 0.0f;
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};

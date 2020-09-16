@@ -18,7 +18,7 @@ std::string Name(const Entity& entity)
 
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : Layer(core)
-    , d_entityRenderer(core.modelManager, core.textureManager)
+    , d_entityRenderer(core.modelManager, core.materialManager)
     , d_skybox({
         ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         CubeMap({

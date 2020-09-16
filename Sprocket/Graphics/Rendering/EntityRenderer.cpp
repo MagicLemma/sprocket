@@ -18,8 +18,6 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
     return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
@@ -28,10 +26,10 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 }
 
 EntityRenderer::EntityRenderer(ModelManager* modelManager,
-                               TextureManager* textureManager)
+                               MaterialManager* materialManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_modelManager(modelManager)
-    , d_textureManager(textureManager)
+    , d_materialManager(materialManager)
     , d_particleManager(nullptr)
     , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
     , d_instanceBuffer(GetInstanceBuffer())
@@ -98,17 +96,26 @@ void EntityRenderer::Draw(
 
     d_shader.Bind();
 
-    std::string currentModel;
-    std::string currentTexture;
+    std::string currentModel = "INVALID";
+    std::string currentMaterial = "INVALID";
+    // These are set initially to INVALID as that is not a valid file path.
+    // They cannot be set to "" as this returns the "default" materials,
+    // which causes errors when drawing in some cases. TODO: Find out why,
+    // it has something to do with the way ImGui renders things, as the
+    // visual errors don't appear when the viewport is not selected, or when
+    // the Guizmo is on screen. It is probably writing to the default texture
+    // which remains bound. We should fix this properly, as this "fix" causes
+    // an extra pointless draw call at the beginning of each frame.
+
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.model.empty()) { return; }
 
         bool changedModel = mc.model != currentModel;
-        bool changedTexture = mc.texture != currentTexture;
+        bool changedMaterial = mc.material != currentMaterial;
 
-        if (changedModel || changedTexture) {
+        if (changedModel || changedMaterial) {
             d_instanceBuffer->SetData(d_instanceData);
             d_vao->SetInstances(d_instanceBuffer);
             d_vao->Draw();
@@ -120,17 +127,19 @@ void EntityRenderer::Draw(
             currentModel = mc.model;
         }
 
-        if (changedTexture) {
-            d_textureManager->GetTexture(mc.texture).Bind();
-            currentTexture = mc.texture;
+        if (changedMaterial) {
+            auto material = d_materialManager->GetMaterial(mc.material);
+            // TODO: Apply everything
+            material->albedoMap.Bind();
+            d_shader.LoadUniform("u_shine_damper", material->roughness);
+            d_shader.LoadUniform("u_reflectivity", material->metallic);
+            currentMaterial = mc.material;
         }
 
         d_instanceData.push_back({
             tc.position,
             tc.orientation,
-            tc.scale,
-            mc.shineDamper,
-            mc.reflectivity
+            tc.scale
         });
     });
 

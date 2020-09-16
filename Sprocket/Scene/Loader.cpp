@@ -53,9 +53,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             const auto& c = entity.Get<ModelComponent>();
             out << YAML::Key << "ModelComponent" << YAML::BeginMap;
             out << YAML::Key << "model" << YAML::Value << c.model;
-            out << YAML::Key << "texture" << YAML::Value << c.texture;
-            out << YAML::Key << "shineDamper" << YAML::Value << c.shineDamper;
-            out << YAML::Key << "reflectivity" << YAML::Value << c.reflectivity;
+            out << YAML::Key << "material" << YAML::Value << c.material;
             out << YAML::EndMap;
         }
         if (entity.Has<RigidBody3DComponent>()) {
@@ -201,9 +199,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
             c.model = spec["model"] ? spec["model"].as<std::string>() : "";
-            c.texture = spec["texture"] ? spec["texture"].as<std::string>() : "";
-            c.shineDamper = spec["shineDamper"] ? spec["shineDamper"].as<float>() : 1.0f;
-            c.reflectivity = spec["reflectivity"] ? spec["reflectivity"].as<float>() : 0.0f;
+            c.material = spec["material"] ? spec["material"].as<std::string>() : "";
             e.Add(c);
         }
         if (auto spec = entity["RigidBody3DComponent"]) {

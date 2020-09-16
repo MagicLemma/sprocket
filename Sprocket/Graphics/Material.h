@@ -16,14 +16,14 @@ struct Material
     Texture metallicMap;
     Texture roughnessMap;
 
-    bool useAlbedoMap;
-    bool useNormalMap;
-    bool useMetallicMap;
-    bool useRoughnessMap;
+    bool useAlbedoMap = false;
+    bool useNormalMap = false;
+    bool useMetallicMap = false;
+    bool useRoughnessMap = false;
 
-    Maths::vec3 albedo;
-    float       metallic;  // AKA Reflectivity
-    float       roughness; // AKA Shine Damper
+    Maths::vec3 albedo = {1.0f, 1.0f, 1.0f};
+    float       metallic = 0.0f;  // AKA Reflectivity
+    float       roughness = 1.0f; // AKA Shine Damper
     // If the normal map is not used, the "default" value used is
     // the normal in the Model VBO.
 };

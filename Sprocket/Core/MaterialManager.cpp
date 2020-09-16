@@ -12,6 +12,11 @@ MaterialManager::MaterialManager(TextureManager* textureManager)
 
 std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
 {
+    if (file == "") {
+        static auto defaultMaterial = std::make_shared<Material>();
+        return defaultMaterial;
+    }
+
     auto it = d_loadedMaterials.find(file);
     if (it != d_loadedMaterials.end()) {
         return it->second;

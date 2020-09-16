@@ -38,9 +38,7 @@ Entities:
       scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      texture: Resources/Textures/Space.PNG
-      shineDamper: 1
-      reflectivity: 0
+      material: Resources/Material/space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -64,9 +62,7 @@ Entities:
       scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      texture: Resources/Textures/Space.PNG
-      shineDamper: 1
-      reflectivity: 0
+      material: Resources/Materials/space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -90,9 +86,7 @@ Entities:
       scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      texture: Resources/Textures/Space.PNG
-      shineDamper: 1
-      reflectivity: 0
+      material: Resources/Materials/space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -116,9 +110,7 @@ Entities:
       scale: [4.208998, 4.209, 4.208998]
     ModelComponent:
       model: D:\dev\Sprocket\Resources\Models\BetterTree.obj
-      texture: D:\dev\Sprocket\Resources\Textures\BetterTree.png
-      shineDamper: 1
-      reflectivity: 0
+      material: Resources/Materials/tree.yaml
   - NameComponent:
       name: Tree
     TransformComponent:
@@ -208,9 +200,7 @@ Entities:
       scale: [1.107292, 1.107288, 1.107292]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      texture: Resources/Textures/Space.PNG
-      shineDamper: 1
-      reflectivity: 0
+      material: Resources/Materials/space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -495,9 +485,7 @@ Entities:
       scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
       model: Resources/Models/Cube.obj
-      texture: Resources/Textures/Space.PNG
-      shineDamper: 1
-      reflectivity: 0
+      material: Resources/Materials/space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true

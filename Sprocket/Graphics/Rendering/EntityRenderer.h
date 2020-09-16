@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "ModelManager.h"
-#include "TextureManager.h"
+#include "MaterialManager.h"
 #include "Components.h"
 #include "VertexArray.h"
 #include "ShadowMap.h"
@@ -15,7 +15,7 @@ namespace Sprocket {
 class EntityRenderer
 {
     ModelManager*    d_modelManager;
-    TextureManager*  d_textureManager;
+    MaterialManager* d_materialManager;
     ParticleManager* d_particleManager;
 
     Shader  d_shader;
@@ -28,7 +28,7 @@ class EntityRenderer
 public:
     EntityRenderer(
         ModelManager* modelManager,
-        TextureManager* textureManager
+        MaterialManager* materialManager
     );
 
     void Draw(const Entity& camera, const Lights& lights, Scene& scene);

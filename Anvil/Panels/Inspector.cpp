@@ -90,9 +90,7 @@ void ShowInspector(EditorLayer& editor)
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
             ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.obj");
-            ImGuiXtra::File("Texture", editor.GetWindow(), &c.texture, "*.png");
-            ImGui::DragFloat("Shine Damper", &c.shineDamper, 0.1f);
-            ImGui::DragFloat("Reflectivity", &c.reflectivity, 0.1f);
+            ImGuiXtra::File("Material", editor.GetWindow(), &c.material, "*.yaml");
             
             if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }
             ImGui::PopID();

@@ -26,9 +26,7 @@ struct TransformComponent
 struct ModelComponent
 {
     std::string model = "";
-    std::string texture = "";
-    float shineDamper = 1.0f;
-    float reflectivity = 0.0f;
+    std::string material = "";
 };
 
 struct RigidBody3DComponent

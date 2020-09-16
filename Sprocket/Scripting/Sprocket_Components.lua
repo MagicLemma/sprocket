@@ -36,24 +36,22 @@ function AddTransformComponent(entity, c)
 end
 
 
-ModelComponent = Class(function(self, model, texture, shineDamper, reflectivity)
+ModelComponent = Class(function(self, model, material)
     self.model = model
-    self.texture = texture
-    self.shineDamper = shineDamper
-    self.reflectivity = reflectivity
+    self.material = material
 end)
 
 function GetModelComponent(entity)
-    x0, x1, x2, x3 = Lua_GetModelComponent(entity)
-    return ModelComponent(x0, x1, x2, x3)
+    x0, x1 = Lua_GetModelComponent(entity)
+    return ModelComponent(x0, x1)
 end
 
 function SetModelComponent(entity, c)
-    Lua_SetModelComponent(entity, c.model, c.texture, c.shineDamper, c.reflectivity)
+    Lua_SetModelComponent(entity, c.model, c.material)
 end
 
 function AddModelComponent(entity, c)
-    Lua_AddModelComponent(entity, c.model, c.texture, c.shineDamper, c.reflectivity)
+    Lua_AddModelComponent(entity, c.model, c.material)
 end
 
 
