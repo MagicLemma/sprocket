@@ -97,7 +97,7 @@ unsigned int Shader::GetUniformLocation(const std::string& name) const
 	return glGetUniformLocation(d_programId, name.c_str());
 }
 
-void Shader::LoadUniform(const std::string& name, float value) const
+void Shader::LoadUniformFloat(const std::string& name, float value) const
 {
 	glUniform1f(GetUniformLocation(name), value);
 }
@@ -112,27 +112,27 @@ void Shader::LoadUniformInt(const std::string& name, int value) const
 	glUniform1i(GetUniformLocation(name), value);
 }
 
-void Shader::LoadUniform(const std::string& name, const Maths::vec2& vector) const
+void Shader::LoadUniformVec2(const std::string& name, const Maths::vec2& vector) const
 {
 	glUniform2f(GetUniformLocation(name), vector.x, vector.y);
 }
 
-void Shader::LoadUniform(const std::string& name, const Maths::vec3& vector) const
+void Shader::LoadUniformVec3(const std::string& name, const Maths::vec3& vector) const
 {
 	glUniform3f(GetUniformLocation(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::LoadUniform(const std::string& name, const Maths::vec4& vector) const
+void Shader::LoadUniformVec4(const std::string& name, const Maths::vec4& vector) const
 {
 	glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 }
 
-void Shader::LoadUniform(const std::string& name, const Maths::quat& quat) const
+void Shader::LoadUniformQuat(const std::string& name, const Maths::quat& quat) const
 {
 	glUniform4f(GetUniformLocation(name), quat.x, quat.y, quat.z, quat.w);
 }
 
-void Shader::LoadUniform(const std::string& name, const Maths::mat4& matrix) const
+void Shader::LoadUniformMat4(const std::string& name, const Maths::mat4& matrix) const
 {
 	glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 }

@@ -44,8 +44,8 @@ void ShadowMap::Draw(
     d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
 
     d_shader.Bind();
-    d_shader.LoadUniform("u_proj_matrix", d_lightProjMatrix);
-    d_shader.LoadUniform("u_view_matrix", d_lightViewMatrix);
+    d_shader.LoadUniformMat4("u_proj_matrix", d_lightProjMatrix);
+    d_shader.LoadUniformMat4("u_view_matrix", d_lightViewMatrix);
 
     d_shadowMap.Bind();
     glEnable(GL_DEPTH_TEST);

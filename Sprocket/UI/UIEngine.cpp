@@ -176,7 +176,7 @@ void UIEngine::EndFrame()
     float h = (float)d_window->Height();
     auto proj = Maths::Ortho(0, w, h, 0);
     d_shader.Bind();
-    d_shader.LoadUniform("u_proj_matrix", proj);
+    d_shader.LoadUniformMat4("u_proj_matrix", proj);
 
     d_buffer.Bind();
     for (const auto& panelHash : d_panelOrder) {

@@ -258,7 +258,7 @@ void Context::EndFrame()
 
     d_impl->shader.Bind();
     d_impl->shader.LoadUniformSampler("Texture", 0);
-    d_impl->shader.LoadUniform("ProjMtx", proj);
+    d_impl->shader.LoadUniformMat4("ProjMtx", proj);
 
     d_impl->buffer.Bind();
     d_impl->fontAtlas.Bind();
