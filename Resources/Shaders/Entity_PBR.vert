@@ -11,7 +11,6 @@ layout(location = 6) in vec4 model_orientation;
 layout(location = 7) in vec3 model_scale;
 
 out vec3 p_to_camera_vector;
-out vec3 p_to_light_vector[5];
 
 out Data
 {
@@ -29,7 +28,6 @@ out Data
 
 uniform mat4 u_proj_matrix;
 uniform mat4 u_view_matrix;
-uniform vec3 u_light_pos[5];
 
 // Shadows
 uniform mat4 u_light_proj_view;
@@ -92,8 +90,4 @@ void main()
     p_to_camera_vector = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
 
     p_light_space_pos = u_light_proj_view * world_pos;
-
-    for (int i = 0; i != 5; i++) {
-        p_to_light_vector[i] = u_light_pos[i] - world_pos.xyz;
-    }
 }

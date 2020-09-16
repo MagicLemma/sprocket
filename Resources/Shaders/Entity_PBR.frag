@@ -1,7 +1,6 @@
 #version 400 core
 
 in vec3  p_to_camera_vector;
-in vec3  p_to_light_vector[5];
 
 layout(location = 0) out vec4 out_colour;
 
@@ -11,8 +10,9 @@ uniform float     u_metallic;
 uniform float     u_roughness;
 
 // Lighting Information
-uniform vec3 u_light_colour[5];
-uniform vec3 u_light_attenuation[5];
+uniform vec3  u_light_pos[5];
+uniform vec3  u_light_colour[5];
+uniform vec3  u_light_attenuation[5];
 uniform float u_light_brightness[5];
 
 uniform vec3  u_sun_direction;
@@ -78,11 +78,12 @@ void main()
     
     // Point Lights
     for (int i = 0; i != 5; i++) {
-        vec3 unit_to_light = normalize(p_to_light_vector[i]);
+        vec3 to_light = u_light_pos[i] - p_data.world_position;
+        vec3 unit_to_light = normalize(to_light);
         vec3 reflected_light_direction = reflect(-unit_to_light, unit_normal);
 
         // Attenuation calculation
-        float d = length(p_to_light_vector[i]);
+        float d = length(to_light);
         float attenuation = u_light_attenuation[i].x + u_light_attenuation[i].y * d + u_light_attenuation[i].z * d * d;
 
         // Diffuse lighting calculation
