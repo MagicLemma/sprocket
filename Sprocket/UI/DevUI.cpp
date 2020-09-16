@@ -257,8 +257,8 @@ void Context::EndFrame()
     auto proj = Sprocket::Maths::Ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
 
     d_impl->shader.Bind();
-    d_impl->shader.LoadUniformSampler("Texture", 0);
-    d_impl->shader.LoadUniformMat4("ProjMtx", proj);
+    d_impl->shader.LoadSampler("Texture", 0);
+    d_impl->shader.LoadMat4("ProjMtx", proj);
 
     d_impl->buffer.Bind();
     d_impl->fontAtlas.Bind();

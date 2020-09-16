@@ -43,14 +43,14 @@ public:
     void Unbind() const;
 
     // Shader Uniform Setters
-    void LoadUniformSampler(const std::string& name, int value) const;
-    void LoadUniformInt(const std::string& name, int value) const;
-    void LoadUniformFloat(const std::string& name, float value) const;
-    void LoadUniformVec2(const std::string& name, const Maths::vec2& vector) const;
-    void LoadUniformVec3(const std::string& name, const Maths::vec3& vector) const;
-    void LoadUniformVec4(const std::string& name, const Maths::vec4& vector) const;
-    void LoadUniformQuat(const std::string& name, const Maths::quat& quat) const;
-    void LoadUniformMat4(const std::string& name, const Maths::mat4& matrix) const;
+    void LoadSampler(const std::string& name, int value) const;
+    void LoadInt(const std::string& name, int value) const;
+    void LoadFloat(const std::string& name, float value) const;
+    void LoadVec2(const std::string& name, const Maths::vec2& vector) const;
+    void LoadVec3(const std::string& name, const Maths::vec3& vector) const;
+    void LoadVec4(const std::string& name, const Maths::vec4& vector) const;
+    void LoadQuat(const std::string& name, const Maths::quat& quat) const;
+    void LoadMat4(const std::string& name, const Maths::mat4& matrix) const;
 };
 
 // HELPER FUNCTIONS

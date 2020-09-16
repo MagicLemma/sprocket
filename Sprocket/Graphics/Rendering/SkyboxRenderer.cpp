@@ -15,8 +15,8 @@ void SkyboxRenderer::Draw(const Skybox& skybox,
                           const Maths::mat4& view)
 {
     d_shader.Bind();
-    d_shader.LoadUniformMat4("projectionMatrix", proj);
-    d_shader.LoadUniformMat4("viewMatrix", view);
+    d_shader.LoadMat4("projectionMatrix", proj);
+    d_shader.LoadMat4("viewMatrix", view);
 
     skybox.texture.Bind();
     d_vao->SetModel(skybox.model);
