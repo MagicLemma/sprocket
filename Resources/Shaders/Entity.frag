@@ -1,11 +1,23 @@
-#version 400 core
-
-in vec2  p_texture_coords;
-in vec3  p_surface_normal;
-in vec3  p_to_camera_vector;
-in vec3  p_to_light_vector[5];
+#version 450 core
 
 layout(location = 0) out vec4 out_colour;
+
+in Data
+{
+    vec3 world_position;
+    vec2 texture_coords;
+
+    vec3 world_normal;
+    vec3 world_tangent;
+    vec3 world_bitangent;
+
+    vec3 normal;
+    vec3 tangent;
+    vec3 bitangent;
+
+    vec4 light_space_pos;
+    vec3 to_camera;
+} p_data;
 
 // Material Info
 uniform sampler2D texture_sampler;
@@ -13,8 +25,9 @@ uniform float     u_metallic;
 uniform float     u_roughness;
 
 // Lighting Information
-uniform vec3 u_light_colour[5];
-uniform vec3 u_light_attenuation[5];
+uniform vec3  u_light_pos[5];
+uniform vec3  u_light_colour[5];
+uniform vec3  u_light_attenuation[5];
 uniform float u_light_brightness[5];
 
 uniform vec3  u_sun_direction;
@@ -25,7 +38,6 @@ uniform vec3  u_ambience_colour;
 uniform float u_ambience_brightness;
 
 // Shadows
-in vec4 p_light_space_pos;
 uniform sampler2D shadow_map;
 
 // Takes a value between 
@@ -36,11 +48,11 @@ float cutoff(float value, float low, float high) {
 void main()
 {
     // Surface information
-    vec3 unit_normal = normalize(p_surface_normal);
-    vec3 unit_to_camera = normalize(p_to_camera_vector);
+    vec3 unit_normal = normalize(p_data.world_normal);
+    vec3 unit_to_camera = normalize(p_data.to_camera);
 
     // Colour prior to lighting
-    vec4 colour = texture(texture_sampler, p_texture_coords);
+    vec4 colour = texture(texture_sampler, p_data.texture_coords);
 
     // Ambience
     vec4 ambience = vec4(u_ambience_brightness * u_ambience_colour, 1.0);
@@ -66,11 +78,12 @@ void main()
     
     // Point Lights
     for (int i = 0; i != 5; i++) {
-        vec3 unit_to_light = normalize(p_to_light_vector[i]);
+        vec3 to_light = u_light_pos[i] - p_data.world_position;
+        vec3 unit_to_light = normalize(to_light);
         vec3 reflected_light_direction = reflect(-unit_to_light, unit_normal);
 
         // Attenuation calculation
-        float d = length(p_to_light_vector[i]);
+        float d = length(to_light);
         float attenuation = u_light_attenuation[i].x + u_light_attenuation[i].y * d + u_light_attenuation[i].z * d * d;
 
         // Diffuse lighting calculation
@@ -86,10 +99,10 @@ void main()
     }
 
     // Shadows
-    vec3 proj_coords = p_light_space_pos.xyz / p_light_space_pos.w;
+    vec3 proj_coords = p_data.light_space_pos.xyz / p_data.light_space_pos.w;
     proj_coords = 0.5 * proj_coords + 0.5;
     float current_depth = proj_coords.z;
-    float d = dot(p_surface_normal, -u_sun_direction);
+    float d = dot(p_data.world_normal, -u_sun_direction);
     //float bias = max(0.005 * (1.0 - d), 0.001);
     float bias = 0.0;
     
