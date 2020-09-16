@@ -15,6 +15,20 @@ out vec3 p_surface_normal;
 out vec3 p_to_camera_vector;
 out vec3 p_to_light_vector[5];
 
+out Data
+{
+    vec3 world_position;
+    vec2 texture_coords;
+
+    vec3 world_normal;
+    vec3 world_tangent;
+    vec3 world_bitangent;
+
+    vec3 normal;
+    vec3 tangent;
+    vec3 bitangent;
+} p_data;
+
 uniform mat4 u_proj_matrix;
 uniform mat4 u_view_matrix;
 uniform vec3 u_light_pos[5];
@@ -62,12 +76,14 @@ mat4 Transform(vec3 p, vec4 o, vec3 s)
 
 void main()
 {
-    mat4 transform = Transform(model_position, model_orientation, model_scale);
-    vec4 world_pos = transform * vec4(position, 1.0);
+    mat4 model_matrix = Transform(model_position, model_orientation, model_scale);
+    vec4 world_pos = model_matrix * vec4(position, 1.0);
     gl_Position = u_proj_matrix * u_view_matrix * world_pos;
     
+    p_data.world_position = vec3(world_pos);
+
     p_texture_coords = texture_coords;
-    p_surface_normal = (transform * vec4(normal, 0.0)).xyz;
+    p_surface_normal = (model_matrix * vec4(normal, 0.0)).xyz;
     p_to_camera_vector = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
 
     p_light_space_pos = u_light_proj_view * world_pos;

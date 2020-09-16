@@ -24,6 +24,20 @@ uniform float u_sun_brightness;
 uniform vec3  u_ambience_colour;
 uniform float u_ambience_brightness;
 
+in Data
+{
+    vec3 world_position;
+    vec2 texture_coords;
+
+    vec3 world_normal;
+    vec3 world_tangent;
+    vec3 world_bitangent;
+
+    vec3 normal;
+    vec3 tangent;
+    vec3 bitangent;
+} p_data;
+
 // Shadows
 in vec4 p_light_space_pos;
 uniform sampler2D shadow_map;
