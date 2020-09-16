@@ -40,83 +40,98 @@ uniform float u_ambience_brightness;
 // Shadows
 uniform sampler2D shadow_map;
 
+const float PI = 3.14159265359;
+const int MAX_NUM_LIGHTS = 5;
+
 // Takes a value between 
 float cutoff(float value, float low, float high) {
     return clamp((value - low) / (high - low), 0.0, 1.0);
 }
 
+vec3 fresnel_schlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+float distribution_ggx(vec3 N, vec3 H, float roughness)
+{
+    float a      = roughness*roughness;
+    float a2     = a*a;
+    float NdotH  = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+	
+    float num   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+	
+    return num / denom;
+}
+
+float geometry_schlick_ggx(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float num   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+	
+    return num / denom;
+}
+
+float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2  = geometry_schlick_ggx(NdotV, roughness);
+    float ggx1  = geometry_schlick_ggx(NdotL, roughness);
+	
+    return ggx1 * ggx2;
+}
+
 void main()
 {
-    // Surface information
-    vec3 unit_normal = normalize(p_data.world_normal);
-    vec3 unit_to_camera = normalize(p_data.to_camera);
+    vec3 albedo = texture(texture_sampler, p_data.texture_coords).xyz;
+ 
+    vec3 N = normalize(p_data.world_normal);
+    vec3 V = normalize(p_data.to_camera);
 
-    // Colour prior to lighting
-    vec4 colour = texture(texture_sampler, p_data.texture_coords);
-
-    // Ambience
-    vec4 ambience = vec4(u_ambience_brightness * u_ambience_colour, 1.0);
-
-    // Lighting calculation
-    vec4 total_diffuse = vec4(0.0);
-    vec4 total_specular = vec4(0.0);
-
-    float sun_brightness = u_sun_brightness * max(-u_sun_direction.y, 0.0);
-    sun_brightness *= cutoff(abs(dot(u_sun_direction, unit_normal)), 0.15, 0.25);
-
-    // Sun diffuse light
-    vec3 unit_sun_direction = normalize(u_sun_direction);
-    float sun_diffuse_factor = dot(-unit_sun_direction, unit_normal);
-    sun_diffuse_factor = max(sun_diffuse_factor, 0.0);
-    total_diffuse += sun_diffuse_factor * sun_brightness * vec4(u_sun_colour, 1.0);
-
-    // Sun specular light
-    vec3 sun_reflected_light_dir = reflect(unit_sun_direction, unit_normal);
-    float sun_specular_factor = dot(sun_reflected_light_dir, unit_to_camera);
-    sun_specular_factor = max(sun_specular_factor, 0.0);
-    total_specular += sun_specular_factor * sun_brightness * vec4(u_sun_colour, 1.0);
+    vec3 F0 = vec3(0.04);
+    F0 = mix(F0, albedo, u_metallic);
     
-    // Point Lights
-    for (int i = 0; i != 5; i++) {
-        vec3 to_light = u_light_pos[i] - p_data.world_position;
-        vec3 unit_to_light = normalize(to_light);
-        vec3 reflected_light_direction = reflect(-unit_to_light, unit_normal);
+    // reflectance
+    vec3 Lo = vec3(0.0);
+    for (int i = 0; i != MAX_NUM_LIGHTS; ++i)
+    {
+        // radiance
+        vec3 L = normalize(u_light_pos[i] - p_data.world_position);
+        vec3 H = normalize(V + L);
+        float dist = length(u_light_pos[i] - p_data.world_position);
+        float attenuation = 1.0 / (dist * dist);
+        vec3 radiance = u_light_brightness[i] * u_light_colour[i] * attenuation;
 
-        // Attenuation calculation
-        float d = length(to_light);
-        float attenuation = u_light_attenuation[i].x + u_light_attenuation[i].y * d + u_light_attenuation[i].z * d * d;
+        // cook-torrance brdf
+        float NDF = distribution_ggx(N, H, u_roughness);
+        float G = geometry_smith(N, V, L, u_roughness);
+        vec3 F = fresnel_schlick(max(dot(H, V), 0.0), F0);
 
-        // Diffuse lighting calculation
-        float diffuse_factor = dot(unit_to_light, unit_normal);
-        diffuse_factor = max(diffuse_factor, 0.0) / attenuation;
-        total_diffuse += u_light_brightness[i] * vec4(diffuse_factor * u_light_colour[i], 1.0);
+        vec3 kS = F;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= 1.0 - u_metallic;
 
-        // Specular lighting calculation
-        float specular_factor = dot(reflected_light_direction, unit_to_camera);
-        specular_factor = max(specular_factor, 0.0);
-        specular_factor = pow(specular_factor, u_roughness) / attenuation;
-        total_specular = total_specular + vec4(specular_factor * u_metallic * u_light_colour[i], 1.0);
+        vec3 numerator = NDF * G * F;
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+        vec3 specular = numerator / max(denominator, 0.001);
+
+        // add to radiance Lo
+        float NdotL = max(dot(N, L), 0.0);
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     }
 
-    // Shadows
-    vec3 proj_coords = p_data.light_space_pos.xyz / p_data.light_space_pos.w;
-    proj_coords = 0.5 * proj_coords + 0.5;
-    float current_depth = proj_coords.z;
-    float d = dot(p_data.world_normal, -u_sun_direction);
-    //float bias = max(0.005 * (1.0 - d), 0.001);
-    float bias = 0.0;
-    
-    float shadow = 0;
-    vec2 texel_size = 1.0 / textureSize(shadow_map, 0);
-    for (int x = -1; x <= 1; ++x) {
-        for (int y= -1; y <= 1; ++y) {
-            float pcf_depth = texture(shadow_map, proj_coords.xy + vec2(x, y) * texel_size).r;
-            shadow += current_depth - bias > pcf_depth ? 1.0 : 0.0;
-        }
-    }
-    shadow /= 9.0;
+    vec3 ambient = vec3(0.03) * albedo;// * ao;
+    vec3 colour = ambient + Lo;
 
-    if (proj_coords.z > 1.0) { shadow = 0.0; }
+    colour = colour / (colour + vec3(1.0));
+    colour = pow(colour, vec3(1.0/2.2));
 
-    out_colour = (ambience + (1.0 - shadow) * (total_diffuse + total_specular)) * colour;
+    out_colour = vec4(colour, 1.0);
 }

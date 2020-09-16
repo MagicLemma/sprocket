@@ -9,5 +9,5 @@ UseMetallicMap: false
 UseRoughnessMap: false
 
 Albedo: [1.0, 1.0, 1.0]
-Metallic: 2
-Roughness: 3
+Metallic: 0.9
+Roughness: 0.4
