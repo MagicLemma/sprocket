@@ -1,8 +1,23 @@
-#version 400 core
-
-in vec3  p_to_camera_vector;
+#version 450 core
 
 layout(location = 0) out vec4 out_colour;
+
+in Data
+{
+    vec3 world_position;
+    vec2 texture_coords;
+
+    vec3 world_normal;
+    vec3 world_tangent;
+    vec3 world_bitangent;
+
+    vec3 normal;
+    vec3 tangent;
+    vec3 bitangent;
+
+    vec4 light_space_pos;
+    vec3 to_camera;
+} p_data;
 
 // Material Info
 uniform sampler2D texture_sampler;
@@ -22,22 +37,7 @@ uniform float u_sun_brightness;
 uniform vec3  u_ambience_colour;
 uniform float u_ambience_brightness;
 
-in Data
-{
-    vec3 world_position;
-    vec2 texture_coords;
-
-    vec3 world_normal;
-    vec3 world_tangent;
-    vec3 world_bitangent;
-
-    vec3 normal;
-    vec3 tangent;
-    vec3 bitangent;
-} p_data;
-
 // Shadows
-in vec4 p_light_space_pos;
 uniform sampler2D shadow_map;
 
 // Takes a value between 
@@ -49,7 +49,7 @@ void main()
 {
     // Surface information
     vec3 unit_normal = normalize(p_data.world_normal);
-    vec3 unit_to_camera = normalize(p_to_camera_vector);
+    vec3 unit_to_camera = normalize(p_data.to_camera);
 
     // Colour prior to lighting
     vec4 colour = texture(texture_sampler, p_data.texture_coords);
@@ -99,7 +99,7 @@ void main()
     }
 
     // Shadows
-    vec3 proj_coords = p_light_space_pos.xyz / p_light_space_pos.w;
+    vec3 proj_coords = p_data.light_space_pos.xyz / p_data.light_space_pos.w;
     proj_coords = 0.5 * proj_coords + 0.5;
     float current_depth = proj_coords.z;
     float d = dot(p_data.world_normal, -u_sun_direction);

@@ -1,4 +1,4 @@
-#version 400 core
+#version 450 core
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -9,8 +9,6 @@ layout(location = 4) in vec2 texture_coords;
 layout(location = 5) in vec3 model_position;
 layout(location = 6) in vec4 model_orientation;
 layout(location = 7) in vec3 model_scale;
-
-out vec3 p_to_camera_vector;
 
 out Data
 {
@@ -24,16 +22,17 @@ out Data
     vec3 normal;
     vec3 tangent;
     vec3 bitangent;
+
+    vec4 light_space_pos;
+    vec3 to_camera;
 } p_data;
 
+// Transforms
 uniform mat4 u_proj_matrix;
 uniform mat4 u_view_matrix;
-
-// Shadows
 uniform mat4 u_light_proj_view;
-out vec4 p_light_space_pos;
 
-mat4 Transform(vec3 p, vec4 o, vec3 s)
+mat4 make_model_matrix(vec3 p, vec4 o, vec3 s)
 {
     mat4 matrix;
 
@@ -72,7 +71,7 @@ mat4 Transform(vec3 p, vec4 o, vec3 s)
 
 void main()
 {
-    mat4 model_matrix = Transform(model_position, model_orientation, model_scale);
+    mat4 model_matrix = make_model_matrix(model_position, model_orientation, model_scale);
     vec4 world_pos = model_matrix * vec4(position, 1.0);
     gl_Position = u_proj_matrix * u_view_matrix * world_pos;
     
@@ -87,7 +86,6 @@ void main()
     p_data.tangent = tangent;
     p_data.bitangent = bitangent;
 
-    p_to_camera_vector = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
-
-    p_light_space_pos = u_light_proj_view * world_pos;
+    p_data.light_space_pos = u_light_proj_view * world_pos;
+    p_data.to_camera = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
 }
