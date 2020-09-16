@@ -115,7 +115,6 @@ void main()
         }
     }
     shadow /= 9.0;
-
     if (proj_coords.z > 1.0) { shadow = 0.0; }
 
     out_colour = (ambience + (1.0 - shadow) * (total_diffuse + total_specular)) * colour;

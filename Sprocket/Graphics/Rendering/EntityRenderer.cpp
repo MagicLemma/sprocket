@@ -31,7 +31,8 @@ EntityRenderer::EntityRenderer(ModelManager* modelManager,
     , d_modelManager(modelManager)
     , d_materialManager(materialManager)
     , d_particleManager(nullptr)
-    , d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
+    //, d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
+    , d_shader("Resources/Shaders/Entity_PBR.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer(GetInstanceBuffer())
 {
 }
