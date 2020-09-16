@@ -9,8 +9,8 @@ layout(location = 0) out vec4 out_colour;
 
 // Material Info
 uniform sampler2D texture_sampler;
-uniform float     u_reflectivity;
-uniform float     u_shine_damper;
+uniform float     u_metallic;
+uniform float     u_roughness;
 
 // Lighting Information
 uniform vec3 u_light_colour[5];
@@ -81,8 +81,8 @@ void main()
         // Specular lighting calculation
         float specular_factor = dot(reflected_light_direction, unit_to_camera);
         specular_factor = max(specular_factor, 0.0);
-        specular_factor = pow(specular_factor, u_shine_damper) / attenuation;
-        total_specular = total_specular + vec4(specular_factor * u_reflectivity * u_light_colour[i], 1.0);
+        specular_factor = pow(specular_factor, u_roughness) / attenuation;
+        total_specular = total_specular + vec4(specular_factor * u_metallic * u_light_colour[i], 1.0);
     }
 
     // Shadows

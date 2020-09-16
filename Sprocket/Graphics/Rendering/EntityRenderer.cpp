@@ -131,8 +131,8 @@ void EntityRenderer::Draw(
             auto material = d_materialManager->GetMaterial(mc.material);
             // TODO: Apply everything
             material->albedoMap.Bind();
-            d_shader.LoadUniform("u_shine_damper", material->roughness);
-            d_shader.LoadUniform("u_reflectivity", material->metallic);
+            d_shader.LoadUniform("u_roughness", material->roughness);
+            d_shader.LoadUniform("u_metallic", material->metallic);
             currentMaterial = mc.material;
         }
 

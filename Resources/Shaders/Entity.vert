@@ -10,10 +10,10 @@ layout(location = 5) in vec3 model_position;
 layout(location = 6) in vec4 model_orientation;
 layout(location = 7) in vec3 model_scale;
 
-out vec2  p_texture_coords;
-out vec3  p_surface_normal;
-out vec3  p_to_camera_vector;
-out vec3  p_to_light_vector[5];
+out vec2 p_texture_coords;
+out vec3 p_surface_normal;
+out vec3 p_to_camera_vector;
+out vec3 p_to_light_vector[5];
 
 uniform mat4 u_proj_matrix;
 uniform mat4 u_view_matrix;
