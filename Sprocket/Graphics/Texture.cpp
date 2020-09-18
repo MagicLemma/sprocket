@@ -22,6 +22,9 @@ Texture::Texture(const std::string& pngFile, bool flip)
         pngFile.c_str(),
         &d_width, &d_height, &bpp, 4);
 
+    assert(d_width > 0);
+    assert(d_height > 0);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

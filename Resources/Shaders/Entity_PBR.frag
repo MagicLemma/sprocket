@@ -93,15 +93,15 @@ float geometry_smith(vec3 N, vec3 V, vec3 L, float roughness)
 
 vec3 calculate_light(
     vec3 F0, vec3 N, vec3 V, vec3 L, vec3 H,
-    vec3 albedo, vec3 radiance)
+    vec3 albedo, vec3 radiance, float metallic, float roughness)
 {
     // cook-torrance brdf
-    float NDF = distribution_ggx(N, H, u_roughness);
-    float G = geometry_smith(N, V, L, u_roughness);
+    float NDF = distribution_ggx(N, H, roughness);
+    float G = geometry_smith(N, V, L, roughness);
     vec3 F = fresnel_schlick(max(dot(H, V), 0.0), F0);
 
     vec3 kS = F;
-    vec3 kD = (vec3(1.0) - kS) * (1.0 - u_metallic);
+    vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
 
     vec3 numerator = NDF * G * F;
     float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
@@ -115,12 +115,16 @@ vec3 calculate_light(
 void main()
 {
     vec3 albedo = texture(texture_sampler, p_data.texture_coords).xyz;
+
+    //vec3 normal = u_use_normal_map > 0.5 ? texture(u_normal_map, p_data.texture_coords).xyz;
+    float metallic = u_use_metallic_map > 0.5 ? texture(u_metallic_map, p_data.texture_coords).r : u_metallic;
+    float roughness = u_use_roughness_map > 0.5 ? texture(u_roughness_map, p_data.texture_coords).r : u_roughness;
  
     vec3 N = normalize(p_data.world_normal);
     vec3 V = normalize(p_data.to_camera);
 
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, albedo, u_metallic);
+    F0 = mix(F0, albedo, metallic);
     
     // reflectance
     vec3 Lo = vec3(0.0);
@@ -130,7 +134,7 @@ void main()
         vec3 L = normalize(u_sun_direction);
         vec3 H = normalize(V + L);
         vec3 radiance = u_sun_brightness * u_sun_colour;
-        Lo += calculate_light(F0, N, V, L, H, albedo, radiance);
+        Lo += calculate_light(F0, N, V, L, H, albedo, radiance, metallic, roughness);
     }
 
     // point lights
@@ -141,7 +145,7 @@ void main()
         float dist = length(u_light_pos[i] - p_data.world_position);
         float attenuation = 1.0 / (dist * dist);
         vec3 radiance = u_light_brightness[i] * u_light_colour[i] * attenuation;
-        Lo += calculate_light(F0, N, V, L, H, albedo, radiance);
+        Lo += calculate_light(F0, N, V, L, H, albedo, radiance, metallic, roughness);
     }
 
     // Shadows

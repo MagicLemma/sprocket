@@ -1,11 +1,11 @@
 AlbedoMap: Resources/Textures/Space.png
 NormalMap: ""
-MetallicMap: ""
+MetallicMap: Resources/Textures/SpaceSpec.png
 RoughnessMap: ""
 
 UseAlbedoMap: true
 UseNormalMap: false
-UseMetallicMap: false
+UseMetallicMap: true
 UseRoughnessMap: false
 
 Albedo: [1.0, 1.0, 1.0]
