@@ -84,7 +84,7 @@ void main()
 
         // Attenuation calculation
         float d = length(to_light);
-        float attenuation = u_light_attenuation[i].x + u_light_attenuation[i].y * d + u_light_attenuation[i].z * d * d;
+        float attenuation = (d * d);
 
         // Diffuse lighting calculation
         float diffuse_factor = dot(unit_to_light, unit_normal);

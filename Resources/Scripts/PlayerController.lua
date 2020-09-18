@@ -73,7 +73,10 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     local tc = TransformComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
     AddTransformComponent(newEntity, tc)
 
-    local mc = ModelComponent("Resources/Models/Sphere.obj", "", 1, 1)
+    local mc = ModelComponent(
+        "Resources/Models/Sphere.obj", 
+        "Resources/Materials/grey.yaml"
+    )
     AddModelComponent(newEntity, mc)
 
     local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.0, 0.5, Vec3(0, 0, 0), false)
