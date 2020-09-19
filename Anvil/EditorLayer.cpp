@@ -246,7 +246,7 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowPos({0.8f * w, menuBarHeight + (h - menuBarHeight)/2.0f});
     ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
     if (ImGui::Begin("Inspector", &open, flags)) {
-        ShowInspector(*this);
+        d_inspector.Show(*this);
         ImGui::End();
     }
 

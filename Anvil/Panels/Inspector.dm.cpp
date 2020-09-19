@@ -32,7 +32,7 @@ void ShowGuizmo(
 
 }
 
-void ShowInspector(EditorLayer& editor)
+void Inspector::Show(EditorLayer& editor)
 {
     Entity entity = editor.Selected();
 
@@ -45,8 +45,6 @@ void ShowInspector(EditorLayer& editor)
     }
     int count = 0;
 
-    static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
-    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         auto& c = entity.Get<{{Comp.Name}}>();

@@ -33,7 +33,7 @@ void ShowGuizmo(
 
 }
 
-void ShowInspector(EditorLayer& editor)
+void Inspector::Show(EditorLayer& editor)
 {
     Entity entity = editor.Selected();
 
@@ -46,8 +46,6 @@ void ShowInspector(EditorLayer& editor)
     }
     int count = 0;
 
-    static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
-    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
     if (entity.Has<TemporaryComponent>()) {
         auto& c = entity.Get<TemporaryComponent>();
         if (ImGui::CollapsingHeader("Temporary")) {
@@ -78,18 +76,18 @@ void ShowInspector(EditorLayer& editor)
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
-            ImGuiXtra::GuizmoSettings(mode, coords);
+            ImGuiXtra::GuizmoSettings(d_mode, d_coords);
             if (ImGui::Button("Delete")) { entity.Remove<TransformComponent>(); }
             ImGui::PopID();
         }
-        ShowGuizmo(editor, c, mode, coords);
+        ShowGuizmo(editor, c, d_mode, d_coords);
     }
 
     if (entity.Has<ModelComponent>()) {
         auto& c = entity.Get<ModelComponent>();
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.fbx");
+            ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.obj");
             ImGuiXtra::File("Material", editor.GetWindow(), &c.material, "*.yaml");
             
             if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }
