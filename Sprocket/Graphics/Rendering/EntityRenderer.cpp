@@ -132,38 +132,31 @@ void EntityRenderer::Draw(
             auto material = d_materialManager->GetMaterial(mc.material);
             // TODO: Apply everything
 
-            if (material->albedoMap != Texture::White()) {
-                glActiveTexture(GL_TEXTURE0);
-                material->albedoMap.Bind();
-                d_shader.LoadSampler("texture_sampler", 0);
-            }
+            glActiveTexture(GL_TEXTURE0);
+            material->albedoMap.Bind();
+            d_shader.LoadSampler("texture_sampler", 0);
 
-            if (material->normalMap != Texture::White()) {
-                glActiveTexture(GL_TEXTURE1);
-                material->normalMap.Bind();
-                d_shader.LoadSampler("u_normal_map", 1);
-            }
+            glActiveTexture(GL_TEXTURE1);
+            material->normalMap.Bind();
+            d_shader.LoadSampler("u_normal_map", 1);
+            
+            glActiveTexture(GL_TEXTURE2);
+            material->metallicMap.Bind();
+            d_shader.LoadSampler("u_metallic_map", 2);
 
-            if (material->metallicMap != Texture::White()) {
-                glActiveTexture(GL_TEXTURE2);
-                material->metallicMap.Bind();
-                d_shader.LoadSampler("u_metallic_map", 2);
-            }
-
-            if (material->roughnessMap != Texture::White()) {
-                glActiveTexture(GL_TEXTURE3);
-                material->roughnessMap.Bind();
-                d_shader.LoadSampler("u_roughness_map", 3);
-            }
+            glActiveTexture(GL_TEXTURE3);
+            material->roughnessMap.Bind();
+            d_shader.LoadSampler("u_roughness_map", 3);
 
             glActiveTexture(GL_TEXTURE0);
 
-            d_shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0);
-            d_shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0);
-            d_shader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0);
-            d_shader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0);
+            d_shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
+            d_shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
+            d_shader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
+            d_shader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
 
             // u_albedo
+            d_shader.LoadVec3("u_albedo", material->albedo);
             d_shader.LoadFloat("u_roughness", material->roughness);
             d_shader.LoadFloat("u_metallic", material->metallic);
             currentMaterial = mc.material;

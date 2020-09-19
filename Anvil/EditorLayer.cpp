@@ -280,10 +280,35 @@ void EditorLayer::OnUpdate(double dt)
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [name, material] : *d_core.materialManager) {
-                    if (ImGui::CollapsingHeader(name.c_str())) {
-                        ImGui::Text(name.c_str());
+                for (auto& [file, material] : *d_core.materialManager) {
+                    ImGui::PushID(std::hash<std::string>{}(material->file));
+                    if (ImGui::CollapsingHeader(material->name.c_str())) {
+                        ImGui::Text(file.c_str());
+                        ImGui::Separator();
+                        ImGui::Text("Texture Maps");
+                        ImGui::Checkbox("##Use Albedo Map", &material->useAlbedoMap);
+                        ImGui::SameLine();
+                        ImGui::Text(material->albedoMap.Filepath().c_str());
+                        ImGui::Checkbox("##Use Normal Map", &material->useNormalMap);
+                        ImGui::SameLine();
+                        ImGui::Text(material->normalMap.Filepath().c_str());
+                        ImGui::Checkbox("##Use Metallic Map", &material->useMetallicMap);
+                        ImGui::SameLine();
+                        ImGui::Text(material->metallicMap.Filepath().c_str());
+                        ImGui::Checkbox("##Use Roughness Map", &material->useRoughnessMap);
+                        ImGui::SameLine();
+                        ImGui::Text(material->roughnessMap.Filepath().c_str());
+                        ImGui::Separator();
+                        ImGui::Text("Defaults");
+                        ImGui::ColorEdit3("Albedo", &material->albedo.x);
+                        ImGui::DragFloat("Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
+                        ImGui::DragFloat("Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
+                        ImGui::Separator();
+                        if (ImGui::Button("Save")) {
+                            d_core.materialManager->SaveMaterial(material);
+                        }
                     }
+                    ImGui::PopID();
                 }
                 ImGui::EndChild();
                 ImGui::EndTabItem();

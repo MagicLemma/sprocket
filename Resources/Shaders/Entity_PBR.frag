@@ -32,6 +32,7 @@ uniform float u_use_normal_map;
 uniform float u_use_metallic_map;
 uniform float u_use_roughness_map;
 
+uniform vec3  u_albedo;
 uniform float u_metallic;
 uniform float u_roughness;
 
@@ -116,7 +117,7 @@ vec3 calculate_light(
 
 void main()
 {
-    vec3 albedo = texture(texture_sampler, p_data.texture_coords).xyz;
+    vec3 albedo = u_use_albedo_map > 0.5 ? texture(texture_sampler, p_data.texture_coords).xyz : u_albedo;
 
     float metallic = u_use_metallic_map > 0.5 ? texture(u_metallic_map, p_data.texture_coords).r : u_metallic;
     float roughness = u_use_roughness_map > 0.5 ? texture(u_roughness_map, p_data.texture_coords).r : u_roughness;

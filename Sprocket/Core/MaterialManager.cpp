@@ -3,6 +3,7 @@
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <filesystem>
 
 namespace Sprocket {
     
@@ -12,28 +13,32 @@ MaterialManager::MaterialManager(TextureManager* textureManager)
 
 std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
 {
-    if (file == "") {
+    std::string filepath = std::filesystem::absolute(file).string();
+    if (filepath == "") {
         static auto defaultMaterial = std::make_shared<Material>();
         return defaultMaterial;
     }
 
-    auto it = d_loadedMaterials.find(file);
+    auto it = d_loadedMaterials.find(filepath);
     if (it != d_loadedMaterials.end()) {
         return it->second;
     }
 
     auto material = std::make_shared<Material>();
-    material->file = file;
+    material->file = filepath;
 
-    std::ifstream stream(file);
+    std::ifstream stream(filepath);
     std::stringstream sstream;
     sstream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(sstream.str());
 
-    auto name = data["Name"];
-    assert(name);
-    material->name = name.as<std::string>();
+    if (auto name = data["Name"]) {
+        material->name = name.as<std::string>();
+    }
+    else {
+        material->name = "Bad material";
+    }
 
     if (auto albedoMap = data["AlbedoMap"]) {
         material->albedoMap = d_textureManager->GetTexture(albedoMap.as<std::string>());
@@ -71,7 +76,7 @@ std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
         material->roughness = roughness.as<float>();
     }
 
-    d_loadedMaterials.emplace(file, material);
+    d_loadedMaterials.emplace(filepath, material);
     return material;
 }
 
