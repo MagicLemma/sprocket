@@ -220,11 +220,25 @@ void EditorLayer::OnUpdate(double dt)
     }
     ImGui::PopStyleVar();
 
+    auto SubstringCI = [](const std::string& string, const std::string& substr) {
+        auto it = std::search(
+            string.begin(), string.end(),
+            substr.begin(), substr.end(),
+            [] (char c1, char c2) { return std::toupper(c1) == std::toupper(c2); }
+        );
+        return it != string.end();
+    };
+
     ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
     ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
     if (ImGui::Begin("Entities", &open, flags)) {
+        static std::string search;
+        ImGuiXtra::TextModifiable(search);
+        ImGui::Separator();
         d_scene->All([&](Entity& entity) {
-            AddEntityToList(entity);
+            if (SubstringCI(Name(entity), search)) {
+                AddEntityToList(entity);
+            }
         });
         ImGui::End();
     }
@@ -254,11 +268,8 @@ void EditorLayer::OnUpdate(double dt)
 void EditorLayer::AddEntityToList(const Entity& entity)
 {
     ImGui::PushID(entity.Id());
-    if (ImGui::TreeNode(Name(entity).c_str())) {
-        if (ImGui::Button("Select")) {
-            d_selected = entity;
-        }
-        ImGui::TreePop();
+    if (ImGui::Button(Name(entity).c_str())) {
+        d_selected = entity;
     }
     ImGui::PopID();
 }

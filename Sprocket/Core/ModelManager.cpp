@@ -16,46 +16,51 @@ bool IsSceneValid(const aiScene* scene)
            scene->mRootNode;
 }
 
-std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene, aiMesh* mesh)
+std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
 {    
     Vertex3DBuffer vertices;
     IndexBuffer    indices;
 
-    // Vertices
-    for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
-        Vertex3D vertex;
+    for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
+        aiMesh* mesh = scene->mMeshes[idx];
 
-        vertex.position.x = mesh->mVertices[i].x;
-        vertex.position.y = mesh->mVertices[i].y;
-        vertex.position.z = mesh->mVertices[i].z;
+        // Vertices
+        for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
+            Vertex3D vertex;
 
-        vertex.normal.x = mesh->mNormals[i].x;
-        vertex.normal.y = mesh->mNormals[i].y;
-        vertex.normal.z = mesh->mNormals[i].z;
+            vertex.position.x = mesh->mVertices[i].x;
+            vertex.position.y = mesh->mVertices[i].y;
+            vertex.position.z = mesh->mVertices[i].z;
 
-        if (mesh->HasTangentsAndBitangents()) {
-            vertex.tangent.x = mesh->mTangents[i].x;
-            vertex.tangent.y = mesh->mTangents[i].y;
-            vertex.tangent.z = mesh->mTangents[i].z;
+            vertex.normal.x = mesh->mNormals[i].x;
+            vertex.normal.y = mesh->mNormals[i].y;
+            vertex.normal.z = mesh->mNormals[i].z;
 
-            vertex.bitangent.x = mesh->mBitangents[i].x;
-            vertex.bitangent.y = mesh->mBitangents[i].y;
-            vertex.bitangent.z = mesh->mBitangents[i].z;
+            if (mesh->HasTangentsAndBitangents()) {
+                vertex.tangent.x = mesh->mTangents[i].x;
+                vertex.tangent.y = mesh->mTangents[i].y;
+                vertex.tangent.z = mesh->mTangents[i].z;
+
+                vertex.bitangent.x = mesh->mBitangents[i].x;
+                vertex.bitangent.y = mesh->mBitangents[i].y;
+                vertex.bitangent.z = mesh->mBitangents[i].z;
+            }
+
+            // TODO: Add error checking code here to make sure the texture exists
+            vertex.textureCoords.x = mesh->mTextureCoords[0][i].x;
+            vertex.textureCoords.y = mesh->mTextureCoords[0][i].y;
+
+            vertices.push_back(vertex);
         }
 
-        // TODO: Add error checking code here to make sure the texture exists
-        vertex.textureCoords.x = mesh->mTextureCoords[0][i].x;
-        vertex.textureCoords.y = mesh->mTextureCoords[0][i].y;
-
-        vertices.push_back(vertex);
-    }
-
-    // Indices
-    for (unsigned int i = 0; i != mesh->mNumFaces; ++i) {
-        aiFace face = mesh->mFaces[i];
-        for (unsigned int j = 0; j != face.mNumIndices; ++j) {
-            indices.push_back(face.mIndices[j]);
+        // Indices
+        for (unsigned int i = 0; i != mesh->mNumFaces; ++i) {
+            aiFace face = mesh->mFaces[i];
+            for (unsigned int j = 0; j != face.mNumIndices; ++j) {
+                indices.push_back(face.mIndices[j]);
+            }
         }
+
     }
 
     return std::make_shared<Model3D>(vertices, indices);
@@ -81,12 +86,12 @@ std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
         return std::make_shared<Model3D>();
     }
 
-    if (scene->mNumMeshes != 1) {
-        SPKT_LOG_ERROR("File does not have exactly one mesh, not supported!");
+    if (scene->mNumMeshes < 1) {
+        SPKT_LOG_ERROR("File has no mesh!");
         return std::make_shared<Model3D>();
     }
 
-    return ProcessMesh(scene, scene->mMeshes[0]);
+    return ProcessMesh(scene);
 }
 
 std::shared_ptr<Model3D> ModelManager::GetModel(const std::string& path)

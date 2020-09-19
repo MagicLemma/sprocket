@@ -15,6 +15,8 @@ in Data
     vec3 tangent;
     vec3 bitangent;
 
+    mat3 tangent_space;
+
     vec4 light_space_pos;
     vec3 to_camera;
 } p_data;
@@ -116,11 +118,16 @@ void main()
 {
     vec3 albedo = texture(texture_sampler, p_data.texture_coords).xyz;
 
-    //vec3 normal = u_use_normal_map > 0.5 ? texture(u_normal_map, p_data.texture_coords).xyz;
     float metallic = u_use_metallic_map > 0.5 ? texture(u_metallic_map, p_data.texture_coords).r : u_metallic;
     float roughness = u_use_roughness_map > 0.5 ? texture(u_roughness_map, p_data.texture_coords).r : u_roughness;
  
     vec3 N = normalize(p_data.world_normal);
+    if (u_use_normal_map > 0.5) {
+        N = texture(u_normal_map, p_data.texture_coords).rgb;
+        N = normalize(N * 2.0 - 1.0);
+        N = normalize(p_data.tangent_space * N);
+    }
+
     vec3 V = normalize(p_data.to_camera);
 
     vec3 F0 = vec3(0.04);

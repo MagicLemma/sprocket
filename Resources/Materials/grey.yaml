@@ -1,10 +1,10 @@
 AlbedoMap: Resources/Materials/Gun/Albedo.png
-NormalMap: "" #Resources/Materials/Gun/Normal.png
+NormalMap: Resources/Materials/Gun/Normal.png
 MetallicMap: Resources/Materials/Gun/Metallic.png
 RoughnessMap: Resources/Materials/Gun/Roughness.png
 
 UseAlbedoMap: true
-UseNormalMap: false
+UseNormalMap: true
 UseMetallicMap: true
 UseRoughnessMap: true
 

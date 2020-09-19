@@ -23,6 +23,8 @@ out Data
     vec3 tangent;
     vec3 bitangent;
 
+    mat3 tangent_space;
+
     vec4 light_space_pos;
     vec3 to_camera;
 } p_data;
@@ -85,6 +87,8 @@ void main()
     p_data.normal = normal;
     p_data.tangent = tangent;
     p_data.bitangent = bitangent;
+
+    p_data.tangent_space = mat3(model_matrix) * mat3(tangent, bitangent, normal);
 
     p_data.light_space_pos = u_light_proj_view * world_pos;
     p_data.to_camera = (inverse(u_view_matrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - world_pos.xyz;
