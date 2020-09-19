@@ -102,4 +102,24 @@ void MaterialManager::SaveMaterial(const std::string& file, std::shared_ptr<Mate
     fout << out.c_str();
 }
 
+MaterialManager::Map::iterator MaterialManager::begin()
+{
+    return d_loadedMaterials.begin();
+}
+
+MaterialManager::Map::iterator MaterialManager::end()
+{
+    return d_loadedMaterials.end();
+}
+
+MaterialManager::Map::const_iterator MaterialManager::cbegin() const
+{
+    return d_loadedMaterials.cbegin();
+}
+
+MaterialManager::Map::const_iterator MaterialManager::cend() const
+{
+    return d_loadedMaterials.cend();
+}
+
 }

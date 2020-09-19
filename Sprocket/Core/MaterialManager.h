@@ -25,6 +25,12 @@ public:
 
     std::shared_ptr<Material> GetMaterial(const std::string& file);
     void SaveMaterial(const std::string& file, std::shared_ptr<Material> material);
+
+    // Lower camel case to match STL iterators
+    Map::iterator begin();
+    Map::iterator end();
+    Map::const_iterator cbegin() const;
+    Map::const_iterator cend() const;
 };
 
 }

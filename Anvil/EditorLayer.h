@@ -3,7 +3,6 @@
 #include "Camera.h"
 
 #include "Inspector.h"
-#include "EntityList.h"
 
 #include <memory>
 #include <random>
@@ -48,8 +47,7 @@ class EditorLayer : public Layer
     Entity d_selected;
 
     // Panels
-    Inspector  d_inspector;
-    EntityList d_entityList;
+    Inspector      d_inspector;
 
 public:
     EditorLayer(const Sprocket::CoreSystems& core);
