@@ -61,9 +61,13 @@ void Inspector::Show(EditorLayer& editor)
 #endif
     ImGui::Separator();
 
-    if (ImGui::BeginMenu("Add Component")) {
+    if (ImGui::Button("Add Component")) {
+        ImGui::OpenPopup("missing_components_list");
+    }
+
+    if (ImGui::BeginPopup("missing_components_list")) {
 #ifdef DATAMATIC_BLOCK
-        if (!entity.Has<{{Comp.Name}}>() && ImGui::MenuItem("{{Comp.DisplayName}}")) {
+        if (!entity.Has<{{Comp.Name}}>() && ImGui::Selectable("{{Comp.DisplayName}}")) {
             {{Comp.Name}} c;
             entity.Add(c);
         }

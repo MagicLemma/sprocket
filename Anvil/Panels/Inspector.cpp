@@ -262,64 +262,68 @@ void Inspector::Show(EditorLayer& editor)
 
     ImGui::Separator();
 
-    if (ImGui::BeginMenu("Add Component")) {
-        if (!entity.Has<TemporaryComponent>() && ImGui::MenuItem("Temporary")) {
+    if (ImGui::Button("Add Component")) {
+        ImGui::OpenPopup("missing_components_list");
+    }
+
+    if (ImGui::BeginPopup("missing_components_list")) {
+        if (!entity.Has<TemporaryComponent>() && ImGui::Selectable("Temporary")) {
             TemporaryComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<NameComponent>() && ImGui::MenuItem("Name")) {
+        if (!entity.Has<NameComponent>() && ImGui::Selectable("Name")) {
             NameComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<TransformComponent>() && ImGui::MenuItem("Transform")) {
+        if (!entity.Has<TransformComponent>() && ImGui::Selectable("Transform")) {
             TransformComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<ModelComponent>() && ImGui::MenuItem("Model")) {
+        if (!entity.Has<ModelComponent>() && ImGui::Selectable("Model")) {
             ModelComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<RigidBody3DComponent>() && ImGui::MenuItem("Rigid Body 3D")) {
+        if (!entity.Has<RigidBody3DComponent>() && ImGui::Selectable("Rigid Body 3D")) {
             RigidBody3DComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<BoxCollider3DComponent>() && ImGui::MenuItem("Box Collider 3D")) {
+        if (!entity.Has<BoxCollider3DComponent>() && ImGui::Selectable("Box Collider 3D")) {
             BoxCollider3DComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<SphereCollider3DComponent>() && ImGui::MenuItem("Sphere Collider 3D")) {
+        if (!entity.Has<SphereCollider3DComponent>() && ImGui::Selectable("Sphere Collider 3D")) {
             SphereCollider3DComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<CapsuleCollider3DComponent>() && ImGui::MenuItem("Capsule Collider 3D")) {
+        if (!entity.Has<CapsuleCollider3DComponent>() && ImGui::Selectable("Capsule Collider 3D")) {
             CapsuleCollider3DComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<ScriptComponent>() && ImGui::MenuItem("Script")) {
+        if (!entity.Has<ScriptComponent>() && ImGui::Selectable("Script")) {
             ScriptComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<CameraComponent>() && ImGui::MenuItem("Camera")) {
+        if (!entity.Has<CameraComponent>() && ImGui::Selectable("Camera")) {
             CameraComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<SelectComponent>() && ImGui::MenuItem("Select")) {
+        if (!entity.Has<SelectComponent>() && ImGui::Selectable("Select")) {
             SelectComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<PathComponent>() && ImGui::MenuItem("Path")) {
+        if (!entity.Has<PathComponent>() && ImGui::Selectable("Path")) {
             PathComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<GridComponent>() && ImGui::MenuItem("Grid")) {
+        if (!entity.Has<GridComponent>() && ImGui::Selectable("Grid")) {
             GridComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<LightComponent>() && ImGui::MenuItem("Light")) {
+        if (!entity.Has<LightComponent>() && ImGui::Selectable("Light")) {
             LightComponent c;
             entity.Add(c);
         }
-        if (!entity.Has<ParticleComponent>() && ImGui::MenuItem("Particle")) {
+        if (!entity.Has<ParticleComponent>() && ImGui::Selectable("Particle")) {
             ParticleComponent c;
             entity.Add(c);
         }
