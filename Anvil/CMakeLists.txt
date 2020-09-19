@@ -10,7 +10,8 @@ add_executable(Anvil
                EditorLayer.cpp
                
                Panels/Inspector.cpp
-               Panels/EntityList.cpp)
+               Panels/EntityList.cpp
+               Panels/MaterialViewer.cpp)
 
 target_link_libraries(Anvil PRIVATE Sprocket)
 target_include_directories(Anvil PUBLIC
