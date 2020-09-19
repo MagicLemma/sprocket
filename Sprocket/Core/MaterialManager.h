@@ -23,7 +23,7 @@ private:
 public:
     MaterialManager(TextureManager* textureManager);
 
-    std::shared_ptr<Material> GetMaterial(const std::string& name);
+    std::shared_ptr<Material> GetMaterial(const std::string& file);
     void SaveMaterial(std::shared_ptr<Material> material);
 
     // Lower camel case to match STL iterators

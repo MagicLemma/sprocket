@@ -71,7 +71,7 @@ std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
         material->roughness = roughness.as<float>();
     }
 
-    d_loadedMaterials.emplace(material->name, material);
+    d_loadedMaterials.emplace(file, material);
     return material;
 }
 
