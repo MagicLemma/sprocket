@@ -16,18 +16,6 @@ std::string Name(const Entity& entity)
     return "Entity";
 }
 
-Entity AddEntityToList(const Entity& entity)
-{
-    Entity ret = Entity();
-
-    ImGui::PushID(entity.Id());
-    if (ImGui::Button(Name(entity).c_str())) {
-        ret = entity;
-    }
-    ImGui::PopID();
-    return ret;
-}
-
 bool SubstringCI(const std::string& string, const std::string& substr) {
     auto it = std::search(
         string.begin(), string.end(),
@@ -56,7 +44,11 @@ void EntityList::Show(EditorLayer& editor)
         ImGui::Separator();
         editor.GetScene()->All([&](Entity& entity) {
             if (SubstringCI(Name(entity), d_search)) {
-                editor.SetSelected(AddEntityToList(entity));
+                ImGui::PushID(entity.Id());
+                if (ImGui::Button(Name(entity).c_str())) {
+                    editor.SetSelected(entity);
+                }
+                ImGui::PopID();
             }
         });
         ImGui::End();
