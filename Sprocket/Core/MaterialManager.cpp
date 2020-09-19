@@ -85,11 +85,6 @@ void MaterialManager::SaveMaterial(std::shared_ptr<Material> material)
     YAML::Emitter out;
     auto K = YAML::Key, V = YAML::Value;
 
-    assert(material->albedoMap.IsFromFile());
-    assert(material->normalMap.IsFromFile());
-    assert(material->metallicMap.IsFromFile());
-    assert(material->roughnessMap.IsFromFile());
-
     out << YAML::BeginMap;
 
     out << K << "Name" << V << material->name;

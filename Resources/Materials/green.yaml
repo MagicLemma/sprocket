@@ -1,15 +1,12 @@
 Name: Green
-
-AlbedoMap: Resources/Textures/Green.PNG
+AlbedoMap: ""
 NormalMap: ""
 MetallicMap: ""
 RoughnessMap: ""
-
-UseAlbedoMap: true
+UseAlbedoMap: false
 UseNormalMap: false
 UseMetallicMap: false
 UseRoughnessMap: false
-
-Albedo: [1.0, 1.0, 1.0]
+Albedo: [0.4036903, 0.9803922, 0]
 Metallic: 0
-Roughness: 1
+Roughness: 0.66

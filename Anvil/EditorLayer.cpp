@@ -285,25 +285,81 @@ void EditorLayer::OnUpdate(double dt)
                     if (ImGui::CollapsingHeader(material->name.c_str())) {
                         ImGui::Text(file.c_str());
                         ImGui::Separator();
-                        ImGui::Text("Texture Maps");
-                        ImGui::Checkbox("##Use Albedo Map", &material->useAlbedoMap);
-                        ImGui::SameLine();
-                        ImGui::Text(material->albedoMap.Filepath().c_str());
-                        ImGui::Checkbox("##Use Normal Map", &material->useNormalMap);
-                        ImGui::SameLine();
-                        ImGui::Text(material->normalMap.Filepath().c_str());
-                        ImGui::Checkbox("##Use Metallic Map", &material->useMetallicMap);
-                        ImGui::SameLine();
-                        ImGui::Text(material->metallicMap.Filepath().c_str());
-                        ImGui::Checkbox("##Use Roughness Map", &material->useRoughnessMap);
-                        ImGui::SameLine();
-                        ImGui::Text(material->roughnessMap.Filepath().c_str());
+
+                        ImGui::PushID(std::hash<std::string>{}("Albedo"));
+                        ImGui::Text("Albedo");
+                        ImGui::Checkbox("Use Map", &material->useAlbedoMap);
+                        if (material->useAlbedoMap) {
+                            auto& tex = material->albedoMap;
+                            std::string f = tex.IsFromFile() ? tex.Filepath() : "";
+                            if (ImGui::Button("X")) {
+                                tex = Texture::White();
+                                f = "";
+                            }
+                            ImGui::SameLine();
+                            ImGuiXtra::File("File", d_core.window, &f, "*.png");
+                            if (f != "") { tex = d_core.textureManager->GetTexture(f); }
+                        } else {
+                            ImGui::ColorEdit3("##Albedo", &material->albedo.x);
+                        }
+                        ImGui::PopID();
                         ImGui::Separator();
-                        ImGui::Text("Defaults");
-                        ImGui::ColorEdit3("Albedo", &material->albedo.x);
-                        ImGui::DragFloat("Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
-                        ImGui::DragFloat("Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
+
+                        ImGui::PushID(std::hash<std::string>{}("Normal"));
+                        ImGui::Text("Normal");
+                        ImGui::Checkbox("Use Map", &material->useNormalMap);
+                        if (material->useNormalMap) {
+                            auto& tex = material->normalMap;
+                            std::string f = tex.IsFromFile() ? tex.Filepath() : "";
+                            if (ImGui::Button("X")) {
+                                tex = Texture::White();
+                                f = "";
+                            }
+                            ImGui::SameLine();
+                            ImGuiXtra::File("File", d_core.window, &f, "*.png");
+                            if (f != "") { tex = d_core.textureManager->GetTexture(f); }
+                        }
+                        ImGui::PopID();
                         ImGui::Separator();
+
+                        ImGui::PushID(std::hash<std::string>{}("Metallic"));
+                        ImGui::Text("Metallic");
+                        ImGui::Checkbox("Use Map", &material->useMetallicMap);
+                        if (material->useMetallicMap) {
+                            auto& tex = material->metallicMap;
+                            std::string f = tex.IsFromFile() ? tex.Filepath() : "";
+                            if (ImGui::Button("X")) {
+                                tex = Texture::White();
+                                f = "";
+                            }
+                            ImGui::SameLine();
+                            ImGuiXtra::File("File", d_core.window, &f, "*.png");
+                            if (f != "") { tex = d_core.textureManager->GetTexture(f); }
+                        } else {
+                            ImGui::DragFloat("Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
+                        }
+                        ImGui::PopID();
+                        ImGui::Separator();
+                        
+                        ImGui::PushID(std::hash<std::string>{}("Roughness"));
+                        ImGui::Text("Roughness");
+                        ImGui::Checkbox("Use Map", &material->useRoughnessMap);
+                        if (material->useRoughnessMap) {
+                            auto& tex = material->roughnessMap;
+                            std::string f = tex.IsFromFile() ? tex.Filepath() : "";
+                            if (ImGui::Button("X")) {
+                                tex = Texture::White();
+                                f = "";
+                            }
+                            ImGui::SameLine();
+                            ImGuiXtra::File("File", d_core.window, &f, "*.png");
+                            if (f != "") { tex = d_core.textureManager->GetTexture(f); }
+                        } else {
+                            ImGui::DragFloat("Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
+                        }
+                        ImGui::PopID();
+                        ImGui::Separator();
+
                         if (ImGui::Button("Save")) {
                             d_core.materialManager->SaveMaterial(material);
                         }
