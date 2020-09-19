@@ -9,6 +9,7 @@ namespace Sprocket {
 
 struct Material
 {
+    std::string name;
     std::string file;
 
     Texture albedoMap;

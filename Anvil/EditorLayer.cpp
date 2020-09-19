@@ -279,9 +279,13 @@ void EditorLayer::OnUpdate(double dt)
             }
 
             if (ImGui::BeginTabItem("Materials")) {
+                ImGui::BeginChild("Material List");
                 for (auto& [name, material] : *d_core.materialManager) {
-                    ImGui::Text(name.c_str());
+                    if (ImGui::CollapsingHeader(name.c_str())) {
+                        ImGui::Text(name.c_str());
+                    }
                 }
+                ImGui::EndChild();
                 ImGui::EndTabItem();
             }
 

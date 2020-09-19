@@ -31,6 +31,10 @@ std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
 
     YAML::Node data = YAML::Load(sstream.str());
 
+    auto name = data["Name"];
+    assert(name);
+    material->name = name.as<std::string>();
+
     if (auto albedoMap = data["AlbedoMap"]) {
         material->albedoMap = d_textureManager->GetTexture(albedoMap.as<std::string>());
     }
@@ -67,11 +71,11 @@ std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
         material->roughness = roughness.as<float>();
     }
 
-    d_loadedMaterials.emplace(file, material);
+    d_loadedMaterials.emplace(material->name, material);
     return material;
 }
 
-void MaterialManager::SaveMaterial(const std::string& file, std::shared_ptr<Material> material)
+void MaterialManager::SaveMaterial(std::shared_ptr<Material> material)
 {
     YAML::Emitter out;
     auto K = YAML::Key, V = YAML::Value;
@@ -82,6 +86,8 @@ void MaterialManager::SaveMaterial(const std::string& file, std::shared_ptr<Mate
     assert(material->roughnessMap.IsFromFile());
 
     out << YAML::BeginMap;
+
+    out << K << "Name" << V << material->name;
 
     out << K << "AlbedoMap" << V << material->albedoMap.Filepath()
         << K << "NormalMap" << V << material->normalMap.Filepath()
@@ -98,7 +104,7 @@ void MaterialManager::SaveMaterial(const std::string& file, std::shared_ptr<Mate
         << K << "Roughness" << V << material->roughness;
 
     out << YAML::EndMap;
-    std::ofstream fout(file);
+    std::ofstream fout(material->file);
     fout << out.c_str();
 }
 
