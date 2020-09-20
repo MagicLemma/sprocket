@@ -94,6 +94,12 @@ void EditorLayer::OnUpdate(double dt)
 
     std::string windowName = "Anvil: " + d_sceneFile;
     d_core.window->SetWindowName(windowName);
+
+    // Create the Shadow Map
+    //float lambda = 5.0f; // TODO: Calculate the floor intersection point
+    //Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
+    //d_shadowMap.Draw(sun, target, *d_scene);
+    //d_entityRenderer.EnableShadows(d_shadowMap);
     
     if (!d_paused) {
         d_activeScene->OnUpdate(dt);
@@ -312,7 +318,7 @@ void EditorLayer::OnUpdate(double dt)
                         if (material->useMetallicMap) {
                             MaterialUI(material->metallicMap);
                         } else {
-                            ImGui::DragFloat("Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
+                            ImGui::DragFloat("##Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
@@ -323,7 +329,7 @@ void EditorLayer::OnUpdate(double dt)
                         if (material->useRoughnessMap) {
                             MaterialUI(material->roughnessMap);
                         } else {
-                            ImGui::DragFloat("Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
+                            ImGui::DragFloat("##Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
