@@ -82,7 +82,6 @@ void EntityRenderer::Draw(
             auto light = entity.Get<LightComponent>();
             d_shader.LoadVec3(ArrayName("u_light_pos", i), position);
 			d_shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
-			d_shader.LoadVec3(ArrayName("u_light_attenuation", i), light.attenuation);
             d_shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
             ++i;
         }
@@ -90,7 +89,6 @@ void EntityRenderer::Draw(
     while (i < MAX_NUM_LIGHTS) {
         d_shader.LoadVec3(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
         d_shader.LoadVec3(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        d_shader.LoadVec3(ArrayName("u_light_attenuation", i), {1.0f, 0.0f, 0.0f});
         d_shader.LoadFloat(ArrayName("u_light_brightness", i), 0.0f);
         ++i;
     }

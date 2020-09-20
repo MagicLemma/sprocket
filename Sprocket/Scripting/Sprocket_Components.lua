@@ -217,23 +217,22 @@ function AddGridComponent(entity, c)
 end
 
 
-LightComponent = Class(function(self, colour, attenuation, brightness)
+LightComponent = Class(function(self, colour, brightness)
     self.colour = colour
-    self.attenuation = attenuation
     self.brightness = brightness
 end)
 
 function GetLightComponent(entity)
-    x0, x1, x2, x3, x4, x5, x6 = Lua_GetLightComponent(entity)
-    return LightComponent(Vec3(x0, x1, x2), Vec3(x3, x4, x5), x6)
+    x0, x1, x2, x3 = Lua_GetLightComponent(entity)
+    return LightComponent(Vec3(x0, x1, x2), x3)
 end
 
 function SetLightComponent(entity, c)
-    Lua_SetLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.attenuation.x, c.attenuation.y, c.attenuation.z, c.brightness)
+    Lua_SetLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
 end
 
 function AddLightComponent(entity, c)
-    Lua_AddLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.attenuation.x, c.attenuation.y, c.attenuation.z, c.brightness)
+    Lua_AddLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
 end
 
 

@@ -132,7 +132,6 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             const auto& c = entity.Get<LightComponent>();
             out << YAML::Key << "LightComponent" << YAML::BeginMap;
             out << YAML::Key << "colour" << YAML::Value << c.colour;
-            out << YAML::Key << "attenuation" << YAML::Value << c.attenuation;
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
             out << YAML::EndMap;
         }
@@ -268,7 +267,6 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["LightComponent"]) {
             LightComponent c;
             c.colour = spec["colour"] ? spec["colour"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
-            c.attenuation = spec["attenuation"] ? spec["attenuation"].as<Maths::vec3>() : Maths::vec3{1.0f, 0.0f, 0.0f};
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add(c);
         }

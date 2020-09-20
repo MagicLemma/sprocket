@@ -395,12 +395,6 @@
                     }
                 },
                 {
-                    "Name": "attenuation",
-                    "DisplayName": "Attenuation",
-                    "Type": "Maths::vec3",
-                    "Default": [1.0, 0.0, 0.0]
-                },
-                {
                     "Name": "brightness",
                     "DisplayName": "Brightness",
                     "Type": "float",

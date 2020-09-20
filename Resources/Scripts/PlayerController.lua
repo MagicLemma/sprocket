@@ -85,7 +85,7 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 20, 0.1)
     AddSphereCollider3DComponent(newEntity, sc)
 
-    local lc = LightComponent(Vec3(1, 1, 1), Vec3(1, 1, 1), 20)
+    local lc = LightComponent(Vec3(1, 1, 1), 20)
     AddLightComponent(newEntity, lc)
 
     Forget(newEntity)

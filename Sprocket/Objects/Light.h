@@ -9,7 +9,6 @@ struct PointLight
 {
     Maths::vec3 position;
     Maths::vec3 colour;
-    Maths::vec3 attenuation;
 };
 
 struct DirectionalLight

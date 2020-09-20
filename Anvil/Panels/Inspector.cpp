@@ -233,7 +233,6 @@ void Inspector::Show(EditorLayer& editor)
         if (ImGui::CollapsingHeader("Light")) {
             ImGui::PushID(count++);
             ImGui::ColorPicker3("Colour", &c.colour.r);
-            ImGui::DragFloat3("Attenuation", &c.attenuation.x, 0.1f);
             ImGui::DragFloat("Brightness", &c.brightness, 0.1f);
             
             if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
