@@ -1,8 +1,8 @@
 Version: 2
 Sun:
-  direction: [0.6753819, -0.7343691, 0.06753819]
-  colour: [1, 0.945, 0.789]
-  brightness: 0.8
+  direction: [0, 0.9808463, -0.1947833]
+  colour: [0.9019608, 0.8005289, 0.6720492]
+  brightness: 20.29
 Entities:
   - NameComponent:
       name: Tree

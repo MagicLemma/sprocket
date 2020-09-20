@@ -49,6 +49,8 @@ class EditorLayer : public Layer
     // Panels
     Inspector      d_inspector;
 
+    void MaterialUI(Texture& texture);
+
 public:
     EditorLayer(const Sprocket::CoreSystems& core);
 

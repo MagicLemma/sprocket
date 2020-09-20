@@ -175,7 +175,6 @@ void main()
     if (proj_coords.z > 1.0) { shadow = 0.0; }
 
     vec3 ambient = vec3(0.03) * albedo;// * ao;
-    //vec3 colour = (1.0 - shadow) * Lo + ambient;
     vec3 colour = Lo + ambient;
 
     // Gamma Correction
@@ -183,4 +182,5 @@ void main()
     colour = pow(colour, vec3(1.0/2.2));
 
     out_colour = vec4(colour, 1.0);
+
 }

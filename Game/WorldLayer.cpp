@@ -43,7 +43,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     sun.brightness = 0.8f;
 
     d_lights.ambience.colour = SARAWAK;
-    d_lights.ambience.brightness = 0.4f;
+    d_lights.ambience.brightness = 0.1f;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
@@ -163,7 +163,7 @@ void WorldLayer::OnUpdate(double dt)
             sun.direction = -d_cycle.GetSunDir();
             sun.colour = {0.5, 0.57, 0.98};
         }
-        sun.brightness = std::abs(Maths::Cosd(d_cycle.GetAngle()));
+        sun.brightness = 2.0f * std::abs(Maths::Cosd(d_cycle.GetAngle()));
 
         Maths::Normalise(sun.direction);
         d_scene->OnUpdate(dt);
