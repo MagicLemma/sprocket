@@ -51,7 +51,6 @@ void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 void EntityRenderer::Draw(
     const Maths::mat4& proj,
     const Maths::mat4& view,
-    const Lights& lights,
     Scene& scene)
 {
     RenderContext rc;
@@ -71,8 +70,9 @@ void EntityRenderer::Draw(
     d_shader.LoadFloat("u_sun_brightness", sun.brightness);
 
     // Load ambience to shader
-    d_shader.LoadVec3("u_ambience_colour", lights.ambience.colour);
-    d_shader.LoadFloat("u_ambience_brightness", lights.ambience.brightness);
+    const auto& ambience = scene.GetAmbience();
+    d_shader.LoadVec3("u_ambience_colour", ambience.colour);
+    d_shader.LoadFloat("u_ambience_brightness", ambience.brightness);
     
     // Load point lights to shader
     std::size_t i = 0;
@@ -177,11 +177,11 @@ void EntityRenderer::Draw(
     d_shader.Unbind();
 }
 
-void EntityRenderer::Draw(const Entity& camera, const Lights& lights, Scene& scene)
+void EntityRenderer::Draw(const Entity& camera, Scene& scene)
 {
     Maths::mat4 proj = CameraUtils::MakeProj(camera);
     Maths::mat4 view = CameraUtils::MakeView(camera);
-    Draw(proj, view, lights, scene);
+    Draw(proj, view, scene);
 }
 
 void EntityRenderer::EnableParticles(ParticleManager* particleManager)

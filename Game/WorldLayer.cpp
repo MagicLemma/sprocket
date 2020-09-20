@@ -42,8 +42,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     sun.colour = {1.0, 0.945, 0.789};
     sun.brightness = 0.8f;
 
-    d_lights.ambience.colour = SARAWAK;
-    d_lights.ambience.brightness = 0.1f;
+    auto& ambience = d_scene->GetAmbience();
+    ambience.colour = SARAWAK;
+    ambience.brightness = 0.01f;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
@@ -179,7 +180,7 @@ void WorldLayer::OnUpdate(double dt)
     }
 
     d_entityRenderer.EnableShadows(d_shadowMap);
-    d_entityRenderer.Draw(d_camera, d_lights, *d_scene);
+    d_entityRenderer.Draw(d_camera, *d_scene);
 
     if (d_paused) {
         d_postProcessor.Unbind();

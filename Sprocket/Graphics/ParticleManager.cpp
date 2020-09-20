@@ -2,7 +2,6 @@
 #include "ModelManager.h"
 #include "RenderContext.h"
 #include "Components.h"
-#include "Light.h"
 #include "Random.h"
 #include "CameraUtils.h"
 

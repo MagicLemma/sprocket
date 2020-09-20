@@ -117,14 +117,14 @@ void EditorLayer::OnUpdate(double dt)
 
     d_viewport.Bind();
     if (d_playingGame) {
-        d_entityRenderer.Draw(d_runtimeCamera, d_lights, *d_activeScene);
+        d_entityRenderer.Draw(d_runtimeCamera, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_runtimeCamera, *d_activeScene);
         }
     }
     else {
-        d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
+        d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);

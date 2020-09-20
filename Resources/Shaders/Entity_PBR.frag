@@ -145,7 +145,7 @@ void main()
     for (int x = -1; x <= 1; ++x) {
         for (int y= -1; y <= 1; ++y) {
             float pcf_depth = texture(shadow_map, proj_coords.xy + vec2(x, y) * texel_size).r;
-            shadow += current_depth > pcf_depth ? 1.0 : 0.0;
+            shadow += current_depth + 0.0005 > pcf_depth ? 1.0 : 0.0;
         }
     }
     shadow /= 9.0;
@@ -155,11 +155,11 @@ void main()
     vec3 Lo = vec3(0.0);
 
     // sun
-    if ((1.0 - shadow) > 0.0) {
+    {
         vec3 L = normalize(-u_sun_direction);
         vec3 H = normalize(V + L);
         vec3 radiance = u_sun_brightness * u_sun_colour;
-        Lo += calculate_light(F0, N, V, L, H, albedo, radiance, metallic, roughness);
+        Lo += (1.0 - shadow) * calculate_light(F0, N, V, L, H, albedo, radiance, metallic, roughness);
     }
 
     // point lights
@@ -173,8 +173,8 @@ void main()
         Lo += calculate_light(F0, N, V, L, H, albedo, radiance, metallic, roughness);
     }
 
-    vec3 ambient = vec3(0.03) * albedo;// * ao;
-    vec3 colour = Lo + ambient;
+    vec3 ambience = u_ambience_brightness * u_ambience_colour * albedo;// * ao;
+    vec3 colour = Lo + ambience;
 
     // Gamma Correction
     colour = colour / (colour + vec3(1.0));

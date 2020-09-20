@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-#include "Light.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "ModelManager.h"
@@ -31,8 +30,8 @@ public:
         MaterialManager* materialManager
     );
 
-    void Draw(const Entity& camera, const Lights& lights, Scene& scene);
-    void Draw(const Maths::mat4& proj, const Maths::mat4& view, const Lights& lights, Scene& scene);
+    void Draw(const Entity& camera, Scene& scene);
+    void Draw(const Maths::mat4& proj, const Maths::mat4& view, Scene& scene);
 
     void EnableShadows(const ShadowMap& shadowMap);
     void EnableParticles(ParticleManager* particleManager);

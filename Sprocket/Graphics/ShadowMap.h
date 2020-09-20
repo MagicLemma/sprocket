@@ -1,7 +1,7 @@
 #pragma once
 #include "Shader.h"
 #include "Window.h"
-#include "Light.h"
+
 #include "Entity.h"
 #include "DepthBuffer.h"
 #include "ModelManager.h"

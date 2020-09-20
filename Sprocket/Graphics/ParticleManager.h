@@ -5,7 +5,6 @@
 #include "Buffer.h"
 #include "Shader.h"
 #include "Scene.h"
-#include "Light.h"
 
 #include <memory>
 #include <array>

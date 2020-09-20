@@ -35,7 +35,6 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::ModelManager d_modelManager;
 
     // Additional world setup
-    Sprocket::Lights         d_lights;
     Sprocket::CircadianCycle d_cycle;
 
     Sprocket::ShadowMap d_shadowMap;

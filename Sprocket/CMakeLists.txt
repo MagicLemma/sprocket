@@ -89,7 +89,6 @@ add_library(Sprocket STATIC
             Graphics/PostProcessing/PostProcessor.cpp
 
             Objects/CameraUtils.cpp
-            Objects/Light.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
 

@@ -33,7 +33,6 @@ class EditorLayer : public Layer
 
     // Additional world setup
     Skybox d_skybox;
-    Lights d_lights;
     float  d_sunAngle = 45.0f;
     
     // LAYER DATA
