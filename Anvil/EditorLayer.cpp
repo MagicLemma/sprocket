@@ -55,10 +55,6 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     });
 
     d_activeScene = d_scene;
-    
-    d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
-    d_lights.sun.colour = {1.0, 1.0, 1.0};
-    d_lights.sun.brightness = 0.2f;
 }
 
 void EditorLayer::OnEvent(Event& event)
@@ -109,8 +105,6 @@ void EditorLayer::OnUpdate(double dt)
             d_editorCamera.OnUpdate(dt);
         }
         
-        d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
-
         d_activeScene->Each<TransformComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
             if (transform.position.y < -50) {
@@ -249,11 +243,6 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
     if (ImGui::Begin("BottomPanel", &open, flags)) {
         ImGui::Checkbox("Show Colliders", &d_showColliders);
-        auto& sun = d_activeScene->GetSun();
-        ImGui::DragFloat3("Sun Direction", &sun.direction.x);
-        Maths::Normalise(sun.direction);
-        ImGui::ColorEdit3("Sun Colour", &sun.colour.x);
-        ImGui::DragFloat("Sun Brightness", &sun.brightness, 0.01f);
         ImGui::End();
     }
 
