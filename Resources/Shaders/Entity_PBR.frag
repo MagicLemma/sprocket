@@ -133,13 +133,30 @@ void main()
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
+
+        // Shadows
+    vec3 proj_coords = p_data.light_space_pos.xyz / p_data.light_space_pos.w;
+    proj_coords = 0.5 * proj_coords + 0.5;
+    float current_depth = proj_coords.z;
+    float d = dot(p_data.world_normal, -u_sun_direction);
+    
+    float shadow = 0;
+    vec2 texel_size = 1.0 / textureSize(shadow_map, 0);
+    for (int x = -1; x <= 1; ++x) {
+        for (int y= -1; y <= 1; ++y) {
+            float pcf_depth = texture(shadow_map, proj_coords.xy + vec2(x, y) * texel_size).r;
+            shadow += current_depth > pcf_depth ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+    if (proj_coords.z > 1.0) { shadow = 0.0; }
     
     // reflectance
     vec3 Lo = vec3(0.0);
 
     // sun
-    {
-        vec3 L = normalize(u_sun_direction);
+    if ((1.0 - shadow) > 0.0) {
+        vec3 L = normalize(-u_sun_direction);
         vec3 H = normalize(V + L);
         vec3 radiance = u_sun_brightness * u_sun_colour;
         Lo += calculate_light(F0, N, V, L, H, albedo, radiance, metallic, roughness);
@@ -155,24 +172,6 @@ void main()
         vec3 radiance = u_light_brightness[i] * u_light_colour[i] * attenuation;
         Lo += calculate_light(F0, N, V, L, H, albedo, radiance, metallic, roughness);
     }
-
-    // Shadows
-    vec3 proj_coords = p_data.light_space_pos.xyz / p_data.light_space_pos.w;
-    proj_coords = 0.5 * proj_coords + 0.5;
-    float current_depth = proj_coords.z;
-    float d = dot(p_data.world_normal, -u_sun_direction);
-    
-    float shadow = 0;
-    vec2 texel_size = 1.0 / textureSize(shadow_map, 0);
-    for (int x = -1; x <= 1; ++x) {
-        for (int y= -1; y <= 1; ++y) {
-            float pcf_depth = texture(shadow_map, proj_coords.xy + vec2(x, y) * texel_size).r;
-            shadow += current_depth > pcf_depth ? 1.0 : 0.0;
-        }
-    }
-    shadow /= 9.0;
-    
-    if (proj_coords.z > 1.0) { shadow = 0.0; }
 
     vec3 ambient = vec3(0.03) * albedo;// * ao;
     vec3 colour = Lo + ambient;
