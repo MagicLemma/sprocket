@@ -328,11 +328,6 @@ void DevUI::MultilineTextModifiable(const std::string_view label, std::string& t
     ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);
 }
 
-void DevUI::Checkbox(const std::string& name, bool* value)
-{
-    ImGui::Checkbox(name.c_str(), value);
-}
-
 void DevUI::ColourPicker(const std::string& name, Maths::vec3* colour)
 {
     static int flags = ImGuiColorEditFlags_Float
