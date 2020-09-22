@@ -11,6 +11,7 @@ namespace Sprocket {
 
 Texture::Texture(const std::string& pngFile, bool flip)
     : d_texture(std::make_shared<TEX>())
+    , d_file(pngFile)
 {
     glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
@@ -20,6 +21,9 @@ Texture::Texture(const std::string& pngFile, bool flip)
     unsigned char* data = stbi_load(
         pngFile.c_str(),
         &d_width, &d_height, &bpp, 4);
+
+    assert(d_width > 0);
+    assert(d_height > 0);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

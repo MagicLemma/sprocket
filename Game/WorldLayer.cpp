@@ -3,11 +3,13 @@
 #include "PathFollower.h"
 #include "PathCalculator.h"
 
+#include <cmath>
+
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
     : Sprocket::Layer(core)
     , d_mode(Mode::PLAYER)
     , d_scene(std::make_shared<Sprocket::Scene>())
-    , d_entityRenderer(core.modelManager, core.textureManager)
+    , d_entityRenderer(core.modelManager, core.materialManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_gameGrid(std::make_shared<Sprocket::GameGrid>(core.window))
     , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(core.window->AspectRatio()))
@@ -40,8 +42,9 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     sun.colour = {1.0, 0.945, 0.789};
     sun.brightness = 0.8f;
 
-    d_lights.ambience.colour = SARAWAK;
-    d_lights.ambience.brightness = 0.4f;
+    auto& ambience = d_scene->GetAmbience();
+    ambience.colour = SARAWAK;
+    ambience.brightness = 0.01f;
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
@@ -156,13 +159,12 @@ void WorldLayer::OnUpdate(double dt)
         if (d_cycle.IsDay()) {
             sun.direction = d_cycle.GetSunDir();
             sun.colour = {1.0, 0.945, 0.789};
-            sun.brightness = 0.8f;
         }
         else {
             sun.direction = -d_cycle.GetSunDir();
             sun.colour = {0.5, 0.57, 0.98};
-            sun.brightness = 0.1f;
         }
+        sun.brightness = 2.0f * std::abs(Maths::Cosd(d_cycle.GetAngle()));
 
         Maths::Normalise(sun.direction);
         d_scene->OnUpdate(dt);
@@ -178,7 +180,7 @@ void WorldLayer::OnUpdate(double dt)
     }
 
     d_entityRenderer.EnableShadows(d_shadowMap);
-    d_entityRenderer.Draw(d_camera, d_lights, *d_scene);
+    d_entityRenderer.Draw(d_camera, *d_scene);
 
     if (d_paused) {
         d_postProcessor.Unbind();
@@ -271,7 +273,6 @@ void WorldLayer::OnUpdate(double dt)
 void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 {
     using namespace Sprocket;
-    static std::string tex = "Resources/Textures/BetterTree.png";
 
     auto newEntity = d_scene->NewEntity();
 
@@ -285,9 +286,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/BetterTree.obj";
-    modelData.texture = tex;
-    modelData.shineDamper = 10.0f;
-    modelData.reflectivity = 0.0f;
+    modelData.material = "Resources/Materials/tree.yaml";
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
@@ -296,7 +295,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 
 void WorldLayer::AddRockBase(
     const Sprocket::Maths::ivec2& pos,
-    const std::string& tex,
+    const std::string& material,
     const std::string& name)
 {
     using namespace Sprocket;
@@ -312,9 +311,7 @@ void WorldLayer::AddRockBase(
 
     auto& modelData = newEntity.Add<ModelComponent>();
     modelData.model = "Resources/Models/Rock.obj";
-    modelData.texture = tex;
-    modelData.shineDamper = 10.0f;
-    modelData.reflectivity = 0.0f;
+    modelData.material = material;
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
@@ -323,24 +320,24 @@ void WorldLayer::AddRockBase(
 
 void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Rock.png";
-    AddRockBase(pos, tex, "Rock");
+    static std::string material = "Resources/Materials/rock.yaml";
+    AddRockBase(pos, material, "Rock");
 }
 
 void WorldLayer::AddIron(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Iron.png";
-    AddRockBase(pos, tex, "Iron");
+    static std::string material = "Resources/Materials/iron.yaml";
+    AddRockBase(pos, material, "Iron");
 }
 
 void WorldLayer::AddTin(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Tin.png";
-    AddRockBase(pos, tex, "Tin");
+    static std::string material = "Resources/Materials/tin.yaml";
+    AddRockBase(pos, material, "Tin");
 }
 
 void WorldLayer::AddMithril(const Sprocket::Maths::ivec2& pos)
 {
-    static std::string tex = "Resources/Textures/Mithril.png";
-    AddRockBase(pos, tex, "Mithril");
+    static std::string material = "Resources/Materials/mithril.yaml";
+    AddRockBase(pos, material, "Mithril");
 }

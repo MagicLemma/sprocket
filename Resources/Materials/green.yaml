@@ -1,0 +1,12 @@
+Name: Green
+AlbedoMap: ""
+NormalMap: ""
+MetallicMap: ""
+RoughnessMap: ""
+UseAlbedoMap: false
+UseNormalMap: false
+UseMetallicMap: false
+UseRoughnessMap: false
+Albedo: [0.4036903, 0.9803922, 0]
+Metallic: 0
+Roughness: 0.66

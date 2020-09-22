@@ -7,8 +7,9 @@ int main()
     Log::Init();
 
     Window window("Workshop");
-    ModelManager modelManager;
-    TextureManager textureManager;
+    ModelManager    modelManager;
+    TextureManager  textureManager;
+    MaterialManager materialManager(&textureManager);
 
     App app;
 
@@ -21,6 +22,7 @@ int main()
     core.window = &window;
     core.modelManager = &modelManager;
     core.textureManager = &textureManager;
+    core.materialManager = &materialManager;
 
     app.Add<EditorLayer>(core);
 

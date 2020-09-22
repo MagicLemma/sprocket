@@ -2,6 +2,8 @@
 #include <Sprocket.h>
 #include "Camera.h"
 
+#include "Inspector.h"
+
 #include <memory>
 #include <random>
 
@@ -31,7 +33,6 @@ class EditorLayer : public Layer
 
     // Additional world setup
     Skybox d_skybox;
-    Lights d_lights;
     float  d_sunAngle = 45.0f;
     
     // LAYER DATA
@@ -43,6 +44,11 @@ class EditorLayer : public Layer
 
     void AddEntityToList(const Entity& entity);
     Entity d_selected;
+
+    // Panels
+    Inspector      d_inspector;
+
+    void MaterialUI(Texture& texture);
 
 public:
     EditorLayer(const Sprocket::CoreSystems& core);

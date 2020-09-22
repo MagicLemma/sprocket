@@ -28,6 +28,7 @@ add_library(Sprocket STATIC
             Core/App.cpp
             Core/CoreSystems.cpp
             Core/Window.cpp
+            Core/MaterialManager.cpp
             Core/ModelManager.cpp
             Core/TextureManager.cpp
             Core/Layer.cpp
@@ -66,6 +67,7 @@ add_library(Sprocket STATIC
             Graphics/Shader.cpp
             Graphics/DepthBuffer.cpp
             Graphics/Resources.cpp
+            Graphics/Material.cpp
             Graphics/Model2D.cpp
             Graphics/Model3D.cpp
             Graphics/Texture.cpp
@@ -87,7 +89,6 @@ add_library(Sprocket STATIC
             Graphics/PostProcessing/PostProcessor.cpp
 
             Objects/CameraUtils.cpp
-            Objects/Light.cpp
             Objects/Skybox.cpp
             Objects/Terrain.cpp
 

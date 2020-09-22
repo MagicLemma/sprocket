@@ -1,0 +1,12 @@
+Name: Space
+AlbedoMap: Resources/Textures/Space.png
+NormalMap: ""
+MetallicMap: ""
+RoughnessMap: ""
+UseAlbedoMap: true
+UseNormalMap: false
+UseMetallicMap: false
+UseRoughnessMap: false
+Albedo: [1, 1, 1]
+Metallic: 0
+Roughness: 0

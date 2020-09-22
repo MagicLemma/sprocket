@@ -1,0 +1,15 @@
+Name: Tin
+
+AlbedoMap: Resources/Textures/Tin.png
+NormalMap: ""
+MetallicMap: ""
+RoughnessMap: ""
+
+UseAlbedoMap: true
+UseNormalMap: false
+UseMetallicMap: false
+UseRoughnessMap: false
+
+Albedo: [1.0, 1.0, 1.0]
+Metallic: 0
+Roughness: 10

@@ -12,6 +12,8 @@ struct Vertex3D
 {
     Maths::vec3 position;
     Maths::vec3 normal;
+    Maths::vec3 tangent;
+    Maths::vec3 bitangent;
     Maths::vec2 textureCoords;
 };
 

@@ -14,12 +14,10 @@ namespace {
 
 std::shared_ptr<Buffer> GetInstanceBuffer()
 {
-    BufferLayout layout(sizeof(InstanceData), 3);
+    BufferLayout layout(sizeof(InstanceData), 5);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
     return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
@@ -28,31 +26,31 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 }
 
 EntityRenderer::EntityRenderer(ModelManager* modelManager,
-                               TextureManager* textureManager)
+                               MaterialManager* materialManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_modelManager(modelManager)
-    , d_textureManager(textureManager)
+    , d_materialManager(materialManager)
     , d_particleManager(nullptr)
-    , d_shader("Resources/Shaders/Entity.vert", "Resources/Shaders/Entity.frag")
+    //, d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
+    , d_shader("Resources/Shaders/Entity_PBR.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer(GetInstanceBuffer())
 {
 }
 
 void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
-    glActiveTexture(GL_TEXTURE3);
+    glActiveTexture(GL_TEXTURE4);
     shadowMap.GetShadowMap().Bind();
  
     d_shader.Bind();
-    d_shader.LoadUniformInt("shadow_map", 3);
-    d_shader.LoadUniform("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
+    d_shader.LoadSampler("shadow_map", 4);
+    d_shader.LoadMat4("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     glActiveTexture(GL_TEXTURE0);
 }
 
 void EntityRenderer::Draw(
     const Maths::mat4& proj,
     const Maths::mat4& view,
-    const Lights& lights,
     Scene& scene)
 {
     RenderContext rc;
@@ -62,18 +60,19 @@ void EntityRenderer::Draw(
     unsigned int MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
-    d_shader.LoadUniform("u_proj_matrix", proj);
-    d_shader.LoadUniform("u_view_matrix", view);
+    d_shader.LoadMat4("u_proj_matrix", proj);
+    d_shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
     const auto& sun = scene.GetSun();
-    d_shader.LoadUniform("u_sun_direction", sun.direction);
-    d_shader.LoadUniform("u_sun_colour", sun.colour);
-    d_shader.LoadUniform("u_sun_brightness", sun.brightness);
+    d_shader.LoadVec3("u_sun_direction", sun.direction);
+    d_shader.LoadVec3("u_sun_colour", sun.colour);
+    d_shader.LoadFloat("u_sun_brightness", sun.brightness);
 
     // Load ambience to shader
-    d_shader.LoadUniform("u_ambience_colour", lights.ambience.colour);
-    d_shader.LoadUniform("u_ambience_brightness", lights.ambience.brightness);
+    const auto& ambience = scene.GetAmbience();
+    d_shader.LoadVec3("u_ambience_colour", ambience.colour);
+    d_shader.LoadFloat("u_ambience_brightness", ambience.brightness);
     
     // Load point lights to shader
     std::size_t i = 0;
@@ -81,34 +80,41 @@ void EntityRenderer::Draw(
         if (i < MAX_NUM_LIGHTS) {
             auto position = entity.Get<TransformComponent>().position;
             auto light = entity.Get<LightComponent>();
-            d_shader.LoadUniform(ArrayName("u_light_pos", i), position);
-			d_shader.LoadUniform(ArrayName("u_light_colour", i), light.colour);
-			d_shader.LoadUniform(ArrayName("u_light_attenuation", i), light.attenuation);
-            d_shader.LoadUniform(ArrayName("u_light_brightness", i), light.brightness);
+            d_shader.LoadVec3(ArrayName("u_light_pos", i), position);
+			d_shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
+            d_shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
             ++i;
         }
     });
     while (i < MAX_NUM_LIGHTS) {
-        d_shader.LoadUniform(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-        d_shader.LoadUniform(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        d_shader.LoadUniform(ArrayName("u_light_attenuation", i), {1.0f, 0.0f, 0.0f});
-        d_shader.LoadUniform(ArrayName("u_light_brightness", i), 0.0f);
+        d_shader.LoadVec3(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
+        d_shader.LoadVec3(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
+        d_shader.LoadFloat(ArrayName("u_light_brightness", i), 0.0f);
         ++i;
     }
 
     d_shader.Bind();
 
-    std::string currentModel;
-    std::string currentTexture;
+    std::string currentModel = "INVALID";
+    std::string currentMaterial = "INVALID";
+    // These are set initially to INVALID as that is not a valid file path.
+    // They cannot be set to "" as this returns the "default" materials,
+    // which causes errors when drawing in some cases. TODO: Find out why,
+    // it has something to do with the way ImGui renders things, as the
+    // visual errors don't appear when the viewport is not selected, or when
+    // the Guizmo is on screen. It is probably writing to the default texture
+    // which remains bound. We should fix this properly, as this "fix" causes
+    // an extra pointless draw call at the beginning of each frame.
+
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.model.empty()) { return; }
 
         bool changedModel = mc.model != currentModel;
-        bool changedTexture = mc.texture != currentTexture;
+        bool changedMaterial = mc.material != currentMaterial;
 
-        if (changedModel || changedTexture) {
+        if (changedModel || changedMaterial) {
             d_instanceBuffer->SetData(d_instanceData);
             d_vao->SetInstances(d_instanceBuffer);
             d_vao->Draw();
@@ -120,18 +126,41 @@ void EntityRenderer::Draw(
             currentModel = mc.model;
         }
 
-        if (changedTexture) {
-            d_textureManager->GetTexture(mc.texture).Bind();
-            currentTexture = mc.texture;
+        if (changedMaterial) {
+            auto material = d_materialManager->GetMaterial(mc.material);
+            // TODO: Apply everything
+
+            glActiveTexture(GL_TEXTURE0);
+            material->albedoMap.Bind();
+            d_shader.LoadSampler("texture_sampler", 0);
+
+            glActiveTexture(GL_TEXTURE1);
+            material->normalMap.Bind();
+            d_shader.LoadSampler("u_normal_map", 1);
+            
+            glActiveTexture(GL_TEXTURE2);
+            material->metallicMap.Bind();
+            d_shader.LoadSampler("u_metallic_map", 2);
+
+            glActiveTexture(GL_TEXTURE3);
+            material->roughnessMap.Bind();
+            d_shader.LoadSampler("u_roughness_map", 3);
+
+            glActiveTexture(GL_TEXTURE0);
+
+            d_shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
+            d_shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
+            d_shader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
+            d_shader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
+
+            // u_albedo
+            d_shader.LoadVec3("u_albedo", material->albedo);
+            d_shader.LoadFloat("u_roughness", material->roughness);
+            d_shader.LoadFloat("u_metallic", material->metallic);
+            currentMaterial = mc.material;
         }
 
-        d_instanceData.push_back({
-            tc.position,
-            tc.orientation,
-            tc.scale,
-            mc.shineDamper,
-            mc.reflectivity
-        });
+        d_instanceData.push_back({ tc.position, tc.orientation, tc.scale });
     });
 
     d_instanceBuffer->SetData(d_instanceData);
@@ -148,11 +177,11 @@ void EntityRenderer::Draw(
     d_shader.Unbind();
 }
 
-void EntityRenderer::Draw(const Entity& camera, const Lights& lights, Scene& scene)
+void EntityRenderer::Draw(const Entity& camera, Scene& scene)
 {
     Maths::mat4 proj = CameraUtils::MakeProj(camera);
     Maths::mat4 view = CameraUtils::MakeView(camera);
-    Draw(proj, view, lights, scene);
+    Draw(proj, view, scene);
 }
 
 void EntityRenderer::EnableParticles(ParticleManager* particleManager)

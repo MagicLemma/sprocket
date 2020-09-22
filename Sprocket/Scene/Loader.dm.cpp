@@ -18,11 +18,18 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Version" << YAML::Value << 2;
+
     const auto& sun = scene->GetSun();
     out << YAML::Key << "Sun" << YAML::BeginMap;
     out << YAML::Key << "direction" << YAML::Value << sun.direction;
     out << YAML::Key << "colour" << YAML::Value << sun.colour;
     out << YAML::Key << "brightness" << YAML::Value << sun.brightness;
+    out << YAML::EndMap;
+
+    const auto& ambience = scene->GetAmbience();
+    out << YAML::Key << "Ambience" << YAML::BeginMap;
+    out << YAML::Key << "colour" << YAML::Value << ambience.colour;
+    out << YAML::Key << "brightness" << YAML::Value << ambience.brightness;
     out << YAML::EndMap;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
@@ -63,6 +70,11 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         scene->GetSun().brightness = sun["brightness"] ? sun["brightness"].as<float>() : 1.0f;
     }
 
+    if (auto ambience = data["Ambience"]) {
+        scene->GetAmbience().colour = ambience["colour"] ? ambience["colour"].as<Maths::vec3>() : Maths::vec3{1.0, 1.0, 1.0};
+        scene->GetAmbience().brightness = ambience["brightness"] ? ambience["brightness"].as<float>() : 1.0f;
+    }
+
     if (!data["Entities"]) {
         return; // TODO: Error checking
     }
@@ -95,6 +107,7 @@ void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
 {
     target->Clear();
     target->GetSun() = source->GetSun();
+    target->GetAmbience() = source->GetAmbience();
     source->All([&](Entity& entity) {
         Copy(target, entity);
     });

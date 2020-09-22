@@ -9,12 +9,10 @@ namespace {
 
 std::shared_ptr<Buffer> GetInstanceBuffer()
 {
-    BufferLayout layout(sizeof(InstanceData), 3);
+    BufferLayout layout(sizeof(InstanceData), 5);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
     return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
@@ -46,8 +44,8 @@ void ShadowMap::Draw(
     d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
 
     d_shader.Bind();
-    d_shader.LoadUniform("u_proj_matrix", d_lightProjMatrix);
-    d_shader.LoadUniform("u_view_matrix", d_lightViewMatrix);
+    d_shader.LoadMat4("u_proj_matrix", d_lightProjMatrix);
+    d_shader.LoadMat4("u_view_matrix", d_lightViewMatrix);
 
     d_shadowMap.Bind();
     glEnable(GL_DEPTH_TEST);
@@ -73,9 +71,7 @@ void ShadowMap::Draw(
         d_instanceData.push_back({
             tc.position,
             tc.orientation,
-            tc.scale,
-            mc.shineDamper,
-            mc.reflectivity
+            tc.scale
         });
     });
 

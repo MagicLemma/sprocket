@@ -14,7 +14,8 @@ void ShowGuizmo(
     EditorLayer& editor,
     TransformComponent& c,
     DevUI::GizmoMode mode,
-    DevUI::GizmoCoords coords)
+    DevUI::GizmoCoords coords,
+    float* snap = nullptr)
 {
     if (!editor.IsGameRunning()) {
         auto& camera = editor.GetEditorCamera();
@@ -24,7 +25,9 @@ void ShowGuizmo(
             Maths::Cast(camera.Proj()),
             GetMode(mode),
             GetCoords(coords),
-            Maths::Cast(tr)
+            Maths::Cast(tr),
+            nullptr,
+            snap
         );
         Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
     }
@@ -32,7 +35,7 @@ void ShowGuizmo(
 
 }
 
-void ShowInspector(EditorLayer& editor)
+void Inspector::Show(EditorLayer& editor)
 {
     Entity entity = editor.Selected();
 
@@ -45,8 +48,6 @@ void ShowInspector(EditorLayer& editor)
     }
     int count = 0;
 
-    static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
-    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         auto& c = entity.Get<{{Comp.Name}}>();
@@ -63,9 +64,13 @@ void ShowInspector(EditorLayer& editor)
 #endif
     ImGui::Separator();
 
-    if (ImGui::BeginMenu("Add Component")) {
+    if (ImGui::Button("Add Component")) {
+        ImGui::OpenPopup("missing_components_list");
+    }
+
+    if (ImGui::BeginPopup("missing_components_list")) {
 #ifdef DATAMATIC_BLOCK
-        if (!entity.Has<{{Comp.Name}}>() && ImGui::MenuItem("{{Comp.DisplayName}}")) {
+        if (!entity.Has<{{Comp.Name}}>() && ImGui::Selectable("{{Comp.DisplayName}}")) {
             {{Comp.Name}} c;
             entity.Add(c);
         }

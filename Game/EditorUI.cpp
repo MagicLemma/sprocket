@@ -91,7 +91,7 @@ void SelectedEntityInfo(DevUI::Context& ui,
 }
 
 void SunInfoPanel(DevUI::Context& ui,
-                  DirectionalLight& sun,
+                  Sun& sun,
                   CircadianCycle& cycle)
 {
     ui.StartWindow("Sun");
@@ -209,7 +209,7 @@ void EditorUI::OnUpdate(double dt)
         SelectedEntityInfo(d_ui, e, view, proj);
     }
 
-    SunInfoPanel(d_ui, d_worldLayer->d_lights.sun, d_worldLayer->d_cycle);
+    SunInfoPanel(d_ui, d_worldLayer->d_scene->GetSun(), d_worldLayer->d_cycle);
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
     d_ui.StartWindow("Shadow Map", &open);

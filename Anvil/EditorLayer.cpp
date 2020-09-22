@@ -14,11 +14,20 @@ std::string Name(const Entity& entity)
     return "Entity";
 }
 
+bool SubstringCI(const std::string& string, const std::string& substr) {
+    auto it = std::search(
+        string.begin(), string.end(),
+        substr.begin(), substr.end(),
+        [] (char c1, char c2) { return std::toupper(c1) == std::toupper(c2); }
+    );
+    return it != string.end();
+}
+
 }
 
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : Layer(core)
-    , d_entityRenderer(core.modelManager, core.textureManager)
+    , d_entityRenderer(core.modelManager, core.materialManager)
     , d_skybox({
         ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         CubeMap({
@@ -46,10 +55,6 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     });
 
     d_activeScene = d_scene;
-    
-    d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
-    d_lights.sun.colour = {1.0, 1.0, 1.0};
-    d_lights.sun.brightness = 0.2f;
 }
 
 void EditorLayer::OnEvent(Event& event)
@@ -85,6 +90,12 @@ void EditorLayer::OnUpdate(double dt)
 
     std::string windowName = "Anvil: " + d_sceneFile;
     d_core.window->SetWindowName(windowName);
+
+    // Create the Shadow Map
+    //float lambda = 5.0f; // TODO: Calculate the floor intersection point
+    //Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
+    //d_shadowMap.Draw(sun, target, *d_scene);
+    //d_entityRenderer.EnableShadows(d_shadowMap);
     
     if (!d_paused) {
         d_activeScene->OnUpdate(dt);
@@ -94,8 +105,6 @@ void EditorLayer::OnUpdate(double dt)
             d_editorCamera.OnUpdate(dt);
         }
         
-        d_lights.sun.direction = {Maths::Sind(d_sunAngle), Maths::Cosd(d_sunAngle), 0.0f};
-
         d_activeScene->Each<TransformComponent>([&](Entity& entity) {
             auto& transform = entity.Get<TransformComponent>();
             if (transform.position.y < -50) {
@@ -108,14 +117,14 @@ void EditorLayer::OnUpdate(double dt)
 
     d_viewport.Bind();
     if (d_playingGame) {
-        d_entityRenderer.Draw(d_runtimeCamera, d_lights, *d_activeScene);
+        d_entityRenderer.Draw(d_runtimeCamera, *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_runtimeCamera, *d_activeScene);
         }
     }
     else {
-        d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), d_lights, *d_activeScene);
+        d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
         if (d_showColliders) {
             d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
@@ -207,6 +216,7 @@ void EditorLayer::OnUpdate(double dt)
     float w = (float)d_core.window->Width();
     float h = (float)d_core.window->Height();
 
+    // VIEWPORT
     ImGui::SetNextWindowPos({0.0, menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
@@ -220,47 +230,129 @@ void EditorLayer::OnUpdate(double dt)
     }
     ImGui::PopStyleVar();
 
-    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
-    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
-    if (ImGui::Begin("Entities", &open, flags)) {
-        d_scene->All([&](Entity& entity) {
-            AddEntityToList(entity);
-        });
-        ImGui::End();
-    }
-
+    // INSPECTOR
     ImGui::SetNextWindowPos({0.8f * w, menuBarHeight + (h - menuBarHeight)/2.0f});
     ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
     if (ImGui::Begin("Inspector", &open, flags)) {
-        ShowInspector(*this);
+        d_inspector.Show(*this);
         ImGui::End();
     }
 
+    // BOTTOM PANEL
     ImGui::SetNextWindowPos({0.0, 0.8f * h + menuBarHeight});
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
     if (ImGui::Begin("BottomPanel", &open, flags)) {
         ImGui::Checkbox("Show Colliders", &d_showColliders);
-        auto& sun = d_activeScene->GetSun();
-        ImGui::DragFloat3("Sun Direction", &sun.direction.x);
-        Maths::Normalise(sun.direction);
-        ImGui::ColorEdit3("Sun Colour", &sun.colour.x);
-        ImGui::DragFloat("Sun Brightness", &sun.brightness, 0.01f);
+        ImGui::End();
+    }
+
+    // EXPLORER
+    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
+    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
+    static std::string search;
+    if (ImGui::Begin("Explorer", &open, flags | ImGuiWindowFlags_NoDecoration)) {
+        ImGuiXtra::TextModifiable(search);
+        ImGui::SameLine();
+        if (ImGui::Button("X")) {
+            search = "";
+        }
+        if (ImGui::BeginTabBar("##Tabs")) {
+            
+            if (ImGui::BeginTabItem("Entities")) {
+                ImGui::BeginChild("Entity List");
+                d_scene->All([&](Entity& entity) {
+                    if (SubstringCI(Name(entity), search)) {
+                        ImGui::PushID(entity.Id());
+                        if (ImGui::Selectable(Name(entity).c_str())) {
+                            d_selected = entity;
+                        }
+                        ImGui::PopID();
+                    }
+                });
+                ImGui::EndChild();
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("Materials")) {
+                ImGui::BeginChild("Material List");
+                for (auto& [file, material] : *d_core.materialManager) {
+                    ImGui::PushID(std::hash<std::string>{}(material->file));
+                    if (ImGui::CollapsingHeader(material->name.c_str())) {
+                        ImGui::Text(file.c_str());
+                        ImGui::Separator();
+
+                        ImGui::PushID(std::hash<std::string>{}("Albedo"));
+                        ImGui::Text("Albedo");
+                        ImGui::Checkbox("Use Map", &material->useAlbedoMap);
+                        if (material->useAlbedoMap) {
+                            MaterialUI(material->albedoMap);
+                        } else {
+                            ImGui::ColorEdit3("##Albedo", &material->albedo.x);
+                        }
+                        ImGui::PopID();
+                        ImGui::Separator();
+
+                        ImGui::PushID(std::hash<std::string>{}("Normal"));
+                        ImGui::Text("Normal");
+                        ImGui::Checkbox("Use Map", &material->useNormalMap);
+                        if (material->useNormalMap) {
+                            MaterialUI(material->normalMap);
+                        }
+                        ImGui::PopID();
+                        ImGui::Separator();
+
+                        ImGui::PushID(std::hash<std::string>{}("Metallic"));
+                        ImGui::Text("Metallic");
+                        ImGui::Checkbox("Use Map", &material->useMetallicMap);
+                        if (material->useMetallicMap) {
+                            MaterialUI(material->metallicMap);
+                        } else {
+                            ImGui::DragFloat("##Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
+                        }
+                        ImGui::PopID();
+                        ImGui::Separator();
+                        
+                        ImGui::PushID(std::hash<std::string>{}("Roughness"));
+                        ImGui::Text("Roughness");
+                        ImGui::Checkbox("Use Map", &material->useRoughnessMap);
+                        if (material->useRoughnessMap) {
+                            MaterialUI(material->roughnessMap);
+                        } else {
+                            ImGui::DragFloat("##Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
+                        }
+                        ImGui::PopID();
+                        ImGui::Separator();
+
+                        if (ImGui::Button("Save")) {
+                            d_core.materialManager->SaveMaterial(material);
+                        }
+                    }
+                    ImGui::PopID();
+                }
+                ImGui::EndChild();
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
         ImGui::End();
     }
 
     d_ui.EndFrame();    
 }
 
-void EditorLayer::AddEntityToList(const Entity& entity)
+void EditorLayer::MaterialUI(Texture& texture)
 {
-    ImGui::PushID(entity.Id());
-    if (ImGui::TreeNode(Name(entity).c_str())) {
-        if (ImGui::Button("Select")) {
-            d_selected = entity;
-        }
-        ImGui::TreePop();
+    std::string f = texture.IsFromFile() ? texture.Filepath() : "";
+    if (ImGui::Button("X")) {
+        texture = Texture::White();
+        f = "";
     }
-    ImGui::PopID();
+    ImGui::SameLine();
+    ImGuiXtra::File("File", d_core.window, &f, "*.png");
+    if (f != "") {
+        texture = d_core.textureManager->GetTexture(f);
+    }
 }
 
 }

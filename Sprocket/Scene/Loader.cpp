@@ -19,11 +19,18 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Version" << YAML::Value << 2;
+
     const auto& sun = scene->GetSun();
     out << YAML::Key << "Sun" << YAML::BeginMap;
     out << YAML::Key << "direction" << YAML::Value << sun.direction;
     out << YAML::Key << "colour" << YAML::Value << sun.colour;
     out << YAML::Key << "brightness" << YAML::Value << sun.brightness;
+    out << YAML::EndMap;
+
+    const auto& ambience = scene->GetAmbience();
+    out << YAML::Key << "Ambience" << YAML::BeginMap;
+    out << YAML::Key << "colour" << YAML::Value << ambience.colour;
+    out << YAML::Key << "brightness" << YAML::Value << ambience.brightness;
     out << YAML::EndMap;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
@@ -53,9 +60,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             const auto& c = entity.Get<ModelComponent>();
             out << YAML::Key << "ModelComponent" << YAML::BeginMap;
             out << YAML::Key << "model" << YAML::Value << c.model;
-            out << YAML::Key << "texture" << YAML::Value << c.texture;
-            out << YAML::Key << "shineDamper" << YAML::Value << c.shineDamper;
-            out << YAML::Key << "reflectivity" << YAML::Value << c.reflectivity;
+            out << YAML::Key << "material" << YAML::Value << c.material;
             out << YAML::EndMap;
         }
         if (entity.Has<RigidBody3DComponent>()) {
@@ -134,7 +139,6 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             const auto& c = entity.Get<LightComponent>();
             out << YAML::Key << "LightComponent" << YAML::BeginMap;
             out << YAML::Key << "colour" << YAML::Value << c.colour;
-            out << YAML::Key << "attenuation" << YAML::Value << c.attenuation;
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
             out << YAML::EndMap;
         }
@@ -175,6 +179,11 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         scene->GetSun().brightness = sun["brightness"] ? sun["brightness"].as<float>() : 1.0f;
     }
 
+    if (auto ambience = data["Ambience"]) {
+        scene->GetAmbience().colour = ambience["colour"] ? ambience["colour"].as<Maths::vec3>() : Maths::vec3{1.0, 1.0, 1.0};
+        scene->GetAmbience().brightness = ambience["brightness"] ? ambience["brightness"].as<float>() : 1.0f;
+    }
+
     if (!data["Entities"]) {
         return; // TODO: Error checking
     }
@@ -201,9 +210,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
             c.model = spec["model"] ? spec["model"].as<std::string>() : "";
-            c.texture = spec["texture"] ? spec["texture"].as<std::string>() : "";
-            c.shineDamper = spec["shineDamper"] ? spec["shineDamper"].as<float>() : 1.0f;
-            c.reflectivity = spec["reflectivity"] ? spec["reflectivity"].as<float>() : 0.0f;
+            c.material = spec["material"] ? spec["material"].as<std::string>() : "";
             e.Add(c);
         }
         if (auto spec = entity["RigidBody3DComponent"]) {
@@ -272,7 +279,6 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["LightComponent"]) {
             LightComponent c;
             c.colour = spec["colour"] ? spec["colour"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
-            c.attenuation = spec["attenuation"] ? spec["attenuation"].as<Maths::vec3>() : Maths::vec3{1.0f, 0.0f, 0.0f};
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add(c);
         }
@@ -344,6 +350,7 @@ void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
 {
     target->Clear();
     target->GetSun() = source->GetSun();
+    target->GetAmbience() = source->GetAmbience();
     source->All([&](Entity& entity) {
         Copy(target, entity);
     });

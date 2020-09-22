@@ -21,6 +21,12 @@ struct Sun
     Maths::vec3 colour;
     float       brightness;
 };
+
+struct Ambience
+{
+    Maths::vec3 colour;
+    float       brightness;
+};
     
 class Scene
 {
@@ -41,6 +47,7 @@ private:
     entt::registry d_registry;
 
     Sun d_sun;
+    Ambience d_ambience;
 
     double d_sinceLastSort = 0.0f;
 
@@ -81,6 +88,9 @@ public:
 
     Sun& GetSun() { return d_sun; }
     const Sun& GetSun() const { return d_sun; }
+
+    Ambience& GetAmbience() { return d_ambience; }
+    const Ambience& GetAmbience() const { return d_ambience; }
 };
 
 template <typename... Components>

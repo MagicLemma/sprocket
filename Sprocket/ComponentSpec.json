@@ -73,26 +73,14 @@
                     }
                 },
                 {
-                    "Name": "texture",
-                    "DisplayName": "Texture",
+                    "Name": "material",
+                    "DisplayName": "Material",
                     "Type": "std::string",
                     "Default": "",
                     "Custom": {
                         "Subtype": "File",
-                        "Filter": "*.png"
+                        "Filter": "*.yaml"
                     }
-                },
-                {
-                    "Name": "shineDamper",
-                    "DisplayName": "Shine Damper",
-                    "Type": "float",
-                    "Default": 1.0
-                },
-                {
-                    "Name": "reflectivity",
-                    "DisplayName": "Reflectivity",
-                    "Type": "float",
-                    "Default": 0.0
                 }
             ] 
         },
@@ -405,12 +393,6 @@
                     "Custom": {
                         "Subtype": "Colour"
                     }
-                },
-                {
-                    "Name": "attenuation",
-                    "DisplayName": "Attenuation",
-                    "Type": "Maths::vec3",
-                    "Default": [1.0, 0.0, 0.0]
                 },
                 {
                     "Name": "brightness",

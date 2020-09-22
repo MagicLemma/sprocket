@@ -58,7 +58,11 @@ void SetGuizmo()
     ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
 }
 
-void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords)
+void GuizmoSettings(
+    DevUI::GizmoMode& mode,
+    DevUI::GizmoCoords& coords,
+    bool& useSnap,
+    Maths::vec3& snap)
 {
     if (ImGui::RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
         mode = DevUI::GizmoMode::TRANSLATION;
@@ -79,13 +83,22 @@ void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords)
     if (ImGui::RadioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
         coords = DevUI::GizmoCoords::LOCAL;
     }
+    ImGui::Checkbox("", &useSnap);
+    ImGui::SameLine();
+    if (mode == DevUI::GizmoMode::TRANSLATION) {
+        ImGui::InputFloat3("Snap", &snap.x);
+    }
+    else {
+        ImGui::InputFloat("Snap", &snap.x);
+    }
 }
 
 void Euler(const std::string& name, Maths::quat* q)
 {
     Maths::vec3 euler = Maths::ToEuler(*q);
-    ImGui::DragFloat3("Orientation", &euler.x, 0.01f);
-    *q = Maths::quat(euler);
+    if (ImGui::DragFloat3("Orientation", &euler.x, 0.01f)) {
+        *q = Maths::quat(euler);
+    }
 }
 
 }

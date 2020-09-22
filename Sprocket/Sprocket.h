@@ -5,6 +5,7 @@
 // CORE
 #include "Core/App.h"
 #include "Core/Window.h"
+#include "Core/MaterialManager.h"
 #include "Core/ModelManager.h"
 #include "Core/TextureManager.h"
 #include "Core/Layer.h"
@@ -66,6 +67,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/DepthBuffer.h"
 #include "Graphics/Resources.h"
+#include "Graphics/Material.h"
 #include "Graphics/Model2D.h"
 #include "Graphics/Model3D.h"
 #include "Graphics/Texture.h"
@@ -93,7 +95,6 @@
 
 // OBJECTS
 #include "Objects/CameraUtils.h"
-#include "Objects/Light.h"
 #include "Objects/Terrain.h"
 #include "Objects/Skybox.h"
 

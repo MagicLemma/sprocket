@@ -2,7 +2,6 @@
 #include "ModelManager.h"
 #include "RenderContext.h"
 #include "Components.h"
-#include "Light.h"
 #include "Random.h"
 #include "CameraUtils.h"
 
@@ -11,12 +10,10 @@ namespace {
 
 std::shared_ptr<Buffer> GetInstanceBuffer()
 {
-    BufferLayout layout(sizeof(InstanceData), 3);
+    BufferLayout layout(sizeof(InstanceData), 5);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 1, DataRate::INSTANCE);
     assert(layout.Validate());
 
     return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
@@ -53,9 +50,7 @@ void ParticleManager::OnUpdate(double dt)
             d_instanceData.push_back({
                 particle.position,
                 {0.0, 0.0, 0.0, 1.0},
-                particle.scale,
-                1.0,
-                1.0
+                particle.scale
             });
         }
     }

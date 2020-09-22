@@ -122,9 +122,7 @@ constexpr int ModelComponentDimension()
 {
     int count = 0;
     count += Dimension<std::string>(); // model
-    count += Dimension<std::string>(); // texture
-    count += Dimension<float>(); // shineDamper
-    count += Dimension<float>(); // reflectivity
+    count += Dimension<std::string>(); // material
     return count;
 }
 
@@ -206,7 +204,6 @@ constexpr int LightComponentDimension()
 {
     int count = 0;
     count += Dimension<Maths::vec3>(); // colour
-    count += Dimension<Maths::vec3>(); // attenuation
     count += Dimension<float>(); // brightness
     return count;
 }
@@ -395,9 +392,7 @@ int GetModelComponent(lua_State* L)
     int count = 0;
     const auto& c = e.Get<ModelComponent>();
     count += Push(L, c.model);
-    count += Push(L, c.texture);
-    count += Push(L, c.shineDamper);
-    count += Push(L, c.reflectivity);
+    count += Push(L, c.material);
     return count;
 }
 
@@ -409,9 +404,7 @@ int SetModelComponent(lua_State* L)
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ModelComponent>();
     c.model = Pull<std::string>(L, count);
-    c.texture = Pull<std::string>(L, count);
-    c.shineDamper = Pull<float>(L, count);
-    c.reflectivity = Pull<float>(L, count);
+    c.material = Pull<std::string>(L, count);
     return 0;
 }
 
@@ -425,9 +418,7 @@ int AddModelComponent(lua_State* L)
 
     ModelComponent c;
     c.model = Pull<std::string>(L, count);
-    c.texture = Pull<std::string>(L, count);
-    c.shineDamper = Pull<float>(L, count);
-    c.reflectivity = Pull<float>(L, count);
+    c.material = Pull<std::string>(L, count);
     e.Add(c);
     return 0;
 }
@@ -800,7 +791,6 @@ int GetLightComponent(lua_State* L)
     int count = 0;
     const auto& c = e.Get<LightComponent>();
     count += Push(L, c.colour);
-    count += Push(L, c.attenuation);
     count += Push(L, c.brightness);
     return count;
 }
@@ -813,7 +803,6 @@ int SetLightComponent(lua_State* L)
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<LightComponent>();
     c.colour = Pull<Maths::vec3>(L, count);
-    c.attenuation = Pull<Maths::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
     return 0;
 }
@@ -828,7 +817,6 @@ int AddLightComponent(lua_State* L)
 
     LightComponent c;
     c.colour = Pull<Maths::vec3>(L, count);
-    c.attenuation = Pull<Maths::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
     e.Add(c);
     return 0;

@@ -10,8 +10,9 @@ int main()
     Log::Init();
 
     Window window("Game!");
-    ModelManager   modelManager;
-    TextureManager textureManager;
+    ModelManager    modelManager;
+    TextureManager  textureManager;
+    MaterialManager materialManager(&textureManager);
 
     App app;
     
@@ -23,6 +24,7 @@ int main()
     core.window = &window;
     core.modelManager = &modelManager;
     core.textureManager = &textureManager;
+    core.materialManager = &materialManager;
 
     auto worldLayer = app.Add<WorldLayer>(core);
     auto editorUi = app.Add<EditorUI>(core, worldLayer.get());
