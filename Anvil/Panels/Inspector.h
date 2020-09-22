@@ -7,8 +7,8 @@ class EditorLayer;
 
 class Inspector
 {
-    DevUI::GizmoCoords d_coords = DevUI::GizmoCoords::WORLD;
-    DevUI::GizmoMode d_mode = DevUI::GizmoMode::TRANSLATION;
+    GizmoCoords d_coords = GizmoCoords::WORLD;
+    GizmoMode d_mode = GizmoMode::TRANSLATION;
     
     bool        d_useSnap = false;
     Maths::vec3 d_snap = {0.0f, 0.0f, 0.0f};

@@ -21,7 +21,6 @@ bool  InputTextMultiline(const char* label,
 }
 
 namespace Sprocket {
-namespace DevUI {
 namespace {
 
 unsigned int Cast(ImTextureID id)
@@ -451,7 +450,6 @@ void DevUI::DemoWindow()
     ImGui::ShowDemoWindow(&show);
 }
 
-}
 }
 
 

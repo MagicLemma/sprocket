@@ -14,7 +14,6 @@
 #include <memory>
 
 namespace Sprocket {
-namespace DevUI {
 
 struct DevUIData;
 
@@ -74,5 +73,4 @@ public:
     void DemoWindow();
 };
 
-}
 }

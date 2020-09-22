@@ -14,8 +14,8 @@ namespace {
 void ShowGuizmo(
     EditorLayer& editor,
     TransformComponent& c,
-    DevUI::GizmoMode mode,
-    DevUI::GizmoCoords coords,
+    GizmoMode mode,
+    GizmoCoords coords,
     Maths::vec3* snap = nullptr)
 {
     if (!editor.IsGameRunning()) {

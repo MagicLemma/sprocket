@@ -16,7 +16,7 @@ std::string EntityName(Entity& entity)
     return "Unnamed";
 }
 
-void AddEntityToList(DevUI::DevUI& ui, BasicSelector& selector, Entity& entity)
+void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 {
     ui.PushID(entity.Id());
     if (ui.StartTreeNode(EntityName(entity))) {
@@ -29,7 +29,7 @@ void AddEntityToList(DevUI::DevUI& ui, BasicSelector& selector, Entity& entity)
     ui.PopID();         
 }
 
-void SelectedEntityInfo(DevUI::DevUI& ui,
+void SelectedEntityInfo(DevUI& ui,
                         Entity& entity,
                         const Maths::mat4& view,
                         const Maths::mat4& proj)
@@ -43,8 +43,8 @@ void SelectedEntityInfo(DevUI::DevUI& ui,
     ui.Text("ID: " + std::to_string(entity.Id()));
     ui.Separator();
     
-    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
-    static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
+    static GizmoMode mode = GizmoMode::TRANSLATION;
+    static GizmoCoords coords = GizmoCoords::WORLD;
 
     if (entity.Has<TransformComponent>() && ui.StartTreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
@@ -56,20 +56,20 @@ void SelectedEntityInfo(DevUI::DevUI& ui,
            << "Roll: " << Maths::ToString(eulerAngles.z, 3);
         ui.Text(ss.str());    
 
-        if (ui.RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
-            mode = DevUI::GizmoMode::TRANSLATION;
+        if (ui.RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
+            mode = GizmoMode::TRANSLATION;
         }
         ui.SameLine();
-        if (ui.RadioButton("Rotate", mode == DevUI::GizmoMode::ROTATION)) {
-            mode = DevUI::GizmoMode::ROTATION;
+        if (ui.RadioButton("Rotate", mode == GizmoMode::ROTATION)) {
+            mode = GizmoMode::ROTATION;
         }
 
-        if (ui.RadioButton("World", coords == DevUI::GizmoCoords::WORLD)) {
-            coords = DevUI::GizmoCoords::WORLD;
+        if (ui.RadioButton("World", coords == GizmoCoords::WORLD)) {
+            coords = GizmoCoords::WORLD;
         }
         ui.SameLine();
-        if (ui.RadioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
-            coords = DevUI::GizmoCoords::LOCAL;
+        if (ui.RadioButton("Local", coords == GizmoCoords::LOCAL)) {
+            coords = GizmoCoords::LOCAL;
         }
         ui.EndTreeNode();
     }
@@ -90,7 +90,7 @@ void SelectedEntityInfo(DevUI::DevUI& ui,
     ui.EndWindow();
 }
 
-void SunInfoPanel(DevUI::DevUI& ui,
+void SunInfoPanel(DevUI& ui,
                   Sun& sun,
                   CircadianCycle& cycle)
 {
@@ -117,7 +117,7 @@ void SunInfoPanel(DevUI::DevUI& ui,
     ui.EndWindow();
 }
 
-void ShaderInfoPanel(DevUI::DevUI& ui, Shader& shader)
+void ShaderInfoPanel(DevUI& ui, Shader& shader)
 {
     static std::string compileStatus;
 

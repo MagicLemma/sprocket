@@ -29,8 +29,8 @@ void Image(const Texture& image,
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
 void GuizmoSettings(
-    DevUI::GizmoMode& mode,
-    DevUI::GizmoCoords& coords,
+    GizmoMode& mode,
+    GizmoCoords& coords,
     bool& useSnap,
     Maths::vec3& snap);
 

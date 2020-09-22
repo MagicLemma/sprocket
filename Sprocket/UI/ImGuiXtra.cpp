@@ -59,33 +59,33 @@ void SetGuizmo()
 }
 
 void GuizmoSettings(
-    DevUI::GizmoMode& mode,
-    DevUI::GizmoCoords& coords,
+    GizmoMode& mode,
+    GizmoCoords& coords,
     bool& useSnap,
     Maths::vec3& snap)
 {
-    if (ImGui::RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
-        mode = DevUI::GizmoMode::TRANSLATION;
+    if (ImGui::RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
+        mode = GizmoMode::TRANSLATION;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Rotate", mode == DevUI::GizmoMode::ROTATION)) {
-        mode = DevUI::GizmoMode::ROTATION;
+    if (ImGui::RadioButton("Rotate", mode == GizmoMode::ROTATION)) {
+        mode = GizmoMode::ROTATION;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Scale", mode == DevUI::GizmoMode::SCALE)) {
-        mode = DevUI::GizmoMode::SCALE;
+    if (ImGui::RadioButton("Scale", mode == GizmoMode::SCALE)) {
+        mode = GizmoMode::SCALE;
     }
 
-    if (ImGui::RadioButton("World", coords == DevUI::GizmoCoords::WORLD)) {
-        coords = DevUI::GizmoCoords::WORLD;
+    if (ImGui::RadioButton("World", coords == GizmoCoords::WORLD)) {
+        coords = GizmoCoords::WORLD;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
-        coords = DevUI::GizmoCoords::LOCAL;
+    if (ImGui::RadioButton("Local", coords == GizmoCoords::LOCAL)) {
+        coords = GizmoCoords::LOCAL;
     }
     ImGui::Checkbox("", &useSnap);
     ImGui::SameLine();
-    if (mode == DevUI::GizmoMode::TRANSLATION) {
+    if (mode == GizmoMode::TRANSLATION) {
         ImGui::InputFloat3("Snap", &snap.x);
     }
     else {

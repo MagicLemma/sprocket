@@ -13,9 +13,9 @@ namespace {
 void ShowGuizmo(
     EditorLayer& editor,
     TransformComponent& c,
-    DevUI::GizmoMode mode,
-    DevUI::GizmoCoords coords,
-    float* snap = nullptr)
+    GizmoMode mode,
+    GizmoCoords coords,
+    Maths::vec3* snap = nullptr)
 {
     if (!editor.IsGameRunning()) {
         auto& camera = editor.GetEditorCamera();
@@ -27,7 +27,7 @@ void ShowGuizmo(
             GetCoords(coords),
             Maths::Cast(tr),
             nullptr,
-            snap
+            &snap->x
         );
         Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
     }

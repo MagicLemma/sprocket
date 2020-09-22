@@ -21,7 +21,7 @@ class EditorLayer : public Layer
     ParticleManager d_particleManager;
 
     FrameBuffer d_viewport;
-    DevUI::DevUI d_ui;
+    DevUI d_ui;
     bool d_isViewportHovered = false;
     bool d_isViewportFocused = false;
 
