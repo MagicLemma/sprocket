@@ -48,8 +48,6 @@ public:
     bool Button(const std::string& name);
     bool RadioButton(const std::string& name, bool active);
     bool CollapsingHeader(const std::string& name);
-    void Text(const std::string& text);
-    void TextModifiable(std::string& text);
     void MultilineTextModifiable(const std::string_view label, std::string &text);
     void Checkbox(const std::string& name, bool* value);
     void ColourPicker(const std::string& name, Maths::vec3* colour);

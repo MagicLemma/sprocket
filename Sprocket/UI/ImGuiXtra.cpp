@@ -32,6 +32,11 @@ void TextModifiable(std::string& text)
     text = std::string(nameStr);
 }
 
+void Text(const std::string& text)
+{
+    ImGui::Text(text.c_str());
+}
+
 void Image(const Texture& image,
            const Maths::vec2& size,
            const Maths::vec2& uv0,

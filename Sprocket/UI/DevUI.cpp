@@ -338,19 +338,6 @@ bool DevUI::CollapsingHeader(const std::string& name)
     return ImGui::CollapsingHeader(name.c_str());
 }
 
-void DevUI::Text(const std::string& text)
-{
-    ImGui::Text(text.c_str());
-}
-
-void DevUI::TextModifiable(std::string& text)
-{
-    char nameStr[128] = "";
-    std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
-    ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
-    text = std::string(nameStr);
-}
-
 void DevUI::MultilineTextModifiable(const std::string_view label, std::string& text)
 {
     ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);

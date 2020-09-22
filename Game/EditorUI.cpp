@@ -37,10 +37,10 @@ void SelectedEntityInfo(DevUI& ui,
     using namespace Maths;
 
     ui.StartWindow("Selected Entity");
-    ui.Text("Name: ");
+    ImGui::Text("Name: ");
     ImGui::SameLine();
-    ui.Text(EntityName(entity));
-    ui.Text("ID: " + std::to_string(entity.Id()));
+    ImGuiXtra::Text(EntityName(entity));
+    ImGuiXtra::Text("ID: " + std::to_string(entity.Id()));
     ImGui::Separator();
     
     static GizmoMode mode = GizmoMode::TRANSLATION;
@@ -54,7 +54,7 @@ void SelectedEntityInfo(DevUI& ui,
         ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
            << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
            << "Roll: " << Maths::ToString(eulerAngles.z, 3);
-        ui.Text(ss.str());    
+        ImGui::Text(ss.str().c_str());    
 
         if (ui.RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
             mode = GizmoMode::TRANSLATION;
@@ -113,7 +113,7 @@ void SunInfoPanel(DevUI& ui,
     }
     
     ImGui::Separator();
-    ui.Text(cycle.ToString12Hour());
+    ImGuiXtra::Text(cycle.ToString12Hour());
     ui.EndWindow();
 }
 
@@ -128,7 +128,7 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
         compileStatus += (result? " SUCCESS": " FAILURE");
     }
 
-    ui.Text(compileStatus.c_str());
+    ImGui::Text(compileStatus.c_str());
     
     bool closed = true;
     if(ui.CollapsingHeader("Vertex")){
@@ -191,7 +191,7 @@ void EditorUI::OnUpdate(double dt)
     d_ui.StartWindow("Sprocket Editor", &open, flags);
     std::stringstream ss;
     ss << "Entities: " << d_worldLayer->d_scene->Size();
-    d_ui.Text(ss.str());
+    ImGui::Text(ss.str().c_str());
 
     if (d_ui.CollapsingHeader("Entity List")) {
         d_worldLayer->d_scene->Each<SelectComponent>([&](Entity& entity) {

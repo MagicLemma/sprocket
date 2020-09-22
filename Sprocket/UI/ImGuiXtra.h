@@ -18,6 +18,9 @@ void File(const std::string& name,
 // Creates a text box for modifying strings.
 void TextModifiable(std::string& text);
 
+// Wrapper that accepts std::strings
+void Text(const std::string& text);
+
 // A wrapper for ImGui::Image that uses Sprocket types.
 void Image(const Texture& image,
            const Maths::vec2& size,
