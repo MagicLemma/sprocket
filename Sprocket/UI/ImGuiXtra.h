@@ -28,7 +28,11 @@ void Image(const Texture& image,
 
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
-void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords);
+void GuizmoSettings(
+    DevUI::GizmoMode& mode,
+    DevUI::GizmoCoords& coords,
+    bool& useSnap,
+    Maths::vec3& snap);
 
 // Displays a quaternion in Euler angles form.
 void Euler(const std::string& name, Maths::quat* q);

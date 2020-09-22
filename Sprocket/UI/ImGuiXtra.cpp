@@ -58,7 +58,11 @@ void SetGuizmo()
     ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
 }
 
-void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords)
+void GuizmoSettings(
+    DevUI::GizmoMode& mode,
+    DevUI::GizmoCoords& coords,
+    bool& useSnap,
+    Maths::vec3& snap)
 {
     if (ImGui::RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
         mode = DevUI::GizmoMode::TRANSLATION;
@@ -78,6 +82,14 @@ void GuizmoSettings(DevUI::GizmoMode& mode, DevUI::GizmoCoords& coords)
     ImGui::SameLine();
     if (ImGui::RadioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
         coords = DevUI::GizmoCoords::LOCAL;
+    }
+    ImGui::Checkbox("", &useSnap);
+    ImGui::SameLine();
+    if (mode == DevUI::GizmoMode::TRANSLATION) {
+        ImGui::InputFloat3("Snap", &snap.x);
+    }
+    else {
+        ImGui::InputFloat("Snap", &snap.x);
     }
 }
 

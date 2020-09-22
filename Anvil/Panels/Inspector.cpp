@@ -15,7 +15,8 @@ void ShowGuizmo(
     EditorLayer& editor,
     TransformComponent& c,
     DevUI::GizmoMode mode,
-    DevUI::GizmoCoords coords)
+    DevUI::GizmoCoords coords,
+    Maths::vec3* snap = nullptr)
 {
     if (!editor.IsGameRunning()) {
         auto& camera = editor.GetEditorCamera();
@@ -25,7 +26,9 @@ void ShowGuizmo(
             Maths::Cast(camera.Proj()),
             GetMode(mode),
             GetCoords(coords),
-            Maths::Cast(tr)
+            Maths::Cast(tr),
+            nullptr,
+            &snap->x
         );
         Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
     }
@@ -76,11 +79,11 @@ void Inspector::Show(EditorLayer& editor)
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
-            ImGuiXtra::GuizmoSettings(d_mode, d_coords);
+            ImGuiXtra::GuizmoSettings(d_mode, d_coords, d_useSnap, d_snap);
             if (ImGui::Button("Delete")) { entity.Remove<TransformComponent>(); }
             ImGui::PopID();
         }
-        ShowGuizmo(editor, c, d_mode, d_coords);
+        ShowGuizmo(editor, c, d_mode, d_coords, d_useSnap ? &d_snap : nullptr);
     }
 
     if (entity.Has<ModelComponent>()) {
