@@ -64,9 +64,6 @@ public:
                GizmoMode mode,
                GizmoCoords coords);
 
-    void SameLine();
-    void Separator();
-
     void PushID(std::size_t id);
     void PopID();
 

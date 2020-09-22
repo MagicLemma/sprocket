@@ -305,55 +305,46 @@ void DevUI::EndFrame()
 
 void DevUI::StartWindow(const std::string& name, bool* open, int flags)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::Begin(name.c_str(), open, flags);
 }
 
 void DevUI::EndWindow()
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::End();
 }
 
 bool DevUI::StartTreeNode(const std::string& name)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     return ImGui::TreeNode(name.c_str());
 }
 
 void DevUI::EndTreeNode()
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::TreePop();
 }
 
 bool DevUI::Button(const std::string& name)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     return ImGui::Button(name.c_str());
 }
 
 bool DevUI::RadioButton(const std::string& name, bool active)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     return ImGui::RadioButton(name.c_str(), active);
 }
 
 bool DevUI::CollapsingHeader(const std::string& name)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     return ImGui::CollapsingHeader(name.c_str());
 }
 
 void DevUI::Text(const std::string& text)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::Text(text.c_str());
 }
 
 void DevUI::TextModifiable(std::string& text)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     char nameStr[128] = "";
     std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
     ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
@@ -362,19 +353,16 @@ void DevUI::TextModifiable(std::string& text)
 
 void DevUI::MultilineTextModifiable(const std::string_view label, std::string& text)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);
 }
 
 void DevUI::Checkbox(const std::string& name, bool* value)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::Checkbox(name.c_str(), value);
 }
 
 void DevUI::ColourPicker(const std::string& name, Maths::vec3* colour)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     static int flags = ImGuiColorEditFlags_Float
                      | ImGuiColorEditFlags_InputRGB;
     ImGui::ColorEdit3(name.c_str(), &colour->x, flags);
@@ -382,25 +370,21 @@ void DevUI::ColourPicker(const std::string& name, Maths::vec3* colour)
 
 void DevUI::SliderFloat(const std::string& name, float* value, float lower, float upper)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
 }
 
 void DevUI::DragInt(const std::string& name, int* value, float speed)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragInt(name.c_str(), value, speed);
 }
 
 void DevUI::DragFloat(const std::string& name, float* value, float speed)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragFloat(name.c_str(), value, speed);
 }
 
 void DevUI::DragFloat3(const std::string& name, Maths::vec3* values, float speed)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragFloat3(name.c_str(), &values->x, speed);
 }
 
@@ -410,7 +394,6 @@ void DevUI::Gizmo(Maths::mat4* matrix,
                     GizmoMode mode,
                     GizmoCoords coords)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGuizmo::Manipulate(
         Maths::Cast(view),
         Maths::Cast(projection),
@@ -420,27 +403,13 @@ void DevUI::Gizmo(Maths::mat4* matrix,
     );
 }
 
-void DevUI::SameLine()
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::SameLine();
-}
-
-void DevUI::Separator()
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::Separator();
-}
-
 void DevUI::PushID(std::size_t id)
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::PushID((int)id);
 }
 
 void DevUI::PopID()
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::PopID();
 }
 

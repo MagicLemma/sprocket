@@ -38,10 +38,10 @@ void SelectedEntityInfo(DevUI& ui,
 
     ui.StartWindow("Selected Entity");
     ui.Text("Name: ");
-    ui.SameLine();
+    ImGui::SameLine();
     ui.Text(EntityName(entity));
     ui.Text("ID: " + std::to_string(entity.Id()));
-    ui.Separator();
+    ImGui::Separator();
     
     static GizmoMode mode = GizmoMode::TRANSLATION;
     static GizmoCoords coords = GizmoCoords::WORLD;
@@ -59,7 +59,7 @@ void SelectedEntityInfo(DevUI& ui,
         if (ui.RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
             mode = GizmoMode::TRANSLATION;
         }
-        ui.SameLine();
+        ImGui::SameLine();
         if (ui.RadioButton("Rotate", mode == GizmoMode::ROTATION)) {
             mode = GizmoMode::ROTATION;
         }
@@ -67,7 +67,7 @@ void SelectedEntityInfo(DevUI& ui,
         if (ui.RadioButton("World", coords == GizmoCoords::WORLD)) {
             coords = GizmoCoords::WORLD;
         }
-        ui.SameLine();
+        ImGui::SameLine();
         if (ui.RadioButton("Local", coords == GizmoCoords::LOCAL)) {
             coords = GizmoCoords::LOCAL;
         }
@@ -81,7 +81,7 @@ void SelectedEntityInfo(DevUI& ui,
         tr.position = GetTranslation(origin);
         tr.orientation = Normalise(ToQuat(mat3(origin)));
     }
-    ui.Separator();
+    ImGui::Separator();
 
     if (ui.Button("Delete Entity")) {
         entity.Kill();
@@ -97,9 +97,9 @@ void SunInfoPanel(DevUI& ui,
     ui.StartWindow("Sun");
 
     if (ui.Button("Start")) { cycle.Start(); }
-    ui.SameLine();
+    ImGui::SameLine();
     if (ui.Button("Stop")) { cycle.Stop(); }
-    ui.Separator();
+    ImGui::Separator();
 
     if (cycle.IsRunning()) { // If running, be able to change the speed.
         float speed = cycle.GetSpeed();
@@ -112,7 +112,7 @@ void SunInfoPanel(DevUI& ui,
         cycle.SetAngle(angle);
     }
     
-    ui.Separator();
+    ImGui::Separator();
     ui.Text(cycle.ToString12Hour());
     ui.EndWindow();
 }
