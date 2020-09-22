@@ -36,7 +36,7 @@ void SelectedEntityInfo(DevUI& ui,
 {
     using namespace Maths;
 
-    ui.StartWindow("Selected Entity");
+    ImGui::Begin("Selected Entity");
     ImGui::Text("Name: ");
     ImGui::SameLine();
     ImGuiXtra::Text(EntityName(entity));
@@ -48,7 +48,7 @@ void SelectedEntityInfo(DevUI& ui,
 
     if (entity.Has<TransformComponent>() && ui.StartTreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
-        ui.DragFloat3("Position", &tr.position, 0.005f);
+        ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
         Maths::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
         std::stringstream ss;
         ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
@@ -87,14 +87,14 @@ void SelectedEntityInfo(DevUI& ui,
         entity.Kill();
     }
 
-    ui.EndWindow();
+    ImGui::End();
 }
 
 void SunInfoPanel(DevUI& ui,
                   Sun& sun,
                   CircadianCycle& cycle)
 {
-    ui.StartWindow("Sun");
+    ImGui::Begin("Sun");
 
     if (ImGui::Button("Start")) { cycle.Start(); }
     ImGui::SameLine();
@@ -108,20 +108,20 @@ void SunInfoPanel(DevUI& ui,
     }
     else { // If not running, be able to set manually
         float angle = cycle.GetAngle();
-        ui.DragFloat("Angle", &angle);
+        ImGui::DragFloat("Angle", &angle);
         cycle.SetAngle(angle);
     }
     
     ImGui::Separator();
     ImGuiXtra::Text(cycle.ToString12Hour());
-    ui.EndWindow();
+    ImGui::End();
 }
 
 void ShaderInfoPanel(DevUI& ui, Shader& shader)
 {
     static std::string compileStatus;
 
-    ui.StartWindow("Shader");
+    ImGui::Begin("Shader");
     if(ImGui::Button("Recompile")) {
         bool result = shader.Reload();
         compileStatus ="Shader compile:";
@@ -144,7 +144,7 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
         compileStatus.clear();
     }
 
-    ui.EndWindow();
+    ImGui::End();
 }
 
 }
@@ -188,7 +188,7 @@ void EditorUI::OnUpdate(double dt)
     bool open = true;
     int flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
 
-    d_ui.StartWindow("Sprocket Editor", &open, flags);
+    ImGui::Begin("Sprocket Editor", &open, flags);
     std::stringstream ss;
     ss << "Entities: " << d_worldLayer->d_scene->Size();
     ImGui::Text(ss.str().c_str());
@@ -198,8 +198,7 @@ void EditorUI::OnUpdate(double dt)
             AddEntityToList(d_ui, *d_worldLayer->d_selector, entity);      
         });
     }
-
-    d_ui.EndWindow();
+    ImGui::End();
 
     mat4 view = CameraUtils::MakeView(d_worldLayer->d_camera);
     mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_camera);
@@ -212,15 +211,13 @@ void EditorUI::OnUpdate(double dt)
     SunInfoPanel(d_ui, d_worldLayer->d_scene->GetSun(), d_worldLayer->d_cycle);
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
-    d_ui.StartWindow("Shadow Map", &open);
-
+    ImGui::Begin("Shadow Map", &open);
     auto shadowMap = d_worldLayer->d_shadowMap.GetShadowMap();
     ImTextureID id = (void*)(intptr_t)shadowMap.Id();
     float aspect = shadowMap.Width() / shadowMap.Height();
     float size = 500.0f;
     ImGui::Image(id, ImVec2(aspect * size, size), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
-
-    d_ui.EndWindow();
+    ImGui::End();
 
     d_ui.DemoWindow();
     d_ui.EndFrame();

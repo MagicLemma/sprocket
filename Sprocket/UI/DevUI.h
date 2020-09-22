@@ -39,17 +39,10 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartWindow(const std::string& name, bool* open = nullptr, int flags = 0);
-    void EndWindow();
-
     bool StartTreeNode(const std::string& name);
     void EndTreeNode();
 
     void MultilineTextModifiable(const std::string_view label, std::string &text);
-    void ColourPicker(const std::string& name, Maths::vec3* colour);
-    void DragInt(const std::string& name, int* value, float speed = 1.0f);
-    void DragFloat(const std::string& name, float* value, float speed = 1.0f);
-    void DragFloat3(const std::string& name, Maths::vec3* values, float speed = 1.0f);
 
     void Gizmo(Maths::mat4* matrix,
                const Maths::mat4& view,

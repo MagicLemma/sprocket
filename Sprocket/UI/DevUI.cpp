@@ -303,16 +303,6 @@ void DevUI::EndFrame()
     }
 }
 
-void DevUI::StartWindow(const std::string& name, bool* open, int flags)
-{
-    ImGui::Begin(name.c_str(), open, flags);
-}
-
-void DevUI::EndWindow()
-{
-    ImGui::End();
-}
-
 bool DevUI::StartTreeNode(const std::string& name)
 {
     return ImGui::TreeNode(name.c_str());
@@ -326,28 +316,6 @@ void DevUI::EndTreeNode()
 void DevUI::MultilineTextModifiable(const std::string_view label, std::string& text)
 {
     ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);
-}
-
-void DevUI::ColourPicker(const std::string& name, Maths::vec3* colour)
-{
-    static int flags = ImGuiColorEditFlags_Float
-                     | ImGuiColorEditFlags_InputRGB;
-    ImGui::ColorEdit3(name.c_str(), &colour->x, flags);
-}
-
-void DevUI::DragInt(const std::string& name, int* value, float speed)
-{
-    ImGui::DragInt(name.c_str(), value, speed);
-}
-
-void DevUI::DragFloat(const std::string& name, float* value, float speed)
-{
-    ImGui::DragFloat(name.c_str(), value, speed);
-}
-
-void DevUI::DragFloat3(const std::string& name, Maths::vec3* values, float speed)
-{
-    ImGui::DragFloat3(name.c_str(), &values->x, speed);
 }
 
 void DevUI::Gizmo(Maths::mat4* matrix,
