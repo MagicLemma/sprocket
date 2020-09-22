@@ -323,21 +323,6 @@ void DevUI::EndTreeNode()
     ImGui::TreePop();
 }
 
-bool DevUI::Button(const std::string& name)
-{
-    return ImGui::Button(name.c_str());
-}
-
-bool DevUI::RadioButton(const std::string& name, bool active)
-{
-    return ImGui::RadioButton(name.c_str(), active);
-}
-
-bool DevUI::CollapsingHeader(const std::string& name)
-{
-    return ImGui::CollapsingHeader(name.c_str());
-}
-
 void DevUI::MultilineTextModifiable(const std::string_view label, std::string& text)
 {
     ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);
@@ -353,11 +338,6 @@ void DevUI::ColourPicker(const std::string& name, Maths::vec3* colour)
     static int flags = ImGuiColorEditFlags_Float
                      | ImGuiColorEditFlags_InputRGB;
     ImGui::ColorEdit3(name.c_str(), &colour->x, flags);
-}
-
-void DevUI::SliderFloat(const std::string& name, float* value, float lower, float upper)
-{
-    ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
 }
 
 void DevUI::DragInt(const std::string& name, int* value, float speed)

@@ -20,7 +20,7 @@ void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 {
     ui.PushID(entity.Id());
     if (ui.StartTreeNode(EntityName(entity))) {
-        if (entity.Has<SelectComponent>() && ui.Button("Select")) {
+        if (entity.Has<SelectComponent>() && ImGui::Button("Select")) {
             SPKT_LOG_INFO("Select clicked!");
             selector.SetSelected(entity);
         }
@@ -56,19 +56,19 @@ void SelectedEntityInfo(DevUI& ui,
            << "Roll: " << Maths::ToString(eulerAngles.z, 3);
         ImGui::Text(ss.str().c_str());    
 
-        if (ui.RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
+        if (ImGui::RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
             mode = GizmoMode::TRANSLATION;
         }
         ImGui::SameLine();
-        if (ui.RadioButton("Rotate", mode == GizmoMode::ROTATION)) {
+        if (ImGui::RadioButton("Rotate", mode == GizmoMode::ROTATION)) {
             mode = GizmoMode::ROTATION;
         }
 
-        if (ui.RadioButton("World", coords == GizmoCoords::WORLD)) {
+        if (ImGui::RadioButton("World", coords == GizmoCoords::WORLD)) {
             coords = GizmoCoords::WORLD;
         }
         ImGui::SameLine();
-        if (ui.RadioButton("Local", coords == GizmoCoords::LOCAL)) {
+        if (ImGui::RadioButton("Local", coords == GizmoCoords::LOCAL)) {
             coords = GizmoCoords::LOCAL;
         }
         ui.EndTreeNode();
@@ -83,7 +83,7 @@ void SelectedEntityInfo(DevUI& ui,
     }
     ImGui::Separator();
 
-    if (ui.Button("Delete Entity")) {
+    if (ImGui::Button("Delete Entity")) {
         entity.Kill();
     }
 
@@ -96,14 +96,14 @@ void SunInfoPanel(DevUI& ui,
 {
     ui.StartWindow("Sun");
 
-    if (ui.Button("Start")) { cycle.Start(); }
+    if (ImGui::Button("Start")) { cycle.Start(); }
     ImGui::SameLine();
-    if (ui.Button("Stop")) { cycle.Stop(); }
+    if (ImGui::Button("Stop")) { cycle.Stop(); }
     ImGui::Separator();
 
     if (cycle.IsRunning()) { // If running, be able to change the speed.
         float speed = cycle.GetSpeed();
-        ui.SliderFloat("Speed", &speed, 1.0f, 1000.0f);
+        ImGui::SliderFloat("Speed", &speed, 1.0f, 1000.0f, "%.3f");
         cycle.SetSpeed(speed);
     }
     else { // If not running, be able to set manually
@@ -122,7 +122,7 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
     static std::string compileStatus;
 
     ui.StartWindow("Shader");
-    if(ui.Button("Recompile")) {
+    if(ImGui::Button("Recompile")) {
         bool result = shader.Reload();
         compileStatus ="Shader compile:";
         compileStatus += (result? " SUCCESS": " FAILURE");
@@ -131,11 +131,11 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
     ImGui::Text(compileStatus.c_str());
     
     bool closed = true;
-    if(ui.CollapsingHeader("Vertex")){
+    if (ImGui::CollapsingHeader("Vertex")) {
         closed = false;
         ui.MultilineTextModifiable("", shader.VertexShaderSource());
     }
-    if(ui.CollapsingHeader("Frag")) {
+    if (ImGui::CollapsingHeader("Frag")) {
         closed = false;
         ui.MultilineTextModifiable("", shader.FragShaderSource());
     }
@@ -193,7 +193,7 @@ void EditorUI::OnUpdate(double dt)
     ss << "Entities: " << d_worldLayer->d_scene->Size();
     ImGui::Text(ss.str().c_str());
 
-    if (d_ui.CollapsingHeader("Entity List")) {
+    if (ImGui::CollapsingHeader("Entity List")) {
         d_worldLayer->d_scene->Each<SelectComponent>([&](Entity& entity) {
             AddEntityToList(d_ui, *d_worldLayer->d_selector, entity);      
         });
@@ -216,7 +216,9 @@ void EditorUI::OnUpdate(double dt)
 
     auto shadowMap = d_worldLayer->d_shadowMap.GetShadowMap();
     ImTextureID id = (void*)(intptr_t)shadowMap.Id();
-    ImGui::Image(id, ImVec2(shadowMap.Width(), shadowMap.Height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
+    float aspect = shadowMap.Width() / shadowMap.Height();
+    float size = 500.0f;
+    ImGui::Image(id, ImVec2(aspect * size, size), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
 
     d_ui.EndWindow();
 

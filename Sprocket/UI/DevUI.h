@@ -45,13 +45,9 @@ public:
     bool StartTreeNode(const std::string& name);
     void EndTreeNode();
 
-    bool Button(const std::string& name);
-    bool RadioButton(const std::string& name, bool active);
-    bool CollapsingHeader(const std::string& name);
     void MultilineTextModifiable(const std::string_view label, std::string &text);
     void Checkbox(const std::string& name, bool* value);
     void ColourPicker(const std::string& name, Maths::vec3* colour);
-    void SliderFloat(const std::string& name, float* value, float lower, float upper);
     void DragInt(const std::string& name, int* value, float speed = 1.0f);
     void DragFloat(const std::string& name, float* value, float speed = 1.0f);
     void DragFloat3(const std::string& name, Maths::vec3* values, float speed = 1.0f);
