@@ -16,7 +16,7 @@ std::string EntityName(Entity& entity)
     return "Unnamed";
 }
 
-void AddEntityToList(DevUI::Context& ui, BasicSelector& selector, Entity& entity)
+void AddEntityToList(DevUI::DevUI& ui, BasicSelector& selector, Entity& entity)
 {
     ui.PushID(entity.Id());
     if (ui.StartTreeNode(EntityName(entity))) {
@@ -29,7 +29,7 @@ void AddEntityToList(DevUI::Context& ui, BasicSelector& selector, Entity& entity
     ui.PopID();         
 }
 
-void SelectedEntityInfo(DevUI::Context& ui,
+void SelectedEntityInfo(DevUI::DevUI& ui,
                         Entity& entity,
                         const Maths::mat4& view,
                         const Maths::mat4& proj)
@@ -90,7 +90,7 @@ void SelectedEntityInfo(DevUI::Context& ui,
     ui.EndWindow();
 }
 
-void SunInfoPanel(DevUI::Context& ui,
+void SunInfoPanel(DevUI::DevUI& ui,
                   Sun& sun,
                   CircadianCycle& cycle)
 {
@@ -117,7 +117,7 @@ void SunInfoPanel(DevUI::Context& ui,
     ui.EndWindow();
 }
 
-void ShaderInfoPanel(DevUI::Context& ui, Shader& shader)
+void ShaderInfoPanel(DevUI::DevUI& ui, Shader& shader)
 {
     static std::string compileStatus;
 

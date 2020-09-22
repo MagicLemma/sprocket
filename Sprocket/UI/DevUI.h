@@ -24,13 +24,13 @@ enum class GizmoCoords { WORLD, LOCAL };
 ImGuizmo::OPERATION GetMode(GizmoMode mode);
 ImGuizmo::MODE GetCoords(GizmoCoords coords);
 
-class Context
+class DevUI
 {
     std::shared_ptr<DevUIData> d_impl;
     bool d_blockEvents = true;
 
 public:
-    Context(Window* window);
+    DevUI(Window* window);
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);

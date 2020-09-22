@@ -142,7 +142,7 @@ struct DevUIData
     }
 };
 
-Context::Context(Window* window)
+DevUI::DevUI(Window* window)
     : d_impl(std::make_shared<DevUIData>())
 {
     IMGUI_CHECKVERSION();
@@ -159,7 +159,7 @@ Context::Context(Window* window)
     SetFontAtlas(io, d_impl->fontAtlas);
 }
 
-void Context::OnEvent(Event& event)
+void DevUI::OnEvent(Event& event)
 {
     if (event.IsConsumed()) { return; }
 
@@ -221,7 +221,7 @@ void Context::OnEvent(Event& event)
     }
 }
 
-void Context::OnUpdate(double dt)
+void DevUI::OnUpdate(double dt)
 {
     ImGuiIO& io = d_impl->context->IO;
     io.DeltaTime = (float)dt;
@@ -231,14 +231,14 @@ void Context::OnUpdate(double dt)
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
 
-void Context::StartFrame()
+void DevUI::StartFrame()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 }
 
-void Context::EndFrame()
+void DevUI::EndFrame()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Render();
@@ -304,55 +304,55 @@ void Context::EndFrame()
     }
 }
 
-void Context::StartWindow(const std::string& name, bool* open, int flags)
+void DevUI::StartWindow(const std::string& name, bool* open, int flags)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Begin(name.c_str(), open, flags);
 }
 
-void Context::EndWindow()
+void DevUI::EndWindow()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::End();
 }
 
-bool Context::StartTreeNode(const std::string& name)
+bool DevUI::StartTreeNode(const std::string& name)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::TreeNode(name.c_str());
 }
 
-void Context::EndTreeNode()
+void DevUI::EndTreeNode()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::TreePop();
 }
 
-bool Context::Button(const std::string& name)
+bool DevUI::Button(const std::string& name)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::Button(name.c_str());
 }
 
-bool Context::RadioButton(const std::string& name, bool active)
+bool DevUI::RadioButton(const std::string& name, bool active)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::RadioButton(name.c_str(), active);
 }
 
-bool Context::CollapsingHeader(const std::string& name)
+bool DevUI::CollapsingHeader(const std::string& name)
 {
     ImGui::SetCurrentContext(d_impl->context);
     return ImGui::CollapsingHeader(name.c_str());
 }
 
-void Context::Text(const std::string& text)
+void DevUI::Text(const std::string& text)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Text(text.c_str());
 }
 
-void Context::TextModifiable(std::string& text)
+void DevUI::TextModifiable(std::string& text)
 {
     ImGui::SetCurrentContext(d_impl->context);
     char nameStr[128] = "";
@@ -361,19 +361,19 @@ void Context::TextModifiable(std::string& text)
     text = std::string(nameStr);
 }
 
-void Context::MultilineTextModifiable(const std::string_view label, std::string& text)
+void DevUI::MultilineTextModifiable(const std::string_view label, std::string& text)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);
 }
 
-void Context::Checkbox(const std::string& name, bool* value)
+void DevUI::Checkbox(const std::string& name, bool* value)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Checkbox(name.c_str(), value);
 }
 
-void Context::ColourPicker(const std::string& name, Maths::vec3* colour)
+void DevUI::ColourPicker(const std::string& name, Maths::vec3* colour)
 {
     ImGui::SetCurrentContext(d_impl->context);
     static int flags = ImGuiColorEditFlags_Float
@@ -381,31 +381,31 @@ void Context::ColourPicker(const std::string& name, Maths::vec3* colour)
     ImGui::ColorEdit3(name.c_str(), &colour->x, flags);
 }
 
-void Context::SliderFloat(const std::string& name, float* value, float lower, float upper)
+void DevUI::SliderFloat(const std::string& name, float* value, float lower, float upper)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
 }
 
-void Context::DragInt(const std::string& name, int* value, float speed)
+void DevUI::DragInt(const std::string& name, int* value, float speed)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragInt(name.c_str(), value, speed);
 }
 
-void Context::DragFloat(const std::string& name, float* value, float speed)
+void DevUI::DragFloat(const std::string& name, float* value, float speed)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragFloat(name.c_str(), value, speed);
 }
 
-void Context::DragFloat3(const std::string& name, Maths::vec3* values, float speed)
+void DevUI::DragFloat3(const std::string& name, Maths::vec3* values, float speed)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::DragFloat3(name.c_str(), &values->x, speed);
 }
 
-void Context::Gizmo(Maths::mat4* matrix,
+void DevUI::Gizmo(Maths::mat4* matrix,
                     const Maths::mat4& view,
                     const Maths::mat4& projection,
                     GizmoMode mode,
@@ -421,31 +421,31 @@ void Context::Gizmo(Maths::mat4* matrix,
     );
 }
 
-void Context::SameLine()
+void DevUI::SameLine()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::SameLine();
 }
 
-void Context::Separator()
+void DevUI::Separator()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::Separator();
 }
 
-void Context::PushID(std::size_t id)
+void DevUI::PushID(std::size_t id)
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::PushID((int)id);
 }
 
-void Context::PopID()
+void DevUI::PopID()
 {
     ImGui::SetCurrentContext(d_impl->context);
     ImGui::PopID();
 }
 
-void Context::DemoWindow()
+void DevUI::DemoWindow()
 {
     static bool show = true;
     ImGui::ShowDemoWindow(&show);
