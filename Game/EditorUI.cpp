@@ -43,7 +43,7 @@ void SelectedEntityInfo(DevUI& ui,
     ImGuiXtra::Text("ID: " + std::to_string(entity.Id()));
     ImGui::Separator();
     
-    static GizmoMode mode = GizmoMode::TRANSLATION;
+    static ImGuizmo::OPERATION mode = ImGuizmo::OPERATION::TRANSLATE;
     static GizmoCoords coords = GizmoCoords::WORLD;
 
     if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
@@ -56,12 +56,12 @@ void SelectedEntityInfo(DevUI& ui,
            << "Roll: " << Maths::ToString(eulerAngles.z, 3);
         ImGui::Text(ss.str().c_str());    
 
-        if (ImGui::RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
-            mode = GizmoMode::TRANSLATION;
+        if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
+            mode = ImGuizmo::OPERATION::TRANSLATE;
         }
         ImGui::SameLine();
-        if (ImGui::RadioButton("Rotate", mode == GizmoMode::ROTATION)) {
-            mode = GizmoMode::ROTATION;
+        if (ImGui::RadioButton("Rotate", mode == ImGuizmo::OPERATION::ROTATE)) {
+            mode = ImGuizmo::OPERATION::ROTATE;
         }
 
         if (ImGui::RadioButton("World", coords == GizmoCoords::WORLD)) {

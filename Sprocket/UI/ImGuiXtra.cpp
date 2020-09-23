@@ -86,21 +86,21 @@ void SetGuizmo()
 }
 
 void GuizmoSettings(
-    GizmoMode& mode,
+    ImGuizmo::OPERATION& mode,
     GizmoCoords& coords,
     bool& useSnap,
     Maths::vec3& snap)
 {
-    if (ImGui::RadioButton("Translate", mode == GizmoMode::TRANSLATION)) {
-        mode = GizmoMode::TRANSLATION;
+    if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
+        mode = ImGuizmo::OPERATION::TRANSLATE;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Rotate", mode == GizmoMode::ROTATION)) {
-        mode = GizmoMode::ROTATION;
+    if (ImGui::RadioButton("Rotate", mode == ImGuizmo::OPERATION::ROTATE)) {
+        mode = ImGuizmo::OPERATION::ROTATE;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Scale", mode == GizmoMode::SCALE)) {
-        mode = GizmoMode::SCALE;
+    if (ImGui::RadioButton("Scale", mode == ImGuizmo::OPERATION::SCALE)) {
+        mode = ImGuizmo::OPERATION::SCALE;
     }
 
     if (ImGui::RadioButton("World", coords == GizmoCoords::WORLD)) {
@@ -112,7 +112,7 @@ void GuizmoSettings(
     }
     ImGui::Checkbox("", &useSnap);
     ImGui::SameLine();
-    if (mode == GizmoMode::TRANSLATION) {
+    if (mode == ImGuizmo::OPERATION::TRANSLATE) {
         ImGui::InputFloat3("Snap", &snap.x);
     }
     else {
@@ -124,13 +124,13 @@ void Guizmo(
     Maths::mat4* matrix,
     const Maths::mat4& view,
     const Maths::mat4& projection,
-    GizmoMode mode,
+    ImGuizmo::OPERATION mode,
     GizmoCoords coords)
 {
     ImGuizmo::Manipulate(
         Maths::Cast(view),
         Maths::Cast(projection),
-        GetMode(mode),
+        mode,
         GetCoords(coords),
         Maths::Cast(*matrix)
     );

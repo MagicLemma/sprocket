@@ -17,10 +17,8 @@ namespace Sprocket {
 
 struct DevUIData;
 
-enum class GizmoMode { TRANSLATION, ROTATION, SCALE };
 enum class GizmoCoords { WORLD, LOCAL };
 
-ImGuizmo::OPERATION GetMode(GizmoMode mode);
 ImGuizmo::MODE GetCoords(GizmoCoords coords);
 
 class DevUI

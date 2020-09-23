@@ -39,7 +39,7 @@ void Image(const Texture& image, float size);
 void SetGuizmo();
 
 void GuizmoSettings(
-    GizmoMode& mode,
+    ImGuizmo::OPERATION& mode,
     GizmoCoords& coords,
     bool& useSnap,
     Maths::vec3& snap
@@ -49,7 +49,7 @@ void Guizmo(
     Maths::mat4* matrix,
     const Maths::mat4& view,
     const Maths::mat4& projection,
-    GizmoMode mode,
+    ImGuizmo::OPERATION mode,
     GizmoCoords coords
 );
 

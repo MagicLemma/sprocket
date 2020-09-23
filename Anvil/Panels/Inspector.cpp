@@ -14,7 +14,7 @@ namespace {
 void ShowGuizmo(
     EditorLayer& editor,
     TransformComponent& c,
-    GizmoMode mode,
+    ImGuizmo::OPERATION mode,
     GizmoCoords coords,
     Maths::vec3* snap = nullptr)
 {
@@ -24,7 +24,7 @@ void ShowGuizmo(
         ImGuizmo::Manipulate(
             Maths::Cast(camera.View()),
             Maths::Cast(camera.Proj()),
-            GetMode(mode),
+            mode,
             GetCoords(coords),
             Maths::Cast(tr),
             nullptr,
