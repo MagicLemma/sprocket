@@ -315,10 +315,4 @@ void DevUI::Gizmo(Maths::mat4* matrix,
     );
 }
 
-void DevUI::DemoWindow()
-{
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
-}
-
 }

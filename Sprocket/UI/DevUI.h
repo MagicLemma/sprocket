@@ -44,8 +44,6 @@ public:
                const Maths::mat4& projection,
                GizmoMode mode,
                GizmoCoords coords);
-
-    void DemoWindow();
 };
 
 }

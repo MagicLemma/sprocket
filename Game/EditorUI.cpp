@@ -185,21 +185,6 @@ void EditorUI::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
     d_ui.StartFrame();
 
-    bool open = true;
-    int flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
-
-    ImGui::Begin("Sprocket Editor", &open, flags);
-    std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_scene->Size();
-    ImGui::Text(ss.str().c_str());
-
-    if (ImGui::CollapsingHeader("Entity List")) {
-        d_worldLayer->d_scene->Each<SelectComponent>([&](Entity& entity) {
-            AddEntityToList(d_ui, *d_worldLayer->d_selector, entity);      
-        });
-    }
-    ImGui::End();
-
     mat4 view = CameraUtils::MakeView(d_worldLayer->d_camera);
     mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_camera);
 
@@ -211,10 +196,11 @@ void EditorUI::OnUpdate(double dt)
     SunInfoPanel(d_ui, d_worldLayer->d_scene->GetSun(), d_worldLayer->d_cycle);
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
-    ImGui::Begin("Shadow Map", &open);
+    ImGui::Begin("Shadow Map");
     ImGuiXtra::Image(d_worldLayer->d_shadowMap.GetShadowMap(), 500.0f);
     ImGui::End();
 
-    d_ui.DemoWindow();
+    ImGui::ShowDemoWindow();
+    
     d_ui.EndFrame();
 }
