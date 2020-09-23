@@ -44,7 +44,7 @@ void SelectedEntityInfo(DevUI& ui,
     ImGui::Separator();
     
     static ImGuizmo::OPERATION mode = ImGuizmo::OPERATION::TRANSLATE;
-    static GizmoCoords coords = GizmoCoords::WORLD;
+    static ImGuizmo::MODE coords = ImGuizmo::MODE::WORLD;
 
     if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
@@ -64,12 +64,12 @@ void SelectedEntityInfo(DevUI& ui,
             mode = ImGuizmo::OPERATION::ROTATE;
         }
 
-        if (ImGui::RadioButton("World", coords == GizmoCoords::WORLD)) {
-            coords = GizmoCoords::WORLD;
+        if (ImGui::RadioButton("World", coords == ImGuizmo::MODE::WORLD)) {
+            coords = ImGuizmo::MODE::WORLD;
         }
         ImGui::SameLine();
-        if (ImGui::RadioButton("Local", coords == GizmoCoords::LOCAL)) {
-            coords = GizmoCoords::LOCAL;
+        if (ImGui::RadioButton("Local", coords == ImGuizmo::MODE::LOCAL)) {
+            coords = ImGuizmo::MODE::LOCAL;
         }
         ImGui::TreePop();
     }

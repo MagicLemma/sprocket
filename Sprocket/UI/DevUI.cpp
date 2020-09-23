@@ -79,18 +79,6 @@ void SetFontAtlas(ImGuiIO& io, Texture& fontAtlas)
 
 }
 
-ImGuizmo::MODE GetCoords(GizmoCoords coords) 
-{
-    switch (coords) {
-        case GizmoCoords::WORLD: return ImGuizmo::MODE::WORLD;
-        case GizmoCoords::LOCAL: return ImGuizmo::MODE::LOCAL;
-        default: {
-            SPKT_LOG_ERROR("Unknown GizmoCoords!");
-            return ImGuizmo::MODE::WORLD;
-        }
-    }
-}
-
 struct DevUIData
 {
     ImGuiContext* context;

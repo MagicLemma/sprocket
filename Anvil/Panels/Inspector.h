@@ -7,7 +7,7 @@ class EditorLayer;
 
 class Inspector
 {
-    GizmoCoords d_coords = GizmoCoords::WORLD;
+    ImGuizmo::MODE d_coords = ImGuizmo::MODE::WORLD;
     ImGuizmo::OPERATION d_mode = ImGuizmo::OPERATION::TRANSLATE;
     
     bool        d_useSnap = false;

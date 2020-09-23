@@ -17,10 +17,6 @@ namespace Sprocket {
 
 struct DevUIData;
 
-enum class GizmoCoords { WORLD, LOCAL };
-
-ImGuizmo::MODE GetCoords(GizmoCoords coords);
-
 class DevUI
 {
     std::shared_ptr<DevUIData> d_impl;

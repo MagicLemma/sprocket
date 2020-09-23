@@ -87,7 +87,7 @@ void SetGuizmo()
 
 void GuizmoSettings(
     ImGuizmo::OPERATION& mode,
-    GizmoCoords& coords,
+    ImGuizmo::MODE& coords,
     bool& useSnap,
     Maths::vec3& snap)
 {
@@ -103,12 +103,12 @@ void GuizmoSettings(
         mode = ImGuizmo::OPERATION::SCALE;
     }
 
-    if (ImGui::RadioButton("World", coords == GizmoCoords::WORLD)) {
-        coords = GizmoCoords::WORLD;
+    if (ImGui::RadioButton("World", coords == ImGuizmo::MODE::WORLD)) {
+        coords = ImGuizmo::MODE::WORLD;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Local", coords == GizmoCoords::LOCAL)) {
-        coords = GizmoCoords::LOCAL;
+    if (ImGui::RadioButton("Local", coords == ImGuizmo::MODE::LOCAL)) {
+        coords = ImGuizmo::MODE::LOCAL;
     }
     ImGui::Checkbox("", &useSnap);
     ImGui::SameLine();
@@ -125,13 +125,13 @@ void Guizmo(
     const Maths::mat4& view,
     const Maths::mat4& projection,
     ImGuizmo::OPERATION mode,
-    GizmoCoords coords)
+    ImGuizmo::MODE coords)
 {
     ImGuizmo::Manipulate(
         Maths::Cast(view),
         Maths::Cast(projection),
         mode,
-        GetCoords(coords),
+        coords,
         Maths::Cast(*matrix)
     );
 }

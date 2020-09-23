@@ -40,7 +40,7 @@ void SetGuizmo();
 
 void GuizmoSettings(
     ImGuizmo::OPERATION& mode,
-    GizmoCoords& coords,
+    ImGuizmo::MODE& coords,
     bool& useSnap,
     Maths::vec3& snap
 );
@@ -50,7 +50,7 @@ void Guizmo(
     const Maths::mat4& view,
     const Maths::mat4& projection,
     ImGuizmo::OPERATION mode,
-    GizmoCoords coords
+    ImGuizmo::MODE coords
 );
 
 // Displays a quaternion in Euler angles form.

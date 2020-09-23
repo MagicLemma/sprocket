@@ -15,7 +15,7 @@ void ShowGuizmo(
     EditorLayer& editor,
     TransformComponent& c,
     ImGuizmo::OPERATION mode,
-    GizmoCoords coords,
+    ImGuizmo::MODE coords,
     Maths::vec3* snap = nullptr)
 {
     if (!editor.IsGameRunning()) {
@@ -25,7 +25,7 @@ void ShowGuizmo(
             Maths::Cast(camera.View()),
             Maths::Cast(camera.Proj()),
             mode,
-            GetCoords(coords),
+            coords,
             Maths::Cast(tr),
             nullptr,
             &snap->x
