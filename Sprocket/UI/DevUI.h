@@ -15,12 +15,18 @@
 
 namespace Sprocket {
 
-struct DevUIData;
-
 class DevUI
 {
-    std::shared_ptr<DevUIData> d_impl;
-    bool d_blockEvents = true;
+    // SPROCKET OBJECTS
+    Window* d_window;
+    Shader  d_shader;
+    Texture d_fontAtlas;
+
+    StreamBuffer d_buffer;
+        // Buffer used to store the render data created by ImGui
+        // for rendering it.
+
+    bool d_blockEvents;
 
 public:
     DevUI(Window* window);

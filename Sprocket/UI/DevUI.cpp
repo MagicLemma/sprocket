@@ -11,24 +11,19 @@
 #include <ImGuizmo.h>
 #include <glad/glad.h>
 
-namespace ImGuiExtra {
-bool  InputTextMultiline(const char* label, 
-                         std::string* str, 
-                         const ImVec2& size = ImVec2(0, 0), 
-                         ImGuiInputTextFlags flags = 0);
-}
-
 namespace Sprocket {
 namespace {
 
-void SetBackendFlags(ImGuiIO& io)
+void SetBackendFlags()
 {
+    ImGuiIO& io = ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 }
 
-void SetClipboardCallbacks(ImGuiIO& io, Window* window)
+void SetClipboardCallbacks(Window* window)
 {
+    ImGuiIO& io = ImGui::GetIO();
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
         Sprocket::Window* w = static_cast<Sprocket::Window*>(user_data);
         w->SetClipboardData(text);
@@ -42,8 +37,9 @@ void SetClipboardCallbacks(ImGuiIO& io, Window* window)
     io.ClipboardUserData = window;
 }
 
-void SetKeyMappings(ImGuiIO& io)
+void SetKeyMappings()
 {
+    ImGuiIO& io = ImGui::GetIO();
     io.KeyMap[ImGuiKey_Tab] =         Keyboard::TAB;
     io.KeyMap[ImGuiKey_LeftArrow] =   Keyboard::LEFT_ARROW;
     io.KeyMap[ImGuiKey_RightArrow] =  Keyboard::RIGHT_ARROW;
@@ -68,8 +64,9 @@ void SetKeyMappings(ImGuiIO& io)
     io.KeyMap[ImGuiKey_Z] =           Keyboard::Z;
 }
 
-void SetFontAtlas(ImGuiIO& io, Texture& fontAtlas)
+void SetFontAtlas(Texture& fontAtlas)
 {
+    ImGuiIO& io = ImGui::GetIO();
     unsigned char* data;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
@@ -79,53 +76,36 @@ void SetFontAtlas(ImGuiIO& io, Texture& fontAtlas)
 
 }
 
-struct DevUIData
-{
-    ImGuiContext* context;
-
-    // SPROCKET OBJECTS
-    Window* window;
-    Shader  shader;
-    Texture fontAtlas;
-
-    StreamBuffer buffer;
-        // Buffer used to store the render data created by ImGui
-        // for rendering it.
-
-    DevUIData()
-        : shader("Resources/Shaders/DevGUI.vert",
-                 "Resources/Shaders/DevGUI.frag")
-    {
-        BufferLayout bufferLayout(sizeof(ImDrawVert));
-        bufferLayout.AddAttribute(DataType::FLOAT, 2);
-        bufferLayout.AddAttribute(DataType::FLOAT, 2);
-        bufferLayout.AddAttribute(DataType::UBYTE, 4);
-        buffer.SetBufferLayout(bufferLayout);
-    }
-};
-
 DevUI::DevUI(Window* window)
-    : d_impl(std::make_shared<DevUIData>())
+    : d_window(window)
+    , d_shader("Resources/Shaders/DevGUI.vert",
+               "Resources/Shaders/DevGUI.frag")
+    , d_fontAtlas()
+    , d_blockEvents(true)
 {
+    ImGui::CreateContext();
     IMGUI_CHECKVERSION();
-    d_impl->context = ImGui::CreateContext();
-    d_impl->window = window;
 
-    ImGui::StyleColorsDark(&d_impl->context->Style);
-
-    ImGuiIO& io = d_impl->context->IO;
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui::StyleColorsDark();
     
-    SetBackendFlags(io);
-    SetClipboardCallbacks(io, window);
-    SetKeyMappings(io);
-    SetFontAtlas(io, d_impl->fontAtlas);
+    SetBackendFlags();
+    SetClipboardCallbacks(window);
+    SetKeyMappings();
+    SetFontAtlas(d_fontAtlas);
+
+    BufferLayout bufferLayout(sizeof(ImDrawVert));
+    bufferLayout.AddAttribute(DataType::FLOAT, 2);
+    bufferLayout.AddAttribute(DataType::FLOAT, 2);
+    bufferLayout.AddAttribute(DataType::UBYTE, 4);
+    d_buffer.SetBufferLayout(bufferLayout);
 }
 
 void DevUI::OnEvent(Event& event)
 {
     if (event.IsConsumed()) { return; }
 
-    ImGuiIO& io = d_impl->context->IO;
+    ImGuiIO& io = ImGui::GetIO();
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {    
         io.MouseDown[e->Button()] = true;
@@ -185,10 +165,10 @@ void DevUI::OnEvent(Event& event)
 
 void DevUI::OnUpdate(double dt)
 {
-    ImGuiIO& io = d_impl->context->IO;
+    ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;
-    io.DisplaySize = ImVec2((float)d_impl->window->Width(),
-                            (float)d_impl->window->Height());
+    io.DisplaySize = ImVec2((float)d_window->Width(),
+                            (float)d_window->Height());
     
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
@@ -201,7 +181,6 @@ void DevUI::StartFrame()
 
 void DevUI::EndFrame()
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::Render();
 
     Sprocket::RenderContext rc;  
@@ -213,16 +192,16 @@ void DevUI::EndFrame()
     glDisable(GL_DEPTH_TEST);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    ImDrawData* drawData = &d_impl->context->DrawData;
+    ImDrawData* drawData = ImGui::GetDrawData();
 
     auto proj = Sprocket::Maths::Ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
 
-    d_impl->shader.Bind();
-    d_impl->shader.LoadSampler("Texture", 0);
-    d_impl->shader.LoadMat4("ProjMtx", proj);
+    d_shader.Bind();
+    d_shader.LoadSampler("Texture", 0);
+    d_shader.LoadMat4("ProjMtx", proj);
 
-    d_impl->buffer.Bind();
-    d_impl->fontAtlas.Bind();
+    d_buffer.Bind();
+    d_fontAtlas.Bind();
 
     // Render command lists
     int width = (int)drawData->DisplaySize.x;
@@ -232,11 +211,11 @@ void DevUI::EndFrame()
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
         // Upload vertex/index buffers
-        d_impl->buffer.SetVertexData(
+        d_buffer.SetVertexData(
             cmd_list->VtxBuffer.Size * sizeof(ImDrawVert),
             cmd_list->VtxBuffer.Data
         );
-        d_impl->buffer.SetIndexData(
+        d_buffer.SetIndexData(
             cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx),
             cmd_list->IdxBuffer.Data            
         );
