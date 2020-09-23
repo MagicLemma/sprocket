@@ -40,5 +40,7 @@ void GuizmoSettings(
 // Displays a quaternion in Euler angles form.
 void Euler(const std::string& name, Maths::quat* q);
 
+bool MultilineTextModifiable(const std::string_view label, std::string* text);
+
 }
 }

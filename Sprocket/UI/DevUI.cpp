@@ -15,9 +15,7 @@ namespace ImGuiExtra {
 bool  InputTextMultiline(const char* label, 
                          std::string* str, 
                          const ImVec2& size = ImVec2(0, 0), 
-                         ImGuiInputTextFlags flags = 0, 
-                         ImGuiInputTextCallback callback = NULL, 
-                         void* user_data = NULL);
+                         ImGuiInputTextFlags flags = 0);
 }
 
 namespace Sprocket {
@@ -232,7 +230,6 @@ void DevUI::OnUpdate(double dt)
 
 void DevUI::StartFrame()
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 }
@@ -303,21 +300,6 @@ void DevUI::EndFrame()
     }
 }
 
-bool DevUI::StartTreeNode(const std::string& name)
-{
-    return ImGui::TreeNode(name.c_str());
-}
-
-void DevUI::EndTreeNode()
-{
-    ImGui::TreePop();
-}
-
-void DevUI::MultilineTextModifiable(const std::string_view label, std::string& text)
-{
-    ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);
-}
-
 void DevUI::Gizmo(Maths::mat4* matrix,
                     const Maths::mat4& view,
                     const Maths::mat4& projection,
@@ -333,69 +315,10 @@ void DevUI::Gizmo(Maths::mat4* matrix,
     );
 }
 
-void DevUI::PushID(std::size_t id)
-{
-    ImGui::PushID((int)id);
-}
-
-void DevUI::PopID()
-{
-    ImGui::PopID();
-}
-
 void DevUI::DemoWindow()
 {
     static bool show = true;
     ImGui::ShowDemoWindow(&show);
-}
-
-}
-
-
-namespace ImGuiExtra {
-
-struct InputTextCallback_UserData
-{
-    std::string*            Str;
-    ImGuiInputTextCallback  ChainCallback;
-    void*                   ChainCallbackUserData;
-};
-
-static int InputTextCallback(ImGuiInputTextCallbackData* data)
-{
-    InputTextCallback_UserData* user_data = (InputTextCallback_UserData*)data->UserData;
-    if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
-    {
-        // Resize string callback
-        // If for some reason we refuse the new length (BufTextLen) and/or capacity (BufSize) we need to set them back to what we want.
-        std::string* str = user_data->Str;
-        IM_ASSERT(data->Buf == str->c_str());
-        str->resize(data->BufTextLen);
-        data->Buf = (char*)str->c_str();
-    }
-    else if (user_data->ChainCallback)
-    {
-        // Forward to user callback, if any
-        data->UserData = user_data->ChainCallbackUserData;
-        return user_data->ChainCallback(data);
-    }
-    return 0;
-}
-
-bool ImGuiExtra::InputTextMultiline(const char* label, 
-                                    std::string* str, 
-                                    const ImVec2& size, 
-                                    ImGuiInputTextFlags flags, 
-                                    ImGuiInputTextCallback callback, 
-                                    void* user_data)
-{
-    IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
-    flags |= ImGuiInputTextFlags_CallbackResize;
-    InputTextCallback_UserData cb_user_data;
-    cb_user_data.Str = str;
-    cb_user_data.ChainCallback = callback;
-    cb_user_data.ChainCallbackUserData = user_data;
-    return ImGui::InputTextMultiline(label, (char*)str->c_str(), str->capacity() + 1, size, flags, InputTextCallback, &cb_user_data);
 }
 
 }

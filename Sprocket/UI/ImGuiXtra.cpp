@@ -6,6 +6,23 @@
 
 namespace Sprocket {
 namespace ImGuiXtra {
+namespace {
+
+static int InputTextCallback(ImGuiInputTextCallbackData* data)
+{
+    if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
+    {
+        // Resize string callback
+        // If for some reason we refuse the new length (BufTextLen) and/or capacity (BufSize) we need to set them back to what we want.
+        auto* str = static_cast<std::string*>(data->UserData);
+        IM_ASSERT(data->Buf == str->c_str());
+        str->resize(data->BufTextLen);
+        data->Buf = (char*)str->c_str();
+    }
+    return 0;
+}
+
+}
 
 void File(const std::string& name,
           Window* window,
@@ -104,6 +121,19 @@ void Euler(const std::string& name, Maths::quat* q)
     if (ImGui::DragFloat3("Orientation", &euler.x, 0.01f)) {
         *q = Maths::quat(euler);
     }
+}
+
+bool MultilineTextModifiable(const std::string_view label, std::string* text)
+{
+    return ImGui::InputTextMultiline(
+        label.data(),
+        (char*)text->c_str(),
+        text->capacity() + 1,
+        ImVec2(500, 500),
+        ImGuiInputTextFlags_CallbackResize,
+        InputTextCallback,
+        text
+    );
 }
 
 }

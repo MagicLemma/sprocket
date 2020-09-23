@@ -39,19 +39,11 @@ public:
     void StartFrame();
     void EndFrame();
 
-    bool StartTreeNode(const std::string& name);
-    void EndTreeNode();
-
-    void MultilineTextModifiable(const std::string_view label, std::string &text);
-
     void Gizmo(Maths::mat4* matrix,
                const Maths::mat4& view,
                const Maths::mat4& projection,
                GizmoMode mode,
                GizmoCoords coords);
-
-    void PushID(std::size_t id);
-    void PopID();
 
     void DemoWindow();
 };

@@ -18,15 +18,15 @@ std::string EntityName(Entity& entity)
 
 void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 {
-    ui.PushID(entity.Id());
-    if (ui.StartTreeNode(EntityName(entity))) {
+    ImGui::PushID(entity.Id());
+    if (ImGui::TreeNode(EntityName(entity).c_str())) {
         if (entity.Has<SelectComponent>() && ImGui::Button("Select")) {
             SPKT_LOG_INFO("Select clicked!");
             selector.SetSelected(entity);
         }
-        ui.EndTreeNode();
+        ImGui::TreePop();
     }
-    ui.PopID();         
+    ImGui::PopID();         
 }
 
 void SelectedEntityInfo(DevUI& ui,
@@ -46,7 +46,7 @@ void SelectedEntityInfo(DevUI& ui,
     static GizmoMode mode = GizmoMode::TRANSLATION;
     static GizmoCoords coords = GizmoCoords::WORLD;
 
-    if (entity.Has<TransformComponent>() && ui.StartTreeNode("Transform")) {
+    if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
         ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
         Maths::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
@@ -71,7 +71,7 @@ void SelectedEntityInfo(DevUI& ui,
         if (ImGui::RadioButton("Local", coords == GizmoCoords::LOCAL)) {
             coords = GizmoCoords::LOCAL;
         }
-        ui.EndTreeNode();
+        ImGui::TreePop();
     }
 
     if (entity.Has<TransformComponent>()) {
@@ -133,11 +133,11 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
     bool closed = true;
     if (ImGui::CollapsingHeader("Vertex")) {
         closed = false;
-        ui.MultilineTextModifiable("", shader.VertexShaderSource());
+        ImGuiXtra::MultilineTextModifiable("", &shader.VertexShaderSource());
     }
     if (ImGui::CollapsingHeader("Frag")) {
         closed = false;
-        ui.MultilineTextModifiable("", shader.FragShaderSource());
+        ImGuiXtra::MultilineTextModifiable("", &shader.FragShaderSource());
     }
     
     if(closed) {
