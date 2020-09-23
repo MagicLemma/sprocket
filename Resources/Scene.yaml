@@ -3,6 +3,9 @@ Sun:
   direction: [0, 0.9808463, -0.1947833]
   colour: [0.9019608, 0.8005289, 0.6720492]
   brightness: 20.29
+Ambience:
+  colour: [1.0, 1.0, 1.0]
+  brightness: 0.03
 Entities:
   - NameComponent:
       name: Tree

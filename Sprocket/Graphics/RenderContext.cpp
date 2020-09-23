@@ -66,4 +66,13 @@ void RenderContext::DepthTesting(bool enabled) const
     }
 }
 
+void RenderContext::ScissorTesting(bool enabled) const
+{
+    if (enabled) {
+        glEnable(GL_SCISSOR_TEST);
+    } else {
+        glDisable(GL_SCISSOR_TEST);
+    }
+}
+
 }

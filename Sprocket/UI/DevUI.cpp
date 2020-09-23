@@ -11,37 +11,19 @@
 #include <ImGuizmo.h>
 #include <glad/glad.h>
 
-namespace ImGuiExtra {
-bool  InputTextMultiline(const char* label, 
-                         std::string* str, 
-                         const ImVec2& size = ImVec2(0, 0), 
-                         ImGuiInputTextFlags flags = 0, 
-                         ImGuiInputTextCallback callback = NULL, 
-                         void* user_data = NULL);
-}
-
 namespace Sprocket {
-namespace DevUI {
 namespace {
 
-unsigned int Cast(ImTextureID id)
+void SetBackendFlags()
 {
-    return (unsigned int)(intptr_t)id;
-}
-
-ImTextureID Cast(unsigned int id)
-{
-    return (ImTextureID)(intptr_t)id;
-}
-
-void SetBackendFlags(ImGuiIO& io)
-{
+    ImGuiIO& io = ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 }
 
-void SetClipboardCallbacks(ImGuiIO& io, Window* window)
+void SetClipboardCallbacks(Window* window)
 {
+    ImGuiIO& io = ImGui::GetIO();
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
         Sprocket::Window* w = static_cast<Sprocket::Window*>(user_data);
         w->SetClipboardData(text);
@@ -55,8 +37,9 @@ void SetClipboardCallbacks(ImGuiIO& io, Window* window)
     io.ClipboardUserData = window;
 }
 
-void SetKeyMappings(ImGuiIO& io)
+void SetKeyMappings()
 {
+    ImGuiIO& io = ImGui::GetIO();
     io.KeyMap[ImGuiKey_Tab] =         Keyboard::TAB;
     io.KeyMap[ImGuiKey_LeftArrow] =   Keyboard::LEFT_ARROW;
     io.KeyMap[ImGuiKey_RightArrow] =  Keyboard::RIGHT_ARROW;
@@ -81,89 +64,48 @@ void SetKeyMappings(ImGuiIO& io)
     io.KeyMap[ImGuiKey_Z] =           Keyboard::Z;
 }
 
-void SetFontAtlas(ImGuiIO& io, Texture& fontAtlas)
+void SetFontAtlas(Texture& fontAtlas)
 {
+    ImGuiIO& io = ImGui::GetIO();
     unsigned char* data;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
     fontAtlas = Texture(width, height, data);
-    io.Fonts->TexID = Cast(fontAtlas.Id());
+    io.Fonts->TexID = (ImTextureID)(unsigned int)(intptr_t)fontAtlas.Id();
 }
 
 }
 
-ImGuizmo::OPERATION GetMode(GizmoMode mode)
+DevUI::DevUI(Window* window)
+    : d_window(window)
+    , d_shader("Resources/Shaders/DevGUI.vert",
+               "Resources/Shaders/DevGUI.frag")
+    , d_fontAtlas()
+    , d_blockEvents(true)
 {
-    switch (mode) {
-        case GizmoMode::TRANSLATION: return ImGuizmo::OPERATION::TRANSLATE;
-        case GizmoMode::ROTATION:    return ImGuizmo::OPERATION::ROTATE;
-        case GizmoMode::SCALE:       return ImGuizmo::OPERATION::SCALE;
-        default: {
-            SPKT_LOG_ERROR("Unknown GizmoMode!");
-            return ImGuizmo::OPERATION::TRANSLATE;
-        }
-    }
-}
-
-ImGuizmo::MODE GetCoords(GizmoCoords coords) 
-{
-    switch (coords) {
-        case GizmoCoords::WORLD: return ImGuizmo::MODE::WORLD;
-        case GizmoCoords::LOCAL: return ImGuizmo::MODE::LOCAL;
-        default: {
-            SPKT_LOG_ERROR("Unknown GizmoCoords!");
-            return ImGuizmo::MODE::WORLD;
-        }
-    }
-}
-
-struct DevUIData
-{
-    ImGuiContext* context;
-
-    // SPROCKET OBJECTS
-    Window* window;
-    Shader  shader;
-    Texture fontAtlas;
-
-    StreamBuffer buffer;
-        // Buffer used to store the render data created by ImGui
-        // for rendering it.
-
-    DevUIData()
-        : shader("Resources/Shaders/DevGUI.vert",
-                 "Resources/Shaders/DevGUI.frag")
-    {
-        BufferLayout bufferLayout(sizeof(ImDrawVert));
-        bufferLayout.AddAttribute(DataType::FLOAT, 2);
-        bufferLayout.AddAttribute(DataType::FLOAT, 2);
-        bufferLayout.AddAttribute(DataType::UBYTE, 4);
-        buffer.SetBufferLayout(bufferLayout);
-    }
-};
-
-Context::Context(Window* window)
-    : d_impl(std::make_shared<DevUIData>())
-{
+    ImGui::CreateContext();
     IMGUI_CHECKVERSION();
-    d_impl->context = ImGui::CreateContext();
-    d_impl->window = window;
 
-    ImGui::StyleColorsDark(&d_impl->context->Style);
-
-    ImGuiIO& io = d_impl->context->IO;
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui::StyleColorsDark();
     
-    SetBackendFlags(io);
-    SetClipboardCallbacks(io, window);
-    SetKeyMappings(io);
-    SetFontAtlas(io, d_impl->fontAtlas);
+    SetBackendFlags();
+    SetClipboardCallbacks(window);
+    SetKeyMappings();
+    SetFontAtlas(d_fontAtlas);
+
+    BufferLayout bufferLayout(sizeof(ImDrawVert));
+    bufferLayout.AddAttribute(DataType::FLOAT, 2);
+    bufferLayout.AddAttribute(DataType::FLOAT, 2);
+    bufferLayout.AddAttribute(DataType::UBYTE, 4);
+    d_buffer.SetBufferLayout(bufferLayout);
 }
 
-void Context::OnEvent(Event& event)
+void DevUI::OnEvent(Event& event)
 {
     if (event.IsConsumed()) { return; }
 
-    ImGuiIO& io = d_impl->context->IO;
+    ImGuiIO& io = ImGui::GetIO();
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {    
         io.MouseDown[e->Button()] = true;
@@ -221,47 +163,42 @@ void Context::OnEvent(Event& event)
     }
 }
 
-void Context::OnUpdate(double dt)
+void DevUI::OnUpdate(double dt)
 {
-    ImGuiIO& io = d_impl->context->IO;
+    ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;
-    io.DisplaySize = ImVec2((float)d_impl->window->Width(),
-                            (float)d_impl->window->Height());
+    io.DisplaySize = ImVec2((float)d_window->Width(),
+                            (float)d_window->Height());
     
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
 
-void Context::StartFrame()
+void DevUI::StartFrame()
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 }
 
-void Context::EndFrame()
+void DevUI::EndFrame()
 {
-    ImGui::SetCurrentContext(d_impl->context);
     ImGui::Render();
 
     Sprocket::RenderContext rc;  
-    glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_SCISSOR_TEST);
-    glDisable(GL_DEPTH_TEST);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    rc.AlphaBlending(true);
+    rc.FaceCulling(false);
+    rc.ScissorTesting(true);
+    rc.DepthTesting(false);
 
-    ImDrawData* drawData = &d_impl->context->DrawData;
+    ImDrawData* drawData = ImGui::GetDrawData();
 
     auto proj = Sprocket::Maths::Ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
 
-    d_impl->shader.Bind();
-    d_impl->shader.LoadSampler("Texture", 0);
-    d_impl->shader.LoadMat4("ProjMtx", proj);
+    d_shader.Bind();
+    d_shader.LoadSampler("Texture", 0);
+    d_shader.LoadMat4("ProjMtx", proj);
 
-    d_impl->buffer.Bind();
-    d_impl->fontAtlas.Bind();
+    d_buffer.Bind();
+    d_fontAtlas.Bind();
 
     // Render command lists
     int width = (int)drawData->DisplaySize.x;
@@ -271,11 +208,11 @@ void Context::EndFrame()
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
         // Upload vertex/index buffers
-        d_impl->buffer.SetVertexData(
+        d_buffer.SetVertexData(
             cmd_list->VtxBuffer.Size * sizeof(ImDrawVert),
             cmd_list->VtxBuffer.Data
         );
-        d_impl->buffer.SetIndexData(
+        d_buffer.SetIndexData(
             cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx),
             cmd_list->IdxBuffer.Data            
         );
@@ -302,203 +239,6 @@ void Context::EndFrame()
             }
         }
     }
-}
-
-void Context::StartWindow(const std::string& name, bool* open, int flags)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::Begin(name.c_str(), open, flags);
-}
-
-void Context::EndWindow()
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::End();
-}
-
-bool Context::StartTreeNode(const std::string& name)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    return ImGui::TreeNode(name.c_str());
-}
-
-void Context::EndTreeNode()
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::TreePop();
-}
-
-bool Context::Button(const std::string& name)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    return ImGui::Button(name.c_str());
-}
-
-bool Context::RadioButton(const std::string& name, bool active)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    return ImGui::RadioButton(name.c_str(), active);
-}
-
-bool Context::CollapsingHeader(const std::string& name)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    return ImGui::CollapsingHeader(name.c_str());
-}
-
-void Context::Text(const std::string& text)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::Text(text.c_str());
-}
-
-void Context::TextModifiable(std::string& text)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    char nameStr[128] = "";
-    std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
-    ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
-    text = std::string(nameStr);
-}
-
-void Context::MultilineTextModifiable(const std::string_view label, std::string& text)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGuiExtra::InputTextMultiline(label.data(), &text, ImVec2(500, 500), 0, nullptr, nullptr);
-}
-
-void Context::Checkbox(const std::string& name, bool* value)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::Checkbox(name.c_str(), value);
-}
-
-void Context::ColourPicker(const std::string& name, Maths::vec3* colour)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    static int flags = ImGuiColorEditFlags_Float
-                     | ImGuiColorEditFlags_InputRGB;
-    ImGui::ColorEdit3(name.c_str(), &colour->x, flags);
-}
-
-void Context::SliderFloat(const std::string& name, float* value, float lower, float upper)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::SliderFloat(name.c_str(), value, lower, upper, "%.3f");
-}
-
-void Context::DragInt(const std::string& name, int* value, float speed)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::DragInt(name.c_str(), value, speed);
-}
-
-void Context::DragFloat(const std::string& name, float* value, float speed)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::DragFloat(name.c_str(), value, speed);
-}
-
-void Context::DragFloat3(const std::string& name, Maths::vec3* values, float speed)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::DragFloat3(name.c_str(), &values->x, speed);
-}
-
-void Context::Gizmo(Maths::mat4* matrix,
-                    const Maths::mat4& view,
-                    const Maths::mat4& projection,
-                    GizmoMode mode,
-                    GizmoCoords coords)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGuizmo::Manipulate(
-        Maths::Cast(view),
-        Maths::Cast(projection),
-        GetMode(mode),
-        GetCoords(coords),
-        Maths::Cast(*matrix)
-    );
-}
-
-void Context::SameLine()
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::SameLine();
-}
-
-void Context::Separator()
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::Separator();
-}
-
-void Context::PushID(std::size_t id)
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::PushID((int)id);
-}
-
-void Context::PopID()
-{
-    ImGui::SetCurrentContext(d_impl->context);
-    ImGui::PopID();
-}
-
-void Context::DemoWindow()
-{
-    static bool show = true;
-    ImGui::ShowDemoWindow(&show);
-}
-
-}
-}
-
-
-namespace ImGuiExtra {
-
-struct InputTextCallback_UserData
-{
-    std::string*            Str;
-    ImGuiInputTextCallback  ChainCallback;
-    void*                   ChainCallbackUserData;
-};
-
-static int InputTextCallback(ImGuiInputTextCallbackData* data)
-{
-    InputTextCallback_UserData* user_data = (InputTextCallback_UserData*)data->UserData;
-    if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
-    {
-        // Resize string callback
-        // If for some reason we refuse the new length (BufTextLen) and/or capacity (BufSize) we need to set them back to what we want.
-        std::string* str = user_data->Str;
-        IM_ASSERT(data->Buf == str->c_str());
-        str->resize(data->BufTextLen);
-        data->Buf = (char*)str->c_str();
-    }
-    else if (user_data->ChainCallback)
-    {
-        // Forward to user callback, if any
-        data->UserData = user_data->ChainCallbackUserData;
-        return user_data->ChainCallback(data);
-    }
-    return 0;
-}
-
-bool ImGuiExtra::InputTextMultiline(const char* label, 
-                                    std::string* str, 
-                                    const ImVec2& size, 
-                                    ImGuiInputTextFlags flags, 
-                                    ImGuiInputTextCallback callback, 
-                                    void* user_data)
-{
-    IM_ASSERT((flags & ImGuiInputTextFlags_CallbackResize) == 0);
-    flags |= ImGuiInputTextFlags_CallbackResize;
-    InputTextCallback_UserData cb_user_data;
-    cb_user_data.Str = str;
-    cb_user_data.ChainCallback = callback;
-    cb_user_data.ChainCallbackUserData = user_data;
-    return ImGui::InputTextMultiline(label, (char*)str->c_str(), str->capacity() + 1, size, flags, InputTextCallback, &cb_user_data);
 }
 
 }

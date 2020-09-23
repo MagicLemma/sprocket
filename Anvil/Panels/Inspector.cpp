@@ -14,8 +14,8 @@ namespace {
 void ShowGuizmo(
     EditorLayer& editor,
     TransformComponent& c,
-    DevUI::GizmoMode mode,
-    DevUI::GizmoCoords coords,
+    ImGuizmo::OPERATION mode,
+    ImGuizmo::MODE coords,
     Maths::vec3* snap = nullptr)
 {
     if (!editor.IsGameRunning()) {
@@ -24,8 +24,8 @@ void ShowGuizmo(
         ImGuizmo::Manipulate(
             Maths::Cast(camera.View()),
             Maths::Cast(camera.Proj()),
-            GetMode(mode),
-            GetCoords(coords),
+            mode,
+            coords,
             Maths::Cast(tr),
             nullptr,
             &snap->x

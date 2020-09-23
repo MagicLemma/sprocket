@@ -16,135 +16,135 @@ std::string EntityName(Entity& entity)
     return "Unnamed";
 }
 
-void AddEntityToList(DevUI::Context& ui, BasicSelector& selector, Entity& entity)
+void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 {
-    ui.PushID(entity.Id());
-    if (ui.StartTreeNode(EntityName(entity))) {
-        if (entity.Has<SelectComponent>() && ui.Button("Select")) {
+    ImGui::PushID(entity.Id());
+    if (ImGui::TreeNode(EntityName(entity).c_str())) {
+        if (entity.Has<SelectComponent>() && ImGui::Button("Select")) {
             SPKT_LOG_INFO("Select clicked!");
             selector.SetSelected(entity);
         }
-        ui.EndTreeNode();
+        ImGui::TreePop();
     }
-    ui.PopID();         
+    ImGui::PopID();         
 }
 
-void SelectedEntityInfo(DevUI::Context& ui,
+void SelectedEntityInfo(DevUI& ui,
                         Entity& entity,
                         const Maths::mat4& view,
                         const Maths::mat4& proj)
 {
     using namespace Maths;
 
-    ui.StartWindow("Selected Entity");
-    ui.Text("Name: ");
-    ui.SameLine();
-    ui.Text(EntityName(entity));
-    ui.Text("ID: " + std::to_string(entity.Id()));
-    ui.Separator();
+    ImGui::Begin("Selected Entity");
+    ImGui::Text("Name: ");
+    ImGui::SameLine();
+    ImGuiXtra::Text(EntityName(entity));
+    ImGuiXtra::Text("ID: " + std::to_string(entity.Id()));
+    ImGui::Separator();
     
-    static DevUI::GizmoMode mode = DevUI::GizmoMode::TRANSLATION;
-    static DevUI::GizmoCoords coords = DevUI::GizmoCoords::WORLD;
+    static ImGuizmo::OPERATION mode = ImGuizmo::OPERATION::TRANSLATE;
+    static ImGuizmo::MODE coords = ImGuizmo::MODE::WORLD;
 
-    if (entity.Has<TransformComponent>() && ui.StartTreeNode("Transform")) {
+    if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
-        ui.DragFloat3("Position", &tr.position, 0.005f);
+        ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
         Maths::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
         std::stringstream ss;
         ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
            << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
            << "Roll: " << Maths::ToString(eulerAngles.z, 3);
-        ui.Text(ss.str());    
+        ImGui::Text(ss.str().c_str());    
 
-        if (ui.RadioButton("Translate", mode == DevUI::GizmoMode::TRANSLATION)) {
-            mode = DevUI::GizmoMode::TRANSLATION;
+        if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
+            mode = ImGuizmo::OPERATION::TRANSLATE;
         }
-        ui.SameLine();
-        if (ui.RadioButton("Rotate", mode == DevUI::GizmoMode::ROTATION)) {
-            mode = DevUI::GizmoMode::ROTATION;
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Rotate", mode == ImGuizmo::OPERATION::ROTATE)) {
+            mode = ImGuizmo::OPERATION::ROTATE;
         }
 
-        if (ui.RadioButton("World", coords == DevUI::GizmoCoords::WORLD)) {
-            coords = DevUI::GizmoCoords::WORLD;
+        if (ImGui::RadioButton("World", coords == ImGuizmo::MODE::WORLD)) {
+            coords = ImGuizmo::MODE::WORLD;
         }
-        ui.SameLine();
-        if (ui.RadioButton("Local", coords == DevUI::GizmoCoords::LOCAL)) {
-            coords = DevUI::GizmoCoords::LOCAL;
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Local", coords == ImGuizmo::MODE::LOCAL)) {
+            coords = ImGuizmo::MODE::LOCAL;
         }
-        ui.EndTreeNode();
+        ImGui::TreePop();
     }
 
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
         Maths::mat4 origin = Maths::Transform(tr.position, tr.orientation);
-        ui.Gizmo(&origin, view, proj, mode, coords);
+        ImGuiXtra::Guizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
         tr.orientation = Normalise(ToQuat(mat3(origin)));
     }
-    ui.Separator();
+    ImGui::Separator();
 
-    if (ui.Button("Delete Entity")) {
+    if (ImGui::Button("Delete Entity")) {
         entity.Kill();
     }
 
-    ui.EndWindow();
+    ImGui::End();
 }
 
-void SunInfoPanel(DevUI::Context& ui,
+void SunInfoPanel(DevUI& ui,
                   Sun& sun,
                   CircadianCycle& cycle)
 {
-    ui.StartWindow("Sun");
+    ImGui::Begin("Sun");
 
-    if (ui.Button("Start")) { cycle.Start(); }
-    ui.SameLine();
-    if (ui.Button("Stop")) { cycle.Stop(); }
-    ui.Separator();
+    if (ImGui::Button("Start")) { cycle.Start(); }
+    ImGui::SameLine();
+    if (ImGui::Button("Stop")) { cycle.Stop(); }
+    ImGui::Separator();
 
     if (cycle.IsRunning()) { // If running, be able to change the speed.
         float speed = cycle.GetSpeed();
-        ui.SliderFloat("Speed", &speed, 1.0f, 1000.0f);
+        ImGui::SliderFloat("Speed", &speed, 1.0f, 1000.0f, "%.3f");
         cycle.SetSpeed(speed);
     }
     else { // If not running, be able to set manually
         float angle = cycle.GetAngle();
-        ui.DragFloat("Angle", &angle);
+        ImGui::DragFloat("Angle", &angle);
         cycle.SetAngle(angle);
     }
     
-    ui.Separator();
-    ui.Text(cycle.ToString12Hour());
-    ui.EndWindow();
+    ImGui::Separator();
+    ImGuiXtra::Text(cycle.ToString12Hour());
+    ImGui::End();
 }
 
-void ShaderInfoPanel(DevUI::Context& ui, Shader& shader)
+void ShaderInfoPanel(DevUI& ui, Shader& shader)
 {
     static std::string compileStatus;
 
-    ui.StartWindow("Shader");
-    if(ui.Button("Recompile")) {
+    ImGui::Begin("Shader");
+    if(ImGui::Button("Recompile")) {
         bool result = shader.Reload();
         compileStatus ="Shader compile:";
         compileStatus += (result? " SUCCESS": " FAILURE");
     }
 
-    ui.Text(compileStatus.c_str());
+    ImGui::Text(compileStatus.c_str());
     
     bool closed = true;
-    if(ui.CollapsingHeader("Vertex")){
+    if (ImGui::CollapsingHeader("Vertex")) {
         closed = false;
-        ui.MultilineTextModifiable("", shader.VertexShaderSource());
+        ImGuiXtra::MultilineTextModifiable("", &shader.VertexShaderSource());
     }
-    if(ui.CollapsingHeader("Frag")) {
+    if (ImGui::CollapsingHeader("Frag")) {
         closed = false;
-        ui.MultilineTextModifiable("", shader.FragShaderSource());
+        ImGuiXtra::MultilineTextModifiable("", &shader.FragShaderSource());
     }
     
     if(closed) {
         compileStatus.clear();
     }
 
-    ui.EndWindow();
+    ImGui::End();
 }
 
 }
@@ -185,22 +185,6 @@ void EditorUI::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
     d_ui.StartFrame();
 
-    bool open = true;
-    int flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
-
-    d_ui.StartWindow("Sprocket Editor", &open, flags);
-    std::stringstream ss;
-    ss << "Entities: " << d_worldLayer->d_scene->Size();
-    d_ui.Text(ss.str());
-
-    if (d_ui.CollapsingHeader("Entity List")) {
-        d_worldLayer->d_scene->Each<SelectComponent>([&](Entity& entity) {
-            AddEntityToList(d_ui, *d_worldLayer->d_selector, entity);      
-        });
-    }
-
-    d_ui.EndWindow();
-
     mat4 view = CameraUtils::MakeView(d_worldLayer->d_camera);
     mat4 proj = CameraUtils::MakeProj(d_worldLayer->d_camera);
 
@@ -212,14 +196,11 @@ void EditorUI::OnUpdate(double dt)
     SunInfoPanel(d_ui, d_worldLayer->d_scene->GetSun(), d_worldLayer->d_cycle);
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
-    d_ui.StartWindow("Shadow Map", &open);
+    ImGui::Begin("Shadow Map");
+    ImGuiXtra::Image(d_worldLayer->d_shadowMap.GetShadowMap(), 500.0f);
+    ImGui::End();
 
-    auto shadowMap = d_worldLayer->d_shadowMap.GetShadowMap();
-    ImTextureID id = (void*)(intptr_t)shadowMap.Id();
-    ImGui::Image(id, ImVec2(shadowMap.Width(), shadowMap.Height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
+    ImGui::ShowDemoWindow();
 
-    d_ui.EndWindow();
-
-    d_ui.DemoWindow();
     d_ui.EndFrame();
 }

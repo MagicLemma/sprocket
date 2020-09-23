@@ -1,36 +1,29 @@
 #pragma once
 #include "Window.h"
-#include "Maths.h"
 #include "Shader.h"
 #include "Event.h"
 #include "Texture.h"
-#include "Resources.h"
 #include "StreamBuffer.h"
 
 #include <imgui.h>
-#include <imgui_internal.h>
 #include <ImGuizmo.h>
 
-#include <memory>
-
 namespace Sprocket {
-namespace DevUI {
 
-struct DevUIData;
-
-enum class GizmoMode { TRANSLATION, ROTATION, SCALE };
-enum class GizmoCoords { WORLD, LOCAL };
-
-ImGuizmo::OPERATION GetMode(GizmoMode mode);
-ImGuizmo::MODE GetCoords(GizmoCoords coords);
-
-class Context
+class DevUI
+// A class that wraps the setup and rendering of ImGui.
 {
-    std::shared_ptr<DevUIData> d_impl;
-    bool d_blockEvents = true;
+    Window* d_window;
+    Shader  d_shader;
+    Texture d_fontAtlas;
+
+    StreamBuffer d_buffer;
+        // Used to draw the render data created by ImGui.
+
+    bool d_blockEvents;
 
 public:
-    Context(Window* window);
+    DevUI(Window* window);
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);
@@ -39,40 +32,6 @@ public:
 
     void StartFrame();
     void EndFrame();
-
-    void StartWindow(const std::string& name, bool* open = nullptr, int flags = 0);
-    void EndWindow();
-
-    bool StartTreeNode(const std::string& name);
-    void EndTreeNode();
-
-    bool Button(const std::string& name);
-    bool RadioButton(const std::string& name, bool active);
-    bool CollapsingHeader(const std::string& name);
-    void Text(const std::string& text);
-    void TextModifiable(std::string& text);
-    void MultilineTextModifiable(const std::string_view label, std::string &text);
-    void Checkbox(const std::string& name, bool* value);
-    void ColourPicker(const std::string& name, Maths::vec3* colour);
-    void SliderFloat(const std::string& name, float* value, float lower, float upper);
-    void DragInt(const std::string& name, int* value, float speed = 1.0f);
-    void DragFloat(const std::string& name, float* value, float speed = 1.0f);
-    void DragFloat3(const std::string& name, Maths::vec3* values, float speed = 1.0f);
-
-    void Gizmo(Maths::mat4* matrix,
-               const Maths::mat4& view,
-               const Maths::mat4& projection,
-               GizmoMode mode,
-               GizmoCoords coords);
-
-    void SameLine();
-    void Separator();
-
-    void PushID(std::size_t id);
-    void PopID();
-
-    void DemoWindow();
 };
 
-}
 }
