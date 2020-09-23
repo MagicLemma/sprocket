@@ -11,6 +11,8 @@ namespace Sprocket {
 
 class EditorLayer : public Layer
 {
+    CoreSystems d_core;
+    
     Camera d_editorCamera;
 
     // Rendering

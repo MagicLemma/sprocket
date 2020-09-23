@@ -6,7 +6,7 @@
 #include <cmath>
 
 WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
-    : Sprocket::Layer(core)
+    : d_core(core)
     , d_mode(Mode::PLAYER)
     , d_scene(std::make_shared<Sprocket::Scene>())
     , d_entityRenderer(core.modelManager, core.materialManager)

@@ -22,21 +22,9 @@ Window::Window(
 )
 	: d_impl(std::make_shared<WindowImpl>())
 	, d_data({name, width, height})
-	, d_callback([](const Event&) {})
 	, d_clearColour({1.0, 1.0, 1.0})
 {
 	glfwInit();
-	
-	// Set the callback that will get called by GLFW. This just
-	// forwards all events on to the keyboard/mouse and any
-	// registered objects.
-	d_data.callback = [&](Event& event) {
-		if (auto e = event.As<WindowClosedEvent>()) {
-			d_data.running = false;
-			return;
-		}
-		d_callback(event);
-	};
 
 	d_impl->window = glfwCreateWindow(
 		d_data.width,
@@ -93,6 +81,7 @@ Window::Window(
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		WindowClosedEvent event;
+		data->running = false;
 		data->callback(event);
 	});
 
@@ -222,7 +211,7 @@ void Window::SetWindowName(const std::string& name)
 
 void Window::SetCallback(EventCallback cb)
 {
-	d_callback = cb;
+	d_data.callback = cb;
 }
 
 const char* Window::GetClipboardData()

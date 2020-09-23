@@ -4,7 +4,7 @@
 
 EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
                        WorldLayer* worldLayer) 
-    : Layer(core)
+    : d_core(core)
     , d_worldLayer(worldLayer)
     , d_ui(core.window)
 {

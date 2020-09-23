@@ -15,23 +15,20 @@ struct WindowImpl;
 
 struct WindowData
 {
-	std::string   name;
-	unsigned int  width;
-	unsigned int  height;
+	std::string  name;
+	unsigned int width;
+	unsigned int height;
 
-	bool running   = true;
-	bool focused   = true;
+	bool running = true;
+	bool focused = true;
 
-	EventCallback callback;
+	EventCallback callback = [](Event&) {};
 };
 
 class Window
 {
 	std::shared_ptr<WindowImpl> d_impl;
 	WindowData                  d_data;
-
-	EventCallback d_callback;
-		// A callback to be called with every event from the window.
 
 	Maths::vec3 d_clearColour;
 

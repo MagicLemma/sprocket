@@ -26,12 +26,10 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 add_library(Sprocket STATIC
 
             Core/App.cpp
-            Core/CoreSystems.cpp
             Core/Window.cpp
             Core/MaterialManager.cpp
             Core/ModelManager.cpp
             Core/TextureManager.cpp
-            Core/Layer.cpp
 
             Audio/Listener.cpp
             Audio/Music.cpp

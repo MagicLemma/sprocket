@@ -1,5 +1,4 @@
 #pragma once
-#include "CoreSystems.h"
 
 namespace Sprocket {
 
@@ -7,14 +6,7 @@ class Event;
 
 class Layer
 {
-protected:  
-    CoreSystems d_core;
-
 public:
-    Layer(const CoreSystems& core);
-    Layer(Layer&&) = delete; // Non-copyable and non-moveable.
-    virtual ~Layer() {}
-
     virtual void OnEvent(Event& event) = 0;
         // Called whenever an event happens. This function should return
         // True if the layer "consumed" the Event, and False otherwise.

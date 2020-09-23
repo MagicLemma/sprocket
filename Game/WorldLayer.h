@@ -12,6 +12,7 @@ enum class Mode { PLAYER, EDITOR };
 
 class WorldLayer : public Sprocket::Layer
 {
+    Sprocket::CoreSystems d_core;
     Mode d_mode;
 
     // Entity management and systems
