@@ -212,11 +212,7 @@ void EditorUI::OnUpdate(double dt)
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
     ImGui::Begin("Shadow Map", &open);
-    auto shadowMap = d_worldLayer->d_shadowMap.GetShadowMap();
-    ImTextureID id = (void*)(intptr_t)shadowMap.Id();
-    float aspect = shadowMap.Width() / shadowMap.Height();
-    float size = 500.0f;
-    ImGui::Image(id, ImVec2(aspect * size, size), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(1.0, 1.0, 1.0, 1.0), ImVec4(1.0, 1.0, 1.0, 0.5));
+    ImGuiXtra::Image(d_worldLayer->d_shadowMap.GetShadowMap(), 500.0f);
     ImGui::End();
 
     d_ui.DemoWindow();

@@ -36,6 +36,7 @@ public:
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }
+    float AspectRatio() const { return (float)d_width / (float)d_height; }
 
     // Standard texture builders
     static const Texture& White();

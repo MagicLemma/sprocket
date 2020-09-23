@@ -71,6 +71,11 @@ void Image(const Texture& image,
     );
 }
 
+void Image(const Texture& image, float size)
+{
+    Image(image, {image.AspectRatio() * size, size});
+}
+
 void SetGuizmo()
 {
     float rw = ImGui::GetWindowWidth();

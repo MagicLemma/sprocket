@@ -29,6 +29,10 @@ void Image(const Texture& image,
            const Maths::vec4& tintCol = {1, 1, 1, 1},
            const Maths::vec4& borderCol = {0, 0, 0, 0});
 
+// A simplified version of the above where the texture maintains
+// aspect ratio. The size is the height in pixels.
+void Image(const Texture& image, float size);
+
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
 void GuizmoSettings(
