@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Texture.h"
 #include "DevUI.h"
+#include "Maths.h"
 
 #include <string>
 
@@ -27,7 +28,8 @@ void Image(const Texture& image,
            const Maths::vec2& uv0 = {0, 1},
            const Maths::vec2& uv1 = {1, 0},
            const Maths::vec4& tintCol = {1, 1, 1, 1},
-           const Maths::vec4& borderCol = {0, 0, 0, 0});
+           const Maths::vec4& borderCol = {0, 0, 0, 0}
+);
 
 // A simplified version of the above where the texture maintains
 // aspect ratio. The size is the height in pixels.
@@ -35,11 +37,21 @@ void Image(const Texture& image, float size);
 
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
+
 void GuizmoSettings(
     GizmoMode& mode,
     GizmoCoords& coords,
     bool& useSnap,
-    Maths::vec3& snap);
+    Maths::vec3& snap
+);
+
+void Guizmo(
+    Maths::mat4* matrix,
+    const Maths::mat4& view,
+    const Maths::mat4& projection,
+    GizmoMode mode,
+    GizmoCoords coords
+);
 
 // Displays a quaternion in Euler angles form.
 void Euler(const std::string& name, Maths::quat* q);

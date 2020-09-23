@@ -21,16 +21,6 @@ bool  InputTextMultiline(const char* label,
 namespace Sprocket {
 namespace {
 
-unsigned int Cast(ImTextureID id)
-{
-    return (unsigned int)(intptr_t)id;
-}
-
-ImTextureID Cast(unsigned int id)
-{
-    return (ImTextureID)(intptr_t)id;
-}
-
 void SetBackendFlags(ImGuiIO& io)
 {
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -84,7 +74,7 @@ void SetFontAtlas(ImGuiIO& io, Texture& fontAtlas)
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
     fontAtlas = Texture(width, height, data);
-    io.Fonts->TexID = Cast(fontAtlas.Id());
+    io.Fonts->TexID = (ImTextureID)(unsigned int)(intptr_t)fontAtlas.Id();
 }
 
 }
@@ -298,21 +288,6 @@ void DevUI::EndFrame()
             }
         }
     }
-}
-
-void DevUI::Gizmo(Maths::mat4* matrix,
-                    const Maths::mat4& view,
-                    const Maths::mat4& projection,
-                    GizmoMode mode,
-                    GizmoCoords coords)
-{
-    ImGuizmo::Manipulate(
-        Maths::Cast(view),
-        Maths::Cast(projection),
-        GetMode(mode),
-        GetCoords(coords),
-        Maths::Cast(*matrix)
-    );
 }
 
 }

@@ -120,6 +120,22 @@ void GuizmoSettings(
     }
 }
 
+void Guizmo(
+    Maths::mat4* matrix,
+    const Maths::mat4& view,
+    const Maths::mat4& projection,
+    GizmoMode mode,
+    GizmoCoords coords)
+{
+    ImGuizmo::Manipulate(
+        Maths::Cast(view),
+        Maths::Cast(projection),
+        GetMode(mode),
+        GetCoords(coords),
+        Maths::Cast(*matrix)
+    );
+}
+
 void Euler(const std::string& name, Maths::quat* q)
 {
     Maths::vec3 euler = Maths::ToEuler(*q);

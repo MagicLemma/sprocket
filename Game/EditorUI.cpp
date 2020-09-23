@@ -77,7 +77,7 @@ void SelectedEntityInfo(DevUI& ui,
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
         Maths::mat4 origin = Maths::Transform(tr.position, tr.orientation);
-        ui.Gizmo(&origin, view, proj, mode, coords);
+        ImGuiXtra::Guizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
         tr.orientation = Normalise(ToQuat(mat3(origin)));
     }
@@ -201,6 +201,6 @@ void EditorUI::OnUpdate(double dt)
     ImGui::End();
 
     ImGui::ShowDemoWindow();
-    
+
     d_ui.EndFrame();
 }

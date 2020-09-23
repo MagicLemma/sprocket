@@ -38,12 +38,6 @@ public:
 
     void StartFrame();
     void EndFrame();
-
-    void Gizmo(Maths::mat4* matrix,
-               const Maths::mat4& view,
-               const Maths::mat4& projection,
-               GizmoMode mode,
-               GizmoCoords coords);
 };
 
 }
