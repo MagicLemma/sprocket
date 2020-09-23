@@ -7,17 +7,12 @@
 #include "Resources.h"
 #include "StreamBuffer.h"
 
-#include <imgui.h>
-#include <imgui_internal.h>
-#include <ImGuizmo.h>
-
 #include <memory>
 
 namespace Sprocket {
 
 class DevUI
 {
-    // SPROCKET OBJECTS
     Window* d_window;
     Shader  d_shader;
     Texture d_fontAtlas;

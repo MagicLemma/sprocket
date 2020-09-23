@@ -1,6 +1,8 @@
 #pragma once
 #include "DevUI.h"
 
+#include <ImGuizmo.h>
+
 namespace Sprocket {
 
 class EditorLayer;

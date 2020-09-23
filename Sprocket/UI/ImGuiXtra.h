@@ -6,6 +6,9 @@
 
 #include <string>
 
+#include <imgui.h>
+#include <ImGuizmo.h>
+
 namespace Sprocket {
 namespace ImGuiXtra {
 
