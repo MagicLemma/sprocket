@@ -11,6 +11,7 @@
 namespace Sprocket {
 
 class DevUI
+// A class that wraps the setup and rendering of ImGui.
 {
     Window* d_window;
     Shader  d_shader;
