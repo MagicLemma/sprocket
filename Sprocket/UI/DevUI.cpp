@@ -188,7 +188,6 @@ void DevUI::EndFrame()
     rc.FaceCulling(false);
     rc.ScissorTesting(true);
     rc.DepthTesting(false);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     ImDrawData* drawData = ImGui::GetDrawData();
 
