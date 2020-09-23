@@ -27,6 +27,7 @@ public:
     void AlphaBlending(bool enabled) const;
     void FaceCulling(bool enabled) const;
     void DepthTesting(bool enabled) const;
+    void ScissorTesting(bool enabled) const;
 
 };
 

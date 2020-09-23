@@ -1,13 +1,12 @@
 #pragma once
 #include "Window.h"
-#include "Maths.h"
 #include "Shader.h"
 #include "Event.h"
 #include "Texture.h"
-#include "Resources.h"
 #include "StreamBuffer.h"
 
-#include <memory>
+#include <imgui.h>
+#include <ImGuizmo.h>
 
 namespace Sprocket {
 
@@ -18,8 +17,7 @@ class DevUI
     Texture d_fontAtlas;
 
     StreamBuffer d_buffer;
-        // Buffer used to store the render data created by ImGui
-        // for rendering it.
+        // Used to draw the render data created by ImGui.
 
     bool d_blockEvents;
 

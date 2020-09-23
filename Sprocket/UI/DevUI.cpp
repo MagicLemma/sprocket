@@ -184,12 +184,10 @@ void DevUI::EndFrame()
     ImGui::Render();
 
     Sprocket::RenderContext rc;  
-    glEnable(GL_BLEND);
-    glBlendEquation(GL_FUNC_ADD);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_CULL_FACE);
-    glEnable(GL_SCISSOR_TEST);
-    glDisable(GL_DEPTH_TEST);
+    rc.AlphaBlending(true);
+    rc.FaceCulling(false);
+    rc.ScissorTesting(true);
+    rc.DepthTesting(false);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     ImDrawData* drawData = ImGui::GetDrawData();
