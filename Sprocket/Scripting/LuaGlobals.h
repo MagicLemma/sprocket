@@ -18,9 +18,6 @@ class Entity;
 KeyboardProxy* GetKeyboard(lua_State* L);
 MouseProxy* GetMouse(lua_State* L);
 Entity* GetEntity(lua_State* L);
-std::unordered_map<std::uint32_t, Entity>* GetSpawnedEntities(lua_State* L);
-    // Returns pointers to the corresponding objects. These are always
-    // set if part of a LuaEngine created by the ScriptRunner.
 
 bool CheckReturnCode(lua_State* L, int rc);
 bool CheckArgCount(lua_State* L, int argc);

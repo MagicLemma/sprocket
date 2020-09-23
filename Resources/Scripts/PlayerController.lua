@@ -88,6 +88,5 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     local lc = LightComponent(Vec3(1, 1, 1), 20)
     AddLightComponent(newEntity, lc)
 
-    Forget(newEntity)
     return true
 end

@@ -35,14 +35,6 @@ Entity* GetEntity(lua_State* L)
     return e;
 }
 
-std::unordered_map<std::uint32_t, Entity>* GetSpawnedEntities(lua_State* L)
-{
-    lua_getglobal(L, "__spawned_entities__");
-    auto* e = (std::unordered_map<std::uint32_t, Entity>*)lua_touserdata(L, -1);
-    lua_pop(L, 1);
-    return e;
-}
-
 bool CheckReturnCode(lua_State* L, int rc)
 {
     if (rc != LUA_OK) {
