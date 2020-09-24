@@ -8,6 +8,16 @@
 namespace Sprocket {
 namespace {
 
+Maths::vec2 Convert(const aiVector2D& v)
+{
+    return Maths::vec2{v.x, v.y};
+}
+
+Maths::vec3 Convert(const aiVector3D& v)
+{
+    return Maths::vec3{v.x, v.y, v.z};
+}
+
 bool IsSceneValid(const aiScene* scene)
     // Returns true if the scene is valid and false otherwise.
 {
@@ -27,29 +37,15 @@ std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
         // Vertices
         for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
             Vertex3D vertex;
-
-            vertex.position.x = mesh->mVertices[i].x;
-            vertex.position.y = mesh->mVertices[i].y;
-            vertex.position.z = mesh->mVertices[i].z;
-
-            vertex.normal.x = mesh->mNormals[i].x;
-            vertex.normal.y = mesh->mNormals[i].y;
-            vertex.normal.z = mesh->mNormals[i].z;
-
+            vertex.position = Convert(mesh->mVertices[i]);
+            vertex.normal = Convert(mesh->mNormals[i]);
+            
             if (mesh->HasTangentsAndBitangents()) {
-                vertex.tangent.x = mesh->mTangents[i].x;
-                vertex.tangent.y = mesh->mTangents[i].y;
-                vertex.tangent.z = mesh->mTangents[i].z;
-
-                vertex.bitangent.x = mesh->mBitangents[i].x;
-                vertex.bitangent.y = mesh->mBitangents[i].y;
-                vertex.bitangent.z = mesh->mBitangents[i].z;
+                vertex.tangent = Convert(mesh->mTangents[i]);
+                vertex.bitangent = Convert(mesh->mBitangents[i]);
             }
 
-            // TODO: Add error checking code here to make sure the texture exists
-            vertex.textureCoords.x = mesh->mTextureCoords[0][i].x;
-            vertex.textureCoords.y = mesh->mTextureCoords[0][i].y;
-
+            vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
             vertices.push_back(vertex);
         }
 
