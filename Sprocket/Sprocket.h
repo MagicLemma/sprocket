@@ -4,6 +4,7 @@
 
 // CORE
 #include "Core/App.h"
+#include "Core/CoreSystems.h"
 #include "Core/Window.h"
 #include "Core/MaterialManager.h"
 #include "Core/ModelManager.h"

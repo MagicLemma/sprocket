@@ -74,9 +74,6 @@ LuaEngine::LuaEngine()
 
     lua_pushnil(d_L);
     lua_setglobal(d_L, "__entity__");
-
-    lua_pushlightuserdata(d_L, &d_spawnedEntities);
-    lua_setglobal(d_L, "__spawned_entities__");
 }
 
 LuaEngine::~LuaEngine()

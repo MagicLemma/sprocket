@@ -7,6 +7,8 @@
 
 class EscapeMenu : public Sprocket::Layer
 {
+    Sprocket::CoreSystems d_core;
+    
     WorldLayer* d_worldLayer;
 
     Sprocket::SimpleUI d_ui;

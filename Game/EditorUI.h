@@ -5,6 +5,8 @@
 
 class EditorUI : public Sprocket::Layer
 {
+    Sprocket::CoreSystems d_core;
+    
     WorldLayer* d_worldLayer;
 
     Sprocket::DevUI d_ui;
