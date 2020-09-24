@@ -39,13 +39,13 @@ std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
             Vertex3D vertex;
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
+            vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
             
             if (mesh->HasTangentsAndBitangents()) {
                 vertex.tangent = Convert(mesh->mTangents[i]);
                 vertex.bitangent = Convert(mesh->mBitangents[i]);
             }
 
-            vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
             vertices.push_back(vertex);
         }
 

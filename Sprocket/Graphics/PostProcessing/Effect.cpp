@@ -40,7 +40,7 @@ void Effect::Draw(const std::shared_ptr<Effect> target)
 {
     if (target) { target->BindForWrite(); }
     BindForRead();
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     UnbindForRead();
     if (target) { target->UnbindForWrite(); }
 }

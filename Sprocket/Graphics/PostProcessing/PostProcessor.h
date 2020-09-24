@@ -1,5 +1,6 @@
 #pragma once
 #include "Effect.h"
+#include "Model3D.h"
 
 #include <vector>
 
@@ -14,7 +15,7 @@ class PostProcessor
         // Dimensions of the screen.
 
     EffectPipeline d_effects;
-    Model2D     d_quad;
+    Model3D     d_quad;
 
 public:
     PostProcessor(int width, int height);
