@@ -20,7 +20,7 @@ int NewEntity(lua_State* L)
 {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
     Entity* luaEntity = (Entity*)lua_newuserdata(L, sizeof(Entity));
-    *luaEntity = GetEntity(L)->NewEntity();;
+    *luaEntity = GetEntity(L)->NewEntity();
     return 1;
 }
 
