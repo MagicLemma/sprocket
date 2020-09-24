@@ -5,8 +5,7 @@
 
 namespace Sprocket {
 
-Model3D::Model3D(const Vertex3DBuffer& vertices,
-                 const IndexBuffer& indices)
+Mesh::Mesh(const Vertex3DBuffer& vertices, const IndexBuffer& indices)
     : d_vertexBuffer(std::make_shared<VBO>())
     , d_indexBuffer(std::make_shared<VBO>())
     , d_count(indices.size())
@@ -28,7 +27,7 @@ Model3D::Model3D(const Vertex3DBuffer& vertices,
     assert(d_layout.Validate());
 }
 
-Model3D::Model3D()
+Mesh::Mesh()
     : d_layout(sizeof(Vertex3D), 0)
 {
     d_layout.AddAttribute(DataType::FLOAT, 3);
@@ -39,7 +38,7 @@ Model3D::Model3D()
     assert(d_layout.Validate());
 }
 
-void Model3D::Bind() const
+void Mesh::Bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
@@ -47,14 +46,14 @@ void Model3D::Bind() const
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-bool Model3D::operator==(const Model3D& other) const
+bool Mesh::operator==(const Mesh& other) const
 {
     // Two models are the same if they point to the same VAO.
     return d_vertexBuffer->Value() == other.d_vertexBuffer->Value() &&
            d_indexBuffer->Value() == other.d_indexBuffer->Value();
 }
 
-BufferLayout Model3D::GetLayout() const
+BufferLayout Mesh::GetLayout() const
 {
     return d_layout;
 }

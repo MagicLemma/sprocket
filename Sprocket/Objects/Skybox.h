@@ -8,7 +8,7 @@ namespace Sprocket {
 
 struct Skybox
 {
-    std::shared_ptr<Model3D> model;
+    std::shared_ptr<Mesh> model;
     CubeMap texture;
 };
 

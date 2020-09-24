@@ -26,7 +26,7 @@ bool IsSceneValid(const aiScene* scene)
            scene->mRootNode;
 }
 
-std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
+std::shared_ptr<Mesh> ProcessMesh(const aiScene* scene)
 {    
     Vertex3DBuffer vertices;
     IndexBuffer    indices;
@@ -59,12 +59,12 @@ std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
 
     }
 
-    return std::make_shared<Model3D>(vertices, indices);
+    return std::make_shared<Mesh>(vertices, indices);
 }
 
 }
 
-std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
+std::shared_ptr<Mesh> ModelManager::LoadModel(const std::string& path)
 {
     Assimp::Importer importer;
     int flags = 
@@ -79,20 +79,20 @@ std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
 
     if (!IsSceneValid(scene)) {
         SPKT_LOG_ERROR("ERROR::ASSIMP::{}", importer.GetErrorString());
-        return std::make_shared<Model3D>();
+        return std::make_shared<Mesh>();
     }
 
     if (scene->mNumMeshes < 1) {
         SPKT_LOG_ERROR("File has no mesh!");
-        return std::make_shared<Model3D>();
+        return std::make_shared<Mesh>();
     }
 
     return ProcessMesh(scene);
 }
 
-std::shared_ptr<Model3D> ModelManager::GetModel(const std::string& path)
+std::shared_ptr<Mesh> ModelManager::GetModel(const std::string& path)
 {
-    if (path == "") { return std::make_shared<Model3D>(); }
+    if (path == "") { return std::make_shared<Mesh>(); }
     
     auto it = d_loadedModels.find(path);
     if (it != d_loadedModels.end()) {

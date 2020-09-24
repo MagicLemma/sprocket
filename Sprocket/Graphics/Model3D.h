@@ -20,7 +20,7 @@ struct Vertex3D
 using Vertex3DBuffer = std::vector<Vertex3D>;
 using IndexBuffer = std::vector<unsigned int>;
 
-class Model3D
+class Mesh
 {
     // GPU STORAGE
     std::shared_ptr<VBO> d_vertexBuffer;
@@ -31,16 +31,14 @@ class Model3D
     std::size_t d_count;
 
 public:
-    Model3D(const Vertex3DBuffer& vertices,
-            const IndexBuffer& indices);
-
-    Model3D(); // Empty model
+    Mesh(const Vertex3DBuffer& vertices, const IndexBuffer& indices);
+    Mesh(); // Empty model
 
     std::size_t VertexCount() const { return d_count; }
 
     void Bind() const;
 
-    bool operator==(const Model3D& other) const;
+    bool operator==(const Mesh& other) const;
 
     BufferLayout GetLayout() const;
 };

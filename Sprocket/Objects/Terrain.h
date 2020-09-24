@@ -3,6 +3,6 @@
 
 namespace Sprocket {
 
-Model3D MakeTerrain(int numEdges, float distance);
+Mesh MakeTerrain(int numEdges, float distance);
 
 }

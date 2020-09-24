@@ -15,7 +15,7 @@ class PostProcessor
         // Dimensions of the screen.
 
     EffectPipeline d_effects;
-    Model3D     d_quad;
+    Mesh           d_quad;
 
 public:
     PostProcessor(int width, int height);
