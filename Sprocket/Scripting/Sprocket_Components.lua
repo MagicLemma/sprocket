@@ -36,8 +36,8 @@ function AddTransformComponent(entity, c)
 end
 
 
-ModelComponent = Class(function(self, model, material)
-    self.model = model
+ModelComponent = Class(function(self, mesh, material)
+    self.mesh = mesh
     self.material = material
 end)
 
@@ -47,11 +47,11 @@ function GetModelComponent(entity)
 end
 
 function SetModelComponent(entity, c)
-    Lua_SetModelComponent(entity, c.model, c.material)
+    Lua_SetModelComponent(entity, c.mesh, c.material)
 end
 
 function AddModelComponent(entity, c)
-    Lua_AddModelComponent(entity, c.model, c.material)
+    Lua_AddModelComponent(entity, c.mesh, c.material)
 end
 
 

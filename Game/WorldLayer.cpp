@@ -285,7 +285,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
     tr.scale = {r, r, r};
 
     auto& modelData = newEntity.Add<ModelComponent>();
-    modelData.model = "Resources/Models/BetterTree.obj";
+    modelData.mesh = "Resources/Models/BetterTree.obj";
     modelData.material = "Resources/Materials/tree.yaml";
     newEntity.Add<SelectComponent>();
 
@@ -310,7 +310,7 @@ void WorldLayer::AddRockBase(
     tr.scale = {1.1f, 1.1f, 1.1f};
 
     auto& modelData = newEntity.Add<ModelComponent>();
-    modelData.model = "Resources/Models/Rock.obj";
+    modelData.mesh = "Resources/Models/Rock.obj";
     modelData.material = material;
     newEntity.Add<SelectComponent>();
 

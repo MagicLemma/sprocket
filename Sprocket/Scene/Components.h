@@ -25,7 +25,7 @@ struct TransformComponent
 
 struct ModelComponent
 {
-    std::string model = "";
+    std::string mesh = "";
     std::string material = "";
 };
 

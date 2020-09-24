@@ -90,7 +90,7 @@ void Inspector::Show(EditorLayer& editor)
         auto& c = entity.Get<ModelComponent>();
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Model", editor.GetWindow(), &c.model, "*.obj");
+            ImGuiXtra::File("Mesh", editor.GetWindow(), &c.mesh, "*.obj");
             ImGuiXtra::File("Material", editor.GetWindow(), &c.material, "*.yaml");
             
             if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }

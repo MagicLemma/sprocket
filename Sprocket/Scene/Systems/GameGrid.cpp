@@ -37,7 +37,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
     tr1.scale = {0.3f, 0.3f, 0.3f};
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
-    model1.model = gridSquare;
+    model1.mesh = gridSquare;
 
     d_selectedSquare = scene.NewEntity();
     auto& n2 = d_selectedSquare.Add<NameComponent>();
@@ -46,7 +46,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& tr2 = d_selectedSquare.Add<TransformComponent>();
     tr2.scale = {0.5f, 0.5f, 0.5f};
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
-    model2.model = gridSquare;
+    model2.mesh = gridSquare;
 
     auto addGrid = [&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();

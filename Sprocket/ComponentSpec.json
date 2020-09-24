@@ -63,8 +63,8 @@
             "DisplayName": "Model",
             "Attributes": [
                 {
-                    "Name": "model",
-                    "DisplayName": "Model",
+                    "Name": "mesh",
+                    "DisplayName": "Mesh",
                     "Type": "std::string",
                     "Default": "",
                     "Custom": {

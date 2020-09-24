@@ -14,7 +14,7 @@ Entities:
       orientation: [0.9678881, 0, -0.2513813, 0]
       scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: D:\dev\Sprocket\Resources\Materials\space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -38,7 +38,7 @@ Entities:
       orientation: [0.9973543, 0, -0.07269317, 0]
       scale: [1.107289, 1.107288, 1.107289]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -62,7 +62,7 @@ Entities:
       orientation: [0.6755896, -0.7372779, 0, 0]
       scale: [0.02989681, 0.02989674, 0.02989682]
     ModelComponent:
-      model: D:\dev\Sprocket\Resources\Models\Cerberus_LP.FBX
+      mesh: D:\dev\Sprocket\Resources\Models\Cerberus_LP.FBX
       material: D:\dev\Sprocket\Resources\Materials\grey.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -89,7 +89,7 @@ Entities:
       orientation: [0.9677961, 0, 0.2517355, 0]
       scale: [4.208998, 4.209, 4.208998]
     ModelComponent:
-      model: D:\dev\Sprocket\Resources\Models\BetterTree.obj
+      mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
   - NameComponent:
       name: Tree Small
@@ -98,7 +98,7 @@ Entities:
       orientation: [0.9726272, 0, 0.2323713, 0]
       scale: [3.049998, 3.05, 3.049998]
     ModelComponent:
-      model: D:\dev\Sprocket\Resources\Models\BetterTree.obj
+      mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -120,7 +120,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     ModelComponent:
-      model: Resources/Models/Sphere.obj
+      mesh: Resources/Models/Sphere.obj
       material: D:\dev\Sprocket\Resources\Materials\metal018.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -143,7 +143,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     ModelComponent:
-      model: Resources/Models/Sphere.obj
+      mesh: Resources/Models/Sphere.obj
       material: Resources/Materials/grey.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -173,7 +173,7 @@ Entities:
       orientation: [0.9999999, 0, -0.0002423458, 0]
       scale: [1.107292, 1.107288, 1.107292]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -197,7 +197,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [4.8, 0.3, 4.8]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -221,7 +221,7 @@ Entities:
       orientation: [0.7069848, -1.843149e-11, 0.7072288, -1.843147e-11]
       scale: [4.99997, 0.948213, 0.2955132]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -245,7 +245,7 @@ Entities:
       orientation: [0.7069848, -1.843149e-11, 0.7072288, -1.843147e-11]
       scale: [4.99997, 0.948213, 0.2955132]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -269,7 +269,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -293,7 +293,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -357,7 +357,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [1, 0.9999998, 0.9999998]
     ModelComponent:
-      model: Resources/Models/Platform.obj
+      mesh: Resources/Models/Platform.obj
       material: D:\dev\Sprocket\Resources\Materials\rock.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -381,7 +381,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [0.5, 0.5, 0.5]
     ModelComponent:
-      model: Resources/Models/FloatingIsland.obj
+      mesh: Resources/Models/FloatingIsland.obj
       material: Resources/Materials/green.yaml
     SelectComponent:
       {}
@@ -392,7 +392,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     ModelComponent:
-      model: Resources/Models/Platform.obj
+      mesh: Resources/Models/Platform.obj
       material: D:\dev\Sprocket\Resources\Materials\mithril.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -416,7 +416,7 @@ Entities:
       orientation: [0.6945286, -0.1323189, 0.6947241, -0.1322128]
       scale: [0.9999771, 0.9998871, 1]
     ModelComponent:
-      model: Resources/Models/Platform.obj
+      mesh: Resources/Models/Platform.obj
       material: D:\dev\Sprocket\Resources\Materials\mithril.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -440,7 +440,7 @@ Entities:
       orientation: [0.7933534, 0, 0.6087613, 0]
       scale: [1.494947, 0.6160595, 6.666203]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -464,7 +464,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -488,7 +488,7 @@ Entities:
       orientation: [0.7213101, 0, -0.6926123, 0]
       scale: [0.2999891, 0.3, 0.2999891]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/grey.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -518,7 +518,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -542,7 +542,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
     ModelComponent:
-      model: Resources/Models/Cube.obj
+      mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]

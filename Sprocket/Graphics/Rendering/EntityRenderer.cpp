@@ -109,9 +109,9 @@ void EntityRenderer::Draw(
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
-        if (mc.model.empty()) { return; }
+        if (mc.mesh.empty()) { return; }
 
-        bool changedModel = mc.model != currentModel;
+        bool changedModel = mc.mesh != currentModel;
         bool changedMaterial = mc.material != currentMaterial;
 
         if (changedModel || changedMaterial) {
@@ -122,8 +122,8 @@ void EntityRenderer::Draw(
         }
 
         if (changedModel) {
-            d_vao->SetModel(d_modelManager->GetModel(mc.model));
-            currentModel = mc.model;
+            d_vao->SetModel(d_modelManager->GetModel(mc.mesh));
+            currentModel = mc.mesh;
         }
 
         if (changedMaterial) {
