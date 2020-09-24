@@ -1,7 +1,7 @@
 #pragma once
 #include "VertexArray.h"
 #include "Maths.h"
-#include "Model3D.h"
+#include "Mesh.h"
 #include "Buffer.h"
 #include "Shader.h"
 #include "Scene.h"

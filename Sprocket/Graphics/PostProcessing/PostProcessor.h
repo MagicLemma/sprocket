@@ -1,6 +1,6 @@
 #pragma once
 #include "Effect.h"
-#include "Model3D.h"
+#include "Mesh.h"
 
 #include <vector>
 

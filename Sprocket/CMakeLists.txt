@@ -66,7 +66,7 @@ add_library(Sprocket STATIC
             Graphics/DepthBuffer.cpp
             Graphics/Resources.cpp
             Graphics/Material.cpp
-            Graphics/Model3D.cpp
+            Graphics/Mesh.cpp
             Graphics/Texture.cpp
             Graphics/CubeMap.cpp
             Graphics/FrameBuffer.cpp
