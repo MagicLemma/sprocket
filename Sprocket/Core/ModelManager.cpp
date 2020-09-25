@@ -28,7 +28,7 @@ bool IsSceneValid(const aiScene* scene)
 
 std::shared_ptr<Mesh> ProcessMesh(const aiScene* scene)
 {    
-    Vertex3DBuffer vertices;
+    VertexBuffer vertices;
     IndexBuffer    indices;
 
     for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
@@ -36,7 +36,7 @@ std::shared_ptr<Mesh> ProcessMesh(const aiScene* scene)
 
         // Vertices
         for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
-            Vertex3D vertex;
+            Vertex vertex;
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
             vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);

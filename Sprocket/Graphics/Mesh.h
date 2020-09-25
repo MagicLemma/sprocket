@@ -8,16 +8,30 @@
 
 namespace Sprocket {
 
-struct Vertex3D
+struct Vertex
 {
     Maths::vec3 position;
+    Maths::vec2 textureCoords;
+
     Maths::vec3 normal;
     Maths::vec3 tangent;
     Maths::vec3 bitangent;
-    Maths::vec2 textureCoords;
 };
 
-using Vertex3DBuffer = std::vector<Vertex3D>;
+struct AnimVertex
+{
+    Maths::vec3 position;
+    Maths::vec2 textureCoords;
+    
+    Maths::vec3 normal;
+    Maths::vec3 tangent;
+    Maths::vec3 bitangent;
+
+    Maths::ivec4 boneIndices;
+    Maths::vec4  boneWeights;
+};
+
+using VertexBuffer = std::vector<Vertex>;
 using IndexBuffer = std::vector<unsigned int>;
 
 class Mesh
@@ -26,12 +40,13 @@ class Mesh
     std::shared_ptr<VBO> d_vertexBuffer;
     std::shared_ptr<VBO> d_indexBuffer;
 
-    BufferLayout d_layout; // This describes the layout of a Vertex3D array.
+    BufferLayout d_layout; // This describes the layout of a vertex array.
 
     std::size_t d_count;
+    bool d_animated;
 
 public:
-    Mesh(const Vertex3DBuffer& vertices, const IndexBuffer& indices);
+    Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
     Mesh(); // Empty model
 
     std::size_t VertexCount() const { return d_count; }

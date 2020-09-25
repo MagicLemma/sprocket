@@ -3,25 +3,25 @@
 namespace Sprocket {
 namespace {
 
-Vertex3DBuffer GetVertices()
+VertexBuffer GetVertices()
 {
-    Vertex3D bottomLeft;
+    Vertex bottomLeft;
     bottomLeft.position = {-1.0f, -1.0f, 0.0f};
     bottomLeft.textureCoords = {0.0f, 0.0f};
 
-    Vertex3D bottomRight;
+    Vertex bottomRight;
     bottomRight.position = {1.0f, -1.0f, 0.0f};
     bottomRight.textureCoords = {1.0f, 0.0f};
 
-    Vertex3D topRight;
+    Vertex topRight;
     topRight.position = {1.0f, 1.0f, 0.0f};
     topRight.textureCoords = {1.0f, 1.0f};
 
-    Vertex3D topLeft;
+    Vertex topLeft;
     topLeft.position = {-1.0f, 1.0f, 0.0f};
     topLeft.textureCoords = {0.0f, 1.0f};
 
-    return Vertex3DBuffer{
+    return VertexBuffer{
         bottomLeft,
         bottomRight,
         topRight,

@@ -8,12 +8,12 @@ namespace Sprocket {
 
 Mesh MakeTerrain(int numEdges, float distance)
 {
-    Vertex3DBuffer vertices;
+    VertexBuffer vertices;
     vertices.reserve(numEdges * numEdges);
     IndexBuffer indices;
     for (int i = 0; i < numEdges; ++i) {
         for (int j = 0; j < numEdges; ++j) {
-            Vertex3D v;
+            Vertex v;
             v.position = Maths::vec3{distance * i, 0, distance * j};
             v.normal = Maths::vec3{0.0f, 1.0f, 0.0f};
             v.textureCoords = Maths::vec2{
