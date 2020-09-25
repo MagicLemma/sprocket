@@ -28,6 +28,31 @@ Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
     assert(d_layout.Validate());
 }
 
+Mesh::Mesh(const AnimVertexBuffer& vertices, const IndexBuffer& indices)
+    : d_vertexBuffer(std::make_shared<VBO>())
+    , d_indexBuffer(std::make_shared<VBO>())
+    , d_count(indices.size())
+    , d_layout(sizeof(AnimVertex), 0)
+    , d_animated(true)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(AnimVertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 2);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 4);
+    d_layout.AddAttribute(DataType::FLOAT, 4);
+    assert(d_layout.Validate());
+}
+
 Mesh::Mesh()
     : d_layout(sizeof(Vertex), 0)
     , d_animated(false)

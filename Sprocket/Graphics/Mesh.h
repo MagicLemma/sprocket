@@ -32,6 +32,7 @@ struct AnimVertex
 };
 
 using VertexBuffer = std::vector<Vertex>;
+using AnimVertexBuffer = std::vector<AnimVertex>;
 using IndexBuffer = std::vector<unsigned int>;
 
 class Mesh
@@ -47,15 +48,18 @@ class Mesh
 
 public:
     Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
+    Mesh(const AnimVertexBuffer& vertices, const IndexBuffer& indices);
     Mesh(); // Empty model
 
+    // Core Functionality
     std::size_t VertexCount() const { return d_count; }
-
+    BufferLayout GetLayout() const;
     void Bind() const;
 
-    bool operator==(const Mesh& other) const;
+    // Animated Functionality
+    bool IsAnimated() const { return d_animated; }
 
-    BufferLayout GetLayout() const;
+    bool operator==(const Mesh& other) const;
 };
 
 }
