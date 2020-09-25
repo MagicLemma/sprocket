@@ -8,7 +8,7 @@ namespace Sprocket {
 Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
     : d_vertexBuffer(std::make_shared<VBO>())
     , d_indexBuffer(std::make_shared<VBO>())
-    , d_count(indices.size())
+    , d_vertexCount(indices.size())
     , d_layout(sizeof(Vertex), 0)
     , d_animated(false)
 {
@@ -31,7 +31,7 @@ Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
 Mesh::Mesh(const AnimVertexBuffer& vertices, const IndexBuffer& indices)
     : d_vertexBuffer(std::make_shared<VBO>())
     , d_indexBuffer(std::make_shared<VBO>())
-    , d_count(indices.size())
+    , d_vertexCount(indices.size())
     , d_layout(sizeof(AnimVertex), 0)
     , d_animated(true)
 {

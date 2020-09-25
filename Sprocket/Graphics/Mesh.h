@@ -37,13 +37,13 @@ using IndexBuffer = std::vector<unsigned int>;
 
 class Mesh
 {
-    // GPU STORAGE
     std::shared_ptr<VBO> d_vertexBuffer;
     std::shared_ptr<VBO> d_indexBuffer;
 
-    BufferLayout d_layout; // This describes the layout of a vertex array.
+    BufferLayout d_layout;
+    std::size_t d_vertexCount;
 
-    std::size_t d_count;
+    // Animated Data
     bool d_animated;
 
 public:
@@ -52,7 +52,7 @@ public:
     Mesh(); // Empty model
 
     // Core Functionality
-    std::size_t VertexCount() const { return d_count; }
+    std::size_t VertexCount() const { return d_vertexCount; }
     BufferLayout GetLayout() const;
     void Bind() const;
 
