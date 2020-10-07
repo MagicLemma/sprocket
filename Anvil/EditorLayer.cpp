@@ -28,6 +28,7 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : d_core(core)
     , d_entityRenderer(core.modelManager, core.materialManager)
+    , d_skyboxRenderer(core.modelManager)
     , d_skybox({
         ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         CubeMap({

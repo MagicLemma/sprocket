@@ -3,8 +3,9 @@
 
 namespace Sprocket {
     
-SkyboxRenderer::SkyboxRenderer()
-    : d_shader("Resources/Shaders/Skybox.vert",
+SkyboxRenderer::SkyboxRenderer(ModelManager* modelManager)
+    : d_modelManager(modelManager)
+    , d_shader("Resources/Shaders/Skybox.vert",
                "Resources/Shaders/Skybox.frag")
     , d_vao(std::make_unique<VertexArray>())
 {
