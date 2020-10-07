@@ -22,8 +22,7 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 }
 
 ParticleManager::ParticleManager()
-    : d_model(ModelManager::LoadModel("Resources/Models/Particle.obj"))
-    , d_instances(GetInstanceBuffer())
+    : d_instances(GetInstanceBuffer())
 {
 }
 

@@ -169,7 +169,8 @@ void EntityRenderer::Draw(
     d_instanceData.clear();
 
     if (d_particleManager != nullptr) {
-        d_vao->SetModel(d_particleManager->GetModel());
+        // TODO: Un-hardcode this, do when cleaning up the rendering.
+        d_vao->SetModel(d_modelManager->GetModel("Resources/Models/Particle.obj"));
         d_vao->SetInstances(d_particleManager->GetInstances());
         d_vao->Draw();
     }
