@@ -87,7 +87,6 @@ add_library(Sprocket STATIC
 
             Objects/CameraUtils.cpp
             Objects/Skybox.cpp
-            Objects/Terrain.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp

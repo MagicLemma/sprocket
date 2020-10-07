@@ -95,7 +95,6 @@
 
 // OBJECTS
 #include "Objects/CameraUtils.h"
-#include "Objects/Terrain.h"
 #include "Objects/Skybox.h"
 
 // SCRIPTING
