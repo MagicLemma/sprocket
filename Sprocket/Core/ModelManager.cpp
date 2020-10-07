@@ -8,6 +8,16 @@
 namespace Sprocket {
 namespace {
 
+Maths::vec2 Convert(const aiVector2D& v)
+{
+    return Maths::vec2{v.x, v.y};
+}
+
+Maths::vec3 Convert(const aiVector3D& v)
+{
+    return Maths::vec3{v.x, v.y, v.z};
+}
+
 bool IsSceneValid(const aiScene* scene)
     // Returns true if the scene is valid and false otherwise.
 {
@@ -16,9 +26,9 @@ bool IsSceneValid(const aiScene* scene)
            scene->mRootNode;
 }
 
-std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
+std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 {    
-    Vertex3DBuffer vertices;
+    VertexBuffer vertices;
     IndexBuffer    indices;
 
     for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
@@ -26,29 +36,15 @@ std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
 
         // Vertices
         for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
-            Vertex3D vertex;
-
-            vertex.position.x = mesh->mVertices[i].x;
-            vertex.position.y = mesh->mVertices[i].y;
-            vertex.position.z = mesh->mVertices[i].z;
-
-            vertex.normal.x = mesh->mNormals[i].x;
-            vertex.normal.y = mesh->mNormals[i].y;
-            vertex.normal.z = mesh->mNormals[i].z;
-
+            Vertex vertex;
+            vertex.position = Convert(mesh->mVertices[i]);
+            vertex.normal = Convert(mesh->mNormals[i]);
+            vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
+            
             if (mesh->HasTangentsAndBitangents()) {
-                vertex.tangent.x = mesh->mTangents[i].x;
-                vertex.tangent.y = mesh->mTangents[i].y;
-                vertex.tangent.z = mesh->mTangents[i].z;
-
-                vertex.bitangent.x = mesh->mBitangents[i].x;
-                vertex.bitangent.y = mesh->mBitangents[i].y;
-                vertex.bitangent.z = mesh->mBitangents[i].z;
+                vertex.tangent = Convert(mesh->mTangents[i]);
+                vertex.bitangent = Convert(mesh->mBitangents[i]);
             }
-
-            // TODO: Add error checking code here to make sure the texture exists
-            vertex.textureCoords.x = mesh->mTextureCoords[0][i].x;
-            vertex.textureCoords.y = mesh->mTextureCoords[0][i].y;
 
             vertices.push_back(vertex);
         }
@@ -63,12 +59,12 @@ std::shared_ptr<Model3D> ProcessMesh(const aiScene* scene)
 
     }
 
-    return std::make_shared<Model3D>(vertices, indices);
+    return std::make_shared<Mesh>(vertices, indices);
 }
 
 }
 
-std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
+std::shared_ptr<Mesh> ModelManager::LoadModel(const std::string& path)
 {
     Assimp::Importer importer;
     int flags = 
@@ -83,20 +79,20 @@ std::shared_ptr<Model3D> ModelManager::LoadModel(const std::string& path)
 
     if (!IsSceneValid(scene)) {
         SPKT_LOG_ERROR("ERROR::ASSIMP::{}", importer.GetErrorString());
-        return std::make_shared<Model3D>();
+        return std::make_shared<Mesh>();
     }
 
     if (scene->mNumMeshes < 1) {
         SPKT_LOG_ERROR("File has no mesh!");
-        return std::make_shared<Model3D>();
+        return std::make_shared<Mesh>();
     }
 
-    return ProcessMesh(scene);
+    return LoadStaticMesh(scene);
 }
 
-std::shared_ptr<Model3D> ModelManager::GetModel(const std::string& path)
+std::shared_ptr<Mesh> ModelManager::GetModel(const std::string& path)
 {
-    if (path == "") { return std::make_shared<Model3D>(); }
+    if (path == "") { return std::make_shared<Mesh>(); }
     
     auto it = d_loadedModels.find(path);
     if (it != d_loadedModels.end()) {

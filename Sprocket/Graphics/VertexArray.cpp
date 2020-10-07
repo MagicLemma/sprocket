@@ -9,7 +9,7 @@ VertexArray::VertexArray()
 {
 }
 
-void VertexArray::SetModel(std::shared_ptr<Model3D> model)
+void VertexArray::SetModel(std::shared_ptr<Mesh> model)
 {
     d_model = model;
     glBindVertexArray(d_vao->Value());

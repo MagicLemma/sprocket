@@ -43,7 +43,7 @@ void Scene::OnUpdate(double dt)
     d_sinceLastSort += dt;
     if (d_sinceLastSort > 5.0) {
         d_registry.sort<ModelComponent>([](const auto& lhs, const auto& rhs) {
-            return lhs.model < rhs.model || (lhs.model == rhs.model && lhs.material < rhs.material);
+            return lhs.mesh < rhs.mesh || (lhs.mesh == rhs.mesh && lhs.material < rhs.material);
         });
         d_sinceLastSort -= 5.0f;
     }

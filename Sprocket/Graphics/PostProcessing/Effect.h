@@ -1,7 +1,6 @@
 #pragma once
 #include "Effect.h"
 #include "Shader.h"
-#include "Model2D.h"
 #include "FrameBuffer.h"
 
 #include <vector>

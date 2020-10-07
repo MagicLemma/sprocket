@@ -3,28 +3,29 @@
 namespace Sprocket {
 namespace {
 
-Vertex2DBuffer GetQuad()
+VertexBuffer GetVertices()
 {
-    return Vertex2DBuffer{
-        {
-            Maths::vec3{-1.0f, -1.0f, 0.0f},
-            Maths::vec2{0.0f, 0.0f}
-        }, {
-            Maths::vec3{1.0f, -1.0f, 0.0f},
-            Maths::vec2{1.0f, 0.0f}
-        }, {
-            Maths::vec3{1.0f, 1.0f, 0.0f},
-            Maths::vec2{1.0f, 1.0f}
-        }, {
-            Maths::vec3{1.0f, 1.0f, 0.0f},
-            Maths::vec2{1.0f, 1.0f}
-        }, {
-            Maths::vec3{-1.0f, 1.0f, 0.0f},
-            Maths::vec2{0.0f, 1.0f}
-        }, {
-            Maths::vec3{-1.0f, -1.0f, 0.0f},
-            Maths::vec2{0.0f, 0.0f}
-        }
+    Vertex bottomLeft;
+    bottomLeft.position = {-1.0f, -1.0f, 0.0f};
+    bottomLeft.textureCoords = {0.0f, 0.0f};
+
+    Vertex bottomRight;
+    bottomRight.position = {1.0f, -1.0f, 0.0f};
+    bottomRight.textureCoords = {1.0f, 0.0f};
+
+    Vertex topRight;
+    topRight.position = {1.0f, 1.0f, 0.0f};
+    topRight.textureCoords = {1.0f, 1.0f};
+
+    Vertex topLeft;
+    topLeft.position = {-1.0f, 1.0f, 0.0f};
+    topLeft.textureCoords = {0.0f, 1.0f};
+
+    return VertexBuffer{
+        bottomLeft,
+        bottomRight,
+        topRight,
+        topLeft
     };
 }
 
@@ -33,7 +34,7 @@ Vertex2DBuffer GetQuad()
 PostProcessor::PostProcessor(int width, int height)
     : d_width(width)
     , d_height(height)
-    , d_quad(GetQuad())
+    , d_quad(GetVertices(), {0, 1, 2, 0, 2, 3})
 {}
 
 void PostProcessor::AddEffect(std::shared_ptr<Effect> effect)
@@ -63,7 +64,6 @@ void PostProcessor::Draw()
             d_effects[i]->Draw(d_effects[i+1]);
         }
     }
-    d_quad.Unbind();
 }
 
 void PostProcessor::SetScreenSize(int width, int height)

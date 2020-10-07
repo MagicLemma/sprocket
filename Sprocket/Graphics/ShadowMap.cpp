@@ -56,16 +56,16 @@ void ShadowMap::Draw(
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
-        if (mc.model.empty()) { return; }
+        if (mc.mesh.empty()) { return; }
 
-        if(mc.model != currentModel) {
+        if(mc.mesh != currentModel) {
             d_instanceBuffer->SetData(d_instanceData);
             d_vao->SetInstances(d_instanceBuffer);
             d_vao->Draw();
             d_instanceData.clear();
 
-            d_vao->SetModel(d_modelManager->GetModel(mc.model));
-            currentModel = mc.model;
+            d_vao->SetModel(d_modelManager->GetModel(mc.mesh));
+            currentModel = mc.mesh;
         }
 
         d_instanceData.push_back({

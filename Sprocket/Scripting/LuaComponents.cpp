@@ -121,7 +121,7 @@ constexpr int TransformComponentDimension()
 constexpr int ModelComponentDimension()
 {
     int count = 0;
-    count += Dimension<std::string>(); // model
+    count += Dimension<std::string>(); // mesh
     count += Dimension<std::string>(); // material
     return count;
 }
@@ -391,7 +391,7 @@ int GetModelComponent(lua_State* L)
 
     int count = 0;
     const auto& c = e.Get<ModelComponent>();
-    count += Push(L, c.model);
+    count += Push(L, c.mesh);
     count += Push(L, c.material);
     return count;
 }
@@ -403,7 +403,7 @@ int SetModelComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ModelComponent>();
-    c.model = Pull<std::string>(L, count);
+    c.mesh = Pull<std::string>(L, count);
     c.material = Pull<std::string>(L, count);
     return 0;
 }
@@ -417,7 +417,7 @@ int AddModelComponent(lua_State* L)
     assert(!e.Has<ModelComponent>());
 
     ModelComponent c;
-    c.model = Pull<std::string>(L, count);
+    c.mesh = Pull<std::string>(L, count);
     c.material = Pull<std::string>(L, count);
     e.Add(c);
     return 0;

@@ -59,7 +59,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
         if (entity.Has<ModelComponent>()) {
             const auto& c = entity.Get<ModelComponent>();
             out << YAML::Key << "ModelComponent" << YAML::BeginMap;
-            out << YAML::Key << "model" << YAML::Value << c.model;
+            out << YAML::Key << "mesh" << YAML::Value << c.mesh;
             out << YAML::Key << "material" << YAML::Value << c.material;
             out << YAML::EndMap;
         }
@@ -209,7 +209,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
-            c.model = spec["model"] ? spec["model"].as<std::string>() : "";
+            c.mesh = spec["mesh"] ? spec["mesh"].as<std::string>() : "";
             c.material = spec["material"] ? spec["material"].as<std::string>() : "";
             e.Add(c);
         }
