@@ -62,50 +62,6 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
     return std::make_shared<Mesh>(vertices, indices);
 }
 
-std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
-{
-    AnimVertexBuffer vertices;
-    IndexBuffer      indices;
-
-    std::uint32_t vertexCount = 0;
-    for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
-        aiMesh* mesh = scene->mMeshes[idx];
-
-        // Vertices
-        for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
-            AnimVertex vertex;
-            vertex.position = Convert(mesh->mVertices[i]);
-            vertex.normal = Convert(mesh->mNormals[i]);
-            vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
-            
-            if (mesh->HasTangentsAndBitangents()) {
-                vertex.tangent = Convert(mesh->mTangents[i]);
-                vertex.bitangent = Convert(mesh->mBitangents[i]);
-            }
-
-            vertices.push_back(vertex);
-        }
-
-        // Indices
-        for (unsigned int i = 0; i != mesh->mNumFaces; ++i) {
-            aiFace& face = mesh->mFaces[i];
-            for (unsigned int j = 0; j != face.mNumIndices; ++j) {
-                indices.push_back(face.mIndices[j]);
-            }
-        }
-
-        // Bones
-        for (unsigned int i = 0; i != mesh->mNumBones; ++i) {
-            aiBone* bone = mesh->mBones[i];
-            std::string boneName(bone->mName.data);
-        }
-
-        vertexCount += mesh->mNumVertices;
-    }
-
-    return std::make_shared<Mesh>(vertices, indices);
-}
-
 }
 
 std::shared_ptr<Mesh> ModelManager::LoadModel(const std::string& path)
@@ -131,9 +87,6 @@ std::shared_ptr<Mesh> ModelManager::LoadModel(const std::string& path)
         return std::make_shared<Mesh>();
     }
 
-    if (scene->HasAnimations()) {
-        LoadAnimatedMesh(scene);
-    }
     return LoadStaticMesh(scene);
 }
 
