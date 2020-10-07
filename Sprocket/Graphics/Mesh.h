@@ -45,6 +45,7 @@ class Mesh
 
     // Animated Data
     bool d_animated;
+    std::unordered_map<std::string, std::uint32_t> m_BoneMap;
 
 public:
     Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
