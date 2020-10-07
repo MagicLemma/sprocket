@@ -30,7 +30,6 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     , d_entityRenderer(core.modelManager, core.materialManager)
     , d_skyboxRenderer(core.modelManager)
     , d_skybox({
-        ModelManager::LoadModel("Resources/Models/Skybox.obj"),
         CubeMap({
             "Resources/Textures/Skybox/Skybox_X_Pos.png",
             "Resources/Textures/Skybox/Skybox_X_Neg.png",

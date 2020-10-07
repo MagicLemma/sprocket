@@ -95,9 +95,8 @@ void EntityRenderer::Draw(
 
     d_shader.Bind();
 
-    std::string currentModel = "INVALID";
+    std::string currentMesh = "INVALID";
     std::string currentMaterial = "INVALID";
-    bool first = true;
     // These are set initially to INVALID as that is not a valid file path.
     // They cannot be set to "" as this returns the "default" materials,
     // which causes errors when drawing in some cases. TODO: Find out why,
@@ -107,16 +106,24 @@ void EntityRenderer::Draw(
     // which remains bound. We should fix this properly, as this "fix" causes
     // an extra pointless draw call at the beginning of each frame.
 
+    bool first = true;
+    // TODO: Try and remove this flag.
+    // On the very first entity, we set both the currentModel and the
+    // currentMaterial, so it would issue a draw call. This would lead to a
+    // seg fault as no mesh or material would be set. This is a latent bug;
+    // it was being masked by a previous model still being loaded, and was
+    // revealed when moving skybox loading code.
+    
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { return; }
 
-        bool changedModel = mc.mesh != currentModel;
+        bool changedMesh = mc.mesh != currentMesh;
         bool changedMaterial = mc.material != currentMaterial;
 
-        if (changedModel || changedMaterial) {
-            if (!first) { // Nothing to draw!
+        if (changedMesh || changedMaterial) {
+            if (!first) {
                 d_instanceBuffer->SetData(d_instanceData);
                 d_vao->SetInstances(d_instanceBuffer);
                 d_vao->Draw();
@@ -125,10 +132,9 @@ void EntityRenderer::Draw(
             first = false;
         }
 
-
-        if (changedModel) {
+        if (changedMesh) {
             d_vao->SetModel(d_modelManager->GetModel(mc.mesh));
-            currentModel = mc.mesh;
+            currentMesh = mc.mesh;
         }
 
         if (changedMaterial) {
