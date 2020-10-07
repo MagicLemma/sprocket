@@ -20,7 +20,7 @@ void SkyboxRenderer::Draw(const Skybox& skybox,
     d_shader.LoadMat4("viewMatrix", view);
 
     skybox.texture.Bind();
-    d_vao->SetModel(skybox.model);
+    d_vao->SetModel(d_modelManager->GetModel("Resources/Models/Skybox.obj"));
     d_vao->Draw();
 }
 

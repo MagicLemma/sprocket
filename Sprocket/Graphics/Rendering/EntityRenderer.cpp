@@ -97,6 +97,7 @@ void EntityRenderer::Draw(
 
     std::string currentModel = "INVALID";
     std::string currentMaterial = "INVALID";
+    bool first = true;
     // These are set initially to INVALID as that is not a valid file path.
     // They cannot be set to "" as this returns the "default" materials,
     // which causes errors when drawing in some cases. TODO: Find out why,
@@ -115,11 +116,15 @@ void EntityRenderer::Draw(
         bool changedMaterial = mc.material != currentMaterial;
 
         if (changedModel || changedMaterial) {
-            d_instanceBuffer->SetData(d_instanceData);
-            d_vao->SetInstances(d_instanceBuffer);
-            d_vao->Draw();
-            d_instanceData.clear();
+            if (!first) { // Nothing to draw!
+                d_instanceBuffer->SetData(d_instanceData);
+                d_vao->SetInstances(d_instanceBuffer);
+                d_vao->Draw();
+                d_instanceData.clear();
+            }
+            first = false;
         }
+
 
         if (changedModel) {
             d_vao->SetModel(d_modelManager->GetModel(mc.mesh));
