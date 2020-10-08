@@ -30,14 +30,12 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     , d_entityRenderer(core.modelManager, core.materialManager)
     , d_skyboxRenderer(core.modelManager)
     , d_skybox({
-        CubeMap({
-            "Resources/Textures/Skybox/Skybox_X_Pos.png",
-            "Resources/Textures/Skybox/Skybox_X_Neg.png",
-            "Resources/Textures/Skybox/Skybox_Y_Pos.png",
-            "Resources/Textures/Skybox/Skybox_Y_Neg.png",
-            "Resources/Textures/Skybox/Skybox_Z_Pos.png",
-            "Resources/Textures/Skybox/Skybox_Z_Neg.png"
-        })
+        "Resources/Textures/Skybox/Skybox_X_Pos.png",
+        "Resources/Textures/Skybox/Skybox_X_Neg.png",
+        "Resources/Textures/Skybox/Skybox_Y_Pos.png",
+        "Resources/Textures/Skybox/Skybox_Y_Neg.png",
+        "Resources/Textures/Skybox/Skybox_Z_Pos.png",
+        "Resources/Textures/Skybox/Skybox_Z_Neg.png"
     })
     , d_editorCamera(core.window, {0.0, 0.0, 0.0})
     , d_viewport(1280, 720)

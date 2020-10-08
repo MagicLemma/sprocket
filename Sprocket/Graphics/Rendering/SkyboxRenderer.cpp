@@ -11,7 +11,7 @@ SkyboxRenderer::SkyboxRenderer(ModelManager* modelManager)
 {
 }
 
-void SkyboxRenderer::Draw(const Skybox& skybox,
+void SkyboxRenderer::Draw(const CubeMap& skybox,
                           const Maths::mat4& proj,
                           const Maths::mat4& view)
 {
@@ -19,12 +19,12 @@ void SkyboxRenderer::Draw(const Skybox& skybox,
     d_shader.LoadMat4("projectionMatrix", proj);
     d_shader.LoadMat4("viewMatrix", view);
 
-    skybox.texture.Bind();
+    skybox.Bind();
     d_vao->SetModel(d_modelManager->GetModel("Resources/Models/Skybox.obj"));
     d_vao->Draw();
 }
 
-void SkyboxRenderer::Draw(const Skybox& skybox, const Entity& camera)
+void SkyboxRenderer::Draw(const CubeMap& skybox, const Entity& camera)
 {
     Maths::mat4 view = CameraUtils::MakeView(camera);
     Maths::mat4 proj = CameraUtils::MakeProj(camera);

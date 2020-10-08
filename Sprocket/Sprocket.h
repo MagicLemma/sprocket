@@ -95,7 +95,6 @@
 
 // OBJECTS
 #include "Objects/CameraUtils.h"
-#include "Objects/Skybox.h"
 
 // SCRIPTING
 #include "Scripting/LuaEngine.h"

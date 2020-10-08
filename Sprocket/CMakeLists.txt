@@ -86,7 +86,6 @@ add_library(Sprocket STATIC
             Graphics/PostProcessing/PostProcessor.cpp
 
             Objects/CameraUtils.cpp
-            Objects/Skybox.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp

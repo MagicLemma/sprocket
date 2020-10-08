@@ -34,7 +34,7 @@ class EditorLayer : public Layer
     Entity d_runtimeCamera;
 
     // Additional world setup
-    Skybox d_skybox;
+    CubeMap d_skybox;
     float  d_sunAngle = 45.0f;
     
     // LAYER DATA

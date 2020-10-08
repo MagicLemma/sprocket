@@ -1,5 +1,5 @@
 #pragma once
-#include "Skybox.h"
+#include "CubeMap.h"
 #include "ModelManager.h"
 #include "Entity.h"
 #include "Shader.h"
@@ -21,8 +21,8 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(ModelManager* modelManager);
 
-    void Draw(const Skybox& skybox, const Entity& camera);
-    void Draw(const Skybox& skybox, const Maths::mat4& proj, const Maths::mat4& view);
+    void Draw(const CubeMap& skybox, const Entity& camera);
+    void Draw(const CubeMap& skybox, const Maths::mat4& proj, const Maths::mat4& view);
 };
 
 }
