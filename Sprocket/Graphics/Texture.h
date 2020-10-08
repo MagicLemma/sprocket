@@ -23,6 +23,9 @@ private:
     Channels d_channels = Channels::RGBA;
         // TODO: Generalise other constructors to expose this.
 
+    Texture(const Texture&) = delete;
+    Texture& operator=(const Texture&) = delete;
+
 public:
     Texture(const std::string& pngFile);
     Texture(int width, int height, const std::vector<unsigned char>& data);

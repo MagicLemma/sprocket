@@ -10,7 +10,7 @@ namespace Sprocket {
 class FontAtlas
 {
     std::vector<Maths::ivec3> d_nodes;
-    Texture d_texture;
+    std::shared_ptr<Texture> d_texture;
 
     int Fit(int index, int width, int height);
 
@@ -24,13 +24,13 @@ public:
         const unsigned char* data
     );
 
-    std::size_t Width() const { return d_texture.Width(); }
-    std::size_t Height() const { return d_texture.Height(); }
+    std::size_t Width() const { return d_texture->Width(); }
+    std::size_t Height() const { return d_texture->Height(); }
 
-    void Bind() const { d_texture.Bind(); }
-    void Unbind() const { d_texture.Unbind(); }
+    void Bind() const { d_texture->Bind(); }
+    void Unbind() const { d_texture->Unbind(); }
 
-    Texture GetAtlas() const { return d_texture; }
+    std::shared_ptr<Texture> GetAtlas() const { return d_texture; }
 };
 
 }
