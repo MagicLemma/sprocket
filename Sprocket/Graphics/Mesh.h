@@ -33,6 +33,8 @@ public:
     Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
     Mesh(); // Empty model
 
+    static std::shared_ptr<Mesh> FromFile(const std::string& file);
+
     // Core Functionality
     std::size_t VertexCount() const { return d_vertexCount; }
     BufferLayout GetLayout() const;
