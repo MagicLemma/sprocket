@@ -23,7 +23,18 @@ bool IsSceneValid(const aiScene* scene)
 {
     return scene && 
            !(scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) &&
-           scene->mRootNode;
+           scene->mRootNode &&
+           scene->mNumMeshes > 0;
+}
+
+int GetAssimpFlags()
+{
+    return aiProcess_Triangulate
+         | aiProcess_FlipUVs
+         | aiProcess_CalcTangentSpace
+         | aiProcess_GenUVCoords
+         | aiProcess_GenNormals
+         | aiProcess_ValidateDataStructure;
 }
 
 std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
@@ -64,26 +75,17 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 
 }
 
+ModelManager::ModelManager()
+    : d_default(std::make_shared<Mesh>())
+{}
+
 std::shared_ptr<Mesh> ModelManager::LoadModel(const std::string& path)
 {
     Assimp::Importer importer;
-    int flags = 
-        aiProcess_Triangulate |
-        aiProcess_FlipUVs |
-        aiProcess_CalcTangentSpace |
-        aiProcess_GenUVCoords |
-        aiProcess_GenNormals |
-        aiProcess_ValidateDataStructure;
-
-    const aiScene* scene = importer.ReadFile(path, flags);
+    const aiScene* scene = importer.ReadFile(path, GetAssimpFlags());
 
     if (!IsSceneValid(scene)) {
         SPKT_LOG_ERROR("ERROR::ASSIMP::{}", importer.GetErrorString());
-        return std::make_shared<Mesh>();
-    }
-
-    if (scene->mNumMeshes < 1) {
-        SPKT_LOG_ERROR("File has no mesh!");
         return std::make_shared<Mesh>();
     }
 
@@ -92,7 +94,7 @@ std::shared_ptr<Mesh> ModelManager::LoadModel(const std::string& path)
 
 std::shared_ptr<Mesh> ModelManager::GetModel(const std::string& path)
 {
-    if (path == "") { return std::make_shared<Mesh>(); }
+    if (path == "") { return d_default; }
     
     auto it = d_loadedModels.find(path);
     if (it != d_loadedModels.end()) {

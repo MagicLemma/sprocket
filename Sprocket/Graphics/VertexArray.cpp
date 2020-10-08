@@ -30,14 +30,13 @@ void VertexArray::Draw() const
     if (!d_model) { return; }
 
     glBindVertexArray(d_vao->Value());
-
     if (d_instances) {
         glDrawElementsInstanced(GL_TRIANGLES, (int)d_model->VertexCount(), GL_UNSIGNED_INT, nullptr, d_instances->Size());
     }
     else {
         glDrawElements(GL_TRIANGLES, (int)d_model->VertexCount(), GL_UNSIGNED_INT, nullptr);
     }
-
+    glBindVertexArray(0);
 }
 
 }

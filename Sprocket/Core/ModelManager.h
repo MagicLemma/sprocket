@@ -15,8 +15,11 @@ public:
 
 private:
     Map d_loadedModels;
+    std::shared_ptr<Mesh> d_default;
 
 public:
+    ModelManager();
+
     static std::shared_ptr<Mesh> LoadModel(const std::string& path);
         // Loads a model without caching it.
 
