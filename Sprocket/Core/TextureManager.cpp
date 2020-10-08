@@ -7,17 +7,22 @@
 
 namespace Sprocket {
 
-Texture TextureManager::GetTexture(const std::string& path)
+TextureManager::TextureManager()
+    : d_default(std::make_shared<Texture>())
 {
-    if (path == "") { return Texture::White(); }
+}
+
+std::shared_ptr<Texture> TextureManager::GetTexture(const std::string& path)
+{
+    if (path == "") { return d_default; }
     
     auto it = d_loadedTextures.find(path);
     if (it != d_loadedTextures.end()) {
         return it->second;
     }
-    Texture model = Texture(path);
-    d_loadedTextures.emplace(path, model);
-    return model;   
+    auto texture = std::make_shared<Texture>(path);
+    d_loadedTextures.emplace(path, texture);
+    return texture;   
 }
 
 }

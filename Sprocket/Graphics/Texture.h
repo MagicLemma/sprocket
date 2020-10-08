@@ -50,7 +50,6 @@ public:
 
     bool operator==(const Texture& other) const;
 
-    bool IsFromFile() const { return d_file != ""; }
     std::string Filepath() const { return d_file; }
 };
 

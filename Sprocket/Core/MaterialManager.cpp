@@ -89,10 +89,10 @@ void MaterialManager::SaveMaterial(std::shared_ptr<Material> material)
 
     out << K << "Name" << V << material->name;
 
-    out << K << "AlbedoMap" << V << material->albedoMap.Filepath()
-        << K << "NormalMap" << V << material->normalMap.Filepath()
-        << K << "MetallicMap" << V << material->metallicMap.Filepath()
-        << K << "RoughnessMap" << V << material->roughnessMap.Filepath();
+    out << K << "AlbedoMap" << V << material->albedoMap->Filepath()
+        << K << "NormalMap" << V << material->normalMap->Filepath()
+        << K << "MetallicMap" << V << material->metallicMap->Filepath()
+        << K << "RoughnessMap" << V << material->roughnessMap->Filepath();
 
     out << K << "UseAlbedoMap" << V << material->useAlbedoMap
         << K << "UseNormalMap" << V << material->useNormalMap

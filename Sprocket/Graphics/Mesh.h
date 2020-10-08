@@ -29,6 +29,9 @@ class Mesh
     BufferLayout d_layout;
     std::size_t d_vertexCount;
 
+    Mesh(const Mesh&) = delete;
+    Mesh& operator=(const Mesh&) = delete;
+
 public:
     Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
     Mesh(); // Empty model

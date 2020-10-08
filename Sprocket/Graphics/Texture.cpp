@@ -42,6 +42,7 @@ Texture::Texture(int width, int height, const std::vector<unsigned char>& data)
     : d_texture(std::make_shared<TEX>())
     , d_width(width)
     , d_height(height)
+    , d_file("")
 {
     glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
@@ -61,6 +62,7 @@ Texture::Texture(int width, int height, unsigned char* data)
     : d_texture(std::make_shared<TEX>())
     , d_width(width)
     , d_height(height)
+    , d_file("")
 {
     glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
@@ -80,6 +82,7 @@ Texture::Texture(int width, int height, std::shared_ptr<TEX> texture)
     : d_texture(texture)
     , d_width(width)
     , d_height(height)
+    , d_file("")
 {
 }
 
@@ -88,6 +91,7 @@ Texture::Texture(int width, int height, Channels channels)
     , d_width(width)
     , d_height(height)
     , d_channels(channels)
+    , d_file("")
 {
     auto c = channels == Channels::RGBA ? GL_RGBA : GL_RED;
 
@@ -112,6 +116,7 @@ Texture::Texture()
     : d_texture(Texture::White().d_texture)
     , d_width(Texture::White().d_width)
     , d_height(Texture::White().d_height)
+    , d_file("")
 {
 }
 

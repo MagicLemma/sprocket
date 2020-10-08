@@ -339,11 +339,11 @@ void EditorLayer::OnUpdate(double dt)
     d_ui.EndFrame();    
 }
 
-void EditorLayer::MaterialUI(Texture& texture)
+void EditorLayer::MaterialUI(std::shared_ptr<Texture>& texture)
 {
-    std::string f = texture.IsFromFile() ? texture.Filepath() : "";
+    std::string f = texture->Filepath();
     if (ImGui::Button("X")) {
-        texture = Texture::White();
+        texture = d_core.textureManager->GetTexture("");
         f = "";
     }
     ImGui::SameLine();

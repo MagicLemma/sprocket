@@ -59,7 +59,6 @@ void ColliderRenderer::Draw(
 
     static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
-    d_vao->SetModel(s_sphere);
     scene.Each<CapsuleCollider3DComponent>([&](Entity& entity) {
         const auto& c = entity.Get<CapsuleCollider3DComponent>();
 

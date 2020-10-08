@@ -142,19 +142,19 @@ void EntityRenderer::Draw(
             // TODO: Apply everything
 
             glActiveTexture(GL_TEXTURE0);
-            material->albedoMap.Bind();
+            material->albedoMap->Bind();
             d_shader.LoadSampler("texture_sampler", 0);
 
             glActiveTexture(GL_TEXTURE1);
-            material->normalMap.Bind();
+            material->normalMap->Bind();
             d_shader.LoadSampler("u_normal_map", 1);
             
             glActiveTexture(GL_TEXTURE2);
-            material->metallicMap.Bind();
+            material->metallicMap->Bind();
             d_shader.LoadSampler("u_metallic_map", 2);
 
             glActiveTexture(GL_TEXTURE3);
-            material->roughnessMap.Bind();
+            material->roughnessMap->Bind();
             d_shader.LoadSampler("u_roughness_map", 3);
 
             glActiveTexture(GL_TEXTURE0);

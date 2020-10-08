@@ -12,10 +12,10 @@ struct Material
     std::string name;
     std::string file;
 
-    Texture albedoMap;
-    Texture normalMap;
-    Texture metallicMap;
-    Texture roughnessMap;
+    std::shared_ptr<Texture> albedoMap = std::shared_ptr<Texture>();
+    std::shared_ptr<Texture> normalMap = std::shared_ptr<Texture>();
+    std::shared_ptr<Texture> metallicMap = std::shared_ptr<Texture>();
+    std::shared_ptr<Texture> roughnessMap = std::shared_ptr<Texture>();
 
     bool useAlbedoMap = false;
     bool useNormalMap = false;
