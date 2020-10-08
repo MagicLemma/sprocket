@@ -2,7 +2,7 @@
 #include "Maths.h"
 #include "ModelManager.h"
 #include "RenderContext.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 #include "Components.h"
 #include "Scene.h"
 #include "ShadowMap.h"
@@ -191,8 +191,8 @@ void EntityRenderer::Draw(
 
 void EntityRenderer::Draw(const Entity& camera, Scene& scene)
 {
-    Maths::mat4 proj = CameraUtils::MakeProj(camera);
-    Maths::mat4 view = CameraUtils::MakeView(camera);
+    Maths::mat4 proj = MakeProj(camera);
+    Maths::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 

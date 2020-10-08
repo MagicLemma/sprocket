@@ -103,8 +103,8 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                 d_mouse.GetMousePos(),
                 d_core.window->Width(),
                 d_core.window->Height(),
-                CameraUtils::MakeView(d_camera),
-                CameraUtils::MakeProj(d_camera)
+                MakeView(d_camera),
+                MakeProj(d_camera)
             );
 
             float lambda = -cameraPos.y / direction.y;

@@ -45,6 +45,7 @@ add_library(Sprocket STATIC
             UI/ImGuiXtra.cpp
 
             Scene/Entity.cpp
+            Scene/Camera.cpp
             Scene/Scene.cpp
             Scene/EntitySystem.cpp
             Scene/Loader.cpp
@@ -79,13 +80,10 @@ add_library(Sprocket STATIC
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
 
-            
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
-
-            Objects/CameraUtils.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp

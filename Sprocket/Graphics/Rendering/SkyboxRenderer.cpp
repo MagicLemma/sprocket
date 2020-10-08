@@ -1,5 +1,5 @@
 #include "SkyboxRenderer.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 
 namespace Sprocket {
     
@@ -26,8 +26,8 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const Entity& camera)
 {
-    Maths::mat4 view = CameraUtils::MakeView(camera);
-    Maths::mat4 proj = CameraUtils::MakeProj(camera);
+    Maths::mat4 view = MakeView(camera);
+    Maths::mat4 proj = MakeProj(camera);
     Maths::mat4 view2 = Maths::mat4(Maths::mat3(view));
     Draw(skybox, proj, view);
 }

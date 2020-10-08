@@ -1,6 +1,6 @@
 #include "Selector.h"
 #include "MouseEvent.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 #include "Scene.h"
 #include "Components.h"
 
@@ -103,8 +103,8 @@ Entity Selector::GetMousedOver()
 {
     if (d_camera.Null()) { return Entity(); }
 
-    auto view = CameraUtils::MakeView(d_camera);
-    auto proj = CameraUtils::MakeProj(d_camera);
+    auto view = MakeView(d_camera);
+    auto proj = MakeProj(d_camera);
 
     Maths::vec3 rayStart = Maths::Inverse(view) * Maths::vec4(0, 0, 0, 1);
     Maths::vec3 direction = Maths::GetMouseRay(

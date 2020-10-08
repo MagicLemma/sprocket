@@ -1,5 +1,5 @@
 #include "GameGrid.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 #include "Components.h"
 #include "Scene.h"
 #include "MouseEvent.h"
@@ -87,8 +87,8 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double)
         d_mouse.GetMousePos(),
         d_window->Width(),
         d_window->Height(),
-        CameraUtils::MakeView(d_camera),
-        CameraUtils::MakeProj(d_camera)
+        MakeView(d_camera),
+        MakeProj(d_camera)
     );
 
     float lambda = -cameraPos.y / direction.y;

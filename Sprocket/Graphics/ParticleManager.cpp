@@ -3,7 +3,7 @@
 #include "RenderContext.h"
 #include "Components.h"
 #include "Random.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 
 namespace Sprocket {
 namespace {

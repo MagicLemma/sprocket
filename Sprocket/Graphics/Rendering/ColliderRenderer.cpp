@@ -1,7 +1,7 @@
 #include "ColliderRenderer.h"
 #include "Maths.h"
 #include "RenderContext.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 #include "Components.h"
 #include "Texture.h"
 #include "ModelManager.h"
@@ -102,8 +102,8 @@ void ColliderRenderer::Draw(
 
 void ColliderRenderer::Draw(const Entity& camera, Scene& scene)
 {
-    Maths::mat4 proj = CameraUtils::MakeProj(camera);
-    Maths::mat4 view = CameraUtils::MakeView(camera);
+    Maths::mat4 proj = MakeProj(camera);
+    Maths::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 
