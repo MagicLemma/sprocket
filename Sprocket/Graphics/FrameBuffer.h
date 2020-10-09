@@ -13,6 +13,9 @@ class FrameBuffer
     int d_width;
     int d_height;
 
+    FrameBuffer(const FrameBuffer&) = delete;
+    FrameBuffer& operator=(const FrameBuffer&) = delete;
+
 public:
     FrameBuffer(int width, int height);
 
