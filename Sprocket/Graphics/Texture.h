@@ -15,7 +15,6 @@ public:
 
 private:
     std::shared_ptr<TEX> d_texture;
-    std::string d_file;
 
     int d_width;
     int d_height;
@@ -54,8 +53,6 @@ public:
     int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
 
     bool operator==(const Texture& other) const;
-
-    std::string Filepath() const { return d_file; }
 };
 
 }
