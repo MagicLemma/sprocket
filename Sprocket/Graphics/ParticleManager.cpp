@@ -1,9 +1,8 @@
 #include "ParticleManager.h"
-#include "ModelManager.h"
 #include "RenderContext.h"
 #include "Components.h"
 #include "Random.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 
 namespace Sprocket {
 namespace {
@@ -22,8 +21,7 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 }
 
 ParticleManager::ParticleManager()
-    : d_model(ModelManager::LoadModel("Resources/Models/Particle.obj"))
-    , d_instances(GetInstanceBuffer())
+    : d_instances(GetInstanceBuffer())
 {
 }
 

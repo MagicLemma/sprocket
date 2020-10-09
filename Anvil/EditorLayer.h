@@ -34,7 +34,7 @@ class EditorLayer : public Layer
     Entity d_runtimeCamera;
 
     // Additional world setup
-    Skybox d_skybox;
+    CubeMap d_skybox;
     float  d_sunAngle = 45.0f;
     
     // LAYER DATA
@@ -50,7 +50,7 @@ class EditorLayer : public Layer
     // Panels
     Inspector      d_inspector;
 
-    void MaterialUI(Texture& texture);
+    void MaterialUI(std::string& texture);
 
 public:
     EditorLayer(const Sprocket::CoreSystems& core);

@@ -64,23 +64,13 @@ void SetKeyMappings()
     io.KeyMap[ImGuiKey_Z] =           Keyboard::Z;
 }
 
-void SetFontAtlas(Texture& fontAtlas)
-{
-    ImGuiIO& io = ImGui::GetIO();
-    unsigned char* data;
-    int width, height;
-    io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-    fontAtlas = Texture(width, height, data);
-    io.Fonts->TexID = (ImTextureID)(unsigned int)(intptr_t)fontAtlas.Id();
-}
-
 }
 
 DevUI::DevUI(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/DevGUI.vert",
                "Resources/Shaders/DevGUI.frag")
-    , d_fontAtlas()
+    , d_fontAtlas(nullptr)
     , d_blockEvents(true)
 {
     ImGui::CreateContext();
@@ -92,7 +82,12 @@ DevUI::DevUI(Window* window)
     SetBackendFlags();
     SetClipboardCallbacks(window);
     SetKeyMappings();
-    SetFontAtlas(d_fontAtlas);
+
+    unsigned char* data;
+    int width, height;
+    io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
+    d_fontAtlas = std::make_shared<Texture>(width, height, data);
+    io.Fonts->TexID = (ImTextureID)(unsigned int)(intptr_t)d_fontAtlas->Id();
 
     BufferLayout bufferLayout(sizeof(ImDrawVert));
     bufferLayout.AddAttribute(DataType::FLOAT, 2);
@@ -198,7 +193,7 @@ void DevUI::EndFrame()
     d_shader.LoadMat4("ProjMtx", proj);
 
     d_buffer.Bind();
-    d_fontAtlas.Bind();
+    d_fontAtlas->Bind();
 
     // Render command lists
     int width = (int)drawData->DisplaySize.x;

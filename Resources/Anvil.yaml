@@ -4,7 +4,7 @@ Sun:
   colour: [0.9019608, 0.8005289, 0.6720492]
   brightness: 1.6
 Ambience:
-  colour: [1.0, 1.0, 1.0]
+  colour: [1, 1, 1]
   brightness: 0.03
 Entities:
   - NameComponent:
@@ -318,7 +318,6 @@ Entities:
       scale: [1, 1, 1]
     LightComponent:
       colour: [0.904, 0.7333333, 1]
-      attenuation: [1, 0.1, 0.1]
       brightness: 260.9
   - NameComponent:
       name: Green Light
@@ -328,7 +327,6 @@ Entities:
       scale: [1, 1, 1]
     LightComponent:
       colour: [0.72, 0.6289493, 0.09920003]
-      attenuation: [1, 0.1, 0.1]
       brightness: 43.9
   - NameComponent:
       name: Blue Light
@@ -338,7 +336,6 @@ Entities:
       scale: [1, 1, 1]
     LightComponent:
       colour: [0, 0, 1]
-      attenuation: [1, 0.1, 0.1]
       brightness: 2
   - NameComponent:
       name: Red Light
@@ -348,7 +345,6 @@ Entities:
       scale: [1, 1, 1]
     LightComponent:
       colour: [1, 0, 0]
-      attenuation: [1, 0.1, 0.1]
       brightness: 2
   - NameComponent:
       name: Platform (Red)

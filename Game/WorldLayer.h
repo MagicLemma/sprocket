@@ -33,7 +33,7 @@ class WorldLayer : public Sprocket::Layer
     Sprocket::PostProcessor   d_postProcessor;
 
     // MODELLING
-    Sprocket::ModelManager d_modelManager;
+    Sprocket::AssetManager d_assetManager;
 
     // Additional world setup
     Sprocket::CircadianCycle d_cycle;

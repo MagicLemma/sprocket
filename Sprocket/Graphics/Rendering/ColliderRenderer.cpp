@@ -1,10 +1,9 @@
 #include "ColliderRenderer.h"
 #include "Maths.h"
 #include "RenderContext.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 #include "Components.h"
 #include "Texture.h"
-#include "ModelManager.h"
 
 #include <glad/glad.h>
 
@@ -30,7 +29,7 @@ void ColliderRenderer::Draw(
     d_shader.LoadMat4("u_proj_matrix", proj);
     d_shader.LoadMat4("u_view_matrix", view);
     
-    static auto s_cube = ModelManager::LoadModel("Resources/Models/Cube.obj");
+    static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube);
     scene.Each<BoxCollider3DComponent>([&](Entity& entity) {
         const auto& c = entity.Get<BoxCollider3DComponent>();
@@ -45,7 +44,7 @@ void ColliderRenderer::Draw(
         d_vao->Draw();
     });
 
-    static auto s_sphere = ModelManager::LoadModel("Resources/Models/LowPolySphere.obj");
+    static auto s_sphere = Mesh::FromFile("Resources/Models/LowPolySphere.obj");
     d_vao->SetModel(s_sphere);
     scene.Each<SphereCollider3DComponent>([&](Entity& entity) {
         const auto& c = entity.Get<SphereCollider3DComponent>();
@@ -57,9 +56,8 @@ void ColliderRenderer::Draw(
         d_vao->Draw();
     });
 
-    static auto s_hemisphere = ModelManager::LoadModel("Resources/Models/Hemisphere.obj");
-    static auto s_cylinder = ModelManager::LoadModel("Resources/Models/Cylinder.obj");
-    d_vao->SetModel(s_sphere);
+    static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
+    static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
     scene.Each<CapsuleCollider3DComponent>([&](Entity& entity) {
         const auto& c = entity.Get<CapsuleCollider3DComponent>();
 
@@ -102,8 +100,8 @@ void ColliderRenderer::Draw(
 
 void ColliderRenderer::Draw(const Entity& camera, Scene& scene)
 {
-    Maths::mat4 proj = CameraUtils::MakeProj(camera);
-    Maths::mat4 view = CameraUtils::MakeView(camera);
+    Maths::mat4 proj = MakeProj(camera);
+    Maths::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 

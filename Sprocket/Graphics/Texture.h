@@ -15,7 +15,6 @@ public:
 
 private:
     std::shared_ptr<TEX> d_texture;
-    std::string d_file;
 
     int d_width;
     int d_height;
@@ -23,13 +22,17 @@ private:
     Channels d_channels = Channels::RGBA;
         // TODO: Generalise other constructors to expose this.
 
+    Texture(const Texture&) = delete;
+    Texture& operator=(const Texture&) = delete;
+
 public:
-    Texture(const std::string& pngFile, bool flip = false);
+    Texture(int width, int height, const unsigned char* data);
     Texture(int width, int height, const std::vector<unsigned char>& data);
-    Texture(int width, int height, unsigned char* data);
     Texture(int width, int height, std::shared_ptr<TEX> texture);
     Texture(int width, int height, Channels channels);
     Texture();
+
+    static std::shared_ptr<Texture> FromFile(const std::string file);
 
     void Bind() const;
     void Unbind() const;
@@ -49,9 +52,6 @@ public:
     int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
 
     bool operator==(const Texture& other) const;
-
-    bool IsFromFile() const { return d_file != ""; }
-    std::string Filepath() const { return d_file; }
 };
 
 }

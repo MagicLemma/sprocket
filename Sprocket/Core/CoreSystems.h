@@ -3,16 +3,12 @@
 namespace Sprocket {
 
 class Window;
-class ModelManager;
-class TextureManager;
-class MaterialManager;
+class AssetManager;
 
 struct CoreSystems
 {
     Window*          window;
-    ModelManager*    modelManager;
-    TextureManager*  textureManager;
-    MaterialManager* materialManager;
+    AssetManager*    assetManager;
 };
 
 }

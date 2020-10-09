@@ -26,10 +26,8 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 add_library(Sprocket STATIC
 
             Core/App.cpp
+            Core/AssetManager.cpp
             Core/Window.cpp
-            Core/MaterialManager.cpp
-            Core/ModelManager.cpp
-            Core/TextureManager.cpp
 
             Audio/Listener.cpp
             Audio/Music.cpp
@@ -45,6 +43,7 @@ add_library(Sprocket STATIC
             UI/ImGuiXtra.cpp
 
             Scene/Entity.cpp
+            Scene/Camera.cpp
             Scene/Scene.cpp
             Scene/EntitySystem.cpp
             Scene/Loader.cpp
@@ -79,15 +78,10 @@ add_library(Sprocket STATIC
             Graphics/Rendering/EntityRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
 
-            
             Graphics/PostProcessing/Effect.cpp
             Graphics/PostProcessing/Negative.cpp
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
-
-            Objects/CameraUtils.cpp
-            Objects/Skybox.cpp
-            Objects/Terrain.cpp
 
             Events/Event.cpp
             Events/WindowEvent.cpp

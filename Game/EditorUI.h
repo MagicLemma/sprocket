@@ -11,8 +11,6 @@ class EditorUI : public Sprocket::Layer
 
     Sprocket::DevUI d_ui;
 
-    Sprocket::ModelManager* d_modelManager;
-
 public:
     EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer);
 

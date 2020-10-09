@@ -9,14 +9,14 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     : d_core(core)
     , d_mode(Mode::PLAYER)
     , d_scene(std::make_shared<Sprocket::Scene>())
-    , d_entityRenderer(core.modelManager, core.materialManager)
+    , d_entityRenderer(core.assetManager)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_gameGrid(std::make_shared<Sprocket::GameGrid>(core.window))
     , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(core.window->AspectRatio()))
     , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>())
     , d_pathFollower(std::make_shared<Sprocket::PathFollower>())
     , d_selector(std::make_shared<Sprocket::BasicSelector>())
-    , d_shadowMap(core.window, core.modelManager)
+    , d_shadowMap(core.window, core.assetManager)
     , d_hoveredEntityUI(core.window)
 {
     using namespace Sprocket;
@@ -103,8 +103,8 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                 d_mouse.GetMousePos(),
                 d_core.window->Width(),
                 d_core.window->Height(),
-                CameraUtils::MakeView(d_camera),
-                CameraUtils::MakeProj(d_camera)
+                MakeView(d_camera),
+                MakeProj(d_camera)
             );
 
             float lambda = -cameraPos.y / direction.y;

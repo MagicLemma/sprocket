@@ -10,9 +10,7 @@ int main()
     Log::Init();
 
     Window window("Game!");
-    ModelManager    modelManager;
-    TextureManager  textureManager;
-    MaterialManager materialManager(&textureManager);
+    AssetManager    assetManager;
 
     App app;
     
@@ -22,9 +20,7 @@ int main()
 
     CoreSystems core;
     core.window = &window;
-    core.modelManager = &modelManager;
-    core.textureManager = &textureManager;
-    core.materialManager = &materialManager;
+    core.assetManager = &assetManager;
 
     auto worldLayer = app.Add<WorldLayer>(core);
     auto editorUi = app.Add<EditorUI>(core, worldLayer.get());

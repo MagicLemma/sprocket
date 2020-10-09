@@ -1,8 +1,8 @@
 #include "EntityRenderer.h"
 #include "Maths.h"
-#include "ModelManager.h"
+#include "AssetManager.h"
 #include "RenderContext.h"
-#include "CameraUtils.h"
+#include "Camera.h"
 #include "Components.h"
 #include "Scene.h"
 #include "ShadowMap.h"
@@ -25,11 +25,9 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 
 }
 
-EntityRenderer::EntityRenderer(ModelManager* modelManager,
-                               MaterialManager* materialManager)
+EntityRenderer::EntityRenderer(AssetManager* assetManager)
     : d_vao(std::make_unique<VertexArray>())
-    , d_modelManager(modelManager)
-    , d_materialManager(materialManager)
+    , d_assetManager(assetManager)
     , d_particleManager(nullptr)
     //, d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
     , d_shader("Resources/Shaders/Entity_PBR.vert", "Resources/Shaders/Entity_PBR.frag")
@@ -95,7 +93,7 @@ void EntityRenderer::Draw(
 
     d_shader.Bind();
 
-    std::string currentModel = "INVALID";
+    std::string currentMesh = "INVALID";
     std::string currentMaterial = "INVALID";
     // These are set initially to INVALID as that is not a valid file path.
     // They cannot be set to "" as this returns the "default" materials,
@@ -106,44 +104,55 @@ void EntityRenderer::Draw(
     // which remains bound. We should fix this properly, as this "fix" causes
     // an extra pointless draw call at the beginning of each frame.
 
+    bool first = true;
+    // TODO: Try and remove this flag.
+    // On the very first entity, we set both the currentModel and the
+    // currentMaterial, so it would issue a draw call. This would lead to a
+    // seg fault as no mesh or material would be set. This is a latent bug;
+    // it was being masked by a previous model still being loaded, and was
+    // revealed when moving skybox loading code.
+    
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { return; }
 
-        bool changedModel = mc.mesh != currentModel;
+        bool changedMesh = mc.mesh != currentMesh;
         bool changedMaterial = mc.material != currentMaterial;
 
-        if (changedModel || changedMaterial) {
-            d_instanceBuffer->SetData(d_instanceData);
-            d_vao->SetInstances(d_instanceBuffer);
-            d_vao->Draw();
-            d_instanceData.clear();
+        if (changedMesh || changedMaterial) {
+            if (!first) {
+                d_instanceBuffer->SetData(d_instanceData);
+                d_vao->SetInstances(d_instanceBuffer);
+                d_vao->Draw();
+                d_instanceData.clear();
+            }
+            first = false;
         }
 
-        if (changedModel) {
-            d_vao->SetModel(d_modelManager->GetModel(mc.mesh));
-            currentModel = mc.mesh;
+        if (changedMesh) {
+            d_vao->SetModel(d_assetManager->GetMesh(mc.mesh));
+            currentMesh = mc.mesh;
         }
 
         if (changedMaterial) {
-            auto material = d_materialManager->GetMaterial(mc.material);
+            auto material = d_assetManager->GetMaterial(mc.material);
             // TODO: Apply everything
 
             glActiveTexture(GL_TEXTURE0);
-            material->albedoMap.Bind();
+            d_assetManager->GetTexture(material->albedoMap)->Bind();
             d_shader.LoadSampler("texture_sampler", 0);
 
             glActiveTexture(GL_TEXTURE1);
-            material->normalMap.Bind();
+            d_assetManager->GetTexture(material->normalMap)->Bind();
             d_shader.LoadSampler("u_normal_map", 1);
             
             glActiveTexture(GL_TEXTURE2);
-            material->metallicMap.Bind();
+            d_assetManager->GetTexture(material->metallicMap)->Bind();
             d_shader.LoadSampler("u_metallic_map", 2);
 
             glActiveTexture(GL_TEXTURE3);
-            material->roughnessMap.Bind();
+            d_assetManager->GetTexture(material->roughnessMap)->Bind();
             d_shader.LoadSampler("u_roughness_map", 3);
 
             glActiveTexture(GL_TEXTURE0);
@@ -169,7 +178,8 @@ void EntityRenderer::Draw(
     d_instanceData.clear();
 
     if (d_particleManager != nullptr) {
-        d_vao->SetModel(d_particleManager->GetModel());
+        // TODO: Un-hardcode this, do when cleaning up the rendering.
+        d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Particle.obj"));
         d_vao->SetInstances(d_particleManager->GetInstances());
         d_vao->Draw();
     }
@@ -179,8 +189,8 @@ void EntityRenderer::Draw(
 
 void EntityRenderer::Draw(const Entity& camera, Scene& scene)
 {
-    Maths::mat4 proj = CameraUtils::MakeProj(camera);
-    Maths::mat4 view = CameraUtils::MakeView(camera);
+    Maths::mat4 proj = MakeProj(camera);
+    Maths::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 

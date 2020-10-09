@@ -1,9 +1,8 @@
-#include "CameraUtils.h"
+#include "Camera.h"
 #include "Log.h"
 #include "Components.h"
 
 namespace Sprocket {
-namespace CameraUtils {
 
 Maths::mat4 MakeView(const Entity& entity)
 {
@@ -31,5 +30,4 @@ Maths::mat4 MakeProj(const Entity& entity)
     return entity.Get<CameraComponent>().projection;
 }
 
-}
 }

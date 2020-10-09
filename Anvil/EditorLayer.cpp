@@ -27,17 +27,15 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
 
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : d_core(core)
-    , d_entityRenderer(core.modelManager, core.materialManager)
+    , d_entityRenderer(core.assetManager)
+    , d_skyboxRenderer(core.assetManager)
     , d_skybox({
-        ModelManager::LoadModel("Resources/Models/Skybox.obj"),
-        CubeMap({
-            "Resources/Textures/Skybox/Skybox_X_Pos.png",
-            "Resources/Textures/Skybox/Skybox_X_Neg.png",
-            "Resources/Textures/Skybox/Skybox_Y_Pos.png",
-            "Resources/Textures/Skybox/Skybox_Y_Neg.png",
-            "Resources/Textures/Skybox/Skybox_Z_Pos.png",
-            "Resources/Textures/Skybox/Skybox_Z_Neg.png"
-        })
+        "Resources/Textures/Skybox/Skybox_X_Pos.png",
+        "Resources/Textures/Skybox/Skybox_X_Neg.png",
+        "Resources/Textures/Skybox/Skybox_Y_Pos.png",
+        "Resources/Textures/Skybox/Skybox_Y_Neg.png",
+        "Resources/Textures/Skybox/Skybox_Z_Pos.png",
+        "Resources/Textures/Skybox/Skybox_Z_Neg.png"
     })
     , d_editorCamera(core.window, {0.0, 0.0, 0.0})
     , d_viewport(1280, 720)
@@ -275,7 +273,7 @@ void EditorLayer::OnUpdate(double dt)
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : *d_core.materialManager) {
+                for (auto& [file, material] : d_core.assetManager->Materials()) {
                     ImGui::PushID(std::hash<std::string>{}(material->file));
                     if (ImGui::CollapsingHeader(material->name.c_str())) {
                         ImGui::Text(file.c_str());
@@ -324,7 +322,7 @@ void EditorLayer::OnUpdate(double dt)
                         ImGui::Separator();
 
                         if (ImGui::Button("Save")) {
-                            d_core.materialManager->SaveMaterial(material);
+                            material->Save();
                         }
                     }
                     ImGui::PopID();
@@ -341,18 +339,13 @@ void EditorLayer::OnUpdate(double dt)
     d_ui.EndFrame();    
 }
 
-void EditorLayer::MaterialUI(Texture& texture)
+void EditorLayer::MaterialUI(std::string& texture)
 {
-    std::string f = texture.IsFromFile() ? texture.Filepath() : "";
     if (ImGui::Button("X")) {
-        texture = Texture::White();
-        f = "";
+        texture = "";
     }
     ImGui::SameLine();
-    ImGuiXtra::File("File", d_core.window, &f, "*.png");
-    if (f != "") {
-        texture = d_core.textureManager->GetTexture(f);
-    }
+    ImGuiXtra::File("File", d_core.window, &texture, "*.png");
 }
 
 }

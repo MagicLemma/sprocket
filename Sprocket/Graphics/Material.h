@@ -1,5 +1,4 @@
 #pragma once
-#include "Texture.h"
 #include "Maths.h"
 
 #include <string>
@@ -9,13 +8,16 @@ namespace Sprocket {
 
 struct Material
 {
+    static std::shared_ptr<Material> FromFile(const std::string& file);
+    void Save() const;
+
     std::string name;
     std::string file;
 
-    Texture albedoMap;
-    Texture normalMap;
-    Texture metallicMap;
-    Texture roughnessMap;
+    std::string albedoMap;
+    std::string normalMap;
+    std::string metallicMap;
+    std::string roughnessMap;
 
     bool useAlbedoMap = false;
     bool useNormalMap = false;

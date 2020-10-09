@@ -50,7 +50,7 @@ public:
 
     float TextWidth(const std::string& text, float size);
 
-    Texture GetAtlas() const { return d_atlas.GetAtlas(); }
+    std::shared_ptr<Texture> GetAtlas() const { return d_atlas.GetAtlas(); }
 };
 
 }

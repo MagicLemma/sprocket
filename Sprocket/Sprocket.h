@@ -4,11 +4,9 @@
 
 // CORE
 #include "Core/App.h"
+#include "Core/AssetManager.h"
 #include "Core/CoreSystems.h"
 #include "Core/Window.h"
-#include "Core/MaterialManager.h"
-#include "Core/ModelManager.h"
-#include "Core/TextureManager.h"
 #include "Core/Layer.h"
 
 // UI
@@ -24,6 +22,7 @@
 
 // SCENE
 #include "Scene/Entity.h"
+#include "Scene/Camera.h"
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 #include "Scene/Loader.h"
@@ -83,7 +82,6 @@
 #include "Graphics/PostProcessing/GaussianBlur.h"
 #include "Graphics/PostProcessing/Negative.h"
 
-
 #include "Graphics/Rendering/ColliderRenderer.h"
 #include "Graphics/Rendering/EntityRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
@@ -92,11 +90,6 @@
 #include "Audio/Listener.h"
 #include "Audio/Music.h"
 #include "Audio/Sound.h"
-
-// OBJECTS
-#include "Objects/CameraUtils.h"
-#include "Objects/Terrain.h"
-#include "Objects/Skybox.h"
 
 // SCRIPTING
 #include "Scripting/LuaEngine.h"

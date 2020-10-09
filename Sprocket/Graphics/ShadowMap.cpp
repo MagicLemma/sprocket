@@ -20,9 +20,9 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 
 }
 
-ShadowMap::ShadowMap(Window* window, ModelManager* modelManager)
+ShadowMap::ShadowMap(Window* window, AssetManager* assetManager)
     : d_window(window)
-    , d_modelManager(modelManager)
+    , d_assetManager(assetManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.
     , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
@@ -64,7 +64,7 @@ void ShadowMap::Draw(
             d_vao->Draw();
             d_instanceData.clear();
 
-            d_vao->SetModel(d_modelManager->GetModel(mc.mesh));
+            d_vao->SetModel(d_assetManager->GetMesh(mc.mesh));
             currentModel = mc.mesh;
         }
 
