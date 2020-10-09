@@ -26,9 +26,11 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 }
 
 EntityRenderer::EntityRenderer(ModelManager* modelManager,
+                               TextureManager* textureManager,
                                MaterialManager* materialManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_modelManager(modelManager)
+    , d_textureManager(textureManager)
     , d_materialManager(materialManager)
     , d_particleManager(nullptr)
     //, d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
@@ -142,19 +144,19 @@ void EntityRenderer::Draw(
             // TODO: Apply everything
 
             glActiveTexture(GL_TEXTURE0);
-            material->albedoMap->Bind();
+            d_textureManager->GetTexture(material->albedoMap)->Bind();
             d_shader.LoadSampler("texture_sampler", 0);
 
             glActiveTexture(GL_TEXTURE1);
-            material->normalMap->Bind();
+            d_textureManager->GetTexture(material->normalMap)->Bind();
             d_shader.LoadSampler("u_normal_map", 1);
             
             glActiveTexture(GL_TEXTURE2);
-            material->metallicMap->Bind();
+            d_textureManager->GetTexture(material->metallicMap)->Bind();
             d_shader.LoadSampler("u_metallic_map", 2);
 
             glActiveTexture(GL_TEXTURE3);
-            material->roughnessMap->Bind();
+            d_textureManager->GetTexture(material->roughnessMap)->Bind();
             d_shader.LoadSampler("u_roughness_map", 3);
 
             glActiveTexture(GL_TEXTURE0);

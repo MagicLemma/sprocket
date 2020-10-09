@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "ModelManager.h"
+#include "TextureManager.h"
 #include "MaterialManager.h"
 #include "Components.h"
 #include "VertexArray.h"
@@ -15,6 +16,7 @@ class EntityRenderer
 {
     ModelManager*    d_modelManager;
     MaterialManager* d_materialManager;
+    TextureManager*  d_textureManager;
     ParticleManager* d_particleManager;
 
     Shader  d_shader;
@@ -27,6 +29,7 @@ class EntityRenderer
 public:
     EntityRenderer(
         ModelManager* modelManager,
+        TextureManager* textureManager,
         MaterialManager* materialManager
     );
 

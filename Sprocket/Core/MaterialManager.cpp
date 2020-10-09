@@ -41,16 +41,16 @@ std::shared_ptr<Material> MaterialManager::GetMaterial(const std::string& file)
     }
 
     if (auto albedoMap = data["AlbedoMap"]) {
-        material->albedoMap = d_textureManager->GetTexture(albedoMap.as<std::string>());
+        material->albedoMap = albedoMap.as<std::string>();
     }
     if (auto normalMap = data["NormalMap"]) {
-        material->normalMap = d_textureManager->GetTexture(normalMap.as<std::string>());
+        material->normalMap = normalMap.as<std::string>();
     }
     if (auto metallicMap = data["MetallicMap"]) {
-        material->metallicMap = d_textureManager->GetTexture(metallicMap.as<std::string>());
+        material->metallicMap = metallicMap.as<std::string>();
     }
     if (auto roughnessMap = data["RoughnessMap"]) {
-        material->roughnessMap = d_textureManager->GetTexture(roughnessMap.as<std::string>());
+        material->roughnessMap = roughnessMap.as<std::string>();
     }
 
     if (auto useAlbedoMap = data["UseAlbedoMap"]) {
@@ -89,10 +89,10 @@ void MaterialManager::SaveMaterial(std::shared_ptr<Material> material)
 
     out << K << "Name" << V << material->name;
 
-    out << K << "AlbedoMap" << V << material->albedoMap->Filepath()
-        << K << "NormalMap" << V << material->normalMap->Filepath()
-        << K << "MetallicMap" << V << material->metallicMap->Filepath()
-        << K << "RoughnessMap" << V << material->roughnessMap->Filepath();
+    out << K << "AlbedoMap" << V << material->albedoMap
+        << K << "NormalMap" << V << material->normalMap
+        << K << "MetallicMap" << V << material->metallicMap
+        << K << "RoughnessMap" << V << material->roughnessMap;
 
     out << K << "UseAlbedoMap" << V << material->useAlbedoMap
         << K << "UseNormalMap" << V << material->useNormalMap

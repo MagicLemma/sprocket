@@ -27,7 +27,7 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
 
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : d_core(core)
-    , d_entityRenderer(core.modelManager, core.materialManager)
+    , d_entityRenderer(core.modelManager, core.textureManager, core.materialManager)
     , d_skyboxRenderer(core.modelManager)
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
@@ -339,18 +339,13 @@ void EditorLayer::OnUpdate(double dt)
     d_ui.EndFrame();    
 }
 
-void EditorLayer::MaterialUI(std::shared_ptr<Texture>& texture)
+void EditorLayer::MaterialUI(std::string& texture)
 {
-    std::string f = texture->Filepath();
     if (ImGui::Button("X")) {
-        texture = d_core.textureManager->GetTexture("");
-        f = "";
+        texture = "";
     }
     ImGui::SameLine();
-    ImGuiXtra::File("File", d_core.window, &f, "*.png");
-    if (f != "") {
-        texture = d_core.textureManager->GetTexture(f);
-    }
+    ImGuiXtra::File("File", d_core.window, &texture, "*.png");
 }
 
 }
