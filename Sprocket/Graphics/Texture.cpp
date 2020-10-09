@@ -64,6 +64,9 @@ Texture::Texture(int width, int height, unsigned char* data)
     , d_height(height)
     , d_file("")
 {
+    assert(width > 0);
+    assert(height > 0);
+
     glBindTexture(GL_TEXTURE_2D, d_texture->Value());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -118,6 +121,15 @@ Texture::Texture()
     , d_height(Texture::White().d_height)
     , d_file("")
 {
+}
+
+std::shared_ptr<Texture> Texture::FromFile(const std::string file)
+{
+    SPKT_LOG_INFO("Loading texture '{}'", file);
+    int width, height, bpp;
+    stbi_set_flip_vertically_on_load(false);
+    unsigned char* data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
+    return std::make_shared<Texture>(width, height, data);
 }
 
 void Texture::Bind() const

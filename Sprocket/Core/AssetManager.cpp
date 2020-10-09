@@ -34,7 +34,7 @@ std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)
         return it->second;
     }
 
-    auto texture = std::make_shared<Texture>(filepath);
+    auto texture = Texture::FromFile(filepath);
     d_textures.emplace(filepath, texture);
     return texture;
 }

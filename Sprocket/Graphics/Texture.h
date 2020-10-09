@@ -34,6 +34,8 @@ public:
     Texture(int width, int height, Channels channels);
     Texture();
 
+    static std::shared_ptr<Texture> FromFile(const std::string file);
+
     void Bind() const;
     void Unbind() const;
 
