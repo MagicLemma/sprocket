@@ -17,14 +17,14 @@ public:
     >;
 
 private:
-    TextureManager* d_textureManager;
-    Map             d_loadedMaterials;
+    TextureManager*           d_textureManager;
+    Map                       d_loadedMaterials;
+    std::shared_ptr<Material> d_default;
 
 public:
     MaterialManager(TextureManager* textureManager);
 
     std::shared_ptr<Material> GetMaterial(const std::string& file);
-    void SaveMaterial(std::shared_ptr<Material> material);
 
     // Lower camel case to match STL iterators
     Map::iterator begin();

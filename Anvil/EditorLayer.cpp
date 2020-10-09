@@ -322,7 +322,7 @@ void EditorLayer::OnUpdate(double dt)
                         ImGui::Separator();
 
                         if (ImGui::Button("Save")) {
-                            d_core.materialManager->SaveMaterial(material);
+                            material->Save();
                         }
                     }
                     ImGui::PopID();
