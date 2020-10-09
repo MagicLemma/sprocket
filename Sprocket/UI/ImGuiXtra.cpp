@@ -54,7 +54,7 @@ void Text(const std::string& text)
     ImGui::Text(text.c_str());
 }
 
-void Image(const Texture& image,
+void Image(std::uint32_t image,
            const Maths::vec2& size,
            const Maths::vec2& uv0,
            const Maths::vec2& uv1,
@@ -62,7 +62,7 @@ void Image(const Texture& image,
            const Maths::vec4& borderCol)
 {
     ImGui::Image(
-        (ImTextureID)(intptr_t)image.Id(),
+        (ImTextureID)(intptr_t)image,
         {size.x, size.y},
         {uv0.x, uv0.y},
         {uv1.x, uv1.y},
@@ -71,9 +71,9 @@ void Image(const Texture& image,
     );
 }
 
-void Image(const Texture& image, float size)
+void Image(std::uint32_t image, float size)
 {
-    Image(image, {image.AspectRatio() * size, size});
+    Image(image, {4.0f/3.0f * size, size});
 }
 
 void SetGuizmo()

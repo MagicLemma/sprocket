@@ -6,20 +6,20 @@ namespace Sprocket {
 
 FrameBuffer::FrameBuffer(int width, int height)
     : d_fbo(std::make_shared<FBO>())
-    , d_texture(std::make_shared<TEX>())
     , d_depthBuffer(std::make_shared<RBO>())
     , d_width(width)
     , d_height(height)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glGenTextures(1, &d_texture);
+    glBindTexture(GL_TEXTURE_2D, d_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
                  GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d_texture->Value(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d_texture, 0);
 
     // Add depth buffer.
     glBindRenderbuffer(GL_RENDERBUFFER, d_depthBuffer->Value());
@@ -48,7 +48,7 @@ void FrameBuffer::Unbind() const
 
 void FrameBuffer::BindTexture() const
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glBindTexture(GL_TEXTURE_2D, d_texture);
 }
 
 void FrameBuffer::UnbindTexture() const
@@ -61,7 +61,7 @@ void FrameBuffer::SetScreenSize(int width, int height)
     d_width = width;
     d_height = height;
 
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glBindTexture(GL_TEXTURE_2D, d_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glBindTexture(GL_TEXTURE_2D, 0);
 
