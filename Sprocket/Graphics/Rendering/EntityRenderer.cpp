@@ -25,13 +25,9 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 
 }
 
-EntityRenderer::EntityRenderer(AssetManager* assetManager,
-                               TextureManager* textureManager,
-                               MaterialManager* materialManager)
+EntityRenderer::EntityRenderer(AssetManager* assetManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_assetManager(assetManager)
-    , d_textureManager(textureManager)
-    , d_materialManager(materialManager)
     , d_particleManager(nullptr)
     //, d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
     , d_shader("Resources/Shaders/Entity_PBR.vert", "Resources/Shaders/Entity_PBR.frag")
@@ -140,23 +136,23 @@ void EntityRenderer::Draw(
         }
 
         if (changedMaterial) {
-            auto material = d_materialManager->GetMaterial(mc.material);
+            auto material = d_assetManager->GetMaterial(mc.material);
             // TODO: Apply everything
 
             glActiveTexture(GL_TEXTURE0);
-            d_textureManager->GetTexture(material->albedoMap)->Bind();
+            d_assetManager->GetTexture(material->albedoMap)->Bind();
             d_shader.LoadSampler("texture_sampler", 0);
 
             glActiveTexture(GL_TEXTURE1);
-            d_textureManager->GetTexture(material->normalMap)->Bind();
+            d_assetManager->GetTexture(material->normalMap)->Bind();
             d_shader.LoadSampler("u_normal_map", 1);
             
             glActiveTexture(GL_TEXTURE2);
-            d_textureManager->GetTexture(material->metallicMap)->Bind();
+            d_assetManager->GetTexture(material->metallicMap)->Bind();
             d_shader.LoadSampler("u_metallic_map", 2);
 
             glActiveTexture(GL_TEXTURE3);
-            d_textureManager->GetTexture(material->roughnessMap)->Bind();
+            d_assetManager->GetTexture(material->roughnessMap)->Bind();
             d_shader.LoadSampler("u_roughness_map", 3);
 
             glActiveTexture(GL_TEXTURE0);

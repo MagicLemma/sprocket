@@ -28,8 +28,6 @@ add_library(Sprocket STATIC
             Core/App.cpp
             Core/AssetManager.cpp
             Core/Window.cpp
-            Core/MaterialManager.cpp
-            Core/TextureManager.cpp
 
             Audio/Listener.cpp
             Audio/Music.cpp

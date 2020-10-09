@@ -8,8 +8,6 @@ int main()
 
     Window window("Workshop");
     AssetManager    assetManager;
-    TextureManager  textureManager;
-    MaterialManager materialManager(&textureManager);
 
     App app;
 
@@ -21,8 +19,6 @@ int main()
     CoreSystems core;
     core.window = &window;
     core.assetManager = &assetManager;
-    core.textureManager = &textureManager;
-    core.materialManager = &materialManager;
 
     app.Add<EditorLayer>(core);
 

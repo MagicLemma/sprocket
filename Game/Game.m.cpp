@@ -11,8 +11,6 @@ int main()
 
     Window window("Game!");
     AssetManager    assetManager;
-    TextureManager  textureManager;
-    MaterialManager materialManager(&textureManager);
 
     App app;
     
@@ -23,8 +21,6 @@ int main()
     CoreSystems core;
     core.window = &window;
     core.assetManager = &assetManager;
-    core.textureManager = &textureManager;
-    core.materialManager = &materialManager;
 
     auto worldLayer = app.Add<WorldLayer>(core);
     auto editorUi = app.Add<EditorUI>(core, worldLayer.get());

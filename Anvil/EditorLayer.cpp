@@ -27,7 +27,7 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
 
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : d_core(core)
-    , d_entityRenderer(core.assetManager, core.textureManager, core.materialManager)
+    , d_entityRenderer(core.assetManager)
     , d_skyboxRenderer(core.assetManager)
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
@@ -273,7 +273,7 @@ void EditorLayer::OnUpdate(double dt)
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : *d_core.materialManager) {
+                for (auto& [file, material] : d_core.assetManager->Materials()) {
                     ImGui::PushID(std::hash<std::string>{}(material->file));
                     if (ImGui::CollapsingHeader(material->name.c_str())) {
                         ImGui::Text(file.c_str());

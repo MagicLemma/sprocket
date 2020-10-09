@@ -7,8 +7,6 @@
 #include "Core/AssetManager.h"
 #include "Core/CoreSystems.h"
 #include "Core/Window.h"
-#include "Core/MaterialManager.h"
-#include "Core/TextureManager.h"
 #include "Core/Layer.h"
 
 // UI

@@ -5,7 +5,6 @@
 #include "Entity.h"
 #include "DepthBuffer.h"
 #include "AssetManager.h"
-#include "TextureManager.h"
 #include "Scene.h"
 #include "VertexArray.h"
 
@@ -17,7 +16,6 @@ class ShadowMap
 {
     Window*         d_window;
     AssetManager*   d_assetManager;
-    TextureManager* d_textureManager;
 
     Shader  d_shader;
 
