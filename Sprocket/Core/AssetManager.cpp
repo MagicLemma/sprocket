@@ -41,7 +41,6 @@ std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)
 
 std::shared_ptr<Material> AssetManager::GetMaterial(const std::string& file)
 {
-#if 0
     if (file == "") { return d_defaultMaterial; }
     std::string filepath = std::filesystem::absolute(file).string();
 
@@ -49,11 +48,9 @@ std::shared_ptr<Material> AssetManager::GetMaterial(const std::string& file)
         return it->second;
     }
 
-    auto material = std::make_shared<Material>(filepath);
+    auto material = Material::FromFile(filepath);
     d_materials.emplace(filepath, material);
     return material;
-#endif
-    return nullptr;
 }
 
 }
