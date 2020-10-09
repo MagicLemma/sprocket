@@ -20,7 +20,7 @@ std::shared_ptr<Texture> TextureManager::GetTexture(const std::string& path)
     if (it != d_loadedTextures.end()) {
         return it->second;
     }
-    auto texture = std::make_shared<Texture>(path);
+    auto texture = Texture::FromFile(path);
     d_loadedTextures.emplace(path, texture);
     return texture;   
 }
