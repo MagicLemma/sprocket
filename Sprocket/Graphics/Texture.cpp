@@ -79,7 +79,6 @@ std::shared_ptr<Texture> Texture::FromFile(const std::string file)
 {
     SPKT_LOG_INFO("Loading texture '{}'", file);
     int width, height, bpp;
-    stbi_set_flip_vertically_on_load(false);
     unsigned char* data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
     return std::make_shared<Texture>(width, height, data);
 }
