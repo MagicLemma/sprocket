@@ -9,18 +9,6 @@
 
 namespace Sprocket {
 
-template <typename T>
-class AssetIterator
-{
-    T* d_map;
-public:
-    AssetIterator(T* map) : d_map(map) {}
-    auto begin() { return d_map->begin(); }
-    auto end() { return d_map->end(); }
-    auto cbegin() { return d_map->cbegin(); }
-    auto cend() { return d_map->cend(); }
-};
-
 class AssetManager
 {
     // Primitives
@@ -36,15 +24,28 @@ class AssetManager
     std::shared_ptr<Material> d_defaultMaterial;
 
 public:
+    template <typename T>
+    class Iterator
+    {
+        T* d_map;
+    public:
+        Iterator(T* map) : d_map(map) {}
+        auto begin() { return d_map->begin(); }
+        auto end() { return d_map->end(); }
+        auto cbegin() { return d_map->cbegin(); }
+        auto cend() { return d_map->cend(); }
+    };
+
+public:
     AssetManager();
 
     std::shared_ptr<Mesh> GetMesh(const std::string& file);
     std::shared_ptr<Texture> GetTexture(const std::string& file);
     std::shared_ptr<Material> GetMaterial(const std::string& file);
 
-    auto Meshes()    { return AssetIterator(&d_meshes); }
-    auto Textures()  { return AssetIterator(&d_textures); }
-    auto Materials() { return AssetIterator(&d_materials); }
+    auto Meshes()    { return Iterator(&d_meshes); }
+    auto Textures()  { return Iterator(&d_textures); }
+    auto Materials() { return Iterator(&d_materials); }
 };
 
 }
