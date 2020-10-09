@@ -8,7 +8,6 @@ int main()
 
     Window window("Workshop");
     AssetManager    assetManager;
-    ModelManager    modelManager;
     TextureManager  textureManager;
     MaterialManager materialManager(&textureManager);
 
@@ -22,7 +21,6 @@ int main()
     CoreSystems core;
     core.window = &window;
     core.assetManager = &assetManager;
-    core.modelManager = &modelManager;
     core.textureManager = &textureManager;
     core.materialManager = &materialManager;
 

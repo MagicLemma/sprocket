@@ -4,7 +4,7 @@
 
 #include "Entity.h"
 #include "DepthBuffer.h"
-#include "ModelManager.h"
+#include "AssetManager.h"
 #include "TextureManager.h"
 #include "Scene.h"
 #include "VertexArray.h"
@@ -16,7 +16,7 @@ namespace Sprocket {
 class ShadowMap
 {
     Window*         d_window;
-    ModelManager*   d_modelManager;
+    AssetManager*   d_assetManager;
     TextureManager* d_textureManager;
 
     Shader  d_shader;
@@ -32,7 +32,7 @@ class ShadowMap
     std::vector<InstanceData> d_instanceData;
 
 public:
-    ShadowMap(Window* window, ModelManager* modelManager);
+    ShadowMap(Window* window, AssetManager* assetManager);
 
     void Draw(const Sun& sun, const Maths::vec3& centre, Scene& scene);
 

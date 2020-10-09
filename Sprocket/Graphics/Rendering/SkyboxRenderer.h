@@ -1,6 +1,6 @@
 #pragma once
 #include "CubeMap.h"
-#include "ModelManager.h"
+#include "AssetManager.h"
 #include "Entity.h"
 #include "Shader.h"
 #include "VertexArray.h"
@@ -11,7 +11,7 @@ namespace Sprocket {
 
 class SkyboxRenderer
 {
-    ModelManager* d_modelManager;
+    AssetManager* d_assetManager;
 
     Shader d_shader;
         // Shader used to draw entities.
@@ -19,7 +19,7 @@ class SkyboxRenderer
     std::unique_ptr<VertexArray> d_vao;
 
 public:
-    SkyboxRenderer(ModelManager* modelManager);
+    SkyboxRenderer(AssetManager* assetManager);
 
     void Draw(const CubeMap& skybox, const Entity& camera);
     void Draw(const CubeMap& skybox, const Maths::mat4& proj, const Maths::mat4& view);

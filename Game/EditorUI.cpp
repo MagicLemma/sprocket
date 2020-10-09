@@ -153,7 +153,6 @@ EditorUI::EditorUI(const CoreSystems& core, WorldLayer* worldLayer)
     : d_core(core)
     , d_worldLayer(worldLayer)
     , d_ui(core.window)
-    , d_modelManager(core.modelManager)
 {  
 }
 

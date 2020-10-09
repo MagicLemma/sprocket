@@ -1,6 +1,6 @@
 #include "EntityRenderer.h"
 #include "Maths.h"
-#include "ModelManager.h"
+#include "AssetManager.h"
 #include "RenderContext.h"
 #include "Camera.h"
 #include "Components.h"
@@ -25,11 +25,11 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 
 }
 
-EntityRenderer::EntityRenderer(ModelManager* modelManager,
+EntityRenderer::EntityRenderer(AssetManager* assetManager,
                                TextureManager* textureManager,
                                MaterialManager* materialManager)
     : d_vao(std::make_unique<VertexArray>())
-    , d_modelManager(modelManager)
+    , d_assetManager(assetManager)
     , d_textureManager(textureManager)
     , d_materialManager(materialManager)
     , d_particleManager(nullptr)
@@ -135,7 +135,7 @@ void EntityRenderer::Draw(
         }
 
         if (changedMesh) {
-            d_vao->SetModel(d_modelManager->GetModel(mc.mesh));
+            d_vao->SetModel(d_assetManager->GetMesh(mc.mesh));
             currentMesh = mc.mesh;
         }
 
@@ -183,7 +183,7 @@ void EntityRenderer::Draw(
 
     if (d_particleManager != nullptr) {
         // TODO: Un-hardcode this, do when cleaning up the rendering.
-        d_vao->SetModel(d_modelManager->GetModel("Resources/Models/Particle.obj"));
+        d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Particle.obj"));
         d_vao->SetInstances(d_particleManager->GetInstances());
         d_vao->Draw();
     }

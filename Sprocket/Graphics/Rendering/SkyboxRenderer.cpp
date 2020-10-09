@@ -3,8 +3,8 @@
 
 namespace Sprocket {
     
-SkyboxRenderer::SkyboxRenderer(ModelManager* modelManager)
-    : d_modelManager(modelManager)
+SkyboxRenderer::SkyboxRenderer(AssetManager* assetManager)
+    : d_assetManager(assetManager)
     , d_shader("Resources/Shaders/Skybox.vert",
                "Resources/Shaders/Skybox.frag")
     , d_vao(std::make_unique<VertexArray>())
@@ -20,7 +20,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_shader.LoadMat4("viewMatrix", view);
 
     skybox.Bind();
-    d_vao->SetModel(d_modelManager->GetModel("Resources/Models/Skybox.obj"));
+    d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Skybox.obj"));
     d_vao->Draw();
 }
 

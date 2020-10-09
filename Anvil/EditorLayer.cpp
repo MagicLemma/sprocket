@@ -27,8 +27,8 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
 
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : d_core(core)
-    , d_entityRenderer(core.modelManager, core.textureManager, core.materialManager)
-    , d_skyboxRenderer(core.modelManager)
+    , d_entityRenderer(core.assetManager, core.textureManager, core.materialManager)
+    , d_skyboxRenderer(core.assetManager)
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
         "Resources/Textures/Skybox/Skybox_X_Neg.png",
