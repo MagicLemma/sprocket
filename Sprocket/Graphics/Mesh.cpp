@@ -78,16 +78,18 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 }
 
 Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
-    : d_vertexBuffer(std::make_shared<VBO>())
-    , d_indexBuffer(std::make_shared<VBO>())
+    : d_vertexBuffer(0)
+    , d_indexBuffer(0)
     , d_vertexCount(indices.size())
     , d_layout(sizeof(Vertex), 0)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glGenBuffers(1, &d_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
+    glGenBuffers(1, &d_indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -100,7 +102,10 @@ Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
 }
 
 Mesh::Mesh()
-    : d_layout(sizeof(Vertex), 0)
+    : d_vertexBuffer(0)
+    , d_indexBuffer(0)
+    , d_vertexCount(0)
+    , d_layout(sizeof(Vertex), 0)
 {
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -108,6 +113,16 @@ Mesh::Mesh()
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 3);
     assert(d_layout.Validate());
+}
+
+Mesh::~Mesh()
+{
+    if (d_vertexBuffer != 0) {
+        glDeleteBuffers(1, &d_vertexBuffer);
+    }
+    if (d_indexBuffer != 0) {
+        glDeleteBuffers(1, &d_indexBuffer);
+    }
 }
 
 std::shared_ptr<Mesh> Mesh::FromFile(const std::string& file)
@@ -125,8 +140,8 @@ std::shared_ptr<Mesh> Mesh::FromFile(const std::string& file)
 
 void Mesh::Bind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer);
     d_layout.SetAttributes();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -134,8 +149,8 @@ void Mesh::Bind() const
 bool Mesh::operator==(const Mesh& other) const
 {
     // Two models are the same if they point to the same VAO.
-    return d_vertexBuffer->Value() == other.d_vertexBuffer->Value() &&
-           d_indexBuffer->Value() == other.d_indexBuffer->Value();
+    return d_vertexBuffer == other.d_vertexBuffer &&
+           d_indexBuffer == other.d_indexBuffer;
 }
 
 BufferLayout Mesh::GetLayout() const

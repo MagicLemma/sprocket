@@ -23,8 +23,8 @@ using IndexBuffer = std::vector<unsigned int>;
 
 class Mesh
 {
-    std::shared_ptr<VBO> d_vertexBuffer;
-    std::shared_ptr<VBO> d_indexBuffer;
+    std::uint32_t d_vertexBuffer;
+    std::uint32_t d_indexBuffer;
 
     BufferLayout d_layout;
     std::size_t d_vertexCount;
@@ -35,6 +35,7 @@ class Mesh
 public:
     Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
     Mesh(); // Empty model
+    ~Mesh();
 
     static std::shared_ptr<Mesh> FromFile(const std::string& file);
 
