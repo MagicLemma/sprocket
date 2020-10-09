@@ -9,6 +9,7 @@ namespace Sprocket {
 struct Material
 {
     static std::shared_ptr<Material> FromFile(const std::string& file);
+    void Save() const;
 
     std::string name;
     std::string file;

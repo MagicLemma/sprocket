@@ -65,4 +65,33 @@ std::shared_ptr<Material> Material::FromFile(const std::string& file)
     return material;
 }
 
+void Material::Save() const
+{
+    assert(std::filesystem::exists(file));
+    YAML::Emitter out;
+    auto K = YAML::Key, V = YAML::Value;
+
+    out << YAML::BeginMap;
+
+    out << K << "Name" << V << name;
+
+    out << K << "AlbedoMap" << V << albedoMap
+        << K << "NormalMap" << V << normalMap
+        << K << "MetallicMap" << V << metallicMap
+        << K << "RoughnessMap" << V << roughnessMap;
+
+    out << K << "UseAlbedoMap" << V << useAlbedoMap
+        << K << "UseNormalMap" << V << useNormalMap
+        << K << "UseMetallicMap" << V << useMetallicMap
+        << K << "UseRoughnessMap" << V << useRoughnessMap;
+
+    out << K << "Albedo" << V << albedo
+        << K << "Metallic" << V << metallic
+        << K << "Roughness" << V << roughness;
+
+    out << YAML::EndMap;
+    std::ofstream fout(file);
+    fout << out.c_str();
+}
+
 }
