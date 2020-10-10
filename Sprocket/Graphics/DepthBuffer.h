@@ -16,6 +16,9 @@ class DepthBuffer
     int d_width;
     int d_height;
 
+    DepthBuffer(const DepthBuffer&) = delete;
+    DepthBuffer& operator=(const DepthBuffer&) = delete;
+
 public:
     DepthBuffer(Window* window, int width, int height);
 
