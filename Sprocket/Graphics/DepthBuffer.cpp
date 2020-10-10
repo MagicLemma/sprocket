@@ -7,7 +7,7 @@ namespace Sprocket {
 DepthBuffer::DepthBuffer(Window* window, int width, int height)
     : d_window(window)
     , d_fbo(std::make_shared<FBO>())
-    , d_depth(std::make_shared<TEX>())
+    , d_depth(std::make_shared<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
 {
@@ -15,17 +15,10 @@ DepthBuffer::DepthBuffer(Window* window, int width, int height)
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
 
-    glBindTexture(GL_TEXTURE_2D, d_depth->Value());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0,
-                 GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glBindTexture(GL_TEXTURE_2D, d_depth->Id());
     float borderColour[] = {1.0f, 1.0f, 1.0f, 1.0f};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColour);
-
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, d_depth->Value(), 0);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, d_depth->Id(), 0);
     
      // Validate the framebuffer.
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {

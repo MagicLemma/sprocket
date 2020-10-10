@@ -11,7 +11,7 @@ namespace Sprocket {
 class Texture
 {
 public:
-    enum class Channels { RGBA, RED };
+    enum class Channels { RGBA, RED, DEPTH };
 
 private:
     std::shared_ptr<TEX> d_texture;
@@ -29,7 +29,7 @@ public:
     Texture(int width, int height, const unsigned char* data);
     Texture(int width, int height, const std::vector<unsigned char>& data);
     Texture(int width, int height, std::shared_ptr<TEX> texture);
-    Texture(int width, int height, Channels channels);
+    Texture(int width, int height, Channels channels = Channels::RGBA);
     Texture();
 
     static std::shared_ptr<Texture> FromFile(const std::string file);

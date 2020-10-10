@@ -61,9 +61,16 @@ Texture::Texture(int width, int height, Channels channels)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     }
 
-    glTexImage2D(GL_TEXTURE_2D,
-                 0, c, width, height,
-                 0, c, GL_UNSIGNED_BYTE, nullptr);
+    if (channels == Channels::DEPTH) {
+        glTexImage2D(GL_TEXTURE_2D,
+                    0, GL_DEPTH_COMPONENT16, width, height,
+                    0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+    }
+    else {
+        glTexImage2D(GL_TEXTURE_2D,
+                    0, c, width, height,
+                    0, c, GL_UNSIGNED_BYTE, nullptr);
+    }
                  
     glBindTexture(GL_TEXTURE_2D, 0);
 }

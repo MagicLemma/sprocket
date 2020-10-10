@@ -6,7 +6,7 @@ namespace Sprocket {
 
 FrameBuffer::FrameBuffer(int width, int height)
     : d_fbo(std::make_shared<FBO>())
-    , d_texture(std::make_shared<Texture>(width, height, nullptr))
+    , d_texture(std::make_shared<Texture>(width, height, Texture::Channels::RGBA))
     , d_depthBuffer(std::make_shared<RBO>())
     , d_width(width)
     , d_height(height)

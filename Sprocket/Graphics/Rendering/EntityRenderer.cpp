@@ -38,7 +38,7 @@ EntityRenderer::EntityRenderer(AssetManager* assetManager)
 void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     glActiveTexture(GL_TEXTURE4);
-    shadowMap.GetShadowMap().Bind();
+    shadowMap.GetShadowMap()->Bind();
  
     d_shader.Bind();
     d_shader.LoadSampler("shadow_map", 4);

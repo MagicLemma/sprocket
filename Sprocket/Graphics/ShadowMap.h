@@ -35,7 +35,7 @@ public:
     void Draw(const Sun& sun, const Maths::vec3& centre, Scene& scene);
 
     Maths::mat4 GetLightProjViewMatrix() const;
-    Texture     GetShadowMap() const;
+    std::shared_ptr<Texture>     GetShadowMap() const;
 };
 
 }
