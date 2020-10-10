@@ -10,23 +10,14 @@ FrameBuffer::FrameBuffer(int width, int height)
     , d_width(width)
     , d_height(height)
 {
-    glGenFramebuffers(1, &d_fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
-
-    glFramebufferTexture2D(
-        GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-        GL_TEXTURE_2D, d_texture->Id(), 0);
-
-    glFramebufferTexture2D(
-        GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-        GL_TEXTURE_2D, d_depth->Id(), 0);
+    glCreateFramebuffers(1, &d_fbo);
+    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_texture->Id(), 0);
+    glNamedFramebufferTexture(d_fbo, GL_DEPTH_ATTACHMENT, d_depth->Id(), 0);
 
     // Validate the framebuffer.
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    if (glCheckNamedFramebufferStatus(d_fbo, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         SPKT_LOG_ERROR("Created FBO is not complete!");
     }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 FrameBuffer::~FrameBuffer()

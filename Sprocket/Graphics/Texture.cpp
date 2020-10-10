@@ -16,19 +16,20 @@ Texture::Texture(int width, int height, const unsigned char* data)
     assert(width > 0);
     assert(height > 0);
 
-    glGenTextures(1, &d_id);
-    glBindTexture(GL_TEXTURE_2D, d_id);
+    glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
+    glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureStorage2D(d_id, 1, GL_RGBA8, width, height);
+    glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-    glTexImage2D(GL_TEXTURE_2D,
-                 0, GL_RGBA, d_width, d_height,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
+    //glTexImage2D(GL_TEXTURE_2D,
+    //             0, GL_RGBA, d_width, d_height,
+    //             0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+//
+    //glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::Texture(int width, int height, Channels channels)
@@ -38,19 +39,17 @@ Texture::Texture(int width, int height, Channels channels)
 {
     auto c = channels == Channels::RGBA ? GL_RGBA : GL_RED;
 
-    glGenTextures(1, &d_id);
-    glBindTexture(GL_TEXTURE_2D, d_id);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
+    glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
     auto a = GL_RGBA;
     auto b = GL_RGBA;
     auto type = GL_UNSIGNED_BYTE;
     
     if (channels == Channels::RED) {
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         a = GL_RED;
         b = GL_RED;
     }
@@ -59,6 +58,10 @@ Texture::Texture(int width, int height, Channels channels)
         b = GL_DEPTH_COMPONENT;
     }
 
+    glBindTexture(GL_TEXTURE_2D, d_id);
+    //glTexStorage2D(GL_TEXTURE_2D, 1, a, width, height);
+    //glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, a, type, nullptr);  
+    //glGenerateMipmap(GL_TEXTURE_2D);
     glTexImage2D(GL_TEXTURE_2D, 0, a, width, height, 0, b, type, nullptr);    
     glBindTexture(GL_TEXTURE_2D, 0);
 }
