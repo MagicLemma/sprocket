@@ -9,7 +9,7 @@ class FrameBuffer
     std::uint32_t d_fbo;
 
     std::shared_ptr<Texture> d_texture;
-    std::shared_ptr<RBO>     d_depthBuffer;
+    std::shared_ptr<Texture> d_depth;
 
     int d_width;
     int d_height;
