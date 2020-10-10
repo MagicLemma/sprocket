@@ -34,25 +34,23 @@ public:
 
     void Bind() const;
     void Unbind() const;
-    
+
     unsigned int Id() const;
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }
     float AspectRatio() const { return (float)d_width / (float)d_height; }
 
+    int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
+    bool operator==(const Texture& other) const;
+
     // Standard texture builders
     static const Texture& White();
 
-    void SetSubTexture(const Maths::ivec4& region,
-                       const unsigned char* data);
-
+    // Mutable Texture Functions
+    void SetSubTexture(const Maths::ivec4& region, const unsigned char* data);
     void Resize(int width, int height);
 
-
-    int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
-
-    bool operator==(const Texture& other) const;
 };
 
 }
