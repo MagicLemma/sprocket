@@ -110,6 +110,8 @@ void UIEngine::StartFrame()
 void UIEngine::EndFrame()
 {
     assert(!d_currentPanel);
+    static unsigned char arr[4] = {0xff, 0xff, 0xff, 0xff};
+    static Texture white(1, 1, arr);
 
     bool foundHovered = false;
     bool foundClicked = false;
@@ -182,7 +184,7 @@ void UIEngine::EndFrame()
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
         d_shader.LoadInt("texture_channels", 1);
-        Texture::White().Bind();
+        white.Bind();
         d_buffer.Draw(panel.quadVertices, panel.quadIndices);
         d_font.Bind();
         d_buffer.Draw(panel.textVertices, panel.textIndices);

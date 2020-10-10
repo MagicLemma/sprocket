@@ -94,20 +94,6 @@ void Texture::Unbind() const
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-const Texture& Texture::White()
-{
-    auto GetData = []() {
-        std::vector<unsigned char> data;
-        data.push_back(0xff);
-        data.push_back(0xff);
-        data.push_back(0xff);
-        data.push_back(0xff);
-        return data;
-    };
-    static const Texture white(1, 1, GetData().data());
-    return white;
-}
-
 unsigned int Texture::Id() const
 {
     return d_id;

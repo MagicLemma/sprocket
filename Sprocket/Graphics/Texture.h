@@ -44,9 +44,6 @@ public:
     int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
     bool operator==(const Texture& other) const;
 
-    // Standard texture builders
-    static const Texture& White();
-
     // Mutable Texture Functions
     void SetSubTexture(const Maths::ivec4& region, const unsigned char* data);
     void Resize(int width, int height);
