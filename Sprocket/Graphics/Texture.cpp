@@ -10,14 +10,14 @@
 namespace Sprocket {
 
 Texture::Texture(int width, int height, const unsigned char* data)
-    : d_texture(std::make_shared<TEX>())
-    , d_width(width)
+    : d_width(width)
     , d_height(height)
 {
     assert(width > 0);
     assert(height > 0);
 
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glGenTextures(1, &d_id);
+    glBindTexture(GL_TEXTURE_2D, d_id);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -32,14 +32,14 @@ Texture::Texture(int width, int height, const unsigned char* data)
 }
 
 Texture::Texture(int width, int height, Channels channels)
-    : d_texture(std::make_shared<TEX>())
-    , d_width(width)
+    : d_width(width)
     , d_height(height)
     , d_channels(channels)
 {
     auto c = channels == Channels::RGBA ? GL_RGBA : GL_RED;
 
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glGenTextures(1, &d_id);
+    glBindTexture(GL_TEXTURE_2D, d_id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -64,10 +64,17 @@ Texture::Texture(int width, int height, Channels channels)
 }
 
 Texture::Texture()
-    : d_texture(Texture::White().d_texture)
-    , d_width(Texture::White().d_width)
-    , d_height(Texture::White().d_height)
+    : d_id(0)
+    , d_width(0)
+    , d_height(0)
 {
+}
+
+Texture::~Texture()
+{
+    if (d_id > 0) {
+        glDeleteTextures(1, &d_id);
+    }
 }
 
 std::shared_ptr<Texture> Texture::FromFile(const std::string file)
@@ -80,7 +87,7 @@ std::shared_ptr<Texture> Texture::FromFile(const std::string file)
 
 void Texture::Bind() const
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glBindTexture(GL_TEXTURE_2D, d_id);
 }
 
 void Texture::Unbind() const
@@ -104,12 +111,12 @@ const Texture& Texture::White()
 
 unsigned int Texture::Id() const
 {
-    return d_texture->Value();
+    return d_id;
 }
 
 bool Texture::operator==(const Texture& other) const
 {
-    return d_texture->Value() == other.d_texture->Value();
+    return d_id == other.d_id;
 }
 
 void Texture::SetSubTexture(

@@ -14,7 +14,7 @@ public:
     enum class Channels { RGBA, RED, DEPTH };
 
 private:
-    std::shared_ptr<TEX> d_texture;
+    std::uint32_t d_id;
 
     int d_width;
     int d_height;
@@ -29,6 +29,7 @@ public:
     Texture(int width, int height, const unsigned char* data);
     Texture(int width, int height, Channels channels = Channels::RGBA);
     Texture();
+    ~Texture();
 
     static std::shared_ptr<Texture> FromFile(const std::string file);
 
