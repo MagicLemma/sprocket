@@ -10,7 +10,8 @@ class DepthBuffer
 {
     Window* d_window; 
 
-    std::shared_ptr<FBO> d_fbo;
+    std::uint32_t d_fbo;
+    
     std::shared_ptr<Texture> d_depth;
 
     int d_width;

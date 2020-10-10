@@ -6,12 +6,12 @@ namespace Sprocket {
 
 DepthBuffer::DepthBuffer(Window* window, int width, int height)
     : d_window(window)
-    , d_fbo(std::make_shared<FBO>())
     , d_depth(std::make_shared<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
+    glGenFramebuffers(1, &d_fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
 
@@ -31,7 +31,7 @@ DepthBuffer::DepthBuffer(Window* window, int width, int height)
 void DepthBuffer::Bind() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, d_fbo->Value());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, d_fbo);
     glViewport(0, 0, d_width, d_height);
 }
 
