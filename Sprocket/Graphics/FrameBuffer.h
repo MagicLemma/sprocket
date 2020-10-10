@@ -28,7 +28,7 @@ public:
     void BindTexture() const;
     void UnbindTexture() const;
 
-    std::uint32_t GetTexture() const { return d_texture->Id(); }
+    std::shared_ptr<Texture> GetTexture() const { return d_texture; }
 
     void SetScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.

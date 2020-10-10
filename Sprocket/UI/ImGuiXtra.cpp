@@ -54,7 +54,7 @@ void Text(const std::string& text)
     ImGui::Text(text.c_str());
 }
 
-void Image(std::uint32_t image,
+void Image(const std::shared_ptr<Texture>& image,
            const Maths::vec2& size,
            const Maths::vec2& uv0,
            const Maths::vec2& uv1,
@@ -62,7 +62,7 @@ void Image(std::uint32_t image,
            const Maths::vec4& borderCol)
 {
     ImGui::Image(
-        (ImTextureID)(intptr_t)image,
+        (ImTextureID)(intptr_t)image->Id(),
         {size.x, size.y},
         {uv0.x, uv0.y},
         {uv1.x, uv1.y},
@@ -71,9 +71,9 @@ void Image(std::uint32_t image,
     );
 }
 
-void Image(std::uint32_t image, float size)
+void Image(const std::shared_ptr<Texture>& image, float size)
 {
-    Image(image, {4.0f/3.0f * size, size});
+    Image(image, {image->AspectRatio() * size, size});
 }
 
 void SetGuizmo()
