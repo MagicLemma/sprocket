@@ -5,12 +5,7 @@
 
 namespace Sprocket {
 
-enum class ResourceType
-{
-    VAO,
-    VBO,
-    Texture,
-};
+enum class ResourceType { VAO, VBO };
 
 unsigned int GenerateBuffer(ResourceType type);
 void DeleteBuffer(ResourceType type, unsigned int buf);
@@ -38,7 +33,6 @@ private:
 
 using VAO = Resource<ResourceType::VAO>;
 using VBO = Resource<ResourceType::VBO>;
-using TEX = Resource<ResourceType::Texture>;
 
 template <ResourceType Type>
 Resource<Type>::Resource()

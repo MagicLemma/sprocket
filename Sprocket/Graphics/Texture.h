@@ -19,8 +19,7 @@ private:
     int d_width;
     int d_height;
 
-    Channels d_channels = Channels::RGBA;
-        // TODO: Generalise other constructors to expose this.
+    Channels d_channels;
 
     Texture(const Texture&) = delete;
     Texture& operator=(const Texture&) = delete;
