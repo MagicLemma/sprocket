@@ -6,7 +6,8 @@ namespace Sprocket {
 
 class FrameBuffer
 {
-    std::shared_ptr<FBO>     d_fbo;
+    std::uint32_t d_fbo;
+
     std::shared_ptr<Texture> d_texture;
     std::shared_ptr<RBO>     d_depthBuffer;
 
@@ -18,6 +19,7 @@ class FrameBuffer
 
 public:
     FrameBuffer(int width, int height);
+    ~FrameBuffer();
 
     void Bind() const;
     void Unbind() const;

@@ -28,6 +28,11 @@ DepthBuffer::DepthBuffer(Window* window, int width, int height)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+DepthBuffer::~DepthBuffer()
+{
+    glDeleteFramebuffers(1, &d_fbo);
+}
+
 void DepthBuffer::Bind() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);

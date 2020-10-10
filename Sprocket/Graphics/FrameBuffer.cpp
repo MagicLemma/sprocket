@@ -5,13 +5,13 @@
 namespace Sprocket {
 
 FrameBuffer::FrameBuffer(int width, int height)
-    : d_fbo(std::make_shared<FBO>())
-    , d_texture(std::make_shared<Texture>(width, height, Texture::Channels::RGBA))
+    : d_texture(std::make_shared<Texture>(width, height, Texture::Channels::RGBA))
     , d_depthBuffer(std::make_shared<RBO>())
     , d_width(width)
     , d_height(height)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
+    glGenFramebuffers(1, &d_fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d_texture->Id(), 0);
 
@@ -28,9 +28,14 @@ FrameBuffer::FrameBuffer(int width, int height)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+FrameBuffer::~FrameBuffer()
+{
+    glDeleteFramebuffers(1, &d_fbo);
+}
+
 void FrameBuffer::Bind() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
+    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 }
