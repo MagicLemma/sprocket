@@ -45,21 +45,21 @@ Texture::Texture(int width, int height, Channels channels)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+    auto a = GL_RGBA;
+    auto b = GL_RGBA;
+    auto type = GL_UNSIGNED_BYTE;
+    
     if (channels == Channels::RED) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        a = GL_RED;
+        b = GL_RED;
+    }
+    else if (channels == Channels::DEPTH) {
+        a = GL_DEPTH_COMPONENT16;
+        b = GL_DEPTH_COMPONENT;
     }
 
-    if (channels == Channels::DEPTH) {
-        glTexImage2D(GL_TEXTURE_2D,
-                    0, GL_DEPTH_COMPONENT16, width, height,
-                    0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
-    }
-    else {
-        glTexImage2D(GL_TEXTURE_2D,
-                    0, c, width, height,
-                    0, c, GL_UNSIGNED_BYTE, nullptr);
-    }
-                 
+    glTexImage2D(GL_TEXTURE_2D, 0, a, width, height, 0, b, type, nullptr);    
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -125,11 +125,14 @@ void Texture::SetSubTexture(
 {
     Bind();
 
+    auto c = GL_RGBA;
     if (d_channels == Channels::RED) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        c = GL_RED;
     }
-
-    auto c = d_channels == Channels::RGBA ? GL_RGBA : GL_RED;
+    else if (d_channels == Channels::DEPTH) {
+        c = GL_DEPTH_COMPONENT;
+    }
     glTexSubImage2D(GL_TEXTURE_2D,
                     0, region.x, region.y, region.z, region.w, 
                     c, GL_UNSIGNED_BYTE, (void*)data);
