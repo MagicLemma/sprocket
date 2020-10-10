@@ -5,13 +5,13 @@
 namespace Sprocket {
 
 FrameBuffer::FrameBuffer(int width, int height)
-    : d_texture(std::make_shared<Texture>(width, height, Texture::Channels::RGBA))
+    : d_colour(std::make_shared<Texture>(width, height, Texture::Channels::RGBA))
     , d_depth(std::make_shared<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
 {
     glCreateFramebuffers(1, &d_fbo);
-    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_texture->Id(), 0);
+    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_colour->Id(), 0);
     glNamedFramebufferTexture(d_fbo, GL_DEPTH_ATTACHMENT, d_depth->Id(), 0);
 
     // Validate the framebuffer.
@@ -39,7 +39,7 @@ void FrameBuffer::Unbind() const
 
 void FrameBuffer::BindTexture() const
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->Id());
+    glBindTexture(GL_TEXTURE_2D, d_colour->Id());
 }
 
 void FrameBuffer::UnbindTexture() const
@@ -51,14 +51,8 @@ void FrameBuffer::SetScreenSize(int width, int height)
 {
     d_width = width;
     d_height = height;
-
-    glBindTexture(GL_TEXTURE_2D, d_texture->Id());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    
-    glBindTexture(GL_TEXTURE_2D, d_depth->Id());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    
-    glBindTexture(GL_TEXTURE_2D, 0);
+    d_colour->Resize(width, height);
+    d_depth->Resize(width, height);
 }
 
 }

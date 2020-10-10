@@ -222,7 +222,7 @@ void EditorLayer::OnUpdate(double dt)
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
-        ImGuiXtra::Image(d_viewport.GetTexture(), {0.8f * w, 0.8f * h});
+        ImGuiXtra::Image(d_viewport.GetColour(), {0.8f * w, 0.8f * h});
         ImGuiXtra::SetGuizmo();
         ImGui::End();
     }

@@ -24,12 +24,6 @@ Texture::Texture(int width, int height, const unsigned char* data)
 
     glTextureStorage2D(d_id, 1, GL_RGBA8, width, height);
     glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-    //glTexImage2D(GL_TEXTURE_2D,
-    //             0, GL_RGBA, d_width, d_height,
-    //             0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-//
-    //glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::Texture(int width, int height, Channels channels)
@@ -37,33 +31,12 @@ Texture::Texture(int width, int height, Channels channels)
     , d_height(height)
     , d_channels(channels)
 {
-    auto c = channels == Channels::RGBA ? GL_RGBA : GL_RED;
-
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
     glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-    auto a = GL_RGBA;
-    auto b = GL_RGBA;
-    auto type = GL_UNSIGNED_BYTE;
-    
-    if (channels == Channels::RED) {
-        a = GL_RED;
-        b = GL_RED;
-    }
-    else if (channels == Channels::DEPTH) {
-        a = GL_DEPTH_COMPONENT16;
-        b = GL_DEPTH_COMPONENT;
-    }
-
-    glBindTexture(GL_TEXTURE_2D, d_id);
-    //glTexStorage2D(GL_TEXTURE_2D, 1, a, width, height);
-    //glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, a, type, nullptr);  
-    //glGenerateMipmap(GL_TEXTURE_2D);
-    glTexImage2D(GL_TEXTURE_2D, 0, a, width, height, 0, b, type, nullptr);    
-    glBindTexture(GL_TEXTURE_2D, 0);
+    Resize(width, height);
 }
 
 Texture::Texture()
@@ -86,6 +59,29 @@ std::shared_ptr<Texture> Texture::FromFile(const std::string file)
     int width, height, bpp;
     unsigned char* data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
     return std::make_shared<Texture>(width, height, data);
+}
+
+void Texture::Resize(int width, int height)
+{
+    int ifmt, fmt;
+    switch (d_channels) {
+        case Channels::RGBA: {
+            ifmt = GL_RGBA;
+            fmt = GL_RGBA;
+        } break;
+        case Channels::RED: {
+            ifmt = GL_RED;
+            fmt = GL_RED;
+        } break;
+        case Channels::DEPTH: {
+            ifmt = GL_DEPTH_COMPONENT16;
+            fmt = GL_DEPTH_COMPONENT;
+        } break;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, d_id);
+    glTexImage2D(GL_TEXTURE_2D, 0, ifmt, width, height, 0, fmt, GL_UNSIGNED_BYTE, nullptr);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Texture::Bind() const

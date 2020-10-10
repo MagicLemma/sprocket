@@ -34,6 +34,8 @@ public:
 
     void Bind() const;
     void Unbind() const;
+    
+    unsigned int Id() const;
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }
@@ -45,7 +47,8 @@ public:
     void SetSubTexture(const Maths::ivec4& region,
                        const unsigned char* data);
 
-    unsigned int Id() const;
+    void Resize(int width, int height);
+
 
     int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
 
