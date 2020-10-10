@@ -27,8 +27,6 @@ private:
 
 public:
     Texture(int width, int height, const unsigned char* data);
-    Texture(int width, int height, const std::vector<unsigned char>& data);
-    Texture(int width, int height, std::shared_ptr<TEX> texture);
     Texture(int width, int height, Channels channels = Channels::RGBA);
     Texture();
 

@@ -31,18 +31,6 @@ Texture::Texture(int width, int height, const unsigned char* data)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-Texture::Texture(int width, int height, const std::vector<unsigned char>& data)
-    : Texture(width, height, data.data())
-{
-}
-
-Texture::Texture(int width, int height, std::shared_ptr<TEX> texture)
-    : d_texture(texture)
-    , d_width(width)
-    , d_height(height)
-{
-}
-
 Texture::Texture(int width, int height, Channels channels)
     : d_texture(std::make_shared<TEX>())
     , d_width(width)
@@ -102,7 +90,15 @@ void Texture::Unbind() const
 
 const Texture& Texture::White()
 {
-    static const Texture white(1, 1, {0xff, 0xff, 0xff, 0xff});
+    auto GetData = []() {
+        std::vector<unsigned char> data;
+        data.push_back(0xff);
+        data.push_back(0xff);
+        data.push_back(0xff);
+        data.push_back(0xff);
+        return data;
+    };
+    static const Texture white(1, 1, GetData().data());
     return white;
 }
 

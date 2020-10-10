@@ -10,8 +10,6 @@ enum class ResourceType
     VAO,
     VBO,
     Texture,
-    FrameBuffer,
-    RenderBuffer
 };
 
 unsigned int GenerateBuffer(ResourceType type);
@@ -41,8 +39,6 @@ private:
 using VAO = Resource<ResourceType::VAO>;
 using VBO = Resource<ResourceType::VBO>;
 using TEX = Resource<ResourceType::Texture>;
-using FBO = Resource<ResourceType::FrameBuffer>;
-using RBO = Resource<ResourceType::RenderBuffer>;
 
 template <ResourceType Type>
 Resource<Type>::Resource()
