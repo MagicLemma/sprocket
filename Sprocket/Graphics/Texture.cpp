@@ -13,15 +13,11 @@ Texture::Texture(int width, int height, const unsigned char* data)
     : d_width(width)
     , d_height(height)
 {
-    assert(width > 0);
-    assert(height > 0);
-
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
     glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
     glTextureStorage2D(d_id, 1, GL_RGBA8, width, height);
     glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
@@ -48,9 +44,7 @@ Texture::Texture()
 
 Texture::~Texture()
 {
-    if (d_id > 0) {
-        glDeleteTextures(1, &d_id);
-    }
+    if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
 std::shared_ptr<Texture> Texture::FromFile(const std::string file)
@@ -108,8 +102,6 @@ void Texture::SetSubTexture(
     const Maths::ivec4& region,
     const unsigned char* data)
 {
-    Bind();
-
     auto c = GL_RGBA;
     if (d_channels == Channels::RED) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -118,11 +110,12 @@ void Texture::SetSubTexture(
     else if (d_channels == Channels::DEPTH) {
         c = GL_DEPTH_COMPONENT;
     }
-    glTexSubImage2D(GL_TEXTURE_2D,
-                    0, region.x, region.y, region.z, region.w, 
-                    c, GL_UNSIGNED_BYTE, (void*)data);
 
-    Unbind();
+    glTextureSubImage2D(
+        d_id, 0,
+        region.x, region.y, region.z, region.w,
+        c, GL_UNSIGNED_BYTE, data
+    );
 }
 
 }
