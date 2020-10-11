@@ -33,7 +33,6 @@ public:
     static std::shared_ptr<Texture> FromFile(const std::string file);
 
     void Bind(int slot) const;
-    void Unbind() const;
 
     unsigned int Id() const;
 

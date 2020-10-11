@@ -83,11 +83,6 @@ void Texture::Bind(int slot) const
     glBindTextureUnit(slot, d_id);
 }
 
-void Texture::Unbind() const
-{
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
 unsigned int Texture::Id() const
 {
     return d_id;
