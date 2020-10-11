@@ -34,7 +34,7 @@ EntityRenderer::EntityRenderer(AssetManager* assetManager)
     , d_instanceBuffer(GetInstanceBuffer())
 {
     d_shader.Bind();
-    d_shader.LoadSampler("texture_sampler", ALBEDO_SLOT);
+    d_shader.LoadSampler("u_albedo_map", ALBEDO_SLOT);
     d_shader.LoadSampler("u_normal_map", NORMAL_SLOT);
     d_shader.LoadSampler("u_metallic_map", METALLIC_SLOT);
     d_shader.LoadSampler("u_roughness_map", ROUGHNESS_SLOT);
