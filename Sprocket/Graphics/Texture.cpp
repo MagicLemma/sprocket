@@ -78,9 +78,9 @@ void Texture::Resize(int width, int height)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::Bind() const
+void Texture::Bind(int slot) const
 {
-    glBindTexture(GL_TEXTURE_2D, d_id);
+    glBindTextureUnit(slot, d_id);
 }
 
 void Texture::Unbind() const

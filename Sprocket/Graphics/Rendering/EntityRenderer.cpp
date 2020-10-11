@@ -33,17 +33,22 @@ EntityRenderer::EntityRenderer(AssetManager* assetManager)
     , d_shader("Resources/Shaders/Entity_PBR.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer(GetInstanceBuffer())
 {
+    d_shader.Bind();
+    d_shader.LoadSampler("texture_sampler", ALBEDO_SLOT);
+    d_shader.LoadSampler("u_normal_map", NORMAL_SLOT);
+    d_shader.LoadSampler("u_metallic_map", METALLIC_SLOT);
+    d_shader.LoadSampler("u_roughness_map", ROUGHNESS_SLOT);
+    d_shader.Unbind();
 }
 
 void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
-    glActiveTexture(GL_TEXTURE4);
-    shadowMap.GetShadowMap()->Bind();
- 
     d_shader.Bind();
-    d_shader.LoadSampler("shadow_map", 4);
+    d_shader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
     d_shader.LoadMat4("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    glActiveTexture(GL_TEXTURE0);
+    d_shader.Unbind();
+ 
+    shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
 }
 
 void EntityRenderer::Draw(
@@ -91,8 +96,6 @@ void EntityRenderer::Draw(
         ++i;
     }
 
-    d_shader.Bind();
-
     std::string currentMesh = "INVALID";
     std::string currentMaterial = "INVALID";
     // These are set initially to INVALID as that is not a valid file path.
@@ -137,36 +140,21 @@ void EntityRenderer::Draw(
 
         if (changedMaterial) {
             auto material = d_assetManager->GetMaterial(mc.material);
-            // TODO: Apply everything
+            currentMaterial = mc.material;
 
-            glActiveTexture(GL_TEXTURE0);
-            d_assetManager->GetTexture(material->albedoMap)->Bind();
-            d_shader.LoadSampler("texture_sampler", 0);
-
-            glActiveTexture(GL_TEXTURE1);
-            d_assetManager->GetTexture(material->normalMap)->Bind();
-            d_shader.LoadSampler("u_normal_map", 1);
-            
-            glActiveTexture(GL_TEXTURE2);
-            d_assetManager->GetTexture(material->metallicMap)->Bind();
-            d_shader.LoadSampler("u_metallic_map", 2);
-
-            glActiveTexture(GL_TEXTURE3);
-            d_assetManager->GetTexture(material->roughnessMap)->Bind();
-            d_shader.LoadSampler("u_roughness_map", 3);
-
-            glActiveTexture(GL_TEXTURE0);
+            d_assetManager->GetTexture(material->albedoMap)->Bind(ALBEDO_SLOT);
+            d_assetManager->GetTexture(material->normalMap)->Bind(NORMAL_SLOT);
+            d_assetManager->GetTexture(material->metallicMap)->Bind(METALLIC_SLOT);
+            d_assetManager->GetTexture(material->roughnessMap)->Bind(ROUGHNESS_SLOT);
 
             d_shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
             d_shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
             d_shader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
             d_shader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
 
-            // u_albedo
             d_shader.LoadVec3("u_albedo", material->albedo);
             d_shader.LoadFloat("u_roughness", material->roughness);
             d_shader.LoadFloat("u_metallic", material->metallic);
-            currentMaterial = mc.material;
         }
 
         d_instanceData.push_back({ tc.position, tc.orientation, tc.scale });

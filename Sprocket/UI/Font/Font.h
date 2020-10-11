@@ -45,7 +45,7 @@ public:
     Glyph GetGlyph(char c, float size);
     float GetKerning(char left, char right, float size);
 
-    void Bind() const { d_atlas.Bind(); }
+    void Bind(int slot) const { d_atlas.Bind(slot); }
     void Unbind() const { d_atlas.Unbind(); }
 
     float TextWidth(const std::string& text, float size);

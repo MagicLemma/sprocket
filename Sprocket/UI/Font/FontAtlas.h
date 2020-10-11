@@ -27,7 +27,7 @@ public:
     std::size_t Width() const { return d_texture->Width(); }
     std::size_t Height() const { return d_texture->Height(); }
 
-    void Bind() const { d_texture->Bind(); }
+    void Bind(int slot) const { d_texture->Bind(slot); }
     void Unbind() const { d_texture->Unbind(); }
 
     std::shared_ptr<Texture> GetAtlas() const { return d_texture; }

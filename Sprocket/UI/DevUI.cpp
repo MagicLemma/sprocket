@@ -193,7 +193,7 @@ void DevUI::EndFrame()
     d_shader.LoadMat4("ProjMtx", proj);
 
     d_buffer.Bind();
-    d_fontAtlas->Bind();
+    d_fontAtlas->Bind(0);
 
     // Render command lists
     int width = (int)drawData->DisplaySize.x;

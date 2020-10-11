@@ -184,13 +184,13 @@ void UIEngine::EndFrame()
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
         d_shader.LoadInt("texture_channels", 1);
-        white.Bind();
+        white.Bind(0);
         d_buffer.Draw(panel.quadVertices, panel.quadIndices);
-        d_font.Bind();
+        d_font.Bind(0);
         d_buffer.Draw(panel.textVertices, panel.textIndices);
         for (const auto& cmd : panel.extraCommands) {
             d_shader.LoadInt("texture_channels", cmd.texture->GetChannels());
-            cmd.texture->Bind();
+            cmd.texture->Bind(0);
             d_buffer.Draw(cmd.vertices, cmd.indices);
         }
     }
