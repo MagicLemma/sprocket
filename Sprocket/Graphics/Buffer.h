@@ -26,6 +26,8 @@ class Buffer
     std::size_t d_instanceCount;
     std::size_t d_instanceSize;
 
+    void SetData(std::size_t count, std::size_t size, const void* data);
+    
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
 
@@ -37,11 +39,6 @@ public:
 
     void Bind();
 
-    void SetData(
-        std::size_t instanceCount,
-        std::size_t instanceSize,
-        const void* data
-    );
 
     template <typename T> void SetData(const std::vector<T>& data);
 
