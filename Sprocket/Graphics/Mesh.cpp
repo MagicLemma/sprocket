@@ -41,8 +41,7 @@ int GetAssimpFlags()
 
 std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 {    
-    VertexBuffer vertices;
-    IndexBuffer    indices;
+    StaticMeshData data;
 
     for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
         aiMesh* mesh = scene->mMeshes[idx];
@@ -59,24 +58,23 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
                 vertex.bitangent = Convert(mesh->mBitangents[i]);
             }
 
-            vertices.push_back(vertex);
+            data.vertices.push_back(vertex);
         }
 
         // Indices
         for (unsigned int i = 0; i != mesh->mNumFaces; ++i) {
             aiFace face = mesh->mFaces[i];
             for (unsigned int j = 0; j != face.mNumIndices; ++j) {
-                indices.push_back(face.mIndices[j]);
+                data.indices.push_back(face.mIndices[j]);
             }
         }
     }
-    return std::make_shared<Mesh>(vertices, indices);
+    return std::make_shared<Mesh>(data);
 }
 
 std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 {    
-    AnimVertexBuffer vertices;
-    IndexBuffer    indices;
+    AnimatedMeshData data;
 
     for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
         aiMesh* mesh = scene->mMeshes[idx];
@@ -93,34 +91,34 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
                 vertex.bitangent = Convert(mesh->mBitangents[i]);
             }
 
-            vertices.push_back(vertex);
+            data.vertices.push_back(vertex);
         }
 
         // Indices
         for (unsigned int i = 0; i != mesh->mNumFaces; ++i) {
             aiFace face = mesh->mFaces[i];
             for (unsigned int j = 0; j != face.mNumIndices; ++j) {
-                indices.push_back(face.mIndices[j]);
+                data.indices.push_back(face.mIndices[j]);
             }
         }
     }
-    return std::make_shared<Mesh>(vertices, indices);
+    return std::make_shared<Mesh>(data);
 }
 
 }
 
-Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
+Mesh::Mesh(const StaticMeshData& data)
     : d_vertexBuffer(0)
     , d_indexBuffer(0)
-    , d_vertexCount(indices.size())
+    , d_vertexCount(data.indices.size())
     , d_layout(sizeof(Vertex), 0)
     , d_animated(false)
 {
     glCreateBuffers(1, &d_vertexBuffer);
-    glNamedBufferData(d_vertexBuffer, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_vertexBuffer, sizeof(Vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_indexBuffer);
-    glNamedBufferData(d_indexBuffer, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_indexBuffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -130,18 +128,18 @@ Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
     assert(d_layout.Validate());
 }
 
-Mesh::Mesh(const AnimVertexBuffer& vertices, const IndexBuffer& indices)
+Mesh::Mesh(const AnimatedMeshData& data)
     : d_vertexBuffer(0)
     , d_indexBuffer(0)
-    , d_vertexCount(indices.size())
+    , d_vertexCount(data.indices.size())
     , d_layout(sizeof(Vertex), 0)
     , d_animated(true)
 {
     glCreateBuffers(1, &d_vertexBuffer);
-    glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_indexBuffer);
-    glNamedBufferData(d_indexBuffer, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_indexBuffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);

@@ -33,7 +33,19 @@ struct AnimVertex
 
 using VertexBuffer = std::vector<Vertex>;
 using AnimVertexBuffer = std::vector<AnimVertex>;
-using IndexBuffer = std::vector<unsigned int>;
+using IndexBuffer = std::vector<std::uint32_t>;
+
+struct StaticMeshData
+{
+    VertexBuffer vertices;
+    IndexBuffer  indices;
+};
+
+struct AnimatedMeshData
+{
+    AnimVertexBuffer vertices;
+    IndexBuffer      indices;
+};
 
 class Mesh
 {
@@ -49,8 +61,8 @@ class Mesh
     Mesh& operator=(const Mesh&) = delete;
 
 public:
-    Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
-    Mesh(const AnimVertexBuffer& vertices, const IndexBuffer& indices);
+    Mesh(const StaticMeshData& data);
+    Mesh(const AnimatedMeshData& data);
     Mesh(); // Empty model
     ~Mesh();
 
