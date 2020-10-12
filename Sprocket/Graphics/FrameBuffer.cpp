@@ -5,38 +5,29 @@
 namespace Sprocket {
 
 FrameBuffer::FrameBuffer(int width, int height)
-    : d_fbo(std::make_shared<FBO>())
-    , d_texture(std::make_shared<TEX>())
-    , d_depthBuffer(std::make_shared<RBO>())
+    : d_colour(std::make_shared<Texture>(width, height, Texture::Channels::RGBA))
+    , d_depth(std::make_shared<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d_texture->Value(), 0);
-
-    // Add depth buffer.
-    glBindRenderbuffer(GL_RENDERBUFFER, d_depthBuffer->Value());
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, d_depthBuffer->Value());
+    glCreateFramebuffers(1, &d_fbo);
+    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_colour->Id(), 0);
+    glNamedFramebufferTexture(d_fbo, GL_DEPTH_ATTACHMENT, d_depth->Id(), 0);
 
     // Validate the framebuffer.
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    if (glCheckNamedFramebufferStatus(d_fbo, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         SPKT_LOG_ERROR("Created FBO is not complete!");
     }
+}
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+FrameBuffer::~FrameBuffer()
+{
+    glDeleteFramebuffers(1, &d_fbo);
 }
 
 void FrameBuffer::Bind() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo->Value());
+    glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 }
@@ -48,7 +39,7 @@ void FrameBuffer::Unbind() const
 
 void FrameBuffer::BindTexture() const
 {
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
+    glBindTexture(GL_TEXTURE_2D, d_colour->Id());
 }
 
 void FrameBuffer::UnbindTexture() const
@@ -60,14 +51,8 @@ void FrameBuffer::SetScreenSize(int width, int height)
 {
     d_width = width;
     d_height = height;
-
-    glBindTexture(GL_TEXTURE_2D, d_texture->Value());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glBindRenderbuffer(GL_RENDERBUFFER, d_depthBuffer->Value());
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    d_colour->Resize(width, height);
+    d_depth->Resize(width, height);
 }
 
 }

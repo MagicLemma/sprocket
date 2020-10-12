@@ -12,6 +12,15 @@ namespace Sprocket {
 
 class EntityRenderer
 {
+    // PBR Texture Slots
+    static constexpr int ALBEDO_SLOT = 0;
+    static constexpr int NORMAL_SLOT = 1;
+    static constexpr int METALLIC_SLOT = 2;
+    static constexpr int ROUGHNESS_SLOT = 3;
+
+    // Shadow Map Texture Slot
+    static constexpr int SHADOW_MAP_SLOT = 4;
+
     AssetManager*    d_assetManager;
     ParticleManager* d_particleManager;
 

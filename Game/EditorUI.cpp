@@ -196,7 +196,7 @@ void EditorUI::OnUpdate(double dt)
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
     ImGui::Begin("Shadow Map");
-    ImGuiXtra::Image(d_worldLayer->d_shadowMap.GetShadowMap(), 500.0f);
+    //ImGuiXtra::Image(d_worldLayer->d_shadowMap.GetShadowMap(), 500.0f);
     ImGui::End();
 
     ImGui::ShowDemoWindow();

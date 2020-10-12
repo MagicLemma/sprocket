@@ -22,7 +22,7 @@ in Data
 } p_data;
 
 // Material Info
-uniform sampler2D texture_sampler;
+uniform sampler2D u_albedo_map;
 uniform sampler2D u_normal_map;
 uniform sampler2D u_metallic_map;
 uniform sampler2D u_roughness_map;
@@ -117,7 +117,7 @@ vec3 calculate_light(
 
 void main()
 {
-    vec3 albedo = u_use_albedo_map > 0.5 ? texture(texture_sampler, p_data.texture_coords).xyz : u_albedo;
+    vec3 albedo = u_use_albedo_map > 0.5 ? texture(u_albedo_map, p_data.texture_coords).xyz : u_albedo;
 
     float metallic = u_use_metallic_map > 0.5 ? texture(u_metallic_map, p_data.texture_coords).r : u_metallic;
     float roughness = u_use_roughness_map > 0.5 ? texture(u_roughness_map, p_data.texture_coords).r : u_roughness;
@@ -134,7 +134,7 @@ void main()
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
-        // Shadows
+    // Shadows
     vec3 proj_coords = p_data.light_space_pos.xyz / p_data.light_space_pos.w;
     proj_coords = 0.5 * proj_coords + 0.5;
     float current_depth = proj_coords.z;

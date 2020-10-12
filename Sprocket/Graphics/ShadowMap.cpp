@@ -90,7 +90,7 @@ Maths::mat4 ShadowMap::GetLightProjViewMatrix() const
     return d_lightProjMatrix * d_lightViewMatrix;
 }
 
-Texture ShadowMap::GetShadowMap() const
+std::shared_ptr<Texture> ShadowMap::GetShadowMap() const
 {
     return d_shadowMap.GetShadowMap();
 }

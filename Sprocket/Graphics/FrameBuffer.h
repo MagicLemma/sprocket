@@ -6,15 +6,20 @@ namespace Sprocket {
 
 class FrameBuffer
 {
-    std::shared_ptr<FBO> d_fbo;
-    std::shared_ptr<TEX> d_texture;
-    std::shared_ptr<RBO> d_depthBuffer;
+    std::uint32_t d_fbo;
+
+    std::shared_ptr<Texture> d_colour;
+    std::shared_ptr<Texture> d_depth;
 
     int d_width;
     int d_height;
 
+    FrameBuffer(const FrameBuffer&) = delete;
+    FrameBuffer& operator=(const FrameBuffer&) = delete;
+
 public:
     FrameBuffer(int width, int height);
+    ~FrameBuffer();
 
     void Bind() const;
     void Unbind() const;
@@ -25,7 +30,8 @@ public:
     void BindTexture() const;
     void UnbindTexture() const;
 
-    Texture GetTexture() const { return Texture(d_width, d_height, d_texture); }
+    std::shared_ptr<Texture> GetColour() const { return d_colour; }
+    std::shared_ptr<Texture> GetDepth() const { return d_depth; }
 
     void SetScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
