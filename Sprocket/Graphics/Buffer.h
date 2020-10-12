@@ -26,6 +26,9 @@ class Buffer
     std::size_t d_instanceCount;
     std::size_t d_instanceSize;
 
+    Buffer(const Buffer&) = delete;
+    Buffer& operator=(const Buffer&) = delete;
+
 public:
     Buffer(
         const BufferLayout& layout,
