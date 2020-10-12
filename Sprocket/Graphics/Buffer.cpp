@@ -28,7 +28,7 @@ Buffer::Buffer(
     assert(d_layout.Validate());
 }
 
-void Buffer::Bind()
+void Buffer::Bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, d_vbo);
     d_layout.SetAttributes();

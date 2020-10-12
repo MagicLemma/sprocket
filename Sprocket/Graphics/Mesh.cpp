@@ -69,9 +69,41 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
                 indices.push_back(face.mIndices[j]);
             }
         }
-
     }
+    return std::make_shared<Mesh>(vertices, indices);
+}
 
+std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
+{    
+    AnimVertexBuffer vertices;
+    IndexBuffer    indices;
+
+    for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
+        aiMesh* mesh = scene->mMeshes[idx];
+
+        // Vertices
+        for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
+            AnimVertex vertex;
+            vertex.position = Convert(mesh->mVertices[i]);
+            vertex.normal = Convert(mesh->mNormals[i]);
+            vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
+            
+            if (mesh->HasTangentsAndBitangents()) {
+                vertex.tangent = Convert(mesh->mTangents[i]);
+                vertex.bitangent = Convert(mesh->mBitangents[i]);
+            }
+
+            vertices.push_back(vertex);
+        }
+
+        // Indices
+        for (unsigned int i = 0; i != mesh->mNumFaces; ++i) {
+            aiFace face = mesh->mFaces[i];
+            for (unsigned int j = 0; j != face.mNumIndices; ++j) {
+                indices.push_back(face.mIndices[j]);
+            }
+        }
+    }
     return std::make_shared<Mesh>(vertices, indices);
 }
 
@@ -82,6 +114,7 @@ Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
     , d_indexBuffer(0)
     , d_vertexCount(indices.size())
     , d_layout(sizeof(Vertex), 0)
+    , d_animated(false)
 {
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
@@ -97,11 +130,35 @@ Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
     assert(d_layout.Validate());
 }
 
+Mesh::Mesh(const AnimVertexBuffer& vertices, const IndexBuffer& indices)
+    : d_vertexBuffer(0)
+    , d_indexBuffer(0)
+    , d_vertexCount(indices.size())
+    , d_layout(sizeof(Vertex), 0)
+    , d_animated(true)
+{
+    glCreateBuffers(1, &d_vertexBuffer);
+    glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+
+    glCreateBuffers(1, &d_indexBuffer);
+    glNamedBufferData(d_indexBuffer, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 2);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::FLOAT, 3);
+    d_layout.AddAttribute(DataType::INT,   4);
+    d_layout.AddAttribute(DataType::FLOAT, 4);
+    assert(d_layout.Validate());
+}
+
 Mesh::Mesh()
     : d_vertexBuffer(0)
     , d_indexBuffer(0)
     , d_vertexCount(0)
     , d_layout(sizeof(Vertex), 0)
+    , d_animated(false)
 {
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -131,6 +188,9 @@ std::shared_ptr<Mesh> Mesh::FromFile(const std::string& file)
         return std::make_shared<Mesh>();
     }
 
+    if (scene->HasAnimations()) {
+        return LoadAnimatedMesh(scene);
+    }
     return LoadStaticMesh(scene);
 }
 

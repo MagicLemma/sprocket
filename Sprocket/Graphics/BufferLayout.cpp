@@ -6,31 +6,31 @@
 namespace Sprocket {
 namespace {
 
-int getType(DataType type)
+constexpr int getType(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return GL_FLOAT;
+        case DataType::INT: return GL_INT;
         case DataType::UBYTE: return GL_UNSIGNED_BYTE;
     }
-    return GL_FLOAT;
 }
 
-int getNormalised(DataType type)
+constexpr int getNormalised(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return GL_FALSE;
+        case DataType::INT: return GL_FALSE;
         case DataType::UBYTE: return GL_TRUE;
     }
-    return GL_FALSE;
 }
 
-unsigned int getSize(DataType type)
+constexpr unsigned int getSize(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return sizeof(float);
+        case DataType::INT: return sizeof(int);
         case DataType::UBYTE: return sizeof(unsigned char);
     }
-    return sizeof(float);
 }
 
 }

@@ -32,17 +32,12 @@ class Buffer
     Buffer& operator=(const Buffer&) = delete;
 
 public:
-    Buffer(
-        const BufferLayout& layout,
-        const BufferUsage& usage
-    );
+    Buffer(const BufferLayout& layout, const BufferUsage& usage);
 
-    void Bind();
-
+    void Bind() const;
+    std::size_t Size() const { return d_instanceCount; }
 
     template <typename T> void SetData(const std::vector<T>& data);
-
-    std::size_t Size() const { return d_instanceCount; }
 };
 
 template <typename T>
