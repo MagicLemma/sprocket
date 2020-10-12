@@ -18,7 +18,7 @@ enum class BufferUsage { STATIC, DYNAMIC };
 
 class Buffer
 {
-    std::shared_ptr<VBO> d_buffer;
+    std::uint32_t d_vbo;
 
     BufferLayout d_layout;
     BufferUsage  d_usage;
