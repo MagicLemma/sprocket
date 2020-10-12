@@ -83,15 +83,11 @@ Mesh::Mesh(const VertexBuffer& vertices, const IndexBuffer& indices)
     , d_vertexCount(indices.size())
     , d_layout(sizeof(Vertex), 0)
 {
-    glGenBuffers(1, &d_vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glCreateBuffers(1, &d_vertexBuffer);
+    glNamedBufferData(d_vertexBuffer, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-    glGenBuffers(1, &d_indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glCreateBuffers(1, &d_indexBuffer);
+    glNamedBufferData(d_indexBuffer, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
