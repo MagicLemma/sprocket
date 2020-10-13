@@ -374,9 +374,24 @@ void Mesh::SetPose(const std::string& name, float time)
 
 }
 
+std::vector<Maths::mat4> Mesh::GetBoneTransforms() const
+{
+    std::vector<Maths::mat4> transforms;
+    transforms.reserve(d_skeleton.bones.size());
+    for (const auto& bone : d_skeleton.bones) {
+        transforms.push_back(bone.finalTransform);
+    }
+    return transforms;
+}
+
 std::vector<std::string> Mesh::GetAnimationNames() const
 {
-    return {};
+    std::vector<std::string> names;
+    names.reserve(d_animations.size());
+    for (const auto& [name, animation] : d_animations) {
+        names.push_back(name);
+    }
+    return names;
 }
 
 }
