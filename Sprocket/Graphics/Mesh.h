@@ -41,10 +41,19 @@ struct StaticMeshData
     IndexBuffer  indices;
 };
 
+struct Bone
+{
+    std::string name;
+    Maths::mat4 transform;
+};
+
 struct AnimatedMeshData
 {
     AnimVertexBuffer vertices;
     IndexBuffer      indices;
+
+    std::vector<Bone> bones;
+    std::unordered_map<std::string, std::uint32_t> boneMap;
 };
 
 class Mesh
@@ -55,7 +64,11 @@ class Mesh
     BufferLayout d_layout;
     std::size_t d_vertexCount;
 
+    // Animation data structures. If this meshes is not animated, these
+    // structures are empty.
     bool d_animated;
+    std::vector<Bone> d_bones;
+    std::unordered_map<std::string, std::uint32_t> d_boneMap;
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;

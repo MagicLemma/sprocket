@@ -146,7 +146,21 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         // Bones
         for (std::uint32_t i = 0; i != mesh->mNumBones; ++i) {
             aiBone* bone = mesh->mBones[i];
-            std::string name(bone->mName.data);
+            std::string boneName(bone->mName.data);
+
+            // We have to do this lookup as a bone be shared by multiple
+            // submeshes, so we may have already encountered this bone.
+            int boneIndex = 0;
+            if (auto it = data.boneMap.find(boneName); it != data.boneMap.end()) {
+                boneIndex = it->second;
+            } else {
+                boneIndex = data.bones.size();
+                Bone newBone;
+                newBone.name = boneName;
+                newBone.transform = Convert(bone->mOffsetMatrix);
+                data.bones.push_back(newBone);
+                data.boneMap[boneName] = boneIndex;
+            }
 
             // Update Vertices
             for (std::uint32_t j = 0; j != bone->mNumWeights; ++j) {
