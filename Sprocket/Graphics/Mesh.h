@@ -2,6 +2,7 @@
 #include "Maths.h"
 #include "Resources.h"
 #include "BufferLayout.h"
+#include "Animation.h"
 
 #include <vector>
 #include <string>
@@ -27,7 +28,7 @@ struct AnimVertex
     Maths::vec3 tangent;
     Maths::vec3 bitangent;
 
-    Maths::ivec4 boneIndices;
+    Maths::ivec4 boneIndices = {-1, -1, -1, -1};
     Maths::vec4  boneWeights;
 };
 
@@ -41,19 +42,12 @@ struct StaticMeshData
     IndexBuffer  indices;
 };
 
-struct Bone
-{
-    std::string name;
-    Maths::mat4 transform;
-};
-
 struct AnimatedMeshData
 {
     AnimVertexBuffer vertices;
     IndexBuffer      indices;
 
-    std::vector<Bone> bones;
-    std::unordered_map<std::string, std::uint32_t> boneMap;
+    Skeleton skeleton;
 };
 
 class Mesh
@@ -67,8 +61,7 @@ class Mesh
     // Animation data structures. If this meshes is not animated, these
     // structures are empty.
     bool d_animated;
-    std::vector<Bone> d_bones;
-    std::unordered_map<std::string, std::uint32_t> d_boneMap;
+    Skeleton d_skeleton;
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;

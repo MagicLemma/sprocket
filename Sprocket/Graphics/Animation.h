@@ -7,8 +7,16 @@ namespace Sprocket {
 
 struct Bone
 {
-    std::string name;
     Maths::mat4 transform;
+    Maths::mat4 finalTransform;
+
+    std::vector<uint32_t> children;
+};
+
+struct Skeleton
+{
+    std::vector<Bone> bones;
+    std::unordered_map<std::string, std::uint32_t> boneMap;
 };
 
 struct KeyFrame

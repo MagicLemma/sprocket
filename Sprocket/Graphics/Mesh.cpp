@@ -114,6 +114,7 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 {    
     AnimatedMeshData data;
+    auto& skel = data.skeleton;
     SPKT_LOG_INFO("Loading animated mesh");
 
     std::uint32_t vertexCount = 0;
@@ -144,7 +145,6 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
             }
         }
 
-#if 0
         // Bones
         for (std::uint32_t i = 0; i != mesh->mNumBones; ++i) {
             aiBone* bone = mesh->mBones[i];
@@ -153,15 +153,14 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
             // We have to do this lookup as a bone be shared by multiple
             // submeshes, so we may have already encountered this bone.
             int boneIndex = 0;
-            if (auto it = data.boneMap.find(boneName); it != data.boneMap.end()) {
+            if (auto it = skel.boneMap.find(boneName); it != skel.boneMap.end()) {
                 boneIndex = it->second;
             } else {
-                boneIndex = data.bones.size();
+                boneIndex = data.skeleton.bones.size();
                 Bone newBone;
-                newBone.name = boneName;
                 newBone.transform = Convert(bone->mOffsetMatrix);
-                data.bones.push_back(newBone);
-                data.boneMap[boneName] = boneIndex;
+                skel.bones.push_back(newBone);
+                skel.boneMap[boneName] = boneIndex;
             }
 
             // Update Vertices
@@ -173,7 +172,6 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         }
 
         vertexCount += mesh->mNumVertices;
-#endif
     }
     return std::make_shared<Mesh>(data);
 }
@@ -207,6 +205,7 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_vertexCount(data.indices.size())
     , d_layout(sizeof(AnimVertex), 0)
     , d_animated(true)
+    , d_skeleton(data.skeleton)
 {
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
