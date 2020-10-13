@@ -143,6 +143,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
             }
         }
 
+#if 0
         // Bones
         for (std::uint32_t i = 0; i != mesh->mNumBones; ++i) {
             aiBone* bone = mesh->mBones[i];
@@ -171,6 +172,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         }
 
         vertexCount += mesh->mNumVertices;
+#endif
     }
     return std::make_shared<Mesh>(data);
 }

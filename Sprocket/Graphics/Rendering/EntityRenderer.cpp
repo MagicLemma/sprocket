@@ -23,6 +23,48 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
     return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
 }
 
+void UploadUniforms(
+    const Shader& shader,
+    const Maths::mat4& proj,
+    const Maths::mat4& view,
+    Scene& scene)
+{
+    unsigned int MAX_NUM_LIGHTS = 5;
+    shader.Bind();
+    shader.LoadMat4("u_proj_matrix", proj);
+    shader.LoadMat4("u_view_matrix", view);
+
+    // Load sun to shader
+    const auto& sun = scene.GetSun();
+    shader.LoadVec3("u_sun_direction", sun.direction);
+    shader.LoadVec3("u_sun_colour", sun.colour);
+    shader.LoadFloat("u_sun_brightness", sun.brightness);
+
+    // Load ambience to shader
+    const auto& ambience = scene.GetAmbience();
+    shader.LoadVec3("u_ambience_colour", ambience.colour);
+    shader.LoadFloat("u_ambience_brightness", ambience.brightness);
+    
+    // Load point lights to shader
+    std::size_t i = 0;
+    scene.Each<TransformComponent, LightComponent>([&](Entity& entity) {
+        if (i < MAX_NUM_LIGHTS) {
+            auto position = entity.Get<TransformComponent>().position;
+            auto light = entity.Get<LightComponent>();
+            shader.LoadVec3(ArrayName("u_light_pos", i), position);
+			shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
+            shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
+            ++i;
+        }
+    });
+    while (i < MAX_NUM_LIGHTS) {
+        shader.LoadVec3(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
+        shader.LoadVec3(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
+        shader.LoadFloat(ArrayName("u_light_brightness", i), 0.0f);
+        ++i;
+    }
+}
+
 }
 
 EntityRenderer::EntityRenderer(AssetManager* assetManager)
@@ -30,23 +72,36 @@ EntityRenderer::EntityRenderer(AssetManager* assetManager)
     , d_assetManager(assetManager)
     , d_particleManager(nullptr)
     //, d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
-    , d_shader("Resources/Shaders/Entity_PBR.vert", "Resources/Shaders/Entity_PBR.frag")
+    , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
+    , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer(GetInstanceBuffer())
 {
-    d_shader.Bind();
-    d_shader.LoadSampler("u_albedo_map", ALBEDO_SLOT);
-    d_shader.LoadSampler("u_normal_map", NORMAL_SLOT);
-    d_shader.LoadSampler("u_metallic_map", METALLIC_SLOT);
-    d_shader.LoadSampler("u_roughness_map", ROUGHNESS_SLOT);
-    d_shader.Unbind();
+    d_staticShader.Bind();
+    d_staticShader.LoadSampler("u_albedo_map", ALBEDO_SLOT);
+    d_staticShader.LoadSampler("u_normal_map", NORMAL_SLOT);
+    d_staticShader.LoadSampler("u_metallic_map", METALLIC_SLOT);
+    d_staticShader.LoadSampler("u_roughness_map", ROUGHNESS_SLOT);
+    d_staticShader.Unbind();
+
+    d_animatedShader.Bind();
+    d_animatedShader.LoadSampler("u_albedo_map", ALBEDO_SLOT);
+    d_animatedShader.LoadSampler("u_normal_map", NORMAL_SLOT);
+    d_animatedShader.LoadSampler("u_metallic_map", METALLIC_SLOT);
+    d_animatedShader.LoadSampler("u_roughness_map", ROUGHNESS_SLOT);
+    d_animatedShader.Unbind();
 }
 
 void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
-    d_shader.Bind();
-    d_shader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
-    d_shader.LoadMat4("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_shader.Unbind();
+    d_staticShader.Bind();
+    d_staticShader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
+    d_staticShader.LoadMat4("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
+    d_staticShader.Unbind();
+
+    d_animatedShader.Bind();
+    d_animatedShader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
+    d_animatedShader.LoadMat4("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
+    d_animatedShader.Unbind();
  
     shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
 }
@@ -60,41 +115,8 @@ void EntityRenderer::Draw(
     rc.FaceCulling(true);
     rc.DepthTesting(true);
 
-    unsigned int MAX_NUM_LIGHTS = 5;
-
-    d_shader.Bind();
-    d_shader.LoadMat4("u_proj_matrix", proj);
-    d_shader.LoadMat4("u_view_matrix", view);
-
-    // Load sun to shader
-    const auto& sun = scene.GetSun();
-    d_shader.LoadVec3("u_sun_direction", sun.direction);
-    d_shader.LoadVec3("u_sun_colour", sun.colour);
-    d_shader.LoadFloat("u_sun_brightness", sun.brightness);
-
-    // Load ambience to shader
-    const auto& ambience = scene.GetAmbience();
-    d_shader.LoadVec3("u_ambience_colour", ambience.colour);
-    d_shader.LoadFloat("u_ambience_brightness", ambience.brightness);
-    
-    // Load point lights to shader
-    std::size_t i = 0;
-    scene.Each<TransformComponent, LightComponent>([&](Entity& entity) {
-        if (i < MAX_NUM_LIGHTS) {
-            auto position = entity.Get<TransformComponent>().position;
-            auto light = entity.Get<LightComponent>();
-            d_shader.LoadVec3(ArrayName("u_light_pos", i), position);
-			d_shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
-            d_shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
-            ++i;
-        }
-    });
-    while (i < MAX_NUM_LIGHTS) {
-        d_shader.LoadVec3(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-        d_shader.LoadVec3(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        d_shader.LoadFloat(ArrayName("u_light_brightness", i), 0.0f);
-        ++i;
-    }
+    UploadUniforms(d_staticShader, proj, view, scene);
+    UploadUniforms(d_animatedShader, proj, view, scene);
 
     std::string currentMesh = "INVALID";
     std::string currentMaterial = "INVALID";
@@ -115,6 +137,7 @@ void EntityRenderer::Draw(
     // it was being masked by a previous model still being loaded, and was
     // revealed when moving skybox loading code.
     
+    d_staticShader.Bind();
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
@@ -147,14 +170,14 @@ void EntityRenderer::Draw(
             d_assetManager->GetTexture(material->metallicMap)->Bind(METALLIC_SLOT);
             d_assetManager->GetTexture(material->roughnessMap)->Bind(ROUGHNESS_SLOT);
 
-            d_shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
-            d_shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
-            d_shader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
-            d_shader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
+            d_staticShader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
+            d_staticShader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
+            d_staticShader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
+            d_staticShader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
 
-            d_shader.LoadVec3("u_albedo", material->albedo);
-            d_shader.LoadFloat("u_roughness", material->roughness);
-            d_shader.LoadFloat("u_metallic", material->metallic);
+            d_staticShader.LoadVec3("u_albedo", material->albedo);
+            d_staticShader.LoadFloat("u_roughness", material->roughness);
+            d_staticShader.LoadFloat("u_metallic", material->metallic);
         }
 
         d_instanceData.push_back({ tc.position, tc.orientation, tc.scale });
@@ -172,7 +195,7 @@ void EntityRenderer::Draw(
         d_vao->Draw();
     }
 
-    d_shader.Unbind();
+    d_staticShader.Unbind();
 }
 
 void EntityRenderer::Draw(const Entity& camera, Scene& scene)
