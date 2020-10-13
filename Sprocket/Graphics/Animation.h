@@ -7,6 +7,8 @@ namespace Sprocket {
 
 struct Bone
 {
+    std::string name;
+
     Maths::mat4 transform;
     Maths::mat4 finalTransform;
 
@@ -21,16 +23,22 @@ struct Skeleton
 
 struct KeyFrame
 {
-    float time;
-    std::unordered_map<std::string, Maths::mat4> transforms;
-        // TODO: Potentially bad structure
+    float       time;
+    Maths::vec3 position;
+    Maths::quat orientation;
 };
 
 struct Animation
 {
-    std::string           name;
-    float                 duration;
-    std::vector<KeyFrame> keyFrames;
+    std::string name;
+    float       duration;
+    std::vector<std::vector<KeyFrame>> boneKeyFrames;
+        // The outer vector is a map from bone index to that bones
+        // key frames. Bones may not have key frames at the same time
+        // as other bones. Thus, when interpolating, we do a separate
+        // interpolation for each bone. Another way to think of it:
+        // rather than a key frame containing an array of bone data,
+        // we have an array of bones containing key frame data.
 };
 
 }

@@ -48,6 +48,7 @@ struct AnimatedMeshData
     IndexBuffer      indices;
 
     Skeleton skeleton;
+    std::unordered_map<std::string, Animation> animations;
 };
 
 class Mesh

@@ -37,7 +37,6 @@ Maths::mat4 Convert(const aiMatrix4x4& matrix)
     return result;
 }
 
-
 Maths::vec2 Convert(const aiVector2D& v)
 {
     return Maths::vec2{v.x, v.y};
@@ -46,6 +45,16 @@ Maths::vec2 Convert(const aiVector2D& v)
 Maths::vec3 Convert(const aiVector3D& v)
 {
     return Maths::vec3{v.x, v.y, v.z};
+}
+
+Maths::quat Convert(const aiQuaternion& q)
+{
+    Maths::quat quat;
+    quat.x = q.x;
+    quat.y = q.y;
+    quat.z = q.z;
+    quat.w = q.w;
+    return quat;
 }
 
 bool IsSceneValid(const aiScene* scene)
@@ -82,7 +91,8 @@ void SetBoneChildren(Skeleton& skeleton, aiNode* currentNode, Bone* current)
 {
     for (std::uint32_t i = 0; i != currentNode->mNumChildren; ++i) {
         aiNode* childNode = currentNode->mChildren[i];
-        auto it = skeleton.boneMap.find(std::string(childNode->mName.data));
+        std::string childName(childNode->mName.data);
+        auto it = skeleton.boneMap.find(childName);
         if (it != skeleton.boneMap.end()) { // This child is a bone
             Bone* child = &skeleton.bones[it->second];
             if (current) {
@@ -93,6 +103,44 @@ void SetBoneChildren(Skeleton& skeleton, aiNode* currentNode, Bone* current)
             SetBoneChildren(skeleton, childNode, current);
         }
     }
+}
+
+aiNodeAnim* GetNodeAnim(aiAnimation* animation, const std::string& name)
+{
+    for (std::uint32_t i = 0; i != animation->mNumChannels; ++i) {
+        aiNodeAnim* node = animation->mChannels[i];
+        if (name == std::string(node->mNodeName.data)) {
+            return node;
+        }
+    }
+    return nullptr;
+}
+
+Animation GetAnimation(Skeleton& skeleton, aiAnimation* animationData)
+{
+    Animation animation;
+    animation.name = std::string(animationData->mName.data);
+    animation.duration = animationData->mDuration;
+    animation.boneKeyFrames.resize(skeleton.bones.size());
+    for (std::uint32_t index = 0; index != skeleton.bones.size(); ++index) {
+        const Bone& bone = skeleton.bones[index];
+        aiNodeAnim* nodeAnim = GetNodeAnim(animationData, bone.name);
+        assert(nodeAnim->mNumPositionKeys == nodeAnim->mNumRotationKeys);
+        for (std::uint32_t i = 0; i != nodeAnim->mNumPositionKeys; ++i) {
+            auto& pos = nodeAnim->mPositionKeys[i];
+            auto& rot = nodeAnim->mRotationKeys[i];
+            assert(pos.mTime == rot.mTime);
+            float time = pos.mTime;
+            auto& kfData = animation.boneKeyFrames[index];
+            kfData.push_back({
+                time,
+                Convert(pos.mValue),
+                Convert(rot.mValue)
+            });
+        }
+    }
+
+    return animation;
 }
 
 std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
@@ -175,6 +223,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
             } else {
                 boneIndex = data.skeleton.bones.size();
                 Bone newBone;
+                newBone.name = boneName;
                 newBone.transform = Convert(bone->mOffsetMatrix);
                 skel.bones.push_back(newBone);
                 skel.boneMap[boneName] = boneIndex;
@@ -191,8 +240,10 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         vertexCount += mesh->mNumVertices;
     }
 
+    // Set up bone hierarchy
     aiNode* root = scene->mRootNode;
-    auto it = skel.boneMap.find(std::string(root->mName.data));
+    std::string rootName = std::string(root->mName.data);
+    auto it = skel.boneMap.find(rootName);
     if (it != skel.boneMap.end()) {
         Bone* rootBone = &skel.bones[it->second];
         SetBoneChildren(skel, root, rootBone);
@@ -200,6 +251,8 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         SetBoneChildren(skel, root, nullptr);
     }
 
+#if 0
+    SPKT_LOG_INFO("ROOT NODE {}", skel.bones[0].name);
     for (const auto& [name, id] : skel.boneMap) {
         SPKT_LOG_INFO("Bone {} - ID {}", name, id);
         const Bone& bone = skel.bones[id];
@@ -208,6 +261,31 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
             childrenString += ", " + std::to_string(id);
         }
         SPKT_LOG_INFO("Children: {}", childrenString);
+    }
+#endif
+
+    for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
+        aiAnimation* animationData = scene->mAnimations[i];
+        std::string name(animationData->mName.data);
+        data.animations[name] = GetAnimation(skel, animationData);
+    }
+
+    for (const auto& [name, animation] : data.animations) {
+        SPKT_LOG_INFO("ANIMATION: {}", name);
+        SPKT_LOG_INFO("animation.name = {}", animation.name);
+        SPKT_LOG_INFO("animation.duration = {}", animation.duration);
+        for (std::uint32_t i = 0; i != animation.boneKeyFrames.size(); ++i) {
+            SPKT_LOG_INFO("  - bone = {}", data.skeleton.bones[i].name);
+            for (const auto& kf : animation.boneKeyFrames[i]) {
+                SPKT_LOG_INFO(
+                    "      time: {}, orientation: {} {} {}",
+                    kf.time,
+                    kf.orientation.x,
+                    kf.orientation.y,
+                    kf.orientation.z
+                );
+            }
+        }
     }
 
     return std::make_shared<Mesh>(data);
