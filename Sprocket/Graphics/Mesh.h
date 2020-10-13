@@ -63,6 +63,7 @@ class Mesh
     // structures are empty.
     bool d_animated;
     Skeleton d_skeleton;
+    std::unordered_map<std::string, Animation> d_animations;
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
