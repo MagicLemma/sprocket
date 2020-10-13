@@ -251,41 +251,10 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         SetBoneChildren(skel, root, nullptr);
     }
 
-#if 0
-    SPKT_LOG_INFO("ROOT NODE {}", skel.bones[0].name);
-    for (const auto& [name, id] : skel.boneMap) {
-        SPKT_LOG_INFO("Bone {} - ID {}", name, id);
-        const Bone& bone = skel.bones[id];
-        std::string childrenString;
-        for (const auto& id : bone.children) {
-            childrenString += ", " + std::to_string(id);
-        }
-        SPKT_LOG_INFO("Children: {}", childrenString);
-    }
-#endif
-
     for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
         aiAnimation* animationData = scene->mAnimations[i];
         std::string name(animationData->mName.data);
         data.animations[name] = GetAnimation(skel, animationData);
-    }
-
-    for (const auto& [name, animation] : data.animations) {
-        SPKT_LOG_INFO("ANIMATION: {}", name);
-        SPKT_LOG_INFO("animation.name = {}", animation.name);
-        SPKT_LOG_INFO("animation.duration = {}", animation.duration);
-        for (std::uint32_t i = 0; i != animation.boneKeyFrames.size(); ++i) {
-            SPKT_LOG_INFO("  - bone = {}", data.skeleton.bones[i].name);
-            for (const auto& kf : animation.boneKeyFrames[i]) {
-                SPKT_LOG_INFO(
-                    "      time: {}, orientation: {} {} {}",
-                    kf.time,
-                    kf.orientation.x,
-                    kf.orientation.y,
-                    kf.orientation.z
-                );
-            }
-        }
     }
 
     return std::make_shared<Mesh>(data);

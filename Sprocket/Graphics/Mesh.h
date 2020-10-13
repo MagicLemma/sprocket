@@ -89,6 +89,10 @@ public:
         // Sets the pose of this mesh according to the given animation
         // name and time. Does nothing if the mesh is a static mesh.
 
+    std::vector<Maths::mat4> GetBoneTransforms() const;
+        // Returns the transforms to be uploaded to the shader. The transform
+        // at position i corresponds to the bone with ID i.
+
     std::vector<std::string> GetAnimationNames() const;
         // Returns a list of names of all possible animations in this mesh.
 };
