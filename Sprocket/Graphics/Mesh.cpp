@@ -78,6 +78,23 @@ void AddBoneData(AnimVertex& vertex, std::uint32_t index, float weight)
     }
 }
 
+void SetBoneChildren(Skeleton& skeleton, aiNode* currentNode, Bone* current)
+{
+    for (std::uint32_t i = 0; i != currentNode->mNumChildren; ++i) {
+        aiNode* childNode = currentNode->mChildren[i];
+        auto it = skeleton.boneMap.find(std::string(childNode->mName.data));
+        if (it != skeleton.boneMap.end()) { // This child is a bone
+            Bone* child = &skeleton.bones[it->second];
+            if (current) {
+                current->children.push_back(it->second);
+            }
+            SetBoneChildren(skeleton, childNode, child);
+        } else {
+            SetBoneChildren(skeleton, childNode, current);
+        }
+    }
+}
+
 std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 {    
     StaticMeshData data;
@@ -173,6 +190,26 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 
         vertexCount += mesh->mNumVertices;
     }
+
+    aiNode* root = scene->mRootNode;
+    auto it = skel.boneMap.find(std::string(root->mName.data));
+    if (it != skel.boneMap.end()) {
+        Bone* rootBone = &skel.bones[it->second];
+        SetBoneChildren(skel, root, rootBone);
+    } else {
+        SetBoneChildren(skel, root, nullptr);
+    }
+
+    for (const auto& [name, id] : skel.boneMap) {
+        SPKT_LOG_INFO("Bone {} - ID {}", name, id);
+        const Bone& bone = skel.bones[id];
+        std::string childrenString;
+        for (const auto& id : bone.children) {
+            childrenString += ", " + std::to_string(id);
+        }
+        SPKT_LOG_INFO("Children: {}", childrenString);
+    }
+
     return std::make_shared<Mesh>(data);
 }
 
