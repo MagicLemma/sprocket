@@ -90,6 +90,13 @@ public:
 
     // Animation Functionality
     bool IsAnimated() const { return d_animated; }
+    
+    void SetPose(const std::string& name, float time);
+        // Sets the pose of this mesh according to the given animation
+        // name and time. Does nothing if the mesh is a static mesh.
+
+    std::vector<std::string> GetAnimationNames() const;
+        // Returns a list of names of all possible animations in this mesh.
 };
 
 }

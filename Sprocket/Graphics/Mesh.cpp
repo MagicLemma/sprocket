@@ -166,7 +166,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
             for (std::uint32_t j = 0; j != bone->mNumWeights; ++j) {
                 auto& vertex = data.vertices[vertexCount + bone->mWeights[j].mVertexId];
                 float weight = bone->mWeights[j].mWeight;
-                AddBoneData(vertex, i, weight);
+                AddBoneData(vertex, boneIndex, weight);
             }
         }
 
@@ -280,6 +280,16 @@ bool Mesh::operator==(const Mesh& other) const
 BufferLayout Mesh::GetLayout() const
 {
     return d_layout;
+}
+
+void Mesh::SetPose(const std::string& name, float time)
+{
+
+}
+
+std::vector<std::string> Mesh::GetAnimationNames() const
+{
+    return {};
 }
 
 }
