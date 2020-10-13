@@ -10,6 +10,34 @@
 namespace Sprocket {
 namespace {
 
+Maths::mat4 Convert(const aiMatrix4x4& matrix)
+{
+    Maths::mat4 result;
+
+    result[0][0] = matrix.a1;
+    result[0][1] = matrix.b1;
+    result[0][2] = matrix.c1;
+    result[0][3] = matrix.d1;
+
+    result[1][0] = matrix.a2;
+    result[1][1] = matrix.b2;
+    result[1][2] = matrix.c2;
+    result[1][3] = matrix.d2;
+
+    result[2][0] = matrix.a3;
+    result[2][1] = matrix.b3;
+    result[2][2] = matrix.c3;
+    result[2][3] = matrix.d3;
+
+    result[3][0] = matrix.a4;
+    result[3][1] = matrix.b4;
+    result[3][2] = matrix.c4;
+    result[3][3] = matrix.d4;
+
+    return result;
+}
+
+
 Maths::vec2 Convert(const aiVector2D& v)
 {
     return Maths::vec2{v.x, v.y};
@@ -37,6 +65,17 @@ int GetAssimpFlags()
          | aiProcess_GenUVCoords
          | aiProcess_GenNormals
          | aiProcess_ValidateDataStructure;
+}
+
+void AddBoneData(AnimVertex& vertex, std::uint32_t index, float weight)
+{
+    for (std::uint32_t i = 0; i != 4; ++i) {
+        if (vertex.boneIndices[i] == -1) {
+            vertex.boneIndices[i] = index;
+            vertex.boneWeights[i] = weight;
+            return;
+        }
+    }
 }
 
 std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
@@ -76,11 +115,13 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 {    
     AnimatedMeshData data;
 
+    std::uint32_t vertexCount = 0;
+
     for (std::size_t idx = 0; idx != scene->mNumMeshes; ++idx) {
         aiMesh* mesh = scene->mMeshes[idx];
 
         // Vertices
-        for (unsigned int i = 0; i != mesh->mNumVertices; ++i) {
+        for (std::uint32_t i = 0; i != mesh->mNumVertices; ++i) {
             AnimVertex vertex;
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
@@ -95,12 +136,27 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         }
 
         // Indices
-        for (unsigned int i = 0; i != mesh->mNumFaces; ++i) {
+        for (std::uint32_t i = 0; i != mesh->mNumFaces; ++i) {
             aiFace face = mesh->mFaces[i];
-            for (unsigned int j = 0; j != face.mNumIndices; ++j) {
+            for (std::uint32_t j = 0; j != face.mNumIndices; ++j) {
                 data.indices.push_back(face.mIndices[j]);
             }
         }
+
+        // Bones
+        for (std::uint32_t i = 0; i != mesh->mNumBones; ++i) {
+            aiBone* bone = mesh->mBones[i];
+            std::string name(bone->mName.data);
+
+            // Update Vertices
+            for (std::uint32_t j = 0; j != bone->mNumWeights; ++j) {
+                auto& vertex = data.vertices[vertexCount + bone->mWeights[j].mVertexId];
+                float weight = bone->mWeights[j].mWeight;
+                AddBoneData(vertex, i, weight);
+            }
+        }
+
+        vertexCount += mesh->mNumVertices;
     }
     return std::make_shared<Mesh>(data);
 }
