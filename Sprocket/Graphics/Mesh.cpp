@@ -114,6 +114,7 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 {    
     AnimatedMeshData data;
+    SPKT_LOG_INFO("Loading animated mesh");
 
     std::uint32_t vertexCount = 0;
 
@@ -204,7 +205,7 @@ Mesh::Mesh(const AnimatedMeshData& data)
     : d_vertexBuffer(0)
     , d_indexBuffer(0)
     , d_vertexCount(data.indices.size())
-    , d_layout(sizeof(Vertex), 0)
+    , d_layout(sizeof(AnimVertex), 0)
     , d_animated(true)
 {
     glCreateBuffers(1, &d_vertexBuffer);

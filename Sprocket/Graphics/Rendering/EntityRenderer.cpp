@@ -71,7 +71,6 @@ EntityRenderer::EntityRenderer(AssetManager* assetManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_assetManager(assetManager)
     , d_particleManager(nullptr)
-    //, d_shader("Resources/Shaders/Entity_Classic.vert", "Resources/Shaders/Entity_Classic.frag")
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer(GetInstanceBuffer())
@@ -142,6 +141,8 @@ void EntityRenderer::Draw(
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { return; }
+        auto mesh = d_assetManager->GetMesh(mc.mesh);
+        if (mesh->IsAnimated()) { return; }
 
         bool changedMesh = mc.mesh != currentMesh;
         bool changedMaterial = mc.material != currentMaterial;
@@ -157,7 +158,7 @@ void EntityRenderer::Draw(
         }
 
         if (changedMesh) {
-            d_vao->SetModel(d_assetManager->GetMesh(mc.mesh));
+            d_vao->SetModel(mesh);
             currentMesh = mc.mesh;
         }
 
@@ -195,7 +196,37 @@ void EntityRenderer::Draw(
         d_vao->Draw();
     }
 
-    d_staticShader.Unbind();
+    d_animatedShader.Bind();
+    scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+        const auto& tc = entity.Get<TransformComponent>();
+        const auto& mc = entity.Get<ModelComponent>();
+        if (mc.mesh.empty()) { return; }
+        auto mesh = d_assetManager->GetMesh(mc.mesh);
+        if (!mesh->IsAnimated()) { return; }
+        SPKT_LOG_INFO("Drawing animated mesh");
+
+        auto material = d_assetManager->GetMaterial(mc.material);
+        d_assetManager->GetTexture(material->albedoMap)->Bind(ALBEDO_SLOT);
+        d_assetManager->GetTexture(material->normalMap)->Bind(NORMAL_SLOT);
+        d_assetManager->GetTexture(material->metallicMap)->Bind(METALLIC_SLOT);
+        d_assetManager->GetTexture(material->roughnessMap)->Bind(ROUGHNESS_SLOT);
+
+        d_animatedShader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
+        d_animatedShader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
+        d_animatedShader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
+        d_animatedShader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
+
+        d_animatedShader.LoadVec3("u_albedo", material->albedo);
+        d_animatedShader.LoadFloat("u_roughness", material->roughness);
+        d_animatedShader.LoadFloat("u_metallic", material->metallic);
+
+        d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
+
+        d_vao->SetModel(mesh);
+        d_vao->SetInstances(nullptr);
+        d_vao->Draw();
+    });
+    d_animatedShader.Unbind();
 }
 
 void EntityRenderer::Draw(const Entity& camera, Scene& scene)
