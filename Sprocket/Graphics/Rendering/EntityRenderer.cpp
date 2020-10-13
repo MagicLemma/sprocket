@@ -203,7 +203,6 @@ void EntityRenderer::Draw(
         if (mc.mesh.empty()) { return; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
         if (!mesh->IsAnimated()) { return; }
-        SPKT_LOG_INFO("Drawing animated mesh");
 
         auto material = d_assetManager->GetMaterial(mc.material);
         d_assetManager->GetTexture(material->albedoMap)->Bind(ALBEDO_SLOT);

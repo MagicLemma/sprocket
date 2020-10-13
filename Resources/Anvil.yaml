@@ -555,3 +555,12 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
+  - NameComponent:
+      name: Running Character
+    TransformComponent:
+      position: [-12.34701, 0.2868298, -6.677127]
+      orientation: [0.6589493, -0.653828, 0.2619314, 0.2639824]
+      scale: [0.2210628, 0.2210638, 0.2210467]
+    ModelComponent:
+      mesh: D:\dev\Sprocket\Resources\Models\RunningCharacter\RunningCharacter.fbx
+      material: D:\dev\Sprocket\Resources\Materials\RunningCharacter.yaml
