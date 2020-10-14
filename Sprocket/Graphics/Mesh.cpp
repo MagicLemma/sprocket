@@ -98,36 +98,6 @@ aiNodeAnim* GetNodeAnim(aiAnimation* animation, const std::string& name)
     assert(false);
 }
 
-Animation GetAnimation(Skeleton& skeleton, aiAnimation* animationData)
-{
-    Animation animation;
-    animation.name = std::string(animationData->mName.data);
-    animation.duration = animationData->mDuration;
-    animation.boneKeyFramesPos.resize(skeleton.bones.size());
-    animation.boneKeyFramesOri.resize(skeleton.bones.size());
-
-    for (std::uint32_t index = 0; index != skeleton.bones.size(); ++index) {
-        const Bone& bone = skeleton.bones[index];
-        aiNodeAnim* nodeAnim = GetNodeAnim(animationData, bone.name);
-
-        for (std::uint32_t i = 0; i != nodeAnim->mNumPositionKeys; ++i) {
-            auto& pos = nodeAnim->mPositionKeys[i];
-            animation.boneKeyFramesPos[index].push_back({
-                (float)pos.mTime, Convert(pos.mValue)
-            });
-        }
-
-        for (std::uint32_t i = 0; i != nodeAnim->mNumRotationKeys; ++i) {
-            auto& pos = nodeAnim->mRotationKeys[i];
-            animation.boneKeyFramesOri[index].push_back({
-                (float)pos.mTime, Convert(pos.mValue)
-            });
-        }
-    }
-
-    return animation;
-}
-
 std::string NodeName(const aiNode* node)
 {
     if (!node) { return ""; }
@@ -151,6 +121,43 @@ bool IsBone(const Skeleton& skeleton, const aiNode* node)
     return it != skeleton.boneMap.end();
 }
 
+void LoadAnimations(
+    Skeleton& skeleton,
+    const aiScene* scene,
+    const aiNode* node,
+    const Maths::mat4& transform
+)
+{
+    // TODO: Apply transform
+    assert(node);
+
+    Bone* bone = GetBone(skeleton, node);
+    assert(bone);
+
+    for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
+        aiAnimation* animationData = scene->mAnimations[i];
+        const aiNodeAnim* keyFrames = GetNodeAnim(animationData, bone->name);
+        std::string name(animationData->mName.data);
+
+        Animation& animation = skeleton.animations[name];
+        BoneKeyFrames& keyFrameData = animation.keyFrames[bone->index];
+        for (std::uint32_t i = 0; i != keyFrames->mNumPositionKeys; ++i) {
+            auto& pos = keyFrames->mPositionKeys[i];
+            keyFrameData.keyPostitions.push_back({
+                (float)pos.mTime, Convert(pos.mValue)
+            });
+        }
+
+        for (std::uint32_t i = 0; i != keyFrames->mNumRotationKeys; ++i) {
+            auto& pos = keyFrames->mRotationKeys[i];
+            keyFrameData.keyOrientations.push_back({
+                (float)pos.mTime, Convert(pos.mValue)
+            });
+        }
+    }
+
+}
+
 // The recursive function for loading skeleton and animation data.
 void LoadSkeleton(
     Skeleton& skeleton,
@@ -168,6 +175,7 @@ void LoadSkeleton(
     if (isBone) {
         currentBoneNode = currentNode;
         nodeTransform = Maths::mat4(1.0);
+        LoadAnimations(skeleton, scene, currentNode, nodeTransform);
     }
 
     Bone* currentBone = GetBone(skeleton, currentBoneNode);
@@ -282,6 +290,19 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
         vertexCount += mesh->mNumVertices;
     }
 
+    // Initialise animation structures
+    for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
+        aiAnimation* data = scene->mAnimations[i];
+        std::string name(data->mName.data);
+
+        Animation& animation = skel.animations[name];
+        animation.name = name;
+        animation.duration = data->mDuration;
+        animation.keyFrames.resize(skel.bones.size());
+    }
+
+    // Load the skeleton, which consists of parent/child bone relations as
+    // well as animations.
     LoadSkeleton(skel, scene, nullptr, scene->mRootNode, Maths::mat4(1.0));
     for (std::uint32_t i = 0; i != skel.bones.size(); ++i) {
         Bone& bone = skel.bones[i];
@@ -292,12 +313,6 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
             SPKT_LOG_INFO("  - {}", child);
         }
     }
-
-    //for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
-    //    aiAnimation* animationData = scene->mAnimations[i];
-    //    std::string name(animationData->mName.data);
-    //    data.animations[name] = GetAnimation(skel, animationData);
-    //}
 
     return std::make_shared<Mesh>(data);
 }
