@@ -176,9 +176,10 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
     return std::make_shared<Mesh>(data);
 }
 
-std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
+std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importer, const aiScene* scene)
 {    
     AnimatedMeshData data;
+    data.importer = importer;
     auto& skel = data.skeleton;
     SPKT_LOG_INFO("Loading animated mesh");
 
@@ -291,6 +292,7 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_animated(true)
     , d_skeleton(data.skeleton)
     , d_animations(data.animations)
+    , d_importer(data.importer)
 {
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
@@ -335,16 +337,16 @@ Mesh::~Mesh()
 
 std::shared_ptr<Mesh> Mesh::FromFile(const std::string& file)
 {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
+    auto importer = std::make_shared<Assimp::Importer>();
+    const aiScene* scene = importer->ReadFile(file, GetAssimpFlags());
 
     if (!IsSceneValid(scene)) {
-        SPKT_LOG_ERROR("ERROR::ASSIMP::{}", importer.GetErrorString());
+        SPKT_LOG_ERROR("ERROR::ASSIMP::{}", importer->GetErrorString());
         return std::make_shared<Mesh>();
     }
 
     if (scene->HasAnimations()) {
-        return LoadAnimatedMesh(scene);
+        return LoadAnimatedMesh(importer, scene);
     }
     return LoadStaticMesh(scene);
 }

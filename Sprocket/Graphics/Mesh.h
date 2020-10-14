@@ -6,6 +6,9 @@
 
 #include <vector>
 #include <string>
+#include <memory>
+
+#include <assimp/Importer.hpp> // TODO: Remove
 
 namespace Sprocket {
 
@@ -49,6 +52,9 @@ struct AnimatedMeshData
 
     Skeleton skeleton;
     std::unordered_map<std::string, Animation> animations;
+    std::shared_ptr<Assimp::Importer> importer; // TODO: Remove
+        // Only being added for now to get animation working, after we should
+        // remove this and store all data in our own structures.
 };
 
 class Mesh
@@ -60,7 +66,8 @@ class Mesh
     std::size_t d_vertexCount;
 
     // Animation data structures. If this meshes is not animated, these
-    // structures are empty.
+    // structures are empty
+    std::shared_ptr<Assimp::Importer> d_importer; // TODO: Remove
     bool d_animated;
     Skeleton d_skeleton;
     std::unordered_map<std::string, Animation> d_animations;
