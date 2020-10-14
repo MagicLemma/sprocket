@@ -46,7 +46,6 @@ void main()
             float weight = bone_weights[i];
 
             mat4 transform = u_bone_transforms[index];
-            transform = mat4(1.0);
 
             vec4 pos = transform * vec4(in_position, 1.0);
             total_position += pos * weight;
@@ -58,6 +57,9 @@ void main()
 
     vec3 position = total_position.xyz;
     vec3 normal = total_normal.xyz;
+    
+    position = in_position;
+    normal = in_normal;
 
     vec4 world_pos = u_model_matrix * vec4(position, 1.0);
     gl_Position = u_proj_matrix * u_view_matrix * world_pos;
