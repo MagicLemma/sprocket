@@ -72,13 +72,13 @@ class Mesh
     std::shared_ptr<Assimp::Importer> d_importer; // TODO: Remove
     bool d_animated;
     Skeleton d_skeleton;
+    std::vector<Maths::mat4> d_currentPose;
     void GetPoseRec(
-        std::vector<Maths::mat4>& matrices,
         const Animation& animation,
         float time,
         std::uint32_t boneIndex,
         const Maths::mat4& parentTransform
-    ) const;
+    );
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
@@ -101,7 +101,8 @@ public:
     // Animation Functionality
     bool IsAnimated() const { return d_animated; }
 
-    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
+    std::vector<Maths::mat4> GetPose() const { return d_currentPose; }
+    void SetPose(const std::string& name, float time);
         // Returns the transforms to be uploaded to the shader. The transform
         // at position i corresponds to the bone with ID i.
 

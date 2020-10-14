@@ -351,7 +351,10 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_animated(true)
     , d_skeleton(data.skeleton)
     , d_importer(data.importer)
+    , d_currentPose()
 {
+    d_currentPose.resize(data.skeleton.bones.size());
+
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
@@ -452,29 +455,29 @@ Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
 }
 
 void Mesh::GetPoseRec(
-    std::vector<Maths::mat4>& matrices,
     const Animation& animation,
     float time,
     std::uint32_t boneIndex,
     const Maths::mat4& parentTransform
-) const
+)
 {
     const Bone& bone = d_skeleton.bones[boneIndex];
     const auto& kfData = animation.keyFrames[boneIndex];
 
     Maths::vec3 position = GetPosition(kfData, time);
     Maths::quat orientation = GetOrientation(kfData, time);
-    matrices[boneIndex] = parentTransform * Maths::Transform(position, orientation);
+    d_currentPose[boneIndex] = parentTransform * Maths::Transform(position, orientation);
 
     for (const auto& child : bone.children) {
-        GetPoseRec(matrices, animation, time, child, matrices[boneIndex]);
+        GetPoseRec(animation, time, child, d_currentPose[boneIndex]);
     }   
 }
 
-std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, float time) const
+void Mesh::SetPose(const std::string& name, float time)
 {
-    std::vector<Maths::mat4> matrices;
-    matrices.resize(d_skeleton.bones.size());
+    d_currentPose.clear();
+    d_currentPose.resize(d_skeleton.bones.size());
+
     std::uint32_t root = 0;
     const Bone& rootBone = d_skeleton.bones[root];
 
@@ -483,11 +486,9 @@ std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, float time) cons
         const Animation& animation = it->second;
 
         for (const auto& child : rootBone.children) {
-            GetPoseRec(matrices, animation, time, child, Maths::mat4(1.0));
+            GetPoseRec(animation, time, child, Maths::mat4(1.0));
         }
     }
-
-    return matrices;
 }
 
 std::vector<std::string> Mesh::GetAnimationNames() const
