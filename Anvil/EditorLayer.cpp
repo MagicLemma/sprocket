@@ -88,14 +88,12 @@ void EditorLayer::OnUpdate(double dt)
 
     static float count = 0;
     count += dt;
-    while (count > 20) {
-        count -= 20;
-    }
+    while (count > 20) { count -= 20; }
+
     d_activeScene->Each<ModelComponent>([&](Entity& entity) {
         auto& mc = entity.Get<ModelComponent>();
         auto mesh = d_core.assetManager->GetMesh(mc.mesh);
         if (mesh->IsAnimated()) {
-            SPKT_LOG_INFO("Setting pose");
             mesh->SetPose("Armature|ArmatureAction", count);
         }
     });

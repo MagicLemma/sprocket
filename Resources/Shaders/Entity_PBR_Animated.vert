@@ -44,7 +44,7 @@ void main()
         float weight = bone_weights[i];
 
         if (index >= 0) {
-            mat4 transform = u_bone_transforms[2];
+            mat4 transform = u_bone_transforms[index];
 
             vec4 pos = transform * vec4(in_position, 1.0);
             total_position += pos * weight;

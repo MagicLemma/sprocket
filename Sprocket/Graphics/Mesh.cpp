@@ -138,8 +138,11 @@ void LoadAnimations(
     const Maths::mat4& transform
 )
 {
-    // TODO: Apply transform
     assert(node);
+
+    Maths::vec3 p, s;
+    Maths::quat q;
+    Maths::Decompose(transform, &p, &q, &s);
 
     Bone* bone = GetBone(skeleton, node);
     assert(bone);
@@ -154,14 +157,14 @@ void LoadAnimations(
         for (std::uint32_t i = 0; i != keyFrames->mNumPositionKeys; ++i) {
             auto& pos = keyFrames->mPositionKeys[i];
             keyFrameData.keyPostitions.push_back({
-                (float)pos.mTime, Convert(pos.mValue)
+                (float)pos.mTime, p + Convert(pos.mValue)
             });
         }
 
         for (std::uint32_t i = 0; i != keyFrames->mNumRotationKeys; ++i) {
             auto& pos = keyFrames->mRotationKeys[i];
             keyFrameData.keyOrientations.push_back({
-                (float)pos.mTime, Convert(pos.mValue)
+                (float)pos.mTime, Convert(pos.mValue) * q
             });
         }
     }
@@ -185,7 +188,7 @@ void LoadSkeleton(
     if (isBone) {
         currentBoneNode = currentNode;
         nodeTransform = Maths::mat4(1.0);
-        LoadAnimations(skeleton, scene, currentNode, nodeTransform);
+        LoadAnimations(skeleton, scene, currentNode, parentTransform);
     }
 
     Bone* currentBone = GetBone(skeleton, currentBoneNode);
@@ -493,11 +496,7 @@ void Mesh::SetPose(const std::string& name, float time)
 
     auto it = d_skeleton.animations.find(name);
     if (it != d_skeleton.animations.end()) {
-        const Animation& animation = it->second;
-
-        for (const auto& child : rootBone.children) {
-            GetPoseRec(animation, time, child, d_inverseTransform);
-        }
+        GetPoseRec(it->second, time, root, d_inverseTransform);
     }
 }
 
