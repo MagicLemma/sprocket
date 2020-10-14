@@ -53,6 +53,7 @@ struct AnimatedMeshData
     IndexBuffer      indices;
 
     Skeleton skeleton;
+    Maths::mat4 inverseTransform;
     std::unordered_map<std::string, Animation> animations;
     std::shared_ptr<Assimp::Importer> importer; // TODO: Remove
         // Only being added for now to get animation working, after we should
@@ -72,6 +73,7 @@ class Mesh
     std::shared_ptr<Assimp::Importer> d_importer; // TODO: Remove
     bool d_animated;
     Skeleton d_skeleton;
+    Maths::mat4 d_inverseTransform = Maths::mat4(1.0);
     std::vector<Maths::mat4> d_currentPose;
     void GetPoseRec(
         const Animation& animation,

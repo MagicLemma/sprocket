@@ -238,6 +238,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
 {    
     AnimatedMeshData data;
     data.importer = importer;
+    data.inverseTransform = Maths::Inverse(Convert(scene->mRootNode->mTransformation));
     auto& skel = data.skeleton;
     SPKT_LOG_INFO("Loading animated mesh");
 
@@ -322,18 +323,6 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
     // Load the skeleton, which consists of parent/child bone relations as
     // well as animations.
     LoadSkeleton(skel, scene, nullptr, scene->mRootNode, Maths::mat4(1.0));
-    
-#if 0
-    for (std::uint32_t i = 0; i != skel.bones.size(); ++i) {
-        Bone& bone = skel.bones[i];
-        assert(i == bone.index);
-        SPKT_LOG_INFO("Bone {}, index {}", bone.name, bone.index);
-        SPKT_LOG_INFO("Children:");
-        for (const auto& child : bone.children) {
-            SPKT_LOG_INFO("  - {}", child);
-        }
-    }
-#endif
 
     return std::make_shared<Mesh>(data);
 }
@@ -370,19 +359,9 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_skeleton(data.skeleton)
     , d_importer(data.importer)
     , d_currentPose()
+    , d_inverseTransform(data.inverseTransform)
 {
     d_currentPose.resize(data.skeleton.bones.size());
-
-    SPKT_LOG_INFO("Total weights");
-    for (const auto& vertex : data.vertices) {
-        float sum = 0;
-        for (int i = 0; i != 4; ++i) {
-            if (vertex.boneIndices[i] > -1) {
-                sum += vertex.boneWeights[i];
-            }
-        }
-        SPKT_LOG_INFO("{}", sum);
-    }
 
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
@@ -495,10 +474,12 @@ void Mesh::GetPoseRec(
 
     Maths::vec3 position = GetPosition(kfData, time);
     Maths::quat orientation = GetOrientation(kfData, time);
-    d_currentPose[boneIndex] = parentTransform * Maths::Transform(position, orientation);
+
+    Maths::mat4 transform = parentTransform * Maths::Transform(position, orientation);
+    d_currentPose[boneIndex] = transform * bone.transform;
 
     for (const auto& child : bone.children) {
-        GetPoseRec(animation, time, child, d_currentPose[boneIndex]);
+        GetPoseRec(animation, time, child, transform);
     }   
 }
 
@@ -515,7 +496,7 @@ void Mesh::SetPose(const std::string& name, float time)
         const Animation& animation = it->second;
 
         for (const auto& child : rootBone.children) {
-            GetPoseRec(animation, time, child, Maths::mat4(1.0));
+            GetPoseRec(animation, time, child, d_inverseTransform);
         }
     }
 }

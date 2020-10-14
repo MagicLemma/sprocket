@@ -59,14 +59,24 @@ void BufferLayout::SetAttributes() const
     unsigned int index = d_startingIndex;
     for (const auto& data : d_attributes) {
         glEnableVertexAttribArray(index);
-        glVertexAttribPointer(
-            index,
-            data.count,
-            getType(data.type),
-            getNormalised(data.type),
-            d_vertexSize,
-            (void*)offset
-        );
+        if (data.type == DataType::INT) {
+            glVertexAttribIPointer(
+                index,
+                data.count,
+                getType(data.type),
+                d_vertexSize,
+                (void*)offset
+            );
+        } else {
+            glVertexAttribPointer(
+                index,
+                data.count,
+                getType(data.type),
+                getNormalised(data.type),
+                d_vertexSize,
+                (void*)offset
+            );
+        }
         switch (data.rate) {
             case DataRate::INSTANCE: {
                 glVertexAttribDivisor(index, 1);

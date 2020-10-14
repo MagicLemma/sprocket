@@ -8,6 +8,7 @@
 #include "ShadowMap.h"
 
 #include <glad/glad.h>
+#include <cmath>
 
 namespace Sprocket {
 namespace {
@@ -221,10 +222,9 @@ void EntityRenderer::Draw(
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        //const auto& poses = mesh->GetPose();
-        for (int i = 0; i != 50; ++i) {
-            d_animatedShader.LoadMat4(ArrayName("u_bone_transforms", i), Maths::mat4(1.0));
-        }
+        const auto& poses = mesh->GetPose();
+        int numBones = std::min(50, (int)poses.size());
+        d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
 
         d_vao->SetModel(mesh);
         d_vao->SetInstances(nullptr);
