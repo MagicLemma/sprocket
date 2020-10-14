@@ -8,7 +8,9 @@
 #include <string>
 #include <memory>
 
-#include <assimp/Importer.hpp> // TODO: Remove
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h> // TODO: Remove
 
 namespace Sprocket {
 
@@ -71,6 +73,8 @@ class Mesh
     bool d_animated;
     Skeleton d_skeleton;
     std::unordered_map<std::string, Animation> d_animations;
+    std::string d_activeAnimation;
+    void UpdateTransforms(float time, aiNode* node, const Maths::mat4& transform);
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
@@ -93,7 +97,8 @@ public:
     // Animation Functionality
     bool IsAnimated() const { return d_animated; }
     
-    void SetPose(const std::string& name, float time);
+    void SetAnimation(const std::string& name);
+    void SetPose(float time);
         // Sets the pose of this mesh according to the given animation
         // name and time. Does nothing if the mesh is a static mesh.
 

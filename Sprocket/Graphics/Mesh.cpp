@@ -113,7 +113,7 @@ aiNodeAnim* GetNodeAnim(aiAnimation* animation, const std::string& name)
             return node;
         }
     }
-    return nullptr;
+    assert(false);
 }
 
 Animation GetAnimation(Skeleton& skeleton, aiAnimation* animationData)
@@ -121,21 +121,24 @@ Animation GetAnimation(Skeleton& skeleton, aiAnimation* animationData)
     Animation animation;
     animation.name = std::string(animationData->mName.data);
     animation.duration = animationData->mDuration;
-    animation.boneKeyFrames.resize(skeleton.bones.size());
+    animation.boneKeyFramesPos.resize(skeleton.bones.size());
+    animation.boneKeyFramesOri.resize(skeleton.bones.size());
+
     for (std::uint32_t index = 0; index != skeleton.bones.size(); ++index) {
         const Bone& bone = skeleton.bones[index];
         aiNodeAnim* nodeAnim = GetNodeAnim(animationData, bone.name);
-        assert(nodeAnim->mNumPositionKeys == nodeAnim->mNumRotationKeys);
+
         for (std::uint32_t i = 0; i != nodeAnim->mNumPositionKeys; ++i) {
             auto& pos = nodeAnim->mPositionKeys[i];
-            auto& rot = nodeAnim->mRotationKeys[i];
-            assert(pos.mTime == rot.mTime);
-            float time = pos.mTime;
-            auto& kfData = animation.boneKeyFrames[index];
-            kfData.push_back({
-                time,
-                Convert(pos.mValue),
-                Convert(rot.mValue)
+            animation.boneKeyFramesPos[index].push_back({
+                pos.mTime, Convert(pos.mValue)
+            });
+        }
+
+        for (std::uint32_t i = 0; i != nodeAnim->mNumRotationKeys; ++i) {
+            auto& pos = nodeAnim->mRotationKeys[i];
+            animation.boneKeyFramesOri[index].push_back({
+                pos.mTime, Convert(pos.mValue)
             });
         }
     }
@@ -371,9 +374,14 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-void Mesh::SetPose(const std::string& name, float time)
+void Mesh::SetAnimation(const std::string& name)
 {
+    d_activeAnimation = name;
+}
 
+void Mesh::SetPose(float time)
+{
+    UpdateTransforms(time, d_importer->GetScene()->mRootNode, Maths::mat4(1.0));
 }
 
 std::vector<Maths::mat4> Mesh::GetBoneTransforms() const
@@ -394,6 +402,34 @@ std::vector<std::string> Mesh::GetAnimationNames() const
         names.push_back(name);
     }
     return names;
+}
+
+void Mesh::UpdateTransforms(float time, aiNode* node, const Maths::mat4& parentTransform)
+{
+    std::string name(node->mName.data);
+    const aiAnimation* animation = d_importer->GetScene()->mAnimations[0];
+ 
+    // If the name is the name of a bone, then this node in the tree represents
+    // a bone and there will be an aiNodeAnim struct associated containing the
+    // keyframe data. If it does not represent a bone, the node just contains
+    // a transform that applies to all child nodes (and hence bones).
+    aiNodeAnim* nodeAnim = nullptr;
+    for (std::uint32_t i = 0; i != animation->mNumChannels; ++i) {
+        aiNodeAnim* x = animation->mChannels[i];
+        if (std::string(x->mNodeName.data) == name) {
+            nodeAnim = x;
+            break;
+        }
+    }
+
+    Maths::mat4 nodeTransform(1.0);
+    if (nodeAnim) { // Current node represents a bone
+        nodeTransform; // TODO: Interpolate between keyframes
+    } else { // No bone, just a transform to apply to sub-bones.
+        nodeTransform = Convert(node->mTransformation);
+    }
+
+    Maths::mat4 transform = parentTransform * nodeTransform;
 }
 
 }

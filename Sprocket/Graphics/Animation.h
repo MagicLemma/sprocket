@@ -25,10 +25,15 @@ struct Skeleton
     std::unordered_map<std::string, std::uint32_t> boneMap;
 };
 
-struct KeyFrame
+struct KeyFramePos
 {
     float       time;
     Maths::vec3 position;
+};
+
+struct KeyFrameOri
+{
+    float       time;
     Maths::quat orientation;
 };
 
@@ -36,7 +41,8 @@ struct Animation
 {
     std::string name;
     float       duration;
-    std::vector<std::vector<KeyFrame>> boneKeyFrames;
+    std::vector<std::vector<KeyFramePos>> boneKeyFramesPos;
+    std::vector<std::vector<KeyFrameOri>> boneKeyFramesOri;
         // The outer vector is a map from bone index to that bones
         // key frames. Bones may not have key frames at the same time
         // as other bones. Thus, when interpolating, we do a separate
