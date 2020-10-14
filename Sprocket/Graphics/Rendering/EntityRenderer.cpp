@@ -220,6 +220,11 @@ void EntityRenderer::Draw(
         d_animatedShader.LoadFloat("u_metallic", material->metallic);
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
+        
+        //const auto& poses = mesh->GetPose();
+        for (int i = 0; i != 50; ++i) {
+            d_animatedShader.LoadMat4(ArrayName("u_bone_transforms", i), Maths::mat4(1.0));
+        }
 
         d_vao->SetModel(mesh);
         d_vao->SetInstances(nullptr);

@@ -290,6 +290,30 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
         vertexCount += mesh->mNumVertices;
     }
 
+    //for (auto& vertex : data.vertices) {
+    //    SPKT_LOG_INFO(
+    //        "Indices: {}, {}, {}, {}",
+    //        vertex.boneIndices[0],
+    //        vertex.boneIndices[1],
+    //        vertex.boneIndices[2],
+    //        vertex.boneIndices[3]
+    //    );
+    //    SPKT_LOG_INFO(
+    //        "Weights: {}, {}, {}, {}",
+    //        vertex.boneWeights[0],
+    //        vertex.boneWeights[1],
+    //        vertex.boneWeights[2],
+    //        vertex.boneWeights[3]
+    //    );
+    //    float total = 0.0f;
+    //    for (int i = 0; i != 4; ++i) {
+    //        if (vertex.boneIndices[i] > -1) {
+    //            total += vertex.boneWeights[i];
+    //        }
+    //    }
+    //    SPKT_LOG_INFO("Weight sum: {}", total);
+    //}
+
     // Initialise animation structures
     for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
         aiAnimation* data = scene->mAnimations[i];
@@ -354,6 +378,16 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_currentPose()
 {
     d_currentPose.resize(data.skeleton.bones.size());
+
+    for (const auto& vertex : data.vertices) {
+        SPKT_LOG_INFO(
+            "Indices: {} {} {} {}",
+            vertex.boneIndices[0],
+            vertex.boneIndices[1],
+            vertex.boneIndices[2],
+            vertex.boneIndices[3]
+        );
+    }
 
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);

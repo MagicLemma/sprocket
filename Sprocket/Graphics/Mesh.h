@@ -34,7 +34,7 @@ struct AnimVertex
     Maths::vec3 bitangent;
 
     Maths::ivec4 boneIndices = {-1, -1, -1, -1};
-    Maths::vec4  boneWeights;
+    Maths::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
 };
 
 using VertexBuffer = std::vector<Vertex>;
@@ -101,7 +101,7 @@ public:
     // Animation Functionality
     bool IsAnimated() const { return d_animated; }
 
-    std::vector<Maths::mat4> GetPose() const { return d_currentPose; }
+    const std::vector<Maths::mat4>& GetPose() const { return d_currentPose; }
     void SetPose(const std::string& name, float time);
         // Returns the transforms to be uploaded to the shader. The transform
         // at position i corresponds to the bone with ID i.

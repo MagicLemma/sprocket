@@ -70,6 +70,9 @@ void BufferLayout::SetAttributes() const
         if (data.rate == DataRate::INSTANCE) {
             glVertexAttribDivisor(index, 1);
         }
+        else {
+             glVertexAttribDivisor(index, 0);
+        }
         offset += data.count * getSize(data.type);
         ++index;
     }
