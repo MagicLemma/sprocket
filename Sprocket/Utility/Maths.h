@@ -81,6 +81,10 @@ float LengthSquare(const vec3& v);
 
 void Normalise(vec3& vec);
 
+// Normalisation
+Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta);
+Maths::quat Interpolate(const Maths::quat& a, const Maths::quat& b, float delta);
+
 // Trig
 float Radians(float degrees);
 float Degrees(float radians);

@@ -446,23 +446,39 @@ BufferLayout Mesh::GetLayout() const
 // TODO: Add interpolation
 Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
 {
-    for (const auto& pos : bkf.keyPostitions) {
-        if (pos.time > time) {
-            return pos.position;
+    std::uint32_t before = 0, after = 0;
+    for (std::uint32_t i = 0; i != bkf.keyPostitions.size(); ++i) {
+        if (bkf.keyPostitions[i].time > time) {
+            before = i > 0 ? i - 1 : bkf.keyPostitions.size() - 1;
+            after = i;
+            break;
         }
     }
-    return {0.0, 0.0, 0.0};
+    //bool loop = false;
+    //if (before == -1) { 
+    //    before = bkf.keyPostitions.size() - 1;
+    //}
+    auto& beforeKF = bkf.keyPostitions[before];
+    auto& afterKF = bkf.keyPostitions[after];
+    float delta = (time - beforeKF.time) / (afterKF.time - beforeKF.time);
+    return Maths::Interpolate(beforeKF.position, afterKF.position, delta);
 }
 
 // TODO: Add interpolation
 Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
 {
-    for (const auto& ori : bkf.keyOrientations) {
-        if (ori.time > time) {
-            return ori.orientation;
+    std::uint32_t before = 0, after = 0;
+    for (std::uint32_t i = 0; i != bkf.keyOrientations.size(); ++i) {
+        if (bkf.keyPostitions[i].time > time) {
+            before = i > 0 ? i - 1 : 0;
+            after = i;
+            break;
         }
     }
-    return {0.0, 0.0, 0.0, 1.0};
+    auto& beforeKF = bkf.keyOrientations[before];
+    auto& afterKF = bkf.keyOrientations[after];
+    float delta = (time - beforeKF.time) / (afterKF.time - beforeKF.time);
+    return Maths::Interpolate(beforeKF.orientation, afterKF.orientation, delta);
 }
 
 void Mesh::GetPoseRec(
@@ -496,7 +512,11 @@ void Mesh::SetPose(const std::string& name, float time)
 
     auto it = d_skeleton.animations.find(name);
     if (it != d_skeleton.animations.end()) {
-        GetPoseRec(it->second, time, root, d_inverseTransform);
+        float t = time;
+        while (t > it->second.duration) {
+            t -= it->second.duration;
+        }
+        GetPoseRec(it->second, t, root, d_inverseTransform);
     }
 }
 

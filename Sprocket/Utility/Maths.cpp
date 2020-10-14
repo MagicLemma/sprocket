@@ -223,6 +223,16 @@ void Normalise(vec3& vec)
     vec = glm::normalize(vec);
 }
 
+Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta)
+{
+    return glm::mix(a, b, delta);
+}
+
+Maths::quat Interpolate(const Maths::quat& a, const Maths::quat& b, float delta)
+{
+    return glm::slerp(a, b, delta);
+}
+
 // Trig
 float Radians(float degrees)
 {

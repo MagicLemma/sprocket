@@ -88,7 +88,6 @@ void EditorLayer::OnUpdate(double dt)
 
     static float count = 0;
     count += dt;
-    while (count > 20) { count -= 20; }
 
     d_activeScene->Each<ModelComponent>([&](Entity& entity) {
         auto& mc = entity.Get<ModelComponent>();
