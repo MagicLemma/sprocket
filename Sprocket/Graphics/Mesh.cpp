@@ -87,24 +87,6 @@ void AddBoneData(AnimVertex& vertex, std::uint32_t index, float weight)
     }
 }
 
-void SetBoneChildren(Skeleton& skeleton, aiNode* currentNode, Bone* current)
-{
-    for (std::uint32_t i = 0; i != currentNode->mNumChildren; ++i) {
-        aiNode* childNode = currentNode->mChildren[i];
-        std::string childName(childNode->mName.data);
-        auto it = skeleton.boneMap.find(childName);
-        if (it != skeleton.boneMap.end()) { // This child is a bone
-            Bone* child = &skeleton.bones[it->second];
-            if (current) {
-                current->children.push_back(it->second);
-            }
-            SetBoneChildren(skeleton, childNode, child);
-        } else {
-            SetBoneChildren(skeleton, childNode, current);
-        }
-    }
-}
-
 aiNodeAnim* GetNodeAnim(aiAnimation* animation, const std::string& name)
 {
     for (std::uint32_t i = 0; i != animation->mNumChannels; ++i) {
@@ -131,19 +113,74 @@ Animation GetAnimation(Skeleton& skeleton, aiAnimation* animationData)
         for (std::uint32_t i = 0; i != nodeAnim->mNumPositionKeys; ++i) {
             auto& pos = nodeAnim->mPositionKeys[i];
             animation.boneKeyFramesPos[index].push_back({
-                pos.mTime, Convert(pos.mValue)
+                (float)pos.mTime, Convert(pos.mValue)
             });
         }
 
         for (std::uint32_t i = 0; i != nodeAnim->mNumRotationKeys; ++i) {
             auto& pos = nodeAnim->mRotationKeys[i];
             animation.boneKeyFramesOri[index].push_back({
-                pos.mTime, Convert(pos.mValue)
+                (float)pos.mTime, Convert(pos.mValue)
             });
         }
     }
 
     return animation;
+}
+
+std::string NodeName(const aiNode* node)
+{
+    if (!node) { return ""; }
+    return std::string(node->mName.data);
+}
+
+Bone* GetBone(Skeleton& skeleton, const aiNode* node)
+{
+    if (!node) { return nullptr; }
+    auto it = skeleton.boneMap.find(NodeName(node));
+    if (it != skeleton.boneMap.end()) {
+        return &skeleton.bones[it->second];
+    }
+    return nullptr;
+}
+
+bool IsBone(const Skeleton& skeleton, const aiNode* node)
+{
+    if (!node) { return false; }
+    auto it = skeleton.boneMap.find(NodeName(node));
+    return it != skeleton.boneMap.end();
+}
+
+// The recursive function for loading skeleton and animation data.
+void LoadSkeleton(
+    Skeleton& skeleton,
+    const aiScene* scene,
+    const aiNode* lastBoneNode, // The last node that contained a bone, starts out null
+    const aiNode* currentNode,  // The current node that we are dealing with.
+    const Maths::mat4& parentTransform
+)
+{
+    assert(currentNode);
+    bool isBone = IsBone(skeleton, currentNode);
+
+    const aiNode* currentBoneNode = lastBoneNode;
+    Maths::mat4 nodeTransform = parentTransform * Convert(currentNode->mTransformation);
+    if (isBone) {
+        currentBoneNode = currentNode;
+        nodeTransform = Maths::mat4(1.0);
+    }
+
+    Bone* currentBone = GetBone(skeleton, currentBoneNode);
+    for (std::uint32_t i = 0; i != currentNode->mNumChildren; ++i) {
+        aiNode* childNode = currentNode->mChildren[i];
+        Bone* childBone = GetBone(skeleton, childNode);
+
+        if (childBone && currentBone) {
+            currentBone->children.push_back(childBone->index);
+        }
+
+        LoadSkeleton(skeleton, scene, currentBoneNode, childNode, nodeTransform);
+    }
 }
 
 std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
@@ -228,6 +265,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
                 boneIndex = data.skeleton.bones.size();
                 Bone newBone;
                 newBone.name = boneName;
+                newBone.index = boneIndex;
                 newBone.transform = Convert(bone->mOffsetMatrix);
                 skel.bones.push_back(newBone);
                 skel.boneMap[boneName] = boneIndex;
@@ -244,22 +282,22 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
         vertexCount += mesh->mNumVertices;
     }
 
-    // Set up bone hierarchy
-    aiNode* root = scene->mRootNode;
-    std::string rootName = std::string(root->mName.data);
-    auto it = skel.boneMap.find(rootName);
-    if (it != skel.boneMap.end()) {
-        Bone* rootBone = &skel.bones[it->second];
-        SetBoneChildren(skel, root, rootBone);
-    } else {
-        SetBoneChildren(skel, root, nullptr);
+    LoadSkeleton(skel, scene, nullptr, scene->mRootNode, Maths::mat4(1.0));
+    for (std::uint32_t i = 0; i != skel.bones.size(); ++i) {
+        Bone& bone = skel.bones[i];
+        assert(i == bone.index);
+        SPKT_LOG_INFO("Bone {}, index {}", bone.name, bone.index);
+        SPKT_LOG_INFO("Children:");
+        for (const auto& child : bone.children) {
+            SPKT_LOG_INFO("  - {}", child);
+        }
     }
 
-    for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
-        aiAnimation* animationData = scene->mAnimations[i];
-        std::string name(animationData->mName.data);
-        data.animations[name] = GetAnimation(skel, animationData);
-    }
+    //for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
+    //    aiAnimation* animationData = scene->mAnimations[i];
+    //    std::string name(animationData->mName.data);
+    //    data.animations[name] = GetAnimation(skel, animationData);
+    //}
 
     return std::make_shared<Mesh>(data);
 }
