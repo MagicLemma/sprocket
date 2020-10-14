@@ -67,11 +67,13 @@ void BufferLayout::SetAttributes() const
             d_vertexSize,
             (void*)offset
         );
-        if (data.rate == DataRate::INSTANCE) {
-            glVertexAttribDivisor(index, 1);
-        }
-        else {
-             glVertexAttribDivisor(index, 0);
+        switch (data.rate) {
+            case DataRate::INSTANCE: {
+                glVertexAttribDivisor(index, 1);
+            } break;
+            case DataRate::VERTEX: {
+                glVertexAttribDivisor(index, 0);
+            } break;
         }
         offset += data.count * getSize(data.type);
         ++index;
