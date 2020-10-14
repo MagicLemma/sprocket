@@ -304,6 +304,8 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
     // Load the skeleton, which consists of parent/child bone relations as
     // well as animations.
     LoadSkeleton(skel, scene, nullptr, scene->mRootNode, Maths::mat4(1.0));
+    
+#if 0
     for (std::uint32_t i = 0; i != skel.bones.size(); ++i) {
         Bone& bone = skel.bones[i];
         assert(i == bone.index);
@@ -313,6 +315,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(std::shared_ptr<Assimp::Importer> importe
             SPKT_LOG_INFO("  - {}", child);
         }
     }
+#endif
 
     return std::make_shared<Mesh>(data);
 }
@@ -347,7 +350,6 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_layout(sizeof(AnimVertex), 0)
     , d_animated(true)
     , d_skeleton(data.skeleton)
-    , d_animations(data.animations)
     , d_importer(data.importer)
 {
     glCreateBuffers(1, &d_vertexBuffer);
@@ -427,62 +429,75 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-void Mesh::SetAnimation(const std::string& name)
+// TODO: Add interpolation
+Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
 {
-    d_activeAnimation = name;
-}
-
-void Mesh::SetPose(float time)
-{
-    UpdateTransforms(time, d_importer->GetScene()->mRootNode, Maths::mat4(1.0));
-}
-
-std::vector<Maths::mat4> Mesh::GetBoneTransforms() const
-{
-    std::vector<Maths::mat4> transforms;
-    transforms.reserve(d_skeleton.bones.size());
-    for (const auto& bone : d_skeleton.bones) {
-        transforms.push_back(bone.finalTransform);
+    for (const auto& pos : bkf.keyPostitions) {
+        if (pos.time > time) {
+            return pos.position;
+        }
     }
-    return transforms;
+    return {0.0, 0.0, 0.0};
+}
+
+// TODO: Add interpolation
+Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
+{
+    for (const auto& ori : bkf.keyOrientations) {
+        if (ori.time > time) {
+            return ori.orientation;
+        }
+    }
+    return {0.0, 0.0, 0.0, 1.0};
+}
+
+void Mesh::GetPoseRec(
+    std::vector<Maths::mat4>& matrices,
+    const Animation& animation,
+    float time,
+    std::uint32_t boneIndex,
+    const Maths::mat4& parentTransform
+) const
+{
+    const Bone& bone = d_skeleton.bones[boneIndex];
+    const auto& kfData = animation.keyFrames[boneIndex];
+
+    Maths::vec3 position = GetPosition(kfData, time);
+    Maths::quat orientation = GetOrientation(kfData, time);
+    matrices[boneIndex] = parentTransform * Maths::Transform(position, orientation);
+
+    for (const auto& child : bone.children) {
+        GetPoseRec(matrices, animation, time, child, matrices[boneIndex]);
+    }   
+}
+
+std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, float time) const
+{
+    std::vector<Maths::mat4> matrices;
+    matrices.resize(d_skeleton.bones.size());
+    std::uint32_t root = 0;
+    const Bone& rootBone = d_skeleton.bones[root];
+
+    auto it = d_skeleton.animations.find(name);
+    if (it != d_skeleton.animations.end()) {
+        const Animation& animation = it->second;
+
+        for (const auto& child : rootBone.children) {
+            GetPoseRec(matrices, animation, time, child, Maths::mat4(1.0));
+        }
+    }
+
+    return matrices;
 }
 
 std::vector<std::string> Mesh::GetAnimationNames() const
 {
     std::vector<std::string> names;
-    names.reserve(d_animations.size());
-    for (const auto& [name, animation] : d_animations) {
+    names.reserve(d_skeleton.animations.size());
+    for (const auto& [name, animation] : d_skeleton.animations) {
         names.push_back(name);
     }
     return names;
-}
-
-void Mesh::UpdateTransforms(float time, aiNode* node, const Maths::mat4& parentTransform)
-{
-    std::string name(node->mName.data);
-    const aiAnimation* animation = d_importer->GetScene()->mAnimations[0];
- 
-    // If the name is the name of a bone, then this node in the tree represents
-    // a bone and there will be an aiNodeAnim struct associated containing the
-    // keyframe data. If it does not represent a bone, the node just contains
-    // a transform that applies to all child nodes (and hence bones).
-    aiNodeAnim* nodeAnim = nullptr;
-    for (std::uint32_t i = 0; i != animation->mNumChannels; ++i) {
-        aiNodeAnim* x = animation->mChannels[i];
-        if (std::string(x->mNodeName.data) == name) {
-            nodeAnim = x;
-            break;
-        }
-    }
-
-    Maths::mat4 nodeTransform(1.0);
-    if (nodeAnim) { // Current node represents a bone
-        nodeTransform; // TODO: Interpolate between keyframes
-    } else { // No bone, just a transform to apply to sub-bones.
-        nodeTransform = Convert(node->mTransformation);
-    }
-
-    Maths::mat4 transform = parentTransform * nodeTransform;
 }
 
 }

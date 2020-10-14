@@ -72,9 +72,13 @@ class Mesh
     std::shared_ptr<Assimp::Importer> d_importer; // TODO: Remove
     bool d_animated;
     Skeleton d_skeleton;
-    std::unordered_map<std::string, Animation> d_animations;
-    std::string d_activeAnimation;
-    void UpdateTransforms(float time, aiNode* node, const Maths::mat4& transform);
+    void GetPoseRec(
+        std::vector<Maths::mat4>& matrices,
+        const Animation& animation,
+        float time,
+        std::uint32_t boneIndex,
+        const Maths::mat4& parentTransform
+    ) const;
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
@@ -96,13 +100,8 @@ public:
 
     // Animation Functionality
     bool IsAnimated() const { return d_animated; }
-    
-    void SetAnimation(const std::string& name);
-    void SetPose(float time);
-        // Sets the pose of this mesh according to the given animation
-        // name and time. Does nothing if the mesh is a static mesh.
 
-    std::vector<Maths::mat4> GetBoneTransforms() const;
+    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
         // Returns the transforms to be uploaded to the shader. The transform
         // at position i corresponds to the bone with ID i.
 

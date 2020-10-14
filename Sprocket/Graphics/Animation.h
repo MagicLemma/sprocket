@@ -14,11 +14,6 @@ struct Bone
     std::vector<uint32_t> children;
         // All the data for the bone, this should not change after loading.
 
-    Maths::mat4 finalTransform;
-        // When setting the pose of the model, this stores the final
-        // transform which will get uploaded to the shader. As such, it will
-        // change quite a lot.
-
 };
 
 struct KeyFramePos
