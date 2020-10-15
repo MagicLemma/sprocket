@@ -124,7 +124,7 @@ void Inspector::Show(EditorLayer& editor)
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
-            ImGui::DragFloat("Mass", &c.mass, 0.1f);
+            ImGui::DragFloat("Mass", &c.mass, 0.01f);
             ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.1f);
             ImGui::Checkbox("Apply Scale", &c.applyScale);
             
@@ -140,8 +140,8 @@ void Inspector::Show(EditorLayer& editor)
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
-            ImGui::DragFloat("Mass", &c.mass, 0.1f);
-            ImGui::DragFloat("Radius", &c.radius, 0.1f);
+            ImGui::DragFloat("Mass", &c.mass, 0.01f);
+            ImGui::DragFloat("Radius", &c.radius, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<SphereCollider3DComponent>(); }
             ImGui::PopID();
@@ -155,9 +155,9 @@ void Inspector::Show(EditorLayer& editor)
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
-            ImGui::DragFloat("Mass", &c.mass, 0.1f);
-            ImGui::DragFloat("Radius", &c.radius, 0.1f);
-            ImGui::DragFloat("Height", &c.height, 0.1f);
+            ImGui::DragFloat("Mass", &c.mass, 0.01f);
+            ImGui::DragFloat("Radius", &c.radius, 0.01f);
+            ImGui::DragFloat("Height", &c.height, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<CapsuleCollider3DComponent>(); }
             ImGui::PopID();
@@ -183,8 +183,8 @@ void Inspector::Show(EditorLayer& editor)
         if (ImGui::CollapsingHeader("Camera")) {
             ImGui::PushID(count++);
             ;
-            ImGui::DragFloat("FOV", &c.fov, 0.1f);
-            ImGui::DragFloat("Pitch", &c.pitch, 0.1f);
+            ImGui::DragFloat("FOV", &c.fov, 0.01f);
+            ImGui::DragFloat("Pitch", &c.pitch, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<CameraComponent>(); }
             ImGui::PopID();
@@ -210,7 +210,7 @@ void Inspector::Show(EditorLayer& editor)
         if (ImGui::CollapsingHeader("Path")) {
             ImGui::PushID(count++);
             ;
-            ImGui::DragFloat("Speed", &c.speed, 0.1f);
+            ImGui::DragFloat("Speed", &c.speed, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<PathComponent>(); }
             ImGui::PopID();
@@ -236,7 +236,7 @@ void Inspector::Show(EditorLayer& editor)
         if (ImGui::CollapsingHeader("Light")) {
             ImGui::PushID(count++);
             ImGui::ColorPicker3("Colour", &c.colour.r);
-            ImGui::DragFloat("Brightness", &c.brightness, 0.1f);
+            ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
             ImGui::PopID();
@@ -248,13 +248,13 @@ void Inspector::Show(EditorLayer& editor)
         auto& c = entity.Get<ParticleComponent>();
         if (ImGui::CollapsingHeader("Particle")) {
             ImGui::PushID(count++);
-            ImGui::DragFloat("Interval", &c.interval, 0.1f);
+            ImGui::DragFloat("Interval", &c.interval, 0.01f);
             ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
-            ImGui::DragFloat("Velocity Noise", &c.velocityNoise, 0.1f);
+            ImGui::DragFloat("Velocity Noise", &c.velocityNoise, 0.01f);
             ImGui::DragFloat3("Acceleration", &c.acceleration.x, 0.1f);
             ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
-            ImGui::DragFloat("Life", &c.life, 0.1f);
-            ImGui::DragFloat("Accumulator", &c.accumulator, 0.1f);
+            ImGui::DragFloat("Life", &c.life, 0.01f);
+            ImGui::DragFloat("Accumulator", &c.accumulator, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<ParticleComponent>(); }
             ImGui::PopID();
@@ -267,8 +267,8 @@ void Inspector::Show(EditorLayer& editor)
         if (ImGui::CollapsingHeader("Animation")) {
             ImGui::PushID(count++);
             ImGuiXtra::TextModifiable(c.name);
-            ImGui::DragFloat("Time", &c.time, 0.1f);
-            ImGui::DragFloat("Speed", &c.speed, 0.1f);
+            ImGui::DragFloat("Time", &c.time, 0.01f);
+            ImGui::DragFloat("Speed", &c.speed, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<AnimationComponent>(); }
             ImGui::PopID();

@@ -34,7 +34,7 @@ class Inspector(Plugin):
             if limits is not None:
                 a, b = [Types.Float(x) for x in limits]
                 return f'ImGui::SliderFloat("{display}", &c.{name}, {a}, {b})'
-            return f'ImGui::DragFloat("{display}", &c.{name}, 0.1f)'
+            return f'ImGui::DragFloat("{display}", &c.{name}, 0.01f)'
         if cpp_type == "Maths::vec2":
             return f'ImGui::DragFloat2("{display}", &c.{name}.x, 0.1f)'
         if cpp_type == "Maths::vec3":

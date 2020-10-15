@@ -9,6 +9,8 @@ layout(location = 4) in vec3 bitangent;
 layout(location = 5) in ivec4 bone_indices;
 layout(location = 6) in vec4 bone_weights;
 
+const int MAX_BONES = 50;
+
 out Data
 {
     vec3 world_position;
@@ -34,7 +36,7 @@ uniform mat4 u_proj_matrix;
 uniform mat4 u_view_matrix;
 uniform mat4 u_light_proj_view;
 
-uniform mat4 u_bone_transforms[50];
+uniform mat4 u_bone_transforms[MAX_BONES];
 
 void main()
 {

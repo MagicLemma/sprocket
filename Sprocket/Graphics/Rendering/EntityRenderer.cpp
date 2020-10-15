@@ -226,16 +226,16 @@ void EntityRenderer::Draw(
             const auto& ac = entity.Get<AnimationComponent>();
             auto poses = mesh->GetPose(ac.name, ac.time);
             
-            int numBones = std::min(50, (int)poses.size());
+            int numBones = std::min(MAX_BONES, (int)poses.size());
             d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
         }
         else {
             static const auto clear = []() {
-                std::array<Maths::mat4, 50> arr;
+                std::array<Maths::mat4, MAX_BONES> arr;
                 for (auto& x : arr) { x = Maths::mat4(1.0); }
                 return arr;
             }();
-            d_animatedShader.LoadMat4("u_bone_transforms", clear[0], 50);
+            d_animatedShader.LoadMat4("u_bone_transforms", clear[0], MAX_BONES);
         }
 
         d_vao->SetModel(mesh);

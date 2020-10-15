@@ -21,6 +21,9 @@ class EntityRenderer
     // Shadow Map Texture Slot
     static constexpr int SHADOW_MAP_SLOT = 4;
 
+    // Animation Data
+    static constexpr int MAX_BONES = 50;
+
     AssetManager*    d_assetManager;
     ParticleManager* d_particleManager;
 
