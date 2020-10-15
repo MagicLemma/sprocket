@@ -452,7 +452,7 @@ void GetPoseRec(
     }   
 }
 
-const std::vector<Maths::mat4>& Mesh::SetPose(const std::string& name, float time)
+std::vector<Maths::mat4> Mesh::SetPose(const std::string& name, float time)
 {
     d_currentPose.clear();
     d_currentPose.resize(d_skeleton.bones.size());
