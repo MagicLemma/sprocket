@@ -60,12 +60,8 @@ struct Skeleton
     std::vector<Bone> bones;
     std::unordered_map<std::string, std::uint32_t> boneMap;
     std::unordered_map<std::string, Animation> animations;
-};
 
-std::vector<Maths::mat4> GetPose(
-    const Skeleton& skeleton,
-    const std::string& animation,
-    float time
-);
+    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
+};
 
 }

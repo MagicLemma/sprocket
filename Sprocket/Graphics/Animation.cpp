@@ -95,15 +95,15 @@ void GetPoseRec(
 
 }
 
-std::vector<Maths::mat4> GetPose(const Skeleton& skeleton, const std::string& animation, float time)
+std::vector<Maths::mat4> Skeleton::GetPose(const std::string& animation, float time) const
 {
     std::vector<Maths::mat4> pose;
-    pose.resize(skeleton.bones.size());
+    pose.resize(bones.size());
 
-    auto it = skeleton.animations.find(animation);
-    if (it != skeleton.animations.end()) {
+    auto it = animations.find(animation);
+    if (it != animations.end()) {
         float t = Maths::Modulo(time, it->second.duration);
-        GetPoseRec(pose, skeleton, it->second, t, 0, Maths::mat4(1.0));
+        GetPoseRec(pose, *this, it->second, t, 0, Maths::mat4(1.0));
     }
     else {
         for (auto& x : pose) {
