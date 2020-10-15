@@ -95,8 +95,7 @@ public:
     // Animation Functionality
     bool IsAnimated() const { return d_animated; }
 
-    const std::vector<Maths::mat4>& GetPose() const { return d_currentPose; }
-    void SetPose(const std::string& name, float time);
+    const std::vector<Maths::mat4>& SetPose(const std::string& name, float time);
         // Returns the transforms to be uploaded to the shader. The transform
         // at position i corresponds to the bone with ID i.
 

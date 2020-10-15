@@ -86,17 +86,6 @@ void EditorLayer::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
 
-    static float count = 0;
-    count += 7 * dt;
-
-    d_activeScene->Each<ModelComponent>([&](Entity& entity) {
-        auto& mc = entity.Get<ModelComponent>();
-        auto mesh = d_core.assetManager->GetMesh(mc.mesh);
-        if (mesh->IsAnimated()) {
-            mesh->SetPose("Armature|ArmatureAction", count);
-        }
-    });
-
     std::string windowName = "Anvil: " + d_sceneFile;
     d_core.window->SetWindowName(windowName);
 
@@ -208,6 +197,7 @@ void EditorLayer::OnUpdate(double dt)
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
                 d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
                 d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
+                d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
 
                 d_activeScene->OnStartup();
                 d_playingGame = true;

@@ -222,9 +222,21 @@ void EntityRenderer::Draw(
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        const auto& poses = mesh->GetPose();
-        int numBones = std::min(50, (int)poses.size());
-        d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
+        if (entity.Has<AnimationComponent>()) {
+            const auto& ac = entity.Get<AnimationComponent>();
+            const auto& poses = mesh->SetPose(ac.name, ac.time);
+            
+            int numBones = std::min(50, (int)poses.size());
+            d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
+        }
+        else {
+            static const auto clear = []() {
+                std::array<Maths::mat4, 50> arr;
+                for (auto& x : arr) { x = Maths::mat4(1.0); }
+                return arr;
+            }();
+            d_animatedShader.LoadMat4("u_bone_transforms", clear[0], 50);
+        }
 
         d_vao->SetModel(mesh);
         d_vao->SetInstances(nullptr);

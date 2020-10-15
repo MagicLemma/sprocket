@@ -496,7 +496,7 @@ void Mesh::GetPoseRec(
     }   
 }
 
-void Mesh::SetPose(const std::string& name, float time)
+const std::vector<Maths::mat4>& Mesh::SetPose(const std::string& name, float time)
 {
     d_currentPose.clear();
     d_currentPose.resize(d_skeleton.bones.size());
@@ -512,6 +512,8 @@ void Mesh::SetPose(const std::string& name, float time)
         }
         GetPoseRec(it->second, t, root, d_inverseTransform);
     }
+
+    return d_currentPose;
 }
 
 std::vector<std::string> Mesh::GetAnimationNames() const

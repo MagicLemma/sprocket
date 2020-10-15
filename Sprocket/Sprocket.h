@@ -29,6 +29,7 @@
 #include "Scene/Updater.h"
 #include "Scene/EntitySystem.h"
 
+#include "Scene/Systems/AnimationSystem.h"
 #include "Scene/Systems/BasicSelector.h"
 #include "Scene/Systems/Selector.h"
 #include "Scene/Systems/CameraSystem.h"
