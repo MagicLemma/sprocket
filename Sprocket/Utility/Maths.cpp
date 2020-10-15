@@ -268,6 +268,14 @@ float Modulo(float val, float high)
     return ret;
 }
 
+Maths::mat4 NoScale(const Maths::mat4& matrix)
+{
+    Maths::vec3 pos, scale;
+    Maths::quat ori;
+    Maths::Decompose(matrix, &pos, &ori, &scale);
+    return Maths::Transform(pos, ori);
+}
+
 vec3 GetMouseRay(
     const vec2& mousePos,
     unsigned int screenWidth,

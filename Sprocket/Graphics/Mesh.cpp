@@ -131,22 +131,9 @@ bool IsBone(const Skeleton& skeleton, const aiNode* node)
     return it != skeleton.boneMap.end();
 }
 
-void LoadAnimations(
-    Skeleton& skeleton,
-    const aiScene* scene,
-    const aiNode* node,
-    const Maths::mat4& transform
-)
+void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene)
 {
-    assert(node);
-
-    Maths::vec3 p, s;
-    Maths::quat q;
-    Maths::Decompose(transform, &p, &q, &s);
-
-    Bone* bone = GetBone(skeleton, node);
     assert(bone);
-
     for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
         aiAnimation* animationData = scene->mAnimations[i];
         const aiNodeAnim* keyFrames = GetNodeAnim(animationData, bone->name);
@@ -156,23 +143,17 @@ void LoadAnimations(
         BoneKeyFrames& keyFrameData = animation.keyFrames[bone->index];
         for (std::uint32_t i = 0; i != keyFrames->mNumPositionKeys; ++i) {
             auto& x = keyFrames->mPositionKeys[i];
-            keyFrameData.keyPostitions.push_back({
-                (float)x.mTime, q * Convert(x.mValue) + p
-            });
+            keyFrameData.keyPostitions.push_back({(float)x.mTime, Convert(x.mValue)});
         }
 
         for (std::uint32_t i = 0; i != keyFrames->mNumRotationKeys; ++i) {
             auto& x = keyFrames->mRotationKeys[i];
-            keyFrameData.keyOrientations.push_back({
-                (float)x.mTime, q * Convert(x.mValue)
-            });
+            keyFrameData.keyOrientations.push_back({(float)x.mTime, Convert(x.mValue)});
         }
 
         for (std::uint32_t i = 0; i != keyFrames->mNumScalingKeys; ++i) {
             auto& x = keyFrames->mScalingKeys[i];
-            keyFrameData.keyScales.push_back({
-                (float)x.mTime, Convert(x.mValue)
-            });
+            keyFrameData.keyScales.push_back({(float)x.mTime, Convert(x.mValue)});
         }
     }
 
@@ -188,14 +169,17 @@ void LoadSkeleton(
 )
 {
     assert(currentNode);
-    bool isBone = IsBone(skeleton, currentNode);
 
-    const aiNode* currentBoneNode = lastBoneNode;
     Maths::mat4 nodeTransform = parentTransform * Convert(currentNode->mTransformation);
-    if (isBone) {
-        currentBoneNode = currentNode;
+    const aiNode* currentBoneNode = lastBoneNode;
+    
+    if (IsBone(skeleton, currentNode)) {
         nodeTransform = Maths::mat4(1.0);
-        LoadAnimations(skeleton, scene, currentNode, parentTransform);
+        currentBoneNode = currentNode;
+
+        Bone* bone = GetBone(skeleton, currentBoneNode);
+        bone->transform = Maths::NoScale(parentTransform);
+        LoadAnimations(skeleton, bone, scene);
     }
 
     Bone* currentBone = GetBone(skeleton, currentBoneNode);
@@ -520,7 +504,7 @@ void Mesh::GetPoseRec(
     Maths::quat orientation = GetOrientation(kfData, time);
     Maths::vec3 scale = GetScale(kfData, time);
 
-    Maths::mat4 transform = parentTransform * Maths::Transform(position, orientation, scale);
+    Maths::mat4 transform = parentTransform * bone.transform * Maths::Transform(position, orientation, scale);
     d_currentPose[boneIndex] = transform * bone.offset;
 
     for (const auto& child : bone.children) {

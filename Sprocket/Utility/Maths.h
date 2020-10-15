@@ -94,8 +94,10 @@ float Cosd(float degrees);
 
 // General Helpers
 void Clamp(float& value, float min, float max);
-
 float Modulo(float val, float high);
+
+// Returns the matrix but with the scale component removed.
+Maths::mat4 NoScale(const Maths::mat4& matrix);
 
 // Mouse Picking
 vec3 GetMouseRay(
