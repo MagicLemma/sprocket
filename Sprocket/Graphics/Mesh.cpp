@@ -349,10 +349,7 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_layout(sizeof(AnimVertex), 0)
     , d_animated(true)
     , d_skeleton(data.skeleton)
-    , d_currentPose()
 {
-    d_currentPose.resize(data.skeleton.bones.size());
-
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 

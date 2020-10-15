@@ -64,7 +64,6 @@ class Mesh
     // structures are empty
     bool d_animated;
     Skeleton d_skeleton;
-    std::vector<Maths::mat4> d_currentPose;
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
