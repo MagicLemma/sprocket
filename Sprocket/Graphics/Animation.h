@@ -9,7 +9,7 @@ struct Bone
 {
     std::string name;
     std::uint32_t index; // The index of this bone within the bone vector.
-    Maths::mat4 transform;
+    Maths::mat4 offset;
 
     std::vector<uint32_t> children;
         // All the data for the bone, this should not change after loading.

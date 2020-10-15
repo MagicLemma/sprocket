@@ -293,7 +293,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
                 Bone newBone;
                 newBone.name = boneName;
                 newBone.index = boneIndex;
-                newBone.transform = Convert(bone->mOffsetMatrix);
+                newBone.offset = Convert(bone->mOffsetMatrix);
                 skel.bones.push_back(newBone);
                 skel.boneMap[boneName] = boneIndex;
             }
@@ -521,7 +521,7 @@ void Mesh::GetPoseRec(
     Maths::vec3 scale = GetScale(kfData, time);
 
     Maths::mat4 transform = parentTransform * Maths::Transform(position, orientation, scale);
-    d_currentPose[boneIndex] = transform * bone.transform;
+    d_currentPose[boneIndex] = transform * bone.offset;
 
     for (const auto& child : bone.children) {
         GetPoseRec(animation, time, child, transform);
