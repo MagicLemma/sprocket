@@ -2,7 +2,7 @@
 
 layout(location = 0) in vec3 in_position;
 layout(location = 1) in vec2 texture_coords;
-layout(location = 2) in vec3 normal;
+layout(location = 2) in vec3 in_normal;
 layout(location = 3) in vec3 tangent;
 layout(location = 4) in vec3 bitangent;
 
@@ -39,6 +39,7 @@ uniform mat4 u_bone_transforms[50];
 void main()
 {
     vec4 total_position = vec4(0.0);
+    vec4 total_normal = vec4(0.0);
     for (int i = 0; i < 4; i++) {
         int index = bone_indices[i];
         float weight = bone_weights[i];
@@ -48,10 +49,14 @@ void main()
 
             vec4 pos = transform * vec4(in_position, 1.0);
             total_position += pos * weight;
+
+            vec4 nor = transform * vec4(in_normal, 0.0);
+            total_normal += nor * weight;
         }
     }
 
     vec3 position = total_position.xyz;
+    vec3 normal = total_normal.xyz;
 
     vec4 world_pos = u_model_matrix * vec4(position, 1.0);
     gl_Position = u_proj_matrix * u_view_matrix * world_pos;

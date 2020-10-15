@@ -49,7 +49,6 @@ struct AnimatedMeshData
     IndexBuffer      indices;
 
     Skeleton skeleton;
-    Maths::mat4 inverseTransform;
     std::unordered_map<std::string, Animation> animations;
 };
 
@@ -65,7 +64,6 @@ class Mesh
     // structures are empty
     bool d_animated;
     Skeleton d_skeleton;
-    Maths::mat4 d_inverseTransform = Maths::mat4(1.0);
     std::vector<Maths::mat4> d_currentPose;
     void GetPoseRec(
         const Animation& animation,

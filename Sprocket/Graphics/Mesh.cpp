@@ -240,7 +240,6 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
 std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 {    
     AnimatedMeshData data;
-    data.inverseTransform = Maths::Inverse(Convert(scene->mRootNode->mTransformation));
     auto& skel = data.skeleton;
     SPKT_LOG_INFO("Loading animated mesh");
 
@@ -360,7 +359,6 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_animated(true)
     , d_skeleton(data.skeleton)
     , d_currentPose()
-    , d_inverseTransform(data.inverseTransform)
 {
     d_currentPose.resize(data.skeleton.bones.size());
 
@@ -505,7 +503,7 @@ const std::vector<Maths::mat4>& Mesh::SetPose(const std::string& name, float tim
     auto it = d_skeleton.animations.find(name);
     if (it != d_skeleton.animations.end()) {
         float t = Maths::Modulo(time, it->second.duration);
-        GetPoseRec(it->second, t, root, d_inverseTransform);
+        GetPoseRec(it->second, t, root, Maths::mat4(1.0));
     }
 
     return d_currentPose;
