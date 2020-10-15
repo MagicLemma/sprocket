@@ -28,10 +28,17 @@ struct KeyFrameOri
     Maths::quat orientation;
 };
 
+struct KeyFrameScl
+{
+    float       time;
+    Maths::vec3 scale;
+};
+
 struct BoneKeyFrames
 {
     std::vector<KeyFramePos> keyPostitions;
     std::vector<KeyFrameOri> keyOrientations;
+    std::vector<KeyFrameScl> keyScales;
 };
 
 struct Animation

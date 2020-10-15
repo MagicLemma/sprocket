@@ -155,16 +155,23 @@ void LoadAnimations(
         Animation& animation = skeleton.animations[name];
         BoneKeyFrames& keyFrameData = animation.keyFrames[bone->index];
         for (std::uint32_t i = 0; i != keyFrames->mNumPositionKeys; ++i) {
-            auto& pos = keyFrames->mPositionKeys[i];
+            auto& x = keyFrames->mPositionKeys[i];
             keyFrameData.keyPostitions.push_back({
-                (float)pos.mTime, p + Convert(pos.mValue)
+                (float)x.mTime, q * Convert(x.mValue) + p
             });
         }
 
         for (std::uint32_t i = 0; i != keyFrames->mNumRotationKeys; ++i) {
-            auto& pos = keyFrames->mRotationKeys[i];
+            auto& x = keyFrames->mRotationKeys[i];
             keyFrameData.keyOrientations.push_back({
-                (float)pos.mTime, Convert(pos.mValue) * q
+                (float)x.mTime, q * Convert(x.mValue)
+            });
+        }
+
+        for (std::uint32_t i = 0; i != keyFrames->mNumScalingKeys; ++i) {
+            auto& x = keyFrames->mScalingKeys[i];
+            keyFrameData.keyScales.push_back({
+                (float)x.mTime, Convert(x.mValue)
             });
         }
     }
@@ -441,6 +448,10 @@ BufferLayout Mesh::GetLayout() const
 
 Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
 {
+    if (bkf.keyPostitions.size() == 1) {
+        return bkf.keyPostitions[0].position;
+    }
+
     std::uint32_t before = 0, after = 0;
     for (std::uint32_t i = 0; i != bkf.keyPostitions.size(); ++i) {
         if (bkf.keyPostitions[i].time > time) {
@@ -457,6 +468,10 @@ Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
 
 Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
 {
+    if (bkf.keyOrientations.size() == 1) {
+        return bkf.keyOrientations[0].orientation;
+    }
+
     std::uint32_t before = 0, after = 0;
     for (std::uint32_t i = 0; i != bkf.keyOrientations.size(); ++i) {
         if (bkf.keyOrientations[i].time > time) {
@@ -471,6 +486,26 @@ Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
     return Maths::Interpolate(beforeKF.orientation, afterKF.orientation, delta);
 }
 
+Maths::vec3 GetScale(const BoneKeyFrames& bkf, float time)
+{
+    if (bkf.keyScales.size() == 1) {
+        return bkf.keyScales[0].scale;
+    }
+
+    std::uint32_t before = 0, after = 0;
+    for (std::uint32_t i = 0; i != bkf.keyScales.size(); ++i) {
+        if (bkf.keyScales[i].time > time) {
+            before = i > 0 ? i - 1 : bkf.keyScales.size() - 1;
+            after = i;
+            break;
+        }
+    }
+    auto& beforeKF = bkf.keyScales[before];
+    auto& afterKF = bkf.keyScales[after];
+    float delta = (time - beforeKF.time) / (afterKF.time - beforeKF.time);
+    return Maths::Interpolate(beforeKF.scale, afterKF.scale, delta);
+}
+
 void Mesh::GetPoseRec(
     const Animation& animation,
     float time,
@@ -483,8 +518,9 @@ void Mesh::GetPoseRec(
 
     Maths::vec3 position = GetPosition(kfData, time);
     Maths::quat orientation = GetOrientation(kfData, time);
+    Maths::vec3 scale = GetScale(kfData, time);
 
-    Maths::mat4 transform = parentTransform * Maths::Transform(position, orientation);
+    Maths::mat4 transform = parentTransform * Maths::Transform(position, orientation, scale);
     d_currentPose[boneIndex] = transform * bone.transform;
 
     for (const auto& child : bone.children) {
