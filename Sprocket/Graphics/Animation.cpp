@@ -63,14 +63,54 @@ Maths::vec3 GetScale(const BoneKeyFrames& bkf, float time)
     return Maths::Interpolate(beforeKF.scale, afterKF.scale, delta);
 }
 
-}
-
 Maths::mat4 GetAnimationTransform(const BoneKeyFrames& kfData, float time)
 {
     Maths::vec3 position = GetPosition(kfData, time);
     Maths::quat orientation = GetOrientation(kfData, time);
     Maths::vec3 scale = GetScale(kfData, time);
     return Maths::Transform(position, orientation, scale);
+}
+
+void GetPoseRec(
+    std::vector<Maths::mat4>& pose,
+    const Skeleton& skeleton,
+    const Animation& animation,
+    float time,
+    std::uint32_t boneIndex,
+    const Maths::mat4& parentTransform
+)
+{
+    const Bone& bone = skeleton.bones[boneIndex];
+    const auto& kfData = animation.keyFrames[boneIndex];
+
+    Maths::mat4 animationTransform = GetAnimationTransform(kfData, time);
+
+    Maths::mat4 transform = parentTransform * bone.transform * animationTransform;
+    pose[boneIndex] = transform * bone.offset;
+
+    for (const auto& child : bone.children) {
+        GetPoseRec(pose, skeleton, animation, time, child, transform);
+    }   
+}
+
+}
+
+std::vector<Maths::mat4> GetPose(const Skeleton& skeleton, const std::string& animation, float time)
+{
+    std::vector<Maths::mat4> pose;
+    pose.resize(skeleton.bones.size());
+
+    auto it = skeleton.animations.find(animation);
+    if (it != skeleton.animations.end()) {
+        float t = Maths::Modulo(time, it->second.duration);
+        GetPoseRec(pose, skeleton, it->second, t, 0, Maths::mat4(1.0));
+    }
+    else {
+        for (auto& x : pose) {
+            x = Maths::mat4(1.0);
+        }
+    }
+    return pose;
 }
 
 }

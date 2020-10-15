@@ -62,6 +62,10 @@ struct Skeleton
     std::unordered_map<std::string, Animation> animations;
 };
 
-Maths::mat4 GetAnimationTransform(const BoneKeyFrames& kfData, float time);
+std::vector<Maths::mat4> GetPose(
+    const Skeleton& skeleton,
+    const std::string& animation,
+    float time
+);
 
 }
