@@ -441,7 +441,6 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-// TODO: Add interpolation
 Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
 {
     std::uint32_t before = 0, after = 0;
@@ -458,13 +457,12 @@ Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
     return Maths::Interpolate(beforeKF.position, afterKF.position, delta);
 }
 
-// TODO: Add interpolation
 Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
 {
     std::uint32_t before = 0, after = 0;
     for (std::uint32_t i = 0; i != bkf.keyOrientations.size(); ++i) {
-        if (bkf.keyPostitions[i].time > time) {
-            before = i > 0 ? i - 1 : 0;
+        if (bkf.keyOrientations[i].time > time) {
+            before = i > 0 ? i - 1 : bkf.keyOrientations.size() - 1;
             after = i;
             break;
         }
