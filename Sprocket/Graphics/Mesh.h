@@ -60,10 +60,8 @@ class Mesh
     BufferLayout d_layout;
     std::size_t d_vertexCount;
 
-    // Animation data structures. If this meshes is not animated, these
-    // structures are empty
     bool d_animated;
-    Skeleton d_skeleton;
+    Skeleton d_skeleton; // This is empty if the Mesh is not animated
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;

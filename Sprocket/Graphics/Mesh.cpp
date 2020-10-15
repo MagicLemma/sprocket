@@ -136,24 +136,29 @@ void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene)
     assert(bone);
     for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
         aiAnimation* animationData = scene->mAnimations[i];
+        float ticksPerSec = animationData->mTicksPerSecond;
+        if (ticksPerSec == 0.0f) { ticksPerSec = 25.0f; } // If unknown
+        SPKT_LOG_INFO("Ticks per sec = {}", ticksPerSec);
+
         const aiNodeAnim* keyFrames = GetNodeAnim(animationData, bone->name);
         std::string name(animationData->mName.data);
 
         Animation& animation = skeleton.animations[name];
+        animation.duration = animationData->mDuration / ticksPerSec;
         BoneKeyFrames& keyFrameData = animation.keyFrames[bone->index];
         for (std::uint32_t i = 0; i != keyFrames->mNumPositionKeys; ++i) {
             auto& x = keyFrames->mPositionKeys[i];
-            keyFrameData.keyPostitions.push_back({(float)x.mTime, Convert(x.mValue)});
+            keyFrameData.keyPostitions.push_back({(float)x.mTime/ticksPerSec, Convert(x.mValue)});
         }
 
         for (std::uint32_t i = 0; i != keyFrames->mNumRotationKeys; ++i) {
             auto& x = keyFrames->mRotationKeys[i];
-            keyFrameData.keyOrientations.push_back({(float)x.mTime, Convert(x.mValue)});
+            keyFrameData.keyOrientations.push_back({(float)x.mTime/ticksPerSec, Convert(x.mValue)});
         }
 
         for (std::uint32_t i = 0; i != keyFrames->mNumScalingKeys; ++i) {
             auto& x = keyFrames->mScalingKeys[i];
-            keyFrameData.keyScales.push_back({(float)x.mTime, Convert(x.mValue)});
+            keyFrameData.keyScales.push_back({(float)x.mTime/ticksPerSec, Convert(x.mValue)});
         }
     }
 
@@ -308,7 +313,6 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 
         Animation& animation = skel.animations[name];
         animation.name = name;
-        animation.duration = data->mDuration;
         animation.keyFrames.resize(skel.bones.size());
     }
 
