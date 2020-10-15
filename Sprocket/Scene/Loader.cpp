@@ -158,6 +158,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "AnimationComponent" << YAML::BeginMap;
             out << YAML::Key << "name" << YAML::Value << c.name;
             out << YAML::Key << "time" << YAML::Value << c.time;
+            out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
         out << YAML::EndMap;
@@ -303,6 +304,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             AnimationComponent c;
             c.name = spec["name"] ? spec["name"].as<std::string>() : "";
             c.time = spec["time"] ? spec["time"].as<float>() : 0.0f;
+            c.speed = spec["speed"] ? spec["speed"].as<float>() : 1.0f;
             e.Add(c);
         }
     }

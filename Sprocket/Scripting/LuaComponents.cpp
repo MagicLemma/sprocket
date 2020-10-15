@@ -225,6 +225,7 @@ constexpr int AnimationComponentDimension()
     int count = 0;
     count += Dimension<std::string>(); // name
     count += Dimension<float>(); // time
+    count += Dimension<float>(); // speed
     return count;
 }
 
@@ -899,6 +900,7 @@ int GetAnimationComponent(lua_State* L)
     const auto& c = e.Get<AnimationComponent>();
     count += Push(L, c.name);
     count += Push(L, c.time);
+    count += Push(L, c.speed);
     return count;
 }
 
@@ -911,6 +913,7 @@ int SetAnimationComponent(lua_State* L)
     auto& c = e.Get<AnimationComponent>();
     c.name = Pull<std::string>(L, count);
     c.time = Pull<float>(L, count);
+    c.speed = Pull<float>(L, count);
     return 0;
 }
 
@@ -925,6 +928,7 @@ int AddAnimationComponent(lua_State* L)
     AnimationComponent c;
     c.name = Pull<std::string>(L, count);
     c.time = Pull<float>(L, count);
+    c.speed = Pull<float>(L, count);
     e.Add(c);
     return 0;
 }

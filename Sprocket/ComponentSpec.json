@@ -469,6 +469,12 @@
                     "DisplayName": "Time",
                     "Type": "float",
                     "Default": 0.0
+                },
+                {
+                    "Name": "speed",
+                    "DisplayName": "Speed",
+                    "Type": "float",
+                    "Default": 1.0
                 }
             ]
         }

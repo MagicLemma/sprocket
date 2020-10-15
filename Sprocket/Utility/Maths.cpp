@@ -260,6 +260,14 @@ void Clamp(float& value, float min, float max)
     value = std::min(std::max(value, min), max);
 }
 
+float Modulo(float val, float high)
+{
+    float ret = val;
+    while (ret > high) { ret -= high; }
+    while (ret < 0) { ret += high; }
+    return ret;
+}
+
 vec3 GetMouseRay(
     const vec2& mousePos,
     unsigned int screenWidth,

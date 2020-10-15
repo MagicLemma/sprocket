@@ -95,6 +95,8 @@ float Cosd(float degrees);
 // General Helpers
 void Clamp(float& value, float min, float max);
 
+float Modulo(float val, float high);
+
 // Mouse Picking
 vec3 GetMouseRay(
     const vec2& mousePos,

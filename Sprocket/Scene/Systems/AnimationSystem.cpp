@@ -8,7 +8,8 @@ namespace Sprocket {
 void AnimationSystem::OnUpdate(Scene& scene, double dt)
 {
     scene.Each<AnimationComponent>([dt](Entity& entity) {
-        entity.Get<AnimationComponent>().time += (float)dt;
+        auto& ac = entity.Get<AnimationComponent>();
+        ac.time += (float)dt * ac.speed;
     });
 }
 

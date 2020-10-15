@@ -506,10 +506,7 @@ const std::vector<Maths::mat4>& Mesh::SetPose(const std::string& name, float tim
 
     auto it = d_skeleton.animations.find(name);
     if (it != d_skeleton.animations.end()) {
-        float t = time;
-        while (t > it->second.duration) {
-            t -= it->second.duration;
-        }
+        float t = Maths::Modulo(time, it->second.duration);
         GetPoseRec(it->second, t, root, d_inverseTransform);
     }
 

@@ -268,6 +268,7 @@ void Inspector::Show(EditorLayer& editor)
             ImGui::PushID(count++);
             ImGuiXtra::TextModifiable(c.name);
             ImGui::DragFloat("Time", &c.time, 0.1f);
+            ImGui::DragFloat("Speed", &c.speed, 0.1f);
             
             if (ImGui::Button("Delete")) { entity.Remove<AnimationComponent>(); }
             ImGui::PopID();
