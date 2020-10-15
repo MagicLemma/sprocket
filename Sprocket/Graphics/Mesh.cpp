@@ -430,7 +430,7 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-std::vector<Maths::mat4> Mesh::SetPose(const std::string& name, float time) const
+std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, float time) const
 {
     return d_skeleton.GetPose(name, time);
 }

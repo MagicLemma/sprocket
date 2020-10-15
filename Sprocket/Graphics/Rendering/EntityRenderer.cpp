@@ -224,7 +224,7 @@ void EntityRenderer::Draw(
         
         if (entity.Has<AnimationComponent>()) {
             const auto& ac = entity.Get<AnimationComponent>();
-            auto poses = mesh->SetPose(ac.name, ac.time);
+            auto poses = mesh->GetPose(ac.name, ac.time);
             
             int numBones = std::min(50, (int)poses.size());
             d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
