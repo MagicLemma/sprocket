@@ -430,24 +430,25 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-void Mesh::GetPoseRec(
+void GetPoseRec(
     std::vector<Maths::mat4>& pose,
+    const Skeleton& skeleton,
     const Animation& animation,
     float time,
     std::uint32_t boneIndex,
     const Maths::mat4& parentTransform
 )
 {
-    const Bone& bone = d_skeleton.bones[boneIndex];
+    const Bone& bone = skeleton.bones[boneIndex];
     const auto& kfData = animation.keyFrames[boneIndex];
 
     Maths::mat4 animationTransform = GetAnimationTransform(kfData, time);
 
     Maths::mat4 transform = parentTransform * bone.transform * animationTransform;
-    d_currentPose[boneIndex] = transform * bone.offset;
+    pose[boneIndex] = transform * bone.offset;
 
     for (const auto& child : bone.children) {
-        GetPoseRec(pose, animation, time, child, transform);
+        GetPoseRec(pose, skeleton, animation, time, child, transform);
     }   
 }
 
@@ -462,7 +463,7 @@ const std::vector<Maths::mat4>& Mesh::SetPose(const std::string& name, float tim
     auto it = d_skeleton.animations.find(name);
     if (it != d_skeleton.animations.end()) {
         float t = Maths::Modulo(time, it->second.duration);
-        GetPoseRec(d_currentPose, it->second, t, root, Maths::mat4(1.0));
+        GetPoseRec(d_currentPose, d_skeleton, it->second, t, root, Maths::mat4(1.0));
     }
 
     return d_currentPose;

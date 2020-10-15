@@ -65,13 +65,6 @@ class Mesh
     bool d_animated;
     Skeleton d_skeleton;
     std::vector<Maths::mat4> d_currentPose;
-    void GetPoseRec(
-        std::vector<Maths::mat4>& pose,
-        const Animation& animation,
-        float time,
-        std::uint32_t boneIndex,
-        const Maths::mat4& parentTransform
-    );
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
