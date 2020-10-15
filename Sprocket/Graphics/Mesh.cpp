@@ -454,8 +454,8 @@ void GetPoseRec(
 
 std::vector<Maths::mat4> Mesh::SetPose(const std::string& name, float time)
 {
-    d_currentPose.clear();
-    d_currentPose.resize(d_skeleton.bones.size());
+    std::vector<Maths::mat4> pose;
+    pose.resize(d_skeleton.bones.size());
 
     std::uint32_t root = 0;
     const Bone& rootBone = d_skeleton.bones[root];
@@ -463,10 +463,10 @@ std::vector<Maths::mat4> Mesh::SetPose(const std::string& name, float time)
     auto it = d_skeleton.animations.find(name);
     if (it != d_skeleton.animations.end()) {
         float t = Maths::Modulo(time, it->second.duration);
-        GetPoseRec(d_currentPose, d_skeleton, it->second, t, root, Maths::mat4(1.0));
+        GetPoseRec(pose, d_skeleton, it->second, t, root, Maths::mat4(1.0));
     }
 
-    return d_currentPose;
+    return pose;
 }
 
 std::vector<std::string> Mesh::GetAnimationNames() const
