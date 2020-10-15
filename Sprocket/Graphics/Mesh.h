@@ -66,6 +66,7 @@ class Mesh
     Skeleton d_skeleton;
     std::vector<Maths::mat4> d_currentPose;
     void GetPoseRec(
+        std::vector<Maths::mat4>& pose,
         const Animation& animation,
         float time,
         std::uint32_t boneIndex,
