@@ -87,7 +87,7 @@ void EditorLayer::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
 
     static float count = 0;
-    count += dt;
+    count += 7 * dt;
 
     d_activeScene->Each<ModelComponent>([&](Entity& entity) {
         auto& mc = entity.Get<ModelComponent>();

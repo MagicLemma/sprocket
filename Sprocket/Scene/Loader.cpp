@@ -153,6 +153,13 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "life" << YAML::Value << c.life;
             out << YAML::EndMap;
         }
+        if (entity.Has<AnimationComponent>()) {
+            const auto& c = entity.Get<AnimationComponent>();
+            out << YAML::Key << "AnimationComponent" << YAML::BeginMap;
+            out << YAML::Key << "name" << YAML::Value << c.name;
+            out << YAML::Key << "time" << YAML::Value << c.time;
+            out << YAML::EndMap;
+        }
         out << YAML::EndMap;
     });
     out << YAML::EndSeq;
@@ -292,6 +299,12 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;
             e.Add(c);
         }
+        if (auto spec = entity["AnimationComponent"]) {
+            AnimationComponent c;
+            c.name = spec["name"] ? spec["name"].as<std::string>() : "";
+            c.time = spec["time"] ? spec["time"].as<float>() : 0.0f;
+            e.Add(c);
+        }
     }
 }
 
@@ -342,6 +355,9 @@ Entity Copy(std::shared_ptr<Scene> scene, Entity entity)
     }
     if (entity.Has<ParticleComponent>()) {
         e.Add<ParticleComponent>(entity.Get<ParticleComponent>());
+    }
+    if (entity.Has<AnimationComponent>()) {
+        e.Add<AnimationComponent>(entity.Get<AnimationComponent>());
     }
     return e;
 }

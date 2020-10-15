@@ -8,10 +8,6 @@
 #include <string>
 #include <memory>
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h> // TODO: Remove
-
 namespace Sprocket {
 
 struct Vertex
@@ -55,9 +51,6 @@ struct AnimatedMeshData
     Skeleton skeleton;
     Maths::mat4 inverseTransform;
     std::unordered_map<std::string, Animation> animations;
-    std::shared_ptr<Assimp::Importer> importer; // TODO: Remove
-        // Only being added for now to get animation working, after we should
-        // remove this and store all data in our own structures.
 };
 
 class Mesh
@@ -70,7 +63,6 @@ class Mesh
 
     // Animation data structures. If this meshes is not animated, these
     // structures are empty
-    std::shared_ptr<Assimp::Importer> d_importer; // TODO: Remove
     bool d_animated;
     Skeleton d_skeleton;
     Maths::mat4 d_inverseTransform = Maths::mat4(1.0);

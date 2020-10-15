@@ -220,6 +220,14 @@ constexpr int ParticleComponentDimension()
     return count;
 }
 
+constexpr int AnimationComponentDimension()
+{
+    int count = 0;
+    count += Dimension<std::string>(); // name
+    count += Dimension<float>(); // time
+    return count;
+}
+
 
 template<typename T> int Lua_Has(lua_State* L)
 {
@@ -298,6 +306,11 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_SetParticleComponent", &Lua::SetParticleComponent);
     lua_register(L, "Lua_AddParticleComponent", &Lua::AddParticleComponent);
     lua_register(L, "HasParticleComponent", &Lua_Has<ParticleComponent>);
+
+    lua_register(L, "Lua_GetAnimationComponent", &Lua::GetAnimationComponent);
+    lua_register(L, "Lua_SetAnimationComponent", &Lua::SetAnimationComponent);
+    lua_register(L, "Lua_AddAnimationComponent", &Lua::AddAnimationComponent);
+    lua_register(L, "HasAnimationComponent", &Lua_Has<AnimationComponent>);
 
 }
 
@@ -871,6 +884,47 @@ int AddParticleComponent(lua_State* L)
     c.acceleration = Pull<Maths::vec3>(L, count);
     c.scale = Pull<Maths::vec3>(L, count);
     c.life = Pull<float>(L, count);
+    e.Add(c);
+    return 0;
+}
+
+int GetAnimationComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<AnimationComponent>());
+
+    int count = 0;
+    const auto& c = e.Get<AnimationComponent>();
+    count += Push(L, c.name);
+    count += Push(L, c.time);
+    return count;
+}
+
+int SetAnimationComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, AnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<AnimationComponent>();
+    c.name = Pull<std::string>(L, count);
+    c.time = Pull<float>(L, count);
+    return 0;
+}
+
+int AddAnimationComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, AnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    assert(!e.Has<AnimationComponent>());
+
+    AnimationComponent c;
+    c.name = Pull<std::string>(L, count);
+    c.time = Pull<float>(L, count);
     e.Add(c);
     return 0;
 }

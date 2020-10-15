@@ -262,6 +262,19 @@ void Inspector::Show(EditorLayer& editor)
         
     }
 
+    if (entity.Has<AnimationComponent>()) {
+        auto& c = entity.Get<AnimationComponent>();
+        if (ImGui::CollapsingHeader("Animation")) {
+            ImGui::PushID(count++);
+            ImGuiXtra::TextModifiable(c.name);
+            ImGui::DragFloat("Time", &c.time, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<AnimationComponent>(); }
+            ImGui::PopID();
+        }
+        
+    }
+
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -327,6 +340,10 @@ void Inspector::Show(EditorLayer& editor)
         }
         if (!entity.Has<ParticleComponent>() && ImGui::Selectable("Particle")) {
             ParticleComponent c;
+            entity.Add(c);
+        }
+        if (!entity.Has<AnimationComponent>() && ImGui::Selectable("Animation")) {
+            AnimationComponent c;
             entity.Add(c);
         }
         ImGui::EndMenu();
