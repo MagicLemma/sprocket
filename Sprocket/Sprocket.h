@@ -62,6 +62,7 @@
 #include "Utility/Yaml.h"
 
 // GRAPHICS
+#include "Graphics/Animation.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/BufferLayout.h"
 #include "Graphics/RenderContext.h"

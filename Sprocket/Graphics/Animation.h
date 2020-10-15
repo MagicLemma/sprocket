@@ -2,6 +2,9 @@
 #include "Maths.h"
 
 #include <string>
+#include <unordered_map>
+#include <cstdint>
+#include <vector>
 
 namespace Sprocket {
 
@@ -58,5 +61,7 @@ struct Skeleton
     std::unordered_map<std::string, std::uint32_t> boneMap;
     std::unordered_map<std::string, Animation> animations;
 };
+
+Maths::mat4 GetAnimationTransform(const BoneKeyFrames& kfData, float time);
 
 }
