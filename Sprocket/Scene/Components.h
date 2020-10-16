@@ -115,5 +115,12 @@ struct ParticleComponent
     float accumulator = 0.0f;
 };
 
+struct AnimationComponent
+{
+    std::string name = "";
+    float time = 0.0f;
+    float speed = 1.0f;
+};
+
 
 }

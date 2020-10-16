@@ -29,6 +29,7 @@
 #include "Scene/Updater.h"
 #include "Scene/EntitySystem.h"
 
+#include "Scene/Systems/AnimationSystem.h"
 #include "Scene/Systems/BasicSelector.h"
 #include "Scene/Systems/Selector.h"
 #include "Scene/Systems/CameraSystem.h"
@@ -61,6 +62,7 @@
 #include "Utility/Yaml.h"
 
 // GRAPHICS
+#include "Graphics/Animation.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/BufferLayout.h"
 #include "Graphics/RenderContext.h"

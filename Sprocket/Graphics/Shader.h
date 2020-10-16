@@ -50,7 +50,7 @@ public:
     void LoadVec3(const std::string& name, const Maths::vec3& vector) const;
     void LoadVec4(const std::string& name, const Maths::vec4& vector) const;
     void LoadQuat(const std::string& name, const Maths::quat& quat) const;
-    void LoadMat4(const std::string& name, const Maths::mat4& matrix) const;
+    void LoadMat4(const std::string& name, const Maths::mat4& matrix, int count = 1) const;
 };
 
 // HELPER FUNCTIONS

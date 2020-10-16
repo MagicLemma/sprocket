@@ -19,18 +19,18 @@ Buffer::Buffer(
     const BufferLayout& layout,
     const BufferUsage& usage
 )
-    : d_buffer(std::make_shared<VBO>())
-    , d_layout(layout)
+    : d_layout(layout)
     , d_usage(usage)
     , d_instanceCount(0)
     , d_instanceSize(0)
 {
+    glCreateBuffers(1, &d_vbo);
     assert(d_layout.Validate());
 }
 
-void Buffer::Bind()
+void Buffer::Bind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
+    glBindBuffer(GL_ARRAY_BUFFER, d_vbo);
     d_layout.SetAttributes();
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -43,9 +43,7 @@ void Buffer::SetData(
 {
     d_instanceCount = instanceCount;
     d_instanceSize = instanceSize;
-    glBindBuffer(GL_ARRAY_BUFFER, d_buffer->Value());
-    glBufferData(GL_ARRAY_BUFFER, instanceCount * instanceSize, data, GetUsage(d_usage));
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glNamedBufferData(d_vbo, instanceCount * instanceSize, data, GetUsage(d_usage));
 }
 
 }

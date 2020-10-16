@@ -17,7 +17,9 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
 {
     d_shader.Bind();
     d_shader.LoadMat4("projectionMatrix", proj);
-    d_shader.LoadMat4("viewMatrix", view);
+
+    // Remove the translation so the camera never escapes the skybox.
+    d_shader.LoadMat4("viewMatrix", Maths::mat4(Maths::mat3(view)));
 
     skybox.Bind();
     d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Skybox.obj"));
@@ -26,10 +28,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const Entity& camera)
 {
-    Maths::mat4 view = MakeView(camera);
-    Maths::mat4 proj = MakeProj(camera);
-    Maths::mat4 view2 = Maths::mat4(Maths::mat3(view));
-    Draw(skybox, proj, view);
+    Draw(skybox, MakeProj(camera), MakeView(camera));
 }
 
 }

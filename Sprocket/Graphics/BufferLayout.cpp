@@ -6,31 +6,31 @@
 namespace Sprocket {
 namespace {
 
-int getType(DataType type)
+constexpr int getType(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return GL_FLOAT;
+        case DataType::INT: return GL_INT;
         case DataType::UBYTE: return GL_UNSIGNED_BYTE;
     }
-    return GL_FLOAT;
 }
 
-int getNormalised(DataType type)
+constexpr int getNormalised(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return GL_FALSE;
+        case DataType::INT: return GL_FALSE;
         case DataType::UBYTE: return GL_TRUE;
     }
-    return GL_FALSE;
 }
 
-unsigned int getSize(DataType type)
+constexpr unsigned int getSize(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return sizeof(float);
+        case DataType::INT: return sizeof(int);
         case DataType::UBYTE: return sizeof(unsigned char);
     }
-    return sizeof(float);
 }
 
 }
@@ -59,16 +59,31 @@ void BufferLayout::SetAttributes() const
     unsigned int index = d_startingIndex;
     for (const auto& data : d_attributes) {
         glEnableVertexAttribArray(index);
-        glVertexAttribPointer(
-            index,
-            data.count,
-            getType(data.type),
-            getNormalised(data.type),
-            d_vertexSize,
-            (void*)offset
-        );
-        if (data.rate == DataRate::INSTANCE) {
-            glVertexAttribDivisor(index, 1);
+        if (data.type == DataType::INT) {
+            glVertexAttribIPointer(
+                index,
+                data.count,
+                getType(data.type),
+                d_vertexSize,
+                (void*)offset
+            );
+        } else {
+            glVertexAttribPointer(
+                index,
+                data.count,
+                getType(data.type),
+                getNormalised(data.type),
+                d_vertexSize,
+                (void*)offset
+            );
+        }
+        switch (data.rate) {
+            case DataRate::INSTANCE: {
+                glVertexAttribDivisor(index, 1);
+            } break;
+            case DataRate::VERTEX: {
+                glVertexAttribDivisor(index, 0);
+            } break;
         }
         offset += data.count * getSize(data.type);
         ++index;

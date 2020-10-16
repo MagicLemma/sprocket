@@ -21,10 +21,14 @@ class EntityRenderer
     // Shadow Map Texture Slot
     static constexpr int SHADOW_MAP_SLOT = 4;
 
+    // Animation Data
+    static constexpr int MAX_BONES = 50;
+
     AssetManager*    d_assetManager;
     ParticleManager* d_particleManager;
 
-    Shader  d_shader;
+    Shader  d_staticShader;
+    Shader  d_animatedShader;
 
     std::unique_ptr<VertexArray> d_vao;
     
@@ -40,7 +44,7 @@ public:
     void EnableShadows(const ShadowMap& shadowMap);
     void EnableParticles(ParticleManager* particleManager);
 
-    Shader& GetShader() { return d_shader; }
+    Shader& GetShader() { return d_staticShader; }
 };
 
 }

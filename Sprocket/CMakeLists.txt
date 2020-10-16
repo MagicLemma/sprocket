@@ -49,6 +49,7 @@ add_library(Sprocket STATIC
             Scene/Loader.cpp
             Scene/Updater.cpp
 
+            Scene/Systems/AnimationSystem.cpp
             Scene/Systems/BasicSelector.cpp
             Scene/Systems/CameraSystem.cpp
             Scene/Systems/Selector.cpp
@@ -58,6 +59,7 @@ add_library(Sprocket STATIC
             Scene/Systems/GameGrid.cpp
             Scene/Systems/PathFollower.cpp
 
+            Graphics/Animation.cpp
             Graphics/Buffer.cpp
             Graphics/BufferLayout.cpp
             Graphics/RenderContext.cpp

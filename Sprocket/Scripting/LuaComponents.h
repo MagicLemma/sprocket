@@ -60,6 +60,10 @@ int GetParticleComponent(lua_State* L);
 int SetParticleComponent(lua_State* L);
 int AddParticleComponent(lua_State* L);
 
+int GetAnimationComponent(lua_State* L);
+int SetAnimationComponent(lua_State* L);
+int AddAnimationComponent(lua_State* L);
+
 
 }
 }

@@ -81,6 +81,10 @@ float LengthSquare(const vec3& v);
 
 void Normalise(vec3& vec);
 
+// Normalisation
+Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta);
+Maths::quat Interpolate(const Maths::quat& a, const Maths::quat& b, float delta);
+
 // Trig
 float Radians(float degrees);
 float Degrees(float radians);
@@ -90,6 +94,10 @@ float Cosd(float degrees);
 
 // General Helpers
 void Clamp(float& value, float min, float max);
+float Modulo(float val, float high);
+
+// Returns the matrix but with the scale component removed.
+Maths::mat4 NoScale(const Maths::mat4& matrix);
 
 // Mouse Picking
 vec3 GetMouseRay(

@@ -197,6 +197,7 @@ void EditorLayer::OnUpdate(double dt)
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
                 d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
                 d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
+                d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
 
                 d_activeScene->OnStartup();
                 d_playingGame = true;

@@ -4,7 +4,7 @@
 
 namespace Sprocket {
 
-enum class DataType { FLOAT, UBYTE };
+enum class DataType { FLOAT, INT, UBYTE };
 enum class DataRate { VERTEX, INSTANCE };
 
 struct LayoutAttribute

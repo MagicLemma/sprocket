@@ -12,17 +12,21 @@ VertexArray::VertexArray()
 void VertexArray::SetModel(std::shared_ptr<Mesh> model)
 {
     d_model = model;
-    glBindVertexArray(d_vao->Value());
-    model->Bind();
-    glBindVertexArray(0);
+    if (model) {
+        glBindVertexArray(d_vao->Value());
+        model->Bind();
+        glBindVertexArray(0);
+    }
 }
 
 void VertexArray::SetInstances(std::shared_ptr<Buffer> instanceData)
 {
     d_instances = instanceData;
-    glBindVertexArray(d_vao->Value());
-    instanceData->Bind();
-    glBindVertexArray(0);
+    if (instanceData) {
+        glBindVertexArray(d_vao->Value());
+        instanceData->Bind();
+        glBindVertexArray(0);
+    }
 }
 
 void VertexArray::Draw() const

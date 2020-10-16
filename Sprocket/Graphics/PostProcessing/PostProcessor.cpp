@@ -3,8 +3,10 @@
 namespace Sprocket {
 namespace {
 
-VertexBuffer GetVertices()
+StaticMeshData GetMeshData()
 {
+    StaticMeshData data;
+
     Vertex bottomLeft;
     bottomLeft.position = {-1.0f, -1.0f, 0.0f};
     bottomLeft.textureCoords = {0.0f, 0.0f};
@@ -21,12 +23,9 @@ VertexBuffer GetVertices()
     topLeft.position = {-1.0f, 1.0f, 0.0f};
     topLeft.textureCoords = {0.0f, 1.0f};
 
-    return VertexBuffer{
-        bottomLeft,
-        bottomRight,
-        topRight,
-        topLeft
-    };
+    data.vertices = {bottomLeft, bottomRight, topRight, topLeft};
+    data.indices = {0, 1, 2, 0, 2, 3};
+    return data;
 }
 
 }
@@ -34,7 +33,7 @@ VertexBuffer GetVertices()
 PostProcessor::PostProcessor(int width, int height)
     : d_width(width)
     , d_height(height)
-    , d_quad(GetVertices(), {0, 1, 2, 0, 2, 3})
+    , d_quad(GetMeshData())
 {}
 
 void PostProcessor::AddEffect(std::shared_ptr<Effect> effect)

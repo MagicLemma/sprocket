@@ -453,6 +453,30 @@
                     }
                 }
             ]
+        },
+        {
+            "Name": "AnimationComponent",
+            "DisplayName": "Animation",
+            "Attributes": [
+                {
+                    "Name": "name",
+                    "DisplayName": "Name",
+                    "Type": "std::string",
+                    "Default": ""
+                },
+                {
+                    "Name": "time",
+                    "DisplayName": "Time",
+                    "Type": "float",
+                    "Default": 0.0
+                },
+                {
+                    "Name": "speed",
+                    "DisplayName": "Speed",
+                    "Type": "float",
+                    "Default": 1.0
+                }
+            ]
         }
     ]
 }

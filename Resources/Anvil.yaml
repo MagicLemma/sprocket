@@ -555,3 +555,16 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
+  - NameComponent:
+      name: Running Character
+    TransformComponent:
+      position: [-12.34701, 0.2741509, -6.543652]
+      orientation: [1, 1.159412e-09, 0, 0]
+      scale: [0.2210628, 0.2210639, 0.2210466]
+    ModelComponent:
+      mesh: D:\dev\Sprocket\Resources\Models\RunningCharacter\RunningCharacter.fbx
+      material: D:\dev\Sprocket\Resources\Materials\RunningCharacter.yaml
+    AnimationComponent:
+      name: Armature|ArmatureAction
+      time: 5
+      speed: 1

@@ -259,3 +259,23 @@ function AddParticleComponent(entity, c)
 end
 
 
+AnimationComponent = Class(function(self, name, time, speed)
+    self.name = name
+    self.time = time
+    self.speed = speed
+end)
+
+function GetAnimationComponent(entity)
+    x0, x1, x2 = Lua_GetAnimationComponent(entity)
+    return AnimationComponent(x0, x1, x2)
+end
+
+function SetAnimationComponent(entity, c)
+    Lua_SetAnimationComponent(entity, c.name, c.time, c.speed)
+end
+
+function AddAnimationComponent(entity, c)
+    Lua_AddAnimationComponent(entity, c.name, c.time, c.speed)
+end
+
+

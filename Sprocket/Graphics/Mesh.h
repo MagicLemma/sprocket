@@ -2,9 +2,11 @@
 #include "Maths.h"
 #include "Resources.h"
 #include "BufferLayout.h"
+#include "Animation.h"
 
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace Sprocket {
 
@@ -18,8 +20,37 @@ struct Vertex
     Maths::vec3 bitangent;
 };
 
+struct AnimVertex
+{
+    Maths::vec3 position;
+    Maths::vec2 textureCoords;
+
+    Maths::vec3 normal;
+    Maths::vec3 tangent;
+    Maths::vec3 bitangent;
+
+    Maths::ivec4 boneIndices = {-1, -1, -1, -1};
+    Maths::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
+};
+
 using VertexBuffer = std::vector<Vertex>;
-using IndexBuffer = std::vector<unsigned int>;
+using AnimVertexBuffer = std::vector<AnimVertex>;
+using IndexBuffer = std::vector<std::uint32_t>;
+
+struct StaticMeshData
+{
+    VertexBuffer vertices;
+    IndexBuffer  indices;
+};
+
+struct AnimatedMeshData
+{
+    AnimVertexBuffer vertices;
+    IndexBuffer      indices;
+
+    Skeleton skeleton;
+    std::unordered_map<std::string, Animation> animations;
+};
 
 class Mesh
 {
@@ -29,11 +60,15 @@ class Mesh
     BufferLayout d_layout;
     std::size_t d_vertexCount;
 
+    bool d_animated;
+    Skeleton d_skeleton; // This is empty if the Mesh is not animated
+
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
 
 public:
-    Mesh(const VertexBuffer& vertices, const IndexBuffer& indices);
+    Mesh(const StaticMeshData& data);
+    Mesh(const AnimatedMeshData& data);
     Mesh(); // Empty model
     ~Mesh();
 
@@ -45,6 +80,16 @@ public:
     void Bind() const;
 
     bool operator==(const Mesh& other) const;
+
+    // Animation Functionality
+    bool IsAnimated() const { return d_animated; }
+
+    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
+        // Returns the transforms to be uploaded to the shader. The transform
+        // at position i corresponds to the bone with ID i.
+
+    std::vector<std::string> GetAnimationNames() const;
+        // Returns a list of names of all possible animations in this mesh.
 };
 
 }

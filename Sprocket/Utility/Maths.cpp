@@ -223,6 +223,16 @@ void Normalise(vec3& vec)
     vec = glm::normalize(vec);
 }
 
+Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta)
+{
+    return glm::mix(a, b, delta);
+}
+
+Maths::quat Interpolate(const Maths::quat& a, const Maths::quat& b, float delta)
+{
+    return glm::slerp(a, b, delta);
+}
+
 // Trig
 float Radians(float degrees)
 {
@@ -248,6 +258,22 @@ float Cosd(float degrees)
 void Clamp(float& value, float min, float max)
 {
     value = std::min(std::max(value, min), max);
+}
+
+float Modulo(float val, float high)
+{
+    float ret = val;
+    while (ret > high) { ret -= high; }
+    while (ret < 0) { ret += high; }
+    return ret;
+}
+
+Maths::mat4 NoScale(const Maths::mat4& matrix)
+{
+    Maths::vec3 pos, scale;
+    Maths::quat ori;
+    Maths::Decompose(matrix, &pos, &ori, &scale);
+    return Maths::Transform(pos, ori);
 }
 
 vec3 GetMouseRay(
