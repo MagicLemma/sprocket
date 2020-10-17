@@ -43,7 +43,6 @@ void ParticleManager::OnUpdate(double dt)
         particle.life -= dt;
         particle.position += particle.velocity * (float)dt;
         particle.velocity += particle.acceleration * (float)dt;
-        float r = Random<float>(1.0f, 3.0f);
         if (particle.life > 0.0) {
             d_instanceData.push_back({
                 particle.position,

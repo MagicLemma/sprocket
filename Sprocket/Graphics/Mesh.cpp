@@ -330,7 +330,6 @@ Mesh::Mesh(const StaticMeshData& data)
     , d_indexBuffer(0)
     , d_vertexCount(data.indices.size())
     , d_layout(sizeof(Vertex), 0)
-    , d_animated(false)
 {
     glCreateBuffers(1, &d_vertexBuffer);
     glNamedBufferData(d_vertexBuffer, sizeof(Vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
@@ -351,7 +350,6 @@ Mesh::Mesh(const AnimatedMeshData& data)
     , d_indexBuffer(0)
     , d_vertexCount(data.indices.size())
     , d_layout(sizeof(AnimVertex), 0)
-    , d_animated(true)
     , d_skeleton(data.skeleton)
 {
     glCreateBuffers(1, &d_vertexBuffer);
@@ -375,7 +373,6 @@ Mesh::Mesh()
     , d_indexBuffer(0)
     , d_vertexCount(0)
     , d_layout(sizeof(Vertex), 0)
-    , d_animated(false)
 {
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -433,15 +430,20 @@ BufferLayout Mesh::GetLayout() const
 
 std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, float time) const
 {
-    return d_skeleton.GetPose(name, time);
+    if (d_skeleton.has_value()) {
+        return d_skeleton.value().GetPose(name, time);
+    }
+    return {};
 }
 
 std::vector<std::string> Mesh::GetAnimationNames() const
 {
     std::vector<std::string> names;
-    names.reserve(d_skeleton.animations.size());
-    for (const auto& [name, animation] : d_skeleton.animations) {
-        names.push_back(name);
+    if (d_skeleton.has_value()) {
+        names.reserve(d_skeleton.value().animations.size());
+        for (const auto& [name, animation] : d_skeleton.value().animations) {
+            names.push_back(name);
+        }
     }
     return names;
 }

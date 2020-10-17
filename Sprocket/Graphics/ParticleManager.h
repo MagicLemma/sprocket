@@ -23,9 +23,12 @@ class ParticleManager
     static constexpr int NUM_PARTICLES = 10000;
 
     std::array<Particle, NUM_PARTICLES> d_particles;
-    std::size_t                         d_index = NUM_PARTICLES - 1;
 
-    std::shared_ptr<Buffer>  d_instances;
+    // The position of the next available space to place a particle. This
+    // updated whenever emit is called.
+    std::size_t d_index = NUM_PARTICLES - 1;
+
+    std::shared_ptr<Buffer> d_instances;
 
     std::vector<InstanceData> d_instanceData;
 

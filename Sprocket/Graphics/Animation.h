@@ -11,13 +11,18 @@ namespace Sprocket {
 struct Bone
 {
     std::string name;
-    std::uint32_t index; // The index of this bone within the bone vector.
+    std::uint32_t index;
 
+    // A transform that gets applied and passed down to child joints,
+    // alongside the interpolated animation transform.
     Maths::mat4 transform;
+
+    // A transform that only applies to this bone and does not get added
+    // into the transform that is passed down to child bones.
     Maths::mat4 offset;
 
+    // The indices of the bones that are children of this one.
     std::vector<uint32_t> children;
-        // All the data for the bone, this should not change after loading.
 
 };
 
@@ -49,10 +54,13 @@ struct BoneKeyFrames
 struct Animation
 {
     std::string name;
-    float       duration;
+
+    // The duration in seconds of this animation.
+    float duration;
+
+    // A vector of keyFrames for each bone. This vector will be the same
+    // length as the bone vector and the indices will line up.
     std::vector<BoneKeyFrames> keyFrames;
-        // A vector of keyFrames for each bone. This vector will be the same
-        // length as the bone vector and the indices will line up.
 };
 
 struct Skeleton

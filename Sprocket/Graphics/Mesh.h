@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <optional>
 
 namespace Sprocket {
 
@@ -49,7 +50,6 @@ struct AnimatedMeshData
     IndexBuffer      indices;
 
     Skeleton skeleton;
-    std::unordered_map<std::string, Animation> animations;
 };
 
 class Mesh
@@ -60,8 +60,7 @@ class Mesh
     BufferLayout d_layout;
     std::size_t d_vertexCount;
 
-    bool d_animated;
-    Skeleton d_skeleton; // This is empty if the Mesh is not animated
+    std::optional<Skeleton> d_skeleton;
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
@@ -82,7 +81,7 @@ public:
     bool operator==(const Mesh& other) const;
 
     // Animation Functionality
-    bool IsAnimated() const { return d_animated; }
+    bool IsAnimated() const { return d_skeleton.has_value(); }
 
     std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
         // Returns the transforms to be uploaded to the shader. The transform
