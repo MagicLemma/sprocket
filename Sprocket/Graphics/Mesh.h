@@ -56,9 +56,8 @@ class Mesh
 {
     std::uint32_t d_vertexBuffer;
     std::uint32_t d_indexBuffer;
-
-    BufferLayout d_layout;
-    std::size_t d_vertexCount;
+    BufferLayout  d_layout;
+    std::size_t   d_vertexCount;
 
     std::optional<Skeleton> d_skeleton;
 
@@ -73,22 +72,19 @@ public:
 
     static std::shared_ptr<Mesh> FromFile(const std::string& file);
 
-    // Core Functionality
     std::size_t VertexCount() const { return d_vertexCount; }
     BufferLayout GetLayout() const;
     void Bind() const;
 
-    bool operator==(const Mesh& other) const;
-
-    // Animation Functionality
+    // Returns true if this Mesh contains animation data.
     bool IsAnimated() const { return d_skeleton.has_value(); }
 
+    // Returns the transforms to be uploaded to the shader. The transform
+    // at position i corresponds to the bone with ID i.
     std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
-        // Returns the transforms to be uploaded to the shader. The transform
-        // at position i corresponds to the bone with ID i.
 
+    // Returns a list of names of all possible animations in this mesh.
     std::vector<std::string> GetAnimationNames() const;
-        // Returns a list of names of all possible animations in this mesh.
 };
 
 }

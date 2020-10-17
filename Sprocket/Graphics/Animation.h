@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Types.h"
 
 #include <string>
 #include <unordered_map>
@@ -11,19 +12,18 @@ namespace Sprocket {
 struct Bone
 {
     std::string name;
-    std::uint32_t index;
-
-    // A transform that gets applied and passed down to child joints,
-    // alongside the interpolated animation transform.
-    Maths::mat4 transform;
+    u32 index;
 
     // A transform that only applies to this bone and does not get added
     // into the transform that is passed down to child bones.
     Maths::mat4 offset;
 
-    // The indices of the bones that are children of this one.
-    std::vector<uint32_t> children;
+    // A transform that gets applied and passed down to child joints,
+    // alongside the interpolated animation transform.
+    Maths::mat4 transform;
 
+    // The indices of the bones that are children of this one.
+    std::vector<u32> children;
 };
 
 struct KeyFramePos
@@ -56,7 +56,7 @@ struct Animation
     std::string name;
 
     // The duration in seconds of this animation.
-    float duration;
+    f32 duration;
 
     // A vector of keyFrames for each bone. This vector will be the same
     // length as the bone vector and the indices will line up.
@@ -69,7 +69,7 @@ struct Skeleton
     std::unordered_map<std::string, std::uint32_t> boneMap;
     std::unordered_map<std::string, Animation> animations;
 
-    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
+    std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;
 };
 
 }
