@@ -133,7 +133,24 @@ bool IsBone(const Skeleton& skeleton, const aiNode* node)
     return it != skeleton.boneMap.end();
 }
 
-void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene)
+// TEMP: Move later
+Maths::vec3 ApplyTransform(const Maths::mat4& matrix, const Maths::vec3& v)
+{
+    Maths::vec4 v2 = matrix * Maths::vec4{v.x, v.y, v.z, 1.0f};
+    return {v2.x, v2.y, v2.z};
+}
+
+Maths::quat ApplyTransform(const Maths::mat4& matrix, const Maths::quat& q)
+{
+    return Maths::ToQuat(matrix) * q;
+}
+
+void LoadAnimations(
+    Skeleton& skeleton,
+    Bone* bone,
+    const aiScene* scene,
+    const Maths::mat4& transform
+)
 {
     assert(bone);
     for (u32 i = 0; i != scene->mNumAnimations; ++i) {
@@ -149,12 +166,18 @@ void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene)
         BoneKeyFrames& keyFrameData = animation.keyFrames[bone->index];
         for (u32 i = 0; i != keyFrames->mNumPositionKeys; ++i) {
             auto& x = keyFrames->mPositionKeys[i];
-            keyFrameData.keyPostitions.push_back({(float)x.mTime/ticksPerSec, Convert(x.mValue)});
+            keyFrameData.keyPostitions.push_back({
+                (float)x.mTime / ticksPerSec,
+                ApplyTransform(transform, Convert(x.mValue))
+            });
         }
 
         for (u32 i = 0; i != keyFrames->mNumRotationKeys; ++i) {
             auto& x = keyFrames->mRotationKeys[i];
-            keyFrameData.keyOrientations.push_back({(float)x.mTime/ticksPerSec, Convert(x.mValue)});
+            keyFrameData.keyOrientations.push_back({
+                (float)x.mTime / ticksPerSec,
+                Maths::ToQuat(transform) * Convert(x.mValue)
+            });
         }
 
         for (u32 i = 0; i != keyFrames->mNumScalingKeys; ++i) {
@@ -184,8 +207,7 @@ void LoadSkeleton(
         currentBoneNode = currentNode;
 
         Bone* bone = GetBone(skeleton, currentBoneNode);
-        bone->transform = Maths::NoScale(parentTransform);
-        LoadAnimations(skeleton, bone, scene);
+        LoadAnimations(skeleton, bone, scene, Maths::NoScale(parentTransform));
     }
 
     Bone* currentBone = GetBone(skeleton, currentBoneNode);
@@ -214,12 +236,8 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
             vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
-            
-            if (mesh->HasTangentsAndBitangents()) {
-                vertex.tangent = Convert(mesh->mTangents[i]);
-                vertex.bitangent = Convert(mesh->mBitangents[i]);
-            }
-
+            vertex.tangent = Convert(mesh->mTangents[i]);
+            vertex.bitangent = Convert(mesh->mBitangents[i]);
             data.vertices.push_back(vertex);
         }
 
@@ -231,13 +249,13 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
             }
         }
     }
+
     return std::make_shared<Mesh>(data);
 }
 
 std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
 {    
     AnimatedMeshData data;
-    auto& skel = data.skeleton;
 
     u32 vertexCount = 0;
     for (u32 idx = 0; idx != scene->mNumMeshes; ++idx) {
@@ -249,12 +267,8 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
             vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
-            
-            if (mesh->HasTangentsAndBitangents()) {
-                vertex.tangent = Convert(mesh->mTangents[i]);
-                vertex.bitangent = Convert(mesh->mBitangents[i]);
-            }
-
+            vertex.tangent = Convert(mesh->mTangents[i]);
+            vertex.bitangent = Convert(mesh->mBitangents[i]);
             data.vertices.push_back(vertex);
         }
 
@@ -301,9 +315,8 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
     // There may have been vertices that are acted on by more than 4 bones,
     // in which case the weights will not sum to one. Loop through and normalise.
     for (auto& vertex : data.vertices) {
-        const auto& v = vertex.boneWeights;
-        float weightSum = v.x + v.y + v.z + v.w; 
-        vertex.boneWeights /= weightSum;
+        auto& v = vertex.boneWeights;
+        v /= v.x + v.y + v.z + v.w;
     }
 
     // Initialise animation structures

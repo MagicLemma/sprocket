@@ -18,10 +18,6 @@ struct Bone
     // into the transform that is passed down to child bones.
     Maths::mat4 offset;
 
-    // A transform that gets applied and passed down to child joints,
-    // alongside the interpolated animation transform.
-    Maths::mat4 transform;
-
     // The indices of the bones that are children of this one.
     std::vector<u32> children;
 };

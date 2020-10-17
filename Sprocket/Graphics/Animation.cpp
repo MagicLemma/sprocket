@@ -83,9 +83,7 @@ void GetPoseRec(
     const Bone& bone = skeleton.bones[boneIndex];
     const auto& kfData = animation.keyFrames[boneIndex];
 
-    Maths::mat4 animationTransform = GetAnimationTransform(kfData, time);
-
-    Maths::mat4 transform = parentTransform * bone.transform * animationTransform;
+    Maths::mat4 transform = parentTransform * GetAnimationTransform(kfData, time);
     pose[boneIndex] = transform * bone.offset;
 
     for (const auto& child : bone.children) {
