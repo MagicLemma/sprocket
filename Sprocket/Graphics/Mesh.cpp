@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Types.h"
+#include "Maths.h"
 
 #include <cassert>
 #include <glad/glad.h>
@@ -133,18 +134,6 @@ bool IsBone(const Skeleton& skeleton, const aiNode* node)
     return it != skeleton.boneMap.end();
 }
 
-// TEMP: Move later
-Maths::vec3 ApplyTransform(const Maths::mat4& matrix, const Maths::vec3& v)
-{
-    Maths::vec4 v2 = matrix * Maths::vec4{v.x, v.y, v.z, 1.0f};
-    return {v2.x, v2.y, v2.z};
-}
-
-Maths::quat ApplyTransform(const Maths::mat4& matrix, const Maths::quat& q)
-{
-    return Maths::ToQuat(matrix) * q;
-}
-
 void LoadAnimations(
     Skeleton& skeleton,
     Bone* bone,
@@ -168,7 +157,7 @@ void LoadAnimations(
             auto& x = keyFrames->mPositionKeys[i];
             keyFrameData.keyPostitions.push_back({
                 (float)x.mTime / ticksPerSec,
-                ApplyTransform(transform, Convert(x.mValue))
+                Maths::ApplyTransform(transform, Convert(x.mValue))
             });
         }
 
@@ -182,7 +171,10 @@ void LoadAnimations(
 
         for (u32 i = 0; i != keyFrames->mNumScalingKeys; ++i) {
             auto& x = keyFrames->mScalingKeys[i];
-            keyFrameData.keyScales.push_back({(float)x.mTime/ticksPerSec, Convert(x.mValue)});
+            keyFrameData.keyScales.push_back({
+                (float)x.mTime/ticksPerSec,
+                Convert(x.mValue)
+            });
         }
     }
 

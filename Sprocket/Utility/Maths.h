@@ -108,6 +108,13 @@ vec3 GetMouseRay(
     const mat4& projMatrix
 );
 
+// EXTRA OPERATIONS
+
+// Appends a 1.0 to the vector, applies the transform, then strips the extra value.
+// Has the action of taking a point and returning the point that the given transform
+// moves it to.
+Maths::vec3 ApplyTransform(const Maths::mat4& matrix, const Maths::vec3& v);
+
 // Printing
 std::string ToString(const vec3& v, const std::optional<int>& dp = {});
 std::string ToString(float x, const std::optional<int>& dp = {});

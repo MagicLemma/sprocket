@@ -303,6 +303,12 @@ vec3 GetMouseRay(
     return returnRay;
 }
 
+Maths::vec3 ApplyTransform(const Maths::mat4& matrix, const Maths::vec3& v)
+{
+    Maths::vec4 v2 = matrix * Maths::vec4{v.x, v.y, v.z, 1.0f};
+    return {v2.x, v2.y, v2.z};
+}
+
 // Printing
 std::string ToString(const vec3& v, const std::optional<int>& dp)
 {
