@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Types.h"
 #include "Resources.h"
 #include "BufferLayout.h"
 #include "Animation.h"
@@ -36,7 +37,7 @@ struct AnimVertex
 
 using VertexBuffer = std::vector<Vertex>;
 using AnimVertexBuffer = std::vector<AnimVertex>;
-using IndexBuffer = std::vector<std::uint32_t>;
+using IndexBuffer = std::vector<u32>;
 
 struct StaticMeshData
 {
@@ -54,10 +55,11 @@ struct AnimatedMeshData
 
 class Mesh
 {
-    std::uint32_t d_vertexBuffer;
-    std::uint32_t d_indexBuffer;
-    BufferLayout  d_layout;
-    std::size_t   d_vertexCount;
+    u32 d_vertexBuffer;
+    u32 d_indexBuffer;
+    u64 d_vertexCount;
+
+    BufferLayout d_layout;
 
     std::optional<Skeleton> d_skeleton;
 
@@ -81,7 +83,7 @@ public:
 
     // Returns the transforms to be uploaded to the shader. The transform
     // at position i corresponds to the bone with ID i.
-    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
+    std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;
 
     // Returns a list of names of all possible animations in this mesh.
     std::vector<std::string> GetAnimationNames() const;

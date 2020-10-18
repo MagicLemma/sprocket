@@ -1,5 +1,6 @@
 #include "BufferLayout.h"
 #include "Log.h"
+#include "Types.h"
 
 #include <glad/glad.h>
 
@@ -24,7 +25,7 @@ constexpr int getNormalised(DataType type)
     }
 }
 
-constexpr unsigned int getSize(DataType type)
+constexpr u32 getSize(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return sizeof(float);
@@ -35,14 +36,14 @@ constexpr unsigned int getSize(DataType type)
 
 }
 
-BufferLayout::BufferLayout(unsigned int vertexSize, unsigned int startingIndex)
+BufferLayout::BufferLayout(u32 vertexSize, u32 startingIndex)
     : d_vertexSize(vertexSize)
     , d_startingIndex(startingIndex)
     , d_currentSize(0)
 {   
 }
 
-void BufferLayout::AddAttribute(DataType type, unsigned int count, DataRate rate)
+void BufferLayout::AddAttribute(DataType type, u32 count, DataRate rate)
 {
     d_attributes.push_back({type, count, rate});
     d_currentSize += count * getSize(type);
@@ -55,8 +56,8 @@ bool BufferLayout::Validate() const
 
 void BufferLayout::SetAttributes() const
 {
-    unsigned int offset = 0;
-    unsigned int index = d_startingIndex;
+    u32 offset = 0;
+    u32 index = d_startingIndex;
     for (const auto& data : d_attributes) {
         glEnableVertexAttribArray(index);
         if (data.type == DataType::INT) {

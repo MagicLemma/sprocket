@@ -24,19 +24,19 @@ struct Bone
 
 struct KeyFramePos
 {
-    float       time;
+    f32         time;
     Maths::vec3 position;
 };
 
 struct KeyFrameOri
 {
-    float       time;
+    f32         time;
     Maths::quat orientation;
 };
 
 struct KeyFrameScl
 {
-    float       time;
+    f32         time;
     Maths::vec3 scale;
 };
 
@@ -62,7 +62,7 @@ struct Animation
 struct Skeleton
 {
     std::vector<Bone> bones;
-    std::unordered_map<std::string, std::uint32_t> boneMap;
+    std::unordered_map<std::string, u32> boneMap;
     std::unordered_map<std::string, Animation> animations;
 
     std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;

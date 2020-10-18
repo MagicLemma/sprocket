@@ -50,7 +50,7 @@ Texture::~Texture()
 std::shared_ptr<Texture> Texture::FromFile(const std::string file)
 {
     SPKT_LOG_INFO("Loading texture '{}'", file);
-    int width, height, bpp;
+    i32 width, height, bpp;
     unsigned char* data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
     return std::make_shared<Texture>(width, height, data);
 }
@@ -83,7 +83,7 @@ void Texture::Bind(int slot) const
     glBindTextureUnit(slot, d_id);
 }
 
-unsigned int Texture::Id() const
+u32 Texture::Id() const
 {
     return d_id;
 }

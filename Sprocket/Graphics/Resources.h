@@ -1,5 +1,6 @@
 #pragma once
 #include "Log.h"
+#include "Types.h"
 
 #include <memory>
 
@@ -7,19 +8,19 @@ namespace Sprocket {
 
 enum class ResourceType { VAO, VBO };
 
-unsigned int GenerateBuffer(ResourceType type);
-void DeleteBuffer(ResourceType type, unsigned int buf);
+u32 GenerateBuffer(ResourceType type);
+void DeleteBuffer(ResourceType type, u32 buf);
 
 template <ResourceType Type>
 class Resource
 {
-    unsigned int d_id;
+    u32 d_id;
 
 public:
     Resource();
     ~Resource();
 
-    unsigned int Value() const { return d_id; }
+    u32 Value() const { return d_id; }
 
 private:
     // Resources can not be copied.

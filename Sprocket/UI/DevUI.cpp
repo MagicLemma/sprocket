@@ -5,6 +5,7 @@
 #include "KeyboardCodes.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
+#include "Types.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -87,7 +88,7 @@ DevUI::DevUI(Window* window)
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
     d_fontAtlas = std::make_shared<Texture>(width, height, data);
-    io.Fonts->TexID = (ImTextureID)(unsigned int)(intptr_t)d_fontAtlas->Id();
+    io.Fonts->TexID = (ImTextureID)(u32)(intptr_t)d_fontAtlas->Id();
 
     BufferLayout bufferLayout(sizeof(ImDrawVert));
     bufferLayout.AddAttribute(DataType::FLOAT, 2);

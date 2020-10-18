@@ -1,20 +1,21 @@
 #pragma once
-#include "Events/Event.h"
+#include "Event.h"
+#include "Types.h"
 
 namespace Sprocket {
 
 class WindowResizeEvent : public Event
 {
-	unsigned int d_width;
-	unsigned int d_height;
+	u32 d_width;
+	u32 d_height;
 
 public:
-	WindowResizeEvent(unsigned int width, unsigned int height);
+	WindowResizeEvent(u32 width, u32 height);
 	virtual int CategoryFlags() const override { return WINDOW; }
 	std::string ToString() const override;
 
-	unsigned int Width() const { return d_width; }
-	unsigned int Height() const { return d_height; }
+	u32 Width() const { return d_width; }
+	u32 Height() const { return d_height; }
 	float AspectRatio() const { return (float)d_width / (float)d_height; }
 };
 

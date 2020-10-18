@@ -1,10 +1,11 @@
-#include "Events/WindowEvent.h"
+#include "WindowEvent.h"
+#include "Types.h"
 
 #include <sstream>
 
 namespace Sprocket {
 
-WindowResizeEvent::WindowResizeEvent(unsigned int width, unsigned int height)
+WindowResizeEvent::WindowResizeEvent(u32 width, u32 height)
 	: d_width(width)
 	, d_height(height)
 {

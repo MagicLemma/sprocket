@@ -1,5 +1,6 @@
 #pragma once
 #include "Resources.h"
+#include "Types.h"
 
 #include <array>
 #include <cstdint>
@@ -8,7 +9,7 @@ namespace Sprocket {
 
 class CubeMap
 {
-    std::uint32_t d_id;
+    u32 d_id;
 
     int d_width;
     int d_height;

@@ -1,6 +1,7 @@
 #pragma once
 #include "Event.h"
 #include "Maths.h"
+#include "Types.h"
 
 #include <string>
 #include <functional>
@@ -15,9 +16,9 @@ struct WindowImpl;
 
 struct WindowData
 {
-	std::string  name;
-	unsigned int width;
-	unsigned int height;
+	std::string name;
+	u32 width;
+	u32 height;
 
 	bool running = true;
 	bool focused = true;
@@ -39,9 +40,7 @@ private:
 	Window& operator=(const Window&) = delete;
 
 public:
-	Window(const std::string& name = "Window",
-	       unsigned int width = 1280, 
-		   unsigned int height = 720);
+	Window(const std::string& name = "Window", u32 width = 1280, u32 height = 720);
 	~Window();
 
 	void OnUpdate();
@@ -50,8 +49,8 @@ public:
 	void SetClearColour(const Maths::vec3& colour);
 
 	// Getters
-	unsigned int Height() const { return d_data.height; }
-	unsigned int Width() const { return d_data.width; }
+	u32 Height() const { return d_data.height; }
+	u32 Width() const { return d_data.width; }
 	float AspectRatio() const { return (float)d_data.width / (float)d_data.height; }
 	bool Running() const { return d_data.running; }
 	bool Focused() const { return d_data.focused; }

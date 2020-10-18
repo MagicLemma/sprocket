@@ -1,4 +1,5 @@
-#include "Events/KeyboardEvent.h"
+#include "KeyboardEvent.h"
+#include "Types.h"
 
 #include <sstream>
 
@@ -46,7 +47,7 @@ std::string KeyboardButtonHeldEvent::ToString() const
 	return ss.str();
 }
 
-KeyboardKeyTypedEvent::KeyboardKeyTypedEvent(unsigned int key)
+KeyboardKeyTypedEvent::KeyboardKeyTypedEvent(u32 key)
 	: d_key(key) 
 {
 }

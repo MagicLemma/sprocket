@@ -1,4 +1,6 @@
 #pragma once
+#include "Types.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <string>
@@ -100,13 +102,7 @@ float Modulo(float val, float high);
 Maths::mat4 NoScale(const Maths::mat4& matrix);
 
 // Mouse Picking
-vec3 GetMouseRay(
-    const vec2& mousePos,
-    unsigned int screenWidth,
-    unsigned int screenHeight,
-    const mat4& viewMatrix,
-    const mat4& projMatrix
-);
+vec3 GetMouseRay(const vec2& mousePos, u32 w, u32 h, const mat4& view, const mat4& proj);
 
 // EXTRA OPERATIONS
 

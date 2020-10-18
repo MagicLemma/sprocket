@@ -326,7 +326,7 @@ void UIEngine::DrawText(
 
         auto& cmd = d_panels[d_currentPanel->hash];
 
-        unsigned int index = cmd.textVertices.size();
+        u32 index = cmd.textVertices.size();
         cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
         cmd.textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
         cmd.textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});

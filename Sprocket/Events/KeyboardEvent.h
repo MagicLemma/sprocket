@@ -1,5 +1,6 @@
 #pragma once
-#include "Events/Event.h"
+#include "Event.h"
+#include "Types.h"
 
 namespace Sprocket {
 
@@ -53,10 +54,10 @@ public:
 
 class KeyboardKeyTypedEvent : public Event
 {
-	unsigned int d_key;
+	u32 d_key;
 
 public:
-	KeyboardKeyTypedEvent(unsigned int key);
+	KeyboardKeyTypedEvent(u32 key);
 	virtual int CategoryFlags() const override { return KEYBOARD | INPUT; }
 	std::string ToString() const override;
 

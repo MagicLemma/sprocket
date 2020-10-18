@@ -1,6 +1,7 @@
-#include "Graphics/Shader.h"
-#include "Utility/Log.h"
-#include "Utility/Maths.h"
+#include "Shader.h"
+#include "Log.h"
+#include "Maths.h"
+#include "Types.h"
 
 #include <fstream>
 #include <sstream>
@@ -63,9 +64,9 @@ void Shader::CreateShader(const std::string& vertShader,
 	glValidateProgram(d_programId);
 }
 
-unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
+u32 Shader::CompileShader(u32 type, const std::string& source)
 {
-	unsigned int id = glCreateShader(type);
+	u32 id = glCreateShader(type);
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, nullptr);
 	glCompileShader(id);
@@ -92,7 +93,7 @@ void Shader::Unbind() const
     glUseProgram(0);
 }
 
-unsigned int Shader::GetUniformLocation(const std::string& name) const
+u32 Shader::GetUniformLocation(const std::string& name) const
 {
 	return glGetUniformLocation(d_programId, name.c_str());
 }
@@ -146,22 +147,18 @@ std::string ArrayName(const std::string& uniformName, size_t index)
 
 bool Shader::Reload()
 {
-	unsigned int programId = glCreateProgram();
+	u32 programId = glCreateProgram();
 
-	unsigned int vertShaderId = CompileShader(GL_VERTEX_SHADER, d_vertexSource);
-
+	u32 vertShaderId = CompileShader(GL_VERTEX_SHADER, d_vertexSource);
 	if(vertShaderId == 0) {
 		glDeleteProgram(programId);
-
 		return false;
 	}
 
-	unsigned int fragShaderId = CompileShader(GL_FRAGMENT_SHADER, d_fragSource);
-
+	u32 fragShaderId = CompileShader(GL_FRAGMENT_SHADER, d_fragSource);
 	if(fragShaderId == 0) {
 		glDeleteShader(vertShaderId);
 		glDeleteProgram(programId);
-
 		return false;
 	}
 

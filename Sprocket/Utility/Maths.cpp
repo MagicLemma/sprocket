@@ -1,4 +1,5 @@
 #include "Maths.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -276,29 +277,18 @@ Maths::mat4 NoScale(const Maths::mat4& matrix)
     return Maths::Transform(pos, ori);
 }
 
-vec3 GetMouseRay(
-    const vec2& mousePos,
-    unsigned int screenWidth,
-    unsigned int screenHeight,
-    const mat4& viewMatrix,
-    const mat4& projMatrix
-)
+vec3 GetMouseRay(const vec2& mousePos, u32 w, u32 h, const mat4& view, const mat4& proj)
 {
     // Homogeneous Clip Space
-    vec4 ray = {
-        (2.0f * mousePos.x) /screenWidth - 1,
-        -((2.0f * mousePos.y) / screenHeight - 1),
-        -1.0f,
-        1.0f
-    };
+    vec4 ray = {(2.0f * mousePos.x) / w - 1, -((2.0f * mousePos.y) / h - 1), -1.0f, 1.0f};
 
     // Eye Space
-    ray = Inverse(projMatrix) * ray;
+    ray = Inverse(proj) * ray;
     ray.z = -1.0f;
     ray.w = 0.0f;
 
     // World Space
-    vec3 returnRay = Inverse(viewMatrix) * ray;
+    vec3 returnRay = Inverse(view) * ray;
     Normalise(returnRay);
     return returnRay;
 }

@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include "Types.h"
 
 namespace Sprocket {
 namespace {
@@ -9,8 +10,8 @@ Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
         return bkf.keyPostitions[0].position;
     }
 
-    std::uint32_t before = 0, after = 0;
-    for (std::uint32_t i = 0; i != bkf.keyPostitions.size(); ++i) {
+    u32 before = 0, after = 0;
+    for (u32 i = 0; i != bkf.keyPostitions.size(); ++i) {
         if (bkf.keyPostitions[i].time > time) {
             before = i > 0 ? i - 1 : bkf.keyPostitions.size() - 1;
             after = i;
@@ -29,8 +30,8 @@ Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
         return bkf.keyOrientations[0].orientation;
     }
 
-    std::uint32_t before = 0, after = 0;
-    for (std::uint32_t i = 0; i != bkf.keyOrientations.size(); ++i) {
+    u32 before = 0, after = 0;
+    for (u32 i = 0; i != bkf.keyOrientations.size(); ++i) {
         if (bkf.keyOrientations[i].time > time) {
             before = i > 0 ? i - 1 : bkf.keyOrientations.size() - 1;
             after = i;
@@ -49,8 +50,8 @@ Maths::vec3 GetScale(const BoneKeyFrames& bkf, float time)
         return bkf.keyScales[0].scale;
     }
 
-    std::uint32_t before = 0, after = 0;
-    for (std::uint32_t i = 0; i != bkf.keyScales.size(); ++i) {
+    u32 before = 0, after = 0;
+    for (u32 i = 0; i != bkf.keyScales.size(); ++i) {
         if (bkf.keyScales[i].time > time) {
             before = i > 0 ? i - 1 : bkf.keyScales.size() - 1;
             after = i;
@@ -76,7 +77,7 @@ void GetPoseRec(
     const Skeleton& skeleton,
     const Animation& animation,
     float time,
-    std::uint32_t boneIndex,
+    u32 boneIndex,
     const Maths::mat4& parentTransform
 )
 {

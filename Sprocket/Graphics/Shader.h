@@ -1,5 +1,6 @@
 #pragma once
-#include "Utility/Maths.h"
+#include "Maths.h"
+#include "Types.h"
 
 #include <string>
 #include <vector>
@@ -10,9 +11,9 @@ namespace Sprocket {
 class Shader
 {
     // Shader IDs
-    unsigned int d_programId;
-    unsigned int d_vertShaderId;
-    unsigned int d_fragShaderId;
+    u32 d_programId;
+    u32 d_vertShaderId;
+    u32 d_fragShaderId;
 
     std::string d_vertexSource;
     std::string d_fragSource;
@@ -21,10 +22,10 @@ class Shader
     void CreateShader(const std::string& vertShader,
                       const std::string& fragShader);
 
-    unsigned int CompileShader(unsigned int type, const std::string& source);
+    u32 CompileShader(u32 type, const std::string& source);
 
     // Shader Uniform Getter
-    unsigned int GetUniformLocation(const std::string& name) const;
+    u32 GetUniformLocation(const std::string& name) const;
 
 public:
     Shader(const std::string& vertShaderFile,
@@ -37,7 +38,7 @@ public:
     std::string& VertexShaderSource() { return d_vertexSource; }
     std::string& FragShaderSource() { return d_fragSource; }
 
-    unsigned int Id() const { return d_programId; }
+    u32 Id() const { return d_programId; }
 
     void Bind() const;
     void Unbind() const;

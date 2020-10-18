@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.h"
+#include "Types.h"
 #include "Resources.h"
 #include "Texture.h"
 
@@ -10,7 +11,7 @@ class DepthBuffer
 {
     Window* d_window; 
 
-    std::uint32_t d_fbo;
+    u32 d_fbo;
 
     std::shared_ptr<Texture> d_depth;
 

@@ -188,30 +188,35 @@ void LoadSkeleton(
     const aiNode* currentNode,  // The current node that we are dealing with.
     const Maths::mat4& parentTransform
 )
+// NOTE: The parentTransform is an artifact of Assimp's node tree. There may be nodes that don't
+// correspond to bones but their transform matrices DO affect bones that are child nodes of it.
+// In this algorithm, we keep track of this transform, and when we reach a bone, we apply the
+// transform to all of the key frame data, and then pass the identity to its children. In
+// essence, we "bake" the intermediate transforms into the animation data so that we do not need
+// non-bone nodes in our skeleton tree.
 {
     assert(currentNode);
 
     Maths::mat4 nodeTransform = parentTransform * Convert(currentNode->mTransformation);
-    const aiNode* currentBoneNode = lastBoneNode;
-    
     if (IsBone(skeleton, currentNode)) {
+        // Reset the nodeTransform; the previous will get baked into this bones' animations.
         nodeTransform = Maths::mat4(1.0);
-        currentBoneNode = currentNode;
+        lastBoneNode = currentNode;
 
-        Bone* bone = GetBone(skeleton, currentBoneNode);
+        Bone* bone = GetBone(skeleton, lastBoneNode);
         LoadAnimations(skeleton, bone, scene, Maths::NoScale(parentTransform));
     }
 
-    Bone* currentBone = GetBone(skeleton, currentBoneNode);
+    Bone* currentBone = GetBone(skeleton, lastBoneNode);
     for (u32 i = 0; i != currentNode->mNumChildren; ++i) {
         aiNode* childNode = currentNode->mChildren[i];
-        Bone* childBone = GetBone(skeleton, childNode);
 
+        Bone* childBone = GetBone(skeleton, childNode);
         if (childBone && currentBone) {
             currentBone->children.push_back(childBone->index);
         }
 
-        LoadSkeleton(skeleton, scene, currentBoneNode, childNode, nodeTransform);
+        LoadSkeleton(skeleton, scene, lastBoneNode, childNode, nodeTransform);
     }
 }
 
@@ -267,7 +272,7 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
         // Indices
         for (u32 i = 0; i != mesh->mNumFaces; ++i) {
             aiFace face = mesh->mFaces[i];
-            for (std::uint32_t j = 0; j != face.mNumIndices; ++j) {
+            for (u32 j = 0; j != face.mNumIndices; ++j) {
                 data.indices.push_back(vertexCount + face.mIndices[j]);
             }
         }
@@ -340,7 +345,7 @@ Mesh::Mesh(const StaticMeshData& data)
     glNamedBufferData(d_vertexBuffer, sizeof(Vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_indexBuffer);
-    glNamedBufferData(d_indexBuffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_indexBuffer, sizeof(u32) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -361,7 +366,7 @@ Mesh::Mesh(const AnimatedMeshData& data)
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_indexBuffer);
-    glNamedBufferData(d_indexBuffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_indexBuffer, sizeof(u32) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -426,7 +431,7 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, float time) const
+std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, f32 time) const
 {
     if (d_skeleton.has_value()) {
         return d_skeleton.value().GetPose(name, time);
