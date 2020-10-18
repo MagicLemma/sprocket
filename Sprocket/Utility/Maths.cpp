@@ -219,9 +219,9 @@ float LengthSquare(const vec3& v)
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-void Normalise(vec3& vec)
+vec3 Normalise(const vec3& vec)
 {
-    vec = glm::normalize(vec);
+    return glm::normalize(vec);
 }
 
 Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta)
@@ -288,9 +288,7 @@ vec3 GetMouseRay(const vec2& mousePos, u32 w, u32 h, const mat4& view, const mat
     ray.w = 0.0f;
 
     // World Space
-    vec3 returnRay = Inverse(view) * ray;
-    Normalise(returnRay);
-    return returnRay;
+    return Normalise(Inverse(view) * ray);
 }
 
 Maths::vec3 ApplyTransform(const Maths::mat4& matrix, const Maths::vec3& v)

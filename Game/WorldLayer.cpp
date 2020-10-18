@@ -166,7 +166,7 @@ void WorldLayer::OnUpdate(double dt)
         }
         sun.brightness = 2.0f * std::abs(Maths::Cosd(d_cycle.GetAngle()));
 
-        Maths::Normalise(sun.direction);
+        sun.direction = Maths::Normalise(sun.direction);
         d_scene->OnUpdate(dt);
     }
 
