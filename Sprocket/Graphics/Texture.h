@@ -39,12 +39,12 @@ private:
     Texture& operator=(const Texture&) = delete;
 
 public:
-    Texture(const TextureData& data);
     Texture(int width, int height, const unsigned char* data);
     Texture(int width, int height, Channels channels = Channels::RGBA);
     Texture();
     ~Texture();
 
+    static std::shared_ptr<Texture> FromData(const TextureData& data);
     static std::shared_ptr<Texture> FromFile(const std::string file);
 
     void Bind(int slot) const;

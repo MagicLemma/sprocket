@@ -19,10 +19,6 @@ TextureData::~TextureData()
     stbi_image_free(data);
 }
 
-Texture::Texture(const TextureData& data)
-    : Texture(data.width, data.height, data.data)
-{}
-
 Texture::Texture(int width, int height, const unsigned char* data)
     : d_width(width)
     , d_height(height)
@@ -61,9 +57,14 @@ Texture::~Texture()
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
+std::shared_ptr<Texture> Texture::FromData(const TextureData& data)
+{
+    return std::make_shared<Texture>(data.width, data.height, data.data);
+}
+
 std::shared_ptr<Texture> Texture::FromFile(const std::string file)
 {
-    return std::make_shared<Texture>(TextureData(file));
+    return Texture::FromData(TextureData(file));
 }
 
 void Texture::Resize(int width, int height)

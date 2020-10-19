@@ -220,7 +220,7 @@ void LoadSkeleton(
     }
 }
 
-std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
+StaticMeshData LoadStaticMesh(const aiScene* scene)
 {    
     StaticMeshData data;
 
@@ -247,10 +247,10 @@ std::shared_ptr<Mesh> LoadStaticMesh(const aiScene* scene)
         }
     }
 
-    return std::make_shared<Mesh>(data);
+    return data;
 }
 
-std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
+AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
 {    
     AnimatedMeshData data;
 
@@ -330,9 +330,23 @@ std::shared_ptr<Mesh> LoadAnimatedMesh(const aiScene* scene)
     // well as animations.
     LoadSkeleton(data.skeleton, scene, nullptr, scene->mRootNode, Maths::mat4(1.0));
 
-    return std::make_shared<Mesh>(data);
+    return data;
 }
 
+}
+
+MeshData::MeshData(const std::string& file)
+{
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
+    assert(IsSceneValid(scene));
+
+    if (scene->HasAnimations()) {
+        data = LoadAnimatedMesh(scene);
+    }
+    else {
+        data = LoadStaticMesh(scene);
+    }
 }
 
 Mesh::Mesh(const StaticMeshData& data)
@@ -402,20 +416,16 @@ Mesh::~Mesh()
     }
 }
 
+std::shared_ptr<Mesh> Mesh::FromData(const MeshData& data)
+{
+    return std::visit([&](auto&& data) {
+        return std::make_shared<Mesh>(data);
+    }, data.data);
+}
+
 std::shared_ptr<Mesh> Mesh::FromFile(const std::string& file)
 {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
-
-    if (!IsSceneValid(scene)) {
-        SPKT_LOG_ERROR("[Assimp]: {}", importer.GetErrorString());
-        return std::make_shared<Mesh>();
-    }
-
-    if (scene->HasAnimations()) {
-        return LoadAnimatedMesh(scene);
-    }
-    return LoadStaticMesh(scene);
+    return Mesh::FromData(MeshData(file));
 }
 
 void Mesh::Bind() const
