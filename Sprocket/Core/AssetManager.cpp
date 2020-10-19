@@ -20,9 +20,20 @@ std::shared_ptr<Mesh> AssetManager::GetMesh(const std::string& file)
         return it->second;
     }
 
-    auto model = Mesh::FromFile(filepath);
-    d_meshes.emplace(filepath, model);
-    return model;
+    if (auto it = d_loadingMeshes.find(filepath); it != d_loadingMeshes.end()) {
+        if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+            auto mesh = Mesh::FromData(*(it->second.get()));
+            d_loadingMeshes.erase(it);
+            d_meshes[filepath] = mesh;
+            return mesh;
+        }
+    } else {
+        d_loadingMeshes[filepath] = std::async(std::launch::async, [filepath]() {
+            return std::make_unique<MeshData>(filepath);
+        });
+    }
+
+    return d_defaultMesh;
 }
 
 std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)

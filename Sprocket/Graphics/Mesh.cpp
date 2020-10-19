@@ -398,6 +398,12 @@ Mesh::Mesh()
     , d_vertexCount(0)
     , d_layout(sizeof(Vertex), 0)
 {
+    glCreateBuffers(1, &d_vertexBuffer);
+    glNamedBufferData(d_vertexBuffer, 0, nullptr, GL_STATIC_DRAW);
+
+    glCreateBuffers(1, &d_indexBuffer);
+    glNamedBufferData(d_indexBuffer, 0, nullptr, GL_STATIC_DRAW);
+
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
     d_layout.AddAttribute(DataType::FLOAT, 3);

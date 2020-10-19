@@ -13,11 +13,12 @@ namespace Sprocket {
 class AssetManager
 {
     // Background Loaders
+    std::unordered_map<std::string, std::future<std::unique_ptr<MeshData>>>    d_loadingMeshes;
     std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
 
     // Primitives
-    std::unordered_map<std::string, std::shared_ptr<Mesh>>     d_meshes;
-    std::unordered_map<std::string, std::shared_ptr<Texture>>  d_textures;
+    std::unordered_map<std::string, std::shared_ptr<Mesh>>    d_meshes;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> d_textures;
     
     // Composites
     std::unordered_map<std::string, std::shared_ptr<Material>> d_materials;
