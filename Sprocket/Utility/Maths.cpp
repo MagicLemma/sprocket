@@ -52,8 +52,7 @@ mat4 Transform(const vec3& position, const quat& orientation, const vec3& scale)
     m[3][1] = position.y;
     m[3][2] = position.z;
     m[3][3] = 1.0f;
-    m = Maths::Scale(m, scale);
-    return m;
+    return Maths::Scale(m, scale);
 }
 
 mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
@@ -210,7 +209,7 @@ float Length(const vec2& v)
 
 float Length(const ivec2& v)
 {
-    return std::sqrt(v.x * v.x + v.y * v.y);
+    return (float)std::sqrt(v.x * v.x + v.y * v.y);
 }
 
 

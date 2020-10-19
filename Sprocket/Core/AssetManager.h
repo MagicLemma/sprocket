@@ -6,11 +6,15 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <future>
 
 namespace Sprocket {
 
 class AssetManager
 {
+    // Background Loaders
+    std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
+
     // Primitives
     std::unordered_map<std::string, std::shared_ptr<Mesh>>     d_meshes;
     std::unordered_map<std::string, std::shared_ptr<Texture>>  d_textures;

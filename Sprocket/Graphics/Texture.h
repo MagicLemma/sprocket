@@ -8,6 +8,19 @@
 
 namespace Sprocket {
 
+struct TextureData
+{
+    int width;
+    int height;
+    int bpp;
+    unsigned char* data;
+
+    TextureData(const TextureData&) = delete;
+    TextureData& operator=(const TextureData&) = delete;
+
+    TextureData(const std::string& file);
+    ~TextureData();
+};
 
 class Texture
 {
@@ -26,6 +39,7 @@ private:
     Texture& operator=(const Texture&) = delete;
 
 public:
+    Texture(const TextureData& data);
     Texture(int width, int height, const unsigned char* data);
     Texture(int width, int height, Channels channels = Channels::RGBA);
     Texture();

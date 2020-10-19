@@ -34,9 +34,20 @@ std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)
         return it->second;
     }
 
-    auto texture = Texture::FromFile(filepath);
-    d_textures.emplace(filepath, texture);
-    return texture;
+    if (auto it = d_loadingTextures.find(filepath); it != d_loadingTextures.end()) {
+        if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+            auto texture = std::make_shared<Texture>(*(it->second.get()));
+            d_loadingTextures.erase(it);
+            d_textures[filepath] = texture;
+            return texture;
+        }
+    } else {
+        d_loadingTextures[filepath] = std::async(std::launch::async, [filepath]() {
+            return std::make_unique<TextureData>(filepath);
+        });
+    }
+
+    return d_defaultTexture;
 }
 
 std::shared_ptr<Material> AssetManager::GetMaterial(const std::string& file)

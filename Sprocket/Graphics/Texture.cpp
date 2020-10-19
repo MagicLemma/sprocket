@@ -9,6 +9,20 @@
 
 namespace Sprocket {
 
+TextureData::TextureData(const std::string& file)
+{
+    data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
+}
+
+TextureData::~TextureData()
+{
+    stbi_image_free(data);
+}
+
+Texture::Texture(const TextureData& data)
+    : Texture(data.width, data.height, data.data)
+{}
+
 Texture::Texture(int width, int height, const unsigned char* data)
     : d_width(width)
     , d_height(height)
@@ -49,10 +63,7 @@ Texture::~Texture()
 
 std::shared_ptr<Texture> Texture::FromFile(const std::string file)
 {
-    SPKT_LOG_INFO("Loading texture '{}'", file);
-    i32 width, height, bpp;
-    unsigned char* data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
-    return std::make_shared<Texture>(width, height, data);
+    return std::make_shared<Texture>(TextureData(file));
 }
 
 void Texture::Resize(int width, int height)
