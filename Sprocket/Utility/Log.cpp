@@ -13,10 +13,11 @@ namespace {
 
 void Init()
 {
-	spdlog::set_pattern("%^[%T] %n: %v%$");
-
-	s_logger_p = spdlog::stdout_color_mt("Sprocket");
-	s_logger_p->set_level(spdlog::level::trace);
+	if (s_logger_p == nullptr) {
+		spdlog::set_pattern("%^[%T] %n: %v%$");
+		s_logger_p = spdlog::stdout_color_mt("Sprocket");
+		s_logger_p->set_level(spdlog::level::trace);
+	}
 }
 
 std::shared_ptr<spdlog::logger>& Logger()

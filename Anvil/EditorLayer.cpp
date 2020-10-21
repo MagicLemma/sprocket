@@ -242,6 +242,8 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
     if (ImGui::Begin("BottomPanel", &open, flags)) {
         ImGui::Checkbox("Show Colliders", &d_showColliders);
+        ImGui::Text(fmt::format("Loading Meshes: {}", d_core.assetManager->IsLoadingMeshes() ? "Yes" : "No").c_str());
+        ImGui::Text(fmt::format("Loading Textures: {}", d_core.assetManager->IsLoadingTextures() ? "Yes" : "No").c_str());
         ImGui::End();
     }
 

@@ -36,20 +36,16 @@ struct AnimVertex
     Maths::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
 };
 
-using VertexBuffer = std::vector<Vertex>;
-using AnimVertexBuffer = std::vector<AnimVertex>;
-using IndexBuffer = std::vector<u32>;
-
 struct StaticMeshData
 {
-    VertexBuffer vertices;
-    IndexBuffer  indices;
+    std::vector<Vertex> vertices;
+    std::vector<u32>    indices;
 };
 
 struct AnimatedMeshData
 {
-    AnimVertexBuffer vertices;
-    IndexBuffer      indices;
+    std::vector<AnimVertex> vertices;
+    std::vector<u32>        indices;
 
     Skeleton skeleton;
 };
@@ -80,6 +76,7 @@ class Mesh
 public:
     Mesh(const StaticMeshData& data);
     Mesh(const AnimatedMeshData& data);
+
     Mesh(); // Empty model
     ~Mesh();
 

@@ -51,6 +51,10 @@ public:
     auto Meshes()    { return Iterator(&d_meshes); }
     auto Textures()  { return Iterator(&d_textures); }
     auto Materials() { return Iterator(&d_materials); }
+
+    bool IsLoadingMeshes() const;
+    bool IsLoadingTextures() const;
+    bool IsLoadingAnything() const;
 };
 
 }

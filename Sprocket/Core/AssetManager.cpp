@@ -75,4 +75,19 @@ std::shared_ptr<Material> AssetManager::GetMaterial(const std::string& file)
     return material;
 }
 
+bool AssetManager::IsLoadingMeshes() const
+{
+    return d_loadingMeshes.size() > 0;
+}
+
+bool AssetManager::IsLoadingTextures() const
+{
+    return d_loadingTextures.size() > 0;
+}
+
+bool AssetManager::IsLoadingAnything() const
+{
+    return IsLoadingMeshes() || IsLoadingTextures();
+}
+
 }

@@ -8,6 +8,17 @@
 #include <stb_image.h>
 
 namespace Sprocket {
+namespace {
+
+void SetTextureParameters(u32 id)
+{
+    glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+}
+
+}
 
 TextureData::TextureData(const std::string& file)
 {
@@ -24,10 +35,7 @@ Texture::Texture(int width, int height, const unsigned char* data)
     , d_height(height)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    SetTextureParameters(d_id);
     glTextureStorage2D(d_id, 1, GL_RGBA8, width, height);
     glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
@@ -38,10 +46,7 @@ Texture::Texture(int width, int height, Channels channels)
     , d_channels(channels)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    SetTextureParameters(d_id);
     Resize(width, height);
 }
 

@@ -34,7 +34,9 @@ PostProcessor::PostProcessor(int width, int height)
     : d_width(width)
     , d_height(height)
     , d_quad(GetMeshData())
-{}
+{
+    
+}
 
 void PostProcessor::AddEffect(std::shared_ptr<Effect> effect)
 {
