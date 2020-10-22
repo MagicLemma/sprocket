@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Types.h"
 #include "Resources.h"
 #include "BufferLayout.h"
 #include "Animation.h"
@@ -7,6 +8,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <optional>
+#include <variant>
 
 namespace Sprocket {
 
@@ -33,35 +36,39 @@ struct AnimVertex
     Maths::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
 };
 
-using VertexBuffer = std::vector<Vertex>;
-using AnimVertexBuffer = std::vector<AnimVertex>;
-using IndexBuffer = std::vector<std::uint32_t>;
-
 struct StaticMeshData
 {
-    VertexBuffer vertices;
-    IndexBuffer  indices;
+    std::vector<Vertex> vertices;
+    std::vector<u32>    indices;
 };
 
 struct AnimatedMeshData
 {
-    AnimVertexBuffer vertices;
-    IndexBuffer      indices;
+    std::vector<AnimVertex> vertices;
+    std::vector<u32>        indices;
 
     Skeleton skeleton;
-    std::unordered_map<std::string, Animation> animations;
+};
+
+struct MeshData
+{
+    std::variant<StaticMeshData, AnimatedMeshData> data;
+
+    MeshData(const MeshData&) = delete;
+    MeshData& operator=(const MeshData&) = delete;
+
+    MeshData(const std::string& file);
 };
 
 class Mesh
 {
-    std::uint32_t d_vertexBuffer;
-    std::uint32_t d_indexBuffer;
+    u32 d_vertexBuffer;
+    u32 d_indexBuffer;
+    u64 d_vertexCount;
 
     BufferLayout d_layout;
-    std::size_t d_vertexCount;
 
-    bool d_animated;
-    Skeleton d_skeleton; // This is empty if the Mesh is not animated
+    std::optional<Skeleton> d_skeleton;
 
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
@@ -69,27 +76,26 @@ class Mesh
 public:
     Mesh(const StaticMeshData& data);
     Mesh(const AnimatedMeshData& data);
+
     Mesh(); // Empty model
     ~Mesh();
 
+    static std::shared_ptr<Mesh> FromData(const MeshData& data);
     static std::shared_ptr<Mesh> FromFile(const std::string& file);
 
-    // Core Functionality
     std::size_t VertexCount() const { return d_vertexCount; }
     BufferLayout GetLayout() const;
     void Bind() const;
 
-    bool operator==(const Mesh& other) const;
+    // Returns true if this Mesh contains animation data.
+    bool IsAnimated() const { return d_skeleton.has_value(); }
 
-    // Animation Functionality
-    bool IsAnimated() const { return d_animated; }
+    // Returns the transforms to be uploaded to the shader. The transform
+    // at position i corresponds to the bone with ID i.
+    std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;
 
-    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
-        // Returns the transforms to be uploaded to the shader. The transform
-        // at position i corresponds to the bone with ID i.
-
+    // Returns a list of names of all possible animations in this mesh.
     std::vector<std::string> GetAnimationNames() const;
-        // Returns a list of names of all possible animations in this mesh.
 };
 
 }

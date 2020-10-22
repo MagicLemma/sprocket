@@ -8,16 +8,34 @@
 #include <stb_image.h>
 
 namespace Sprocket {
+namespace {
+
+void SetTextureParameters(u32 id)
+{
+    glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+}
+
+}
+
+TextureData::TextureData(const std::string& file)
+{
+    data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
+}
+
+TextureData::~TextureData()
+{
+    stbi_image_free(data);
+}
 
 Texture::Texture(int width, int height, const unsigned char* data)
     : d_width(width)
     , d_height(height)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    SetTextureParameters(d_id);
     glTextureStorage2D(d_id, 1, GL_RGBA8, width, height);
     glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
@@ -28,10 +46,7 @@ Texture::Texture(int width, int height, Channels channels)
     , d_channels(channels)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(d_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureParameteri(d_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    SetTextureParameters(d_id);
     Resize(width, height);
 }
 
@@ -47,12 +62,14 @@ Texture::~Texture()
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
+std::shared_ptr<Texture> Texture::FromData(const TextureData& data)
+{
+    return std::make_shared<Texture>(data.width, data.height, data.data);
+}
+
 std::shared_ptr<Texture> Texture::FromFile(const std::string file)
 {
-    SPKT_LOG_INFO("Loading texture '{}'", file);
-    int width, height, bpp;
-    unsigned char* data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
-    return std::make_shared<Texture>(width, height, data);
+    return Texture::FromData(TextureData(file));
 }
 
 void Texture::Resize(int width, int height)
@@ -83,7 +100,7 @@ void Texture::Bind(int slot) const
     glBindTextureUnit(slot, d_id);
 }
 
-unsigned int Texture::Id() const
+u32 Texture::Id() const
 {
     return d_id;
 }

@@ -1,5 +1,6 @@
 #include <Sprocket.h>
 #include "EditorLayer.h"
+#include "Adaptors.h"
 
 int main()
 {
@@ -7,7 +8,7 @@ int main()
     Log::Init();
 
     Window window("Workshop");
-    AssetManager    assetManager;
+    AssetManager assetManager;
 
     App app;
 

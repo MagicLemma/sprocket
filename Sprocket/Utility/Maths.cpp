@@ -1,4 +1,5 @@
 #include "Maths.h"
+#include "Types.h"
 
 #include <algorithm>
 #include <cmath>
@@ -51,8 +52,7 @@ mat4 Transform(const vec3& position, const quat& orientation, const vec3& scale)
     m[3][1] = position.y;
     m[3][2] = position.z;
     m[3][3] = 1.0f;
-    m = Maths::Scale(m, scale);
-    return m;
+    return Maths::Scale(m, scale);
 }
 
 mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
@@ -209,7 +209,7 @@ float Length(const vec2& v)
 
 float Length(const ivec2& v)
 {
-    return std::sqrt(v.x * v.x + v.y * v.y);
+    return (float)std::sqrt(v.x * v.x + v.y * v.y);
 }
 
 
@@ -218,9 +218,9 @@ float LengthSquare(const vec3& v)
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-void Normalise(vec3& vec)
+vec3 Normalise(const vec3& vec)
 {
-    vec = glm::normalize(vec);
+    return glm::normalize(vec);
 }
 
 Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta)
@@ -276,31 +276,24 @@ Maths::mat4 NoScale(const Maths::mat4& matrix)
     return Maths::Transform(pos, ori);
 }
 
-vec3 GetMouseRay(
-    const vec2& mousePos,
-    unsigned int screenWidth,
-    unsigned int screenHeight,
-    const mat4& viewMatrix,
-    const mat4& projMatrix
-)
+vec3 GetMouseRay(const vec2& mousePos, u32 w, u32 h, const mat4& view, const mat4& proj)
 {
     // Homogeneous Clip Space
-    vec4 ray = {
-        (2.0f * mousePos.x) /screenWidth - 1,
-        -((2.0f * mousePos.y) / screenHeight - 1),
-        -1.0f,
-        1.0f
-    };
+    vec4 ray = {(2.0f * mousePos.x) / w - 1, -((2.0f * mousePos.y) / h - 1), -1.0f, 1.0f};
 
     // Eye Space
-    ray = Inverse(projMatrix) * ray;
+    ray = Inverse(proj) * ray;
     ray.z = -1.0f;
     ray.w = 0.0f;
 
     // World Space
-    vec3 returnRay = Inverse(viewMatrix) * ray;
-    Normalise(returnRay);
-    return returnRay;
+    return Normalise(Inverse(view) * ray);
+}
+
+Maths::vec3 ApplyTransform(const Maths::mat4& matrix, const Maths::vec3& v)
+{
+    Maths::vec4 v2 = matrix * Maths::vec4{v.x, v.y, v.z, 1.0f};
+    return {v2.x, v2.y, v2.z};
 }
 
 // Printing

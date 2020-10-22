@@ -1,12 +1,13 @@
 #pragma once
 #include "Resources.h"
+#include "Types.h"
 #include "Texture.h"
 
 namespace Sprocket {
 
 class FrameBuffer
 {
-    std::uint32_t d_fbo;
+    u32 d_fbo;
 
     std::shared_ptr<Texture> d_colour;
     std::shared_ptr<Texture> d_depth;

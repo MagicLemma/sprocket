@@ -20,9 +20,20 @@ std::shared_ptr<Mesh> AssetManager::GetMesh(const std::string& file)
         return it->second;
     }
 
-    auto model = Mesh::FromFile(filepath);
-    d_meshes.emplace(filepath, model);
-    return model;
+    if (auto it = d_loadingMeshes.find(filepath); it != d_loadingMeshes.end()) {
+        if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+            auto mesh = Mesh::FromData(*(it->second.get()));
+            d_loadingMeshes.erase(it);
+            d_meshes[filepath] = mesh;
+            return mesh;
+        }
+    } else {
+        d_loadingMeshes[filepath] = std::async(std::launch::async, [filepath]() {
+            return std::make_unique<MeshData>(filepath);
+        });
+    }
+
+    return d_defaultMesh;
 }
 
 std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)
@@ -34,9 +45,20 @@ std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)
         return it->second;
     }
 
-    auto texture = Texture::FromFile(filepath);
-    d_textures.emplace(filepath, texture);
-    return texture;
+    if (auto it = d_loadingTextures.find(filepath); it != d_loadingTextures.end()) {
+        if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+            auto texture = Texture::FromData(*(it->second.get()));
+            d_loadingTextures.erase(it);
+            d_textures[filepath] = texture;
+            return texture;
+        }
+    } else {
+        d_loadingTextures[filepath] = std::async(std::launch::async, [filepath]() {
+            return std::make_unique<TextureData>(filepath);
+        });
+    }
+
+    return d_defaultTexture;
 }
 
 std::shared_ptr<Material> AssetManager::GetMaterial(const std::string& file)
@@ -51,6 +73,21 @@ std::shared_ptr<Material> AssetManager::GetMaterial(const std::string& file)
     auto material = Material::FromFile(filepath);
     d_materials.emplace(filepath, material);
     return material;
+}
+
+bool AssetManager::IsLoadingMeshes() const
+{
+    return d_loadingMeshes.size() > 0;
+}
+
+bool AssetManager::IsLoadingTextures() const
+{
+    return d_loadingTextures.size() > 0;
+}
+
+bool AssetManager::IsLoadingAnything() const
+{
+    return IsLoadingMeshes() || IsLoadingTextures();
 }
 
 }

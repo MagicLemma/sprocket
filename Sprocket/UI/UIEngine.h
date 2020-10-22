@@ -6,6 +6,7 @@
 #include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "Font.h"
+#include "Types.h"
 
 #include <vector>
 #include <unordered_map>
@@ -31,7 +32,7 @@ struct QuadData
 struct DrawCommand
 {
     std::vector<BufferVertex> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<u32> indices;
     const Texture* texture;
 };
 
@@ -45,10 +46,10 @@ struct Panel
 
     // Render data
     std::vector<BufferVertex> quadVertices;
-    std::vector<unsigned int> quadIndices;
+    std::vector<u32> quadIndices;
 
     std::vector<BufferVertex> textVertices;
-    std::vector<unsigned int> textIndices;
+    std::vector<u32> textIndices;
 
     std::vector<DrawCommand> extraCommands;
 };

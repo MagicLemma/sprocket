@@ -1,5 +1,6 @@
 #include "Resources.h"
 #include "Log.h"
+#include "Types.h"
 
 #include <exception>
 
@@ -7,9 +8,9 @@
 
 namespace Sprocket {
 
-unsigned int GenerateBuffer(ResourceType type)
+u32 GenerateBuffer(ResourceType type)
 {
-    unsigned int buf;
+    u32 buf;
     switch(type) {
         case ResourceType::VAO: {
             glGenVertexArrays(1, &buf);
@@ -25,7 +26,7 @@ unsigned int GenerateBuffer(ResourceType type)
     return buf;
 }
 
-void DeleteBuffer(ResourceType type, unsigned int buf)
+void DeleteBuffer(ResourceType type, u32 buf)
 {
     switch(type) {
         case ResourceType::VAO: {

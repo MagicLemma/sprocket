@@ -83,7 +83,7 @@ Maths::vec3 CircadianCycle::GetSunDir() const
 {
     float angle = GetAngle();
     Maths::vec3 dir = {Maths::Sind(angle), Maths::Cosd(angle), 0.1f * Maths::Sind(angle)};
-    Maths::Normalise(dir);
+    dir = Maths::Normalise(dir);
     return dir;
 }
 

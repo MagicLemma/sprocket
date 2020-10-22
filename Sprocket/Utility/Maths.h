@@ -1,4 +1,6 @@
 #pragma once
+#include "Types.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <string>
@@ -71,19 +73,19 @@ float* Cast(const mat4& m);
 vec3 Cross(const vec3& lhs, const vec3& rhs);
 vec3 GetTranslation(const mat4& m);
 
-float Distance(const Maths::vec2& A, const Maths::vec2& B);
-float Distance(const Maths::vec3& A, const Maths::vec3& B);
+float Distance(const vec2& A, const vec2& B);
+float Distance(const vec3& A, const vec3& B);
 
 float Length(const vec3& v);
 float Length(const vec2& v);
 float Length(const ivec2& v);
 float LengthSquare(const vec3& v);
 
-void Normalise(vec3& vec);
+vec3 Normalise(const vec3& vec);
 
 // Normalisation
-Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta);
-Maths::quat Interpolate(const Maths::quat& a, const Maths::quat& b, float delta);
+vec3 Interpolate(const vec3& a, const vec3& b, float delta);
+quat Interpolate(const quat& a, const quat& b, float delta);
 
 // Trig
 float Radians(float degrees);
@@ -97,16 +99,17 @@ void Clamp(float& value, float min, float max);
 float Modulo(float val, float high);
 
 // Returns the matrix but with the scale component removed.
-Maths::mat4 NoScale(const Maths::mat4& matrix);
+mat4 NoScale(const mat4& matrix);
 
 // Mouse Picking
-vec3 GetMouseRay(
-    const vec2& mousePos,
-    unsigned int screenWidth,
-    unsigned int screenHeight,
-    const mat4& viewMatrix,
-    const mat4& projMatrix
-);
+vec3 GetMouseRay(const vec2& mousePos, u32 w, u32 h, const mat4& view, const mat4& proj);
+
+// EXTRA OPERATIONS
+
+// Appends a 1.0 to the vector, applies the transform, then strips the extra value.
+// Has the action of taking a point and returning the point that the given transform
+// moves it to.
+vec3 ApplyTransform(const mat4& matrix, const vec3& v);
 
 // Printing
 std::string ToString(const vec3& v, const std::optional<int>& dp = {});

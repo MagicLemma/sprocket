@@ -7,6 +7,13 @@ Ambience:
   colour: [1, 1, 1]
   brightness: 0.03
 Entities:
+  - TransformComponent:
+      position: [11.87766, -0.3048884, 0]
+      orientation: [1, 0, 0, 0]
+      scale: [1, 1, 1]
+    ModelComponent:
+      mesh: D:\dev\Sprocket\Resources\Models\Dragon.obj
+      material: ""
   - NameComponent:
       name: Crate Upper
     TransformComponent:

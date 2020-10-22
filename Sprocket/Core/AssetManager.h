@@ -6,14 +6,19 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <future>
 
 namespace Sprocket {
 
 class AssetManager
 {
+    // Background Loaders
+    std::unordered_map<std::string, std::future<std::unique_ptr<MeshData>>>    d_loadingMeshes;
+    std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
+
     // Primitives
-    std::unordered_map<std::string, std::shared_ptr<Mesh>>     d_meshes;
-    std::unordered_map<std::string, std::shared_ptr<Texture>>  d_textures;
+    std::unordered_map<std::string, std::shared_ptr<Mesh>>    d_meshes;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> d_textures;
     
     // Composites
     std::unordered_map<std::string, std::shared_ptr<Material>> d_materials;
@@ -46,6 +51,10 @@ public:
     auto Meshes()    { return Iterator(&d_meshes); }
     auto Textures()  { return Iterator(&d_textures); }
     auto Materials() { return Iterator(&d_materials); }
+
+    bool IsLoadingMeshes() const;
+    bool IsLoadingTextures() const;
+    bool IsLoadingAnything() const;
 };
 
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include "Types.h"
+
 #include <chrono>
 
 namespace Sprocket {
@@ -13,9 +15,9 @@ class Stopwatch
 
     bool d_printFramerate = false;
     Clock::time_point d_lastTimePrinted;
-    unsigned int d_frameCount;
-
-    unsigned int d_frameRate = 0.0f;
+    
+    u32 d_frameCount;
+    u32 d_frameRate = 0;
 
 public:
     Stopwatch();
@@ -23,7 +25,7 @@ public:
     double DeltaTime() const;
 
     void PrintFramerate(bool val) { d_printFramerate = val; }
-    unsigned int Framerate() const { return d_frameRate; }
+    u32 Framerate() const { return d_frameRate; }
 };
 
 }

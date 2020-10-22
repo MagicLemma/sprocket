@@ -11,8 +11,7 @@ void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt)
         auto& path = entity.Get<PathComponent>();
         if (path.markers.empty()) { return; }
         
-        Maths::vec3 direction = path.markers.front() - transform.position;
-        Maths::Normalise(direction);
+        Maths::vec3 direction = Maths::Normalise(path.markers.front() - transform.position);
         Maths::vec3 advance = path.speed * (float)dt * direction;
 
         auto MagSq = [](const Maths::vec3& v) {

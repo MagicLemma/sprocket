@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Types.h"
 #include "BufferLayout.h"
 #include "Resources.h"
 
@@ -18,7 +19,7 @@ enum class BufferUsage { STATIC, DYNAMIC };
 
 class Buffer
 {
-    std::uint32_t d_vbo;
+    u32 d_vbo;
 
     BufferLayout d_layout;
     BufferUsage  d_usage;

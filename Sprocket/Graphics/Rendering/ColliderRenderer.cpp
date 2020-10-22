@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Components.h"
 #include "Texture.h"
+#include "Types.h"
 
 #include <glad/glad.h>
 
@@ -23,7 +24,7 @@ void ColliderRenderer::Draw(
     RenderContext rc;
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    unsigned int MAX_NUM_LIGHTS = 5;
+    u32 MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
     d_shader.LoadMat4("u_proj_matrix", proj);

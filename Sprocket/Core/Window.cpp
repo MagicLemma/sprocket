@@ -1,9 +1,10 @@
-#include "Core/Window.h"
-#include "Utility/Log.h"
-#include "Events/WindowEvent.h"
-#include "Events/KeyboardEvent.h"
-#include "Events/MouseEvent.h"
+#include "Window.h"
 #include "Log.h"
+#include "WindowEvent.h"
+#include "KeyboardEvent.h"
+#include "MouseEvent.h"
+#include "Log.h"
+#include "Types.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -15,11 +16,7 @@ struct WindowImpl
 	GLFWwindow* window;	
 };
 
-Window::Window(
-	const std::string& name,
-	unsigned int width, 
-	unsigned int height
-)
+Window::Window(const std::string& name, u32 width, u32 height)
 	: d_impl(std::make_shared<WindowImpl>())
 	, d_data({name, width, height})
 	, d_clearColour({1.0, 1.0, 1.0})
@@ -163,7 +160,7 @@ Window::Window(
 		}
 	});
 
-	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, unsigned int key) {
+	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, u32 key) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		KeyboardKeyTypedEvent event(key);

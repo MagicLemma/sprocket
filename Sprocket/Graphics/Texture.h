@@ -1,12 +1,26 @@
 #pragma once
 #include "Resources.h"
 #include "Maths.h"
+#include "Types.h"
 
 #include <memory>
 #include <string>
 
 namespace Sprocket {
 
+struct TextureData
+{
+    int width;
+    int height;
+    int bpp;
+    unsigned char* data;
+
+    TextureData(const TextureData&) = delete;
+    TextureData& operator=(const TextureData&) = delete;
+
+    TextureData(const std::string& file);
+    ~TextureData();
+};
 
 class Texture
 {
@@ -14,7 +28,7 @@ public:
     enum class Channels { RGBA, RED, DEPTH };
 
 private:
-    std::uint32_t d_id;
+    u32 d_id;
 
     int d_width;
     int d_height;
@@ -30,11 +44,12 @@ public:
     Texture();
     ~Texture();
 
+    static std::shared_ptr<Texture> FromData(const TextureData& data);
     static std::shared_ptr<Texture> FromFile(const std::string file);
 
     void Bind(int slot) const;
 
-    unsigned int Id() const;
+    u32 Id() const;
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }

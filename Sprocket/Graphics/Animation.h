@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Types.h"
 
 #include <string>
 #include <unordered_map>
@@ -11,31 +12,31 @@ namespace Sprocket {
 struct Bone
 {
     std::string name;
-    std::uint32_t index; // The index of this bone within the bone vector.
+    u32 index;
 
-    Maths::mat4 transform;
+    // A transform that only applies to this bone and does not get added
+    // into the transform that is passed down to child bones.
     Maths::mat4 offset;
 
-    std::vector<uint32_t> children;
-        // All the data for the bone, this should not change after loading.
-
+    // The indices of the bones that are children of this one.
+    std::vector<u32> children;
 };
 
 struct KeyFramePos
 {
-    float       time;
+    f32         time;
     Maths::vec3 position;
 };
 
 struct KeyFrameOri
 {
-    float       time;
+    f32         time;
     Maths::quat orientation;
 };
 
 struct KeyFrameScl
 {
-    float       time;
+    f32         time;
     Maths::vec3 scale;
 };
 
@@ -49,19 +50,22 @@ struct BoneKeyFrames
 struct Animation
 {
     std::string name;
-    float       duration;
+
+    // The duration in seconds of this animation.
+    f32 duration;
+
+    // A vector of keyFrames for each bone. This vector will be the same
+    // length as the bone vector and the indices will line up.
     std::vector<BoneKeyFrames> keyFrames;
-        // A vector of keyFrames for each bone. This vector will be the same
-        // length as the bone vector and the indices will line up.
 };
 
 struct Skeleton
 {
     std::vector<Bone> bones;
-    std::unordered_map<std::string, std::uint32_t> boneMap;
+    std::unordered_map<std::string, u32> boneMap;
     std::unordered_map<std::string, Animation> animations;
 
-    std::vector<Maths::mat4> GetPose(const std::string& name, float time) const;
+    std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;
 };
 
 }

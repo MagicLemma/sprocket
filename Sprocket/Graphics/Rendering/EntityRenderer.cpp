@@ -6,6 +6,7 @@
 #include "Components.h"
 #include "Scene.h"
 #include "ShadowMap.h"
+#include "Types.h"
 
 #include <glad/glad.h>
 #include <cmath>
@@ -30,7 +31,7 @@ void UploadUniforms(
     const Maths::mat4& view,
     Scene& scene)
 {
-    unsigned int MAX_NUM_LIGHTS = 5;
+    u32 MAX_NUM_LIGHTS = 5;
     shader.Bind();
     shader.LoadMat4("u_proj_matrix", proj);
     shader.LoadMat4("u_view_matrix", view);

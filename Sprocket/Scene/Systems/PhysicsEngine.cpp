@@ -298,8 +298,7 @@ void PhysicsEngine::Running(bool isRunning)
 Entity PhysicsEngine::Raycast(const Maths::vec3& base,
                               const Maths::vec3& direction)
 {
-    Maths::vec3 d = direction;
-    Maths::Normalise(d);
+    Maths::vec3 d = Maths::Normalise(direction);
     d *= 100.0f;
 
     rp3d::Vector3 start = Convert(base);
