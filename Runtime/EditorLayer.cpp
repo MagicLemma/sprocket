@@ -88,12 +88,6 @@ void EditorLayer::OnUpdate(double dt)
 
     std::string windowName = "Anvil: " + d_sceneFile;
     d_core.window->SetWindowName(windowName);
-
-    // Create the Shadow Map
-    //float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    //Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    //d_shadowMap.Draw(sun, target, *d_scene);
-    //d_entityRenderer.EnableShadows(d_shadowMap);
     
     if (!d_paused) {
         d_activeScene->OnUpdate(dt);
@@ -129,23 +123,6 @@ void EditorLayer::OnUpdate(double dt)
     }
 
     d_ui.StartFrame();
-
-    auto& style = ImGui::GetStyle();
-    style.WindowRounding = 0.0f;
-
-    ImGuiWindowFlags flags = 
-        ImGuiWindowFlags_NoNav |
-        ImGuiWindowFlags_NoNavFocus |
-        ImGuiWindowFlags_NoNavInputs |
-        ImGuiWindowFlags_NoResize |
-        ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoResize;
-    if (d_playingGame) {
-        flags |= ImGuiWindowFlags_NoDecoration;
-    }
-
-    bool open = true;
-    float menuBarHeight = 19.0f;
 
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("Scene")) {
