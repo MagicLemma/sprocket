@@ -1,5 +1,6 @@
 #pragma once
 #include <Sprocket.h>
+#include "Console.h"
 
 #include <memory>
 #include <random>
@@ -13,49 +14,25 @@ class EditorLayer : public Layer
     // Rendering
     EntityRenderer d_entityRenderer;
     SkyboxRenderer d_skyboxRenderer;
-    ColliderRenderer d_colliderRenderer;
 
     ParticleManager d_particleManager;
 
-    FrameBuffer d_viewport;
-    DevUI d_ui;
-    bool d_isViewportHovered = false;
-    bool d_isViewportFocused = false;
-
     // Scene
-    std::string d_sceneFile = "Resources/Anvil.yaml";
-    std::shared_ptr<Scene> d_activeScene;
+    CubeMap d_skybox;
     std::shared_ptr<Scene> d_scene;
     Entity d_runtimeCamera;
 
-    // Additional world setup
-    CubeMap d_skybox;
-    float  d_sunAngle = 45.0f;
-    
-    // LAYER DATA
-    bool d_paused = false;
-    bool d_mouseRequired = false;
-
-    bool d_playingGame = false;
-
-    void AddEntityToList(const Entity& entity);
-    Entity d_selected;
+    // Console
+    Console d_console;
+    bool d_consoleActive = false;
 
 public:
-    EditorLayer(const Sprocket::CoreSystems& core);
+    EditorLayer(const CoreSystems& core);
 
-    void OnEvent(Sprocket::Event& event) override;
+    void OnEvent(Event& event) override;
     void OnUpdate(double dt) override;
 
-    Entity Selected() { return d_selected; }
-    void SetSelected(Entity e) { d_selected = e; }
-    void ClearSelected() { d_selected = Entity(); }
-
-    bool IsGameRunning() const { return d_playingGame; }
-
     Window* GetWindow() { return d_core.window; }
-
-    std::shared_ptr<Scene> GetScene() { return d_activeScene; }
 };
 
 }

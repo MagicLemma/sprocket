@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Runtime
                Runtime.m.cpp
-               Camera.cpp
+               Console.cpp
                EditorLayer.cpp)
 
 target_link_libraries(Runtime PRIVATE Sprocket)
