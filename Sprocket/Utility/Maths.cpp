@@ -255,11 +255,6 @@ float Cosd(float degrees)
 }
 
 // General Helpers
-void Clamp(float& value, float min, float max)
-{
-    value = std::min(std::max(value, min), max);
-}
-
 float Modulo(float val, float high)
 {
     float ret = val;

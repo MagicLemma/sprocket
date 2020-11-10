@@ -424,7 +424,7 @@ Mesh::~Mesh()
 
 std::shared_ptr<Mesh> Mesh::FromData(const MeshData& data)
 {
-    return std::visit([&](auto&& data) {
+    return std::visit([](auto&& data) {
         return std::make_shared<Mesh>(data);
     }, data.data);
 }

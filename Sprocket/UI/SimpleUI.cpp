@@ -192,7 +192,7 @@ void SimpleUI::Slider(const std::string& name,
 
     if (info.mouseDown) {
         auto mouse = d_mouse.GetMousePos();
-        Maths::Clamp(mouse.x, x, x + width);
+        mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
     }    
