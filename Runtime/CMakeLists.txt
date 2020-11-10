@@ -7,9 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(Runtime
                Runtime.m.cpp
                Camera.cpp
-               EditorLayer.cpp
-               
-               Panels/Inspector.cpp)
+               EditorLayer.cpp)
 
 target_link_libraries(Runtime PRIVATE Sprocket)
 target_include_directories(Runtime PUBLIC

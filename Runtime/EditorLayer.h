@@ -1,8 +1,5 @@
 #pragma once
 #include <Sprocket.h>
-#include "Camera.h"
-
-#include "Inspector.h"
 
 #include <memory>
 #include <random>
@@ -12,8 +9,6 @@ namespace Sprocket {
 class EditorLayer : public Layer
 {
     CoreSystems d_core;
-    
-    Camera d_editorCamera;
 
     // Rendering
     EntityRenderer d_entityRenderer;
@@ -42,15 +37,9 @@ class EditorLayer : public Layer
     bool d_mouseRequired = false;
 
     bool d_playingGame = false;
-    bool d_showColliders = false;
 
     void AddEntityToList(const Entity& entity);
     Entity d_selected;
-
-    // Panels
-    Inspector      d_inspector;
-
-    void MaterialUI(std::string& texture);
 
 public:
     EditorLayer(const Sprocket::CoreSystems& core);
@@ -64,7 +53,6 @@ public:
 
     bool IsGameRunning() const { return d_playingGame; }
 
-    Camera& GetEditorCamera() { return d_editorCamera; }
     Window* GetWindow() { return d_core.window; }
 
     std::shared_ptr<Scene> GetScene() { return d_activeScene; }
