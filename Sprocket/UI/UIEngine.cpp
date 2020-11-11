@@ -319,23 +319,24 @@ void UIEngine::DrawText(
     auto copy = region;
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
-    Glyph first = d_font.GetGlyph(text.front(), size);
     float textWidth = d_font.TextWidth(text, size);
 
     Maths::vec2 pen{region.x, region.y};
 
-    pen.y += (copy.w - first.height) / 2.0f;
-
     if (alignment == Alignment::LEFT) {
         pen.x += 5.0f;
+        pen.y += (copy.w - size) / 2.0f;
     } else if (alignment == Alignment::RIGHT) {
         pen.x += region.z - 5.0f - textWidth;
+        pen.y += (copy.w - size) / 2.0f;
     } else {
+        Glyph first = d_font.GetGlyph(text.front(), size);
+        pen.y += (copy.w - first.height) / 2.0f;
         pen.x += (copy.z - textWidth) / 2.0f;
+        pen.x -= first.offset.x;
+        pen.y += first.offset.y;
     }
 
-    pen.x -= first.offset.x;
-    pen.y += first.offset.y;
     
     for (std::size_t i = 0; i != text.size(); ++i) {
         auto glyph = d_font.GetGlyph(text[i], size);

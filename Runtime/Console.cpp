@@ -30,8 +30,7 @@ void Console::OnUpdate(double dt)
 
     d_ui.Button("Button1", {10, 10, 20, 20});
     d_ui.Button("Button2", {10, 30, 20, 20});
-    static std::string text = "Foo";
-    d_ui.TextModifiable("Text", {10, 60, 200, 100}, &text);
+    d_ui.TextModifiable("Text", {10, 60, 200, 100}, &d_commandLine);
 
     d_ui.EndPanel();
 }

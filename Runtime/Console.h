@@ -5,6 +5,7 @@ namespace Sprocket {
 class Console
 {
     SimpleUI d_ui;
+    std::string d_commandLine;
 
 public:
     Console(Window* window);
