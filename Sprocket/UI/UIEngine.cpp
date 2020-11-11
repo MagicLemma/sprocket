@@ -88,7 +88,7 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
 
 void UIEngine::OnEvent(Event& event)
 {
-    if (d_focused != 0) {
+    if (d_focused != 0 && !event.IsConsumed()) {
         if (auto e = event.As<KeyboardKeyTypedEvent>()) {
             d_keyPresses.push_back(e->Key());
             e->Consume();
@@ -291,14 +291,11 @@ void UIEngine::DrawQuad(const Maths::vec4& colour,
 
     auto& cmd = d_panels[d_currentPanel->hash];
 
-    auto col = colour;
-    col.a = 1;
-
     std::size_t index = cmd.quadVertices.size();
-    cmd.quadVertices.push_back({{x,         y},          col});
-    cmd.quadVertices.push_back({{x + width, y},          col});
-    cmd.quadVertices.push_back({{x,         y + height}, col});
-    cmd.quadVertices.push_back({{x + width, y + height}, col});
+    cmd.quadVertices.push_back({{x,         y},          colour});
+    cmd.quadVertices.push_back({{x + width, y},          colour});
+    cmd.quadVertices.push_back({{x,         y + height}, colour});
+    cmd.quadVertices.push_back({{x + width, y + height}, colour});
 
     cmd.quadIndices.push_back(index + 0);
     cmd.quadIndices.push_back(index + 1);
@@ -323,16 +320,12 @@ void UIEngine::DrawText(
 
     Maths::vec2 pen{region.x, region.y};
 
-    // In LEFT and RIGHT alignment, they are fitted to the top of the given box
-    // based on the size of the font. For centred text, we base it off the height of
-    // the first char. This gives the best effect with the fonts I have tested, but may
-    // not be suitable in general. We should find a more general way to align text here.
     if (alignment == Alignment::LEFT) {
         pen.x += 5.0f;
-        pen.y += (copy.w - size) / 2.0f;
+        pen.y += size;
     } else if (alignment == Alignment::RIGHT) {
-        pen.x += region.z - 5.0f - textWidth;
-        pen.y += (copy.w - size) / 2.0f;
+        pen.x += region.z - 5.0f;
+        pen.y += size;
     } else {
         Glyph first = d_font.GetGlyph(text.front(), size);
         pen.y += (copy.w - first.height) / 2.0f;

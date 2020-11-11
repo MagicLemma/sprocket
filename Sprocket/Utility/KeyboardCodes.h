@@ -37,7 +37,9 @@ enum Keyboard {
 	HOME = 268,
 	END = 269,
 	INSERT = 260,
-	DEL = 261
+	DEL = 261,
+
+	BACK_TICK = 96
 };
 
 enum KeyModifier {

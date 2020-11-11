@@ -4,6 +4,7 @@ namespace Sprocket {
 
 class Console
 {
+    Window* d_window;
     SimpleUI d_ui;
     std::string d_commandLine;
 
@@ -13,7 +14,6 @@ public:
     void OnUpdate(double dt);
     void OnEvent(Event& event);
     void Draw();
-
 };
 
 }

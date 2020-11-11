@@ -16,7 +16,7 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     })
     , d_console(core.window)
 {
-    d_core.window->SetCursorVisibility(true);
+    d_core.window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_scene = std::make_shared<Scene>();    
@@ -36,15 +36,32 @@ EditorLayer::EditorLayer(const CoreSystems& core)
 
 void EditorLayer::OnEvent(Event& event)
 {
-    if (d_consoleActive) { d_console.OnEvent(event); }
-    d_scene->OnEvent(event);
+    if (auto e = event.As<KeyboardKeyTypedEvent>()) {
+        if (e->Key() == Keyboard::BACK_TICK) {
+            d_consoleActive = !d_consoleActive;
+            e->Consume();
+        }
+    }
+
+    if (d_consoleActive) {
+        d_console.OnEvent(event);
+        event.Consume();
+    } else {
+        d_scene->OnEvent(event);
+    }
+
 }
 
 void EditorLayer::OnUpdate(double dt)
 {
-    d_scene->OnUpdate(dt);
-    if (d_consoleActive) { d_console.OnUpdate(dt); }
-    d_particleManager.OnUpdate(dt);
+    d_core.window->SetCursorVisibility(d_consoleActive);
+
+    if (d_consoleActive) {
+        d_console.OnUpdate(dt);
+    } else {
+        d_scene->OnUpdate(dt);
+        d_particleManager.OnUpdate(dt);
+    }
     
     d_scene->Each<TransformComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();

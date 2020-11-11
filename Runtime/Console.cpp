@@ -8,10 +8,12 @@ const auto GARDEN      = Sprocket::FromHex(0x55E6C1);
 const auto SPACE_DARK  = Sprocket::FromHex(0x2C3A47);
 
 Console::Console(Window* window)
-    : d_ui(window)
+    : d_window(window)
+    , d_ui(window)
 {
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
+    theme.backgroundColour.w = 0.8f;
     theme.baseColour = CLEAR_BLUE;
     theme.hoveredColour = LIGHT_BLUE;
     theme.clickedColour = GARDEN;
@@ -23,14 +25,16 @@ void Console::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
 
     d_ui.StartFrame();
-
-    Maths::vec4 mainRegion = {0, 0, 300, 300};
+    double W = 0.8 * d_window->Width() - 20;
+    double H = d_window->Height() - 20;
+    Maths::vec4 mainRegion = {10, 10, W, H};
     bool active = true;
-    d_ui.StartPanel("Main", &mainRegion, &active, &active, &active);
+    bool draggable = false;
+    bool clickable = false;
+    d_ui.StartPanel("Main", &mainRegion, &active, &draggable, &clickable);
 
-    d_ui.Button("Button1", {10, 10, 20, 20});
-    d_ui.Button("Button2", {10, 30, 20, 20});
-    d_ui.TextModifiable("Text", {10, 60, 200, 100}, &d_commandLine);
+    double boxHeight = 75.0;
+    d_ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &d_commandLine);
 
     d_ui.EndPanel();
 }

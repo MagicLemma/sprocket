@@ -139,7 +139,7 @@ void SimpleUI::TextModifiable(
         }
     }
 
-    auto colour = info.focused ? d_theme.clickedColour : d_theme.baseColour;
+    auto colour = info.focused ? d_theme.hoveredColour : d_theme.baseColour;
     d_engine.DrawQuad(colour, info.quad);
     d_engine.DrawText((*text) + "|", 36.0f, info.quad, Alignment::LEFT);
 }
