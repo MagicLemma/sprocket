@@ -43,7 +43,7 @@ void Console::OnUpdate(double dt)
     Maths::vec2 region = {10, H - 10 - boxHeight - 50};
     float fontSize = 24.0f;
     for (const auto& command : d_consoleLines) {
-        d_ui.Text(command, fontSize, region);
+        d_ui.Text(command.text, fontSize, region, command.colour);
         region.y -= fontSize;
     }
 
@@ -54,7 +54,7 @@ void Console::OnEvent(Event& event)
 {
     auto e = event.As<KeyboardButtonPressedEvent>();
     if (e && e->Key() == Keyboard::ENTER) {
-        d_consoleLines.push_front(d_commandLine);
+        d_consoleLines.push_front({d_commandLine, Maths::vec4{1.0, 1.0, 1.0, 1.0}});
         HandleCommand(d_commandLine);
         d_commandLine = "";
         e->Consume();
@@ -70,9 +70,17 @@ void Console::Draw()
 
 void Console::HandleCommand(const std::string& command)
 {
-    SPKT_LOG_INFO("Handled: {}", command);
     if (command == "clear") {
         d_consoleLines.clear();
+    }
+    else if (command == "exit") {
+        d_window->Close();
+    }
+    else if (command.substr(0, 5) == "echo ") {
+        d_consoleLines.push_front({
+            " > " + command.substr(5),
+            Maths::vec4{0.7, 0.7, 0.7, 1.0}
+        });
     }
     else if (command.substr(0, 4) == "run ") {
         Sprocket::LuaEngine engine;
@@ -82,7 +90,10 @@ void Console::HandleCommand(const std::string& command)
             if (std::filesystem::exists(script)) {
                 engine.RunScript(script);
             } else {
-                d_consoleLines.push_front(" > Could not find script '" + name + "'");
+                d_consoleLines.push_front({
+                    " > Could not find script '" + name + "'",
+                    Maths::vec4{1.0, 0.0, 0.0, 1.0}
+                });
             }
         }
     }
