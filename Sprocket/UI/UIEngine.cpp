@@ -323,6 +323,10 @@ void UIEngine::DrawText(
 
     Maths::vec2 pen{region.x, region.y};
 
+    // In LEFT and RIGHT alignment, they are fitted to the top of the given box
+    // based on the size of the font. For centred text, we base it off the height of
+    // the first char. This gives the best effect with the fonts I have tested, but may
+    // not be suitable in general. We should find a more general way to align text here.
     if (alignment == Alignment::LEFT) {
         pen.x += 5.0f;
         pen.y += (copy.w - size) / 2.0f;
