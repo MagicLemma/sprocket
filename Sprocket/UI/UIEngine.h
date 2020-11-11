@@ -187,6 +187,7 @@ public:
     void SubmitDrawCommand(const DrawCommand& cmd);
 
     std::size_t GetClicked() const { return d_clicked; }
+    void ClearFocus() { d_focused = 0; }
 };
 
 }

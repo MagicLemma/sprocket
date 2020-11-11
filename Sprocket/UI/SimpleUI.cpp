@@ -130,10 +130,11 @@ void SimpleUI::TextModifiable(
     auto info = d_engine.Register(name, region);
 
     for (int key : info.keyPresses) {
-        if (key == Keyboard::BACKSPACE && text->size() > 0) {
-            text->pop_back();
-        }
-        else {
+        if (key == Keyboard::BACKSPACE) {
+            if (text->size() > 0) {
+                text->pop_back();
+            }
+        } else {
             text->push_back(static_cast<char>(key));
         }
     }
