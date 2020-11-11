@@ -24,7 +24,7 @@ class EditorLayer : public Layer
 
     // Console
     Console d_console;
-    bool d_consoleActive = false;
+    bool d_consoleActive = true;
 
 public:
     EditorLayer(const CoreSystems& core);

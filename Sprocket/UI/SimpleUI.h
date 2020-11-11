@@ -42,7 +42,7 @@ public:
     void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
 
     Font& GetFont() { return d_engine.GetFont(); }
-
+    
     void OnEvent(Event& event);
     void OnUpdate(double dt);
 
@@ -63,6 +63,10 @@ public:
               float size,
               const Maths::vec4& region);
 
+    void TextModifiable(const std::string& name,
+                        const Maths::vec4& region,
+                        std::string* text);
+
     bool Button(const std::string& name,
                 const Maths::vec4& region);
 
@@ -81,6 +85,9 @@ public:
     void Image(const std::string& name,
                const Texture& image,
                const Maths::vec2& position);
+
+    // TEMP: Hashes are implementation details, just is just for debugging
+    std::size_t GetClicked() const { return d_engine.GetClicked(); }
 };
 
 }

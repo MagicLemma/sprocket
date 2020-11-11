@@ -122,6 +122,27 @@ void SimpleUI::Text(
     d_engine.DrawText(text, size, copy);
 }
 
+void SimpleUI::TextModifiable(
+    const std::string& name,
+    const Maths::vec4& region,
+    std::string* text)
+{
+    auto info = d_engine.Register(name, region);
+
+    for (int key : info.keyPresses) {
+        if (key == Keyboard::BACKSPACE && text->size() > 0) {
+            text->pop_back();
+        }
+        else {
+            text->push_back(static_cast<char>(key));
+        }
+    }
+
+    auto colour = info.focused ? d_theme.clickedColour : d_theme.baseColour;
+    d_engine.DrawQuad(colour, info.quad);
+    d_engine.DrawText(*text, 36.0f, info.quad);
+}
+
 bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
 {
     auto info = d_engine.Register(name, region);

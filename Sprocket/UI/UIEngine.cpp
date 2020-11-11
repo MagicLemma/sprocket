@@ -8,6 +8,7 @@
 #include "RenderContext.h"
 #include "BufferLayout.h"
 #include "Adaptors.h"
+#include "KeyboardEvent.h"
 
 #include <functional>
 #include <sstream>
@@ -78,11 +79,28 @@ WidgetInfo UIEngine::Register(const std::string& name,
         info.onHover = true;
     }
 
+    if (d_focused == hash) {
+        info.focused = true;
+        info.keyPresses = d_keyPresses;
+    }
+
     return info;
 }
 
 void UIEngine::OnEvent(Event& event)
 {
+    if (d_focused != 0) {
+        if (auto e = event.As<KeyboardKeyTypedEvent>()) {
+            d_keyPresses.push_back(e->Key());
+            e->Consume();
+        }
+        else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+            if (e->Key() == Keyboard::BACKSPACE) {
+                d_keyPresses.push_back(Keyboard::BACKSPACE);
+                e->Consume();
+            }
+        }
+    }
 }
 
 void UIEngine::OnUpdate(double dt)
@@ -118,6 +136,8 @@ void UIEngine::EndFrame()
 
     std::size_t moveToFront = 0;
 
+    d_keyPresses.clear();
+
     for (const auto& panelHash : Reversed(d_panelOrder)) {
         const auto& panel = d_panels[panelHash];
 
@@ -135,6 +155,9 @@ void UIEngine::EndFrame()
                     d_clicked = hash;
                     d_onClick = hash;
                     d_clickedTime = 0.0;
+
+                    // The newly clicked widget is now the focus
+                    d_focused = hash;
                 }
             }
             
@@ -149,6 +172,11 @@ void UIEngine::EndFrame()
                 }
             }
         }
+    }
+
+    if (d_mouse->IsButtonClicked(Mouse::LEFT) && !foundClicked) {
+        // Clicked on something other than the UI, so lose focus
+        d_focused = 0;
     }
 
     if (foundHovered == false) {

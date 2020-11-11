@@ -80,8 +80,14 @@ struct WidgetInfo
     bool onClick = false;
     bool onHover = false;
 
+    bool focused = false;
+
+    // The keys pressed since the last frame. This is guaranteed to be empty
+    // if the current widget is not focused.
+    std::vector<int> keyPresses;
+
+    // The region of the widget converted to screen space coords.
     Maths::vec4 quad;
-        // The region of the widget converted to screen space coords.
 };
 
 enum class Alignment
@@ -118,6 +124,8 @@ class UIEngine
         // Times (in seconds) that the current widgets have been
         // hovered/selected.
 
+    std::size_t d_focused = 0; // TODO: Expand with timings and add to WidgetInfo
+
     std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
         // Hash -> time map keeping track of the last time each
         // widget was unselected. Used to calculate the unhovered
@@ -131,6 +139,10 @@ class UIEngine
     std::size_t d_onHover = 0;
         // Stores which widget has been clicked/hovered so that it can
         // be acted on next frame. These are consumed when retrieved.
+
+    std::vector<int> d_keyPresses;
+        // A vector of key presses that happened since last frame. This will be
+        // given to the currently focused widget.
 
 public:
     UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse);
@@ -164,15 +176,17 @@ public:
         const Maths::vec4& quad
     );
 
+    // Basic draw functions, does not take panelling into account.
     void DrawText(
         const std::string& text,
         float size,
         const Maths::vec4& quad,
         Alignment alignment = Alignment::CENTRE
     );
-        // Basic draw functions, does not take panelling into account.
 
     void SubmitDrawCommand(const DrawCommand& cmd);
+
+    std::size_t GetClicked() const { return d_clicked; }
 };
 
 }

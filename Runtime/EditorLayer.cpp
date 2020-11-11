@@ -14,8 +14,9 @@ EditorLayer::EditorLayer(const CoreSystems& core)
         "Resources/Textures/Skybox/Skybox_Z_Pos.png",
         "Resources/Textures/Skybox/Skybox_Z_Neg.png"
     })
+    , d_console(core.window)
 {
-    d_core.window->SetCursorVisibility(false);
+    d_core.window->SetCursorVisibility(true);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_scene = std::make_shared<Scene>();    
@@ -35,8 +36,8 @@ EditorLayer::EditorLayer(const CoreSystems& core)
 
 void EditorLayer::OnEvent(Event& event)
 {
-    d_scene->OnEvent(event);
     if (d_consoleActive) { d_console.OnEvent(event); }
+    d_scene->OnEvent(event);
 }
 
 void EditorLayer::OnUpdate(double dt)
@@ -53,6 +54,8 @@ void EditorLayer::OnUpdate(double dt)
     });
     d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     d_entityRenderer.Draw(d_runtimeCamera, *d_scene);
+
+    if (d_consoleActive) { d_console.Draw(); }
 }
 
 }
