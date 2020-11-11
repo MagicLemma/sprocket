@@ -124,8 +124,6 @@ class UIEngine
         // Times (in seconds) that the current widgets have been
         // hovered/selected.
 
-    std::size_t d_focused = 0; // TODO: Expand with timings and add to WidgetInfo
-
     std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
         // Hash -> time map keeping track of the last time each
         // widget was unselected. Used to calculate the unhovered
@@ -140,6 +138,7 @@ class UIEngine
         // Stores which widget has been clicked/hovered so that it can
         // be acted on next frame. These are consumed when retrieved.
 
+    std::size_t d_focused = 0; // TODO: Expand with timings and add to WidgetInfo
     std::vector<int> d_keyPresses;
         // A vector of key presses that happened since last frame. This will be
         // given to the currently focused widget.
@@ -147,10 +146,11 @@ class UIEngine
 public:
     UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse);
 
+    // Registers a region that can respond to hovers and clicks. The (x, y)
+    // position of the region is with respect to the position of the active panel.
+    // If this widget will consume keyboard input, it needs to be stated here. Widgets
+    // only consume keyboard events while in focus.
     WidgetInfo Register(const std::string& name, const Maths::vec4& region);
-        // Registers a region that can respond to hovers and clicks.
-        // The (x, y) position of the region is with respect to the
-        // position of the active panel. The widget info returned
 
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
         // Returns the region offsetted by the position of the current
@@ -187,7 +187,6 @@ public:
     void SubmitDrawCommand(const DrawCommand& cmd);
 
     std::size_t GetClicked() const { return d_clicked; }
-    void ClearFocus() { d_focused = 0; }
 };
 
 }

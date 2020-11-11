@@ -43,8 +43,7 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
     return region;
 }
 
-WidgetInfo UIEngine::Register(const std::string& name,
-                              const Maths::vec4& region)
+WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region)
 {
     assert(d_currentPanel);
     
@@ -95,6 +94,12 @@ void UIEngine::OnEvent(Event& event)
             e->Consume();
         }
         else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+            if (e->Key() == Keyboard::BACKSPACE) {
+                d_keyPresses.push_back(Keyboard::BACKSPACE);
+                e->Consume();
+            }
+        }
+        else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
             if (e->Key() == Keyboard::BACKSPACE) {
                 d_keyPresses.push_back(Keyboard::BACKSPACE);
                 e->Consume();
