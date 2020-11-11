@@ -233,15 +233,13 @@ void UIEngine::EndFrame()
 bool UIEngine::StartPanel(
     const std::string& name,
     Maths::vec4* region,
-    bool* active,
-    bool* draggable,
-    bool* clickable)
+    bool active,
+    bool draggable,
+    bool clickable)
 {
     assert(!d_currentPanel);
-    assert(region != nullptr);
-    assert(active != nullptr);
 
-    if (*active) {
+    if (active) {
         std::size_t hash = std::hash<std::string>{}(name);
 
         auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
@@ -255,13 +253,13 @@ bool UIEngine::StartPanel(
         panel.region = *region;
         d_currentPanel = &panel;
 
-        if (*clickable) {
+        if (clickable) {
             auto info = Register(
                 name,
                 {0, 0, region->z, region->w}
             );
 
-            if (info.mouseDown && *draggable) {
+            if (info.mouseDown && draggable) {
                 region->x += d_mouse->GetMouseOffset().x;
                 region->y += d_mouse->GetMouseOffset().y;
                 d_currentPanel->region = *region;
@@ -270,7 +268,7 @@ bool UIEngine::StartPanel(
 
     }
 
-    return *active;
+    return active;
 }
 
 void UIEngine::EndPanel()

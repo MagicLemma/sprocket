@@ -80,14 +80,14 @@ void SimpleUI::EndFrame()
 bool SimpleUI::StartPanel(
     const std::string& name,
     Maths::vec4* region,
-    bool* active,
-    bool* draggable,
-    bool* clickable)
+    bool active,
+    bool draggable,
+    bool clickable)
 {
     d_engine.StartPanel(name, region, active, draggable, clickable);
     d_keyboard.ConsumeAll(false);
 
-    if(*active) {
+    if(active) {
         float thickness = 5.0f;
         auto border = *region;
         border.x -= thickness;
@@ -99,7 +99,7 @@ bool SimpleUI::StartPanel(
         d_engine.DrawQuad(d_theme.backgroundColour * 0.7f, *region);
     }
 
-    return *active;
+    return active;
 }
 
 void SimpleUI::EndPanel()

@@ -51,9 +51,9 @@ public:
 
     bool StartPanel(const std::string& name,
                     Maths::vec4* region,
-                    bool* active,
-                    bool* draggable,
-                    bool* clickable);
+                    bool active,
+                    bool draggable,
+                    bool clickable);
     void EndPanel();
 
     void Quad(const Maths::vec4& colour,
