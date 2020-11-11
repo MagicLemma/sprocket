@@ -1,4 +1,6 @@
 #include "Console.h"
+#include <Sprocket.h>
+#include <filesystem>
 
 namespace Sprocket {
 
@@ -35,11 +37,11 @@ void Console::OnUpdate(double dt)
 
     double boxHeight = 50.0;
     d_ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &d_commandLine);
-    while (d_consoleLines.size() > 25) {
+    while (d_consoleLines.size() > 100) {
         d_consoleLines.pop_back();
     }
     Maths::vec2 region = {10, H - 10 - boxHeight - 50};
-    float fontSize = 36.0f;
+    float fontSize = 24.0f;
     for (const auto& command : d_consoleLines) {
         d_ui.Text(command, fontSize, region);
         region.y -= fontSize;
@@ -72,8 +74,14 @@ void Console::HandleCommand(const std::string& command)
     if (command == "clear") {
         d_consoleLines.clear();
     }
-    else if (command == "test") {
-        d_consoleLines.push_front(" > Test Output!");
+    else {
+        Sprocket::LuaEngine engine;
+        auto script = std::string("Resources/Scripts/") + command + ".lua";
+        if (std::filesystem::exists(script)) {
+            engine.RunScript(script);
+        } else {
+            d_consoleLines.push_front("Could not find script");
+        }
     }
 }
 
