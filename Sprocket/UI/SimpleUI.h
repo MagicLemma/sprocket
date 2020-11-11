@@ -62,15 +62,18 @@ public:
     // TODO: Simplify the text API, it's a bit messy currently
     void Text(const std::string& text,
               float size,
-              const Maths::vec4& region);
+              const Maths::vec4& region,
+              const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     void Text(const std::string& text,
               float size,
-              const Maths::vec2& position);
+              const Maths::vec2& position,
+              const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     void TextModifiable(const std::string& name,
                         const Maths::vec4& region,
-                        std::string* text);
+                        std::string* text,
+                        const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     bool Button(const std::string& name,
                 const Maths::vec4& region);

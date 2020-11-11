@@ -181,7 +181,8 @@ public:
         const std::string& text,
         float size,
         const Maths::vec4& quad,
-        Alignment alignment = Alignment::CENTRE
+        Alignment alignment = Alignment::CENTRE,
+        const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0}
     );
 
     void SubmitDrawCommand(const DrawCommand& cmd);

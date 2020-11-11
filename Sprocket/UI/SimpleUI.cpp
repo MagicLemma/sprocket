@@ -116,25 +116,28 @@ void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 void SimpleUI::Text(
     const std::string& text,
     float size,
-    const Maths::vec4& quad)
+    const Maths::vec4& quad,
+    const Maths::vec4& colour)
 {
     auto copy = d_engine.ApplyOffset(quad);
-    d_engine.DrawText(text, size, copy);
+    d_engine.DrawText(text, size, copy, Alignment::CENTRE, colour);
 }
 
 void SimpleUI::Text(
     const std::string& text,
     float size,
-    const Maths::vec2& position)
+    const Maths::vec2& position,
+    const Maths::vec4& colour)
 {
     auto copy = d_engine.ApplyOffset({position.x, position.y, 0, 0});
-    d_engine.DrawText(text, size, copy, Alignment::LEFT);
+    d_engine.DrawText(text, size, copy, Alignment::LEFT, colour);
 }
 
 void SimpleUI::TextModifiable(
     const std::string& name,
     const Maths::vec4& region,
-    std::string* text)
+    std::string* text,
+    const Maths::vec4& colour)
 {
     auto info = d_engine.Register(name, region);
 
@@ -148,14 +151,14 @@ void SimpleUI::TextModifiable(
         }
     }
 
-    auto colour = info.focused ? d_theme.hoveredColour : d_theme.baseColour;
-    d_engine.DrawQuad(colour, info.quad);
+    auto boxColour = info.focused ? d_theme.hoveredColour : d_theme.baseColour;
+    d_engine.DrawQuad(boxColour, info.quad);
 
     std::string printText = *text;
     if (info.focused) {
         printText.push_back('|');
     }
-    d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT);
+    d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT, colour);
 }
 
 bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)

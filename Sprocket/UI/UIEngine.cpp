@@ -309,13 +309,13 @@ void UIEngine::DrawText(
     const std::string& text,
     float size,
     const Maths::vec4& region,
-    Alignment alignment)
+    Alignment alignment,
+    const Maths::vec4& colour)
 {
     assert(d_currentPanel);
     if (text.size() == 0) { return; }
 
     auto copy = region;
-    Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
 
     float textWidth = d_font.TextWidth(text, size);
 
