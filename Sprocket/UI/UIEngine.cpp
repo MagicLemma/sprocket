@@ -312,6 +312,7 @@ void UIEngine::DrawText(
     Alignment alignment)
 {
     assert(d_currentPanel);
+    if (text.size() == 0) { return; }
 
     auto copy = region;
     Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};

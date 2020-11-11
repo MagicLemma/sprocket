@@ -122,6 +122,15 @@ void SimpleUI::Text(
     d_engine.DrawText(text, size, copy);
 }
 
+void SimpleUI::Text(
+    const std::string& text,
+    float size,
+    const Maths::vec2& position)
+{
+    auto copy = d_engine.ApplyOffset({position.x, position.y, 0, 0});
+    d_engine.DrawText(text, size, copy, Alignment::LEFT);
+}
+
 void SimpleUI::TextModifiable(
     const std::string& name,
     const Maths::vec4& region,

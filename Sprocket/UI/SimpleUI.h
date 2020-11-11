@@ -59,9 +59,14 @@ public:
     void Quad(const Maths::vec4& colour,
               const Maths::vec4& region);
 
+    // TODO: Simplify the text API, it's a bit messy currently
     void Text(const std::string& text,
               float size,
               const Maths::vec4& region);
+
+    void Text(const std::string& text,
+              float size,
+              const Maths::vec2& position);
 
     void TextModifiable(const std::string& name,
                         const Maths::vec4& region,

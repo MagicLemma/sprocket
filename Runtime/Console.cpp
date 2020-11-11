@@ -33,20 +33,43 @@ void Console::OnUpdate(double dt)
     bool clickable = false;
     d_ui.StartPanel("Main", &mainRegion, &active, &draggable, &clickable);
 
-    double boxHeight = 75.0;
+    double boxHeight = 50.0;
     d_ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &d_commandLine);
+    while (d_previousLines.size() > 25) {
+        d_previousLines.pop_back();
+    }
+    Maths::vec2 region = {10, H - 10 - boxHeight - 50};
+    float fontSize = 36.0f;
+    for (const auto& command : d_previousLines) {
+        d_ui.Text(command, fontSize, region);
+        region.y -= fontSize;
+    }
 
     d_ui.EndPanel();
 }
 
 void Console::OnEvent(Event& event)
 {
-    d_ui.OnEvent(event);
+    if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+        if (e->Key() == Keyboard::ENTER) {
+            d_previousLines.push_front(d_commandLine);
+            HandleCommand(d_commandLine);
+            d_commandLine = "";
+            e->Consume();
+        }
+    } else {
+        d_ui.OnEvent(event);
+    }
 }
 
 void Console::Draw()
 {
     d_ui.EndFrame();
+}
+
+void Console::HandleCommand(const std::string& command)
+{
+    SPKT_LOG_INFO("Handled: {}", command);
 }
 
 }
