@@ -9,7 +9,7 @@ class Console
     SimpleUI d_ui;
 
     std::string             d_commandLine;
-    std::deque<std::string> d_previousLines;
+    std::deque<std::string> d_consoleLines;
 
     void HandleCommand(const std::string& command);
 

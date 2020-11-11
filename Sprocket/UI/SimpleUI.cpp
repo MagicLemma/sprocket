@@ -150,7 +150,12 @@ void SimpleUI::TextModifiable(
 
     auto colour = info.focused ? d_theme.hoveredColour : d_theme.baseColour;
     d_engine.DrawQuad(colour, info.quad);
-    d_engine.DrawText((*text) + "|", 36.0f, info.quad, Alignment::LEFT);
+
+    std::string printText = *text;
+    if (info.focused) {
+        printText.push_back('|');
+    }
+    d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT);
 }
 
 bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
