@@ -140,7 +140,7 @@ void SimpleUI::TextModifiable(
 
     auto colour = info.focused ? d_theme.clickedColour : d_theme.baseColour;
     d_engine.DrawQuad(colour, info.quad);
-    d_engine.DrawText(*text, 36.0f, info.quad);
+    d_engine.DrawText((*text) + "|", 36.0f, info.quad);
 }
 
 bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
