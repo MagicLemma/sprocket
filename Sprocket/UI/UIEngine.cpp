@@ -92,6 +92,11 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
         info.onHover = true;
     }
 
+    if (d_onFocus == hash) { // Consume the onFocus
+        d_onFocus = 0;
+        info.onFocus = true;
+    }
+
     return info;
 }
 
@@ -171,6 +176,7 @@ void UIEngine::EndFrame()
                     d_widgetTimes[d_focused].unfocusedTime = d_time;
                     d_widgetTimes[hash].focusedTime = d_time;
                     d_focused = hash;
+                    d_onFocus = hash;
                 }
             }
             

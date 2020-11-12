@@ -82,6 +82,7 @@ struct WidgetInfo
     
     bool onClick = false;
     bool onHover = false;
+    bool onFocus = false;
 
     // The keys pressed since the last frame. This is guaranteed to be empty
     // if the current widget is not focused.
@@ -116,8 +117,9 @@ class UIEngine
     Panel* d_currentPanel = nullptr;
     std::deque<std::size_t> d_panelOrder;
 
-    std::size_t d_hovered = 0;
     std::size_t d_clicked = 0;
+    std::size_t d_hovered = 0;
+    std::size_t d_focused = 0;
         // Hashes of the currently hovered/clicked widgets.
 
     std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
@@ -131,10 +133,10 @@ class UIEngine
 
     std::size_t d_onClick = 0;
     std::size_t d_onHover = 0;
+    std::size_t d_onFocus = 0;
         // Stores which widget has been clicked/hovered so that it can
         // be acted on next frame. These are consumed when retrieved.
 
-    std::size_t d_focused = 0; // TODO: Expand with timings and add to WidgetInfo
     std::vector<int> d_keyPresses;
         // A vector of key presses that happened since last frame. This will be
         // given to the currently focused widget.
