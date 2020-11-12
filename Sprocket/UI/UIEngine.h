@@ -117,11 +117,6 @@ class UIEngine
     std::size_t d_clicked = 0;
         // Hashes of the currently hovered/clicked widgets.
 
-    double d_hoveredTime = 0.0;
-    double d_clickedTime = 0.0;
-        // Times (in seconds) that the current widgets have been
-        // hovered/selected.
-
     std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
         // Hash -> time map keeping track of the last time each
         // widget was unselected. Used to calculate the unhovered

@@ -116,11 +116,8 @@ void UIEngine::OnUpdate(double dt)
 {
     d_mouse->ConsumeEvents(false);
     d_time += dt;
-    d_clickedTime += dt;
-    d_hoveredTime += dt;
 
     if (d_mouse->IsButtonReleased(Mouse::LEFT)) {
-        d_clickedTime = 0.0;
         if (d_clicked > 0) {
             d_widgetTimes[d_clicked].unclickedTime = d_time;
             d_clicked = 0;
@@ -163,7 +160,6 @@ void UIEngine::EndFrame()
                     d_widgetTimes[hash].clickedTime = d_time;
                     d_clicked = hash;
                     d_onClick = hash;
-                    d_clickedTime = 0.0;
 
                     // The newly clicked widget is now the focus
                     d_focused = hash;
@@ -177,7 +173,6 @@ void UIEngine::EndFrame()
                     d_widgetTimes[hash].hoveredTime = d_time;
                     d_hovered = hash;
                     d_onHover = hash;
-                    d_hoveredTime = 0.0;
                 }
             }
         }
@@ -189,7 +184,6 @@ void UIEngine::EndFrame()
     }
 
     if (foundHovered == false) {
-        d_hoveredTime = 0.0;
         if (d_hovered > 0) {
             d_widgetTimes[d_hovered].unhoveredTime = d_time;
             d_hovered = 0;
