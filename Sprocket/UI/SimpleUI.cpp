@@ -26,8 +26,8 @@ template <typename T> T Interpolate(
     T ret = base;
     double interval = 0.1;
     
-    if (info.sinceClicked) {
-        float r = std::min(info.sinceClicked, interval) / (float)interval;
+    if (info.sinceHovered) {
+        float r = std::min(info.sinceHovered, interval) / (float)interval;
         ret = (1 - r) * ret + r * hovered;
     } else {
         float r = std::min(info.sinceUnhovered, interval) / (float)interval;
