@@ -71,12 +71,9 @@ void SinglePanelUI::StartFrame()
 {
     std::string name = "__SinglePanelUI_Name__";
     Maths::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
-    bool active = true;
-    bool draggable = false;
-    bool clickable = true;
 
     d_engine.StartFrame();
-    d_engine.StartPanel(name, &region, &active, &draggable, &clickable);
+    d_engine.StartPanel(name, &region, true, false, true);
 }
 
 void SinglePanelUI::EndFrame()
