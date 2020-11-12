@@ -69,11 +69,9 @@ struct WidgetInfo
 // other pieces of info. The caller can then use this information to
 // decide how the widget should be rendered.
 {
-    double mouseOver = 0.0;
     double sinceHovered = 0.0f;
     double sinceUnhovered = 0.0;
 
-    double mouseDown = 0.0;
     double sinceClicked = 0.0;
     double sinceUnlicked = 0.0;
     

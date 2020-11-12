@@ -26,16 +26,16 @@ template <typename T> T Interpolate(
     T ret = base;
     double interval = 0.1;
     
-    if (info.mouseOver) {
-        float r = std::min(info.mouseOver, interval) / (float)interval;
+    if (info.sinceClicked) {
+        float r = std::min(info.sinceClicked, interval) / (float)interval;
         ret = (1 - r) * ret + r * hovered;
     } else {
         float r = std::min(info.sinceUnhovered, interval) / (float)interval;
         ret = (1 - r) * hovered + r * ret;
     }
 
-    if (info.mouseDown) {
-        float r = std::min(info.mouseDown, interval) / (float)interval;
+    if (info.sinceClicked) {
+        float r = std::min(info.sinceClicked, interval) / (float)interval;
         ret = (1 - r) * ret + r * clicked;
     } else {
         float r = std::min(info.sinceUnlicked, interval) / (float)interval;
@@ -229,7 +229,7 @@ void SimpleUI::Slider(const std::string& name,
     d_engine.DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
     d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
 
-    if (info.mouseDown) {
+    if (info.sinceClicked > 0) {
         auto mouse = d_mouse.GetMousePos();
         mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
@@ -248,7 +248,7 @@ void SimpleUI::Dragger(const std::string& name,
     d_engine.DrawQuad(colour, info.quad);
     d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
 
-    if (info.mouseDown) {
+    if (info.sinceClicked > 0) {
         *value += d_mouse.GetMouseOffset().x * speed;
     }    
 }

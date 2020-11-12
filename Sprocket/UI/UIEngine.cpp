@@ -55,18 +55,22 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
     d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, info.quad});
 
     if (hash == d_clicked) {
-        info.mouseDown = d_clickedTime;
+        info.sinceUnlicked = 0.0;
+        info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
     }
-
-    info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
-    info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
+    else {
+        info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
+        info.sinceClicked = 0.0;
+    }
 
     if (hash == d_hovered) {
-        info.mouseOver = d_hoveredTime;
+        info.sinceUnhovered = 0.0;
+        info.sinceHovered = d_time - d_widgetTimes[hash].hoveredTime;
     }
-    
-    info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
-    info.sinceHovered = d_time - d_widgetTimes[hash].hoveredTime;
+    else {
+        info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
+        info.sinceHovered = 0.0;
+    }
 
     if (d_onClick == hash) { // Consume the onCLick
         d_onClick = 0;
@@ -259,7 +263,7 @@ bool UIEngine::StartPanel(
                 {0, 0, region->z, region->w}
             );
 
-            if (info.mouseDown && draggable) {
+            if (info.sinceClicked > 0 && draggable) {
                 region->x += d_mouse->GetMouseOffset().x;
                 region->y += d_mouse->GetMouseOffset().y;
                 d_currentPanel->region = *region;
