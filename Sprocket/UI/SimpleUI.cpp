@@ -155,7 +155,7 @@ void SimpleUI::TextModifiable(
     d_engine.DrawQuad(boxColour, info.quad);
 
     std::string printText = *text;
-    if (info.sinceFocused > 0) {
+    if (info.sinceFocused > 0 && Maths::Modulo(info.sinceFocused, 1.0) < 0.5) {
         printText.push_back('|');
     }
     d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT, colour);
