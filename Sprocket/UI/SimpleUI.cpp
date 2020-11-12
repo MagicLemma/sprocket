@@ -151,11 +151,11 @@ void SimpleUI::TextModifiable(
         }
     }
 
-    auto boxColour = info.focused ? d_theme.hoveredColour : d_theme.baseColour;
+    auto boxColour = info.sinceFocused > 0 ? d_theme.hoveredColour : d_theme.baseColour;
     d_engine.DrawQuad(boxColour, info.quad);
 
     std::string printText = *text;
-    if (info.focused) {
+    if (info.sinceFocused > 0) {
         printText.push_back('|');
     }
     d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT, colour);

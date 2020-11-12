@@ -55,21 +55,31 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
     d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, info.quad});
 
     if (hash == d_clicked) {
-        info.sinceUnlicked = 0.0;
         info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
+        info.sinceUnlicked = 0.0;
     }
     else {
-        info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
         info.sinceClicked = 0.0;
+        info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
     }
 
     if (hash == d_hovered) {
-        info.sinceUnhovered = 0.0;
         info.sinceHovered = d_time - d_widgetTimes[hash].hoveredTime;
+        info.sinceUnhovered = 0.0;
     }
     else {
-        info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
         info.sinceHovered = 0.0;
+        info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
+    }
+
+    if (hash == d_focused) {
+        info.sinceFocused = d_time - d_widgetTimes[hash].focusedTime;
+        info.sinceUnfocused = 0.0;
+        info.keyPresses = d_keyPresses;
+    }
+    else {
+        info.sinceFocused = 0.0;
+        info.sinceUnfocused = d_time - d_widgetTimes[hash].unfocusedTime;
     }
 
     if (d_onClick == hash) { // Consume the onCLick
@@ -80,11 +90,6 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
     if (d_onHover == hash) { // Consume the onHover
         d_onHover = 0;
         info.onHover = true;
-    }
-
-    if (d_focused == hash) {
-        info.focused = true;
-        info.keyPresses = d_keyPresses;
     }
 
     return info;
@@ -118,6 +123,7 @@ void UIEngine::OnUpdate(double dt)
     d_time += dt;
 
     if (d_mouse->IsButtonReleased(Mouse::LEFT)) {
+        // Let go of mouse click, so lose clicked
         if (d_clicked > 0) {
             d_widgetTimes[d_clicked].unclickedTime = d_time;
             d_clicked = 0;
@@ -162,6 +168,8 @@ void UIEngine::EndFrame()
                     d_onClick = hash;
 
                     // The newly clicked widget is now the focus
+                    d_widgetTimes[d_focused].unfocusedTime = d_time;
+                    d_widgetTimes[hash].focusedTime = d_time;
                     d_focused = hash;
                 }
             }
@@ -180,19 +188,21 @@ void UIEngine::EndFrame()
 
     if (d_mouse->IsButtonClicked(Mouse::LEFT) && !foundClicked) {
         // Clicked on something other than the UI, so lose focus
-        d_focused = 0;
+        if (d_focused > 0) {
+            d_widgetTimes[d_focused].unfocusedTime = d_time;
+            d_focused = 0;
+        }
     }
 
-    if (foundHovered == false) {
+    if (!foundHovered) {
+        // Hovered over something other than the UI, so lose hover
         if (d_hovered > 0) {
             d_widgetTimes[d_hovered].unhoveredTime = d_time;
             d_hovered = 0;
         }
-        d_mouse->ConsumeEvents(false);
     }
-    else {
-        d_mouse->ConsumeEvents(true);
-    }
+
+    d_mouse->ConsumeEvents(foundHovered);
 
     if (moveToFront > 0) {
         auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);

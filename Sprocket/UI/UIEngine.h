@@ -60,6 +60,8 @@ struct WidgetTimes
     double unhoveredTime = 0.0;
     double clickedTime = 0.0;
     double unclickedTime = 0.0;
+    double focusedTime = 0.0;
+    double unfocusedTime = 0.0;
 };
 
 struct WidgetInfo
@@ -74,11 +76,12 @@ struct WidgetInfo
 
     double sinceClicked = 0.0;
     double sinceUnlicked = 0.0;
+
+    double sinceFocused = 0.0;
+    double sinceUnfocused = 0.0;
     
     bool onClick = false;
     bool onHover = false;
-
-    bool focused = false;
 
     // The keys pressed since the last frame. This is guaranteed to be empty
     // if the current widget is not focused.
