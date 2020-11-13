@@ -120,29 +120,31 @@ class UIEngine
     Panel* d_currentPanel = nullptr;
     std::deque<std::size_t> d_panelOrder;
 
+    // Hashes of the currently hovered/clicked widgets.
     std::size_t d_clicked = 0;
     std::size_t d_hovered = 0;
     std::size_t d_focused = 0;
-        // Hashes of the currently hovered/clicked widgets.
 
+    // Hash -> time map keeping track of the last time each
+    // widget was unselected. Used to calculate the unhovered
+    // and unclicked times.
     std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
-        // Hash -> time map keeping track of the last time each
-        // widget was unselected. Used to calculate the unhovered
-        // and unclicked times.
 
+    // A steadily increasing timer used to set the unselected
+    // times in the maps above.
     double d_time = 0.0;
-        // A steadily increasing timer used to set the unselected
-        // times in the maps above.
 
+    // Stores which widget has been clicked/hovered so that it can
+    // be acted on next frame. These are consumed when retrieved.
     std::size_t d_onClick = 0;
     std::size_t d_onHover = 0;
     std::size_t d_onFocus = 0;
-        // Stores which widget has been clicked/hovered so that it can
-        // be acted on next frame. These are consumed when retrieved.
 
+    // A vector of key presses that happened since last frame. This will be
+    // given to the currently focused widget.
     std::vector<int> d_keyPresses;
-        // A vector of key presses that happened since last frame. This will be
-        // given to the currently focused widget.
+
+    void ExecuteCommand(const DrawCommand& cmd);
 
 public:
     UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse);
@@ -153,9 +155,9 @@ public:
     // only consume keyboard events while in focus.
     WidgetInfo Register(const std::string& name, const Maths::vec4& region);
 
+    // Returns the region offsetted by the position of the current
+    // panel if there is one, or region otherwise.
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
-        // Returns the region offsetted by the position of the current
-        // panel if there is one, or region otherwise.
 
     const Font* GetFont() { return &d_font; }
     const Texture* GetWhite() { return &d_white; }

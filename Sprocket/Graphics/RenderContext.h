@@ -1,4 +1,8 @@
 #pragma once
+#include "Maths.h"
+#include "Window.h"
+
+#include <optional>
 
 namespace Sprocket {
 
@@ -29,6 +33,19 @@ public:
     void DepthTesting(bool enabled) const;
     void ScissorTesting(bool enabled) const;
 
+};
+
+class ScissorContext
+// An RAII class for enabling scissor testing. Scissor testing is enabled on creation
+// and disabled on destruction. The window is needed here since OpenGL puts (0, 0) in the
+// lower left while Sprocket has (0, 0) as the top left, so the region needs to get
+// flipped in the y-axis before using.
+{
+    std::optional<Maths::vec4> d_region;
+
+public:
+    ScissorContext(Window* window, const std::optional<Maths::vec4>& region);
+    ~ScissorContext();
 };
 
 }

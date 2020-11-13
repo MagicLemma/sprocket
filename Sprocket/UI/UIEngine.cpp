@@ -239,44 +239,10 @@ void UIEngine::EndFrame()
     d_buffer.Bind();
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
-        const auto& cmd = panel.mainCommand;
 
-        if (cmd.region.has_value()) {
-            glEnable(GL_SCISSOR_TEST);
-            const auto& region = cmd.region.value();
-            glScissor(region.x,  d_window->Height() - region.y - region.w, region.z, region.w);
-        }
-        if (cmd.texture) {
-            cmd.texture->Bind(0);
-            d_buffer.Draw(cmd.vertices, cmd.indices);
-        }
-        if (cmd.font) {
-            cmd.font->Bind(0);
-            d_shader.LoadInt("texture_channels", 1);
-            d_buffer.Draw(cmd.textVertices, cmd.textIndices);
-        }
-        if (cmd.region.has_value()) {
-            glDisable(GL_SCISSOR_TEST);
-        }
-
-        for (const auto& extraCmd : panel.extraCommands) {
-            if (extraCmd.region.has_value()) {
-                glEnable(GL_SCISSOR_TEST);
-                const auto& region = extraCmd.region.value();
-                glScissor(region.x,  d_window->Height() - region.y - region.w, region.z, region.w);
-            }
-            if (extraCmd.texture) {
-                extraCmd.texture->Bind(0);
-                d_buffer.Draw(extraCmd.vertices, extraCmd.indices);
-            }
-            if (extraCmd.font) {
-                extraCmd.font->Bind(0);
-                d_shader.LoadInt("texture_channels", 1);
-                d_buffer.Draw(extraCmd.textVertices, extraCmd.textIndices);
-            }
-            if (extraCmd.region.has_value()) {
-                glDisable(GL_SCISSOR_TEST);
-            }
+        ExecuteCommand(panel.mainCommand);
+        for (const auto& cmd : panel.extraCommands) {
+            ExecuteCommand(cmd);
         }
     }
     d_buffer.Unbind();
@@ -437,6 +403,20 @@ void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
 {
     assert(d_currentPanel);
     d_currentPanel->extraCommands.emplace_back(cmd);
+}
+
+void UIEngine::ExecuteCommand(const DrawCommand& cmd)
+{
+    auto scissor = ScissorContext(d_window, cmd.region);
+    if (cmd.texture) {
+        cmd.texture->Bind(0);
+        d_buffer.Draw(cmd.vertices, cmd.indices);
+    }
+    if (cmd.font) {
+        cmd.font->Bind(0);
+        d_shader.LoadInt("texture_channels", 1);
+        d_buffer.Draw(cmd.textVertices, cmd.textIndices);
+    }
 }
 
 }
