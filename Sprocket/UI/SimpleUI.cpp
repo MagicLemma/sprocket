@@ -261,10 +261,10 @@ void SimpleUI::Dragger(const std::string& name,
 }
 
 void SimpleUI::Image(const std::string& name,
-                     const Texture& image,
+                     std::shared_ptr<Texture> image,
                      const Maths::vec2& position)
 {
-    Maths::vec4 region{position.x, position.y, image.Width(), image.Height()};
+    Maths::vec4 region{position.x, position.y, image->Width(), image->Height()};
     Maths::vec4 copy = d_engine.ApplyOffset(region);
 
     DrawCommand cmd;
@@ -275,7 +275,7 @@ void SimpleUI::Image(const std::string& name,
         {{copy.x + copy.z, copy.y + copy.w}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0}}
     };
     cmd.indices = {0, 1, 2, 2, 1, 3};
-    cmd.texture = &image;
+    cmd.texture = image.get();
     d_engine.SubmitDrawCommand(cmd);
 }
 

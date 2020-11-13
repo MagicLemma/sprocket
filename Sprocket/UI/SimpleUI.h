@@ -41,7 +41,7 @@ public:
     const SimpleUITheme& GetTheme() const { return d_theme; }
     void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
 
-    const Font* GetFont() { return d_engine.GetFont(); }
+    Font* GetFont() { return d_engine.GetFont(); }
     
     void OnEvent(Event& event);
     void OnUpdate(double dt);
@@ -91,7 +91,7 @@ public:
                  float* value, float speed);
 
     void Image(const std::string& name,
-               const Texture& image,
+               std::shared_ptr<Texture> image,
                const Maths::vec2& position);
 
     // TEMP: Hashes are implementation details, just is just for debugging

@@ -16,6 +16,20 @@
 
 namespace Sprocket {
 
+enum class Alignment
+{
+    LEFT,
+    CENTRE,
+    RIGHT
+};
+
+struct TextProperties
+{
+    float       size      = 24.0f;
+    Alignment   alignment = Alignment::CENTRE;
+    Maths::vec4 colour    = {0.0, 0.0, 0.0, 1.0};
+};
+
 struct BufferVertex
 {
     Maths::vec2 position;
@@ -31,16 +45,23 @@ struct QuadData
 
 struct DrawCommand
 {
-    const Texture*            texture = nullptr;
+    Texture*                  texture = nullptr;
     std::vector<BufferVertex> vertices;
     std::vector<u32>          indices;
 
-    const Font*               font = nullptr;
+    Font*                     font = nullptr;
     std::vector<BufferVertex> textVertices;
     std::vector<u32>          textIndices;
 
     // If specified, we scissor test this region so nothing outside the region is rendered.
     std::optional<Maths::vec4> region = {};
+
+    void AddQuad(const Maths::vec4& colour,
+                 const Maths::vec4& quad);
+
+    void AddText(const std::string& text,
+                 const Maths::vec4& quad,
+                 const TextProperties& properties = {});
 };
 
 struct Panel
@@ -92,13 +113,6 @@ struct WidgetInfo
 
     // The region of the widget converted to screen space coords.
     Maths::vec4 quad;
-};
-
-enum class Alignment
-{
-    LEFT,
-    CENTRE,
-    RIGHT
 };
 
 class UIEngine
@@ -159,8 +173,8 @@ public:
     // panel if there is one, or region otherwise.
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
 
-    const Font* GetFont() { return &d_font; }
-    const Texture* GetWhite() { return &d_white; }
+    Font* GetFont() { return &d_font; }
+    Texture* GetWhite() { return &d_white; }
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);

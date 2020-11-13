@@ -27,6 +27,96 @@ std::vector<unsigned char> GetWhiteData()
 
 }
 
+void DrawCommand::AddQuad(const Maths::vec4& colour, const Maths::vec4& quad)
+{
+    float x = quad.x;
+    float y = quad.y;
+    float width = quad.z;
+    float height = quad.w;
+
+    std::size_t index = vertices.size();
+    vertices.push_back({{x,         y},          colour});
+    vertices.push_back({{x + width, y},          colour});
+    vertices.push_back({{x,         y + height}, colour});
+    vertices.push_back({{x + width, y + height}, colour});
+
+    indices.push_back(index + 0);
+    indices.push_back(index + 1);
+    indices.push_back(index + 2);
+    indices.push_back(index + 2);
+    indices.push_back(index + 1);
+    indices.push_back(index + 3);
+}
+
+void DrawCommand::AddText(const std::string& text,
+                          const Maths::vec4& quad,
+                          const TextProperties& properties)
+{
+    if (font == nullptr) {
+        SPKT_LOG_ERROR("Tried to add text to a draw command with no font!");
+        return;
+    }
+
+    if (text.size() == 0) {
+        return;
+    }
+
+    Alignment alignment = properties.alignment;
+    float size = properties.size;
+    Maths::vec4 colour = properties.colour;
+
+    Maths::vec2 pen{quad.x, quad.y};
+
+    if (alignment == Alignment::LEFT) {
+        pen.x += 5.0f;
+        pen.y += size;
+    } else if (alignment == Alignment::RIGHT) {
+        pen.x += quad.z - 5.0f;
+        pen.y += size;
+    } else {
+        float textWidth = font->TextWidth(text, size);
+        Glyph first = font->GetGlyph(text.front(), size);
+        pen.y += (quad.w - first.height) / 2.0f;
+        pen.x += (quad.z - textWidth) / 2.0f;
+        pen.x -= first.offset.x;
+        pen.y += first.offset.y;
+    }
+
+    for (std::size_t i = 0; i != text.size(); ++i) {
+        auto glyph = font->GetGlyph(text[i], size);
+
+        if (i > 0) {
+            pen.x += font->GetKerning(text[i-1], text[i], size);
+        }
+
+        float xPos = pen.x + glyph.offset.x;
+        float yPos = pen.y - glyph.offset.y;
+
+        float width = glyph.width;
+        float height = glyph.height;
+
+        float x = glyph.texture.x;
+        float y = glyph.texture.y;
+        float w = glyph.texture.z;
+        float h = glyph.texture.w;
+
+        pen += glyph.advance;
+
+        u32 index = textVertices.size();
+        textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
+        textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
+        textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
+        textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
+
+        textIndices.push_back(index + 0);
+        textIndices.push_back(index + 1);
+        textIndices.push_back(index + 2);
+        textIndices.push_back(index + 2);
+        textIndices.push_back(index + 1);
+        textIndices.push_back(index + 3);
+    }
+}
+
 UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     : d_window(window)
     , d_keyboard(keyboard)
@@ -302,29 +392,13 @@ void UIEngine::DrawQuad(const Maths::vec4& colour,
                         DrawCommand* cmd)
 {
     assert(d_currentPanel);
-    auto copy = region;
-    float x = copy.x;
-    float y = copy.y;
-    float width = copy.z;
-    float height = copy.w;
 
     DrawCommand* target = cmd;
     if (target == nullptr) {
         target = &d_panels[d_currentPanel->hash].mainCommand;
     }
 
-    std::size_t index = target->vertices.size();
-    target->vertices.push_back({{x,         y},          colour});
-    target->vertices.push_back({{x + width, y},          colour});
-    target->vertices.push_back({{x,         y + height}, colour});
-    target->vertices.push_back({{x + width, y + height}, colour});
-
-    target->indices.push_back(index + 0);
-    target->indices.push_back(index + 1);
-    target->indices.push_back(index + 2);
-    target->indices.push_back(index + 2);
-    target->indices.push_back(index + 1);
-    target->indices.push_back(index + 3);
+    target->AddQuad(colour, region);
 }
 
 void UIEngine::DrawText(
@@ -338,65 +412,18 @@ void UIEngine::DrawText(
     assert(d_currentPanel);
     if (text.size() == 0) { return; }
 
-    auto copy = region;
-
-    float textWidth = d_font.TextWidth(text, size);
-
-    Maths::vec2 pen{region.x, region.y};
-
-    if (alignment == Alignment::LEFT) {
-        pen.x += 5.0f;
-        pen.y += size;
-    } else if (alignment == Alignment::RIGHT) {
-        pen.x += region.z - 5.0f;
-        pen.y += size;
-    } else {
-        Glyph first = d_font.GetGlyph(text.front(), size);
-        pen.y += (copy.w - first.height) / 2.0f;
-        pen.x += (copy.z - textWidth) / 2.0f;
-        pen.x -= first.offset.x;
-        pen.y += first.offset.y;
+    DrawCommand* target = cmd;
+    if (target == nullptr) {
+        target = &d_panels[d_currentPanel->hash].mainCommand;
     }
 
-    
-    for (std::size_t i = 0; i != text.size(); ++i) {
-        auto glyph = d_font.GetGlyph(text[i], size);
+    TextProperties tp;
+    tp.alignment = alignment;
+    tp.colour = colour;
+    tp.size = size;
 
-        if (i > 0) {
-            pen.x += d_font.GetKerning(text[i-1], text[i], size);
-        }
+    target->AddText(text, region, tp);
 
-        float xPos = pen.x + glyph.offset.x;
-        float yPos = pen.y - glyph.offset.y;
-
-        float width = glyph.width;
-        float height = glyph.height;
-
-        float x = glyph.texture.x;
-        float y = glyph.texture.y;
-        float w = glyph.texture.z;
-        float h = glyph.texture.w;
-
-        pen += glyph.advance;
-
-        DrawCommand* target = cmd;
-        if (target == nullptr) {
-            target = &d_panels[d_currentPanel->hash].mainCommand;
-        }
-
-        u32 index = target->textVertices.size();
-        target->textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
-        target->textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
-        target->textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
-        target->textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
-
-        target->textIndices.push_back(index + 0);
-        target->textIndices.push_back(index + 1);
-        target->textIndices.push_back(index + 2);
-        target->textIndices.push_back(index + 2);
-        target->textIndices.push_back(index + 1);
-        target->textIndices.push_back(index + 3);
-    }
 }
 
 void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
