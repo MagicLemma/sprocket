@@ -244,7 +244,7 @@ void UIEngine::EndFrame()
         if (cmd.region.has_value()) {
             glEnable(GL_SCISSOR_TEST);
             const auto& region = cmd.region.value();
-            glScissor(region.x, region.y, region.w, region.w);
+            glScissor(region.x,  d_window->Height() - region.y - region.w, region.z, region.w);
         }
         if (cmd.texture) {
             cmd.texture->Bind(0);
@@ -263,7 +263,7 @@ void UIEngine::EndFrame()
             if (extraCmd.region.has_value()) {
                 glEnable(GL_SCISSOR_TEST);
                 const auto& region = extraCmd.region.value();
-                glScissor(region.x, region.y, region.z, region.w);
+                glScissor(region.x,  d_window->Height() - region.y - region.w, region.z, region.w);
             }
             if (extraCmd.texture) {
                 extraCmd.texture->Bind(0);

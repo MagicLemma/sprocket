@@ -140,10 +140,9 @@ void SimpleUI::TextModifiable(
     const Maths::vec4& colour)
 {
     auto info = d_engine.Register(name, region);
-    auto copy = info.quad;
 
     DrawCommand cmd;
-    //cmd.region = copy;
+    cmd.region = info.quad;
     cmd.texture = d_engine.GetWhite();
     cmd.font = d_engine.GetFont();
 
