@@ -189,8 +189,6 @@ public:
     // panel if there is one, or region otherwise.
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
 
-    Texture* GetWhite() { return &d_white; }
-
     // Returns the current panels main draw command. Asserts if there is no current panel.
     DrawCommand& GetDrawCommand();
 

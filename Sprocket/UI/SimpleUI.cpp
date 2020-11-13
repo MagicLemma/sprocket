@@ -144,7 +144,6 @@ void SimpleUI::TextModifiable(
 
     DrawCommand cmd;
     cmd.region = info.quad;
-    cmd.texture = d_engine.GetWhite();
     cmd.font = &d_font;
 
     for (int key : info.keyPresses) {
