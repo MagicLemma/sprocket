@@ -337,42 +337,35 @@ void UIEngine::EndFrame()
     d_buffer.Unbind();
 }
 
-bool UIEngine::StartPanel(
+void UIEngine::StartPanel(
     const std::string& name,
     Maths::vec4* region,
-    bool active,
     bool draggable,
     bool clickable)
 {
     assert(!d_currentPanel);
+    std::size_t hash = std::hash<std::string>{}(name);
 
-    if (active) {
-        std::size_t hash = std::hash<std::string>{}(name);
-
-        auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
-        if (it == d_panelOrder.end()) {
-            d_panelOrder.push_back(hash);
-        }
-        
-        auto& panel = d_panels[hash];
-        panel.name = name;
-        panel.hash = hash;
-        panel.region = *region;
-        d_currentPanel = &panel;
-
-        if (clickable) {
-            auto info = Register(name, {0, 0, region->z, region->w});
-
-            if (info.sinceClicked > 0 && draggable) {
-                region->x += d_mouse->GetMouseOffset().x;
-                region->y += d_mouse->GetMouseOffset().y;
-                d_currentPanel->region = *region;
-            }
-        }
-
+    auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
+    if (it == d_panelOrder.end()) {
+        d_panelOrder.push_back(hash);
     }
+    
+    auto& panel = d_panels[hash];
+    panel.name = name;
+    panel.hash = hash;
+    panel.region = *region;
+    d_currentPanel = &panel;
 
-    return active;
+    if (clickable) {
+        auto info = Register(name, {0, 0, region->z, region->w});
+
+        if (info.sinceClicked > 0 && draggable) {
+            region->x += d_mouse->GetMouseOffset().x;
+            region->y += d_mouse->GetMouseOffset().y;
+            d_currentPanel->region = *region;
+        }
+    }
 }
 
 void UIEngine::EndPanel()

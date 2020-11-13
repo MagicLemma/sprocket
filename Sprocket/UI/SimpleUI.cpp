@@ -78,23 +78,18 @@ void SimpleUI::EndFrame()
     d_engine.EndFrame();
 }
 
-bool SimpleUI::StartPanel(
+void SimpleUI::StartPanel(
     const std::string& name,
     Maths::vec4* region,
-    bool active,
     bool draggable,
     bool clickable)
 {
-    d_engine.StartPanel(name, region, active, draggable, clickable);
+    d_engine.StartPanel(name, region, draggable, clickable);
     d_keyboard.ConsumeAll(false);
 
-    if(active) {
-        auto& cmd = d_engine.GetDrawCommand();
-        cmd.font = &d_font;
-        cmd.AddQuad(d_theme.backgroundColour * 0.7f, *region);
-    }
-
-    return active;
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.font = &d_font;
+    cmd.AddQuad(d_theme.backgroundColour * 0.7f, *region);
 }
 
 void SimpleUI::EndPanel()

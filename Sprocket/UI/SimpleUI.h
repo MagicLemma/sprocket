@@ -50,9 +50,8 @@ public:
     void StartFrame();
     void EndFrame();
 
-    bool StartPanel(const std::string& name,
+    void StartPanel(const std::string& name,
                     Maths::vec4* region,
-                    bool active,
                     bool draggable,
                     bool clickable);
     void EndPanel();
