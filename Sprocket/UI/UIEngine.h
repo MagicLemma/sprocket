@@ -38,6 +38,8 @@ struct DrawCommand
     const Font*               font = nullptr;
     std::vector<BufferVertex> textVertices;
     std::vector<u32>          textIndices;
+
+    std::optional<Maths::vec4> region = {};
 };
 
 struct Panel

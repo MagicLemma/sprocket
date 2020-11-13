@@ -15,6 +15,8 @@
 #include <cassert>
 #include <algorithm>
 
+#include <glad/glad.h>
+
 namespace Sprocket {
 namespace {
 
@@ -239,9 +241,13 @@ void UIEngine::EndFrame()
         const auto& panel = d_panels[panelHash];
         const auto& cmd = panel.mainCommand;
 
+        if (cmd.region.has_value()) {
+            glEnable(GL_SCISSOR_TEST);
+            const auto& region = cmd.region.value();
+            glScissor(region.x, region.y, region.z, region.w);
+        }
         if (cmd.texture) {
             cmd.texture->Bind(0);
-            d_shader.LoadInt("texture_channels", cmd.texture->GetChannels());
             d_buffer.Draw(cmd.vertices, cmd.indices);
         }
         if (cmd.font) {
@@ -249,17 +255,27 @@ void UIEngine::EndFrame()
             d_shader.LoadInt("texture_channels", 1);
             d_buffer.Draw(cmd.textVertices, cmd.textIndices);
         }
+        if (cmd.region.has_value()) {
+            glDisable(GL_SCISSOR_TEST);
+        }
 
         for (const auto& extraCmd : panel.extraCommands) {
+            if (extraCmd.region.has_value()) {
+                glEnable(GL_SCISSOR_TEST);
+                const auto& region = extraCmd.region.value();
+                glScissor(region.x, region.y, region.z, region.w);
+            }
             if (extraCmd.texture) {
                 extraCmd.texture->Bind(0);
-                d_shader.LoadInt("texture_channels", extraCmd.texture->GetChannels());
                 d_buffer.Draw(extraCmd.vertices, extraCmd.indices);
             }
             if (extraCmd.font) {
                 extraCmd.font->Bind(0);
                 d_shader.LoadInt("texture_channels", 1);
                 d_buffer.Draw(extraCmd.textVertices, extraCmd.textIndices);
+            }
+            if (extraCmd.region.has_value()) {
+                glDisable(GL_SCISSOR_TEST);
             }
         }
     }
