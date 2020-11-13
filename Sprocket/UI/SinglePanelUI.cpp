@@ -97,8 +97,12 @@ bool SinglePanelUI::Button(const std::string& name, const Maths::vec4& region)
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
     
-    d_engine.DrawQuad(colour, shape);
-    d_engine.DrawText(name, 36.0f, info.quad);
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, shape);
+    cmd.AddText(name, info.quad, tp);
 
     return info.onClick;
 }
@@ -113,14 +117,17 @@ void SinglePanelUI::Slider(const std::string& name,
     float y = info.quad.y;
     float width = info.quad.z;
     float height = info.quad.w;
-
+    float ratio = (*value - min) / (max - min);
     Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 rightColour = d_theme.backgroundColour;
+
+    TextProperties tp;
+    tp.size = 36.0f;
     
-    float ratio = (*value - min) / (max - min);
-    d_engine.DrawQuad(leftColour, {x, y, ratio * width, height});
-    d_engine.DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(leftColour, {x, y, ratio * width, height});
+    cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
+    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         auto mouse = d_mouse.GetMousePos();
@@ -139,8 +146,9 @@ void SinglePanelUI::Box(const Maths::vec4& quad, const Maths::vec4& colour)
     border.z += 2 * padding;
     border.w += 2 * padding;
 
-    d_engine.DrawQuad(colour * 0.7f, border);
-    d_engine.DrawQuad(colour, quad);
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour * 0.7f, border);
+    cmd.AddQuad(colour, quad);
 }
 
 }

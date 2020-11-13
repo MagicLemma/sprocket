@@ -27,7 +27,7 @@ struct TextProperties
 {
     float       size      = 24.0f;
     Alignment   alignment = Alignment::CENTRE;
-    Maths::vec4 colour    = {0.0, 0.0, 0.0, 1.0};
+    Maths::vec4 colour    = {1.0, 1.0, 1.0, 1.0};
 };
 
 struct BufferVertex
@@ -175,6 +175,9 @@ public:
 
     Font* GetFont() { return &d_font; }
     Texture* GetWhite() { return &d_white; }
+
+    // Returns the current panels main draw command. Asserts if there is no current panel.
+    DrawCommand& GetDrawCommand();
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);

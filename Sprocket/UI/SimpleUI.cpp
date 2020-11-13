@@ -109,8 +109,10 @@ void SimpleUI::EndPanel()
 
 void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 {
-    auto copy = d_engine.ApplyOffset(quad);
-    d_engine.DrawQuad(colour, copy);
+    auto region = d_engine.ApplyOffset(quad);
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, region);
 }
 
 void SimpleUI::Text(
@@ -119,8 +121,15 @@ void SimpleUI::Text(
     const Maths::vec4& quad,
     const Maths::vec4& colour)
 {
-    auto copy = d_engine.ApplyOffset(quad);
-    d_engine.DrawText(text, size, copy, Alignment::CENTRE, colour);
+    auto region = d_engine.ApplyOffset(quad);
+    d_engine.DrawText(text, size, region, Alignment::CENTRE, colour);
+
+    TextProperties tp;
+    tp.colour = colour;
+    tp.size = size;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddText(text, region, tp);
 }
 
 void SimpleUI::Text(
@@ -129,8 +138,15 @@ void SimpleUI::Text(
     const Maths::vec2& position,
     const Maths::vec4& colour)
 {
-    auto copy = d_engine.ApplyOffset({position.x, position.y, 0, 0});
-    d_engine.DrawText(text, size, copy, Alignment::LEFT, colour);
+    auto region = d_engine.ApplyOffset({position.x, position.y, 0, 0});
+
+    TextProperties tp;
+    tp.alignment = Alignment::LEFT;
+    tp.colour = colour;
+    tp.size = size;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddText(text, region, tp);
 }
 
 void SimpleUI::TextModifiable(
@@ -157,13 +173,19 @@ void SimpleUI::TextModifiable(
     }
 
     auto boxColour = info.sinceFocused > 0 ? d_theme.hoveredColour : d_theme.baseColour;
-    d_engine.DrawQuad(boxColour, info.quad, &cmd);
+    cmd.AddQuad(boxColour, info.quad);
 
     std::string printText = *text;
     if (info.sinceFocused > 0 && Maths::Modulo(info.sinceFocused, 1.0) < 0.5) {
         printText.push_back('|');
     }
-    d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT, colour, &cmd);
+
+    TextProperties tp;
+    tp.alignment = Alignment::LEFT;
+    tp.colour = colour;
+    tp.size = 36.0f;
+
+    cmd.AddText(printText, info.quad, tp);
 
     d_engine.SubmitDrawCommand(cmd);
 }
@@ -182,9 +204,13 @@ bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
-    
-    d_engine.DrawQuad(colour, shape);
-    d_engine.DrawText(name, 36.0f, info.quad);
+
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, shape);
+    cmd.AddText(name, info.quad, tp);
 
     return info.onClick;
 }
@@ -211,8 +237,12 @@ bool SimpleUI::Checkbox(const std::string& name,
         *value = !(*value);
     }
 
-    d_engine.DrawQuad(colour, info.quad);
-    d_engine.DrawText(name, 36.0f, info.quad);
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, info.quad);
+    cmd.AddText(name, info.quad, tp);
 
     return *value; 
 }
@@ -227,14 +257,17 @@ void SimpleUI::Slider(const std::string& name,
     float y = info.quad.y;
     float width = info.quad.z;
     float height = info.quad.w;
-
     Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    
     float ratio = (*value - min) / (max - min);
-    d_engine.DrawQuad(leftColour, {x, y, ratio * width, height});
-    d_engine.DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
+
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(leftColour, {x, y, ratio * width, height});
+    cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
+    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         auto mouse = d_mouse.GetMousePos();
@@ -252,8 +285,12 @@ void SimpleUI::Dragger(const std::string& name,
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
-    d_engine.DrawQuad(colour, info.quad);
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, info.quad);
+    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         *value += d_mouse.GetMouseOffset().x * speed;

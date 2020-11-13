@@ -201,6 +201,12 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
     return info;
 }
 
+DrawCommand& UIEngine::GetDrawCommand()
+{
+    assert(d_currentPanel);
+    return d_currentPanel->mainCommand;
+}
+
 void UIEngine::OnEvent(Event& event)
 {
     if (d_focused != 0 && !event.IsConsumed()) {
@@ -395,7 +401,7 @@ void UIEngine::DrawQuad(const Maths::vec4& colour,
 
     DrawCommand* target = cmd;
     if (target == nullptr) {
-        target = &d_panels[d_currentPanel->hash].mainCommand;
+        target = &d_currentPanel->mainCommand;
     }
 
     target->AddQuad(colour, region);
@@ -414,7 +420,7 @@ void UIEngine::DrawText(
 
     DrawCommand* target = cmd;
     if (target == nullptr) {
-        target = &d_panels[d_currentPanel->hash].mainCommand;
+        target = &d_currentPanel->mainCommand;
     }
 
     TextProperties tp;
