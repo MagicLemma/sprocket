@@ -179,6 +179,9 @@ public:
     // Returns the current panels main draw command. Asserts if there is no current panel.
     DrawCommand& GetDrawCommand();
 
+    // Submits an extra draw command for the current panel. Asserts if there is no current panel.
+    void SubmitDrawCommand(const DrawCommand& cmd);
+
     void OnEvent(Event& event);
     void OnUpdate(double dt);
 
@@ -191,24 +194,6 @@ public:
                     bool draggable,
                     bool clickable);
     void EndPanel();
-
-    void DrawQuad(
-        const Maths::vec4& colour,
-        const Maths::vec4& quad,
-        DrawCommand* cmd = nullptr
-    );
-
-    // Basic draw functions, does not take panelling into account.
-    void DrawText(
-        const std::string& text,
-        float size,
-        const Maths::vec4& quad,
-        Alignment alignment = Alignment::CENTRE,
-        const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0},
-        DrawCommand* cmd = nullptr
-    );
-
-    void SubmitDrawCommand(const DrawCommand& cmd);
 
     std::size_t GetClicked() const { return d_clicked; }
 };

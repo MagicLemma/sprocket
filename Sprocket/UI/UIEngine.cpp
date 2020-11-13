@@ -393,45 +393,6 @@ void UIEngine::EndPanel()
     d_currentPanel = nullptr;
 }
 
-void UIEngine::DrawQuad(const Maths::vec4& colour,
-                        const Maths::vec4& region,
-                        DrawCommand* cmd)
-{
-    assert(d_currentPanel);
-
-    DrawCommand* target = cmd;
-    if (target == nullptr) {
-        target = &d_currentPanel->mainCommand;
-    }
-
-    target->AddQuad(colour, region);
-}
-
-void UIEngine::DrawText(
-    const std::string& text,
-    float size,
-    const Maths::vec4& region,
-    Alignment alignment,
-    const Maths::vec4& colour,
-    DrawCommand* cmd)
-{
-    assert(d_currentPanel);
-    if (text.size() == 0) { return; }
-
-    DrawCommand* target = cmd;
-    if (target == nullptr) {
-        target = &d_currentPanel->mainCommand;
-    }
-
-    TextProperties tp;
-    tp.alignment = alignment;
-    tp.colour = colour;
-    tp.size = size;
-
-    target->AddText(text, region, tp);
-
-}
-
 void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
 {
     assert(d_currentPanel);

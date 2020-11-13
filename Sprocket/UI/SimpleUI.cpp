@@ -87,6 +87,7 @@ bool SimpleUI::StartPanel(
     d_engine.StartPanel(name, region, active, draggable, clickable);
     d_keyboard.ConsumeAll(false);
 
+
     if(active) {
         float thickness = 5.0f;
         auto border = *region;
@@ -95,8 +96,9 @@ bool SimpleUI::StartPanel(
         border.z += 2.0f * thickness;
         border.w += 2.0f * thickness;
 
-        d_engine.DrawQuad(d_theme.backgroundColour * 0.35f, border);
-        d_engine.DrawQuad(d_theme.backgroundColour * 0.7f, *region);
+        auto& cmd = d_engine.GetDrawCommand();
+        cmd.AddQuad(d_theme.backgroundColour * 0.35f, border);
+        cmd.AddQuad(d_theme.backgroundColour * 0.7f, *region);
     }
 
     return active;
@@ -122,7 +124,6 @@ void SimpleUI::Text(
     const Maths::vec4& colour)
 {
     auto region = d_engine.ApplyOffset(quad);
-    d_engine.DrawText(text, size, region, Alignment::CENTRE, colour);
 
     TextProperties tp;
     tp.colour = colour;
