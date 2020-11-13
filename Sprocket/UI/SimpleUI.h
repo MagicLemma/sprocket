@@ -50,10 +50,7 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name,
-                    Maths::vec4* region,
-                    bool draggable,
-                    bool clickable);
+    void StartPanel(const std::string& name, Maths::vec4* region, PanelType type);
     void EndPanel();
 
     void Quad(const Maths::vec4& colour,
@@ -94,8 +91,6 @@ public:
                std::shared_ptr<Texture> image,
                const Maths::vec2& position);
 
-    // TEMP: Hashes are implementation details, just is just for debugging
-    std::size_t GetClicked() const { return d_engine.GetClicked(); }
 };
 
 }

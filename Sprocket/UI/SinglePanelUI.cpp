@@ -74,7 +74,7 @@ void SinglePanelUI::StartFrame()
     Maths::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
 
     d_engine.StartFrame();
-    d_engine.StartPanel(name, &region, false, true);
+    d_engine.StartPanel(name, &region, PanelType::CLICKABLE);
     d_engine.GetDrawCommand().font = &d_font;
 }
 

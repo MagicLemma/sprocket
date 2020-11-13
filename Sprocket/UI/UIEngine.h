@@ -64,6 +64,23 @@ struct DrawCommand
                  const TextProperties& properties = {});
 };
 
+// Describes how the encompassing region of the panel behaves. This has no impact on how
+// the regions of widgets behave.
+enum class PanelType
+{
+    // For unclickable panels, the background is completely non-interactable. Clicks will
+    // not be absorbed and may affect things behind the panel.
+    UNCLICKABLE,
+
+    // For clickable panels, the background is also non-interactable, however clicks do
+    // get absorbed and will bring the panel to the front.
+    CLICKABLE,
+
+    // For draggable panels, it is possible to click and drag the panels around the
+    // viewport. This will also bring the panel to the front.
+    DRAGGABLE
+};
+
 struct Panel
 {
     std::string name;
@@ -186,13 +203,8 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name,
-                    Maths::vec4* region,
-                    bool draggable,
-                    bool clickable);
+    void StartPanel(const std::string& name, Maths::vec4* region, PanelType type);
     void EndPanel();
-
-    std::size_t GetClicked() const { return d_clicked; }
 };
 
 }

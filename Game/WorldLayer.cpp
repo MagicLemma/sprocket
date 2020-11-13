@@ -203,7 +203,7 @@ void WorldLayer::OnUpdate(double dt)
             float y = ((1.0f - 0.6f) / 2) * h;
 
             Maths::vec4 region{x, y, width, height};
-            d_hoveredEntityUI.StartPanel("Selected", &region, false, true);
+            d_hoveredEntityUI.StartPanel("Selected", &region, PanelType::UNCLICKABLE);
                 
             auto pos = d_gameGrid->SelectedPosition().value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
@@ -247,14 +247,12 @@ void WorldLayer::OnUpdate(double dt)
             float y = std::min(mouse.y - 5, h - height - 10);
 
             Maths::vec4 region{x, y, width, height};
-            d_hoveredEntityUI.StartPanel("Hovered", &region, false, false);
-                
+            d_hoveredEntityUI.StartPanel("Hovered", &region, PanelType::UNCLICKABLE);
             std::string name = "Unnamed";
             if (hovered.Has<NameComponent>()) {
                 name = hovered.Get<NameComponent>().name;
             }
             d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
-
             d_hoveredEntityUI.EndPanel();
         }
 

@@ -78,13 +78,9 @@ void SimpleUI::EndFrame()
     d_engine.EndFrame();
 }
 
-void SimpleUI::StartPanel(
-    const std::string& name,
-    Maths::vec4* region,
-    bool draggable,
-    bool clickable)
+void SimpleUI::StartPanel(const std::string& name, Maths::vec4* region, PanelType type)
 {
-    d_engine.StartPanel(name, region, draggable, clickable);
+    d_engine.StartPanel(name, region, type);
     d_keyboard.ConsumeAll(false);
 
     auto& cmd = d_engine.GetDrawCommand();

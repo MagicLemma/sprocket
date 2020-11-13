@@ -30,7 +30,7 @@ void Console::OnUpdate(double dt)
     double W = 0.8 * d_window->Width() - 20;
     double H = d_window->Height() - 20;
     Maths::vec4 mainRegion = {10, 10, W, H};
-    d_ui.StartPanel("Main", &mainRegion, false, false);
+    d_ui.StartPanel("Main", &mainRegion, PanelType::UNCLICKABLE);
 
     double boxHeight = 50.0;
     d_ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &d_commandLine);

@@ -337,11 +337,7 @@ void UIEngine::EndFrame()
     d_buffer.Unbind();
 }
 
-void UIEngine::StartPanel(
-    const std::string& name,
-    Maths::vec4* region,
-    bool draggable,
-    bool clickable)
+void UIEngine::StartPanel(const std::string& name, Maths::vec4* region, PanelType type)
 {
     assert(!d_currentPanel);
     std::size_t hash = std::hash<std::string>{}(name);
@@ -357,10 +353,10 @@ void UIEngine::StartPanel(
     panel.region = *region;
     d_currentPanel = &panel;
 
-    if (clickable) {
+    if (type == PanelType::CLICKABLE || type == PanelType::DRAGGABLE) {
         auto info = Register(name, {0, 0, region->z, region->w});
 
-        if (info.sinceClicked > 0 && draggable) {
+        if (info.sinceClicked > 0 && type == PanelType::DRAGGABLE) {
             region->x += d_mouse->GetMouseOffset().x;
             region->y += d_mouse->GetMouseOffset().y;
             d_currentPanel->region = *region;
