@@ -123,7 +123,6 @@ UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     , d_mouse(mouse)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_font("Resources/Fonts/Coolvetica.ttf")
     , d_white(1, 1, GetWhiteData().data())
 {
     BufferLayout layout(sizeof(BufferVertex));
@@ -234,12 +233,10 @@ void UIEngine::OnUpdate(double dt)
     d_mouse->ConsumeEvents(false);
     d_time += dt;
 
-    if (d_mouse->IsButtonReleased(Mouse::LEFT)) {
-        // Let go of mouse click, so lose clicked
-        if (d_clicked > 0) {
-            d_widgetTimes[d_clicked].unclickedTime = d_time;
-            d_clicked = 0;
-        }
+    // Let go of mouse click, so lose clicked
+    if (d_mouse->IsButtonReleased(Mouse::LEFT) && d_clicked > 0) {
+        d_widgetTimes[d_clicked].unclickedTime = d_time;
+        d_clicked = 0;
     }
 }
 
@@ -297,20 +294,16 @@ void UIEngine::EndFrame()
         }
     }
 
-    if (d_mouse->IsButtonClicked(Mouse::LEFT) && !foundClicked) {
-        // Clicked on something other than the UI, so lose focus
-        if (d_focused > 0) {
-            d_widgetTimes[d_focused].unfocusedTime = d_time;
-            d_focused = 0;
-        }
+    // Clicked on something other than the UI, so lose focus
+    if (d_mouse->IsButtonClicked(Mouse::LEFT) && !foundClicked && d_focused > 0) {
+        d_widgetTimes[d_focused].unfocusedTime = d_time;
+        d_focused = 0;
     }
 
-    if (!foundHovered) {
-        // Hovered over something other than the UI, so lose hover
-        if (d_hovered > 0) {
-            d_widgetTimes[d_hovered].unhoveredTime = d_time;
-            d_hovered = 0;
-        }
+    // Hovered over something other than the UI, so lose hover
+    if (!foundHovered && d_hovered > 0) {
+        d_widgetTimes[d_hovered].unhoveredTime = d_time;
+        d_hovered = 0;
     }
 
     d_mouse->ConsumeEvents(foundHovered);
@@ -365,15 +358,10 @@ bool UIEngine::StartPanel(
         panel.name = name;
         panel.hash = hash;
         panel.region = *region;
-        panel.mainCommand.texture = &d_white;
-        panel.mainCommand.font = &d_font;
         d_currentPanel = &panel;
 
         if (clickable) {
-            auto info = Register(
-                name,
-                {0, 0, region->z, region->w}
-            );
+            auto info = Register(name, {0, 0, region->z, region->w});
 
             if (info.sinceClicked > 0 && draggable) {
                 region->x += d_mouse->GetMouseOffset().x;
@@ -404,8 +392,11 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     auto scissor = ScissorContext(d_window, cmd.region);
     if (cmd.texture) {
         cmd.texture->Bind(0);
-        d_buffer.Draw(cmd.vertices, cmd.indices);
+    } else {
+        d_white.Bind(0);
     }
+    d_buffer.Draw(cmd.vertices, cmd.indices);
+    
     if (cmd.font) {
         cmd.font->Bind(0);
         d_shader.LoadInt("texture_channels", 1);

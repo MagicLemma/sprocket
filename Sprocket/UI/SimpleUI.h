@@ -34,6 +34,7 @@ class SimpleUI
     MouseProxy d_mouse;
 
     UIEngine d_engine;
+    Font d_font;
 
 public:
     SimpleUI(Window* window);
@@ -41,7 +42,7 @@ public:
     const SimpleUITheme& GetTheme() const { return d_theme; }
     void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
 
-    Font* GetFont() { return d_engine.GetFont(); }
+    Font* GetFont() { return &d_font; }
     
     void OnEvent(Event& event);
     void OnUpdate(double dt);

@@ -50,6 +50,7 @@ template <typename T> T Interpolate(
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_engine(window, &d_keyboard, &d_mouse)
+    , d_font("Resources/Fonts/Coolvetica.ttf")
 {
     d_keyboard.ConsumeAll(false);
 }
@@ -87,17 +88,9 @@ bool SimpleUI::StartPanel(
     d_engine.StartPanel(name, region, active, draggable, clickable);
     d_keyboard.ConsumeAll(false);
 
-
     if(active) {
-        float thickness = 5.0f;
-        auto border = *region;
-        border.x -= thickness;
-        border.y -= thickness;
-        border.z += 2.0f * thickness;
-        border.w += 2.0f * thickness;
-
         auto& cmd = d_engine.GetDrawCommand();
-        cmd.AddQuad(d_theme.backgroundColour * 0.35f, border);
+        cmd.font = &d_font;
         cmd.AddQuad(d_theme.backgroundColour * 0.7f, *region);
     }
 
@@ -161,7 +154,7 @@ void SimpleUI::TextModifiable(
     DrawCommand cmd;
     cmd.region = info.quad;
     cmd.texture = d_engine.GetWhite();
-    cmd.font = d_engine.GetFont();
+    cmd.font = &d_font;
 
     for (int key : info.keyPresses) {
         if (key == Keyboard::BACKSPACE) {

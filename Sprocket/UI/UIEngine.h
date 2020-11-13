@@ -122,7 +122,6 @@ class UIEngine
     KeyboardProxy* d_keyboard;
     MouseProxy* d_mouse;
 
-    Font d_font;
     Texture d_white;
 
     // Rendering code    
@@ -173,7 +172,6 @@ public:
     // panel if there is one, or region otherwise.
     Maths::vec4 ApplyOffset(const Maths::vec4& region);
 
-    Font* GetFont() { return &d_font; }
     Texture* GetWhite() { return &d_white; }
 
     // Returns the current panels main draw command. Asserts if there is no current panel.

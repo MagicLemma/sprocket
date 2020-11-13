@@ -50,6 +50,7 @@ template <typename T> T Interpolate(
 SinglePanelUI::SinglePanelUI(Window* window)
     : d_window(window)
     , d_engine(window, &d_keyboard, &d_mouse)
+    , d_font("Resources/Fonts/Coolvetica.ttf")
 {
     d_keyboard.ConsumeAll(false);
 }
@@ -74,6 +75,7 @@ void SinglePanelUI::StartFrame()
 
     d_engine.StartFrame();
     d_engine.StartPanel(name, &region, true, false, true);
+    d_engine.GetDrawCommand().font = &d_font;
 }
 
 void SinglePanelUI::EndFrame()
