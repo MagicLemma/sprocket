@@ -41,7 +41,7 @@ public:
     const SimpleUITheme& GetTheme() const { return d_theme; }
     void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
 
-    Font& GetFont() { return d_engine.GetFont(); }
+    const Font* GetFont() { return d_engine.GetFont(); }
     
     void OnEvent(Event& event);
     void OnUpdate(double dt);

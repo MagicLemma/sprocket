@@ -31,9 +31,13 @@ struct QuadData
 
 struct DrawCommand
 {
+    const Texture*            texture = nullptr;
     std::vector<BufferVertex> vertices;
-    std::vector<u32> indices;
-    const Texture* texture;
+    std::vector<u32>          indices;
+
+    const Font*               font = nullptr;
+    std::vector<BufferVertex> textVertices;
+    std::vector<u32>          textIndices;
 };
 
 struct Panel
@@ -45,12 +49,7 @@ struct Panel
     std::vector<QuadData> widgetRegions;
 
     // Render data
-    std::vector<BufferVertex> quadVertices;
-    std::vector<u32> quadIndices;
-
-    std::vector<BufferVertex> textVertices;
-    std::vector<u32> textIndices;
-
+    DrawCommand mainCommand;
     std::vector<DrawCommand> extraCommands;
 };
 
@@ -107,6 +106,7 @@ class UIEngine
     MouseProxy* d_mouse;
 
     Font d_font;
+    Texture d_white;
 
     // Rendering code    
     Shader d_shader;
@@ -154,7 +154,8 @@ public:
         // Returns the region offsetted by the position of the current
         // panel if there is one, or region otherwise.
 
-    Font& GetFont() { return d_font; }
+    const Font* GetFont() { return &d_font; }
+    const Texture* GetWhite() { return &d_white; }
 
     void OnEvent(Event& event);
     void OnUpdate(double dt);

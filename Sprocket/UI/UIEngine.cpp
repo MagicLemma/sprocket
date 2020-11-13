@@ -16,6 +16,14 @@
 #include <algorithm>
 
 namespace Sprocket {
+namespace {
+
+std::vector<unsigned char> GetWhiteData()
+{
+    return {0xff, 0xff, 0xff, 0xff};
+}
+
+}
 
 UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     : d_window(window)
@@ -24,6 +32,7 @@ UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_font("Resources/Fonts/Coolvetica.ttf")
+    , d_white(1, 1, GetWhiteData().data())
 {
     BufferLayout layout(sizeof(BufferVertex));
     layout.AddAttribute(DataType::FLOAT, 2);
@@ -145,8 +154,6 @@ void UIEngine::StartFrame()
 void UIEngine::EndFrame()
 {
     assert(!d_currentPanel);
-    static unsigned char arr[4] = {0xff, 0xff, 0xff, 0xff};
-    static Texture white(1, 1, arr);
 
     bool foundHovered = false;
     bool foundClicked = false;
@@ -230,15 +237,30 @@ void UIEngine::EndFrame()
     d_buffer.Bind();
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
-        d_shader.LoadInt("texture_channels", 1);
-        white.Bind(0);
-        d_buffer.Draw(panel.quadVertices, panel.quadIndices);
-        d_font.Bind(0);
-        d_buffer.Draw(panel.textVertices, panel.textIndices);
-        for (const auto& cmd : panel.extraCommands) {
-            d_shader.LoadInt("texture_channels", cmd.texture->GetChannels());
+        const auto& cmd = panel.mainCommand;
+
+        if (cmd.texture) {
             cmd.texture->Bind(0);
+            d_shader.LoadInt("texture_channels", cmd.texture->GetChannels());
             d_buffer.Draw(cmd.vertices, cmd.indices);
+        }
+        if (cmd.font) {
+            cmd.font->Bind(0);
+            d_shader.LoadInt("texture_channels", 1);
+            d_buffer.Draw(cmd.textVertices, cmd.textIndices);
+        }
+
+        for (const auto& extraCmd : panel.extraCommands) {
+            if (extraCmd.texture) {
+                extraCmd.texture->Bind(0);
+                d_shader.LoadInt("texture_channels", extraCmd.texture->GetChannels());
+                d_buffer.Draw(extraCmd.vertices, extraCmd.indices);
+            }
+            if (extraCmd.font) {
+                extraCmd.font->Bind(0);
+                d_shader.LoadInt("texture_channels", 1);
+                d_buffer.Draw(extraCmd.textVertices, extraCmd.textIndices);
+            }
         }
     }
     d_buffer.Unbind();
@@ -265,6 +287,8 @@ bool UIEngine::StartPanel(
         panel.name = name;
         panel.hash = hash;
         panel.region = *region;
+        panel.mainCommand.texture = &d_white;
+        panel.mainCommand.font = &d_font;
         d_currentPanel = &panel;
 
         if (clickable) {
@@ -301,20 +325,20 @@ void UIEngine::DrawQuad(const Maths::vec4& colour,
     float width = copy.z;
     float height = copy.w;
 
-    auto& cmd = d_panels[d_currentPanel->hash];
+    auto& cmd = d_panels[d_currentPanel->hash].mainCommand;
 
-    std::size_t index = cmd.quadVertices.size();
-    cmd.quadVertices.push_back({{x,         y},          colour});
-    cmd.quadVertices.push_back({{x + width, y},          colour});
-    cmd.quadVertices.push_back({{x,         y + height}, colour});
-    cmd.quadVertices.push_back({{x + width, y + height}, colour});
+    std::size_t index = cmd.vertices.size();
+    cmd.vertices.push_back({{x,         y},          colour});
+    cmd.vertices.push_back({{x + width, y},          colour});
+    cmd.vertices.push_back({{x,         y + height}, colour});
+    cmd.vertices.push_back({{x + width, y + height}, colour});
 
-    cmd.quadIndices.push_back(index + 0);
-    cmd.quadIndices.push_back(index + 1);
-    cmd.quadIndices.push_back(index + 2);
-    cmd.quadIndices.push_back(index + 2);
-    cmd.quadIndices.push_back(index + 1);
-    cmd.quadIndices.push_back(index + 3);
+    cmd.indices.push_back(index + 0);
+    cmd.indices.push_back(index + 1);
+    cmd.indices.push_back(index + 2);
+    cmd.indices.push_back(index + 2);
+    cmd.indices.push_back(index + 1);
+    cmd.indices.push_back(index + 3);
 }
 
 void UIEngine::DrawText(
@@ -368,7 +392,7 @@ void UIEngine::DrawText(
 
         pen += glyph.advance;
 
-        auto& cmd = d_panels[d_currentPanel->hash];
+        auto& cmd = d_panels[d_currentPanel->hash].mainCommand;
 
         u32 index = cmd.textVertices.size();
         cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
