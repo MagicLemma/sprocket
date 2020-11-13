@@ -244,7 +244,7 @@ void UIEngine::EndFrame()
         if (cmd.region.has_value()) {
             glEnable(GL_SCISSOR_TEST);
             const auto& region = cmd.region.value();
-            glScissor(region.x, region.y, region.z, region.w);
+            glScissor(region.x, region.y, region.w, region.w);
         }
         if (cmd.texture) {
             cmd.texture->Bind(0);
@@ -332,7 +332,8 @@ void UIEngine::EndPanel()
 }
 
 void UIEngine::DrawQuad(const Maths::vec4& colour,
-                        const Maths::vec4& region)
+                        const Maths::vec4& region,
+                        DrawCommand* cmd)
 {
     assert(d_currentPanel);
     auto copy = region;
@@ -341,20 +342,23 @@ void UIEngine::DrawQuad(const Maths::vec4& colour,
     float width = copy.z;
     float height = copy.w;
 
-    auto& cmd = d_panels[d_currentPanel->hash].mainCommand;
+    DrawCommand* target = cmd;
+    if (target == nullptr) {
+        target = &d_panels[d_currentPanel->hash].mainCommand;
+    }
 
-    std::size_t index = cmd.vertices.size();
-    cmd.vertices.push_back({{x,         y},          colour});
-    cmd.vertices.push_back({{x + width, y},          colour});
-    cmd.vertices.push_back({{x,         y + height}, colour});
-    cmd.vertices.push_back({{x + width, y + height}, colour});
+    std::size_t index = target->vertices.size();
+    target->vertices.push_back({{x,         y},          colour});
+    target->vertices.push_back({{x + width, y},          colour});
+    target->vertices.push_back({{x,         y + height}, colour});
+    target->vertices.push_back({{x + width, y + height}, colour});
 
-    cmd.indices.push_back(index + 0);
-    cmd.indices.push_back(index + 1);
-    cmd.indices.push_back(index + 2);
-    cmd.indices.push_back(index + 2);
-    cmd.indices.push_back(index + 1);
-    cmd.indices.push_back(index + 3);
+    target->indices.push_back(index + 0);
+    target->indices.push_back(index + 1);
+    target->indices.push_back(index + 2);
+    target->indices.push_back(index + 2);
+    target->indices.push_back(index + 1);
+    target->indices.push_back(index + 3);
 }
 
 void UIEngine::DrawText(
@@ -362,7 +366,8 @@ void UIEngine::DrawText(
     float size,
     const Maths::vec4& region,
     Alignment alignment,
-    const Maths::vec4& colour)
+    const Maths::vec4& colour,
+    DrawCommand* cmd)
 {
     assert(d_currentPanel);
     if (text.size() == 0) { return; }
@@ -408,20 +413,23 @@ void UIEngine::DrawText(
 
         pen += glyph.advance;
 
-        auto& cmd = d_panels[d_currentPanel->hash].mainCommand;
+        DrawCommand* target = cmd;
+        if (target == nullptr) {
+            target = &d_panels[d_currentPanel->hash].mainCommand;
+        }
 
-        u32 index = cmd.textVertices.size();
-        cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
-        cmd.textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
-        cmd.textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
-        cmd.textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
+        u32 index = target->textVertices.size();
+        target->textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
+        target->textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
+        target->textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
+        target->textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
 
-        cmd.textIndices.push_back(index + 0);
-        cmd.textIndices.push_back(index + 1);
-        cmd.textIndices.push_back(index + 2);
-        cmd.textIndices.push_back(index + 2);
-        cmd.textIndices.push_back(index + 1);
-        cmd.textIndices.push_back(index + 3);
+        target->textIndices.push_back(index + 0);
+        target->textIndices.push_back(index + 1);
+        target->textIndices.push_back(index + 2);
+        target->textIndices.push_back(index + 2);
+        target->textIndices.push_back(index + 1);
+        target->textIndices.push_back(index + 3);
     }
 }
 

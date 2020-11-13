@@ -140,6 +140,12 @@ void SimpleUI::TextModifiable(
     const Maths::vec4& colour)
 {
     auto info = d_engine.Register(name, region);
+    auto copy = info.quad;
+
+    DrawCommand cmd;
+    //cmd.region = copy;
+    cmd.texture = d_engine.GetWhite();
+    cmd.font = d_engine.GetFont();
 
     for (int key : info.keyPresses) {
         if (key == Keyboard::BACKSPACE) {
@@ -152,13 +158,15 @@ void SimpleUI::TextModifiable(
     }
 
     auto boxColour = info.sinceFocused > 0 ? d_theme.hoveredColour : d_theme.baseColour;
-    d_engine.DrawQuad(boxColour, info.quad);
+    d_engine.DrawQuad(boxColour, info.quad, &cmd);
 
     std::string printText = *text;
     if (info.sinceFocused > 0 && Maths::Modulo(info.sinceFocused, 1.0) < 0.5) {
         printText.push_back('|');
     }
-    d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT, colour);
+    d_engine.DrawText(printText, 36.0f, info.quad, Alignment::LEFT, colour, &cmd);
+
+    d_engine.SubmitDrawCommand(cmd);
 }
 
 bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)

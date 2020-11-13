@@ -39,6 +39,7 @@ struct DrawCommand
     std::vector<BufferVertex> textVertices;
     std::vector<u32>          textIndices;
 
+    // If specified, we scissor test this region so nothing outside the region is rendered.
     std::optional<Maths::vec4> region = {};
 };
 
@@ -174,7 +175,8 @@ public:
 
     void DrawQuad(
         const Maths::vec4& colour,
-        const Maths::vec4& quad
+        const Maths::vec4& quad,
+        DrawCommand* cmd = nullptr
     );
 
     // Basic draw functions, does not take panelling into account.
@@ -183,7 +185,8 @@ public:
         float size,
         const Maths::vec4& quad,
         Alignment alignment = Alignment::CENTRE,
-        const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0}
+        const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0},
+        DrawCommand* cmd = nullptr
     );
 
     void SubmitDrawCommand(const DrawCommand& cmd);
