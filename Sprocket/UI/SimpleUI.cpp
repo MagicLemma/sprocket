@@ -212,9 +212,9 @@ bool SimpleUI::Checkbox(const std::string& name,
 
     Maths::vec4 colour;
     if (*value) {
-        colour = r * selected + (1 - r) * unselected;
-    } else {
         colour = r * unselected + (1 - r) * selected;
+    } else {
+        colour = r * selected + (1 - r) * unselected;
     }
 
     if (info.onClick) {
