@@ -26,16 +26,16 @@ template <typename T> T Interpolate(
     T ret = base;
     double interval = 0.1;
     
-    if (info.mouseOver) {
-        float r = std::min(info.mouseOver, interval) / (float)interval;
+    if (info.sinceHovered) {
+        float r = std::min(info.sinceHovered, interval) / (float)interval;
         ret = (1 - r) * ret + r * hovered;
     } else {
         float r = std::min(info.sinceUnhovered, interval) / (float)interval;
         ret = (1 - r) * hovered + r * ret;
     }
 
-    if (info.mouseDown) {
-        float r = std::min(info.mouseDown, interval) / (float)interval;
+    if (info.sinceClicked) {
+        float r = std::min(info.sinceClicked, interval) / (float)interval;
         ret = (1 - r) * ret + r * clicked;
     } else {
         float r = std::min(info.sinceUnlicked, interval) / (float)interval;
@@ -50,6 +50,7 @@ template <typename T> T Interpolate(
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
     , d_engine(window, &d_keyboard, &d_mouse)
+    , d_font("Resources/Fonts/Coolvetica.ttf")
 {
     d_keyboard.ConsumeAll(false);
 }
@@ -77,29 +78,14 @@ void SimpleUI::EndFrame()
     d_engine.EndFrame();
 }
 
-bool SimpleUI::StartPanel(
-    const std::string& name,
-    Maths::vec4* region,
-    bool* active,
-    bool* draggable,
-    bool* clickable)
+void SimpleUI::StartPanel(const std::string& name, Maths::vec4* region, PanelType type)
 {
-    d_engine.StartPanel(name, region, active, draggable, clickable);
+    d_engine.StartPanel(name, region, type);
     d_keyboard.ConsumeAll(false);
 
-    if(*active) {
-        float thickness = 5.0f;
-        auto border = *region;
-        border.x -= thickness;
-        border.y -= thickness;
-        border.z += 2.0f * thickness;
-        border.w += 2.0f * thickness;
-
-        d_engine.DrawQuad(d_theme.backgroundColour * 0.35f, border);
-        d_engine.DrawQuad(d_theme.backgroundColour * 0.7f, *region);
-    }
-
-    return *active;
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.font = &d_font;
+    cmd.AddQuad(d_theme.backgroundColour * 0.7f, *region);
 }
 
 void SimpleUI::EndPanel()
@@ -109,17 +95,83 @@ void SimpleUI::EndPanel()
 
 void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 {
-    auto copy = d_engine.ApplyOffset(quad);
-    d_engine.DrawQuad(colour, copy);
+    auto region = d_engine.ApplyOffset(quad);
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, region);
 }
 
 void SimpleUI::Text(
     const std::string& text,
     float size,
-    const Maths::vec4& quad)
+    const Maths::vec4& quad,
+    const Maths::vec4& colour)
 {
-    auto copy = d_engine.ApplyOffset(quad);
-    d_engine.DrawText(text, size, copy);
+    auto region = d_engine.ApplyOffset(quad);
+
+    TextProperties tp;
+    tp.colour = colour;
+    tp.size = size;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddText(text, region, tp);
+}
+
+void SimpleUI::Text(
+    const std::string& text,
+    float size,
+    const Maths::vec2& position,
+    const Maths::vec4& colour)
+{
+    auto region = d_engine.ApplyOffset({position.x, position.y, 0, 0});
+
+    TextProperties tp;
+    tp.alignment = Alignment::LEFT;
+    tp.colour = colour;
+    tp.size = size;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddText(text, region, tp);
+}
+
+void SimpleUI::TextModifiable(
+    const std::string& name,
+    const Maths::vec4& region,
+    std::string* text,
+    const Maths::vec4& colour)
+{
+    auto info = d_engine.Register(name, region);
+
+    DrawCommand cmd;
+    cmd.region = info.quad;
+    cmd.font = &d_font;
+
+    for (int key : info.keyPresses) {
+        if (key == Keyboard::BACKSPACE) {
+            if (text->size() > 0) {
+                text->pop_back();
+            }
+        } else {
+            text->push_back(static_cast<char>(key));
+        }
+    }
+
+    auto boxColour = info.sinceFocused > 0 ? d_theme.hoveredColour : d_theme.baseColour;
+    cmd.AddQuad(boxColour, info.quad);
+
+    std::string printText = *text;
+    if (info.sinceFocused > 0 && Maths::Modulo(info.sinceFocused, 1.0) < 0.5) {
+        printText.push_back('|');
+    }
+
+    TextProperties tp;
+    tp.alignment = Alignment::LEFT;
+    tp.colour = colour;
+    tp.size = 36.0f;
+
+    cmd.AddText(printText, info.quad, tp);
+
+    d_engine.SubmitDrawCommand(cmd);
 }
 
 bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
@@ -136,9 +188,13 @@ bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
-    
-    d_engine.DrawQuad(colour, shape);
-    d_engine.DrawText(name, 36.0f, info.quad);
+
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, shape);
+    cmd.AddText(name, info.quad, tp);
 
     return info.onClick;
 }
@@ -156,17 +212,21 @@ bool SimpleUI::Checkbox(const std::string& name,
 
     Maths::vec4 colour;
     if (*value) {
-        colour = r * selected + (1 - r) * unselected;
-    } else {
         colour = r * unselected + (1 - r) * selected;
+    } else {
+        colour = r * selected + (1 - r) * unselected;
     }
 
     if (info.onClick) {
         *value = !(*value);
     }
 
-    d_engine.DrawQuad(colour, info.quad);
-    d_engine.DrawText(name, 36.0f, info.quad);
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, info.quad);
+    cmd.AddText(name, info.quad, tp);
 
     return *value; 
 }
@@ -181,18 +241,21 @@ void SimpleUI::Slider(const std::string& name,
     float y = info.quad.y;
     float width = info.quad.z;
     float height = info.quad.w;
-
     Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    
     float ratio = (*value - min) / (max - min);
-    d_engine.DrawQuad(leftColour, {x, y, ratio * width, height});
-    d_engine.DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
 
-    if (info.mouseDown) {
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(leftColour, {x, y, ratio * width, height});
+    cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
+    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
+
+    if (info.sinceClicked > 0) {
         auto mouse = d_mouse.GetMousePos();
-        Maths::Clamp(mouse.x, x, x + width);
+        mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
     }    
@@ -206,19 +269,23 @@ void SimpleUI::Dragger(const std::string& name,
 
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
-    d_engine.DrawQuad(colour, info.quad);
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
+    TextProperties tp;
+    tp.size = 36.0f;
 
-    if (info.mouseDown) {
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, info.quad);
+    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
+
+    if (info.sinceClicked > 0) {
         *value += d_mouse.GetMouseOffset().x * speed;
     }    
 }
 
 void SimpleUI::Image(const std::string& name,
-                     const Texture& image,
+                     std::shared_ptr<Texture> image,
                      const Maths::vec2& position)
 {
-    Maths::vec4 region{position.x, position.y, image.Width(), image.Height()};
+    Maths::vec4 region{position.x, position.y, image->Width(), image->Height()};
     Maths::vec4 copy = d_engine.ApplyOffset(region);
 
     DrawCommand cmd;
@@ -229,7 +296,7 @@ void SimpleUI::Image(const std::string& name,
         {{copy.x + copy.z, copy.y + copy.w}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0}}
     };
     cmd.indices = {0, 1, 2, 2, 1, 3};
-    cmd.texture = &image;
+    cmd.texture = image.get();
     d_engine.SubmitDrawCommand(cmd);
 }
 

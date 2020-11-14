@@ -26,16 +26,16 @@ template <typename T> T Interpolate(
     T ret = base;
     double interval = 0.1;
     
-    if (info.mouseOver) {
-        float r = std::min(info.mouseOver, interval) / (float)interval;
+    if (info.sinceHovered > 0) {
+        float r = std::min(info.sinceHovered, interval) / (float)interval;
         ret = (1 - r) * ret + r * hovered;
     } else {
         float r = std::min(info.sinceUnhovered, interval) / (float)interval;
         ret = (1 - r) * hovered + r * ret;
     }
 
-    if (info.mouseDown) {
-        float r = std::min(info.mouseDown, interval) / (float)interval;
+    if (info.sinceClicked > 0) {
+        float r = std::min(info.sinceClicked, interval) / (float)interval;
         ret = (1 - r) * ret + r * clicked;
     } else {
         float r = std::min(info.sinceUnlicked, interval) / (float)interval;
@@ -50,6 +50,7 @@ template <typename T> T Interpolate(
 SinglePanelUI::SinglePanelUI(Window* window)
     : d_window(window)
     , d_engine(window, &d_keyboard, &d_mouse)
+    , d_font("Resources/Fonts/Coolvetica.ttf")
 {
     d_keyboard.ConsumeAll(false);
 }
@@ -71,12 +72,10 @@ void SinglePanelUI::StartFrame()
 {
     std::string name = "__SinglePanelUI_Name__";
     Maths::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
-    bool active = true;
-    bool draggable = false;
-    bool clickable = true;
 
     d_engine.StartFrame();
-    d_engine.StartPanel(name, &region, &active, &draggable, &clickable);
+    d_engine.StartPanel(name, &region, PanelType::CLICKABLE);
+    d_engine.GetDrawCommand().font = &d_font;
 }
 
 void SinglePanelUI::EndFrame()
@@ -100,8 +99,12 @@ bool SinglePanelUI::Button(const std::string& name, const Maths::vec4& region)
     Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
     
-    d_engine.DrawQuad(colour, shape);
-    d_engine.DrawText(name, 36.0f, info.quad);
+    TextProperties tp;
+    tp.size = 36.0f;
+
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour, shape);
+    cmd.AddText(name, info.quad, tp);
 
     return info.onClick;
 }
@@ -116,18 +119,21 @@ void SinglePanelUI::Slider(const std::string& name,
     float y = info.quad.y;
     float width = info.quad.z;
     float height = info.quad.w;
-
+    float ratio = (*value - min) / (max - min);
     Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     Maths::vec4 rightColour = d_theme.backgroundColour;
-    
-    float ratio = (*value - min) / (max - min);
-    d_engine.DrawQuad(leftColour, {x, y, ratio * width, height});
-    d_engine.DrawQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    d_engine.DrawText(name + ": " + Maths::ToString(*value, 0), 36.0f, info.quad);
 
-    if (info.mouseDown) {
+    TextProperties tp;
+    tp.size = 36.0f;
+    
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(leftColour, {x, y, ratio * width, height});
+    cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
+    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
+
+    if (info.sinceClicked > 0) {
         auto mouse = d_mouse.GetMousePos();
-        Maths::Clamp(mouse.x, x, x + width);
+        mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
     }    
@@ -142,8 +148,9 @@ void SinglePanelUI::Box(const Maths::vec4& quad, const Maths::vec4& colour)
     border.z += 2 * padding;
     border.w += 2 * padding;
 
-    d_engine.DrawQuad(colour * 0.7f, border);
-    d_engine.DrawQuad(colour, quad);
+    auto& cmd = d_engine.GetDrawCommand();
+    cmd.AddQuad(colour * 0.7f, border);
+    cmd.AddQuad(colour, quad);
 }
 
 }

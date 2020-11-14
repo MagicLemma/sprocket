@@ -75,4 +75,21 @@ void RenderContext::ScissorTesting(bool enabled) const
     }
 }
 
+ScissorContext::ScissorContext(Window* window, const std::optional<Maths::vec4>& region)
+    : d_region(region)
+{
+    if (d_region.has_value()) {
+        glEnable(GL_SCISSOR_TEST);
+        const auto& val = d_region.value();
+        glScissor(val.x,  window->Height() - val.y - val.w, val.z, val.w);
+    }
+}
+
+ScissorContext::~ScissorContext()
+{
+    if (d_region.has_value()) {
+        glDisable(GL_SCISSOR_TEST);
+    }   
+}
+
 }

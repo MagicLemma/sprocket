@@ -91,7 +91,7 @@ void Camera::OnEvent(Event& event)
     if (auto e = event.As<MouseScrolledEvent>()) {
         if (e->IsConsumed()) { return; }
         d_absVert -= e->YOffset();
-        Maths::Clamp(d_absVert, d_absMin, d_absMax);
+        d_absVert = std::clamp(d_absVert, d_absMin, d_absMax);
         e->Consume();
     }
 }

@@ -70,6 +70,8 @@ public:
 
 	// Low level Utilities
 	void* NativeWindow() const;
+
+	void Close() { d_data.running = false; }
 };
 
 }

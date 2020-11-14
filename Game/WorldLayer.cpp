@@ -203,43 +203,39 @@ void WorldLayer::OnUpdate(double dt)
             float y = ((1.0f - 0.6f) / 2) * h;
 
             Maths::vec4 region{x, y, width, height};
-            bool active = true;
-            bool draggable = false;
-            bool clickable = true;
-            if (d_hoveredEntityUI.StartPanel("Selected", &region, &active, &draggable, &clickable)) {
+            d_hoveredEntityUI.StartPanel("Selected", &region, PanelType::UNCLICKABLE);
                 
-                auto pos = d_gameGrid->SelectedPosition().value();
-                if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                    selected.Kill();
-                    AddTree(pos);
-                }
-
-                if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                    selected.Kill();
-                    AddRock(pos);
-                }
-
-                if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                    selected.Kill();
-                    AddIron(pos);
-                }
-
-                if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                    selected.Kill();
-                    AddTin(pos);
-                }
-
-                if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                    selected.Kill();
-                    AddMithril(pos);
-                }
-
-                if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                    selected.Kill();
-                }
-
-                d_hoveredEntityUI.EndPanel();
+            auto pos = d_gameGrid->SelectedPosition().value();
+            if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
+                selected.Kill();
+                AddTree(pos);
             }
+
+            if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
+                selected.Kill();
+                AddRock(pos);
+            }
+
+            if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
+                selected.Kill();
+                AddIron(pos);
+            }
+
+            if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
+                selected.Kill();
+                AddTin(pos);
+            }
+
+            if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
+                selected.Kill();
+                AddMithril(pos);
+            }
+
+            if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
+                selected.Kill();
+            }
+
+            d_hoveredEntityUI.EndPanel();
         }
 
 
@@ -251,19 +247,13 @@ void WorldLayer::OnUpdate(double dt)
             float y = std::min(mouse.y - 5, h - height - 10);
 
             Maths::vec4 region{x, y, width, height};
-            bool active = true;
-            bool draggable = false;
-            bool clickable = false;
-            if (d_hoveredEntityUI.StartPanel("Hovered", &region, &active, &draggable, &clickable)) {
-                
-                std::string name = "Unnamed";
-                if (hovered.Has<NameComponent>()) {
-                    name = hovered.Get<NameComponent>().name;
-                }
-                d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
-
-                d_hoveredEntityUI.EndPanel();
+            d_hoveredEntityUI.StartPanel("Hovered", &region, PanelType::UNCLICKABLE);
+            std::string name = "Unnamed";
+            if (hovered.Has<NameComponent>()) {
+                name = hovered.Get<NameComponent>().name;
             }
+            d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
+            d_hoveredEntityUI.EndPanel();
         }
 
         d_hoveredEntityUI.EndFrame();

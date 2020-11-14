@@ -8,13 +8,114 @@
 #include "RenderContext.h"
 #include "BufferLayout.h"
 #include "Adaptors.h"
+#include "KeyboardEvent.h"
 
 #include <functional>
 #include <sstream>
 #include <cassert>
 #include <algorithm>
 
+#include <glad/glad.h>
+
 namespace Sprocket {
+namespace {
+
+std::vector<unsigned char> GetWhiteData()
+{
+    return {0xff, 0xff, 0xff, 0xff};
+}
+
+}
+
+void DrawCommand::AddQuad(const Maths::vec4& colour, const Maths::vec4& quad)
+{
+    float x = quad.x;
+    float y = quad.y;
+    float width = quad.z;
+    float height = quad.w;
+
+    std::size_t index = vertices.size();
+    vertices.push_back({{x,         y},          colour});
+    vertices.push_back({{x + width, y},          colour});
+    vertices.push_back({{x,         y + height}, colour});
+    vertices.push_back({{x + width, y + height}, colour});
+
+    indices.push_back(index + 0);
+    indices.push_back(index + 1);
+    indices.push_back(index + 2);
+    indices.push_back(index + 2);
+    indices.push_back(index + 1);
+    indices.push_back(index + 3);
+}
+
+void DrawCommand::AddText(const std::string& text,
+                          const Maths::vec4& quad,
+                          const TextProperties& properties)
+{
+    if (font == nullptr) {
+        SPKT_LOG_ERROR("Tried to add text to a draw command with no font!");
+        return;
+    }
+
+    if (text.size() == 0) {
+        return;
+    }
+
+    Alignment alignment = properties.alignment;
+    float size = properties.size;
+    Maths::vec4 colour = properties.colour;
+
+    Maths::vec2 pen{quad.x, quad.y};
+
+    if (alignment == Alignment::LEFT) {
+        pen.x += 5.0f;
+        pen.y += size;
+    } else if (alignment == Alignment::RIGHT) {
+        pen.x += quad.z - 5.0f;
+        pen.y += size;
+    } else {
+        float textWidth = font->TextWidth(text, size);
+        Glyph first = font->GetGlyph(text.front(), size);
+        pen.y += (quad.w - first.height) / 2.0f;
+        pen.x += (quad.z - textWidth) / 2.0f;
+        pen.x -= first.offset.x;
+        pen.y += first.offset.y;
+    }
+
+    for (std::size_t i = 0; i != text.size(); ++i) {
+        auto glyph = font->GetGlyph(text[i], size);
+
+        if (i > 0) {
+            pen.x += font->GetKerning(text[i-1], text[i], size);
+        }
+
+        float xPos = pen.x + glyph.offset.x;
+        float yPos = pen.y - glyph.offset.y;
+
+        float width = glyph.width;
+        float height = glyph.height;
+
+        float x = glyph.texture.x;
+        float y = glyph.texture.y;
+        float w = glyph.texture.z;
+        float h = glyph.texture.w;
+
+        pen += glyph.advance;
+
+        u32 index = textVertices.size();
+        textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
+        textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
+        textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
+        textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
+
+        textIndices.push_back(index + 0);
+        textIndices.push_back(index + 1);
+        textIndices.push_back(index + 2);
+        textIndices.push_back(index + 2);
+        textIndices.push_back(index + 1);
+        textIndices.push_back(index + 3);
+    }
+}
 
 UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     : d_window(window)
@@ -22,7 +123,7 @@ UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     , d_mouse(mouse)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_font("Resources/Fonts/Coolvetica.ttf")
+    , d_white(1, 1, GetWhiteData().data())
 {
     BufferLayout layout(sizeof(BufferVertex));
     layout.AddAttribute(DataType::FLOAT, 2);
@@ -42,8 +143,7 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
     return region;
 }
 
-WidgetInfo UIEngine::Register(const std::string& name,
-                              const Maths::vec4& region)
+WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region)
 {
     assert(d_currentPanel);
     
@@ -55,18 +155,32 @@ WidgetInfo UIEngine::Register(const std::string& name,
     d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, info.quad});
 
     if (hash == d_clicked) {
-        info.mouseDown = d_clickedTime;
+        info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
+        info.sinceUnlicked = 0.0;
     }
-
-    info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
-    info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
+    else {
+        info.sinceClicked = 0.0;
+        info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
+    }
 
     if (hash == d_hovered) {
-        info.mouseOver = d_hoveredTime;
+        info.sinceHovered = d_time - d_widgetTimes[hash].hoveredTime;
+        info.sinceUnhovered = 0.0;
     }
-    
-    info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
-    info.sinceHovered = d_time - d_widgetTimes[hash].hoveredTime;
+    else {
+        info.sinceHovered = 0.0;
+        info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
+    }
+
+    if (hash == d_focused) {
+        info.sinceFocused = d_time - d_widgetTimes[hash].focusedTime;
+        info.sinceUnfocused = 0.0;
+        info.keyPresses = d_keyPresses;
+    }
+    else {
+        info.sinceFocused = 0.0;
+        info.sinceUnfocused = d_time - d_widgetTimes[hash].unfocusedTime;
+    }
 
     if (d_onClick == hash) { // Consume the onCLick
         d_onClick = 0;
@@ -78,26 +192,51 @@ WidgetInfo UIEngine::Register(const std::string& name,
         info.onHover = true;
     }
 
+    if (d_onFocus == hash) { // Consume the onFocus
+        d_onFocus = 0;
+        info.onFocus = true;
+    }
+
     return info;
+}
+
+DrawCommand& UIEngine::GetDrawCommand()
+{
+    assert(d_currentPanel);
+    return d_currentPanel->mainCommand;
 }
 
 void UIEngine::OnEvent(Event& event)
 {
+    if (d_focused != 0 && !event.IsConsumed()) {
+        if (auto e = event.As<KeyboardKeyTypedEvent>()) {
+            d_keyPresses.push_back(e->Key());
+            e->Consume();
+        }
+        else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+            if (e->Key() == Keyboard::BACKSPACE) {
+                d_keyPresses.push_back(Keyboard::BACKSPACE);
+                e->Consume();
+            }
+        }
+        else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
+            if (e->Key() == Keyboard::BACKSPACE) {
+                d_keyPresses.push_back(Keyboard::BACKSPACE);
+                e->Consume();
+            }
+        }
+    }
 }
 
 void UIEngine::OnUpdate(double dt)
 {
     d_mouse->ConsumeEvents(false);
     d_time += dt;
-    d_clickedTime += dt;
-    d_hoveredTime += dt;
 
-    if (d_mouse->IsButtonReleased(Mouse::LEFT)) {
-        d_clickedTime = 0.0;
-        if (d_clicked > 0) {
-            d_widgetTimes[d_clicked].unclickedTime = d_time;
-            d_clicked = 0;
-        }
+    // Let go of mouse click, so lose clicked
+    if (d_mouse->IsButtonReleased(Mouse::LEFT) && d_clicked > 0) {
+        d_widgetTimes[d_clicked].unclickedTime = d_time;
+        d_clicked = 0;
     }
 }
 
@@ -110,13 +249,13 @@ void UIEngine::StartFrame()
 void UIEngine::EndFrame()
 {
     assert(!d_currentPanel);
-    static unsigned char arr[4] = {0xff, 0xff, 0xff, 0xff};
-    static Texture white(1, 1, arr);
 
     bool foundHovered = false;
     bool foundClicked = false;
 
     std::size_t moveToFront = 0;
+
+    d_keyPresses.clear();
 
     for (const auto& panelHash : Reversed(d_panelOrder)) {
         const auto& panel = d_panels[panelHash];
@@ -134,7 +273,12 @@ void UIEngine::EndFrame()
                     d_widgetTimes[hash].clickedTime = d_time;
                     d_clicked = hash;
                     d_onClick = hash;
-                    d_clickedTime = 0.0;
+
+                    // The newly clicked widget is now the focus
+                    d_widgetTimes[d_focused].unfocusedTime = d_time;
+                    d_widgetTimes[hash].focusedTime = d_time;
+                    d_focused = hash;
+                    d_onFocus = hash;
                 }
             }
             
@@ -145,23 +289,24 @@ void UIEngine::EndFrame()
                     d_widgetTimes[hash].hoveredTime = d_time;
                     d_hovered = hash;
                     d_onHover = hash;
-                    d_hoveredTime = 0.0;
                 }
             }
         }
     }
 
-    if (foundHovered == false) {
-        d_hoveredTime = 0.0;
-        if (d_hovered > 0) {
-            d_widgetTimes[d_hovered].unhoveredTime = d_time;
-            d_hovered = 0;
-        }
-        d_mouse->ConsumeEvents(false);
+    // Clicked on something other than the UI, so lose focus
+    if (d_mouse->IsButtonClicked(Mouse::LEFT) && !foundClicked && d_focused > 0) {
+        d_widgetTimes[d_focused].unfocusedTime = d_time;
+        d_focused = 0;
     }
-    else {
-        d_mouse->ConsumeEvents(true);
+
+    // Hovered over something other than the UI, so lose hover
+    if (!foundHovered && d_hovered > 0) {
+        d_widgetTimes[d_hovered].unhoveredTime = d_time;
+        d_hovered = 0;
     }
+
+    d_mouse->ConsumeEvents(foundHovered);
 
     if (moveToFront > 0) {
         auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
@@ -183,61 +328,40 @@ void UIEngine::EndFrame()
     d_buffer.Bind();
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
-        d_shader.LoadInt("texture_channels", 1);
-        white.Bind(0);
-        d_buffer.Draw(panel.quadVertices, panel.quadIndices);
-        d_font.Bind(0);
-        d_buffer.Draw(panel.textVertices, panel.textIndices);
+
+        ExecuteCommand(panel.mainCommand);
         for (const auto& cmd : panel.extraCommands) {
-            d_shader.LoadInt("texture_channels", cmd.texture->GetChannels());
-            cmd.texture->Bind(0);
-            d_buffer.Draw(cmd.vertices, cmd.indices);
+            ExecuteCommand(cmd);
         }
     }
     d_buffer.Unbind();
 }
 
-bool UIEngine::StartPanel(
-    const std::string& name,
-    Maths::vec4* region,
-    bool* active,
-    bool* draggable,
-    bool* clickable)
+void UIEngine::StartPanel(const std::string& name, Maths::vec4* region, PanelType type)
 {
     assert(!d_currentPanel);
-    assert(region != nullptr);
-    assert(active != nullptr);
+    std::size_t hash = std::hash<std::string>{}(name);
 
-    if (*active) {
-        std::size_t hash = std::hash<std::string>{}(name);
-
-        auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
-        if (it == d_panelOrder.end()) {
-            d_panelOrder.push_back(hash);
-        }
-        
-        auto& panel = d_panels[hash];
-        panel.name = name;
-        panel.hash = hash;
-        panel.region = *region;
-        d_currentPanel = &panel;
-
-        if (*clickable) {
-            auto info = Register(
-                name,
-                {0, 0, region->z, region->w}
-            );
-
-            if (info.mouseDown && *draggable) {
-                region->x += d_mouse->GetMouseOffset().x;
-                region->y += d_mouse->GetMouseOffset().y;
-                d_currentPanel->region = *region;
-            }
-        }
-
+    auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
+    if (it == d_panelOrder.end()) {
+        d_panelOrder.push_back(hash);
     }
+    
+    auto& panel = d_panels[hash];
+    panel.name = name;
+    panel.hash = hash;
+    panel.region = *region;
+    d_currentPanel = &panel;
 
-    return *active;
+    if (type == PanelType::CLICKABLE || type == PanelType::DRAGGABLE) {
+        auto info = Register(name, {0, 0, region->z, region->w});
+
+        if (info.sinceClicked > 0 && type == PanelType::DRAGGABLE) {
+            region->x += d_mouse->GetMouseOffset().x;
+            region->y += d_mouse->GetMouseOffset().y;
+            d_currentPanel->region = *region;
+        }
+    }
 }
 
 void UIEngine::EndPanel()
@@ -246,105 +370,27 @@ void UIEngine::EndPanel()
     d_currentPanel = nullptr;
 }
 
-void UIEngine::DrawQuad(const Maths::vec4& colour,
-                        const Maths::vec4& region)
-{
-    assert(d_currentPanel);
-    auto copy = region;
-    float x = copy.x;
-    float y = copy.y;
-    float width = copy.z;
-    float height = copy.w;
-
-    auto& cmd = d_panels[d_currentPanel->hash];
-
-    auto col = colour;
-    col.a = 1;
-
-    std::size_t index = cmd.quadVertices.size();
-    cmd.quadVertices.push_back({{x,         y},          col});
-    cmd.quadVertices.push_back({{x + width, y},          col});
-    cmd.quadVertices.push_back({{x,         y + height}, col});
-    cmd.quadVertices.push_back({{x + width, y + height}, col});
-
-    cmd.quadIndices.push_back(index + 0);
-    cmd.quadIndices.push_back(index + 1);
-    cmd.quadIndices.push_back(index + 2);
-    cmd.quadIndices.push_back(index + 2);
-    cmd.quadIndices.push_back(index + 1);
-    cmd.quadIndices.push_back(index + 3);
-}
-
-void UIEngine::DrawText(
-    const std::string& text,
-    float size,
-    const Maths::vec4& region,
-    Alignment alignment)
-{
-    assert(d_currentPanel);
-
-    auto copy = region;
-    Maths::vec4 colour = {1.0, 1.0, 1.0, 1.0};
-
-    Glyph first = d_font.GetGlyph(text.front(), size);
-    float textWidth = d_font.TextWidth(text, size);
-
-    Maths::vec2 pen{region.x, region.y};
-
-    pen.y += (copy.w - first.height) / 2.0f;
-
-    if (alignment == Alignment::LEFT) {
-        pen.x += 5.0f;
-    } else if (alignment == Alignment::RIGHT) {
-        pen.x += region.z - 5.0f - textWidth;
-    } else {
-        pen.x += (copy.z - textWidth) / 2.0f;
-    }
-
-    pen.x -= first.offset.x;
-    pen.y += first.offset.y;
-    
-    for (std::size_t i = 0; i != text.size(); ++i) {
-        auto glyph = d_font.GetGlyph(text[i], size);
-
-        if (i > 0) {
-            pen.x += d_font.GetKerning(text[i-1], text[i], size);
-        }
-
-        float xPos = pen.x + glyph.offset.x;
-        float yPos = pen.y - glyph.offset.y;
-
-        float width = glyph.width;
-        float height = glyph.height;
-
-        float x = glyph.texture.x;
-        float y = glyph.texture.y;
-        float w = glyph.texture.z;
-        float h = glyph.texture.w;
-
-        pen += glyph.advance;
-
-        auto& cmd = d_panels[d_currentPanel->hash];
-
-        u32 index = cmd.textVertices.size();
-        cmd.textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
-        cmd.textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
-        cmd.textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
-        cmd.textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
-
-        cmd.textIndices.push_back(index + 0);
-        cmd.textIndices.push_back(index + 1);
-        cmd.textIndices.push_back(index + 2);
-        cmd.textIndices.push_back(index + 2);
-        cmd.textIndices.push_back(index + 1);
-        cmd.textIndices.push_back(index + 3);
-    }
-}
-
 void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
 {
     assert(d_currentPanel);
     d_currentPanel->extraCommands.emplace_back(cmd);
+}
+
+void UIEngine::ExecuteCommand(const DrawCommand& cmd)
+{
+    auto scissor = ScissorContext(d_window, cmd.region);
+    if (cmd.texture) {
+        cmd.texture->Bind(0);
+    } else {
+        d_white.Bind(0);
+    }
+    d_buffer.Draw(cmd.vertices, cmd.indices);
+    
+    if (cmd.font) {
+        cmd.font->Bind(0);
+        d_shader.LoadInt("texture_channels", 1);
+        d_buffer.Draw(cmd.textVertices, cmd.textIndices);
+    }
 }
 
 }
