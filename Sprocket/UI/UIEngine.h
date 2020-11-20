@@ -56,9 +56,12 @@ struct DrawCommand
     // If specified, we scissor test this region so nothing outside the region is rendered.
     std::optional<Maths::vec4> region = {};
 
+    // Helper for added a quad to the vertex and index buffer.
     void AddQuad(const Maths::vec4& colour,
                  const Maths::vec4& quad);
 
+    // Helper for adding a string of test to the text vertex and index buffers. Uses the
+    // font stored in the draw command.
     void AddText(const std::string& text,
                  const Maths::vec4& quad,
                  const TextProperties& properties = {});
