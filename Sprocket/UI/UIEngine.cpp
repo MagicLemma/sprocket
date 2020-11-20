@@ -152,7 +152,7 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
     
     std::string prefixedName = d_currentPanel->name + "##" + name;
     std::size_t hash = std::hash<std::string>{}(prefixedName);
-    d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, info.quad});
+    d_currentPanel->widgetRegions.push_back({hash, info.quad});
 
     if (hash == d_clicked) {
         info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
