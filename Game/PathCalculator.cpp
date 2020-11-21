@@ -52,7 +52,8 @@ std::queue<glm::vec3> GenerateAStarPath(
                 continue;
             }
 
-            int totalCost = current->g + (int)(10 * Maths::Length(dir));
+            float dirLength = glm::length(glm::vec2(dir));
+            int totalCost = current->g + (int)(10 * dirLength);
 
             auto successor = FindNode(openList, newPos);
             if (successor == nullptr) {

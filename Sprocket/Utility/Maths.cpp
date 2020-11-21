@@ -177,27 +177,6 @@ glm::vec3 GetTranslation(const glm::mat4& m)
     return m[3];
 }
 
-float Length(const glm::vec3& v)
-{
-    return glm::length(v);
-}
-
-float Length(const glm::vec2& v)
-{
-    return glm::length(v);
-}
-
-float Length(const glm::ivec2& v)
-{
-    return (float)glm::sqrt(v.x * v.x + v.y * v.y);
-}
-
-
-float LengthSquare(const glm::vec3& v)
-{
-    return glm::length2(v);
-}
-
 glm::vec3 Normalise(const glm::vec3& vec)
 {
     return glm::normalize(vec);

@@ -60,11 +60,6 @@ float* Cast(const glm::mat4& m);
 glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs);
 glm::vec3 GetTranslation(const glm::mat4& m);
 
-float Length(const glm::vec3& v);
-float Length(const glm::vec2& v);
-float Length(const glm::ivec2& v);
-float LengthSquare(const glm::vec3& v);
-
 glm::vec3 Normalise(const glm::vec3& vec);
 
 // Normalisation
