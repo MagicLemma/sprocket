@@ -54,12 +54,12 @@ void EscapeMenu::OnUpdate(double dt)
     d_ui.StartFrame();
     static bool showVolume = false;
 
-    vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
+    glm::vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
     d_ui.StartPanel("Main", &mainRegion, PanelType::CLICKABLE);
 
     d_ui.Text("Menu", 48.0f, {0.0f, 0.0f, w * 0.3f, 100});
 
-    vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
+    glm::vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
 
     if (d_ui.Button("Toggle Dev UI", buttonRegion)) {
         switch (d_worldLayer->d_mode) {
@@ -78,7 +78,7 @@ void EscapeMenu::OnUpdate(double dt)
 
     buttonRegion.y += 60;
     float angle = d_worldLayer->d_cycle.GetAngle();
-    d_ui.Dragger("Time of Day", buttonRegion, &angle, 0.1f);
+    d_ui.Dragger("Time of Day", buttonRegion, &angle, 0.001f);
     d_worldLayer->d_cycle.SetAngle(angle);
 
     buttonRegion.y += 60;
@@ -97,7 +97,7 @@ void EscapeMenu::OnUpdate(double dt)
     
     d_ui.EndPanel();
     
-    static vec4 shape{w/2 - 200, 100, 400, 500};
+    static glm::vec4 shape{w/2 - 200, 100, 400, 500};
     if (showVolume) {
         d_ui.StartPanel("VolumePanel", &shape, PanelType::DRAGGABLE);
         d_ui.Text("Volume", 48.0f, {0, 0, 400, 100});
@@ -109,10 +109,10 @@ void EscapeMenu::OnUpdate(double dt)
         d_ui.EndPanel();
     }
 
-    static vec4 shape2{w/2 + 300, 100, 400, 500};
+    static glm::vec4 shape2{w/2 + 300, 100, 400, 500};
     d_ui.StartPanel("Button Panel", &shape2, PanelType::DRAGGABLE);
     d_ui.Text("Buttons", 36.0f, {0, 0, 400, 100});
-    vec4 buttonQuad{10, 100, 400 - 20, 50};
+    glm::vec4 buttonQuad{10, 100, 400 - 20, 50};
     d_ui.Button("Button 1", buttonQuad);
     buttonQuad.y += 60;
     d_ui.Button("Button 2", buttonQuad);

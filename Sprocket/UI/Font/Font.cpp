@@ -187,7 +187,7 @@ bool Font::LoadGlyph(char c, float size)
     glyph.texture.y = region.y / (float)d_atlas.Height();
     glyph.texture.z = glyph.width / (float)d_atlas.Width();
     glyph.texture.w = glyph.height / (float)d_atlas.Height();
-    glyph.advance = Maths::vec2{slot->advance.x, slot->advance.y} / HRESf;
+    glyph.advance = glm::vec2{slot->advance.x, slot->advance.y} / HRESf;
 
     GenerateKerning(font.glyphs, font.kernings, &library, &face);
 

@@ -18,10 +18,10 @@ namespace Sprocket {
 
 struct SimpleUITheme
 {
-    Maths::vec4 backgroundColour;
-    Maths::vec4 baseColour;
-    Maths::vec4 hoveredColour;
-    Maths::vec4 clickedColour;
+    glm::vec4 backgroundColour;
+    glm::vec4 baseColour;
+    glm::vec4 hoveredColour;
+    glm::vec4 clickedColour;
 };
 
 class SimpleUI
@@ -50,46 +50,46 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name, Maths::vec4* region, PanelType type);
+    void StartPanel(const std::string& name, glm::vec4* region, PanelType type);
     void EndPanel();
 
-    void Quad(const Maths::vec4& colour,
-              const Maths::vec4& region);
+    void Quad(const glm::vec4& colour,
+              const glm::vec4& region);
 
     // TODO: Simplify the text API, it's a bit messy currently
     void Text(const std::string& text,
               float size,
-              const Maths::vec4& region,
-              const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+              const glm::vec4& region,
+              const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     void Text(const std::string& text,
               float size,
-              const Maths::vec2& position,
-              const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+              const glm::vec2& position,
+              const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     void TextModifiable(const std::string& name,
-                        const Maths::vec4& region,
+                        const glm::vec4& region,
                         std::string* text,
-                        const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+                        const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     bool Button(const std::string& name,
-                const Maths::vec4& region);
+                const glm::vec4& region);
 
     bool Checkbox(const std::string& name,
-                  const Maths::vec4& region,
+                  const glm::vec4& region,
                   bool* value);
 
     void Slider(const std::string& name,
-                const Maths::vec4& region,
+                const glm::vec4& region,
                 float* value, float min, float max);
 
     void Dragger(const std::string& name,
-                 const Maths::vec4& region,
+                 const glm::vec4& region,
                  float* value, float speed);
 
     void Image(const std::string& name,
                std::shared_ptr<Texture> image,
-               const Maths::vec2& position);
+               const glm::vec2& position);
 
 };
 

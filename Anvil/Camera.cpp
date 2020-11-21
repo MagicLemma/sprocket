@@ -1,15 +1,17 @@
 #include "Camera.h"
 
+#include <glm/trigonometric.hpp>
+
 namespace Sprocket {
 
-Camera::Camera(Window* window, const Maths::vec3& target)
+Camera::Camera(Window* window, const glm::vec3& target)
     : d_window(window)
     , d_position()
     , d_target(target)
     , d_yaw(0.0f)
     , d_distance(8.0f)
     , d_moveSpeed(10.0f)
-    , d_rotateSpeed(90.0f)
+    , d_rotateSpeed(glm::half_pi<float>())
     , d_absVert(2.0f)
     , d_absMin(2.0f)
     , d_absMax(10.0f)
@@ -34,10 +36,10 @@ void Camera::OnUpdate(double dt)
 
     auto f = d_target - d_position;
     f.y = 0;
-    f = Maths::Normalise(f);
+    f = glm::normalize(f);
 
-    Maths::vec3 up{0, 1, 0};
-    Maths::vec3 r = Maths::Cross(f, up);
+    glm::vec3 up{0, 1, 0};
+    glm::vec3 r = glm::cross(f, up);
 
     if (d_keyboard.IsKeyDown(Keyboard::W)) {
         d_target += moveSpeed * f;
@@ -74,8 +76,8 @@ void Camera::OnUpdate(double dt)
         d_absMax -= d_moveSpeed * dt;
     }
 
-    d_position.x = d_target.x + d_distance * Maths::Cosd(d_yaw);
-    d_position.z = d_target.z + d_distance * Maths::Sind(d_yaw);
+    d_position.x = d_target.x + d_distance * glm::cos(d_yaw);
+    d_position.z = d_target.z + d_distance * glm::sin(d_yaw);
 
     if (d_position.y != d_absVert) {
         float d = d_absVert - d_position.y;
@@ -96,14 +98,14 @@ void Camera::OnEvent(Event& event)
     }
 }
 
-Maths::mat4 Camera::Proj() const
+glm::mat4 Camera::Proj() const
 {
-    return Maths::Perspective(d_window->AspectRatio(), 70.0f, 0.1f, 1000.0f);
+    return glm::perspective(70.0f, d_window->AspectRatio(), 0.1f, 1000.0f);
 }
 
-Maths::mat4 Camera::View() const
+glm::mat4 Camera::View() const
 {
-    return Maths::LookAt(d_position, d_target);
+    return glm::lookAt(d_position, d_target, {0.0, 1.0, 0.0});
 }
 
 }

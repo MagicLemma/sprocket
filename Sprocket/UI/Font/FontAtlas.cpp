@@ -18,7 +18,7 @@ FontAtlas::FontAtlas(int width, int height)
 }
 
 void FontAtlas::SetRegion(
-    const Maths::ivec4& region,
+    const glm::ivec4& region,
     const unsigned char* data)
 {
     assert(region.x > 0);
@@ -54,14 +54,14 @@ int FontAtlas::Fit(int index, int width, int height)
     return y;
 }
 
-Maths::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
+glm::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
 {
     // Add padding
     int padding = 1;
     width += 2 * padding;
     height += 2 * padding;
 
-    Maths::ivec4 region{0, 0, width, height};
+    glm::ivec4 region{0, 0, width, height};
 
     std::size_t best_height = std::numeric_limits<std::size_t>::max();
     std::size_t best_width = std::numeric_limits<std::size_t>::max();
@@ -92,7 +92,7 @@ Maths::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
         return region;
     }
 
-    Maths::ivec3 n;
+    glm::ivec3 n;
     n.x = region.x;
     n.y = region.y + height;
     n.z = width;

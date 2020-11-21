@@ -17,8 +17,8 @@ ColliderRenderer::ColliderRenderer()
 }
 
 void ColliderRenderer::Draw(
-    const Maths::mat4& proj,
-    const Maths::mat4& view,
+    const glm::mat4& proj,
+    const glm::mat4& view,
     Scene& scene)
 {
     RenderContext rc;
@@ -35,11 +35,11 @@ void ColliderRenderer::Draw(
     scene.Each<BoxCollider3DComponent>([&](Entity& entity) {
         const auto& c = entity.Get<BoxCollider3DComponent>();
         auto tr = entity.Get<TransformComponent>();
-        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+        glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
-        transform = Maths::Scale(transform, c.halfExtents);
+        transform = glm::scale(transform, c.halfExtents);
         if (c.applyScale) {
-            transform = Maths::Scale(transform, tr.scale);
+            transform = glm::scale(transform, tr.scale);
         }
         d_shader.LoadMat4("u_model_matrix", transform);
         d_vao->Draw();
@@ -50,9 +50,9 @@ void ColliderRenderer::Draw(
     scene.Each<SphereCollider3DComponent>([&](Entity& entity) {
         const auto& c = entity.Get<SphereCollider3DComponent>();
         auto tr = entity.Get<TransformComponent>();
-        Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+        glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
-        transform = Maths::Scale(transform, c.radius);
+        transform = glm::scale(transform, {c.radius, c.radius, c.radius});
         d_shader.LoadMat4("u_model_matrix", transform);
         d_vao->Draw();
     });
@@ -64,10 +64,10 @@ void ColliderRenderer::Draw(
 
         {  // Top Hemisphere
             auto tr = entity.Get<TransformComponent>();
-            Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+            glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
-            transform = Maths::Translate(transform, {0.0, c.height/2, 0.0});
-            transform = Maths::Scale(transform, c.radius);
+            transform = glm::translate(transform, {0.0, c.height/2, 0.0});
+            transform = glm::scale(transform, {c.radius, c.radius, c.radius});
             d_shader.LoadMat4("u_model_matrix", transform);
             d_vao->SetModel(s_hemisphere);
             d_vao->Draw();
@@ -75,9 +75,9 @@ void ColliderRenderer::Draw(
 
         {  // Middle Cylinder
             auto tr = entity.Get<TransformComponent>();
-            Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+            glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
-            transform = Maths::Scale(transform, {c.radius, c.height, c.radius});
+            transform = glm::scale(transform, {c.radius, c.height, c.radius});
             d_shader.LoadMat4("u_model_matrix", transform);
             d_vao->SetModel(s_cylinder);
             d_vao->Draw();
@@ -85,11 +85,11 @@ void ColliderRenderer::Draw(
 
         {  // Bottom Hemisphere
             auto tr = entity.Get<TransformComponent>();
-            Maths::mat4 transform = Maths::Transform(tr.position, tr.orientation);
+            glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
-            transform = Maths::Translate(transform, {0.0, -c.height/2, 0.0});
-            transform = Maths::Rotate(transform, {1, 0, 0}, Maths::Radians(180.0f));
-            transform = Maths::Scale(transform, c.radius);
+            transform = glm::translate(transform, {0.0, -c.height/2, 0.0});
+            transform = glm::rotate(transform, glm::pi<float>(), {1, 0, 0});
+            transform = glm::scale(transform, {c.radius, c.radius, c.radius});
             d_shader.LoadMat4("u_model_matrix", transform);
             d_vao->SetModel(s_hemisphere);
             d_vao->Draw();
@@ -101,8 +101,8 @@ void ColliderRenderer::Draw(
 
 void ColliderRenderer::Draw(const Entity& camera, Scene& scene)
 {
-    Maths::mat4 proj = MakeProj(camera);
-    Maths::mat4 view = MakeView(camera);
+    glm::mat4 proj = MakeProj(camera);
+    glm::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 

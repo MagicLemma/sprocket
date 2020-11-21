@@ -29,7 +29,7 @@ void Console::OnUpdate(double dt)
 
     double W = 0.8 * d_window->Width() - 20;
     double H = d_window->Height() - 20;
-    Maths::vec4 mainRegion = {10, 10, W, H};
+    glm::vec4 mainRegion = {10, 10, W, H};
     d_ui.StartPanel("Main", &mainRegion, PanelType::UNCLICKABLE);
 
     double boxHeight = 50.0;
@@ -37,7 +37,7 @@ void Console::OnUpdate(double dt)
     while (d_consoleLines.size() > 100) {
         d_consoleLines.pop_back();
     }
-    Maths::vec2 region = {10, H - 10 - boxHeight - 50};
+    glm::vec2 region = {10, H - 10 - boxHeight - 50};
     float fontSize = 24.0f;
     for (const auto& command : d_consoleLines) {
         d_ui.Text(command.text, fontSize, region, command.colour);
@@ -51,7 +51,7 @@ void Console::OnEvent(Event& event)
 {
     auto e = event.As<KeyboardButtonPressedEvent>();
     if (e && e->Key() == Keyboard::ENTER) {
-        d_consoleLines.push_front({d_commandLine, Maths::vec4{1.0, 1.0, 1.0, 1.0}});
+        d_consoleLines.push_front({d_commandLine, glm::vec4{1.0, 1.0, 1.0, 1.0}});
         HandleCommand(d_commandLine);
         d_commandLine = "";
         e->Consume();
@@ -76,7 +76,7 @@ void Console::HandleCommand(const std::string& command)
     else if (command.substr(0, 5) == "echo ") {
         d_consoleLines.push_front({
             " > " + command.substr(5),
-            Maths::vec4{0.7, 0.7, 0.7, 1.0}
+            glm::vec4{0.7, 0.7, 0.7, 1.0}
         });
     }
     else if (command.substr(0, 4) == "run ") {
@@ -89,7 +89,7 @@ void Console::HandleCommand(const std::string& command)
             } else {
                 d_consoleLines.push_front({
                     " > Could not find script '" + name + "'",
-                    Maths::vec4{1.0, 0.0, 0.0, 1.0}
+                    glm::vec4{1.0, 0.0, 0.0, 1.0}
                 });
             }
         }

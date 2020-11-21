@@ -35,7 +35,7 @@ public:
     void SetSound(const Sound& sound);
 
     void SetPosition(float x, float y, float z);
-    void SetPosition(const Maths::vec3& position);
+    void SetPosition(const glm::vec3& position);
 
     void Play() const;
     void Pause() const;

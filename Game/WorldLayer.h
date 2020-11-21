@@ -61,14 +61,14 @@ public:
     void SaveScene();
     void LoadScene(const std::string& sceneFile);
 
-    void AddTree(const Sprocket::Maths::ivec2& pos);
+    void AddTree(const glm::ivec2& pos);
 
-    void AddRockBase(const Sprocket::Maths::ivec2& pos,
+    void AddRockBase(const glm::ivec2& pos,
                      const std::string& tex,
                      const std::string& name);
     
-    void AddRock(const Sprocket::Maths::ivec2& pos);
-    void AddIron(const Sprocket::Maths::ivec2& pos);
-    void AddTin(const Sprocket::Maths::ivec2& pos);
-    void AddMithril(const Sprocket::Maths::ivec2& pos);
+    void AddRock(const glm::ivec2& pos);
+    void AddIron(const glm::ivec2& pos);
+    void AddTin(const glm::ivec2& pos);
+    void AddMithril(const glm::ivec2& pos);
 };

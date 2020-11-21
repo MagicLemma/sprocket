@@ -182,13 +182,13 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     UpdateScene(data);
 
     if (auto sun = data["Sun"]) {
-        scene->GetSun().direction = sun["direction"] ? sun["direction"].as<Maths::vec3>() : Maths::vec3{0.0, -1.0, 0.0};
-        scene->GetSun().colour = sun["colour"] ? sun["colour"].as<Maths::vec3>() : Maths::vec3{1.0, 1.0, 1.0};
+        scene->GetSun().direction = sun["direction"] ? sun["direction"].as<glm::vec3>() : glm::vec3{0.0, -1.0, 0.0};
+        scene->GetSun().colour = sun["colour"] ? sun["colour"].as<glm::vec3>() : glm::vec3{1.0, 1.0, 1.0};
         scene->GetSun().brightness = sun["brightness"] ? sun["brightness"].as<float>() : 1.0f;
     }
 
     if (auto ambience = data["Ambience"]) {
-        scene->GetAmbience().colour = ambience["colour"] ? ambience["colour"].as<Maths::vec3>() : Maths::vec3{1.0, 1.0, 1.0};
+        scene->GetAmbience().colour = ambience["colour"] ? ambience["colour"].as<glm::vec3>() : glm::vec3{1.0, 1.0, 1.0};
         scene->GetAmbience().brightness = ambience["brightness"] ? ambience["brightness"].as<float>() : 1.0f;
     }
 
@@ -210,9 +210,9 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["TransformComponent"]) {
             TransformComponent c;
-            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
-            c.scale = spec["scale"] ? spec["scale"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
+            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.scale = spec["scale"] ? spec["scale"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             e.Add(c);
         }
         if (auto spec = entity["ModelComponent"]) {
@@ -223,7 +223,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["RigidBody3DComponent"]) {
             RigidBody3DComponent c;
-            c.velocity = spec["velocity"] ? spec["velocity"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.velocity = spec["velocity"] ? spec["velocity"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.gravity = spec["gravity"] ? spec["gravity"].as<bool>() : true;
             c.frozen = spec["frozen"] ? spec["frozen"].as<bool>() : false;
             c.bounciness = spec["bounciness"] ? spec["bounciness"].as<float>() : 0.5f;
@@ -233,25 +233,25 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
-            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
-            c.halfExtents = spec["halfExtents"] ? spec["halfExtents"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.halfExtents = spec["halfExtents"] ? spec["halfExtents"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.applyScale = spec["applyScale"] ? spec["applyScale"].as<bool>() : true;
             e.Add(c);
         }
         if (auto spec = entity["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
-            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
             e.Add(c);
         }
         if (auto spec = entity["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
-            c.position = spec["position"] ? spec["position"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
             c.height = spec["height"] ? spec["height"].as<float>() : 1.0f;
@@ -286,17 +286,17 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         }
         if (auto spec = entity["LightComponent"]) {
             LightComponent c;
-            c.colour = spec["colour"] ? spec["colour"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
+            c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add(c);
         }
         if (auto spec = entity["ParticleComponent"]) {
             ParticleComponent c;
             c.interval = spec["interval"] ? spec["interval"].as<float>() : 1.0f;
-            c.velocity = spec["velocity"] ? spec["velocity"].as<Maths::vec3>() : Maths::vec3{0.0f, 0.0f, 0.0f};
+            c.velocity = spec["velocity"] ? spec["velocity"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.velocityNoise = spec["velocityNoise"] ? spec["velocityNoise"].as<float>() : 0.0f;
-            c.acceleration = spec["acceleration"] ? spec["acceleration"].as<Maths::vec3>() : Maths::vec3{0.0f, -9.81f, 0.0f};
-            c.scale = spec["scale"] ? spec["scale"].as<Maths::vec3>() : Maths::vec3{1.0f, 1.0f, 1.0f};
+            c.acceleration = spec["acceleration"] ? spec["acceleration"].as<glm::vec3>() : glm::vec3{0.0f, -9.81f, 0.0f};
+            c.scale = spec["scale"] ? spec["scale"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;
             e.Add(c);
         }

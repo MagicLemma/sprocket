@@ -186,7 +186,7 @@ void Window::Clear()
 	glClearColor(d_clearColour.r, d_clearColour.g, d_clearColour.b, 1.0);
 }
 
-void Window::SetClearColour(const Maths::vec3& colour)
+void Window::SetClearColour(const glm::vec3& colour)
 {
 	d_clearColour = colour;
 }

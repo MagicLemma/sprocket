@@ -1,4 +1,9 @@
 #pragma once
+#include "FontAtlas.h"
+#include "Maths.h"
+#include "HashPair.h"
+#include "Glyph.h"
+
 #include <cstddef>
 #include <memory>
 #include <vector>
@@ -6,20 +11,17 @@
 #include <utility>
 #include <unordered_map>
 
-#include "FontAtlas.h"
-#include "Maths.h"
-#include "HashPair.h"
-#include "Glyph.h"
+#include <tsl/hopscotch_map.h>
 
 namespace Sprocket {
 
-using KerningMap = std::unordered_map<
+using KerningMap = tsl::hopscotch_map<
     std::pair<uint32_t, uint32_t>,
     float,
     HashPair
 >;
 
-using GlyphMap = std::unordered_map<
+using GlyphMap = tsl::hopscotch_map<
     uint32_t,
     Glyph
 >;
@@ -35,7 +37,7 @@ class Font
     std::string d_filename;
     
     FontAtlas  d_atlas;
-    std::unordered_map<float, SizedFontData> d_fontData;
+    tsl::hopscotch_map<float, SizedFontData> d_fontData;
 
     bool LoadGlyph(char c, float size);
 

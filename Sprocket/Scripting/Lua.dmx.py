@@ -14,13 +14,13 @@ class Lua(Plugin):
         for attr in comp["Attributes"]:
             if not attr["Flags"]["SCRIPTABLE"]:
                 continue
-            if attr["Type"]  == "Maths::vec4":
+            if attr["Type"]  == "glm::vec4":
                 constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
                 num_attrs += 4
-            elif attr["Type"] == "Maths::vec3":
+            elif attr["Type"] == "glm::vec3":
                 constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
                 num_attrs += 3
-            elif attr["Type"] == "Maths::vec2":
+            elif attr["Type"] == "glm::vec2":
                 constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
                 num_attrs += 2
             else:
@@ -44,7 +44,7 @@ class Lua(Plugin):
             n = attr["Name"]
             if not attr["Flags"]["SCRIPTABLE"]:
                 continue
-            if attr["Type"] == "Maths::vec3":
+            if attr["Type"] == "glm::vec3":
                 args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
             else:
                 args.append(f'c.{attr["Name"]}')
@@ -59,7 +59,7 @@ class Lua(Plugin):
             n = attr["Name"]
             if not attr["Flags"]["SCRIPTABLE"]:
                 continue
-            if attr["Type"] == "Maths::vec3":
+            if attr["Type"] == "glm::vec3":
                 args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
             else:
                 args.append(f'c.{attr["Name"]}')

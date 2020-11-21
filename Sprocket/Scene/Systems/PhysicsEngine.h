@@ -27,7 +27,7 @@ class PhysicsEngine : public EntitySystem
         // Entity directly below it. TODO: Make this more general.
 
 public:
-    PhysicsEngine(const Maths::vec3& gravity);
+    PhysicsEngine(const glm::vec3& gravity);
     ~PhysicsEngine() {}
 
     void OnStartup(Scene& scene) override;
@@ -36,7 +36,7 @@ public:
     void Running(bool isRunning);
     bool Running() const { return d_running; }
 
-    Entity Raycast(const Maths::vec3& base, const Maths::vec3& direction);
+    Entity Raycast(const glm::vec3& base, const glm::vec3& direction);
         // Given a position in the world and a direction from that point,
         // return a pointer to the entity that it hits, or null if it
         // does not.

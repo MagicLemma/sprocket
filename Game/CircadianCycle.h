@@ -49,7 +49,7 @@ public:
     bool IsDay() const;
         // Dayime is defined as being between 6am and 6pm.
 
-    Maths::vec3 GetSunDir() const;
+    glm::vec3 GetSunDir() const;
         // Returns a direction vector to act at the direction of sunlight.
         // Calculated using the circadian cycle treated as an angle. The
         // direction at noon is straight down.

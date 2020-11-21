@@ -18,10 +18,10 @@ namespace Sprocket {
 
 struct SinglePanelUITheme
 {
-    Maths::vec4 backgroundColour;
-    Maths::vec4 baseColour;
-    Maths::vec4 hoveredColour;
-    Maths::vec4 clickedColour;
+    glm::vec4 backgroundColour;
+    glm::vec4 baseColour;
+    glm::vec4 hoveredColour;
+    glm::vec4 clickedColour;
 };
 
 class SinglePanelUI
@@ -51,13 +51,13 @@ public:
     void EndFrame();
 
     bool Button(const std::string& name,
-                const Maths::vec4& region);
+                const glm::vec4& region);
 
     void Slider(const std::string& name,
-                const Maths::vec4& region,
+                const glm::vec4& region,
                 float* value, float min, float max);
 
-    void Box(const Maths::vec4& quad, const Maths::vec4& colour);
+    void Box(const glm::vec4& quad, const glm::vec4& colour);
 };
 
 }

@@ -12,19 +12,20 @@
 #include <unordered_map>
 
 #include <entt/entt.hpp>
+#include <tsl/hopscotch_map.h>
 
 namespace Sprocket {
 
 struct Sun
 {
-    Maths::vec3 direction;
-    Maths::vec3 colour;
+    glm::vec3 direction;
+    glm::vec3 colour;
     float       brightness;
 };
 
 struct Ambience
 {
-    Maths::vec3 colour;
+    glm::vec3 colour;
     float       brightness;
 };
     
@@ -33,7 +34,7 @@ class Scene
 public:
     using EntityCallback = std::function<void(Entity&)>;
 
-    using TypeFunctionMap = std::unordered_map<
+    using TypeFunctionMap = tsl::hopscotch_map<
         std::type_index, std::vector<EntityCallback>
     >;
 

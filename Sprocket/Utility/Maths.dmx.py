@@ -15,7 +15,7 @@ class Vec2(Type):
 
     @staticmethod
     def typename():
-        return "Maths::vec2"
+        return "glm::vec2"
 
 
 class Vec3(Type):
@@ -29,7 +29,7 @@ class Vec3(Type):
 
     @staticmethod
     def typename():
-        return "Maths::vec3"
+        return "glm::vec3"
 
 
 class Vec4(Type):
@@ -43,7 +43,7 @@ class Vec4(Type):
 
     @staticmethod
     def typename():
-        return "Maths::vec4"
+        return "glm::vec4"
 
 
 class Quat(Type):
@@ -57,7 +57,7 @@ class Quat(Type):
 
     @staticmethod
     def typename():
-        return "Maths::quat"
+        return "glm::quat"
 
 
 class Mat4(Type): # TODO: Implement
@@ -69,7 +69,7 @@ class Mat4(Type): # TODO: Implement
 
     @staticmethod
     def typename():
-        return "Maths::mat4"
+        return "glm::mat4"
 
 
 class QueueVec3(Type): # TODO: Implement
@@ -81,4 +81,4 @@ class QueueVec3(Type): # TODO: Implement
 
     @staticmethod
     def typename():
-        return "std::queue<Maths::vec3>"
+        return "std::queue<glm::vec3>"

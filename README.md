@@ -12,3 +12,4 @@
 - sfml-audio
 - entt
 - yaml-cpp
+- tsl-hopscotch-map

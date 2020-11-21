@@ -27,7 +27,7 @@ std::vector<unsigned char> GetWhiteData()
 
 }
 
-void DrawCommand::AddQuad(const Maths::vec4& colour, const Maths::vec4& quad)
+void DrawCommand::AddQuad(const glm::vec4& colour, const glm::vec4& quad)
 {
     float x = quad.x;
     float y = quad.y;
@@ -49,7 +49,7 @@ void DrawCommand::AddQuad(const Maths::vec4& colour, const Maths::vec4& quad)
 }
 
 void DrawCommand::AddText(const std::string& text,
-                          const Maths::vec4& quad,
+                          const glm::vec4& quad,
                           const TextProperties& properties)
 {
     if (font == nullptr) {
@@ -63,9 +63,9 @@ void DrawCommand::AddText(const std::string& text,
 
     Alignment alignment = properties.alignment;
     float size = properties.size;
-    Maths::vec4 colour = properties.colour;
+    glm::vec4 colour = properties.colour;
 
-    Maths::vec2 pen{quad.x, quad.y};
+    glm::vec2 pen{quad.x, quad.y};
 
     if (alignment == Alignment::LEFT) {
         pen.x += 5.0f;
@@ -132,10 +132,10 @@ UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     d_buffer.SetBufferLayout(layout);
 }
 
-Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
+glm::vec4 UIEngine::ApplyOffset(const glm::vec4& region)
 {
     if (d_currentPanel) {
-        Maths::vec4 quad = region;
+        glm::vec4 quad = region;
         quad.x += d_currentPanel->region.x;
         quad.y += d_currentPanel->region.y;
         return quad;
@@ -143,7 +143,7 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
     return region;
 }
 
-WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region)
+WidgetInfo UIEngine::Register(const std::string& name, const glm::vec4& region)
 {
     assert(d_currentPanel);
     
@@ -152,7 +152,7 @@ WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region
     
     std::string prefixedName = d_currentPanel->name + "##" + name;
     std::size_t hash = std::hash<std::string>{}(prefixedName);
-    d_panels[d_currentPanel->hash].widgetRegions.push_back({hash, info.quad});
+    d_currentPanel->widgetRegions.push_back({hash, info.quad});
 
     if (hash == d_clicked) {
         info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
@@ -321,7 +321,11 @@ void UIEngine::EndFrame()
 
     float w = (float)d_window->Width();
     float h = (float)d_window->Height();
-    auto proj = Maths::Ortho(0, w, h, 0);
+
+    // This transformation makes the top left of the screen (0, 0) and the bottom
+    // right be (width, height). It flips the y-axis since OpenGL treats the bottom
+    // left as (0, 0).
+    auto proj = glm::ortho(0.0f, w, h, 0.0f);
     d_shader.Bind();
     d_shader.LoadMat4("u_proj_matrix", proj);
 
@@ -337,7 +341,7 @@ void UIEngine::EndFrame()
     d_buffer.Unbind();
 }
 
-void UIEngine::StartPanel(const std::string& name, Maths::vec4* region, PanelType type)
+void UIEngine::StartPanel(const std::string& name, glm::vec4* region, PanelType type)
 {
     assert(!d_currentPanel);
     std::size_t hash = std::hash<std::string>{}(name);

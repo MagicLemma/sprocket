@@ -1,6 +1,8 @@
 #include "CircadianCycle.h"
 #include "Log.h"
+
 #include <sstream>
+#include <glm/trigonometric.hpp>
 
 namespace Sprocket {
 
@@ -47,7 +49,6 @@ void CircadianCycle::SetTime(int hours, int mins, int secs)
 
 void CircadianCycle::AddSeconds(double seconds)
 {
-    //SPKT_LOG_INFO("Adding {}", seconds);
     d_seconds += seconds;
     Modulo();
 }
@@ -65,12 +66,12 @@ void CircadianCycle::SetSeconds(double seconds)
 
 double CircadianCycle::GetAngle() const
 { 
-    return 360.0 * d_seconds / SECONDS_IN_DAY;
+    return glm::two_pi<double>() * d_seconds / SECONDS_IN_DAY;
 }
 
 void CircadianCycle::SetAngle(double angle)
 {
-    d_seconds = (angle / 360.0) * SECONDS_IN_DAY;
+    d_seconds = (angle / glm::two_pi<double>()) * SECONDS_IN_DAY;
     Modulo();
 }
 
@@ -79,11 +80,11 @@ bool CircadianCycle::IsDay() const
     return SIX_AM <= d_seconds && d_seconds < SIX_PM;
 }
 
-Maths::vec3 CircadianCycle::GetSunDir() const
+glm::vec3 CircadianCycle::GetSunDir() const
 {
     float angle = GetAngle();
-    Maths::vec3 dir = {Maths::Sind(angle), Maths::Cosd(angle), 0.1f * Maths::Sind(angle)};
-    dir = Maths::Normalise(dir);
+    glm::vec3 dir = {glm::sin(angle), glm::cos(angle), 0.1f * glm::sin(angle)};
+    dir = glm::normalize(dir);
     return dir;
 }
 

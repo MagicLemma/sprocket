@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <vector>
 
+#include <tsl/hopscotch_map.h>
+
 namespace Sprocket {
 
 struct Bone
@@ -16,7 +18,7 @@ struct Bone
 
     // A transform that only applies to this bone and does not get added
     // into the transform that is passed down to child bones.
-    Maths::mat4 offset;
+    glm::mat4 offset;
 
     // The indices of the bones that are children of this one.
     std::vector<u32> children;
@@ -25,19 +27,19 @@ struct Bone
 struct KeyFramePos
 {
     f32         time;
-    Maths::vec3 position;
+    glm::vec3 position;
 };
 
 struct KeyFrameOri
 {
     f32         time;
-    Maths::quat orientation;
+    glm::quat orientation;
 };
 
 struct KeyFrameScl
 {
     f32         time;
-    Maths::vec3 scale;
+    glm::vec3 scale;
 };
 
 struct BoneKeyFrames
@@ -62,10 +64,10 @@ struct Animation
 struct Skeleton
 {
     std::vector<Bone> bones;
-    std::unordered_map<std::string, u32> boneMap;
-    std::unordered_map<std::string, Animation> animations;
+    tsl::hopscotch_map<std::string, u32> boneMap;
+    tsl::hopscotch_map<std::string, Animation> animations;
 
-    std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;
+    std::vector<glm::mat4> GetPose(const std::string& name, f32 time) const;
 };
 
 }

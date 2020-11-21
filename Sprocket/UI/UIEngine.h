@@ -14,6 +14,8 @@
 #include <chrono>
 #include <deque>
 
+#include <tsl/hopscotch_map.h>
+
 namespace Sprocket {
 
 enum class Alignment
@@ -27,20 +29,14 @@ struct TextProperties
 {
     float       size      = 24.0f;
     Alignment   alignment = Alignment::CENTRE;
-    Maths::vec4 colour    = {1.0, 1.0, 1.0, 1.0};
+    glm::vec4 colour    = {1.0, 1.0, 1.0, 1.0};
 };
 
 struct BufferVertex
 {
-    Maths::vec2 position;
-    Maths::vec4 colour;
-    Maths::vec2 textureCoords = {0.0, 0.0};
-};
-
-struct QuadData
-{
-    std::size_t hash;
-    Maths::vec4 region;
+    glm::vec2 position;
+    glm::vec4 colour;
+    glm::vec2 textureCoords = {0.0, 0.0};
 };
 
 struct DrawCommand
@@ -54,13 +50,16 @@ struct DrawCommand
     std::vector<u32>          textIndices;
 
     // If specified, we scissor test this region so nothing outside the region is rendered.
-    std::optional<Maths::vec4> region = {};
+    std::optional<glm::vec4> region = {};
 
-    void AddQuad(const Maths::vec4& colour,
-                 const Maths::vec4& quad);
+    // Helper for added a quad to the vertex and index buffer.
+    void AddQuad(const glm::vec4& colour,
+                 const glm::vec4& quad);
 
+    // Helper for adding a string of test to the text vertex and index buffers. Uses the
+    // font stored in the draw command.
     void AddText(const std::string& text,
-                 const Maths::vec4& quad,
+                 const glm::vec4& quad,
                  const TextProperties& properties = {});
 };
 
@@ -81,11 +80,17 @@ enum class PanelType
     DRAGGABLE
 };
 
+struct QuadData
+{
+    std::size_t hash;
+    glm::vec4 region;
+};
+
 struct Panel
 {
     std::string name;
     std::size_t hash;
-    Maths::vec4 region;
+    glm::vec4 region;
 
     std::vector<QuadData> widgetRegions;
 
@@ -129,7 +134,7 @@ struct WidgetInfo
     std::vector<int> keyPresses;
 
     // The region of the widget converted to screen space coords.
-    Maths::vec4 quad;
+    glm::vec4 quad;
 };
 
 class UIEngine
@@ -146,7 +151,7 @@ class UIEngine
     StreamBuffer d_buffer;
     
     // Panel info 
-    std::unordered_map<std::size_t, Panel> d_panels;
+    tsl::hopscotch_map<std::size_t, Panel> d_panels;
     Panel* d_currentPanel = nullptr;
     std::deque<std::size_t> d_panelOrder;
 
@@ -158,7 +163,7 @@ class UIEngine
     // Hash -> time map keeping track of the last time each
     // widget was unselected. Used to calculate the unhovered
     // and unclicked times.
-    std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
+    tsl::hopscotch_map<std::size_t, WidgetTimes> d_widgetTimes;
 
     // A steadily increasing timer used to set the unselected
     // times in the maps above.
@@ -183,11 +188,11 @@ public:
     // position of the region is with respect to the position of the active panel.
     // If this widget will consume keyboard input, it needs to be stated here. Widgets
     // only consume keyboard events while in focus.
-    WidgetInfo Register(const std::string& name, const Maths::vec4& region);
+    WidgetInfo Register(const std::string& name, const glm::vec4& region);
 
     // Returns the region offsetted by the position of the current
     // panel if there is one, or region otherwise.
-    Maths::vec4 ApplyOffset(const Maths::vec4& region);
+    glm::vec4 ApplyOffset(const glm::vec4& region);
 
     // Returns the current panels main draw command. Asserts if there is no current panel.
     DrawCommand& GetDrawCommand();
@@ -201,7 +206,7 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name, Maths::vec4* region, PanelType type);
+    void StartPanel(const std::string& name, glm::vec4* region, PanelType type);
     void EndPanel();
 };
 

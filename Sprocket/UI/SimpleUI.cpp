@@ -8,6 +8,7 @@
 #include "RenderContext.h"
 #include "BufferLayout.h"
 #include "Adaptors.h"
+#include "Printer.h"
 
 #include <functional>
 #include <sstream>
@@ -78,7 +79,7 @@ void SimpleUI::EndFrame()
     d_engine.EndFrame();
 }
 
-void SimpleUI::StartPanel(const std::string& name, Maths::vec4* region, PanelType type)
+void SimpleUI::StartPanel(const std::string& name, glm::vec4* region, PanelType type)
 {
     d_engine.StartPanel(name, region, type);
     d_keyboard.ConsumeAll(false);
@@ -93,7 +94,7 @@ void SimpleUI::EndPanel()
     d_engine.EndPanel();
 }
 
-void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
+void SimpleUI::Quad(const glm::vec4& colour, const glm::vec4& quad)
 {
     auto region = d_engine.ApplyOffset(quad);
 
@@ -104,8 +105,8 @@ void SimpleUI::Quad(const Maths::vec4& colour, const Maths::vec4& quad)
 void SimpleUI::Text(
     const std::string& text,
     float size,
-    const Maths::vec4& quad,
-    const Maths::vec4& colour)
+    const glm::vec4& quad,
+    const glm::vec4& colour)
 {
     auto region = d_engine.ApplyOffset(quad);
 
@@ -120,8 +121,8 @@ void SimpleUI::Text(
 void SimpleUI::Text(
     const std::string& text,
     float size,
-    const Maths::vec2& position,
-    const Maths::vec4& colour)
+    const glm::vec2& position,
+    const glm::vec4& colour)
 {
     auto region = d_engine.ApplyOffset({position.x, position.y, 0, 0});
 
@@ -136,9 +137,9 @@ void SimpleUI::Text(
 
 void SimpleUI::TextModifiable(
     const std::string& name,
-    const Maths::vec4& region,
+    const glm::vec4& region,
     std::string* text,
-    const Maths::vec4& colour)
+    const glm::vec4& colour)
 {
     auto info = d_engine.Register(name, region);
 
@@ -174,20 +175,20 @@ void SimpleUI::TextModifiable(
     d_engine.SubmitDrawCommand(cmd);
 }
 
-bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
+bool SimpleUI::Button(const std::string& name, const glm::vec4& region)
 {
     auto info = d_engine.Register(name, region);
 
-    Maths::vec4 hoveredRegion = info.quad;
+    glm::vec4 hoveredRegion = info.quad;
     hoveredRegion.x -= 10.0f;
     hoveredRegion.z += 20.0f;
 
-    Maths::vec4 clickedRegion = info.quad;
+    glm::vec4 clickedRegion = info.quad;
     clickedRegion.x += 10.0f;
     clickedRegion.z -= 20.0f;
 
-    Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
-    Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
+    glm::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
+    glm::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
 
     TextProperties tp;
     tp.size = 36.0f;
@@ -200,7 +201,7 @@ bool SimpleUI::Button(const std::string& name, const Maths::vec4& region)
 }
 
 bool SimpleUI::Checkbox(const std::string& name,
-                        const Maths::vec4& region,
+                        const glm::vec4& region,
                         bool* value)
 {
     auto info = d_engine.Register(name, region);
@@ -210,7 +211,7 @@ bool SimpleUI::Checkbox(const std::string& name,
 
     float r = std::min(info.sinceClicked, 0.1) / 0.1f;
 
-    Maths::vec4 colour;
+    glm::vec4 colour;
     if (*value) {
         colour = r * unselected + (1 - r) * selected;
     } else {
@@ -232,7 +233,7 @@ bool SimpleUI::Checkbox(const std::string& name,
 }
 
 void SimpleUI::Slider(const std::string& name,
-                      const Maths::vec4& region,
+                      const glm::vec4& region,
                       float* value, float min, float max)
 {
     auto info = d_engine.Register(name, region);
@@ -241,8 +242,8 @@ void SimpleUI::Slider(const std::string& name,
     float y = info.quad.y;
     float width = info.quad.z;
     float height = info.quad.w;
-    Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
-    Maths::vec4 rightColour = d_theme.backgroundColour;
+    glm::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
+    glm::vec4 rightColour = d_theme.backgroundColour;
     float ratio = (*value - min) / (max - min);
 
     TextProperties tp;
@@ -251,7 +252,7 @@ void SimpleUI::Slider(const std::string& name,
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(leftColour, {x, y, ratio * width, height});
     cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
+    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         auto mouse = d_mouse.GetMousePos();
@@ -262,19 +263,19 @@ void SimpleUI::Slider(const std::string& name,
 }
 
 void SimpleUI::Dragger(const std::string& name,
-                       const Maths::vec4& region,
+                       const glm::vec4& region,
                        float* value, float speed)
 {
     auto info = d_engine.Register(name, region);
 
-    Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
+    glm::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
     TextProperties tp;
     tp.size = 36.0f;
 
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(colour, info.quad);
-    cmd.AddText(name + ": " + Maths::ToString(*value, 0), info.quad, tp);
+    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         *value += d_mouse.GetMouseOffset().x * speed;
@@ -283,10 +284,10 @@ void SimpleUI::Dragger(const std::string& name,
 
 void SimpleUI::Image(const std::string& name,
                      std::shared_ptr<Texture> image,
-                     const Maths::vec2& position)
+                     const glm::vec2& position)
 {
-    Maths::vec4 region{position.x, position.y, image->Width(), image->Height()};
-    Maths::vec4 copy = d_engine.ApplyOffset(region);
+    glm::vec4 region{position.x, position.y, image->Width(), image->Height()};
+    glm::vec4 copy = d_engine.ApplyOffset(region);
 
     DrawCommand cmd;
     cmd.vertices = {

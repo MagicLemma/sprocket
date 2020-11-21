@@ -187,7 +187,7 @@ void DevUI::EndFrame()
 
     ImDrawData* drawData = ImGui::GetDrawData();
 
-    auto proj = Sprocket::Maths::Ortho(0, drawData->DisplaySize.x, drawData->DisplaySize.y, 0);
+    auto proj = glm::ortho(0.0f, drawData->DisplaySize.x, drawData->DisplaySize.y, 0.0f);
 
     d_shader.Bind();
     d_shader.LoadSampler("Texture", 0);

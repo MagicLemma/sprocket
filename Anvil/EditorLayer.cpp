@@ -91,7 +91,7 @@ void EditorLayer::OnUpdate(double dt)
 
     // Create the Shadow Map
     //float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    //Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
+    //glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     //d_shadowMap.Draw(sun, target, *d_scene);
     //d_entityRenderer.EnableShadows(d_shadowMap);
     
@@ -193,7 +193,7 @@ void EditorLayer::OnUpdate(double dt)
                 Loader::Copy(d_scene, runningScene);
                 d_activeScene = runningScene;
                 
-                d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(Maths::vec3{0.0, -9.81, 0.0}));
+                d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
                 d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
                 d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));

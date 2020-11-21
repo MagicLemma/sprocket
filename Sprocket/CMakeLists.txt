@@ -21,6 +21,7 @@ find_package(SFML CONFIG REQUIRED system audio)
 find_package(EnTT CONFIG REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
+find_package(tsl-hopscotch-map CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
@@ -96,10 +97,10 @@ add_library(Sprocket STATIC
             Utility/FileBrowser.cpp
             Utility/KeyboardProxy.cpp
             Utility/MouseProxy.cpp
+            Utility/Printer.cpp
             Utility/Random.cpp
             Utility/Maths.cpp
             Utility/Stopwatch.cpp
-            Utility/Tokenize.cpp
             Utility/Yaml.cpp
 
             Scripting/LuaEngine.cpp
@@ -124,6 +125,7 @@ target_link_libraries(Sprocket PUBLIC
                       sfml-audio
                       EnTT::EnTT
                       yaml-cpp
+                      tsl::hopscotch_map
                       ${LUA_LIBRARIES})
 
 target_link_libraries(Sprocket PRIVATE asio asio::asio)

@@ -10,37 +10,37 @@
 namespace Sprocket {
 namespace {
 
-rp3d::Vector3 Convert(const Maths::vec3& v)
+rp3d::Vector3 Convert(const glm::vec3& v)
 {
     return rp3d::Vector3(v.x, v.y, v.z);
 }
 
-rp3d::Vector2 Convert(const Maths::vec2& v)
+rp3d::Vector2 Convert(const glm::vec2& v)
 {
     return rp3d::Vector2(v.x, v.y);
 }
 
-Maths::vec3 Convert(const rp3d::Vector3& v)
+glm::vec3 Convert(const rp3d::Vector3& v)
 {
-    return Maths::vec3(v.x, v.y, v.z);
+    return glm::vec3(v.x, v.y, v.z);
 }
 
-Maths::vec2 Convert(const rp3d::Vector2& v)
+glm::vec2 Convert(const rp3d::Vector2& v)
 {
-    return Maths::vec2(v.x, v.y);
+    return glm::vec2(v.x, v.y);
 }
 
-Maths::quat Convert(const rp3d::Quaternion& q)
+glm::quat Convert(const rp3d::Quaternion& q)
 {
-    return Maths::quat(q.w, q.x, q.y, q.z);
+    return glm::quat(q.w, q.x, q.y, q.z);
 }
 
-rp3d::Quaternion Convert(const Maths::quat& q)
+rp3d::Quaternion Convert(const glm::quat& q)
 {
     return rp3d::Quaternion(q.x, q.y, q.z, q.w);
 }
 
-rp3d::Transform Convert(const Maths::vec3& position, const Maths::quat& orientation)
+rp3d::Transform Convert(const glm::vec3& position, const glm::quat& orientation)
 {
     rp3d::Transform t;
     t.setPosition(Convert(position));
@@ -98,12 +98,12 @@ struct PhysicsEngineImpl
 
     std::unordered_map<uint32_t, EntityData> entityData;
 
-    PhysicsEngineImpl(const Maths::vec3& gravity)
+    PhysicsEngineImpl(const glm::vec3& gravity)
         : world(Convert(gravity))
     {}
 };
 
-PhysicsEngine::PhysicsEngine(const Maths::vec3& gravity)
+PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
     : d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
     , d_timeStep(1.0f / 120.0f)
     , d_lastFrameLength(0)
@@ -145,7 +145,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto& box = entity.Get<BoxCollider3DComponent>();
 
         std::shared_ptr<rp3d::CollisionShape> collider;
-        Maths::vec3 dimensions = box.halfExtents;
+        glm::vec3 dimensions = box.halfExtents;
         if (box.applyScale) {
             dimensions *= transform.scale;
         }
@@ -295,10 +295,10 @@ void PhysicsEngine::Running(bool isRunning)
     d_running = isRunning;
 }
 
-Entity PhysicsEngine::Raycast(const Maths::vec3& base,
-                              const Maths::vec3& direction)
+Entity PhysicsEngine::Raycast(const glm::vec3& base,
+                              const glm::vec3& direction)
 {
-    Maths::vec3 d = Maths::Normalise(direction);
+    glm::vec3 d = glm::normalize(direction);
     d *= 100.0f;
 
     rp3d::Vector3 start = Convert(base);

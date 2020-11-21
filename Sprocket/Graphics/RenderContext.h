@@ -41,10 +41,10 @@ class ScissorContext
 // lower left while Sprocket has (0, 0) as the top left, so the region needs to get
 // flipped in the y-axis before using.
 {
-    std::optional<Maths::vec4> d_region;
+    std::optional<glm::vec4> d_region;
 
 public:
-    ScissorContext(Window* window, const std::optional<Maths::vec4>& region);
+    ScissorContext(Window* window, const std::optional<glm::vec4>& region);
     ~ScissorContext();
 };
 

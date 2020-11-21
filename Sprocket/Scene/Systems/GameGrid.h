@@ -28,8 +28,8 @@ private:
     Entity d_hoveredSquare;
     Entity d_selectedSquare;
 
-    Maths::ivec2 d_hovered; // TODO: make optional
-    std::optional<Maths::ivec2> d_selected;
+    glm::ivec2 d_hovered; // TODO: make optional
+    std::optional<glm::ivec2> d_selected;
 
     GridMap d_gridEntities; 
 
@@ -47,7 +47,7 @@ public:
     Entity Hovered() const;
     Entity Selected() const;
 
-    std::optional<Maths::ivec2> SelectedPosition() const { return d_selected; }
+    std::optional<glm::ivec2> SelectedPosition() const { return d_selected; }
 };
 
 }

@@ -10,10 +10,10 @@ namespace Sprocket {
 
 struct Particle
 {
-    Maths::vec3 position      = {0.0, 0.0, 0.0};
-    Maths::vec3 velocity      = {0.0, 0.0, 0.0};
-    Maths::vec3 acceleration  = {0.0, 0.0, 0.0};
-    Maths::vec3 scale         = {1.0, 1.0, 1.0};
+    glm::vec3 position      = {0.0, 0.0, 0.0};
+    glm::vec3 velocity      = {0.0, 0.0, 0.0};
+    glm::vec3 acceleration  = {0.0, 0.0, 0.0};
+    glm::vec3 scale         = {1.0, 1.0, 1.0};
 
     double life = -1.0;
 };

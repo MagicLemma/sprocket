@@ -6,7 +6,7 @@ namespace Sprocket {
 struct ConsoleLine
 {
     std::string text;
-    Maths::vec4 colour;
+    glm::vec4 colour;
 };
 
 class Console

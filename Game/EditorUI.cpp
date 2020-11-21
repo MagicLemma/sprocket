@@ -31,8 +31,8 @@ void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 
 void SelectedEntityInfo(DevUI& ui,
                         Entity& entity,
-                        const Maths::mat4& view,
-                        const Maths::mat4& proj)
+                        const glm::mat4& view,
+                        const glm::mat4& proj)
 {
     using namespace Maths;
 
@@ -49,11 +49,11 @@ void SelectedEntityInfo(DevUI& ui,
     if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
         ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
-        Maths::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
+        glm::vec3 eulerAngles = glm::eulerAngles(tr.orientation);
         std::stringstream ss;
-        ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
-           << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
-           << "Roll: " << Maths::ToString(eulerAngles.z, 3);
+        ss << "Pitch: " << Printer::PrintFloat(eulerAngles.x, 3) << "\n"
+           << "Yaw: " << Printer::PrintFloat(eulerAngles.y, 3) << "\n"
+           << "Roll: " << Printer::PrintFloat(eulerAngles.z, 3);
         ImGui::Text(ss.str().c_str());    
 
         if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
@@ -76,10 +76,10 @@ void SelectedEntityInfo(DevUI& ui,
 
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
-        Maths::mat4 origin = Maths::Transform(tr.position, tr.orientation);
+        glm::mat4 origin = Maths::Transform(tr.position, tr.orientation);
         ImGuiXtra::Guizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
-        tr.orientation = Normalise(ToQuat(mat3(origin)));
+        tr.orientation = glm::normalize(glm::quat_cast(glm::mat3(origin)));
     }
     ImGui::Separator();
 
@@ -108,7 +108,7 @@ void SunInfoPanel(DevUI& ui,
     }
     else { // If not running, be able to set manually
         float angle = cycle.GetAngle();
-        ImGui::DragFloat("Angle", &angle);
+        ImGui::DragFloat("Angle", &angle, 0.01f);
         cycle.SetAngle(angle);
     }
     
@@ -184,8 +184,8 @@ void EditorUI::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
     d_ui.StartFrame();
 
-    mat4 view = MakeView(d_worldLayer->d_camera);
-    mat4 proj = MakeProj(d_worldLayer->d_camera);
+    glm::mat4 view = MakeView(d_worldLayer->d_camera);
+    glm::mat4 proj = MakeProj(d_worldLayer->d_camera);
 
     auto e = d_worldLayer->d_selector->SelectedEntity();
     if (!e.Null()) {

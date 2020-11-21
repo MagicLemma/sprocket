@@ -5,6 +5,8 @@
 #include "Components.h"
 
 #include <lua.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
 namespace Sprocket {
 
@@ -36,11 +38,10 @@ int SetLookAt(lua_State* L)
     float tx = (float)lua_tonumber(L, 5);
     float ty = (float)lua_tonumber(L, 6);
     float tz = (float)lua_tonumber(L, 7);
-    Maths::quat q = Maths::LookAtQuat({px, py, pz}, {tx, ty, tz});
 
     auto& tr = entity.Get<TransformComponent>();
     tr.position = {px, py, pz};
-    tr.orientation = q;
+    tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, {tx, ty, tz}, {0.0, 1.0, 0.0})));
     return 0;
 }
 
@@ -52,7 +53,7 @@ int RotateY(lua_State* L)
     auto& tr = entity.Get<TransformComponent>();
 
     float yaw = (float)lua_tonumber(L, 2);
-    tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, Maths::Radians(yaw));
+    tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
     return 0;
 }
 
@@ -66,7 +67,7 @@ int GetForwardsDir(lua_State* L)
     
     if (entity.Has<CameraComponent>()) {
         auto pitch = entity.Get<CameraComponent>().pitch;
-        o *= Maths::Rotate({1, 0, 0}, pitch);
+        o = glm::rotate(o, pitch, {1, 0, 0});
     }
 
     auto forwards = Maths::Forwards(o);
@@ -96,7 +97,7 @@ int MakeUpright(lua_State* L)
     Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& tr = entity.Get<TransformComponent>();
     float yaw = (float)lua_tonumber(L, 2);
-    tr.orientation = Maths::quat(Maths::vec3(0, yaw, 0));
+    tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
     return 0;
 }
 

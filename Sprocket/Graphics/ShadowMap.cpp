@@ -25,7 +25,7 @@ ShadowMap::ShadowMap(Window* window, AssetManager* assetManager)
     , d_assetManager(assetManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.
-    , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
+    , d_lightProjMatrix(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
     , d_shadowMap(window, 8192, 8192)
     , d_vao(std::make_unique<VertexArray>())
     , d_instanceBuffer(GetInstanceBuffer())
@@ -34,14 +34,14 @@ ShadowMap::ShadowMap(Window* window, AssetManager* assetManager)
 
 void ShadowMap::Draw(
     const Sun& sun,
-    const Maths::vec3& centre,
+    const glm::vec3& centre,
     Scene& scene)
 {
     RenderContext rc;
     rc.DepthTesting(true);
     rc.FaceCulling(true);
 
-    d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
+    d_lightViewMatrix = glm::lookAt(centre - sun.direction, centre, {0.0, 1.0, 0.0});
 
     d_shader.Bind();
     d_shader.LoadMat4("u_proj_matrix", d_lightProjMatrix);
@@ -85,7 +85,7 @@ void ShadowMap::Draw(
     d_shader.Unbind();
 }
 
-Maths::mat4 ShadowMap::GetLightProjViewMatrix() const
+glm::mat4 ShadowMap::GetLightProjViewMatrix() const
 {
     return d_lightProjMatrix * d_lightViewMatrix;
 }

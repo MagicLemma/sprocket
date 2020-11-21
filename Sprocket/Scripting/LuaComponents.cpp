@@ -37,7 +37,7 @@ int Push(lua_State* L, const bool& value)
     return 1;
 }
 
-int Push(lua_State* L, const Maths::vec3& value)
+int Push(lua_State* L, const glm::vec3& value)
 {
     lua_pushnumber(L, value.x);
     lua_pushnumber(L, value.y);
@@ -72,7 +72,7 @@ template <> bool Pull(lua_State* L, int& count)
     return (bool)lua_toboolean(L, count++);
 }
 
-template <> Maths::vec3 Pull(lua_State* L, int& count)
+template <> glm::vec3 Pull(lua_State* L, int& count)
 {
     float x = (float)lua_tonumber(L, count++);
     float y = (float)lua_tonumber(L, count++);
@@ -80,7 +80,7 @@ template <> Maths::vec3 Pull(lua_State* L, int& count)
     return {x, y, z};
 }
 
-template <> Maths::quat Pull(lua_State* L, int& count)
+template <> glm::quat Pull(lua_State* L, int& count)
 {
     float x = (float)lua_tonumber(L, count++);
     float y = (float)lua_tonumber(L, count++);
@@ -100,8 +100,8 @@ template <> constexpr int Dimension<int>() { return 1; }
 template <> constexpr int Dimension<float>() { return 1; }
 template <> constexpr int Dimension<bool>() { return 1; }
 template <> constexpr int Dimension<std::string>() { return 1; }
-template <> constexpr int Dimension<Maths::vec3>() { return 3; }
-template <> constexpr int Dimension<Maths::quat>() { return 4; }
+template <> constexpr int Dimension<glm::vec3>() { return 3; }
+template <> constexpr int Dimension<glm::quat>() { return 4; }
 
 constexpr int NameComponentDimension()
 {
@@ -113,8 +113,8 @@ constexpr int NameComponentDimension()
 constexpr int TransformComponentDimension()
 {
     int count = 0;
-    count += Dimension<Maths::vec3>(); // position
-    count += Dimension<Maths::vec3>(); // scale
+    count += Dimension<glm::vec3>(); // position
+    count += Dimension<glm::vec3>(); // scale
     return count;
 }
 
@@ -129,13 +129,13 @@ constexpr int ModelComponentDimension()
 constexpr int RigidBody3DComponentDimension()
 {
     int count = 0;
-    count += Dimension<Maths::vec3>(); // velocity
+    count += Dimension<glm::vec3>(); // velocity
     count += Dimension<bool>(); // gravity
     count += Dimension<bool>(); // frozen
     count += Dimension<float>(); // bounciness
     count += Dimension<float>(); // frictionCoefficient
     count += Dimension<float>(); // rollingResistance
-    count += Dimension<Maths::vec3>(); // force
+    count += Dimension<glm::vec3>(); // force
     count += Dimension<bool>(); // onFloor
     return count;
 }
@@ -143,9 +143,9 @@ constexpr int RigidBody3DComponentDimension()
 constexpr int BoxCollider3DComponentDimension()
 {
     int count = 0;
-    count += Dimension<Maths::vec3>(); // position
+    count += Dimension<glm::vec3>(); // position
     count += Dimension<float>(); // mass
-    count += Dimension<Maths::vec3>(); // halfExtents
+    count += Dimension<glm::vec3>(); // halfExtents
     count += Dimension<bool>(); // applyScale
     return count;
 }
@@ -153,7 +153,7 @@ constexpr int BoxCollider3DComponentDimension()
 constexpr int SphereCollider3DComponentDimension()
 {
     int count = 0;
-    count += Dimension<Maths::vec3>(); // position
+    count += Dimension<glm::vec3>(); // position
     count += Dimension<float>(); // mass
     count += Dimension<float>(); // radius
     return count;
@@ -162,7 +162,7 @@ constexpr int SphereCollider3DComponentDimension()
 constexpr int CapsuleCollider3DComponentDimension()
 {
     int count = 0;
-    count += Dimension<Maths::vec3>(); // position
+    count += Dimension<glm::vec3>(); // position
     count += Dimension<float>(); // mass
     count += Dimension<float>(); // radius
     count += Dimension<float>(); // height
@@ -203,7 +203,7 @@ constexpr int GridComponentDimension()
 constexpr int LightComponentDimension()
 {
     int count = 0;
-    count += Dimension<Maths::vec3>(); // colour
+    count += Dimension<glm::vec3>(); // colour
     count += Dimension<float>(); // brightness
     return count;
 }
@@ -212,10 +212,10 @@ constexpr int ParticleComponentDimension()
 {
     int count = 0;
     count += Dimension<float>(); // interval
-    count += Dimension<Maths::vec3>(); // velocity
+    count += Dimension<glm::vec3>(); // velocity
     count += Dimension<float>(); // velocityNoise
-    count += Dimension<Maths::vec3>(); // acceleration
-    count += Dimension<Maths::vec3>(); // scale
+    count += Dimension<glm::vec3>(); // acceleration
+    count += Dimension<glm::vec3>(); // scale
     count += Dimension<float>(); // life
     return count;
 }
@@ -376,8 +376,8 @@ int SetTransformComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<TransformComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
+    c.scale = Pull<glm::vec3>(L, count);
     return 0;
 }
 
@@ -390,8 +390,8 @@ int AddTransformComponent(lua_State* L)
     assert(!e.Has<TransformComponent>());
 
     TransformComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
+    c.scale = Pull<glm::vec3>(L, count);
     e.Add(c);
     return 0;
 }
@@ -464,13 +464,13 @@ int SetRigidBody3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<RigidBody3DComponent>();
-    c.velocity = Pull<Maths::vec3>(L, count);
+    c.velocity = Pull<glm::vec3>(L, count);
     c.gravity = Pull<bool>(L, count);
     c.frozen = Pull<bool>(L, count);
     c.bounciness = Pull<float>(L, count);
     c.frictionCoefficient = Pull<float>(L, count);
     c.rollingResistance = Pull<float>(L, count);
-    c.force = Pull<Maths::vec3>(L, count);
+    c.force = Pull<glm::vec3>(L, count);
     c.onFloor = Pull<bool>(L, count);
     return 0;
 }
@@ -484,13 +484,13 @@ int AddRigidBody3DComponent(lua_State* L)
     assert(!e.Has<RigidBody3DComponent>());
 
     RigidBody3DComponent c;
-    c.velocity = Pull<Maths::vec3>(L, count);
+    c.velocity = Pull<glm::vec3>(L, count);
     c.gravity = Pull<bool>(L, count);
     c.frozen = Pull<bool>(L, count);
     c.bounciness = Pull<float>(L, count);
     c.frictionCoefficient = Pull<float>(L, count);
     c.rollingResistance = Pull<float>(L, count);
-    c.force = Pull<Maths::vec3>(L, count);
+    c.force = Pull<glm::vec3>(L, count);
     c.onFloor = Pull<bool>(L, count);
     e.Add(c);
     return 0;
@@ -519,9 +519,9 @@ int SetBoxCollider3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<BoxCollider3DComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
-    c.halfExtents = Pull<Maths::vec3>(L, count);
+    c.halfExtents = Pull<glm::vec3>(L, count);
     c.applyScale = Pull<bool>(L, count);
     return 0;
 }
@@ -535,9 +535,9 @@ int AddBoxCollider3DComponent(lua_State* L)
     assert(!e.Has<BoxCollider3DComponent>());
 
     BoxCollider3DComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
-    c.halfExtents = Pull<Maths::vec3>(L, count);
+    c.halfExtents = Pull<glm::vec3>(L, count);
     c.applyScale = Pull<bool>(L, count);
     e.Add(c);
     return 0;
@@ -565,7 +565,7 @@ int SetSphereCollider3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<SphereCollider3DComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
     return 0;
@@ -580,7 +580,7 @@ int AddSphereCollider3DComponent(lua_State* L)
     assert(!e.Has<SphereCollider3DComponent>());
 
     SphereCollider3DComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
     e.Add(c);
@@ -610,7 +610,7 @@ int SetCapsuleCollider3DComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<CapsuleCollider3DComponent>();
-    c.position = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
     c.height = Pull<float>(L, count);
@@ -626,7 +626,7 @@ int AddCapsuleCollider3DComponent(lua_State* L)
     assert(!e.Has<CapsuleCollider3DComponent>());
 
     CapsuleCollider3DComponent c;
-    c.position = Pull<Maths::vec3>(L, count);
+    c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
     c.height = Pull<float>(L, count);
@@ -816,7 +816,7 @@ int SetLightComponent(lua_State* L)
     int count = 2;
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<LightComponent>();
-    c.colour = Pull<Maths::vec3>(L, count);
+    c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
     return 0;
 }
@@ -830,7 +830,7 @@ int AddLightComponent(lua_State* L)
     assert(!e.Has<LightComponent>());
 
     LightComponent c;
-    c.colour = Pull<Maths::vec3>(L, count);
+    c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
     e.Add(c);
     return 0;
@@ -862,10 +862,10 @@ int SetParticleComponent(lua_State* L)
     Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ParticleComponent>();
     c.interval = Pull<float>(L, count);
-    c.velocity = Pull<Maths::vec3>(L, count);
+    c.velocity = Pull<glm::vec3>(L, count);
     c.velocityNoise = Pull<float>(L, count);
-    c.acceleration = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
+    c.acceleration = Pull<glm::vec3>(L, count);
+    c.scale = Pull<glm::vec3>(L, count);
     c.life = Pull<float>(L, count);
     return 0;
 }
@@ -880,10 +880,10 @@ int AddParticleComponent(lua_State* L)
 
     ParticleComponent c;
     c.interval = Pull<float>(L, count);
-    c.velocity = Pull<Maths::vec3>(L, count);
+    c.velocity = Pull<glm::vec3>(L, count);
     c.velocityNoise = Pull<float>(L, count);
-    c.acceleration = Pull<Maths::vec3>(L, count);
-    c.scale = Pull<Maths::vec3>(L, count);
+    c.acceleration = Pull<glm::vec3>(L, count);
+    c.scale = Pull<glm::vec3>(L, count);
     c.life = Pull<float>(L, count);
     e.Add(c);
     return 0;

@@ -3,6 +3,6 @@
 
 namespace Sprocket {
 
-Maths::vec4 FromHex(int hex);
+glm::vec4 FromHex(int hex);
 
 }

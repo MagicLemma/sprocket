@@ -47,11 +47,11 @@ public:
     void LoadSampler(const std::string& name, int value) const;
     void LoadInt(const std::string& name, int value) const;
     void LoadFloat(const std::string& name, float value) const;
-    void LoadVec2(const std::string& name, const Maths::vec2& vector) const;
-    void LoadVec3(const std::string& name, const Maths::vec3& vector) const;
-    void LoadVec4(const std::string& name, const Maths::vec4& vector) const;
-    void LoadQuat(const std::string& name, const Maths::quat& quat) const;
-    void LoadMat4(const std::string& name, const Maths::mat4& matrix, int count = 1) const;
+    void LoadVec2(const std::string& name, const glm::vec2& vector) const;
+    void LoadVec3(const std::string& name, const glm::vec3& vector) const;
+    void LoadVec4(const std::string& name, const glm::vec4& vector) const;
+    void LoadQuat(const std::string& name, const glm::quat& quat) const;
+    void LoadMat4(const std::string& name, const glm::mat4& matrix, int count = 1) const;
 };
 
 // HELPER FUNCTIONS

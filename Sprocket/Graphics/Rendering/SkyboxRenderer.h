@@ -22,7 +22,7 @@ public:
     SkyboxRenderer(AssetManager* assetManager);
 
     void Draw(const CubeMap& skybox, const Entity& camera);
-    void Draw(const CubeMap& skybox, const Maths::mat4& proj, const Maths::mat4& view);
+    void Draw(const CubeMap& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 
 }

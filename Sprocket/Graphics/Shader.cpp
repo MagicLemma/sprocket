@@ -9,6 +9,7 @@
 #include <filesystem>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Sprocket {
 
@@ -113,29 +114,29 @@ void Shader::LoadInt(const std::string& name, int value) const
 	glUniform1i(GetUniformLocation(name), value);
 }
 
-void Shader::LoadVec2(const std::string& name, const Maths::vec2& vector) const
+void Shader::LoadVec2(const std::string& name, const glm::vec2& vector) const
 {
 	glUniform2f(GetUniformLocation(name), vector.x, vector.y);
 }
 
-void Shader::LoadVec3(const std::string& name, const Maths::vec3& vector) const
+void Shader::LoadVec3(const std::string& name, const glm::vec3& vector) const
 {
 	glUniform3f(GetUniformLocation(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::LoadVec4(const std::string& name, const Maths::vec4& vector) const
+void Shader::LoadVec4(const std::string& name, const glm::vec4& vector) const
 {
 	glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 }
 
-void Shader::LoadQuat(const std::string& name, const Maths::quat& quat) const
+void Shader::LoadQuat(const std::string& name, const glm::quat& quat) const
 {
 	glUniform4f(GetUniformLocation(name), quat.x, quat.y, quat.z, quat.w);
 }
 
-void Shader::LoadMat4(const std::string& name, const Maths::mat4& matrix, int count) const
+void Shader::LoadMat4(const std::string& name, const glm::mat4& matrix, int count) const
 {
-	glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, Maths::Cast(matrix));
+	glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, glm::value_ptr(matrix));
 }
 
 std::string ArrayName(const std::string& uniformName, size_t index)
