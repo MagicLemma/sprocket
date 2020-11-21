@@ -14,21 +14,6 @@ namespace Sprocket {
 namespace Maths {
 
 // Matrix Modifiers
-glm::mat4 Translate(const glm::mat4& matrix, const glm::vec3& translation)
-{
-    return glm::translate(matrix, translation);
-}
-
-glm::mat4 Scale(const glm::mat4& matrix, const glm::vec3& scales)
-{
-    return glm::scale(matrix, scales);
-}
-
-glm::mat4 Scale(const glm::mat4& matrix, float scale)
-{
-    return glm::scale(matrix, {scale, scale, scale});
-}
-
 glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians)
 {
     return glm::rotate(matrix, radians, axis);
@@ -37,12 +22,12 @@ glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians)
 // Matrix Constructors
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale)
 {
-    glm::mat4 m = ToMat3(orientation);
+    glm::mat4 m = glm::mat3_cast(orientation);
     m[3][0] = position.x;
     m[3][1] = position.y;
     m[3][2] = position.z;
     m[3][3] = 1.0f;
-    return Maths::Scale(m, scale);
+    return glm::scale(m, scale);
 }
 
 glm::mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
@@ -83,7 +68,7 @@ glm::mat4 Ortho(float width, float height, float length)
 // Quaternion Modifiers
 glm::quat Rotate(const glm::vec3& axis, float degrees)
 {
-    return glm::rotate(Maths::identity, glm::radians(degrees), axis);
+    return glm::rotate(glm::identity<glm::quat>(), glm::radians(degrees), axis);
 }
 
 glm::quat Rotate(const glm::quat& orig, const glm::vec3& axis, float degrees)
@@ -100,7 +85,7 @@ glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const g
 {
     glm::mat4 lookAtMat = glm::lookAt(position, target, up);
     glm::mat3 rotation = lookAtMat;
-    return glm::conjugate(ToQuat(rotation));
+    return glm::conjugate(glm::quat_cast(rotation));
 }
 
 glm::vec3 Forwards(const glm::quat& q)
@@ -119,21 +104,6 @@ glm::vec3 Up(const glm::quat& q)
 }
 
 // Conversions
-glm::mat3 ToMat3(const glm::quat& q)
-{
-    return glm::mat3_cast(q);
-}
-
-glm::mat4 ToMat4(const glm::quat& q)
-{
-    return glm::mat4_cast(q);
-}
-
-glm::quat ToQuat(const glm::mat3& m)
-{
-    return glm::quat_cast(m);
-}
-
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale)
 {
     glm::vec3 skew;

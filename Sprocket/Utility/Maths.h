@@ -10,14 +10,8 @@
 
 namespace Sprocket {
 namespace Maths {
-
-constexpr glm::quat identity = glm::identity<glm::quat>();
-
+    
 // Matrix Modifiers
-glm::mat4 Translate(const glm::mat4& matrix, const glm::vec3& translation);
-glm::mat4 Scale(const glm::mat4& matrix, const glm::vec3& scales);
-glm::mat4 Scale(const glm::mat4& matrix, float scale);
-
 glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians);
 
 // Matrix Constructors
@@ -44,10 +38,6 @@ glm::vec3 Up(const glm::quat& q);
 glm::vec3 Rotate(const glm::vec3& vector, const glm::vec3& axis, float radians);
 
 // Conversions
-glm::mat3 ToMat3(const glm::quat& q);
-glm::mat4 ToMat4(const glm::quat& q);
-glm::quat ToQuat(const glm::mat3& m);
-
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale);
 
 float* Cast(const glm::mat3& m);

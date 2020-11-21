@@ -37,9 +37,9 @@ void ColliderRenderer::Draw(
         auto tr = entity.Get<TransformComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
-        transform = Maths::Scale(transform, c.halfExtents);
+        transform = glm::scale(transform, c.halfExtents);
         if (c.applyScale) {
-            transform = Maths::Scale(transform, tr.scale);
+            transform = glm::scale(transform, tr.scale);
         }
         d_shader.LoadMat4("u_model_matrix", transform);
         d_vao->Draw();
@@ -52,7 +52,7 @@ void ColliderRenderer::Draw(
         auto tr = entity.Get<TransformComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
-        transform = Maths::Scale(transform, c.radius);
+        transform = glm::scale(transform, {c.radius, c.radius, c.radius});
         d_shader.LoadMat4("u_model_matrix", transform);
         d_vao->Draw();
     });
@@ -66,8 +66,8 @@ void ColliderRenderer::Draw(
             auto tr = entity.Get<TransformComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
-            transform = Maths::Translate(transform, {0.0, c.height/2, 0.0});
-            transform = Maths::Scale(transform, c.radius);
+            transform = glm::translate(transform, {0.0, c.height/2, 0.0});
+            transform = glm::scale(transform, {c.radius, c.radius, c.radius});
             d_shader.LoadMat4("u_model_matrix", transform);
             d_vao->SetModel(s_hemisphere);
             d_vao->Draw();
@@ -77,7 +77,7 @@ void ColliderRenderer::Draw(
             auto tr = entity.Get<TransformComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
-            transform = Maths::Scale(transform, {c.radius, c.height, c.radius});
+            transform = glm::scale(transform, {c.radius, c.height, c.radius});
             d_shader.LoadMat4("u_model_matrix", transform);
             d_vao->SetModel(s_cylinder);
             d_vao->Draw();
@@ -87,9 +87,9 @@ void ColliderRenderer::Draw(
             auto tr = entity.Get<TransformComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
-            transform = Maths::Translate(transform, {0.0, -c.height/2, 0.0});
+            transform = glm::translate(transform, {0.0, -c.height/2, 0.0});
             transform = Maths::Rotate(transform, {1, 0, 0}, glm::radians(180.0f));
-            transform = Maths::Scale(transform, c.radius);
+            transform = glm::scale(transform, {c.radius, c.radius, c.radius});
             d_shader.LoadMat4("u_model_matrix", transform);
             d_vao->SetModel(s_hemisphere);
             d_vao->Draw();

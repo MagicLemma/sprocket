@@ -165,7 +165,7 @@ void LoadAnimations(
             auto& x = keyFrames->mRotationKeys[i];
             keyFrameData.keyOrientations.push_back({
                 (float)x.mTime / ticksPerSec,
-                Maths::ToQuat(transform) * Convert(x.mValue)
+                glm::quat_cast(transform) * Convert(x.mValue)
             });
         }
 

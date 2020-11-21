@@ -79,7 +79,7 @@ void SelectedEntityInfo(DevUI& ui,
         glm::mat4 origin = Maths::Transform(tr.position, tr.orientation);
         ImGuiXtra::Guizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
-        tr.orientation = Normalise(ToQuat(glm::mat3(origin)));
+        tr.orientation = Normalise(glm::quat_cast(glm::mat3(origin)));
     }
     ImGui::Separator();
 
