@@ -12,8 +12,7 @@
 #include <unordered_map>
 
 #include <entt/entt.hpp>
-
-#include "tsl/robin_map.h"
+#include <tsl/hopscotch_map.h>
 
 namespace Sprocket {
 
@@ -35,7 +34,7 @@ class Scene
 public:
     using EntityCallback = std::function<void(Entity&)>;
 
-    using TypeFunctionMap = tsl::robin_map<
+    using TypeFunctionMap = tsl::hopscotch_map<
         std::type_index, std::vector<EntityCallback>
     >;
 

@@ -14,7 +14,7 @@
 #include <chrono>
 #include <deque>
 
-#include <tsl/robin_map.h>
+#include <tsl/hopscotch_map.h>
 
 namespace Sprocket {
 
@@ -151,7 +151,7 @@ class UIEngine
     StreamBuffer d_buffer;
     
     // Panel info 
-    tsl::robin_map<std::size_t, Panel> d_panels;
+    tsl::hopscotch_map<std::size_t, Panel> d_panels;
     Panel* d_currentPanel = nullptr;
     std::deque<std::size_t> d_panelOrder;
 
@@ -163,7 +163,7 @@ class UIEngine
     // Hash -> time map keeping track of the last time each
     // widget was unselected. Used to calculate the unhovered
     // and unclicked times.
-    tsl::robin_map<std::size_t, WidgetTimes> d_widgetTimes;
+    tsl::hopscotch_map<std::size_t, WidgetTimes> d_widgetTimes;
 
     // A steadily increasing timer used to set the unselected
     // times in the maps above.

@@ -285,7 +285,8 @@ AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
             // We have to do this lookup as a bone be shared by multiple
             // submeshes, so we may have already encountered this bone.
             u32 boneIndex = 0;
-            if (data.skeleton.boneMap.contains(boneName)) {
+            auto it = data.skeleton.boneMap.find(boneName);
+            if (it != data.skeleton.boneMap.end()) {
                 boneIndex = data.skeleton.boneMap[boneName];
             } else {
                 boneIndex = data.skeleton.bones.size();
