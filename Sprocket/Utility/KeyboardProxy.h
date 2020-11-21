@@ -4,6 +4,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "tsl/robin_map.h"
+#include "tsl/robin_set.h"
+
 namespace Sprocket {
 
 class KeyboardProxy
@@ -13,8 +16,8 @@ class KeyboardProxy
 // The main motivation for this was that typing WASD into a text box would
 // still make the camera move.
 {
-    std::unordered_map<int, bool> d_pressedKeys;
-    std::unordered_set<int> d_consumedKeys;
+    tsl::robin_map<int, bool> d_pressedKeys;
+    tsl::robin_set<int> d_consumedKeys;
     bool d_consumeAll = true;
 
 public:

@@ -11,15 +11,17 @@
 #include "HashPair.h"
 #include "Glyph.h"
 
+#include "tsl/robin_map.h"
+
 namespace Sprocket {
 
-using KerningMap = std::unordered_map<
+using KerningMap = tsl::robin_map<
     std::pair<uint32_t, uint32_t>,
     float,
     HashPair
 >;
 
-using GlyphMap = std::unordered_map<
+using GlyphMap = tsl::robin_map<
     uint32_t,
     Glyph
 >;
@@ -35,7 +37,7 @@ class Font
     std::string d_filename;
     
     FontAtlas  d_atlas;
-    std::unordered_map<float, SizedFontData> d_fontData;
+    tsl::robin_map<float, SizedFontData> d_fontData;
 
     bool LoadGlyph(char c, float size);
 

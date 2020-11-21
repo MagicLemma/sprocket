@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "tsl/robin_map.h"
+
 namespace Sprocket {
 
 struct Bone
@@ -62,8 +64,8 @@ struct Animation
 struct Skeleton
 {
     std::vector<Bone> bones;
-    std::unordered_map<std::string, u32> boneMap;
-    std::unordered_map<std::string, Animation> animations;
+    tsl::robin_map<std::string, u32> boneMap;
+    tsl::robin_map<std::string, Animation> animations;
 
     std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;
 };

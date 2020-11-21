@@ -13,6 +13,8 @@
 
 #include <entt/entt.hpp>
 
+#include "tsl/robin_map.h"
+
 namespace Sprocket {
 
 struct Sun
@@ -33,7 +35,7 @@ class Scene
 public:
     using EntityCallback = std::function<void(Entity&)>;
 
-    using TypeFunctionMap = std::unordered_map<
+    using TypeFunctionMap = tsl::robin_map<
         std::type_index, std::vector<EntityCallback>
     >;
 
