@@ -5,6 +5,8 @@
 #include "Components.h"
 
 #include <lua.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
 namespace Sprocket {
 
@@ -36,11 +38,10 @@ int SetLookAt(lua_State* L)
     float tx = (float)lua_tonumber(L, 5);
     float ty = (float)lua_tonumber(L, 6);
     float tz = (float)lua_tonumber(L, 7);
-    glm::quat q = Maths::LookAtQuat({px, py, pz}, {tx, ty, tz});
 
     auto& tr = entity.Get<TransformComponent>();
     tr.position = {px, py, pz};
-    tr.orientation = q;
+    tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, {tx, ty, tz}, {0.0, 1.0, 0.0})));
     return 0;
 }
 

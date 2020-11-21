@@ -56,13 +56,6 @@ glm::quat Rotate(const glm::quat& orig, const glm::vec3& axis, float degrees)
     return glm::rotate(orig, glm::radians(degrees), axis);
 }
 
-glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up)
-{
-    glm::mat4 lookAtMat = glm::lookAt(position, target, up);
-    glm::mat3 rotation = lookAtMat;
-    return glm::conjugate(glm::quat_cast(rotation));
-}
-
 glm::vec3 Forwards(const glm::quat& q)
 {
     return glm::normalize(q) * glm::vec3(0, 0, -1);

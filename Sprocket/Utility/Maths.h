@@ -24,8 +24,6 @@ glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll);
 glm::quat Rotate(const glm::vec3& axis, float radians);
 glm::quat Rotate(const glm::quat& quaternion, const glm::vec3& axis, float radians);
 
-glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up = {0, 1, 0});
-
 // Given an orientation, find the directions of Forwards, Right and Up.
 glm::vec3 Forwards(const glm::quat& q);
 glm::vec3 Right(const glm::quat& q);
