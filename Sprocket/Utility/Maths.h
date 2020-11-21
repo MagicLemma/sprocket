@@ -2,20 +2,19 @@
 #include "Types.h"
 
 #include <glm/glm.hpp>
-#include <glm/gtx/norm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/norm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#include <string>
-#include <optional>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/trigonometric.hpp>
 
 namespace Sprocket {
 namespace Maths {
 
-// Matrix Constructors
+// Constructs a transformation matrix with the given parameters.
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale = {1.0f, 1.0f, 1.0f});
 
-// Given an orientation, find the directions of Forwards, Right and Up.
 glm::vec3 Forwards(const glm::quat& q);
 glm::vec3 Right(const glm::quat& q);
 glm::vec3 Up(const glm::quat& q);

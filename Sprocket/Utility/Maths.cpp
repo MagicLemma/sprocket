@@ -1,14 +1,7 @@
 #include "Maths.h"
 #include "Types.h"
 
-#include <algorithm>
-#include <cmath>
-#include <sstream>
-#include <iomanip>
-
-#include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>

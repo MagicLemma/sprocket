@@ -4,6 +4,8 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace Sprocket {
 namespace ImGuiXtra {
 namespace {
