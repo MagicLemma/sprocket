@@ -15,7 +15,7 @@ rp3d::Vector3 Convert(const Maths::vec3& v)
     return rp3d::Vector3(v.x, v.y, v.z);
 }
 
-rp3d::Vector2 Convert(const Maths::vec2& v)
+rp3d::Vector2 Convert(const glm::vec2& v)
 {
     return rp3d::Vector2(v.x, v.y);
 }
@@ -25,9 +25,9 @@ Maths::vec3 Convert(const rp3d::Vector3& v)
     return Maths::vec3(v.x, v.y, v.z);
 }
 
-Maths::vec2 Convert(const rp3d::Vector2& v)
+glm::vec2 Convert(const rp3d::Vector2& v)
 {
-    return Maths::vec2(v.x, v.y);
+    return glm::vec2(v.x, v.y);
 }
 
 Maths::quat Convert(const rp3d::Quaternion& q)

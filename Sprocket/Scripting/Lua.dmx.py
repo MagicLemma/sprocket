@@ -20,7 +20,7 @@ class Lua(Plugin):
             elif attr["Type"] == "Maths::vec3":
                 constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
                 num_attrs += 3
-            elif attr["Type"] == "Maths::vec2":
+            elif attr["Type"] == "glm::vec2":
                 constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
                 num_attrs += 2
             else:

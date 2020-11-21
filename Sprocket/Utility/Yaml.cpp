@@ -4,7 +4,7 @@ namespace YAML {
 
 using namespace Sprocket;
 
-Node convert<Maths::vec2>::encode(const Maths::vec2& rhs)
+Node convert<glm::vec2>::encode(const glm::vec2& rhs)
 {
     Node n;
     n.push_back(rhs.x);
@@ -12,7 +12,7 @@ Node convert<Maths::vec2>::encode(const Maths::vec2& rhs)
     return n;
 }
 
-bool convert<Maths::vec2>::decode(const Node& node, Maths::vec2& rhs)
+bool convert<glm::vec2>::decode(const Node& node, glm::vec2& rhs)
 {
     if (!node.IsSequence() || node.size() != 2)
         return false;

@@ -15,9 +15,9 @@ class MouseProxy
         // frame and previous respectively. The temp is the one that the
         // event loop writes to. It is copied to current during OnUpdate.
 
-    Maths::vec2 d_positionTemp;
-    Maths::vec2 d_positionCurr;
-    Maths::vec2 d_positionPrev;
+    glm::vec2 d_positionTemp;
+    glm::vec2 d_positionCurr;
+    glm::vec2 d_positionPrev;
 
     bool d_consumeEvents = false;
 
@@ -30,8 +30,8 @@ public:
 
     void ConsumeEvents(bool value) { d_consumeEvents = value; }
 
-    Maths::vec2 GetMousePos() const { return d_positionCurr; }
-    Maths::vec2 GetMouseOffset() const { return d_positionCurr - d_positionPrev; }
+    glm::vec2 GetMousePos() const { return d_positionCurr; }
+    glm::vec2 GetMouseOffset() const { return d_positionCurr - d_positionPrev; }
 
     bool IsButtonClicked(int button) const;
     bool IsButtonReleased(int button) const;

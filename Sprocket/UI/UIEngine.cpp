@@ -65,7 +65,7 @@ void DrawCommand::AddText(const std::string& text,
     float size = properties.size;
     Maths::vec4 colour = properties.colour;
 
-    Maths::vec2 pen{quad.x, quad.y};
+    glm::vec2 pen{quad.x, quad.y};
 
     if (alignment == Alignment::LEFT) {
         pen.x += 5.0f;

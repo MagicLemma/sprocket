@@ -16,7 +16,7 @@ namespace Sprocket {
 struct Vertex
 {
     Maths::vec3 position;
-    Maths::vec2 textureCoords;
+    glm::vec2 textureCoords;
 
     Maths::vec3 normal;
     Maths::vec3 tangent;
@@ -26,7 +26,7 @@ struct Vertex
 struct AnimVertex
 {
     Maths::vec3 position;
-    Maths::vec2 textureCoords;
+    glm::vec2 textureCoords;
 
     Maths::vec3 normal;
     Maths::vec3 tangent;

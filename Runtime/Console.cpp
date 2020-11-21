@@ -37,7 +37,7 @@ void Console::OnUpdate(double dt)
     while (d_consoleLines.size() > 100) {
         d_consoleLines.pop_back();
     }
-    Maths::vec2 region = {10, H - 10 - boxHeight - 50};
+    glm::vec2 region = {10, H - 10 - boxHeight - 50};
     float fontSize = 24.0f;
     for (const auto& command : d_consoleLines) {
         d_ui.Text(command.text, fontSize, region, command.colour);

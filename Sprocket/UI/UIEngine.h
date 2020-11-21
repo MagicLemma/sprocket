@@ -34,15 +34,9 @@ struct TextProperties
 
 struct BufferVertex
 {
-    Maths::vec2 position;
+    glm::vec2 position;
     Maths::vec4 colour;
-    Maths::vec2 textureCoords = {0.0, 0.0};
-};
-
-struct QuadData
-{
-    std::size_t hash;
-    Maths::vec4 region;
+    glm::vec2 textureCoords = {0.0, 0.0};
 };
 
 struct DrawCommand
@@ -84,6 +78,12 @@ enum class PanelType
     // For draggable panels, it is possible to click and drag the panels around the
     // viewport. This will also bring the panel to the front.
     DRAGGABLE
+};
+
+struct QuadData
+{
+    std::size_t hash;
+    Maths::vec4 region;
 };
 
 struct Panel

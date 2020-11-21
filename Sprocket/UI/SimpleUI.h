@@ -64,7 +64,7 @@ public:
 
     void Text(const std::string& text,
               float size,
-              const Maths::vec2& position,
+              const glm::vec2& position,
               const Maths::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     void TextModifiable(const std::string& name,
@@ -89,7 +89,7 @@ public:
 
     void Image(const std::string& name,
                std::shared_ptr<Texture> image,
-               const Maths::vec2& position);
+               const glm::vec2& position);
 
 };
 

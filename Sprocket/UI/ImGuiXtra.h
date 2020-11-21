@@ -27,9 +27,9 @@ void Text(const std::string& text);
 
 // A wrapper for ImGui::Image that uses Sprocket types.
 void Image(const std::shared_ptr<Texture>& image,
-           const Maths::vec2& size,
-           const Maths::vec2& uv0 = {0, 1},
-           const Maths::vec2& uv1 = {1, 0},
+           const glm::vec2& size,
+           const glm::vec2& uv0 = {0, 1},
+           const glm::vec2& uv1 = {1, 0},
            const Maths::vec4& tintCol = {1, 1, 1, 1},
            const Maths::vec4& borderCol = {0, 0, 0, 0}
 );

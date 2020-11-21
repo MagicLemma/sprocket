@@ -55,9 +55,9 @@ void Text(const std::string& text)
 }
 
 void Image(const std::shared_ptr<Texture>& image,
-           const Maths::vec2& size,
-           const Maths::vec2& uv0,
-           const Maths::vec2& uv1,
+           const glm::vec2& size,
+           const glm::vec2& uv0,
+           const glm::vec2& uv1,
            const Maths::vec4& tintCol,
            const Maths::vec4& borderCol)
 {

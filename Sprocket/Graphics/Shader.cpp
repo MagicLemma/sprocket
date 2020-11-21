@@ -113,7 +113,7 @@ void Shader::LoadInt(const std::string& name, int value) const
 	glUniform1i(GetUniformLocation(name), value);
 }
 
-void Shader::LoadVec2(const std::string& name, const Maths::vec2& vector) const
+void Shader::LoadVec2(const std::string& name, const glm::vec2& vector) const
 {
 	glUniform2f(GetUniformLocation(name), vector.x, vector.y);
 }

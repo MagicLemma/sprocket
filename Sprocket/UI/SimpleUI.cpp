@@ -120,7 +120,7 @@ void SimpleUI::Text(
 void SimpleUI::Text(
     const std::string& text,
     float size,
-    const Maths::vec2& position,
+    const glm::vec2& position,
     const Maths::vec4& colour)
 {
     auto region = d_engine.ApplyOffset({position.x, position.y, 0, 0});
@@ -283,7 +283,7 @@ void SimpleUI::Dragger(const std::string& name,
 
 void SimpleUI::Image(const std::string& name,
                      std::shared_ptr<Texture> image,
-                     const Maths::vec2& position)
+                     const glm::vec2& position)
 {
     Maths::vec4 region{position.x, position.y, image->Width(), image->Height()};
     Maths::vec4 copy = d_engine.ApplyOffset(region);

@@ -39,9 +39,9 @@ Maths::mat4 Convert(const aiMatrix4x4& matrix)
     return result;
 }
 
-Maths::vec2 Convert(const aiVector2D& v)
+glm::vec2 Convert(const aiVector2D& v)
 {
-    return Maths::vec2{v.x, v.y};
+    return glm::vec2{v.x, v.y};
 }
 
 Maths::vec3 Convert(const aiVector3D& v)

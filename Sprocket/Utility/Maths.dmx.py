@@ -15,7 +15,7 @@ class Vec2(Type):
 
     @staticmethod
     def typename():
-        return "Maths::vec2"
+        return "glm::vec2"
 
 
 class Vec3(Type):

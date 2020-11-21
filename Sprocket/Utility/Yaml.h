@@ -8,10 +8,10 @@ namespace YAML {
 using namespace Sprocket;
 
 template<>
-struct convert<Maths::vec2>
+struct convert<glm::vec2>
 {
-    static Node encode(const Maths::vec2& rhs);
-    static bool decode(const Node& node, Maths::vec2& rhs);
+    static Node encode(const glm::vec2& rhs);
+    static bool decode(const Node& node, glm::vec2& rhs);
 };
 
 template<>

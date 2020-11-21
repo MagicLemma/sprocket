@@ -17,7 +17,7 @@ T Random(T min, T max)
         return RandomFloat(min, max);
     }
 
-    else if constexpr (std::is_same<T, Maths::vec2>::value) {
+    else if constexpr (std::is_same<T, glm::vec2>::value) {
         return {
             RandomFloat(min.x, max.x),
             RandomFloat(min.y, max.y)
