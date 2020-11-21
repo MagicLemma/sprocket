@@ -101,7 +101,6 @@ add_library(Sprocket STATIC
             Utility/Random.cpp
             Utility/Maths.cpp
             Utility/Stopwatch.cpp
-            Utility/Tokenize.cpp
             Utility/Yaml.cpp
 
             Scripting/LuaEngine.cpp
