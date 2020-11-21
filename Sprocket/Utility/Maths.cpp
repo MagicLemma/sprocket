@@ -65,11 +65,6 @@ glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll)
     return matrix;
 }
 
-glm::mat4 LookAt(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up)
-{
-    return glm::lookAt(position, target, up);
-}
-
 glm::mat4 Ortho(float left, float right, float bottom, float top)
 {
     return glm::ortho(left, right, bottom, top);   
@@ -108,7 +103,7 @@ glm::quat Normalise(const glm::quat& q)
 
 glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up)
 {
-    glm::mat4 lookAtMat = LookAt(position, target, up);
+    glm::mat4 lookAtMat = glm::lookAt(position, target, up);
     glm::mat3 rotation = lookAtMat;
     return glm::conjugate(ToQuat(rotation));
 }

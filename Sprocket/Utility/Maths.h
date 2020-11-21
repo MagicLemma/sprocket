@@ -25,7 +25,6 @@ glm::mat4 Transpose(const glm::mat4& matrix);
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale = {1.0f, 1.0f, 1.0f});
 glm::mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane);
 glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll);
-glm::mat4 LookAt(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up = {0, 1, 0});
 glm::mat4 Ortho(float left, float right, float bottom, float top);
 glm::mat4 Ortho(float left, float right, float bottom, float top, float near, float far);
 glm::mat4 Ortho(float width, float height, float length);

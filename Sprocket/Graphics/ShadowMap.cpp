@@ -41,7 +41,7 @@ void ShadowMap::Draw(
     rc.DepthTesting(true);
     rc.FaceCulling(true);
 
-    d_lightViewMatrix = Maths::LookAt(centre - sun.direction, centre);
+    d_lightViewMatrix = glm::lookAt(centre - sun.direction, centre, {0.0, 1.0, 0.0});
 
     d_shader.Bind();
     d_shader.LoadMat4("u_proj_matrix", d_lightProjMatrix);

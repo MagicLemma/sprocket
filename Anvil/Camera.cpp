@@ -103,7 +103,7 @@ glm::mat4 Camera::Proj() const
 
 glm::mat4 Camera::View() const
 {
-    return Maths::LookAt(d_position, d_target);
+    return glm::lookAt(d_position, d_target, {0.0, 1.0, 0.0});
 }
 
 }
