@@ -5,7 +5,7 @@
 namespace Sprocket {
 namespace {
 
-Maths::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
+glm::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
 {
     if (bkf.keyPostitions.size() == 1) {
         return bkf.keyPostitions[0].position;
@@ -45,7 +45,7 @@ Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
     return Maths::Interpolate(beforeKF.orientation, afterKF.orientation, delta);
 }
 
-Maths::vec3 GetScale(const BoneKeyFrames& bkf, float time)
+glm::vec3 GetScale(const BoneKeyFrames& bkf, float time)
 {
     if (bkf.keyScales.size() == 1) {
         return bkf.keyScales[0].scale;
@@ -65,27 +65,27 @@ Maths::vec3 GetScale(const BoneKeyFrames& bkf, float time)
     return Maths::Interpolate(beforeKF.scale, afterKF.scale, delta);
 }
 
-Maths::mat4 GetAnimationTransform(const BoneKeyFrames& kfData, float time)
+glm::mat4 GetAnimationTransform(const BoneKeyFrames& kfData, float time)
 {
-    Maths::vec3 position = GetPosition(kfData, time);
+    glm::vec3 position = GetPosition(kfData, time);
     Maths::quat orientation = GetOrientation(kfData, time);
-    Maths::vec3 scale = GetScale(kfData, time);
+    glm::vec3 scale = GetScale(kfData, time);
     return Maths::Transform(position, orientation, scale);
 }
 
 void GetPoseRec(
-    std::vector<Maths::mat4>& pose,
+    std::vector<glm::mat4>& pose,
     const Skeleton& skeleton,
     const Animation& animation,
     float time,
     u32 boneIndex,
-    const Maths::mat4& parentTransform
+    const glm::mat4& parentTransform
 )
 {
     const Bone& bone = skeleton.bones[boneIndex];
     const auto& kfData = animation.keyFrames[boneIndex];
 
-    Maths::mat4 transform = parentTransform * GetAnimationTransform(kfData, time);
+    glm::mat4 transform = parentTransform * GetAnimationTransform(kfData, time);
     pose[boneIndex] = transform * bone.offset;
 
     for (const auto& child : bone.children) {
@@ -95,19 +95,19 @@ void GetPoseRec(
 
 }
 
-std::vector<Maths::mat4> Skeleton::GetPose(const std::string& animation, float time) const
+std::vector<glm::mat4> Skeleton::GetPose(const std::string& animation, float time) const
 {
-    std::vector<Maths::mat4> pose;
+    std::vector<glm::mat4> pose;
     pose.resize(bones.size());
 
     auto it = animations.find(animation);
     if (it != animations.end()) {
         float t = Maths::Modulo(time, it->second.duration);
-        GetPoseRec(pose, *this, it->second, t, 0, Maths::mat4(1.0));
+        GetPoseRec(pose, *this, it->second, t, 0, glm::mat4(1.0));
     }
     else {
         for (auto& x : pose) {
-            x = Maths::mat4(1.0);
+            x = glm::mat4(1.0);
         }
     }
     return pose;

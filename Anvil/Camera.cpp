@@ -2,7 +2,7 @@
 
 namespace Sprocket {
 
-Camera::Camera(Window* window, const Maths::vec3& target)
+Camera::Camera(Window* window, const glm::vec3& target)
     : d_window(window)
     , d_position()
     , d_target(target)
@@ -36,8 +36,8 @@ void Camera::OnUpdate(double dt)
     f.y = 0;
     f = Maths::Normalise(f);
 
-    Maths::vec3 up{0, 1, 0};
-    Maths::vec3 r = Maths::Cross(f, up);
+    glm::vec3 up{0, 1, 0};
+    glm::vec3 r = Maths::Cross(f, up);
 
     if (d_keyboard.IsKeyDown(Keyboard::W)) {
         d_target += moveSpeed * f;
@@ -96,12 +96,12 @@ void Camera::OnEvent(Event& event)
     }
 }
 
-Maths::mat4 Camera::Proj() const
+glm::mat4 Camera::Proj() const
 {
     return Maths::Perspective(d_window->AspectRatio(), 70.0f, 0.1f, 1000.0f);
 }
 
-Maths::mat4 Camera::View() const
+glm::mat4 Camera::View() const
 {
     return Maths::LookAt(d_position, d_target);
 }

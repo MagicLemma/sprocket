@@ -12,9 +12,9 @@ struct Glyph
     std::size_t width  = 0;
     std::size_t height = 0;
 
-    Maths::ivec2 offset = {0, 0};
+    glm::ivec2 offset = {0, 0};
     glm::vec2 advance = {0.0f, 0.0f};
-    Maths::vec4 texture = {0.0f, 0.0f, 0.0f, 0.0f};
+    glm::vec4 texture = {0.0f, 0.0f, 0.0f, 0.0f};
 };
 
 }

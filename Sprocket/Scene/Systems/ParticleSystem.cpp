@@ -22,7 +22,7 @@ void ParticleSystem::OnUpdate(Scene& scene, double dt)
             float r = Random<float>(0, pc.velocityNoise);
             float phi = Random<float>(0, 3.142);
             float theta = Random<float>(0, 6.284);
-            Maths::vec3 noise = {r * std::sin(theta) * std::cos(phi), r * std::sin(theta) * std::sin(phi), r * std::cos(theta)};
+            glm::vec3 noise = {r * std::sin(theta) * std::cos(phi), r * std::sin(theta) * std::sin(phi), r * std::cos(theta)};
             
             Particle p;
             p.position = tc.position;

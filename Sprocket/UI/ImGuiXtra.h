@@ -30,8 +30,8 @@ void Image(const std::shared_ptr<Texture>& image,
            const glm::vec2& size,
            const glm::vec2& uv0 = {0, 1},
            const glm::vec2& uv1 = {1, 0},
-           const Maths::vec4& tintCol = {1, 1, 1, 1},
-           const Maths::vec4& borderCol = {0, 0, 0, 0}
+           const glm::vec4& tintCol = {1, 1, 1, 1},
+           const glm::vec4& borderCol = {0, 0, 0, 0}
 );
 
 // A simplified version of the above where the texture maintains
@@ -45,13 +45,13 @@ void GuizmoSettings(
     ImGuizmo::OPERATION& mode,
     ImGuizmo::MODE& coords,
     bool& useSnap,
-    Maths::vec3& snap
+    glm::vec3& snap
 );
 
 void Guizmo(
-    Maths::mat4* matrix,
-    const Maths::mat4& view,
-    const Maths::mat4& projection,
+    glm::mat4* matrix,
+    const glm::mat4& view,
+    const glm::mat4& projection,
     ImGuizmo::OPERATION mode,
     ImGuizmo::MODE coords
 );

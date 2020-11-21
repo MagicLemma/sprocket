@@ -53,7 +53,7 @@ std::shared_ptr<Material> Material::FromFile(const std::string& file)
     }
 
     if (auto albedo = data["Albedo"]) {
-        material->albedo = albedo.as<Maths::vec3>();
+        material->albedo = albedo.as<glm::vec3>();
     }
     if (auto metallic = data["Metallic"]) {
         material->metallic = metallic.as<float>();

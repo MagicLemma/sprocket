@@ -19,8 +19,8 @@ class ShadowMap
 
     Shader  d_shader;
 
-    Maths::mat4 d_lightViewMatrix;
-    Maths::mat4 d_lightProjMatrix;
+    glm::mat4 d_lightViewMatrix;
+    glm::mat4 d_lightProjMatrix;
 
     DepthBuffer d_shadowMap;
 
@@ -32,9 +32,9 @@ class ShadowMap
 public:
     ShadowMap(Window* window, AssetManager* assetManager);
 
-    void Draw(const Sun& sun, const Maths::vec3& centre, Scene& scene);
+    void Draw(const Sun& sun, const glm::vec3& centre, Scene& scene);
 
-    Maths::mat4 GetLightProjViewMatrix() const;
+    glm::mat4 GetLightProjViewMatrix() const;
     std::shared_ptr<Texture>     GetShadowMap() const;
 };
 

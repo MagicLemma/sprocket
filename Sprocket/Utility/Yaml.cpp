@@ -22,7 +22,7 @@ bool convert<glm::vec2>::decode(const Node& node, glm::vec2& rhs)
     return true;
 }
 
-Node convert<Maths::vec3>::encode(const Maths::vec3& rhs)
+Node convert<glm::vec3>::encode(const glm::vec3& rhs)
 {
     Node n;
     n.push_back(rhs.x);
@@ -31,7 +31,7 @@ Node convert<Maths::vec3>::encode(const Maths::vec3& rhs)
     return n;
 }
 
-bool convert<Maths::vec3>::decode(const Node& node, Maths::vec3& rhs)
+bool convert<glm::vec3>::decode(const Node& node, glm::vec3& rhs)
 {
     if (!node.IsSequence() || node.size() != 3)
         return false;
@@ -64,7 +64,7 @@ bool convert<Maths::quat>::decode(const Node& node, Maths::quat& rhs)
     return true;
 }
 
-Node convert<Maths::mat4>::encode(const Maths::mat4& rhs)
+Node convert<glm::mat4>::encode(const glm::mat4& rhs)
 {
     Node n;
     n.push_back(rhs[0][0]);
@@ -89,7 +89,7 @@ Node convert<Maths::mat4>::encode(const Maths::mat4& rhs)
     return n;
 }
 
-bool convert<Maths::mat4>::decode(const Node& node, Maths::mat4& rhs)
+bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
 {
     if (!node.IsSequence() || node.size() != 16)
         return false;
@@ -117,7 +117,7 @@ bool convert<Maths::mat4>::decode(const Node& node, Maths::mat4& rhs)
 
 namespace Sprocket {
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::vec3& v)
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
 {
     out << YAML::Flow;
     out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
@@ -131,7 +131,7 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::quat& q)
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::mat4& m)
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
 {
     out << YAML::Flow;
     out << YAML::BeginSeq << m[0][0] << m[0][1] << m[0][2] << m[0][3]

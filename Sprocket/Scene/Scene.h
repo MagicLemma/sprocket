@@ -19,14 +19,14 @@ namespace Sprocket {
 
 struct Sun
 {
-    Maths::vec3 direction;
-    Maths::vec3 colour;
+    glm::vec3 direction;
+    glm::vec3 colour;
     float       brightness;
 };
 
 struct Ambience
 {
-    Maths::vec3 colour;
+    glm::vec3 colour;
     float       brightness;
 };
     

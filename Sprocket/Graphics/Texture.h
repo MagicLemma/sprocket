@@ -59,7 +59,7 @@ public:
     bool operator==(const Texture& other) const;
 
     // Mutable Texture Functions
-    void SetSubTexture(const Maths::ivec4& region, const unsigned char* data);
+    void SetSubTexture(const glm::ivec4& region, const unsigned char* data);
     void Resize(int width, int height);
 
 };

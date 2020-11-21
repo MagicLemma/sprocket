@@ -71,7 +71,7 @@ void SinglePanelUI::OnUpdate(double dt)
 void SinglePanelUI::StartFrame()
 {
     std::string name = "__SinglePanelUI_Name__";
-    Maths::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
+    glm::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
 
     d_engine.StartFrame();
     d_engine.StartPanel(name, &region, PanelType::CLICKABLE);
@@ -84,20 +84,20 @@ void SinglePanelUI::EndFrame()
     d_engine.EndFrame();
 }
 
-bool SinglePanelUI::Button(const std::string& name, const Maths::vec4& region)
+bool SinglePanelUI::Button(const std::string& name, const glm::vec4& region)
 {
     auto info = d_engine.Register(name, region);
 
-    Maths::vec4 hoveredRegion = info.quad;
+    glm::vec4 hoveredRegion = info.quad;
     hoveredRegion.x -= 10.0f;
     hoveredRegion.z += 20.0f;
 
-    Maths::vec4 clickedRegion = info.quad;
+    glm::vec4 clickedRegion = info.quad;
     clickedRegion.x += 10.0f;
     clickedRegion.z -= 20.0f;
 
-    Maths::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
-    Maths::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
+    glm::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
+    glm::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
     
     TextProperties tp;
     tp.size = 36.0f;
@@ -110,7 +110,7 @@ bool SinglePanelUI::Button(const std::string& name, const Maths::vec4& region)
 }
 
 void SinglePanelUI::Slider(const std::string& name,
-                      const Maths::vec4& region,
+                      const glm::vec4& region,
                       float* value, float min, float max)
 {
     auto info = d_engine.Register(name, region);
@@ -120,8 +120,8 @@ void SinglePanelUI::Slider(const std::string& name,
     float width = info.quad.z;
     float height = info.quad.w;
     float ratio = (*value - min) / (max - min);
-    Maths::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
-    Maths::vec4 rightColour = d_theme.backgroundColour;
+    glm::vec4 leftColour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
+    glm::vec4 rightColour = d_theme.backgroundColour;
 
     TextProperties tp;
     tp.size = 36.0f;
@@ -139,10 +139,10 @@ void SinglePanelUI::Slider(const std::string& name,
     }    
 }
 
-void SinglePanelUI::Box(const Maths::vec4& quad, const Maths::vec4& colour)
+void SinglePanelUI::Box(const glm::vec4& quad, const glm::vec4& colour)
 {
     float padding = 5.0f;
-    Maths::vec4 border = quad;
+    glm::vec4 border = quad;
     border.x -= padding;
     border.y -= padding;
     border.z += 2 * padding;

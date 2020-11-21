@@ -9,7 +9,7 @@ namespace Sprocket {
 
 class FontAtlas
 {
-    std::vector<Maths::ivec3> d_nodes;
+    std::vector<glm::ivec3> d_nodes;
     std::shared_ptr<Texture> d_texture;
 
     int Fit(int index, int width, int height);
@@ -17,10 +17,10 @@ class FontAtlas
 public:
     FontAtlas(int width, int height);
 
-    Maths::ivec4 GetRegion(std::size_t width, std::size_t height);
+    glm::ivec4 GetRegion(std::size_t width, std::size_t height);
 
     void SetRegion(
-        const Maths::ivec4& region,
+        const glm::ivec4& region,
         const unsigned char* data
     );
 

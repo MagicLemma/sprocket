@@ -4,11 +4,11 @@
 
 namespace Sprocket {
 
-Maths::mat4 MakeView(const Entity& entity)
+glm::mat4 MakeView(const Entity& entity)
 {
     if (!entity.Has<TransformComponent>()) {
         SPKT_LOG_ERROR("Camera has no transform component!");
-        return Maths::mat4{1.0};
+        return glm::mat4{1.0};
     }
 
     auto tr = entity.Get<TransformComponent>();
@@ -21,10 +21,10 @@ Maths::mat4 MakeView(const Entity& entity)
     return Maths::Inverse(Maths::Transform(tr.position, tr.orientation));   
 }
 
-Maths::mat4 MakeProj(const Entity& entity)
+glm::mat4 MakeProj(const Entity& entity)
 {
     if (!entity.Has<CameraComponent>()) {
-        return Maths::mat4(1.0);
+        return glm::mat4(1.0);
     }
 
     return entity.Get<CameraComponent>().projection;

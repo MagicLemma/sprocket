@@ -79,10 +79,10 @@ bool CircadianCycle::IsDay() const
     return SIX_AM <= d_seconds && d_seconds < SIX_PM;
 }
 
-Maths::vec3 CircadianCycle::GetSunDir() const
+glm::vec3 CircadianCycle::GetSunDir() const
 {
     float angle = GetAngle();
-    Maths::vec3 dir = {Maths::Sind(angle), Maths::Cosd(angle), 0.1f * Maths::Sind(angle)};
+    glm::vec3 dir = {Maths::Sind(angle), Maths::Cosd(angle), 0.1f * Maths::Sind(angle)};
     dir = Maths::Normalise(dir);
     return dir;
 }

@@ -41,7 +41,7 @@ void Source::SetPosition(float x, float y, float z)
     d_impl->sound.setPosition({x, y, z});
 }
 
-void Source::SetPosition(const Maths::vec3& position)
+void Source::SetPosition(const glm::vec3& position)
 {
     SetPosition(position.x, position.y, position.z);
 }

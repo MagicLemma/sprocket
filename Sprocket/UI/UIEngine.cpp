@@ -27,7 +27,7 @@ std::vector<unsigned char> GetWhiteData()
 
 }
 
-void DrawCommand::AddQuad(const Maths::vec4& colour, const Maths::vec4& quad)
+void DrawCommand::AddQuad(const glm::vec4& colour, const glm::vec4& quad)
 {
     float x = quad.x;
     float y = quad.y;
@@ -49,7 +49,7 @@ void DrawCommand::AddQuad(const Maths::vec4& colour, const Maths::vec4& quad)
 }
 
 void DrawCommand::AddText(const std::string& text,
-                          const Maths::vec4& quad,
+                          const glm::vec4& quad,
                           const TextProperties& properties)
 {
     if (font == nullptr) {
@@ -63,7 +63,7 @@ void DrawCommand::AddText(const std::string& text,
 
     Alignment alignment = properties.alignment;
     float size = properties.size;
-    Maths::vec4 colour = properties.colour;
+    glm::vec4 colour = properties.colour;
 
     glm::vec2 pen{quad.x, quad.y};
 
@@ -132,10 +132,10 @@ UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
     d_buffer.SetBufferLayout(layout);
 }
 
-Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
+glm::vec4 UIEngine::ApplyOffset(const glm::vec4& region)
 {
     if (d_currentPanel) {
-        Maths::vec4 quad = region;
+        glm::vec4 quad = region;
         quad.x += d_currentPanel->region.x;
         quad.y += d_currentPanel->region.y;
         return quad;
@@ -143,7 +143,7 @@ Maths::vec4 UIEngine::ApplyOffset(const Maths::vec4& region)
     return region;
 }
 
-WidgetInfo UIEngine::Register(const std::string& name, const Maths::vec4& region)
+WidgetInfo UIEngine::Register(const std::string& name, const glm::vec4& region)
 {
     assert(d_currentPanel);
     
@@ -337,7 +337,7 @@ void UIEngine::EndFrame()
     d_buffer.Unbind();
 }
 
-void UIEngine::StartPanel(const std::string& name, Maths::vec4* region, PanelType type)
+void UIEngine::StartPanel(const std::string& name, glm::vec4* region, PanelType type)
 {
     assert(!d_currentPanel);
     std::size_t hash = std::hash<std::string>{}(name);

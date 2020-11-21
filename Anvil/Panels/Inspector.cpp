@@ -16,7 +16,7 @@ void ShowGuizmo(
     TransformComponent& c,
     ImGuizmo::OPERATION mode,
     ImGuizmo::MODE coords,
-    Maths::vec3* snap = nullptr)
+    glm::vec3* snap = nullptr)
 {
     if (!editor.IsGameRunning()) {
         auto& camera = editor.GetEditorCamera();

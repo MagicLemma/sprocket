@@ -98,8 +98,8 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         auto& tr = d_camera.Get<TransformComponent>();
         if (e->Mods() & KeyModifier::CTRL) {
-            Maths::vec3 cameraPos = tr.position;
-            Maths::vec3 direction = Maths::GetMouseRay(
+            glm::vec3 cameraPos = tr.position;
+            glm::vec3 direction = Maths::GetMouseRay(
                 d_mouse.GetMousePos(),
                 d_core.window->Width(),
                 d_core.window->Height(),
@@ -108,19 +108,19 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
             );
 
             float lambda = -cameraPos.y / direction.y;
-            Maths::vec3 mousePos = cameraPos + lambda * direction;
+            glm::vec3 mousePos = cameraPos + lambda * direction;
             mousePos.y = 0.5f;
             
             auto& path = d_worker.Get<PathComponent>();
 
             if (e->Button() == Mouse::LEFT) {
-                std::queue<Maths::vec3>().swap(path.markers);
+                std::queue<glm::vec3>().swap(path.markers);
                 auto pos = d_worker.Get<TransformComponent>().position;
                 if (Maths::Distance(pos, mousePos) > 1.0f) {
                     path.markers = GenerateAStarPath(
                         pos,
                         mousePos,
-                        [&](const Maths::ivec2& pos) {
+                        [&](const glm::ivec2& pos) {
                             auto e = d_gameGrid->At(pos.x, pos.y);
                             return !e.Null();
                         }
@@ -131,7 +131,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                 e->Consume();
             }
             else if (e->Button() == Mouse::RIGHT) {
-                std::queue<Maths::vec3>().swap(path.markers);
+                std::queue<glm::vec3>().swap(path.markers);
                 e->Consume();
             }
         }
@@ -172,7 +172,7 @@ void WorldLayer::OnUpdate(double dt)
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    Maths::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
+    glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     d_shadowMap.Draw(sun, target, *d_scene);
 
     if (d_paused) {
@@ -202,7 +202,7 @@ void WorldLayer::OnUpdate(double dt)
             float x = w - width;
             float y = ((1.0f - 0.6f) / 2) * h;
 
-            Maths::vec4 region{x, y, width, height};
+            glm::vec4 region{x, y, width, height};
             d_hoveredEntityUI.StartPanel("Selected", &region, PanelType::UNCLICKABLE);
                 
             auto pos = d_gameGrid->SelectedPosition().value();
@@ -246,7 +246,7 @@ void WorldLayer::OnUpdate(double dt)
             float x = std::min(mouse.x - 5, w - width - 10);
             float y = std::min(mouse.y - 5, h - height - 10);
 
-            Maths::vec4 region{x, y, width, height};
+            glm::vec4 region{x, y, width, height};
             d_hoveredEntityUI.StartPanel("Hovered", &region, PanelType::UNCLICKABLE);
             std::string name = "Unnamed";
             if (hovered.Has<NameComponent>()) {
@@ -260,7 +260,7 @@ void WorldLayer::OnUpdate(double dt)
     }
 }
 
-void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
+void WorldLayer::AddTree(const glm::ivec2& pos)
 {
     using namespace Sprocket;
 
@@ -284,7 +284,7 @@ void WorldLayer::AddTree(const Sprocket::Maths::ivec2& pos)
 }
 
 void WorldLayer::AddRockBase(
-    const Sprocket::Maths::ivec2& pos,
+    const glm::ivec2& pos,
     const std::string& material,
     const std::string& name)
 {
@@ -308,25 +308,25 @@ void WorldLayer::AddRockBase(
     newEntity.Add(gc);
 }
 
-void WorldLayer::AddRock(const Sprocket::Maths::ivec2& pos)
+void WorldLayer::AddRock(const glm::ivec2& pos)
 {
     static std::string material = "Resources/Materials/rock.yaml";
     AddRockBase(pos, material, "Rock");
 }
 
-void WorldLayer::AddIron(const Sprocket::Maths::ivec2& pos)
+void WorldLayer::AddIron(const glm::ivec2& pos)
 {
     static std::string material = "Resources/Materials/iron.yaml";
     AddRockBase(pos, material, "Iron");
 }
 
-void WorldLayer::AddTin(const Sprocket::Maths::ivec2& pos)
+void WorldLayer::AddTin(const glm::ivec2& pos)
 {
     static std::string material = "Resources/Materials/tin.yaml";
     AddRockBase(pos, material, "Tin");
 }
 
-void WorldLayer::AddMithril(const Sprocket::Maths::ivec2& pos)
+void WorldLayer::AddMithril(const glm::ivec2& pos)
 {
     static std::string material = "Resources/Materials/mithril.yaml";
     AddRockBase(pos, material, "Mithril");

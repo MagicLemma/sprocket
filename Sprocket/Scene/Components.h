@@ -18,9 +18,9 @@ struct NameComponent
 
 struct TransformComponent
 {
-    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
     Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
-    Maths::vec3 scale = Maths::vec3{1.0f, 1.0f, 1.0f};
+    glm::vec3 scale = glm::vec3{1.0f, 1.0f, 1.0f};
 };
 
 struct ModelComponent
@@ -31,28 +31,28 @@ struct ModelComponent
 
 struct RigidBody3DComponent
 {
-    Maths::vec3 velocity = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 velocity = glm::vec3{0.0f, 0.0f, 0.0f};
     bool gravity = true;
     bool frozen = false;
     float bounciness = 0.5f;
     float frictionCoefficient = 0.3f;
     float rollingResistance = 0.0f;
-    Maths::vec3 force = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 force = glm::vec3{0.0f, 0.0f, 0.0f};
     bool onFloor = false;
 };
 
 struct BoxCollider3DComponent
 {
-    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
     Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
-    Maths::vec3 halfExtents = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 halfExtents = glm::vec3{0.0f, 0.0f, 0.0f};
     bool applyScale = true;
 };
 
 struct SphereCollider3DComponent
 {
-    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
     Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     float radius = 1.0f;
@@ -60,7 +60,7 @@ struct SphereCollider3DComponent
 
 struct CapsuleCollider3DComponent
 {
-    Maths::vec3 position = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
     Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     float radius = 1.0f;
@@ -75,7 +75,7 @@ struct ScriptComponent
 
 struct CameraComponent
 {
-    Maths::mat4 projection = Maths::mat4{1.0};
+    glm::mat4 projection = glm::mat4{1.0};
     float fov = 70.0f;
     float pitch = 0.0f;
 };
@@ -88,7 +88,7 @@ struct SelectComponent
 
 struct PathComponent
 {
-    std::queue<Maths::vec3> markers = std::queue<Maths::vec3>{};
+    std::queue<glm::vec3> markers = std::queue<glm::vec3>{};
     float speed = 0.0f;
 };
 
@@ -100,17 +100,17 @@ struct GridComponent
 
 struct LightComponent
 {
-    Maths::vec3 colour = Maths::vec3{1.0f, 1.0f, 1.0f};
+    glm::vec3 colour = glm::vec3{1.0f, 1.0f, 1.0f};
     float brightness = 1.0f;
 };
 
 struct ParticleComponent
 {
     float interval = 1.0f;
-    Maths::vec3 velocity = Maths::vec3{0.0f, 0.0f, 0.0f};
+    glm::vec3 velocity = glm::vec3{0.0f, 0.0f, 0.0f};
     float velocityNoise = 0.0f;
-    Maths::vec3 acceleration = Maths::vec3{0.0f, -9.81f, 0.0f};
-    Maths::vec3 scale = Maths::vec3{1.0f, 1.0f, 1.0f};
+    glm::vec3 acceleration = glm::vec3{0.0f, -9.81f, 0.0f};
+    glm::vec3 scale = glm::vec3{1.0f, 1.0f, 1.0f};
     float life = 1.0f;
     float accumulator = 0.0f;
 };

@@ -37,11 +37,11 @@ class Inspector(Plugin):
             return f'ImGui::DragFloat("{display}", &c.{name}, 0.01f)'
         if cpp_type == "glm::vec2":
             return f'ImGui::DragFloat2("{display}", &c.{name}.x, 0.1f)'
-        if cpp_type == "Maths::vec3":
+        if cpp_type == "glm::vec3":
             if cpp_subtype == "Colour":
                 return f'ImGui::ColorPicker3("{display}", &c.{name}.r)'
             return f'ImGui::DragFloat3("{display}", &c.{name}.x, 0.1f)'
-        if cpp_type == "Maths::vec4":
+        if cpp_type == "glm::vec4":
             if cpp_subtype == "Colour":
                 return f'ImGui::ColorPicker4("{display}", &c.{name}.r)'
             return f'ImGui::DragFloat4("{display}", &c.{name}.x, 0.1f)'

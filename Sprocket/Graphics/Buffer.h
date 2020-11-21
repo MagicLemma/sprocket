@@ -10,9 +10,9 @@ namespace Sprocket {
 
 struct InstanceData
 {
-    Maths::vec3 position;
+    glm::vec3 position;
     Maths::quat orientation;
-    Maths::vec3 scale;
+    glm::vec3 scale;
 };
 
 enum class BufferUsage { STATIC, DYNAMIC };

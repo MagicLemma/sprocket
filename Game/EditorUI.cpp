@@ -31,8 +31,8 @@ void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 
 void SelectedEntityInfo(DevUI& ui,
                         Entity& entity,
-                        const Maths::mat4& view,
-                        const Maths::mat4& proj)
+                        const glm::mat4& view,
+                        const glm::mat4& proj)
 {
     using namespace Maths;
 
@@ -49,7 +49,7 @@ void SelectedEntityInfo(DevUI& ui,
     if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
         ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
-        Maths::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
+        glm::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
         std::stringstream ss;
         ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
            << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
@@ -76,10 +76,10 @@ void SelectedEntityInfo(DevUI& ui,
 
     if (entity.Has<TransformComponent>()) {
         auto& tr = entity.Get<TransformComponent>();
-        Maths::mat4 origin = Maths::Transform(tr.position, tr.orientation);
+        glm::mat4 origin = Maths::Transform(tr.position, tr.orientation);
         ImGuiXtra::Guizmo(&origin, view, proj, mode, coords);
         tr.position = GetTranslation(origin);
-        tr.orientation = Normalise(ToQuat(mat3(origin)));
+        tr.orientation = Normalise(ToQuat(glm::mat3(origin)));
     }
     ImGui::Separator();
 
@@ -184,8 +184,8 @@ void EditorUI::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
     d_ui.StartFrame();
 
-    mat4 view = MakeView(d_worldLayer->d_camera);
-    mat4 proj = MakeProj(d_worldLayer->d_camera);
+    glm::mat4 view = MakeView(d_worldLayer->d_camera);
+    glm::mat4 proj = MakeProj(d_worldLayer->d_camera);
 
     auto e = d_worldLayer->d_selector->SelectedEntity();
     if (!e.Null()) {

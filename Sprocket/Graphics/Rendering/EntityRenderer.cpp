@@ -27,8 +27,8 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
 
 void UploadUniforms(
     const Shader& shader,
-    const Maths::mat4& proj,
-    const Maths::mat4& view,
+    const glm::mat4& proj,
+    const glm::mat4& view,
     Scene& scene)
 {
     u32 MAX_NUM_LIGHTS = 5;
@@ -108,8 +108,8 @@ void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
 }
 
 void EntityRenderer::Draw(
-    const Maths::mat4& proj,
-    const Maths::mat4& view,
+    const glm::mat4& proj,
+    const glm::mat4& view,
     Scene& scene)
 {
     RenderContext rc;
@@ -232,8 +232,8 @@ void EntityRenderer::Draw(
         }
         else {
             static const auto clear = []() {
-                std::array<Maths::mat4, MAX_BONES> arr;
-                for (auto& x : arr) { x = Maths::mat4(1.0); }
+                std::array<glm::mat4, MAX_BONES> arr;
+                for (auto& x : arr) { x = glm::mat4(1.0); }
                 return arr;
             }();
             d_animatedShader.LoadMat4("u_bone_transforms", clear[0], MAX_BONES);
@@ -248,8 +248,8 @@ void EntityRenderer::Draw(
 
 void EntityRenderer::Draw(const Entity& camera, Scene& scene)
 {
-    Maths::mat4 proj = MakeProj(camera);
-    Maths::mat4 view = MakeView(camera);
+    glm::mat4 proj = MakeProj(camera);
+    glm::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 

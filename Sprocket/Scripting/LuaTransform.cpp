@@ -96,7 +96,7 @@ int MakeUpright(lua_State* L)
     Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
     auto& tr = entity.Get<TransformComponent>();
     float yaw = (float)lua_tonumber(L, 2);
-    tr.orientation = Maths::quat(Maths::vec3(0, yaw, 0));
+    tr.orientation = Maths::quat(glm::vec3(0, yaw, 0));
     return 0;
 }
 

@@ -58,8 +58,8 @@ void Image(const std::shared_ptr<Texture>& image,
            const glm::vec2& size,
            const glm::vec2& uv0,
            const glm::vec2& uv1,
-           const Maths::vec4& tintCol,
-           const Maths::vec4& borderCol)
+           const glm::vec4& tintCol,
+           const glm::vec4& borderCol)
 {
     ImGui::Image(
         (ImTextureID)(intptr_t)image->Id(),
@@ -89,7 +89,7 @@ void GuizmoSettings(
     ImGuizmo::OPERATION& mode,
     ImGuizmo::MODE& coords,
     bool& useSnap,
-    Maths::vec3& snap)
+    glm::vec3& snap)
 {
     if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
         mode = ImGuizmo::OPERATION::TRANSLATE;
@@ -121,9 +121,9 @@ void GuizmoSettings(
 }
 
 void Guizmo(
-    Maths::mat4* matrix,
-    const Maths::mat4& view,
-    const Maths::mat4& projection,
+    glm::mat4* matrix,
+    const glm::mat4& view,
+    const glm::mat4& projection,
     ImGuizmo::OPERATION mode,
     ImGuizmo::MODE coords)
 {
@@ -138,7 +138,7 @@ void Guizmo(
 
 void Euler(const std::string& name, Maths::quat* q)
 {
-    Maths::vec3 euler = Maths::ToEuler(*q);
+    glm::vec3 euler = Maths::ToEuler(*q);
     if (ImGui::DragFloat3("Orientation", &euler.x, 0.01f)) {
         *q = Maths::quat(euler);
     }

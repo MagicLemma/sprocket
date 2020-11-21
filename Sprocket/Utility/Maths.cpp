@@ -14,40 +14,40 @@ namespace Sprocket {
 namespace Maths {
 
 // Matrix Modifiers
-mat4 Translate(const mat4& matrix, const vec3& translation)
+glm::mat4 Translate(const glm::mat4& matrix, const glm::vec3& translation)
 {
     return glm::translate(matrix, translation);
 }
 
-mat4 Scale(const mat4& matrix, const vec3& scales)
+glm::mat4 Scale(const glm::mat4& matrix, const glm::vec3& scales)
 {
     return glm::scale(matrix, scales);
 }
 
-mat4 Scale(const mat4& matrix, float scale)
+glm::mat4 Scale(const glm::mat4& matrix, float scale)
 {
     return glm::scale(matrix, {scale, scale, scale});
 }
 
-mat4 Rotate(const mat4& matrix, const vec3& axis, float radians)
+glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians)
 {
     return glm::rotate(matrix, radians, axis);
 }
 
-mat4 Inverse(const mat4& matrix)
+glm::mat4 Inverse(const glm::mat4& matrix)
 {
     return glm::inverse(matrix);
 }
 
-mat4 Transpose(const mat4& matrix)
+glm::mat4 Transpose(const glm::mat4& matrix)
 {
     return glm::transpose(matrix);
 }
 
 // Matrix Constructors
-mat4 Transform(const vec3& position, const quat& orientation, const vec3& scale)
+glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale)
 {
-    mat4 m = ToMat3(orientation);
+    glm::mat4 m = ToMat3(orientation);
     m[3][0] = position.x;
     m[3][1] = position.y;
     m[3][2] = position.z;
@@ -55,39 +55,39 @@ mat4 Transform(const vec3& position, const quat& orientation, const vec3& scale)
     return Maths::Scale(m, scale);
 }
 
-mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
+glm::mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
 {
     return glm::perspective(fov, aspectRatio, nearPlane, farPlane);  
 }
 
-mat4 View(const vec3& position, float pitch, float yaw, float roll)
+glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll)
 {
-    mat4 matrix(1.0);
-    matrix = glm::rotate(matrix, Radians(pitch), vec3(1, 0, 0));
-    matrix = glm::rotate(matrix, Radians(yaw), vec3(0, 1, 0));
-    matrix = glm::rotate(matrix, Radians(roll), vec3(0, 0, 1));
+    glm::mat4 matrix(1.0);
+    matrix = glm::rotate(matrix, Radians(pitch), glm::vec3(1, 0, 0));
+    matrix = glm::rotate(matrix, Radians(yaw), glm::vec3(0, 1, 0));
+    matrix = glm::rotate(matrix, Radians(roll), glm::vec3(0, 0, 1));
     matrix = glm::translate(matrix, -position);
     return matrix;
 }
 
-mat4 LookAt(const vec3& position, const vec3& target, const vec3& up)
+glm::mat4 LookAt(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up)
 {
     return glm::lookAt(position, target, up);
 }
 
-mat4 Ortho(float left, float right, float bottom, float top)
+glm::mat4 Ortho(float left, float right, float bottom, float top)
 {
     return glm::ortho(left, right, bottom, top);   
 }
 
-mat4 Ortho(float left, float right, float bottom, float top, float near, float far)
+glm::mat4 Ortho(float left, float right, float bottom, float top, float near, float far)
 {
     return glm::ortho(left, right, bottom, top, near, far);   
 }
 
-mat4 Ortho(float width, float height, float length)
+glm::mat4 Ortho(float width, float height, float length)
 {
-    mat4 m(0.0f);
+    glm::mat4 m(0.0f);
     m[0][0] = 2.0f / width;
     m[1][1] = 2.0f / height;
     m[2][2] = -2.0f / length;
@@ -96,134 +96,134 @@ mat4 Ortho(float width, float height, float length)
 }
 
 // Quaternion Modifiers
-quat Rotate(const vec3& axis, float degrees)
+glm::quat Rotate(const glm::vec3& axis, float degrees)
 {
     return glm::rotate(Maths::identity, Radians(degrees), axis);
 }
 
-quat Rotate(const quat& orig, const vec3& axis, float degrees)
+glm::quat Rotate(const quat& orig, const glm::vec3& axis, float degrees)
 {
     return glm::rotate(orig, Radians(degrees), axis);
 }
 
-quat Inverse(const quat& quaternion)
+glm::quat Inverse(const glm::quat& quaternion)
 {
     return glm::inverse(quaternion);
 }
 
-quat Normalise(const quat& q)
+glm::quat Normalise(const glm::quat& q)
 {
     return glm::normalize(q);
 }
 
-quat LookAtQuat(const vec3& position, const vec3& target, const vec3& up)
+glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up)
 {
-    mat4 lookAtMat = LookAt(position, target, up);
-    mat3 rotation = lookAtMat;
+    glm::mat4 lookAtMat = LookAt(position, target, up);
+    glm::mat3 rotation = lookAtMat;
     return glm::conjugate(ToQuat(rotation));
 }
 
-vec3 Forwards(const quat& q)
+glm::vec3 Forwards(const glm::quat& q)
 {
-    return glm::normalize(q) * vec3(0, 0, -1);
+    return glm::normalize(q) * glm::vec3(0, 0, -1);
 }
 
-vec3 Right(const quat& q)
+glm::vec3 Right(const glm::quat& q)
 {
-    return glm::normalize(q) * vec3(1, 0, 0);
+    return glm::normalize(q) * glm::vec3(1, 0, 0);
 }
 
-vec3 Up(const quat& q)
+glm::vec3 Up(const glm::quat& q)
 {
-    return glm::normalize(q) * vec3(0, 1, 0);
+    return glm::normalize(q) * glm::vec3(0, 1, 0);
 }
 
 // Conversions
-mat3 ToMat3(const quat& q)
+glm::mat3 ToMat3(const glm::quat& q)
 {
     return glm::mat3_cast(q);
 }
 
-mat4 ToMat4(const quat& q)
+glm::mat4 ToMat4(const glm::quat& q)
 {
     return glm::mat4_cast(q);
 }
 
-quat ToQuat(const mat3& m)
+glm::quat ToQuat(const glm::mat3& m)
 {
     return glm::quat_cast(m);
 }
 
-vec3 ToEuler(const quat& q)
+glm::vec3 ToEuler(const glm::quat& q)
 {
     return glm::eulerAngles(q);
 }
 
-void Decompose(const mat4& matrix, vec3* position, quat* orientation, vec3* scale)
+void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale)
 {
-    vec3 skew;
-    vec4 perspective;
+    glm::vec3 skew;
+    glm::vec4 perspective;
     glm::decompose(matrix, *scale, *orientation, *position, skew, perspective);
 }
 
-float* Cast(const mat3& m)
+float* Cast(const glm::mat3& m)
 {
     return (float*)&m[0][0];
 }
 
-float* Cast(const mat4& m)
+float* Cast(const glm::mat4& m)
 {
     return (float*)&m[0][0];
 }
 
 // Vector Maths
-vec3 Cross(const vec3& lhs, const vec3& rhs)
+glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs)
 {
     return glm::cross(lhs, rhs);
 }
 
-vec3 GetTranslation(const mat4& m)
+glm::vec3 GetTranslation(const glm::mat4& m)
 {
-    return vec3{m[3][0], m[3][1], m[3][2]};
+    return glm::vec3{m[3][0], m[3][1], m[3][2]};
 }
 
-float Distance(const vec2& A, const vec2& B)
-{
-    return glm::distance(A, B);
-}
-
-float Distance(const vec3& A, const vec3& B)
+float Distance(const glm::vec2& A, const glm::vec2& B)
 {
     return glm::distance(A, B);
 }
 
-float Length(const vec3& v)
+float Distance(const glm::vec3& A, const glm::vec3& B)
+{
+    return glm::distance(A, B);
+}
+
+float Length(const glm::vec3& v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-float Length(const vec2& v)
+float Length(const glm::vec2& v)
 {
     return std::sqrt(v.x * v.x + v.y * v.y);
 }
 
-float Length(const ivec2& v)
+float Length(const glm::ivec2& v)
 {
     return (float)std::sqrt(v.x * v.x + v.y * v.y);
 }
 
 
-float LengthSquare(const vec3& v)
+float LengthSquare(const glm::vec3& v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-vec3 Normalise(const vec3& vec)
+glm::vec3 Normalise(const glm::vec3& vec)
 {
     return glm::normalize(vec);
 }
 
-Maths::vec3 Interpolate(const Maths::vec3& a, const Maths::vec3& b, float delta)
+glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float delta)
 {
     return glm::mix(a, b, delta);
 }
@@ -263,18 +263,18 @@ float Modulo(float val, float high)
     return ret;
 }
 
-Maths::mat4 NoScale(const Maths::mat4& matrix)
+glm::mat4 NoScale(const glm::mat4& matrix)
 {
-    Maths::vec3 pos, scale;
+    glm::vec3 pos, scale;
     Maths::quat ori;
     Maths::Decompose(matrix, &pos, &ori, &scale);
     return Maths::Transform(pos, ori);
 }
 
-vec3 GetMouseRay(const vec2& mousePos, u32 w, u32 h, const mat4& view, const mat4& proj)
+glm::vec3 GetMouseRay(const glm::vec2& mousePos, u32 w, u32 h, const glm::mat4& view, const glm::mat4& proj)
 {
     // Homogeneous Clip Space
-    vec4 ray = {(2.0f * mousePos.x) / w - 1, -((2.0f * mousePos.y) / h - 1), -1.0f, 1.0f};
+    glm::vec4 ray = {(2.0f * mousePos.x) / w - 1, -((2.0f * mousePos.y) / h - 1), -1.0f, 1.0f};
 
     // Eye Space
     ray = Inverse(proj) * ray;
@@ -285,14 +285,14 @@ vec3 GetMouseRay(const vec2& mousePos, u32 w, u32 h, const mat4& view, const mat
     return Normalise(Inverse(view) * ray);
 }
 
-Maths::vec3 ApplyTransform(const Maths::mat4& matrix, const Maths::vec3& v)
+glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)
 {
-    Maths::vec4 v2 = matrix * Maths::vec4{v.x, v.y, v.z, 1.0f};
+    glm::vec4 v2 = matrix * glm::vec4{v.x, v.y, v.z, 1.0f};
     return {v2.x, v2.y, v2.z};
 }
 
 // Printing
-std::string ToString(const vec3& v, const std::optional<int>& dp)
+std::string ToString(const glm::vec3& v, const std::optional<int>& dp)
 {
     std::stringstream ss;
     if (dp.has_value()) {

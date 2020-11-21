@@ -75,7 +75,7 @@ void RenderContext::ScissorTesting(bool enabled) const
     }
 }
 
-ScissorContext::ScissorContext(Window* window, const std::optional<Maths::vec4>& region)
+ScissorContext::ScissorContext(Window* window, const std::optional<glm::vec4>& region)
     : d_region(region)
 {
     if (d_region.has_value()) {

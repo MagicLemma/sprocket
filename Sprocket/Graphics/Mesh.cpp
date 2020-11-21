@@ -12,9 +12,9 @@
 namespace Sprocket {
 namespace {
 
-Maths::mat4 Convert(const aiMatrix4x4& matrix)
+glm::mat4 Convert(const aiMatrix4x4& matrix)
 {
-    Maths::mat4 result;
+    glm::mat4 result;
 
     result[0][0] = matrix.a1;
     result[0][1] = matrix.b1;
@@ -44,9 +44,9 @@ glm::vec2 Convert(const aiVector2D& v)
     return glm::vec2{v.x, v.y};
 }
 
-Maths::vec3 Convert(const aiVector3D& v)
+glm::vec3 Convert(const aiVector3D& v)
 {
-    return Maths::vec3{v.x, v.y, v.z};
+    return glm::vec3{v.x, v.y, v.z};
 }
 
 Maths::quat Convert(const aiQuaternion& q)
@@ -138,7 +138,7 @@ void LoadAnimations(
     Skeleton& skeleton,
     Bone* bone,
     const aiScene* scene,
-    const Maths::mat4& transform
+    const glm::mat4& transform
 )
 {
     assert(bone);
@@ -186,7 +186,7 @@ void LoadSkeleton(
     const aiScene* scene,
     const aiNode* lastBoneNode, // The last node that contained a bone, starts out null
     const aiNode* currentNode,  // The current node that we are dealing with.
-    const Maths::mat4& parentTransform
+    const glm::mat4& parentTransform
 )
 // NOTE: The parentTransform is an artifact of Assimp's node tree. There may be nodes that don't
 // correspond to bones but their transform matrices DO affect bones that are child nodes of it.
@@ -197,10 +197,10 @@ void LoadSkeleton(
 {
     assert(currentNode);
 
-    Maths::mat4 nodeTransform = parentTransform * Convert(currentNode->mTransformation);
+    glm::mat4 nodeTransform = parentTransform * Convert(currentNode->mTransformation);
     if (IsBone(skeleton, currentNode)) {
         // Reset the nodeTransform; the previous will get baked into this bones' animations.
-        nodeTransform = Maths::mat4(1.0);
+        nodeTransform = glm::mat4(1.0);
         lastBoneNode = currentNode;
 
         Bone* bone = GetBone(skeleton, lastBoneNode);
@@ -328,7 +328,7 @@ AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
 
     // Load the skeleton, which consists of parent/child bone relations as
     // well as animations.
-    LoadSkeleton(data.skeleton, scene, nullptr, scene->mRootNode, Maths::mat4(1.0));
+    LoadSkeleton(data.skeleton, scene, nullptr, scene->mRootNode, glm::mat4(1.0));
 
     return data;
 }
@@ -447,7 +447,7 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-std::vector<Maths::mat4> Mesh::GetPose(const std::string& name, f32 time) const
+std::vector<glm::mat4> Mesh::GetPose(const std::string& name, f32 time) const
 {
     if (d_skeleton.has_value()) {
         return d_skeleton.value().GetPose(name, time);

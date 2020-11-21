@@ -36,7 +36,7 @@ int Push(lua_State* L, const bool& value)
     return 1;
 }
 
-int Push(lua_State* L, const Maths::vec3& value)
+int Push(lua_State* L, const glm::vec3& value)
 {
     lua_pushnumber(L, value.x);
     lua_pushnumber(L, value.y);
@@ -71,7 +71,7 @@ template <> bool Pull(lua_State* L, int& count)
     return (bool)lua_toboolean(L, count++);
 }
 
-template <> Maths::vec3 Pull(lua_State* L, int& count)
+template <> glm::vec3 Pull(lua_State* L, int& count)
 {
     float x = (float)lua_tonumber(L, count++);
     float y = (float)lua_tonumber(L, count++);
@@ -99,7 +99,7 @@ template <> constexpr int Dimension<int>() { return 1; }
 template <> constexpr int Dimension<float>() { return 1; }
 template <> constexpr int Dimension<bool>() { return 1; }
 template <> constexpr int Dimension<std::string>() { return 1; }
-template <> constexpr int Dimension<Maths::vec3>() { return 3; }
+template <> constexpr int Dimension<glm::vec3>() { return 3; }
 template <> constexpr int Dimension<Maths::quat>() { return 4; }
 
 #ifdef DATAMATIC_BLOCK SCRIPTABLE=true

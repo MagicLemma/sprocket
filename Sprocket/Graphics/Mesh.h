@@ -15,25 +15,25 @@ namespace Sprocket {
 
 struct Vertex
 {
-    Maths::vec3 position;
+    glm::vec3 position;
     glm::vec2 textureCoords;
 
-    Maths::vec3 normal;
-    Maths::vec3 tangent;
-    Maths::vec3 bitangent;
+    glm::vec3 normal;
+    glm::vec3 tangent;
+    glm::vec3 bitangent;
 };
 
 struct AnimVertex
 {
-    Maths::vec3 position;
+    glm::vec3 position;
     glm::vec2 textureCoords;
 
-    Maths::vec3 normal;
-    Maths::vec3 tangent;
-    Maths::vec3 bitangent;
+    glm::vec3 normal;
+    glm::vec3 tangent;
+    glm::vec3 bitangent;
 
-    Maths::ivec4 boneIndices = {-1, -1, -1, -1};
-    Maths::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
+    glm::ivec4 boneIndices = {-1, -1, -1, -1};
+    glm::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
 };
 
 struct StaticMeshData
@@ -92,7 +92,7 @@ public:
 
     // Returns the transforms to be uploaded to the shader. The transform
     // at position i corresponds to the bone with ID i.
-    std::vector<Maths::mat4> GetPose(const std::string& name, f32 time) const;
+    std::vector<glm::mat4> GetPose(const std::string& name, f32 time) const;
 
     // Returns a list of names of all possible animations in this mesh.
     std::vector<std::string> GetAnimationNames() const;

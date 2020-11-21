@@ -31,7 +31,7 @@ class Window
 	std::shared_ptr<WindowImpl> d_impl;
 	WindowData                  d_data;
 
-	Maths::vec3 d_clearColour;
+	glm::vec3 d_clearColour;
 
 private:
 	// Deleted Constructors
@@ -46,7 +46,7 @@ public:
 	void OnUpdate();
 	void Clear();
 
-	void SetClearColour(const Maths::vec3& colour);
+	void SetClearColour(const glm::vec3& colour);
 
 	// Getters
 	u32 Height() const { return d_data.height; }

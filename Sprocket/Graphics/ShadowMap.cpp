@@ -34,7 +34,7 @@ ShadowMap::ShadowMap(Window* window, AssetManager* assetManager)
 
 void ShadowMap::Draw(
     const Sun& sun,
-    const Maths::vec3& centre,
+    const glm::vec3& centre,
     Scene& scene)
 {
     RenderContext rc;
@@ -85,7 +85,7 @@ void ShadowMap::Draw(
     d_shader.Unbind();
 }
 
-Maths::mat4 ShadowMap::GetLightProjViewMatrix() const
+glm::mat4 ShadowMap::GetLightProjViewMatrix() const
 {
     return d_lightProjMatrix * d_lightViewMatrix;
 }

@@ -111,7 +111,7 @@ bool Texture::operator==(const Texture& other) const
 }
 
 void Texture::SetSubTexture(
-    const Maths::ivec4& region,
+    const glm::ivec4& region,
     const unsigned char* data)
 {
     auto c = GL_RGBA;

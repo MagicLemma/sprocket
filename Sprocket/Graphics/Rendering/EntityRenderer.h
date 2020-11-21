@@ -39,7 +39,7 @@ public:
     EntityRenderer(AssetManager* assetManager);
 
     void Draw(const Entity& camera, Scene& scene);
-    void Draw(const Maths::mat4& proj, const Maths::mat4& view, Scene& scene);
+    void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);
 
     void EnableShadows(const ShadowMap& shadowMap);
     void EnableParticles(ParticleManager* particleManager);

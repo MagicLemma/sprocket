@@ -10,8 +10,8 @@ class Camera
     KeyboardProxy d_keyboard;
     MouseProxy    d_mouse;
 
-    Maths::vec3 d_position;
-    Maths::vec3 d_target;
+    glm::vec3 d_position;
+    glm::vec3 d_target;
 
     float d_yaw;
     float d_distance;
@@ -24,13 +24,13 @@ class Camera
     float d_absMax;
 
 public:
-    Camera(Window* window, const Maths::vec3& target);
+    Camera(Window* window, const glm::vec3& target);
 
     void OnUpdate(double dt);
     void OnEvent(Event& event);
 
-    Maths::mat4 Proj() const;
-    Maths::mat4 View() const;
+    glm::mat4 Proj() const;
+    glm::mat4 View() const;
 };
 
 }

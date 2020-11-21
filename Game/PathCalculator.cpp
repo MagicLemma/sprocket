@@ -6,15 +6,15 @@
 
 using namespace Sprocket;
 
-std::queue<Maths::vec3> GenerateAStarPath(
-    const Maths::vec3& start,
-    const Maths::vec3& end,
+std::queue<glm::vec3> GenerateAStarPath(
+    const glm::vec3& start,
+    const glm::vec3& end,
     GridFunction gridFunction)
 {
     auto p1 = ClosestGridSquare(start);
     auto p2 = ClosestGridSquare(end);
 
-    Maths::ivec2 directions[8] = {
+    glm::ivec2 directions[8] = {
         {0, 1}, {1, 0}, {0, -1}, {-1, 0},
         {-1, -1}, {1, 1}, {-1, 1}, {1, -1}
     };
@@ -46,7 +46,7 @@ std::queue<Maths::vec3> GenerateAStarPath(
         openList.erase(currentIt);
 
         for (const auto& dir : directions) {
-            Maths::ivec2 newPos = current->position + dir;
+            glm::ivec2 newPos = current->position + dir;
 
             if (FindNode(closedList, newPos) || gridFunction(newPos)) {
                 continue;
@@ -70,14 +70,14 @@ std::queue<Maths::vec3> GenerateAStarPath(
         }
     }
 
-    std::queue<Sprocket::Maths::vec3> path;
+    std::queue<glm::vec3> path;
 
     if (current->position != p2) {
         SPKT_LOG_INFO("No path found!");
         return path;
     }
 
-    std::vector<Sprocket::Maths::vec3> aStarPath;
+    std::vector<glm::vec3> aStarPath;
 
     while (current != nullptr) {
         auto p = current->position;
@@ -93,7 +93,7 @@ std::queue<Maths::vec3> GenerateAStarPath(
     return path;
 }
 
-Maths::ivec2 ClosestGridSquare(const Maths::vec3& position)
+glm::ivec2 ClosestGridSquare(const glm::vec3& position)
 {
     int gridX = (int)std::round(position.x - 0.5f);
     int gridZ = (int)std::round(position.z - 0.5f);
@@ -102,7 +102,7 @@ Maths::ivec2 ClosestGridSquare(const Maths::vec3& position)
 
 PathNodePtr FindNode(
     const std::vector<PathNodePtr>& nodes,
-    const Maths::ivec2& coords)
+    const glm::ivec2& coords)
 {
     for (auto& node : nodes) {
         if (node->position == coords) {
@@ -112,7 +112,7 @@ PathNodePtr FindNode(
     return nullptr;
 };
 
-float Heuristic(PathNodePtr node, const Maths::ivec2& target)
+float Heuristic(PathNodePtr node, const glm::ivec2& target)
 {
     auto delta = target - node->position;
     return 10 * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));

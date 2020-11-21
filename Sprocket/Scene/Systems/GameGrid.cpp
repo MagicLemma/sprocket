@@ -82,8 +82,8 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double)
     auto& camTr = d_camera.Get<TransformComponent>();
 
     d_mouse.OnUpdate();
-    Maths::vec3 cameraPos = camTr.position;
-    Maths::vec3 direction = Maths::GetMouseRay(
+    glm::vec3 cameraPos = camTr.position;
+    glm::vec3 direction = Maths::GetMouseRay(
         d_mouse.GetMousePos(),
         d_window->Width(),
         d_window->Height(),
@@ -92,7 +92,7 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double)
     );
 
     float lambda = -cameraPos.y / direction.y;
-    Maths::vec3 mousePos = cameraPos + lambda * direction;
+    glm::vec3 mousePos = cameraPos + lambda * direction;
     d_hovered = {(int)std::floor(mousePos.x), (int)std::floor(mousePos.z)};
 
     d_hoveredSquare.Get<TransformComponent>().position = { d_hovered.x + 0.5f, 0.05f, d_hovered.y + 0.5f };
