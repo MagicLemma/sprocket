@@ -83,7 +83,7 @@ glm::vec3 CircadianCycle::GetSunDir() const
 {
     float angle = GetAngle();
     glm::vec3 dir = {Maths::Sind(angle), Maths::Cosd(angle), 0.1f * Maths::Sind(angle)};
-    dir = Maths::Normalise(dir);
+    dir = glm::normalize(dir);
     return dir;
 }
 

@@ -298,7 +298,7 @@ void PhysicsEngine::Running(bool isRunning)
 Entity PhysicsEngine::Raycast(const glm::vec3& base,
                               const glm::vec3& direction)
 {
-    glm::vec3 d = Maths::Normalise(direction);
+    glm::vec3 d = glm::normalize(direction);
     d *= 100.0f;
 
     rp3d::Vector3 start = Convert(base);

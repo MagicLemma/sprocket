@@ -76,11 +76,6 @@ glm::quat Rotate(const glm::quat& orig, const glm::vec3& axis, float degrees)
     return glm::rotate(orig, glm::radians(degrees), axis);
 }
 
-glm::quat Normalise(const glm::quat& q)
-{
-    return glm::normalize(q);
-}
-
 glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up)
 {
     glm::mat4 lookAtMat = glm::lookAt(position, target, up);
@@ -132,11 +127,6 @@ glm::vec3 GetTranslation(const glm::mat4& m)
     return m[3];
 }
 
-glm::vec3 Normalise(const glm::vec3& vec)
-{
-    return glm::normalize(vec);
-}
-
 glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float delta)
 {
     return glm::mix(a, b, delta);
@@ -186,7 +176,7 @@ glm::vec3 GetMouseRay(const glm::vec2& mousePos, u32 w, u32 h, const glm::mat4& 
     ray.w = 0.0f;
 
     // World Space
-    return Normalise(glm::inverse(view) * ray);
+    return glm::normalize(glm::inverse(view) * ray);
 }
 
 glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)

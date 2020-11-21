@@ -10,7 +10,7 @@
 
 namespace Sprocket {
 namespace Maths {
-    
+
 // Matrix Modifiers
 glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians);
 
@@ -25,7 +25,6 @@ glm::mat4 Ortho(float width, float height, float length);
 // Quaternion Modifiers
 glm::quat Rotate(const glm::vec3& axis, float radians);
 glm::quat Rotate(const glm::quat& quaternion, const glm::vec3& axis, float radians);
-glm::quat Normalise(const glm::quat& q);
 
 glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up = {0, 1, 0});
 
@@ -46,8 +45,6 @@ float* Cast(const glm::mat4& m);
 // Vector Maths
 glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs);
 glm::vec3 GetTranslation(const glm::mat4& m);
-
-glm::vec3 Normalise(const glm::vec3& vec);
 
 // Normalisation
 glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float delta);

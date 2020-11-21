@@ -34,7 +34,7 @@ void Camera::OnUpdate(double dt)
 
     auto f = d_target - d_position;
     f.y = 0;
-    f = Maths::Normalise(f);
+    f = glm::normalize(f);
 
     glm::vec3 up{0, 1, 0};
     glm::vec3 r = Maths::Cross(f, up);
