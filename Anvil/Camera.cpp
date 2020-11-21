@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include <glm/trigonometric.hpp>
+
 namespace Sprocket {
 
 Camera::Camera(Window* window, const glm::vec3& target)
@@ -9,7 +11,7 @@ Camera::Camera(Window* window, const glm::vec3& target)
     , d_yaw(0.0f)
     , d_distance(8.0f)
     , d_moveSpeed(10.0f)
-    , d_rotateSpeed(90.0f)
+    , d_rotateSpeed(glm::half_pi<float>())
     , d_absVert(2.0f)
     , d_absMin(2.0f)
     , d_absMax(10.0f)
@@ -74,8 +76,8 @@ void Camera::OnUpdate(double dt)
         d_absMax -= d_moveSpeed * dt;
     }
 
-    d_position.x = d_target.x + d_distance * Maths::Cosd(d_yaw);
-    d_position.z = d_target.z + d_distance * Maths::Sind(d_yaw);
+    d_position.x = d_target.x + d_distance * glm::cos(d_yaw);
+    d_position.z = d_target.z + d_distance * glm::sin(d_yaw);
 
     if (d_position.y != d_absVert) {
         float d = d_absVert - d_position.y;
