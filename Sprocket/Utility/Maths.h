@@ -2,6 +2,7 @@
 #include "Types.h"
 
 #include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 #include <string>
@@ -59,9 +60,6 @@ float* Cast(const glm::mat4& m);
 glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs);
 glm::vec3 GetTranslation(const glm::mat4& m);
 
-float Distance(const glm::vec2& A, const glm::vec2& B);
-float Distance(const glm::vec3& A, const glm::vec3& B);
-
 float Length(const glm::vec3& v);
 float Length(const glm::vec2& v);
 float Length(const glm::ivec2& v);
@@ -74,9 +72,6 @@ glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float delta);
 glm::quat Interpolate(const glm::quat& a, const glm::quat& b, float delta);
 
 // Trig
-float Radians(float degrees);
-float Degrees(float radians);
-
 float Sind(float degrees);
 float Cosd(float degrees);
 

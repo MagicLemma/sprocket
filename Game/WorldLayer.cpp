@@ -116,7 +116,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
             if (e->Button() == Mouse::LEFT) {
                 std::queue<glm::vec3>().swap(path.markers);
                 auto pos = d_worker.Get<TransformComponent>().position;
-                if (Maths::Distance(pos, mousePos) > 1.0f) {
+                if (glm::distance(pos, mousePos) > 1.0f) {
                     path.markers = GenerateAStarPath(
                         pos,
                         mousePos,

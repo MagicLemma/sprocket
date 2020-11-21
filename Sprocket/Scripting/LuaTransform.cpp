@@ -52,7 +52,7 @@ int RotateY(lua_State* L)
     auto& tr = entity.Get<TransformComponent>();
 
     float yaw = (float)lua_tonumber(L, 2);
-    tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, Maths::Radians(yaw));
+    tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, glm::radians(yaw));
     return 0;
 }
 

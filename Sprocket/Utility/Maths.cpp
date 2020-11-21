@@ -58,9 +58,9 @@ glm::mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPl
 glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll)
 {
     glm::mat4 matrix(1.0);
-    matrix = glm::rotate(matrix, Radians(pitch), glm::vec3(1, 0, 0));
-    matrix = glm::rotate(matrix, Radians(yaw), glm::vec3(0, 1, 0));
-    matrix = glm::rotate(matrix, Radians(roll), glm::vec3(0, 0, 1));
+    matrix = glm::rotate(matrix, glm::radians(pitch), glm::vec3(1, 0, 0));
+    matrix = glm::rotate(matrix, glm::radians(yaw), glm::vec3(0, 1, 0));
+    matrix = glm::rotate(matrix, glm::radians(roll), glm::vec3(0, 0, 1));
     matrix = glm::translate(matrix, -position);
     return matrix;
 }
@@ -93,12 +93,12 @@ glm::mat4 Ortho(float width, float height, float length)
 // Quaternion Modifiers
 glm::quat Rotate(const glm::vec3& axis, float degrees)
 {
-    return glm::rotate(Maths::identity, Radians(degrees), axis);
+    return glm::rotate(Maths::identity, glm::radians(degrees), axis);
 }
 
 glm::quat Rotate(const glm::quat& orig, const glm::vec3& axis, float degrees)
 {
-    return glm::rotate(orig, Radians(degrees), axis);
+    return glm::rotate(orig, glm::radians(degrees), axis);
 }
 
 glm::quat Normalise(const glm::quat& q)
@@ -174,38 +174,28 @@ glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs)
 
 glm::vec3 GetTranslation(const glm::mat4& m)
 {
-    return glm::vec3{m[3][0], m[3][1], m[3][2]};
-}
-
-float Distance(const glm::vec2& A, const glm::vec2& B)
-{
-    return glm::distance(A, B);
-}
-
-float Distance(const glm::vec3& A, const glm::vec3& B)
-{
-    return glm::distance(A, B);
+    return m[3];
 }
 
 float Length(const glm::vec3& v)
 {
-    return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    return glm::length(v);
 }
 
 float Length(const glm::vec2& v)
 {
-    return std::sqrt(v.x * v.x + v.y * v.y);
+    return glm::length(v);
 }
 
 float Length(const glm::ivec2& v)
 {
-    return (float)std::sqrt(v.x * v.x + v.y * v.y);
+    return (float)glm::sqrt(v.x * v.x + v.y * v.y);
 }
 
 
 float LengthSquare(const glm::vec3& v)
 {
-    return v.x * v.x + v.y * v.y + v.z * v.z;
+    return glm::length2(v);
 }
 
 glm::vec3 Normalise(const glm::vec3& vec)
@@ -224,24 +214,14 @@ glm::quat Interpolate(const glm::quat& a, const glm::quat& b, float delta)
 }
 
 // Trig
-float Radians(float degrees)
-{
-    return glm::radians(degrees);
-}
-
-float Degrees(float radians)
-{
-    return glm::degrees(radians);
-}
-
 float Sind(float degrees)
 {
-    return std::sin(Radians(degrees));
+    return glm::sin(glm::radians(degrees));
 }
 
 float Cosd(float degrees)
 {
-    return std::cos(Radians(degrees));
+    return glm::cos(glm::radians(degrees));
 }
 
 // General Helpers
