@@ -128,11 +128,11 @@ void Guizmo(
     ImGuizmo::MODE coords)
 {
     ImGuizmo::Manipulate(
-        Maths::Cast(view),
-        Maths::Cast(projection),
+        glm::value_ptr(view),
+        glm::value_ptr(projection),
         mode,
         coords,
-        Maths::Cast(*matrix)
+        glm::value_ptr(*matrix)
     );
 }
 

@@ -21,11 +21,11 @@ void ShowGuizmo(
         auto& camera = editor.GetEditorCamera();
         auto tr = Maths::Transform(c.position, c.orientation, c.scale);
         ImGuizmo::Manipulate(
-            Maths::Cast(camera.View()),
-            Maths::Cast(camera.Proj()),
+            glm::value_ptr(camera.View()),
+            glm::value_ptr(camera.Proj()),
             mode,
             coords,
-            Maths::Cast(tr),
+            glm::value_ptr(tr),
             nullptr,
             &snap->x
         );

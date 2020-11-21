@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <string>
 #include <optional>
@@ -38,9 +39,6 @@ glm::vec3 Rotate(const glm::vec3& vector, const glm::vec3& axis, float radians);
 
 // Conversions
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale);
-
-float* Cast(const glm::mat3& m);
-float* Cast(const glm::mat4& m);
 
 // Vector Maths
 glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs);

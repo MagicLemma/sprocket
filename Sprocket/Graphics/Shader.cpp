@@ -135,7 +135,7 @@ void Shader::LoadQuat(const std::string& name, const glm::quat& quat) const
 
 void Shader::LoadMat4(const std::string& name, const glm::mat4& matrix, int count) const
 {
-	glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, Maths::Cast(matrix));
+	glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, glm::value_ptr(matrix));
 }
 
 std::string ArrayName(const std::string& uniformName, size_t index)

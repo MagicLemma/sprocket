@@ -106,16 +106,6 @@ void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientat
     glm::decompose(matrix, *scale, *orientation, *position, skew, perspective);
 }
 
-float* Cast(const glm::mat3& m)
-{
-    return (float*)&m[0][0];
-}
-
-float* Cast(const glm::mat4& m)
-{
-    return (float*)&m[0][0];
-}
-
 // Vector Maths
 glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs)
 {
