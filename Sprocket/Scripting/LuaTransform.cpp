@@ -53,7 +53,7 @@ int RotateY(lua_State* L)
     auto& tr = entity.Get<TransformComponent>();
 
     float yaw = (float)lua_tonumber(L, 2);
-    tr.orientation = Maths::Rotate(tr.orientation, {0, 1, 0}, glm::radians(yaw));
+    tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
     return 0;
 }
 
@@ -67,7 +67,7 @@ int GetForwardsDir(lua_State* L)
     
     if (entity.Has<CameraComponent>()) {
         auto pitch = entity.Get<CameraComponent>().pitch;
-        o *= Maths::Rotate({1, 0, 0}, pitch);
+        o = glm::rotate(o, pitch, {1, 0, 0});
     }
 
     auto forwards = Maths::Forwards(o);

@@ -15,7 +15,7 @@ glm::mat4 MakeView(const Entity& entity)
 
     if (entity.Has<CameraComponent>()) {
         const auto& c = entity.Get<CameraComponent>();
-        tr.orientation *= Maths::Rotate({1, 0, 0}, c.pitch);
+        tr.orientation *= glm::rotate(glm::identity<glm::quat>(), c.pitch, {1, 0, 0});
     }
 
     return glm::inverse(Maths::Transform(tr.position, tr.orientation));   

@@ -13,12 +13,6 @@
 namespace Sprocket {
 namespace Maths {
 
-// Matrix Modifiers
-glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians)
-{
-    return glm::rotate(matrix, radians, axis);
-}
-
 // Matrix Constructors
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale)
 {
@@ -28,27 +22,6 @@ glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, con
     m[3][2] = position.z;
     m[3][3] = 1.0f;
     return glm::scale(m, scale);
-}
-
-glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll)
-{
-    glm::mat4 matrix(1.0);
-    matrix = glm::rotate(matrix, glm::radians(pitch), glm::vec3(1, 0, 0));
-    matrix = glm::rotate(matrix, glm::radians(yaw), glm::vec3(0, 1, 0));
-    matrix = glm::rotate(matrix, glm::radians(roll), glm::vec3(0, 0, 1));
-    matrix = glm::translate(matrix, -position);
-    return matrix;
-}
-
-// Quaternion Modifiers
-glm::quat Rotate(const glm::vec3& axis, float degrees)
-{
-    return glm::rotate(glm::identity<glm::quat>(), glm::radians(degrees), axis);
-}
-
-glm::quat Rotate(const glm::quat& orig, const glm::vec3& axis, float degrees)
-{
-    return glm::rotate(orig, glm::radians(degrees), axis);
 }
 
 glm::vec3 Forwards(const glm::quat& q)

@@ -270,7 +270,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     name.name = "Tree";
 
     auto& tr = newEntity.Add<TransformComponent>();
-    tr.orientation = Maths::Rotate({0, 1, 0}, Random(0.0f, 360.0f));
+    tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
     float r = Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
@@ -296,7 +296,8 @@ void WorldLayer::AddRockBase(
 
     auto& tr = newEntity.Add<TransformComponent>();
     tr.position.y -= Random(0.0f, 0.5f);
-    tr.orientation = Maths::Rotate({0, 1, 0}, 90 * Random(0, 3));
+    float randomRotation = glm::half_pi<float>() * Random(0, 3);
+    tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
     tr.scale = {1.1f, 1.1f, 1.1f};
 
     auto& modelData = newEntity.Add<ModelComponent>();

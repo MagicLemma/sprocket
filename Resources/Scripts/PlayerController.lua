@@ -1,6 +1,6 @@
 function Init(entity)
     local f = GetForwardsDir(entity)
-    YAW = math.deg(-math.asin(f.x))
+    YAW = -math.asin(f.x)
 
     TIME = 0.0
 
@@ -11,22 +11,24 @@ end
 function OnUpdate(entity, dt)
     TIME = TIME + dt
 
+    local rotateSpeed = 0.01
+
     local dx = 0
     local dy = 0
     if TIME > 0.2 then
         dx, dy = GetMouseOffset()
     end
     
-    YAW = YAW - dx * 0.15
+    YAW = YAW - dx * rotateSpeed
 
     local camera = GetCameraComponent(entity)
-    camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
+    camera.pitch = Clamp(camera.pitch - rotateSpeed * dy, math.rad(-89), math.rad(89))
     SetCameraComponent(entity, camera)
 
-    MakeUpright(entity, math.rad(YAW))
+    MakeUpright(entity, YAW)
 
-    local cosYaw = math.cos(math.rad(YAW))
-    local sinYaw = math.sin(math.rad(YAW))
+    local cosYaw = math.cos(YAW)
+    local sinYaw = math.sin(YAW)
     
     local forwards = Vec3(-sinYaw, 0, -cosYaw)
     local right = Vec3(cosYaw, 0, -sinYaw)

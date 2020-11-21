@@ -88,7 +88,7 @@ void ColliderRenderer::Draw(
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, -c.height/2, 0.0});
-            transform = Maths::Rotate(transform, {1, 0, 0}, glm::radians(180.0f));
+            transform = glm::rotate(transform, glm::pi<float>(), {1, 0, 0});
             transform = glm::scale(transform, {c.radius, c.radius, c.radius});
             d_shader.LoadMat4("u_model_matrix", transform);
             d_vao->SetModel(s_hemisphere);
