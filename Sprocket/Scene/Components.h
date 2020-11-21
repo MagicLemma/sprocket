@@ -19,7 +19,7 @@ struct NameComponent
 struct TransformComponent
 {
     glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
-    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    glm::quat orientation = glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
     glm::vec3 scale = glm::vec3{1.0f, 1.0f, 1.0f};
 };
 
@@ -44,7 +44,7 @@ struct RigidBody3DComponent
 struct BoxCollider3DComponent
 {
     glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
-    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    glm::quat orientation = glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     glm::vec3 halfExtents = glm::vec3{0.0f, 0.0f, 0.0f};
     bool applyScale = true;
@@ -53,7 +53,7 @@ struct BoxCollider3DComponent
 struct SphereCollider3DComponent
 {
     glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
-    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    glm::quat orientation = glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     float radius = 1.0f;
 };
@@ -61,7 +61,7 @@ struct SphereCollider3DComponent
 struct CapsuleCollider3DComponent
 {
     glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
-    Maths::quat orientation = Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+    glm::quat orientation = glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
     float mass = 1.0f;
     float radius = 1.0f;
     float height = 1.0f;

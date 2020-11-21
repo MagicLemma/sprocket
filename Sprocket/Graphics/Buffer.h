@@ -11,7 +11,7 @@ namespace Sprocket {
 struct InstanceData
 {
     glm::vec3 position;
-    Maths::quat orientation;
+    glm::quat orientation;
     glm::vec3 scale;
 };
 

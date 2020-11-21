@@ -101,7 +101,7 @@ glm::quat Rotate(const glm::vec3& axis, float degrees)
     return glm::rotate(Maths::identity, Radians(degrees), axis);
 }
 
-glm::quat Rotate(const quat& orig, const glm::vec3& axis, float degrees)
+glm::quat Rotate(const glm::quat& orig, const glm::vec3& axis, float degrees)
 {
     return glm::rotate(orig, Radians(degrees), axis);
 }
@@ -228,7 +228,7 @@ glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float delta)
     return glm::mix(a, b, delta);
 }
 
-Maths::quat Interpolate(const Maths::quat& a, const Maths::quat& b, float delta)
+glm::quat Interpolate(const glm::quat& a, const glm::quat& b, float delta)
 {
     return glm::slerp(a, b, delta);
 }
@@ -266,7 +266,7 @@ float Modulo(float val, float high)
 glm::mat4 NoScale(const glm::mat4& matrix)
 {
     glm::vec3 pos, scale;
-    Maths::quat ori;
+    glm::quat ori;
     Maths::Decompose(matrix, &pos, &ori, &scale);
     return Maths::Transform(pos, ori);
 }

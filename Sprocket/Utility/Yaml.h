@@ -22,10 +22,10 @@ struct convert<glm::vec3>
 };
 
 template<>
-struct convert<Sprocket::Maths::quat>
+struct convert<glm::quat>
 {
-    static Node encode(const Sprocket::Maths::quat& rhs);
-    static bool decode(const Node& node, Sprocket::Maths::quat& rhs);
+    static Node encode(const glm::quat& rhs);
+    static bool decode(const Node& node, glm::quat& rhs);
 };
 
 template<>
@@ -40,7 +40,7 @@ struct convert<glm::mat4>
 namespace Sprocket {
  
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
-YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::quat& q);
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);
 
 }

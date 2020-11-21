@@ -25,7 +25,7 @@ glm::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
     return Maths::Interpolate(beforeKF.position, afterKF.position, delta);
 }
 
-Maths::quat GetOrientation(const BoneKeyFrames& bkf, float time)
+glm::quat GetOrientation(const BoneKeyFrames& bkf, float time)
 {
     if (bkf.keyOrientations.size() == 1) {
         return bkf.keyOrientations[0].orientation;
@@ -68,7 +68,7 @@ glm::vec3 GetScale(const BoneKeyFrames& bkf, float time)
 glm::mat4 GetAnimationTransform(const BoneKeyFrames& kfData, float time)
 {
     glm::vec3 position = GetPosition(kfData, time);
-    Maths::quat orientation = GetOrientation(kfData, time);
+    glm::quat orientation = GetOrientation(kfData, time);
     glm::vec3 scale = GetScale(kfData, time);
     return Maths::Transform(position, orientation, scale);
 }

@@ -211,7 +211,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["TransformComponent"]) {
             TransformComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.scale = spec["scale"] ? spec["scale"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             e.Add(c);
         }
@@ -234,7 +234,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.halfExtents = spec["halfExtents"] ? spec["halfExtents"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.applyScale = spec["applyScale"] ? spec["applyScale"].as<bool>() : true;
@@ -243,7 +243,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
             e.Add(c);
@@ -251,7 +251,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<Maths::quat>() : Maths::quat{1.0f, 0.0f, 0.0f, 0.0f};
+            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
             c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
             c.height = spec["height"] ? spec["height"].as<float>() : 1.0f;

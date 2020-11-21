@@ -33,7 +33,7 @@ struct KeyFramePos
 struct KeyFrameOri
 {
     f32         time;
-    Maths::quat orientation;
+    glm::quat orientation;
 };
 
 struct KeyFrameScl

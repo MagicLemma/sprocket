@@ -128,7 +128,7 @@ void Shader::LoadVec4(const std::string& name, const glm::vec4& vector) const
 	glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 }
 
-void Shader::LoadQuat(const std::string& name, const Maths::quat& quat) const
+void Shader::LoadQuat(const std::string& name, const glm::quat& quat) const
 {
 	glUniform4f(GetUniformLocation(name), quat.x, quat.y, quat.z, quat.w);
 }

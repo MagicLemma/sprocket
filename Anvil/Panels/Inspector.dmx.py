@@ -45,7 +45,7 @@ class Inspector(Plugin):
             if cpp_subtype == "Colour":
                 return f'ImGui::ColorPicker4("{display}", &c.{name}.r)'
             return f'ImGui::DragFloat4("{display}", &c.{name}.x, 0.1f)'
-        if cpp_type == "Maths::quat":
+        if cpp_type == "glm::quat":
             return f'ImGuiXtra::Euler("{display}", &c.{name})'
         if cpp_type == "bool":
             return f'ImGui::Checkbox("{display}", &c.{name})'

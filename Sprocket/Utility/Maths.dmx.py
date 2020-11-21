@@ -57,7 +57,7 @@ class Quat(Type):
 
     @staticmethod
     def typename():
-        return "Maths::quat"
+        return "glm::quat"
 
 
 class Mat4(Type): # TODO: Implement

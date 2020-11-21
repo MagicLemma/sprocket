@@ -42,7 +42,7 @@ bool convert<glm::vec3>::decode(const Node& node, glm::vec3& rhs)
     return true;
 }
 
-Node convert<Maths::quat>::encode(const Maths::quat& rhs)
+Node convert<glm::quat>::encode(const glm::quat& rhs)
 {
     Node n;
     n.push_back(rhs.w);
@@ -52,7 +52,7 @@ Node convert<Maths::quat>::encode(const Maths::quat& rhs)
     return n;
 }
 
-bool convert<Maths::quat>::decode(const Node& node, Maths::quat& rhs)
+bool convert<glm::quat>::decode(const Node& node, glm::quat& rhs)
 {
     if (!node.IsSequence() || node.size() != 4)
         return false;
@@ -124,7 +124,7 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const Maths::quat& q)
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q)
 {
     out << YAML::Flow;
     out << YAML::BeginSeq << q.w << q.x << q.y << q.z << YAML::EndSeq;

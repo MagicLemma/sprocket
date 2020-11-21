@@ -136,11 +136,11 @@ void Guizmo(
     );
 }
 
-void Euler(const std::string& name, Maths::quat* q)
+void Euler(const std::string& name, glm::quat* q)
 {
     glm::vec3 euler = Maths::ToEuler(*q);
     if (ImGui::DragFloat3("Orientation", &euler.x, 0.01f)) {
-        *q = Maths::quat(euler);
+        *q = glm::quat(euler);
     }
 }
 

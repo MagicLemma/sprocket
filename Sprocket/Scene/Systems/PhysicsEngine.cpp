@@ -30,17 +30,17 @@ glm::vec2 Convert(const rp3d::Vector2& v)
     return glm::vec2(v.x, v.y);
 }
 
-Maths::quat Convert(const rp3d::Quaternion& q)
+glm::quat Convert(const rp3d::Quaternion& q)
 {
-    return Maths::quat(q.w, q.x, q.y, q.z);
+    return glm::quat(q.w, q.x, q.y, q.z);
 }
 
-rp3d::Quaternion Convert(const Maths::quat& q)
+rp3d::Quaternion Convert(const glm::quat& q)
 {
     return rp3d::Quaternion(q.x, q.y, q.z, q.w);
 }
 
-rp3d::Transform Convert(const glm::vec3& position, const Maths::quat& orientation)
+rp3d::Transform Convert(const glm::vec3& position, const glm::quat& orientation)
 {
     rp3d::Transform t;
     t.setPosition(Convert(position));

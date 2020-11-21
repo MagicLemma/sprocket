@@ -49,9 +49,9 @@ glm::vec3 Convert(const aiVector3D& v)
     return glm::vec3{v.x, v.y, v.z};
 }
 
-Maths::quat Convert(const aiQuaternion& q)
+glm::quat Convert(const aiQuaternion& q)
 {
-    Maths::quat quat;
+    glm::quat quat;
     quat.x = q.x;
     quat.y = q.y;
     quat.z = q.z;

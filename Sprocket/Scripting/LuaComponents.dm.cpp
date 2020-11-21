@@ -79,7 +79,7 @@ template <> glm::vec3 Pull(lua_State* L, int& count)
     return {x, y, z};
 }
 
-template <> Maths::quat Pull(lua_State* L, int& count)
+template <> glm::quat Pull(lua_State* L, int& count)
 {
     float x = (float)lua_tonumber(L, count++);
     float y = (float)lua_tonumber(L, count++);
@@ -100,7 +100,7 @@ template <> constexpr int Dimension<float>() { return 1; }
 template <> constexpr int Dimension<bool>() { return 1; }
 template <> constexpr int Dimension<std::string>() { return 1; }
 template <> constexpr int Dimension<glm::vec3>() { return 3; }
-template <> constexpr int Dimension<Maths::quat>() { return 4; }
+template <> constexpr int Dimension<glm::quat>() { return 4; }
 
 #ifdef DATAMATIC_BLOCK SCRIPTABLE=true
 constexpr int {{Comp.Name}}Dimension()

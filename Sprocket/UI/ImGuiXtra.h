@@ -57,7 +57,7 @@ void Guizmo(
 );
 
 // Displays a quaternion in Euler angles form.
-void Euler(const std::string& name, Maths::quat* q);
+void Euler(const std::string& name, glm::quat* q);
 
 // Displays a window for a large amount of text that can be rewritten.
 bool MultilineTextModifiable(const std::string_view label, std::string* text);
