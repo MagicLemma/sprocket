@@ -98,7 +98,7 @@ void Camera::OnEvent(Event& event)
 
 glm::mat4 Camera::Proj() const
 {
-    return Maths::Perspective(d_window->AspectRatio(), 70.0f, 0.1f, 1000.0f);
+    return glm::perspective(70.0f, d_window->AspectRatio(), 0.1f, 1000.0f);
 }
 
 glm::mat4 Camera::View() const

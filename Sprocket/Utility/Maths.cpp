@@ -30,11 +30,6 @@ glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, con
     return glm::scale(m, scale);
 }
 
-glm::mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane)
-{
-    return glm::perspective(fov, aspectRatio, nearPlane, farPlane);  
-}
-
 glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll)
 {
     glm::mat4 matrix(1.0);

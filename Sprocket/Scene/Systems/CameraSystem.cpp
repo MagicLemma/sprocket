@@ -14,8 +14,8 @@ void CameraSystem::OnStartup(Scene& scene)
 {
     auto addCamera = [&](Entity& entity) {
         auto& camera = entity.Get<CameraComponent>();
-        camera.projection = Maths::Perspective(
-            d_aspectRatio, camera.fov, 0.1f, 1000.0f
+        camera.projection = glm::perspective(
+            camera.fov, d_aspectRatio, 0.1f, 1000.0f
         );
     };
 
@@ -31,8 +31,8 @@ void CameraSystem::OnEvent(Scene& scene, Event& event)
 
         scene.Each<CameraComponent>([&](Entity& entity) {
             auto& camera = entity.Get<CameraComponent>();
-            camera.projection = Maths::Perspective(
-                d_aspectRatio, camera.fov, 0.1f, 1000.0f
+            camera.projection = glm::perspective(
+                camera.fov, d_aspectRatio, 0.1f, 1000.0f
             );
         });
     }
