@@ -1,3 +1,4 @@
+#include pragma once
 #include <string>
 #include <optional>
 

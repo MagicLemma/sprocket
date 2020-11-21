@@ -134,12 +134,7 @@ bool IsBone(const Skeleton& skeleton, const aiNode* node)
     return it != skeleton.boneMap.end();
 }
 
-void LoadAnimations(
-    Skeleton& skeleton,
-    Bone* bone,
-    const aiScene* scene,
-    const glm::mat4& transform
-)
+void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene, const glm::mat4& transform)
 {
     assert(bone);
     for (u32 i = 0; i != scene->mNumAnimations; ++i) {
