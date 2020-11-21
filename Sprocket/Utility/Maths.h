@@ -18,7 +18,6 @@ glm::mat4 Scale(const glm::mat4& matrix, const glm::vec3& scales);
 glm::mat4 Scale(const glm::mat4& matrix, float scale);
 
 glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians);
-glm::mat4 Inverse(const glm::mat4& matrix);
 glm::mat4 Transpose(const glm::mat4& matrix);
 
 // Matrix Constructors
@@ -33,7 +32,6 @@ glm::mat4 Ortho(float width, float height, float length);
 // Quaternion Modifiers
 glm::quat Rotate(const glm::vec3& axis, float radians);
 glm::quat Rotate(const glm::quat& quaternion, const glm::vec3& axis, float radians);
-glm::quat Inverse(const glm::quat& quaternion);
 glm::quat Normalise(const glm::quat& q);
 
 glm::quat LookAtQuat(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up = {0, 1, 0});

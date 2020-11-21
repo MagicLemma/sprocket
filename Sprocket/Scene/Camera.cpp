@@ -18,7 +18,7 @@ glm::mat4 MakeView(const Entity& entity)
         tr.orientation *= Maths::Rotate({1, 0, 0}, c.pitch);
     }
 
-    return Maths::Inverse(Maths::Transform(tr.position, tr.orientation));   
+    return glm::inverse(Maths::Transform(tr.position, tr.orientation));   
 }
 
 glm::mat4 MakeProj(const Entity& entity)

@@ -34,11 +34,6 @@ glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians)
     return glm::rotate(matrix, radians, axis);
 }
 
-glm::mat4 Inverse(const glm::mat4& matrix)
-{
-    return glm::inverse(matrix);
-}
-
 glm::mat4 Transpose(const glm::mat4& matrix)
 {
     return glm::transpose(matrix);
@@ -104,11 +99,6 @@ glm::quat Rotate(const glm::vec3& axis, float degrees)
 glm::quat Rotate(const glm::quat& orig, const glm::vec3& axis, float degrees)
 {
     return glm::rotate(orig, Radians(degrees), axis);
-}
-
-glm::quat Inverse(const glm::quat& quaternion)
-{
-    return glm::inverse(quaternion);
 }
 
 glm::quat Normalise(const glm::quat& q)
@@ -277,12 +267,12 @@ glm::vec3 GetMouseRay(const glm::vec2& mousePos, u32 w, u32 h, const glm::mat4& 
     glm::vec4 ray = {(2.0f * mousePos.x) / w - 1, -((2.0f * mousePos.y) / h - 1), -1.0f, 1.0f};
 
     // Eye Space
-    ray = Inverse(proj) * ray;
+    ray = glm::inverse(proj) * ray;
     ray.z = -1.0f;
     ray.w = 0.0f;
 
     // World Space
-    return Normalise(Inverse(view) * ray);
+    return Normalise(glm::inverse(view) * ray);
 }
 
 glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)
