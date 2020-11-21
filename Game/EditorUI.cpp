@@ -51,9 +51,9 @@ void SelectedEntityInfo(DevUI& ui,
         ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
         glm::vec3 eulerAngles = glm::eulerAngles(tr.orientation);
         std::stringstream ss;
-        ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
-           << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"
-           << "Roll: " << Maths::ToString(eulerAngles.z, 3);
+        ss << "Pitch: " << Printer::PrintFloat(eulerAngles.x, 3) << "\n"
+           << "Yaw: " << Printer::PrintFloat(eulerAngles.y, 3) << "\n"
+           << "Roll: " << Printer::PrintFloat(eulerAngles.z, 3);
         ImGui::Text(ss.str().c_str());    
 
         if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {

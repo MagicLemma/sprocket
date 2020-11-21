@@ -6,6 +6,10 @@
 #include <sstream>
 #include <iomanip>
 
+#include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/trigonometric.hpp>
@@ -88,35 +92,6 @@ glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)
 {
     glm::vec4 v2 = matrix * glm::vec4{v.x, v.y, v.z, 1.0f};
     return {v2.x, v2.y, v2.z};
-}
-
-// Printing
-std::string ToString(const glm::vec3& v, const std::optional<int>& dp)
-{
-    std::stringstream ss;
-    if (dp.has_value()) {
-        ss << std::fixed << std::setprecision(dp.value());
-    }
-    ss << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-    return ss.str();
-}
-
-std::string ToString(float x, const std::optional<int>& dp)
-{
-    std::stringstream ss;
-    if (dp.has_value()) {
-        ss << std::fixed << std::setprecision(dp.value());
-    }
-    ss << x;
-    return ss.str();
-}
-
-std::string ToString(bool t)
-{
-    if (t) {
-        return "True";
-    }
-    return "False";
 }
 
 }

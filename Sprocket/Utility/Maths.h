@@ -20,32 +20,12 @@ glm::vec3 Forwards(const glm::quat& q);
 glm::vec3 Right(const glm::quat& q);
 glm::vec3 Up(const glm::quat& q);
 
-// Conversions
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale);
-
-// Vector Maths
 glm::vec3 GetTranslation(const glm::mat4& m);
-
-// General Helpers
 float Modulo(float val, float high);
-
-// Returns the matrix but with the scale component removed.
 glm::mat4 NoScale(const glm::mat4& matrix);
-
-// Mouse Picking
 glm::vec3 GetMouseRay(const glm::vec2& mousePos, u32 w, u32 h, const glm::mat4& view, const glm::mat4& proj);
-
-// EXTRA OPERATIONS
-
-// Appends a 1.0 to the vector, applies the transform, then strips the extra value.
-// Has the action of taking a point and returning the point that the given transform
-// moves it to.
 glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v);
-
-// Printing
-std::string ToString(const glm::vec3& v, const std::optional<int>& dp = {});
-std::string ToString(float x, const std::optional<int>& dp = {});
-std::string ToString(bool t);
 
 }
 }
