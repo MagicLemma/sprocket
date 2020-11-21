@@ -19,9 +19,6 @@ glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians);
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale = {1.0f, 1.0f, 1.0f});
 glm::mat4 Perspective(float aspectRatio, float fov, float nearPlane, float farPlane);
 glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll);
-glm::mat4 Ortho(float left, float right, float bottom, float top);
-glm::mat4 Ortho(float left, float right, float bottom, float top, float near, float far);
-glm::mat4 Ortho(float width, float height, float length);
 
 // Quaternion Modifiers
 glm::quat Rotate(const glm::vec3& axis, float radians);
@@ -41,12 +38,7 @@ glm::vec3 Rotate(const glm::vec3& vector, const glm::vec3& axis, float radians);
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale);
 
 // Vector Maths
-glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs);
 glm::vec3 GetTranslation(const glm::mat4& m);
-
-// Normalisation
-glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float delta);
-glm::quat Interpolate(const glm::quat& a, const glm::quat& b, float delta);
 
 // Trig
 float Sind(float degrees);

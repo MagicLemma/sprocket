@@ -22,7 +22,7 @@ glm::vec3 GetPosition(const BoneKeyFrames& bkf, float time)
     auto& beforeKF = bkf.keyPostitions[before];
     auto& afterKF = bkf.keyPostitions[after];
     float delta = (time - beforeKF.time) / (afterKF.time - beforeKF.time);
-    return Maths::Interpolate(beforeKF.position, afterKF.position, delta);
+    return glm::mix(beforeKF.position, afterKF.position, delta);
 }
 
 glm::quat GetOrientation(const BoneKeyFrames& bkf, float time)
@@ -42,7 +42,7 @@ glm::quat GetOrientation(const BoneKeyFrames& bkf, float time)
     auto& beforeKF = bkf.keyOrientations[before];
     auto& afterKF = bkf.keyOrientations[after];
     float delta = (time - beforeKF.time) / (afterKF.time - beforeKF.time);
-    return Maths::Interpolate(beforeKF.orientation, afterKF.orientation, delta);
+    return glm::slerp(beforeKF.orientation, afterKF.orientation, delta);
 }
 
 glm::vec3 GetScale(const BoneKeyFrames& bkf, float time)
@@ -62,7 +62,7 @@ glm::vec3 GetScale(const BoneKeyFrames& bkf, float time)
     auto& beforeKF = bkf.keyScales[before];
     auto& afterKF = bkf.keyScales[after];
     float delta = (time - beforeKF.time) / (afterKF.time - beforeKF.time);
-    return Maths::Interpolate(beforeKF.scale, afterKF.scale, delta);
+    return glm::mix(beforeKF.scale, afterKF.scale, delta);
 }
 
 glm::mat4 GetAnimationTransform(const BoneKeyFrames& kfData, float time)

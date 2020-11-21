@@ -25,7 +25,7 @@ ShadowMap::ShadowMap(Window* window, AssetManager* assetManager)
     , d_assetManager(assetManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.
-    , d_lightProjMatrix(Maths::Ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
+    , d_lightProjMatrix(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
     , d_shadowMap(window, 8192, 8192)
     , d_vao(std::make_unique<VertexArray>())
     , d_instanceBuffer(GetInstanceBuffer())

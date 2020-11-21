@@ -37,7 +37,7 @@ void Camera::OnUpdate(double dt)
     f = glm::normalize(f);
 
     glm::vec3 up{0, 1, 0};
-    glm::vec3 r = Maths::Cross(f, up);
+    glm::vec3 r = glm::cross(f, up);
 
     if (d_keyboard.IsKeyDown(Keyboard::W)) {
         d_target += moveSpeed * f;

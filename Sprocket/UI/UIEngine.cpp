@@ -321,7 +321,11 @@ void UIEngine::EndFrame()
 
     float w = (float)d_window->Width();
     float h = (float)d_window->Height();
-    auto proj = Maths::Ortho(0, w, h, 0);
+
+    // This transformation makes the top left of the screen (0, 0) and the bottom
+    // right be (width, height). It flips the y-axis since OpenGL treats the bottom
+    // left as (0, 0).
+    auto proj = glm::ortho(0.0f, w, h, 0.0f);
     d_shader.Bind();
     d_shader.LoadMat4("u_proj_matrix", proj);
 

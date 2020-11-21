@@ -22,7 +22,7 @@ glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians)
 // Matrix Constructors
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale)
 {
-    glm::mat4 m = glm::mat3_cast(orientation);
+    glm::mat4 m = glm::mat4_cast(orientation);
     m[3][0] = position.x;
     m[3][1] = position.y;
     m[3][2] = position.z;
@@ -43,26 +43,6 @@ glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll)
     matrix = glm::rotate(matrix, glm::radians(roll), glm::vec3(0, 0, 1));
     matrix = glm::translate(matrix, -position);
     return matrix;
-}
-
-glm::mat4 Ortho(float left, float right, float bottom, float top)
-{
-    return glm::ortho(left, right, bottom, top);   
-}
-
-glm::mat4 Ortho(float left, float right, float bottom, float top, float near, float far)
-{
-    return glm::ortho(left, right, bottom, top, near, far);   
-}
-
-glm::mat4 Ortho(float width, float height, float length)
-{
-    glm::mat4 m(0.0f);
-    m[0][0] = 2.0f / width;
-    m[1][1] = 2.0f / height;
-    m[2][2] = -2.0f / length;
-    m[3][3] = 1.0f;
-    return m;
 }
 
 // Quaternion Modifiers
@@ -107,24 +87,9 @@ void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientat
 }
 
 // Vector Maths
-glm::vec3 Cross(const glm::vec3& lhs, const glm::vec3& rhs)
-{
-    return glm::cross(lhs, rhs);
-}
-
 glm::vec3 GetTranslation(const glm::mat4& m)
 {
     return m[3];
-}
-
-glm::vec3 Interpolate(const glm::vec3& a, const glm::vec3& b, float delta)
-{
-    return glm::mix(a, b, delta);
-}
-
-glm::quat Interpolate(const glm::quat& a, const glm::quat& b, float delta)
-{
-    return glm::slerp(a, b, delta);
 }
 
 // Trig
