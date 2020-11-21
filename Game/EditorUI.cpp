@@ -49,7 +49,7 @@ void SelectedEntityInfo(DevUI& ui,
     if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
         auto& tr = entity.Get<TransformComponent>();
         ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
-        glm::vec3 eulerAngles = Maths::ToEuler(tr.orientation);
+        glm::vec3 eulerAngles = glm::eulerAngles(tr.orientation);
         std::stringstream ss;
         ss << "Pitch: " << Maths::ToString(eulerAngles.x, 3) << "\n"
            << "Yaw: " << Maths::ToString(eulerAngles.y, 3) << "\n"

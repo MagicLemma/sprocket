@@ -34,11 +34,6 @@ glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians)
     return glm::rotate(matrix, radians, axis);
 }
 
-glm::mat4 Transpose(const glm::mat4& matrix)
-{
-    return glm::transpose(matrix);
-}
-
 // Matrix Constructors
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale)
 {
@@ -137,11 +132,6 @@ glm::mat4 ToMat4(const glm::quat& q)
 glm::quat ToQuat(const glm::mat3& m)
 {
     return glm::quat_cast(m);
-}
-
-glm::vec3 ToEuler(const glm::quat& q)
-{
-    return glm::eulerAngles(q);
 }
 
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale)
