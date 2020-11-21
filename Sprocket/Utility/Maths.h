@@ -32,10 +32,6 @@ void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientat
 // Vector Maths
 glm::vec3 GetTranslation(const glm::mat4& m);
 
-// Trig
-float Sind(float degrees);
-float Cosd(float degrees);
-
 // General Helpers
 float Modulo(float val, float high);
 

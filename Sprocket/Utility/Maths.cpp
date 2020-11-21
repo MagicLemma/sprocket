@@ -80,17 +80,6 @@ glm::vec3 GetTranslation(const glm::mat4& m)
     return m[3];
 }
 
-// Trig
-float Sind(float degrees)
-{
-    return glm::sin(glm::radians(degrees));
-}
-
-float Cosd(float degrees)
-{
-    return glm::cos(glm::radians(degrees));
-}
-
 // General Helpers
 float Modulo(float val, float high)
 {
