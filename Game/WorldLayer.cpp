@@ -35,7 +35,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     theme.clickedColour = GARDEN;
     d_hoveredEntityUI.SetTheme(theme);
 
-    d_cycle.SetAngle(190.0f);
+    d_cycle.SetAngle(3.14195f);
 
     auto& sun = d_scene->GetSun();
     sun.direction = d_cycle.GetSunDir();
@@ -164,7 +164,7 @@ void WorldLayer::OnUpdate(double dt)
             sun.direction = -d_cycle.GetSunDir();
             sun.colour = {0.5, 0.57, 0.98};
         }
-        sun.brightness = 2.0f * std::abs(Maths::Cosd(d_cycle.GetAngle()));
+        sun.brightness = 2.0f * std::abs(glm::cos(d_cycle.GetAngle()));
 
         sun.direction = glm::normalize(sun.direction);
         d_scene->OnUpdate(dt);

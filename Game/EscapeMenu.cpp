@@ -78,7 +78,7 @@ void EscapeMenu::OnUpdate(double dt)
 
     buttonRegion.y += 60;
     float angle = d_worldLayer->d_cycle.GetAngle();
-    d_ui.Dragger("Time of Day", buttonRegion, &angle, 0.1f);
+    d_ui.Dragger("Time of Day", buttonRegion, &angle, 0.001f);
     d_worldLayer->d_cycle.SetAngle(angle);
 
     buttonRegion.y += 60;

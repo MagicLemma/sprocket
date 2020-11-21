@@ -12,24 +12,19 @@
 namespace Sprocket {
 namespace Maths {
 
-// Matrix Modifiers
 glm::mat4 Rotate(const glm::mat4& matrix, const glm::vec3& axis, float radians);
+glm::vec3 Rotate(const glm::vec3& vector, const glm::vec3& axis, float radians);
+glm::quat Rotate(const glm::vec3& axis, float radians);
+glm::quat Rotate(const glm::quat& quaternion, const glm::vec3& axis, float radians);
 
 // Matrix Constructors
 glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale = {1.0f, 1.0f, 1.0f});
 glm::mat4 View(const glm::vec3& position, float pitch, float yaw, float roll);
 
-// Quaternion Modifiers
-glm::quat Rotate(const glm::vec3& axis, float radians);
-glm::quat Rotate(const glm::quat& quaternion, const glm::vec3& axis, float radians);
-
 // Given an orientation, find the directions of Forwards, Right and Up.
 glm::vec3 Forwards(const glm::quat& q);
 glm::vec3 Right(const glm::quat& q);
 glm::vec3 Up(const glm::quat& q);
-
-// Vector Modifiers
-glm::vec3 Rotate(const glm::vec3& vector, const glm::vec3& axis, float radians);
 
 // Conversions
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale);

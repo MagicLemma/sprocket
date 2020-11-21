@@ -108,7 +108,7 @@ void SunInfoPanel(DevUI& ui,
     }
     else { // If not running, be able to set manually
         float angle = cycle.GetAngle();
-        ImGui::DragFloat("Angle", &angle);
+        ImGui::DragFloat("Angle", &angle, 0.01f);
         cycle.SetAngle(angle);
     }
     
