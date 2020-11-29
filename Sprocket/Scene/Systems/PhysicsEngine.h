@@ -31,7 +31,7 @@ public:
     ~PhysicsEngine() {}
 
     void OnStartup(Scene& scene) override;
-    void OnUpdate(Scene& scene, double dt) override;
+    void OnUpdate(Scene& scene, double dt, bool active) override;
 
     void Running(bool isRunning);
     bool Running() const { return d_running; }

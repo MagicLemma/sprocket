@@ -1,11 +1,13 @@
 #version 450 core
 
-layout(location = 0) in vec3 position;
+layout(location = 0) in vec3 position; // vertex position in model space
 layout(location = 1) in vec2 texture_coords;
 layout(location = 2) in vec3 normal;
 layout(location = 3) in vec3 tangent;
 layout(location = 4) in vec3 bitangent;
 
+// Model Matrix
+// Variables needed to calculate the matrix that converts from model space to world space
 layout(location = 5) in vec3 model_position;
 layout(location = 6) in vec4 model_orientation;
 layout(location = 7) in vec3 model_scale;
@@ -15,10 +17,12 @@ out Data
     vec3 world_position;
     vec2 texture_coords;
 
+    // Tangent space unit vectors in world space
     vec3 world_normal;
     vec3 world_tangent;
     vec3 world_bitangent;
 
+    // Tangent space unit vectors in model space
     vec3 normal;
     vec3 tangent;
     vec3 bitangent;

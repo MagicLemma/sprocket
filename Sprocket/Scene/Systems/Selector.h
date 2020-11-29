@@ -40,7 +40,7 @@ public:
     ~Selector() {}
 
     void OnStartup(Scene& scene) override;
-    void OnUpdate(Scene& scene, double dt) override;
+    void OnUpdate(Scene& scene, double dt, bool active) override;
     void OnEvent(Scene& scene, Event& event) override;
 
     void Enable(bool newEnabled);

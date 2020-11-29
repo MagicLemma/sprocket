@@ -23,14 +23,15 @@ void Selector::OnStartup(Scene& manager)
     });
 }
 
-void Selector::OnUpdate(Scene& manager, double dt)
+void Selector::OnUpdate(Scene& manager, double dt, bool active)
 {
+    d_mouse.OnUpdate();
+    if (!active) { return; }
+
     if (!d_enabled) {
         ClearHovered();
         ClearSelected();
     }
-
-    d_mouse.OnUpdate();
 }
 
 void Selector::OnEvent(Scene& scene, Event& event)

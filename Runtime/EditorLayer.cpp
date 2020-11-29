@@ -62,18 +62,23 @@ void EditorLayer::OnUpdate(double dt)
     if (d_consoleActive) {
         d_console.OnUpdate(dt);
     } else {
-        d_scene->OnUpdate(dt);
         d_particleManager.OnUpdate(dt);
     }
     
+    d_scene->OnUpdate(dt, !d_consoleActive);
     d_scene->Each<TransformComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
             entity.Kill();
         }
     });
+    
     d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     d_entityRenderer.Draw(d_runtimeCamera, *d_scene);
+
+    if (d_consoleActive) {
+        d_console.Draw();
+    }
 }
 
 }

@@ -66,7 +66,7 @@ public:
     void ClearSystems();
 
     void OnStartup();
-    void OnUpdate(double dt);
+    void OnUpdate(double dt, bool active);
     void OnEvent(Event& event);
 
     std::size_t Size() const;
