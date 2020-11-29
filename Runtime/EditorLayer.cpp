@@ -2,6 +2,11 @@
 
 namespace Sprocket {
 
+const auto LIGHT_BLUE  = Sprocket::FromHex(0x25CCF7);
+const auto CLEAR_BLUE  = Sprocket::FromHex(0x1B9CFC);
+const auto GARDEN      = Sprocket::FromHex(0x55E6C1);
+const auto SPACE_DARK  = Sprocket::FromHex(0x2C3A47);
+
 EditorLayer::EditorLayer(const CoreSystems& core) 
     : d_core(core)
     , d_entityRenderer(core.assetManager)
@@ -46,10 +51,8 @@ void EditorLayer::OnEvent(Event& event)
     if (d_consoleActive) {
         d_console.OnEvent(event);
         event.Consume();
-    } else {
-        d_scene->OnEvent(event);
     }
-
+    d_scene->OnEvent(event);
 }
 
 void EditorLayer::OnUpdate(double dt)
@@ -59,20 +62,23 @@ void EditorLayer::OnUpdate(double dt)
     if (d_consoleActive) {
         d_console.OnUpdate(dt);
     } else {
-        d_scene->OnUpdate(dt);
         d_particleManager.OnUpdate(dt);
     }
     
+    d_scene->OnUpdate(dt, !d_consoleActive);
     d_scene->Each<TransformComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
             entity.Kill();
         }
     });
+    
     d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     d_entityRenderer.Draw(d_runtimeCamera, *d_scene);
 
-    if (d_consoleActive) { d_console.Draw(); }
+    if (d_consoleActive) {
+        d_console.Draw();
+    }
 }
 
 }

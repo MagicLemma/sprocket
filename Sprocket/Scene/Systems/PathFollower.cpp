@@ -4,8 +4,10 @@
 
 namespace Sprocket {
 
-void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt)
+void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt, bool active)
 {
+    if (!active) { return; }
+    
     scene.Each<TransformComponent, PathComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         auto& path = entity.Get<PathComponent>();

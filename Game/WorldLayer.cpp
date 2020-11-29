@@ -147,28 +147,27 @@ void WorldLayer::OnUpdate(double dt)
 
     d_hoveredEntityUI.OnUpdate(dt);
     d_mouse.OnUpdate();
-    d_cycle.OnUpdate(dt);
-    auto& sun = d_scene->GetSun();
-    
     if (!d_paused) {
-
-        float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
-        float facSq = factor * factor;
-        auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
-        d_core.window->SetClearColour(skyColour);
-        if (d_cycle.IsDay()) {
-            sun.direction = d_cycle.GetSunDir();
-            sun.colour = {1.0, 0.945, 0.789};
-        }
-        else {
-            sun.direction = -d_cycle.GetSunDir();
-            sun.colour = {0.5, 0.57, 0.98};
-        }
-        sun.brightness = 2.0f * std::abs(glm::cos(d_cycle.GetAngle()));
-
-        sun.direction = glm::normalize(sun.direction);
-        d_scene->OnUpdate(dt);
+        d_cycle.OnUpdate(dt);
     }
+    
+    auto& sun = d_scene->GetSun();
+    float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
+    float facSq = factor * factor;
+    auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
+    d_core.window->SetClearColour(skyColour);
+    if (d_cycle.IsDay()) {
+        sun.direction = d_cycle.GetSunDir();
+        sun.colour = {1.0, 0.945, 0.789};
+    }
+    else {
+        sun.direction = -d_cycle.GetSunDir();
+        sun.colour = {0.5, 0.57, 0.98};
+    }
+    sun.brightness = 2.0f * std::abs(glm::cos(d_cycle.GetAngle()));
+    sun.direction = glm::normalize(sun.direction);
+
+    d_scene->OnUpdate(dt, !d_paused);
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point

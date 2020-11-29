@@ -25,6 +25,23 @@ Console::Console(Window* window)
 void Console::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
+}
+
+void Console::OnEvent(Event& event)
+{
+    auto e = event.As<KeyboardButtonPressedEvent>();
+    if (e && e->Key() == Keyboard::ENTER) {
+        d_consoleLines.push_front({d_commandLine, glm::vec4{1.0, 1.0, 1.0, 1.0}});
+        HandleCommand(d_commandLine);
+        d_commandLine = "";
+        e->Consume();
+    } else {
+        d_ui.OnEvent(event);
+    }
+}
+
+void Console::Draw()
+{
     d_ui.StartFrame();
 
     double W = 0.8 * d_window->Width() - 20;
@@ -45,23 +62,6 @@ void Console::OnUpdate(double dt)
     }
 
     d_ui.EndPanel();
-}
-
-void Console::OnEvent(Event& event)
-{
-    auto e = event.As<KeyboardButtonPressedEvent>();
-    if (e && e->Key() == Keyboard::ENTER) {
-        d_consoleLines.push_front({d_commandLine, glm::vec4{1.0, 1.0, 1.0, 1.0}});
-        HandleCommand(d_commandLine);
-        d_commandLine = "";
-        e->Consume();
-    } else {
-        d_ui.OnEvent(event);
-    }
-}
-
-void Console::Draw()
-{
     d_ui.EndFrame();
 }
 

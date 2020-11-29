@@ -77,8 +77,10 @@ void GameGrid::OnStartup(Scene& scene)
     });
 }
 
-void GameGrid::OnUpdate(Sprocket::Scene&, double)
+void GameGrid::OnUpdate(Sprocket::Scene&, double dt, bool active)
 {
+    if (!active) { return; }
+    
     auto& camTr = d_camera.Get<TransformComponent>();
 
     d_mouse.OnUpdate();

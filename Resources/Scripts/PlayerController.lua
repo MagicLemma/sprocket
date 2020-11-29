@@ -11,7 +11,7 @@ end
 function OnUpdate(entity, dt)
     TIME = TIME + dt
 
-    local rotateSpeed = 0.01
+    local rotateSpeed = 0.001
 
     local dx = 0
     local dy = 0
