@@ -30,12 +30,8 @@ public:
 
     void ConsumeEvents(bool value) { d_consumeEvents = value; }
 
-    glm::vec2 GetMousePos() const { return d_positionCurr; }
-
     bool IsButtonClicked(int button) const;
     bool IsButtonReleased(int button) const;
-
-    bool InRegion(float x, float y, float width, float height) const;
 };
 
 }

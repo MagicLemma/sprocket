@@ -109,7 +109,7 @@ Entity Selector::GetMousedOver()
 
     glm::vec3 rayStart = glm::inverse(view) * glm::vec4(0, 0, 0, 1);
     glm::vec3 direction = Maths::GetMouseRay(
-        d_mouse.GetMousePos(),
+        d_window->GetMousePos(),
         d_window->Width(),
         d_window->Height(),
         view,

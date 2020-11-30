@@ -20,6 +20,11 @@
 namespace Sprocket {
 namespace {
 
+bool InRegion(const glm::vec2& pos, float x, float y, float width, float height)
+{
+    return x < pos.x && pos.x < x + width &&  y < pos.y && pos.y < y + height;
+}
+
 std::vector<unsigned char> GetWhiteData()
 {
     return {0xff, 0xff, 0xff, 0xff};
@@ -252,6 +257,7 @@ void UIEngine::EndFrame()
 
     bool foundHovered = false;
     bool foundClicked = false;
+    glm::vec2 mouse = d_window->GetMousePos();
 
     std::size_t moveToFront = 0;
 
@@ -262,7 +268,7 @@ void UIEngine::EndFrame()
 
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
-            auto hovered = d_mouse->InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
+            auto hovered = InRegion(mouse, quad.region.x, quad.region.y, quad.region.z, quad.region.w);
             auto clicked = hovered && d_mouse->IsButtonClicked(Mouse::LEFT);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {

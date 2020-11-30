@@ -100,7 +100,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         if (e->Mods() & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
-                d_mouse.GetMousePos(),
+                d_core.window->GetMousePos(),
                 d_core.window->Width(),
                 d_core.window->Height(),
                 MakeView(d_camera),
@@ -189,7 +189,7 @@ void WorldLayer::OnUpdate(double dt)
     if (!d_paused) {
         d_hoveredEntityUI.StartFrame();
 
-        auto mouse = d_mouse.GetMousePos();
+        auto mouse = d_core.window->GetMousePos();
         float w = (float)d_core.window->Width();
         float h = (float)d_core.window->Height();
 

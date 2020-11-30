@@ -86,7 +86,7 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double dt, bool active)
     d_mouse.OnUpdate();
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
-        d_mouse.GetMousePos(),
+        d_window->GetMousePos(),
         d_window->Width(),
         d_window->Height(),
         MakeView(d_camera),
