@@ -178,6 +178,13 @@ void Window::OnUpdate()
 {
 	glfwSwapBuffers(d_impl->window);
 	glfwPollEvents();
+
+	double x, y;
+	glfwGetCursorPos(d_impl->window, &x, &y);
+	glm::vec2 newMousePos{x, y};
+
+	d_mouseOffset = newMousePos - d_mousePos;
+	d_mousePos = newMousePos;
 }
 
 void Window::Clear()
@@ -199,6 +206,16 @@ void Window::SetCursorVisibility(bool visibility)
 	else {
 		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
+}
+
+glm::vec2 Window::GetMousePos() const
+{
+	return d_mousePos;
+}
+
+glm::vec2 Window::GetMouseOffset() const
+{
+	return d_mouseOffset;
 }
 
 void Window::SetWindowName(const std::string& name)
