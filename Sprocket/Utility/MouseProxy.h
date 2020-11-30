@@ -31,7 +31,6 @@ public:
     void ConsumeEvents(bool value) { d_consumeEvents = value; }
 
     glm::vec2 GetMousePos() const { return d_positionCurr; }
-    glm::vec2 GetMouseOffset() const { return d_positionCurr - d_positionPrev; }
 
     bool IsButtonClicked(int button) const;
     bool IsButtonReleased(int button) const;

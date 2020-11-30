@@ -2,6 +2,7 @@
 #include "LuaGlobals.h"
 #include "KeyboardProxy.h"
 #include "MouseProxy.h"
+#include "Window.h"
 
 #include <lua.hpp>
 
@@ -70,13 +71,13 @@ int GetMouseOffset(lua_State* L)
 {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
-    auto m = GetMouse(L);
-    if (m == nullptr) {
+    auto w = GetWindow(L);
+    if (w == nullptr) {
         lua_pushnumber(L, 0);
         lua_pushnumber(L, 0);
     }
     else {
-        auto offset = m->GetMouseOffset();
+        auto offset = w->GetMouseOffset();
         lua_pushnumber(L, offset.x);
         lua_pushnumber(L, offset.y);
     }
