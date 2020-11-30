@@ -20,8 +20,12 @@
 namespace Sprocket {
 namespace {
 
-bool InRegion(const glm::vec2& pos, float x, float y, float width, float height)
+bool InRegion(const glm::vec2& pos, const glm::vec4& quad)
 {
+    float x = quad.x;
+    float y = quad.y;
+    float width = quad.z;
+    float height = quad.w;
     return x < pos.x && pos.x < x + width &&  y < pos.y && pos.y < y + height;
 }
 
@@ -268,7 +272,7 @@ void UIEngine::EndFrame()
 
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
-            auto hovered = InRegion(mouse, quad.region.x, quad.region.y, quad.region.z, quad.region.w);
+            auto hovered = InRegion(mouse, quad.region);
             auto clicked = hovered && d_mouse->IsButtonClicked(Mouse::LEFT);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
