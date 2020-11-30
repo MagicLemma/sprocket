@@ -83,7 +83,6 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double dt, bool active)
     
     auto& camTr = d_camera.Get<TransformComponent>();
 
-    d_mouse.OnUpdate();
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
         d_window->GetMousePos(),
@@ -109,7 +108,6 @@ void GameGrid::OnEvent(Scene& scene, Event& event)
 {
     if (event.IsConsumed()) { return; }
 
-    d_mouse.OnEvent(event);
     d_keyboard.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {

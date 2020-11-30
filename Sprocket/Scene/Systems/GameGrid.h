@@ -22,7 +22,6 @@ public:
 private:
     Window*       d_window;
     KeyboardProxy d_keyboard;
-    MouseProxy    d_mouse;
 
     Entity d_camera;
     Entity d_hoveredSquare;
