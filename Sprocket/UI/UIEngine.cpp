@@ -246,6 +246,8 @@ void UIEngine::OnEvent(Event& event)
     else if (auto e = event.As<MouseButtonReleasedEvent>()) {
         if (e->Button() == Mouse::LEFT) {
             d_mouseUnclicked = true;
+            d_widgetTimes[d_clicked].unclickedTime = d_time;
+            d_clicked = 0;
             if (d_consumeMouseEvents) { e->Consume(); }
         }
     }
@@ -253,14 +255,7 @@ void UIEngine::OnEvent(Event& event)
 
 void UIEngine::OnUpdate(double dt)
 {
-    d_consumeMouseEvents = false;
     d_time += dt;
-
-    // Let go of mouse click, so lose clicked
-    if (d_mouseUnclicked && d_clicked > 0) {
-        d_widgetTimes[d_clicked].unclickedTime = d_time;
-        d_clicked = 0;
-    }
 }
 
 void UIEngine::StartFrame()
