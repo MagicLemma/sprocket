@@ -9,7 +9,8 @@
 
 namespace Sprocket {
 
-ScriptRunner::ScriptRunner()
+ScriptRunner::ScriptRunner(Window* window)
+    : d_window(window)
 {
     d_keyboard.ConsumeAll(false);
 }
@@ -18,6 +19,7 @@ void ScriptRunner::OnStartup(Scene& scene)
 {
     auto AddScript = [&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
+        luaEngine.SetWindow(d_window);
         luaEngine.SetKeyboard(&d_keyboard);
         luaEngine.SetMouse(&d_mouse);
         luaEngine.SetEntity(entity);

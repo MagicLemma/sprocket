@@ -7,6 +7,7 @@ class lua_State;
 
 namespace Sprocket {
 
+class Window;
 class KeyboardProxy;
 class MouseProxy;
 class Entity;
@@ -15,6 +16,7 @@ class Entity;
 // are used for implementing Lua C++ functions and are not callable
 // directly within Lua.
 
+Window* GetWindow(lua_State* L);
 KeyboardProxy* GetKeyboard(lua_State* L);
 MouseProxy* GetMouse(lua_State* L);
 Entity* GetEntity(lua_State* L);

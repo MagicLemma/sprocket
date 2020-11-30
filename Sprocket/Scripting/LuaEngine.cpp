@@ -67,6 +67,9 @@ LuaEngine::LuaEngine()
     RegisterEntityFunctions(d_L);
 
     lua_pushnil(d_L);
+    lua_setglobal(d_L, "__window__");
+
+    lua_pushnil(d_L);
     lua_setglobal(d_L, "__keyboard__");
 
     lua_pushnil(d_L);
@@ -390,6 +393,12 @@ void LuaEngine::SetEntity(const Entity& e)
     d_entity = e;
     lua_pushlightuserdata(d_L, (void*)&d_entity);
     lua_setglobal(d_L, "__entity__");
+}
+
+void LuaEngine::SetWindow(Window* w)
+{
+    lua_pushlightuserdata(d_L, (void*)w);
+    lua_setglobal(d_L, "__window__");
 }
 
 void LuaEngine::SetKeyboard(KeyboardProxy* k)

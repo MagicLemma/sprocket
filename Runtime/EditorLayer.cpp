@@ -27,7 +27,7 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     d_scene = std::make_shared<Scene>();    
     d_scene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
     d_scene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
-    d_scene->AddSystem(std::make_shared<ScriptRunner>());
+    d_scene->AddSystem(std::make_shared<ScriptRunner>(d_core.window));
     d_scene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
     d_scene->AddSystem(std::make_shared<AnimationSystem>());
     Loader::Load("Resources/Anvil.yaml", d_scene);

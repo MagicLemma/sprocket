@@ -6,6 +6,7 @@
 #include "WindowEvent.h"
 #include "KeyboardEvent.h"
 #include "Entity.h"
+#include "Window.h"
 
 #include <string>
 #include <unordered_map>
@@ -51,6 +52,7 @@ public:
 
     // Setters
     void SetEntity(const Entity& e);
+    void SetWindow(Window* w);
     void SetKeyboard(KeyboardProxy* k);
     void SetMouse(MouseProxy* m);
 

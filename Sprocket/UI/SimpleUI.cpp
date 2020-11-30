@@ -278,7 +278,7 @@ void SimpleUI::Dragger(const std::string& name,
     cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        *value += d_mouse.GetMouseOffset().x * speed;
+        *value += d_window->GetMouseOffset().x * speed;
     }    
 }
 

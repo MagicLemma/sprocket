@@ -361,8 +361,8 @@ void UIEngine::StartPanel(const std::string& name, glm::vec4* region, PanelType 
         auto info = Register(name, {0, 0, region->z, region->w});
 
         if (info.sinceClicked > 0 && type == PanelType::DRAGGABLE) {
-            region->x += d_mouse->GetMouseOffset().x;
-            region->y += d_mouse->GetMouseOffset().y;
+            region->x += d_window->GetMouseOffset().x;
+            region->y += d_window->GetMouseOffset().y;
             d_currentPanel->region = *region;
         }
     }

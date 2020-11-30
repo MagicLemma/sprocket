@@ -5,6 +5,17 @@
 
 namespace Sprocket {
 
+Window* GetWindow(lua_State* L)
+{
+    lua_getglobal(L, "__window__");
+    Window* w = nullptr;
+    if (!lua_isnil(L, -1)) {
+        w = (Window*)lua_touserdata(L, -1);
+    }
+    lua_pop(L, 1);
+    return w;
+}
+
 KeyboardProxy* GetKeyboard(lua_State* L)
 {
     lua_getglobal(L, "__keyboard__");

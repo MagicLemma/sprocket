@@ -195,7 +195,7 @@ void EditorLayer::OnUpdate(double dt)
                 
                 d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
-                d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
+                d_activeScene->AddSystem(std::make_shared<ScriptRunner>(d_core.window));
                 d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
                 d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
 
