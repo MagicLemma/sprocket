@@ -180,7 +180,9 @@ class UIEngine
     std::vector<int> d_keyPresses;
     bool d_consumeMouseEvents = false;
     bool d_mouseClicked = false;
-    bool d_mouseUnclicked = false;
+
+    void MouseClick();
+    void MouseHover();
 
     void ExecuteCommand(const DrawCommand& cmd);
 
