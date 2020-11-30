@@ -15,10 +15,6 @@ class MouseProxy
         // frame and previous respectively. The temp is the one that the
         // event loop writes to. It is copied to current during OnUpdate.
 
-    glm::vec2 d_positionTemp;
-    glm::vec2 d_positionCurr;
-    glm::vec2 d_positionPrev;
-
     bool d_consumeEvents = false;
 
 public:
