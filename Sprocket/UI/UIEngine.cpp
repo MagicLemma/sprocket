@@ -9,6 +9,7 @@
 #include "BufferLayout.h"
 #include "Adaptors.h"
 #include "KeyboardEvent.h"
+#include "MouseEvent.h"
 
 #include <functional>
 #include <sstream>
@@ -235,15 +236,28 @@ void UIEngine::OnEvent(Event& event)
             }
         }
     }
+
+    if (auto e = event.As<MouseButtonPressedEvent>()) {
+        if (e->Button() == Mouse::LEFT) {
+            d_mouseClicked = true;
+            if (d_consumeMouseEvents) { e->Consume(); }
+        }
+    }
+    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
+        if (e->Button() == Mouse::LEFT) {
+            d_mouseUnclicked = true;
+            if (d_consumeMouseEvents) { e->Consume(); }
+        }
+    }
 }
 
 void UIEngine::OnUpdate(double dt)
 {
-    d_mouse->ConsumeEvents(false);
+    d_consumeMouseEvents = false;
     d_time += dt;
 
     // Let go of mouse click, so lose clicked
-    if (d_mouse->IsButtonReleased(Mouse::LEFT) && d_clicked > 0) {
+    if (d_mouseUnclicked && d_clicked > 0) {
         d_widgetTimes[d_clicked].unclickedTime = d_time;
         d_clicked = 0;
     }
@@ -273,7 +287,7 @@ void UIEngine::EndFrame()
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
             auto hovered = InRegion(mouse, quad.region);
-            auto clicked = hovered && d_mouse->IsButtonClicked(Mouse::LEFT);
+            auto clicked = hovered && d_mouseClicked;
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
@@ -305,7 +319,7 @@ void UIEngine::EndFrame()
     }
 
     // Clicked on something other than the UI, so lose focus
-    if (d_mouse->IsButtonClicked(Mouse::LEFT) && !foundClicked && d_focused > 0) {
+    if (d_mouseClicked && !foundClicked && d_focused > 0) {
         d_widgetTimes[d_focused].unfocusedTime = d_time;
         d_focused = 0;
     }
@@ -316,7 +330,9 @@ void UIEngine::EndFrame()
         d_hovered = 0;
     }
 
-    d_mouse->ConsumeEvents(foundHovered);
+    d_consumeMouseEvents = foundHovered;
+    d_mouseClicked = false;
+    d_mouseUnclicked = false;
 
     if (moveToFront > 0) {
         auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);

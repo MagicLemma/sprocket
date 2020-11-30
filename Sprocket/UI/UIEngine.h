@@ -178,6 +178,9 @@ class UIEngine
     // A vector of key presses that happened since last frame. This will be
     // given to the currently focused widget.
     std::vector<int> d_keyPresses;
+    bool d_consumeMouseEvents = false;
+    bool d_mouseClicked = false;
+    bool d_mouseUnclicked = false;
 
     void ExecuteCommand(const DrawCommand& cmd);
 
