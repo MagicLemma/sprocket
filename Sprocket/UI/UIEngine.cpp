@@ -276,8 +276,7 @@ void UIEngine::MouseClick()
 
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
-            auto hovered = InRegion(mouse, quad.region);
-            auto clicked = hovered && d_mouseClicked;
+            auto clicked = InRegion(mouse, quad.region);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
@@ -299,7 +298,7 @@ void UIEngine::MouseClick()
     }
 
     // Clicked on something other than the UI, so lose focus
-    if (d_mouseClicked && !foundClicked && d_focused > 0) {
+    if (!foundClicked && d_focused > 0) {
         d_widgetTimes[d_focused].unfocusedTime = d_time;
         d_focused = 0;
     }
@@ -350,11 +349,13 @@ void UIEngine::EndFrame()
 {
     assert(!d_currentPanel);
 
-    MouseClick();
+    if (d_mouseClicked) {
+        MouseClick();
+    }
+    d_mouseClicked = false;
     MouseHover();
 
     d_keyPresses.clear();
-    d_mouseClicked = false;
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
