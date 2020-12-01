@@ -5,10 +5,8 @@
 
 namespace Sprocket {
 
-void AnimationSystem::OnUpdate(Scene& scene, double dt, bool active)
+void AnimationSystem::OnUpdate(Scene& scene, double dt)
 {
-    if (!active) { return; }
-    
     scene.Each<AnimationComponent>([dt](Entity& entity) {
         auto& ac = entity.Get<AnimationComponent>();
         ac.time += (float)dt * ac.speed;

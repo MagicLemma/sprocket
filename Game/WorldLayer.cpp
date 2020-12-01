@@ -166,7 +166,9 @@ void WorldLayer::OnUpdate(double dt)
     sun.brightness = 2.0f * std::abs(glm::cos(d_cycle.GetAngle()));
     sun.direction = glm::normalize(sun.direction);
 
-    d_scene->OnUpdate(dt, !d_paused);
+    if (!d_paused) {
+        d_scene->OnUpdate(dt);
+    }
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point

@@ -21,7 +21,7 @@ public:
     ScriptRunner(Window* window);
 
     void OnStartup(Scene& scene) override;
-    void OnUpdate(Scene& scene, double dt, bool active) override;
+    void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Scene& scene, Event& event) override;
 };
 

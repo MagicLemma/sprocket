@@ -38,10 +38,8 @@ void ScriptRunner::OnStartup(Scene& scene)
     });
 }
 
-void ScriptRunner::OnUpdate(Scene& scene, double dt, bool active)
+void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
-    if (!active) { return; }
-
     scene.Each<ScriptComponent>([&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.CallOnUpdateFunction(dt);

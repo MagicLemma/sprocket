@@ -9,10 +9,8 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 {
 }
 
-void ParticleSystem::OnUpdate(Scene& scene, double dt, bool active)
+void ParticleSystem::OnUpdate(Scene& scene, double dt)
 {
-    if (!active) { return; }
-    
     scene.Each<TransformComponent, ParticleComponent>([&](Entity& entity) {
         auto& tc = entity.Get<TransformComponent>();
         auto& pc = entity.Get<ParticleComponent>();

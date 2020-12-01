@@ -23,10 +23,8 @@ void Selector::OnStartup(Scene& manager)
     });
 }
 
-void Selector::OnUpdate(Scene& manager, double dt, bool active)
+void Selector::OnUpdate(Scene& manager, double dt)
 {
-    if (!active) { return; }
-
     if (!d_enabled) {
         ClearHovered();
         ClearSelected();

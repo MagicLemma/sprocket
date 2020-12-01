@@ -77,10 +77,8 @@ void GameGrid::OnStartup(Scene& scene)
     });
 }
 
-void GameGrid::OnUpdate(Sprocket::Scene&, double dt, bool active)
+void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
 {
-    if (!active) { return; }
-    
     auto& camTr = d_camera.Get<TransformComponent>();
 
     glm::vec3 cameraPos = camTr.position;

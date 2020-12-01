@@ -95,8 +95,8 @@ void EditorLayer::OnUpdate(double dt)
     //d_shadowMap.Draw(sun, target, *d_scene);
     //d_entityRenderer.EnableShadows(d_shadowMap);
     
-    d_activeScene->OnUpdate(dt, !d_paused);
     if (!d_paused) {
+        d_activeScene->OnUpdate(dt);
         d_particleManager.OnUpdate(dt);
 
         if (d_isViewportFocused && !d_playingGame) {

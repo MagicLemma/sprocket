@@ -6,7 +6,7 @@ namespace Sprocket {
 class AnimationSystem : public EntitySystem
 {
 public:
-    void OnUpdate(Scene& scene, double dt, bool active) override;
+    void OnUpdate(Scene& scene, double dt) override;
 };
 
 }

@@ -17,8 +17,8 @@ public:
         // Called once when starting the scene. There may be
         // entities in the scene by this point.
     
-    virtual void OnUpdate(Scene& scene, double dt, bool active) {};
-        // Called every tick of the game loop. If active is false, the scene is "paused".
+    virtual void OnUpdate(Scene& scene, double dt) {};
+        // Called every tick of the game loop.
 
     virtual void OnEvent(Scene& scene, Event& event) {};
         // Called with every event so systems can consume them.

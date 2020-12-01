@@ -62,10 +62,10 @@ void EditorLayer::OnUpdate(double dt)
     if (d_consoleActive) {
         d_console.OnUpdate(dt);
     } else {
+        d_scene->OnUpdate(dt);
         d_particleManager.OnUpdate(dt);
     }
     
-    d_scene->OnUpdate(dt, !d_consoleActive);
     d_scene->Each<TransformComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
