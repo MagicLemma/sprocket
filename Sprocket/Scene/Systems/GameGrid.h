@@ -2,7 +2,6 @@
 #include "EntitySystem.h"
 #include "HashPair.h"
 #include "Window.h"
-#include "MouseProxy.h"
 #include "Maths.h"
 
 #include <memory>

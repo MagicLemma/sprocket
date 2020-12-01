@@ -54,7 +54,6 @@
 #include "Utility/InputProxy.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardCodes.h"
-#include "Utility/MouseProxy.h"
 #include "Utility/Printer.h"
 #include "Utility/Random.h"
 #include "Utility/MouseCodes.h"

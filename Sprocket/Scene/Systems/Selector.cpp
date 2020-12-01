@@ -35,8 +35,6 @@ void Selector::OnEvent(Scene& scene, Event& event)
 {
     if (!d_enabled) { return; }
 
-    d_mouse.OnEvent(event);
-
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         if (e->IsConsumed()) { return; }
         auto entity = GetMousedOver();

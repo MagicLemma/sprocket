@@ -3,7 +3,6 @@
 #include "Window.h"
 #include "Entity.h"
 #include "PhysicsEngine.h"
-#include "MouseProxy.h"
 
 namespace Sprocket {
     
@@ -20,8 +19,6 @@ class Selector : public EntitySystem
     Entity d_selectedEntity;
         // Do not edit these directly, clear and set them with the functions
         // below.
-
-    MouseProxy d_mouse;
 
     void SetHovered(Entity entity);
 

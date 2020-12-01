@@ -96,7 +96,6 @@ add_library(Sprocket STATIC
             Utility/Colour.cpp
             Utility/FileBrowser.cpp
             Utility/InputProxy.cpp
-            Utility/MouseProxy.cpp
             Utility/Printer.cpp
             Utility/Random.cpp
             Utility/Maths.cpp

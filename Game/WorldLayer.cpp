@@ -89,7 +89,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     using namespace Sprocket;
 
     d_hoveredEntityUI.OnEvent(event);
-    d_mouse.OnEvent(event);
 
     if (auto e = event.As<WindowResizeEvent>()) {
         d_postProcessor.SetScreenSize(e->Width(), e->Height());
