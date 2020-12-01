@@ -243,7 +243,7 @@ void UIEngine::OnEvent(Event& event)
             if (d_consumeMouseEvents) { e->Consume(); }
         }
     }
-    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
+    if (auto e = event.As<MouseButtonReleasedEvent>()) {
         if (e->Button() == Mouse::LEFT) {
             d_widgetTimes[d_clicked].unclickedTime = d_time;
             d_clicked = 0;
@@ -270,7 +270,9 @@ void UIEngine::MouseClick()
     std::size_t moveToFront = 0;
 
     for (const auto& panelHash : Reversed(d_panelOrder)) {
-        const auto& panel = d_panels[panelHash];
+        auto it = d_panels.find(panelHash);
+        if (it == d_panels.end()) { continue; }
+        const auto& panel = it->second;
 
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
@@ -315,7 +317,9 @@ void UIEngine::MouseHover()
     glm::vec2 mouse = d_window->GetMousePos();
 
     for (const auto& panelHash : Reversed(d_panelOrder)) {
-        const auto& panel = d_panels[panelHash];
+        auto it = d_panels.find(panelHash);
+        if (it == d_panels.end()) { continue; }
+        const auto& panel = it->second;
 
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
