@@ -274,7 +274,7 @@ void SimpleUI::Dragger(const std::string& name,
 
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(colour, info.quad);
-    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
+    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 2), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         *value += d_window->GetMouseOffset().x * speed;

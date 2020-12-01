@@ -99,11 +99,10 @@ DevUI::DevUI(Window* window)
 
 void DevUI::OnEvent(Event& event)
 {
-    if (event.IsConsumed()) { return; }
-
     ImGuiIO& io = ImGui::GetIO();
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {    
+        if (e->IsConsumed()) { return; }
         io.MouseDown[e->Button()] = true;
     }
     
@@ -127,6 +126,7 @@ void DevUI::OnEvent(Event& event)
     }
 
     else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+        if (e->IsConsumed()) { return; }
         io.KeysDown[e->Key()] = true;
         io.KeyCtrl  = e->Mods() & KeyModifier::CTRL;
         io.KeyShift = e->Mods() & KeyModifier::SHIFT;
@@ -143,6 +143,7 @@ void DevUI::OnEvent(Event& event)
     }
 
     else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
+        if (e->IsConsumed()) { return; }
         if (e->Key() > 0 && e->Key() < 0x10000) {
             io.AddInputCharacter((unsigned short)e->Key());
         }

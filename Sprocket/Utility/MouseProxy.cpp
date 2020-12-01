@@ -20,18 +20,11 @@ void MouseProxy::OnEvent(Event& event)
     else if (auto e = event.As<MouseButtonReleasedEvent>()) {
         d_pressed[e->Button()] = false;
     }
-
-    if (d_consumeEvents) { event.Consume(); }
 }
 
 bool MouseProxy::IsButtonDown(int key) const
 {
     return d_pressed[key];
-}
-
-void MouseProxy::ConsumeEvents(bool value)
-{
-    d_consumeEvents = value;
 }
 
 }
