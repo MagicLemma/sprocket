@@ -6,7 +6,7 @@ namespace Sprocket {
 
 Camera::Camera(Window* window, const glm::vec3& target)
     : d_window(window)
-    , d_position()
+    , d_position({d_distance, d_absMin, 0.0})
     , d_target(target)
     , d_yaw(0.0f)
     , d_distance(8.0f)
@@ -16,15 +16,13 @@ Camera::Camera(Window* window, const glm::vec3& target)
     , d_absMin(2.0f)
     , d_absMax(10.0f)
 {
-    d_position = { d_distance, d_absMin, 0.0 };
-
-    d_keyboard.ConsumeAll(false);
-    d_keyboard.ConsumeEventsFor(Keyboard::W);
-    d_keyboard.ConsumeEventsFor(Keyboard::A);
-    d_keyboard.ConsumeEventsFor(Keyboard::S);
-    d_keyboard.ConsumeEventsFor(Keyboard::D);
-    d_keyboard.ConsumeEventsFor(Keyboard::Q);
-    d_keyboard.ConsumeEventsFor(Keyboard::E);
+    d_input.ConsumeAll(false);
+    d_input.ConsumeEventsFor(Keyboard::W);
+    d_input.ConsumeEventsFor(Keyboard::A);
+    d_input.ConsumeEventsFor(Keyboard::S);
+    d_input.ConsumeEventsFor(Keyboard::D);
+    d_input.ConsumeEventsFor(Keyboard::Q);
+    d_input.ConsumeEventsFor(Keyboard::E);
 }
 
 void Camera::OnUpdate(double dt)
@@ -39,34 +37,34 @@ void Camera::OnUpdate(double dt)
     glm::vec3 up{0, 1, 0};
     glm::vec3 r = glm::cross(f, up);
 
-    if (d_keyboard.IsKeyDown(Keyboard::W)) {
+    if (d_input.IsKeyboardDown(Keyboard::W)) {
         d_target += moveSpeed * f;
     }
-    if (d_keyboard.IsKeyDown(Keyboard::S)) {
+    if (d_input.IsKeyboardDown(Keyboard::S)) {
         d_target -= moveSpeed * f;
     }
-    if (d_keyboard.IsKeyDown(Keyboard::D)) {
+    if (d_input.IsKeyboardDown(Keyboard::D)) {
         d_target += moveSpeed * r;
     }
-    if (d_keyboard.IsKeyDown(Keyboard::A)) {
+    if (d_input.IsKeyboardDown(Keyboard::A)) {
         d_target -= moveSpeed * r;
     }
 
-    if (d_keyboard.IsKeyDown(Keyboard::E)) {
+    if (d_input.IsKeyboardDown(Keyboard::E)) {
         d_yaw -= horizSpeed;
     }
-    if (d_keyboard.IsKeyDown(Keyboard::Q)) {
+    if (d_input.IsKeyboardDown(Keyboard::Q)) {
         d_yaw += horizSpeed;
     }
 
-    if (d_keyboard.IsKeyDown(Keyboard::SPACE)) {
+    if (d_input.IsKeyboardDown(Keyboard::SPACE)) {
         d_position.y += d_moveSpeed * dt;
         d_target.y += d_moveSpeed * dt;
         d_absVert += d_moveSpeed * dt;
         d_absMin += d_moveSpeed * dt;
         d_absMax += d_moveSpeed * dt;
     }
-    if (d_keyboard.IsKeyDown(Keyboard::LSHIFT)) {
+    if (d_input.IsKeyboardDown(Keyboard::LSHIFT)) {
         d_position.y -= d_moveSpeed * dt;
         d_target.y -= d_moveSpeed * dt;
         d_absVert -= d_moveSpeed * dt;
@@ -85,8 +83,7 @@ void Camera::OnUpdate(double dt)
 
 void Camera::OnEvent(Event& event)
 {
-    d_keyboard.OnEvent(event);
-    d_mouse.OnEvent(event);
+    d_input.OnEvent(event);
 
     if (auto e = event.As<MouseScrolledEvent>()) {
         if (e->IsConsumed()) { return; }

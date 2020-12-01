@@ -2,7 +2,6 @@
 #include "EntitySystem.h"
 #include "HashPair.h"
 #include "Window.h"
-#include "KeyboardProxy.h"
 #include "MouseProxy.h"
 #include "Maths.h"
 
@@ -21,7 +20,6 @@ public:
 
 private:
     Window*       d_window;
-    KeyboardProxy d_keyboard;
 
     Entity d_camera;
     Entity d_hoveredSquare;

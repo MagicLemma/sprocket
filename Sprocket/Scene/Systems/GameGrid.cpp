@@ -23,7 +23,6 @@ GameGrid::GameGrid(Window* window)
     , d_hovered({0.0, 0.0})
     , d_selected({})
 {
-    d_keyboard.ConsumeAll(false);
 }
 
 void GameGrid::OnStartup(Scene& scene)
@@ -105,8 +104,6 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
 void GameGrid::OnEvent(Scene& scene, Event& event)
 {
     if (event.IsConsumed()) { return; }
-
-    d_keyboard.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         if (e->Button() == Mouse::LEFT) {
