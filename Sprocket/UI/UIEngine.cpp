@@ -127,10 +127,8 @@ void DrawCommand::AddText(const std::string& text,
     }
 }
 
-UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
+UIEngine::UIEngine(Window* window)
     : d_window(window)
-    , d_keyboard(keyboard)
-    , d_mouse(mouse)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_white(1, 1, GetWhiteData().data())

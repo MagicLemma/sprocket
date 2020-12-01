@@ -50,16 +50,13 @@ template <typename T> T Interpolate(
 
 SinglePanelUI::SinglePanelUI(Window* window)
     : d_window(window)
-    , d_engine(window, &d_keyboard, &d_mouse)
+    , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")
 {
-    d_keyboard.ConsumeAll(false);
 }
 
 void SinglePanelUI::OnEvent(Event& event)
 {
-    d_keyboard.OnEvent(event);
-    d_mouse.OnEvent(event);
     d_engine.OnEvent(event);
 }
 

@@ -2,8 +2,6 @@
 #include "Window.h"
 #include "Shader.h"
 #include "Event.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "Font.h"
 #include "Types.h"
@@ -141,9 +139,6 @@ class UIEngine
 {
     Window* d_window;
 
-    KeyboardProxy* d_keyboard;
-    MouseProxy* d_mouse;
-
     Texture d_white;
 
     // Rendering code    
@@ -187,7 +182,7 @@ class UIEngine
     void ExecuteCommand(const DrawCommand& cmd);
 
 public:
-    UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse);
+    UIEngine(Window* window);
 
     // Registers a region that can respond to hovers and clicks. The (x, y)
     // position of the region is with respect to the position of the active panel.

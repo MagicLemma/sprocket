@@ -50,17 +50,14 @@ template <typename T> T Interpolate(
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
-    , d_engine(window, &d_keyboard, &d_mouse)
+    , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")
 {
-    d_keyboard.ConsumeAll(false);
 }
 
 void SimpleUI::OnEvent(Event& event)
 {
     d_engine.OnEvent(event);
-    d_keyboard.OnEvent(event);
-    d_mouse.OnEvent(event);
 }
 
 void SimpleUI::OnUpdate(double dt)
@@ -81,7 +78,6 @@ void SimpleUI::EndFrame()
 void SimpleUI::StartPanel(const std::string& name, glm::vec4* region, PanelType type)
 {
     d_engine.StartPanel(name, region, type);
-    d_keyboard.ConsumeAll(false);
 
     auto& cmd = d_engine.GetDrawCommand();
     cmd.font = &d_font;
