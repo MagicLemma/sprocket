@@ -65,7 +65,6 @@ void SinglePanelUI::OnEvent(Event& event)
 
 void SinglePanelUI::OnUpdate(double dt)
 {
-    d_mouse.OnUpdate();
     d_engine.OnUpdate(dt);
 }
 

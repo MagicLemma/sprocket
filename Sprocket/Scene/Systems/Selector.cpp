@@ -25,7 +25,6 @@ void Selector::OnStartup(Scene& manager)
 
 void Selector::OnUpdate(Scene& manager, double dt, bool active)
 {
-    d_mouse.OnUpdate();
     if (!active) { return; }
 
     if (!d_enabled) {

@@ -65,7 +65,6 @@ void SimpleUI::OnEvent(Event& event)
 
 void SimpleUI::OnUpdate(double dt)
 {
-    d_mouse.OnUpdate();
     d_engine.OnUpdate(dt);
 }
 

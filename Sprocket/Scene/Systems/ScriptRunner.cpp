@@ -40,9 +40,6 @@ void ScriptRunner::OnStartup(Scene& scene)
 
 void ScriptRunner::OnUpdate(Scene& scene, double dt, bool active)
 {
-    // Always update the mouse even if inactive so that mouse offsets stay correct.
-    d_mouse.OnUpdate();
-
     if (!active) { return; }
 
     scene.Each<ScriptComponent>([&](Entity& entity) {

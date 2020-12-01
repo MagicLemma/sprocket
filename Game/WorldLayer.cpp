@@ -146,7 +146,6 @@ void WorldLayer::OnUpdate(double dt)
     Audio::SetListener(d_camera);
 
     d_hoveredEntityUI.OnUpdate(dt);
-    d_mouse.OnUpdate();
     if (!d_paused) {
         d_cycle.OnUpdate(dt);
     }

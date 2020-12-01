@@ -29,8 +29,6 @@ Camera::Camera(Window* window, const glm::vec3& target)
 
 void Camera::OnUpdate(double dt)
 {
-    d_mouse.OnUpdate();
-
     float horizSpeed = d_rotateSpeed * dt;
     float moveSpeed = d_moveSpeed * dt;
 
