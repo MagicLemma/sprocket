@@ -8,8 +8,7 @@ class lua_State;
 namespace Sprocket {
 
 class Window;
-class KeyboardProxy;
-class MouseProxy;
+class InputProxy;
 class Entity;
 
 // Functions for access core global values from a Lua state. These
@@ -17,8 +16,7 @@ class Entity;
 // directly within Lua.
 
 Window* GetWindow(lua_State* L);
-KeyboardProxy* GetKeyboard(lua_State* L);
-MouseProxy* GetMouse(lua_State* L);
+InputProxy* GetInput(lua_State* L);
 Entity* GetEntity(lua_State* L);
 
 bool CheckReturnCode(lua_State* L, int rc);

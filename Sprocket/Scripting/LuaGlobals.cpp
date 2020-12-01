@@ -16,26 +16,15 @@ Window* GetWindow(lua_State* L)
     return w;
 }
 
-KeyboardProxy* GetKeyboard(lua_State* L)
+InputProxy* GetInput(lua_State* L)
 {
-    lua_getglobal(L, "__keyboard__");
-    KeyboardProxy* k = nullptr;
+    lua_getglobal(L, "__input__");
+    InputProxy* ip = nullptr;
     if (!lua_isnil(L, -1)) {
-        k = (KeyboardProxy*)lua_touserdata(L, -1);
+        ip = (InputProxy*)lua_touserdata(L, -1);
     }
     lua_pop(L, 1);
-    return k;
-}
-
-MouseProxy* GetMouse(lua_State* L)
-{
-    lua_getglobal(L, "__mouse__");
-    MouseProxy* m = nullptr;
-    if (!lua_isnil(L, -1)) {
-        m = (MouseProxy*)lua_touserdata(L, -1);
-    }
-    lua_pop(L, 1);
-    return m;
+    return ip;
 }
 
 Entity* GetEntity(lua_State* L)

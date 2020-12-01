@@ -70,10 +70,7 @@ LuaEngine::LuaEngine()
     lua_setglobal(d_L, "__window__");
 
     lua_pushnil(d_L);
-    lua_setglobal(d_L, "__keyboard__");
-
-    lua_pushnil(d_L);
-    lua_setglobal(d_L, "__mouse__");
+    lua_setglobal(d_L, "__input__");
 
     lua_pushnil(d_L);
     lua_setglobal(d_L, "__entity__");
@@ -401,16 +398,10 @@ void LuaEngine::SetWindow(Window* w)
     lua_setglobal(d_L, "__window__");
 }
 
-void LuaEngine::SetKeyboard(KeyboardProxy* k)
+void LuaEngine::SetInput(InputProxy* ip)
 {
-    lua_pushlightuserdata(d_L, (void*)k);
-    lua_setglobal(d_L, "__keyboard__");
-}
-
-void LuaEngine::SetMouse(MouseProxy* m)
-{
-    lua_pushlightuserdata(d_L, (void*)m);
-    lua_setglobal(d_L, "__mouse__");
+    lua_pushlightuserdata(d_L, (void*)ip);
+    lua_setglobal(d_L, "__input__");
 }
 
 }

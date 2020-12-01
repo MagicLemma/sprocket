@@ -1,7 +1,6 @@
 #include "LuaInput.h"
 #include "LuaGlobals.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
+#include "InputProxy.h"
 #include "Window.h"
 
 #include <lua.hpp>
@@ -22,13 +21,13 @@ int IsKeyDown(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    auto k = GetKeyboard(L);
-    if (k == nullptr) {
+    auto ip = GetInput(L);
+    if (ip == nullptr) {
         lua_pushboolean(L, false);
     }
     else {
         int x = (int)lua_tointeger(L, 1);
-        lua_pushboolean(L, k->IsKeyDown(x));
+        lua_pushboolean(L, ip->IsKeyboardDown(x));
     }
     
     return 1;
@@ -38,13 +37,13 @@ int IsMouseDown(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    auto m = GetMouse(L);
-    if (m == nullptr) {
+    auto ip = GetInput(L);
+    if (ip == nullptr) {
         lua_pushboolean(L, false);
     }
     else {
         int x = (int)lua_tointeger(L, 1);
-        lua_pushboolean(L, m->IsButtonDown(x));
+        lua_pushboolean(L, ip->IsMouseDown(x));
     }
 
     return 1;
