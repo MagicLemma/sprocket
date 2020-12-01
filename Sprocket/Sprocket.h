@@ -53,7 +53,6 @@
 #include "Utility/HashPair.h"
 #include "Utility/InputProxy.h"
 #include "Utility/Maths.h"
-#include "Utility/KeyboardProxy.h"
 #include "Utility/KeyboardCodes.h"
 #include "Utility/MouseProxy.h"
 #include "Utility/Printer.h"
