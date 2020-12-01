@@ -51,6 +51,7 @@
 #include "Utility/Colour.h"
 #include "Utility/FileBrowser.h"
 #include "Utility/HashPair.h"
+#include "Utility/InputProxy.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardProxy.h"
 #include "Utility/KeyboardCodes.h"
