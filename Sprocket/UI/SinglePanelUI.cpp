@@ -1,6 +1,4 @@
 #include "SinglePanelUI.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "MouseCodes.h"
 #include "KeyboardCodes.h"
 #include "Log.h"
