@@ -15,7 +15,6 @@ void KeyboardProxy::OnEvent(Event& event)
 
     else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
         d_pressedKeys[e->Key()] = false;
-        if (d_consumeAll || d_consumedKeys.find(e->Key()) != d_consumedKeys.end()) { e->Consume(); }
     }
 }
 
