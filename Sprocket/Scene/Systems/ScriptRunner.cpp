@@ -12,7 +12,6 @@ namespace Sprocket {
 ScriptRunner::ScriptRunner(Window* window)
     : d_window(window)
 {
-    d_input.ConsumeAll(false);
 }
 
 void ScriptRunner::OnStartup(Scene& scene)

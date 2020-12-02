@@ -16,7 +16,6 @@ Camera::Camera(Window* window, const glm::vec3& target)
     , d_absMin(2.0f)
     , d_absMax(10.0f)
 {
-    d_input.ConsumeAll(false);
     d_input.ConsumeEventsFor(Keyboard::W);
     d_input.ConsumeEventsFor(Keyboard::A);
     d_input.ConsumeEventsFor(Keyboard::S);
