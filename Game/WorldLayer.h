@@ -40,8 +40,6 @@ class WorldLayer : public Sprocket::Layer
 
     Sprocket::ShadowMap d_shadowMap;
 
-    Sprocket::MouseProxy d_mouse;
-
     Sprocket::SimpleUI d_hoveredEntityUI;
     
     // LAYER DATA

@@ -1,6 +1,4 @@
 #include "SinglePanelUI.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "MouseCodes.h"
 #include "KeyboardCodes.h"
 #include "Log.h"
@@ -50,22 +48,18 @@ template <typename T> T Interpolate(
 
 SinglePanelUI::SinglePanelUI(Window* window)
     : d_window(window)
-    , d_engine(window, &d_keyboard, &d_mouse)
+    , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")
 {
-    d_keyboard.ConsumeAll(false);
 }
 
 void SinglePanelUI::OnEvent(Event& event)
 {
-    d_keyboard.OnEvent(event);
-    d_mouse.OnEvent(event);
     d_engine.OnEvent(event);
 }
 
 void SinglePanelUI::OnUpdate(double dt)
 {
-    d_mouse.OnUpdate();
     d_engine.OnUpdate(dt);
 }
 
@@ -133,7 +127,7 @@ void SinglePanelUI::Slider(const std::string& name,
     cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        auto mouse = d_mouse.GetMousePos();
+        auto mouse = d_window->GetMousePos();
         mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;

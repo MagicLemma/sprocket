@@ -95,8 +95,8 @@ void EditorLayer::OnUpdate(double dt)
     //d_shadowMap.Draw(sun, target, *d_scene);
     //d_entityRenderer.EnableShadows(d_shadowMap);
     
-    d_activeScene->OnUpdate(dt, !d_paused);
     if (!d_paused) {
+        d_activeScene->OnUpdate(dt);
         d_particleManager.OnUpdate(dt);
 
         if (d_isViewportFocused && !d_playingGame) {
@@ -195,7 +195,7 @@ void EditorLayer::OnUpdate(double dt)
                 
                 d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
-                d_activeScene->AddSystem(std::make_shared<ScriptRunner>());
+                d_activeScene->AddSystem(std::make_shared<ScriptRunner>(d_core.window));
                 d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
                 d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
 

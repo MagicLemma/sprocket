@@ -23,11 +23,8 @@ void Selector::OnStartup(Scene& manager)
     });
 }
 
-void Selector::OnUpdate(Scene& manager, double dt, bool active)
+void Selector::OnUpdate(Scene& manager, double dt)
 {
-    d_mouse.OnUpdate();
-    if (!active) { return; }
-
     if (!d_enabled) {
         ClearHovered();
         ClearSelected();
@@ -37,8 +34,6 @@ void Selector::OnUpdate(Scene& manager, double dt, bool active)
 void Selector::OnEvent(Scene& scene, Event& event)
 {
     if (!d_enabled) { return; }
-
-    d_mouse.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         if (e->IsConsumed()) { return; }
@@ -109,7 +104,7 @@ Entity Selector::GetMousedOver()
 
     glm::vec3 rayStart = glm::inverse(view) * glm::vec4(0, 0, 0, 1);
     glm::vec3 direction = Maths::GetMouseRay(
-        d_mouse.GetMousePos(),
+        d_window->GetMousePos(),
         d_window->Width(),
         d_window->Height(),
         view,

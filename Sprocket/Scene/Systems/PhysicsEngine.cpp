@@ -232,10 +232,8 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 }
 
-void PhysicsEngine::OnUpdate(Scene& scene, double dt, bool active)
+void PhysicsEngine::OnUpdate(Scene& scene, double dt)
 {
-    if (!active) { return; }
-    
     // Pre Update
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.

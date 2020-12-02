@@ -1,6 +1,4 @@
 #include "SimpleUI.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "MouseCodes.h"
 #include "KeyboardCodes.h"
 #include "Log.h"
@@ -50,22 +48,18 @@ template <typename T> T Interpolate(
 
 SimpleUI::SimpleUI(Window* window)
     : d_window(window)
-    , d_engine(window, &d_keyboard, &d_mouse)
+    , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")
 {
-    d_keyboard.ConsumeAll(false);
 }
 
 void SimpleUI::OnEvent(Event& event)
 {
     d_engine.OnEvent(event);
-    d_keyboard.OnEvent(event);
-    d_mouse.OnEvent(event);
 }
 
 void SimpleUI::OnUpdate(double dt)
 {
-    d_mouse.OnUpdate();
     d_engine.OnUpdate(dt);
 }
 
@@ -82,7 +76,6 @@ void SimpleUI::EndFrame()
 void SimpleUI::StartPanel(const std::string& name, glm::vec4* region, PanelType type)
 {
     d_engine.StartPanel(name, region, type);
-    d_keyboard.ConsumeAll(false);
 
     auto& cmd = d_engine.GetDrawCommand();
     cmd.font = &d_font;
@@ -255,7 +248,7 @@ void SimpleUI::Slider(const std::string& name,
     cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        auto mouse = d_mouse.GetMousePos();
+        auto mouse = d_window->GetMousePos();
         mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
@@ -275,10 +268,10 @@ void SimpleUI::Dragger(const std::string& name,
 
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(colour, info.quad);
-    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
+    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 2), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        *value += d_mouse.GetMouseOffset().x * speed;
+        *value += d_window->GetMouseOffset().x * speed;
     }    
 }
 

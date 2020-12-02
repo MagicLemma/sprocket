@@ -5,10 +5,8 @@ namespace Sprocket {
 
 class Camera
 {
-    Window*       d_window;
-    
-    KeyboardProxy d_keyboard;
-    MouseProxy    d_mouse;
+    Window*    d_window;
+    InputProxy d_input;
 
     glm::vec3 d_position;
     glm::vec3 d_target;

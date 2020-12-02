@@ -33,6 +33,9 @@ class Window
 
 	glm::vec3 d_clearColour;
 
+	glm::vec2 d_mousePos;
+	glm::vec2 d_mouseOffset;
+
 private:
 	// Deleted Constructors
 	Window(Window&&) = delete;
@@ -63,6 +66,10 @@ public:
 	// Window Utilities
 	void SetWindowName(const std::string& name);
 	void SetCursorVisibility(bool visibility);
+
+	// Mouse Utilities
+	glm::vec2 GetMousePos() const;
+	glm::vec2 GetMouseOffset() const;
 
 	// Clipboard Utilities
 	const char* GetClipboardData();

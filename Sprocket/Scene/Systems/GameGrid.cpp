@@ -23,7 +23,6 @@ GameGrid::GameGrid(Window* window)
     , d_hovered({0.0, 0.0})
     , d_selected({})
 {
-    d_keyboard.ConsumeAll(false);
 }
 
 void GameGrid::OnStartup(Scene& scene)
@@ -77,16 +76,13 @@ void GameGrid::OnStartup(Scene& scene)
     });
 }
 
-void GameGrid::OnUpdate(Sprocket::Scene&, double dt, bool active)
+void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
 {
-    if (!active) { return; }
-    
     auto& camTr = d_camera.Get<TransformComponent>();
 
-    d_mouse.OnUpdate();
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
-        d_mouse.GetMousePos(),
+        d_window->GetMousePos(),
         d_window->Width(),
         d_window->Height(),
         MakeView(d_camera),
@@ -108,9 +104,6 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double dt, bool active)
 void GameGrid::OnEvent(Scene& scene, Event& event)
 {
     if (event.IsConsumed()) { return; }
-
-    d_mouse.OnEvent(event);
-    d_keyboard.OnEvent(event);
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
         if (e->Button() == Mouse::LEFT) {

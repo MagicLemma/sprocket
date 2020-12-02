@@ -1,9 +1,6 @@
 #include "LuaEntity.h"
 #include "LuaGlobals.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "Entity.h"
-#include "Components.h"
 
 #include <lua.hpp>
 

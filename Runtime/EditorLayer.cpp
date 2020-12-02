@@ -27,7 +27,7 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     d_scene = std::make_shared<Scene>();    
     d_scene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
     d_scene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
-    d_scene->AddSystem(std::make_shared<ScriptRunner>());
+    d_scene->AddSystem(std::make_shared<ScriptRunner>(d_core.window));
     d_scene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
     d_scene->AddSystem(std::make_shared<AnimationSystem>());
     Loader::Load("Resources/Anvil.yaml", d_scene);
@@ -62,10 +62,10 @@ void EditorLayer::OnUpdate(double dt)
     if (d_consoleActive) {
         d_console.OnUpdate(dt);
     } else {
+        d_scene->OnUpdate(dt);
         d_particleManager.OnUpdate(dt);
     }
     
-    d_scene->OnUpdate(dt, !d_consoleActive);
     d_scene->Each<TransformComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {

@@ -2,8 +2,6 @@
 #include "EntitySystem.h"
 #include "HashPair.h"
 #include "Window.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "Maths.h"
 
 #include <memory>
@@ -21,8 +19,6 @@ public:
 
 private:
     Window*       d_window;
-    KeyboardProxy d_keyboard;
-    MouseProxy    d_mouse;
 
     Entity d_camera;
     Entity d_hoveredSquare;
@@ -37,7 +33,7 @@ public:
     GameGrid(Window* window);
 
     void OnStartup(Scene& scene) override;
-    void OnUpdate(Scene& scene, double dt, bool active) override;
+    void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Scene& scene, Event& event) override;
 
     Entity At(int x, int z) const;

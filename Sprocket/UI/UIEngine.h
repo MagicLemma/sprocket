@@ -2,8 +2,6 @@
 #include "Window.h"
 #include "Shader.h"
 #include "Event.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "Font.h"
 #include "Types.h"
@@ -141,9 +139,6 @@ class UIEngine
 {
     Window* d_window;
 
-    KeyboardProxy* d_keyboard;
-    MouseProxy* d_mouse;
-
     Texture d_white;
 
     // Rendering code    
@@ -178,11 +173,16 @@ class UIEngine
     // A vector of key presses that happened since last frame. This will be
     // given to the currently focused widget.
     std::vector<int> d_keyPresses;
+    bool d_consumeMouseEvents = false;
+    bool d_mouseClicked = false;
+
+    void MouseClick();
+    void MouseHover();
 
     void ExecuteCommand(const DrawCommand& cmd);
 
 public:
-    UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse);
+    UIEngine(Window* window);
 
     // Registers a region that can respond to hovers and clicks. The (x, y)
     // position of the region is with respect to the position of the active panel.

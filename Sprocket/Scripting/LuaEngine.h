@@ -1,11 +1,11 @@
 #pragma once
 #include "Event.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
+#include "InputProxy.h"
 #include "MouseEvent.h"
 #include "WindowEvent.h"
 #include "KeyboardEvent.h"
 #include "Entity.h"
+#include "Window.h"
 
 #include <string>
 #include <unordered_map>
@@ -51,8 +51,8 @@ public:
 
     // Setters
     void SetEntity(const Entity& e);
-    void SetKeyboard(KeyboardProxy* k);
-    void SetMouse(MouseProxy* m);
+    void SetWindow(Window* w);
+    void SetInput(InputProxy* ip);
 
     // Do not copy these things
     LuaEngine(LuaEngine&&) = delete;

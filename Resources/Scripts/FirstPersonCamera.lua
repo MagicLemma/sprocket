@@ -20,7 +20,7 @@ function OnUpdate(entity, dt)
     SetTransformComponent(entity, transform)
 
     local dx, dy = GetMouseOffset()
-    RotateY(entity, -10 * dx)
+    RotateY(entity, 10 * dx)
 
     local camera = GetCameraComponent(entity)
     camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)

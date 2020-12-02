@@ -9,17 +9,17 @@
 
 namespace Sprocket {
 
-ScriptRunner::ScriptRunner()
+ScriptRunner::ScriptRunner(Window* window)
+    : d_window(window)
 {
-    d_keyboard.ConsumeAll(false);
 }
 
 void ScriptRunner::OnStartup(Scene& scene)
 {
     auto AddScript = [&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
-        luaEngine.SetKeyboard(&d_keyboard);
-        luaEngine.SetMouse(&d_mouse);
+        luaEngine.SetWindow(d_window);
+        luaEngine.SetInput(&d_input);
         luaEngine.SetEntity(entity);
         luaEngine.RunScript(entity.Get<ScriptComponent>().script);
         luaEngine.CallInitFunction();
@@ -36,13 +36,8 @@ void ScriptRunner::OnStartup(Scene& scene)
     });
 }
 
-void ScriptRunner::OnUpdate(Scene& scene, double dt, bool active)
+void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
-    // Always update the mouse even if inactive so that mouse offsets stay correct.
-    d_mouse.OnUpdate();
-
-    if (!active) { return; }
-
     scene.Each<ScriptComponent>([&](Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.CallOnUpdateFunction(dt);
@@ -51,8 +46,7 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt, bool active)
 
 void ScriptRunner::OnEvent(Scene& scene, Event& event)
 {
-    d_keyboard.OnEvent(event);
-    d_mouse.OnEvent(event);
+    d_input.OnEvent(event);
 
     // WINDOW EVENTS
     if (auto e = event.As<WindowResizeEvent>()) {

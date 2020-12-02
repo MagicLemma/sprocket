@@ -29,9 +29,8 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
         }
     }
 
-    d_ui.OnEvent(event);
-
     if (d_worldLayer->d_paused) {
+        d_ui.OnEvent(event);
         event.Consume();
     }
 }

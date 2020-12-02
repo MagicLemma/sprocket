@@ -38,7 +38,7 @@ void Scene::OnStartup()
     }
 }
 
-void Scene::OnUpdate(double dt, bool active)
+void Scene::OnUpdate(double dt)
 {
     d_sinceLastSort += dt;
     if (d_sinceLastSort > 5.0) {
@@ -49,7 +49,7 @@ void Scene::OnUpdate(double dt, bool active)
     }
 
     for (auto system : d_systems) {
-        system->OnUpdate(*this, dt, active);
+        system->OnUpdate(*this, dt);
     }
 }
 

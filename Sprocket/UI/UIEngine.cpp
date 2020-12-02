@@ -1,6 +1,4 @@
 #include "SimpleUI.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "MouseCodes.h"
 #include "KeyboardCodes.h"
 #include "Log.h"
@@ -9,6 +7,7 @@
 #include "BufferLayout.h"
 #include "Adaptors.h"
 #include "KeyboardEvent.h"
+#include "MouseEvent.h"
 
 #include <functional>
 #include <sstream>
@@ -19,6 +18,15 @@
 
 namespace Sprocket {
 namespace {
+
+bool InRegion(const glm::vec2& pos, const glm::vec4& quad)
+{
+    float x = quad.x;
+    float y = quad.y;
+    float width = quad.z;
+    float height = quad.w;
+    return x < pos.x && pos.x < x + width &&  y < pos.y && pos.y < y + height;
+}
 
 std::vector<unsigned char> GetWhiteData()
 {
@@ -117,10 +125,8 @@ void DrawCommand::AddText(const std::string& text,
     }
 }
 
-UIEngine::UIEngine(Window* window, KeyboardProxy* keyboard, MouseProxy* mouse)
+UIEngine::UIEngine(Window* window)
     : d_window(window)
-    , d_keyboard(keyboard)
-    , d_mouse(mouse)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
     , d_white(1, 1, GetWhiteData().data())
@@ -226,18 +232,24 @@ void UIEngine::OnEvent(Event& event)
             }
         }
     }
+
+    if (auto e = event.As<MouseButtonPressedEvent>()) {
+        if (e->Button() == Mouse::LEFT) {
+            d_mouseClicked = true;
+            if (d_consumeMouseEvents) { e->Consume(); }
+        }
+    }
+    if (auto e = event.As<MouseButtonReleasedEvent>()) {
+        if (e->Button() == Mouse::LEFT) {
+            d_widgetTimes[d_clicked].unclickedTime = d_time;
+            d_clicked = 0;
+        }
+    }
 }
 
 void UIEngine::OnUpdate(double dt)
 {
-    d_mouse->ConsumeEvents(false);
     d_time += dt;
-
-    // Let go of mouse click, so lose clicked
-    if (d_mouse->IsButtonReleased(Mouse::LEFT) && d_clicked > 0) {
-        d_widgetTimes[d_clicked].unclickedTime = d_time;
-        d_clicked = 0;
-    }
 }
 
 void UIEngine::StartFrame()
@@ -246,24 +258,21 @@ void UIEngine::StartFrame()
     d_currentPanel = nullptr;
 }
 
-void UIEngine::EndFrame()
+void UIEngine::MouseClick()
 {
-    assert(!d_currentPanel);
-
-    bool foundHovered = false;
     bool foundClicked = false;
+    glm::vec2 mouse = d_window->GetMousePos();
 
     std::size_t moveToFront = 0;
 
-    d_keyPresses.clear();
-
     for (const auto& panelHash : Reversed(d_panelOrder)) {
-        const auto& panel = d_panels[panelHash];
+        auto it = d_panels.find(panelHash);
+        if (it == d_panels.end()) { continue; }
+        const auto& panel = it->second;
 
         for (const auto& quad : Reversed(panel.widgetRegions)) {
             std::size_t hash = quad.hash;
-            auto hovered = d_mouse->InRegion(quad.region.x, quad.region.y, quad.region.z, quad.region.w);
-            auto clicked = hovered && d_mouse->IsButtonClicked(Mouse::LEFT);
+            auto clicked = InRegion(mouse, quad.region);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
@@ -281,6 +290,35 @@ void UIEngine::EndFrame()
                     d_onFocus = hash;
                 }
             }
+        }
+    }
+
+    // Clicked on something other than the UI, so lose focus
+    if (!foundClicked && d_focused > 0) {
+        d_widgetTimes[d_focused].unfocusedTime = d_time;
+        d_focused = 0;
+    }
+
+    if (moveToFront > 0) {
+        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
+        d_panelOrder.erase(toMove);
+        d_panelOrder.push_back(moveToFront);
+    }
+}
+
+void UIEngine::MouseHover()
+{
+    bool foundHovered = false;
+    glm::vec2 mouse = d_window->GetMousePos();
+
+    for (const auto& panelHash : Reversed(d_panelOrder)) {
+        auto it = d_panels.find(panelHash);
+        if (it == d_panels.end()) { continue; }
+        const auto& panel = it->second;
+
+        for (const auto& quad : Reversed(panel.widgetRegions)) {
+            std::size_t hash = quad.hash;
+            auto hovered = InRegion(mouse, quad.region);
             
             if (!foundHovered && hovered) {
                 foundHovered = true;
@@ -294,25 +332,26 @@ void UIEngine::EndFrame()
         }
     }
 
-    // Clicked on something other than the UI, so lose focus
-    if (d_mouse->IsButtonClicked(Mouse::LEFT) && !foundClicked && d_focused > 0) {
-        d_widgetTimes[d_focused].unfocusedTime = d_time;
-        d_focused = 0;
-    }
-
     // Hovered over something other than the UI, so lose hover
     if (!foundHovered && d_hovered > 0) {
         d_widgetTimes[d_hovered].unhoveredTime = d_time;
         d_hovered = 0;
     }
 
-    d_mouse->ConsumeEvents(foundHovered);
+    d_consumeMouseEvents = foundHovered;
+}
 
-    if (moveToFront > 0) {
-        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
-        d_panelOrder.erase(toMove);
-        d_panelOrder.push_back(moveToFront);
+void UIEngine::EndFrame()
+{
+    assert(!d_currentPanel);
+
+    if (d_mouseClicked) {
+        MouseClick();
     }
+    d_mouseClicked = false;
+    MouseHover();
+
+    d_keyPresses.clear();
 
     Sprocket::RenderContext rc;
     rc.AlphaBlending(true);
@@ -361,8 +400,8 @@ void UIEngine::StartPanel(const std::string& name, glm::vec4* region, PanelType 
         auto info = Register(name, {0, 0, region->z, region->w});
 
         if (info.sinceClicked > 0 && type == PanelType::DRAGGABLE) {
-            region->x += d_mouse->GetMouseOffset().x;
-            region->y += d_mouse->GetMouseOffset().y;
+            region->x += d_window->GetMouseOffset().x;
+            region->y += d_window->GetMouseOffset().y;
             d_currentPanel->region = *region;
         }
     }

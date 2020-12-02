@@ -13,7 +13,7 @@ WorldLayer::WorldLayer(const Sprocket::CoreSystems& core)
     , d_postProcessor(core.window->Width(), core.window->Height())
     , d_gameGrid(std::make_shared<Sprocket::GameGrid>(core.window))
     , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(core.window->AspectRatio()))
-    , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>())
+    , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>(d_core.window))
     , d_pathFollower(std::make_shared<Sprocket::PathFollower>())
     , d_selector(std::make_shared<Sprocket::BasicSelector>())
     , d_shadowMap(core.window, core.assetManager)
@@ -89,7 +89,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     using namespace Sprocket;
 
     d_hoveredEntityUI.OnEvent(event);
-    d_mouse.OnEvent(event);
 
     if (auto e = event.As<WindowResizeEvent>()) {
         d_postProcessor.SetScreenSize(e->Width(), e->Height());
@@ -100,7 +99,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         if (e->Mods() & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
-                d_mouse.GetMousePos(),
+                d_core.window->GetMousePos(),
                 d_core.window->Width(),
                 d_core.window->Height(),
                 MakeView(d_camera),
@@ -146,7 +145,6 @@ void WorldLayer::OnUpdate(double dt)
     Audio::SetListener(d_camera);
 
     d_hoveredEntityUI.OnUpdate(dt);
-    d_mouse.OnUpdate();
     if (!d_paused) {
         d_cycle.OnUpdate(dt);
     }
@@ -167,7 +165,9 @@ void WorldLayer::OnUpdate(double dt)
     sun.brightness = 2.0f * std::abs(glm::cos(d_cycle.GetAngle()));
     sun.direction = glm::normalize(sun.direction);
 
-    d_scene->OnUpdate(dt, !d_paused);
+    if (!d_paused) {
+        d_scene->OnUpdate(dt);
+    }
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
@@ -189,7 +189,7 @@ void WorldLayer::OnUpdate(double dt)
     if (!d_paused) {
         d_hoveredEntityUI.StartFrame();
 
-        auto mouse = d_mouse.GetMousePos();
+        auto mouse = d_core.window->GetMousePos();
         float w = (float)d_core.window->Width();
         float h = (float)d_core.window->Height();
 

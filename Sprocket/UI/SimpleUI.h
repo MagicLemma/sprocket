@@ -2,8 +2,6 @@
 #include "Window.h"
 #include "Shader.h"
 #include "Event.h"
-#include "KeyboardProxy.h"
-#include "MouseProxy.h"
 #include "StreamBuffer.h"
 #include "Font.h"
 #include "UIEngine.h"
@@ -29,9 +27,6 @@ class SimpleUI
     Window* d_window;
 
     SimpleUITheme d_theme;
-
-    KeyboardProxy d_keyboard;
-    MouseProxy d_mouse;
 
     UIEngine d_engine;
     Font d_font;
