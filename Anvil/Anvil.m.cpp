@@ -31,6 +31,7 @@ int main()
         
         watch.OnUpdate();
         app.OnUpdate(watch.DeltaTime());
+        app.OnRender();
 
         window.OnUpdate();
     }

@@ -17,4 +17,11 @@ void App::OnUpdate(double dt)
     }
 }
 
+void App::OnRender()
+{
+    for (auto& layer : d_layers) {
+        layer->OnRender();
+    }
+}
+
 }

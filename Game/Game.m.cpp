@@ -37,6 +37,7 @@ int main()
         
         watch.OnUpdate();
         app.OnUpdate(watch.DeltaTime());
+        app.OnRender();
 
         std::string name = "Game! FPS: " + std::to_string(watch.Framerate());
         window.SetWindowName(name);

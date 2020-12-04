@@ -55,6 +55,7 @@ public:
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
+    void OnRender() override;
 
     void SaveScene();
     void LoadScene(const std::string& sceneFile);

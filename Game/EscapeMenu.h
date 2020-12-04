@@ -19,4 +19,5 @@ public:
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
+    void OnRender() override;
 };

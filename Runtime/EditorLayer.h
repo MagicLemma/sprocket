@@ -31,6 +31,7 @@ public:
 
     void OnEvent(Event& event) override;
     void OnUpdate(double dt) override;
+    void OnRender() override;
 
     Window* GetWindow() { return d_core.window; }
 };

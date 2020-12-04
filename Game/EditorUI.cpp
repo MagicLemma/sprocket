@@ -179,9 +179,11 @@ void EditorUI::OnUpdate(double dt)
         return;
     }
 
-    using namespace Maths;
-
     d_ui.OnUpdate(dt);
+}
+
+void EditorUI::OnRender()
+{
     d_ui.StartFrame();
 
     glm::mat4 view = MakeView(d_worldLayer->d_camera);
@@ -196,7 +198,7 @@ void EditorUI::OnUpdate(double dt)
     ShaderInfoPanel(d_ui, d_worldLayer->d_entityRenderer.GetShader());
 
     ImGui::Begin("Shadow Map");
-    //ImGuiXtra::Image(d_worldLayer->d_shadowMap.GetShadowMap(), 500.0f);
+    ImGuiXtra::Image(d_worldLayer->d_shadowMap.GetShadowMap(), 500.0f);
     ImGui::End();
 
     ImGui::ShowDemoWindow();

@@ -37,10 +37,12 @@ void EscapeMenu::OnEvent(Sprocket::Event& event)
 
 void EscapeMenu::OnUpdate(double dt)
 {
-    using namespace Sprocket::Maths;
-    using namespace Sprocket;
-
     d_ui.OnUpdate(dt);
+}
+
+void EscapeMenu::OnRender()
+{
+    using namespace Sprocket;
 
     if (!d_worldLayer->d_paused) {
         return; // Layer not active

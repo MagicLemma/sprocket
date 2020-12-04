@@ -85,32 +85,35 @@ void EditorLayer::OnEvent(Event& event)
 void EditorLayer::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
-
-    std::string windowName = "Anvil: " + d_sceneFile;
-    d_core.window->SetWindowName(windowName);
+    d_core.window->SetWindowName(std::string("Anvil: " + d_sceneFile));
 
     // Create the Shadow Map
     //float lambda = 5.0f; // TODO: Calculate the floor intersection point
     //glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     //d_shadowMap.Draw(sun, target, *d_scene);
     //d_entityRenderer.EnableShadows(d_shadowMap);
-    
-    if (!d_paused) {
-        d_activeScene->OnUpdate(dt);
-        d_particleManager.OnUpdate(dt);
 
-        if (d_isViewportFocused && !d_playingGame) {
-            d_editorCamera.OnUpdate(dt);
-        }
-        
-        d_activeScene->Each<TransformComponent>([&](Entity& entity) {
-            auto& transform = entity.Get<TransformComponent>();
-            if (transform.position.y < -50) {
-                entity.Kill();
-            }
-        });
+    if (d_paused) {
+        return;
     }
 
+    d_activeScene->OnUpdate(dt);
+    d_particleManager.OnUpdate(dt);
+
+    if (d_isViewportFocused && !d_playingGame) {
+        d_editorCamera.OnUpdate(dt);
+    }
+    
+    d_activeScene->Each<TransformComponent>([&](Entity& entity) {
+        auto& transform = entity.Get<TransformComponent>();
+        if (transform.position.y < -50) {
+            entity.Kill();
+        }
+    });
+}
+
+void EditorLayer::OnRender()
+{
     d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_viewport.Bind();
@@ -128,8 +131,6 @@ void EditorLayer::OnUpdate(double dt)
             d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
         }
     }
-
-
     d_viewport.Unbind();
 
     d_ui.StartFrame();

@@ -169,10 +169,16 @@ void WorldLayer::OnUpdate(double dt)
         d_scene->OnUpdate(dt);
     }
 
+}
+
+void WorldLayer::OnRender()
+{
+    using namespace Sprocket;
+
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    d_shadowMap.Draw(sun, target, *d_scene);
+    d_shadowMap.Draw(d_scene->GetSun(), target, *d_scene);
 
     if (d_paused) {
         d_postProcessor.Bind();

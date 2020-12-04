@@ -57,6 +57,7 @@ public:
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;
+    void OnRender() override;
 
     Entity Selected() { return d_selected; }
     void SetSelected(Entity e) { d_selected = e; }

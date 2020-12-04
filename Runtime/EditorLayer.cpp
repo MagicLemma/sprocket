@@ -72,7 +72,10 @@ void EditorLayer::OnUpdate(double dt)
             entity.Kill();
         }
     });
-    
+}
+
+void EditorLayer::OnRender()
+{
     d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     d_entityRenderer.Draw(d_runtimeCamera, *d_scene);
 
