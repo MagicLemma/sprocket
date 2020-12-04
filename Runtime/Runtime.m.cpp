@@ -10,31 +10,19 @@ int main()
     Window window("Workshop");
     AssetManager assetManager;
 
-    App app;
-
+    CoreSystems core;
+    core.window = &window;
+    core.assetManager = &assetManager;
+    
+    EditorLayer app(core);
+    
     window.SetClearColour({0.5, 0.5, 0.5});
     window.SetCallback([&app](Event& event) {
         app.OnEvent(event);
     });
 
-    CoreSystems core;
-    core.window = &window;
-    core.assetManager = &assetManager;
-
-    app.Add<EditorLayer>(core);
-
-    Stopwatch watch;
-    watch.PrintFramerate(false);
-
-    while (window.Running()) {
-        window.Clear();
-        
-        watch.OnUpdate();
-        app.OnUpdate(watch.DeltaTime());
-        app.OnRender();
-
-        window.OnUpdate();
-    }
+    GameLoop loop(&app, &window);
+    loop.Run();
 
     return 0;
 }

@@ -8,6 +8,7 @@
 #include "Core/CoreSystems.h"
 #include "Core/Window.h"
 #include "Core/Layer.h"
+#include "Core/GameLoop.h"
 
 // UI
 #include "UI/Font/FontAtlas.h"
