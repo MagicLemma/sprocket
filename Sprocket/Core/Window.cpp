@@ -21,6 +21,8 @@ Window::Window(const std::string& name, u32 width, u32 height)
 	, d_data({name, width, height})
 	, d_clearColour({1.0, 1.0, 1.0})
 {
+	Log::Init();
+	
 	glfwInit();
 
 	d_impl->window = glfwCreateWindow(

@@ -11,7 +11,7 @@ Stopwatch::Stopwatch()
     , d_frameCount(0)
 {}
 
-void Stopwatch::OnUpdate()
+double Stopwatch::OnUpdate()
 {
     d_previousTime = d_currentTime;
     d_currentTime = d_clock.now();
@@ -24,6 +24,8 @@ void Stopwatch::OnUpdate()
         d_frameCount = 0;
         d_lastTimePrinted = d_currentTime;
     }
+
+    return DeltaTime();
 }
 
 double Stopwatch::DeltaTime() const

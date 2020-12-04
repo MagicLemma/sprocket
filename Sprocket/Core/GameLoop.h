@@ -1,37 +1,41 @@
 #pragma once
 #include "Window.h"
 #include "Stopwatch.h"
+#include "Log.h"
+
+#include <exception>
 
 namespace Sprocket {
 
 template <typename App>
-class GameLoop
+int Run(App& app, Window& window)
 {
-    App*    d_app;
-    Window* d_window;
+    Stopwatch watch;
 
-    Stopwatch d_stopwatch;
+    window.SetCallback([&app](Event& event) {
+        app.OnEvent(event);
+    });
 
-public:
-    GameLoop(App* app, Window* window) : d_app(app), d_window(window) {}
+    try {
+        while (window.Running()) {
+            window.Clear();
+            
+            double dt = watch.OnUpdate();
+            app.OnUpdate(dt);
+            app.OnRender();
 
-    void Run();
-};
+            window.OnUpdate();
+        }
 
-template <typename App>
-void GameLoop<App>::Run()
-{
-    while (d_window->Running()) {
-        double dt = d_stopwatch.DeltaTime();
-
-        d_window->Clear();
-        
-        d_stopwatch.OnUpdate();
-        d_app->OnUpdate(dt);
-        d_app->OnRender();
-
-        d_window->OnUpdate();
+    } catch (std::exception& e) {
+        SPKT_LOG_FATAL("Unhandled exception: {}", e.what());
+        return -1;
+    } catch (...) {
+        SPKT_LOG_FATAL("Unhandled unknown exception");
+        return -2;
     }
+
+    return 0;
 }
 
 }

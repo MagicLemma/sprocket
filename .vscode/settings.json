@@ -79,6 +79,7 @@
         "typeindex": "cpp",
         "unordered_set": "cpp",
         "valarray": "cpp",
-        "fft": "cpp"
+        "fft": "cpp",
+        "*.rh": "cpp"
     }
 }

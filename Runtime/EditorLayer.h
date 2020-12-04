@@ -7,7 +7,7 @@
 
 namespace Sprocket {
 
-class EditorLayer : public Layer
+class EditorLayer
 {
     CoreSystems d_core;
 
@@ -29,9 +29,9 @@ class EditorLayer : public Layer
 public:
     EditorLayer(const CoreSystems& core);
 
-    void OnEvent(Event& event) override;
-    void OnUpdate(double dt) override;
-    void OnRender() override;
+    void OnEvent(Event& event);
+    void OnUpdate(double dt);
+    void OnRender();
 
     Window* GetWindow() { return d_core.window; }
 };
