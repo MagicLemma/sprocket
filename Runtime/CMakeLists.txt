@@ -5,9 +5,9 @@ project(Runtime)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Runtime
-               Runtime.m.cpp
-               Console.cpp
-               EditorLayer.cpp)
+               Main.m.cpp
+               Runtime.cpp
+               Console.cpp)
 
 target_link_libraries(Runtime PRIVATE Sprocket)
 target_include_directories(Runtime PUBLIC
