@@ -3,16 +3,8 @@
 
 int main()
 {
-    using namespace Sprocket;
-    Log::Init();
+    Sprocket::Window window("Runtime");
 
-    Window window("Workshop");
-    AssetManager assetManager;
-
-    CoreSystems core;
-    core.window = &window;
-    core.assetManager = &assetManager;
-
-    EditorLayer app(core);
-    return Run(app, window);
+    EditorLayer app(&window);
+    return Sprocket::Run(app, window);
 }

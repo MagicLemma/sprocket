@@ -5,35 +5,30 @@
 #include <memory>
 #include <random>
 
-namespace Sprocket {
-
 class EditorLayer
 {
-    CoreSystems d_core;
+    Sprocket::Window*      d_window;
+    Sprocket::AssetManager d_assetManager;
 
     // Rendering
-    EntityRenderer d_entityRenderer;
-    SkyboxRenderer d_skyboxRenderer;
+    Sprocket::EntityRenderer d_entityRenderer;
+    Sprocket::SkyboxRenderer d_skyboxRenderer;
 
-    ParticleManager d_particleManager;
+    Sprocket::ParticleManager d_particleManager;
 
     // Scene
-    CubeMap d_skybox;
-    std::shared_ptr<Scene> d_scene;
-    Entity d_runtimeCamera;
+    Sprocket::CubeMap d_skybox;
+    std::shared_ptr<Sprocket::Scene> d_scene;
+    Sprocket::Entity d_runtimeCamera;
 
     // Console
-    Console d_console;
+    Sprocket::Console d_console;
     bool d_consoleActive = false;
 
 public:
-    EditorLayer(const CoreSystems& core);
+    EditorLayer(Sprocket::Window* window);
 
-    void OnEvent(Event& event);
+    void OnEvent(Sprocket::Event& event);
     void OnUpdate(double dt);
     void OnRender();
-
-    Window* GetWindow() { return d_core.window; }
 };
-
-}

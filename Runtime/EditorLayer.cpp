@@ -1,16 +1,17 @@
 #include "EditorLayer.h"
 
-namespace Sprocket {
+using namespace Sprocket;
 
 const auto LIGHT_BLUE  = Sprocket::FromHex(0x25CCF7);
 const auto CLEAR_BLUE  = Sprocket::FromHex(0x1B9CFC);
 const auto GARDEN      = Sprocket::FromHex(0x55E6C1);
 const auto SPACE_DARK  = Sprocket::FromHex(0x2C3A47);
 
-EditorLayer::EditorLayer(const CoreSystems& core) 
-    : d_core(core)
-    , d_entityRenderer(core.assetManager)
-    , d_skyboxRenderer(core.assetManager)
+EditorLayer::EditorLayer(Window* window) 
+    : d_window(window)
+    , d_assetManager()
+    , d_entityRenderer(&d_assetManager)
+    , d_skyboxRenderer(&d_assetManager)
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
         "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -19,15 +20,15 @@ EditorLayer::EditorLayer(const CoreSystems& core)
         "Resources/Textures/Skybox/Skybox_Z_Pos.png",
         "Resources/Textures/Skybox/Skybox_Z_Neg.png"
     })
-    , d_console(core.window)
+    , d_console(d_window)
 {
-    d_core.window->SetCursorVisibility(false);
+    d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_scene = std::make_shared<Scene>();    
     d_scene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
-    d_scene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
-    d_scene->AddSystem(std::make_shared<ScriptRunner>(d_core.window));
+    d_scene->AddSystem(std::make_shared<CameraSystem>(d_window->AspectRatio()));
+    d_scene->AddSystem(std::make_shared<ScriptRunner>(d_window));
     d_scene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
     d_scene->AddSystem(std::make_shared<AnimationSystem>());
     Loader::Load("Resources/Anvil.yaml", d_scene);
@@ -57,7 +58,7 @@ void EditorLayer::OnEvent(Event& event)
 
 void EditorLayer::OnUpdate(double dt)
 {
-    d_core.window->SetCursorVisibility(d_consoleActive);
+    d_window->SetCursorVisibility(d_consoleActive);
 
     if (d_consoleActive) {
         d_console.OnUpdate(dt);
@@ -82,6 +83,4 @@ void EditorLayer::OnRender()
     if (d_consoleActive) {
         d_console.Draw();
     }
-}
-
 }
