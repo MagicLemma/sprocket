@@ -5,14 +5,12 @@
 
 class EditorUI : public Sprocket::Layer
 {
-    Sprocket::CoreSystems d_core;
-    
     WorldLayer* d_worldLayer;
 
     Sprocket::DevUI d_ui;
 
 public:
-    EditorUI(const Sprocket::CoreSystems& core, WorldLayer* worldLayer);
+    EditorUI(WorldLayer* worldLayer);
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;

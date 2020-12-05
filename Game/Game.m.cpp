@@ -10,23 +10,16 @@ int main()
     Log::Init();
 
     Window window("Game!");
-    AssetManager    assetManager;
 
     App app;
-    
+    auto worldLayer = app.Add<WorldLayer>(&window);
+    auto editorUi = app.Add<EditorUI>(worldLayer.get());
+    app.Add<EscapeMenu>(worldLayer.get());
+ 
+    Stopwatch watch;
     window.SetCallback([&app](Event& event) {
         app.OnEvent(event);
     });
-
-    CoreSystems core;
-    core.window = &window;
-    core.assetManager = &assetManager;
-
-    auto worldLayer = app.Add<WorldLayer>(&window);
-    auto editorUi = app.Add<EditorUI>(core, worldLayer.get());
-    app.Add<EscapeMenu>(core, worldLayer.get());
- 
-    Stopwatch watch;
 
     while (window.Running()) {
         window.Clear();

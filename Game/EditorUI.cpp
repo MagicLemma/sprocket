@@ -149,10 +149,9 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
 
 }
 
-EditorUI::EditorUI(const CoreSystems& core, WorldLayer* worldLayer)
-    : d_core(core)
-    , d_worldLayer(worldLayer)
-    , d_ui(core.window)
+EditorUI::EditorUI(WorldLayer* worldLayer)
+    : d_worldLayer(worldLayer)
+    , d_ui(worldLayer->d_window)
 {  
 }
 

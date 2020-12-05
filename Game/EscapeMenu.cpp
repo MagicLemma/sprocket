@@ -2,11 +2,9 @@
 #include "Palette.h"
 #include "FileBrowser.h"
 
-EscapeMenu::EscapeMenu(const Sprocket::CoreSystems& core,
-                       WorldLayer* worldLayer) 
-    : d_core(core)
-    , d_worldLayer(worldLayer)
-    , d_ui(core.window)
+EscapeMenu::EscapeMenu(WorldLayer* worldLayer) 
+    : d_worldLayer(worldLayer)
+    , d_ui(worldLayer->d_window)
 {
     using namespace Sprocket;
 
@@ -138,5 +136,5 @@ void EscapeMenu::OnRender()
     
     d_ui.EndFrame();
 
-    d_core.window->SetCursorVisibility(true);
+    d_worldLayer->d_window->SetCursorVisibility(true);
 }
