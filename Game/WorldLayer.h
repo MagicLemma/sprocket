@@ -47,6 +47,9 @@ class WorldLayer : public Sprocket::Layer
     // Editor UI
     Sprocket::DevUI d_devUI;
 
+    // Escape Menu
+    Sprocket::SimpleUI d_escapeMenu;
+
     friend class EscapeMenu;
     friend class EditorUI;
 

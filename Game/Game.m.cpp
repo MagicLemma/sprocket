@@ -1,7 +1,5 @@
 #include <Sprocket.h>
 #include "WorldLayer.h"
-#include "EscapeMenu.h"
-#include "Palette.h"
 
 int main()
 {
@@ -9,7 +7,6 @@ int main()
 
     Sprocket::App app;
     auto worldLayer = app.Add<WorldLayer>(&window);
-    app.Add<EscapeMenu>(worldLayer.get());
 
     Sprocket::RunOptions options;
     options.showFramerate = true;

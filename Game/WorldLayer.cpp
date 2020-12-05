@@ -166,6 +166,7 @@ WorldLayer::WorldLayer(Window* window)
     , d_shadowMap(d_window, &d_assetManager)
     , d_hoveredEntityUI(d_window)
     , d_devUI(window)
+    , d_escapeMenu(window)
 {
     using namespace Sprocket;
 
@@ -182,6 +183,7 @@ WorldLayer::WorldLayer(Window* window)
     theme.hoveredColour = LIGHT_BLUE;
     theme.clickedColour = GARDEN;
     d_hoveredEntityUI.SetTheme(theme);
+    d_escapeMenu.SetTheme(theme);    
 
     d_cycle.SetAngle(3.14195f);
 
@@ -236,6 +238,20 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 {
     using namespace Sprocket;
 
+    // Escape Menu event handling
+    if (auto e = event.As<Sprocket::KeyboardButtonPressedEvent>()) {
+        if (!e->IsConsumed() && e->Key() == Sprocket::Keyboard::ESC) {
+            d_paused = !d_paused;
+            e->Consume();
+        }
+    }
+
+    if (d_paused) {
+        d_escapeMenu.OnEvent(event);
+        event.Consume();
+    }
+
+    // Editor UI event handling
     if (d_mode == Mode::EDITOR) {
         d_devUI.OnEvent(event);
 
@@ -247,6 +263,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         }
     }
 
+    // Game World event handling
     d_hoveredEntityUI.OnEvent(event);
 
     if (auto e = event.As<WindowResizeEvent>()) {
@@ -328,10 +345,8 @@ void WorldLayer::OnUpdate(double dt)
         d_scene->OnUpdate(dt);
     }
 
-    if (d_mode == Mode::EDITOR) {
-        d_devUI.OnUpdate(dt);
-    }
-
+    d_devUI.OnUpdate(dt);
+    d_escapeMenu.OnUpdate(dt);
 }
 
 void WorldLayer::OnRender()
@@ -449,6 +464,99 @@ void WorldLayer::OnRender()
 
         d_devUI.EndFrame();
     }
+
+    // Rest of the rendering is the escape menu, which should only get rendered when paused.
+    if (!d_paused) {
+        return;
+    }
+
+    float w = (float)d_window->Width();
+    float h = (float)d_window->Height();
+
+    d_escapeMenu.StartFrame();
+    static bool showVolume = false;
+
+    glm::vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
+    d_escapeMenu.StartPanel("Main", &mainRegion, PanelType::CLICKABLE);
+
+    d_escapeMenu.Text("Menu", 48.0f, {0.0f, 0.0f, w * 0.3f, 100});
+
+    glm::vec4 buttonRegion = {w * 0.025f, 100, w * 0.25f, 50};
+
+    if (d_escapeMenu.Button("Toggle Dev UI", buttonRegion)) {
+        switch (d_mode) {
+            case Mode::PLAYER: {
+                d_mode = Mode::EDITOR;
+            } break;
+            case Mode::EDITOR: {
+                d_mode = Mode::PLAYER;
+            } break;
+        }
+    }
+
+    buttonRegion.y += 2 * 60;
+    static float value1 = 27.0f;
+    d_escapeMenu.Slider("Slider", buttonRegion, &value1, 0, 100);
+
+    buttonRegion.y += 60;
+    float angle = d_cycle.GetAngle();
+    d_escapeMenu.Dragger("Time of Day", buttonRegion, &angle, 0.001f);
+    d_cycle.SetAngle(angle);
+
+    buttonRegion.y += 60;
+    if (d_escapeMenu.Button("Save", buttonRegion)) {
+        SaveScene();
+    }
+
+    buttonRegion.y += 60;
+    if (d_escapeMenu.Button("Open", buttonRegion)) {
+        std::string newScene = OpenFile(d_window, "");
+        LoadScene(newScene);
+    }
+
+    buttonRegion.y += 60;
+    d_escapeMenu.Checkbox("Volume Panel", buttonRegion, &showVolume);
+    
+    d_escapeMenu.EndPanel();
+    
+    static glm::vec4 shape{w/2 - 200, 100, 400, 500};
+    if (showVolume) {
+        d_escapeMenu.StartPanel("VolumePanel", &shape, PanelType::DRAGGABLE);
+        d_escapeMenu.Text("Volume", 48.0f, {0, 0, 400, 100});
+
+        float volume = Sprocket::Audio::GetMasterVolume();
+        d_escapeMenu.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
+        Sprocket::Audio::SetMasterVolume(volume);
+        
+        d_escapeMenu.EndPanel();
+    }
+
+    static glm::vec4 shape2{w/2 + 300, 100, 400, 500};
+    d_escapeMenu.StartPanel("Button Panel", &shape2, PanelType::DRAGGABLE);
+    d_escapeMenu.Text("Buttons", 36.0f, {0, 0, 400, 100});
+    glm::vec4 buttonQuad{10, 100, 400 - 20, 50};
+    d_escapeMenu.Button("Button 1", buttonQuad);
+    buttonQuad.y += 60;
+    d_escapeMenu.Button("Button 2", buttonQuad);
+    buttonQuad.y += 60;
+    d_escapeMenu.Button("Button 3", buttonQuad);
+    buttonQuad.y += 60;
+    d_escapeMenu.Button("Button 4", buttonQuad);
+    buttonQuad.y += 60;
+    d_escapeMenu.Button("Button 5", buttonQuad);
+    buttonQuad.y += 60;
+    buttonQuad.z = buttonQuad.w;
+
+    static bool valA = false;
+    d_escapeMenu.Checkbox("A", buttonQuad, &valA);
+    buttonQuad.x += buttonQuad.z + 10.0f;
+
+    static bool valB = true;
+    d_escapeMenu.Checkbox("B", buttonQuad, &valB);
+    buttonQuad.x += buttonQuad.z + 10.0f;
+
+    d_escapeMenu.EndPanel();
+    d_escapeMenu.EndFrame();
 }
 
 void WorldLayer::AddTree(const glm::ivec2& pos)
