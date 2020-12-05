@@ -6,33 +6,15 @@
 
 int main()
 {
-    using namespace Sprocket;
-    Log::Init();
+    Sprocket::Window window("Game");
 
-    Window window("Game!");
-
-    App app;
+    Sprocket::App app;
     auto worldLayer = app.Add<WorldLayer>(&window);
     auto editorUi = app.Add<EditorUI>(worldLayer.get());
     app.Add<EscapeMenu>(worldLayer.get());
- 
-    Stopwatch watch;
-    window.SetCallback([&app](Event& event) {
-        app.OnEvent(event);
-    });
 
-    while (window.Running()) {
-        window.Clear();
-        
-        double dt = watch.OnUpdate();
-        app.OnUpdate(dt);
-        app.OnRender();
+    Sprocket::RunOptions options;
+    options.showFramerate = true;
 
-        std::string name = "Game! FPS: " + std::to_string(watch.Framerate());
-        window.SetWindowName(name);
-
-        window.OnUpdate();
-    }
-
-    return 0;
+    return Sprocket::Run(app, window, options);
 }

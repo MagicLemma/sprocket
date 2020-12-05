@@ -64,6 +64,7 @@ public:
 		// provided, it is overwritten.
 
 	// Window Utilities
+	std::string GetWindowName() const;
 	void SetWindowName(const std::string& name);
 	void SetCursorVisibility(bool visibility);
 

@@ -222,7 +222,13 @@ glm::vec2 Window::GetMouseOffset() const
 
 void Window::SetWindowName(const std::string& name)
 {
+	d_data.name = name;
 	glfwSetWindowTitle(d_impl->window, name.c_str());
+}
+
+std::string Window::GetWindowName() const
+{
+	return d_data.name;
 }
 
 void Window::SetCallback(EventCallback cb)
