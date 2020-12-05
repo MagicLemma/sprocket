@@ -5,9 +5,9 @@ project(Anvil)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(Anvil
-               Anvil.m.cpp
+               Main.m.cpp
+               Anvil.cpp
                Camera.cpp
-               EditorLayer.cpp
                
                Panels/Inspector.cpp)
 

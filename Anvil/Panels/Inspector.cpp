@@ -1,6 +1,6 @@
 // GENERATED FILE
 #include "Inspector.h"
-#include "EditorLayer.h"
+#include "Anvil.h"
 #include "ImGuiXtra.h"
 #include "Maths.h"
 #include "Components.h"
@@ -13,7 +13,7 @@ namespace Sprocket {
 namespace {
 
 void ShowGuizmo(
-    EditorLayer& editor,
+    Anvil& editor,
     TransformComponent& c,
     ImGuizmo::OPERATION mode,
     ImGuizmo::MODE coords,
@@ -37,7 +37,7 @@ void ShowGuizmo(
 
 }
 
-void Inspector::Show(EditorLayer& editor)
+void Inspector::Show(Anvil& editor)
 {
     Entity entity = editor.Selected();
 

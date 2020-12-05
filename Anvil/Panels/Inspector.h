@@ -5,7 +5,7 @@
 
 namespace Sprocket {
 
-class EditorLayer;
+class Anvil;
 
 class Inspector
 {
@@ -16,7 +16,7 @@ class Inspector
     glm::vec3 d_snap = {0.0f, 0.0f, 0.0f};
 
 public:
-    void Show(EditorLayer& editor);
+    void Show(Anvil& editor);
 
 };
 

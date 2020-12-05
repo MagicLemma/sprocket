@@ -9,7 +9,7 @@
 
 namespace Sprocket {
 
-class EditorLayer : public Layer
+class Anvil
 {
     Window*      d_window;
     AssetManager d_assetManager;
@@ -54,11 +54,11 @@ class EditorLayer : public Layer
     void MaterialUI(std::string& texture);
 
 public:
-    EditorLayer(Window* window);
+    Anvil(Window* window);
 
-    void OnEvent(Event& event) override;
-    void OnUpdate(double dt) override;
-    void OnRender() override;
+    void OnEvent(Event& event);
+    void OnUpdate(double dt);
+    void OnRender();
 
     Entity Selected() { return d_selected; }
     void SetSelected(Entity e) { d_selected = e; }

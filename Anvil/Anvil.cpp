@@ -1,4 +1,4 @@
-#include "EditorLayer.h"
+#include "Anvil.h"
 #include "Inspector.h"
 #include "FileBrowser.h"
 #include "ImGuiXtra.cpp"
@@ -25,7 +25,7 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
 
 }
 
-EditorLayer::EditorLayer(Window* window) 
+Anvil::Anvil(Window* window) 
     : d_window(window)
     , d_assetManager()
     , d_entityRenderer(&d_assetManager)
@@ -56,7 +56,7 @@ EditorLayer::EditorLayer(Window* window)
     d_activeScene = d_scene;
 }
 
-void EditorLayer::OnEvent(Event& event)
+void Anvil::OnEvent(Event& event)
 {
     if (auto e = event.As<WindowResizeEvent>()) {
         d_viewport.SetScreenSize(e->Width(), e->Height());
@@ -83,7 +83,7 @@ void EditorLayer::OnEvent(Event& event)
     }
 }
 
-void EditorLayer::OnUpdate(double dt)
+void Anvil::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
     d_window->SetWindowName(std::string("Anvil: " + d_sceneFile));
@@ -113,7 +113,7 @@ void EditorLayer::OnUpdate(double dt)
     });
 }
 
-void EditorLayer::OnRender()
+void Anvil::OnRender()
 {
     d_entityRenderer.EnableParticles(&d_particleManager);
 
@@ -344,7 +344,7 @@ void EditorLayer::OnRender()
     d_ui.EndFrame();    
 }
 
-void EditorLayer::MaterialUI(std::string& texture)
+void Anvil::MaterialUI(std::string& texture)
 {
     if (ImGui::Button("X")) {
         texture = "";
