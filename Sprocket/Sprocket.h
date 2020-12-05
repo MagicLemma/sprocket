@@ -3,7 +3,6 @@
 //
 
 // CORE
-#include "Core/App.h"
 #include "Core/AssetManager.h"
 #include "Core/Window.h"
 #include "Core/Layer.h"
