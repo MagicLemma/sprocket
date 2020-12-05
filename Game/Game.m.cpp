@@ -4,12 +4,10 @@
 int main()
 {
     Sprocket::Window window("Game");
-
-    Sprocket::App app;
-    auto worldLayer = app.Add<WorldLayer>(&window);
+    WorldLayer game(&window);
 
     Sprocket::RunOptions options;
     options.showFramerate = true;
 
-    return Sprocket::Run(app, window, options);
+    return Sprocket::Run(game, window, options);
 }
