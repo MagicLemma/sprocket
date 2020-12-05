@@ -1,4 +1,4 @@
-#include "EditorLayer.h"
+#include "Anvil.h"
 #include "Inspector.h"
 #include "FileBrowser.h"
 #include "ImGuiXtra.cpp"
@@ -25,10 +25,11 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
 
 }
 
-EditorLayer::EditorLayer(const CoreSystems& core) 
-    : d_core(core)
-    , d_entityRenderer(core.assetManager)
-    , d_skyboxRenderer(core.assetManager)
+Anvil::Anvil(Window* window) 
+    : d_window(window)
+    , d_assetManager()
+    , d_entityRenderer(&d_assetManager)
+    , d_skyboxRenderer(&d_assetManager)
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
         "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -37,11 +38,11 @@ EditorLayer::EditorLayer(const CoreSystems& core)
         "Resources/Textures/Skybox/Skybox_Z_Pos.png",
         "Resources/Textures/Skybox/Skybox_Z_Neg.png"
     })
-    , d_editorCamera(core.window, {0.0, 0.0, 0.0})
+    , d_editorCamera(d_window, {0.0, 0.0, 0.0})
     , d_viewport(1280, 720)
-    , d_ui(core.window)
+    , d_ui(d_window)
 {
-    d_core.window->SetCursorVisibility(true);
+    d_window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<Scene>();    
     Loader::Load(d_sceneFile, d_scene);
@@ -55,7 +56,7 @@ EditorLayer::EditorLayer(const CoreSystems& core)
     d_activeScene = d_scene;
 }
 
-void EditorLayer::OnEvent(Event& event)
+void Anvil::OnEvent(Event& event)
 {
     if (auto e = event.As<WindowResizeEvent>()) {
         d_viewport.SetScreenSize(e->Width(), e->Height());
@@ -66,7 +67,7 @@ void EditorLayer::OnEvent(Event& event)
             if (d_playingGame) {
                 d_playingGame = false;
                 d_activeScene = d_scene;
-                d_core.window->SetCursorVisibility(true);
+                d_window->SetCursorVisibility(true);
             }
             else {
                 d_selected = Entity();
@@ -82,35 +83,38 @@ void EditorLayer::OnEvent(Event& event)
     }
 }
 
-void EditorLayer::OnUpdate(double dt)
+void Anvil::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
-
-    std::string windowName = "Anvil: " + d_sceneFile;
-    d_core.window->SetWindowName(windowName);
+    d_window->SetWindowName(std::string("Anvil: " + d_sceneFile));
 
     // Create the Shadow Map
     //float lambda = 5.0f; // TODO: Calculate the floor intersection point
     //glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     //d_shadowMap.Draw(sun, target, *d_scene);
     //d_entityRenderer.EnableShadows(d_shadowMap);
-    
-    if (!d_paused) {
-        d_activeScene->OnUpdate(dt);
-        d_particleManager.OnUpdate(dt);
 
-        if (d_isViewportFocused && !d_playingGame) {
-            d_editorCamera.OnUpdate(dt);
-        }
-        
-        d_activeScene->Each<TransformComponent>([&](Entity& entity) {
-            auto& transform = entity.Get<TransformComponent>();
-            if (transform.position.y < -50) {
-                entity.Kill();
-            }
-        });
+    if (d_paused) {
+        return;
     }
 
+    d_activeScene->OnUpdate(dt);
+    d_particleManager.OnUpdate(dt);
+
+    if (d_isViewportFocused && !d_playingGame) {
+        d_editorCamera.OnUpdate(dt);
+    }
+    
+    d_activeScene->Each<TransformComponent>([&](Entity& entity) {
+        auto& transform = entity.Get<TransformComponent>();
+        if (transform.position.y < -50) {
+            entity.Kill();
+        }
+    });
+}
+
+void Anvil::OnRender()
+{
     d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_viewport.Bind();
@@ -128,8 +132,6 @@ void EditorLayer::OnUpdate(double dt)
             d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
         }
     }
-
-
     d_viewport.Unbind();
 
     d_ui.StartFrame();
@@ -154,7 +156,7 @@ void EditorLayer::OnUpdate(double dt)
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
-                std::string file = SaveFile(d_core.window, "*.yaml");
+                std::string file = SaveFile(d_window, "*.yaml");
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
@@ -163,7 +165,7 @@ void EditorLayer::OnUpdate(double dt)
                 }
             }
             if (ImGui::MenuItem("Open")) {
-                std::string file = OpenFile(d_core.window, "*.yaml");
+                std::string file = OpenFile(d_window, "*.yaml");
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
@@ -177,7 +179,7 @@ void EditorLayer::OnUpdate(double dt)
                 SPKT_LOG_INFO("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
-                std::string file = SaveFile(d_core.window, "*.yaml");
+                std::string file = SaveFile(d_window, "*.yaml");
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Saving as {}...", file);
                     d_sceneFile = file;
@@ -194,8 +196,8 @@ void EditorLayer::OnUpdate(double dt)
                 d_activeScene = runningScene;
                 
                 d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
-                d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_core.window->AspectRatio()));
-                d_activeScene->AddSystem(std::make_shared<ScriptRunner>(d_core.window));
+                d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_window->AspectRatio()));
+                d_activeScene->AddSystem(std::make_shared<ScriptRunner>(d_window));
                 d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
                 d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
 
@@ -205,15 +207,15 @@ void EditorLayer::OnUpdate(double dt)
                 d_activeScene->Each<Sprocket::CameraComponent>([&](Entity& entity) {
                     d_runtimeCamera = entity;
                 });
-                d_core.window->SetCursorVisibility(false);
+                d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
 
-    float w = (float)d_core.window->Width();
-    float h = (float)d_core.window->Height();
+    float w = (float)d_window->Width();
+    float h = (float)d_window->Height();
 
     // VIEWPORT
     ImGui::SetNextWindowPos({0.0, menuBarHeight});
@@ -242,8 +244,8 @@ void EditorLayer::OnUpdate(double dt)
     ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
     if (ImGui::Begin("BottomPanel", &open, flags)) {
         ImGui::Checkbox("Show Colliders", &d_showColliders);
-        ImGui::Text(fmt::format("Loading Meshes: {}", d_core.assetManager->IsLoadingMeshes() ? "Yes" : "No").c_str());
-        ImGui::Text(fmt::format("Loading Textures: {}", d_core.assetManager->IsLoadingTextures() ? "Yes" : "No").c_str());
+        ImGui::Text(fmt::format("Loading Meshes: {}", d_assetManager.IsLoadingMeshes() ? "Yes" : "No").c_str());
+        ImGui::Text(fmt::format("Loading Textures: {}", d_assetManager.IsLoadingTextures() ? "Yes" : "No").c_str());
         ImGui::End();
     }
 
@@ -276,7 +278,7 @@ void EditorLayer::OnUpdate(double dt)
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_core.assetManager->Materials()) {
+                for (auto& [file, material] : d_assetManager.Materials()) {
                     ImGui::PushID(std::hash<std::string>{}(material->file));
                     if (ImGui::CollapsingHeader(material->name.c_str())) {
                         ImGui::Text(file.c_str());
@@ -342,13 +344,13 @@ void EditorLayer::OnUpdate(double dt)
     d_ui.EndFrame();    
 }
 
-void EditorLayer::MaterialUI(std::string& texture)
+void Anvil::MaterialUI(std::string& texture)
 {
     if (ImGui::Button("X")) {
         texture = "";
     }
     ImGui::SameLine();
-    ImGuiXtra::File("File", d_core.window, &texture, "*.png");
+    ImGuiXtra::File("File", d_window, &texture, "*.png");
 }
 
 }

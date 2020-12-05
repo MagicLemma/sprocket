@@ -3,11 +3,8 @@
 //
 
 // CORE
-#include "Core/App.h"
-#include "Core/AssetManager.h"
-#include "Core/CoreSystems.h"
 #include "Core/Window.h"
-#include "Core/Layer.h"
+#include "Core/GameLoop.h"
 
 // UI
 #include "UI/Font/FontAtlas.h"
@@ -62,6 +59,7 @@
 #include "Utility/Yaml.h"
 
 // GRAPHICS
+#include "Graphics/AssetManager.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/BufferLayout.h"

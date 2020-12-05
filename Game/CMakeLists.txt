@@ -7,13 +7,9 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
 
 add_executable(Game
-               Game.m.cpp
-               WorldLayer.cpp
-
-               EscapeMenu.cpp
-
-               EditorUI.cpp
-               
+               Main.m.cpp
+               Game.cpp
+        
                CircadianCycle.cpp
                PathCalculator.cpp)
 

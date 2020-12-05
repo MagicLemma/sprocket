@@ -9,9 +9,10 @@
 
 namespace Sprocket {
 
-class EditorLayer : public Layer
+class Anvil
 {
-    CoreSystems d_core;
+    Window*      d_window;
+    AssetManager d_assetManager;
     
     Camera d_editorCamera;
 
@@ -53,10 +54,11 @@ class EditorLayer : public Layer
     void MaterialUI(std::string& texture);
 
 public:
-    EditorLayer(const Sprocket::CoreSystems& core);
+    Anvil(Window* window);
 
-    void OnEvent(Sprocket::Event& event) override;
-    void OnUpdate(double dt) override;
+    void OnEvent(Event& event);
+    void OnUpdate(double dt);
+    void OnRender();
 
     Entity Selected() { return d_selected; }
     void SetSelected(Entity e) { d_selected = e; }
@@ -65,7 +67,7 @@ public:
     bool IsGameRunning() const { return d_playingGame; }
 
     Camera& GetEditorCamera() { return d_editorCamera; }
-    Window* GetWindow() { return d_core.window; }
+    Window* GetWindow() { return d_window; }
 
     std::shared_ptr<Scene> GetScene() { return d_activeScene; }
 };

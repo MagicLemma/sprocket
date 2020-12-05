@@ -21,6 +21,8 @@ Window::Window(const std::string& name, u32 width, u32 height)
 	, d_data({name, width, height})
 	, d_clearColour({1.0, 1.0, 1.0})
 {
+	Log::Init();
+	
 	glfwInit();
 
 	d_impl->window = glfwCreateWindow(
@@ -200,12 +202,8 @@ void Window::SetClearColour(const glm::vec3& colour)
 
 void Window::SetCursorVisibility(bool visibility)
 {
-	if (visibility) {
-		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-	else {
-		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
+	int show = visibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
+	glfwSetInputMode(d_impl->window, GLFW_CURSOR, show);
 }
 
 glm::vec2 Window::GetMousePos() const
@@ -220,7 +218,13 @@ glm::vec2 Window::GetMouseOffset() const
 
 void Window::SetWindowName(const std::string& name)
 {
+	d_data.name = name;
 	glfwSetWindowTitle(d_impl->window, name.c_str());
+}
+
+std::string Window::GetWindowName() const
+{
+	return d_data.name;
 }
 
 void Window::SetCallback(EventCallback cb)
