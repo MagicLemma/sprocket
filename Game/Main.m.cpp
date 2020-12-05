@@ -20,22 +20,11 @@ int main()
     using namespace Sprocket;
     Log::Init();
 
-    //Registry reg;
-//
-    //u32 entity = reg.New();
-    //SPKT_LOG_INFO("Entity: {}", entity);
+    ECS::Registry reg;
 
-    TransformComponent tc;
-    tc.position = {1, 2, 3};
-    tc.orientation = {1, 2, 3, 4};
-    tc.scale = {9, 8, 7};
+    ECS::Entity e1 = reg.New();
+    reg.Delete(e1);
+    SPKT_LOG_INFO("Valid? {}", e1.Valid());
 
-
-    {
-        TypeErasedComponent tec(Foo(5));
-        auto x = tec.Get<Foo>().x;
-        SPKT_LOG_INFO("Value = {}", x);
-    }
-
-    SPKT_LOG_INFO("Outside");
+    ECS::Entity e2 = reg.New();
 }
