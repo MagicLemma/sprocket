@@ -4,7 +4,6 @@
 int main()
 {
     Sprocket::Window window("Runtime");
-
-    EditorLayer app(&window);
-    return Sprocket::Run(app, window);
+    Runtime runtime(&window);
+    return Sprocket::Run(runtime, window);
 }

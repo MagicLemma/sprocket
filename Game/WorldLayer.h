@@ -12,7 +12,9 @@ enum class Mode { PLAYER, EDITOR };
 
 class WorldLayer : public Sprocket::Layer
 {
-    Sprocket::CoreSystems d_core;
+    Sprocket::Window*      d_window;
+    Sprocket::AssetManager d_assetManager;
+    
     Mode d_mode;
 
     // Entity management and systems
@@ -29,11 +31,7 @@ class WorldLayer : public Sprocket::Layer
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;
-
     Sprocket::PostProcessor   d_postProcessor;
-
-    // MODELLING
-    Sprocket::AssetManager d_assetManager;
 
     // Additional world setup
     Sprocket::CircadianCycle d_cycle;
@@ -51,7 +49,7 @@ class WorldLayer : public Sprocket::Layer
     friend class EditorUI;
 
 public:
-    WorldLayer(const Sprocket::CoreSystems& core);
+    WorldLayer(Sprocket::Window* window);
 
     void OnEvent(Sprocket::Event& event) override;
     void OnUpdate(double dt) override;

@@ -2,22 +2,26 @@
 #include "Palette.h"
 #include "PathFollower.h"
 #include "PathCalculator.h"
+#include "Window.h"
 
 #include <cmath>
 
-WorldLayer::WorldLayer(const Sprocket::CoreSystems& core) 
-    : d_core(core)
+using namespace Sprocket;
+
+WorldLayer::WorldLayer(Window* window) 
+    : d_window(window)
+    , d_assetManager()
     , d_mode(Mode::PLAYER)
     , d_scene(std::make_shared<Sprocket::Scene>())
-    , d_entityRenderer(core.assetManager)
-    , d_postProcessor(core.window->Width(), core.window->Height())
-    , d_gameGrid(std::make_shared<Sprocket::GameGrid>(core.window))
-    , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(core.window->AspectRatio()))
-    , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>(d_core.window))
+    , d_entityRenderer(&d_assetManager)
+    , d_postProcessor(d_window->Width(), d_window->Height())
+    , d_gameGrid(std::make_shared<Sprocket::GameGrid>(d_window))
+    , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(d_window->AspectRatio()))
+    , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>(d_window))
     , d_pathFollower(std::make_shared<Sprocket::PathFollower>())
     , d_selector(std::make_shared<Sprocket::BasicSelector>())
-    , d_shadowMap(core.window, core.assetManager)
-    , d_hoveredEntityUI(core.window)
+    , d_shadowMap(d_window, &d_assetManager)
+    , d_hoveredEntityUI(d_window)
 {
     using namespace Sprocket;
 
@@ -99,9 +103,9 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         if (e->Mods() & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
-                d_core.window->GetMousePos(),
-                d_core.window->Width(),
-                d_core.window->Height(),
+                d_window->GetMousePos(),
+                d_window->Width(),
+                d_window->Height(),
                 MakeView(d_camera),
                 MakeProj(d_camera)
             );
@@ -153,7 +157,7 @@ void WorldLayer::OnUpdate(double dt)
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
-    d_core.window->SetClearColour(skyColour);
+    d_window->SetClearColour(skyColour);
     if (d_cycle.IsDay()) {
         sun.direction = d_cycle.GetSunDir();
         sun.colour = {1.0, 0.945, 0.789};
@@ -195,9 +199,9 @@ void WorldLayer::OnRender()
     if (!d_paused) {
         d_hoveredEntityUI.StartFrame();
 
-        auto mouse = d_core.window->GetMousePos();
-        float w = (float)d_core.window->Width();
-        float h = (float)d_core.window->Height();
+        auto mouse = d_window->GetMousePos();
+        float w = (float)d_window->Width();
+        float h = (float)d_window->Height();
 
         if (d_gameGrid->SelectedPosition().has_value()) {
             auto selected = d_gameGrid->Selected();

@@ -48,7 +48,7 @@ void EscapeMenu::OnRender()
         return; // Layer not active
     }
 
-    auto* window = d_worldLayer->d_core.window;
+    auto window = d_worldLayer->d_window;
     float w = (float)window->Width();
     float h = (float)window->Height();
 
@@ -89,7 +89,7 @@ void EscapeMenu::OnRender()
 
     buttonRegion.y += 60;
     if (d_ui.Button("Open", buttonRegion)) {
-        std::string newScene = OpenFile(d_worldLayer->d_core.window, "");
+        std::string newScene = OpenFile(d_worldLayer->d_window, "");
         d_worldLayer->LoadScene(newScene);
     }
 

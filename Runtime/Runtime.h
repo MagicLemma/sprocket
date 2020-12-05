@@ -5,7 +5,7 @@
 #include <memory>
 #include <random>
 
-class EditorLayer
+class Runtime
 {
     Sprocket::Window*      d_window;
     Sprocket::AssetManager d_assetManager;
@@ -26,7 +26,7 @@ class EditorLayer
     bool d_consoleActive = false;
 
 public:
-    EditorLayer(Sprocket::Window* window);
+    Runtime(Sprocket::Window* window);
 
     void OnEvent(Sprocket::Event& event);
     void OnUpdate(double dt);

@@ -22,25 +22,22 @@ int main()
     core.window = &window;
     core.assetManager = &assetManager;
 
-    auto worldLayer = app.Add<WorldLayer>(core);
+    auto worldLayer = app.Add<WorldLayer>(&window);
     auto editorUi = app.Add<EditorUI>(core, worldLayer.get());
     app.Add<EscapeMenu>(core, worldLayer.get());
  
     Stopwatch watch;
 
-    Audio::Music sound;
-    sound.Load("Resources/Audio/Sample.wav");
-    sound.Play();
-
     while (window.Running()) {
         window.Clear();
         
-        watch.OnUpdate();
-        app.OnUpdate(watch.DeltaTime());
+        double dt = watch.OnUpdate();
+        app.OnUpdate(dt);
         app.OnRender();
 
         std::string name = "Game! FPS: " + std::to_string(watch.Framerate());
         window.SetWindowName(name);
+
         window.OnUpdate();
     }
 
