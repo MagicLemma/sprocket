@@ -1,5 +1,4 @@
 #include "Stopwatch.h"
-#include "Log.h"
 
 namespace Sprocket {
 
@@ -19,7 +18,6 @@ double Stopwatch::OnUpdate()
     ++d_frameCount;
 
     if (d_currentTime - d_lastTimePrinted >= std::chrono::seconds(1)) {
-        if (d_printFramerate) { SPKT_LOG_INFO("{}", d_frameCount); }
         d_frameRate = d_frameCount;
         d_frameCount = 0;
         d_lastTimePrinted = d_currentTime;

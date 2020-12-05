@@ -202,12 +202,8 @@ void Window::SetClearColour(const glm::vec3& colour)
 
 void Window::SetCursorVisibility(bool visibility)
 {
-	if (visibility) {
-		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-	else {
-		glfwSetInputMode(d_impl->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	}
+	int show = visibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
+	glfwSetInputMode(d_impl->window, GLFW_CURSOR, show);
 }
 
 glm::vec2 Window::GetMousePos() const
