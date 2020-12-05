@@ -5,7 +5,6 @@
 // CORE
 #include "Core/AssetManager.h"
 #include "Core/Window.h"
-#include "Core/Layer.h"
 #include "Core/GameLoop.h"
 
 // UI

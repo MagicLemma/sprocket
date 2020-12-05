@@ -14,7 +14,6 @@ double Stopwatch::OnUpdate()
 {
     d_previousTime = d_currentTime;
     d_currentTime = d_clock.now();
-    
     ++d_frameCount;
 
     if (d_currentTime - d_lastTimePrinted >= std::chrono::seconds(1)) {
@@ -23,11 +22,6 @@ double Stopwatch::OnUpdate()
         d_lastTimePrinted = d_currentTime;
     }
 
-    return DeltaTime();
-}
-
-double Stopwatch::DeltaTime() const
-{
     std::chrono::duration<double> dt = d_currentTime - d_previousTime;
     return dt.count();
 }

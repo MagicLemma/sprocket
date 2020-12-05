@@ -20,8 +20,6 @@ class Stopwatch
 public:
     Stopwatch();
     double OnUpdate();
-    double DeltaTime() const;
-
     u32 Framerate() const { return d_frameRate; }
 };
 

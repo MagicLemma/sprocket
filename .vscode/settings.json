@@ -80,6 +80,7 @@
         "unordered_set": "cpp",
         "valarray": "cpp",
         "fft": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "any": "cpp"
     }
 }
