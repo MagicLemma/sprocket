@@ -26,8 +26,6 @@ find_package(tsl-hopscotch-map CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
-
-            Core/AssetManager.cpp
             Core/Window.cpp
 
             Audio/Listener.cpp
@@ -60,6 +58,7 @@ add_library(Sprocket STATIC
             Scene/Systems/GameGrid.cpp
             Scene/Systems/PathFollower.cpp
 
+            Graphics/AssetManager.cpp
             Graphics/Animation.cpp
             Graphics/Buffer.cpp
             Graphics/BufferLayout.cpp
