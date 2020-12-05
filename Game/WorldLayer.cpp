@@ -8,6 +8,149 @@
 
 using namespace Sprocket;
 
+namespace {
+
+std::string EntityName(Entity& entity)
+{
+    if (entity.Has<NameComponent>()) {
+        return entity.Get<NameComponent>().name;
+    }
+    return "Unnamed";
+}
+
+void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
+{
+    ImGui::PushID(entity.Id());
+    if (ImGui::TreeNode(EntityName(entity).c_str())) {
+        if (entity.Has<SelectComponent>() && ImGui::Button("Select")) {
+            SPKT_LOG_INFO("Select clicked!");
+            selector.SetSelected(entity);
+        }
+        ImGui::TreePop();
+    }
+    ImGui::PopID();         
+}
+
+void SelectedEntityInfo(DevUI& ui,
+                        Entity& entity,
+                        const glm::mat4& view,
+                        const glm::mat4& proj)
+{
+    using namespace Maths;
+
+    ImGui::Begin("Selected Entity");
+    ImGui::Text("Name: ");
+    ImGui::SameLine();
+    ImGuiXtra::Text(EntityName(entity));
+    ImGuiXtra::Text("ID: " + std::to_string(entity.Id()));
+    ImGui::Separator();
+    
+    static ImGuizmo::OPERATION mode = ImGuizmo::OPERATION::TRANSLATE;
+    static ImGuizmo::MODE coords = ImGuizmo::MODE::WORLD;
+
+    if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
+        auto& tr = entity.Get<TransformComponent>();
+        ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
+        glm::vec3 eulerAngles = glm::eulerAngles(tr.orientation);
+        std::stringstream ss;
+        ss << "Pitch: " << Printer::PrintFloat(eulerAngles.x, 3) << "\n"
+           << "Yaw: " << Printer::PrintFloat(eulerAngles.y, 3) << "\n"
+           << "Roll: " << Printer::PrintFloat(eulerAngles.z, 3);
+        ImGui::Text(ss.str().c_str());    
+
+        if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
+            mode = ImGuizmo::OPERATION::TRANSLATE;
+        }
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Rotate", mode == ImGuizmo::OPERATION::ROTATE)) {
+            mode = ImGuizmo::OPERATION::ROTATE;
+        }
+
+        if (ImGui::RadioButton("World", coords == ImGuizmo::MODE::WORLD)) {
+            coords = ImGuizmo::MODE::WORLD;
+        }
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Local", coords == ImGuizmo::MODE::LOCAL)) {
+            coords = ImGuizmo::MODE::LOCAL;
+        }
+        ImGui::TreePop();
+    }
+
+    if (entity.Has<TransformComponent>()) {
+        auto& tr = entity.Get<TransformComponent>();
+        glm::mat4 origin = Maths::Transform(tr.position, tr.orientation);
+        ImGuiXtra::Guizmo(&origin, view, proj, mode, coords);
+        tr.position = GetTranslation(origin);
+        tr.orientation = glm::normalize(glm::quat_cast(glm::mat3(origin)));
+    }
+    ImGui::Separator();
+
+    if (ImGui::Button("Delete Entity")) {
+        entity.Kill();
+    }
+
+    ImGui::End();
+}
+
+void SunInfoPanel(DevUI& ui,
+                  Sun& sun,
+                  CircadianCycle& cycle)
+{
+    ImGui::Begin("Sun");
+
+    if (ImGui::Button("Start")) { cycle.Start(); }
+    ImGui::SameLine();
+    if (ImGui::Button("Stop")) { cycle.Stop(); }
+    ImGui::Separator();
+
+    if (cycle.IsRunning()) { // If running, be able to change the speed.
+        float speed = cycle.GetSpeed();
+        ImGui::SliderFloat("Speed", &speed, 1.0f, 1000.0f, "%.3f");
+        cycle.SetSpeed(speed);
+    }
+    else { // If not running, be able to set manually
+        float angle = cycle.GetAngle();
+        ImGui::DragFloat("Angle", &angle, 0.01f);
+        cycle.SetAngle(angle);
+    }
+    
+    ImGui::Separator();
+    ImGuiXtra::Text(cycle.ToString12Hour());
+    ImGui::End();
+}
+
+void ShaderInfoPanel(DevUI& ui, Shader& shader)
+{
+    static std::string compileStatus;
+
+    ImGui::Begin("Shader");
+    if(ImGui::Button("Recompile")) {
+        bool result = shader.Reload();
+        compileStatus ="Shader compile:";
+        compileStatus += (result? " SUCCESS": " FAILURE");
+    }
+
+    ImGui::Text(compileStatus.c_str());
+    
+    bool closed = true;
+    if (ImGui::CollapsingHeader("Vertex")) {
+        closed = false;
+        ImGuiXtra::MultilineTextModifiable("", &shader.VertexShaderSource());
+    }
+    if (ImGui::CollapsingHeader("Frag")) {
+        closed = false;
+        ImGuiXtra::MultilineTextModifiable("", &shader.FragShaderSource());
+    }
+    
+    if(closed) {
+        compileStatus.clear();
+    }
+
+    ImGui::End();
+}
+
+}
+
 WorldLayer::WorldLayer(Window* window) 
     : d_window(window)
     , d_assetManager()
@@ -22,6 +165,7 @@ WorldLayer::WorldLayer(Window* window)
     , d_selector(std::make_shared<Sprocket::BasicSelector>())
     , d_shadowMap(d_window, &d_assetManager)
     , d_hoveredEntityUI(d_window)
+    , d_devUI(window)
 {
     using namespace Sprocket;
 
@@ -91,6 +235,17 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
 void WorldLayer::OnEvent(Sprocket::Event& event)
 {
     using namespace Sprocket;
+
+    if (d_mode == Mode::EDITOR) {
+        d_devUI.OnEvent(event);
+
+        if (!event.IsConsumed()) {
+            if (auto e = event.As<MouseButtonPressedEvent>()) {
+                d_selector->SetSelected(Entity());
+                // TODO: Do we want to consume this event here?
+            }
+        }
+    }
 
     d_hoveredEntityUI.OnEvent(event);
 
@@ -171,6 +326,10 @@ void WorldLayer::OnUpdate(double dt)
 
     if (!d_paused) {
         d_scene->OnUpdate(dt);
+    }
+
+    if (d_mode == Mode::EDITOR) {
+        d_devUI.OnUpdate(dt);
     }
 
 }
@@ -266,6 +425,29 @@ void WorldLayer::OnRender()
         }
 
         d_hoveredEntityUI.EndFrame();
+    }
+
+    if (d_mode == Mode::EDITOR) {
+        d_devUI.StartFrame();
+
+        glm::mat4 view = MakeView(d_camera);
+        glm::mat4 proj = MakeProj(d_camera);
+
+        auto e = d_selector->SelectedEntity();
+        if (!e.Null()) {
+            SelectedEntityInfo(d_devUI, e, view, proj);
+        }
+
+        SunInfoPanel(d_devUI, d_scene->GetSun(), d_cycle);
+        ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
+
+        ImGui::Begin("Shadow Map");
+        ImGuiXtra::Image(d_shadowMap.GetShadowMap(), 500.0f);
+        ImGui::End();
+
+        ImGui::ShowDemoWindow();
+
+        d_devUI.EndFrame();
     }
 }
 

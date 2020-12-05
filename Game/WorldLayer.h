@@ -42,8 +42,10 @@ class WorldLayer : public Sprocket::Layer
     
     // LAYER DATA
     bool d_paused = false;
-
     std::string d_sceneFile = "";
+
+    // Editor UI
+    Sprocket::DevUI d_devUI;
 
     friend class EscapeMenu;
     friend class EditorUI;

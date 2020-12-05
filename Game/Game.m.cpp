@@ -1,6 +1,5 @@
 #include <Sprocket.h>
 #include "WorldLayer.h"
-#include "EditorUI.h"
 #include "EscapeMenu.h"
 #include "Palette.h"
 
@@ -10,7 +9,6 @@ int main()
 
     Sprocket::App app;
     auto worldLayer = app.Add<WorldLayer>(&window);
-    auto editorUi = app.Add<EditorUI>(worldLayer.get());
     app.Add<EscapeMenu>(worldLayer.get());
 
     Sprocket::RunOptions options;
