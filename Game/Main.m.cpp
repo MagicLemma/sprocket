@@ -1,6 +1,11 @@
 #include <Sprocket.h>
 #include "Game.h"
 
+struct Foo
+{
+    int x = 5;
+};
+
 int main()
 {
     //Sprocket::Window window("Game");
@@ -16,16 +21,25 @@ int main()
     u64 e1 = reg.New();
     u64 e2 = reg.New();
     u64 e3 = reg.New();
-    u64 e6 = reg.New();
     u64 e4 = reg.New();
     u64 e5 = reg.New();
     reg.Add(e1, NameComponent({"E"}));
     reg.Add(e2, NameComponent({"D"}));
-    reg.Add(e3, NameComponent({"C"}));
     reg.Add(e4, NameComponent({"B"}));
     reg.Add(e5, NameComponent({"A"}));
-    
-    for (auto entity : reg) {
-        SPKT_LOG_INFO("{}", entity);
+
+    reg.Add(e2, Foo());
+    reg.Add(e4, Foo());
+
+    for (auto entity : reg.View<NameComponent>()) {
+        auto x = reg.Get<NameComponent>(entity);
+        SPKT_LOG_INFO("{}", x.name);
     }
+
+    
+    for (auto entity : reg.View<Foo>()) {
+        auto x = reg.Get<Foo>(entity);
+        SPKT_LOG_INFO("{}", x.x);
+    }
+
 }

@@ -84,16 +84,47 @@ public:
 
     public:
         Iterator(Registry* reg, std::size_t index) : d_reg(reg), d_dequeIndex(index) {}
-
         Iterator& operator++();
         bool operator==(const Iterator& other) const;
         bool operator!=(const Iterator& other) const;
-
         u64 operator*();
     };
 
     Iterator begin() { return Iterator(this, 0); }
     Iterator end() { return Iterator(this, d_entities.size()); }
+
+    template <typename Comp>
+    class ViewType
+    {
+        Registry* d_reg;
+
+    public:
+        class ViewIterator
+        {
+            Registry* d_reg;
+            Iterator  d_iter;
+
+        public:
+            ViewIterator(Registry* reg, const Iterator& iter) : d_reg(reg), d_iter(iter) {
+                while (d_iter != d_reg->end() && !d_reg->Has<Comp>(*d_iter)) ++d_iter;
+            }
+            ViewIterator& operator++();
+            bool operator==(const ViewIterator& other) const;
+            bool operator!=(const ViewIterator& other) const;
+            u64 operator*();
+        };
+
+        ViewType(Registry* reg) : d_reg(reg) {}
+
+        ViewIterator begin() { return ViewIterator(d_reg, d_reg->begin()); }
+        ViewIterator end() { return ViewIterator(d_reg, d_reg->end()); }
+    };
+
+    template <typename Comp>
+    ViewType<Comp> View()
+    {
+        return ViewType<Comp>(this);
+    }
 
     friend class Iterator;
 };
@@ -163,6 +194,32 @@ bool Registry::Has(u64 entity) const
         return entry != nullptr;
     }
     return false;
+}
+
+template <typename Comp>
+typename Registry::ViewType<Comp>::ViewIterator& Registry::ViewType<Comp>::ViewIterator::operator++()
+{
+    ++d_iter;
+    while (d_iter != d_reg->end() && !d_reg->Has<Comp>(*d_iter)) ++d_iter;
+    return *this;
+}
+
+template <typename Comp>
+bool Registry::ViewType<Comp>::ViewIterator::operator==(const Registry::ViewType<Comp>::ViewIterator& other) const
+{
+    return d_iter == other.d_iter;
+}
+
+template <typename Comp>
+bool Registry::ViewType<Comp>::ViewIterator::operator!=(const Registry::ViewType<Comp>::ViewIterator& other) const
+{
+    return !(*this == other);
+}
+
+template <typename Comp>
+u64 Registry::ViewType<Comp>::ViewIterator::operator*()
+{
+    return *d_iter;
 }
 
 }
