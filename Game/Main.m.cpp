@@ -24,10 +24,8 @@ int main()
     reg.Add(e3, NameComponent({"C"}));
     reg.Add(e4, NameComponent({"B"}));
     reg.Add(e5, NameComponent({"A"}));
-    reg.Sort<NameComponent>([&](u64 a, u64 b) {
-        auto an = reg.Get<NameComponent>(a).name;
-        auto bn = reg.Get<NameComponent>(b).name;
-        bool x = an < bn;
-        return x;
-    });
+    
+    for (auto entity : reg) {
+        SPKT_LOG_INFO("{}", entity);
+    }
 }
