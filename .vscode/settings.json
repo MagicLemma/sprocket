@@ -81,6 +81,7 @@
         "valarray": "cpp",
         "fft": "cpp",
         "*.rh": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "core": "cpp"
     }
 }
