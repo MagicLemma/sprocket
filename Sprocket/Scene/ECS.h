@@ -10,6 +10,7 @@
 #include <functional>
 #include <deque>
 #include <limits>
+#include <vector>
 
 namespace Sprocket {
 namespace ECS {
@@ -40,6 +41,7 @@ class Registry
 public:
     using Opaque = std::unique_ptr<void, std::function<void(void*)>>;
     using Comparitor = std::function<bool(u32, u32)>;
+    using EntityCallback = std::function<void(Entity)>;
 
 private:
 
@@ -72,6 +74,9 @@ private:
     // the u32 indices that identify a component.
     std::unordered_map<std::type_index, std::array<Opaque, NUM_ENTITIES>> d_components;
 
+    std::unordered_map<std::type_index, std::vector<EntityCallback>> d_onAddCallbacks;
+    std::unordered_map<std::type_index, std::vector<EntityCallback>> d_onRemoveCallbacks;
+
 public:
     Registry();
 
@@ -81,7 +86,6 @@ public:
     std::size_t Size() const;
     bool Valid(u32 entity) const;
 
-
     void Sort(const Comparitor& compare);
     template <typename Comp> void Sort(const Comparitor& compare);
 
@@ -90,6 +94,9 @@ public:
     template <typename Comp> Comp& Get(u32 entity);
     template <typename Comp> const Comp& Get(u32 entity) const;
     template <typename Comp> bool Has(u32 entity) const;
+
+    template <typename Comp> void OnAdd(const EntityCallback& cb);
+    template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     // Iteration
     class Iterator
@@ -176,6 +183,11 @@ Comp& Registry::Add(u32 entity, const Comp& component)
     Handle handle = entity;
     auto& entry = d_components[typeid(Comp)][handle.index];
     entry = Opaque(new Comp(component), Deleter);
+
+    for (const auto& cb : d_onAddCallbacks[typeid(Comp)]) {
+        cb({this, entity});
+    }
+
     return *static_cast<Comp*>(entry.get());
 }
 
@@ -183,6 +195,10 @@ template <typename Comp>
 void Registry::Remove(u32 entity)
 {
     assert(entity != ECS::Null.id);
+    for (const auto& cb : d_onRemoveCallbacks[typeid(Comp)]) {
+        cb({this, entity});
+    }
+
     Handle handle = entity;
     if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
         auto& entry = it->second.at(handle.index);
@@ -219,6 +235,20 @@ bool Registry::Has(u32 entity) const
     }
     return false;
 }
+
+template <typename Comp>
+void Registry::OnAdd(const EntityCallback& cb)
+{
+    d_onAddCallbacks[typeid(Comp)].push_back(cb);
+}
+
+template <typename Comp>
+void Registry::OnRemove(const EntityCallback& cb)
+{
+    d_onRemoveCallbacks[typeid(Comp)].push_back(cb);
+}
+
+// VIEWTYPE TEMPLATES
 
 template <typename Comp>
 typename Registry::ViewType<Comp>::ViewIterator& Registry::ViewType<Comp>::ViewIterator::operator++()

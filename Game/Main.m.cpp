@@ -23,10 +23,23 @@ int main()
     ECS::Entity e3 = reg.New();
     ECS::Entity e4 = reg.New();
     ECS::Entity e5 = reg.New();
+
+    reg.OnAdd<NameComponent>([](ECS::Entity e) {
+        auto name = e.Get<NameComponent>().name;
+        SPKT_LOG_INFO("Added {}", name);
+    });
+
+    reg.OnRemove<NameComponent>([](ECS::Entity e) {
+        auto name = e.Get<NameComponent>().name;
+        SPKT_LOG_INFO("Removed {}", name);
+    });
+
     e1.Add(NameComponent({"E"}));
     e2.Add(NameComponent({"D"}));
     e4.Add(NameComponent({"B"}));
     e5.Add(NameComponent({"A"}));
+
+    e2.Remove<NameComponent>();
 
     e2.Add(Foo());
     e4.Add(Foo());
