@@ -7,11 +7,26 @@
 namespace Sprocket {
 namespace ECS {
 
+bool Entity::operator==(Entity other) const
+{
+    return registry == other.registry && id == other.id;
+}
+
+bool Entity::operator!=(Entity other) const
+{
+    return !(*this == other);
+}
+
+bool Entity::Valid() const
+{
+     return registry && registry->Valid(id);
+}
+
 Registry::Registry()
     : d_next(0)
 {}
 
-u32 Registry::New()
+Entity Registry::New()
 {
     Handle handle;
     if (auto it = d_pool.begin(); it != d_pool.end()) {
@@ -23,12 +38,12 @@ u32 Registry::New()
         d_entities.push_back(handle.index);
     }
     handle.version = d_version[handle.index]++;
-    return handle.entity;
+    return {this, handle.entity};
 }
 
-void Registry::Delete(u32 entity)
+void Registry::Delete(Entity entity)
 {
-    Handle handle = entity;
+    Handle handle = entity.id;
 
     // Clean up all components
     for (auto& [type, components] : d_components) {
@@ -46,7 +61,7 @@ void Registry::Delete(u32 entity)
 bool Registry::Valid(u32 entity) const
 {
     Handle handle = entity;
-    return entity != ECS::Null 
+    return entity != ECS::Null.id
         && handle.index < d_next
         && !d_pool.contains(handle.index)
         && handle.version == d_version[handle.index];
@@ -73,12 +88,12 @@ Registry::Iterator& Registry::Iterator::operator++()
     return *this;
 }
 
-u32 Registry::Iterator::operator*()
+Entity Registry::Iterator::operator*()
 {
     Registry::Handle h;
     h.index = d_reg->d_entities[d_dequeIndex];
     h.version = d_reg->d_version[h.index];
-    return h.entity;
+    return {d_reg, h.entity};
 }
 
 bool Registry::Iterator::operator==(const Iterator& other) const

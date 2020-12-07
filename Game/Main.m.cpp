@@ -18,27 +18,29 @@ int main()
     Log::Init();
 
     ECS::Registry reg;
-    u32 e1 = reg.New();
-    u32 e2 = reg.New();
-    u32 e3 = reg.New();
-    u32 e4 = reg.New();
-    u32 e5 = reg.New();
-    reg.Add(e1, NameComponent({"E"}));
-    reg.Add(e2, NameComponent({"D"}));
-    reg.Add(e4, NameComponent({"B"}));
-    reg.Add(e5, NameComponent({"A"}));
+    ECS::Entity e1 = reg.New();
+    ECS::Entity e2 = reg.New();
+    ECS::Entity e3 = reg.New();
+    ECS::Entity e4 = reg.New();
+    ECS::Entity e5 = reg.New();
+    e1.Add(NameComponent({"E"}));
+    e2.Add(NameComponent({"D"}));
+    e4.Add(NameComponent({"B"}));
+    e5.Add(NameComponent({"A"}));
 
-    reg.Add(e2, Foo());
-    reg.Add(e4, Foo());
+    e2.Add(Foo());
+    e4.Add(Foo());
 
     for (auto entity : reg.View<NameComponent>()) {
-        auto x = reg.Get<NameComponent>(entity);
+        auto x = entity.Get<NameComponent>();
         SPKT_LOG_INFO("{}", x.name);
     }
 
+    bool isNull = e2 == ECS::Null;
+    SPKT_LOG_INFO("Comparison to null {}", isNull);
     
     for (auto entity : reg.View<Foo>()) {
-        auto x = reg.Get<Foo>(entity);
+        auto x = entity.Get<Foo>();
         SPKT_LOG_INFO("{}", x.x);
     }
 

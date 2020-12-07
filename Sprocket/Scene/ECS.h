@@ -14,7 +14,26 @@
 namespace Sprocket {
 namespace ECS {
 
-constexpr u64 Null = std::numeric_limits<u64>::max();
+class Registry;
+
+struct Entity
+{
+    Registry* const registry;
+    const u32 id;
+
+    Entity(Registry* r, u32 i) : registry(r), id(i) {}
+
+    bool Valid() const;
+
+    template <typename Comp> Comp& Add(const Comp& component);
+    template <typename Comp> void Remove();
+    template <typename Comp> Comp& Get();
+    template <typename Comp> const Comp& Get() const;
+    template <typename Comp> bool Has() const;
+
+    bool operator==(Entity other) const;
+    bool operator!=(Entity other) const;
+};
 
 class Registry
 {
@@ -26,10 +45,7 @@ private:
 
     union Handle
     {
-        struct {
-            u16 index;
-            u16 version;
-        };
+        struct { u16 index; u16 version; };
         u32 entity;
 
         Handle(u32 e) : entity(e) {}
@@ -37,7 +53,7 @@ private:
         Handle() : entity(0) {}
     };
 
-    static constexpr std::size_t NUM_ENTITIES = 100000;
+    static constexpr std::size_t NUM_ENTITIES = std::numeric_limits<u16>::max();
 
     // When an entity is removed, their ID is added to the pool so that it can be reused.
     std::unordered_set<u16> d_pool;
@@ -59,17 +75,15 @@ private:
 public:
     Registry();
 
-    u32 New();
-    void Delete(u32 entity);
-
-    bool Valid(u32 entity) const;
-
-    void Sort(const Comparitor& compare);
-
-    template <typename Comp>
-    void Sort(const Comparitor& compare);
+    Entity New();
+    void Delete(Entity entity);
 
     std::size_t Size() const;
+    bool Valid(u32 entity) const;
+
+
+    void Sort(const Comparitor& compare);
+    template <typename Comp> void Sort(const Comparitor& compare);
 
     template <typename Comp> Comp& Add(u32 entity, const Comp& component);
     template <typename Comp> void Remove(u32 entity);
@@ -77,6 +91,7 @@ public:
     template <typename Comp> const Comp& Get(u32 entity) const;
     template <typename Comp> bool Has(u32 entity) const;
 
+    // Iteration
     class Iterator
     {
         Registry*   d_reg;
@@ -87,14 +102,14 @@ public:
         Iterator& operator++();
         bool operator==(const Iterator& other) const;
         bool operator!=(const Iterator& other) const;
-        u32 operator*();
+        Entity operator*();
     };
 
     Iterator begin() { return Iterator(this, 0); }
     Iterator end() { return Iterator(this, d_entities.size()); }
 
-    template <typename Comp>
-    class ViewType
+    // Views
+    template <typename Comp> class ViewType
     {
         Registry* d_reg;
 
@@ -106,12 +121,12 @@ public:
 
         public:
             ViewIterator(Registry* reg, const Iterator& iter) : d_reg(reg), d_iter(iter) {
-                while (d_iter != d_reg->end() && !d_reg->Has<Comp>(*d_iter)) ++d_iter;
+                while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
             }
             ViewIterator& operator++();
             bool operator==(const ViewIterator& other) const;
             bool operator!=(const ViewIterator& other) const;
-            u32 operator*();
+            Entity operator*();
         };
 
         ViewType(Registry* reg) : d_reg(reg) {}
@@ -120,8 +135,7 @@ public:
         ViewIterator end() { return ViewIterator(d_reg, d_reg->end()); }
     };
 
-    template <typename Comp>
-    ViewType<Comp> View()
+    template <typename Comp> ViewType<Comp> View()
     {
         return ViewType<Comp>(this);
     }
@@ -129,9 +143,14 @@ public:
     friend class Iterator;
 };
 
+// An "empty" entity.
+static const Entity Null(nullptr, std::numeric_limits<u32>::max());
+
 // ==============================================================
 //                      TEMPLATE DEFINITIONS
 // ==============================================================
+
+// REGISTRY TEMPLATES
 
 template <typename Comp>
 void Registry::Sort(const Comparitor& compare)
@@ -149,6 +168,7 @@ void Registry::Sort(const Comparitor& compare)
 template <typename Comp>
 Comp& Registry::Add(u32 entity, const Comp& component)
 {
+    assert(entity != ECS::Null.id);
     static constexpr auto Deleter = [](void* data) {
         if (data) delete static_cast<Comp*>(data);
     };
@@ -162,6 +182,7 @@ Comp& Registry::Add(u32 entity, const Comp& component)
 template <typename Comp>
 void Registry::Remove(u32 entity)
 {
+    assert(entity != ECS::Null.id);
     Handle handle = entity;
     if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
         auto& entry = it->second.at(handle.index);
@@ -172,6 +193,7 @@ void Registry::Remove(u32 entity)
 template <typename Comp>
 Comp& Registry::Get(u32 entity)
 {
+    assert(entity != ECS::Null.id);
     Handle handle = entity;
     const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
     return *static_cast<Comp*>(entry.get());
@@ -180,6 +202,7 @@ Comp& Registry::Get(u32 entity)
 template <typename Comp>
 const Comp& Registry::Get(u32 entity) const
 {
+    assert(entity != ECS::Null.id);
     Handle handle = entity;
     const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
     return *static_cast<Comp*>(entry.get());
@@ -188,6 +211,7 @@ const Comp& Registry::Get(u32 entity) const
 template <typename Comp>
 bool Registry::Has(u32 entity) const
 {
+    assert(entity != ECS::Null.id);
     Handle handle = entity;
     if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
         const auto& entry = it->second.at(handle.index);
@@ -200,7 +224,7 @@ template <typename Comp>
 typename Registry::ViewType<Comp>::ViewIterator& Registry::ViewType<Comp>::ViewIterator::operator++()
 {
     ++d_iter;
-    while (d_iter != d_reg->end() && !d_reg->Has<Comp>(*d_iter)) ++d_iter;
+    while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
     return *this;
 }
 
@@ -217,9 +241,46 @@ bool Registry::ViewType<Comp>::ViewIterator::operator!=(const Registry::ViewType
 }
 
 template <typename Comp>
-u32 Registry::ViewType<Comp>::ViewIterator::operator*()
+Entity Registry::ViewType<Comp>::ViewIterator::operator*()
 {
     return *d_iter;
+}
+
+// ENTITY TEMPLATES
+
+template <typename Comp>
+Comp& Entity::Add(const Comp& component)
+{
+    assert(*this != ECS::Null);
+    return registry->Add<Comp>(id, component);
+}
+
+template <typename Comp>
+void Entity::Remove()
+{
+    assert(*this != ECS::Null);
+    registry->Remove<Comp>(id);
+}
+
+template <typename Comp>
+Comp& Entity::Get()
+{
+    assert(*this != ECS::Null);
+    return registry->Get<Comp>(id);
+}
+
+template <typename Comp>
+const Comp& Entity::Get() const
+{
+    assert(*this != ECS::Null);
+    return registry->Get<Comp>(id);
+}
+
+template <typename Comp>
+bool Entity::Has() const
+{
+    assert(*this != ECS::Null);
+    return registry->Has<Comp>(id);
 }
 
 }
