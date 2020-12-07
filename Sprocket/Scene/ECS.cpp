@@ -11,7 +11,7 @@ Registry::Registry()
     : d_next(0)
 {}
 
-u64 Registry::New()
+u32 Registry::New()
 {
     Handle handle;
     if (auto it = d_pool.begin(); it != d_pool.end()) {
@@ -26,7 +26,7 @@ u64 Registry::New()
     return handle.entity;
 }
 
-void Registry::Delete(u64 entity)
+void Registry::Delete(u32 entity)
 {
     Handle handle = entity;
 
@@ -43,7 +43,7 @@ void Registry::Delete(u64 entity)
     d_pool.insert(handle.index);
 }
 
-bool Registry::Valid(u64 entity) const
+bool Registry::Valid(u32 entity) const
 {
     Handle handle = entity;
     return entity != ECS::Null 
@@ -54,7 +54,7 @@ bool Registry::Valid(u64 entity) const
 
 void Registry::Sort(const Comparitor& compare)
 {
-    const auto c = [&](u32 a, u32 b) {
+    const auto c = [&](u16 a, u16 b) {
         Handle ha(a, d_version[a]);
         Handle hb(b, d_version[b]);
         return compare(ha.entity, hb.entity);
@@ -62,7 +62,7 @@ void Registry::Sort(const Comparitor& compare)
     std::sort(d_entities.begin(), d_entities.end(), c);
 }
 
-u32 Registry::Size() const
+std::size_t Registry::Size() const
 {
     return d_next - d_pool.size();
 }
@@ -73,7 +73,7 @@ Registry::Iterator& Registry::Iterator::operator++()
     return *this;
 }
 
-u64 Registry::Iterator::operator*()
+u32 Registry::Iterator::operator*()
 {
     Registry::Handle h;
     h.index = d_reg->d_entities[d_dequeIndex];

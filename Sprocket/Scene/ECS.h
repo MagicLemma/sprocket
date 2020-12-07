@@ -20,37 +20,37 @@ class Registry
 {
 public:
     using Opaque = std::unique_ptr<void, std::function<void(void*)>>;
-    using Comparitor = std::function<bool(u64, u64)>;
+    using Comparitor = std::function<bool(u32, u32)>;
 
 private:
 
     union Handle
     {
         struct {
-            u32 index;
-            u32 version;
+            u16 index;
+            u16 version;
         };
-        u64 entity;
+        u32 entity;
 
-        Handle(u64 e) : entity(e) {}
-        Handle(u32 i, u32 v) : index(i), version(v) {}
+        Handle(u32 e) : entity(e) {}
+        Handle(u16 i, u16 v) : index(i), version(v) {}
         Handle() : entity(0) {}
     };
 
     static constexpr std::size_t NUM_ENTITIES = 100000;
 
     // When an entity is removed, their ID is added to the pool so that it can be reused.
-    std::unordered_set<u32> d_pool;
+    std::unordered_set<u16> d_pool;
 
     // If the pool of IDs is empty, then the next entity will use this variable as their ID.
-    u32 d_next;
+    u16 d_next;
 
     // We also keep track of the number of times an entity ID has been used. This is used to
     // check if a Entity handle is still valid. If the entity
-    std::array<u32, NUM_ENTITIES> d_version;
+    std::array<u16, NUM_ENTITIES> d_version;
 
     // This deque contains the currently alive entities. This is used for iteration.
-    std::deque<u32> d_entities;
+    std::deque<u16> d_entities;
 
     // All the components are stored in contiguous lists. This indexes into the arrays are
     // the u32 indices that identify a component.
@@ -59,23 +59,23 @@ private:
 public:
     Registry();
 
-    u64 New();
-    void Delete(u64 entity);
+    u32 New();
+    void Delete(u32 entity);
 
-    bool Valid(u64 entity) const;
+    bool Valid(u32 entity) const;
 
     void Sort(const Comparitor& compare);
 
     template <typename Comp>
     void Sort(const Comparitor& compare);
 
-    u32 Size() const;
+    std::size_t Size() const;
 
-    template <typename Comp> Comp& Add(u64 entity, const Comp& component);
-    template <typename Comp> void Remove(u64 entity);
-    template <typename Comp> Comp& Get(u64 entity);
-    template <typename Comp> const Comp& Get(u64 entity) const;
-    template <typename Comp> bool Has(u64 entity) const;
+    template <typename Comp> Comp& Add(u32 entity, const Comp& component);
+    template <typename Comp> void Remove(u32 entity);
+    template <typename Comp> Comp& Get(u32 entity);
+    template <typename Comp> const Comp& Get(u32 entity) const;
+    template <typename Comp> bool Has(u32 entity) const;
 
     class Iterator
     {
@@ -87,7 +87,7 @@ public:
         Iterator& operator++();
         bool operator==(const Iterator& other) const;
         bool operator!=(const Iterator& other) const;
-        u64 operator*();
+        u32 operator*();
     };
 
     Iterator begin() { return Iterator(this, 0); }
@@ -111,7 +111,7 @@ public:
             ViewIterator& operator++();
             bool operator==(const ViewIterator& other) const;
             bool operator!=(const ViewIterator& other) const;
-            u64 operator*();
+            u32 operator*();
         };
 
         ViewType(Registry* reg) : d_reg(reg) {}
@@ -136,7 +136,7 @@ public:
 template <typename Comp>
 void Registry::Sort(const Comparitor& compare)
 {
-    Sort([&](u64 a, u64 b) {
+    Sort([&](u32 a, u32 b) {
         bool ac = Has<Comp>(a);
         bool bc = Has<Comp>(b);
         if (ac && bc) {
@@ -147,7 +147,7 @@ void Registry::Sort(const Comparitor& compare)
 }
 
 template <typename Comp>
-Comp& Registry::Add(u64 entity, const Comp& component)
+Comp& Registry::Add(u32 entity, const Comp& component)
 {
     static constexpr auto Deleter = [](void* data) {
         if (data) delete static_cast<Comp*>(data);
@@ -160,7 +160,7 @@ Comp& Registry::Add(u64 entity, const Comp& component)
 }
 
 template <typename Comp>
-void Registry::Remove(u64 entity)
+void Registry::Remove(u32 entity)
 {
     Handle handle = entity;
     if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
@@ -170,7 +170,7 @@ void Registry::Remove(u64 entity)
 }
 
 template <typename Comp>
-Comp& Registry::Get(u64 entity)
+Comp& Registry::Get(u32 entity)
 {
     Handle handle = entity;
     const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
@@ -178,7 +178,7 @@ Comp& Registry::Get(u64 entity)
 }
 
 template <typename Comp>
-const Comp& Registry::Get(u64 entity) const
+const Comp& Registry::Get(u32 entity) const
 {
     Handle handle = entity;
     const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
@@ -186,7 +186,7 @@ const Comp& Registry::Get(u64 entity) const
 }
 
 template <typename Comp>
-bool Registry::Has(u64 entity) const
+bool Registry::Has(u32 entity) const
 {
     Handle handle = entity;
     if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
@@ -217,7 +217,7 @@ bool Registry::ViewType<Comp>::ViewIterator::operator!=(const Registry::ViewType
 }
 
 template <typename Comp>
-u64 Registry::ViewType<Comp>::ViewIterator::operator*()
+u32 Registry::ViewType<Comp>::ViewIterator::operator*()
 {
     return *d_iter;
 }

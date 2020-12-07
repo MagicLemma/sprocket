@@ -18,11 +18,11 @@ int main()
     Log::Init();
 
     ECS::Registry reg;
-    u64 e1 = reg.New();
-    u64 e2 = reg.New();
-    u64 e3 = reg.New();
-    u64 e4 = reg.New();
-    u64 e5 = reg.New();
+    u32 e1 = reg.New();
+    u32 e2 = reg.New();
+    u32 e3 = reg.New();
+    u32 e4 = reg.New();
+    u32 e5 = reg.New();
     reg.Add(e1, NameComponent({"E"}));
     reg.Add(e2, NameComponent({"D"}));
     reg.Add(e4, NameComponent({"B"}));
