@@ -1,11 +1,6 @@
 #include <Sprocket.h>
 #include "Game.h"
 
-struct Foo
-{
-    int x = 5;
-};
-
 int main()
 {
     //Sprocket::Window window("Game");
@@ -19,19 +14,26 @@ int main()
 
     ECS::Registry reg;
     ECS::Entity e1 = reg.New();
-    SPKT_LOG_INFO("Is e1 valid? {}", e1.Valid());
+    e1.Add<NameComponent>({"A"});
 
+    ECS::Entity e2 = reg.New();
+    e2.Add<NameComponent>({"D"});
 
-    reg.OnAdd<NameComponent>([](ECS::Entity e) {
-        auto name = e.Get<NameComponent>().name;
-        SPKT_LOG_INFO("Added {}", name);
+    ECS::Entity e3 = reg.New();
+    e3.Add<NameComponent>({"B"});
+
+    ECS::Entity e4 = reg.New();
+    e4.Add<NameComponent>({"C"});
+
+    for (ECS::Entity e : reg) {
+        SPKT_LOG_INFO("{}", e.Get<NameComponent>().name);
+    }
+
+    reg.Sort([](ECS::Entity lhs, ECS::Entity rhs) {
+        return lhs.Get<NameComponent>().name < rhs.Get<NameComponent>().name;
     });
 
-    reg.OnRemove<NameComponent>([](ECS::Entity e) {
-        auto name = e.Get<NameComponent>().name;
-        SPKT_LOG_INFO("Removed {}", name);
-    });
-
-    e1.Add<NameComponent>({"Hello"});
-    reg.Delete(e1);
+    for (ECS::Entity e : reg) {
+        SPKT_LOG_INFO("{}", e.Get<NameComponent>().name);
+    }
 }

@@ -85,7 +85,7 @@ void Registry::Sort(const Comparitor& compare)
     const auto c = [&](u16 a, u16 b) {
         Handle ha(a, d_version[a]);
         Handle hb(b, d_version[b]);
-        return compare(ha.entity, hb.entity);
+        return compare({this, ha.entity}, {this, hb.entity});
     };
     std::sort(d_entities.begin(), d_entities.end(), c);
 }

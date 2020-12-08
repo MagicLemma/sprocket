@@ -41,7 +41,7 @@ class Registry
 {
 public:
     using Opaque = std::unique_ptr<void, std::function<void(void*)>>;
-    using Comparitor = std::function<bool(u32, u32)>;
+    using Comparitor = std::function<bool(Entity, Entity)>;
     using EntityCallback = std::function<void(Entity)>;
 
 private:
@@ -175,9 +175,9 @@ static const Entity Null(nullptr, std::numeric_limits<u32>::max());
 template <typename Comp>
 void Registry::Sort(const Comparitor& compare)
 {
-    Sort([&](u32 a, u32 b) {
-        bool ac = Has<Comp>(a);
-        bool bc = Has<Comp>(b);
+    Sort([&](Entity a, Entity b) {
+        bool ac = a.Has<Comp>();
+        bool bc = b.Has<Comp>();
         if (ac && bc) {
             return compare(a, b);
         }
