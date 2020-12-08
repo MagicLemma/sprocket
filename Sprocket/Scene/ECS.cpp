@@ -22,6 +22,11 @@ bool Entity::Valid() const
      return registry && registry->Valid(id);
 }
 
+void Entity::Delete() 
+{
+    registry->Delete(*this);
+}
+
 Registry::Registry()
     : d_next(0)
 {}

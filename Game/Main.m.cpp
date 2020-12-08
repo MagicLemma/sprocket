@@ -24,16 +24,4 @@ int main()
 
     ECS::Entity e4 = reg.New();
     e4.Add<NameComponent>({"C"});
-
-    for (ECS::Entity e : reg) {
-        SPKT_LOG_INFO("{}", e.Get<NameComponent>().name);
-    }
-
-    reg.Sort([](ECS::Entity lhs, ECS::Entity rhs) {
-        return lhs.Get<NameComponent>().name < rhs.Get<NameComponent>().name;
-    });
-
-    for (ECS::Entity e : reg) {
-        SPKT_LOG_INFO("{}", e.Get<NameComponent>().name);
-    }
 }

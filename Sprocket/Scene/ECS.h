@@ -26,7 +26,9 @@ struct Entity
     Entity(Registry* r, u32 i) : registry(r), id(i) {}
 
     bool Valid() const;
+    void Delete();
 
+    template <typename Comp> Comp& Add();
     template <typename Comp> Comp& Add(const Comp& component);
     template <typename Comp> void Remove();
     template <typename Comp> Comp& Get();
@@ -97,19 +99,24 @@ public:
     void Delete(Entity entity);
 
     std::size_t Size() const;
-    bool Valid(u32 entity) const;
 
     void Sort(const Comparitor& compare);
     template <typename Comp> void Sort(const Comparitor& compare);
 
+    template <typename Comp> void OnAdd(const EntityCallback& cb);
+    template <typename Comp> void OnRemove(const EntityCallback& cb);
+
+    // The rest of the interface uses entity IDs rather than the entity struct.
+    // It is recommended to use the corresponding functions on the entity struct.
+
+    bool Valid(u32 entity) const;
+
+    template <typename Comp> Comp& Add(u32 entity);
     template <typename Comp> Comp& Add(u32 entity, const Comp& component);
     template <typename Comp> void Remove(u32 entity);
     template <typename Comp> Comp& Get(u32 entity);
     template <typename Comp> const Comp& Get(u32 entity) const;
     template <typename Comp> bool Has(u32 entity) const;
-
-    template <typename Comp> void OnAdd(const EntityCallback& cb);
-    template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     // Iteration
     class Iterator
@@ -183,6 +190,12 @@ void Registry::Sort(const Comparitor& compare)
         }
         return ac; // Comp will shift to the front.
     });
+}
+
+template <typename Comp>
+Comp& Registry::Add(u32 entity)
+{
+    Add<Comp>(entity, Comp{});
 }
 
 template <typename Comp>
@@ -282,6 +295,12 @@ Entity Registry::ViewType<Comp>::ViewIterator::operator*()
 }
 
 // ENTITY TEMPLATES
+
+template <typename Comp>
+Comp& Entity::Add()
+{
+    Add<Comp>(Comp{});
+}
 
 template <typename Comp>
 Comp& Entity::Add(const Comp& component)
