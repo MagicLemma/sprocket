@@ -10,7 +10,7 @@
             "name": "Game",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Game/RelWithDebInfo/Game.exe",
+            "program": "${workspaceFolder}/build/Game/Debug/Game.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -11,6 +11,7 @@
 #include <deque>
 #include <limits>
 #include <vector>
+#include <cassert>
 
 namespace Sprocket {
 namespace ECS {
@@ -76,6 +77,8 @@ private:
 
     std::unordered_map<std::type_index, std::vector<EntityCallback>> d_onAddCallbacks;
     std::unordered_map<std::type_index, std::vector<EntityCallback>> d_onRemoveCallbacks;
+
+    void Remove(u32 entity, std::type_index type);
 
 public:
     Registry();
@@ -175,7 +178,7 @@ void Registry::Sort(const Comparitor& compare)
 template <typename Comp>
 Comp& Registry::Add(u32 entity, const Comp& component)
 {
-    assert(entity != ECS::Null.id);
+    assert(Valid(entity));
     static constexpr auto Deleter = [](void* data) {
         if (data) delete static_cast<Comp*>(data);
     };
@@ -194,22 +197,14 @@ Comp& Registry::Add(u32 entity, const Comp& component)
 template <typename Comp>
 void Registry::Remove(u32 entity)
 {
-    assert(entity != ECS::Null.id);
-    for (const auto& cb : d_onRemoveCallbacks[typeid(Comp)]) {
-        cb({this, entity});
-    }
-
-    Handle handle = entity;
-    if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
-        auto& entry = it->second.at(handle.index);
-        entry.reset();
-    }
+    assert(Valid(entity));
+    Remove(entity, typeid(Comp));
 }
 
 template <typename Comp>
 Comp& Registry::Get(u32 entity)
 {
-    assert(entity != ECS::Null.id);
+    assert(Valid(entity));
     Handle handle = entity;
     const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
     return *static_cast<Comp*>(entry.get());
@@ -218,7 +213,7 @@ Comp& Registry::Get(u32 entity)
 template <typename Comp>
 const Comp& Registry::Get(u32 entity) const
 {
-    assert(entity != ECS::Null.id);
+    assert(Valid(entity));
     Handle handle = entity;
     const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
     return *static_cast<Comp*>(entry.get());
@@ -227,7 +222,7 @@ const Comp& Registry::Get(u32 entity) const
 template <typename Comp>
 bool Registry::Has(u32 entity) const
 {
-    assert(entity != ECS::Null.id);
+    assert(Valid(entity));
     Handle handle = entity;
     if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
         const auto& entry = it->second.at(handle.index);
@@ -281,35 +276,35 @@ Entity Registry::ViewType<Comp>::ViewIterator::operator*()
 template <typename Comp>
 Comp& Entity::Add(const Comp& component)
 {
-    assert(*this != ECS::Null);
+    assert(this->Valid());
     return registry->Add<Comp>(id, component);
 }
 
 template <typename Comp>
 void Entity::Remove()
 {
-    assert(*this != ECS::Null);
+    assert(this->Valid());
     registry->Remove<Comp>(id);
 }
 
 template <typename Comp>
 Comp& Entity::Get()
 {
-    assert(*this != ECS::Null);
+    assert(this->Valid());
     return registry->Get<Comp>(id);
 }
 
 template <typename Comp>
 const Comp& Entity::Get() const
 {
-    assert(*this != ECS::Null);
+    assert(this->Valid());
     return registry->Get<Comp>(id);
 }
 
 template <typename Comp>
 bool Entity::Has() const
 {
-    assert(*this != ECS::Null);
+    assert(this->Valid());
     return registry->Has<Comp>(id);
 }
 

@@ -19,10 +19,8 @@ int main()
 
     ECS::Registry reg;
     ECS::Entity e1 = reg.New();
-    ECS::Entity e2 = reg.New();
-    ECS::Entity e3 = reg.New();
-    ECS::Entity e4 = reg.New();
-    ECS::Entity e5 = reg.New();
+    SPKT_LOG_INFO("Is e1 valid? {}", e1.Valid());
+
 
     reg.OnAdd<NameComponent>([](ECS::Entity e) {
         auto name = e.Get<NameComponent>().name;
@@ -34,27 +32,6 @@ int main()
         SPKT_LOG_INFO("Removed {}", name);
     });
 
-    e1.Add(NameComponent({"E"}));
-    e2.Add(NameComponent({"D"}));
-    e4.Add(NameComponent({"B"}));
-    e5.Add(NameComponent({"A"}));
-
-    e2.Remove<NameComponent>();
-
-    e2.Add(Foo());
-    e4.Add(Foo());
-
-    for (auto entity : reg.View<NameComponent>()) {
-        auto x = entity.Get<NameComponent>();
-        SPKT_LOG_INFO("{}", x.name);
-    }
-
-    bool isNull = e2 == ECS::Null;
-    SPKT_LOG_INFO("Comparison to null {}", isNull);
-    
-    for (auto entity : reg.View<Foo>()) {
-        auto x = entity.Get<Foo>();
-        SPKT_LOG_INFO("{}", x.x);
-    }
-
+    e1.Add<NameComponent>({"Hello"});
+    reg.Delete(e1);
 }

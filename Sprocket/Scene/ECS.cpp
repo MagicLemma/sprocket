@@ -26,6 +26,19 @@ Registry::Registry()
     : d_next(0)
 {}
 
+void Registry::Remove(u32 entity, std::type_index type)
+{
+    for (const auto& cb : d_onRemoveCallbacks[type]) {
+        cb({this, entity});
+    }
+
+    Handle handle = entity;
+    if (auto it = d_components.find(type); it != d_components.end()) {
+        auto& entry = it->second.at(handle.index);
+        entry.reset();
+    }
+}
+
 Entity Registry::New()
 {
     Handle handle;
@@ -37,7 +50,7 @@ Entity Registry::New()
         handle.index = d_next++;
         d_entities.push_back(handle.index);
     }
-    handle.version = d_version[handle.index]++;
+    handle.version = ++d_version[handle.index];
     return {this, handle.entity};
 }
 
@@ -47,7 +60,7 @@ void Registry::Delete(Entity entity)
 
     // Clean up all components
     for (auto& [type, components] : d_components) {
-        components[handle.index].reset();
+        Remove(entity.id, type);
     }
 
     // Remove the entity index from the "alive" list
