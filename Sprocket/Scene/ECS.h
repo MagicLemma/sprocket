@@ -71,12 +71,22 @@ private:
     // This deque contains the currently alive entities. This is used for iteration.
     std::deque<u16> d_entities;
 
-    // All the components are stored in contiguous lists. This indexes into the arrays are
-    // the u32 indices that identify a component.
-    std::unordered_map<std::type_index, std::array<Opaque, NUM_ENTITIES>> d_components;
+    // Store of all components for all entities. The type of the components are erased.
+    struct ComponentData
+    {
+        // All instances of this component.
+        std::array<Opaque, NUM_ENTITIES> instances;
 
-    std::unordered_map<std::type_index, std::vector<EntityCallback>> d_onAddCallbacks;
-    std::unordered_map<std::type_index, std::vector<EntityCallback>> d_onRemoveCallbacks;
+        // Callbacks triggered whenever a new instance of this component is added. These
+        // are called after the component has been added.
+        std::vector<EntityCallback>      onAdd;
+
+        // Callbacks triggers whenever an instance of this component is remove. These
+        // are called before the component has been removed.
+        std::vector<EntityCallback>      onRemove;
+    };
+
+    std::unordered_map<std::type_index, ComponentData> d_comps;
 
     void Remove(u32 entity, std::type_index type);
 
@@ -184,10 +194,10 @@ Comp& Registry::Add(u32 entity, const Comp& component)
     };
 
     Handle handle = entity;
-    auto& entry = d_components[typeid(Comp)][handle.index];
+    auto& entry = d_comps[typeid(Comp)].instances[handle.index];
     entry = Opaque(new Comp(component), Deleter);
 
-    for (const auto& cb : d_onAddCallbacks[typeid(Comp)]) {
+    for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
         cb({this, entity});
     }
 
@@ -206,7 +216,7 @@ Comp& Registry::Get(u32 entity)
 {
     assert(Valid(entity));
     Handle handle = entity;
-    const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
+    const auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
     return *static_cast<Comp*>(entry.get());
 }
 
@@ -215,7 +225,7 @@ const Comp& Registry::Get(u32 entity) const
 {
     assert(Valid(entity));
     Handle handle = entity;
-    const auto& entry = d_components.at(typeid(Comp)).at(handle.index);
+    const auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
     return *static_cast<Comp*>(entry.get());
 }
 
@@ -224,8 +234,8 @@ bool Registry::Has(u32 entity) const
 {
     assert(Valid(entity));
     Handle handle = entity;
-    if (auto it = d_components.find(typeid(Comp)); it != d_components.end()) {
-        const auto& entry = it->second.at(handle.index);
+    if (auto it = d_comps.find(typeid(Comp)); it != d_comps.end()) {
+        const auto& entry = it->second.instances.at(handle.index);
         return entry != nullptr;
     }
     return false;
@@ -234,13 +244,13 @@ bool Registry::Has(u32 entity) const
 template <typename Comp>
 void Registry::OnAdd(const EntityCallback& cb)
 {
-    d_onAddCallbacks[typeid(Comp)].push_back(cb);
+    d_comps[typeid(Comp)].onAdd.push_back(cb);
 }
 
 template <typename Comp>
 void Registry::OnRemove(const EntityCallback& cb)
 {
-    d_onRemoveCallbacks[typeid(Comp)].push_back(cb);
+    d_comps[typeid(Comp)].onRemove.push_back(cb);
 }
 
 // VIEWTYPE TEMPLATES

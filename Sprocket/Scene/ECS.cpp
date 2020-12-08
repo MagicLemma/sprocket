@@ -28,13 +28,13 @@ Registry::Registry()
 
 void Registry::Remove(u32 entity, std::type_index type)
 {
-    for (const auto& cb : d_onRemoveCallbacks[type]) {
+    for (const auto& cb : d_comps[type].onRemove) {
         cb({this, entity});
     }
 
     Handle handle = entity;
-    if (auto it = d_components.find(type); it != d_components.end()) {
-        auto& entry = it->second.at(handle.index);
+    if (auto it = d_comps.find(type); it != d_comps.end()) {
+        auto& entry = it->second.instances.at(handle.index);
         entry.reset();
     }
 }
@@ -59,7 +59,7 @@ void Registry::Delete(Entity entity)
     Handle handle = entity.id;
 
     // Clean up all components
-    for (auto& [type, components] : d_components) {
+    for (auto& [type, data] : d_comps) {
         Remove(entity.id, type);
     }
 
