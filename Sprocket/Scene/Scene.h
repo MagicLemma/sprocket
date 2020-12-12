@@ -67,7 +67,7 @@ public:
 
     std::size_t Size() const;
 
-    template <typename... Components> void Each(EntityCallback func);
+    template <typename Component> void Each(EntityCallback func);
         // Loops through all the entities that have the specified
         // components and calls the given lambda with each entity
         // as the argument.
@@ -89,10 +89,10 @@ public:
     const Ambience& GetAmbience() const { return d_ambience; }
 };
 
-template <typename... Components>
+template <typename Component>
 void Scene::Each(EntityCallback lambda)
 {
-    for (auto& entity : d_registry.view<Components...>()) {
+    for (auto& entity : d_registry.view<Component>()) {
         lambda(Entity(&d_registry, entity));   
     }
 }
@@ -103,8 +103,7 @@ void Scene::OnAdd(EntityCallback func)
     auto it = d_addFunctions.find(typeid(T));
     if (it == d_addFunctions.end()) {
         // Register the signal when we add the first function.
-        d_registry.on_construct<T>()
-            .connect<&Scene::OnAddCB<T>>(*this);
+        d_registry.on_construct<T>().connect<&Scene::OnAddCB<T>>(*this);
     }
     d_addFunctions[typeid(T)].push_back(func);
 }
@@ -115,8 +114,7 @@ void Scene::OnRemove(EntityCallback func)
     auto it = d_removeFunctions.find(typeid(T));
     if (it == d_removeFunctions.end()) {
         // Register the signal when we add the first function.
-        d_registry.on_destroy<T>()
-            .connect<&Scene::OnRemoveCB<T>>(*this);
+        d_registry.on_destroy<T>().connect<&Scene::OnRemoveCB<T>>(*this);
     }
     d_removeFunctions[typeid(T)].push_back(func);
 }

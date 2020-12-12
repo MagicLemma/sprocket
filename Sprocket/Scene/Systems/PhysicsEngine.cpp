@@ -237,7 +237,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     // Pre Update
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
-    scene.Each<TransformComponent, RigidBody3DComponent>([&] (Entity& entity) {
+    scene.Each<RigidBody3DComponent>([&] (Entity& entity) {
         const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<RigidBody3DComponent>();
 
@@ -276,7 +276,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     }
 
     // Post Update
-    scene.Each<TransformComponent, RigidBody3DComponent>([&] (Entity& entity) {
+    scene.Each<RigidBody3DComponent>([&] (Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         auto& physics = entity.Get<RigidBody3DComponent>();
         const auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;

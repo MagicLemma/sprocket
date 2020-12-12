@@ -136,7 +136,7 @@ public:
     Iterator end() { return Iterator(this, d_entities.size()); }
 
     // Views
-    template <typename Comp> class ViewType
+    template <typename... Comp> class ViewType
     {
         Registry* d_reg;
 
@@ -148,7 +148,7 @@ public:
 
         public:
             ViewIterator(Registry* reg, const Iterator& iter) : d_reg(reg), d_iter(iter) {
-                while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
+                while (d_iter != d_reg->end() && !((*d_iter).Has<Comp>() && ...)) ++d_iter;
             }
             ViewIterator& operator++();
             bool operator==(const ViewIterator& other) const;
@@ -162,9 +162,9 @@ public:
         ViewIterator end() { return ViewIterator(d_reg, d_reg->end()); }
     };
 
-    template <typename Comp> ViewType<Comp> View()
+    template <typename... Comp> ViewType<Comp...> View()
     {
-        return ViewType<Comp>(this);
+        return ViewType<Comp...>(this);
     }
 
     friend class Iterator;
@@ -268,28 +268,28 @@ void Registry::OnRemove(const EntityCallback& cb)
 
 // VIEWTYPE TEMPLATES
 
-template <typename Comp>
-typename Registry::ViewType<Comp>::ViewIterator& Registry::ViewType<Comp>::ViewIterator::operator++()
+template <typename... Comp>
+typename Registry::ViewType<Comp...>::ViewIterator& Registry::ViewType<Comp...>::ViewIterator::operator++()
 {
     ++d_iter;
-    while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
+    while (d_iter != d_reg->end() && !((*d_iter).Has<Comp>() && ...)) ++d_iter;
     return *this;
 }
 
-template <typename Comp>
-bool Registry::ViewType<Comp>::ViewIterator::operator==(const Registry::ViewType<Comp>::ViewIterator& other) const
+template <typename... Comp>
+bool Registry::ViewType<Comp...>::ViewIterator::operator==(const Registry::ViewType<Comp...>::ViewIterator& other) const
 {
     return d_iter == other.d_iter;
 }
 
-template <typename Comp>
-bool Registry::ViewType<Comp>::ViewIterator::operator!=(const Registry::ViewType<Comp>::ViewIterator& other) const
+template <typename... Comp>
+bool Registry::ViewType<Comp...>::ViewIterator::operator!=(const Registry::ViewType<Comp...>::ViewIterator& other) const
 {
     return !(*this == other);
 }
 
-template <typename Comp>
-Entity Registry::ViewType<Comp>::ViewIterator::operator*()
+template <typename... Comp>
+Entity Registry::ViewType<Comp...>::ViewIterator::operator*()
 {
     return *d_iter;
 }
