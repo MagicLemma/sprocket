@@ -14,6 +14,8 @@
 #include <cassert>
 #include <any>
 
+#include "Log.h"
+
 namespace Sprocket {
 namespace ECS {
 
@@ -37,6 +39,9 @@ struct Entity
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
 
+    u16 Index() const;
+    u16 Version() const;
+
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
 };
@@ -48,16 +53,6 @@ public:
     using EntityCallback = std::function<void(Entity)>;
 
 private:
-
-    union Handle
-    {
-        struct { u16 index; u16 version; };
-        u32 entity;
-
-        Handle(u32 e) : entity(e) {}
-        Handle(u16 i, u16 v) : index(i), version(v) {}
-        Handle() : entity(0) {}
-    };
 
     static constexpr std::size_t NUM_ENTITIES = std::numeric_limits<u16>::max();
 
@@ -119,6 +114,10 @@ public:
     template <typename Comp> Comp& Get(u32 entity);
     template <typename Comp> const Comp& Get(u32 entity) const;
     template <typename Comp> bool Has(u32 entity) const;
+
+    static u32 GetID(u16 index, u16 version);
+    static u16 GetIndex(u32 id);
+    static u16 GetVersion(u32 id);
 
     // Iteration
     class Iterator
@@ -204,9 +203,7 @@ template <typename Comp>
 Comp& Registry::Add(u32 entity, const Comp& component)
 {
     assert(Valid(entity));
-
-    Handle handle = entity;
-    auto& entry = d_comps[typeid(Comp)].instances[handle.index];
+    auto& entry = d_comps[typeid(Comp)].instances[GetIndex(entity)];
     entry = component;
 
     for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
@@ -220,9 +217,7 @@ template <typename Comp, typename... Args>
 Comp& Registry::Emplace(u32 entity, Args&&... args)
 {
     assert(Valid(entity));
-
-    Handle handle = entity;
-    auto& entry = d_comps[typeid(Comp)].instances[handle.index];
+    auto& entry = d_comps[typeid(Comp)].instances[GetIndex(entity)];
     entry = std::make_any<Comp&>(std::forward<Args>(args)...);
 
     for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
@@ -243,8 +238,7 @@ template <typename Comp>
 Comp& Registry::Get(u32 entity)
 {
     assert(Valid(entity));
-    Handle handle = entity;
-    auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
+    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetIndex(entity));
     return std::any_cast<Comp&>(entry);
 }
 
@@ -252,8 +246,7 @@ template <typename Comp>
 const Comp& Registry::Get(u32 entity) const
 {
     assert(Valid(entity));
-    Handle handle = entity;
-    auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
+    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetIndex(entity));
     return std::any_cast<Comp&>(entry);
 }
 
@@ -261,9 +254,8 @@ template <typename Comp>
 bool Registry::Has(u32 entity) const
 {
     assert(Valid(entity));
-    Handle handle = entity;
     if (auto it = d_comps.find(typeid(Comp)); it != d_comps.end()) {
-        const auto& entry = it->second.instances.at(handle.index);
+        const auto& entry = it->second.instances.at(GetIndex(entity));
         return entry.has_value();
     }
     return false;

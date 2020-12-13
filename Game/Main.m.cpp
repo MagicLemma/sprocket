@@ -39,4 +39,6 @@ int main()
 
     auto& f1 = e2.Get<Foo>();
     SPKT_LOG_INFO("{}", f1.x);
+
+    SPKT_LOG_INFO("id {} index {} version {}", e1.id, e1.Index(), e1.Version());
 }
