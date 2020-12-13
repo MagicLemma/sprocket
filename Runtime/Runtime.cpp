@@ -35,7 +35,7 @@ Runtime::Runtime(Window* window)
 
     d_scene->OnStartup();
 
-    d_scene->Each<CameraComponent>([&](Entity& entity) {
+    d_scene->Each<CameraComponent>([&](ECS::Entity& entity) {
         d_runtimeCamera = entity;
     });
 }
@@ -67,7 +67,7 @@ void Runtime::OnUpdate(double dt)
         d_particleManager.OnUpdate(dt);
     }
     
-    d_scene->Each<TransformComponent>([&](Entity& entity) {
+    d_scene->Each<TransformComponent>([&](ECS::Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
             entity.Delete();

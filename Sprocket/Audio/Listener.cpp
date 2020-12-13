@@ -6,7 +6,7 @@
 namespace Sprocket {
 namespace Audio {
 
-void SetListener(const Entity& entity)
+void SetListener(const ECS::Entity& entity)
 {
     if (!entity.Has<TransformComponent>()) { return; }
     auto tr = entity.Get<TransformComponent>();

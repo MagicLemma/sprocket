@@ -6,7 +6,7 @@
 namespace Sprocket {
 namespace {
 
-std::string Name(const Entity& entity)
+std::string Name(const ECS::Entity& entity)
 {
     if (entity.Has<NameComponent>()) {
         return entity.Get<NameComponent>().name;
@@ -49,7 +49,7 @@ Anvil::Anvil(Window* window)
 
     d_scene->OnStartup();
 
-    d_scene->Each<CameraComponent>([&](Entity& entity) {
+    d_scene->Each<CameraComponent>([&](ECS::Entity& entity) {
         d_runtimeCamera = entity;
     });
 
@@ -70,7 +70,7 @@ void Anvil::OnEvent(Event& event)
                 d_window->SetCursorVisibility(true);
             }
             else {
-                d_selected = Entity();
+                d_selected = ECS::Null;
             }
             e->Consume();
         }
@@ -105,7 +105,7 @@ void Anvil::OnUpdate(double dt)
         d_editorCamera.OnUpdate(dt);
     }
     
-    d_activeScene->Each<TransformComponent>([&](Entity& entity) {
+    d_activeScene->Each<TransformComponent>([&](ECS::Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
             entity.Delete();
@@ -204,7 +204,7 @@ void Anvil::OnRender()
                 d_activeScene->OnStartup();
                 d_playingGame = true;
 
-                d_activeScene->Each<Sprocket::CameraComponent>([&](Entity& entity) {
+                d_activeScene->Each<Sprocket::CameraComponent>([&](ECS::Entity& entity) {
                     d_runtimeCamera = entity;
                 });
                 d_window->SetCursorVisibility(false);
@@ -263,7 +263,7 @@ void Anvil::OnRender()
             
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
-                d_scene->All([&](Entity& entity) {
+                d_scene->All([&](ECS::Entity& entity) {
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {

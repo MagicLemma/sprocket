@@ -32,7 +32,7 @@ struct Ambience
 class Scene
 {
 public:
-    using EntityCallback = std::function<void(Entity&)>;
+    using EntityCallback = std::function<void(ECS::Entity&)>;
 
     using TypeFunctionMap = tsl::hopscotch_map<
         std::type_index, std::vector<EntityCallback>
@@ -53,7 +53,7 @@ public:
     Scene();
     ~Scene();
     
-    Entity NewEntity();
+    ECS::Entity NewEntity();
 
     void AddSystem(std::shared_ptr<EntitySystem> system);
     void ClearSystems();
@@ -89,7 +89,7 @@ public:
 template <typename Component>
 void Scene::Each(EntityCallback lambda)
 {
-    for (Entity e : d_registry.View<Component>()) {
+    for (ECS::Entity e : d_registry.View<Component>()) {
         lambda(e);   
     }
 }

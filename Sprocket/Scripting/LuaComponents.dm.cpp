@@ -116,7 +116,7 @@ template<typename T> int Lua_Has(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity entity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     lua_pushboolean(L, entity.Has<T>());
     return 1;
 }
@@ -141,7 +141,7 @@ int Get{{Comp.Name}}(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<{{Comp.Name}}>());
 
     int count = 0;
@@ -155,7 +155,7 @@ int Set{{Comp.Name}}(lua_State* L)
     if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<{{Comp.Name}}>();
     c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
     return 0;
@@ -166,7 +166,7 @@ int Add{{Comp.Name}}(lua_State* L)
     if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    Entity e = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<{{Comp.Name}}>());
 
     {{Comp.Name}} c;

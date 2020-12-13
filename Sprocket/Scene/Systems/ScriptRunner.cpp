@@ -16,7 +16,7 @@ ScriptRunner::ScriptRunner(Window* window)
 
 void ScriptRunner::OnStartup(Scene& scene)
 {
-    auto AddScript = [&](Entity& entity) {
+    auto AddScript = [&](ECS::Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.SetWindow(d_window);
         luaEngine.SetInput(&d_input);
@@ -31,14 +31,14 @@ void ScriptRunner::OnStartup(Scene& scene)
     scene.OnAdd<ScriptComponent>(AddScript);
         // If a new script gets added to an entity, register that too.
 
-    scene.OnRemove<ScriptComponent>([&](Entity& entity) {
+    scene.OnRemove<ScriptComponent>([&](ECS::Entity& entity) {
         d_engines.erase(entity.Id());
     });
 }
 
 void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
-    scene.Each<ScriptComponent>([&](Entity& entity) {
+    scene.Each<ScriptComponent>([&](ECS::Entity& entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.CallOnUpdateFunction(dt);
     });

@@ -10,7 +10,7 @@ using namespace Sprocket;
 
 namespace {
 
-std::string EntityName(Entity& entity)
+std::string EntityName(ECS::Entity& entity)
 {
     if (entity.Has<NameComponent>()) {
         return entity.Get<NameComponent>().name;
@@ -18,7 +18,7 @@ std::string EntityName(Entity& entity)
     return "Unnamed";
 }
 
-void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
+void AddEntityToList(DevUI& ui, BasicSelector& selector, ECS::Entity& entity)
 {
     ImGui::PushID(entity.Id());
     if (ImGui::TreeNode(EntityName(entity).c_str())) {
@@ -32,7 +32,7 @@ void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 }
 
 void SelectedEntityInfo(DevUI& ui,
-                        Entity& entity,
+                        ECS::Entity& entity,
                         const glm::mat4& view,
                         const glm::mat4& proj)
 {
@@ -213,13 +213,13 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
 {
     using namespace Sprocket;
 
-    d_selector->SetSelected(Entity());
+    d_selector->SetSelected(ECS::Null);
     d_paused = false;
 
     d_sceneFile = sceneFile;
     Loader::Load(sceneFile, d_scene);
 
-    d_scene->Each<NameComponent>([&](Entity& entity) {
+    d_scene->Each<NameComponent>([&](ECS::Entity& entity) {
         const auto& name = entity.Get<NameComponent>();
         if (name.name == "Worker") {
             d_worker = entity;
@@ -257,7 +257,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
         if (!event.IsConsumed()) {
             if (auto e = event.As<MouseButtonPressedEvent>()) {
-                d_selector->SetSelected(Entity());
+                d_selector->SetSelected(ECS::Null);
                 // TODO: Do we want to consume this event here?
             }
         }

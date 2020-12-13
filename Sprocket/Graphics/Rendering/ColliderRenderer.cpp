@@ -32,7 +32,7 @@ void ColliderRenderer::Draw(
     
     static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube);
-    scene.Each<BoxCollider3DComponent>([&](Entity& entity) {
+    scene.Each<BoxCollider3DComponent>([&](ECS::Entity& entity) {
         const auto& c = entity.Get<BoxCollider3DComponent>();
         auto tr = entity.Get<TransformComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
@@ -47,7 +47,7 @@ void ColliderRenderer::Draw(
 
     static auto s_sphere = Mesh::FromFile("Resources/Models/LowPolySphere.obj");
     d_vao->SetModel(s_sphere);
-    scene.Each<SphereCollider3DComponent>([&](Entity& entity) {
+    scene.Each<SphereCollider3DComponent>([&](ECS::Entity& entity) {
         const auto& c = entity.Get<SphereCollider3DComponent>();
         auto tr = entity.Get<TransformComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
@@ -59,7 +59,7 @@ void ColliderRenderer::Draw(
 
     static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
-    scene.Each<CapsuleCollider3DComponent>([&](Entity& entity) {
+    scene.Each<CapsuleCollider3DComponent>([&](ECS::Entity& entity) {
         const auto& c = entity.Get<CapsuleCollider3DComponent>();
 
         {  // Top Hemisphere
@@ -99,7 +99,7 @@ void ColliderRenderer::Draw(
     d_shader.Unbind();
 }
 
-void ColliderRenderer::Draw(const Entity& camera, Scene& scene)
+void ColliderRenderer::Draw(const ECS::Entity& camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);

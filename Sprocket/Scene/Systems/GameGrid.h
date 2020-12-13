@@ -14,15 +14,15 @@ class GameGrid : public EntitySystem
 {
 public:
     using GridMap = std::unordered_map<
-        std::pair<int, int>, Entity, HashPair
+        std::pair<int, int>, ECS::Entity, HashPair
     >;
 
 private:
     Window*       d_window;
 
-    Entity d_camera;
-    Entity d_hoveredSquare;
-    Entity d_selectedSquare;
+    ECS::Entity d_camera;
+    ECS::Entity d_hoveredSquare;
+    ECS::Entity d_selectedSquare;
 
     glm::ivec2 d_hovered; // TODO: make optional
     std::optional<glm::ivec2> d_selected;
@@ -36,12 +36,12 @@ public:
     void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Scene& scene, Event& event) override;
 
-    Entity At(int x, int z) const;
+    ECS::Entity At(int x, int z) const;
 
-    void SetCamera(Entity entity) { d_camera = entity; }
+    void SetCamera(ECS::Entity entity) { d_camera = entity; }
 
-    Entity Hovered() const;
-    Entity Selected() const;
+    ECS::Entity Hovered() const;
+    ECS::Entity Selected() const;
 
     std::optional<glm::ivec2> SelectedPosition() const { return d_selected; }
 };

@@ -10,6 +10,5 @@
 - stb
 - sfml-system
 - sfml-audio
-- entt
 - yaml-cpp
 - tsl-hopscotch-map

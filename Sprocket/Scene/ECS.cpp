@@ -4,6 +4,7 @@
 #include <algorithm>
 
 namespace Sprocket {
+namespace ECS {
 
 bool Entity::operator==(Entity other) const
 {
@@ -51,8 +52,6 @@ Entity Entity::NewEntity() const
 {
     return {d_registry, d_registry->New()};
 }
-
-namespace ECS {
 
 Registry::Registry()
     : d_next(0)

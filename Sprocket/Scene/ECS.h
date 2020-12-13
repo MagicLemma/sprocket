@@ -17,8 +17,9 @@
 #include "Log.h"
 
 namespace Sprocket {
-
-namespace ECS { class Registry; }
+namespace ECS {
+    
+class Registry;
 
 static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
 
@@ -53,8 +54,6 @@ public:
     // TODO: Remove
     Entity NewEntity() const;
 };
-
-namespace ECS {
 
 class Registry
 {
@@ -311,8 +310,6 @@ Entity Registry::ViewType<Comp...>::ViewIterator::operator*()
     return *d_iter;
 }
 
-}
-
 // ENTITY TEMPLATES
 
 template <typename Comp>
@@ -363,4 +360,5 @@ bool Entity::Has() const
     return d_registry->Has<Comp>(d_id);
 }
 
+}
 }

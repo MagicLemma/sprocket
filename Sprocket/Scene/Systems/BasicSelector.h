@@ -9,7 +9,7 @@ class BasicSelector : public EntitySystem
 // entity is removed from the scene, then this system will automatically
 // clear itself.
 {
-    Entity d_selectedEntity;
+    ECS::Entity d_selectedEntity;
 
 public:
     BasicSelector();
@@ -17,11 +17,11 @@ public:
 
     void OnStartup(Scene& scene) override;
     
-    void SetSelected(Entity entity);
+    void SetSelected(ECS::Entity entity);
         // Sets the current selected Entity. If called with a nullptr,
         // it will clear the currently selected Entity.
 
-    Entity SelectedEntity() const { return d_selectedEntity; }
+    ECS::Entity SelectedEntity() const { return d_selectedEntity; }
 };
 
 }

@@ -15,7 +15,7 @@ class ColliderRenderer
 public:
     ColliderRenderer();
 
-    void Draw(const Entity& camera, Scene& scene);
+    void Draw(const ECS::Entity& camera, Scene& scene);
     void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);
 
     Shader& GetShader() { return d_shader; }

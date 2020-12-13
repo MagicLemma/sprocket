@@ -22,7 +22,7 @@ class PhysicsEngine : public EntitySystem
     
     bool        d_running = false;
 
-    bool IsOnFloor(Entity entity) const; 
+    bool IsOnFloor(ECS::Entity entity) const; 
         // Returns true if the given Entity is colliding with another
         // Entity directly below it. TODO: Make this more general.
 
@@ -36,7 +36,7 @@ public:
     void Running(bool isRunning);
     bool Running() const { return d_running; }
 
-    Entity Raycast(const glm::vec3& base, const glm::vec3& direction);
+    ECS::Entity Raycast(const glm::vec3& base, const glm::vec3& direction);
         // Given a position in the world and a direction from that point,
         // return a pointer to the entity that it hits, or null if it
         // does not.

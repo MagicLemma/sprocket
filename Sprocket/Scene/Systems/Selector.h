@@ -9,18 +9,18 @@ namespace Sprocket {
 class Selector : public EntitySystem
 {
     Window* d_window;
-    Entity d_camera;
+    ECS::Entity d_camera;
 
     PhysicsEngine* d_physicsEngine;
 
     bool d_enabled;
 
-    Entity d_hoveredEntity;
-    Entity d_selectedEntity;
+    ECS::Entity d_hoveredEntity;
+    ECS::Entity d_selectedEntity;
         // Do not edit these directly, clear and set them with the functions
         // below.
 
-    void SetHovered(Entity entity);
+    void SetHovered(ECS::Entity entity);
 
     void ClearHovered();
     void ClearSelected();
@@ -28,7 +28,7 @@ class Selector : public EntitySystem
         // was not null, update their internal state before setting the
         // pointer to nullptr.
 
-    Entity GetMousedOver();
+    ECS::Entity GetMousedOver();
         // Returns a pointer to the entity that the mouse is currently
         // over, and a nullptr if there isn't one.
 
@@ -42,14 +42,14 @@ public:
 
     void Enable(bool newEnabled);
 
-    void SetSelected(Entity entity);
+    void SetSelected(ECS::Entity entity);
         // Sets the current selected Entity. If called with a nullptr,
         // it will clear the currently selected Entity.
 
-    void SetCamera(Entity camera) { d_camera = camera; }
+    void SetCamera(ECS::Entity camera) { d_camera = camera; }
 
-    Entity HoveredEntity() const { return d_hoveredEntity; }
-    Entity SelectedEntity() const { return d_selectedEntity; }
+    ECS::Entity HoveredEntity() const { return d_hoveredEntity; }
+    ECS::Entity SelectedEntity() const { return d_selectedEntity; }
 };
 
 }

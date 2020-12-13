@@ -17,7 +17,7 @@ Selector::Selector(Window* window, PhysicsEngine* physicsEngine)
 
 void Selector::OnStartup(Scene& manager)
 {
-    manager.OnRemove<SelectComponent>([&](Entity& entity) {
+    manager.OnRemove<SelectComponent>([&](ECS::Entity& entity) {
         if (entity == d_hoveredEntity) { ClearHovered(); }
         if (entity == d_selectedEntity) { ClearSelected(); }
     });
@@ -75,7 +75,7 @@ void Selector::ClearSelected()
     d_selectedEntity = ECS::Null;
 }
 
-void Selector::SetHovered(Entity entity)
+void Selector::SetHovered(ECS::Entity entity)
 {
     ClearHovered();
     if (entity.Valid() && entity.Has<SelectComponent>()) {
@@ -84,7 +84,7 @@ void Selector::SetHovered(Entity entity)
     }
 }
 
-void Selector::SetSelected(Entity entity)
+void Selector::SetSelected(ECS::Entity entity)
 {
     ClearSelected();
     if (entity.Valid() && entity.Has<SelectComponent>()) {
@@ -93,9 +93,9 @@ void Selector::SetSelected(Entity entity)
     }
 }
 
-Entity Selector::GetMousedOver()
+ECS::Entity Selector::GetMousedOver()
 {
-    if (!d_camera.Valid()) { return Entity(); }
+    if (!d_camera.Valid()) { return ECS::Null; }
 
     auto view = MakeView(d_camera);
     auto proj = MakeProj(d_camera);
