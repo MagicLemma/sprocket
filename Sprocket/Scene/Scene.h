@@ -3,6 +3,7 @@
 #include "EntitySystem.h"
 #include "Event.h"
 #include "Maths.h"
+#include "ECS.h"
 
 #include <memory>
 #include <vector>
@@ -20,13 +21,13 @@ struct Sun
 {
     glm::vec3 direction;
     glm::vec3 colour;
-    float       brightness;
+    float     brightness;
 };
 
 struct Ambience
 {
     glm::vec3 colour;
-    float       brightness;
+    float     brightness;
 };
     
 class Scene
@@ -41,10 +42,7 @@ public:
 private:
     std::vector<std::shared_ptr<EntitySystem>> d_systems;
 
-    TypeFunctionMap d_addFunctions;
-    TypeFunctionMap d_removeFunctions;
-
-    entt::registry d_registry;
+    ECS::Registry d_registry;
 
     Sun d_sun;
     Ambience d_ambience;
@@ -92,53 +90,21 @@ public:
 template <typename Component>
 void Scene::Each(EntityCallback lambda)
 {
-    for (auto& entity : d_registry.view<Component>()) {
-        lambda(Entity(&d_registry, entity));   
+    for (Entity e : d_registry.View<Component>()) {
+        lambda(e);   
     }
 }
 
 template <typename T>
 void Scene::OnAdd(EntityCallback func)
 {
-    auto it = d_addFunctions.find(typeid(T));
-    if (it == d_addFunctions.end()) {
-        // Register the signal when we add the first function.
-        d_registry.on_construct<T>().connect<&Scene::OnAddCB<T>>(*this);
-    }
-    d_addFunctions[typeid(T)].push_back(func);
+    d_registry.OnAdd<T>(func);
 }
 
 template <typename T>
 void Scene::OnRemove(EntityCallback func)
 {
-    auto it = d_removeFunctions.find(typeid(T));
-    if (it == d_removeFunctions.end()) {
-        // Register the signal when we add the first function.
-        d_registry.on_destroy<T>().connect<&Scene::OnRemoveCB<T>>(*this);
-    }
-    d_removeFunctions[typeid(T)].push_back(func);
-}
-
-template <typename T>
-void Scene::OnAddCB(entt::registry& r, entt::entity e)
-{
-    auto it = d_addFunctions.find(typeid(T));
-    if (it != d_addFunctions.end()) {
-        for (auto f : it->second) {
-            f(Entity(&r, e));
-        }
-    }
-}
-
-template <typename T>
-void Scene::OnRemoveCB(entt::registry& r, entt::entity e)
-{
-    auto it = d_removeFunctions.find(typeid(T));
-    if (it != d_removeFunctions.end()) {
-        for (auto f : it->second) {
-            f(Entity(&r, e));
-        }
-    }
+    d_registry.OnRemove<T>(func);
 }
 
 }

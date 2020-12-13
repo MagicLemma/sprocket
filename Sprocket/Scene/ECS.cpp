@@ -4,7 +4,6 @@
 #include <algorithm>
 
 namespace Sprocket {
-namespace ECS {
 
 bool Entity::operator==(Entity other) const
 {
@@ -14,6 +13,13 @@ bool Entity::operator==(Entity other) const
 bool Entity::operator!=(Entity other) const
 {
     return !(*this == other);
+}
+
+Entity& Entity::operator=(Entity other)
+{
+    registry = other.registry;
+    id = other.id;
+    return *this;
 }
 
 bool Entity::Valid() const
@@ -26,6 +32,11 @@ void Entity::Delete()
     registry->Delete(this->id);
 }
 
+bool Entity::Null() const
+{
+    return *this == ECS::Null;
+}
+
 u16 Entity::Slot() const
 {
     return ECS::Registry::GetSlot(id);
@@ -35,6 +46,13 @@ u16 Entity::Version() const
 {
     return ECS::Registry::GetVersion(id);
 }
+
+Entity Entity::NewEntity() const
+{
+    return {registry, registry->New()};
+}
+
+namespace ECS {
 
 Registry::Registry()
     : d_next(0)
@@ -88,7 +106,7 @@ bool Registry::Valid(u32 entity) const
 {
     u16 slot = GetSlot(entity);
     u16 version = GetVersion(entity);
-    return entity != ECS::NULL_ID
+    return entity != NULL_ID
         && slot < d_next
         && !d_pool.contains(slot)
         && version == d_version[slot];

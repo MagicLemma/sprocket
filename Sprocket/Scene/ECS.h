@@ -17,18 +17,18 @@
 #include "Log.h"
 
 namespace Sprocket {
-namespace ECS {
 
-class Registry;
+namespace ECS { class Registry; }
 
 static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
 
 struct Entity
 {
-    Registry* const registry;
-    const u32 id;
+    ECS::Registry* registry;
+    u32 id;
 
-    Entity(Registry* r, u32 i) : registry(r), id(i) {}
+    Entity(ECS::Registry* r, u32 i) : registry(r), id(i) {}
+    Entity() : registry(nullptr), id(NULL_ID) {}
 
     bool Valid() const;
     void Delete();
@@ -46,7 +46,16 @@ struct Entity
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
+    Entity& operator=(Entity other);
+
+    // TODO: Remove
+    u32 Id() const { return id; }
+    void Kill() { Delete(); }
+    bool Null() const;
+    Entity NewEntity() const;
 };
+
+namespace ECS {
 
 class Registry
 {
@@ -303,12 +312,14 @@ Entity Registry::ViewType<Comp...>::ViewIterator::operator*()
     return *d_iter;
 }
 
+}
+
 // ENTITY TEMPLATES
 
 template <typename Comp>
 Comp& Entity::Add()
 {
-    Add<Comp>(Comp{});
+    return Add<Comp>(Comp{});
 }
 
 template <typename Comp>
@@ -353,5 +364,4 @@ bool Entity::Has() const
     return registry->Has<Comp>(id);
 }
 
-}
 }
