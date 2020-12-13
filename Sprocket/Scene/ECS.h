@@ -12,6 +12,7 @@
 #include <limits>
 #include <vector>
 #include <cassert>
+#include <any>
 
 namespace Sprocket {
 namespace ECS {
@@ -30,6 +31,7 @@ struct Entity
 
     template <typename Comp> Comp& Add();
     template <typename Comp> Comp& Add(const Comp& component);
+    template <typename Comp, typename... Args> Comp& Emplace(Args&&... args);
     template <typename Comp> void Remove();
     template <typename Comp> Comp& Get();
     template <typename Comp> const Comp& Get() const;
@@ -42,7 +44,6 @@ struct Entity
 class Registry
 {
 public:
-    using Opaque = std::unique_ptr<void, std::function<void(void*)>>;
     using Comparitor = std::function<bool(Entity, Entity)>;
     using EntityCallback = std::function<void(Entity)>;
 
@@ -77,7 +78,7 @@ private:
     struct ComponentData
     {
         // All instances of this component.
-        std::array<Opaque, NUM_ENTITIES> instances;
+        std::array<std::any, NUM_ENTITIES> instances;
 
         // Callbacks triggered whenever a new instance of this component is added. These
         // are called after the component has been added.
@@ -113,6 +114,7 @@ public:
 
     template <typename Comp> Comp& Add(u32 entity);
     template <typename Comp> Comp& Add(u32 entity, const Comp& component);
+    template <typename Comp, typename... Args> Comp& Emplace(u32 entity, Args&&... args);
     template <typename Comp> void Remove(u32 entity);
     template <typename Comp> Comp& Get(u32 entity);
     template <typename Comp> const Comp& Get(u32 entity) const;
@@ -202,19 +204,32 @@ template <typename Comp>
 Comp& Registry::Add(u32 entity, const Comp& component)
 {
     assert(Valid(entity));
-    static constexpr auto Deleter = [](void* data) {
-        if (data) delete static_cast<Comp*>(data);
-    };
 
     Handle handle = entity;
     auto& entry = d_comps[typeid(Comp)].instances[handle.index];
-    entry = Opaque(new Comp(component), Deleter);
+    entry = component;
 
     for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
         cb({this, entity});
     }
 
-    return *static_cast<Comp*>(entry.get());
+    return std::any_cast<Comp&>(entry);
+}
+
+template <typename Comp, typename... Args>
+Comp& Registry::Emplace(u32 entity, Args&&... args)
+{
+    assert(Valid(entity));
+
+    Handle handle = entity;
+    auto& entry = d_comps[typeid(Comp)].instances[handle.index];
+    entry = std::make_any<Comp&>(std::forward<Args>(args)...);
+
+    for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
+        cb({this, entity});
+    }
+
+    return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
@@ -229,8 +244,8 @@ Comp& Registry::Get(u32 entity)
 {
     assert(Valid(entity));
     Handle handle = entity;
-    const auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
-    return *static_cast<Comp*>(entry.get());
+    auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
+    return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
@@ -238,8 +253,8 @@ const Comp& Registry::Get(u32 entity) const
 {
     assert(Valid(entity));
     Handle handle = entity;
-    const auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
-    return *static_cast<Comp*>(entry.get());
+    auto& entry = d_comps.at(typeid(Comp)).instances.at(handle.index);
+    return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
@@ -249,7 +264,7 @@ bool Registry::Has(u32 entity) const
     Handle handle = entity;
     if (auto it = d_comps.find(typeid(Comp)); it != d_comps.end()) {
         const auto& entry = it->second.instances.at(handle.index);
-        return entry != nullptr;
+        return entry.has_value();
     }
     return false;
 }
@@ -307,6 +322,13 @@ Comp& Entity::Add(const Comp& component)
 {
     assert(this->Valid());
     return registry->Add<Comp>(id, component);
+}
+
+template <typename Comp, typename... Args>
+Comp& Entity::Emplace(Args&&... args)
+{
+    assert(this->Valid());
+    return registry->Emplace<Comp>(id, std::forward<Args>(args)...);
 }
 
 template <typename Comp>
