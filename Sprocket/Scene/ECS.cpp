@@ -7,7 +7,7 @@ namespace Sprocket {
 
 bool Entity::operator==(Entity other) const
 {
-    return registry == other.registry && id == other.id;
+    return d_registry == other.d_registry && d_id == other.d_id;
 }
 
 bool Entity::operator!=(Entity other) const
@@ -17,19 +17,19 @@ bool Entity::operator!=(Entity other) const
 
 Entity& Entity::operator=(Entity other)
 {
-    registry = other.registry;
-    id = other.id;
+    d_registry = other.d_registry;
+    d_id = other.d_id;
     return *this;
 }
 
 bool Entity::Valid() const
 {
-     return registry && registry->Valid(id);
+     return d_registry && d_registry->Valid(d_id);
 }
 
 void Entity::Delete() 
 {
-    registry->Delete(this->id);
+    d_registry->Delete(d_id);
 }
 
 bool Entity::Null() const
@@ -37,19 +37,24 @@ bool Entity::Null() const
     return *this == ECS::Null;
 }
 
+u32 Entity::Id() const
+{
+    return d_id;
+}
+
 u16 Entity::Slot() const
 {
-    return ECS::Registry::GetSlot(id);
+    return ECS::Registry::GetSlot(d_id);
 }
 
 u16 Entity::Version() const
 {
-    return ECS::Registry::GetVersion(id);
+    return ECS::Registry::GetVersion(d_id);
 }
 
 Entity Entity::NewEntity() const
 {
-    return {registry, registry->New()};
+    return {d_registry, d_registry->New()};
 }
 
 namespace ECS {

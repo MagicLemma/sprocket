@@ -9,7 +9,7 @@ namespace Sprocket {
 
 class Window;
 class InputProxy;
-struct Entity;
+class Entity;
 
 // Functions for access core global values from a Lua state. These
 // are used for implementing Lua C++ functions and are not callable

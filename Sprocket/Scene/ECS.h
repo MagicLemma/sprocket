@@ -22,13 +22,14 @@ namespace ECS { class Registry; }
 
 static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
 
-struct Entity
+class Entity
 {
-    ECS::Registry* registry;
-    u32 id;
+    ECS::Registry* d_registry;
+    u32            d_id;
 
-    Entity(ECS::Registry* r, u32 i) : registry(r), id(i) {}
-    Entity() : registry(nullptr), id(NULL_ID) {}
+public:
+    Entity(ECS::Registry* r, u32 i) : d_registry(r), d_id(i) {}
+    Entity() : d_registry(nullptr), d_id(NULL_ID) {}
 
     bool Valid() const;
     void Delete();
@@ -41,6 +42,7 @@ struct Entity
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
 
+    u32 Id() const;
     u16 Slot() const;
     u16 Version() const;
 
@@ -49,7 +51,6 @@ struct Entity
     Entity& operator=(Entity other);
 
     // TODO: Remove
-    u32 Id() const { return id; }
     void Kill() { Delete(); }
     bool Null() const;
     Entity NewEntity() const;
@@ -325,43 +326,43 @@ Comp& Entity::Add()
 template <typename Comp>
 Comp& Entity::Add(const Comp& component)
 {
-    assert(this->Valid());
-    return registry->Add<Comp>(id, component);
+    assert(Valid());
+    return d_registry->Add<Comp>(d_id, component);
 }
 
 template <typename Comp, typename... Args>
 Comp& Entity::Emplace(Args&&... args)
 {
-    assert(this->Valid());
-    return registry->Emplace<Comp>(id, std::forward<Args>(args)...);
+    assert(Valid());
+    return d_registry->Emplace<Comp>(id, std::forward<Args>(args)...);
 }
 
 template <typename Comp>
 void Entity::Remove()
 {
-    assert(this->Valid());
-    registry->Remove<Comp>(id);
+    assert(Valid());
+    d_registry->Remove<Comp>(d_id);
 }
 
 template <typename Comp>
 Comp& Entity::Get()
 {
-    assert(this->Valid());
-    return registry->Get<Comp>(id);
+    assert(Valid());
+    return d_registry->Get<Comp>(d_id);
 }
 
 template <typename Comp>
 const Comp& Entity::Get() const
 {
-    assert(this->Valid());
-    return registry->Get<Comp>(id);
+    assert(Valid());
+    return d_registry->Get<Comp>(d_id);
 }
 
 template <typename Comp>
 bool Entity::Has() const
 {
-    assert(this->Valid());
-    return registry->Has<Comp>(id);
+    assert(Valid());
+    return d_registry->Has<Comp>(d_id);
 }
 
 }
