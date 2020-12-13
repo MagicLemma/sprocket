@@ -23,16 +23,21 @@ int main()
     Log::Init();
 
     ECS::Registry reg;
-    auto e1 = reg.New();
-    auto e2 = reg.New();
+    auto e1 = ECS::Entity(&reg, reg.New());
+    auto e2 = ECS::Entity(&reg, reg.New());
 
     NameComponent nc;
     e1.Add(nc);
+    e2.Emplace<NameComponent>();
 
     TransformComponent tc;
     e1.Add(tc);
     e2.Add(tc);
     e2.Emplace<Foo>();
+
+    for (auto e : reg.View<NameComponent, TransformComponent>()) {
+        SPKT_LOG_INFO("LOOP");
+    }
 
     auto& f = e2.Get<Foo>();
     f.x = 3;

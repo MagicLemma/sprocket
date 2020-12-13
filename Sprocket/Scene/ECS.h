@@ -93,8 +93,8 @@ private:
 public:
     Registry();
 
-    Entity New();
-    void Delete(Entity entity);
+    u32 New();
+    void Delete(u32 entity);
 
     std::size_t Size() const;
 

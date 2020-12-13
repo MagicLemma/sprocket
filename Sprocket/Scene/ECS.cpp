@@ -23,7 +23,7 @@ bool Entity::Valid() const
 
 void Entity::Delete() 
 {
-    registry->Delete(*this);
+    registry->Delete(this->id);
 }
 
 u16 Entity::Slot() const
@@ -54,7 +54,7 @@ void Registry::Remove(u32 entity, std::type_index type)
     }
 }
 
-Entity Registry::New()
+u32 Registry::New()
 {
     u16 slot = 0;
     if (auto it = d_pool.begin(); it != d_pool.end()) {
@@ -66,22 +66,22 @@ Entity Registry::New()
         d_entities.push_back(slot);
     }
     u16 version = ++d_version[slot];
-    return {this, GetID(slot, version)};
+    return GetID(slot, version);
 }
 
-void Registry::Delete(Entity entity)
+void Registry::Delete(u32 entity)
 {
     // Clean up all components
     for (auto& [type, data] : d_comps) {
-        Remove(entity.id, type);
+        Remove(entity, type);
     }
 
     // Remove the entity slot from the "alive" list
-    auto it = std::find(d_entities.begin(), d_entities.end(), entity.Slot());
+    auto it = std::find(d_entities.begin(), d_entities.end(), GetSlot(entity));
     d_entities.erase(it);
 
     // Add the entity slot to the pool of available IDs.
-    d_pool.insert(entity.Slot());
+    d_pool.insert(GetSlot(entity));
 }
 
 bool Registry::Valid(u32 entity) const
