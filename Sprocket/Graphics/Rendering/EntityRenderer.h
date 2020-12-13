@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "ECS.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "AssetManager.h"

@@ -1,7 +1,7 @@
 #pragma once
 #include "Shader.h"
 #include "VertexArray.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Scene.h"
 
 namespace Sprocket {

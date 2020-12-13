@@ -19,7 +19,6 @@
 
 // SCENE
 #include "Scene/ECS.h"
-#include "Scene/Entity.h"
 #include "Scene/Camera.h"
 #include "Scene/Components.h"
 #include "Scene/Scene.h"

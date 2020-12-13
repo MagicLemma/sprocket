@@ -2,7 +2,7 @@
 #include "Components.h"
 #include "WindowEvent.h"
 #include "Scene.h"
-#include "Entity.h"
+#include "ECS.h"
 
 namespace Sprocket {
 

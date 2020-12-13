@@ -4,7 +4,7 @@
 #include "MouseEvent.h"
 #include "WindowEvent.h"
 #include "KeyboardEvent.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Window.h"
 
 #include <string>

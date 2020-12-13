@@ -1,6 +1,6 @@
 #include "ScriptRunner.h"
 #include "Log.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Scene.h"
 #include "LuaEngine.h"
 #include "Components.h"

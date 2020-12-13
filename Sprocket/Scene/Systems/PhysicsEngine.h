@@ -1,6 +1,6 @@
 #pragma once
 #include "Maths.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "EntitySystem.h"
 
 #include <unordered_map>

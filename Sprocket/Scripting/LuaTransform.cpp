@@ -1,6 +1,6 @@
 #include "LuaTransform.h"
 #include "LuaGlobals.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Log.h"
 #include "Components.h"
 

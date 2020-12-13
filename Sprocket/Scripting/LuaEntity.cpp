@@ -1,6 +1,6 @@
 #include "LuaEntity.h"
 #include "LuaGlobals.h"
-#include "Entity.h"
+#include "ECS.h"
 
 #include <lua.hpp>
 

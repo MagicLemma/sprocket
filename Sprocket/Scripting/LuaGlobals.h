@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "ECS.h"
 
 #include <unordered_map>
 
@@ -9,7 +9,7 @@ namespace Sprocket {
 
 class Window;
 class InputProxy;
-class Entity;
+struct Entity;
 
 // Functions for access core global values from a Lua state. These
 // are used for implementing Lua C++ functions and are not callable

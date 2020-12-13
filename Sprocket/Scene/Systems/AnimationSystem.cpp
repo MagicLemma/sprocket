@@ -1,6 +1,6 @@
 #include "AnimationSystem.h"
 #include "Components.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Scene.h"
 
 namespace Sprocket {

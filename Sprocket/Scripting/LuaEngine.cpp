@@ -5,7 +5,7 @@
 #include "LuaInput.h"
 #include "LuaComponents.h"
 #include "Log.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Components.h"
 
 #include <lua.hpp>

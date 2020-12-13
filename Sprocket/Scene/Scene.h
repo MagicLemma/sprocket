@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "ECS.h"
 #include "EntitySystem.h"
 #include "Event.h"
 #include "Maths.h"
@@ -12,7 +12,6 @@
 #include <typeinfo>
 #include <unordered_map>
 
-#include <entt/entt.hpp>
 #include <tsl/hopscotch_map.h>
 
 namespace Sprocket {

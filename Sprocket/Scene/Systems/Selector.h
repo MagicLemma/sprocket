@@ -1,7 +1,7 @@
 #pragma once
 #include "EntitySystem.h"
 #include "Window.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "PhysicsEngine.h"
 
 namespace Sprocket {

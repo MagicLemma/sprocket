@@ -18,7 +18,6 @@ find_package(assimp CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
-find_package(EnTT CONFIG REQUIRED)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(tsl-hopscotch-map CONFIG REQUIRED)
@@ -42,7 +41,6 @@ add_library(Sprocket STATIC
             UI/ImGuiXtra.cpp
 
             Scene/ECS.cpp
-            Scene/Entity.cpp
             Scene/Camera.cpp
             Scene/Scene.cpp
             Scene/EntitySystem.cpp
@@ -121,7 +119,6 @@ target_link_libraries(Sprocket PUBLIC
                       imgui::imgui
                       sfml-system
                       sfml-audio
-                      EnTT::EnTT
                       yaml-cpp
                       tsl::hopscotch_map
                       ${LUA_LIBRARIES})
