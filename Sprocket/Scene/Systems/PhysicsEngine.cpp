@@ -55,7 +55,7 @@ rp3d::Transform Convert(const TransformComponent& transform)
 
 class RaycastCB : public rp3d::RaycastCallback
 {
-    Entity d_entity = Entity();
+    Entity d_entity = ECS::Null;
     float d_fraction = 10.0f;
 
 public:
@@ -325,7 +325,7 @@ bool PhysicsEngine::IsOnFloor(Entity entity) const
     rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
     RaycastCB cb;
     d_impl->world.raycast(ray, &cb);
-    return !cb.GetEntity().Null();
+    return cb.GetEntity() != ECS::Null;
 }
 
 }

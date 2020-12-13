@@ -297,7 +297,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                         mousePos,
                         [&](const glm::ivec2& pos) {
                             auto e = d_gameGrid->At(pos.x, pos.y);
-                            return !e.Null();
+                            return e != ECS::Null;
                         }
                     );
                 } else {
@@ -423,7 +423,7 @@ void WorldLayer::OnRender()
 
 
         auto hovered = d_gameGrid->Hovered();
-        if (!hovered.Null()) {
+        if (hovered.Valid()) {
             float width = 200;
             float height = 50;
             float x = std::min(mouse.x - 5, w - width - 10);
@@ -449,7 +449,7 @@ void WorldLayer::OnRender()
         glm::mat4 proj = MakeProj(d_camera);
 
         auto e = d_selector->SelectedEntity();
-        if (!e.Null()) {
+        if (e.Valid()) {
             SelectedEntityInfo(d_devUI, e, view, proj);
         }
 

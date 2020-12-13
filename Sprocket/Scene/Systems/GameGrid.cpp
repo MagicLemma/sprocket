@@ -115,26 +115,26 @@ void GameGrid::OnEvent(Scene& scene, Event& event)
     }
 }
 
-Sprocket::Entity GameGrid::At(int x, int z) const
+Entity GameGrid::At(int x, int z) const
 {
     auto it = d_gridEntities.find({x, z});
     if (it != d_gridEntities.end()) {
         return it->second;
     }
-    return Sprocket::Entity();
+    return ECS::Null;
 }
 
-Sprocket::Entity GameGrid::Hovered() const
+Entity GameGrid::Hovered() const
 {
     return At(d_hovered.x, d_hovered.y);
 }
 
-Sprocket::Entity GameGrid::Selected() const
+Entity GameGrid::Selected() const
 {
     if (d_selected.has_value()) {
         return At(d_selected.value().x, d_selected.value().y);
     }
-    return Sprocket::Entity();
+    return ECS::Null;
 }
 
 }

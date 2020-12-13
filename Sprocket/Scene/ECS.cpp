@@ -32,11 +32,6 @@ void Entity::Delete()
     d_registry->Delete(d_id);
 }
 
-bool Entity::Null() const
-{
-    return *this == ECS::Null;
-}
-
 u32 Entity::Id() const
 {
     return d_id;

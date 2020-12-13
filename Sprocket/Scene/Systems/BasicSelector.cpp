@@ -20,13 +20,13 @@ void BasicSelector::OnStartup(Scene& scene)
 void BasicSelector::SetSelected(Entity entity)
 {
     // First clear the previous
-    if (!d_selectedEntity.Null()) {
+    if (d_selectedEntity.Valid()) {
         d_selectedEntity.Get<SelectComponent>().selected = false;
         d_selectedEntity = Entity();
     }
 
     // Now set the new one if the given entity is valid
-    if (!entity.Null()) {
+    if (entity.Valid()) {
         if (!entity.Has<SelectComponent>()) {
             SPKT_LOG_WARN("Attempted to select entity with no SelectComponent");
         }

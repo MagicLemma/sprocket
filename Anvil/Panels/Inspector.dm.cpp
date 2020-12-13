@@ -6,6 +6,7 @@
 #include "DevUI.h"
 
 #include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Sprocket {
 namespace {
@@ -39,7 +40,7 @@ void Inspector::Show(Anvil& editor)
 {
     Entity entity = editor.Selected();
 
-    if (editor.Selected().Null()) {
+    if (!editor.Selected().Valid()) {
         if (ImGui::Button("New Entity")) {
             auto e = editor.GetScene()->NewEntity();
             editor.SetSelected(e);

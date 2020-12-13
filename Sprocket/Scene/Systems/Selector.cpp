@@ -61,26 +61,24 @@ void Selector::Enable(bool newEnabled)
 
 void Selector::ClearHovered()
 {
-    if (!d_hoveredEntity.Null()) {
+    if (d_hoveredEntity.Valid()) {
         d_hoveredEntity.Get<SelectComponent>().hovered = false;
-        d_hoveredEntity = Entity();
     }
+    d_hoveredEntity = ECS::Null;
 }
 
 void Selector::ClearSelected()
 {
-    if (!d_selectedEntity.Null()) {
+    if (d_selectedEntity.Valid()) {
         d_selectedEntity.Get<SelectComponent>().selected = false;
-        d_selectedEntity = Entity();
     }
+    d_selectedEntity = ECS::Null;
 }
 
 void Selector::SetHovered(Entity entity)
 {
     ClearHovered();
-    if (entity.Null()) { return; }
-
-    if (entity.Has<SelectComponent>()) {
+    if (entity.Valid() && entity.Has<SelectComponent>()) {
         d_hoveredEntity = entity;
         d_hoveredEntity.Get<SelectComponent>().hovered = true;
     }
@@ -89,7 +87,7 @@ void Selector::SetHovered(Entity entity)
 void Selector::SetSelected(Entity entity)
 {
     ClearSelected();
-    if (!entity.Null() && entity.Has<SelectComponent>()) {
+    if (entity.Valid() && entity.Has<SelectComponent>()) {
         d_selectedEntity = entity;
         d_selectedEntity.Get<SelectComponent>().selected = true;
     }
@@ -97,7 +95,7 @@ void Selector::SetSelected(Entity entity)
 
 Entity Selector::GetMousedOver()
 {
-    if (d_camera.Null()) { return Entity(); }
+    if (!d_camera.Valid()) { return Entity(); }
 
     auto view = MakeView(d_camera);
     auto proj = MakeProj(d_camera);
