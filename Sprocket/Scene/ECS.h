@@ -21,6 +21,8 @@ namespace ECS {
 
 class Registry;
 
+static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
+
 struct Entity
 {
     Registry* const registry;
@@ -39,7 +41,7 @@ struct Entity
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
 
-    u16 Index() const;
+    u16 Slot() const;
     u16 Version() const;
 
     bool operator==(Entity other) const;
@@ -115,8 +117,8 @@ public:
     template <typename Comp> const Comp& Get(u32 entity) const;
     template <typename Comp> bool Has(u32 entity) const;
 
-    static u32 GetID(u16 index, u16 version);
-    static u16 GetIndex(u32 id);
+    static u32 GetID(u16 slot, u16 version);
+    static u16 GetSlot(u32 id);
     static u16 GetVersion(u32 id);
 
     // Iteration
@@ -172,7 +174,7 @@ public:
 };
 
 // An "empty" entity.
-static const Entity Null(nullptr, std::numeric_limits<u32>::max());
+static const Entity Null(nullptr, NULL_ID);
 
 // ==============================================================
 //                      TEMPLATE DEFINITIONS
@@ -203,7 +205,7 @@ template <typename Comp>
 Comp& Registry::Add(u32 entity, const Comp& component)
 {
     assert(Valid(entity));
-    auto& entry = d_comps[typeid(Comp)].instances[GetIndex(entity)];
+    auto& entry = d_comps[typeid(Comp)].instances[GetSlot(entity)];
     entry = component;
 
     for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
@@ -217,7 +219,7 @@ template <typename Comp, typename... Args>
 Comp& Registry::Emplace(u32 entity, Args&&... args)
 {
     assert(Valid(entity));
-    auto& entry = d_comps[typeid(Comp)].instances[GetIndex(entity)];
+    auto& entry = d_comps[typeid(Comp)].instances[GetSlot(entity)];
     entry = std::make_any<Comp&>(std::forward<Args>(args)...);
 
     for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
@@ -238,7 +240,7 @@ template <typename Comp>
 Comp& Registry::Get(u32 entity)
 {
     assert(Valid(entity));
-    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetIndex(entity));
+    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetSlot(entity));
     return std::any_cast<Comp&>(entry);
 }
 
@@ -246,7 +248,7 @@ template <typename Comp>
 const Comp& Registry::Get(u32 entity) const
 {
     assert(Valid(entity));
-    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetIndex(entity));
+    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetSlot(entity));
     return std::any_cast<Comp&>(entry);
 }
 
@@ -255,7 +257,7 @@ bool Registry::Has(u32 entity) const
 {
     assert(Valid(entity));
     if (auto it = d_comps.find(typeid(Comp)); it != d_comps.end()) {
-        const auto& entry = it->second.instances.at(GetIndex(entity));
+        const auto& entry = it->second.instances.at(GetSlot(entity));
         return entry.has_value();
     }
     return false;

@@ -1,6 +1,5 @@
 #include "ECS.h"
 #include "Components.h"
-#include "Log.h"
 
 #include <algorithm>
 
@@ -27,9 +26,9 @@ void Entity::Delete()
     registry->Delete(*this);
 }
 
-u16 Entity::Index() const
+u16 Entity::Slot() const
 {
-    return ECS::Registry::GetIndex(id);
+    return ECS::Registry::GetSlot(id);
 }
 
 u16 Entity::Version() const
@@ -50,25 +49,24 @@ void Registry::Remove(u32 entity, std::type_index type)
     }
 
     if (auto it = d_comps.find(type); it != d_comps.end()) {
-        auto& entry = it->second.instances.at(GetIndex(entity));
+        auto& entry = it->second.instances.at(GetSlot(entity));
         entry.reset();
     }
 }
 
 Entity Registry::New()
 {
-    u16 index = 0;
+    u16 slot = 0;
     if (auto it = d_pool.begin(); it != d_pool.end()) {
-        index = *it;
+        slot = *it;
         d_pool.erase(it);
     }
     else {
-        index = d_next++;
-        d_entities.push_back(index);
+        slot = d_next++;
+        d_entities.push_back(slot);
     }
-    u16 version = ++d_version[index];
-    SPKT_LOG_INFO("Make version {} for {}", version, index);
-    return {this, GetID(index, version)};
+    u16 version = ++d_version[slot];
+    return {this, GetID(slot, version)};
 }
 
 void Registry::Delete(Entity entity)
@@ -78,22 +76,22 @@ void Registry::Delete(Entity entity)
         Remove(entity.id, type);
     }
 
-    // Remove the entity index from the "alive" list
-    auto it = std::find(d_entities.begin(), d_entities.end(), entity.Index());
+    // Remove the entity slot from the "alive" list
+    auto it = std::find(d_entities.begin(), d_entities.end(), entity.Slot());
     d_entities.erase(it);
 
-    // Add the entity index to the pool of available IDs.
-    d_pool.insert(entity.Index());
+    // Add the entity slot to the pool of available IDs.
+    d_pool.insert(entity.Slot());
 }
 
 bool Registry::Valid(u32 entity) const
 {
-    u16 index = GetIndex(entity);
+    u16 slot = GetSlot(entity);
     u16 version = GetVersion(entity);
-    return entity != ECS::Null.id
-        && index < d_next
-        && !d_pool.contains(index)
-        && version == d_version[index];
+    return entity != ECS::NULL_ID
+        && slot < d_next
+        && !d_pool.contains(slot)
+        && version == d_version[slot];
 }
 
 void Registry::Sort(const Comparitor& compare)
@@ -117,7 +115,7 @@ u32 Registry::GetID(u16 index, u16 version)
     return (u32)version << 16 | index;
 }
 
-u16 Registry::GetIndex(u32 id)
+u16 Registry::GetSlot(u32 id)
 {
     return static_cast<u16>(id);
 }
