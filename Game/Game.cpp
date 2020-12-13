@@ -86,7 +86,7 @@ void SelectedEntityInfo(DevUI& ui,
     ImGui::Separator();
 
     if (ImGui::Button("Delete Entity")) {
-        entity.Kill();
+        entity.Delete();
     }
 
     ImGui::End();
@@ -390,32 +390,32 @@ void WorldLayer::OnRender()
                 
             auto pos = d_gameGrid->SelectedPosition().value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddTree(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddRock(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddIron(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddTin(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddMithril(pos);
             }
 
             if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                selected.Kill();
+                selected.Delete();
             }
 
             d_hoveredEntityUI.EndPanel();

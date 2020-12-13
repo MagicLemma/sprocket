@@ -51,7 +51,6 @@ public:
     Entity& operator=(Entity other);
 
     // TODO: Remove
-    void Kill() { Delete(); }
     bool Null() const;
     Entity NewEntity() const;
 };

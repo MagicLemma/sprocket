@@ -70,7 +70,7 @@ void Runtime::OnUpdate(double dt)
     d_scene->Each<TransformComponent>([&](Entity& entity) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
-            entity.Kill();
+            entity.Delete();
         }
     });
 }

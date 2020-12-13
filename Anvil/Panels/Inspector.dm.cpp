@@ -83,7 +83,7 @@ void Inspector::Show(Anvil& editor)
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
-        entity.Kill();
+        entity.Delete();
         editor.ClearSelected();
     }
 }
