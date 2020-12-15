@@ -46,9 +46,6 @@ private:
     Sun d_sun;
     Ambience d_ambience;
 
-    template <typename T> void OnAddCB(entt::registry& r, entt::entity e);
-    template <typename T> void OnRemoveCB(entt::registry& r, entt::entity e);
-
 public:
     Scene();
     ~Scene();

@@ -230,8 +230,8 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
         }
     });
 
-    assert(!d_worker.Null());
-    assert(!d_camera.Null());
+    assert(d_worker != ECS::Null);
+    assert(d_camera != ECS::Null);
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
