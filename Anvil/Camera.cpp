@@ -6,7 +6,7 @@ namespace Sprocket {
 
 Camera::Camera(Window* window, const glm::vec3& target)
     : d_window(window)
-    , d_position({d_distance, d_absMin, 0.0})
+    , d_position()
     , d_target(target)
     , d_yaw(0.0f)
     , d_distance(8.0f)

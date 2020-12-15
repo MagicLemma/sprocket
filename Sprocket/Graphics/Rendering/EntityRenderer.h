@@ -12,6 +12,7 @@ namespace Sprocket {
 
 class EntityRenderer
 {
+public:
     // PBR Texture Slots
     static constexpr int ALBEDO_SLOT = 0;
     static constexpr int NORMAL_SLOT = 1;
@@ -24,6 +25,7 @@ class EntityRenderer
     // Animation Data
     static constexpr int MAX_BONES = 50;
 
+private:
     AssetManager*    d_assetManager;
     ParticleManager* d_particleManager;
 

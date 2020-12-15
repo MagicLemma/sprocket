@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "ShadowMap.h"
 #include "Types.h"
+#include "HashPair.h"
 
 #include <glad/glad.h>
 #include <cmath>
@@ -29,7 +30,8 @@ void UploadUniforms(
     const Shader& shader,
     const glm::mat4& proj,
     const glm::mat4& view,
-    Scene& scene)
+    Scene& scene
+)
 {
     u32 MAX_NUM_LIGHTS = 5;
     shader.Bind();
@@ -65,6 +67,27 @@ void UploadUniforms(
         shader.LoadFloat(ArrayName("u_light_brightness", i), 0.0f);
         ++i;
     }
+}
+
+void UploadMaterial(
+    const Shader& shader,
+    const std::shared_ptr<Material>& material,
+    AssetManager* assetManager
+)
+{
+    assetManager->GetTexture(material->albedoMap)->Bind(EntityRenderer::ALBEDO_SLOT);
+    assetManager->GetTexture(material->normalMap)->Bind(EntityRenderer::NORMAL_SLOT);
+    assetManager->GetTexture(material->metallicMap)->Bind(EntityRenderer::METALLIC_SLOT);
+    assetManager->GetTexture(material->roughnessMap)->Bind(EntityRenderer::ROUGHNESS_SLOT);
+
+    shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
+    shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
+    shader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
+    shader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
+
+    shader.LoadVec3("u_albedo", material->albedo);
+    shader.LoadFloat("u_roughness", material->roughness);
+    shader.LoadFloat("u_metallic", material->metallic);
 }
 
 }
@@ -119,25 +142,8 @@ void EntityRenderer::Draw(
     UploadUniforms(d_staticShader, proj, view, scene);
     UploadUniforms(d_animatedShader, proj, view, scene);
 
-    std::string currentMesh = "INVALID";
-    std::string currentMaterial = "INVALID";
-    // These are set initially to INVALID as that is not a valid file path.
-    // They cannot be set to "" as this returns the "default" materials,
-    // which causes errors when drawing in some cases. TODO: Find out why,
-    // it has something to do with the way ImGui renders things, as the
-    // visual errors don't appear when the viewport is not selected, or when
-    // the Guizmo is on screen. It is probably writing to the default texture
-    // which remains bound. We should fix this properly, as this "fix" causes
-    // an extra pointless draw call at the beginning of each frame.
+    std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
 
-    bool first = true;
-    // TODO: Try and remove this flag.
-    // On the very first entity, we set both the currentModel and the
-    // currentMaterial, so it would issue a draw call. This would lead to a
-    // seg fault as no mesh or material would be set. This is a latent bug;
-    // it was being masked by a previous model still being loaded, and was
-    // revealed when moving skybox loading code.
-    
     d_staticShader.Bind();
     scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
@@ -145,51 +151,20 @@ void EntityRenderer::Draw(
         if (mc.mesh.empty()) { return; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
         if (mesh->IsAnimated()) { return; }
-
-        bool changedMesh = mc.mesh != currentMesh;
-        bool changedMaterial = mc.material != currentMaterial;
-
-        if (changedMesh || changedMaterial) {
-            if (!first) {
-                d_instanceBuffer->SetData(d_instanceData);
-                d_vao->SetInstances(d_instanceBuffer);
-                d_vao->Draw();
-                d_instanceData.clear();
-            }
-            first = false;
-        }
-
-        if (changedMesh) {
-            d_vao->SetModel(mesh);
-            currentMesh = mc.mesh;
-        }
-
-        if (changedMaterial) {
-            auto material = d_assetManager->GetMaterial(mc.material);
-            currentMaterial = mc.material;
-
-            d_assetManager->GetTexture(material->albedoMap)->Bind(ALBEDO_SLOT);
-            d_assetManager->GetTexture(material->normalMap)->Bind(NORMAL_SLOT);
-            d_assetManager->GetTexture(material->metallicMap)->Bind(METALLIC_SLOT);
-            d_assetManager->GetTexture(material->roughnessMap)->Bind(ROUGHNESS_SLOT);
-
-            d_staticShader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
-            d_staticShader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
-            d_staticShader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
-            d_staticShader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
-
-            d_staticShader.LoadVec3("u_albedo", material->albedo);
-            d_staticShader.LoadFloat("u_roughness", material->roughness);
-            d_staticShader.LoadFloat("u_metallic", material->metallic);
-        }
-
-        d_instanceData.push_back({ tc.position, tc.orientation, tc.scale });
+        commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
     });
 
-    d_instanceBuffer->SetData(d_instanceData);
-    d_vao->SetInstances(d_instanceBuffer);
-    d_vao->Draw();
-    d_instanceData.clear();
+    for (const auto& [key, data] : commands) {
+        auto mesh = d_assetManager->GetMesh(key.first);
+        auto material = d_assetManager->GetMaterial(key.second);
+        if (!mesh || !material) { continue; }
+
+        UploadMaterial(d_staticShader, material, d_assetManager);
+        d_vao->SetModel(mesh);
+        d_instanceBuffer->SetData(data);
+        d_vao->SetInstances(d_instanceBuffer);
+        d_vao->Draw();
+    }
 
     if (d_particleManager != nullptr) {
         // TODO: Un-hardcode this, do when cleaning up the rendering.
@@ -207,19 +182,7 @@ void EntityRenderer::Draw(
         if (!mesh->IsAnimated()) { return; }
 
         auto material = d_assetManager->GetMaterial(mc.material);
-        d_assetManager->GetTexture(material->albedoMap)->Bind(ALBEDO_SLOT);
-        d_assetManager->GetTexture(material->normalMap)->Bind(NORMAL_SLOT);
-        d_assetManager->GetTexture(material->metallicMap)->Bind(METALLIC_SLOT);
-        d_assetManager->GetTexture(material->roughnessMap)->Bind(ROUGHNESS_SLOT);
-
-        d_animatedShader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
-        d_animatedShader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
-        d_animatedShader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
-        d_animatedShader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
-
-        d_animatedShader.LoadVec3("u_albedo", material->albedo);
-        d_animatedShader.LoadFloat("u_roughness", material->roughness);
-        d_animatedShader.LoadFloat("u_metallic", material->metallic);
+        UploadMaterial(d_animatedShader, material, d_assetManager);
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
