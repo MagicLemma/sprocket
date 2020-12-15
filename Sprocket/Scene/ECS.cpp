@@ -80,8 +80,8 @@ u32 Registry::New()
     }
     else {
         slot = d_next++;
-        d_entities.push_back(slot);
     }
+    d_entities[slot] = true;
     u16 version = ++d_version[slot];
     return GetID(slot, version);
 }
@@ -94,8 +94,7 @@ void Registry::Delete(u32 entity)
     }
 
     // Remove the entity slot from the "alive" list
-    auto it = std::find(d_entities.begin(), d_entities.end(), GetSlot(entity));
-    d_entities.erase(it);
+    d_entities[GetSlot(entity)] = false;
 
     // Add the entity slot to the pool of available IDs.
     d_pool.insert(GetSlot(entity));
@@ -109,17 +108,6 @@ bool Registry::Valid(u32 entity) const
         && slot < d_next
         && !d_pool.contains(slot)
         && version == d_version[slot];
-}
-
-void Registry::Sort(const Comparitor& compare)
-{
-    const auto c = [&](u16 a, u16 b) {
-        return compare(
-            {this, GetID(a, d_version[a])},
-            {this, GetID(b, d_version[b])}
-        );
-    };
-    std::sort(d_entities.begin(), d_entities.end(), c);
 }
 
 std::size_t Registry::Size() const
@@ -144,20 +132,22 @@ u16 Registry::GetVersion(u32 id)
 
 Registry::Iterator& Registry::Iterator::operator++()
 {
-    ++d_dequeIndex;
+    ++d_index;
+
+    // Iterate up to the next alive entity
+    while (d_index != d_reg->d_next && d_reg->d_entities[d_index] == false) ++d_index;
+
     return *this;
 }
 
 Entity Registry::Iterator::operator*()
 {
-    u16 index = d_reg->d_entities[d_dequeIndex];
-    u16 version = d_reg->d_version[index];
-    return {d_reg, GetID(index, version)};
+    return {d_reg, GetID(d_index, d_reg->d_version[d_index])};
 }
 
 bool Registry::Iterator::operator==(const Iterator& other) const
 {
-    return d_reg == other.d_reg && d_dequeIndex == other.d_dequeIndex;
+    return d_reg == other.d_reg && d_index == other.d_index;
 }
 
 bool Registry::Iterator::operator!=(const Iterator& other) const

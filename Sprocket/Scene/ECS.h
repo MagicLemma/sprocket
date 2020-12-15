@@ -58,7 +58,6 @@ public:
 class Registry
 {
 public:
-    using Comparitor = std::function<bool(Entity, Entity)>;
     using EntityCallback = std::function<void(Entity)>;
 
 private:
@@ -76,7 +75,7 @@ private:
     std::array<u16, NUM_ENTITIES> d_version;
 
     // This deque contains the currently alive entities. This is used for iteration.
-    std::deque<u16> d_entities;
+    std::array<bool, NUM_ENTITIES> d_entities;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -105,9 +104,6 @@ public:
 
     std::size_t Size() const;
 
-    void Sort(const Comparitor& compare);
-    template <typename Comp> void Sort(const Comparitor& compare);
-
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
@@ -132,10 +128,12 @@ public:
     class Iterator
     {
         Registry*   d_reg;
-        std::size_t d_dequeIndex;
+        std::size_t d_index;
 
     public:
-        Iterator(Registry* reg, std::size_t index) : d_reg(reg), d_dequeIndex(index) {}
+        Iterator(Registry* reg, std::size_t index) : d_reg(reg), d_index(index) {
+            while (!d_reg->d_entities[d_index] && d_index < d_reg->d_next) ++d_index;
+        }
         Iterator& operator++();
         bool operator==(const Iterator& other) const;
         bool operator!=(const Iterator& other) const;
@@ -143,7 +141,7 @@ public:
     };
 
     Iterator begin() { return Iterator(this, 0); }
-    Iterator end() { return Iterator(this, d_entities.size()); }
+    Iterator end() { return Iterator(this, d_next); }
 
     // Views
     template <typename... Comp> class ViewType
@@ -188,19 +186,6 @@ static const Entity Null(nullptr, NULL_ID);
 // ==============================================================
 
 // REGISTRY TEMPLATES
-
-template <typename Comp>
-void Registry::Sort(const Comparitor& compare)
-{
-    Sort([&](Entity a, Entity b) {
-        bool ac = a.Has<Comp>();
-        bool bc = b.Has<Comp>();
-        if (ac && bc) {
-            return compare(a, b);
-        }
-        return ac; // Comp will shift to the front.
-    });
-}
 
 template <typename Comp>
 Comp& Registry::Add(u32 entity)
