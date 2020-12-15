@@ -64,17 +64,16 @@ private:
 
     static constexpr std::size_t NUM_ENTITIES = std::numeric_limits<u16>::max();
 
-    // When an entity is removed, their ID is added to the pool so that it can be reused.
+    // When an entity is removed, their slot is added to the pool so that it can be reused.
     std::queue<u16> d_pool;
 
-    // If the pool of IDs is empty, then the next entity will use this variable as their ID.
+    // If the pool of slots is empty, then the next entity will use this variable as their slot.
     u16 d_next;
 
-    // We also keep track of the number of times an entity ID has been used. This is used to
-    // check if a Entity handle is still valid. If the entity
+    // We also keep track of the number of times a slot has been used for validity checks.
     std::array<u16, NUM_ENTITIES> d_version;
 
-    // This deque contains the currently alive entities. This is used for iteration.
+    // Values are true for alive entities and false otherwise.
     std::array<bool, NUM_ENTITIES> d_entities;
 
     // Store of all components for all entities. The type of the components are erased.
