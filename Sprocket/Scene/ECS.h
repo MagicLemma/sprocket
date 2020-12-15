@@ -6,7 +6,7 @@
 #include <typeinfo>
 #include <array>
 #include <memory>
-#include <unordered_set>
+#include <queue>
 #include <functional>
 #include <deque>
 #include <limits>
@@ -65,7 +65,7 @@ private:
     static constexpr std::size_t NUM_ENTITIES = std::numeric_limits<u16>::max();
 
     // When an entity is removed, their ID is added to the pool so that it can be reused.
-    std::unordered_set<u16> d_pool;
+    std::queue<u16> d_pool;
 
     // If the pool of IDs is empty, then the next entity will use this variable as their ID.
     u16 d_next;

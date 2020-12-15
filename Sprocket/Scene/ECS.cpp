@@ -73,15 +73,18 @@ void Registry::Remove(u32 entity, std::type_index type)
 
 u32 Registry::New()
 {
+    // First get a slot for the entity to use. If there are any slots in the pool
+    // from dead entities, make use of that. Otherwise, get the next available.
     u16 slot = 0;
-    if (auto it = d_pool.begin(); it != d_pool.end()) {
-        slot = *it;
-        d_pool.erase(it);
-    }
-    else {
+    if (!d_pool.empty()) {
+        slot = d_pool.front();
+        d_pool.pop();
+    } else {
         slot = d_next++;
     }
-    d_entities[slot] = true;
+    d_entities[slot] = true; // Reserve the new slot for this entity.
+
+    // Bump the version of this slot.
     u16 version = ++d_version[slot];
     return GetID(slot, version);
 }
@@ -93,11 +96,11 @@ void Registry::Delete(u32 entity)
         Remove(entity, type);
     }
 
-    // Remove the entity slot from the "alive" list
+    // Mark this entities slot as available.
     d_entities[GetSlot(entity)] = false;
 
     // Add the entity slot to the pool of available IDs.
-    d_pool.insert(GetSlot(entity));
+    d_pool.push(GetSlot(entity));
 }
 
 bool Registry::Valid(u32 entity) const
@@ -105,9 +108,8 @@ bool Registry::Valid(u32 entity) const
     u16 slot = GetSlot(entity);
     u16 version = GetVersion(entity);
     return entity != NULL_ID
-        && slot < d_next
-        && !d_pool.contains(slot)
-        && version == d_version[slot];
+        && d_entities[slot] == true
+        && d_version[slot] == version;
 }
 
 std::size_t Registry::Size() const

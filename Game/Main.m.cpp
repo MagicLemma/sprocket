@@ -15,18 +15,10 @@ int main()
     ECS::Registry reg;
 
     auto e1 = reg.New();
-    reg.Emplace<NameComponent>(e1);
+    reg.Delete(e1);
     auto e2 = reg.New();
-    auto e3 = reg.New();
 
-    for (auto e : reg) {
-        SPKT_LOG_INFO("LOOP");
-        if (e.Has<NameComponent>()) {
-            e.Delete();
-        }
-    }
-
-    for (auto e : reg) {
-        SPKT_LOG_INFO("LOOP 2");
-    }
+    SPKT_LOG_INFO("Slots    {} {}", reg.GetSlot(e1), reg.GetSlot(e2));
+    SPKT_LOG_INFO("Versions {} {}", reg.GetVersion(e1), reg.GetVersion(e2));
+    SPKT_LOG_INFO("Valid?   {} {}", reg.Valid(e1), reg.Valid(e2));
 }
