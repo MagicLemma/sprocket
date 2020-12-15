@@ -40,14 +40,6 @@ void Scene::OnStartup()
 
 void Scene::OnUpdate(double dt)
 {
-    d_sinceLastSort += dt;
-    if (d_sinceLastSort > 5.0) {
-        d_registry.sort<ModelComponent>([](const auto& lhs, const auto& rhs) {
-            return lhs.mesh < rhs.mesh || (lhs.mesh == rhs.mesh && lhs.material < rhs.material);
-        });
-        d_sinceLastSort -= 5.0f;
-    }
-
     for (auto system : d_systems) {
         system->OnUpdate(*this, dt);
     }
