@@ -81,6 +81,12 @@
         "valarray": "cpp",
         "fft": "cpp",
         "*.rh": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "core": "cpp",
+        "*.evaluator": "cpp",
+        "*.expression": "cpp",
+        "alignedvector3": "cpp",
+        "bvh": "cpp",
+        "mprealsupport": "cpp"
     }
 }

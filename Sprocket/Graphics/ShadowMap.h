@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "Window.h"
 
-#include "Entity.h"
+#include "ECS.h"
 #include "DepthBuffer.h"
 #include "AssetManager.h"
 #include "Scene.h"

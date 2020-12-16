@@ -4,7 +4,7 @@
 #include "MouseEvent.h"
 #include "WindowEvent.h"
 #include "KeyboardEvent.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Window.h"
 
 #include <string>
@@ -18,7 +18,7 @@ class LuaEngine
 {
     lua_State* d_L;
 
-    Entity d_entity;
+    ECS::Entity d_entity;
 
 public:
     LuaEngine();
@@ -50,7 +50,7 @@ public:
     void CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e);
 
     // Setters
-    void SetEntity(const Entity& e);
+    void SetEntity(const ECS::Entity& e);
     void SetWindow(Window* w);
     void SetInput(InputProxy* ip);
 

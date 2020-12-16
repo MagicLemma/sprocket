@@ -15,10 +15,9 @@ Scene::~Scene()
     SPKT_LOG_INFO("Deleting scene");
 }
 
-Entity Scene::NewEntity()
+ECS::Entity Scene::NewEntity()
 {
-    auto e = d_registry.create();
-    return Entity(&d_registry, e);
+    return ECS::Entity{&d_registry, d_registry.New()};
 }
 
 void Scene::AddSystem(std::shared_ptr<EntitySystem> system)
@@ -54,23 +53,23 @@ void Scene::OnEvent(Event& event)
 
 std::size_t Scene::Size() const
 {
-    return d_registry.alive();
+    return d_registry.Size();
 }
 
 void Scene::All(EntityCallback func)
 {
-    d_registry.each([&](auto entity) {
-        func(Entity(&d_registry, entity));
-    });
+    for (ECS::Entity e : d_registry) {
+        func(e);
+    }
 }
 
 void Scene::Clear()
 {
-    d_registry.each([&](auto entity) {
-        if (!d_registry.has<TemporaryComponent>(entity)) {
-            d_registry.destroy(entity);
+    for (ECS::Entity e : d_registry) {
+        if (e.Has<TemporaryComponent>()) {
+            e.Delete();
         }
-    });
+    }
 }
 
 }

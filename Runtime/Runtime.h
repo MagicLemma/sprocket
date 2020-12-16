@@ -19,7 +19,7 @@ class Runtime
     // Scene
     Sprocket::CubeMap d_skybox;
     std::shared_ptr<Sprocket::Scene> d_scene;
-    Sprocket::Entity d_runtimeCamera;
+    Sprocket::ECS::Entity d_runtimeCamera;
 
     // Console
     Sprocket::Console d_console;

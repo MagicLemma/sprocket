@@ -26,8 +26,8 @@ class WorldLayer
     
     std::shared_ptr<Sprocket::Scene> d_scene;
 
-    Sprocket::Entity d_camera;
-    Sprocket::Entity d_worker;
+    Sprocket::ECS::Entity d_camera;
+    Sprocket::ECS::Entity d_worker;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;

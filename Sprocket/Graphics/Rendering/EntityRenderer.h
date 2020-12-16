@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "ECS.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "AssetManager.h"
@@ -40,7 +40,7 @@ private:
 public:
     EntityRenderer(AssetManager* assetManager);
 
-    void Draw(const Entity& camera, Scene& scene);
+    void Draw(const ECS::Entity& camera, Scene& scene);
     void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);
 
     void EnableShadows(const ShadowMap& shadowMap);

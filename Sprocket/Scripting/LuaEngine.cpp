@@ -5,7 +5,7 @@
 #include "LuaInput.h"
 #include "LuaComponents.h"
 #include "Log.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Components.h"
 
 #include <lua.hpp>
@@ -23,7 +23,7 @@ void DoFile(lua_State* L, const char* file)
 
 void PrintErrors(lua_State* L, int rc)
 {
-    Entity* e = GetEntity(L);
+    ECS::Entity* e = GetEntity(L);
 
     std::string name = "Unnamed";
     if (e->Has<NameComponent>()) {
@@ -385,7 +385,7 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
-void LuaEngine::SetEntity(const Entity& e)
+void LuaEngine::SetEntity(const ECS::Entity& e)
 {
     d_entity = e;
     lua_pushlightuserdata(d_L, (void*)&d_entity);

@@ -34,6 +34,7 @@ class Buffer
 
 public:
     Buffer(const BufferLayout& layout, const BufferUsage& usage);
+    // TODO Add destructor to clean up GL resources
 
     void Bind() const;
     std::size_t Size() const { return d_instanceCount; }

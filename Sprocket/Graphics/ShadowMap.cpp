@@ -53,7 +53,7 @@ void ShadowMap::Draw(
     glCullFace(GL_FRONT);
 
     std::string currentModel;
-    scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    scene.Each<ModelComponent>([&](ECS::Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { return; }

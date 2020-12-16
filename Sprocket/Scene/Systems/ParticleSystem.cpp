@@ -11,7 +11,7 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 
 void ParticleSystem::OnUpdate(Scene& scene, double dt)
 {
-    scene.Each<TransformComponent, ParticleComponent>([&](Entity& entity) {
+    scene.Each<ParticleComponent>([&](ECS::Entity& entity) {
         auto& tc = entity.Get<TransformComponent>();
         auto& pc = entity.Get<ParticleComponent>();
 

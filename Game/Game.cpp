@@ -10,7 +10,7 @@ using namespace Sprocket;
 
 namespace {
 
-std::string EntityName(Entity& entity)
+std::string EntityName(ECS::Entity& entity)
 {
     if (entity.Has<NameComponent>()) {
         return entity.Get<NameComponent>().name;
@@ -18,7 +18,7 @@ std::string EntityName(Entity& entity)
     return "Unnamed";
 }
 
-void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
+void AddEntityToList(DevUI& ui, BasicSelector& selector, ECS::Entity& entity)
 {
     ImGui::PushID(entity.Id());
     if (ImGui::TreeNode(EntityName(entity).c_str())) {
@@ -32,7 +32,7 @@ void AddEntityToList(DevUI& ui, BasicSelector& selector, Entity& entity)
 }
 
 void SelectedEntityInfo(DevUI& ui,
-                        Entity& entity,
+                        ECS::Entity& entity,
                         const glm::mat4& view,
                         const glm::mat4& proj)
 {
@@ -86,7 +86,7 @@ void SelectedEntityInfo(DevUI& ui,
     ImGui::Separator();
 
     if (ImGui::Button("Delete Entity")) {
-        entity.Kill();
+        entity.Delete();
     }
 
     ImGui::End();
@@ -213,13 +213,13 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
 {
     using namespace Sprocket;
 
-    d_selector->SetSelected(Entity());
+    d_selector->SetSelected(ECS::Null);
     d_paused = false;
 
     d_sceneFile = sceneFile;
     Loader::Load(sceneFile, d_scene);
 
-    d_scene->Each<NameComponent>([&](Entity& entity) {
+    d_scene->Each<NameComponent>([&](ECS::Entity& entity) {
         const auto& name = entity.Get<NameComponent>();
         if (name.name == "Worker") {
             d_worker = entity;
@@ -230,8 +230,8 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
         }
     });
 
-    assert(!d_worker.Null());
-    assert(!d_camera.Null());
+    assert(d_worker != ECS::Null);
+    assert(d_camera != ECS::Null);
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -257,7 +257,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
         if (!event.IsConsumed()) {
             if (auto e = event.As<MouseButtonPressedEvent>()) {
-                d_selector->SetSelected(Entity());
+                d_selector->SetSelected(ECS::Null);
                 // TODO: Do we want to consume this event here?
             }
         }
@@ -297,7 +297,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                         mousePos,
                         [&](const glm::ivec2& pos) {
                             auto e = d_gameGrid->At(pos.x, pos.y);
-                            return !e.Null();
+                            return e != ECS::Null;
                         }
                     );
                 } else {
@@ -390,32 +390,32 @@ void WorldLayer::OnRender()
                 
             auto pos = d_gameGrid->SelectedPosition().value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddTree(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddRock(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddIron(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddTin(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                selected.Kill();
+                selected.Delete();
                 AddMithril(pos);
             }
 
             if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                selected.Kill();
+                selected.Delete();
             }
 
             d_hoveredEntityUI.EndPanel();
@@ -423,7 +423,7 @@ void WorldLayer::OnRender()
 
 
         auto hovered = d_gameGrid->Hovered();
-        if (!hovered.Null()) {
+        if (hovered.Valid()) {
             float width = 200;
             float height = 50;
             float x = std::min(mouse.x - 5, w - width - 10);
@@ -449,7 +449,7 @@ void WorldLayer::OnRender()
         glm::mat4 proj = MakeProj(d_camera);
 
         auto e = d_selector->SelectedEntity();
-        if (!e.Null()) {
+        if (e.Valid()) {
             SelectedEntityInfo(d_devUI, e, view, proj);
         }
 

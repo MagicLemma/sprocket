@@ -12,21 +12,21 @@ BasicSelector::BasicSelector()
 
 void BasicSelector::OnStartup(Scene& scene)
 {
-    scene.OnRemove<SelectComponent>([&](Entity& entity) {
-        if (entity == d_selectedEntity) { SetSelected(Entity()); }
+    scene.OnRemove<SelectComponent>([&](ECS::Entity& entity) {
+        if (entity == d_selectedEntity) { SetSelected(ECS::Null); }
     });
 }
 
-void BasicSelector::SetSelected(Entity entity)
+void BasicSelector::SetSelected(ECS::Entity entity)
 {
     // First clear the previous
-    if (!d_selectedEntity.Null()) {
+    if (d_selectedEntity.Valid()) {
         d_selectedEntity.Get<SelectComponent>().selected = false;
-        d_selectedEntity = Entity();
+        d_selectedEntity = ECS::Null;
     }
 
     // Now set the new one if the given entity is valid
-    if (!entity.Null()) {
+    if (entity.Valid()) {
         if (!entity.Has<SelectComponent>()) {
             SPKT_LOG_WARN("Attempted to select entity with no SelectComponent");
         }

@@ -26,7 +26,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_vao->Draw();
 }
 
-void SkyboxRenderer::Draw(const CubeMap& skybox, const Entity& camera)
+void SkyboxRenderer::Draw(const CubeMap& skybox, const ECS::Entity& camera)
 {
     Draw(skybox, MakeProj(camera), MakeView(camera));
 }

@@ -51,7 +51,7 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    scene.Each<TransformComponent, LightComponent>([&](Entity& entity) {
+    scene.Each<LightComponent>([&](ECS::Entity& entity) {
         if (i < MAX_NUM_LIGHTS) {
             auto position = entity.Get<TransformComponent>().position;
             auto light = entity.Get<LightComponent>();
@@ -145,7 +145,7 @@ void EntityRenderer::Draw(
     std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
 
     d_staticShader.Bind();
-    scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    scene.Each<ModelComponent>([&](ECS::Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { return; }
@@ -174,7 +174,7 @@ void EntityRenderer::Draw(
     }
 
     d_animatedShader.Bind();
-    scene.Each<TransformComponent, ModelComponent>([&](Entity& entity) {
+    scene.Each<ModelComponent>([&](ECS::Entity& entity) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { return; }
@@ -209,7 +209,7 @@ void EntityRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void EntityRenderer::Draw(const Entity& camera, Scene& scene)
+void EntityRenderer::Draw(const ECS::Entity& camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);

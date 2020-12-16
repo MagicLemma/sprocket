@@ -1,7 +1,7 @@
 #pragma once
 #include "CubeMap.h"
 #include "AssetManager.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Shader.h"
 #include "VertexArray.h"
 
@@ -21,7 +21,7 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(AssetManager* assetManager);
 
-    void Draw(const CubeMap& skybox, const Entity& camera);
+    void Draw(const CubeMap& skybox, const ECS::Entity& camera);
     void Draw(const CubeMap& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 

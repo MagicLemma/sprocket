@@ -1,6 +1,6 @@
 #include "LuaTransform.h"
 #include "LuaGlobals.h"
-#include "Entity.h"
+#include "ECS.h"
 #include "Log.h"
 #include "Components.h"
 
@@ -30,7 +30,7 @@ int SetLookAt(lua_State* L)
 {
     if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
-    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity entity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     float px = (float)lua_tonumber(L, 2);
     float py = (float)lua_tonumber(L, 3);
     float pz = (float)lua_tonumber(L, 4);
@@ -49,7 +49,7 @@ int RotateY(lua_State* L)
 {
     if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
-    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity entity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     auto& tr = entity.Get<TransformComponent>();
 
     float yaw = (float)lua_tonumber(L, 2);
@@ -61,7 +61,7 @@ int GetForwardsDir(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity entity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     auto& tr = entity.Get<TransformComponent>();
     auto o = tr.orientation;
     
@@ -82,7 +82,7 @@ int GetRightDir(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity entity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     auto& tr = entity.Get<TransformComponent>();
     auto right = Maths::Right(tr.orientation);
     lua_pushnumber(L, right.x);
@@ -94,7 +94,7 @@ int GetRightDir(lua_State* L)
 int MakeUpright(lua_State* L)
 {
     if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-    Entity entity = *static_cast<Entity*>(lua_touserdata(L, 1));
+    ECS::Entity entity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
     auto& tr = entity.Get<TransformComponent>();
     float yaw = (float)lua_tonumber(L, 2);
     tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
