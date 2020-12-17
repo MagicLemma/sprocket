@@ -49,8 +49,8 @@ private:
 public:
     Scene();
     ~Scene();
-    
-    ECS::Entity NewEntity();
+
+    ECS::Registry* GetRegistry() { return &d_registry; }
 
     void AddSystem(std::shared_ptr<EntitySystem> system);
     void ClearSystems();

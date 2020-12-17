@@ -30,7 +30,7 @@ bool Entity::Valid() const
 
 void Entity::Delete() 
 {
-    d_registry->Delete(d_id);
+    d_registry->Delete(*this);
 }
 
 u32 Entity::Id() const
@@ -50,7 +50,7 @@ u16 Entity::Version() const
 
 Entity Entity::NewEntity() const
 {
-    return {d_registry, d_registry->New()};
+    return d_registry->New();
 }
 
 Registry::Registry()
@@ -71,7 +71,7 @@ void Registry::Remove(u32 entity, std::type_index type)
     }
 }
 
-u32 Registry::New()
+Entity Registry::New()
 {
     // First get a slot for the entity to use. If there are any slots in the pool
     // from dead entities, make use of that. Otherwise, get the next available.
@@ -86,21 +86,21 @@ u32 Registry::New()
 
     // Bump the version of this slot.
     u16 version = ++d_version[slot];
-    return GetID(slot, version);
+    return {this, GetID(slot, version)};
 }
 
-void Registry::Delete(u32 entity)
+void Registry::Delete(Entity entity)
 {
     // Clean up all components
     for (auto& [type, data] : d_comps) {
-        Remove(entity, type);
+        Remove(entity.Id(), type);
     }
 
     // Mark this entities slot as available.
-    d_entities[GetSlot(entity)] = false;
+    d_entities[entity.Slot()] = false;
 
     // Add the entity slot to the pool of available IDs.
-    d_pool.push(GetSlot(entity));
+    d_pool.push(entity.Slot());
 }
 
 bool Registry::Valid(u32 entity) const

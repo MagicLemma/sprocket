@@ -29,7 +29,7 @@ void GameGrid::OnStartup(Scene& scene)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
-    d_hoveredSquare = scene.NewEntity();
+    d_hoveredSquare = scene.GetRegistry()->New();
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
@@ -38,7 +38,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
     model1.mesh = gridSquare;
 
-    d_selectedSquare = scene.NewEntity();
+    d_selectedSquare = scene.GetRegistry()->New();
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";

@@ -81,7 +81,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = scene->NewEntity();
+        ECS::Entity e = scene->GetRegistry()->New();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
@@ -94,7 +94,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
 ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
 {
-    ECS::Entity e = scene->NewEntity();
+    ECS::Entity e = scene->GetRegistry()->New();
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         e.Add<{{Comp.Name}}>(entity.Get<{{Comp.Name}}>());

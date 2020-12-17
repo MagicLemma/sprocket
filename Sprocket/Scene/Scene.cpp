@@ -15,11 +15,6 @@ Scene::~Scene()
     SPKT_LOG_INFO("Deleting scene");
 }
 
-ECS::Entity Scene::NewEntity()
-{
-    return ECS::Entity{&d_registry, d_registry.New()};
-}
-
 void Scene::AddSystem(std::shared_ptr<EntitySystem> system)
 {
     d_systems.push_back(system);
