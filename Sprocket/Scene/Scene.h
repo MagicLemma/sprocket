@@ -68,12 +68,6 @@ public:
 
     void All(EntityCallback func);
 
-    template <typename T> void OnAdd(EntityCallback func);
-    template <typename T> void OnRemove(EntityCallback func);
-        // Register functions that will get called whenever
-        // a component of type T is added/removed to/from an
-        // Entity.
-
     void Clear();
 
     Sun& GetSun() { return d_sun; }
@@ -89,18 +83,6 @@ void Scene::Each(EntityCallback lambda)
     for (ECS::Entity e : d_registry.View<Component>()) {
         lambda(e);   
     }
-}
-
-template <typename T>
-void Scene::OnAdd(EntityCallback func)
-{
-    d_registry.OnAdd<T>(func);
-}
-
-template <typename T>
-void Scene::OnRemove(EntityCallback func)
-{
-    d_registry.OnRemove<T>(func);
 }
 
 }

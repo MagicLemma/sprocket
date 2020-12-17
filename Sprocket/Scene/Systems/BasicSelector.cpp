@@ -12,7 +12,7 @@ BasicSelector::BasicSelector()
 
 void BasicSelector::OnStartup(Scene& scene)
 {
-    scene.OnRemove<SelectComponent>([&](ECS::Entity& entity) {
+    scene.GetRegistry()->OnRemove<SelectComponent>([&](ECS::Entity entity) {
         if (entity == d_selectedEntity) { SetSelected(ECS::Null); }
     });
 }

@@ -47,7 +47,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
     model2.mesh = gridSquare;
 
-    auto addGrid = [&](ECS::Entity& entity) {
+    auto addGrid = [&](ECS::Entity entity) {
         auto& transform = entity.Get<TransformComponent>();
         const auto& gc = entity.Get<GridComponent>();
 
@@ -61,9 +61,9 @@ void GameGrid::OnStartup(Scene& scene)
 
     scene.Each<GridComponent>(addGrid);
 
-    scene.OnAdd<GridComponent>(addGrid);
+    scene.GetRegistry()->OnAdd<GridComponent>(addGrid);
 
-    scene.OnRemove<GridComponent>([&](ECS::Entity& entity) {
+    scene.GetRegistry()->OnRemove<GridComponent>([&](ECS::Entity entity) {
         auto& gc = entity.Get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});
