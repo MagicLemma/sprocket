@@ -5,5 +5,7 @@ int main()
 {
     Sprocket::Window window("Runtime");
     Runtime runtime(&window);
-    return Sprocket::Run(runtime, window);
+    Sprocket::RunOptions options;
+    options.showFramerate = true;
+    return Sprocket::Run(runtime, window, options);
 }

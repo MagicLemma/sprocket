@@ -1,5 +1,7 @@
 #pragma once
 #include "Types.h"
+#include "SparseSet.h"
+#include "Log.h"
 
 #include <unordered_map>
 #include <typeindex>
@@ -13,8 +15,6 @@
 #include <vector>
 #include <cassert>
 #include <any>
-
-#include "Log.h"
 
 namespace Sprocket {
 namespace ECS {
@@ -71,7 +71,7 @@ private:
     u16 d_next;
 
     // We also keep track of the number of times a slot has been used for validity checks.
-    std::array<u16, NUM_ENTITIES> d_version;
+    SparseSet<u16, u16> d_version;
 
     // Values are true for alive entities and false otherwise.
     std::array<bool, NUM_ENTITIES> d_entities;
@@ -80,7 +80,7 @@ private:
     struct ComponentData
     {
         // All instances of this component.
-        std::array<std::any, NUM_ENTITIES> instances;
+        SparseSet<std::any, u16> instances;
 
         // Callbacks triggered whenever a new instance of this component is added. These
         // are called after the component has been added.
@@ -143,7 +143,7 @@ public:
     Iterator end() { return Iterator(this, d_next); }
 
     // Views
-    template <typename... Comp> class ViewType
+    template <typename Comp> class ViewType
     {
         Registry* d_reg;
 
@@ -155,7 +155,7 @@ public:
 
         public:
             ViewIterator(Registry* reg, const Iterator& iter) : d_reg(reg), d_iter(iter) {
-                while (d_iter != d_reg->end() && !((*d_iter).Has<Comp>() && ...)) ++d_iter;
+                while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
             }
             ViewIterator& operator++();
             bool operator==(const ViewIterator& other) const;
@@ -169,9 +169,9 @@ public:
         ViewIterator end() { return ViewIterator(d_reg, d_reg->end()); }
     };
 
-    template <typename... Comp> ViewType<Comp...> View()
+    template <typename Comp> ViewType<Comp> View()
     {
-        return ViewType<Comp...>(this);
+        return ViewType<Comp>(this);
     }
 
     friend class Iterator;
@@ -231,7 +231,7 @@ template <typename Comp>
 Comp& Registry::Get(u32 entity)
 {
     assert(Valid(entity));
-    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetSlot(entity));
+    auto& entry = d_comps.at(typeid(Comp)).instances[GetSlot(entity)];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -239,7 +239,7 @@ template <typename Comp>
 const Comp& Registry::Get(u32 entity) const
 {
     assert(Valid(entity));
-    auto& entry = d_comps.at(typeid(Comp)).instances.at(GetSlot(entity));
+    auto& entry = d_comps.at(typeid(Comp)).instances[GetSlot(entity)];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -248,8 +248,10 @@ bool Registry::Has(u32 entity) const
 {
     assert(Valid(entity));
     if (auto it = d_comps.find(typeid(Comp)); it != d_comps.end()) {
-        const auto& entry = it->second.instances.at(GetSlot(entity));
-        return entry.has_value();
+        if (it->second.instances.Has(GetSlot(entity))) {
+            const auto& entry = it->second.instances[GetSlot(entity)];
+            return entry.has_value();
+        }
     }
     return false;
 }
@@ -268,28 +270,28 @@ void Registry::OnRemove(const EntityCallback& cb)
 
 // VIEWTYPE TEMPLATES
 
-template <typename... Comp>
-typename Registry::ViewType<Comp...>::ViewIterator& Registry::ViewType<Comp...>::ViewIterator::operator++()
+template <typename Comp>
+typename Registry::ViewType<Comp>::ViewIterator& Registry::ViewType<Comp>::ViewIterator::operator++()
 {
     ++d_iter;
-    while (d_iter != d_reg->end() && !((*d_iter).Has<Comp>() && ...)) ++d_iter;
+    while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
     return *this;
 }
 
-template <typename... Comp>
-bool Registry::ViewType<Comp...>::ViewIterator::operator==(const Registry::ViewType<Comp...>::ViewIterator& other) const
+template <typename Comp>
+bool Registry::ViewType<Comp>::ViewIterator::operator==(const Registry::ViewType<Comp>::ViewIterator& other) const
 {
     return d_iter == other.d_iter;
 }
 
-template <typename... Comp>
-bool Registry::ViewType<Comp...>::ViewIterator::operator!=(const Registry::ViewType<Comp...>::ViewIterator& other) const
+template <typename Comp>
+bool Registry::ViewType<Comp>::ViewIterator::operator!=(const Registry::ViewType<Comp>::ViewIterator& other) const
 {
     return !(*this == other);
 }
 
-template <typename... Comp>
-Entity Registry::ViewType<Comp...>::ViewIterator::operator*()
+template <typename Comp>
+Entity Registry::ViewType<Comp>::ViewIterator::operator*()
 {
     return *d_iter;
 }

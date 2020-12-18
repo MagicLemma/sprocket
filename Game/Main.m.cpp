@@ -11,36 +11,15 @@ int main()
     return Sprocket::Run(game, window, options);
 #else
     Sprocket::Log::Init();
-    Sprocket::SparseSet<std::string> set;
+    Sprocket::ECS::Registry reg;
 
-    set.Insert(4, "Whoops");
-    set.Insert(4, "200");
+    auto e1 = reg.New();
 
-    set[2] = "Hello";
-    set[10] = "world";
-    set[5] = "Matt";
+    auto e2 = reg.New();
+    SPKT_LOG_INFO("SLOT {} VERSION {}", e2.Slot(), e2.Version());
 
-    SPKT_LOG_INFO("Size? {}", set.Size());
-    SPKT_LOG_INFO("Has 2? {}", set.Has(2));
-    SPKT_LOG_INFO("Get 2: {}", set[2]);
-
-    for (const auto& [key, val] : set) {
-        SPKT_LOG_INFO("{} -> {}", key, val);
-    }
-
-    SPKT_LOG_INFO("Clearing");
-
-    set.Clear();
-    SPKT_LOG_INFO("{}", set.Size());
-
-    for (const auto& [key, val] : set) {
-        SPKT_LOG_INFO("{} -> {}", key, val);
-    }
-
-    set[5] = "Matt";
-
-    for (const auto& [key, val] : set) {
-        SPKT_LOG_INFO("{} -> {}", key, val);
+    for (auto e : reg) {
+        SPKT_LOG_INFO("{}: {} {}", e.Id(), e.Slot(), e.Version());
     }
 
 #endif

@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <cassert>
 #include <type_traits>
 #include <vector>
 #include <array>
@@ -16,84 +17,119 @@ class SparseSet
 
     const IndexType EMPTY = std::numeric_limits<IndexType>::max();
 
-    using packed = std::vector<std::pair<IndexType, ValueType>>;
-    using sparse = std::vector<IndexType>;
+    std::vector<std::pair<IndexType, ValueType>> d_packed;
+    std::vector<IndexType>                       d_sparse;
 
-    packed d_elements;
-    sparse d_slots;
-
-    void Assure(IndexType slot) {
-        if (d_slots.size() <= slot) {
-            d_slots.resize(slot + 1, EMPTY);
-        }
-    }
+    // Grows the sparse vector so that the given index becomes valid.
+    void Assure(IndexType index);
 
 public:
     SparseSet() = default;
 
-    ValueType& Insert(IndexType slot, const ValueType& value) {
-        if (Has(slot)) {
-            return d_elements[d_slots[slot]].second = value;
-        }
-        else {
-            Assure(slot);
-            IndexType location = d_elements.size();
-            d_slots[slot] = location;
-            return d_elements.emplace_back(std::make_pair(slot, value)).second;
-        }
-    }
+    // Inserts the given value into the specified index. If a value already
+    // exists at that index, it is overwritten.
+    ValueType& Insert(IndexType index, const ValueType& value);
 
-    bool Has(IndexType slot) const {
-        return slot < d_slots.size() && d_slots[slot] != EMPTY;
-    }
+    // Returns true if the specified index contains a value, and false otherwise.
+    bool Has(IndexType index) const;
 
-    void Clear() {
-        d_elements.clear();
-        d_slots.clear();
-    }
+    // Removes all elements from the set.
+    void Clear();
 
-    // Removes the given slot. To keep the packed vector packaed, the back value
-    // is moved into the slot of the outgoing v
-    void Erase(IndexType slot) {
-        assert(Has(slot));
+    // Removes the value at the specified index. The structure may reorder
+    // itself to maintain contiguity for iteration.
+    void Erase(IndexType index);
 
-        if (d_slots[slot] == d_elements.size() - 1) {
-            d_slots[slot] = EMPTY;
-            d_elements.pop_back();
-            return;
-        }
+    std::size_t Size() const;
 
-        // Pop the back element of the sparse_list
-        auto back = d_elements.back();
-        d_elements.pop_back();
+    ValueType& operator[](IndexType index);
+    const ValueType& operator[](IndexType index) const;
 
-        // Get the index of the outgoing value within the elements vector.
-        std::size_t index = d_slots[slot];
-        d_slots[slot] = EMPTY;
-
-        // Overwrite the outgoing value with the back value.
-        d_elements[index] = back;
-
-        // Point the slot for the back value to its new location.
-        d_slots[back.first] = index;
-    }
-
-    std::size_t Size() const { return d_elements.size(); }
-
-    ValueType& operator[](IndexType slot) {
-        if (Has(slot)) {
-            return d_elements[d_slots[slot]].second;
-        }
-        return Insert(slot, ValueType{});
-    }
-
-    const ValueType& operator[](IndexType slot) const {
-        assert(Has(slot));
-        return d_elements[d_slots[slot]].second;
-    }
-
-    auto begin() { return d_elements.begin(); }
-    auto end() { return d_elements.end(); }
+    auto begin() { return d_packed.begin(); }
+    auto end() { return d_packed.end(); }
 };
+
+
+template <typename ValueType, typename IndexType>
+void SparseSet<ValueType, IndexType>::Assure(IndexType index) {
+    if (d_sparse.size() <= index) {
+        d_sparse.resize(index + 1, EMPTY);
+    }
+}
+
+template <typename ValueType, typename IndexType>
+ValueType& SparseSet<ValueType, IndexType>::Insert(IndexType index, const ValueType& value)
+{
+    if (Has(index)) {
+        return d_packed[d_sparse[index]].second = value;
+    }
+    else {
+        Assure(index);
+        IndexType location = d_packed.size();
+        d_sparse[index] = location;
+        return d_packed.emplace_back(std::make_pair(index, value)).second;
+    }
+}
+
+template <typename ValueType, typename IndexType>
+bool SparseSet<ValueType, IndexType>::Has(IndexType index) const
+{
+    return index < d_sparse.size() && d_sparse[index] != EMPTY;
+}
+
+template <typename ValueType, typename IndexType>
+void SparseSet<ValueType, IndexType>::Clear()
+{
+    d_packed.clear();
+    d_sparse.clear();
+}
+
+template <typename ValueType, typename IndexType>
+void SparseSet<ValueType, IndexType>::Erase(IndexType index)
+{
+    assert(Has(index));
+
+    if (d_sparse[index] == d_packed.size() - 1) {
+        d_sparse[index] = EMPTY;
+        d_packed.pop_back();
+        return;
+    }
+
+    // Pop the back element of the sparse_list
+    auto back = d_packed.back();
+    d_packed.pop_back();
+
+    // Get the index of the outgoing value within the elements vector.
+    std::size_t packed_index = d_sparse[index];
+    d_sparse[index] = EMPTY;
+
+    // Overwrite the outgoing value with the back value.
+    d_packed[packed_index] = back;
+
+    // Point the index for the back value to its new location.
+    d_sparse[back.first] = packed_index;
+}
+
+template <typename ValueType, typename IndexType>
+std::size_t SparseSet<ValueType, IndexType>::Size() const
+{
+    return d_packed.size();
+}
+
+template <typename ValueType, typename IndexType>
+ValueType& SparseSet<ValueType, IndexType>::operator[](IndexType index)
+{
+    if (Has(index)) {
+        return d_packed[d_sparse[index]].second;
+    }
+    return Insert(index, ValueType{});
+}
+
+template <typename ValueType, typename IndexType>
+const ValueType& SparseSet<ValueType, IndexType>::operator[](IndexType index) const
+{
+    assert(Has(index));
+    return d_packed[d_sparse[index]].second;
+}
 
 }

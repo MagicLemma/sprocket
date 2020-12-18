@@ -56,7 +56,6 @@ Entity Entity::NewEntity() const
 Registry::Registry()
     : d_next(0)
 {
-    d_version.fill(0);
 }
 
 void Registry::Remove(u32 entity, std::type_index type)
@@ -66,8 +65,10 @@ void Registry::Remove(u32 entity, std::type_index type)
     }
 
     if (auto it = d_comps.find(type); it != d_comps.end()) {
-        auto& entry = it->second.instances.at(GetSlot(entity));
-        entry.reset();
+        if (it->second.instances.Has(GetSlot(entity))) {
+            auto& entry = it->second.instances[GetSlot(entity)];
+            entry.reset();
+        }
     }
 }
 
