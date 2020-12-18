@@ -11,14 +11,21 @@ namespace Sprocket {
 template <typename ValueType, typename IndexType = std::uint32_t>
 class SparseSet
 {
+public:
+    using PackedType = std::vector<std::pair<IndexType, ValueType>>;
+    using SparseType = std::vector<IndexType>;
+
+    using Iterator = typename PackedType::iterator;
+
+private:
     static_assert(std::is_default_constructible<ValueType>());
     static_assert(std::is_copy_constructible<ValueType>());
     static_assert(std::is_integral<IndexType>());
 
     const IndexType EMPTY = std::numeric_limits<IndexType>::max();
 
-    std::vector<std::pair<IndexType, ValueType>> d_packed;
-    std::vector<IndexType>                       d_sparse;
+    PackedType d_packed;
+    SparseType d_sparse;
 
     // Grows the sparse vector so that the given index becomes valid.
     void Assure(IndexType index);
@@ -45,8 +52,8 @@ public:
     ValueType& operator[](IndexType index);
     const ValueType& operator[](IndexType index) const;
 
-    auto begin() { return d_packed.begin(); }
-    auto end() { return d_packed.end(); }
+    Iterator begin() { return d_packed.begin(); }
+    Iterator end() { return d_packed.end(); }
 };
 
 

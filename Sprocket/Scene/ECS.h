@@ -73,8 +73,8 @@ private:
     // We also keep track of the number of times a slot has been used for validity checks.
     SparseSet<u16, u16> d_version;
 
-    // Values are true for alive entities and false otherwise.
-    std::array<bool, NUM_ENTITIES> d_entities;
+    // Stores which entity IDs are currently taking up the slots in the registry.
+    SparseSet<u32, u16> d_entities;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -84,11 +84,11 @@ private:
 
         // Callbacks triggered whenever a new instance of this component is added. These
         // are called after the component has been added.
-        std::vector<EntityCallback>      onAdd;
+        std::vector<EntityCallback> onAdd;
 
         // Callbacks triggers whenever an instance of this component is remove. These
         // are called before the component has been removed.
-        std::vector<EntityCallback>      onRemove;
+        std::vector<EntityCallback> onRemove;
     };
 
     std::unordered_map<std::type_index, ComponentData> d_comps;
@@ -126,21 +126,22 @@ public:
     // Iteration
     class Iterator
     {
-        Registry*   d_reg;
-        std::size_t d_index;
+        Registry* d_reg;
+        typename SparseSet<u32, u16>::Iterator d_iter;
 
     public:
-        Iterator(Registry* reg, std::size_t index) : d_reg(reg), d_index(index) {
-            while (!d_reg->d_entities[d_index] && d_index < d_reg->d_next) ++d_index;
-        }
+        Iterator(Registry* reg, const SparseSet<u32, u16>::Iterator& iter)
+            : d_reg(reg), d_iter(iter)
+        {}
+
         Iterator& operator++();
         bool operator==(const Iterator& other) const;
         bool operator!=(const Iterator& other) const;
         Entity operator*();
     };
 
-    Iterator begin() { return Iterator(this, 0); }
-    Iterator end() { return Iterator(this, d_next); }
+    Iterator begin() { return Iterator(this, d_entities.begin()); }
+    Iterator end() { return Iterator(this, d_entities.end()); }
 
     // Views
     template <typename Comp> class ViewType
