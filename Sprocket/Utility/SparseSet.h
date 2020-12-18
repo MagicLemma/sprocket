@@ -7,42 +7,58 @@
 
 namespace Sprocket {
 
-template <typename T, std::uint32_t Size>
+template <typename ValueType, typename IndexType = std::uint32_t>
 class SparseSet
 {
-    static_assert(std::is_copy_constructible<T>());
+    static_assert(std::is_default_constructible<ValueType>());
+    static_assert(std::is_copy_constructible<ValueType>());
+    static_assert(std::is_integral<IndexType>());
 
-    using packed = std::vector<std::pair<std::uint32_t, T>>;
-    using sparse = std::array<std::uint32_t, Size>;
+    const IndexType EMPTY = std::numeric_limits<IndexType>::max();
+
+    using packed = std::vector<std::pair<IndexType, ValueType>>;
+    using sparse = std::vector<IndexType>;
 
     packed d_elements;
     sparse d_slots;
 
-public:
-    SparseSet() 
-    {
-        for (auto& x : d_slots) {
-            x = std::numeric_limits<std::uint32_t>::max();
+    void Assure(IndexType slot) {
+        if (d_slots.size() <= slot) {
+            d_slots.resize(slot + 1, EMPTY);
         }
     }
 
-    T& Insert(std::uint32_t slot, const T& value) {
-        std::uint32_t location = d_elements.size();
-        d_slots[slot] = location;
-        return d_elements.emplace_back(std::make_pair(slot, value)).second;
+public:
+    SparseSet() = default;
+
+    ValueType& Insert(IndexType slot, const ValueType& value) {
+        if (Has(slot)) {
+            return d_elements[d_slots[slot]].second = value;
+        }
+        else {
+            Assure(slot);
+            IndexType location = d_elements.size();
+            d_slots[slot] = location;
+            return d_elements.emplace_back(std::make_pair(slot, value)).second;
+        }
     }
 
-    bool Has(std::uint32_t slot) const {
-        return d_slots[slot] != std::numeric_limits<std::uint32_t>::max();
+    bool Has(IndexType slot) const {
+        return slot < d_slots.size() && d_slots[slot] != EMPTY;
+    }
+
+    void Clear() {
+        d_elements.clear();
+        d_slots.clear();
     }
 
     // Removes the given slot. To keep the packed vector packaed, the back value
     // is moved into the slot of the outgoing v
-    void Erase(std::uint32_t slot) {
+    void Erase(IndexType slot) {
         assert(Has(slot));
 
         if (d_slots[slot] == d_elements.size() - 1) {
-            d_slots[slot] = std::numeric_limits<std::uint32_t>::max();
+            d_slots[slot] = EMPTY;
             d_elements.pop_back();
             return;
         }
@@ -53,7 +69,7 @@ public:
 
         // Get the index of the outgoing value within the elements vector.
         std::size_t index = d_slots[slot];
-        d_slots[slot] = std::numeric_limits<std::uint32_t>::max();
+        d_slots[slot] = EMPTY;
 
         // Overwrite the outgoing value with the back value.
         d_elements[index] = back;
@@ -64,14 +80,14 @@ public:
 
     std::size_t Size() const { return d_elements.size(); }
 
-    T& operator[](std::uint32_t slot) {
+    ValueType& operator[](IndexType slot) {
         if (Has(slot)) {
             return d_elements[d_slots[slot]].second;
         }
-        return Insert(slot, T{});
+        return Insert(slot, ValueType{});
     }
 
-    const T& operator[](std::uint32_t slot) const {
+    const ValueType& operator[](IndexType slot) const {
         assert(Has(slot));
         return d_elements[d_slots[slot]].second;
     }

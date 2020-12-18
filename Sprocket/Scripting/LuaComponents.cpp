@@ -208,6 +208,16 @@ constexpr int LightComponentDimension()
     return count;
 }
 
+constexpr int SunComponentDimension()
+{
+    int count = 0;
+    count += Dimension<glm::vec3>(); // colour
+    count += Dimension<float>(); // brightness
+    count += Dimension<glm::vec3>(); // direction
+    count += Dimension<bool>(); // shadows
+    return count;
+}
+
 constexpr int ParticleComponentDimension()
 {
     int count = 0;
@@ -302,6 +312,11 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_SetLightComponent", &Lua::SetLightComponent);
     lua_register(L, "Lua_AddLightComponent", &Lua::AddLightComponent);
     lua_register(L, "HasLightComponent", &Lua_Has<LightComponent>);
+
+    lua_register(L, "Lua_GetSunComponent", &Lua::GetSunComponent);
+    lua_register(L, "Lua_SetSunComponent", &Lua::SetSunComponent);
+    lua_register(L, "Lua_AddSunComponent", &Lua::AddSunComponent);
+    lua_register(L, "HasSunComponent", &Lua_Has<SunComponent>);
 
     lua_register(L, "Lua_GetParticleComponent", &Lua::GetParticleComponent);
     lua_register(L, "Lua_SetParticleComponent", &Lua::SetParticleComponent);
@@ -832,6 +847,53 @@ int AddLightComponent(lua_State* L)
     LightComponent c;
     c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
+    e.Add(c);
+    return 0;
+}
+
+int GetSunComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<SunComponent>());
+
+    int count = 0;
+    const auto& c = e.Get<SunComponent>();
+    count += Push(L, c.colour);
+    count += Push(L, c.brightness);
+    count += Push(L, c.direction);
+    count += Push(L, c.shadows);
+    return count;
+}
+
+int SetSunComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<SunComponent>();
+    c.colour = Pull<glm::vec3>(L, count);
+    c.brightness = Pull<float>(L, count);
+    c.direction = Pull<glm::vec3>(L, count);
+    c.shadows = Pull<bool>(L, count);
+    return 0;
+}
+
+int AddSunComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(!e.Has<SunComponent>());
+
+    SunComponent c;
+    c.colour = Pull<glm::vec3>(L, count);
+    c.brightness = Pull<float>(L, count);
+    c.direction = Pull<glm::vec3>(L, count);
+    c.shadows = Pull<bool>(L, count);
     e.Add(c);
     return 0;
 }

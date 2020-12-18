@@ -16,7 +16,7 @@ ScriptRunner::ScriptRunner(Window* window)
 
 void ScriptRunner::OnStartup(Scene& scene)
 {
-    auto AddScript = [&](ECS::Entity& entity) {
+    auto AddScript = [&](ECS::Entity entity) {
         auto& luaEngine = d_engines[entity.Id()];
         luaEngine.SetWindow(d_window);
         luaEngine.SetInput(&d_input);

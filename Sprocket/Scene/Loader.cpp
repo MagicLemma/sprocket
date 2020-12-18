@@ -142,6 +142,15 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
             out << YAML::EndMap;
         }
+        if (entity.Has<SunComponent>()) {
+            const auto& c = entity.Get<SunComponent>();
+            out << YAML::Key << "SunComponent" << YAML::BeginMap;
+            out << YAML::Key << "colour" << YAML::Value << c.colour;
+            out << YAML::Key << "brightness" << YAML::Value << c.brightness;
+            out << YAML::Key << "direction" << YAML::Value << c.direction;
+            out << YAML::Key << "shadows" << YAML::Value << c.shadows;
+            out << YAML::EndMap;
+        }
         if (entity.Has<ParticleComponent>()) {
             const auto& c = entity.Get<ParticleComponent>();
             out << YAML::Key << "ParticleComponent" << YAML::BeginMap;
@@ -198,7 +207,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = scene->GetRegistry()->New();;
+        ECS::Entity e = scene->GetRegistry()->New();
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add(c);
@@ -290,6 +299,14 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add(c);
         }
+        if (auto spec = entity["SunComponent"]) {
+            SunComponent c;
+            c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
+            c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
+            c.direction = spec["direction"] ? spec["direction"].as<glm::vec3>() : glm::vec3{0.0f, -1.0f, 0.0f};
+            c.shadows = spec["shadows"] ? spec["shadows"].as<bool>() : false;
+            e.Add(c);
+        }
         if (auto spec = entity["ParticleComponent"]) {
             ParticleComponent c;
             c.interval = spec["interval"] ? spec["interval"].as<float>() : 1.0f;
@@ -354,6 +371,9 @@ ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
     }
     if (entity.Has<LightComponent>()) {
         e.Add<LightComponent>(entity.Get<LightComponent>());
+    }
+    if (entity.Has<SunComponent>()) {
+        e.Add<SunComponent>(entity.Get<SunComponent>());
     }
     if (entity.Has<ParticleComponent>()) {
         e.Add<ParticleComponent>(entity.Get<ParticleComponent>());

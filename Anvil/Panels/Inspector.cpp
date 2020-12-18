@@ -245,6 +245,21 @@ void Inspector::Show(Anvil& editor)
         
     }
 
+    if (entity.Has<SunComponent>()) {
+        auto& c = entity.Get<SunComponent>();
+        if (ImGui::CollapsingHeader("Sun")) {
+            ImGui::PushID(count++);
+            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
+            ImGui::DragFloat3("Direction", &c.direction.x, 0.1f);
+            ImGui::Checkbox("Shadows", &c.shadows);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<SunComponent>(); }
+            ImGui::PopID();
+        }
+        
+    }
+
     if (entity.Has<ParticleComponent>()) {
         auto& c = entity.Get<ParticleComponent>();
         if (ImGui::CollapsingHeader("Particle")) {
@@ -338,6 +353,10 @@ void Inspector::Show(Anvil& editor)
         }
         if (!entity.Has<LightComponent>() && ImGui::Selectable("Light")) {
             LightComponent c;
+            entity.Add(c);
+        }
+        if (!entity.Has<SunComponent>() && ImGui::Selectable("Sun")) {
+            SunComponent c;
             entity.Add(c);
         }
         if (!entity.Has<ParticleComponent>() && ImGui::Selectable("Particle")) {

@@ -56,6 +56,10 @@ int GetLightComponent(lua_State* L);
 int SetLightComponent(lua_State* L);
 int AddLightComponent(lua_State* L);
 
+int GetSunComponent(lua_State* L);
+int SetSunComponent(lua_State* L);
+int AddSunComponent(lua_State* L);
+
 int GetParticleComponent(lua_State* L);
 int SetParticleComponent(lua_State* L);
 int AddParticleComponent(lua_State* L);
