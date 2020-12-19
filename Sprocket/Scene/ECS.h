@@ -64,14 +64,11 @@ public:
     using EntityCallback = std::function<void(Entity)>;
 
 private:
+    // Stores the current version of each entity.
+    std::vector<u16> d_entities;
+
     // When an entity is removed, their slot is added to the pool so that it can be reused.
     std::unordered_set<u16> d_pool;
-
-    // We also keep track of the number of times a slot has been used for validity checks.
-    SparseSet<u16> d_version;
-
-    // Stores which entity IDs are currently taking up the slots in the registry.
-    std::vector<u32> d_entities;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData

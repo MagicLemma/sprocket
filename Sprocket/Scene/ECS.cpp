@@ -69,28 +69,22 @@ void Registry::Remove(u32 entity, std::type_index type)
 
 Entity Registry::New()
 {
-    // First get a slot for the entity to use. If there are any slots in the pool
-    // from dead entities, make use of that. Otherwise, get the next available.
     u16 slot = 0;
+    u16 version = 0;
+
+    // If there is a slot in the pool, pop it and bump its version.
     if (auto it = d_pool.begin(); it != d_pool.end()) {
         slot = *it;
         d_pool.erase(it);
-    } else {
+        version = ++d_entities[slot];
+    }
+    // Otherwise we append on the end.
+    else {
         slot = d_entities.size();
+        d_entities.push_back(version);
     }
 
-    // Bump the version of this slot.
-    u16 version = ++d_version[slot];
-
-    u32 entity = GetID(slot, version);
-
-    if (slot == d_entities.size()) {
-        d_entities.push_back(entity);
-    } else {
-        d_entities[slot] = entity;
-    }
-
-    return {this, entity};
+    return {this, GetID(slot, version)};
 }
 
 void Registry::Delete(Entity entity)
@@ -101,8 +95,6 @@ void Registry::Delete(Entity entity)
     for (auto& [type, data] : d_comps) {
         Remove(entity.Id(), type);
     }
-
-    d_entities[entity.Slot()] = NULL_ID;
 
     // Add the entity slot to the pool of available IDs.
     d_pool.insert(entity.Slot());
@@ -118,7 +110,10 @@ void Registry::Clear()
 bool Registry::Valid(u32 entity) const
 {
     u16 slot = GetSlot(entity);
-    return entity != NULL_ID && d_entities[slot] == entity;
+    u16 version = GetVersion(entity);
+    return entity != NULL_ID
+        && d_entities[slot] == version
+        && !d_pool.contains(slot);
 }
 
 std::size_t Registry::Size() const
@@ -143,9 +138,9 @@ u16 Registry::GetVersion(u32 id)
 
 cppcoro::generator<Entity> Registry::All()
 {
-    for (auto entity : d_entities) {
-        if (entity != NULL_ID) {
-            co_yield {this, entity};
+    for (u16 index = 0; index < d_entities.size(); ++index) {
+        if (!d_pool.contains(index)) {
+            co_yield {this, GetID(index, d_entities[index])};
         }
     }
 }
