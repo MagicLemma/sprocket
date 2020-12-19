@@ -16,6 +16,8 @@
 #include <cassert>
 #include <any>
 
+#include <cppcoro/generator.hpp>
+
 namespace Sprocket {
 namespace ECS {
     
@@ -71,16 +73,16 @@ private:
     u16 d_next;
 
     // We also keep track of the number of times a slot has been used for validity checks.
-    SparseSet<u16, u16> d_version;
+    SparseSet<u16> d_version;
 
     // Stores which entity IDs are currently taking up the slots in the registry.
-    SparseSet<u32, u16> d_entities;
+    SparseSet<u32> d_entities;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
     {
         // All instances of this component.
-        SparseSet<std::any, u16> instances;
+        SparseSet<std::any> instances;
 
         // Callbacks triggered whenever a new instance of this component is added. These
         // are called after the component has been added.
@@ -127,10 +129,10 @@ public:
     class Iterator
     {
         Registry* d_reg;
-        typename SparseSet<u32, u16>::Iterator d_iter;
+        typename SparseSet<u32>::Iterator d_iter;
 
     public:
-        Iterator(Registry* reg, const SparseSet<u32, u16>::Iterator& iter)
+        Iterator(Registry* reg, const SparseSet<u32>::Iterator& iter)
             : d_reg(reg), d_iter(iter)
         {}
 
@@ -169,6 +171,7 @@ public:
         ViewIterator begin() { return ViewIterator(d_reg, d_reg->begin()); }
         ViewIterator end() { return ViewIterator(d_reg, d_reg->end()); }
     };
+
 
     template <typename Comp> ViewType<Comp> View()
     {
