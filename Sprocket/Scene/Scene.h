@@ -66,8 +66,6 @@ public:
         // components and calls the given lambda with each entity
         // as the argument.
 
-    void All(EntityCallback func);
-
     void Clear();
 
     Sun& GetSun() { return d_sun; }

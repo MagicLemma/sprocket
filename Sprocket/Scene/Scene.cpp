@@ -51,13 +51,6 @@ std::size_t Scene::Size() const
     return d_registry.Size();
 }
 
-void Scene::All(EntityCallback func)
-{
-    for (ECS::Entity e : d_registry.All()) {
-        func(e);
-    }
-}
-
 void Scene::Clear()
 {
     d_registry.Clear();

@@ -263,7 +263,7 @@ void Anvil::OnRender()
             
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
-                d_scene->All([&](ECS::Entity& entity) {
+                for (auto entity : d_scene->Reg()->All()) {
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {
@@ -271,7 +271,7 @@ void Anvil::OnRender()
                         }
                         ImGui::PopID();
                     }
-                });
+                }
                 ImGui::EndChild();
                 ImGui::EndTabItem();
             }
