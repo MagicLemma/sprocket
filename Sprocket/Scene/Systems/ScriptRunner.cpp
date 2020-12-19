@@ -28,10 +28,10 @@ void ScriptRunner::OnStartup(Scene& scene)
     scene.Each<ScriptComponent>(AddScript);
         // Register all existing scripts
 
-    scene.GetRegistry()->OnAdd<ScriptComponent>(AddScript);
+    scene.Reg()->OnAdd<ScriptComponent>(AddScript);
         // If a new script gets added to an entity, register that too.
 
-    scene.GetRegistry()->OnRemove<ScriptComponent>([&](ECS::Entity entity) {
+    scene.Reg()->OnRemove<ScriptComponent>([&](ECS::Entity entity) {
         d_engines.erase(entity.Id());
     });
 }

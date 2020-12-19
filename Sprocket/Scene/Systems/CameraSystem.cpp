@@ -21,7 +21,7 @@ void CameraSystem::OnStartup(Scene& scene)
 
     scene.Each<CameraComponent>(addCamera);
 
-    scene.GetRegistry()->OnAdd<CameraComponent>(addCamera);
+    scene.Reg()->OnAdd<CameraComponent>(addCamera);
 }
 
 void CameraSystem::OnEvent(Scene& scene, Event& event)

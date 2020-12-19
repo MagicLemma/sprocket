@@ -126,9 +126,9 @@ void PhysicsEngine::OnStartup(Scene& scene)
     };
 
     scene.Each<RigidBody3DComponent>(addPhysics);
-    scene.GetRegistry()->OnAdd<RigidBody3DComponent>(addPhysics);
+    scene.Reg()->OnAdd<RigidBody3DComponent>(addPhysics);
 
-    scene.GetRegistry()->OnRemove<RigidBody3DComponent>([&](ECS::Entity& entity) {
+    scene.Reg()->OnRemove<RigidBody3DComponent>([&](ECS::Entity& entity) {
         entity.Remove<BoxCollider3DComponent>();
         entity.Remove<SphereCollider3DComponent>();
         entity.Remove<CapsuleCollider3DComponent>();
@@ -161,9 +161,9 @@ void PhysicsEngine::OnStartup(Scene& scene)
     };
 
     scene.Each<BoxCollider3DComponent>(addBox);
-    scene.GetRegistry()->OnAdd<BoxCollider3DComponent>(addBox);
+    scene.Reg()->OnAdd<BoxCollider3DComponent>(addBox);
 
-    scene.GetRegistry()->OnRemove<BoxCollider3DComponent>([&](ECS::Entity& entity) {
+    scene.Reg()->OnRemove<BoxCollider3DComponent>([&](ECS::Entity& entity) {
         auto c = d_impl->entityData[entity.Id()].boxProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
@@ -190,9 +190,9 @@ void PhysicsEngine::OnStartup(Scene& scene)
     };
 
     scene.Each<SphereCollider3DComponent>(addSphere);
-    scene.GetRegistry()->OnAdd<SphereCollider3DComponent>(addSphere);
+    scene.Reg()->OnAdd<SphereCollider3DComponent>(addSphere);
 
-    scene.GetRegistry()->OnRemove<SphereCollider3DComponent>([&](ECS::Entity& entity) {
+    scene.Reg()->OnRemove<SphereCollider3DComponent>([&](ECS::Entity& entity) {
         auto c = d_impl->entityData[entity.Id()].sphereProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
@@ -221,9 +221,9 @@ void PhysicsEngine::OnStartup(Scene& scene)
     };
 
     scene.Each<CapsuleCollider3DComponent>(addCapsule);
-    scene.GetRegistry()->OnAdd<CapsuleCollider3DComponent>(addCapsule);
+    scene.Reg()->OnAdd<CapsuleCollider3DComponent>(addCapsule);
 
-    scene.GetRegistry()->OnRemove<CapsuleCollider3DComponent>([&](ECS::Entity& entity) {
+    scene.Reg()->OnRemove<CapsuleCollider3DComponent>([&](ECS::Entity& entity) {
         auto c = d_impl->entityData[entity.Id()].capsuleProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);

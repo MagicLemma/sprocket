@@ -17,7 +17,7 @@ Selector::Selector(Window* window, PhysicsEngine* physicsEngine)
 
 void Selector::OnStartup(Scene& manager)
 {
-    manager.GetRegistry()->OnRemove<SelectComponent>([&](ECS::Entity& entity) {
+    manager.Reg()->OnRemove<SelectComponent>([&](ECS::Entity& entity) {
         if (entity == d_hoveredEntity) { ClearHovered(); }
         if (entity == d_selectedEntity) { ClearSelected(); }
     });

@@ -63,20 +63,14 @@ public:
     using EntityCallback = std::function<void(Entity)>;
 
 private:
-
-    static constexpr std::size_t NUM_ENTITIES = std::numeric_limits<u16>::max();
-
     // When an entity is removed, their slot is added to the pool so that it can be reused.
     std::queue<u16> d_pool;
-
-    // If the pool of slots is empty, then the next entity will use this variable as their slot.
-    u16 d_next;
 
     // We also keep track of the number of times a slot has been used for validity checks.
     SparseSet<u16> d_version;
 
     // Stores which entity IDs are currently taking up the slots in the registry.
-    std::array<u32, NUM_ENTITIES> d_entities;
+    std::vector<u32> d_entities;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -98,7 +92,7 @@ private:
     void Remove(u32 entity, std::type_index type);
 
 public:
-    Registry();
+    Registry() = default;
 
     Entity New();
     void Delete(Entity entity);

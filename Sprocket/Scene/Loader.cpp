@@ -207,7 +207,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = scene->GetRegistry()->New();
+        ECS::Entity e = scene->Reg()->New();
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add(c);
@@ -329,7 +329,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
 ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
 {
-    ECS::Entity e = scene->GetRegistry()->New();
+    ECS::Entity e = scene->Reg()->New();
     if (entity.Has<TemporaryComponent>()) {
         e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
     }

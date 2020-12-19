@@ -53,12 +53,6 @@ Entity Entity::NewEntity() const
     return d_registry->New();
 }
 
-Registry::Registry()
-    : d_next(0)
-{
-    d_entities.fill(NULL_ID);
-}
-
 void Registry::Remove(u32 entity, std::type_index type)
 {
     for (const auto& cb : d_comps[type].onRemove) {
@@ -82,14 +76,20 @@ Entity Registry::New()
         slot = d_pool.front();
         d_pool.pop();
     } else {
-        slot = d_next++;
+        slot = d_entities.size();
     }
 
     // Bump the version of this slot.
     u16 version = ++d_version[slot];
 
     u32 entity = GetID(slot, version);
-    d_entities[slot] = entity;
+
+    if (slot == d_entities.size()) {
+        d_entities.push_back(entity);
+    } else {
+        d_entities[slot] = entity;
+    }
+
     return {this, entity};
 }
 
@@ -123,7 +123,7 @@ bool Registry::Valid(u32 entity) const
 
 std::size_t Registry::Size() const
 {
-    return d_next - d_pool.size();
+    return d_entities.size() - d_pool.size();
 }
 
 u32 Registry::GetID(u16 index, u16 version)
