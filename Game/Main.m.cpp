@@ -18,7 +18,7 @@ int main()
     auto e2 = reg.New();
     SPKT_LOG_INFO("SLOT {} VERSION {}", e2.Slot(), e2.Version());
 
-    for (auto e : reg) {
+    for (auto e : reg.All()) {
         SPKT_LOG_INFO("{}: {} {}", e.Id(), e.Slot(), e.Version());
     }
 

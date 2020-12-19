@@ -76,7 +76,7 @@ private:
     SparseSet<u16> d_version;
 
     // Stores which entity IDs are currently taking up the slots in the registry.
-    SparseSet<u32> d_entities;
+    std::array<u32, NUM_ENTITIES> d_entities;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -103,13 +103,18 @@ public:
     Entity New();
     void Delete(Entity entity);
 
+    void Clear();
+
     std::size_t Size() const;
 
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
-    // The rest of the interface uses entity IDs rather than the entity struct.
-    // It is recommended to use the corresponding functions on the entity struct.
+    // Generates all active entities.
+    cppcoro::generator<Entity> All();
+
+    // Generates all active entities with the specified components.
+    template <typename... Comps> cppcoro::generator<Entity> View();
 
     bool Valid(u32 entity) const;
 
@@ -124,61 +129,6 @@ public:
     static u32 GetID(u16 slot, u16 version);
     static u16 GetSlot(u32 id);
     static u16 GetVersion(u32 id);
-
-    // Iteration
-    class Iterator
-    {
-        Registry* d_reg;
-        typename SparseSet<u32>::Iterator d_iter;
-
-    public:
-        Iterator(Registry* reg, const SparseSet<u32>::Iterator& iter)
-            : d_reg(reg), d_iter(iter)
-        {}
-
-        Iterator& operator++();
-        bool operator==(const Iterator& other) const;
-        bool operator!=(const Iterator& other) const;
-        Entity operator*();
-    };
-
-    Iterator begin() { return Iterator(this, d_entities.begin()); }
-    Iterator end() { return Iterator(this, d_entities.end()); }
-
-    // Views
-    template <typename Comp> class ViewType
-    {
-        Registry* d_reg;
-
-    public:
-        class ViewIterator
-        {
-            Registry* d_reg;
-            Iterator  d_iter;
-
-        public:
-            ViewIterator(Registry* reg, const Iterator& iter) : d_reg(reg), d_iter(iter) {
-                while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
-            }
-            ViewIterator& operator++();
-            bool operator==(const ViewIterator& other) const;
-            bool operator!=(const ViewIterator& other) const;
-            Entity operator*();
-        };
-
-        ViewType(Registry* reg) : d_reg(reg) {}
-
-        ViewIterator begin() { return ViewIterator(d_reg, d_reg->begin()); }
-        ViewIterator end() { return ViewIterator(d_reg, d_reg->end()); }
-    };
-
-
-    template <typename Comp> ViewType<Comp> View()
-    {
-        return ViewType<Comp>(this);
-    }
-
-    friend class Iterator;
 };
 
 // An "empty" entity.
@@ -272,32 +222,14 @@ void Registry::OnRemove(const EntityCallback& cb)
     d_comps[typeid(Comp)].onRemove.push_back(cb);
 }
 
-// VIEWTYPE TEMPLATES
-
-template <typename Comp>
-typename Registry::ViewType<Comp>::ViewIterator& Registry::ViewType<Comp>::ViewIterator::operator++()
+template <typename... Comps>
+cppcoro::generator<Entity> Registry::View()
 {
-    ++d_iter;
-    while (d_iter != d_reg->end() && !(*d_iter).Has<Comp>()) ++d_iter;
-    return *this;
-}
-
-template <typename Comp>
-bool Registry::ViewType<Comp>::ViewIterator::operator==(const Registry::ViewType<Comp>::ViewIterator& other) const
-{
-    return d_iter == other.d_iter;
-}
-
-template <typename Comp>
-bool Registry::ViewType<Comp>::ViewIterator::operator!=(const Registry::ViewType<Comp>::ViewIterator& other) const
-{
-    return !(*this == other);
-}
-
-template <typename Comp>
-Entity Registry::ViewType<Comp>::ViewIterator::operator*()
-{
-    return *d_iter;
+    for (auto entity : All()) {
+        if ((entity.Has<Comps>() && ...)) {
+            co_yield entity;
+        }
+    }
 }
 
 // ENTITY TEMPLATES

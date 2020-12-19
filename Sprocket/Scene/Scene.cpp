@@ -53,18 +53,14 @@ std::size_t Scene::Size() const
 
 void Scene::All(EntityCallback func)
 {
-    for (ECS::Entity e : d_registry) {
+    for (ECS::Entity e : d_registry.All()) {
         func(e);
     }
 }
 
 void Scene::Clear()
 {
-    for (ECS::Entity e : d_registry) {
-        if (e.Has<TemporaryComponent>()) {
-            e.Delete();
-        }
-    }
+    d_registry.Clear();
 }
 
 }

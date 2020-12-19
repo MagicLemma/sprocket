@@ -51,7 +51,7 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    scene.Each<LightComponent>([&](ECS::Entity& entity) {
+    scene.Each<LightComponent, TransformComponent>([&](ECS::Entity& entity) {
         if (i < MAX_NUM_LIGHTS) {
             auto position = entity.Get<TransformComponent>().position;
             auto light = entity.Get<LightComponent>();

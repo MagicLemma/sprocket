@@ -56,6 +56,7 @@ Entity Entity::NewEntity() const
 Registry::Registry()
     : d_next(0)
 {
+    d_entities.fill(NULL_ID);
 }
 
 void Registry::Remove(u32 entity, std::type_index type)
@@ -99,10 +100,19 @@ void Registry::Delete(Entity entity)
         Remove(entity.Id(), type);
     }
 
-    d_entities.Erase(entity.Slot());
+    d_entities[entity.Slot()] = NULL_ID;
 
     // Add the entity slot to the pool of available IDs.
     d_pool.push(entity.Slot());
+}
+
+void Registry::Clear()
+{
+    d_next = 0;
+    d_version.Clear();
+    d_entities.fill(NULL_ID);
+    d_comps.clear();
+    std::queue<u16>().swap(d_pool);
 }
 
 bool Registry::Valid(u32 entity) const
@@ -131,25 +141,13 @@ u16 Registry::GetVersion(u32 id)
     return static_cast<u16>(id >> 16);
 }
 
-Registry::Iterator& Registry::Iterator::operator++()
+cppcoro::generator<Entity> Registry::All()
 {
-    ++d_iter;
-    return *this;
-}
-
-Entity Registry::Iterator::operator*()
-{
-    return {d_reg, d_iter->second};
-}
-
-bool Registry::Iterator::operator==(const Iterator& other) const
-{
-    return d_reg == other.d_reg && d_iter == other.d_iter;
-}
-
-bool Registry::Iterator::operator!=(const Iterator& other) const
-{
-    return !(*this == other);
+    for (auto entity : d_entities) {
+        if (entity != NULL_ID) {
+            co_yield {this, entity};
+        }
+    }
 }
 
 }
