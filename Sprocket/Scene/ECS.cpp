@@ -72,9 +72,9 @@ Entity Registry::New()
     // First get a slot for the entity to use. If there are any slots in the pool
     // from dead entities, make use of that. Otherwise, get the next available.
     u16 slot = 0;
-    if (!d_pool.empty()) {
-        slot = d_pool.front();
-        d_pool.pop();
+    if (auto it = d_pool.begin(); it != d_pool.end()) {
+        slot = *it;
+        d_pool.erase(it);
     } else {
         slot = d_entities.size();
     }
@@ -105,7 +105,7 @@ void Registry::Delete(Entity entity)
     d_entities[entity.Slot()] = NULL_ID;
 
     // Add the entity slot to the pool of available IDs.
-    d_pool.push(entity.Slot());
+    d_pool.insert(entity.Slot());
 }
 
 void Registry::Clear()

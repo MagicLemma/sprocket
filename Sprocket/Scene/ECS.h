@@ -4,6 +4,7 @@
 #include "Log.h"
 
 #include <unordered_map>
+#include <unordered_set>
 #include <typeindex>
 #include <typeinfo>
 #include <array>
@@ -64,7 +65,7 @@ public:
 
 private:
     // When an entity is removed, their slot is added to the pool so that it can be reused.
-    std::queue<u16> d_pool;
+    std::unordered_set<u16> d_pool;
 
     // We also keep track of the number of times a slot has been used for validity checks.
     SparseSet<u16> d_version;
