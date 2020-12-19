@@ -103,6 +103,8 @@ public:
     Entity New();
     void Delete(Entity entity);
 
+    // Loops through all entities and deletes their components. This will trigger
+    // the OnRemove functionality.
     void Clear();
 
     std::size_t Size() const;

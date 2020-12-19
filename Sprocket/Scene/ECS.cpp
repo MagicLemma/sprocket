@@ -95,6 +95,8 @@ Entity Registry::New()
 
 void Registry::Delete(Entity entity)
 {
+    assert(entity.Valid());
+
     // Clean up all components
     for (auto& [type, data] : d_comps) {
         Remove(entity.Id(), type);
@@ -108,11 +110,9 @@ void Registry::Delete(Entity entity)
 
 void Registry::Clear()
 {
-    d_next = 0;
-    d_version.Clear();
-    d_entities.fill(NULL_ID);
-    d_comps.clear();
-    std::queue<u16>().swap(d_pool);
+    for (auto entity : All()) {
+        entity.Delete();
+    }
 }
 
 bool Registry::Valid(u32 entity) const
