@@ -31,6 +31,8 @@ class Entity
     ECS::Registry* d_registry;
     u32            d_id;
 
+    void Remove(std::type_index type);
+
 public:
     Entity(ECS::Registry* r, u32 i) : d_registry(r), d_id(i) {}
     Entity() : d_registry(nullptr), d_id(NULL_ID) {}
@@ -89,13 +91,10 @@ private:
 
     std::unordered_map<std::type_index, ComponentData> d_comps;
 
-    void Remove(u32 entity, std::type_index type);
-
 public:
     Registry() = default;
 
     Entity New();
-    void Delete(Entity entity);
     void Delete(const std::vector<Entity>& entities);
 
     // Loops through all entities and deletes their components. This will trigger
@@ -127,11 +126,7 @@ public:
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
-    bool Valid(u32 entity) const;
-
     static u32 GetID(u16 slot, u16 version);
-    static u16 GetSlot(u32 id);
-    static u16 GetVersion(u32 id);
 
     friend class Entity;
 };
@@ -209,7 +204,7 @@ template <typename Comp>
 void Entity::Remove()
 {
     assert(Valid());
-    d_registry->Remove(d_id, typeid(Comp));
+    Remove(typeid(Comp));
 }
 
 template <typename Comp>

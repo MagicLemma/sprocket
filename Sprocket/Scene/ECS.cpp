@@ -25,12 +25,24 @@ Entity& Entity::operator=(Entity other)
 
 bool Entity::Valid() const
 {
-     return d_registry && d_registry->Valid(d_id);
+     return d_id != NULL_ID
+         && d_registry
+         && d_registry->d_entities.Has(Slot())
+         && d_registry->d_entities[Slot()] == Version();
 }
 
 void Entity::Delete() 
 {
-    d_registry->Delete(*this);
+    if (Valid()) {
+        // Clean up all components
+        for (auto& [type, data] : d_registry->d_comps) {
+            Remove(type);
+        }
+        d_registry->d_entities.Erase(Slot());
+
+        // Add the entity slot to the pool of available IDs.
+        d_registry->d_pool.push({Slot(), Version()});
+    }
 }
 
 u32 Entity::Id() const
@@ -40,12 +52,12 @@ u32 Entity::Id() const
 
 u16 Entity::Slot() const
 {
-    return ECS::Registry::GetSlot(d_id);
+    return static_cast<u16>(d_id);
 }
 
 u16 Entity::Version() const
 {
-    return ECS::Registry::GetVersion(d_id);
+    return static_cast<u16>(d_id >> 16);
 }
 
 Entity Entity::NewEntity() const
@@ -53,15 +65,16 @@ Entity Entity::NewEntity() const
     return d_registry->New();
 }
 
-void Registry::Remove(u32 entity, std::type_index type)
+void Entity::Remove(std::type_index type)
 {
-    for (const auto& cb : d_comps[type].onRemove) {
-        cb({this, entity});
+    assert(Valid());
+    for (const auto& cb : d_registry->d_comps[type].onRemove) {
+        cb(*this);
     }
 
-    if (auto it = d_comps.find(type); it != d_comps.end()) {
-        if (it->second.instances.Has(GetSlot(entity))) {
-            it->second.instances.Erase(GetSlot(entity));
+    if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
+        if (it->second.instances.Has(Slot())) {
+            it->second.instances.Erase(Slot());
         }
     }
 }
@@ -86,24 +99,10 @@ Entity Registry::New()
     return {this, GetID(slot, version)};
 }
 
-void Registry::Delete(Entity entity)
-{
-    assert(entity.Valid());
-
-    // Clean up all components
-    for (auto& [type, data] : d_comps) {
-        Remove(entity.Id(), type);
-    }
-    d_entities.Erase(entity.Slot());
-
-    // Add the entity slot to the pool of available IDs.
-    d_pool.push({entity.Slot(), entity.Version()});
-}
-
 void Registry::Delete(const std::vector<Entity>& entities)
 {
     for (auto entity : entities) {
-        Delete(entity);
+        entity.Delete();
     }
 }
 
@@ -111,7 +110,7 @@ void Registry::Clear()
 {
     // Clean up components, triggering onRemove behaviour
     for (auto entity : Safe()) {
-        Delete(entity);
+        entity.Delete();
     }
 
     // Reset internal structures
@@ -130,15 +129,6 @@ Entity Registry::Find(const EntityPredicate& pred)
     return ECS::Null;
 }
 
-bool Registry::Valid(u32 entity) const
-{
-    u16 index = GetSlot(entity);
-    u16 version = GetVersion(entity);
-    return entity != NULL_ID
-        && d_entities.Has(index)
-        && d_entities[index] == version;
-}
-
 std::size_t Registry::Size() const
 {
     return d_entities.Size();
@@ -147,16 +137,6 @@ std::size_t Registry::Size() const
 u32 Registry::GetID(u16 index, u16 version)
 {
     return (u32)version << 16 | index;
-}
-
-u16 Registry::GetSlot(u32 id)
-{
-    return static_cast<u16>(id);
-}
-
-u16 Registry::GetVersion(u32 id)
-{
-    return static_cast<u16>(id >> 16);
 }
 
 cppcoro::generator<Entity> Registry::Fast()
