@@ -3,6 +3,7 @@
 
 int main()
 {
+#define GAME
 #ifdef GAME
     Sprocket::Window window("Game");
     WorldLayer game(&window);
@@ -38,7 +39,7 @@ int main()
         if (i == 3) {
             auto e = reg.New();
             SPKT_LOG_INFO("Created index {} version {}", e.Slot(), e.Version());
-            e.Emplace<Sprocket::TransformComponent>();
+            e.Emplace<Sprocket::NameComponent>();
         }
         ++i;
     }

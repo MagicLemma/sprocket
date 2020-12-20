@@ -105,8 +105,13 @@ public:
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
-    // Generates all active entities.
+    // Generates all active entities. This is fast, however adding and removing
+    // entities while iterating results is undefined.
     cppcoro::generator<Entity> Fast();
+
+    // Generates all active entities. This is slow, but adding and removing
+    // entities is safe. If an entity is added, it may or may not be included
+    // in the iteration, depending on where in the sparse set it gets added.
     cppcoro::generator<Entity> Safe();
 
     // Generates all active entities with the specified components.
