@@ -75,9 +75,7 @@ void SparseSet<ValueType, IndexType>::Assure(IndexType index) {
 template <typename ValueType, typename IndexType>
 ValueType& SparseSet<ValueType, IndexType>::Insert(IndexType index, const ValueType& value)
 {
-    if (Has(index)) {
-        return d_packed[d_sparse[index]].second = value;
-    }
+    assert(!Has(index));
     Assure(index);
     IndexType location = d_packed.size();
     d_sparse[index] = location;

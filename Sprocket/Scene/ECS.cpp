@@ -73,17 +73,17 @@ Entity Registry::New()
     u16 version = 0;
 
     // If there is a slot in the pool, pop it and bump its version.
-    if (auto it = d_pool.begin(); it != d_pool.end()) {
-        slot = *it;
-        d_pool.erase(it);
-        version = ++d_entities[slot];
+    if (!d_pool.empty()) {
+        std::tie(slot, version) = d_pool.front();
+        d_pool.pop();
+        ++version;
     }
     // Otherwise we append on the end.
     else {
-        slot = d_entities.size();
-        d_entities.push_back(version);
+        slot = d_entities.Size(); // size of sparse == size of packed here
     }
 
+    d_entities.Insert(slot, version);
     return {this, GetID(slot, version)};
 }
 
@@ -95,30 +95,31 @@ void Registry::Delete(Entity entity)
     for (auto& [type, data] : d_comps) {
         Remove(entity.Id(), type);
     }
+    d_entities.Erase(entity.Slot());
 
     // Add the entity slot to the pool of available IDs.
-    d_pool.insert(entity.Slot());
+    d_pool.push({entity.Slot(), entity.Version()});
 }
 
 void Registry::Clear()
 {
-    for (auto entity : All()) {
+    for (auto entity : Safe()) {
         entity.Delete();
     }
 }
 
 bool Registry::Valid(u32 entity) const
 {
-    u16 slot = GetSlot(entity);
+    u16 index = GetSlot(entity);
     u16 version = GetVersion(entity);
     return entity != NULL_ID
-        && d_entities[slot] == version
-        && !d_pool.contains(slot);
+        && d_entities.Has(index)
+        && d_entities[index] == version;
 }
 
 std::size_t Registry::Size() const
 {
-    return d_entities.size() - d_pool.size();
+    return d_entities.Size();
 }
 
 u32 Registry::GetID(u16 index, u16 version)
@@ -136,12 +137,17 @@ u16 Registry::GetVersion(u32 id)
     return static_cast<u16>(id >> 16);
 }
 
-cppcoro::generator<Entity> Registry::All()
+cppcoro::generator<Entity> Registry::Fast()
 {
-    for (u16 index = 0; index < d_entities.size(); ++index) {
-        if (!d_pool.contains(index)) {
-            co_yield {this, GetID(index, d_entities[index])};
-        }
+    for (const auto& [index, version] : d_entities.Fast()) {
+        co_yield {this, GetID(index, version)};
+    }
+}
+
+cppcoro::generator<Entity> Registry::Safe()
+{
+    for (const auto& [index, version] : d_entities.Safe()) {
+        co_yield {this, GetID(index, version)};
     }
 }
 

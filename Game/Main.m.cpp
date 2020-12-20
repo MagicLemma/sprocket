@@ -11,34 +11,36 @@ int main()
     return Sprocket::Run(game, window, options);
 #else
     Sprocket::Log::Init();
-    Sprocket::SparseSet<std::string> set;
+    Sprocket::ECS::Registry reg;
 
-    set[6] = "a";
-    set[2] = "a";
-    set[9] = "a";
-    set[1] = "a";
-    set[0] = "a";
-    set[4] = "a";
-    set[11] = "a";
+    auto e = reg.New();
+    e.Emplace<Sprocket::NameComponent>();
+    e = reg.New();
+    e.Emplace<Sprocket::NameComponent>();
+    e = reg.New();
+    e.Emplace<Sprocket::NameComponent>();
+    e = reg.New();
+    e.Emplace<Sprocket::NameComponent>();
+    e = reg.New();
+    e.Emplace<Sprocket::NameComponent>();
 
-    for (auto& [index, value] : set.Fast()) {
-        SPKT_LOG_INFO("{} -> {}", index, value);
-    }
-
-    SPKT_LOG_INFO("Stable Loop:");
-
-    for (auto& [index, value] : set.Safe()) {
-        SPKT_LOG_INFO("{} -> {}", index, value);
-        if (index == 9) {
-            set.Erase(index);
+    int i = 0;
+    for (auto entity : reg.View<Sprocket::NameComponent>()) {
+        if (i == 2) {
+            SPKT_LOG_INFO("Deleting index {} version {}", entity.Slot(), entity.Version());
+            reg.Delete(entity);
         }
-        value = "6";
+        ++i;
     }
 
-    SPKT_LOG_INFO("Fast Loop:");
-
-    for (auto& [index, value] : set.Fast()) {
-        SPKT_LOG_INFO("{} -> {}", index, value);
+    i = 0;
+    for (auto entity : reg.View<Sprocket::NameComponent>()) {
+        if (i == 3) {
+            auto e = reg.New();
+            SPKT_LOG_INFO("Created index {} version {}", e.Slot(), e.Version());
+            e.Emplace<Sprocket::TransformComponent>();
+        }
+        ++i;
     }
 
 

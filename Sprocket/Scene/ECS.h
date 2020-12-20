@@ -65,10 +65,11 @@ public:
 
 private:
     // Stores the current version of each entity.
-    std::vector<u16> d_entities;
+    SparseSet<u16> d_entities;
 
-    // When an entity is removed, their slot is added to the pool so that it can be reused.
-    std::unordered_set<u16> d_pool;
+    // When an entity is removed, their slot/version is added to the pool so that it
+    // can be reused.
+    std::queue<std::pair<u16, u16>> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -105,7 +106,8 @@ public:
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     // Generates all active entities.
-    cppcoro::generator<Entity> All();
+    cppcoro::generator<Entity> Fast();
+    cppcoro::generator<Entity> Safe();
 
     // Generates all active entities with the specified components.
     template <typename... Comps> cppcoro::generator<Entity> View();
@@ -219,7 +221,7 @@ void Registry::OnRemove(const EntityCallback& cb)
 template <typename... Comps>
 cppcoro::generator<Entity> Registry::View()
 {
-    for (auto entity : All()) {
+    for (auto entity : Safe()) {
         if ((entity.Has<Comps>() && ...)) {
             co_yield entity;
         }
@@ -245,7 +247,7 @@ template <typename Comp, typename... Args>
 Comp& Entity::Emplace(Args&&... args)
 {
     assert(Valid());
-    return d_registry->Emplace<Comp>(id, std::forward<Args>(args)...);
+    return d_registry->Emplace<Comp>(d_id, std::forward<Args>(args)...);
 }
 
 template <typename Comp>

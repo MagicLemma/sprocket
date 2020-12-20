@@ -34,7 +34,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     out << YAML::EndMap;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : scene->Reg()->All()) {
+    for (auto entity : scene->Reg()->Fast()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
         if (entity.Has<TemporaryComponent>()) {
@@ -389,7 +389,7 @@ void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
     target->Clear();
     target->GetSun() = source->GetSun();
     target->GetAmbience() = source->GetAmbience();
-    for (auto entity : source->Reg()->All()) {
+    for (auto entity : source->Reg()->Fast()) {
         Copy(target, entity);
     }
 }
