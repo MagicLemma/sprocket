@@ -206,7 +206,7 @@ void Anvil::OnRender()
                 d_activeScene->OnStartup();
                 d_playingGame = true;
 
-                d_runtimeCamera = d_scene->Reg()->Find([](ECS::Entity entity) {
+                d_runtimeCamera = d_activeScene->Reg()->Find([](ECS::Entity entity) {
                     return entity.Has<Sprocket::CameraComponent>();
                 });
                 d_window->SetCursorVisibility(false);
