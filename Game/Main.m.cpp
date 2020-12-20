@@ -3,7 +3,7 @@
 
 int main()
 {
-#define GAME
+
 #ifdef GAME
     Sprocket::Window window("Game");
     WorldLayer game(&window);
@@ -12,7 +12,7 @@ int main()
     return Sprocket::Run(game, window, options);
 #else
     Sprocket::Log::Init();
-    auto [index, value] = get<A, B, C>();
-    SPKT_LOG_INFO("{}", index.name());
+
+    SPKT_LOG_INFO("{} {}", sizeof(Sprocket::ECS::Registry*), sizeof(Sprocket::u64));
 #endif
 }

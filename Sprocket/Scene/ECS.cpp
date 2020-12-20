@@ -8,7 +8,9 @@ namespace ECS {
 
 bool Entity::operator==(Entity other) const
 {
-    return d_registry == other.d_registry && d_id == other.d_id;
+    return d_registry == other.d_registry
+        && d_index == other.d_index
+        && d_version == other.d_version;
 }
 
 bool Entity::operator!=(Entity other) const
@@ -19,16 +21,17 @@ bool Entity::operator!=(Entity other) const
 Entity& Entity::operator=(Entity other)
 {
     d_registry = other.d_registry;
-    d_id = other.d_id;
+    d_index = other.d_index;
+    d_version = other.d_version;
     return *this;
 }
 
 bool Entity::Valid() const
 {
-     return d_id != NULL_ID
+     return *this != ECS::Null
          && d_registry
-         && d_registry->d_entities.Has(Slot())
-         && d_registry->d_entities[Slot()] == Version();
+         && d_registry->d_entities.Has(d_index)
+         && d_registry->d_entities[d_index] == d_version;
 }
 
 void Entity::Delete() 
@@ -41,23 +44,23 @@ void Entity::Delete()
         d_registry->d_entities.Erase(Slot());
 
         // Add the entity slot to the pool of available IDs.
-        d_registry->d_pool.push({Slot(), Version()});
+        d_registry->d_pool.push({d_index, d_version});
     }
 }
 
 u32 Entity::Id() const
 {
-    return d_id;
+    return (u32)d_version << 16 | d_index;
 }
 
 u16 Entity::Slot() const
 {
-    return static_cast<u16>(d_id);
+    return d_index;
 }
 
 u16 Entity::Version() const
 {
-    return static_cast<u16>(d_id >> 16);
+    return d_version;
 }
 
 Entity Entity::NewEntity() const
@@ -73,30 +76,30 @@ void Entity::Remove(std::type_index type)
     }
 
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
-        if (it->second.instances.Has(Slot())) {
-            it->second.instances.Erase(Slot());
+        if (it->second.instances.Has(d_index)) {
+            it->second.instances.Erase(d_index);
         }
     }
 }
 
 Entity Registry::New()
 {
-    u16 slot = 0;
+    u16 index = 0;
     u16 version = 0;
 
     // If there is a slot in the pool, pop it and bump its version.
     if (!d_pool.empty()) {
-        std::tie(slot, version) = d_pool.front();
+        std::tie(index, version) = d_pool.front();
         d_pool.pop();
         ++version;
     }
     // Otherwise we append on the end.
     else {
-        slot = d_entities.Size(); // size of sparse == size of packed here
+        index = d_entities.Size(); // size of sparse == size of packed here
     }
 
-    d_entities.Insert(slot, version);
-    return {this, GetID(slot, version)};
+    d_entities.Insert(index, version);
+    return {this, index, version};
 }
 
 void Registry::Clear()
@@ -127,22 +130,17 @@ std::size_t Registry::Size() const
     return d_entities.Size();
 }
 
-u32 Registry::GetID(u16 index, u16 version)
-{
-    return (u32)version << 16 | index;
-}
-
 cppcoro::generator<Entity> Registry::Fast()
 {
     for (const auto& [index, version] : d_entities.Fast()) {
-        co_yield {this, GetID(index, version)};
+        co_yield {this, index, version};
     }
 }
 
 cppcoro::generator<Entity> Registry::Safe()
 {
     for (const auto& [index, version] : d_entities.Safe()) {
-        co_yield {this, GetID(index, version)};
+        co_yield {this, index, version};
     }
 }
 

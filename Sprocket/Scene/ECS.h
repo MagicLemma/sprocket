@@ -25,17 +25,20 @@ namespace ECS {
 class Registry;
 
 static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
+static constexpr u16 NULL_INDEX = std::numeric_limits<u32>::max();
+static constexpr u16 NULL_VERSION = std::numeric_limits<u32>::max();
 
 class Entity
 {
     ECS::Registry* d_registry;
-    u32            d_id;
+    u16            d_index;
+    u16            d_version;
 
     void Remove(std::type_index type);
 
 public:
-    Entity(ECS::Registry* r, u32 i) : d_registry(r), d_id(i) {}
-    Entity() : d_registry(nullptr), d_id(NULL_ID) {}
+    Entity(ECS::Registry* r, u16 i, u16 v) : d_registry(r), d_index(i), d_version(v) {}
+    Entity() : d_registry(nullptr), d_index(NULL_INDEX), d_version(NULL_VERSION) {}
 
     bool Valid() const;
     void Delete();
@@ -125,13 +128,11 @@ public:
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
-    static u32 GetID(u16 slot, u16 version);
-
     friend class Entity;
 };
 
 // An "empty" entity.
-static const Entity Null(nullptr, NULL_ID);
+static const Entity Null(nullptr, NULL_INDEX, NULL_VERSION);
 
 // ==============================================================
 //                      TEMPLATE DEFINITIONS
@@ -155,7 +156,7 @@ template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::View()
 {
     for (auto& [index, comp] : d_comps[typeid(Comp)].instances.Fast()) {
-        Entity entity{this, GetID(index, d_entities[index])};
+        Entity entity{this, index, d_entities[index]};
         if ((entity.Has<Rest>() && ...)) {
             co_yield entity;
         }
@@ -174,7 +175,7 @@ template <typename Comp>
 Comp& Entity::Add(const Comp& component)
 {
     assert(Valid());
-    auto& entry = d_registry->d_comps[typeid(Comp)].instances[Slot()];
+    auto& entry = d_registry->d_comps[typeid(Comp)].instances[d_index];
     entry = component;
 
     for (const auto& cb : d_registry->d_comps[typeid(Comp)].onAdd) {
@@ -189,7 +190,7 @@ Comp& Entity::Emplace(Args&&... args)
 {
     assert(Valid());
     auto& entry = d_registry->d_comps[typeid(Comp)].instances.Insert(
-        Slot(), std::make_any<Comp&>(std::forward<Args>(args)...)
+        d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
     for (const auto& cb : d_registry->d_comps[typeid(Comp)].onAdd) {
@@ -210,7 +211,7 @@ template <typename Comp>
 Comp& Entity::Get()
 {
     assert(Valid());
-    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[Slot()];
+    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[d_index];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -218,7 +219,7 @@ template <typename Comp>
 const Comp& Entity::Get() const
 {
     assert(Valid());
-    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[Slot()];
+    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[d_index];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -227,8 +228,8 @@ bool Entity::Has() const
 {
     assert(Valid());
     if (auto it = d_registry->d_comps.find(typeid(Comp)); it != d_registry->d_comps.end()) {
-        if (it->second.instances.Has(Slot())) {
-            const auto& entry = it->second.instances[Slot()];
+        if (it->second.instances.Has(d_index)) {
+            const auto& entry = it->second.instances[d_index];
             return entry.has_value();
         }
     }
