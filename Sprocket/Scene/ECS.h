@@ -58,6 +58,9 @@ public:
     Entity NewEntity() const;
 };
 
+template <typename... Comps>
+struct Include {};
+
 class Registry
 {
 public:
@@ -105,6 +108,8 @@ public:
     // Number of active entities in the registry.
     std::size_t Size() const;
 
+    // Returns the first entity satisfying the given predicate, or ECS::Null if
+    // none is found.
     Entity Find(const EntityPredicate& pred);
 
     // Generates all active entities. This is fast, however adding and removing
@@ -120,6 +125,8 @@ public:
     // This should only be used for modifying the components, not adding/removing
     // new ones.
     template <typename Comp> cppcoro::generator<Entity> View();
+
+    template <typename Comp, typename... Comps> cppcoro::generator<Entity> View(Include<Comps...>);
 
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
@@ -235,6 +242,16 @@ cppcoro::generator<Entity> Registry::View()
 {
     for (auto& [index, comp] : d_comps[typeid(Comp)].instances.Fast()) {
         co_yield {this, GetID(index, d_entities[index])};
+    }
+}
+
+template <typename Comp, typename... Comps>
+cppcoro::generator<Entity> Registry::View(Include<Comps...>)
+{
+    for (auto entity : View<Comp>()) {
+        if ((entity.Has<Comps>() && ...)) {
+            co_yield entity;
+        }
     }
 }
 

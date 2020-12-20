@@ -51,19 +51,17 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    for (auto entity : scene.Reg()->View<LightComponent>()) {
-        if (entity.Has<TransformComponent>()) {
-            if (i < MAX_NUM_LIGHTS) {
-                auto position = entity.Get<TransformComponent>().position;
-                auto light = entity.Get<LightComponent>();
-                shader.LoadVec3(ArrayName("u_light_pos", i), position);
-                shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
-                shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
-                ++i;
-            }
-            else {
-                break;
-            }
+    for (auto entity : scene.Reg()->View<LightComponent>(ECS::Include<TransformComponent>())) {
+        if (i < MAX_NUM_LIGHTS) {
+            auto position = entity.Get<TransformComponent>().position;
+            auto light = entity.Get<LightComponent>();
+            shader.LoadVec3(ArrayName("u_light_pos", i), position);
+            shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
+            shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
+            ++i;
+        }
+        else {
+            break;
         }
     }
     while (i < MAX_NUM_LIGHTS) {
