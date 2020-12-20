@@ -75,7 +75,9 @@ void Runtime::OnUpdate(double dt)
             toDelete.push_back(entity);
         }
     }
-    d_scene->Reg()->Delete(toDelete);
+    for (auto entity : toDelete) {
+        entity.Delete();
+    }
 }
 
 void Runtime::OnRender()

@@ -99,13 +99,6 @@ Entity Registry::New()
     return {this, GetID(slot, version)};
 }
 
-void Registry::Delete(const std::vector<Entity>& entities)
-{
-    for (auto entity : entities) {
-        entity.Delete();
-    }
-}
-
 void Registry::Clear()
 {
     // Clean up components, triggering onRemove behaviour

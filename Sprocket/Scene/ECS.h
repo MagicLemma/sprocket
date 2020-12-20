@@ -95,7 +95,6 @@ public:
     Registry() = default;
 
     Entity New();
-    void Delete(const std::vector<Entity>& entities);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality.

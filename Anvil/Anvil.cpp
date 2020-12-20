@@ -112,7 +112,9 @@ void Anvil::OnUpdate(double dt)
             toDelete.push_back(entity);
         }
     }
-    d_activeScene->Reg()->Delete(toDelete);
+    for (auto entity : toDelete) {
+        entity.Delete();
+    }
 }
 
 void Anvil::OnRender()
