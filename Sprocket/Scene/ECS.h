@@ -118,9 +118,10 @@ public:
     // in the iteration, depending on where in the sparse set it gets added.
     cppcoro::generator<Entity> Safe();
 
-    // Does a fast iteration over all entities with the given component.
-    // This should only be used for modifying the components, not adding/removing
-    // new ones.
+    // Does a fast iteration over all entities with the given Comp. If any extra
+    // component types are specified, only entities that have all of those types
+    // will be yielded. This should only be used for modifying the components, not
+    // adding/removing new ones.
     template <typename Comp, typename... Rest> cppcoro::generator<Entity> View();
 
     template <typename Comp> void OnAdd(const EntityCallback& cb);
