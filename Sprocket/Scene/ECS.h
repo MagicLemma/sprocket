@@ -129,13 +129,6 @@ public:
 
     bool Valid(u32 entity) const;
 
-    template <typename Comp> Comp& Add(u32 entity);
-    template <typename Comp> Comp& Add(u32 entity, const Comp& component);
-    template <typename Comp> void Remove(u32 entity);
-    template <typename Comp> Comp& Get(u32 entity);
-    template <typename Comp> const Comp& Get(u32 entity) const;
-    template <typename Comp> bool Has(u32 entity) const;
-
     static u32 GetID(u16 slot, u16 version);
     static u16 GetSlot(u32 id);
     static u16 GetVersion(u32 id);
@@ -151,62 +144,6 @@ static const Entity Null(nullptr, NULL_ID);
 // ==============================================================
 
 // REGISTRY TEMPLATES
-
-template <typename Comp>
-Comp& Registry::Add(u32 entity)
-{
-    return Add<Comp>(entity, Comp{});
-}
-
-template <typename Comp>
-Comp& Registry::Add(u32 entity, const Comp& component)
-{
-    assert(Valid(entity));
-    auto& entry = d_comps[typeid(Comp)].instances[GetSlot(entity)];
-    entry = component;
-
-    for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
-        cb({this, entity});
-    }
-
-    return std::any_cast<Comp&>(entry);
-}
-
-template <typename Comp>
-void Registry::Remove(u32 entity)
-{
-    assert(Valid(entity));
-    Remove(entity, typeid(Comp));
-}
-
-template <typename Comp>
-Comp& Registry::Get(u32 entity)
-{
-    assert(Valid(entity));
-    auto& entry = d_comps.at(typeid(Comp)).instances[GetSlot(entity)];
-    return std::any_cast<Comp&>(entry);
-}
-
-template <typename Comp>
-const Comp& Registry::Get(u32 entity) const
-{
-    assert(Valid(entity));
-    auto& entry = d_comps.at(typeid(Comp)).instances[GetSlot(entity)];
-    return std::any_cast<Comp&>(entry);
-}
-
-template <typename Comp>
-bool Registry::Has(u32 entity) const
-{
-    assert(Valid(entity));
-    if (auto it = d_comps.find(typeid(Comp)); it != d_comps.end()) {
-        if (it->second.instances.Has(GetSlot(entity))) {
-            const auto& entry = it->second.instances[GetSlot(entity)];
-            return entry.has_value();
-        }
-    }
-    return false;
-}
 
 template <typename Comp>
 void Registry::OnAdd(const EntityCallback& cb)
@@ -243,20 +180,26 @@ template <typename Comp>
 Comp& Entity::Add(const Comp& component)
 {
     assert(Valid());
-    return d_registry->Add<Comp>(d_id, component);
+    auto& entry = d_registry->d_comps[typeid(Comp)].instances[Slot()];
+    entry = component;
+
+    for (const auto& cb : d_registry->d_comps[typeid(Comp)].onAdd) {
+        cb(*this);
+    }
+
+    return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp, typename... Args>
 Comp& Entity::Emplace(Args&&... args)
 {
     assert(Valid());
-    
     auto& entry = d_registry->d_comps[typeid(Comp)].instances.Insert(
         Slot(), std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
     for (const auto& cb : d_registry->d_comps[typeid(Comp)].onAdd) {
-        cb({this, entity});
+        cb(*this);
     }
 
     return std::any_cast<Comp&>(entry);
@@ -266,28 +209,36 @@ template <typename Comp>
 void Entity::Remove()
 {
     assert(Valid());
-    d_registry->Remove<Comp>(d_id);
+    d_registry->Remove(d_id, typeid(Comp));
 }
 
 template <typename Comp>
 Comp& Entity::Get()
 {
     assert(Valid());
-    return d_registry->Get<Comp>(d_id);
+    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[Slot()];
+    return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
 const Comp& Entity::Get() const
 {
     assert(Valid());
-    return d_registry->Get<Comp>(d_id);
+    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[Slot()];
+    return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
 bool Entity::Has() const
 {
     assert(Valid());
-    return d_registry->Has<Comp>(d_id);
+    if (auto it = d_registry->d_comps.find(typeid(Comp)); it != d_registry->d_comps.end()) {
+        if (it->second.instances.Has(Slot())) {
+            const auto& entry = it->second.instances[Slot()];
+            return entry.has_value();
+        }
+    }
+    return false;
 }
 
 }
