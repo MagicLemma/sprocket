@@ -52,35 +52,23 @@ void ShadowMap::Draw(
     glClear(GL_DEPTH_BUFFER_BIT);
     glCullFace(GL_FRONT);
 
-    std::string currentModel;
-    // TODO: Switch to a render command model like in the entity renderer as this
-    // relies on the entities being sorted.
+    std::unordered_map<std::string, std::vector<InstanceData>> commands;
     for (auto entity : scene.Reg()->View<ModelComponent>()) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
-        if (mc.mesh.empty()) { return; }
-
-        if(mc.mesh != currentModel) {
-            d_instanceBuffer->SetData(d_instanceData);
-            d_vao->SetInstances(d_instanceBuffer);
-            d_vao->Draw();
-            d_instanceData.clear();
-
-            d_vao->SetModel(d_assetManager->GetMesh(mc.mesh));
-            currentModel = mc.mesh;
-        }
-
-        d_instanceData.push_back({
-            tc.position,
-            tc.orientation,
-            tc.scale
-        });
+        if (mc.mesh.empty()) { continue; }
+        commands[mc.mesh].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
-    d_instanceBuffer->SetData(d_instanceData);
-    d_vao->SetInstances(d_instanceBuffer);
-    d_vao->Draw();
-    d_instanceData.clear();
+    for (const auto& [key, data] : commands) {
+        auto mesh = d_assetManager->GetMesh(key);
+        if (!mesh) { continue; }
+
+        d_vao->SetModel(mesh);
+        d_instanceBuffer->SetData(data);
+        d_vao->SetInstances(d_instanceBuffer);
+        d_vao->Draw();
+    }
 
     glCullFace(GL_BACK);
     d_shadowMap.Unbind();
