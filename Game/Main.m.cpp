@@ -27,7 +27,7 @@ int main()
 
     SPKT_LOG_INFO("Stable Loop:");
 
-    for (auto& [index, value] : set.Stable()) {
+    for (auto& [index, value] : set.Safe()) {
         SPKT_LOG_INFO("{} -> {}", index, value);
         if (index == 9) {
             set.Erase(index);

@@ -61,7 +61,7 @@ public:
 
     // Provides a generator that loops over the sparse set, which is slower but
     // safe for deleting the current element.
-    cppcoro::generator<std::pair<const IndexType, ValueType>&> Stable();
+    cppcoro::generator<std::pair<const IndexType, ValueType>&> Safe();
 };
 
 
@@ -155,7 +155,7 @@ cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, 
 }
 
 template <typename ValueType, typename IndexType>
-cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Stable()
+cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Safe()
 {
     for (auto index : d_sparse) {
         if (index != EMPTY) {
