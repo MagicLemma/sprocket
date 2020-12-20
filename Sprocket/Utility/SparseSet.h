@@ -5,6 +5,9 @@
 #include <vector>
 #include <array>
 #include <utility>
+#include <functional>
+
+#include <cppcoro/generator.hpp>
 
 namespace Sprocket {
 
@@ -12,7 +15,7 @@ template <typename ValueType, typename IndexType = std::uint16_t>
 class SparseSet
 {
 public:
-    using PackedType = std::vector<std::pair<IndexType, ValueType>>;
+    using PackedType = std::vector<std::pair<const IndexType, ValueType>>;
     using SparseType = std::vector<IndexType>;
 
     using Iterator = typename PackedType::iterator;
@@ -52,8 +55,13 @@ public:
     ValueType& operator[](IndexType index);
     const ValueType& operator[](IndexType index) const;
 
-    Iterator begin() { return d_packed.begin(); }
-    Iterator end() { return d_packed.end(); }
+    // Provides a generator that loops over the packed set, which is fast but
+    // results in undefined behaviour when removing elements.
+    cppcoro::generator<std::pair<const IndexType, ValueType>&> Fast();
+
+    // Provides a generator that loops over the sparse set, which is slower but
+    // safe for deleting the current element.
+    cppcoro::generator<std::pair<const IndexType, ValueType>&> Stable();
 };
 
 
@@ -70,12 +78,10 @@ ValueType& SparseSet<ValueType, IndexType>::Insert(IndexType index, const ValueT
     if (Has(index)) {
         return d_packed[d_sparse[index]].second = value;
     }
-    else {
-        Assure(index);
-        IndexType location = d_packed.size();
-        d_sparse[index] = location;
-        return d_packed.emplace_back(std::make_pair(index, value)).second;
-    }
+    Assure(index);
+    IndexType location = d_packed.size();
+    d_sparse[index] = location;
+    return d_packed.emplace_back(std::make_pair(index, value)).second;
 }
 
 template <typename ValueType, typename IndexType>
@@ -111,7 +117,8 @@ void SparseSet<ValueType, IndexType>::Erase(IndexType index)
     d_sparse[index] = EMPTY;
 
     // Overwrite the outgoing value with the back value.
-    d_packed[packed_index] = back;
+    d_packed[packed_index].second = back.second;
+    const_cast<IndexType&>(d_packed[packed_index].first) = back.first;
 
     // Point the index for the back value to its new location.
     d_sparse[back.first] = packed_index;
@@ -137,6 +144,24 @@ const ValueType& SparseSet<ValueType, IndexType>::operator[](IndexType index) co
 {
     assert(Has(index));
     return d_packed[d_sparse[index]].second;
+}
+
+template <typename ValueType, typename IndexType>
+cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Fast()
+{
+    for (auto pair : d_packed) {
+        co_yield pair;
+    }
+}
+
+template <typename ValueType, typename IndexType>
+cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Stable()
+{
+    for (auto index : d_sparse) {
+        if (index != EMPTY) {
+            co_yield d_packed[index];
+        }
+    }
 }
 
 }

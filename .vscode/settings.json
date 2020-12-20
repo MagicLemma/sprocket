@@ -90,6 +90,7 @@
         "mprealsupport": "cpp",
         "orderingmethods": "cpp",
         "matrixfunctions": "cpp",
-        "polynomials": "cpp"
+        "polynomials": "cpp",
+        "adolcforward": "cpp"
     }
 }

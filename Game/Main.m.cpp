@@ -11,16 +11,36 @@ int main()
     return Sprocket::Run(game, window, options);
 #else
     Sprocket::Log::Init();
-    Sprocket::ECS::Registry reg;
+    Sprocket::SparseSet<std::string> set;
 
-    auto e1 = reg.New();
+    set[6] = "a";
+    set[2] = "a";
+    set[9] = "a";
+    set[1] = "a";
+    set[0] = "a";
+    set[4] = "a";
+    set[11] = "a";
 
-    auto e2 = reg.New();
-    SPKT_LOG_INFO("SLOT {} VERSION {}", e2.Slot(), e2.Version());
-
-    for (auto e : reg.All()) {
-        SPKT_LOG_INFO("{}: {} {}", e.Id(), e.Slot(), e.Version());
+    for (auto& [index, value] : set.Fast()) {
+        SPKT_LOG_INFO("{} -> {}", index, value);
     }
+
+    SPKT_LOG_INFO("Stable Loop:");
+
+    for (auto& [index, value] : set.Stable()) {
+        SPKT_LOG_INFO("{} -> {}", index, value);
+        if (index == 9) {
+            set.Erase(index);
+        }
+        value = "6";
+    }
+
+    SPKT_LOG_INFO("Fast Loop:");
+
+    for (auto& [index, value] : set.Fast()) {
+        SPKT_LOG_INFO("{} -> {}", index, value);
+    }
+
 
 #endif
 }
