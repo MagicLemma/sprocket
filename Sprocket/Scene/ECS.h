@@ -58,9 +58,6 @@ public:
     Entity NewEntity() const;
 };
 
-template <typename... Comps>
-struct Include {};
-
 class Registry
 {
 public:
@@ -124,9 +121,7 @@ public:
     // Does a fast iteration over all entities with the given component.
     // This should only be used for modifying the components, not adding/removing
     // new ones.
-    template <typename Comp> cppcoro::generator<Entity> View();
-
-    template <typename Comp, typename... Comps> cppcoro::generator<Entity> View(Include<Comps...>);
+    template <typename Comp, typename... Rest> cppcoro::generator<Entity> View();
 
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
@@ -237,19 +232,12 @@ void Registry::OnRemove(const EntityCallback& cb)
     d_comps[typeid(Comp)].onRemove.push_back(cb);
 }
 
-template <typename Comp>
+template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::View()
 {
     for (auto& [index, comp] : d_comps[typeid(Comp)].instances.Fast()) {
-        co_yield {this, GetID(index, d_entities[index])};
-    }
-}
-
-template <typename Comp, typename... Comps>
-cppcoro::generator<Entity> Registry::View(Include<Comps...>)
-{
-    for (auto entity : View<Comp>()) {
-        if ((entity.Has<Comps>() && ...)) {
+        Entity entity{this, GetID(index, d_entities[index])};
+        if ((entity.Has<Rest>() && ...)) {
             co_yield entity;
         }
     }
