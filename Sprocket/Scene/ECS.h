@@ -131,7 +131,6 @@ public:
 
     template <typename Comp> Comp& Add(u32 entity);
     template <typename Comp> Comp& Add(u32 entity, const Comp& component);
-    template <typename Comp, typename... Args> Comp& Emplace(u32 entity, Args&&... args);
     template <typename Comp> void Remove(u32 entity);
     template <typename Comp> Comp& Get(u32 entity);
     template <typename Comp> const Comp& Get(u32 entity) const;
@@ -140,6 +139,8 @@ public:
     static u32 GetID(u16 slot, u16 version);
     static u16 GetSlot(u32 id);
     static u16 GetVersion(u32 id);
+
+    friend class Entity;
 };
 
 // An "empty" entity.
@@ -163,20 +164,6 @@ Comp& Registry::Add(u32 entity, const Comp& component)
     assert(Valid(entity));
     auto& entry = d_comps[typeid(Comp)].instances[GetSlot(entity)];
     entry = component;
-
-    for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
-        cb({this, entity});
-    }
-
-    return std::any_cast<Comp&>(entry);
-}
-
-template <typename Comp, typename... Args>
-Comp& Registry::Emplace(u32 entity, Args&&... args)
-{
-    assert(Valid(entity));
-    auto& entry = d_comps[typeid(Comp)].instances[GetSlot(entity)];
-    entry = std::make_any<Comp&>(std::forward<Args>(args)...);
 
     for (const auto& cb : d_comps[typeid(Comp)].onAdd) {
         cb({this, entity});
@@ -263,7 +250,16 @@ template <typename Comp, typename... Args>
 Comp& Entity::Emplace(Args&&... args)
 {
     assert(Valid());
-    return d_registry->Emplace<Comp>(d_id, std::forward<Args>(args)...);
+    
+    auto& entry = d_registry->d_comps[typeid(Comp)].instances.Insert(
+        Slot(), std::make_any<Comp&>(std::forward<Args>(args)...)
+    );
+
+    for (const auto& cb : d_registry->d_comps[typeid(Comp)].onAdd) {
+        cb({this, entity});
+    }
+
+    return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>

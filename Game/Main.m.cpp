@@ -1,26 +1,29 @@
 #include <Sprocket.h>
 #include "Game.h"
 
-struct A {};
-struct B {};
-struct C {};
+struct A {
+    static const int x = 5;
+};
+struct B {
+    static const int x = 2;
+};
+struct C {
+    static const int x = 6;
+};
 
-template <typename T>
-bool bar()
+template <typename Comp, typename... Rest>
+constexpr std::pair<std::type_index, int> get()
 {
-    return true;
+    if constexpr (sizeof...(Rest) == 0) {
+        return {typeid(Comp), Comp::x};
+    } else {
+        return std::min(get<Comp>(), get<Rest...>(), [](const auto& lhs, const auto& rhs) {
+            return lhs.second < rhs.second;
+        });
+    }
 }
 
-template <typename... Types>
-void foo ()
-{
-    if ((bar<Types>() && ...)) {
-        SPKT_LOG_INFO("True!");
-    }
-    else {
-        SPKT_LOG_INFO("False!");
-    }
-}
+
 
 int main()
 {
@@ -32,6 +35,7 @@ int main()
     return Sprocket::Run(game, window, options);
 #else
     Sprocket::Log::Init();
-    foo<>();
+    auto [index, value] = get<A, B, C>();
+    SPKT_LOG_INFO("{}", index.name());
 #endif
 }
