@@ -219,16 +219,15 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
     d_sceneFile = sceneFile;
     Loader::Load(sceneFile, d_scene);
 
-    d_scene->Each<NameComponent>([&](ECS::Entity& entity) {
-        const auto& name = entity.Get<NameComponent>();
-        if (name.name == "Worker") {
-            d_worker = entity;
-        }
-        else if (name.name == "Camera") {
-            d_camera = entity;
-            d_gameGrid->SetCamera(entity);
-        }
+    d_worker = d_scene->Reg()->Find([](ECS::Entity entity) {
+        return entity.Has<NameComponent>() && entity.Get<NameComponent>().name == "Worker";
     });
+
+    d_camera = d_scene->Reg()->Find([](ECS::Entity entity) {
+        return entity.Has<NameComponent>() && entity.Get<NameComponent>().name == "Camera";
+    });
+
+    d_gameGrid->SetCamera(d_camera);
 
     assert(d_worker != ECS::Null);
     assert(d_camera != ECS::Null);

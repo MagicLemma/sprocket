@@ -62,6 +62,7 @@ class Registry
 {
 public:
     using EntityCallback = std::function<void(Entity)>;
+    using EntityPredicate = std::function<bool(Entity)>;
 
 private:
     // Stores the current version of each entity.
@@ -95,15 +96,16 @@ public:
 
     Entity New();
     void Delete(Entity entity);
+    void Delete(const std::vector<Entity>& entities);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality.
     void Clear();
 
+    // Number of active entities in the registry.
     std::size_t Size() const;
 
-    template <typename Comp> void OnAdd(const EntityCallback& cb);
-    template <typename Comp> void OnRemove(const EntityCallback& cb);
+    Entity Find(const EntityPredicate& pred);
 
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
@@ -114,8 +116,13 @@ public:
     // in the iteration, depending on where in the sparse set it gets added.
     cppcoro::generator<Entity> Safe();
 
-    // Generates all active entities with the specified components.
-    template <typename... Comps> cppcoro::generator<Entity> View();
+    // Does a fast iteration over all entities with the given component.
+    // This should only be used for modifying the components, not adding/removing
+    // new ones.
+    template <typename Comp> cppcoro::generator<Entity> View();
+
+    template <typename Comp> void OnAdd(const EntityCallback& cb);
+    template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     bool Valid(u32 entity) const;
 
@@ -144,7 +151,7 @@ static const Entity Null(nullptr, NULL_ID);
 template <typename Comp>
 Comp& Registry::Add(u32 entity)
 {
-    Add<Comp>(entity, Comp{});
+    return Add<Comp>(entity, Comp{});
 }
 
 template <typename Comp>
@@ -223,13 +230,11 @@ void Registry::OnRemove(const EntityCallback& cb)
     d_comps[typeid(Comp)].onRemove.push_back(cb);
 }
 
-template <typename... Comps>
+template <typename Comp>
 cppcoro::generator<Entity> Registry::View()
 {
-    for (auto entity : Safe()) {
-        if ((entity.Has<Comps>() && ...)) {
-            co_yield entity;
-        }
+    for (auto& [index, comp] : d_comps[typeid(Comp)].instances.Fast()) {
+        co_yield {this, GetID(index, d_entities[index])};
     }
 }
 

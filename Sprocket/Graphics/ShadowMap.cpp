@@ -53,7 +53,9 @@ void ShadowMap::Draw(
     glCullFace(GL_FRONT);
 
     std::string currentModel;
-    scene.Each<ModelComponent>([&](ECS::Entity& entity) {
+    // TODO: Switch to a render command model like in the entity renderer as this
+    // relies on the entities being sorted.
+    for (auto entity : scene.Reg()->View<ModelComponent>()) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { return; }
@@ -73,7 +75,7 @@ void ShadowMap::Draw(
             tc.orientation,
             tc.scale
         });
-    });
+    }
 
     d_instanceBuffer->SetData(d_instanceData);
     d_vao->SetInstances(d_instanceBuffer);

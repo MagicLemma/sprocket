@@ -51,7 +51,6 @@ void GameGrid::OnStartup(Scene& scene)
         auto& transform = entity.Get<TransformComponent>();
         const auto& gc = entity.Get<GridComponent>();
 
-        assert(entity.Has<TransformComponent>());
         assert(!d_gridEntities.contains({gc.x, gc.z}));
     
         transform.position.x = gc.x + 0.5f;
@@ -59,7 +58,9 @@ void GameGrid::OnStartup(Scene& scene)
         d_gridEntities[{gc.x, gc.z}] = entity;
     };
 
-    scene.Each<GridComponent>(addGrid);
+    for (auto entity : scene.Reg()->View<GridComponent>()) {
+        addGrid(entity);
+    }
 
     scene.Reg()->OnAdd<GridComponent>(addGrid);
 

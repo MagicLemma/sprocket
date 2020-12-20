@@ -11,7 +11,7 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 
 void ParticleSystem::OnUpdate(Scene& scene, double dt)
 {
-    scene.Each<ParticleComponent>([&](ECS::Entity& entity) {
+    for (auto entity : scene.Reg()->View<ParticleComponent>()) {
         auto& tc = entity.Get<TransformComponent>();
         auto& pc = entity.Get<ParticleComponent>();
 
@@ -34,7 +34,7 @@ void ParticleSystem::OnUpdate(Scene& scene, double dt)
 
             pc.accumulator -= pc.interval;
         }
-    });
+    }
 }
 
 }

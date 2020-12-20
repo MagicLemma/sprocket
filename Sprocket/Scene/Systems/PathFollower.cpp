@@ -6,7 +6,7 @@ namespace Sprocket {
 
 void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt)
 {
-    scene.Each<PathComponent>([&](ECS::Entity& entity) {
+    for (auto entity : scene.Reg()->View<PathComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         auto& path = entity.Get<PathComponent>();
         if (path.markers.empty()) { return; }
@@ -24,7 +24,7 @@ void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt)
             transform.position = path.markers.front();
             path.markers.pop();
         }
-    });
+    }
 }
 
 }

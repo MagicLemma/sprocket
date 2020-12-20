@@ -49,8 +49,8 @@ Anvil::Anvil(Window* window)
 
     d_scene->OnStartup();
 
-    d_scene->Each<CameraComponent>([&](ECS::Entity& entity) {
-        d_runtimeCamera = entity;
+    d_runtimeCamera = d_scene->Reg()->Find([](ECS::Entity entity) {
+        return entity.Has<CameraComponent>();
     });
 
     d_activeScene = d_scene;
@@ -105,12 +105,14 @@ void Anvil::OnUpdate(double dt)
         d_editorCamera.OnUpdate(dt);
     }
     
-    d_activeScene->Each<TransformComponent>([&](ECS::Entity& entity) {
+    std::vector<ECS::Entity> toDelete;
+    for (auto entity : d_activeScene->Reg()->View<TransformComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
-            entity.Delete();
+            toDelete.push_back(entity);
         }
-    });
+    }
+    d_activeScene->Reg()->Delete(toDelete);
 }
 
 void Anvil::OnRender()
@@ -204,8 +206,8 @@ void Anvil::OnRender()
                 d_activeScene->OnStartup();
                 d_playingGame = true;
 
-                d_activeScene->Each<Sprocket::CameraComponent>([&](ECS::Entity& entity) {
-                    d_runtimeCamera = entity;
+                d_runtimeCamera = d_scene->Reg()->Find([](ECS::Entity entity) {
+                    return entity.Has<Sprocket::CameraComponent>();
                 });
                 d_window->SetCursorVisibility(false);
             }

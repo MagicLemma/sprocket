@@ -61,8 +61,7 @@ void Registry::Remove(u32 entity, std::type_index type)
 
     if (auto it = d_comps.find(type); it != d_comps.end()) {
         if (it->second.instances.Has(GetSlot(entity))) {
-            auto& entry = it->second.instances[GetSlot(entity)];
-            entry.reset();
+            it->second.instances.Erase(GetSlot(entity));
         }
     }
 }
@@ -101,11 +100,34 @@ void Registry::Delete(Entity entity)
     d_pool.push({entity.Slot(), entity.Version()});
 }
 
+void Registry::Delete(const std::vector<Entity>& entities)
+{
+    for (auto entity : entities) {
+        Delete(entity);
+    }
+}
+
 void Registry::Clear()
 {
+    // Clean up components, triggering onRemove behaviour
     for (auto entity : Safe()) {
-        entity.Delete();
+        Delete(entity);
     }
+
+    // Reset internal structures
+    d_entities.Clear();
+    std::queue<std::pair<u16, u16>>().swap(d_pool);
+    d_comps.clear();
+}
+
+Entity Registry::Find(const EntityPredicate& pred)
+{
+    for (auto entity : Fast()) {
+        if (pred(entity)) {
+            return entity;
+        }
+    }
+    return ECS::Null;
 }
 
 bool Registry::Valid(u32 entity) const

@@ -19,7 +19,9 @@ void CameraSystem::OnStartup(Scene& scene)
         );
     };
 
-    scene.Each<CameraComponent>(addCamera);
+    for (auto entity : scene.Reg()->View<CameraComponent>()) {
+        addCamera(entity);
+    }
 
     scene.Reg()->OnAdd<CameraComponent>(addCamera);
 }
@@ -29,12 +31,12 @@ void CameraSystem::OnEvent(Scene& scene, Event& event)
     if (auto e = event.As<WindowResizeEvent>()) {
         d_aspectRatio = e->AspectRatio();
 
-        scene.Each<CameraComponent>([&](ECS::Entity& entity) {
+        for (auto entity : scene.Reg()->View<CameraComponent>()) {
             auto& camera = entity.Get<CameraComponent>();
             camera.projection = glm::perspective(
                 camera.fov, d_aspectRatio, 0.1f, 1000.0f
             );
-        });
+        }
     }
 }
 

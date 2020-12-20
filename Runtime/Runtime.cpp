@@ -35,9 +35,10 @@ Runtime::Runtime(Window* window)
 
     d_scene->OnStartup();
 
-    d_scene->Each<CameraComponent>([&](ECS::Entity& entity) {
+    for (auto entity : d_scene->Reg()->View<CameraComponent>()) {
         d_runtimeCamera = entity;
-    });
+        break;
+    }
 }
 
 void Runtime::OnEvent(Event& event)
@@ -67,12 +68,14 @@ void Runtime::OnUpdate(double dt)
         d_particleManager.OnUpdate(dt);
     }
     
-    d_scene->Each<TransformComponent>([&](ECS::Entity& entity) {
+    std::vector<ECS::Entity> toDelete;
+    for (auto entity : d_scene->Reg()->View<TransformComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
-            entity.Delete();
+            toDelete.push_back(entity);
         }
-    });
+    }
+    d_scene->Reg()->Delete(toDelete);
 }
 
 void Runtime::OnRender()

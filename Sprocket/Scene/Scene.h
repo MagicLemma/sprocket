@@ -61,11 +61,6 @@ public:
 
     std::size_t Size() const;
 
-    template <typename... Components> void Each(EntityCallback func);
-        // Loops through all the entities that have the specified
-        // components and calls the given lambda with each entity
-        // as the argument.
-
     void Clear();
 
     Sun& GetSun() { return d_sun; }
@@ -74,13 +69,5 @@ public:
     Ambience& GetAmbience() { return d_ambience; }
     const Ambience& GetAmbience() const { return d_ambience; }
 };
-
-template <typename... Components>
-void Scene::Each(EntityCallback lambda)
-{
-    for (ECS::Entity e : d_registry.View<Components...>()) {
-        lambda(e);   
-    }
-}
 
 }

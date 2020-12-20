@@ -51,16 +51,21 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    scene.Each<LightComponent, TransformComponent>([&](ECS::Entity& entity) {
-        if (i < MAX_NUM_LIGHTS) {
-            auto position = entity.Get<TransformComponent>().position;
-            auto light = entity.Get<LightComponent>();
-            shader.LoadVec3(ArrayName("u_light_pos", i), position);
-			shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
-            shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
-            ++i;
+    for (auto entity : scene.Reg()->View<LightComponent>()) {
+        if (entity.Has<TransformComponent>()) {
+            if (i < MAX_NUM_LIGHTS) {
+                auto position = entity.Get<TransformComponent>().position;
+                auto light = entity.Get<LightComponent>();
+                shader.LoadVec3(ArrayName("u_light_pos", i), position);
+                shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
+                shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
+                ++i;
+            }
+            else {
+                break;
+            }
         }
-    });
+    }
     while (i < MAX_NUM_LIGHTS) {
         shader.LoadVec3(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
         shader.LoadVec3(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
@@ -145,14 +150,14 @@ void EntityRenderer::Draw(
     std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
 
     d_staticShader.Bind();
-    scene.Each<ModelComponent>([&](ECS::Entity& entity) {
+    for (auto entity : scene.Reg()->View<ModelComponent>()) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
-        if (mc.mesh.empty()) { return; }
+        if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
-        if (mesh->IsAnimated()) { return; }
+        if (mesh->IsAnimated()) { continue; }
         commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
-    });
+    }
 
     for (const auto& [key, data] : commands) {
         auto mesh = d_assetManager->GetMesh(key.first);
@@ -174,12 +179,12 @@ void EntityRenderer::Draw(
     }
 
     d_animatedShader.Bind();
-    scene.Each<ModelComponent>([&](ECS::Entity& entity) {
+    for (auto entity : scene.Reg()->View<ModelComponent>()) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
-        if (mc.mesh.empty()) { return; }
+        if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
-        if (!mesh->IsAnimated()) { return; }
+        if (!mesh->IsAnimated()) { continue; }
 
         auto material = d_assetManager->GetMaterial(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
@@ -205,7 +210,7 @@ void EntityRenderer::Draw(
         d_vao->SetModel(mesh);
         d_vao->SetInstances(nullptr);
         d_vao->Draw();
-    });
+    }
     d_animatedShader.Unbind();
 }
 

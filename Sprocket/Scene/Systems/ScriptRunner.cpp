@@ -25,8 +25,9 @@ void ScriptRunner::OnStartup(Scene& scene)
         luaEngine.CallInitFunction();
     };
 
-    scene.Each<ScriptComponent>(AddScript);
-        // Register all existing scripts
+    for (auto entity : scene.Reg()->View<ScriptComponent>()) {
+        AddScript(entity);
+    }
 
     scene.Reg()->OnAdd<ScriptComponent>(AddScript);
         // If a new script gets added to an entity, register that too.
@@ -38,10 +39,12 @@ void ScriptRunner::OnStartup(Scene& scene)
 
 void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
-    scene.Each<ScriptComponent>([&](ECS::Entity& entity) {
-        auto& luaEngine = d_engines[entity.Id()];
-        luaEngine.CallOnUpdateFunction(dt);
-    });
+    for (auto entity : scene.Reg()->Safe()) {
+        if (entity.Has<ScriptComponent>()) {
+            auto& luaEngine = d_engines[entity.Id()];
+            luaEngine.CallOnUpdateFunction(dt);
+        }
+    }
 }
 
 void ScriptRunner::OnEvent(Scene& scene, Event& event)
