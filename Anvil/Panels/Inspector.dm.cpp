@@ -42,7 +42,7 @@ void Inspector::Show(Anvil& editor)
 
     if (!editor.Selected().Valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->GetRegistry()->New();
+            auto e = editor.GetScene()->Reg()->New();
             editor.SetSelected(e);
         }
         return;
@@ -73,7 +73,7 @@ void Inspector::Show(Anvil& editor)
 #ifdef DATAMATIC_BLOCK
         if (!entity.Has<{{Comp.Name}}>() && ImGui::Selectable("{{Comp.DisplayName}}")) {
             {{Comp.Name}} c;
-            entity.Add(c);
+            entity.Add<{{Comp.Name}}>(c);
         }
 #endif
         ImGui::EndMenu();

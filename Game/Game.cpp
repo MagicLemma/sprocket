@@ -578,7 +578,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.Add(gc);
+    newEntity.Add<GridComponent>(gc);
 }
 
 void WorldLayer::AddRockBase(
@@ -604,7 +604,7 @@ void WorldLayer::AddRockBase(
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.Add(gc);
+    newEntity.Add<GridComponent>(gc);
 }
 
 void WorldLayer::AddRock(const glm::ivec2& pos)

@@ -86,7 +86,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
             c.{{Attr.Name}} = spec["{{Attr.Name}}"] ? spec["{{Attr.Name}}"].as<{{Attr.Type}}>() : {{Attr.Default}};
-            e.Add(c);
+            e.Add<{{Comp.Name}}>(c);
         }
 #endif
     }

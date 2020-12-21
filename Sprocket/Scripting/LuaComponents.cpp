@@ -366,7 +366,7 @@ int AddNameComponent(lua_State* L)
 
     NameComponent c;
     c.name = Pull<std::string>(L, count);
-    e.Add(c);
+    e.Add<NameComponent>(c);
     return 0;
 }
 
@@ -407,7 +407,7 @@ int AddTransformComponent(lua_State* L)
     TransformComponent c;
     c.position = Pull<glm::vec3>(L, count);
     c.scale = Pull<glm::vec3>(L, count);
-    e.Add(c);
+    e.Add<TransformComponent>(c);
     return 0;
 }
 
@@ -448,7 +448,7 @@ int AddModelComponent(lua_State* L)
     ModelComponent c;
     c.mesh = Pull<std::string>(L, count);
     c.material = Pull<std::string>(L, count);
-    e.Add(c);
+    e.Add<ModelComponent>(c);
     return 0;
 }
 
@@ -507,7 +507,7 @@ int AddRigidBody3DComponent(lua_State* L)
     c.rollingResistance = Pull<float>(L, count);
     c.force = Pull<glm::vec3>(L, count);
     c.onFloor = Pull<bool>(L, count);
-    e.Add(c);
+    e.Add<RigidBody3DComponent>(c);
     return 0;
 }
 
@@ -554,7 +554,7 @@ int AddBoxCollider3DComponent(lua_State* L)
     c.mass = Pull<float>(L, count);
     c.halfExtents = Pull<glm::vec3>(L, count);
     c.applyScale = Pull<bool>(L, count);
-    e.Add(c);
+    e.Add<BoxCollider3DComponent>(c);
     return 0;
 }
 
@@ -598,7 +598,7 @@ int AddSphereCollider3DComponent(lua_State* L)
     c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<SphereCollider3DComponent>(c);
     return 0;
 }
 
@@ -645,7 +645,7 @@ int AddCapsuleCollider3DComponent(lua_State* L)
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
     c.height = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<CapsuleCollider3DComponent>(c);
     return 0;
 }
 
@@ -686,7 +686,7 @@ int AddCameraComponent(lua_State* L)
     CameraComponent c;
     c.fov = Pull<float>(L, count);
     c.pitch = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<CameraComponent>(c);
     return 0;
 }
 
@@ -727,7 +727,7 @@ int AddSelectComponent(lua_State* L)
     SelectComponent c;
     c.selected = Pull<bool>(L, count);
     c.hovered = Pull<bool>(L, count);
-    e.Add(c);
+    e.Add<SelectComponent>(c);
     return 0;
 }
 
@@ -765,7 +765,7 @@ int AddPathComponent(lua_State* L)
 
     PathComponent c;
     c.speed = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<PathComponent>(c);
     return 0;
 }
 
@@ -806,7 +806,7 @@ int AddGridComponent(lua_State* L)
     GridComponent c;
     c.x = Pull<int>(L, count);
     c.z = Pull<int>(L, count);
-    e.Add(c);
+    e.Add<GridComponent>(c);
     return 0;
 }
 
@@ -847,7 +847,7 @@ int AddLightComponent(lua_State* L)
     LightComponent c;
     c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<LightComponent>(c);
     return 0;
 }
 
@@ -894,7 +894,7 @@ int AddSunComponent(lua_State* L)
     c.brightness = Pull<float>(L, count);
     c.direction = Pull<glm::vec3>(L, count);
     c.shadows = Pull<bool>(L, count);
-    e.Add(c);
+    e.Add<SunComponent>(c);
     return 0;
 }
 
@@ -947,7 +947,7 @@ int AddParticleComponent(lua_State* L)
     c.acceleration = Pull<glm::vec3>(L, count);
     c.scale = Pull<glm::vec3>(L, count);
     c.life = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<ParticleComponent>(c);
     return 0;
 }
 
@@ -991,7 +991,7 @@ int AddAnimationComponent(lua_State* L)
     c.name = Pull<std::string>(L, count);
     c.time = Pull<float>(L, count);
     c.speed = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<AnimationComponent>(c);
     return 0;
 }
 

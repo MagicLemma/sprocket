@@ -41,7 +41,7 @@ void Entity::Delete()
         for (auto& [type, data] : d_registry->d_comps) {
             Remove(type);
         }
-        d_registry->d_entities.Erase(Slot());
+        d_registry->d_entities.Erase(d_index);
 
         // Add the entity slot to the pool of available IDs.
         d_registry->d_pool.push({d_index, d_version});
@@ -51,11 +51,6 @@ void Entity::Delete()
 u32 Entity::Id() const
 {
     return (u32)d_version << 16 | d_index;
-}
-
-u16 Entity::Slot() const
-{
-    return d_index;
 }
 
 u16 Entity::Version() const

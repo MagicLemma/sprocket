@@ -43,16 +43,13 @@ public:
     bool Valid() const;
     void Delete();
 
-    template <typename Comp> Comp& Add();
-    template <typename Comp> Comp& Add(const Comp& component);
-    template <typename Comp, typename... Args> Comp& Emplace(Args&&... args);
+    template <typename Comp, typename... Args> Comp& Add(Args&&... args);
     template <typename Comp> void Remove();
     template <typename Comp> Comp& Get();
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
 
     u32 Id() const;
-    u16 Slot() const;
     u16 Version() const;
 
     bool operator==(Entity other) const;
@@ -165,35 +162,16 @@ cppcoro::generator<Entity> Registry::View()
 
 // ENTITY TEMPLATES
 
-template <typename Comp>
-Comp& Entity::Add()
-{
-    return Add<Comp>(Comp{});
-}
-
-template <typename Comp>
-Comp& Entity::Add(const Comp& component)
-{
-    assert(Valid());
-    auto& entry = d_registry->d_comps[typeid(Comp)].instances[d_index];
-    entry = component;
-
-    for (const auto& cb : d_registry->d_comps[typeid(Comp)].onAdd) {
-        cb(*this);
-    }
-
-    return std::any_cast<Comp&>(entry);
-}
-
 template <typename Comp, typename... Args>
-Comp& Entity::Emplace(Args&&... args)
+Comp& Entity::Add(Args&&... args)
 {
     assert(Valid());
-    auto& entry = d_registry->d_comps[typeid(Comp)].instances.Insert(
+    auto& data = d_registry->d_comps[typeid(Comp)];
+    auto& entry = data.instances.Insert(
         d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
-    for (const auto& cb : d_registry->d_comps[typeid(Comp)].onAdd) {
+    for (const auto& cb : data.onAdd) {
         cb(*this);
     }
 
