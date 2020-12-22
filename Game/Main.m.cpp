@@ -4,8 +4,6 @@
 int main()
 {
 
-#define GAME
-
 #ifdef GAME
     Sprocket::Window window("Game");
     WorldLayer game(&window);
@@ -13,17 +11,8 @@ int main()
     options.showFramerate = true;
     return Sprocket::Run(game, window, options);
 #else
-    using namespace Sprocket;
-    Log::Init();
+    Sprocket::Log::Init();
 
-    ECS::Registry reg;
-
-    auto e1 = reg.New();
-    reg.Delete(e1);
-    auto e2 = reg.New();
-
-    SPKT_LOG_INFO("Slots    {} {}", reg.GetSlot(e1), reg.GetSlot(e2));
-    SPKT_LOG_INFO("Versions {} {}", reg.GetVersion(e1), reg.GetVersion(e2));
-    SPKT_LOG_INFO("Valid?   {} {}", reg.Valid(e1), reg.Valid(e2));
+    SPKT_LOG_INFO("{} {}", sizeof(Sprocket::ECS::Registry*), sizeof(Sprocket::u64));
 #endif
 }

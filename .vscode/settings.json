@@ -87,6 +87,10 @@
         "*.expression": "cpp",
         "alignedvector3": "cpp",
         "bvh": "cpp",
-        "mprealsupport": "cpp"
+        "mprealsupport": "cpp",
+        "orderingmethods": "cpp",
+        "matrixfunctions": "cpp",
+        "polynomials": "cpp",
+        "adolcforward": "cpp"
     }
 }

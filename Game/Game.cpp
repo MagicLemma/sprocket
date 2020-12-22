@@ -219,16 +219,15 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
     d_sceneFile = sceneFile;
     Loader::Load(sceneFile, d_scene);
 
-    d_scene->Each<NameComponent>([&](ECS::Entity& entity) {
-        const auto& name = entity.Get<NameComponent>();
-        if (name.name == "Worker") {
-            d_worker = entity;
-        }
-        else if (name.name == "Camera") {
-            d_camera = entity;
-            d_gameGrid->SetCamera(entity);
-        }
+    d_worker = d_scene->Reg()->Find([](ECS::Entity entity) {
+        return entity.Has<NameComponent>() && entity.Get<NameComponent>().name == "Worker";
     });
+
+    d_camera = d_scene->Reg()->Find([](ECS::Entity entity) {
+        return entity.Has<NameComponent>() && entity.Get<NameComponent>().name == "Camera";
+    });
+
+    d_gameGrid->SetCamera(d_camera);
 
     assert(d_worker != ECS::Null);
     assert(d_camera != ECS::Null);
@@ -563,7 +562,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene->NewEntity();
+    auto newEntity = d_scene->Reg()->New();
 
     auto& name = newEntity.Add<NameComponent>();
     name.name = "Tree";
@@ -579,7 +578,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.Add(gc);
+    newEntity.Add<GridComponent>(gc);
 }
 
 void WorldLayer::AddRockBase(
@@ -589,7 +588,7 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene->NewEntity();
+    auto newEntity = d_scene->Reg()->New();
     auto& n = newEntity.Add<NameComponent>();
     n.name = name;
 
@@ -605,7 +604,7 @@ void WorldLayer::AddRockBase(
     newEntity.Add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.Add(gc);
+    newEntity.Add<GridComponent>(gc);
 }
 
 void WorldLayer::AddRock(const glm::ivec2& pos)

@@ -53,6 +53,7 @@
 #include "Utility/KeyboardCodes.h"
 #include "Utility/Printer.h"
 #include "Utility/Random.h"
+#include "Utility/SparseSet.h"
 #include "Utility/MouseCodes.h"
 #include "Utility/Stopwatch.h"
 #include "Utility/Types.h"

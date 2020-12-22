@@ -208,6 +208,16 @@ constexpr int LightComponentDimension()
     return count;
 }
 
+constexpr int SunComponentDimension()
+{
+    int count = 0;
+    count += Dimension<glm::vec3>(); // colour
+    count += Dimension<float>(); // brightness
+    count += Dimension<glm::vec3>(); // direction
+    count += Dimension<bool>(); // shadows
+    return count;
+}
+
 constexpr int ParticleComponentDimension()
 {
     int count = 0;
@@ -303,6 +313,11 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_AddLightComponent", &Lua::AddLightComponent);
     lua_register(L, "HasLightComponent", &Lua_Has<LightComponent>);
 
+    lua_register(L, "Lua_GetSunComponent", &Lua::GetSunComponent);
+    lua_register(L, "Lua_SetSunComponent", &Lua::SetSunComponent);
+    lua_register(L, "Lua_AddSunComponent", &Lua::AddSunComponent);
+    lua_register(L, "HasSunComponent", &Lua_Has<SunComponent>);
+
     lua_register(L, "Lua_GetParticleComponent", &Lua::GetParticleComponent);
     lua_register(L, "Lua_SetParticleComponent", &Lua::SetParticleComponent);
     lua_register(L, "Lua_AddParticleComponent", &Lua::AddParticleComponent);
@@ -351,7 +366,7 @@ int AddNameComponent(lua_State* L)
 
     NameComponent c;
     c.name = Pull<std::string>(L, count);
-    e.Add(c);
+    e.Add<NameComponent>(c);
     return 0;
 }
 
@@ -392,7 +407,7 @@ int AddTransformComponent(lua_State* L)
     TransformComponent c;
     c.position = Pull<glm::vec3>(L, count);
     c.scale = Pull<glm::vec3>(L, count);
-    e.Add(c);
+    e.Add<TransformComponent>(c);
     return 0;
 }
 
@@ -433,7 +448,7 @@ int AddModelComponent(lua_State* L)
     ModelComponent c;
     c.mesh = Pull<std::string>(L, count);
     c.material = Pull<std::string>(L, count);
-    e.Add(c);
+    e.Add<ModelComponent>(c);
     return 0;
 }
 
@@ -492,7 +507,7 @@ int AddRigidBody3DComponent(lua_State* L)
     c.rollingResistance = Pull<float>(L, count);
     c.force = Pull<glm::vec3>(L, count);
     c.onFloor = Pull<bool>(L, count);
-    e.Add(c);
+    e.Add<RigidBody3DComponent>(c);
     return 0;
 }
 
@@ -539,7 +554,7 @@ int AddBoxCollider3DComponent(lua_State* L)
     c.mass = Pull<float>(L, count);
     c.halfExtents = Pull<glm::vec3>(L, count);
     c.applyScale = Pull<bool>(L, count);
-    e.Add(c);
+    e.Add<BoxCollider3DComponent>(c);
     return 0;
 }
 
@@ -583,7 +598,7 @@ int AddSphereCollider3DComponent(lua_State* L)
     c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<SphereCollider3DComponent>(c);
     return 0;
 }
 
@@ -630,7 +645,7 @@ int AddCapsuleCollider3DComponent(lua_State* L)
     c.mass = Pull<float>(L, count);
     c.radius = Pull<float>(L, count);
     c.height = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<CapsuleCollider3DComponent>(c);
     return 0;
 }
 
@@ -671,7 +686,7 @@ int AddCameraComponent(lua_State* L)
     CameraComponent c;
     c.fov = Pull<float>(L, count);
     c.pitch = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<CameraComponent>(c);
     return 0;
 }
 
@@ -712,7 +727,7 @@ int AddSelectComponent(lua_State* L)
     SelectComponent c;
     c.selected = Pull<bool>(L, count);
     c.hovered = Pull<bool>(L, count);
-    e.Add(c);
+    e.Add<SelectComponent>(c);
     return 0;
 }
 
@@ -750,7 +765,7 @@ int AddPathComponent(lua_State* L)
 
     PathComponent c;
     c.speed = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<PathComponent>(c);
     return 0;
 }
 
@@ -791,7 +806,7 @@ int AddGridComponent(lua_State* L)
     GridComponent c;
     c.x = Pull<int>(L, count);
     c.z = Pull<int>(L, count);
-    e.Add(c);
+    e.Add<GridComponent>(c);
     return 0;
 }
 
@@ -832,7 +847,54 @@ int AddLightComponent(lua_State* L)
     LightComponent c;
     c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<LightComponent>(c);
+    return 0;
+}
+
+int GetSunComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<SunComponent>());
+
+    int count = 0;
+    const auto& c = e.Get<SunComponent>();
+    count += Push(L, c.colour);
+    count += Push(L, c.brightness);
+    count += Push(L, c.direction);
+    count += Push(L, c.shadows);
+    return count;
+}
+
+int SetSunComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<SunComponent>();
+    c.colour = Pull<glm::vec3>(L, count);
+    c.brightness = Pull<float>(L, count);
+    c.direction = Pull<glm::vec3>(L, count);
+    c.shadows = Pull<bool>(L, count);
+    return 0;
+}
+
+int AddSunComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(!e.Has<SunComponent>());
+
+    SunComponent c;
+    c.colour = Pull<glm::vec3>(L, count);
+    c.brightness = Pull<float>(L, count);
+    c.direction = Pull<glm::vec3>(L, count);
+    c.shadows = Pull<bool>(L, count);
+    e.Add<SunComponent>(c);
     return 0;
 }
 
@@ -885,7 +947,7 @@ int AddParticleComponent(lua_State* L)
     c.acceleration = Pull<glm::vec3>(L, count);
     c.scale = Pull<glm::vec3>(L, count);
     c.life = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<ParticleComponent>(c);
     return 0;
 }
 
@@ -929,7 +991,7 @@ int AddAnimationComponent(lua_State* L)
     c.name = Pull<std::string>(L, count);
     c.time = Pull<float>(L, count);
     c.speed = Pull<float>(L, count);
-    e.Add(c);
+    e.Add<AnimationComponent>(c);
     return 0;
 }
 

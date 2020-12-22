@@ -29,7 +29,7 @@ void GameGrid::OnStartup(Scene& scene)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
-    d_hoveredSquare = scene.NewEntity();
+    d_hoveredSquare = scene.Reg()->New();
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
@@ -38,7 +38,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
     model1.mesh = gridSquare;
 
-    d_selectedSquare = scene.NewEntity();
+    d_selectedSquare = scene.Reg()->New();
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
@@ -47,11 +47,10 @@ void GameGrid::OnStartup(Scene& scene)
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
     model2.mesh = gridSquare;
 
-    auto addGrid = [&](ECS::Entity& entity) {
+    auto addGrid = [&](ECS::Entity entity) {
         auto& transform = entity.Get<TransformComponent>();
         const auto& gc = entity.Get<GridComponent>();
 
-        assert(entity.Has<TransformComponent>());
         assert(!d_gridEntities.contains({gc.x, gc.z}));
     
         transform.position.x = gc.x + 0.5f;
@@ -59,11 +58,13 @@ void GameGrid::OnStartup(Scene& scene)
         d_gridEntities[{gc.x, gc.z}] = entity;
     };
 
-    scene.Each<GridComponent>(addGrid);
+    for (auto entity : scene.Reg()->View<GridComponent>()) {
+        addGrid(entity);
+    }
 
-    scene.OnAdd<GridComponent>(addGrid);
+    scene.Reg()->OnAdd<GridComponent>(addGrid);
 
-    scene.OnRemove<GridComponent>([&](ECS::Entity& entity) {
+    scene.Reg()->OnRemove<GridComponent>([&](ECS::Entity entity) {
         auto& gc = entity.Get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});

@@ -171,7 +171,7 @@ int Add{{Comp.Name}}(lua_State* L)
 
     {{Comp.Name}} c;
     c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
-    e.Add(c);
+    e.Add<{{Comp.Name}}>(c);
     return 0;
 }
 

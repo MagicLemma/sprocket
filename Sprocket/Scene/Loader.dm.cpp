@@ -33,7 +33,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     out << YAML::EndMap;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    scene->All([&](ECS::Entity& entity) {
+    for (auto entity : scene->Reg()->Fast()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
 #ifdef DATAMATIC_BLOCK SAVABLE=true
@@ -45,7 +45,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
         }
 #endif
         out << YAML::EndMap;
-    });
+    }
     out << YAML::EndSeq;
     out << YAML::EndMap;
 
@@ -81,12 +81,12 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = scene->NewEntity();
+        ECS::Entity e = scene->Reg()->New();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
             c.{{Attr.Name}} = spec["{{Attr.Name}}"] ? spec["{{Attr.Name}}"].as<{{Attr.Type}}>() : {{Attr.Default}};
-            e.Add(c);
+            e.Add<{{Comp.Name}}>(c);
         }
 #endif
     }
@@ -94,7 +94,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
 ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
 {
-    ECS::Entity e = scene->NewEntity();
+    ECS::Entity e = scene->Reg()->New();
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         e.Add<{{Comp.Name}}>(entity.Get<{{Comp.Name}}>());
@@ -108,9 +108,9 @@ void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
     target->Clear();
     target->GetSun() = source->GetSun();
     target->GetAmbience() = source->GetAmbience();
-    source->All([&](ECS::Entity& entity) {
+    for (auto entity : source->Reg()->Fast()) {
         Copy(target, entity);
-    });
+    }
 }
 
 }

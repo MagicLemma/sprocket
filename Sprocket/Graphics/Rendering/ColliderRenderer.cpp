@@ -32,7 +32,7 @@ void ColliderRenderer::Draw(
     
     static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube);
-    scene.Each<BoxCollider3DComponent>([&](ECS::Entity& entity) {
+    for (auto entity : scene.Reg()->View<BoxCollider3DComponent>()) {
         const auto& c = entity.Get<BoxCollider3DComponent>();
         auto tr = entity.Get<TransformComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
@@ -43,11 +43,11 @@ void ColliderRenderer::Draw(
         }
         d_shader.LoadMat4("u_model_matrix", transform);
         d_vao->Draw();
-    });
+    }
 
     static auto s_sphere = Mesh::FromFile("Resources/Models/LowPolySphere.obj");
     d_vao->SetModel(s_sphere);
-    scene.Each<SphereCollider3DComponent>([&](ECS::Entity& entity) {
+    for (auto entity : scene.Reg()->View<SphereCollider3DComponent>()) {
         const auto& c = entity.Get<SphereCollider3DComponent>();
         auto tr = entity.Get<TransformComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
@@ -55,11 +55,11 @@ void ColliderRenderer::Draw(
         transform = glm::scale(transform, {c.radius, c.radius, c.radius});
         d_shader.LoadMat4("u_model_matrix", transform);
         d_vao->Draw();
-    });
+    }
 
     static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
-    scene.Each<CapsuleCollider3DComponent>([&](ECS::Entity& entity) {
+    for (auto entity : scene.Reg()->View<CapsuleCollider3DComponent>()) {
         const auto& c = entity.Get<CapsuleCollider3DComponent>();
 
         {  // Top Hemisphere
@@ -94,7 +94,7 @@ void ColliderRenderer::Draw(
             d_vao->SetModel(s_hemisphere);
             d_vao->Draw();
         }
-    });
+    }
 
     d_shader.Unbind();
 }

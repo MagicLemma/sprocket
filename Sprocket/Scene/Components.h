@@ -104,6 +104,14 @@ struct LightComponent
     float brightness = 1.0f;
 };
 
+struct SunComponent
+{
+    glm::vec3 colour = glm::vec3{1.0f, 1.0f, 1.0f};
+    float brightness = 1.0f;
+    glm::vec3 direction = glm::vec3{0.0f, -1.0f, 0.0f};
+    bool shadows = false;
+};
+
 struct ParticleComponent
 {
     float interval = 1.0f;

@@ -403,6 +403,39 @@
             ]
         },
         {
+            "Name": "SunComponent",
+            "DisplayName": "Sun",
+            "Attributes": [
+                {
+                    "Name": "colour",
+                    "DisplayName": "Colour",
+                    "Type": "glm::vec3",
+                    "Default": [1.0, 1.0, 1.0],
+                    "Custom": {
+                        "Subtype": "Colour"
+                    }
+                },
+                {
+                    "Name": "brightness",
+                    "DisplayName": "Brightness",
+                    "Type": "float",
+                    "Default": 1.0
+                },
+                {
+                    "Name": "direction",
+                    "DisplayName": "Direction",
+                    "Type": "glm::vec3",
+                    "Default": [0.0, -1.0, 0.0]
+                },
+                {
+                    "Name": "shadows",
+                    "DisplayName": "Shadows",
+                    "Type": "bool",
+                    "Default": false
+                }
+            ]
+        },
+        {
             "Name": "ParticleComponent",
             "DisplayName": "Particle",
             "Attributes": [

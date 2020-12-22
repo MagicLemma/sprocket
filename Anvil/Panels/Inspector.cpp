@@ -43,7 +43,7 @@ void Inspector::Show(Anvil& editor)
 
     if (!editor.Selected().Valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->NewEntity();
+            auto e = editor.GetScene()->Reg()->New();
             editor.SetSelected(e);
         }
         return;
@@ -245,6 +245,21 @@ void Inspector::Show(Anvil& editor)
         
     }
 
+    if (entity.Has<SunComponent>()) {
+        auto& c = entity.Get<SunComponent>();
+        if (ImGui::CollapsingHeader("Sun")) {
+            ImGui::PushID(count++);
+            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
+            ImGui::DragFloat3("Direction", &c.direction.x, 0.1f);
+            ImGui::Checkbox("Shadows", &c.shadows);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<SunComponent>(); }
+            ImGui::PopID();
+        }
+        
+    }
+
     if (entity.Has<ParticleComponent>()) {
         auto& c = entity.Get<ParticleComponent>();
         if (ImGui::CollapsingHeader("Particle")) {
@@ -286,67 +301,71 @@ void Inspector::Show(Anvil& editor)
     if (ImGui::BeginPopup("missing_components_list")) {
         if (!entity.Has<TemporaryComponent>() && ImGui::Selectable("Temporary")) {
             TemporaryComponent c;
-            entity.Add(c);
+            entity.Add<TemporaryComponent>(c);
         }
         if (!entity.Has<NameComponent>() && ImGui::Selectable("Name")) {
             NameComponent c;
-            entity.Add(c);
+            entity.Add<NameComponent>(c);
         }
         if (!entity.Has<TransformComponent>() && ImGui::Selectable("Transform")) {
             TransformComponent c;
-            entity.Add(c);
+            entity.Add<TransformComponent>(c);
         }
         if (!entity.Has<ModelComponent>() && ImGui::Selectable("Model")) {
             ModelComponent c;
-            entity.Add(c);
+            entity.Add<ModelComponent>(c);
         }
         if (!entity.Has<RigidBody3DComponent>() && ImGui::Selectable("Rigid Body 3D")) {
             RigidBody3DComponent c;
-            entity.Add(c);
+            entity.Add<RigidBody3DComponent>(c);
         }
         if (!entity.Has<BoxCollider3DComponent>() && ImGui::Selectable("Box Collider 3D")) {
             BoxCollider3DComponent c;
-            entity.Add(c);
+            entity.Add<BoxCollider3DComponent>(c);
         }
         if (!entity.Has<SphereCollider3DComponent>() && ImGui::Selectable("Sphere Collider 3D")) {
             SphereCollider3DComponent c;
-            entity.Add(c);
+            entity.Add<SphereCollider3DComponent>(c);
         }
         if (!entity.Has<CapsuleCollider3DComponent>() && ImGui::Selectable("Capsule Collider 3D")) {
             CapsuleCollider3DComponent c;
-            entity.Add(c);
+            entity.Add<CapsuleCollider3DComponent>(c);
         }
         if (!entity.Has<ScriptComponent>() && ImGui::Selectable("Script")) {
             ScriptComponent c;
-            entity.Add(c);
+            entity.Add<ScriptComponent>(c);
         }
         if (!entity.Has<CameraComponent>() && ImGui::Selectable("Camera")) {
             CameraComponent c;
-            entity.Add(c);
+            entity.Add<CameraComponent>(c);
         }
         if (!entity.Has<SelectComponent>() && ImGui::Selectable("Select")) {
             SelectComponent c;
-            entity.Add(c);
+            entity.Add<SelectComponent>(c);
         }
         if (!entity.Has<PathComponent>() && ImGui::Selectable("Path")) {
             PathComponent c;
-            entity.Add(c);
+            entity.Add<PathComponent>(c);
         }
         if (!entity.Has<GridComponent>() && ImGui::Selectable("Grid")) {
             GridComponent c;
-            entity.Add(c);
+            entity.Add<GridComponent>(c);
         }
         if (!entity.Has<LightComponent>() && ImGui::Selectable("Light")) {
             LightComponent c;
-            entity.Add(c);
+            entity.Add<LightComponent>(c);
+        }
+        if (!entity.Has<SunComponent>() && ImGui::Selectable("Sun")) {
+            SunComponent c;
+            entity.Add<SunComponent>(c);
         }
         if (!entity.Has<ParticleComponent>() && ImGui::Selectable("Particle")) {
             ParticleComponent c;
-            entity.Add(c);
+            entity.Add<ParticleComponent>(c);
         }
         if (!entity.Has<AnimationComponent>() && ImGui::Selectable("Animation")) {
             AnimationComponent c;
-            entity.Add(c);
+            entity.Add<AnimationComponent>(c);
         }
         ImGui::EndMenu();
     }

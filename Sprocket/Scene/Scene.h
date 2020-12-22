@@ -49,8 +49,8 @@ private:
 public:
     Scene();
     ~Scene();
-    
-    ECS::Entity NewEntity();
+
+    ECS::Registry* Reg() { return &d_registry; }
 
     void AddSystem(std::shared_ptr<EntitySystem> system);
     void ClearSystems();
@@ -61,19 +61,6 @@ public:
 
     std::size_t Size() const;
 
-    template <typename Component> void Each(EntityCallback func);
-        // Loops through all the entities that have the specified
-        // components and calls the given lambda with each entity
-        // as the argument.
-
-    void All(EntityCallback func);
-
-    template <typename T> void OnAdd(EntityCallback func);
-    template <typename T> void OnRemove(EntityCallback func);
-        // Register functions that will get called whenever
-        // a component of type T is added/removed to/from an
-        // Entity.
-
     void Clear();
 
     Sun& GetSun() { return d_sun; }
@@ -82,25 +69,5 @@ public:
     Ambience& GetAmbience() { return d_ambience; }
     const Ambience& GetAmbience() const { return d_ambience; }
 };
-
-template <typename Component>
-void Scene::Each(EntityCallback lambda)
-{
-    for (ECS::Entity e : d_registry.View<Component>()) {
-        lambda(e);   
-    }
-}
-
-template <typename T>
-void Scene::OnAdd(EntityCallback func)
-{
-    d_registry.OnAdd<T>(func);
-}
-
-template <typename T>
-void Scene::OnRemove(EntityCallback func)
-{
-    d_registry.OnRemove<T>(func);
-}
 
 }
