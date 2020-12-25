@@ -18,11 +18,7 @@ public:
     FontAtlas(int width, int height);
 
     glm::ivec4 GetRegion(std::size_t width, std::size_t height);
-
-    void SetRegion(
-        const glm::ivec4& region,
-        const unsigned char* data
-    );
+    void SetRegion(const glm::ivec4& region, const unsigned char* data);
 
     std::size_t Width() const { return d_texture->Width(); }
     std::size_t Height() const { return d_texture->Height(); }

@@ -31,14 +31,6 @@ struct Ambience
     
 class Scene
 {
-public:
-    using EntityCallback = std::function<void(ECS::Entity&)>;
-
-    using TypeFunctionMap = tsl::hopscotch_map<
-        std::type_index, std::vector<EntityCallback>
-    >;
-
-private:
     std::vector<std::shared_ptr<EntitySystem>> d_systems;
 
     ECS::Registry d_registry;
