@@ -47,7 +47,6 @@ add_library(Sprocket STATIC
             Scene/EntitySystem.cpp
             Scene/Loader.cpp
             Scene/Updater.cpp
-            Scene/SystemList.cpp
 
             Scene/Systems/AnimationSystem.cpp
             Scene/Systems/BasicSelector.cpp
