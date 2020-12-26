@@ -112,6 +112,12 @@ struct SunComponent
     bool shadows = false;
 };
 
+struct AmbienceComponent
+{
+    glm::vec3 colour = glm::vec3{1.0f, 1.0f, 1.0f};
+    float brightness = 1.0f;
+};
+
 struct ParticleComponent
 {
     float interval = 1.0f;

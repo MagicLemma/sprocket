@@ -1,11 +1,8 @@
 Version: 2
-Ambience:
-  colour: [0.96875, 0.9335938, 0.7265625]
-  brightness: 0.01
 Entities:
   - NameComponent:
       name: Ambience
-    LightComponent:
+    AmbienceComponent:
       colour: [0.96875, 0.9335938, 0.7265625]
       brightness: 0.01
   - NameComponent:

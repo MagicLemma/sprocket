@@ -19,12 +19,6 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     out << YAML::BeginMap;
     out << YAML::Key << "Version" << YAML::Value << 2;
 
-    const auto& ambience = scene->GetAmbience();
-    out << YAML::Key << "Ambience" << YAML::BeginMap;
-    out << YAML::Key << "colour" << YAML::Value << ambience.colour;
-    out << YAML::Key << "brightness" << YAML::Value << ambience.brightness;
-    out << YAML::EndMap;
-
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto entity : scene->Reg()->Fast()) {
         if (entity.Has<TemporaryComponent>()) { return; }
@@ -57,11 +51,6 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     YAML::Node data = YAML::Load(sstream.str());
     UpdateScene(data);
 
-    if (auto ambience = data["Ambience"]) {
-        scene->GetAmbience().colour = ambience["colour"] ? ambience["colour"].as<glm::vec3>() : glm::vec3{1.0, 1.0, 1.0};
-        scene->GetAmbience().brightness = ambience["brightness"] ? ambience["brightness"].as<float>() : 1.0f;
-    }
-
     if (!data["Entities"]) {
         return; // TODO: Error checking
     }
@@ -93,7 +82,6 @@ ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
 void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
 {
     target->Clear();
-    target->GetAmbience() = source->GetAmbience();
     for (auto entity : source->Reg()->Fast()) {
         Copy(target, entity);
     }

@@ -45,7 +45,7 @@ void UploadUniforms(
     shader.LoadFloat("u_sun_brightness", sun.brightness);
 
     // Load ambience to shader
-    const auto& ambience = scene.GetAmbience();
+    const auto& ambience = scene.Reg()->Find<AmbienceComponent>().Get<AmbienceComponent>();
     shader.LoadVec3("u_ambience_colour", ambience.colour);
     shader.LoadFloat("u_ambience_brightness", ambience.brightness);
     

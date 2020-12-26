@@ -190,7 +190,7 @@ WorldLayer::WorldLayer(Window* window)
     sun.colour = {1.0, 0.945, 0.789};
     sun.brightness = 0.8f;
 
-    auto& ambience = d_scene->GetAmbience();
+    auto& ambience = d_scene->Reg()->Find<AmbienceComponent>().Get<AmbienceComponent>();
     ambience.colour = SARAWAK;
     ambience.brightness = 0.01f;
 

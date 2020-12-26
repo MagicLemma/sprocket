@@ -436,6 +436,27 @@
             ]
         },
         {
+            "Name": "AmbienceComponent",
+            "DisplayName": "Ambience",
+            "Attributes": [
+                {
+                    "Name": "colour",
+                    "DisplayName": "Colour",
+                    "Type": "glm::vec3",
+                    "Default": [1.0, 1.0, 1.0],
+                    "Custom": {
+                        "Subtype": "Colour"
+                    }
+                },
+                {
+                    "Name": "brightness",
+                    "DisplayName": "Brightness",
+                    "Type": "float",
+                    "Default": 1.0
+                }
+            ]
+        },
+        {
             "Name": "ParticleComponent",
             "DisplayName": "Particle",
             "Attributes": [

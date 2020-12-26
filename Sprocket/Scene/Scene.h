@@ -3,32 +3,17 @@
 #include "EntitySystem.h"
 #include "Event.h"
 #include "Maths.h"
-#include "ECS.h"
 
 #include <memory>
 #include <vector>
-#include <functional>
-#include <typeindex>
-#include <typeinfo>
-#include <unordered_map>
-
-#include <tsl/hopscotch_map.h>
 
 namespace Sprocket {
-
-struct Ambience
-{
-    glm::vec3 colour;
-    float     brightness;
-};
     
 class Scene
 {
     std::vector<std::shared_ptr<EntitySystem>> d_systems;
 
     ECS::Registry d_registry;
-
-    Ambience d_ambience;
 
 public:
     Scene();
@@ -46,9 +31,6 @@ public:
     std::size_t Size() const;
 
     void Clear();
-
-    Ambience& GetAmbience() { return d_ambience; }
-    const Ambience& GetAmbience() const { return d_ambience; }
 };
 
 }
