@@ -39,7 +39,7 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    const auto& sun = scene.GetSun();
+    const auto& sun = scene.Reg()->Find<SunComponent>().Get<SunComponent>();
     shader.LoadVec3("u_sun_direction", sun.direction);
     shader.LoadVec3("u_sun_colour", sun.colour);
     shader.LoadFloat("u_sun_brightness", sun.brightness);

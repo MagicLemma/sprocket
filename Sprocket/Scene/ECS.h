@@ -120,11 +120,7 @@ public:
 
     // Returns the first entity satisfying the given predicate, or ECS::Null if
     // none is found. Can optionally provide components to filter on.
-    template <typename... Comps> Entity Find(const EntityPredicate& pred);
-
-    // Returns the first entity found with the given components. Equivalent to
-    // calling Find with [](Entity) { return true; }.
-    template <typename... Comps> Entity First();
+    template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
     template <typename Comp> void OnAdd(const EntityCallback& cb);
     template <typename Comp> void OnRemove(const EntityCallback& cb);
@@ -182,12 +178,6 @@ Entity Registry::Find(const EntityPredicate& pred)
         }
     }
     return ECS::Null;
-}
-
-template <typename... Comps>
-Entity Registry::First()
-{
-    return Find<Comps...>([](Entity) { return true; });
 }
 
 // ENTITY TEMPLATES

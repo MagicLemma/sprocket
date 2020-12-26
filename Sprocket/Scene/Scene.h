@@ -16,13 +16,6 @@
 
 namespace Sprocket {
 
-struct Sun
-{
-    glm::vec3 direction;
-    glm::vec3 colour;
-    float     brightness;
-};
-
 struct Ambience
 {
     glm::vec3 colour;
@@ -35,7 +28,6 @@ class Scene
 
     ECS::Registry d_registry;
 
-    Sun d_sun;
     Ambience d_ambience;
 
 public:
@@ -54,9 +46,6 @@ public:
     std::size_t Size() const;
 
     void Clear();
-
-    Sun& GetSun() { return d_sun; }
-    const Sun& GetSun() const { return d_sun; }
 
     Ambience& GetAmbience() { return d_ambience; }
     const Ambience& GetAmbience() const { return d_ambience; }

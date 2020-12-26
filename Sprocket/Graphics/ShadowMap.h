@@ -32,7 +32,7 @@ class ShadowMap
 public:
     ShadowMap(Window* window, AssetManager* assetManager);
 
-    void Draw(const Sun& sun, const glm::vec3& centre, Scene& scene);
+    void Draw(const glm::vec3& sunDirection, const glm::vec3& centre, Scene& scene);
 
     glm::mat4 GetLightProjViewMatrix() const;
     std::shared_ptr<Texture>     GetShadowMap() const;

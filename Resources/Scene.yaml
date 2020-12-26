@@ -1,8 +1,4 @@
 Version: 2
-Sun:
-  colour: [1, 0.945, 0.789]
-  direction: [-0.002256002, -0.9999974, -0.0002256002]
-  brightness: 1.999995
 Ambience:
   colour: [0.96875, 0.9335938, 0.7265625]
   brightness: 0.01
