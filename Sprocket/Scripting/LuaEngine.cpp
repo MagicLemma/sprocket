@@ -65,15 +65,6 @@ LuaEngine::LuaEngine()
     RegisterInputFunctions(d_L);
     RegisterComponentFunctions(d_L);
     RegisterEntityFunctions(d_L);
-
-    lua_pushnil(d_L);
-    lua_setglobal(d_L, "__window__");
-
-    lua_pushnil(d_L);
-    lua_setglobal(d_L, "__input__");
-
-    lua_pushnil(d_L);
-    lua_setglobal(d_L, "__entity__");
 }
 
 LuaEngine::~LuaEngine()
