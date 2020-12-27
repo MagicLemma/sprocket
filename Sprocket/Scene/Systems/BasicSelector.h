@@ -12,7 +12,6 @@ class BasicSelector : public EntitySystem
     ECS::Entity d_selectedEntity;
 
 public:
-    BasicSelector();
     ~BasicSelector() {}
 
     void OnStartup(Scene& scene) override;
