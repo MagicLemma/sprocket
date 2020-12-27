@@ -257,6 +257,25 @@ function AddSunComponent(entity, c)
 end
 
 
+AmbienceComponent = Class(function(self, colour, brightness)
+    self.colour = colour
+    self.brightness = brightness
+end)
+
+function GetAmbienceComponent(entity)
+    x0, x1, x2, x3 = Lua_GetAmbienceComponent(entity)
+    return AmbienceComponent(Vec3(x0, x1, x2), x3)
+end
+
+function SetAmbienceComponent(entity, c)
+    Lua_SetAmbienceComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+end
+
+function AddAmbienceComponent(entity, c)
+    Lua_AddAmbienceComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+end
+
+
 ParticleComponent = Class(function(self, interval, velocity, velocityNoise, acceleration, scale, life)
     self.interval = interval
     self.velocity = velocity

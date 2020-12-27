@@ -218,6 +218,14 @@ constexpr int SunComponentDimension()
     return count;
 }
 
+constexpr int AmbienceComponentDimension()
+{
+    int count = 0;
+    count += Dimension<glm::vec3>(); // colour
+    count += Dimension<float>(); // brightness
+    return count;
+}
+
 constexpr int ParticleComponentDimension()
 {
     int count = 0;
@@ -317,6 +325,11 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_SetSunComponent", &Lua::SetSunComponent);
     lua_register(L, "Lua_AddSunComponent", &Lua::AddSunComponent);
     lua_register(L, "HasSunComponent", &Lua_Has<SunComponent>);
+
+    lua_register(L, "Lua_GetAmbienceComponent", &Lua::GetAmbienceComponent);
+    lua_register(L, "Lua_SetAmbienceComponent", &Lua::SetAmbienceComponent);
+    lua_register(L, "Lua_AddAmbienceComponent", &Lua::AddAmbienceComponent);
+    lua_register(L, "HasAmbienceComponent", &Lua_Has<AmbienceComponent>);
 
     lua_register(L, "Lua_GetParticleComponent", &Lua::GetParticleComponent);
     lua_register(L, "Lua_SetParticleComponent", &Lua::SetParticleComponent);
@@ -895,6 +908,47 @@ int AddSunComponent(lua_State* L)
     c.direction = Pull<glm::vec3>(L, count);
     c.shadows = Pull<bool>(L, count);
     e.Add<SunComponent>(c);
+    return 0;
+}
+
+int GetAmbienceComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<AmbienceComponent>());
+
+    int count = 0;
+    const auto& c = e.Get<AmbienceComponent>();
+    count += Push(L, c.colour);
+    count += Push(L, c.brightness);
+    return count;
+}
+
+int SetAmbienceComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, AmbienceComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<AmbienceComponent>();
+    c.colour = Pull<glm::vec3>(L, count);
+    c.brightness = Pull<float>(L, count);
+    return 0;
+}
+
+int AddAmbienceComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, AmbienceComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(!e.Has<AmbienceComponent>());
+
+    AmbienceComponent c;
+    c.colour = Pull<glm::vec3>(L, count);
+    c.brightness = Pull<float>(L, count);
+    e.Add<AmbienceComponent>(c);
     return 0;
 }
 

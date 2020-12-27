@@ -1,12 +1,16 @@
 Version: 2
-Sun:
-  direction: [0, -0.9805147, -0.196446]
-  colour: [0.9019608, 0.8005289, 0.6720492]
-  brightness: 1.6
-Ambience:
-  colour: [1, 1, 1]
-  brightness: 0.03
 Entities:
+  - NameComponent:
+      name: Ambience
+    AmbienceComponent:
+      colour: [1, 1, 1]
+      brightness: 0.03
+  - NameComponent:
+      name: Sun
+    SunComponent:
+      direction: [0, -0.9805147, -0.196446]
+      colour: [0.9019608, 0.8005289, 0.6720492]
+      brightness: 1.6
   - NameComponent:
       name: Running Character
     TransformComponent:

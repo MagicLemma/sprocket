@@ -92,9 +92,7 @@ void SelectedEntityInfo(DevUI& ui,
     ImGui::End();
 }
 
-void SunInfoPanel(DevUI& ui,
-                  Sun& sun,
-                  CircadianCycle& cycle)
+void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
 {
     ImGui::Begin("Sun");
 
@@ -187,12 +185,12 @@ WorldLayer::WorldLayer(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& sun = d_scene->GetSun();
+    auto& sun = d_scene->Reg()->Find<SunComponent>().Get<SunComponent>();
     sun.direction = d_cycle.GetSunDir();
     sun.colour = {1.0, 0.945, 0.789};
     sun.brightness = 0.8f;
 
-    auto& ambience = d_scene->GetAmbience();
+    auto& ambience = d_scene->Reg()->Find<AmbienceComponent>().Get<AmbienceComponent>();
     ambience.colour = SARAWAK;
     ambience.brightness = 0.01f;
 
@@ -219,12 +217,12 @@ void WorldLayer::LoadScene(const std::string& sceneFile)
     d_sceneFile = sceneFile;
     Loader::Load(sceneFile, d_scene);
 
-    d_worker = d_scene->Reg()->Find([](ECS::Entity entity) {
-        return entity.Has<NameComponent>() && entity.Get<NameComponent>().name == "Worker";
+    d_worker = d_scene->Reg()->Find<NameComponent>([](ECS::Entity entity) {
+        return entity.Get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene->Reg()->Find([](ECS::Entity entity) {
-        return entity.Has<NameComponent>() && entity.Get<NameComponent>().name == "Camera";
+    d_camera = d_scene->Reg()->Find<NameComponent>([](ECS::Entity entity) {
+        return entity.Get<NameComponent>().name == "Camera";
     });
 
     d_gameGrid->SetCamera(d_camera);
@@ -324,7 +322,7 @@ void WorldLayer::OnUpdate(double dt)
         d_cycle.OnUpdate(dt);
     }
     
-    auto& sun = d_scene->GetSun();
+    auto& sun = d_scene->Reg()->Find<SunComponent>().Get<SunComponent>();
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -355,7 +353,11 @@ void WorldLayer::OnRender()
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    d_shadowMap.Draw(d_scene->GetSun(), target, *d_scene);
+    d_shadowMap.Draw(
+        d_scene->Reg()->Find<SunComponent>().Get<SunComponent>().direction,
+        target,
+        *d_scene
+    );
 
     if (d_paused) {
         d_postProcessor.Bind();
@@ -452,7 +454,7 @@ void WorldLayer::OnRender()
             SelectedEntityInfo(d_devUI, e, view, proj);
         }
 
-        SunInfoPanel(d_devUI, d_scene->GetSun(), d_cycle);
+        SunInfoPanel(d_devUI, d_cycle);
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
 
         ImGui::Begin("Shadow Map");

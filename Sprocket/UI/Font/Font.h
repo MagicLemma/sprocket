@@ -3,6 +3,7 @@
 #include "Maths.h"
 #include "HashPair.h"
 #include "Glyph.h"
+#include "Types.h"
 
 #include <cstddef>
 #include <memory>
@@ -15,16 +16,8 @@
 
 namespace Sprocket {
 
-using KerningMap = tsl::hopscotch_map<
-    std::pair<uint32_t, uint32_t>,
-    float,
-    HashPair
->;
-
-using GlyphMap = tsl::hopscotch_map<
-    uint32_t,
-    Glyph
->;
+using KerningMap = tsl::hopscotch_map<std::pair<u32, u32>, float, HashPair>;
+using GlyphMap = tsl::hopscotch_map<u32, Glyph>;
 
 struct SizedFontData
 {

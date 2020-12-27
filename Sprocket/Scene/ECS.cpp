@@ -110,16 +110,6 @@ void Registry::Clear()
     d_comps.clear();
 }
 
-Entity Registry::Find(const EntityPredicate& pred)
-{
-    for (auto entity : Fast()) {
-        if (pred(entity)) {
-            return entity;
-        }
-    }
-    return ECS::Null;
-}
-
 std::size_t Registry::Size() const
 {
     return d_entities.Size();

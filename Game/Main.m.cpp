@@ -3,7 +3,7 @@
 
 int main()
 {
-
+#define GAME
 #ifdef GAME
     Sprocket::Window window("Game");
     WorldLayer game(&window);
