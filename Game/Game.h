@@ -20,7 +20,6 @@ class WorldLayer
     // Entity management and systems
     std::shared_ptr<Sprocket::CameraSystem>  d_cameraSystem;
     std::shared_ptr<Sprocket::BasicSelector> d_selector;
-    std::shared_ptr<Sprocket::ScriptRunner>  d_scriptRunner;
     std::shared_ptr<Sprocket::PathFollower>  d_pathFollower;
     std::shared_ptr<Sprocket::GameGrid>      d_gameGrid;
     

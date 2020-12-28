@@ -158,7 +158,6 @@ WorldLayer::WorldLayer(Window* window)
     , d_postProcessor(d_window->Width(), d_window->Height())
     , d_gameGrid(std::make_shared<Sprocket::GameGrid>(d_window))
     , d_cameraSystem(std::make_shared<Sprocket::CameraSystem>(d_window->AspectRatio()))
-    , d_scriptRunner(std::make_shared<Sprocket::ScriptRunner>(d_window))
     , d_pathFollower(std::make_shared<Sprocket::PathFollower>())
     , d_selector(std::make_shared<Sprocket::BasicSelector>())
     , d_shadowMap(d_window, &d_assetManager)
@@ -168,10 +167,10 @@ WorldLayer::WorldLayer(Window* window)
 {
     using namespace Sprocket;
 
+    d_scene->Add<ScriptRunner>(d_window);
     d_scene->AddSystem(d_selector);
     d_scene->AddSystem(d_pathFollower);
     d_scene->AddSystem(d_gameGrid);
-    d_scene->AddSystem(d_scriptRunner);
     d_scene->AddSystem(d_cameraSystem);
     LoadScene("Resources/Scene.yaml");
 
