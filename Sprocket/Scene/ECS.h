@@ -100,6 +100,10 @@ public:
     // the OnRemove functionality.
     void Clear();
 
+    // Resets all internal storage, removing all entities (without calling OnRemove)
+    // and removes all OnAdd/OnRemove callbacks.
+    void Reset();
+
     // Number of active entities in the registry.
     std::size_t Size() const;
 

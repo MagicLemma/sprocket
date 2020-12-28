@@ -197,7 +197,6 @@ WorldLayer::WorldLayer(Window* window)
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
 
-    d_scene->OnStartup();
 }
 
 void WorldLayer::SaveScene()

@@ -42,7 +42,12 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
 
 void Load(const std::string& file, std::shared_ptr<Scene> scene)
 {
-    scene->Clear();
+    // Must be a clean scene
+    u32 count = 0;
+    for (ECS::Entity e : scene->Reg()->Fast()) {
+        if (!e.Has<TemporaryComponent>()) ++count;
+    }
+    assert(count == 0);
 
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -81,7 +86,6 @@ ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
 
 void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
 {
-    target->Clear();
     for (auto entity : source->Reg()->Fast()) {
         Copy(target, entity);
     }

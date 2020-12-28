@@ -18,18 +18,12 @@ Scene::~Scene()
 void Scene::AddSystem(std::shared_ptr<EntitySystem> system)
 {
     d_systems.push_back(system);
+    system->OnStartup(*this);
 }
 
 void Scene::ClearSystems()
 {
     d_systems.clear();
-}
-
-void Scene::OnStartup()
-{
-    for (auto system : d_systems) {
-        system->OnStartup(*this);
-    }
 }
 
 void Scene::OnUpdate(double dt)

@@ -47,8 +47,6 @@ Anvil::Anvil(Window* window)
     d_scene = std::make_shared<Scene>();    
     Loader::Load(d_sceneFile, d_scene);
 
-    d_scene->OnStartup();
-
     d_runtimeCamera = d_scene->Reg()->Find([](ECS::Entity entity) {
         return entity.Has<CameraComponent>();
     });
@@ -195,17 +193,13 @@ void Anvil::OnRender()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                auto runningScene = std::make_shared<Scene>();
-                Loader::Copy(d_scene, runningScene);
-                d_activeScene = runningScene;
-                
+                d_activeScene = std::make_shared<Scene>(); 
                 d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
                 d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_window->AspectRatio()));
                 d_activeScene->AddSystem(std::make_shared<ScriptRunner>(d_window));
                 d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
                 d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
-
-                d_activeScene->OnStartup();
+                Loader::Copy(d_scene, d_activeScene);
                 d_playingGame = true;
 
                 d_runtimeCamera = d_activeScene->Reg()->Find([](ECS::Entity entity) {

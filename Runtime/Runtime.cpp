@@ -33,8 +33,6 @@ Runtime::Runtime(Window* window)
     d_scene->AddSystem(std::make_shared<AnimationSystem>());
     Loader::Load("Resources/Anvil.yaml", d_scene);
 
-    d_scene->OnStartup();
-
     for (auto entity : d_scene->Reg()->View<CameraComponent>()) {
         d_runtimeCamera = entity;
         break;

@@ -91,6 +91,7 @@
         "orderingmethods": "cpp",
         "matrixfunctions": "cpp",
         "polynomials": "cpp",
-        "adolcforward": "cpp"
+        "adolcforward": "cpp",
+        "clocale": "cpp"
     }
 }
