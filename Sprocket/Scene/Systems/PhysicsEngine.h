@@ -27,7 +27,7 @@ class PhysicsEngine : public EntitySystem
         // Entity directly below it. TODO: Make this more general.
 
 public:
-    PhysicsEngine(const glm::vec3& gravity);
+    PhysicsEngine(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
     ~PhysicsEngine() {}
 
     void OnStartup(Scene& scene) override;

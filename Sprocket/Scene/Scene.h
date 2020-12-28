@@ -21,6 +21,9 @@ public:
 
     ECS::Registry* Reg() { return &d_registry; }
 
+    template <typename T, typename... Args>
+    T& Add(Args&&... args);
+
     void AddSystem(std::shared_ptr<EntitySystem> system);
     void ClearSystems();
 
@@ -31,5 +34,13 @@ public:
 
     void Clear();
 };
+
+template <typename T, typename... Args>
+T& Scene::Add(Args&&... args)
+{
+    auto system = std::make_shared<T>(std::forward<Args>(args)...);
+    AddSystem(system);
+    return *system;
+}
 
 }

@@ -194,11 +194,11 @@ void Anvil::OnRender()
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(); 
-                d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
-                d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_window->AspectRatio()));
-                d_activeScene->AddSystem(std::make_shared<ScriptRunner>(d_window));
-                d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
-                d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
+                d_activeScene->Add<PhysicsEngine>();
+                d_activeScene->Add<CameraSystem>(d_window->AspectRatio());
+                d_activeScene->Add<ScriptRunner>(d_window);
+                d_activeScene->Add<ParticleSystem>(&d_particleManager);
+                d_activeScene->Add<AnimationSystem>();
                 Loader::Copy(d_scene, d_activeScene);
                 d_playingGame = true;
 

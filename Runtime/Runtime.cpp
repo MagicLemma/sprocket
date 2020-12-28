@@ -25,18 +25,15 @@ Runtime::Runtime(Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
-    d_scene = std::make_shared<Scene>();    
-    d_scene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
-    d_scene->AddSystem(std::make_shared<CameraSystem>(d_window->AspectRatio()));
-    d_scene->AddSystem(std::make_shared<ScriptRunner>(d_window));
-    d_scene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
-    d_scene->AddSystem(std::make_shared<AnimationSystem>());
+    d_scene = std::make_shared<Scene>();
+    d_scene->Add<PhysicsEngine>();
+    d_scene->Add<ScriptRunner>(d_window);
+    d_scene->Add<CameraSystem>(d_window->AspectRatio());
+    d_scene->Add<ParticleSystem>(&d_particleManager);
+    d_scene->Add<AnimationSystem>();
     Loader::Load("Resources/Anvil.yaml", d_scene);
 
-    for (auto entity : d_scene->Reg()->View<CameraComponent>()) {
-        d_runtimeCamera = entity;
-        break;
-    }
+    d_runtimeCamera = d_scene->Reg()->Find<CameraComponent>();
 }
 
 void Runtime::OnEvent(Event& event)
