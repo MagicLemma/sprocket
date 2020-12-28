@@ -97,7 +97,7 @@ Entity Registry::New()
     return {this, index, version};
 }
 
-void Registry::Clear()
+void Registry::DeleteAll()
 {
     // Clean up components, triggering onRemove behaviour
     for (auto entity : Safe()) {
@@ -111,7 +111,7 @@ void Registry::Clear()
     // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
 
-void Registry::Reset()
+void Registry::Clear()
 {
     // Reset all components and remove all callbacks
     d_comps.clear();

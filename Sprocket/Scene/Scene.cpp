@@ -48,6 +48,8 @@ std::size_t Scene::Size() const
 void Scene::Clear()
 {
     d_registry.Clear();
+    d_lookup.clear();
+    d_systems.clear();
 }
 
 }

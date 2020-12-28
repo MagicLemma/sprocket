@@ -388,7 +388,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        ECS::Entity copy = Loader::Copy(editor.GetScene(), entity);
+        ECS::Entity copy = Loader::Copy(editor.GetScene().get(), entity);
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

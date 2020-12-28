@@ -45,7 +45,7 @@ Anvil::Anvil(Window* window)
     d_window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<Scene>();    
-    Loader::Load(d_sceneFile, d_scene);
+    Loader::Load(d_sceneFile, d_scene.get());
 
     d_runtimeCamera = d_scene->Reg()->Find([](ECS::Entity entity) {
         return entity.Has<CameraComponent>();
@@ -171,13 +171,13 @@ void Anvil::OnRender()
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    Loader::Load(file, d_scene);
+                    Loader::Load(file, d_scene.get());
                     SPKT_LOG_INFO("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 SPKT_LOG_INFO("Saving {}...", d_sceneFile);
-                Loader::Save(d_sceneFile, d_scene);
+                Loader::Save(d_sceneFile, d_scene.get());
                 SPKT_LOG_INFO("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -185,7 +185,7 @@ void Anvil::OnRender()
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Saving as {}...", file);
                     d_sceneFile = file;
-                    Loader::Save(file, d_scene);
+                    Loader::Save(file, d_scene.get());
                     SPKT_LOG_INFO("...done!");
                 }
             }
@@ -199,7 +199,7 @@ void Anvil::OnRender()
                 d_activeScene->Add<ScriptRunner>(d_window);
                 d_activeScene->Add<ParticleSystem>(&d_particleManager);
                 d_activeScene->Add<AnimationSystem>();
-                Loader::Copy(d_scene, d_activeScene);
+                Loader::Copy(d_scene.get(), d_activeScene.get());
                 d_playingGame = true;
 
                 d_runtimeCamera = d_activeScene->Reg()->Find([](ECS::Entity entity) {

@@ -13,7 +13,7 @@
 namespace Sprocket {
 namespace Loader {
 
-void Save(const std::string& file, std::shared_ptr<Scene> scene)
+void Save(const std::string& file, Scene* scene)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -40,7 +40,7 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     fout << out.c_str();
 }
 
-void Load(const std::string& file, std::shared_ptr<Scene> scene)
+void Load(const std::string& file, Scene* scene)
 {
     // Must be a clean scene
     u32 count = 0;
@@ -73,7 +73,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     }
 }
 
-ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
+ECS::Entity Copy(Scene* scene, ECS::Entity entity)
 {
     ECS::Entity e = scene->Reg()->New();
 #ifdef DATAMATIC_BLOCK
@@ -84,7 +84,7 @@ ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
     return e;
 }
 
-void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
+void Copy(Scene* source, Scene* target)
 {
     for (auto entity : source->Reg()->Fast()) {
         Copy(target, entity);

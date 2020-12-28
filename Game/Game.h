@@ -17,7 +17,7 @@ class WorldLayer
     
     Mode d_mode;
 
-    std::shared_ptr<Sprocket::Scene> d_scene;
+    Sprocket::Scene d_scene;
 
     Sprocket::ECS::Entity d_camera;
     Sprocket::ECS::Entity d_worker;

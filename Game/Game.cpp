@@ -174,12 +174,12 @@ WorldLayer::WorldLayer(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& sun = d_scene->Reg()->Find<SunComponent>().Get<SunComponent>();
+    auto& sun = d_scene.Reg()->Find<SunComponent>().Get<SunComponent>();
     sun.direction = d_cycle.GetSunDir();
     sun.colour = {1.0, 0.945, 0.789};
     sun.brightness = 0.8f;
 
-    auto& ambience = d_scene->Reg()->Find<AmbienceComponent>().Get<AmbienceComponent>();
+    auto& ambience = d_scene.Reg()->Find<AmbienceComponent>().Get<AmbienceComponent>();
     ambience.colour = SARAWAK;
     ambience.brightness = 0.01f;
 
@@ -192,26 +192,26 @@ void WorldLayer::LoadScene(const std::string& file)
 {
     using namespace Sprocket;
 
-    d_scene = std::make_shared<Scene>();
-    d_scene->Add<ScriptRunner>(d_window);
-    d_scene->Add<CameraSystem>(d_window->AspectRatio());
-    d_scene->Add<PathFollower>();
-    d_scene->Add<BasicSelector>();
-    d_scene->Add<GameGrid>(d_window);
+    d_scene.Clear();
+    d_scene.Add<ScriptRunner>(d_window);
+    d_scene.Add<CameraSystem>(d_window->AspectRatio());
+    d_scene.Add<PathFollower>();
+    d_scene.Add<BasicSelector>();
+    d_scene.Add<GameGrid>(d_window);
     d_paused = false;
 
     d_sceneFile = file;
-    Loader::Load(file, d_scene);
+    Loader::Load(file, &d_scene);
 
-    d_worker = d_scene->Reg()->Find<NameComponent>([](ECS::Entity entity) {
+    d_worker = d_scene.Reg()->Find<NameComponent>([](ECS::Entity entity) {
         return entity.Get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene->Reg()->Find<NameComponent>([](ECS::Entity entity) {
+    d_camera = d_scene.Reg()->Find<NameComponent>([](ECS::Entity entity) {
         return entity.Get<NameComponent>().name == "Camera";
     });
 
-    d_scene->Get<GameGrid>().SetCamera(d_camera);
+    d_scene.Get<GameGrid>().SetCamera(d_camera);
 
     assert(d_worker != ECS::Null);
     assert(d_camera != ECS::Null);
@@ -240,7 +240,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
         if (!event.IsConsumed()) {
             if (auto e = event.As<MouseButtonPressedEvent>()) {
-                d_scene->Get<BasicSelector>().SetSelected(ECS::Null);
+                d_scene.Get<BasicSelector>().SetSelected(ECS::Null);
                 // TODO: Do we want to consume this event here?
             }
         }
@@ -279,7 +279,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            auto e = d_scene->Get<GameGrid>().At(pos.x, pos.y);
+                            auto e = d_scene.Get<GameGrid>().At(pos.x, pos.y);
                             return e != ECS::Null;
                         }
                     );
@@ -295,7 +295,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
         }
     }
 
-    d_scene->OnEvent(event);
+    d_scene.OnEvent(event);
 }
 
 void WorldLayer::OnUpdate(double dt)
@@ -308,7 +308,7 @@ void WorldLayer::OnUpdate(double dt)
         d_cycle.OnUpdate(dt);
     }
     
-    auto& sun = d_scene->Reg()->Find<SunComponent>().Get<SunComponent>();
+    auto& sun = d_scene.Reg()->Find<SunComponent>().Get<SunComponent>();
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -325,7 +325,7 @@ void WorldLayer::OnUpdate(double dt)
     sun.direction = glm::normalize(sun.direction);
 
     if (!d_paused) {
-        d_scene->OnUpdate(dt);
+        d_scene.OnUpdate(dt);
     }
 
     d_devUI.OnUpdate(dt);
@@ -335,15 +335,15 @@ void WorldLayer::OnUpdate(double dt)
 void WorldLayer::OnRender()
 {
     using namespace Sprocket;
-    auto& grid = d_scene->Get<GameGrid>();
+    auto& grid = d_scene.Get<GameGrid>();
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     d_shadowMap.Draw(
-        d_scene->Reg()->Find<SunComponent>().Get<SunComponent>().direction,
+        d_scene.Reg()->Find<SunComponent>().Get<SunComponent>().direction,
         target,
-        *d_scene
+        d_scene
     );
 
     if (d_paused) {
@@ -351,7 +351,7 @@ void WorldLayer::OnRender()
     }
 
     d_entityRenderer.EnableShadows(d_shadowMap);
-    d_entityRenderer.Draw(d_camera, *d_scene);
+    d_entityRenderer.Draw(d_camera, d_scene);
 
     if (d_paused) {
         d_postProcessor.Unbind();
@@ -437,7 +437,7 @@ void WorldLayer::OnRender()
         glm::mat4 proj = MakeProj(d_camera);
 
 
-        auto e = d_scene->Get<BasicSelector>().SelectedEntity();
+        auto e = d_scene.Get<BasicSelector>().SelectedEntity();
         if (e.Valid()) {
             SelectedEntityInfo(d_devUI, e, view, proj);
         }
@@ -546,7 +546,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene->Reg()->New();
+    auto newEntity = d_scene.Reg()->New();
 
     auto& name = newEntity.Add<NameComponent>();
     name.name = "Tree";
@@ -572,7 +572,7 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene->Reg()->New();
+    auto newEntity = d_scene.Reg()->New();
     auto& n = newEntity.Add<NameComponent>();
     n.name = name;
 

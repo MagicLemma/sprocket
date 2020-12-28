@@ -8,15 +8,15 @@
 namespace Sprocket {
 namespace Loader {
 
-void Save(const std::string& file, std::shared_ptr<Scene> scene);
-void Load(const std::string& file, std::shared_ptr<Scene> scene);
+void Save(const std::string& file, Scene* scene);
+void Load(const std::string& file, Scene* scene);
 
 // Creates a copy of the given Entity within the given Scene. The given
 // entity can be from a different scene.
-ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity);
+ECS::Entity Copy(Scene* scene, ECS::Entity entity);
 
 // Copies one scene into another. The target scene is first cleared.
-void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target);
+void Copy(Scene* source, Scene* target);
 
 }
 }

@@ -97,12 +97,12 @@ public:
     Entity New();
 
     // Loops through all entities and deletes their components. This will trigger
-    // the OnRemove functionality.
-    void Clear();
+    // the OnRemove functionality. Callbacks are not removed.
+    void DeleteAll();
 
     // Resets all internal storage, removing all entities (without calling OnRemove)
     // and removes all OnAdd/OnRemove callbacks.
-    void Reset();
+    void Clear();
 
     // Number of active entities in the registry.
     std::size_t Size() const;
