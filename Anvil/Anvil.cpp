@@ -171,6 +171,7 @@ void Anvil::OnRender()
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
+                    d_scene->Clear();
                     Loader::Load(file, d_scene.get());
                     SPKT_LOG_INFO("...done!");
                 }
