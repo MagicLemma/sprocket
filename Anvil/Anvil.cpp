@@ -172,13 +172,13 @@ void Anvil::OnRender()
                     SPKT_LOG_INFO("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
                     d_scene->Clear();
-                    Loader::Load(file, d_scene.get());
+                    Loader::Load(file, &d_scene->Entities());
                     SPKT_LOG_INFO("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 SPKT_LOG_INFO("Saving {}...", d_sceneFile);
-                Loader::Save(d_sceneFile, d_scene.get());
+                Loader::Save(d_sceneFile, &d_scene->Entities());
                 SPKT_LOG_INFO("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -186,7 +186,7 @@ void Anvil::OnRender()
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Saving as {}...", file);
                     d_sceneFile = file;
-                    Loader::Save(file, d_scene.get());
+                    Loader::Save(file, &d_scene->Entities());
                     SPKT_LOG_INFO("...done!");
                 }
             }
@@ -200,12 +200,10 @@ void Anvil::OnRender()
                 d_activeScene->Add<ScriptRunner>(d_window);
                 d_activeScene->Add<ParticleSystem>(&d_particleManager);
                 d_activeScene->Add<AnimationSystem>();
-                Loader::Copy(d_scene.get(), d_activeScene.get());
-                d_playingGame = true;
+                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
-                d_runtimeCamera = d_activeScene->Entities().Find([](ECS::Entity entity) {
-                    return entity.Has<Sprocket::CameraComponent>();
-                });
+                d_playingGame = true;
+                d_runtimeCamera = d_activeScene->Entities().Find<CameraComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();

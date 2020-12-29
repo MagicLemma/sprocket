@@ -6,7 +6,7 @@ namespace Sprocket {
 
 void Scene::Load(const std::string& file)
 {
-    Loader::Load(file, this);
+    Loader::Load(file, &Entities());
 }
 
 void Scene::OnUpdate(double dt)

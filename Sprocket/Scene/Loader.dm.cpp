@@ -13,14 +13,14 @@
 namespace Sprocket {
 namespace Loader {
 
-void Save(const std::string& file, Scene* scene)
+void Save(const std::string& file, ECS::Registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Version" << YAML::Value << 2;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : scene->Entities().Fast()) {
+    for (auto entity : reg->Fast()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
 #ifdef DATAMATIC_BLOCK SAVABLE=true
@@ -40,11 +40,11 @@ void Save(const std::string& file, Scene* scene)
     fout << out.c_str();
 }
 
-void Load(const std::string& file, Scene* scene)
+void Load(const std::string& file, ECS::Registry* reg)
 {
     // Must be a clean scene
     u32 count = 0;
-    for (ECS::Entity e : scene->Entities().Fast()) {
+    for (ECS::Entity e : reg->Fast()) {
         if (!e.Has<TemporaryComponent>()) ++count;
     }
     assert(count == 0);
@@ -62,7 +62,7 @@ void Load(const std::string& file, Scene* scene)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = scene->Entities().New();
+        ECS::Entity e = reg->New();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
@@ -73,9 +73,9 @@ void Load(const std::string& file, Scene* scene)
     }
 }
 
-ECS::Entity Copy(Scene* scene, ECS::Entity entity)
+ECS::Entity Copy(ECS::Registry* reg, ECS::Entity entity)
 {
-    ECS::Entity e = scene->Entities().New();
+    ECS::Entity e = reg->New();
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         e.Add<{{Comp.Name}}>(entity.Get<{{Comp.Name}}>());
@@ -84,9 +84,9 @@ ECS::Entity Copy(Scene* scene, ECS::Entity entity)
     return e;
 }
 
-void Copy(Scene* source, Scene* target)
+void Copy(ECS::Registry* source, ECS::Registry* target)
 {
-    for (auto entity : source->Entities().Fast()) {
+    for (auto entity : source->Fast()) {
         Copy(target, entity);
     }
 }
