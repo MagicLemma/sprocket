@@ -45,7 +45,7 @@ Anvil::Anvil(Window* window)
     d_window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<Scene>();    
-    Loader::Load(d_sceneFile, d_scene.get());
+    d_scene->Load(d_sceneFile);
 
     d_runtimeCamera = d_scene->Entities().Find([](ECS::Entity entity) {
         return entity.Has<CameraComponent>();

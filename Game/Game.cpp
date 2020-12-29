@@ -192,10 +192,10 @@ void WorldLayer::LoadScene(const std::string& file)
     d_scene.Add<PathFollower>();
     d_scene.Add<BasicSelector>();
     d_scene.Add<GameGrid>(d_window);
+    d_scene.Load(file);
     d_paused = false;
 
     d_sceneFile = file;
-    Loader::Load(file, &d_scene);
 
     d_worker = d_scene.Entities().Find<NameComponent>([](ECS::Entity entity) {
         return entity.Get<NameComponent>().name == "Worker";

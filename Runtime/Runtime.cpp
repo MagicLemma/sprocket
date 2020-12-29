@@ -31,7 +31,7 @@ Runtime::Runtime(Window* window)
     d_scene->Add<CameraSystem>(d_window->AspectRatio());
     d_scene->Add<ParticleSystem>(&d_particleManager);
     d_scene->Add<AnimationSystem>();
-    Loader::Load("Resources/Anvil.yaml", d_scene.get());
+    d_scene->Load("Resources/Anvil.yaml");
 
     d_runtimeCamera = d_scene->Entities().Find<CameraComponent>();
 }

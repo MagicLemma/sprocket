@@ -1,8 +1,13 @@
 #include "Scene.h"
 #include "Components.h"
-#include "Log.h"
+#include "Loader.h"
 
 namespace Sprocket {
+
+void Scene::Load(const std::string& file)
+{
+    Loader::Load(file, this);
+}
 
 void Scene::OnUpdate(double dt)
 {

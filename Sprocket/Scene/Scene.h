@@ -28,6 +28,8 @@ public:
     template <typename T> bool Has();
     template <typename T> T& Get();
 
+    void Load(const std::string& file);
+
     void OnUpdate(double dt);
     void OnEvent(Event& event);
 
