@@ -12,6 +12,7 @@ class EntitySystem
 {
 public:
     EntitySystem() = default;
+    virtual ~EntitySystem() {};
 
     virtual void OnStartup(Scene& scene) {};
         // Called once when starting the scene. There may be

@@ -15,14 +15,11 @@ namespace Sprocket {
 class Scene
 {
     std::unordered_map<std::type_index, std::size_t> d_lookup;
-    std::vector<std::shared_ptr<EntitySystem>> d_systems;
+    std::vector<std::unique_ptr<EntitySystem>> d_systems;
 
     ECS::Registry d_registry;
 
 public:
-    Scene();
-    ~Scene();
-
     ECS::Registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>
@@ -44,10 +41,9 @@ T& Scene::Add(Args&&... args)
 {
     assert(d_lookup.find(typeid(T)) == d_lookup.end());
     d_lookup[typeid(T)] = d_systems.size();
-    auto system = std::make_shared<T>(std::forward<Args>(args)...);
-    d_systems.push_back(system);
-    system->OnStartup(*this);
-    return *system;
+    d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
+    d_systems.back()->OnStartup(*this);
+    return *static_cast<T*>(d_systems.back().get());
 }
 
 template <typename T> bool Scene::Has()

@@ -1,6 +1,7 @@
 #pragma once
 #include "Maths.h"
 #include "ECS.h"
+#include "Log.h"
 #include "EntitySystem.h"
 
 #include <unordered_map>
@@ -28,7 +29,7 @@ class PhysicsEngine : public EntitySystem
 
 public:
     PhysicsEngine(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
-    ~PhysicsEngine() {}
+    ~PhysicsEngine() { SPKT_LOG_INFO("Destroying physics engine"); }
 
     void OnStartup(Scene& scene) override;
     void OnUpdate(Scene& scene, double dt) override;

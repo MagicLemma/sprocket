@@ -4,27 +4,16 @@
 
 namespace Sprocket {
 
-Scene::Scene()
-    : d_systems()
-    , d_registry()
-{
-}
-
-Scene::~Scene()
-{
-    SPKT_LOG_INFO("Deleting scene");
-}
-
 void Scene::OnUpdate(double dt)
 {
-    for (auto system : d_systems) {
+    for (auto& system : d_systems) {
         system->OnUpdate(*this, dt);
     }
 }
 
 void Scene::OnEvent(Event& event)
 {
-    for (auto system : d_systems) {
+    for (auto& system : d_systems) {
         system->OnEvent(*this, event);
     }
 }
