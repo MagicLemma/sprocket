@@ -7,7 +7,7 @@ namespace Sprocket {
 
 void AnimationSystem::OnUpdate(Scene& scene, double dt)
 {
-    for (auto entity : scene.Reg()->View<AnimationComponent>()) {
+    for (auto entity : scene.Entities().View<AnimationComponent>()) {
         auto& ac = entity.Get<AnimationComponent>();
         ac.time += (float)dt * ac.speed;
     }

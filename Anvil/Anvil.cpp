@@ -47,7 +47,7 @@ Anvil::Anvil(Window* window)
     d_scene = std::make_shared<Scene>();    
     Loader::Load(d_sceneFile, d_scene.get());
 
-    d_runtimeCamera = d_scene->Reg()->Find([](ECS::Entity entity) {
+    d_runtimeCamera = d_scene->Entities().Find([](ECS::Entity entity) {
         return entity.Has<CameraComponent>();
     });
 
@@ -104,7 +104,7 @@ void Anvil::OnUpdate(double dt)
     }
     
     std::vector<ECS::Entity> toDelete;
-    for (auto entity : d_activeScene->Reg()->View<TransformComponent>()) {
+    for (auto entity : d_activeScene->Entities().View<TransformComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);
@@ -203,7 +203,7 @@ void Anvil::OnRender()
                 Loader::Copy(d_scene.get(), d_activeScene.get());
                 d_playingGame = true;
 
-                d_runtimeCamera = d_activeScene->Reg()->Find([](ECS::Entity entity) {
+                d_runtimeCamera = d_activeScene->Entities().Find([](ECS::Entity entity) {
                     return entity.Has<Sprocket::CameraComponent>();
                 });
                 d_window->SetCursorVisibility(false);
@@ -262,7 +262,7 @@ void Anvil::OnRender()
             
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
-                for (auto entity : d_scene->Reg()->Fast()) {
+                for (auto entity : d_scene->Entities().Fast()) {
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {

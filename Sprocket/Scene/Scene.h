@@ -23,7 +23,7 @@ public:
     Scene();
     ~Scene();
 
-    ECS::Registry* Reg() { return &d_registry; }
+    ECS::Registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>
     T& Add(Args&&... args);

@@ -7,7 +7,7 @@ namespace Sprocket {
 
 void BasicSelector::OnStartup(Scene& scene)
 {
-    scene.Reg()->OnRemove<SelectComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnRemove<SelectComponent>([&](ECS::Entity entity) {
         if (entity == d_selectedEntity) { SetSelected(ECS::Null); }
     });
 }

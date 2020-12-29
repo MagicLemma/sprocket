@@ -53,7 +53,7 @@ void ShadowMap::Draw(
     glCullFace(GL_FRONT);
 
     std::unordered_map<std::string, std::vector<InstanceData>> commands;
-    for (auto entity : scene.Reg()->View<ModelComponent>()) {
+    for (auto entity : scene.Entities().View<ModelComponent>()) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }

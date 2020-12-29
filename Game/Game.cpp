@@ -174,7 +174,7 @@ WorldLayer::WorldLayer(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& sun = d_scene.Reg()->Find<SunComponent>().Get<SunComponent>();
+    auto& sun = d_scene.Entities().Find<SunComponent>().Get<SunComponent>();
     sun.direction = d_cycle.GetSunDir();
 
     d_postProcessor.AddEffect<GaussianVert>();
@@ -197,11 +197,11 @@ void WorldLayer::LoadScene(const std::string& file)
     d_sceneFile = file;
     Loader::Load(file, &d_scene);
 
-    d_worker = d_scene.Reg()->Find<NameComponent>([](ECS::Entity entity) {
+    d_worker = d_scene.Entities().Find<NameComponent>([](ECS::Entity entity) {
         return entity.Get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene.Reg()->Find<NameComponent>([](ECS::Entity entity) {
+    d_camera = d_scene.Entities().Find<NameComponent>([](ECS::Entity entity) {
         return entity.Get<NameComponent>().name == "Camera";
     });
 
@@ -302,7 +302,7 @@ void WorldLayer::OnUpdate(double dt)
         d_cycle.OnUpdate(dt);
     }
     
-    auto& sun = d_scene.Reg()->Find<SunComponent>().Get<SunComponent>();
+    auto& sun = d_scene.Entities().Find<SunComponent>().Get<SunComponent>();
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -335,7 +335,7 @@ void WorldLayer::OnRender()
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
     d_shadowMap.Draw(
-        d_scene.Reg()->Find<SunComponent>().Get<SunComponent>().direction,
+        d_scene.Entities().Find<SunComponent>().Get<SunComponent>().direction,
         target,
         d_scene
     );
@@ -540,7 +540,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Reg()->New();
+    auto newEntity = d_scene.Entities().New();
 
     auto& name = newEntity.Add<NameComponent>();
     name.name = "Tree";
@@ -566,7 +566,7 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Reg()->New();
+    auto newEntity = d_scene.Entities().New();
     auto& n = newEntity.Add<NameComponent>();
     n.name = name;
 

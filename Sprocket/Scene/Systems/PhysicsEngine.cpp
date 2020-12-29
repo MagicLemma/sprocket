@@ -115,7 +115,7 @@ PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
 
 void PhysicsEngine::OnStartup(Scene& scene)
 {
-    scene.Reg()->OnAdd<RigidBody3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnAdd<RigidBody3DComponent>([&](ECS::Entity entity) {
         assert(entity.Has<TransformComponent>());
         auto& transform = entity.Get<TransformComponent>();
 
@@ -125,7 +125,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         entry.rigidBody->setUserData(static_cast<void*>(&entry.entity));
     });
 
-    scene.Reg()->OnRemove<RigidBody3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnRemove<RigidBody3DComponent>([&](ECS::Entity entity) {
         entity.Remove<BoxCollider3DComponent>();
         entity.Remove<SphereCollider3DComponent>();
         entity.Remove<CapsuleCollider3DComponent>();
@@ -135,7 +135,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         d_impl->entityData.erase(rigidBodyIt);
     });
 
-    scene.Reg()->OnAdd<BoxCollider3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnAdd<BoxCollider3DComponent>([&](ECS::Entity entity) {
         assert(entity.Has<TransformComponent>());
         assert(entity.Has<RigidBody3DComponent>());
         auto& transform = entity.Get<TransformComponent>();
@@ -157,7 +157,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         d_impl->entityData[entity.Id()].boxCollisionShape = collider;
     });
 
-    scene.Reg()->OnRemove<BoxCollider3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnRemove<BoxCollider3DComponent>([&](ECS::Entity entity) {
         auto c = d_impl->entityData[entity.Id()].boxProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
@@ -165,7 +165,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         }
     });
 
-    scene.Reg()->OnAdd<SphereCollider3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnAdd<SphereCollider3DComponent>([&](ECS::Entity entity) {
         assert(entity.Has<TransformComponent>());
         assert(entity.Has<RigidBody3DComponent>());
         auto& transform = entity.Get<TransformComponent>();
@@ -183,7 +183,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         d_impl->entityData[entity.Id()].sphereCollisionShape = collider;
     });
 
-    scene.Reg()->OnRemove<SphereCollider3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnRemove<SphereCollider3DComponent>([&](ECS::Entity entity) {
         auto c = d_impl->entityData[entity.Id()].sphereProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
@@ -191,7 +191,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         }
     });
 
-    scene.Reg()->OnAdd<CapsuleCollider3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnAdd<CapsuleCollider3DComponent>([&](ECS::Entity entity) {
         assert(entity.Has<TransformComponent>());
         assert(entity.Has<RigidBody3DComponent>());
         auto& transform = entity.Get<TransformComponent>();
@@ -211,7 +211,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         d_impl->entityData[entity.Id()].capsuleCollisionShape = collider;
     });
 
-    scene.Reg()->OnRemove<CapsuleCollider3DComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnRemove<CapsuleCollider3DComponent>([&](ECS::Entity entity) {
         auto c = d_impl->entityData[entity.Id()].capsuleProxyShape;
         if (c != nullptr) {
             d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
@@ -225,7 +225,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     // Pre Update
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
-    for (auto entity : scene.Reg()->View<RigidBody3DComponent>()) {
+    for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
         const auto& transform = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<RigidBody3DComponent>();
 
@@ -264,7 +264,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     }
 
     // Post Update
-    for (auto entity : scene.Reg()->View<RigidBody3DComponent>()) {
+    for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         auto& physics = entity.Get<RigidBody3DComponent>();
         const auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;

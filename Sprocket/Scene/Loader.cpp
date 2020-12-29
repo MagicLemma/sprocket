@@ -21,7 +21,7 @@ void Save(const std::string& file, Scene* scene)
     out << YAML::Key << "Version" << YAML::Value << 2;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : scene->Reg()->Fast()) {
+    for (auto entity : scene->Entities().Fast()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
         if (entity.Has<TemporaryComponent>()) {
@@ -177,7 +177,7 @@ void Load(const std::string& file, Scene* scene)
 {
     // Must be a clean scene
     u32 count = 0;
-    for (ECS::Entity e : scene->Reg()->Fast()) {
+    for (ECS::Entity e : scene->Entities().Fast()) {
         if (!e.Has<TemporaryComponent>()) ++count;
     }
     assert(count == 0);
@@ -195,7 +195,7 @@ void Load(const std::string& file, Scene* scene)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = scene->Reg()->New();
+        ECS::Entity e = scene->Entities().New();
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add<TemporaryComponent>(c);
@@ -323,7 +323,7 @@ void Load(const std::string& file, Scene* scene)
 
 ECS::Entity Copy(Scene* scene, ECS::Entity entity)
 {
-    ECS::Entity e = scene->Reg()->New();
+    ECS::Entity e = scene->Entities().New();
     if (entity.Has<TemporaryComponent>()) {
         e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
     }
@@ -383,7 +383,7 @@ ECS::Entity Copy(Scene* scene, ECS::Entity entity)
 
 void Copy(Scene* source, Scene* target)
 {
-    for (auto entity : source->Reg()->Fast()) {
+    for (auto entity : source->Entities().Fast()) {
         Copy(target, entity);
     }
 }
