@@ -121,7 +121,12 @@ public:
     // none is found. Can optionally provide components to filter on.
     template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
+    // Registers a function that will be called whenever a Comp is added to an
+    // entity. This is called after the component has been added.
     template <typename Comp> void OnAdd(const EntityCallback& cb);
+
+    // Registers a function that will be called whenever a Comp is removed from
+    // an entity. This is called before the compoent has been removed.
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     friend class Entity;

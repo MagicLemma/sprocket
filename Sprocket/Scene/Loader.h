@@ -1,7 +1,6 @@
 #pragma once
 #include "ECS.h"
 
-#include <memory>
 #include <string>
 
 namespace Sprocket {
