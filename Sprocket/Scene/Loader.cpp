@@ -14,14 +14,14 @@
 namespace Sprocket {
 namespace Loader {
 
-void Save(const std::string& file, std::shared_ptr<Scene> scene)
+void Save(const std::string& file, ECS::Registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Version" << YAML::Value << 2;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : scene->Reg()->Fast()) {
+    for (auto entity : reg->Fast()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
         if (entity.Has<TemporaryComponent>()) {
@@ -173,9 +173,14 @@ void Save(const std::string& file, std::shared_ptr<Scene> scene)
     fout << out.c_str();
 }
 
-void Load(const std::string& file, std::shared_ptr<Scene> scene)
+void Load(const std::string& file, ECS::Registry* reg)
 {
-    scene->Clear();
+    // Must be a clean scene
+    u32 count = 0;
+    for (ECS::Entity e : reg->Fast()) {
+        if (!e.Has<TemporaryComponent>()) ++count;
+    }
+    assert(count == 0);
 
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -190,7 +195,7 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = scene->Reg()->New();
+        ECS::Entity e = reg->New();
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add<TemporaryComponent>(c);
@@ -316,9 +321,9 @@ void Load(const std::string& file, std::shared_ptr<Scene> scene)
     }
 }
 
-ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
+ECS::Entity Copy(ECS::Registry* reg, ECS::Entity entity)
 {
-    ECS::Entity e = scene->Reg()->New();
+    ECS::Entity e = reg->New();
     if (entity.Has<TemporaryComponent>()) {
         e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
     }
@@ -376,10 +381,9 @@ ECS::Entity Copy(std::shared_ptr<Scene> scene, ECS::Entity entity)
     return e;
 }
 
-void Copy(std::shared_ptr<Scene> source, std::shared_ptr<Scene> target)
+void Copy(ECS::Registry* source, ECS::Registry* target)
 {
-    target->Clear();
-    for (auto entity : source->Reg()->Fast()) {
+    for (auto entity : source->Fast()) {
         Copy(target, entity);
     }
 }

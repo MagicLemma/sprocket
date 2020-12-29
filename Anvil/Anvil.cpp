@@ -45,11 +45,9 @@ Anvil::Anvil(Window* window)
     d_window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<Scene>();    
-    Loader::Load(d_sceneFile, d_scene);
+    d_scene->Load(d_sceneFile);
 
-    d_scene->OnStartup();
-
-    d_runtimeCamera = d_scene->Reg()->Find([](ECS::Entity entity) {
+    d_runtimeCamera = d_scene->Entities().Find([](ECS::Entity entity) {
         return entity.Has<CameraComponent>();
     });
 
@@ -106,7 +104,7 @@ void Anvil::OnUpdate(double dt)
     }
     
     std::vector<ECS::Entity> toDelete;
-    for (auto entity : d_activeScene->Reg()->View<TransformComponent>()) {
+    for (auto entity : d_activeScene->Entities().View<TransformComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);
@@ -173,13 +171,14 @@ void Anvil::OnRender()
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    Loader::Load(file, d_scene);
+                    d_scene->Clear();
+                    Loader::Load(file, &d_scene->Entities());
                     SPKT_LOG_INFO("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 SPKT_LOG_INFO("Saving {}...", d_sceneFile);
-                Loader::Save(d_sceneFile, d_scene);
+                Loader::Save(d_sceneFile, &d_scene->Entities());
                 SPKT_LOG_INFO("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -187,7 +186,7 @@ void Anvil::OnRender()
                 if (!file.empty()) {
                     SPKT_LOG_INFO("Saving as {}...", file);
                     d_sceneFile = file;
-                    Loader::Save(file, d_scene);
+                    Loader::Save(file, &d_scene->Entities());
                     SPKT_LOG_INFO("...done!");
                 }
             }
@@ -195,22 +194,16 @@ void Anvil::OnRender()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                auto runningScene = std::make_shared<Scene>();
-                Loader::Copy(d_scene, runningScene);
-                d_activeScene = runningScene;
-                
-                d_activeScene->AddSystem(std::make_shared<PhysicsEngine>(glm::vec3{0.0, -9.81, 0.0}));
-                d_activeScene->AddSystem(std::make_shared<CameraSystem>(d_window->AspectRatio()));
-                d_activeScene->AddSystem(std::make_shared<ScriptRunner>(d_window));
-                d_activeScene->AddSystem(std::make_shared<ParticleSystem>(&d_particleManager));
-                d_activeScene->AddSystem(std::make_shared<AnimationSystem>());
+                d_activeScene = std::make_shared<Scene>(); 
+                d_activeScene->Add<PhysicsEngine>();
+                d_activeScene->Add<CameraSystem>(d_window->AspectRatio());
+                d_activeScene->Add<ScriptRunner>(d_window);
+                d_activeScene->Add<ParticleSystem>(&d_particleManager);
+                d_activeScene->Add<AnimationSystem>();
+                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
-                d_activeScene->OnStartup();
                 d_playingGame = true;
-
-                d_runtimeCamera = d_activeScene->Reg()->Find([](ECS::Entity entity) {
-                    return entity.Has<Sprocket::CameraComponent>();
-                });
+                d_runtimeCamera = d_activeScene->Entities().Find<CameraComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();
@@ -267,7 +260,7 @@ void Anvil::OnRender()
             
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
-                for (auto entity : d_scene->Reg()->Fast()) {
+                for (auto entity : d_scene->Entities().Fast()) {
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {

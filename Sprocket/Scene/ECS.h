@@ -1,17 +1,12 @@
 #pragma once
 #include "Types.h"
 #include "SparseSet.h"
-#include "Log.h"
 
 #include <unordered_map>
-#include <unordered_set>
-#include <typeindex>
 #include <typeinfo>
-#include <array>
-#include <memory>
+#include <typeindex>
 #include <queue>
 #include <functional>
-#include <deque>
 #include <limits>
 #include <vector>
 #include <cassert>
@@ -30,14 +25,14 @@ static constexpr u16 NULL_VERSION = std::numeric_limits<u32>::max();
 
 class Entity
 {
-    ECS::Registry* d_registry;
-    u16            d_index;
-    u16            d_version;
+    Registry* d_registry;
+    u16       d_index;
+    u16       d_version;
 
     void Remove(std::type_index type);
 
 public:
-    Entity(ECS::Registry* r, u16 i, u16 v) : d_registry(r), d_index(i), d_version(v) {}
+    Entity(Registry* r, u16 i, u16 v) : d_registry(r), d_index(i), d_version(v) {}
     Entity() : d_registry(nullptr), d_index(NULL_INDEX), d_version(NULL_VERSION) {}
 
     bool Valid() const;
@@ -97,7 +92,11 @@ public:
     Entity New();
 
     // Loops through all entities and deletes their components. This will trigger
-    // the OnRemove functionality.
+    // the OnRemove functionality. Callbacks are not removed.
+    void DeleteAll();
+
+    // Resets all internal storage, removing all entities (without calling OnRemove)
+    // and removes all OnAdd/OnRemove callbacks.
     void Clear();
 
     // Number of active entities in the registry.
@@ -122,7 +121,12 @@ public:
     // none is found. Can optionally provide components to filter on.
     template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
+    // Registers a function that will be called whenever a Comp is added to an
+    // entity. This is called after the component has been added.
     template <typename Comp> void OnAdd(const EntityCallback& cb);
+
+    // Registers a function that will be called whenever a Comp is removed from
+    // an entity. This is called before the compoent has been removed.
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     friend class Entity;

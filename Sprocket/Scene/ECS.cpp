@@ -97,17 +97,28 @@ Entity Registry::New()
     return {this, index, version};
 }
 
-void Registry::Clear()
+void Registry::DeleteAll()
 {
     // Clean up components, triggering onRemove behaviour
     for (auto entity : Safe()) {
         entity.Delete();
     }
 
-    // Reset internal structures
+    // Reset all entity storage
     d_entities.Clear();
     std::queue<std::pair<u16, u16>>().swap(d_pool);
+
+    // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
+}
+
+void Registry::Clear()
+{
+    // Reset all components and remove all callbacks
     d_comps.clear();
+
+    // Reset all entity storage
+    d_entities.Clear();
+    std::queue<std::pair<u16, u16>>().swap(d_pool);
 }
 
 std::size_t Registry::Size() const

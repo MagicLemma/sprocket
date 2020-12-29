@@ -11,7 +11,7 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 
 void ParticleSystem::OnUpdate(Scene& scene, double dt)
 {
-    for (auto entity : scene.Reg()->View<ParticleComponent>()) {
+    for (auto entity : scene.Entities().View<ParticleComponent>()) {
         auto& tc = entity.Get<TransformComponent>();
         auto& pc = entity.Get<ParticleComponent>();
 

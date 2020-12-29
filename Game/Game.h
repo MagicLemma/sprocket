@@ -17,14 +17,7 @@ class WorldLayer
     
     Mode d_mode;
 
-    // Entity management and systems
-    std::shared_ptr<Sprocket::CameraSystem>  d_cameraSystem;
-    std::shared_ptr<Sprocket::BasicSelector> d_selector;
-    std::shared_ptr<Sprocket::ScriptRunner>  d_scriptRunner;
-    std::shared_ptr<Sprocket::PathFollower>  d_pathFollower;
-    std::shared_ptr<Sprocket::GameGrid>      d_gameGrid;
-    
-    std::shared_ptr<Sprocket::Scene> d_scene;
+    Sprocket::Scene d_scene;
 
     Sprocket::ECS::Entity d_camera;
     Sprocket::ECS::Entity d_worker;
@@ -50,9 +43,6 @@ class WorldLayer
     // Escape Menu
     Sprocket::SimpleUI d_escapeMenu;
 
-    friend class EscapeMenu;
-    friend class EditorUI;
-
 public:
     WorldLayer(Sprocket::Window* window);
 
@@ -60,8 +50,7 @@ public:
     void OnUpdate(double dt);
     void OnRender();
 
-    void SaveScene();
-    void LoadScene(const std::string& sceneFile);
+    void LoadScene(const std::string& file);
 
     void AddTree(const glm::ivec2& pos);
 

@@ -1,47 +1,24 @@
 #include "Scene.h"
 #include "Components.h"
-#include "Log.h"
+#include "Loader.h"
 
 namespace Sprocket {
 
-Scene::Scene()
-    : d_systems()
-    , d_registry()
+void Scene::Load(const std::string& file)
 {
-}
-
-Scene::~Scene()
-{
-    SPKT_LOG_INFO("Deleting scene");
-}
-
-void Scene::AddSystem(std::shared_ptr<EntitySystem> system)
-{
-    d_systems.push_back(system);
-}
-
-void Scene::ClearSystems()
-{
-    d_systems.clear();
-}
-
-void Scene::OnStartup()
-{
-    for (auto system : d_systems) {
-        system->OnStartup(*this);
-    }
+    Loader::Load(file, &Entities());
 }
 
 void Scene::OnUpdate(double dt)
 {
-    for (auto system : d_systems) {
+    for (auto& system : d_systems) {
         system->OnUpdate(*this, dt);
     }
 }
 
 void Scene::OnEvent(Event& event)
 {
-    for (auto system : d_systems) {
+    for (auto& system : d_systems) {
         system->OnEvent(*this, event);
     }
 }
@@ -54,6 +31,8 @@ std::size_t Scene::Size() const
 void Scene::Clear()
 {
     d_registry.Clear();
+    d_lookup.clear();
+    d_systems.clear();
 }
 
 }

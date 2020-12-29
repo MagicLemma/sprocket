@@ -17,8 +17,8 @@ class Runtime
     Sprocket::ParticleManager d_particleManager;
 
     // Scene
+    Sprocket::Scene d_scene;
     Sprocket::CubeMap d_skybox;
-    std::shared_ptr<Sprocket::Scene> d_scene;
     Sprocket::ECS::Entity d_runtimeCamera;
 
     // Console

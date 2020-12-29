@@ -43,7 +43,7 @@ void Inspector::Show(Anvil& editor)
 
     if (!editor.Selected().Valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->Reg()->New();
+            auto e = editor.GetScene()->Entities().New();
             editor.SetSelected(e);
         }
         return;
@@ -388,7 +388,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        ECS::Entity copy = Loader::Copy(editor.GetScene(), entity);
+        ECS::Entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

@@ -8,13 +8,13 @@ Entities:
   - NameComponent:
       name: Sun
     TransformComponent:
-      position: [0.0, 0.0, 0.0]
-      orientation: [0.0, 0.0, 0.0, 1.0]
-      scale: [1.0, 1.0, 1.0]
+      position: [0, 0, 0]
+      orientation: [0, 0, 0, 1]
+      scale: [1, 1, 1]
     SunComponent:
       colour: [1, 0.945, 0.789]
+      brightness: 0.8
       direction: [-0.002256002, -0.9999974, -0.0002256002]
-      brightness: 1.999995
       shadows: true
   - NameComponent:
       name: Iron
