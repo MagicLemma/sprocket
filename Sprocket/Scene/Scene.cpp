@@ -15,17 +15,6 @@ Scene::~Scene()
     SPKT_LOG_INFO("Deleting scene");
 }
 
-void Scene::AddSystem(std::shared_ptr<EntitySystem> system)
-{
-    d_systems.push_back(system);
-    system->OnStartup(*this);
-}
-
-void Scene::ClearSystems()
-{
-    d_systems.clear();
-}
-
 void Scene::OnUpdate(double dt)
 {
     for (auto system : d_systems) {

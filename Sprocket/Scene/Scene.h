@@ -31,9 +31,6 @@ public:
     template <typename T> bool Has();
     template <typename T> T& Get();
 
-    void AddSystem(std::shared_ptr<EntitySystem> system);
-    void ClearSystems();
-
     void OnUpdate(double dt);
     void OnEvent(Event& event);
 
@@ -48,7 +45,8 @@ T& Scene::Add(Args&&... args)
     assert(d_lookup.find(typeid(T)) == d_lookup.end());
     d_lookup[typeid(T)] = d_systems.size();
     auto system = std::make_shared<T>(std::forward<Args>(args)...);
-    AddSystem(system);
+    d_systems.push_back(system);
+    system->OnStartup(*this);
     return *system;
 }
 
