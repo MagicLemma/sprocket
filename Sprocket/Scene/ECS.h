@@ -1,17 +1,12 @@
 #pragma once
 #include "Types.h"
 #include "SparseSet.h"
-#include "Log.h"
 
 #include <unordered_map>
-#include <unordered_set>
-#include <typeindex>
 #include <typeinfo>
-#include <array>
-#include <memory>
+#include <typeindex>
 #include <queue>
 #include <functional>
-#include <deque>
 #include <limits>
 #include <vector>
 #include <cassert>
@@ -30,14 +25,14 @@ static constexpr u16 NULL_VERSION = std::numeric_limits<u32>::max();
 
 class Entity
 {
-    ECS::Registry* d_registry;
-    u16            d_index;
-    u16            d_version;
+    Registry* d_registry;
+    u16       d_index;
+    u16       d_version;
 
     void Remove(std::type_index type);
 
 public:
-    Entity(ECS::Registry* r, u16 i, u16 v) : d_registry(r), d_index(i), d_version(v) {}
+    Entity(Registry* r, u16 i, u16 v) : d_registry(r), d_index(i), d_version(v) {}
     Entity() : d_registry(nullptr), d_index(NULL_INDEX), d_version(NULL_VERSION) {}
 
     bool Valid() const;
