@@ -5,6 +5,7 @@
 
 #include <lua.hpp>
 
+
 namespace Sprocket {
 
 void RegisterEntityFunctions(lua_State* L)

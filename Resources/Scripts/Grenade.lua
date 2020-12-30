@@ -9,7 +9,7 @@ function OnUpdate(entity, dt)
     if TIME > 3 and EXPLODED == false then
         print("Boom")
         for entity in AllEntities() do
-            if HasRigidBody3DComponent(entity) then
+            if HasRigidBody3DComponent(entity) and not HasCameraComponent(entity) then
                 local rbc = GetRigidBody3DComponent(entity)
                 if rbc.frozen == false then
                     rbc.velocity.y = rbc.velocity.y + 10

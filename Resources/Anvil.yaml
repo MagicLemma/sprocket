@@ -8,9 +8,10 @@ Entities:
   - NameComponent:
       name: Sun
     SunComponent:
-      direction: [0, -0.9805147, -0.196446]
       colour: [0.9019608, 0.8005289, 0.6720492]
       brightness: 1.6
+      direction: [0, -0.9805147, -0.196446]
+      shadows: false
   - NameComponent:
       name: Running Character
     TransformComponent:
@@ -564,6 +565,222 @@ Entities:
       bounciness: 0
       frictionCoefficient: 0
       rollingResistance: 0
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-7.520597, 3.294004, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.151
+      rollingResistance: 0.105
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-7.520597, 4.494779, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.211
+      rollingResistance: 0.132
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-7.648428, 5.646762, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.23
+      rollingResistance: 0.132
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-8.850865, 5.689884, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.151
+      rollingResistance: 0.158
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-8.850865, 4.496203, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.092
+      rollingResistance: 0.099
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-8.850865, 3.253146, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.158
+      rollingResistance: 0.112
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-10.13275, 3.253146, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.158
+      rollingResistance: 0.112
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-10.13275, 4.474674, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.158
+      rollingResistance: 0.112
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    TransformComponent:
+      position: [-9.982604, 5.576144, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.158
+      rollingResistance: 0.112
     BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
