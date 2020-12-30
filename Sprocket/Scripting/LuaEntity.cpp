@@ -10,6 +10,7 @@ namespace Sprocket {
 void RegisterEntityFunctions(lua_State* L)
 {
     lua_register(L, "NewEntity", &Lua::NewEntity);
+    lua_register(L, "DeleteEntity", &Lua::DeleteEntity);
 
     lua_register(L, "FastIteration_New", &Lua::NewFast);
     lua_register(L, "FastIteration_Delete", &Lua::DeleteFast);
@@ -27,6 +28,14 @@ int NewEntity(lua_State* L)
     ECS::Entity* luaEntity = (ECS::Entity*)lua_newuserdata(L, sizeof(ECS::Entity));
     *luaEntity = GetScene(L)->Entities().New();
     return 1;
+}
+
+int DeleteEntity(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    ECS::Entity* luaEntity = (ECS::Entity*)lua_touserdata(L, 1);
+    luaEntity->Delete();
+    return 0;
 }
 
 int NewFast(lua_State* L)

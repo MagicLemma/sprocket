@@ -9,6 +9,7 @@ void RegisterEntityFunctions(lua_State* L);
 namespace Lua {
 
 int NewEntity(lua_State* L);
+int DeleteEntity(lua_State* L);
 
 int NewFast(lua_State* L);
 int DeleteFast(lua_State* L);
