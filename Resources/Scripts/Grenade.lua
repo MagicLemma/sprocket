@@ -1,14 +1,11 @@
 function Init(entity)
     TIME = 0.0
-    EXPLODED = false
-    ENTITY = entity
 end
 
 function OnUpdate(entity, dt)
     TIME = TIME + dt
 
-    if TIME > 3 and EXPLODED == false then
-        print("Boom")
+    if TIME > 3 then
         for entity in AllEntities() do
             if HasRigidBody3DComponent(entity) and not HasCameraComponent(entity) then
                 local rbc = GetRigidBody3DComponent(entity)
@@ -18,7 +15,6 @@ function OnUpdate(entity, dt)
                 SetRigidBody3DComponent(entity, rbc)
             end
         end
-        EXPLODED = true
         DeleteEntity(entity)
     end
 end

@@ -29,6 +29,7 @@ class Entity
     u16       d_index;
     u16       d_version;
 
+    bool Has(std::type_index type) const;
     void Remove(std::type_index type);
 
 public:
@@ -229,13 +230,7 @@ template <typename Comp>
 bool Entity::Has() const
 {
     assert(Valid());
-    if (auto it = d_registry->d_comps.find(typeid(Comp)); it != d_registry->d_comps.end()) {
-        if (it->second.instances.Has(d_index)) {
-            const auto& entry = it->second.instances[d_index];
-            return entry.has_value();
-        }
-    }
-    return false;
+    return Has(typeid(Comp));
 }
 
 }

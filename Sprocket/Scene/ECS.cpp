@@ -39,7 +39,7 @@ void Entity::Delete()
     if (Valid()) {
         // Clean up all components
         for (auto& [type, data] : d_registry->d_comps) {
-            Remove(type);
+            if (Has(type)) { Remove(type); }
         }
         d_registry->d_entities.Erase(d_index);
 
@@ -70,6 +70,17 @@ void Entity::Remove(std::type_index type)
             it->second.instances.Erase(d_index);
         }
     }
+}
+
+bool Entity::Has(std::type_index type) const
+{
+    if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
+        if (it->second.instances.Has(d_index)) {
+            const auto& entry = it->second.instances[d_index];
+            return entry.has_value();
+        }
+    }
+    return false;
 }
 
 Entity Registry::New()

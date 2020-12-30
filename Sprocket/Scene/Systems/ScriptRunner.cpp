@@ -30,26 +30,22 @@ void ScriptRunner::OnStartup(Scene& scene)
     });
 
     scene.Entities().OnRemove<ScriptComponent>([&](ECS::Entity entity) {
-        auto& [luaEngine, alive] = d_engines[entity.Id()];
-        alive = false;
+        d_engines[entity.Id()].second = false; // alive = false
     });
 }
 
 void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
-    for (auto& [id, pair] : d_engines) {
-        auto& [script, alive] = pair;
-        if (alive) { script.CallOnUpdateFunction(dt); }
-    }
-
     // We delete scripts here rather then with OnRemove otherwise we would segfault if
     // a script tries to delete its own entity, which is functionality that we want to
     // support.
     for (auto it = d_engines.begin(); it != d_engines.end();) {
-        if (!it->second.second) {
-            it = d_engines.erase(it);
-        } else {
+        auto& [script, alive] = it->second;
+        if (alive) {
+            script.CallOnUpdateFunction(dt);
             ++it;
+        } else {
+            it = d_engines.erase(it);
         }
     }
 }
