@@ -50,9 +50,6 @@ public:
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
     Entity& operator=(Entity other);
-
-    // TODO: Remove
-    Entity NewEntity() const;
 };
 
 class Registry

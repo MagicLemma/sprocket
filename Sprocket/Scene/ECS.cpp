@@ -58,11 +58,6 @@ u16 Entity::Version() const
     return d_version;
 }
 
-Entity Entity::NewEntity() const
-{
-    return d_registry->New();
-}
-
 void Entity::Remove(std::type_index type)
 {
     assert(Valid());
