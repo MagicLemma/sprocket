@@ -64,31 +64,52 @@ function OnUpdate(entity, dt)
 end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods)
-    if consumed then return false end
 
-    local newEntity = NewEntity()
+    local generator, iterator = FastBegin()
+    local entity = GetEntityFromIterator(iterator)
 
-    local dir = GetForwardsDir(ENTITY)
-    local pos = GetTransformComponent(ENTITY).position
-    local vel = GetRigidBody3DComponent(ENTITY).velocity
-    
-    local tc = TransformComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
-    AddTransformComponent(newEntity, tc)
-
-    local mc = ModelComponent(
-        "Resources/Models/Sphere.obj", 
-        "Resources/Materials/grey.yaml"
-    )
-    AddModelComponent(newEntity, mc)
-
-    local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.3, 1, Vec3(0, 0, 0), false)
-    AddRigidBody3DComponent(newEntity, rbc)
-
-    local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 20, 0.1)
-    AddSphereCollider3DComponent(newEntity, sc)
-
-    local lc = LightComponent(Vec3(1, 1, 1), 20)
-    AddLightComponent(newEntity, lc)
+    if HasNameComponent(entity) then
+        local nc = GetNameComponent(entity)
+        print(nc.name)
+    end
+--    while IteratorAtEnd(iterator) == false do
+--        local entity = GetEntityFromIterator(iterator)
+--
+--        if HasNameComponent(entity) then
+--            local nc = GetNameComponent(entity)
+--            print(nc.name)
+--        end
+--
+--        IteratorAdvance(iterator)
+--    end
 
     return true
+
+--    if consumed then return false end
+--
+--    local newEntity = NewEntity()
+--
+--    local dir = GetForwardsDir(ENTITY)
+--    local pos = GetTransformComponent(ENTITY).position
+--    local vel = GetRigidBody3DComponent(ENTITY).velocity
+--    
+--    local tc = TransformComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
+--    AddTransformComponent(newEntity, tc)
+--
+--    local mc = ModelComponent(
+--        "Resources/Models/Sphere.obj", 
+--        "Resources/Materials/grey.yaml"
+--    )
+--    AddModelComponent(newEntity, mc)
+--
+--    local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.3, 1, Vec3(0, 0, 0), false)
+--    AddRigidBody3DComponent(newEntity, rbc)
+--
+--    local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 20, 0.1)
+--    AddSphereCollider3DComponent(newEntity, sc)
+--
+--    local lc = LightComponent(Vec3(1, 1, 1), 20)
+--    AddLightComponent(newEntity, lc)
+--
+--    return true
 end

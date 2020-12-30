@@ -10,5 +10,10 @@ namespace Lua {
 
 int NewEntity(lua_State* L);
 
+int FastBegin(lua_State* L);
+int IteratorAtEnd(lua_State* L);
+int GetEntityFromIterator(lua_State* L);
+int IteratorAdvance(lua_State* L);
+
 }
 }
