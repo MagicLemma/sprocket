@@ -5,6 +5,17 @@
 
 namespace Sprocket {
 
+Scene* GetScene(lua_State* L)
+{
+    lua_getglobal(L, "__scene__");
+    Scene* s = nullptr;
+    if (!lua_isnil(L, -1)) {
+        s = (Scene*)lua_touserdata(L, -1);
+    }
+    lua_pop(L, 1);
+    return s;
+}
+
 Window* GetWindow(lua_State* L)
 {
     lua_getglobal(L, "__window__");

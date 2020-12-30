@@ -376,6 +376,12 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
+void LuaEngine::SetScene(Scene* s)
+{
+    lua_pushlightuserdata(d_L, (void*)s);
+    lua_setglobal(d_L, "__scene__");
+}
+
 void LuaEngine::SetEntity(const ECS::Entity& e)
 {
     d_entity = e;

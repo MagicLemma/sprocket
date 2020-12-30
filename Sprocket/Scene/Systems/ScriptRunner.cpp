@@ -18,6 +18,7 @@ void ScriptRunner::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<ScriptComponent>([&](ECS::Entity entity) {
         auto& luaEngine = d_engines[entity.Id()];
+        luaEngine.SetScene(&scene);
         luaEngine.SetWindow(d_window);
         luaEngine.SetInput(&d_input);
         luaEngine.SetEntity(entity);

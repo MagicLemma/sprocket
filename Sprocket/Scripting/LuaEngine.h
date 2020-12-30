@@ -5,6 +5,7 @@
 #include "WindowEvent.h"
 #include "KeyboardEvent.h"
 #include "ECS.h"
+#include "Scene.h"
 #include "Window.h"
 
 #include <string>
@@ -50,6 +51,7 @@ public:
     void CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e);
 
     // Setters
+    void SetScene(Scene* s);
     void SetEntity(const ECS::Entity& e);
     void SetWindow(Window* w);
     void SetInput(InputProxy* ip);

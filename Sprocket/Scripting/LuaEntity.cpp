@@ -1,6 +1,7 @@
 #include "LuaEntity.h"
 #include "LuaGlobals.h"
 #include "ECS.h"
+#include "Scene.h"
 
 #include <lua.hpp>
 
@@ -17,7 +18,7 @@ int NewEntity(lua_State* L)
 {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
     ECS::Entity* luaEntity = (ECS::Entity*)lua_newuserdata(L, sizeof(ECS::Entity));
-    *luaEntity = GetEntity(L)->NewEntity();
+    *luaEntity = GetScene(L)->Entities().New();
     return 1;
 }
 

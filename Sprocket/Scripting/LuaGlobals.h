@@ -7,6 +7,7 @@ class lua_State;
 
 namespace Sprocket {
 
+class Scene;
 class Window;
 class InputProxy;
 class ECS::Entity;
@@ -15,6 +16,7 @@ class ECS::Entity;
 // are used for implementing Lua C++ functions and are not callable
 // directly within Lua.
 
+Scene* GetScene(lua_State* L);
 Window* GetWindow(lua_State* L);
 InputProxy* GetInput(lua_State* L);
 ECS::Entity* GetEntity(lua_State* L);
