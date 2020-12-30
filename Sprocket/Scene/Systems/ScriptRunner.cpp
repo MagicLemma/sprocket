@@ -6,6 +6,8 @@
 #include "Components.h"
 
 #include <utility>
+#include <algorithm>
+#include <experimental/unordered_map>
 
 namespace Sprocket {
 
@@ -17,7 +19,8 @@ ScriptRunner::ScriptRunner(Window* window)
 void ScriptRunner::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<ScriptComponent>([&](ECS::Entity entity) {
-        auto& luaEngine = d_engines[entity.Id()];
+        auto& [luaEngine, alive] = d_engines[entity.Id()];
+        alive = true;
         luaEngine.SetScene(&scene);
         luaEngine.SetWindow(d_window);
         luaEngine.SetInput(&d_input);
@@ -26,25 +29,28 @@ void ScriptRunner::OnStartup(Scene& scene)
         luaEngine.CallInitFunction();
     });
 
-    //scene.Entities().OnRemove<ScriptComponent>([&](ECS::Entity entity) {
-    //    d_engines.erase(entity.Id());
-    //});
+    scene.Entities().OnRemove<ScriptComponent>([&](ECS::Entity entity) {
+        auto& [luaEngine, alive] = d_engines[entity.Id()];
+        alive = false;
+    });
 }
 
 void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
-    std::vector<u32> toDelete;
-
-    for (auto& [id, script] : d_engines) {
-        auto entity = scene.Entities().Get(id);
-        if (entity.Valid() && entity.Has<ScriptComponent>()) {
-            script.CallOnUpdateFunction(dt);
-        } else {
-            toDelete.push_back(id);
-        }
+    for (auto& [id, pair] : d_engines) {
+        auto& [script, alive] = pair;
+        if (alive) { script.CallOnUpdateFunction(dt); }
     }
-    for (auto id : toDelete) {
-        d_engines.erase(id);
+
+    // We delete scripts here rather then with OnRemove otherwise we would segfault if
+    // a script tries to delete its own entity, which is functionality that we want to
+    // support.
+    for (auto it = d_engines.begin(); it != d_engines.end();) {
+        if (!it->second.second) {
+            it = d_engines.erase(it);
+        } else {
+            ++it;
+        }
     }
 }
 
@@ -53,57 +59,55 @@ void ScriptRunner::OnEvent(Scene& scene, Event& event)
     d_input.OnEvent(event);
 
     // WINDOW EVENTS
-    for (auto& [id, luaEngine] : d_engines) {
-        auto entity = scene.Entities().Get(id);
-        if (!(entity.Valid() && entity.Has<ScriptComponent>())) {
-            continue;
-        }
+    for (auto& [id, pair] : d_engines) {
+        auto& [script, alive] = pair;
+        if (!alive) { continue; }
 
         if (auto e = event.As<WindowResizeEvent>()) {
-            luaEngine.CallOnWindowResizeEvent(e);
+            script.CallOnWindowResizeEvent(e);
         }
         else if (auto e = event.As<WindowClosedEvent>()) {
-            luaEngine.CallOnWindowClosedEvent(e);
+            script.CallOnWindowClosedEvent(e);
         }
         else if (auto e = event.As<WindowGotFocusEvent>()) {
-            luaEngine.CallOnWindowGotFocusEvent(e);
+            script.CallOnWindowGotFocusEvent(e);
         }
         else if (auto e = event.As<WindowLostFocusEvent>()) {
-            luaEngine.CallOnWindowLostFocusEvent(e);
+            script.CallOnWindowLostFocusEvent(e);
         }
         else if (auto e = event.As<WindowMaximizeEvent>()) {
-            luaEngine.CallOnWindowMaximizeEvent(e);
+            script.CallOnWindowMaximizeEvent(e);
         }
         else if (auto e = event.As<WindowMinimizeEvent>()) {
-            luaEngine.CallOnWindowMinimizeEvent(e);
+            script.CallOnWindowMinimizeEvent(e);
         }
 
         // MOUSE EVENTS
         else if (auto e = event.As<MouseButtonPressedEvent>()) {
-            luaEngine.CallOnMouseButtonPressedEvent(e);
+            script.CallOnMouseButtonPressedEvent(e);
         }
         else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-            luaEngine.CallOnMouseButtonReleasedEvent(e);
+            script.CallOnMouseButtonReleasedEvent(e);
         }
         else if (auto e = event.As<MouseMovedEvent>()) {
-            luaEngine.CallOnMouseMovedEvent(e);
+            script.CallOnMouseMovedEvent(e);
         }
         else if (auto e = event.As<MouseScrolledEvent>()) {
-            luaEngine.CallOnMouseScrolledEvent(e);
+            script.CallOnMouseScrolledEvent(e);
         }
             
         // KEYBOARD
         else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-            luaEngine.CallOnKeyboardButtonPressedEvent(e);
+            script.CallOnKeyboardButtonPressedEvent(e);
         }
         else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
-            luaEngine.CallOnKeyboardButtonReleasedEvent(e);
+            script.CallOnKeyboardButtonReleasedEvent(e);
         }
         else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
-            luaEngine.CallOnKeyboardButtonHeldEvent(e);
+            script.CallOnKeyboardButtonHeldEvent(e);
         }
         else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
-            luaEngine.CallOnKeyboardKeyTypedEvent(e);
+            script.CallOnKeyboardKeyTypedEvent(e);
         }
     }
 }

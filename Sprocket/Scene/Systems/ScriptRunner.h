@@ -13,7 +13,7 @@ class ScriptRunner : public EntitySystem
     Window*    d_window;
     InputProxy d_input;
 
-    std::unordered_map<uint32_t, LuaEngine> d_engines;
+    std::unordered_map<u32, std::pair<LuaEngine, bool>> d_engines;
 
 public:
     ScriptRunner(Window* window);

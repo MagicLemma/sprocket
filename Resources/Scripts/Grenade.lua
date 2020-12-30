@@ -1,6 +1,7 @@
 function Init(entity)
     TIME = 0.0
     EXPLODED = false
+    ENTITY = entity
 end
 
 function OnUpdate(entity, dt)
@@ -20,5 +21,4 @@ function OnUpdate(entity, dt)
         EXPLODED = true
         DeleteEntity(entity)
     end
-
 end
