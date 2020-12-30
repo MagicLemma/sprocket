@@ -169,6 +169,14 @@ constexpr int CapsuleCollider3DComponentDimension()
     return count;
 }
 
+constexpr int ScriptComponentDimension()
+{
+    int count = 0;
+    count += Dimension<std::string>(); // script
+    count += Dimension<bool>(); // active
+    return count;
+}
+
 constexpr int CameraComponentDimension()
 {
     int count = 0;
@@ -295,6 +303,11 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_SetCapsuleCollider3DComponent", &Lua::SetCapsuleCollider3DComponent);
     lua_register(L, "Lua_AddCapsuleCollider3DComponent", &Lua::AddCapsuleCollider3DComponent);
     lua_register(L, "HasCapsuleCollider3DComponent", &Lua_Has<CapsuleCollider3DComponent>);
+
+    lua_register(L, "Lua_GetScriptComponent", &Lua::GetScriptComponent);
+    lua_register(L, "Lua_SetScriptComponent", &Lua::SetScriptComponent);
+    lua_register(L, "Lua_AddScriptComponent", &Lua::AddScriptComponent);
+    lua_register(L, "HasScriptComponent", &Lua_Has<ScriptComponent>);
 
     lua_register(L, "Lua_GetCameraComponent", &Lua::GetCameraComponent);
     lua_register(L, "Lua_SetCameraComponent", &Lua::SetCameraComponent);
@@ -659,6 +672,47 @@ int AddCapsuleCollider3DComponent(lua_State* L)
     c.radius = Pull<float>(L, count);
     c.height = Pull<float>(L, count);
     e.Add<CapsuleCollider3DComponent>(c);
+    return 0;
+}
+
+int GetScriptComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<ScriptComponent>());
+
+    int count = 0;
+    const auto& c = e.Get<ScriptComponent>();
+    count += Push(L, c.script);
+    count += Push(L, c.active);
+    return count;
+}
+
+int SetScriptComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<ScriptComponent>();
+    c.script = Pull<std::string>(L, count);
+    c.active = Pull<bool>(L, count);
+    return 0;
+}
+
+int AddScriptComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    assert(!e.Has<ScriptComponent>());
+
+    ScriptComponent c;
+    c.script = Pull<std::string>(L, count);
+    c.active = Pull<bool>(L, count);
+    e.Add<ScriptComponent>(c);
     return 0;
 }
 

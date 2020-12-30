@@ -10,11 +10,12 @@ namespace Lua {
 
 int NewEntity(lua_State* L);
 
-int FastBegin(lua_State* L);
-int IteratorAtEnd(lua_State* L);
-int GetEntityFromIterator(lua_State* L);
-int IteratorAdvance(lua_State* L);
-int FastBeginFree(lua_State* L);
+int NewFast(lua_State* L);
+int DeleteFast(lua_State* L);
+int IterStart(lua_State* L);
+int IterValid(lua_State* L);
+int IterNext(lua_State* L);
+int IterGet(lua_State* L);
 
 }
 }

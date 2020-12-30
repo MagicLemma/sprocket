@@ -10,11 +10,13 @@ namespace Sprocket {
 void RegisterEntityFunctions(lua_State* L)
 {
     lua_register(L, "NewEntity", &Lua::NewEntity);
-    lua_register(L, "FastBegin", &Lua::FastBegin);
-    lua_register(L, "IteratorAtEnd", &Lua::IteratorAtEnd);
-    lua_register(L, "GetEntityFromIterator", &Lua::GetEntityFromIterator);
-    lua_register(L, "IteratorAdvance", &Lua::IteratorAdvance);
-    lua_register(L, "FastBeginFree", &Lua::FastBeginFree);
+
+    lua_register(L, "FastIteration_New", &Lua::NewFast);
+    lua_register(L, "FastIteration_Delete", &Lua::DeleteFast);
+    lua_register(L, "FastIteration_IterStart", &Lua::IterStart);
+    lua_register(L, "FastIteration_IterValid", &Lua::IterValid);
+    lua_register(L, "FastIteration_IterNext", &Lua::IterNext);
+    lua_register(L, "FastIteration_IterGet", &Lua::IterGet);
 }
 
 namespace Lua {
@@ -27,63 +29,77 @@ int NewEntity(lua_State* L)
     return 1;
 }
 
-int FastBegin(lua_State* L)
+int NewFast(lua_State* L)
 {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    using generator_type = cppcoro::generator<ECS::Entity>;
-    using iterator = typename generator_type::iterator;
+    using generator_t = cppcoro::generator<ECS::Entity>;
 
-    generator_type** gen = (generator_type**)lua_newuserdata(L, sizeof(generator_type*));
-    iterator* iter = (iterator*)lua_newuserdata(L, sizeof(iterator));
+    generator_t** gen = (generator_t**)lua_newuserdata(L, sizeof(generator_t*));
 
-    *gen = new generator_type(GetScene(L)->Entities().Fast());
-    *iter = (*gen)->begin();
-
-    return 2;
-}
-
-int IteratorAtEnd(lua_State* L)
-{
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-    using generator_type = cppcoro::generator<ECS::Entity>;
-    using iterator = typename generator_type::iterator;
-
-    generator_type* gen = *(generator_type**)lua_touserdata(L, 1);
-    iterator* iter = (iterator*)lua_touserdata(L, 2);
-
-    lua_pushboolean(L, *iter == gen->end());
+    *gen = new generator_t(GetScene(L)->Entities().Fast());
     return 1;
 }
 
-int GetEntityFromIterator(lua_State* L)
+int DeleteFast(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    using iter = cppcoro::generator<ECS::Entity>::iterator;
-    iter iterator = *(iter*)lua_touserdata(L, 1);
+    using generator_t = cppcoro::generator<ECS::Entity>;
 
-    ECS::Entity* luaEntity = (ECS::Entity*)lua_newuserdata(L, sizeof(ECS::Entity));
-    *luaEntity = *iterator;
-    return 1;
-}
+    generator_t** gen = (generator_t**)lua_touserdata(L, 1);
 
-int IteratorAdvance(lua_State* L)
-{
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    using iter = cppcoro::generator<ECS::Entity>::iterator;
-    iter* iterator = (iter*)lua_touserdata(L, 1);
-    ++(*iterator);
-    return 0;
-}
-
-int FastBeginFree(lua_State* L)
-{
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    using generator_type = cppcoro::generator<ECS::Entity>;
-    using iterator = typename generator_type::iterator;
-
-    generator_type** gen = (generator_type**)lua_touserdata(L, 1);
     delete *gen;
     return 0;
+}
+
+int IterStart(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    using generator_t = cppcoro::generator<ECS::Entity>;
+    using iterator_t = typename generator_t::iterator;
+
+    generator_t** gen = (generator_t**)lua_touserdata(L, 1);
+
+    iterator_t* iter = (iterator_t*)lua_newuserdata(L, sizeof(iterator_t));
+    *iter = (*gen)->begin();
+    return 1;
+}
+
+int IterValid(lua_State* L)
+{
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    using generator_t = cppcoro::generator<ECS::Entity>;
+    using iterator_t = typename generator_t::iterator;
+
+    generator_t** gen = (generator_t**)lua_touserdata(L, 1);
+    iterator_t* iter = (iterator_t*)lua_touserdata(L, 2);
+
+    lua_pushboolean(L, *iter != (*gen)->end());
+    return 1;
+}
+
+int IterNext(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    using generator_t = cppcoro::generator<ECS::Entity>;
+    using iterator_t = typename generator_t::iterator;
+
+    iterator_t* iter = (iterator_t*)lua_touserdata(L, 1);
+
+    ++(*iter);
+    return 0;   
+}
+
+int IterGet(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    using generator_t = cppcoro::generator<ECS::Entity>;
+    using iterator_t = typename generator_t::iterator;
+
+    iterator_t* iterator = (iterator_t*)lua_touserdata(L, 1);
+
+    ECS::Entity* luaEntity = (ECS::Entity*)lua_newuserdata(L, sizeof(ECS::Entity));
+    *luaEntity = **iterator;
+    return 1;
 }
 
 }

@@ -142,6 +142,25 @@ function AddCapsuleCollider3DComponent(entity, c)
 end
 
 
+ScriptComponent = Class(function(self, script, active)
+    self.script = script
+    self.active = active
+end)
+
+function GetScriptComponent(entity)
+    x0, x1 = Lua_GetScriptComponent(entity)
+    return ScriptComponent(x0, x1)
+end
+
+function SetScriptComponent(entity, c)
+    Lua_SetScriptComponent(entity, c.script, c.active)
+end
+
+function AddScriptComponent(entity, c)
+    Lua_AddScriptComponent(entity, c.script, c.active)
+end
+
+
 CameraComponent = Class(function(self, fov, pitch)
     self.fov = fov
     self.pitch = pitch
