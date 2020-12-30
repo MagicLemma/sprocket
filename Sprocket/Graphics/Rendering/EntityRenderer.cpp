@@ -9,9 +9,6 @@
 #include "Types.h"
 #include "HashPair.h"
 
-#include <glad/glad.h>
-#include <cmath>
-
 namespace Sprocket {
 namespace {
 
@@ -39,15 +36,19 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    const auto& sun = scene.Entities().Find<SunComponent>().Get<SunComponent>();
-    shader.LoadVec3("u_sun_direction", sun.direction);
-    shader.LoadVec3("u_sun_colour", sun.colour);
-    shader.LoadFloat("u_sun_brightness", sun.brightness);
+    if (const auto& s = scene.Entities().Find<SunComponent>(); s != ECS::Null) {
+        const auto& sun = s.Get<SunComponent>();
+        shader.LoadVec3("u_sun_direction", sun.direction);
+        shader.LoadVec3("u_sun_colour", sun.colour);
+        shader.LoadFloat("u_sun_brightness", sun.brightness);
+    }
 
     // Load ambience to shader
-    const auto& ambience = scene.Entities().Find<AmbienceComponent>().Get<AmbienceComponent>();
-    shader.LoadVec3("u_ambience_colour", ambience.colour);
-    shader.LoadFloat("u_ambience_brightness", ambience.brightness);
+    if (const auto& a = scene.Entities().Find<AmbienceComponent>(); a != ECS::Null) {
+        const auto& ambience = a.Get<AmbienceComponent>();
+        shader.LoadVec3("u_ambience_colour", ambience.colour);
+        shader.LoadFloat("u_ambience_brightness", ambience.brightness);
+    }
     
     // Load point lights to shader
     std::size_t i = 0;
@@ -149,7 +150,7 @@ void EntityRenderer::Draw(
     std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent>()) {
+    for (auto entity : scene.Entities().View<ModelComponent, TransformComponent>()) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }

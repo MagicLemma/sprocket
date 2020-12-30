@@ -1,5 +1,6 @@
 #pragma once
 #include "EntitySystem.h"
+#include "ECS.h"
 
 namespace Sprocket {
     

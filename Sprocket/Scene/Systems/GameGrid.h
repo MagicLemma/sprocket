@@ -1,4 +1,5 @@
 #pragma once
+#include "ECS.h"
 #include "EntitySystem.h"
 #include "HashPair.h"
 #include "Window.h"
