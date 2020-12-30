@@ -14,6 +14,7 @@ void RegisterEntityFunctions(lua_State* L)
     lua_register(L, "IteratorAtEnd", &Lua::IteratorAtEnd);
     lua_register(L, "GetEntityFromIterator", &Lua::GetEntityFromIterator);
     lua_register(L, "IteratorAdvance", &Lua::IteratorAdvance);
+    lua_register(L, "FastBeginFree", &Lua::FastBeginFree);
 }
 
 namespace Lua {
@@ -71,6 +72,17 @@ int IteratorAdvance(lua_State* L)
     using iter = cppcoro::generator<ECS::Entity>::iterator;
     iter* iterator = (iter*)lua_touserdata(L, 1);
     ++(*iterator);
+    return 0;
+}
+
+int FastBeginFree(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    using generator_type = cppcoro::generator<ECS::Entity>;
+    using iterator = typename generator_type::iterator;
+
+    generator_type** gen = (generator_type**)lua_touserdata(L, 1);
+    delete *gen;
     return 0;
 }
 

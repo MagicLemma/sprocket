@@ -66,22 +66,17 @@ end
 function OnMouseButtonPressedEvent(consumed, button, action, mods)
 
     local generator, iterator = FastBegin()
-    local entity = GetEntityFromIterator(iterator)
+    while IteratorAtEnd(generator, iterator) == false do
+        local entity = GetEntityFromIterator(iterator)
 
-    if HasNameComponent(entity) then
-        local nc = GetNameComponent(entity)
-        print(nc.name)
+        if HasNameComponent(entity) then
+            local nc = GetNameComponent(entity)
+            print(nc.name)
+        end
+        
+        IteratorAdvance(iterator)
     end
---    while IteratorAtEnd(iterator) == false do
---        local entity = GetEntityFromIterator(iterator)
---
---        if HasNameComponent(entity) then
---            local nc = GetNameComponent(entity)
---            print(nc.name)
---        end
---
---        IteratorAdvance(iterator)
---    end
+    FastBeginFree(generator)
 
     return true
 

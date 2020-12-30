@@ -14,6 +14,7 @@ int FastBegin(lua_State* L);
 int IteratorAtEnd(lua_State* L);
 int GetEntityFromIterator(lua_State* L);
 int IteratorAdvance(lua_State* L);
+int FastBeginFree(lua_State* L);
 
 }
 }
