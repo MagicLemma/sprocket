@@ -26,7 +26,9 @@ void PrintErrors(lua_State* L, int rc)
     ECS::Entity* e = GetEntity(L);
 
     std::string name = "Unnamed";
-    if (e->Has<NameComponent>()) {
+    if (!e->Valid()) {
+        name = "Deleted Entity";
+    } else if (e->Has<NameComponent>()) {
         name = e->Get<NameComponent>().name;
     }
 
@@ -195,7 +197,7 @@ void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
 
 void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
 {
-        if (!d_entity.Get<ScriptComponent>().active) { return; }
+    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnWindowMinimizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {

@@ -18,6 +18,7 @@ function OnUpdate(entity, dt)
             end
         end
         EXPLODED = true
+        DeleteEntity(entity)
     end
 
 end

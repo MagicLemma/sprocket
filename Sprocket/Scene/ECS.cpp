@@ -92,6 +92,13 @@ Entity Registry::New()
     return {this, index, version};
 }
 
+Entity Registry::Get(u32 id)
+{
+    u16 index = (u16)id;
+    u16 version = (u32)(id >> 16);
+    return {this, index, version};
+}
+
 void Registry::DeleteAll()
 {
     // Clean up components, triggering onRemove behaviour

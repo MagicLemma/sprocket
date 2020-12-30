@@ -88,6 +88,9 @@ public:
 
     Entity New();
 
+    // Given an entity ID, return the entity handle associated to it.
+    Entity Get(u32 id); 
+
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
     void DeleteAll();
