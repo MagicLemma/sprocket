@@ -66,14 +66,6 @@ end
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods)
 
-    --for entity in AllEntities() do
-    --    if HasNameComponent(entity) then
-    --        local nc = GetNameComponent(entity)
-    --        print(nc.name)
-    --    end
-    --end
-    --return true
-
     if consumed then return false end
 
     local newEntity = NewEntity()
