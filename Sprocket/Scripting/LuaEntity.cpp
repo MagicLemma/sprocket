@@ -34,8 +34,8 @@ int NewEntity(lua_State* L)
 int DeleteEntity(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    ECS::Entity* luaEntity = (ECS::Entity*)lua_touserdata(L, 1);
-    luaEntity->Delete();
+    ECS::Entity luaEntity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    luaEntity.Delete();
     return 0;
 }
 
@@ -45,7 +45,7 @@ int NewFast(lua_State* L)
     using generator_t = cppcoro::generator<ECS::Entity>;
 
     auto gen = new generator_t(GetScene(L)->Entities().Fast());
-    lua_pushlightuserdata(L, (void*)gen);
+    lua_pushlightuserdata(L, static_cast<void*>(gen));
     return 1;
 }
 
@@ -54,9 +54,7 @@ int DeleteFast(lua_State* L)
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     using generator_t = cppcoro::generator<ECS::Entity>;
 
-    generator_t* gen = (generator_t*)lua_touserdata(L, 1);
-
-    delete gen;
+    delete static_cast<generator_t*>(lua_touserdata(L, 1));
     return 0;
 }
 
