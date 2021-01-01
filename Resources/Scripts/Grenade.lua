@@ -6,13 +6,17 @@ function OnUpdate(entity, dt)
     TIME = TIME + dt
 
     if TIME > 3 then
-        for entity in AllEntities() do
-            if HasRigidBody3DComponent(entity) and not HasCameraComponent(entity) then
-                local rbc = GetRigidBody3DComponent(entity)
+        for e in AllEntities() do
+            local pos = GetTransformComponent(entity).position
+            if HasRigidBody3DComponent(e) then
+                local rbc = GetRigidBody3DComponent(e)
                 if rbc.frozen == false then
-                    rbc.velocity.y = rbc.velocity.y + 10
+                    local e_pos = GetTransformComponent(e).position
+                    if Mag(e_pos - pos) < 10 then
+                        rbc.velocity = rbc.velocity + 5 * (e_pos - pos)
+                    end
                 end
-                SetRigidBody3DComponent(entity, rbc)
+                SetRigidBody3DComponent(e, rbc)
             end
         end
         DeleteEntity(entity)

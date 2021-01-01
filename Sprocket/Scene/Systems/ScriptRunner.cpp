@@ -6,8 +6,6 @@
 #include "Components.h"
 
 #include <utility>
-#include <algorithm>
-#include <experimental/unordered_map>
 
 namespace Sprocket {
 

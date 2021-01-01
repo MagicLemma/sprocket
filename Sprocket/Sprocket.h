@@ -28,7 +28,6 @@
 
 #include "Scene/Systems/AnimationSystem.h"
 #include "Scene/Systems/BasicSelector.h"
-#include "Scene/Systems/Selector.h"
 #include "Scene/Systems/CameraSystem.h"
 #include "Scene/Systems/ParticleSystem.h"
 #include "Scene/Systems/PhysicsEngine.h"
