@@ -62,6 +62,7 @@ LuaEngine::LuaEngine()
     DoFile(d_L, "Sprocket/Scripting/Sprocket_Maths.lua");
     DoFile(d_L, "Sprocket/Scripting/Sprocket_Bindings.lua");
     DoFile(d_L, "Sprocket/Scripting/Sprocket_Components.lua");
+    DoFile(d_L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
     RegisterTransformFunctions(d_L);
     RegisterInputFunctions(d_L);
