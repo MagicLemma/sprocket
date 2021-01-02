@@ -5,31 +5,14 @@
 
 namespace Sprocket {
 
-void BasicSelector::OnStartup(Scene& scene)
+void BasicSelector::Set(ECS::Entity entity)
 {
-    scene.Entities().OnRemove<SelectComponent>([&](ECS::Entity entity) {
-        if (entity == d_selectedEntity) { SetSelected(ECS::Null); }
-    });
+    d_selected = entity;
 }
 
-void BasicSelector::SetSelected(ECS::Entity entity)
+ECS::Entity BasicSelector::Get() const
 {
-    // First clear the previous
-    if (d_selectedEntity.Valid()) {
-        d_selectedEntity.Get<SelectComponent>().selected = false;
-        d_selectedEntity = ECS::Null;
-    }
-
-    // Now set the new one if the given entity is valid
-    if (entity.Valid()) {
-        if (!entity.Has<SelectComponent>()) {
-            SPKT_LOG_WARN("Attempted to select entity with no SelectComponent");
-        }
-        else {
-            entity.Get<SelectComponent>().selected = true;
-            d_selectedEntity = entity;
-        }
-    }
+    return d_selected.Valid() ? d_selected : ECS::Null;
 }
 
 }
