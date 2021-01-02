@@ -183,7 +183,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            auto e = d_scene.Get<GameGrid>().At(pos.x, pos.y);
+                            auto e = d_scene.Get<GameGrid>().At(pos);
                             return e != ECS::Null;
                         }
                     );

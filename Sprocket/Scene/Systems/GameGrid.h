@@ -9,14 +9,15 @@
 #include <unordered_map>
 #include <optional>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
+
 namespace Sprocket {
 
 class GameGrid : public EntitySystem
 {
 public:
-    using GridMap = std::unordered_map<
-        std::pair<int, int>, ECS::Entity, HashPair
-    >;
+    using GridMap = std::unordered_map<glm::ivec2, ECS::Entity>;
 
 private:
     Window*       d_window;
@@ -37,7 +38,7 @@ public:
     void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Scene& scene, Event& event) override;
 
-    ECS::Entity At(int x, int z) const;
+    ECS::Entity At(const glm::ivec2& pos) const;
 
     void SetCamera(ECS::Entity entity) { d_camera = entity; }
 

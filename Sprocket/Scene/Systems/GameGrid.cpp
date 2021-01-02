@@ -110,9 +110,9 @@ void GameGrid::OnEvent(Scene& scene, Event& event)
     }
 }
 
-ECS::Entity GameGrid::At(int x, int z) const
+ECS::Entity GameGrid::At(const glm::ivec2& pos) const
 {
-    auto it = d_gridEntities.find({x, z});
+    auto it = d_gridEntities.find(pos);
     if (it != d_gridEntities.end()) {
         return it->second;
     }
@@ -121,13 +121,13 @@ ECS::Entity GameGrid::At(int x, int z) const
 
 ECS::Entity GameGrid::Hovered() const
 {
-    return At(d_hovered.x, d_hovered.y);
+    return At(d_hovered);
 }
 
 ECS::Entity GameGrid::Selected() const
 {
     if (d_selected.has_value()) {
-        return At(d_selected.value().x, d_selected.value().y);
+        return At(d_selected.value());
     }
     return ECS::Null;
 }
