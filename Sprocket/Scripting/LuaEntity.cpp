@@ -47,7 +47,7 @@ int DeleteEntity(lua_State* L)
 int NewFast(lua_State* L)
 {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    auto gen = new Generator(GetScene(L)->Entities().Fast());
+    auto gen = new Generator(GetScene(L)->Entities().Each());
     lua_pushlightuserdata(L, static_cast<void*>(gen));
     return 1;
 }

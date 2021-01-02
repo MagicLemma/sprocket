@@ -15,7 +15,10 @@ end
 -- An iterator for looping over all entities in the associated scene. Under the
 -- hood, this is done as a fast iteration, so should not be used for adding and
 -- removing entities.
-function AllEntities()
+Scene = Class(function(self)
+end)
+
+function Scene:Each()
     local generator = FastIteration_New()
     local iter = FastIteration_IterStart(generator)
 

@@ -105,12 +105,7 @@ public:
 
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
-    cppcoro::generator<Entity> Fast();
-
-    // Generates all active entities. This is slow, but adding and removing
-    // entities is safe. If an entity is added, it may or may not be included
-    // in the iteration, depending on where in the sparse set it gets added.
-    cppcoro::generator<Entity> Safe();
+    cppcoro::generator<Entity> Each();
 
     // Does a fast iteration over all entities with the given Comp. If any extra
     // component types are specified, only entities that have all of those types
@@ -169,7 +164,7 @@ template <typename... Comps>
 Entity Registry::Find(const EntityPredicate& pred)
 {
     if constexpr (sizeof...(Comps) == 0) {
-        for (auto entity : Fast()) {
+        for (auto entity : Each()) {
             if (pred(entity)) {
                 return entity;
             }

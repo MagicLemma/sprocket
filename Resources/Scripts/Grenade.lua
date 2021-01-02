@@ -5,8 +5,10 @@ end
 function OnUpdate(entity, dt)
     TIME = TIME + dt
 
+    local scene = Scene()
+
     if TIME > 3 then
-        for e in AllEntities() do
+        for e in scene:Each() do
             local pos = GetTransformComponent(entity).position
             if HasRigidBody3DComponent(e) then
                 local rbc = GetRigidBody3DComponent(e)

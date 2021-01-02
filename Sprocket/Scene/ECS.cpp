@@ -113,8 +113,8 @@ Entity Registry::Get(u32 id)
 void Registry::DeleteAll()
 {
     // Clean up components, triggering onRemove behaviour
-    for (auto entity : Safe()) {
-        entity.Delete();
+    for (const auto& [index, version] : d_entities.Safe()) {
+        Entity{this, index, version}.Delete();
     }
 
     // Reset all entity storage
@@ -139,16 +139,9 @@ std::size_t Registry::Size() const
     return d_entities.Size();
 }
 
-cppcoro::generator<Entity> Registry::Fast()
+cppcoro::generator<Entity> Registry::Each()
 {
     for (const auto& [index, version] : d_entities.Fast()) {
-        co_yield {this, index, version};
-    }
-}
-
-cppcoro::generator<Entity> Registry::Safe()
-{
-    for (const auto& [index, version] : d_entities.Safe()) {
         co_yield {this, index, version};
     }
 }
