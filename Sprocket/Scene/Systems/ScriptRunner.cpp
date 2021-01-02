@@ -16,7 +16,7 @@ ScriptRunner::ScriptRunner(Window* window)
 
 void ScriptRunner::OnStartup(Scene& scene)
 {
-    scene.Entities().OnAdd<ScriptComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
         auto& [luaEngine, alive] = d_engines[entity.Id()];
         alive = true;
         luaEngine.SetScene(&scene);
@@ -27,7 +27,7 @@ void ScriptRunner::OnStartup(Scene& scene)
         luaEngine.CallInitFunction();
     });
 
-    scene.Entities().OnRemove<ScriptComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
         d_engines[entity.Id()].second = false; // alive = false
     });
 }

@@ -15,7 +15,7 @@
 #include <cppcoro/generator.hpp>
 
 namespace Sprocket {
-namespace ECS {
+namespace ecs {
     
 class Registry;
 
@@ -182,7 +182,7 @@ Entity Registry::Find(const EntityPredicate& pred)
             }
         }
     }
-    return ECS::Null;
+    return ecs::Null;
 }
 
 // ENTITY TEMPLATES

@@ -36,7 +36,7 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    if (const auto& s = scene.Entities().Find<SunComponent>(); s != ECS::Null) {
+    if (const auto& s = scene.Entities().Find<SunComponent>(); s != ecs::Null) {
         const auto& sun = s.Get<SunComponent>();
         shader.LoadVec3("u_sun_direction", sun.direction);
         shader.LoadVec3("u_sun_colour", sun.colour);
@@ -44,7 +44,7 @@ void UploadUniforms(
     }
 
     // Load ambience to shader
-    if (const auto& a = scene.Entities().Find<AmbienceComponent>(); a != ECS::Null) {
+    if (const auto& a = scene.Entities().Find<AmbienceComponent>(); a != ecs::Null) {
         const auto& ambience = a.Get<AmbienceComponent>();
         shader.LoadVec3("u_ambience_colour", ambience.colour);
         shader.LoadFloat("u_ambience_brightness", ambience.brightness);
@@ -214,7 +214,7 @@ void EntityRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void EntityRenderer::Draw(const ECS::Entity& camera, Scene& scene)
+void EntityRenderer::Draw(const ecs::Entity& camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);

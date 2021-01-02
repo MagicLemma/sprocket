@@ -11,7 +11,7 @@
 
 namespace Sprocket {
 
-std::string Name(const ECS::Entity& e) {
+std::string Name(const ecs::Entity& e) {
     if (e.Has<NameComponent>()) {
         return e.Get<NameComponent>().name;
     }
@@ -47,7 +47,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
     model2.mesh = gridSquare;
 
-    scene.Entities().OnAdd<GridComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnAdd<GridComponent>([&](ecs::Entity entity) {
         auto& transform = entity.Get<TransformComponent>();
         const auto& gc = entity.Get<GridComponent>();
 
@@ -58,7 +58,7 @@ void GameGrid::OnStartup(Scene& scene)
         d_gridEntities[{gc.x, gc.z}] = entity;
     });
 
-    scene.Entities().OnRemove<GridComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnRemove<GridComponent>([&](ecs::Entity entity) {
         auto& gc = entity.Get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});
@@ -110,26 +110,26 @@ void GameGrid::OnEvent(Scene& scene, Event& event)
     }
 }
 
-ECS::Entity GameGrid::At(const glm::ivec2& pos) const
+ecs::Entity GameGrid::At(const glm::ivec2& pos) const
 {
     auto it = d_gridEntities.find(pos);
     if (it != d_gridEntities.end()) {
         return it->second;
     }
-    return ECS::Null;
+    return ecs::Null;
 }
 
-ECS::Entity GameGrid::Hovered() const
+ecs::Entity GameGrid::Hovered() const
 {
     return At(d_hovered);
 }
 
-ECS::Entity GameGrid::Selected() const
+ecs::Entity GameGrid::Selected() const
 {
     if (d_selected.has_value()) {
         return At(d_selected.value());
     }
-    return ECS::Null;
+    return ecs::Null;
 }
 
 }

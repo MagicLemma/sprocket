@@ -4,7 +4,7 @@
 #include <algorithm>
 
 namespace Sprocket {
-namespace ECS {
+namespace ecs {
 
 bool Entity::operator==(Entity other) const
 {
@@ -28,7 +28,7 @@ Entity& Entity::operator=(Entity other)
 
 bool Entity::Valid() const
 {
-     return *this != ECS::Null
+     return *this != ecs::Null
          && d_registry
          && d_registry->d_entities.Has(d_index)
          && d_registry->d_entities[d_index] == d_version;

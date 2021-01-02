@@ -19,7 +19,7 @@ class LuaEngine
 {
     lua_State* d_L;
 
-    ECS::Entity d_entity;
+    ecs::Entity d_entity;
 
 public:
     LuaEngine();
@@ -52,7 +52,7 @@ public:
 
     // Setters
     void SetScene(Scene* s);
-    void SetEntity(const ECS::Entity& e);
+    void SetEntity(const ecs::Entity& e);
     void SetWindow(Window* w);
     void SetInput(InputProxy* ip);
 

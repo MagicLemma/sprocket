@@ -100,7 +100,7 @@ void ColliderRenderer::Draw(
     d_shader.Unbind();
 }
 
-void ColliderRenderer::Draw(const ECS::Entity& camera, Scene& scene)
+void ColliderRenderer::Draw(const ecs::Entity& camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);

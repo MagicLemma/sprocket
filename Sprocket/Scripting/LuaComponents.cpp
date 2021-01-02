@@ -260,7 +260,7 @@ template<typename T> int Lua_Has(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity entity = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     lua_pushboolean(L, entity.Has<T>());
     return 1;
 }
@@ -362,7 +362,7 @@ int GetNameComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<NameComponent>());
 
     int count = 0;
@@ -376,7 +376,7 @@ int SetNameComponent(lua_State* L)
     if (!CheckArgCount(L, NameComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<NameComponent>();
     c.name = Pull<std::string>(L, count);
     return 0;
@@ -387,7 +387,7 @@ int AddNameComponent(lua_State* L)
     if (!CheckArgCount(L, NameComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<NameComponent>());
 
     NameComponent c;
@@ -400,7 +400,7 @@ int GetTransformComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<TransformComponent>());
 
     int count = 0;
@@ -415,7 +415,7 @@ int SetTransformComponent(lua_State* L)
     if (!CheckArgCount(L, TransformComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<TransformComponent>();
     c.position = Pull<glm::vec3>(L, count);
     c.scale = Pull<glm::vec3>(L, count);
@@ -427,7 +427,7 @@ int AddTransformComponent(lua_State* L)
     if (!CheckArgCount(L, TransformComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<TransformComponent>());
 
     TransformComponent c;
@@ -441,7 +441,7 @@ int GetModelComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<ModelComponent>());
 
     int count = 0;
@@ -456,7 +456,7 @@ int SetModelComponent(lua_State* L)
     if (!CheckArgCount(L, ModelComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ModelComponent>();
     c.mesh = Pull<std::string>(L, count);
     c.material = Pull<std::string>(L, count);
@@ -468,7 +468,7 @@ int AddModelComponent(lua_State* L)
     if (!CheckArgCount(L, ModelComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<ModelComponent>());
 
     ModelComponent c;
@@ -482,7 +482,7 @@ int GetRigidBody3DComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<RigidBody3DComponent>());
 
     int count = 0;
@@ -503,7 +503,7 @@ int SetRigidBody3DComponent(lua_State* L)
     if (!CheckArgCount(L, RigidBody3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<RigidBody3DComponent>();
     c.velocity = Pull<glm::vec3>(L, count);
     c.gravity = Pull<bool>(L, count);
@@ -521,7 +521,7 @@ int AddRigidBody3DComponent(lua_State* L)
     if (!CheckArgCount(L, RigidBody3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<RigidBody3DComponent>());
 
     RigidBody3DComponent c;
@@ -541,7 +541,7 @@ int GetBoxCollider3DComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<BoxCollider3DComponent>());
 
     int count = 0;
@@ -558,7 +558,7 @@ int SetBoxCollider3DComponent(lua_State* L)
     if (!CheckArgCount(L, BoxCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<BoxCollider3DComponent>();
     c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
@@ -572,7 +572,7 @@ int AddBoxCollider3DComponent(lua_State* L)
     if (!CheckArgCount(L, BoxCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<BoxCollider3DComponent>());
 
     BoxCollider3DComponent c;
@@ -588,7 +588,7 @@ int GetSphereCollider3DComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<SphereCollider3DComponent>());
 
     int count = 0;
@@ -604,7 +604,7 @@ int SetSphereCollider3DComponent(lua_State* L)
     if (!CheckArgCount(L, SphereCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<SphereCollider3DComponent>();
     c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
@@ -617,7 +617,7 @@ int AddSphereCollider3DComponent(lua_State* L)
     if (!CheckArgCount(L, SphereCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<SphereCollider3DComponent>());
 
     SphereCollider3DComponent c;
@@ -632,7 +632,7 @@ int GetCapsuleCollider3DComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<CapsuleCollider3DComponent>());
 
     int count = 0;
@@ -649,7 +649,7 @@ int SetCapsuleCollider3DComponent(lua_State* L)
     if (!CheckArgCount(L, CapsuleCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<CapsuleCollider3DComponent>();
     c.position = Pull<glm::vec3>(L, count);
     c.mass = Pull<float>(L, count);
@@ -663,7 +663,7 @@ int AddCapsuleCollider3DComponent(lua_State* L)
     if (!CheckArgCount(L, CapsuleCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<CapsuleCollider3DComponent>());
 
     CapsuleCollider3DComponent c;
@@ -679,7 +679,7 @@ int GetScriptComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<ScriptComponent>());
 
     int count = 0;
@@ -694,7 +694,7 @@ int SetScriptComponent(lua_State* L)
     if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ScriptComponent>();
     c.script = Pull<std::string>(L, count);
     c.active = Pull<bool>(L, count);
@@ -706,7 +706,7 @@ int AddScriptComponent(lua_State* L)
     if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<ScriptComponent>());
 
     ScriptComponent c;
@@ -720,7 +720,7 @@ int GetCameraComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<CameraComponent>());
 
     int count = 0;
@@ -735,7 +735,7 @@ int SetCameraComponent(lua_State* L)
     if (!CheckArgCount(L, CameraComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<CameraComponent>();
     c.fov = Pull<float>(L, count);
     c.pitch = Pull<float>(L, count);
@@ -747,7 +747,7 @@ int AddCameraComponent(lua_State* L)
     if (!CheckArgCount(L, CameraComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<CameraComponent>());
 
     CameraComponent c;
@@ -761,7 +761,7 @@ int GetSelectComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<SelectComponent>());
 
     int count = 0;
@@ -776,7 +776,7 @@ int SetSelectComponent(lua_State* L)
     if (!CheckArgCount(L, SelectComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<SelectComponent>();
     c.selected = Pull<bool>(L, count);
     c.hovered = Pull<bool>(L, count);
@@ -788,7 +788,7 @@ int AddSelectComponent(lua_State* L)
     if (!CheckArgCount(L, SelectComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<SelectComponent>());
 
     SelectComponent c;
@@ -802,7 +802,7 @@ int GetPathComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<PathComponent>());
 
     int count = 0;
@@ -816,7 +816,7 @@ int SetPathComponent(lua_State* L)
     if (!CheckArgCount(L, PathComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<PathComponent>();
     c.speed = Pull<float>(L, count);
     return 0;
@@ -827,7 +827,7 @@ int AddPathComponent(lua_State* L)
     if (!CheckArgCount(L, PathComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<PathComponent>());
 
     PathComponent c;
@@ -840,7 +840,7 @@ int GetGridComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<GridComponent>());
 
     int count = 0;
@@ -855,7 +855,7 @@ int SetGridComponent(lua_State* L)
     if (!CheckArgCount(L, GridComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<GridComponent>();
     c.x = Pull<int>(L, count);
     c.z = Pull<int>(L, count);
@@ -867,7 +867,7 @@ int AddGridComponent(lua_State* L)
     if (!CheckArgCount(L, GridComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<GridComponent>());
 
     GridComponent c;
@@ -881,7 +881,7 @@ int GetLightComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<LightComponent>());
 
     int count = 0;
@@ -896,7 +896,7 @@ int SetLightComponent(lua_State* L)
     if (!CheckArgCount(L, LightComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<LightComponent>();
     c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
@@ -908,7 +908,7 @@ int AddLightComponent(lua_State* L)
     if (!CheckArgCount(L, LightComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<LightComponent>());
 
     LightComponent c;
@@ -922,7 +922,7 @@ int GetSunComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<SunComponent>());
 
     int count = 0;
@@ -939,7 +939,7 @@ int SetSunComponent(lua_State* L)
     if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<SunComponent>();
     c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
@@ -953,7 +953,7 @@ int AddSunComponent(lua_State* L)
     if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<SunComponent>());
 
     SunComponent c;
@@ -969,7 +969,7 @@ int GetAmbienceComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<AmbienceComponent>());
 
     int count = 0;
@@ -984,7 +984,7 @@ int SetAmbienceComponent(lua_State* L)
     if (!CheckArgCount(L, AmbienceComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<AmbienceComponent>();
     c.colour = Pull<glm::vec3>(L, count);
     c.brightness = Pull<float>(L, count);
@@ -996,7 +996,7 @@ int AddAmbienceComponent(lua_State* L)
     if (!CheckArgCount(L, AmbienceComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<AmbienceComponent>());
 
     AmbienceComponent c;
@@ -1010,7 +1010,7 @@ int GetParticleComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<ParticleComponent>());
 
     int count = 0;
@@ -1029,7 +1029,7 @@ int SetParticleComponent(lua_State* L)
     if (!CheckArgCount(L, ParticleComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<ParticleComponent>();
     c.interval = Pull<float>(L, count);
     c.velocity = Pull<glm::vec3>(L, count);
@@ -1045,7 +1045,7 @@ int AddParticleComponent(lua_State* L)
     if (!CheckArgCount(L, ParticleComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<ParticleComponent>());
 
     ParticleComponent c;
@@ -1063,7 +1063,7 @@ int GetAnimationComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(e.Has<AnimationComponent>());
 
     int count = 0;
@@ -1079,7 +1079,7 @@ int SetAnimationComponent(lua_State* L)
     if (!CheckArgCount(L, AnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     auto& c = e.Get<AnimationComponent>();
     c.name = Pull<std::string>(L, count);
     c.time = Pull<float>(L, count);
@@ -1092,7 +1092,7 @@ int AddAnimationComponent(lua_State* L)
     if (!CheckArgCount(L, AnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
-    ECS::Entity e = *static_cast<ECS::Entity*>(lua_touserdata(L, 1));
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
     assert(!e.Has<AnimationComponent>());
 
     AnimationComponent c;

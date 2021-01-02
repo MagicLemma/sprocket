@@ -38,10 +38,10 @@ InputProxy* GetInput(lua_State* L)
     return ip;
 }
 
-ECS::Entity* GetEntity(lua_State* L)
+ecs::Entity* GetEntity(lua_State* L)
 {
     lua_getglobal(L, "__entity__");
-    ECS::Entity* e = (ECS::Entity*)lua_touserdata(L, -1);
+    ecs::Entity* e = (ecs::Entity*)lua_touserdata(L, -1);
     lua_pop(L, 1);
     return e;
 }

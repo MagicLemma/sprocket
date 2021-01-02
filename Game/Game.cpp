@@ -114,18 +114,18 @@ void WorldLayer::LoadScene(const std::string& file)
 
     d_sceneFile = file;
 
-    d_worker = d_scene.Entities().Find<NameComponent>([](ECS::Entity entity) {
+    d_worker = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
         return entity.Get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene.Entities().Find<NameComponent>([](ECS::Entity entity) {
+    d_camera = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
         return entity.Get<NameComponent>().name == "Camera";
     });
 
     d_scene.Get<GameGrid>().SetCamera(d_camera);
 
-    assert(d_worker != ECS::Null);
-    assert(d_camera != ECS::Null);
+    assert(d_worker != ecs::Null);
+    assert(d_camera != ecs::Null);
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -184,7 +184,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                         mousePos,
                         [&](const glm::ivec2& pos) {
                             auto e = d_scene.Get<GameGrid>().At(pos);
-                            return e != ECS::Null;
+                            return e != ecs::Null;
                         }
                     );
                 } else {
@@ -491,24 +491,20 @@ void WorldLayer::AddRockBase(
 
 void WorldLayer::AddRock(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/rock.yaml";
-    AddRockBase(pos, material, "Rock");
+    AddRockBase(pos, "Resources/Materials/rock.yaml", "Rock");
 }
 
 void WorldLayer::AddIron(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/iron.yaml";
-    AddRockBase(pos, material, "Iron");
+    AddRockBase(pos, "Resources/Materials/iron.yaml", "Iron");
 }
 
 void WorldLayer::AddTin(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/tin.yaml";
-    AddRockBase(pos, material, "Tin");
+    AddRockBase(pos, "Resources/Materials/tin.yaml", "Tin");
 }
 
 void WorldLayer::AddMithril(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/mithril.yaml";
-    AddRockBase(pos, material, "Mithril");
+    AddRockBase(pos, "Resources/Materials/mithril.yaml", "Mithril");
 }

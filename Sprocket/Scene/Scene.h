@@ -17,10 +17,10 @@ class Scene
     std::unordered_map<std::type_index, std::size_t> d_lookup;
     std::vector<std::unique_ptr<EntitySystem>> d_systems;
 
-    ECS::Registry d_registry;
+    ecs::Registry d_registry;
 
 public:
-    ECS::Registry& Entities() { return d_registry; }
+    ecs::Registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>
     T& Add(Args&&... args);

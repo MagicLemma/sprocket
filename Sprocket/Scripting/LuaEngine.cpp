@@ -23,7 +23,7 @@ void DoFile(lua_State* L, const char* file)
 
 void PrintErrors(lua_State* L, int rc)
 {
-    ECS::Entity* e = GetEntity(L);
+    ecs::Entity* e = GetEntity(L);
 
     std::string name = "Unnamed";
     if (!e->Valid()) {
@@ -384,7 +384,7 @@ void LuaEngine::SetScene(Scene* s)
     lua_setglobal(d_L, "__scene__");
 }
 
-void LuaEngine::SetEntity(const ECS::Entity& e)
+void LuaEngine::SetEntity(const ecs::Entity& e)
 {
     d_entity = e;
     lua_pushlightuserdata(d_L, (void*)&d_entity);

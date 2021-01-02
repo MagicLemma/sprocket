@@ -5,7 +5,7 @@
 namespace Sprocket {
 namespace Audio {
     
-void SetListener(const ECS::Entity& entity);
+void SetListener(const ecs::Entity& entity);
 
 float GetMasterVolume();
 void SetMasterVolume(float volume);

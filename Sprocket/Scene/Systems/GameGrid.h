@@ -17,14 +17,14 @@ namespace Sprocket {
 class GameGrid : public EntitySystem
 {
 public:
-    using GridMap = std::unordered_map<glm::ivec2, ECS::Entity>;
+    using GridMap = std::unordered_map<glm::ivec2, ecs::Entity>;
 
 private:
     Window*       d_window;
 
-    ECS::Entity d_camera;
-    ECS::Entity d_hoveredSquare;
-    ECS::Entity d_selectedSquare;
+    ecs::Entity d_camera;
+    ecs::Entity d_hoveredSquare;
+    ecs::Entity d_selectedSquare;
 
     glm::ivec2 d_hovered; // TODO: make optional
     std::optional<glm::ivec2> d_selected;
@@ -38,12 +38,12 @@ public:
     void OnUpdate(Scene& scene, double dt) override;
     void OnEvent(Scene& scene, Event& event) override;
 
-    ECS::Entity At(const glm::ivec2& pos) const;
+    ecs::Entity At(const glm::ivec2& pos) const;
 
-    void SetCamera(ECS::Entity entity) { d_camera = entity; }
+    void SetCamera(ecs::Entity entity) { d_camera = entity; }
 
-    ECS::Entity Hovered() const;
-    ECS::Entity Selected() const;
+    ecs::Entity Hovered() const;
+    ecs::Entity Selected() const;
 
     std::optional<glm::ivec2> SelectedPosition() const { return d_selected; }
 };
