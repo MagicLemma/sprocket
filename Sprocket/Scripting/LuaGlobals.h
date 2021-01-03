@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-class lua_State;
+struct lua_State;
 
 namespace Sprocket {
 
