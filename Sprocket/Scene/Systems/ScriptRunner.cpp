@@ -17,16 +17,16 @@ ScriptRunner::ScriptRunner(Window* window)
 void ScriptRunner::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
-        auto& [luaEngine, alive] = d_engines[entity];
+        auto& [engine, alive] = d_engines[entity];
         alive = true;
 
-        luaEngine.Set("__scene__", &scene);
-        luaEngine.Set("__window__", d_window);
-        luaEngine.Set("__input__", &d_input);
+        engine.Set("__scene__", &scene);
+        engine.Set("__window__", d_window);
+        engine.Set("__input__", &d_input);
 
-        luaEngine.RunScript(entity.Get<ScriptComponent>().script);
-        luaEngine.Call("Init", entity);
-        luaEngine.PrintGlobals();
+        engine.RunScript(entity.Get<ScriptComponent>().script);
+        engine.Call("Init", entity);
+        engine.PrintGlobals();
     });
 
     scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
