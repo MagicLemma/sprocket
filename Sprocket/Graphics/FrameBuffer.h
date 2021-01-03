@@ -9,8 +9,8 @@ class FrameBuffer
 {
     u32 d_fbo;
 
-    std::shared_ptr<Texture> d_colour;
-    std::shared_ptr<Texture> d_depth;
+    std::unique_ptr<Texture> d_colour;
+    std::unique_ptr<Texture> d_depth;
 
     int d_width;
     int d_height;
@@ -31,8 +31,8 @@ public:
     void BindTexture() const;
     void UnbindTexture() const;
 
-    std::shared_ptr<Texture> GetColour() const { return d_colour; }
-    std::shared_ptr<Texture> GetDepth() const { return d_depth; }
+    Texture* GetColour() const { return d_colour.get(); }
+    Texture* GetDepth() const { return d_depth.get(); }
 
     void SetScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.

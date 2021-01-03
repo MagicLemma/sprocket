@@ -56,7 +56,7 @@ void Text(const std::string& text)
     ImGui::Text(text.c_str());
 }
 
-void Image(const std::shared_ptr<Texture>& image,
+void Image(const Texture* image,
            const glm::vec2& size,
            const glm::vec2& uv0,
            const glm::vec2& uv1,
@@ -73,7 +73,7 @@ void Image(const std::shared_ptr<Texture>& image,
     );
 }
 
-void Image(const std::shared_ptr<Texture>& image, float size)
+void Image(const Texture* image, float size)
 {
     Image(image, {image->AspectRatio() * size, size});
 }

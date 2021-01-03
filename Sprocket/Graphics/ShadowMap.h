@@ -35,7 +35,7 @@ public:
     void Draw(const glm::vec3& sunDirection, const glm::vec3& centre, Scene& scene);
 
     glm::mat4 GetLightProjViewMatrix() const;
-    std::shared_ptr<Texture>     GetShadowMap() const;
+    Texture*  GetShadowMap() const;
 };
 
 }
