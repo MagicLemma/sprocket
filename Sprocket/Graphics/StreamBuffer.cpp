@@ -7,9 +7,9 @@
 namespace Sprocket {
 
 StreamBuffer::StreamBuffer()
-    : d_vao(std::make_shared<VAO>())
-    , d_vertexBuffer(std::make_shared<VBO>())
-    , d_indexBuffer(std::make_shared<VBO>())
+    : d_vao(std::make_unique<VAO>())
+    , d_vertexBuffer(std::make_unique<VBO>())
+    , d_indexBuffer(std::make_unique<VBO>())
 {
     // Set the index buffer pointer in the VAO.
     glBindVertexArray(d_vao->Value());

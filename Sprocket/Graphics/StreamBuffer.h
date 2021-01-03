@@ -12,9 +12,9 @@ class StreamBuffer
 // By default, the VBO has 3 attribute pointers enabled, but nothing
 // is defined; that is up to the user.
 {
-    std::shared_ptr<VAO> d_vao;
-    std::shared_ptr<VBO> d_vertexBuffer;
-    std::shared_ptr<VBO> d_indexBuffer;
+    std::unique_ptr<VAO> d_vao;
+    std::unique_ptr<VBO> d_vertexBuffer;
+    std::unique_ptr<VBO> d_indexBuffer;
 
 
 public:
