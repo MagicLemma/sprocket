@@ -1,29 +1,16 @@
 function Class(init)
    local c = {}
-
-   -- the class is the metatable for all its objects
    c.__index = c
  
-   -- expose a constructor which can be called by <classname>(<args>)
-   local mt = {}
-   mt.__call = function(class_tbl, ...)
-
-      local obj = {}
-      setmetatable(obj,c)
-      init(obj,...)
-      return obj
-   end
-   
-   c.init = init
-   c.is_a = function(self, klass)
-      local m = getmetatable(self)
-      while m do 
-         if m == klass then return true end
-         m = m._base
+   local metatable = {
+      __call = function(class_tbl, ...)
+         local obj = setmetatable({}, c)
+         init(obj,...)
+         return obj
       end
-      return false
-   end
-   setmetatable(c, mt)
+   }
+   setmetatable(c, metatable)
+
    return c
 end
 

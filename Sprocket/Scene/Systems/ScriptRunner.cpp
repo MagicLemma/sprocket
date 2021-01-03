@@ -42,8 +42,11 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
     for (auto it = d_engines.begin(); it != d_engines.end();) {
         auto& entity = it->first;
         auto& [script, alive] = it->second;
-        if (alive && entity.Get<ScriptComponent>().active) {
-            script.Call("OnUpdate", entity, dt);
+
+        if (alive) {
+            if (entity.Get<ScriptComponent>().active) {
+                script.Call("OnUpdate", entity, dt);
+            }
             ++it;
         } else {
             it = d_engines.erase(it);

@@ -38,14 +38,6 @@ InputProxy* GetInput(lua_State* L)
     return ip;
 }
 
-ecs::Entity* GetEntity(lua_State* L)
-{
-    lua_getglobal(L, "__entity__");
-    ecs::Entity* e = (ecs::Entity*)lua_touserdata(L, -1);
-    lua_pop(L, 1);
-    return e;
-}
-
 bool CheckReturnCode(lua_State* L, int rc)
 {
     if (rc != LUA_OK) {
