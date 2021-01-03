@@ -8,6 +8,10 @@
 
 namespace itertools {
 
+// =======================================================================================
+//    BUILTINS
+// =======================================================================================
+
 template <typename T>
 cppcoro::generator<typename T::reference>
 reversed(T& iterable)
@@ -74,6 +78,10 @@ zip(const Left& left, const Right& right)
     }
 }
 
+// =======================================================================================
+//    INFINITE ITERATORS
+// =======================================================================================
+
 template <typename T>
 cppcoro::generator<T>
 count(const T& start = T{0}, const T& step = T{1})
@@ -111,6 +119,36 @@ repeat(const T& object, const std::optional<std::size_t>& times = {})
     }
 }
 
+// =======================================================================================
+//    FINITE ITERATORS
+// =======================================================================================
+
+template <typename Data, typename Selectors>
+cppcoro::generator<typename Data::const_reference>
+compress(const Data& data, const Selectors& selectors)
+{
+    for (const auto& [object, selector] : zip(data, selectors)) {
+        if (bool(selector)) {
+            co_yield object;
+        }
+    }
+}
+
+template <typename T>
+cppcoro::generator<typename T::const_reference>
+dropwhile(std::function<bool(typename T::const_reference)> predicate, const T& iterable)
+{
+    auto it = iterable.begin();
+    while (it != iterable.end() && predicate(*it)) {
+        ++it;
+    }
+    while (it != iterable.end()) {
+        co_yield *it;
+        ++it;
+    }
+
+}
+
 template <typename T>
 cppcoro::generator<typename T::const_reference>
 filterfalse(std::function<bool(typename T::const_reference)> predicate, const T& iterable)
@@ -122,15 +160,17 @@ filterfalse(std::function<bool(typename T::const_reference)> predicate, const T&
     }
 }
 
-template <typename T>
-cppcoro::generator<typename T::const_reference>
-filterfalse(const T& iterable)
+template <typename Func, typename... Args>
+auto starmap(Func function, const std::vector<std::tuple<Args...>>& args)
+    -> cppcoro::generator<typename std::result_of<Func(Args&&...)>::type>
 {
-    for (const auto& elem : iterable) {
-        if (!elem) {
-            co_yield elem;
-        }
+    for (const auto& signature : args) {
+        co_yield std::apply(function, signature);
     }
 }
+
+// =======================================================================================
+//    COMBINATORIC ITERATORS
+// =======================================================================================
 
 }

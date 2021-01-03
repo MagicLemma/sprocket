@@ -1,9 +1,9 @@
 #include <Sprocket.h>
 #include "Game.h"
 
-struct Foo {};
-struct Bar {};
-struct Baz {};
+double foo(int x, double y) {
+    return y + x;
+}
 
 int main()
 {
@@ -17,11 +17,11 @@ int main()
     using namespace Sprocket;
     Log::Init();
 
-    std::vector<int> v1{1, 2, 3, 4, 5};
-    std::vector<int> v2{6, 7, 8, 9};
+    std::vector<int> data{1, 4, 6, 4, 1};
+    std::vector<std::tuple<int, double>> signatures{{1, 2.0}, {3, 4.5}};
 
-    for (auto& [l, r] : itertools::zip(v1, v2)) {
-        SPKT_LOG_INFO("{}, {}", l, r);
+    for (const auto& x : itertools::starmap(foo, signatures)) {
+        SPKT_LOG_INFO("{}", x);
     }
 
 
