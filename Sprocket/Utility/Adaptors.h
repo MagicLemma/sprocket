@@ -1,57 +1,110 @@
 #pragma once
-#include "Types.h"
-
+#include <optional>
+#include <functional>
 #include <vector>
+#include <utility>
 
-namespace Sprocket {
+#include <cppcoro/generator.hpp>
 
-template <typename Iterable>
-class Reversed
+namespace itertools {
+
+template <typename T>
+cppcoro::generator<typename T::reference>
+reversed(T& iterable)
 {
-    Iterable& d_container;
+    for (auto it = iterable.rbegin(); it != iterable.rend(); ++it) {
+        co_yield *it;
+    }
+}
 
-public:
-    Reversed(Iterable& container) : d_container(container) {}
-
-    auto begin() { return d_container.rbegin(); }
-    auto end() { return d_container.rend(); }
-
-    auto cbegin() { return d_container.crbegin(); }
-    auto cend() { return d_container.crend(); }
-};
-
-template <typename Iterable>
-class Enumerate
+template <typename T>
+cppcoro::generator<typename T::const_reference>
+reversed(const T& iterable)
 {
-    Iterable& d_container;
-    u32 d_counter;
+    for (auto it = iterable.crbegin(); it != iterable.crend(); ++it) {
+        co_yield *it;
+    }
+}
 
-public:
-    class Iterator
-    {
-        using ValueType = typename Iterable::value_type;
-        using InnerIterator = typename Iterable::iterator;
-        InnerIterator d_iterator;
-        u32 d_value;
+template <typename T>
+cppcoro::generator<std::pair<const std::size_t, typename T::reference>>
+enumerate(T& iterable, std::size_t start = 0)
+{
+    std::size_t index = start;
+    for (auto& elem : iterable) {
+        co_yield {index, elem};
+        ++index;
+    }
+}
 
-    public:
-        Iterator(const InnerIterator& iterator, u32 value) : d_iterator(iterator), d_value(value) {}
-        auto operator*() { return std::make_pair(d_value, std::ref(*d_iterator)); }
-        
-        Iterator& operator++() {
-            ++d_iterator;
-            ++d_value;
-            return *this;
+template <typename T>
+cppcoro::generator<std::pair<const std::size_t, typename T::const_reference>>
+enumerate(const T& iterable, std::size_t start = 0)
+{
+    std::size_t index = start;
+    for (const auto& elem : iterable) {
+        co_yield {index, elem};
+        ++index;
+    }
+}
+
+template <typename T>
+cppcoro::generator<T>
+count(const T& start = T{0}, const T& step = T{1})
+{
+    T val = start;
+    while (true) {
+        co_yield val;
+        val += step;
+    }
+}
+
+template <typename T>
+cppcoro::generator<typename T::const_reference>
+cycle(const T& iterable)
+{
+    while (true) {
+        for (const auto& elem : iterable) {
+            co_yield elem;
         }
+    }
+}
 
-        bool operator==(const Iterator& other) const { return d_iterator == other.d_iterator && d_value == other.d_value; }
-        bool operator!=(const Iterator& other) const { return !(*this == other); }
-    };
+template <typename T>
+cppcoro::generator<const T&>
+repeat(const T& object, const std::optional<std::size_t>& times = {})
+{
+    if (times.has_value()) {
+        for (std::size_t i = 0; i != times; ++i) {
+            co_yield object;
+        }
+    } else {
+        while (true) {
+            co_yield object;
+        }
+    }
+}
 
-    Enumerate(Iterable& container, u32 start = 0) : d_container(container), d_counter(start) {}
+template <typename T>
+cppcoro::generator<typename T::const_reference>
+filterfalse(std::function<bool(typename T::const_reference)> predicate, const T& iterable)
+{
+    for (const auto& elem : iterable) {
+        if (!predicate(elem)) {
+            co_yield elem;
+        }
+    }
+}
 
-    Iterator begin() { return Iterator(d_container.begin(), 0); }
-    Iterator end() { return Iterator(d_container.end(), d_container.size()); }
-};
+template <typename T>
+cppcoro::generator<typename T::const_reference>
+filterfalse(const T& iterable)
+{
+    for (const auto& elem : iterable) {
+        if (!elem) {
+            co_yield elem;
+        }
+    }
+}
 
 }
