@@ -39,7 +39,7 @@ void ShowGuizmo(
 
 void Inspector::Show(Anvil& editor)
 {
-    ECS::Entity entity = editor.Selected();
+    ecs::Entity entity = editor.Selected();
 
     if (!editor.Selected().Valid()) {
         if (ImGui::Button("New Entity")) {
@@ -388,7 +388,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        ECS::Entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
+        ecs::Entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

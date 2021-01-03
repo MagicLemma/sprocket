@@ -63,7 +63,7 @@ void Runtime::OnUpdate(double dt)
         d_particleManager.OnUpdate(dt);
     }
     
-    std::vector<ECS::Entity> toDelete;
+    std::vector<ecs::Entity> toDelete;
     for (auto entity : d_scene.Entities().View<TransformComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {

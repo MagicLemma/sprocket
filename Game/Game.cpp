@@ -10,88 +10,6 @@ using namespace Sprocket;
 
 namespace {
 
-std::string EntityName(ECS::Entity& entity)
-{
-    if (entity.Has<NameComponent>()) {
-        return entity.Get<NameComponent>().name;
-    }
-    return "Unnamed";
-}
-
-void AddEntityToList(DevUI& ui, BasicSelector& selector, ECS::Entity& entity)
-{
-    ImGui::PushID(entity.Id());
-    if (ImGui::TreeNode(EntityName(entity).c_str())) {
-        if (entity.Has<SelectComponent>() && ImGui::Button("Select")) {
-            SPKT_LOG_INFO("Select clicked!");
-            selector.SetSelected(entity);
-        }
-        ImGui::TreePop();
-    }
-    ImGui::PopID();         
-}
-
-void SelectedEntityInfo(DevUI& ui,
-                        ECS::Entity& entity,
-                        const glm::mat4& view,
-                        const glm::mat4& proj)
-{
-    using namespace Maths;
-
-    ImGui::Begin("Selected Entity");
-    ImGui::Text("Name: ");
-    ImGui::SameLine();
-    ImGuiXtra::Text(EntityName(entity));
-    ImGuiXtra::Text("ID: " + std::to_string(entity.Id()));
-    ImGui::Separator();
-    
-    static ImGuizmo::OPERATION mode = ImGuizmo::OPERATION::TRANSLATE;
-    static ImGuizmo::MODE coords = ImGuizmo::MODE::WORLD;
-
-    if (entity.Has<TransformComponent>() && ImGui::TreeNode("Transform")) {
-        auto& tr = entity.Get<TransformComponent>();
-        ImGui::DragFloat3("Position", &tr.position.x, 0.005f);
-        glm::vec3 eulerAngles = glm::eulerAngles(tr.orientation);
-        std::stringstream ss;
-        ss << "Pitch: " << Printer::PrintFloat(eulerAngles.x, 3) << "\n"
-           << "Yaw: " << Printer::PrintFloat(eulerAngles.y, 3) << "\n"
-           << "Roll: " << Printer::PrintFloat(eulerAngles.z, 3);
-        ImGui::Text(ss.str().c_str());    
-
-        if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
-            mode = ImGuizmo::OPERATION::TRANSLATE;
-        }
-        ImGui::SameLine();
-        if (ImGui::RadioButton("Rotate", mode == ImGuizmo::OPERATION::ROTATE)) {
-            mode = ImGuizmo::OPERATION::ROTATE;
-        }
-
-        if (ImGui::RadioButton("World", coords == ImGuizmo::MODE::WORLD)) {
-            coords = ImGuizmo::MODE::WORLD;
-        }
-        ImGui::SameLine();
-        if (ImGui::RadioButton("Local", coords == ImGuizmo::MODE::LOCAL)) {
-            coords = ImGuizmo::MODE::LOCAL;
-        }
-        ImGui::TreePop();
-    }
-
-    if (entity.Has<TransformComponent>()) {
-        auto& tr = entity.Get<TransformComponent>();
-        glm::mat4 origin = Maths::Transform(tr.position, tr.orientation);
-        ImGuiXtra::Guizmo(&origin, view, proj, mode, coords);
-        tr.position = GetTranslation(origin);
-        tr.orientation = glm::normalize(glm::quat_cast(glm::mat3(origin)));
-    }
-    ImGui::Separator();
-
-    if (ImGui::Button("Delete Entity")) {
-        entity.Delete();
-    }
-
-    ImGui::End();
-}
-
 void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
 {
     ImGui::Begin("Sun");
@@ -190,25 +108,24 @@ void WorldLayer::LoadScene(const std::string& file)
     d_scene.Add<ScriptRunner>(d_window);
     d_scene.Add<CameraSystem>(d_window->AspectRatio());
     d_scene.Add<PathFollower>();
-    d_scene.Add<BasicSelector>();
     d_scene.Add<GameGrid>(d_window);
     d_scene.Load(file);
     d_paused = false;
 
     d_sceneFile = file;
 
-    d_worker = d_scene.Entities().Find<NameComponent>([](ECS::Entity entity) {
+    d_worker = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
         return entity.Get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene.Entities().Find<NameComponent>([](ECS::Entity entity) {
+    d_camera = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
         return entity.Get<NameComponent>().name == "Camera";
     });
 
     d_scene.Get<GameGrid>().SetCamera(d_camera);
 
-    assert(d_worker != ECS::Null);
-    assert(d_camera != ECS::Null);
+    assert(d_worker != ecs::Null);
+    assert(d_camera != ecs::Null);
 }
 
 void WorldLayer::OnEvent(Sprocket::Event& event)
@@ -231,13 +148,6 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     // Editor UI event handling
     if (d_mode == Mode::EDITOR) {
         d_devUI.OnEvent(event);
-
-        if (!event.IsConsumed()) {
-            if (auto e = event.As<MouseButtonPressedEvent>()) {
-                d_scene.Get<BasicSelector>().SetSelected(ECS::Null);
-                // TODO: Do we want to consume this event here?
-            }
-        }
     }
 
     // Game World event handling
@@ -273,8 +183,8 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            auto e = d_scene.Get<GameGrid>().At(pos.x, pos.y);
-                            return e != ECS::Null;
+                            auto e = d_scene.Get<GameGrid>().At(pos);
+                            return e != ecs::Null;
                         }
                     );
                 } else {
@@ -430,12 +340,6 @@ void WorldLayer::OnRender()
         glm::mat4 view = MakeView(d_camera);
         glm::mat4 proj = MakeProj(d_camera);
 
-
-        auto e = d_scene.Get<BasicSelector>().SelectedEntity();
-        if (e.Valid()) {
-            SelectedEntityInfo(d_devUI, e, view, proj);
-        }
-
         SunInfoPanel(d_devUI, d_cycle);
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
 
@@ -587,24 +491,20 @@ void WorldLayer::AddRockBase(
 
 void WorldLayer::AddRock(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/rock.yaml";
-    AddRockBase(pos, material, "Rock");
+    AddRockBase(pos, "Resources/Materials/rock.yaml", "Rock");
 }
 
 void WorldLayer::AddIron(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/iron.yaml";
-    AddRockBase(pos, material, "Iron");
+    AddRockBase(pos, "Resources/Materials/iron.yaml", "Iron");
 }
 
 void WorldLayer::AddTin(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/tin.yaml";
-    AddRockBase(pos, material, "Tin");
+    AddRockBase(pos, "Resources/Materials/tin.yaml", "Tin");
 }
 
 void WorldLayer::AddMithril(const glm::ivec2& pos)
 {
-    static std::string material = "Resources/Materials/mithril.yaml";
-    AddRockBase(pos, material, "Mithril");
+    AddRockBase(pos, "Resources/Materials/mithril.yaml", "Mithril");
 }

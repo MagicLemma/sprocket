@@ -39,7 +39,7 @@ struct BufferVertex
 
 struct DrawCommand
 {
-    Texture*                  texture = nullptr;
+    const Texture*            texture = nullptr;
     std::vector<BufferVertex> vertices;
     std::vector<u32>          indices;
 

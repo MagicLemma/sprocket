@@ -7,7 +7,7 @@
 namespace Sprocket {
 namespace {
 
-std::shared_ptr<Buffer> GetInstanceBuffer()
+std::unique_ptr<Buffer> GetInstanceBuffer()
 {
     BufferLayout layout(sizeof(InstanceData), 5);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
@@ -15,7 +15,7 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     assert(layout.Validate());
 
-    return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
+    return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
 }
 
 }
@@ -66,7 +66,7 @@ void ShadowMap::Draw(
 
         d_vao->SetModel(mesh);
         d_instanceBuffer->SetData(data);
-        d_vao->SetInstances(d_instanceBuffer);
+        d_vao->SetInstances(d_instanceBuffer.get());
         d_vao->Draw();
     }
 
@@ -80,7 +80,7 @@ glm::mat4 ShadowMap::GetLightProjViewMatrix() const
     return d_lightProjMatrix * d_lightViewMatrix;
 }
 
-std::shared_ptr<Texture> ShadowMap::GetShadowMap() const
+Texture* ShadowMap::GetShadowMap() const
 {
     return d_shadowMap.GetShadowMap();
 }

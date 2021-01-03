@@ -11,7 +11,7 @@ struct MusicImpl
 };
 
 Music::Music()
-    : d_impl(std::make_shared<MusicImpl>())
+    : d_impl(std::make_unique<MusicImpl>())
 {
 }
 

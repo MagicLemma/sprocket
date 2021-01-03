@@ -1,12 +1,9 @@
 #pragma once
-#include "ECS.h"
-#include "Event.h"
-
-#include <map>
 
 namespace Sprocket {
 
 class Scene;
+class Event;
 
 class EntitySystem
 {

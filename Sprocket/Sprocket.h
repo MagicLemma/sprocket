@@ -27,8 +27,6 @@
 #include "Scene/EntitySystem.h"
 
 #include "Scene/Systems/AnimationSystem.h"
-#include "Scene/Systems/BasicSelector.h"
-#include "Scene/Systems/Selector.h"
 #include "Scene/Systems/CameraSystem.h"
 #include "Scene/Systems/ParticleSystem.h"
 #include "Scene/Systems/PhysicsEngine.h"
@@ -67,7 +65,6 @@
 #include "Graphics/RenderContext.h"
 #include "Graphics/Shader.h"
 #include "Graphics/DepthBuffer.h"
-#include "Graphics/Resources.h"
 #include "Graphics/Material.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Texture.h"

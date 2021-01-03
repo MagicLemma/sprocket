@@ -15,7 +15,7 @@ template <typename ValueType, typename IndexType = std::uint16_t>
 class SparseSet
 {
 public:
-    using PackedType = std::vector<std::pair<const IndexType, ValueType>>;
+    using PackedType = std::vector<std::pair<IndexType, ValueType>>;
     using SparseType = std::vector<IndexType>;
 
     using Iterator = typename PackedType::iterator;
@@ -115,8 +115,7 @@ void SparseSet<ValueType, IndexType>::Erase(IndexType index)
     d_sparse[index] = EMPTY;
 
     // Overwrite the outgoing value with the back value.
-    d_packed[packed_index].second = back.second;
-    const_cast<IndexType&>(d_packed[packed_index].first) = back.first;
+    d_packed[packed_index] = back;
 
     // Point the index for the back value to its new location.
     d_sparse[back.first] = packed_index;

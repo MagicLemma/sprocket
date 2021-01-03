@@ -5,27 +5,28 @@
 namespace Sprocket {
 
 AssetManager::AssetManager()
-    : d_defaultMesh(std::make_shared<Mesh>())
-    , d_defaultTexture(std::make_shared<Texture>())
-    , d_defaultMaterial(std::make_shared<Material>())
+    : d_defaultMesh(std::make_unique<Mesh>())
+    , d_defaultTexture(std::make_unique<Texture>())
+    , d_defaultMaterial(std::make_unique<Material>())
 {
 }
 
-std::shared_ptr<Mesh> AssetManager::GetMesh(const std::string& file)
+Mesh* AssetManager::GetMesh(const std::string& file)
 {
-    if (file == "") { return d_defaultMesh; }
+    if (file == "") { return d_defaultMesh.get(); }
     std::string filepath = std::filesystem::absolute(file).string();
 
     if (auto it = d_meshes.find(filepath); it != d_meshes.end()) {
-        return it->second;
+        return it->second.get();
     }
 
     if (auto it = d_loadingMeshes.find(filepath); it != d_loadingMeshes.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
             auto mesh = Mesh::FromData(*(it->second.get()));
+            Mesh* ret = mesh.get();
             d_loadingMeshes.erase(it);
-            d_meshes[filepath] = mesh;
-            return mesh;
+            d_meshes.emplace(filepath, std::move(mesh));
+            return ret;
         }
     } else {
         d_loadingMeshes[filepath] = std::async(std::launch::async, [filepath]() {
@@ -33,24 +34,25 @@ std::shared_ptr<Mesh> AssetManager::GetMesh(const std::string& file)
         });
     }
 
-    return d_defaultMesh;
+    return d_defaultMesh.get();
 }
 
-std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)
+Texture* AssetManager::GetTexture(const std::string& file)
 {
-    if (file == "") { return d_defaultTexture; }
+    if (file == "") { return d_defaultTexture.get(); }
     std::string filepath = std::filesystem::absolute(file).string();
 
     if (auto it = d_textures.find(filepath); it != d_textures.end()) {
-        return it->second;
+        return it->second.get();
     }
 
     if (auto it = d_loadingTextures.find(filepath); it != d_loadingTextures.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
             auto texture = Texture::FromData(*(it->second.get()));
+            Texture* ret = texture.get();
             d_loadingTextures.erase(it);
-            d_textures[filepath] = texture;
-            return texture;
+            d_textures.emplace(filepath, std::move(texture));
+            return ret;
         }
     } else {
         d_loadingTextures[filepath] = std::async(std::launch::async, [filepath]() {
@@ -58,21 +60,22 @@ std::shared_ptr<Texture> AssetManager::GetTexture(const std::string& file)
         });
     }
 
-    return d_defaultTexture;
+    return d_defaultTexture.get();
 }
 
-std::shared_ptr<Material> AssetManager::GetMaterial(const std::string& file)
+Material* AssetManager::GetMaterial(const std::string& file)
 {
-    if (file == "") { return d_defaultMaterial; }
+    if (file == "") { return d_defaultMaterial.get(); }
     std::string filepath = std::filesystem::absolute(file).string();
 
     if (auto it = d_materials.find(filepath); it != d_materials.end()) {
-        return it->second;
+        return it->second.get();
     }
 
     auto material = Material::FromFile(filepath);
-    d_materials.emplace(filepath, material);
-    return material;
+    Material* ret = material.get();
+    d_materials.emplace(filepath, std::move(material));
+    return ret;
 }
 
 bool AssetManager::IsLoadingMeshes() const

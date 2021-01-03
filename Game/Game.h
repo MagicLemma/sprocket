@@ -19,8 +19,8 @@ class WorldLayer
 
     Sprocket::Scene d_scene;
 
-    Sprocket::ECS::Entity d_camera;
-    Sprocket::ECS::Entity d_worker;
+    Sprocket::ecs::Entity d_camera;
+    Sprocket::ecs::Entity d_worker;
     
     // RENDERING
     Sprocket::EntityRenderer  d_entityRenderer;

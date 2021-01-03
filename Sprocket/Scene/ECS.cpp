@@ -4,7 +4,7 @@
 #include <algorithm>
 
 namespace Sprocket {
-namespace ECS {
+namespace ecs {
 
 bool Entity::operator==(Entity other) const
 {
@@ -28,7 +28,7 @@ Entity& Entity::operator=(Entity other)
 
 bool Entity::Valid() const
 {
-     return *this != ECS::Null
+     return *this != ecs::Null
          && d_registry
          && d_registry->d_entities.Has(d_index)
          && d_registry->d_entities[d_index] == d_version;
@@ -39,7 +39,7 @@ void Entity::Delete()
     if (Valid()) {
         // Clean up all components
         for (auto& [type, data] : d_registry->d_comps) {
-            Remove(type);
+            if (Has(type)) { Remove(type); }
         }
         d_registry->d_entities.Erase(d_index);
 
@@ -58,11 +58,6 @@ u16 Entity::Version() const
     return d_version;
 }
 
-Entity Entity::NewEntity() const
-{
-    return d_registry->New();
-}
-
 void Entity::Remove(std::type_index type)
 {
     assert(Valid());
@@ -75,6 +70,17 @@ void Entity::Remove(std::type_index type)
             it->second.instances.Erase(d_index);
         }
     }
+}
+
+bool Entity::Has(std::type_index type) const
+{
+    if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
+        if (it->second.instances.Has(d_index)) {
+            const auto& entry = it->second.instances[d_index];
+            return entry.has_value();
+        }
+    }
+    return false;
 }
 
 Entity Registry::New()
@@ -97,11 +103,18 @@ Entity Registry::New()
     return {this, index, version};
 }
 
+Entity Registry::Get(u32 id)
+{
+    u16 index = (u16)id;
+    u16 version = (u32)(id >> 16);
+    return {this, index, version};
+}
+
 void Registry::DeleteAll()
 {
     // Clean up components, triggering onRemove behaviour
-    for (auto entity : Safe()) {
-        entity.Delete();
+    for (const auto& [index, version] : d_entities.Safe()) {
+        Entity{this, index, version}.Delete();
     }
 
     // Reset all entity storage
@@ -126,16 +139,9 @@ std::size_t Registry::Size() const
     return d_entities.Size();
 }
 
-cppcoro::generator<Entity> Registry::Fast()
+cppcoro::generator<Entity> Registry::Each()
 {
     for (const auto& [index, version] : d_entities.Fast()) {
-        co_yield {this, index, version};
-    }
-}
-
-cppcoro::generator<Entity> Registry::Safe()
-{
-    for (const auto& [index, version] : d_entities.Safe()) {
         co_yield {this, index, version};
     }
 }

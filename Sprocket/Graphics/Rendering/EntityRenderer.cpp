@@ -9,13 +9,10 @@
 #include "Types.h"
 #include "HashPair.h"
 
-#include <glad/glad.h>
-#include <cmath>
-
 namespace Sprocket {
 namespace {
 
-std::shared_ptr<Buffer> GetInstanceBuffer()
+std::unique_ptr<Buffer> GetInstanceBuffer()
 {
     BufferLayout layout(sizeof(InstanceData), 5);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
@@ -23,7 +20,7 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     assert(layout.Validate());
 
-    return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
+    return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
 }
 
 void UploadUniforms(
@@ -39,15 +36,19 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    const auto& sun = scene.Entities().Find<SunComponent>().Get<SunComponent>();
-    shader.LoadVec3("u_sun_direction", sun.direction);
-    shader.LoadVec3("u_sun_colour", sun.colour);
-    shader.LoadFloat("u_sun_brightness", sun.brightness);
+    if (const auto& s = scene.Entities().Find<SunComponent>(); s != ecs::Null) {
+        const auto& sun = s.Get<SunComponent>();
+        shader.LoadVec3("u_sun_direction", sun.direction);
+        shader.LoadVec3("u_sun_colour", sun.colour);
+        shader.LoadFloat("u_sun_brightness", sun.brightness);
+    }
 
     // Load ambience to shader
-    const auto& ambience = scene.Entities().Find<AmbienceComponent>().Get<AmbienceComponent>();
-    shader.LoadVec3("u_ambience_colour", ambience.colour);
-    shader.LoadFloat("u_ambience_brightness", ambience.brightness);
+    if (const auto& a = scene.Entities().Find<AmbienceComponent>(); a != ecs::Null) {
+        const auto& ambience = a.Get<AmbienceComponent>();
+        shader.LoadVec3("u_ambience_colour", ambience.colour);
+        shader.LoadFloat("u_ambience_brightness", ambience.brightness);
+    }
     
     // Load point lights to shader
     std::size_t i = 0;
@@ -75,7 +76,7 @@ void UploadUniforms(
 
 void UploadMaterial(
     const Shader& shader,
-    const std::shared_ptr<Material>& material,
+    Material* material,
     AssetManager* assetManager
 )
 {
@@ -149,7 +150,7 @@ void EntityRenderer::Draw(
     std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent>()) {
+    for (auto entity : scene.Entities().View<ModelComponent, TransformComponent>()) {
         const auto& tc = entity.Get<TransformComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
@@ -166,7 +167,7 @@ void EntityRenderer::Draw(
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_vao->SetModel(mesh);
         d_instanceBuffer->SetData(data);
-        d_vao->SetInstances(d_instanceBuffer);
+        d_vao->SetInstances(d_instanceBuffer.get());
         d_vao->Draw();
     }
 
@@ -213,7 +214,7 @@ void EntityRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void EntityRenderer::Draw(const ECS::Entity& camera, Scene& scene)
+void EntityRenderer::Draw(const ecs::Entity& camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);

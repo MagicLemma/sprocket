@@ -28,7 +28,7 @@ struct WindowData
 
 class Window
 {
-	std::shared_ptr<WindowImpl> d_impl;
+	std::unique_ptr<WindowImpl> d_impl;
 	WindowData                  d_data;
 
 	glm::vec3 d_clearColour;

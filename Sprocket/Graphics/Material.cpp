@@ -7,10 +7,10 @@
 
 namespace Sprocket {
 
-std::shared_ptr<Material> Material::FromFile(const std::string& file)
+std::unique_ptr<Material> Material::FromFile(const std::string& file)
 {
     std::string filepath = std::filesystem::absolute(file).string();
-    auto material = std::make_shared<Material>();
+    auto material = std::make_unique<Material>();
     material->file = filepath;
 
     std::ifstream stream(filepath);

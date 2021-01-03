@@ -12,7 +12,7 @@ CameraSystem::CameraSystem(float aspectRatio)
 
 void CameraSystem::OnStartup(Scene& scene)
 {
-    scene.Entities().OnAdd<CameraComponent>([&](ECS::Entity entity) {
+    scene.Entities().OnAdd<CameraComponent>([&](ecs::Entity entity) {
         auto& camera = entity.Get<CameraComponent>();
         camera.projection = glm::perspective(
             camera.fov, d_aspectRatio, 0.1f, 1000.0f

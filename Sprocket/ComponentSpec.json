@@ -267,9 +267,6 @@
         {
             "Name": "ScriptComponent",
             "DisplayName": "Script",
-            "Flags": {
-                "SCRIPTABLE": false
-            },
             "Attributes": [
                 {
                     "Name": "script",

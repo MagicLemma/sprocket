@@ -14,14 +14,14 @@
 namespace Sprocket {
 namespace Loader {
 
-void Save(const std::string& file, ECS::Registry* reg)
+void Save(const std::string& file, ecs::Registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Version" << YAML::Value << 2;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : reg->Fast()) {
+    for (auto entity : reg->Each()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
         if (entity.Has<TemporaryComponent>()) {
@@ -173,11 +173,11 @@ void Save(const std::string& file, ECS::Registry* reg)
     fout << out.c_str();
 }
 
-void Load(const std::string& file, ECS::Registry* reg)
+void Load(const std::string& file, ecs::Registry* reg)
 {
     // Must be a clean scene
     u32 count = 0;
-    for (ECS::Entity e : reg->Fast()) {
+    for (ecs::Entity e : reg->Each()) {
         if (!e.Has<TemporaryComponent>()) ++count;
     }
     assert(count == 0);
@@ -195,7 +195,7 @@ void Load(const std::string& file, ECS::Registry* reg)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ECS::Entity e = reg->New();
+        ecs::Entity e = reg->New();
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add<TemporaryComponent>(c);
@@ -321,9 +321,9 @@ void Load(const std::string& file, ECS::Registry* reg)
     }
 }
 
-ECS::Entity Copy(ECS::Registry* reg, ECS::Entity entity)
+ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 {
-    ECS::Entity e = reg->New();
+    ecs::Entity e = reg->New();
     if (entity.Has<TemporaryComponent>()) {
         e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
     }
@@ -381,9 +381,9 @@ ECS::Entity Copy(ECS::Registry* reg, ECS::Entity entity)
     return e;
 }
 
-void Copy(ECS::Registry* source, ECS::Registry* target)
+void Copy(ecs::Registry* source, ecs::Registry* target)
 {
-    for (auto entity : source->Fast()) {
+    for (auto entity : source->Each()) {
         Copy(target, entity);
     }
 }

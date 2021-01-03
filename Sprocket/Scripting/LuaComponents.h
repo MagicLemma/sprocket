@@ -1,5 +1,5 @@
 // GENERATED FILE
-class lua_State;
+struct lua_State;
 
 namespace Sprocket {
 
@@ -35,6 +35,10 @@ int AddSphereCollider3DComponent(lua_State* L);
 int GetCapsuleCollider3DComponent(lua_State* L);
 int SetCapsuleCollider3DComponent(lua_State* L);
 int AddCapsuleCollider3DComponent(lua_State* L);
+
+int GetScriptComponent(lua_State* L);
+int SetScriptComponent(lua_State* L);
+int AddScriptComponent(lua_State* L);
 
 int GetCameraComponent(lua_State* L);
 int SetCameraComponent(lua_State* L);

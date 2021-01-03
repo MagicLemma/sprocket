@@ -1,7 +1,6 @@
 #pragma once
 #include "Maths.h"
 #include "Types.h"
-#include "Resources.h"
 #include "BufferLayout.h"
 #include "Animation.h"
 
@@ -80,8 +79,8 @@ public:
     Mesh(); // Empty model
     ~Mesh();
 
-    static std::shared_ptr<Mesh> FromData(const MeshData& data);
-    static std::shared_ptr<Mesh> FromFile(const std::string& file);
+    static std::unique_ptr<Mesh> FromData(const MeshData& data);
+    static std::unique_ptr<Mesh> FromFile(const std::string& file);
 
     std::size_t VertexCount() const { return d_vertexCount; }
     BufferLayout GetLayout() const;

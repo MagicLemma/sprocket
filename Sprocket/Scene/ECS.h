@@ -15,7 +15,7 @@
 #include <cppcoro/generator.hpp>
 
 namespace Sprocket {
-namespace ECS {
+namespace ecs {
     
 class Registry;
 
@@ -29,6 +29,7 @@ class Entity
     u16       d_index;
     u16       d_version;
 
+    bool Has(std::type_index type) const;
     void Remove(std::type_index type);
 
 public:
@@ -50,9 +51,6 @@ public:
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
     Entity& operator=(Entity other);
-
-    // TODO: Remove
-    Entity NewEntity() const;
 };
 
 class Registry
@@ -91,6 +89,9 @@ public:
 
     Entity New();
 
+    // Given an entity ID, return the entity handle associated to it.
+    Entity Get(u32 id); 
+
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
     void DeleteAll();
@@ -104,12 +105,7 @@ public:
 
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
-    cppcoro::generator<Entity> Fast();
-
-    // Generates all active entities. This is slow, but adding and removing
-    // entities is safe. If an entity is added, it may or may not be included
-    // in the iteration, depending on where in the sparse set it gets added.
-    cppcoro::generator<Entity> Safe();
+    cppcoro::generator<Entity> Each();
 
     // Does a fast iteration over all entities with the given Comp. If any extra
     // component types are specified, only entities that have all of those types
@@ -168,7 +164,7 @@ template <typename... Comps>
 Entity Registry::Find(const EntityPredicate& pred)
 {
     if constexpr (sizeof...(Comps) == 0) {
-        for (auto entity : Fast()) {
+        for (auto entity : Each()) {
             if (pred(entity)) {
                 return entity;
             }
@@ -181,7 +177,7 @@ Entity Registry::Find(const EntityPredicate& pred)
             }
         }
     }
-    return ECS::Null;
+    return ecs::Null;
 }
 
 // ENTITY TEMPLATES
@@ -229,14 +225,32 @@ template <typename Comp>
 bool Entity::Has() const
 {
     assert(Valid());
-    if (auto it = d_registry->d_comps.find(typeid(Comp)); it != d_registry->d_comps.end()) {
-        if (it->second.instances.Has(d_index)) {
-            const auto& entry = it->second.instances[d_index];
-            return entry.has_value();
-        }
-    }
-    return false;
+    return Has(typeid(Comp));
 }
 
+// We can push an entity into the Lua stack by calling the Lua equivalent of malloc
+// and setting that memory to an entity. For this, we need Entity to be copy
+// assignable. As this will get deleted by the garbage collector, we also require that
+// Entity be trivially destrucible so there are no side effects that we would miss.
+static_assert(std::is_trivially_destructible<Entity>());
+
+static_assert(std::is_copy_assignable<Entity>());
+static_assert(std::is_copy_constructible<Entity>());
+
+static_assert(std::is_move_assignable<Entity>());
+static_assert(std::is_move_constructible<Entity>());
+
 }
+}
+
+namespace std {
+
+template <> struct hash<Sprocket::ecs::Entity>
+{
+    std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
+    {
+        return std::hash<std::uint32_t>{}(entity.Id());
+    };
+};
+
 }

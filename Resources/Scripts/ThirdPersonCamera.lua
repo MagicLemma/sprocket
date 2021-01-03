@@ -31,23 +31,23 @@ function OnUpdate(entity, dt)
     local up = Vec3(0, 1, 0)
     local r = Cross(f, up)
 
-    if IsKeyDown(KEYBOARD_W) then
+    if IsKeyDown(Keyboard.W) then
         TARGET = TARGET + moveSpeed * f
     end
-    if IsKeyDown(KEYBOARD_S) then
+    if IsKeyDown(Keyboard.S) then
         TARGET = TARGET - moveSpeed * f
     end
-    if IsKeyDown(KEYBOARD_D) then
+    if IsKeyDown(Keyboard.D) then
         TARGET = TARGET + moveSpeed * r
     end
-    if IsKeyDown(KEYBOARD_A) then
+    if IsKeyDown(Keyboard.A) then
         TARGET = TARGET - moveSpeed * r
     end
 
-    if IsKeyDown(KEYBOARD_E) then
+    if IsKeyDown(Keyboard.E) then
         HORIZ = HORIZ - horizSpeed
     end
-    if IsKeyDown(KEYBOARD_Q) then
+    if IsKeyDown(Keyboard.Q) then
         HORIZ = HORIZ + horizSpeed
     end
 

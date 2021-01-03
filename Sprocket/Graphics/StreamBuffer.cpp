@@ -1,4 +1,5 @@
 #include "StreamBuffer.h"
+#include "Log.h"
 
 #include <glad/glad.h>
 
@@ -7,25 +8,33 @@
 namespace Sprocket {
 
 StreamBuffer::StreamBuffer()
-    : d_vao(std::make_shared<VAO>())
-    , d_vertexBuffer(std::make_shared<VBO>())
-    , d_indexBuffer(std::make_shared<VBO>())
+    : d_vao(0)
+    , d_vertexBuffer(0)
+    , d_indexBuffer(0)
 {
-    // Set the index buffer pointer in the VAO.
-    glBindVertexArray(d_vao->Value());
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer->Value());
+    glGenVertexArrays(1, &d_vao);
+    glGenBuffers(1, &d_vertexBuffer);
+    glGenBuffers(1, &d_indexBuffer);
+
+    // Set the index buffer pointer in the vertex buffer.
+    glBindVertexArray(d_vao);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer);
     glBindVertexArray(0);
 }
 
 StreamBuffer::~StreamBuffer()
 {
     Unbind();
+
+    glDeleteBuffers(1, &d_indexBuffer);
+    glDeleteBuffers(1, &d_vertexBuffer);
+    glDeleteVertexArrays(1, &d_vao);
 }
 
 void StreamBuffer::Bind() const
 {
-    glBindVertexArray(d_vao->Value());
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glBindVertexArray(d_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
 }
 
 void StreamBuffer::Unbind() const
@@ -48,7 +57,7 @@ void StreamBuffer::SetBufferLayout(const BufferLayout& layout) const
 
 void StreamBuffer::SetVertexData(std::size_t size, const void* data)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer->Value());
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 }
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "Maths.h"
-#include "Resources.h"
 #include "BufferLayout.h"
 
 #include <vector>
@@ -12,10 +11,12 @@ class StreamBuffer
 // By default, the VBO has 3 attribute pointers enabled, but nothing
 // is defined; that is up to the user.
 {
-    std::shared_ptr<VAO> d_vao;
-    std::shared_ptr<VBO> d_vertexBuffer;
-    std::shared_ptr<VBO> d_indexBuffer;
+    u32 d_vao;
+    u32 d_vertexBuffer;
+    u32 d_indexBuffer;
 
+    StreamBuffer(const StreamBuffer&) = delete;
+    StreamBuffer& operator=(const StreamBuffer&) = delete;
 
 public:
     StreamBuffer();

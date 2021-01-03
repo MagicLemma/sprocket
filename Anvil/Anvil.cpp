@@ -6,7 +6,7 @@
 namespace Sprocket {
 namespace {
 
-std::string Name(const ECS::Entity& entity)
+std::string Name(const ecs::Entity& entity)
 {
     if (entity.Has<NameComponent>()) {
         return entity.Get<NameComponent>().name;
@@ -47,7 +47,7 @@ Anvil::Anvil(Window* window)
     d_scene = std::make_shared<Scene>();    
     d_scene->Load(d_sceneFile);
 
-    d_runtimeCamera = d_scene->Entities().Find([](ECS::Entity entity) {
+    d_runtimeCamera = d_scene->Entities().Find([](ecs::Entity entity) {
         return entity.Has<CameraComponent>();
     });
 
@@ -68,7 +68,7 @@ void Anvil::OnEvent(Event& event)
                 d_window->SetCursorVisibility(true);
             }
             else {
-                d_selected = ECS::Null;
+                d_selected = ecs::Null;
             }
             e->Consume();
         }
@@ -103,7 +103,7 @@ void Anvil::OnUpdate(double dt)
         d_editorCamera.OnUpdate(dt);
     }
     
-    std::vector<ECS::Entity> toDelete;
+    std::vector<ecs::Entity> toDelete;
     for (auto entity : d_activeScene->Entities().View<TransformComponent>()) {
         auto& transform = entity.Get<TransformComponent>();
         if (transform.position.y < -50) {
@@ -260,7 +260,7 @@ void Anvil::OnRender()
             
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
-                for (auto entity : d_scene->Entities().Fast()) {
+                for (auto entity : d_scene->Entities().Each()) {
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {

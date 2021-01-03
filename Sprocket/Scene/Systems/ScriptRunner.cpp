@@ -16,26 +16,40 @@ ScriptRunner::ScriptRunner(Window* window)
 
 void ScriptRunner::OnStartup(Scene& scene)
 {
-    scene.Entities().OnAdd<ScriptComponent>([&](ECS::Entity entity) {
-        auto& luaEngine = d_engines[entity.Id()];
-        luaEngine.SetWindow(d_window);
-        luaEngine.SetInput(&d_input);
-        luaEngine.SetEntity(entity);
-        luaEngine.RunScript(entity.Get<ScriptComponent>().script);
-        luaEngine.CallInitFunction();
+    scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
+        auto& [engine, alive] = d_engines[entity];
+        alive = true;
+
+        engine.Set("__scene__", &scene);
+        engine.Set("__window__", d_window);
+        engine.Set("__input__", &d_input);
+
+        engine.RunScript(entity.Get<ScriptComponent>().script);
+        engine.Call("Init", entity);
+        engine.PrintGlobals();
     });
 
-    scene.Entities().OnRemove<ScriptComponent>([&](ECS::Entity entity) {
-        d_engines.erase(entity.Id());
+    scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
+        d_engines[entity].second = false; // alive = false
     });
 }
 
 void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
-    for (auto entity : scene.Entities().Safe()) {
-        if (entity.Has<ScriptComponent>()) {
-            auto& luaEngine = d_engines[entity.Id()];
-            luaEngine.CallOnUpdateFunction(dt);
+    // We delete scripts here rather then with OnRemove otherwise we would segfault if
+    // a script tries to delete its own entity, which is functionality that we want to
+    // support.
+    for (auto it = d_engines.begin(); it != d_engines.end();) {
+        auto& entity = it->first;
+        auto& [script, alive] = it->second;
+
+        if (alive) {
+            if (entity.Get<ScriptComponent>().active) {
+                script.Call("OnUpdate", entity, dt);
+            }
+            ++it;
+        } else {
+            it = d_engines.erase(it);
         }
     }
 }
@@ -45,78 +59,55 @@ void ScriptRunner::OnEvent(Scene& scene, Event& event)
     d_input.OnEvent(event);
 
     // WINDOW EVENTS
-    if (auto e = event.As<WindowResizeEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnWindowResizeEvent(e);
-        }
-    }
-    else if (auto e = event.As<WindowClosedEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnWindowClosedEvent(e);
-        }
-    }
-    else if (auto e = event.As<WindowGotFocusEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnWindowGotFocusEvent(e);
-        }
-    }
-    else if (auto e = event.As<WindowLostFocusEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnWindowLostFocusEvent(e);
-        }
-    }
-    else if (auto e = event.As<WindowMaximizeEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnWindowMaximizeEvent(e);
-        }
-    }
-    else if (auto e = event.As<WindowMinimizeEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnWindowMinimizeEvent(e);
-        }
-    }
+    for (auto& [entity, pair] : d_engines) {
+        auto& [script, alive] = pair;
+        if (!(alive && entity.Get<ScriptComponent>().active)) { continue; }
 
-    // MOUSE EVENTS
-    else if (auto e = event.As<MouseButtonPressedEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnMouseButtonPressedEvent(e);
+        if (auto e = event.As<WindowResizeEvent>()) {
+            script.CallOnWindowResizeEvent(e);
         }
-    }
-    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnMouseButtonReleasedEvent(e);
+        else if (auto e = event.As<WindowClosedEvent>()) {
+            script.CallOnWindowClosedEvent(e);
         }
-    }
-    else if (auto e = event.As<MouseMovedEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnMouseMovedEvent(e);
+        else if (auto e = event.As<WindowGotFocusEvent>()) {
+            script.CallOnWindowGotFocusEvent(e);
         }
-    }
-    else if (auto e = event.As<MouseScrolledEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnMouseScrolledEvent(e);
+        else if (auto e = event.As<WindowLostFocusEvent>()) {
+            script.CallOnWindowLostFocusEvent(e);
         }
-    }
-        
-    // KEYBOARD
-    else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnKeyboardButtonPressedEvent(e);
+        else if (auto e = event.As<WindowMaximizeEvent>()) {
+            script.CallOnWindowMaximizeEvent(e);
         }
-    }
-    else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnKeyboardButtonReleasedEvent(e);
+        else if (auto e = event.As<WindowMinimizeEvent>()) {
+            script.CallOnWindowMinimizeEvent(e);
         }
-    }
-    else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnKeyboardButtonHeldEvent(e);
+
+        // MOUSE EVENTS
+        else if (auto e = event.As<MouseButtonPressedEvent>()) {
+            script.CallOnMouseButtonPressedEvent(e);
         }
-    }
-    else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
-        for (auto& [id, luaEngine] : d_engines) {
-            luaEngine.CallOnKeyboardKeyTypedEvent(e);
+        else if (auto e = event.As<MouseButtonReleasedEvent>()) {
+            script.CallOnMouseButtonReleasedEvent(e);
+        }
+        else if (auto e = event.As<MouseMovedEvent>()) {
+            script.CallOnMouseMovedEvent(e);
+        }
+        else if (auto e = event.As<MouseScrolledEvent>()) {
+            script.CallOnMouseScrolledEvent(e);
+        }
+            
+        // KEYBOARD
+        else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+            script.CallOnKeyboardButtonPressedEvent(e);
+        }
+        else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
+            script.CallOnKeyboardButtonReleasedEvent(e);
+        }
+        else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
+            script.CallOnKeyboardButtonHeldEvent(e);
+        }
+        else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
+            script.CallOnKeyboardKeyTypedEvent(e);
         }
     }
 }

@@ -15,7 +15,7 @@ class DevUI
 {
     Window* d_window;
     Shader  d_shader;
-    std::shared_ptr<Texture> d_fontAtlas;
+    std::unique_ptr<Texture> d_fontAtlas;
 
     StreamBuffer d_buffer;
         // Used to draw the render data created by ImGui.

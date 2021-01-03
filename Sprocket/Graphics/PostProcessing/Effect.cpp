@@ -36,7 +36,7 @@ void Effect::UnbindForRead() const
     d_shader.Unbind();
 }
 
-void Effect::Draw(const std::shared_ptr<Effect> target)
+void Effect::Draw(Effect* target)
 {
     if (target) { target->BindForWrite(); }
     BindForRead();

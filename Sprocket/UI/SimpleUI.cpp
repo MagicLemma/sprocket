@@ -276,7 +276,7 @@ void SimpleUI::Dragger(const std::string& name,
 }
 
 void SimpleUI::Image(const std::string& name,
-                     std::shared_ptr<Texture> image,
+                     const Texture* image,
                      const glm::vec2& position)
 {
     glm::vec4 region{position.x, position.y, image->Width(), image->Height()};
@@ -290,7 +290,7 @@ void SimpleUI::Image(const std::string& name,
         {{copy.x + copy.z, copy.y + copy.w}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0}}
     };
     cmd.indices = {0, 1, 2, 2, 1, 3};
-    cmd.texture = image.get();
+    cmd.texture = image;
     d_engine.SubmitDrawCommand(cmd);
 }
 

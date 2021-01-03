@@ -87,7 +87,7 @@ DevUI::DevUI(Window* window)
     unsigned char* data;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-    d_fontAtlas = std::make_shared<Texture>(width, height, data);
+    d_fontAtlas = std::make_unique<Texture>(width, height, data);
     io.Fonts->TexID = (ImTextureID)(u32)(intptr_t)d_fontAtlas->Id();
 
     BufferLayout bufferLayout(sizeof(ImDrawVert));

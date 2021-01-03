@@ -49,9 +49,7 @@ add_library(Sprocket STATIC
             Scene/Updater.cpp
 
             Scene/Systems/AnimationSystem.cpp
-            Scene/Systems/BasicSelector.cpp
             Scene/Systems/CameraSystem.cpp
-            Scene/Systems/Selector.cpp
             Scene/Systems/ParticleSystem.cpp
             Scene/Systems/PhysicsEngine.cpp
             Scene/Systems/ScriptRunner.cpp
@@ -65,7 +63,6 @@ add_library(Sprocket STATIC
             Graphics/RenderContext.cpp
             Graphics/Shader.cpp
             Graphics/DepthBuffer.cpp
-            Graphics/Resources.cpp
             Graphics/Material.cpp
             Graphics/Mesh.cpp
             Graphics/Texture.cpp

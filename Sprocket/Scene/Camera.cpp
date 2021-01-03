@@ -4,7 +4,7 @@
 
 namespace Sprocket {
 
-glm::mat4 MakeView(const ECS::Entity& entity)
+glm::mat4 MakeView(const ecs::Entity& entity)
 {
     if (!entity.Has<TransformComponent>()) {
         SPKT_LOG_ERROR("Camera has no transform component!");
@@ -21,7 +21,7 @@ glm::mat4 MakeView(const ECS::Entity& entity)
     return glm::inverse(Maths::Transform(tr.position, tr.orientation));   
 }
 
-glm::mat4 MakeProj(const ECS::Entity& entity)
+glm::mat4 MakeProj(const ecs::Entity& entity)
 {
     if (!entity.Has<CameraComponent>()) {
         return glm::mat4(1.0);

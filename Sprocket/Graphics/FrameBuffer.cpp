@@ -1,12 +1,13 @@
 #include "FrameBuffer.h"
+#include "Log.h"
 
 #include <glad/glad.h>
 
 namespace Sprocket {
 
 FrameBuffer::FrameBuffer(int width, int height)
-    : d_colour(std::make_shared<Texture>(width, height, Texture::Channels::RGBA))
-    , d_depth(std::make_shared<Texture>(width, height, Texture::Channels::DEPTH))
+    : d_colour(std::make_unique<Texture>(width, height, Texture::Channels::RGBA))
+    , d_depth(std::make_unique<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
 {

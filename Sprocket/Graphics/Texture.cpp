@@ -62,12 +62,12 @@ Texture::~Texture()
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
-std::shared_ptr<Texture> Texture::FromData(const TextureData& data)
+std::unique_ptr<Texture> Texture::FromData(const TextureData& data)
 {
-    return std::make_shared<Texture>(data.width, data.height, data.data);
+    return std::make_unique<Texture>(data.width, data.height, data.data);
 }
 
-std::shared_ptr<Texture> Texture::FromFile(const std::string file)
+std::unique_ptr<Texture> Texture::FromFile(const std::string file)
 {
     return Texture::FromData(TextureData(file));
 }

@@ -28,7 +28,7 @@ class ParticleManager
     // updated whenever emit is called.
     std::size_t d_index = NUM_PARTICLES - 1;
 
-    std::shared_ptr<Buffer> d_instances;
+    std::unique_ptr<Buffer> d_instances;
 
     std::vector<InstanceData> d_instanceData;
 
@@ -39,7 +39,7 @@ public:
 
     void OnUpdate(double dt);
 
-    std::shared_ptr<Buffer> GetInstances() const { return d_instances; }
+    Buffer* GetInstances() const { return d_instances.get(); }
 
 };
 

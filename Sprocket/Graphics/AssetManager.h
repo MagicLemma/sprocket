@@ -17,16 +17,16 @@ class AssetManager
     std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
 
     // Primitives
-    std::unordered_map<std::string, std::shared_ptr<Mesh>>    d_meshes;
-    std::unordered_map<std::string, std::shared_ptr<Texture>> d_textures;
+    std::unordered_map<std::string, std::unique_ptr<Mesh>>    d_meshes;
+    std::unordered_map<std::string, std::unique_ptr<Texture>> d_textures;
     
     // Composites
-    std::unordered_map<std::string, std::shared_ptr<Material>> d_materials;
+    std::unordered_map<std::string, std::unique_ptr<Material>> d_materials;
 
     // Defaults
-    std::shared_ptr<Mesh>     d_defaultMesh;
-    std::shared_ptr<Texture>  d_defaultTexture;
-    std::shared_ptr<Material> d_defaultMaterial;
+    std::unique_ptr<Mesh>     d_defaultMesh;
+    std::unique_ptr<Texture>  d_defaultTexture;
+    std::unique_ptr<Material> d_defaultMaterial;
 
 public:
     template <typename T>
@@ -44,9 +44,9 @@ public:
 public:
     AssetManager();
 
-    std::shared_ptr<Mesh> GetMesh(const std::string& file);
-    std::shared_ptr<Texture> GetTexture(const std::string& file);
-    std::shared_ptr<Material> GetMaterial(const std::string& file);
+    Mesh* GetMesh(const std::string& file);
+    Texture* GetTexture(const std::string& file);
+    Material* GetMaterial(const std::string& file);
 
     auto Meshes()    { return Iterator(&d_meshes); }
     auto Textures()  { return Iterator(&d_textures); }

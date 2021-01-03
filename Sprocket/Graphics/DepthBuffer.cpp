@@ -1,4 +1,5 @@
 #include "DepthBuffer.h"
+#include "Log.h"
 
 #include <glad/glad.h>
 
@@ -6,7 +7,7 @@ namespace Sprocket {
 
 DepthBuffer::DepthBuffer(Window* window, int width, int height)
     : d_window(window)
-    , d_depth(std::make_shared<Texture>(width, height, Texture::Channels::DEPTH))
+    , d_depth(std::make_unique<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
 {

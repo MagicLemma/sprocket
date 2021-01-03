@@ -5,6 +5,17 @@
 
 namespace Sprocket {
 
+Scene* GetScene(lua_State* L)
+{
+    lua_getglobal(L, "__scene__");
+    Scene* s = nullptr;
+    if (!lua_isnil(L, -1)) {
+        s = (Scene*)lua_touserdata(L, -1);
+    }
+    lua_pop(L, 1);
+    return s;
+}
+
 Window* GetWindow(lua_State* L)
 {
     lua_getglobal(L, "__window__");
@@ -25,14 +36,6 @@ InputProxy* GetInput(lua_State* L)
     }
     lua_pop(L, 1);
     return ip;
-}
-
-ECS::Entity* GetEntity(lua_State* L)
-{
-    lua_getglobal(L, "__entity__");
-    ECS::Entity* e = (ECS::Entity*)lua_touserdata(L, -1);
-    lua_pop(L, 1);
-    return e;
 }
 
 bool CheckReturnCode(lua_State* L, int rc)

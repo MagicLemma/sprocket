@@ -34,13 +34,13 @@ private:
 
     std::unique_ptr<VertexArray> d_vao;
     
-    std::shared_ptr<Buffer> d_instanceBuffer;
+    std::unique_ptr<Buffer> d_instanceBuffer;
     std::vector<InstanceData> d_instanceData;
 
 public:
     EntityRenderer(AssetManager* assetManager);
 
-    void Draw(const ECS::Entity& camera, Scene& scene);
+    void Draw(const ecs::Entity& camera, Scene& scene);
     void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);
 
     void EnableShadows(const ShadowMap& shadowMap);

@@ -34,8 +34,8 @@ public:
     // vertex size and false otherwise.
     bool Validate() const;
 
-    // Sets the attribute pointers of the currently bound VAO
-    // and VBO to match this BufferLayout.
+    // Sets the attribute pointers of the currently bound vertex array
+    // and vertex buffer to match this BufferLayout.
     void SetAttributes() const;
 
     // Returns the starting index of this buffer layout.

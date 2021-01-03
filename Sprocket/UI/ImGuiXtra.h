@@ -26,7 +26,7 @@ void TextModifiable(std::string& text);
 void Text(const std::string& text);
 
 // A wrapper for ImGui::Image that uses Sprocket types.
-void Image(const std::shared_ptr<Texture>& image,
+void Image(const Texture* image,
            const glm::vec2& size,
            const glm::vec2& uv0 = {0, 1},
            const glm::vec2& uv1 = {1, 0},
@@ -36,7 +36,7 @@ void Image(const std::shared_ptr<Texture>& image,
 
 // A simplified version of the above where the texture maintains
 // aspect ratio. The size is the height in pixels.
-void Image(const std::shared_ptr<Texture>& image, float size);
+void Image(const Texture* image, float size);
 
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
