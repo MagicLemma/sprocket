@@ -1,5 +1,4 @@
 #pragma once
-#include "Resources.h"
 #include "Mesh.h"
 #include "Buffer.h"
 
@@ -9,13 +8,17 @@ namespace Sprocket {
 
 class VertexArray
 {
-    std::shared_ptr<VAO> d_vao;
+    u32 d_vao;
 
     Mesh* d_model;
     Buffer* d_instances;
 
+    VertexArray(const VertexArray&) = delete;
+    VertexArray& operator=(const VertexArray&) = delete;
+
 public:
     VertexArray();
+    ~VertexArray();
 
     void SetModel(Mesh* model);
     void SetInstances(Buffer* instanceData);
