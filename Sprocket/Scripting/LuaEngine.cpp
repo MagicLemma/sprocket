@@ -87,7 +87,7 @@ void LuaEngine::CallInitFunction(ecs::Entity entity)
         return;
     }
 
-    *(ecs::Entity*)lua_newuserdata(d_L, sizeof(ecs::Entity)) = entity;
+    Push(entity);
 
     int rc = lua_pcall(d_L, 1, 0, 0);
     PrintErrors(d_L, rc);
@@ -102,8 +102,8 @@ void LuaEngine::CallOnUpdateFunction(ecs::Entity entity, double dt)
         return;
     }
 
-    *(ecs::Entity*)lua_newuserdata(d_L, sizeof(ecs::Entity)) = entity;
-    lua_pushnumber(d_L, dt);
+    Push(entity);
+    Push(dt);
 
     int rc = lua_pcall(d_L, 2, 0, 0);
     PrintErrors(d_L, rc);
@@ -118,9 +118,9 @@ void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
         return;
     }
 
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, (float)e->Width());
-    lua_pushnumber(d_L, (float)e->Height());
+    Push(e->IsConsumed());
+    Push(e->Width());
+    Push(e->Height());
 
     int rc = lua_pcall(d_L, 3, 1, 0);
     PrintErrors(d_L, rc);
@@ -140,7 +140,7 @@ void LuaEngine::CallOnWindowGotFocusEvent(WindowGotFocusEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
+    Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(d_L, rc);
@@ -157,7 +157,7 @@ void LuaEngine::CallOnWindowLostFocusEvent(WindowLostFocusEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
+    Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(d_L, rc);
@@ -174,7 +174,7 @@ void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
+    Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(d_L, rc);
@@ -191,7 +191,7 @@ void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
+    Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(d_L, rc);
@@ -208,10 +208,10 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->Button());
-    lua_pushnumber(d_L, e->Action());
-    lua_pushnumber(d_L, e->Mods());
+    Push(e->IsConsumed());
+    Push(e->Button());
+    Push(e->Action());
+    Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(d_L, rc);
@@ -229,10 +229,10 @@ void LuaEngine::CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->Button());
-    lua_pushnumber(d_L, e->Action());
-    lua_pushnumber(d_L, e->Mods());
+    Push(e->IsConsumed());
+    Push(e->Button());
+    Push(e->Action());
+    Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(d_L, rc);
@@ -249,9 +249,9 @@ void LuaEngine::CallOnMouseMovedEvent(MouseMovedEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->XPos());
-    lua_pushnumber(d_L, e->YPos());
+    Push(e->IsConsumed());
+    Push(e->XPos());
+    Push(e->YPos());
 
     int rc = lua_pcall(d_L, 3, 1, 0);
     PrintErrors(d_L, rc);
@@ -268,9 +268,9 @@ void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
         return;
     }
     
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->XOffset());
-    lua_pushnumber(d_L, e->YOffset());
+    Push(e->IsConsumed());
+    Push(e->XOffset());
+    Push(e->YOffset());
 
     int rc = lua_pcall(d_L, 3, 1, 0);
     PrintErrors(d_L, rc);
@@ -287,10 +287,10 @@ void LuaEngine::CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e)
         return;
     }
 
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->Key());
-    lua_pushnumber(d_L, e->Scancode());
-    lua_pushnumber(d_L, e->Mods());
+    Push(e->IsConsumed());
+    Push(e->Key());
+    Push(e->Scancode());
+    Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(d_L, rc);
@@ -307,10 +307,10 @@ void LuaEngine::CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e
         return;
     }
 
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->Key());
-    lua_pushnumber(d_L, e->Scancode());
-    lua_pushnumber(d_L, e->Mods());
+    Push(e->IsConsumed());
+    Push(e->Key());
+    Push(e->Scancode());
+    Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(d_L, rc);
@@ -327,10 +327,10 @@ void LuaEngine::CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e)
         return;
     }
 
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->Key());
-    lua_pushnumber(d_L, e->Scancode());
-    lua_pushnumber(d_L, e->Mods());
+    Push(e->IsConsumed());
+    Push(e->Key());
+    Push(e->Scancode());
+    Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(d_L, rc);
@@ -347,8 +347,8 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
         return;
     }
 
-    lua_pushboolean(d_L, e->IsConsumed());
-    lua_pushnumber(d_L, e->Key());
+    Push(e->IsConsumed());
+    Push(e->Key());
 
     int rc = lua_pcall(d_L, 2, 1, 0);
     PrintErrors(d_L, rc);
@@ -358,19 +358,19 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
 
 void LuaEngine::SetScene(Scene* s)
 {
-    lua_pushlightuserdata(d_L, (void*)s);
+    Push(s);
     lua_setglobal(d_L, "__scene__");
 }
 
 void LuaEngine::SetWindow(Window* w)
 {
-    lua_pushlightuserdata(d_L, (void*)w);
+    Push(w);
     lua_setglobal(d_L, "__window__");
 }
 
 void LuaEngine::SetInput(InputProxy* ip)
 {
-    lua_pushlightuserdata(d_L, (void*)ip);
+    Push(ip);
     lua_setglobal(d_L, "__input__");
 }
 

@@ -19,6 +19,12 @@ class LuaEngine
 {
     lua_State* d_L;
 
+    template <typename T>
+    void Push(const T& val);
+
+    template <typename T>
+    void Push(T* val);
+
 public:
     LuaEngine();
     ~LuaEngine();
@@ -56,5 +62,34 @@ public:
     // Do not copy these things
     LuaEngine(LuaEngine&&) = delete;
 };
+
+template <typename T>
+void LuaEngine::Push(const T& val)
+{
+    if constexpr (std::is_same<T, bool>()) {
+        lua_pushboolean(d_L, val);
+    }
+    else if constexpr (std::is_integral<T>()) {
+        lua_pushinteger(d_L, val);
+    }
+    else if constexpr (std::is_floating_point<T>()) {
+        lua_pushnumber(d_L, val);
+    }
+    else if constexpr (std::is_same<T, std::string>()) {
+        lua_pushstring(d_L, val);
+    }
+    else if constexpr (std::is_copy_assignable<T>() && std::is_trivially_destructible<T>()) {
+        *(T*)lua_newuserdata(d_L, sizeof(T)) = val;
+    }
+    else {
+        static_assert(false);
+    }
+}
+
+template <typename T>
+void LuaEngine::Push(T* val)
+{
+    lua_pushlightuserdata(d_L, (void*)val);
+}
 
 }
