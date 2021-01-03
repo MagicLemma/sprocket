@@ -23,7 +23,7 @@ void ScriptRunner::OnStartup(Scene& scene)
         luaEngine.SetWindow(d_window);
         luaEngine.SetInput(&d_input);
         luaEngine.RunScript(entity.Get<ScriptComponent>().script);
-        luaEngine.CallInitFunction(entity);
+        luaEngine.Call("Init", entity);
     });
 
     scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
@@ -40,7 +40,7 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
         auto& entity = it->first;
         auto& [script, alive] = it->second;
         if (alive && entity.Get<ScriptComponent>().active) {
-            script.CallOnUpdateFunction(entity, dt);
+            script.Call("OnUpdate", entity, dt);
             ++it;
         } else {
             it = d_engines.erase(it);

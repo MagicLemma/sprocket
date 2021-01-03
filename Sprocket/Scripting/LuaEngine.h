@@ -25,8 +25,10 @@ class LuaEngine
     template <typename T>
     void Push(T* val);
 
-    //template <typename Arg, typename... Args>
-    //void PushValues(Arg&& arg, Args&&... args);
+    template <typename Arg, typename... Args>
+    void PushArray(Arg&& arg, Args&&... args);
+
+    void PrintErrors(int rc) const;
 
 public:
     LuaEngine();
@@ -34,11 +36,8 @@ public:
 
     void RunScript(const std::string& filename);
 
-    //template <typename... Args>
-    //void CallFunction(const std::string& function, Args&&... args);
-
-    void CallInitFunction(ecs::Entity entity);
-    void CallOnUpdateFunction(ecs::Entity entity, double dt);
+    template <typename... Args>
+    void Call(const std::string& function, Args&&... args);
 
     // Window Events
     void CallOnWindowResizeEvent(WindowResizeEvent* e);
@@ -99,25 +98,27 @@ void LuaEngine::Push(T* val)
 }
 
 template <typename Arg, typename... Args>
-void PushValues(Arg&& arg, Args&&... args)
+void LuaEngine::PushArray(Arg&& arg, Args&&... args)
 {
     Push(std::forward<Arg>(arg));
-    Push(std::forward<Args>(args)...);
+    if constexpr (sizeof...(Args) > 0) {
+        Push(std::forward<Args>(args)...);
+    }
 }
 
-//template <typename... Args>
-//void CallFunction(const std::string& function, Args&&... args)
-//{
-//    lua_getglobal(d_L, function.c_str());
-//    if (!lua_isfunction(d_L, -1)) {
-//        lua_pop(d_L, -1);
-//        return;
-//    }
-//
-//    PushValues(std::forward<Args>(args)...);
-//
-//    int rc = lua_pcall(d_L, sizeof...(Args), 0, 0);
-//    PrintErrors(d_L, rc);
-//}
+template <typename... Args>
+void LuaEngine::Call(const std::string& function, Args&&... args)
+{
+    lua_getglobal(d_L, function.c_str());
+    if (!lua_isfunction(d_L, -1)) {
+        lua_pop(d_L, -1);
+        return;
+    }
+
+    PushArray(std::forward<Args>(args)...);
+
+    int rc = lua_pcall(d_L, sizeof...(Args), 0, 0);
+    PrintErrors(rc);
+}
 
 }

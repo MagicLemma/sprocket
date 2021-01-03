@@ -21,26 +21,6 @@ void DoFile(lua_State* L, const char* file)
     }
 }
 
-void PrintErrors(lua_State* L, int rc)
-{
-    if (rc == LUA_OK) { return; } // No error
-    
-    std::string err = lua_tostring(L, -1);
-    switch (rc) {
-        case LUA_ERRRUN:
-            SPKT_LOG_ERROR("[Lua]: Runtime error: {}", err);
-            return;
-        case LUA_ERRMEM:
-            SPKT_LOG_ERROR("[Lua]: Memory allocation error: {}", err);
-            return;
-        case LUA_ERRERR:
-            SPKT_LOG_ERROR("[Lua]: Error handler func failed: {}", err);
-            return;
-        default:
-            SPKT_LOG_ERROR("[Lua]: Unknown error: {}", err);
-    }
-}
-
 }
 
 LuaEngine::LuaEngine()
@@ -66,6 +46,26 @@ LuaEngine::~LuaEngine()
     lua_close(d_L);
 }
 
+void LuaEngine::PrintErrors(int rc) const
+{
+    if (rc == LUA_OK) { return; } // No error
+    
+    std::string err = lua_tostring(d_L, -1);
+    switch (rc) {
+        case LUA_ERRRUN:
+            SPKT_LOG_ERROR("[Lua]: Runtime error: {}", err);
+            return;
+        case LUA_ERRMEM:
+            SPKT_LOG_ERROR("[Lua]: Memory allocation error: {}", err);
+            return;
+        case LUA_ERRERR:
+            SPKT_LOG_ERROR("[Lua]: Error handler func failed: {}", err);
+            return;
+        default:
+            SPKT_LOG_ERROR("[Lua]: Unknown error: {}", err);
+    }
+}
+
 void LuaEngine::RunScript(const std::string& filename)
 {
     if (filename.empty()) {
@@ -74,39 +74,6 @@ void LuaEngine::RunScript(const std::string& filename)
     }
     
     DoFile(d_L, filename.c_str());
-}
-
-void LuaEngine::CallInitFunction(ecs::Entity entity)
-{
-    SPKT_LOG_INFO("LuaEngine: Calling init!");
-
-    lua_getglobal(d_L, "Init");
-    
-    if (!lua_isfunction(d_L, -1)) {
-        lua_pop(d_L, -1);
-        return;
-    }
-
-    Push(entity);
-
-    int rc = lua_pcall(d_L, 1, 0, 0);
-    PrintErrors(d_L, rc);
-}
-
-void LuaEngine::CallOnUpdateFunction(ecs::Entity entity, double dt)
-{
-    lua_getglobal(d_L, "OnUpdate");
-    
-    if (!lua_isfunction(d_L, -1)) {
-        lua_pop(d_L, -1);
-        return;
-    }
-
-    Push(entity);
-    Push(dt);
-
-    int rc = lua_pcall(d_L, 2, 0, 0);
-    PrintErrors(d_L, rc);
 }
 
 void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
@@ -123,7 +90,7 @@ void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
     Push(e->Height());
 
     int rc = lua_pcall(d_L, 3, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -143,7 +110,7 @@ void LuaEngine::CallOnWindowGotFocusEvent(WindowGotFocusEvent* e)
     Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -160,7 +127,7 @@ void LuaEngine::CallOnWindowLostFocusEvent(WindowLostFocusEvent* e)
     Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -177,7 +144,7 @@ void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
     Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -194,7 +161,7 @@ void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
     Push(e->IsConsumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -214,7 +181,7 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
     Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -235,7 +202,7 @@ void LuaEngine::CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e)
     Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -254,7 +221,7 @@ void LuaEngine::CallOnMouseMovedEvent(MouseMovedEvent* e)
     Push(e->YPos());
 
     int rc = lua_pcall(d_L, 3, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -273,7 +240,7 @@ void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
     Push(e->YOffset());
 
     int rc = lua_pcall(d_L, 3, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -293,7 +260,7 @@ void LuaEngine::CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e)
     Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -313,7 +280,7 @@ void LuaEngine::CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e
     Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -333,7 +300,7 @@ void LuaEngine::CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e)
     Push(e->Mods());
 
     int rc = lua_pcall(d_L, 4, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
@@ -351,7 +318,7 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
     Push(e->Key());
 
     int rc = lua_pcall(d_L, 2, 1, 0);
-    PrintErrors(d_L, rc);
+    PrintErrors(rc);
 
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
