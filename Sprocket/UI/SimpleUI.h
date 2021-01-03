@@ -83,7 +83,7 @@ public:
                  float* value, float speed);
 
     void Image(const std::string& name,
-               std::shared_ptr<Texture> image,
+               const Texture* image,
                const glm::vec2& position);
 
 };

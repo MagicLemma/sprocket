@@ -34,7 +34,7 @@ private:
 
     std::unique_ptr<VertexArray> d_vao;
     
-    std::shared_ptr<Buffer> d_instanceBuffer;
+    std::unique_ptr<Buffer> d_instanceBuffer;
     std::vector<InstanceData> d_instanceData;
 
 public:

@@ -38,9 +38,9 @@ PostProcessor::PostProcessor(int width, int height)
     
 }
 
-void PostProcessor::AddEffect(std::shared_ptr<Effect> effect)
+void PostProcessor::AddEffect(std::unique_ptr<Effect> effect)
 {
-    d_effects.push_back(effect);
+    d_effects.push_back(std::move(effect));
 }
 
 void PostProcessor::Bind() const
@@ -62,7 +62,7 @@ void PostProcessor::Draw()
         if (i + 1 == d_effects.size()) {
             d_effects[i]->Draw();
         } else {
-            d_effects[i]->Draw(d_effects[i+1]);
+            d_effects[i]->Draw(d_effects[i+1].get());
         }
     }
 }

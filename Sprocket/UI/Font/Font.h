@@ -44,7 +44,7 @@ public:
 
     float TextWidth(const std::string& text, float size);
 
-    std::shared_ptr<Texture> GetAtlas() const { return d_atlas.GetAtlas(); }
+    Texture* GetAtlas() const { return d_atlas.GetAtlas(); }
 };
 
 }

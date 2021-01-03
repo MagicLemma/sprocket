@@ -10,7 +10,7 @@
 namespace Sprocket {
 
 FontAtlas::FontAtlas(int width, int height)
-    : d_texture(std::make_shared<Texture>(width, height, Texture::Channels::RED))
+    : d_texture(std::make_unique<Texture>(width, height, Texture::Channels::RED))
 {
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture

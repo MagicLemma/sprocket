@@ -12,7 +12,7 @@
 namespace Sprocket {
 namespace {
 
-std::shared_ptr<Buffer> GetInstanceBuffer()
+std::unique_ptr<Buffer> GetInstanceBuffer()
 {
     BufferLayout layout(sizeof(InstanceData), 5);
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
@@ -20,7 +20,7 @@ std::shared_ptr<Buffer> GetInstanceBuffer()
     layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
     assert(layout.Validate());
 
-    return std::make_shared<Buffer>(layout, BufferUsage::DYNAMIC);
+    return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
 }
 
 void UploadUniforms(

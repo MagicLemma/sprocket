@@ -37,7 +37,7 @@ public:
         // bound for reading will receive this objects texture which
         // can be sampled in shaders.
 
-    void Draw(std::shared_ptr<Effect> = nullptr);
+    void Draw(Effect* = nullptr);
         // Draws to the texture of the target PostProcess. If this is
         // a nullptr, it is rendered to the screen.
 

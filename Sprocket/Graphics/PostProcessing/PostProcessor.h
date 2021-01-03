@@ -6,7 +6,7 @@
 
 namespace Sprocket {
 
-using EffectPipeline = std::vector<std::shared_ptr<Effect>>;
+using EffectPipeline = std::vector<std::unique_ptr<Effect>>;
 
 class PostProcessor
 {
@@ -14,13 +14,13 @@ class PostProcessor
     int d_height;
         // Dimensions of the screen.
 
-    EffectPipeline        d_effects;
+    EffectPipeline d_effects;
     Mesh d_quad;
+
+    void AddEffect(std::unique_ptr<Effect> effect);
 
 public:
     PostProcessor(int width, int height);
-
-    void AddEffect(std::shared_ptr<Effect> effect);
 
     void Bind() const;
     void Unbind() const;
@@ -33,7 +33,7 @@ public:
 
     template <typename T, typename... Args>
     void AddEffect(Args&&... args) {
-        d_effects.push_back(std::make_shared<T>(d_width, d_height, args...));
+        d_effects.push_back(std::make_unique<T>(d_width, d_height, args...));
     }
 };
 
