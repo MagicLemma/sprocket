@@ -1,4 +1,5 @@
 #include "FrameBuffer.h"
+#include "Log.h"
 
 #include <glad/glad.h>
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "Maths.h"
 #include "Types.h"
-#include "Resources.h"
 #include "BufferLayout.h"
 #include "Animation.h"
 

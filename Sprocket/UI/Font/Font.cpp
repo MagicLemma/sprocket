@@ -1,5 +1,6 @@
 #include "Font.h"
 #include "Maths.h"
+#include "Log.h"
 
 #include <cassert>
 #include <algorithm>

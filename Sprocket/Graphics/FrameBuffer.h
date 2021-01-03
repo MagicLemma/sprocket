@@ -1,5 +1,4 @@
 #pragma once
-#include "Resources.h"
 #include "Types.h"
 #include "Texture.h"
 

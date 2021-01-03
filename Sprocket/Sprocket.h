@@ -65,7 +65,6 @@
 #include "Graphics/RenderContext.h"
 #include "Graphics/Shader.h"
 #include "Graphics/DepthBuffer.h"
-#include "Graphics/Resources.h"
 #include "Graphics/Material.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Texture.h"

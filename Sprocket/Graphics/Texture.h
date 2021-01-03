@@ -1,5 +1,4 @@
 #pragma once
-#include "Resources.h"
 #include "Maths.h"
 #include "Types.h"
 

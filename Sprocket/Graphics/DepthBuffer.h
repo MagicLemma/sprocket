@@ -1,7 +1,6 @@
 #pragma once
 #include "Window.h"
 #include "Types.h"
-#include "Resources.h"
 #include "Texture.h"
 
 namespace Sprocket {

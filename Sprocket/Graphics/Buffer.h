@@ -2,7 +2,6 @@
 #include "Maths.h"
 #include "Types.h"
 #include "BufferLayout.h"
-#include "Resources.h"
 
 #include <vector>
 
