@@ -10,12 +10,12 @@ function OnUpdate(entity, dt)
     
     local transform = GetTransformComponent(entity)
     local new_pos = transform.position
-    if IsKeyDown(KEYBOARD_W) then new_pos = new_pos + speed * f end
-    if IsKeyDown(KEYBOARD_S) then new_pos = new_pos - speed * f end
-    if IsKeyDown(KEYBOARD_D) then new_pos = new_pos + speed * r end
-    if IsKeyDown(KEYBOARD_A) then new_pos = new_pos - speed * r end
-    if IsKeyDown(KEYBOARD_SPACE) then new_pos.y = new_pos.y + speed end
-    if IsKeyDown(KEYBOARD_LSHIFT) then new_pos.y = new_pos.y - speed end
+    if IsKeyDown(Keyboard.W) then new_pos = new_pos + speed * f end
+    if IsKeyDown(Keyboard.S) then new_pos = new_pos - speed * f end
+    if IsKeyDown(Keyboard.D) then new_pos = new_pos + speed * r end
+    if IsKeyDown(Keyboard.A) then new_pos = new_pos - speed * r end
+    if IsKeyDown(Keyboard.SPACE) then new_pos.y = new_pos.y + speed end
+    if IsKeyDown(Keyboard.LSHIFT) then new_pos.y = new_pos.y - speed end
     transform.position = new_pos
     SetTransformComponent(entity, transform)
 
