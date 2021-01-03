@@ -232,8 +232,13 @@ bool Entity::Has() const
 // and setting that memory to an entity. For this, we need Entity to be copy
 // assignable. As this will get deleted by the garbage collector, we also require that
 // Entity be trivially destrucible so there are no side effects that we would miss.
-static_assert(std::is_copy_assignable<Entity>());
 static_assert(std::is_trivially_destructible<Entity>());
+
+static_assert(std::is_copy_assignable<Entity>());
+static_assert(std::is_copy_constructible<Entity>());
+
+static_assert(std::is_move_assignable<Entity>());
+static_assert(std::is_move_constructible<Entity>());
 
 }
 }
