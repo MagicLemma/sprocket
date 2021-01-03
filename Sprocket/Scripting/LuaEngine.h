@@ -4,7 +4,6 @@
 #include "MouseEvent.h"
 #include "WindowEvent.h"
 #include "KeyboardEvent.h"
-#include "ECS.h"
 #include "Scene.h"
 #include "Window.h"
 
@@ -36,8 +35,14 @@ public:
 
     void RunScript(const std::string& filename);
 
+    // TODO: Remove
+    void PrintGlobals();
+
     template <typename... Args>
     void Call(const std::string& function, Args&&... args);
+
+    template <typename Type>
+    void Set(const std::string& name, Type&& value);
 
     // Window Events
     void CallOnWindowResizeEvent(WindowResizeEvent* e);
@@ -58,11 +63,6 @@ public:
     void CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e);
     void CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e);
     void CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e);
-
-    // Setters
-    void SetScene(Scene* s);
-    void SetWindow(Window* w);
-    void SetInput(InputProxy* ip);
 
     // Do not copy these things
     LuaEngine(LuaEngine&&) = delete;
@@ -119,6 +119,13 @@ void LuaEngine::Call(const std::string& function, Args&&... args)
 
     int rc = lua_pcall(d_L, sizeof...(Args), 0, 0);
     PrintErrors(rc);
+}
+
+template <typename Type>
+void LuaEngine::Set(const std::string& name, Type&& value)
+{
+    Push(std::forward<Type>(value));
+    lua_setglobal(d_L, name.c_str());
 }
 
 }

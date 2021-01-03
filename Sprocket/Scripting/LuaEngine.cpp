@@ -323,22 +323,19 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
     if (lua_toboolean(d_L, -1)) { e->Consume(); }
 }
 
-void LuaEngine::SetScene(Scene* s)
+void LuaEngine::PrintGlobals()
 {
-    Push(s);
-    lua_setglobal(d_L, "__scene__");
-}
-
-void LuaEngine::SetWindow(Window* w)
-{
-    Push(w);
-    lua_setglobal(d_L, "__window__");
-}
-
-void LuaEngine::SetInput(InputProxy* ip)
-{
-    Push(ip);
-    lua_setglobal(d_L, "__input__");
+    SPKT_LOG_INFO("Starting globals");
+    lua_pushglobaltable(d_L);
+    lua_pushnil(d_L);
+    while (lua_next(d_L, -2) != 0) {
+        if (lua_isnumber(d_L, -1)) {
+            SPKT_LOG_INFO("{} = {}", lua_tostring(d_L, -2), lua_tonumber(d_L, -1));
+        }
+        lua_pop(d_L, 1);
+    }
+    lua_pop(d_L, 1);
+    SPKT_LOG_INFO("Ending globals");
 }
 
 }

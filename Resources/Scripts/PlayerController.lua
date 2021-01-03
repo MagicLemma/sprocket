@@ -34,10 +34,10 @@ function OnUpdate(entity, dt)
     local right = Vec3(cosYaw, 0, -sinYaw)
 
     local dir = Vec3(0, 0, 0)
-    if IsKeyDown(KEYBOARD_W) then dir = dir + forwards end
-    if IsKeyDown(KEYBOARD_S) then dir = dir - forwards end
-    if IsKeyDown(KEYBOARD_D) then dir = dir + right end
-    if IsKeyDown(KEYBOARD_A) then dir = dir - right end
+    if IsKeyDown(Keyboard.W) then dir = dir + forwards end
+    if IsKeyDown(Keyboard.S) then dir = dir - forwards end
+    if IsKeyDown(Keyboard.D) then dir = dir + right end
+    if IsKeyDown(Keyboard.A) then dir = dir - right end
     dir = Normalised(dir)
 
     local physics = GetRigidBody3DComponent(entity)
@@ -48,7 +48,7 @@ function OnUpdate(entity, dt)
         dv.y = 0
     end
 
-    if physics.onFloor and IsKeyDown(KEYBOARD_SPACE) then 
+    if physics.onFloor and IsKeyDown(Keyboard.SPACE) then 
         dv.y = (6 - physics.velocity.y)
     end
 
