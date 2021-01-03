@@ -48,6 +48,32 @@ enumerate(const T& iterable, std::size_t start = 0)
     }
 }
 
+template <typename Left, typename Right>
+cppcoro::generator<std::pair<typename Left::reference, typename Right::reference>>
+zip(Left& left, Right& right)
+{
+    auto left_it = left.begin();
+    auto right_it = right.begin();
+    while (left_it != left.end() && right_it != right.end()) {
+        co_yield {*left_it, *right_it};
+        ++left_it;
+        ++right_it;
+    }
+}
+
+template <typename Left, typename Right>
+cppcoro::generator<std::pair<typename Left::const_reference, typename Right::const_reference>>
+zip(const Left& left, const Right& right)
+{
+    auto left_it = left.cbegin();
+    auto right_it = right.cbegin();
+    while (left_it != left.cend() && right_it != right.cend()) {
+        co_yield {*left_it, *right_it};
+        ++left_it;
+        ++right_it;
+    }
+}
+
 template <typename T>
 cppcoro::generator<T>
 count(const T& start = T{0}, const T& step = T{1})

@@ -7,7 +7,6 @@ struct Baz {};
 
 int main()
 {
-#define GAME
 #ifdef GAME
     Sprocket::Window window("Game");
     WorldLayer game(&window);
@@ -18,20 +17,13 @@ int main()
     using namespace Sprocket;
     Log::Init();
 
-    ECS::Registry reg;
-    auto e1 = reg.New();
-    auto e2 = reg.New();
+    std::vector<int> v1{1, 2, 3, 4, 5};
+    std::vector<int> v2{6, 7, 8, 9};
 
-    e1.Add<Foo>();
-    
-    e2.Add<Bar>();
+    for (auto& [l, r] : itertools::zip(v1, v2)) {
+        SPKT_LOG_INFO("{}, {}", l, r);
+    }
 
-    e1.Add<Baz>();
-    e2.Add<Baz>();
 
-    SPKT_LOG_INFO("{}", reg.Count());
-    SPKT_LOG_INFO("{}", reg.Count<Foo>());
-    SPKT_LOG_INFO("{}", reg.Count<Baz>());
-    SPKT_LOG_INFO("{}", reg.Count<Baz>(ECS::Exclude<Bar, Baz>()));
 #endif
 }
