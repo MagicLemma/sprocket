@@ -66,7 +66,7 @@ void ShadowMap::Draw(
 
         d_vao->SetModel(mesh);
         d_instanceBuffer->SetData(data);
-        d_vao->SetInstances(d_instanceBuffer);
+        d_vao->SetInstances(d_instanceBuffer.get());
         d_vao->Draw();
     }
 

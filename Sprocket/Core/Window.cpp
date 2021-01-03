@@ -17,7 +17,7 @@ struct WindowImpl
 };
 
 Window::Window(const std::string& name, u32 width, u32 height)
-	: d_impl(std::make_shared<WindowImpl>())
+	: d_impl(std::make_unique<WindowImpl>())
 	, d_data({name, width, height})
 	, d_clearColour({1.0, 1.0, 1.0})
 {

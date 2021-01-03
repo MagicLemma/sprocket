@@ -76,7 +76,7 @@ void UploadUniforms(
 
 void UploadMaterial(
     const Shader& shader,
-    const std::shared_ptr<Material>& material,
+    Material* material,
     AssetManager* assetManager
 )
 {
@@ -167,7 +167,7 @@ void EntityRenderer::Draw(
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_vao->SetModel(mesh);
         d_instanceBuffer->SetData(data);
-        d_vao->SetInstances(d_instanceBuffer);
+        d_vao->SetInstances(d_instanceBuffer.get());
         d_vao->Draw();
     }
 

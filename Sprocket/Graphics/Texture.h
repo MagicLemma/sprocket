@@ -44,8 +44,8 @@ public:
     Texture();
     ~Texture();
 
-    static std::shared_ptr<Texture> FromData(const TextureData& data);
-    static std::shared_ptr<Texture> FromFile(const std::string file);
+    static std::unique_ptr<Texture> FromData(const TextureData& data);
+    static std::unique_ptr<Texture> FromFile(const std::string file);
 
     void Bind(int slot) const;
 

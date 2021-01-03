@@ -11,7 +11,7 @@ struct SoundImpl
 };
 
 Sound::Sound()
-    : d_impl(std::make_shared<SoundImpl>())
+    : d_impl(std::make_unique<SoundImpl>())
 {
 }
 
@@ -26,7 +26,7 @@ struct SourceImpl
 }; 
 
 Source::Source()
-    : d_impl(std::make_shared<SourceImpl>())
+    : d_impl(std::make_unique<SourceImpl>())
 {
 }
 

@@ -12,7 +12,7 @@ struct SourceImpl;
 
 class Sound
 {
-    std::shared_ptr<SoundImpl> d_impl;
+    std::unique_ptr<SoundImpl> d_impl;
 
 public:
     Sound();
@@ -23,7 +23,7 @@ public:
 
 class Source
 {
-    std::shared_ptr<SourceImpl> d_impl;
+    std::unique_ptr<SourceImpl> d_impl;
 
 public:
     Source();

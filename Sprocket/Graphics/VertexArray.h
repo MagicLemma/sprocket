@@ -11,14 +11,14 @@ class VertexArray
 {
     std::shared_ptr<VAO> d_vao;
 
-    std::shared_ptr<Mesh> d_model;
-    std::shared_ptr<Buffer> d_instances;
+    Mesh* d_model;
+    Buffer* d_instances;
 
 public:
     VertexArray();
 
-    void SetModel(std::shared_ptr<Mesh> model);
-    void SetInstances(std::shared_ptr<Buffer> instanceData);
+    void SetModel(Mesh* model);
+    void SetInstances(Buffer* instanceData);
 
     void Draw() const;
 };

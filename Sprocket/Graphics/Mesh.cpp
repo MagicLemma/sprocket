@@ -418,14 +418,14 @@ Mesh::~Mesh()
     }
 }
 
-std::shared_ptr<Mesh> Mesh::FromData(const MeshData& data)
+std::unique_ptr<Mesh> Mesh::FromData(const MeshData& data)
 {
     return std::visit([](auto&& data) {
-        return std::make_shared<Mesh>(data);
+        return std::make_unique<Mesh>(data);
     }, data.data);
 }
 
-std::shared_ptr<Mesh> Mesh::FromFile(const std::string& file)
+std::unique_ptr<Mesh> Mesh::FromFile(const std::string& file)
 {
     return Mesh::FromData(MeshData(file));
 }

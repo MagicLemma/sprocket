@@ -9,7 +9,7 @@ struct MusicImpl;
 
 class Music
 {
-    std::shared_ptr<MusicImpl> d_impl;
+    std::unique_ptr<MusicImpl> d_impl;
 
 public:
     Music();
