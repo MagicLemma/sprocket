@@ -21,12 +21,6 @@ class LuaEngine
     template <typename T>
     void Push(const T& val);
 
-    template <typename T>
-    void Push(T* val);
-
-    template <typename Arg, typename... Args>
-    void PushArray(Arg&& arg, Args&&... args);
-
     void PrintErrors(int rc) const;
 
 public:
@@ -71,7 +65,10 @@ public:
 template <typename T>
 void LuaEngine::Push(const T& val)
 {
-    if constexpr (std::is_same<T, bool>()) {
+    if constexpr (std::is_pointer<T>()) {
+        lua_pushlightuserdata(d_L, (void*)val);
+    }
+    else if constexpr (std::is_same<T, bool>()) {
         lua_pushboolean(d_L, val);
     }
     else if constexpr (std::is_integral<T>()) {
@@ -91,21 +88,6 @@ void LuaEngine::Push(const T& val)
     }
 }
 
-template <typename T>
-void LuaEngine::Push(T* val)
-{
-    lua_pushlightuserdata(d_L, (void*)val);
-}
-
-template <typename Arg, typename... Args>
-void LuaEngine::PushArray(Arg&& arg, Args&&... args)
-{
-    Push(std::forward<Arg>(arg));
-    if constexpr (sizeof...(Args) > 0) {
-        Push(std::forward<Args>(args)...);
-    }
-}
-
 template <typename... Args>
 void LuaEngine::Call(const std::string& function, Args&&... args)
 {
@@ -115,7 +97,7 @@ void LuaEngine::Call(const std::string& function, Args&&... args)
         return;
     }
 
-    PushArray(std::forward<Args>(args)...);
+    (Push(std::forward<Args>(args)), ...);
 
     int rc = lua_pcall(d_L, sizeof...(Args), 0, 0);
     PrintErrors(rc);
