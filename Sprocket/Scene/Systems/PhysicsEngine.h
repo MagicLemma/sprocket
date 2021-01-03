@@ -15,7 +15,7 @@ struct PhysicsEngineImpl;
 
 class PhysicsEngine : public EntitySystem
 {
-    std::shared_ptr<PhysicsEngineImpl> d_impl;
+    std::unique_ptr<PhysicsEngineImpl> d_impl;
 
     const float d_timeStep;
 
@@ -29,7 +29,7 @@ class PhysicsEngine : public EntitySystem
 
 public:
     PhysicsEngine(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
-    ~PhysicsEngine() { SPKT_LOG_INFO("Destroying physics engine"); }
+    ~PhysicsEngine() = default;
 
     void OnStartup(Scene& scene) override;
     void OnUpdate(Scene& scene, double dt) override;

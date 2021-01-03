@@ -81,15 +81,15 @@ struct EntityData
 
     // Box
     rp3d::ProxyShape*                     boxProxyShape     = nullptr;
-    std::shared_ptr<rp3d::CollisionShape> boxCollisionShape = nullptr;
+    std::unique_ptr<rp3d::CollisionShape> boxCollisionShape = nullptr;
 
     // Sphere
     rp3d::ProxyShape*                     sphereProxyShape     = nullptr;
-    std::shared_ptr<rp3d::CollisionShape> sphereCollisionShape = nullptr;
+    std::unique_ptr<rp3d::CollisionShape> sphereCollisionShape = nullptr;
 
     // Capsule
     rp3d::ProxyShape*                     capsuleProxyShape     = nullptr;
-    std::shared_ptr<rp3d::CollisionShape> capsuleCollisionShape = nullptr;
+    std::unique_ptr<rp3d::CollisionShape> capsuleCollisionShape = nullptr;
 };
 
 struct PhysicsEngineImpl
@@ -104,7 +104,7 @@ struct PhysicsEngineImpl
 };
 
 PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
-    : d_impl(std::make_shared<PhysicsEngineImpl>(gravity))
+    : d_impl(std::make_unique<PhysicsEngineImpl>(gravity))
     , d_timeStep(1.0f / 120.0f)
     , d_lastFrameLength(0)
     , d_running(true)
@@ -141,12 +141,12 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto& transform = entity.Get<TransformComponent>();
         auto& box = entity.Get<BoxCollider3DComponent>();
 
-        std::shared_ptr<rp3d::CollisionShape> collider;
+        std::unique_ptr<rp3d::CollisionShape> collider;
         glm::vec3 dimensions = box.halfExtents;
         if (box.applyScale) {
             dimensions *= transform.scale;
         }
-        collider = std::make_shared<rp3d::BoxShape>(Convert(dimensions));
+        collider = std::make_unique<rp3d::BoxShape>(Convert(dimensions));
 
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
         d_impl->entityData[entity.Id()].boxProxyShape = entry->addCollisionShape(
@@ -154,7 +154,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
             Convert(box.position, box.orientation),
             box.mass
         );
-        d_impl->entityData[entity.Id()].boxCollisionShape = collider;
+        d_impl->entityData[entity.Id()].boxCollisionShape = std::move(collider);
     });
 
     scene.Entities().OnRemove<BoxCollider3DComponent>([&](ecs::Entity entity) {
@@ -171,8 +171,8 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto& transform = entity.Get<TransformComponent>();
         auto& sphere = entity.Get<SphereCollider3DComponent>();
 
-        std::shared_ptr<rp3d::CollisionShape> collider;
-        collider = std::make_shared<rp3d::SphereShape>(sphere.radius);
+        std::unique_ptr<rp3d::CollisionShape> collider;
+        collider = std::make_unique<rp3d::SphereShape>(sphere.radius);
 
         auto entry = d_impl->entityData[entity.Id()].rigidBody;
         d_impl->entityData[entity.Id()].sphereProxyShape = entry->addCollisionShape(
@@ -180,7 +180,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
             Convert(sphere.position, sphere.orientation),
             sphere.mass
         );
-        d_impl->entityData[entity.Id()].sphereCollisionShape = collider;
+        d_impl->entityData[entity.Id()].sphereCollisionShape = std::move(collider);
     });
 
     scene.Entities().OnRemove<SphereCollider3DComponent>([&](ecs::Entity entity) {
@@ -197,8 +197,8 @@ void PhysicsEngine::OnStartup(Scene& scene)
         auto& transform = entity.Get<TransformComponent>();
         auto& capsule = entity.Get<CapsuleCollider3DComponent>();
 
-        std::shared_ptr<rp3d::CollisionShape> collider;
-        collider = std::make_shared<rp3d::CapsuleShape>(
+        std::unique_ptr<rp3d::CollisionShape> collider;
+        collider = std::make_unique<rp3d::CapsuleShape>(
             capsule.radius, capsule.height
         );
 
@@ -208,7 +208,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
             Convert(capsule.position, capsule.orientation),
             capsule.mass
         );
-        d_impl->entityData[entity.Id()].capsuleCollisionShape = collider;
+        d_impl->entityData[entity.Id()].capsuleCollisionShape = std::move(collider);
     });
 
     scene.Entities().OnRemove<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
