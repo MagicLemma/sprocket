@@ -10,11 +10,6 @@
 
 enum class Mode { PLAYER, EDITOR };
 
-namespace spkt
-{
-struct circadian_cycle {};
-}
-
 class WorldLayer
 {
     Sprocket::Window*      d_window;
