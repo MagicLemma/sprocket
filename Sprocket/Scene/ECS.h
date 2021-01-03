@@ -228,5 +228,24 @@ bool Entity::Has() const
     return Has(typeid(Comp));
 }
 
+// We can push an entity into the Lua stack by calling the Lua equivalent of malloc
+// and setting that memory to an entity. For this, we need Entity to be copy
+// assignable. As this will get deleted by the garbage collector, we also require that
+// Entity be trivially destrucible so there are no side effects that we would miss.
+static_assert(std::is_copy_assignable<Entity>());
+static_assert(std::is_trivially_destructible<Entity>());
+
 }
+}
+
+namespace std {
+
+template <> struct hash<Sprocket::ecs::Entity>
+{
+    std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
+    {
+        return std::hash<std::uint32_t>{}(entity.Id());
+    };
+};
+
 }

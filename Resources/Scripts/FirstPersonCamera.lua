@@ -26,9 +26,3 @@ function OnUpdate(entity, dt)
     camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
     SetCameraComponent(entity, camera)
 end
-
-function OnMouseButtonPressedEvent(consumed, button, action, mods) end
-
-function OnMouseScrolledEvent(consumed, xOffset, yOffset) end
-
-function OnWindowResizeEvent(consumed, width, height) end

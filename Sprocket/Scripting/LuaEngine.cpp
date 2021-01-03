@@ -23,30 +23,21 @@ void DoFile(lua_State* L, const char* file)
 
 void PrintErrors(lua_State* L, int rc)
 {
-    ecs::Entity* e = GetEntity(L);
-
-    std::string name = "Unnamed";
-    if (!e->Valid()) {
-        name = "Deleted Entity";
-    } else if (e->Has<NameComponent>()) {
-        name = e->Get<NameComponent>().name;
-    }
-
-    if (rc == LUA_ERRRUN) {
-        std::string err = lua_tostring(L, -1);
-        SPKT_LOG_ERROR("[Lua]: Runtime error for {}: {}", name, err);
-    }
-    else if (rc == LUA_ERRMEM) {
-        std::string err = lua_tostring(L, -1);
-        SPKT_LOG_ERROR("[Lua]: Memory allocation error for {}: {}", name, err);
-    }
-    else if (rc == LUA_ERRERR) {
-        std::string err = lua_tostring(L, -1);
-        SPKT_LOG_ERROR("[Lua]: Error handler func failed for {}: {}", name, err);
-    }
-    else if (rc != LUA_OK) {
-        std::string err = lua_tostring(L, -1);
-        SPKT_LOG_ERROR("[Lua]: Unknown error for {}: {}", name, err);
+    if (rc == LUA_OK) { return; } // No error
+    
+    std::string err = lua_tostring(L, -1);
+    switch (rc) {
+        case LUA_ERRRUN:
+            SPKT_LOG_ERROR("[Lua]: Runtime error: {}", err);
+            return;
+        case LUA_ERRMEM:
+            SPKT_LOG_ERROR("[Lua]: Memory allocation error: {}", err);
+            return;
+        case LUA_ERRERR:
+            SPKT_LOG_ERROR("[Lua]: Error handler func failed: {}", err);
+            return;
+        default:
+            SPKT_LOG_ERROR("[Lua]: Unknown error: {}", err);
     }
 }
 
@@ -85,7 +76,7 @@ void LuaEngine::RunScript(const std::string& filename)
     DoFile(d_L, filename.c_str());
 }
 
-void LuaEngine::CallInitFunction()
+void LuaEngine::CallInitFunction(ecs::Entity entity)
 {
     SPKT_LOG_INFO("LuaEngine: Calling init!");
 
@@ -96,15 +87,14 @@ void LuaEngine::CallInitFunction()
         return;
     }
 
-    lua_pushlightuserdata(d_L, &d_entity);
+    *(ecs::Entity*)lua_newuserdata(d_L, sizeof(ecs::Entity)) = entity;
 
     int rc = lua_pcall(d_L, 1, 0, 0);
     PrintErrors(d_L, rc);
 }
 
-void LuaEngine::CallOnUpdateFunction(double dt)
+void LuaEngine::CallOnUpdateFunction(ecs::Entity entity, double dt)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnUpdate");
     
     if (!lua_isfunction(d_L, -1)) {
@@ -112,7 +102,7 @@ void LuaEngine::CallOnUpdateFunction(double dt)
         return;
     }
 
-    lua_pushlightuserdata(d_L, &d_entity);
+    *(ecs::Entity*)lua_newuserdata(d_L, sizeof(ecs::Entity)) = entity;
     lua_pushnumber(d_L, dt);
 
     int rc = lua_pcall(d_L, 2, 0, 0);
@@ -121,7 +111,6 @@ void LuaEngine::CallOnUpdateFunction(double dt)
 
 void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnWindowResizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -144,7 +133,6 @@ void LuaEngine::CallOnWindowClosedEvent(WindowClosedEvent* e)
 
 void LuaEngine::CallOnWindowGotFocusEvent(WindowGotFocusEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnWindowGotFocusEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -162,7 +150,6 @@ void LuaEngine::CallOnWindowGotFocusEvent(WindowGotFocusEvent* e)
 
 void LuaEngine::CallOnWindowLostFocusEvent(WindowLostFocusEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnWindowLostFocusEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -180,7 +167,6 @@ void LuaEngine::CallOnWindowLostFocusEvent(WindowLostFocusEvent* e)
 
 void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnWindowMaximizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -198,7 +184,6 @@ void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
 
 void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnWindowMinimizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -216,7 +201,6 @@ void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
 
 void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnMouseButtonPressedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -238,7 +222,6 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
 
 void LuaEngine::CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "MouseButtonReleasedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -259,7 +242,6 @@ void LuaEngine::CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e)
 
 void LuaEngine::CallOnMouseMovedEvent(MouseMovedEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnMouseMovedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -279,7 +261,6 @@ void LuaEngine::CallOnMouseMovedEvent(MouseMovedEvent* e)
 
 void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnMouseScrolledEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -299,7 +280,6 @@ void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
 
 void LuaEngine::CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnKeyboardButtonPressedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -320,7 +300,6 @@ void LuaEngine::CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e)
 
 void LuaEngine::CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnKeyboardButtonReleasedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -341,7 +320,6 @@ void LuaEngine::CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e
 
 void LuaEngine::CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnKeyboardButtonHeldEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -362,7 +340,6 @@ void LuaEngine::CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e)
 
 void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
 {
-    if (!d_entity.Get<ScriptComponent>().active) { return; }
     lua_getglobal(d_L, "OnKeyboardKeyTypedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -383,13 +360,6 @@ void LuaEngine::SetScene(Scene* s)
 {
     lua_pushlightuserdata(d_L, (void*)s);
     lua_setglobal(d_L, "__scene__");
-}
-
-void LuaEngine::SetEntity(const ecs::Entity& e)
-{
-    d_entity = e;
-    lua_pushlightuserdata(d_L, (void*)&d_entity);
-    lua_setglobal(d_L, "__entity__");
 }
 
 void LuaEngine::SetWindow(Window* w)

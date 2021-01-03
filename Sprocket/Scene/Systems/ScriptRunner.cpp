@@ -17,18 +17,17 @@ ScriptRunner::ScriptRunner(Window* window)
 void ScriptRunner::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
-        auto& [luaEngine, alive] = d_engines[entity.Id()];
+        auto& [luaEngine, alive] = d_engines[entity];
         alive = true;
         luaEngine.SetScene(&scene);
         luaEngine.SetWindow(d_window);
         luaEngine.SetInput(&d_input);
-        luaEngine.SetEntity(entity);
         luaEngine.RunScript(entity.Get<ScriptComponent>().script);
-        luaEngine.CallInitFunction();
+        luaEngine.CallInitFunction(entity);
     });
 
     scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
-        d_engines[entity.Id()].second = false; // alive = false
+        d_engines[entity].second = false; // alive = false
     });
 }
 
@@ -38,9 +37,10 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
     // a script tries to delete its own entity, which is functionality that we want to
     // support.
     for (auto it = d_engines.begin(); it != d_engines.end();) {
+        auto& entity = it->first;
         auto& [script, alive] = it->second;
-        if (alive) {
-            script.CallOnUpdateFunction(dt);
+        if (alive && entity.Get<ScriptComponent>().active) {
+            script.CallOnUpdateFunction(entity, dt);
             ++it;
         } else {
             it = d_engines.erase(it);
@@ -53,9 +53,9 @@ void ScriptRunner::OnEvent(Scene& scene, Event& event)
     d_input.OnEvent(event);
 
     // WINDOW EVENTS
-    for (auto& [id, pair] : d_engines) {
+    for (auto& [entity, pair] : d_engines) {
         auto& [script, alive] = pair;
-        if (!alive) { continue; }
+        if (!(alive && entity.Get<ScriptComponent>().active)) { continue; }
 
         if (auto e = event.As<WindowResizeEvent>()) {
             script.CallOnWindowResizeEvent(e);

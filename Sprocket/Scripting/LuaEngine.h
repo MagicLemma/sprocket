@@ -19,16 +19,14 @@ class LuaEngine
 {
     lua_State* d_L;
 
-    ecs::Entity d_entity;
-
 public:
     LuaEngine();
     ~LuaEngine();
 
     void RunScript(const std::string& filename);
 
-    void CallInitFunction();
-    void CallOnUpdateFunction(double dt);
+    void CallInitFunction(ecs::Entity entity);
+    void CallOnUpdateFunction(ecs::Entity entity, double dt);
 
     // Window Events
     void CallOnWindowResizeEvent(WindowResizeEvent* e);
@@ -52,7 +50,6 @@ public:
 
     // Setters
     void SetScene(Scene* s);
-    void SetEntity(const ecs::Entity& e);
     void SetWindow(Window* w);
     void SetInput(InputProxy* ip);
 
