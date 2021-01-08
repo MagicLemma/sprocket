@@ -5,7 +5,6 @@
 #include "Maths.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
-#include "Adaptors.h"
 #include "KeyboardEvent.h"
 #include "MouseEvent.h"
 
@@ -14,6 +13,7 @@
 #include <cassert>
 #include <algorithm>
 
+#include <cpp-itertools.hpp>
 #include <glad/glad.h>
 
 namespace Sprocket {

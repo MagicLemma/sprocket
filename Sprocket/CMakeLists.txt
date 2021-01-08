@@ -143,6 +143,7 @@ target_include_directories(Sprocket PUBLIC
                            ./UI/Font
                            ./Vendor/ImGuizmo
                            ./Vendor/ftgl
+                           ./Vendor/cpp-itertools
                            ${STB_INCLUDE_DIR}
                            ${LUA_INCLUDE_DIR}
                            ${SFML_INCLUDE_DIR})

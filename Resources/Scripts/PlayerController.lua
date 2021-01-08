@@ -77,11 +77,11 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     local tc = TransformComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
     AddTransformComponent(newEntity, tc)
 
-    local mc = ModelComponent(
-        "Resources/Models/Sphere.obj", 
-        "Resources/Materials/grey.yaml"
-    )
-    AddModelComponent(newEntity, mc)
+    --local mc = ModelComponent(
+    --    "Resources/Models/Sphere.obj", 
+    --    "Resources/Materials/grey.yaml"
+    --)
+    --AddModelComponent(newEntity, mc)
 
     local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.3, 1, Vec3(0, 0, 0), false)
     AddRigidBody3DComponent(newEntity, rbc)
@@ -94,6 +94,9 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
 
     local sc = ScriptComponent("Resources/Scripts/Grenade.lua", true)
     AddScriptComponent(newEntity, sc)
+
+    local pc = ParticleComponent(0.01, Vec3(0, 0, 0), 1, Vec3(0, 0, 0), Vec3(1, 1, 1), 1)
+    AddParticleComponent(newEntity, pc)
 
     return true
 end

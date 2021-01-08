@@ -1,6 +1,5 @@
 #include "Animation.h"
 #include "Types.h"
-#include "Adaptors.h"
 
 namespace Sprocket {
 namespace {
