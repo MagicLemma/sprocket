@@ -4,6 +4,8 @@
 #include <queue>
 #include <memory>
 
+#include <cpp-itertools.hpp>
+
 using namespace Sprocket;
 
 std::queue<glm::vec3> GenerateAStarPath(
@@ -86,7 +88,7 @@ std::queue<glm::vec3> GenerateAStarPath(
         current = current->parent;
     }
 
-    for (const auto& pos : Reversed(aStarPath)) {
+    for (const auto& pos : itertools::reversed(aStarPath)) {
         path.push(pos);
     }
 

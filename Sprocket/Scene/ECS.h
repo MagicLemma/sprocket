@@ -87,6 +87,7 @@ private:
 public:
     Registry() = default;
 
+    // Creates a new entity with no components. This is guaranteed to be a valid handle.
     Entity New();
 
     // Given an entity ID, return the entity handle associated to it.

@@ -5,13 +5,14 @@
 #include "Maths.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
-#include "Adaptors.h"
 #include "Printer.h"
 
 #include <functional>
 #include <sstream>
 #include <cassert>
 #include <algorithm>
+
+#include <cpp-itertools.hpp>
 
 namespace Sprocket {
 namespace {

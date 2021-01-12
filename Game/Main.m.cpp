@@ -1,13 +1,15 @@
 #include <Sprocket.h>
+
 #include "Game.h"
 
-struct Foo {};
-struct Bar {};
-struct Baz {};
+#include <cpp-itertools.hpp>
+
+double foo(int x, double y) {
+    return y + x;
+}
 
 int main()
 {
-#define GAME
 #ifdef GAME
     Sprocket::Window window("Game");
     WorldLayer game(&window);
@@ -18,20 +20,17 @@ int main()
     using namespace Sprocket;
     Log::Init();
 
-    ECS::Registry reg;
-    auto e1 = reg.New();
-    auto e2 = reg.New();
+    std::vector<int> data{1, 4, 6, 4, 1};
 
-    e1.Add<Foo>();
-    
-    e2.Add<Bar>();
+    std::vector<std::tuple<int, double>> args{
+        {1, 2.0},
+        {3, 4.5}
+    };
 
-    e1.Add<Baz>();
-    e2.Add<Baz>();
+    for (const auto& x : itertools::starmap(foo, args)) {
+        SPKT_LOG_INFO("{}", x);
+    }
 
-    SPKT_LOG_INFO("{}", reg.Count());
-    SPKT_LOG_INFO("{}", reg.Count<Foo>());
-    SPKT_LOG_INFO("{}", reg.Count<Baz>());
-    SPKT_LOG_INFO("{}", reg.Count<Baz>(ECS::Exclude<Bar, Baz>()));
+
 #endif
 }
