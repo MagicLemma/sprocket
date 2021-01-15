@@ -1,13 +1,10 @@
 #pragma once
-#include "Maths.h"
 #include "ECS.h"
-#include "Log.h"
 #include "EntitySystem.h"
 
-#include <unordered_map>
-#include <utility>
 #include <memory>
-#include <variant>
+
+#include <glm/glm.hpp>
 
 namespace Sprocket {
 
@@ -18,8 +15,6 @@ class PhysicsEngine : public EntitySystem
     static constexpr float TIME_STEP = 1.0f / 60.0f;
 
     std::unique_ptr<PhysicsEngineImpl> d_impl;
-
-    float       d_lastFrameLength;
 
     bool IsOnFloor(ecs::Entity entity) const; 
         // Returns true if the given Entity is colliding with another

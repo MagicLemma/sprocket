@@ -4,6 +4,7 @@
 #include "Components.h"
 
 #include <variant>
+#include <unordered_map>
 
 #include <reactphysics3d/reactphysics3d.h>
 
@@ -101,6 +102,8 @@ struct PhysicsEngineImpl
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
 
+    float lastFrameLength = 0;
+
     std::unordered_map<ecs::Entity, EntityData> entityData;
 
     PhysicsEngineImpl(const glm::vec3& gravity)
@@ -122,7 +125,6 @@ struct PhysicsEngineImpl
 
 PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
     : d_impl(std::make_unique<PhysicsEngineImpl>(gravity))
-    , d_lastFrameLength(0)
 {
 }
 
@@ -233,6 +235,8 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         }
         else {
             body->setType(rp3d::BodyType::DYNAMIC);
+
+            // TODO: Move to RigidBody3DComponent
             float mass = 0;
             if (entity.Has<BoxCollider3DComponent>()) { mass += entity.Get<BoxCollider3DComponent>().mass; }
             if (entity.Has<SphereCollider3DComponent>()) { mass += entity.Get<SphereCollider3DComponent>().mass; }
@@ -240,14 +244,14 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
             body->setMass(mass);
         }
 
-        if (d_lastFrameLength > 0) {
-            auto f = physics.force / d_lastFrameLength;
+        if (d_impl->lastFrameLength > 0) {
+            auto f = physics.force / d_impl->lastFrameLength;
             body->applyForceToCenterOfMass(Convert(f));
         }
     }
     
     // Update System
-    d_lastFrameLength = 0;
+    d_impl->lastFrameLength = 0;
 
     static float accumulator = 0.0f;
     accumulator += static_cast<float>(dt);
@@ -256,7 +260,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     while (accumulator >= TIME_STEP) {
         d_impl->world->update(TIME_STEP);
         accumulator -= TIME_STEP;
-        d_lastFrameLength += TIME_STEP;
+        d_impl->lastFrameLength += TIME_STEP;
     }
 
     // Post Update
