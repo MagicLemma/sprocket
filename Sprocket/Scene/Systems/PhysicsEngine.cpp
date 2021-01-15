@@ -4,8 +4,9 @@
 #include "Components.h"
 
 #include <variant>
+#include <unordered_map>
 
-#include "reactphysics3d.h"
+#include <reactphysics3d/reactphysics3d.h>
 
 namespace Sprocket {
 namespace {
@@ -44,13 +45,24 @@ rp3d::Transform Convert(const glm::vec3& position, const glm::quat& orientation)
 {
     rp3d::Transform t;
     t.setPosition(Convert(position));
-    t.setOrientation(Convert(orientation));
+
+    rp3d::Quaternion ori = Convert(orientation);
+    ori.normalize();
+    t.setOrientation(ori);
     return t;
 }
 
 rp3d::Transform Convert(const TransformComponent& transform)
 {
     return Convert(transform.position, transform.orientation);
+}
+
+void SetMaterial(rp3d::Collider* collider, const RigidBody3DComponent& rc)
+{
+    rp3d::Material& material = collider->getMaterial();
+    material.setFrictionCoefficient(rc.frictionCoefficient);
+    material.setBounciness(rc.bounciness);
+    material.setRollingResistance(rc.rollingResistance);
 }
 
 class RaycastCB : public rp3d::RaycastCallback
@@ -76,53 +88,57 @@ public:
 
 struct EntityData
 {
-    ecs::Entity      entity;
-    rp3d::RigidBody* rigidBody;
+    ecs::Entity entity;
+    rp3d::RigidBody* body;
 
-    // Box
-    rp3d::ProxyShape*                     boxProxyShape     = nullptr;
-    std::unique_ptr<rp3d::CollisionShape> boxCollisionShape = nullptr;
-
-    // Sphere
-    rp3d::ProxyShape*                     sphereProxyShape     = nullptr;
-    std::unique_ptr<rp3d::CollisionShape> sphereCollisionShape = nullptr;
-
-    // Capsule
-    rp3d::ProxyShape*                     capsuleProxyShape     = nullptr;
-    std::unique_ptr<rp3d::CollisionShape> capsuleCollisionShape = nullptr;
+    // Colliders
+    rp3d::Collider* boxCollider = nullptr;
+    rp3d::Collider* sphereCollider = nullptr;
+    rp3d::Collider* capsuleCollider = nullptr;
 };
 
 struct PhysicsEngineImpl
 {
-    rp3d::DynamicsWorld world;
+    rp3d::PhysicsCommon pc;
+    rp3d::PhysicsWorld* world;
 
-    std::unordered_map<uint32_t, EntityData> entityData;
+    float lastFrameLength = 0;
+
+    std::unordered_map<ecs::Entity, EntityData> entityData;
 
     PhysicsEngineImpl(const glm::vec3& gravity)
-        : world(Convert(gravity))
-    {}
+    {
+        rp3d::PhysicsWorld::WorldSettings settings;
+        settings.gravity = Convert(gravity);
+
+        world = pc.createPhysicsWorld(settings);
+    }
+
+    ~PhysicsEngineImpl()
+    {
+        for (auto& [entity, data] : entityData) {
+            world->destroyRigidBody(data.body);
+        }
+        pc.destroyPhysicsWorld(world);
+    }
 };
 
 PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
     : d_impl(std::make_unique<PhysicsEngineImpl>(gravity))
-    , d_timeStep(1.0f / 120.0f)
-    , d_lastFrameLength(0)
-    , d_running(true)
 {
-    d_impl->world.setNbIterationsPositionSolver(5);
-    d_impl->world.setNbIterationsVelocitySolver(8);
 }
 
 void PhysicsEngine::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<RigidBody3DComponent>([&](ecs::Entity entity) {
         assert(entity.Has<TransformComponent>());
-        auto& transform = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<TransformComponent>();
+        auto& rc = entity.Get<RigidBody3DComponent>();
 
-        auto& entry = d_impl->entityData[entity.Id()];
+        auto& entry = d_impl->entityData[entity];
         entry.entity = entity;
-        entry.rigidBody = d_impl->world.createRigidBody(Convert(transform));
-        entry.rigidBody->setUserData(static_cast<void*>(&entry.entity));
+        entry.body = d_impl->world->createRigidBody(Convert(tc));
+        entry.body->setUserData(static_cast<void*>(&entry.entity));
     });
 
     scene.Entities().OnRemove<RigidBody3DComponent>([&](ecs::Entity entity) {
@@ -130,93 +146,71 @@ void PhysicsEngine::OnStartup(Scene& scene)
         entity.Remove<SphereCollider3DComponent>();
         entity.Remove<CapsuleCollider3DComponent>();
 
-        auto rigidBodyIt = d_impl->entityData.find(entity.Id());
-        d_impl->world.destroyRigidBody(rigidBodyIt->second.rigidBody);
+        auto rigidBodyIt = d_impl->entityData.find(entity);
+        d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
         d_impl->entityData.erase(rigidBodyIt);
     });
 
     scene.Entities().OnAdd<BoxCollider3DComponent>([&](ecs::Entity entity) {
         assert(entity.Has<TransformComponent>());
         assert(entity.Has<RigidBody3DComponent>());
-        auto& transform = entity.Get<TransformComponent>();
-        auto& box = entity.Get<BoxCollider3DComponent>();
 
-        std::unique_ptr<rp3d::CollisionShape> collider;
-        glm::vec3 dimensions = box.halfExtents;
-        if (box.applyScale) {
-            dimensions *= transform.scale;
-        }
-        collider = std::make_unique<rp3d::BoxShape>(Convert(dimensions));
+        auto& tc = entity.Get<TransformComponent>();
+        auto& bc = entity.Get<BoxCollider3DComponent>();
+        auto& entry = d_impl->entityData[entity];
 
-        auto entry = d_impl->entityData[entity.Id()].rigidBody;
-        d_impl->entityData[entity.Id()].boxProxyShape = entry->addCollisionShape(
-            collider.get(),
-            Convert(box.position, box.orientation),
-            box.mass
-        );
-        d_impl->entityData[entity.Id()].boxCollisionShape = std::move(collider);
+        glm::vec3 dimensions = bc.halfExtents;
+        if (bc.applyScale) { dimensions *= tc.scale; }
+        rp3d::BoxShape* shape = d_impl->pc.createBoxShape(Convert(dimensions));
+        rp3d::Transform transform = Convert(bc.position, bc.orientation);
+
+        entry.boxCollider = entry.body->addCollider(shape, transform);
+        SetMaterial(entry.boxCollider, entity.Get<RigidBody3DComponent>());
     });
 
     scene.Entities().OnRemove<BoxCollider3DComponent>([&](ecs::Entity entity) {
-        auto c = d_impl->entityData[entity.Id()].boxProxyShape;
-        if (c != nullptr) {
-            d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
-            d_impl->entityData[entity.Id()].boxCollisionShape = nullptr;
-        }
+        auto& entry = d_impl->entityData[entity];
+        entry.body->removeCollider(entry.boxCollider);
     });
 
     scene.Entities().OnAdd<SphereCollider3DComponent>([&](ecs::Entity entity) {
         assert(entity.Has<TransformComponent>());
         assert(entity.Has<RigidBody3DComponent>());
-        auto& transform = entity.Get<TransformComponent>();
-        auto& sphere = entity.Get<SphereCollider3DComponent>();
 
-        std::unique_ptr<rp3d::CollisionShape> collider;
-        collider = std::make_unique<rp3d::SphereShape>(sphere.radius);
+        auto& tc = entity.Get<TransformComponent>();
+        auto& sc = entity.Get<SphereCollider3DComponent>();
+        auto& entry = d_impl->entityData[entity];
+        
+        rp3d::SphereShape* shape = d_impl->pc.createSphereShape(sc.radius);
+        rp3d::Transform transform = Convert(sc.position, sc.orientation);
 
-        auto entry = d_impl->entityData[entity.Id()].rigidBody;
-        d_impl->entityData[entity.Id()].sphereProxyShape = entry->addCollisionShape(
-            collider.get(),
-            Convert(sphere.position, sphere.orientation),
-            sphere.mass
-        );
-        d_impl->entityData[entity.Id()].sphereCollisionShape = std::move(collider);
+        entry.sphereCollider = entry.body->addCollider(shape, transform);
+        SetMaterial(entry.sphereCollider, entity.Get<RigidBody3DComponent>());   
     });
 
     scene.Entities().OnRemove<SphereCollider3DComponent>([&](ecs::Entity entity) {
-        auto c = d_impl->entityData[entity.Id()].sphereProxyShape;
-        if (c != nullptr) {
-            d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
-            d_impl->entityData[entity.Id()].sphereCollisionShape = nullptr;
-        }
+        auto& entry = d_impl->entityData[entity];
+        entry.body->removeCollider(entry.sphereCollider);
     });
 
     scene.Entities().OnAdd<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
         assert(entity.Has<TransformComponent>());
         assert(entity.Has<RigidBody3DComponent>());
-        auto& transform = entity.Get<TransformComponent>();
-        auto& capsule = entity.Get<CapsuleCollider3DComponent>();
 
-        std::unique_ptr<rp3d::CollisionShape> collider;
-        collider = std::make_unique<rp3d::CapsuleShape>(
-            capsule.radius, capsule.height
-        );
+        auto& tc = entity.Get<TransformComponent>();
+        auto& cc = entity.Get<CapsuleCollider3DComponent>();
+        auto& entry = d_impl->entityData[entity];
+        
+        rp3d::CapsuleShape* shape = d_impl->pc.createCapsuleShape(cc.radius, cc.height);
+        rp3d::Transform transform = Convert(cc.position, cc.orientation);
 
-        auto entry = d_impl->entityData[entity.Id()].rigidBody;
-        d_impl->entityData[entity.Id()].capsuleProxyShape = entry->addCollisionShape(
-            collider.get(),
-            Convert(capsule.position, capsule.orientation),
-            capsule.mass
-        );
-        d_impl->entityData[entity.Id()].capsuleCollisionShape = std::move(collider);
+        entry.capsuleCollider = entry.body->addCollider(shape, transform);
+        SetMaterial(entry.capsuleCollider, entity.Get<RigidBody3DComponent>()); 
     });
 
     scene.Entities().OnRemove<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
-        auto c = d_impl->entityData[entity.Id()].capsuleProxyShape;
-        if (c != nullptr) {
-            d_impl->entityData[entity.Id()].rigidBody->removeCollisionShape(c);
-            d_impl->entityData[entity.Id()].capsuleCollisionShape = nullptr;
-        }
+        auto& entry = d_impl->entityData[entity];
+        entry.body->removeCollider(entry.capsuleCollider);
     });
 }
 
@@ -226,61 +220,62 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
     for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
-        const auto& transform = entity.Get<TransformComponent>();
+        const auto& tc = entity.Get<TransformComponent>();
         const auto& physics = entity.Get<RigidBody3DComponent>();
 
-        auto& entry = d_impl->entityData[entity.Id()];
-        auto bodyData = entry.rigidBody;
-        
-        bodyData->setTransform(Convert(transform));
-        bodyData->setLinearVelocity(Convert(physics.velocity));
-        bodyData->enableGravity(physics.gravity);    
-        bodyData->setType(physics.frozen ? rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC);
+        auto& entry = d_impl->entityData[entity];
+        rp3d::RigidBody* body = entry.body;
 
-        auto& material = bodyData->getMaterial();
-        material.setBounciness(physics.bounciness);
-        material.setFrictionCoefficient(physics.frictionCoefficient);
-        material.setRollingResistance(physics.rollingResistance);
+        body->setTransform(Convert(tc));
+        body->setLinearVelocity(Convert(physics.velocity));
+        body->enableGravity(physics.gravity);    
 
-        if (d_lastFrameLength > 0) {
-            auto f = physics.force / d_lastFrameLength;
-            bodyData->applyForceToCenterOfMass(Convert(f));
+        if (physics.frozen) {
+            body->setType(rp3d::BodyType::STATIC);
+        }
+        else {
+            body->setType(rp3d::BodyType::DYNAMIC);
+
+            // TODO: Move to RigidBody3DComponent
+            float mass = 0;
+            if (entity.Has<BoxCollider3DComponent>()) { mass += entity.Get<BoxCollider3DComponent>().mass; }
+            if (entity.Has<SphereCollider3DComponent>()) { mass += entity.Get<SphereCollider3DComponent>().mass; }
+            if (entity.Has<CapsuleCollider3DComponent>()) { mass += entity.Get<CapsuleCollider3DComponent>().mass; }
+            body->setMass(mass);
+        }
+
+        if (d_impl->lastFrameLength > 0) {
+            auto f = physics.force / d_impl->lastFrameLength;
+            body->applyForceToCenterOfMass(Convert(f));
         }
     }
-
-    if (!d_running) { return; }
     
     // Update System
-    d_lastFrameLength = 0;
+    d_impl->lastFrameLength = 0;
 
     static float accumulator = 0.0f;
     accumulator += static_cast<float>(dt);
 
     // First update the Physics World.
-    while (accumulator >= d_timeStep) {
-        d_impl->world.update(d_timeStep);
-        accumulator -= d_timeStep;
-        d_lastFrameLength += d_timeStep;
+    while (accumulator >= TIME_STEP) {
+        d_impl->world->update(TIME_STEP);
+        accumulator -= TIME_STEP;
+        d_impl->lastFrameLength += TIME_STEP;
     }
 
     // Post Update
     for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
-        auto& transform = entity.Get<TransformComponent>();
-        auto& physics = entity.Get<RigidBody3DComponent>();
-        const auto& bodyData = d_impl->entityData[entity.Id()].rigidBody;
+        auto& tc = entity.Get<TransformComponent>();
+        auto& rc = entity.Get<RigidBody3DComponent>();
+        const rp3d::RigidBody* body = d_impl->entityData[entity].body;
 
-        transform.position = Convert(bodyData->getTransform().getPosition());
-        transform.orientation = Convert(bodyData->getTransform().getOrientation());
-        physics.velocity = Convert(bodyData->getLinearVelocity());
+        tc.position = Convert(body->getTransform().getPosition());
+        tc.orientation = Convert(body->getTransform().getOrientation());
+        rc.velocity = Convert(body->getLinearVelocity());
 
-        physics.force = {0.0, 0.0, 0.0};
-        physics.onFloor = IsOnFloor(entity);
+        rc.force = {0.0, 0.0, 0.0};
+        rc.onFloor = IsOnFloor(entity);
     }
-}
-
-void PhysicsEngine::Running(bool isRunning)
-{
-    d_running = isRunning;
 }
 
 ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
@@ -294,14 +289,14 @@ ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
 
     rp3d::Ray ray(start, end);
     RaycastCB cb;
-    d_impl->world.raycast(ray, &cb);
+    d_impl->world->raycast(ray, &cb);
     return cb.GetEntity();
 }
 
 bool PhysicsEngine::IsOnFloor(ecs::Entity entity) const
 {
     // Get the point at the bottom of the rigid body.
-    auto aabb = d_impl->entityData[entity.Id()].rigidBody->getAABB();
+    auto aabb = d_impl->entityData[entity].body->getAABB();
     rp3d::Vector3 playerBase = aabb.getCenter();
     playerBase.y = aabb.getMin().y;
 
@@ -312,7 +307,7 @@ bool PhysicsEngine::IsOnFloor(ecs::Entity entity) const
     float delta = 0.1f;
     rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
     RaycastCB cb;
-    d_impl->world.raycast(ray, &cb);
+    d_impl->world->raycast(ray, &cb);
     return cb.GetEntity() != ecs::Null;
 }
 
