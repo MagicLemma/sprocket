@@ -118,6 +118,9 @@ struct PhysicsEngineImpl
 
     ~PhysicsEngineImpl()
     {
+        for (auto& [entity, data] : entityData) {
+            world->destroyRigidBody(data.rigidBody);
+        }
         pc.destroyPhysicsWorld(world);
     }
 };
