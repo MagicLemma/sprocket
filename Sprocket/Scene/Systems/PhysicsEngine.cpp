@@ -88,7 +88,7 @@ public:
 struct EntityData
 {
     ecs::Entity entity;
-    rp3d::RigidBody* rigidBody;
+    rp3d::RigidBody* body;
 
     // Box
     rp3d::Collider* boxCollider = nullptr;
@@ -119,7 +119,7 @@ struct PhysicsEngineImpl
     ~PhysicsEngineImpl()
     {
         for (auto& [entity, data] : entityData) {
-            world->destroyRigidBody(data.rigidBody);
+            world->destroyRigidBody(data.body);
         }
         pc.destroyPhysicsWorld(world);
     }
@@ -142,8 +142,8 @@ void PhysicsEngine::OnStartup(Scene& scene)
 
         auto& entry = d_impl->entityData[entity];
         entry.entity = entity;
-        entry.rigidBody = d_impl->world->createRigidBody(Convert(tc));
-        entry.rigidBody->setUserData(static_cast<void*>(&entry.entity));
+        entry.body = d_impl->world->createRigidBody(Convert(tc));
+        entry.body->setUserData(static_cast<void*>(&entry.entity));
     });
 
     scene.Entities().OnRemove<RigidBody3DComponent>([&](ecs::Entity entity) {
@@ -152,7 +152,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         entity.Remove<CapsuleCollider3DComponent>();
 
         auto rigidBodyIt = d_impl->entityData.find(entity);
-        d_impl->world->destroyRigidBody(rigidBodyIt->second.rigidBody);
+        d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
         d_impl->entityData.erase(rigidBodyIt);
     });
 
@@ -169,13 +169,13 @@ void PhysicsEngine::OnStartup(Scene& scene)
         rp3d::BoxShape* shape = d_impl->pc.createBoxShape(Convert(dimensions));
         rp3d::Transform transform = Convert(bc.position, bc.orientation);
 
-        entry.boxCollider = entry.rigidBody->addCollider(shape, transform);
+        entry.boxCollider = entry.body->addCollider(shape, transform);
         SetMaterial(entry.boxCollider, entity.Get<RigidBody3DComponent>());
     });
 
     scene.Entities().OnRemove<BoxCollider3DComponent>([&](ecs::Entity entity) {
         auto& entry = d_impl->entityData[entity];
-        entry.rigidBody->removeCollider(entry.boxCollider);
+        entry.body->removeCollider(entry.boxCollider);
     });
 
     scene.Entities().OnAdd<SphereCollider3DComponent>([&](ecs::Entity entity) {
@@ -189,13 +189,13 @@ void PhysicsEngine::OnStartup(Scene& scene)
         rp3d::SphereShape* shape = d_impl->pc.createSphereShape(sc.radius);
         rp3d::Transform transform = Convert(sc.position, sc.orientation);
 
-        entry.sphereCollider = entry.rigidBody->addCollider(shape, transform);
+        entry.sphereCollider = entry.body->addCollider(shape, transform);
         SetMaterial(entry.sphereCollider, entity.Get<RigidBody3DComponent>());   
     });
 
     scene.Entities().OnRemove<SphereCollider3DComponent>([&](ecs::Entity entity) {
         auto& entry = d_impl->entityData[entity];
-        entry.rigidBody->removeCollider(entry.sphereCollider);
+        entry.body->removeCollider(entry.sphereCollider);
     });
 
     scene.Entities().OnAdd<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
@@ -209,13 +209,13 @@ void PhysicsEngine::OnStartup(Scene& scene)
         rp3d::CapsuleShape* shape = d_impl->pc.createCapsuleShape(cc.radius, cc.height);
         rp3d::Transform transform = Convert(cc.position, cc.orientation);
 
-        entry.capsuleCollider = entry.rigidBody->addCollider(shape, transform);
+        entry.capsuleCollider = entry.body->addCollider(shape, transform);
         SetMaterial(entry.capsuleCollider, entity.Get<RigidBody3DComponent>()); 
     });
 
     scene.Entities().OnRemove<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
         auto& entry = d_impl->entityData[entity];
-        entry.rigidBody->removeCollider(entry.capsuleCollider);
+        entry.body->removeCollider(entry.capsuleCollider);
     });
 }
 
@@ -229,7 +229,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         const auto& physics = entity.Get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[entity];
-        rp3d::RigidBody* body = entry.rigidBody;
+        rp3d::RigidBody* body = entry.body;
 
         body->setTransform(Convert(tc));
         body->setLinearVelocity(Convert(physics.velocity));
@@ -272,7 +272,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
         auto& tc = entity.Get<TransformComponent>();
         auto& rc = entity.Get<RigidBody3DComponent>();
-        const rp3d::RigidBody* body = d_impl->entityData[entity].rigidBody;
+        const rp3d::RigidBody* body = d_impl->entityData[entity].body;
 
         tc.position = Convert(body->getTransform().getPosition());
         tc.orientation = Convert(body->getTransform().getOrientation());
@@ -306,7 +306,7 @@ ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
 bool PhysicsEngine::IsOnFloor(ecs::Entity entity) const
 {
     // Get the point at the bottom of the rigid body.
-    auto aabb = d_impl->entityData[entity].rigidBody->getAABB();
+    auto aabb = d_impl->entityData[entity].body->getAABB();
     rp3d::Vector3 playerBase = aabb.getCenter();
     playerBase.y = aabb.getMin().y;
 
