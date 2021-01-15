@@ -61,6 +61,8 @@ u16 Entity::Version() const
 void Entity::Remove(std::type_index type)
 {
     assert(Valid());
+    if (!Has(type)) { return; }
+    
     for (const auto& cb : d_registry->d_comps[type].onRemove) {
         cb(*this);
     }
