@@ -234,11 +234,22 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
 
         auto& entry = d_impl->entityData[entity];
         rp3d::RigidBody* body = entry.rigidBody;
-        
+
         body->setTransform(Convert(tc));
         body->setLinearVelocity(Convert(physics.velocity));
         body->enableGravity(physics.gravity);    
-        body->setType(physics.frozen ? rp3d::BodyType::STATIC : rp3d::BodyType::DYNAMIC);
+
+        if (physics.frozen) {
+            body->setType(rp3d::BodyType::STATIC);
+        }
+        else {
+            body->setType(rp3d::BodyType::DYNAMIC);
+            float mass = 0;
+            if (entity.Has<BoxCollider3DComponent>()) { mass += entity.Get<BoxCollider3DComponent>().mass; }
+            if (entity.Has<SphereCollider3DComponent>()) { mass += entity.Get<SphereCollider3DComponent>().mass; }
+            if (entity.Has<CapsuleCollider3DComponent>()) { mass += entity.Get<CapsuleCollider3DComponent>().mass; }
+            body->setMass(mass);
+        }
 
         if (d_lastFrameLength > 0) {
             auto f = physics.force / d_lastFrameLength;
