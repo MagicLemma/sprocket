@@ -90,20 +90,15 @@ struct EntityData
     ecs::Entity entity;
     rp3d::RigidBody* body;
 
-    // Box
+    // Colliders
     rp3d::Collider* boxCollider = nullptr;
-
-    // Sphere
     rp3d::Collider* sphereCollider = nullptr;
-
-    // Capsule
     rp3d::Collider* capsuleCollider = nullptr;
 };
 
 struct PhysicsEngineImpl
 {
     rp3d::PhysicsCommon pc;
-
     rp3d::PhysicsWorld* world;
 
     std::unordered_map<ecs::Entity, EntityData> entityData;
@@ -127,9 +122,7 @@ struct PhysicsEngineImpl
 
 PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
     : d_impl(std::make_unique<PhysicsEngineImpl>(gravity))
-    , d_timeStep(1.0f / 60.0f)
     , d_lastFrameLength(0)
-    , d_running(true)
 {
 }
 
@@ -252,8 +245,6 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
             body->applyForceToCenterOfMass(Convert(f));
         }
     }
-
-    if (!d_running) { return; }
     
     // Update System
     d_lastFrameLength = 0;
@@ -262,10 +253,10 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     accumulator += static_cast<float>(dt);
 
     // First update the Physics World.
-    while (accumulator >= d_timeStep) {
-        d_impl->world->update(d_timeStep);
-        accumulator -= d_timeStep;
-        d_lastFrameLength += d_timeStep;
+    while (accumulator >= TIME_STEP) {
+        d_impl->world->update(TIME_STEP);
+        accumulator -= TIME_STEP;
+        d_lastFrameLength += TIME_STEP;
     }
 
     // Post Update
@@ -281,11 +272,6 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         rc.force = {0.0, 0.0, 0.0};
         rc.onFloor = IsOnFloor(entity);
     }
-}
-
-void PhysicsEngine::Running(bool isRunning)
-{
-    d_running = isRunning;
 }
 
 ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
