@@ -56,6 +56,14 @@ rp3d::Transform Convert(const TransformComponent& transform)
     return Convert(transform.position, transform.orientation);
 }
 
+void SetMaterial(rp3d::Collider* collider, const RigidBody3DComponent& rc)
+{
+    rp3d::Material& material = collider->getMaterial();
+    material.setFrictionCoefficient(rc.frictionCoefficient);
+    material.setBounciness(rc.bounciness);
+    material.setRollingResistance(rc.rollingResistance);
+}
+
 class RaycastCB : public rp3d::RaycastCallback
 {
     ecs::Entity d_entity = ecs::Null;
@@ -126,12 +134,12 @@ void PhysicsEngine::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<RigidBody3DComponent>([&](ecs::Entity entity) {
         assert(entity.Has<TransformComponent>());
-        auto& transform = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<TransformComponent>();
+        auto& rc = entity.Get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[entity];
         entry.entity = entity;
-
-        entry.rigidBody = d_impl->world->createRigidBody(Convert(transform));
+        entry.rigidBody = d_impl->world->createRigidBody(Convert(tc));
         entry.rigidBody->setUserData(static_cast<void*>(&entry.entity));
     });
 
@@ -159,12 +167,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         rp3d::Transform transform = Convert(bc.position, bc.orientation);
 
         entry.boxCollider = entry.rigidBody->addCollider(shape, transform);
-
-        const auto& rc = entity.Get<RigidBody3DComponent>();
-        rp3d::Material& material = entry.boxCollider->getMaterial();
-        material.setBounciness(rc.bounciness);
-        material.setFrictionCoefficient(rc.frictionCoefficient);
-        material.setRollingResistance(rc.rollingResistance);
+        SetMaterial(entry.boxCollider, entity.Get<RigidBody3DComponent>());
     });
 
     scene.Entities().OnRemove<BoxCollider3DComponent>([&](ecs::Entity entity) {
@@ -184,12 +187,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         rp3d::Transform transform = Convert(sc.position, sc.orientation);
 
         entry.sphereCollider = entry.rigidBody->addCollider(shape, transform);
-
-        const auto& rc = entity.Get<RigidBody3DComponent>();
-        rp3d::Material& material = entry.sphereCollider->getMaterial();
-        material.setBounciness(rc.bounciness);
-        material.setFrictionCoefficient(rc.frictionCoefficient);
-        material.setRollingResistance(rc.rollingResistance);
+        SetMaterial(entry.sphereCollider, entity.Get<RigidBody3DComponent>());   
     });
 
     scene.Entities().OnRemove<SphereCollider3DComponent>([&](ecs::Entity entity) {
@@ -209,12 +207,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
         rp3d::Transform transform = Convert(cc.position, cc.orientation);
 
         entry.capsuleCollider = entry.rigidBody->addCollider(shape, transform);
-
-        const auto& rc = entity.Get<RigidBody3DComponent>();
-        rp3d::Material& material = entry.capsuleCollider->getMaterial();
-        material.setBounciness(rc.bounciness);
-        material.setFrictionCoefficient(rc.frictionCoefficient);
-        material.setRollingResistance(rc.rollingResistance);
+        SetMaterial(entry.capsuleCollider, entity.Get<RigidBody3DComponent>()); 
     });
 
     scene.Entities().OnRemove<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
