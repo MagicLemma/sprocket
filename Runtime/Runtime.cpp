@@ -32,7 +32,7 @@ Runtime::Runtime(Window* window)
     d_scene.Add<AnimationSystem>();
     d_scene.Load("Resources/Anvil.yaml");
 
-    d_runtimeCamera = d_scene.Entities().Find<CameraComponent>();
+    d_runtimeCamera = d_scene.Entities().Find<Camera3DComponent>();
 }
 
 void Runtime::OnEvent(Event& event)
@@ -64,8 +64,8 @@ void Runtime::OnUpdate(double dt)
     }
     
     std::vector<ecs::Entity> toDelete;
-    for (auto entity : d_scene.Entities().View<TransformComponent>()) {
-        auto& transform = entity.Get<TransformComponent>();
+    for (auto entity : d_scene.Entities().View<Transform3DComponent>()) {
+        auto& transform = entity.Get<Transform3DComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);
         }

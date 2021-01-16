@@ -16,7 +16,14 @@ struct NameComponent
     std::string name = "Entity";
 };
 
-struct TransformComponent
+struct Transform2DComponent
+{
+    glm::vec2 position = glm::vec2{0.0f, 0.0f};
+    float rotation = 0.0f;
+    glm::vec2 scale = glm::vec2{1.0f, 1.0f};
+};
+
+struct Transform3DComponent
 {
     glm::vec3 position = glm::vec3{0.0f, 0.0f, 0.0f};
     glm::quat orientation = glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
@@ -73,7 +80,7 @@ struct ScriptComponent
     bool active = true;
 };
 
-struct CameraComponent
+struct Camera3DComponent
 {
     glm::mat4 projection = glm::mat4{1.0};
     float fov = 70.0f;
@@ -129,7 +136,7 @@ struct ParticleComponent
     float accumulator = 0.0f;
 };
 
-struct AnimationComponent
+struct MeshAnimationComponent
 {
     std::string name = "";
     float time = 0.0f;

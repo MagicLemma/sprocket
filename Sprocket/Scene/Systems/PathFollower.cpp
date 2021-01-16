@@ -7,7 +7,7 @@ namespace Sprocket {
 void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt)
 {
     for (auto entity : scene.Entities().View<PathComponent>()) {
-        auto& transform = entity.Get<TransformComponent>();
+        auto& transform = entity.Get<Transform3DComponent>();
         auto& path = entity.Get<PathComponent>();
         if (path.markers.empty()) { return; }
         

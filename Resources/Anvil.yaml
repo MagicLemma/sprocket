@@ -14,20 +14,20 @@ Entities:
       shadows: false
   - NameComponent:
       name: Running Character
-    TransformComponent:
+    Transform3DComponent:
       position: [-12.34701, 0.2741509, -6.543652]
       orientation: [1, 1.159412e-09, 0, 0]
       scale: [0.2210628, 0.2210639, 0.2210466]
     ModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\RunningCharacter\RunningCharacter.fbx
       material: D:\dev\Sprocket\Resources\Materials\RunningCharacter.yaml
-    AnimationComponent:
+    MeshAnimationComponent:
       name: Armature|ArmatureAction
       time: 5
       speed: 1
   - NameComponent:
       name: Bridge Thin 3
-    TransformComponent:
+    Transform3DComponent:
       position: [0, 0, 10]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
@@ -51,7 +51,7 @@ Entities:
       {}
   - NameComponent:
       name: Bridge Thin 2
-    TransformComponent:
+    Transform3DComponent:
       position: [0, 0, 9]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
@@ -75,7 +75,7 @@ Entities:
       {}
   - NameComponent:
       name: Player
-    TransformComponent:
+    Transform3DComponent:
       position: [-14.72964, 1.646085, -0.107402]
       orientation: [0.7213101, 0, -0.6926123, 0]
       scale: [0.2999891, 0.3, 0.2999891]
@@ -98,14 +98,14 @@ Entities:
     ScriptComponent:
       script: Resources/Scripts/PlayerController.lua
       active: true
-    CameraComponent:
+    Camera3DComponent:
       fov: 70
       pitch: 0
     SelectComponent:
       {}
   - NameComponent:
       name: Bridge Thin 1
-    TransformComponent:
+    Transform3DComponent:
       position: [0, 0, 8]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
@@ -129,7 +129,7 @@ Entities:
       {}
   - NameComponent:
       name: Bridge Wide
-    TransformComponent:
+    Transform3DComponent:
       position: [-0.1458986, 0.02311094, -8.724297]
       orientation: [0.7933534, 0, 0.6087613, 0]
       scale: [1.494947, 0.6160595, 6.666203]
@@ -153,7 +153,7 @@ Entities:
       {}
   - NameComponent:
       name: Platform (Angled)
-    TransformComponent:
+    Transform3DComponent:
       position: [0.001507398, 2.274611, 21.75628]
       orientation: [0.6945286, -0.1323189, 0.6947241, -0.1322128]
       scale: [0.9999771, 0.9998871, 1]
@@ -177,7 +177,7 @@ Entities:
       {}
   - NameComponent:
       name: Platform (Blue)
-    TransformComponent:
+    Transform3DComponent:
       position: [-10, 0, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
@@ -201,7 +201,7 @@ Entities:
       {}
   - NameComponent:
       name: Island
-    TransformComponent:
+    Transform3DComponent:
       position: [0, -7, -30]
       orientation: [1, 0, 0, 0]
       scale: [0.5, 0.5, 0.5]
@@ -212,7 +212,7 @@ Entities:
       {}
   - NameComponent:
       name: Platform (Red)
-    TransformComponent:
+    Transform3DComponent:
       position: [10, 0, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 0.9999998, 0.9999998]
@@ -236,7 +236,7 @@ Entities:
       {}
   - NameComponent:
       name: Red Light
-    TransformComponent:
+    Transform3DComponent:
       position: [14, 5, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
@@ -245,7 +245,7 @@ Entities:
       brightness: 2
   - NameComponent:
       name: Blue Light
-    TransformComponent:
+    Transform3DComponent:
       position: [-14, 5, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
@@ -254,7 +254,7 @@ Entities:
       brightness: 2
   - NameComponent:
       name: Green Light
-    TransformComponent:
+    Transform3DComponent:
       position: [-1.224496, 2.567594, -9.963178]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
@@ -263,7 +263,7 @@ Entities:
       brightness: 43.9
   - NameComponent:
       name: White Light
-    TransformComponent:
+    Transform3DComponent:
       position: [-8.66809, 20.76288, -13.71229]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
@@ -272,7 +272,7 @@ Entities:
       brightness: 260.9
   - NameComponent:
       name: Pit Wall 4
-    TransformComponent:
+    Transform3DComponent:
       position: [-22.48153, -0.7553417, 11.35812]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
@@ -296,7 +296,7 @@ Entities:
       {}
   - NameComponent:
       name: Pit Wall 3
-    TransformComponent:
+    Transform3DComponent:
       position: [-22.48153, -0.7553417, 1.987747]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
@@ -320,7 +320,7 @@ Entities:
       {}
   - NameComponent:
       name: Pit Wall 2
-    TransformComponent:
+    Transform3DComponent:
       position: [-17.76336, -0.7553418, 6.675583]
       orientation: [0.7069848, -1.843149e-11, 0.7072288, -1.843147e-11]
       scale: [4.99997, 0.948213, 0.2955132]
@@ -344,7 +344,7 @@ Entities:
       {}
   - NameComponent:
       name: Pit Wall 1
-    TransformComponent:
+    Transform3DComponent:
       position: [-27.19478, -0.7553418, 6.675583]
       orientation: [0.7069848, -1.843149e-11, 0.7072288, -1.843147e-11]
       scale: [4.99997, 0.948213, 0.2955132]
@@ -368,7 +368,7 @@ Entities:
       {}
   - NameComponent:
       name: Pit Floor
-    TransformComponent:
+    Transform3DComponent:
       position: [-22.48153, -1.756183, 6.635912]
       orientation: [1, 0, 0, 0]
       scale: [4.8, 0.3, 4.8]
@@ -392,7 +392,7 @@ Entities:
       {}
   - NameComponent:
       name: Pit Crate
-    TransformComponent:
+    Transform3DComponent:
       position: [-18.92559, -1.5, 10.18482]
       orientation: [0.9999999, 0, -0.0002423458, 0]
       scale: [1.107292, 1.107288, 1.107292]
@@ -416,7 +416,7 @@ Entities:
       {}
   - NameComponent:
       name: Sphere (Particles)
-    TransformComponent:
+    Transform3DComponent:
       position: [-8.352023, 2.686497, 12.41776]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
@@ -446,7 +446,7 @@ Entities:
       life: 60.5
   - NameComponent:
       name: Sphere (No Particles)
-    TransformComponent:
+    Transform3DComponent:
       position: [-12.44487, 2.686496, 12.44196]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
@@ -469,7 +469,7 @@ Entities:
       {}
   - NameComponent:
       name: Tree Small
-    TransformComponent:
+    Transform3DComponent:
       position: [-14.01267, 0.3019291, -13.35674]
       orientation: [0.9726272, 0, 0.2323713, 0]
       scale: [3.049998, 3.05, 3.049998]
@@ -491,7 +491,7 @@ Entities:
       applyScale: true
   - NameComponent:
       name: Tree Large
-    TransformComponent:
+    Transform3DComponent:
       position: [-4.764427, 0.301929, -26.94802]
       orientation: [0.9677961, 0, 0.2517355, 0]
       scale: [4.208998, 4.209, 4.208998]
@@ -500,7 +500,7 @@ Entities:
       material: Resources/Materials/tree.yaml
   - NameComponent:
       name: Pistol
-    TransformComponent:
+    Transform3DComponent:
       position: [7.777368, 2.526275, -10.93738]
       orientation: [0.6755896, -0.7372779, 0, 0]
       scale: [0.02989681, 0.02989674, 0.02989682]
@@ -527,7 +527,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-22.08163, 1.329976, -4.062364]
       orientation: [0.9973543, 0, -0.07269317, 0]
       scale: [1.107289, 1.107288, 1.107289]
@@ -551,7 +551,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Upper
-    TransformComponent:
+    Transform3DComponent:
       position: [-24.50688, 2.658418, -6.193301]
       orientation: [0.9678881, 0, -0.2513813, 0]
       scale: [1.107289, 1.107288, 1.107289]
@@ -575,7 +575,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-7.520597, 3.294004, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -599,7 +599,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-7.520597, 4.494779, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -623,7 +623,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-7.648428, 5.646762, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -647,7 +647,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-8.850865, 5.689884, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -671,7 +671,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-8.850865, 4.496203, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -695,7 +695,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-8.850865, 3.253146, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -719,7 +719,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-10.13275, 3.253146, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -743,7 +743,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-10.13275, 4.474674, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
@@ -767,7 +767,7 @@ Entities:
       {}
   - NameComponent:
       name: Crate Lower
-    TransformComponent:
+    Transform3DComponent:
       position: [-9.982604, 5.576144, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]

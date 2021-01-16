@@ -52,10 +52,10 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    auto lights = scene.Entities().View<LightComponent, TransformComponent>();
+    auto lights = scene.Entities().View<LightComponent, Transform3DComponent>();
     for (auto entity : lights) {
         if (i < MAX_NUM_LIGHTS) {
-            auto position = entity.Get<TransformComponent>().position;
+            auto position = entity.Get<Transform3DComponent>().position;
             auto light = entity.Get<LightComponent>();
             shader.LoadVec3(ArrayName("u_light_pos", i), position);
             shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
@@ -150,8 +150,8 @@ void EntityRenderer::Draw(
     std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent, TransformComponent>()) {
-        const auto& tc = entity.Get<TransformComponent>();
+    for (auto entity : scene.Entities().View<ModelComponent, Transform3DComponent>()) {
+        const auto& tc = entity.Get<Transform3DComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
@@ -180,7 +180,7 @@ void EntityRenderer::Draw(
 
     d_animatedShader.Bind();
     for (auto entity : scene.Entities().View<ModelComponent>()) {
-        const auto& tc = entity.Get<TransformComponent>();
+        const auto& tc = entity.Get<Transform3DComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
@@ -191,8 +191,8 @@ void EntityRenderer::Draw(
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        if (entity.Has<AnimationComponent>()) {
-            const auto& ac = entity.Get<AnimationComponent>();
+        if (entity.Has<MeshAnimationComponent>()) {
+            const auto& ac = entity.Get<MeshAnimationComponent>();
             auto poses = mesh->GetPose(ac.name, ac.time);
             
             int numBones = std::min(MAX_BONES, (int)poses.size());

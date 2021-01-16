@@ -48,7 +48,7 @@ Anvil::Anvil(Window* window)
     d_scene->Load(d_sceneFile);
 
     d_runtimeCamera = d_scene->Entities().Find([](ecs::Entity entity) {
-        return entity.Has<CameraComponent>();
+        return entity.Has<Camera3DComponent>();
     });
 
     d_activeScene = d_scene;
@@ -104,8 +104,8 @@ void Anvil::OnUpdate(double dt)
     }
     
     std::vector<ecs::Entity> toDelete;
-    for (auto entity : d_activeScene->Entities().View<TransformComponent>()) {
-        auto& transform = entity.Get<TransformComponent>();
+    for (auto entity : d_activeScene->Entities().View<Transform3DComponent>()) {
+        auto& transform = entity.Get<Transform3DComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);
         }
@@ -203,7 +203,7 @@ void Anvil::OnRender()
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->Entities().Find<CameraComponent>();
+                d_runtimeCamera = d_activeScene->Entities().Find<Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();

@@ -32,8 +32,32 @@
             ]
         },
         {
-            "Name": "TransformComponent",
-            "DisplayName": "Transform",
+            "Name": "Transform2DComponent",
+            "DisplayName": "Transform 2D",
+            "Attributes": [
+                {
+                    "Name": "position",
+                    "DisplayName": "Position",
+                    "Type": "glm::vec2",
+                    "Default": [0.0, 0.0]
+                },
+                {
+                    "Name": "rotation",
+                    "DisplayName": "Rotation",
+                    "Type": "float",
+                    "Default": 0.0
+                },
+                {
+                    "Name": "scale",
+                    "DisplayName": "Scale",
+                    "Type": "glm::vec2",
+                    "Default": [1.0, 1.0]
+                }
+            ]
+        },
+        {
+            "Name": "Transform3DComponent",
+            "DisplayName": "Transform 3D",
             "Attributes": [
                 {
                     "Name": "position",
@@ -287,8 +311,8 @@
             ]
         },
         {
-            "Name": "CameraComponent",
-            "DisplayName": "Camera",
+            "Name": "Camera3DComponent",
+            "DisplayName": "Camera 3D",
             "Attributes": [
                 {
                     "Name": "projection",
@@ -506,8 +530,8 @@
             ]
         },
         {
-            "Name": "AnimationComponent",
-            "DisplayName": "Animation",
+            "Name": "MeshAnimationComponent",
+            "DisplayName": "Mesh Animation",
             "Attributes": [
                 {
                     "Name": "name",

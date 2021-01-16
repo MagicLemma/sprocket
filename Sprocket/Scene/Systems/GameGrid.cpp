@@ -33,7 +33,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
-    auto& tr1 = d_hoveredSquare.Add<TransformComponent>();
+    auto& tr1 = d_hoveredSquare.Add<Transform3DComponent>();
     tr1.scale = {0.3f, 0.3f, 0.3f};
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
     model1.mesh = gridSquare;
@@ -42,13 +42,13 @@ void GameGrid::OnStartup(Scene& scene)
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
-    auto& tr2 = d_selectedSquare.Add<TransformComponent>();
+    auto& tr2 = d_selectedSquare.Add<Transform3DComponent>();
     tr2.scale = {0.5f, 0.5f, 0.5f};
     auto& model2 = d_selectedSquare.Add<ModelComponent>();
     model2.mesh = gridSquare;
 
     scene.Entities().OnAdd<GridComponent>([&](ecs::Entity entity) {
-        auto& transform = entity.Get<TransformComponent>();
+        auto& transform = entity.Get<Transform3DComponent>();
         const auto& gc = entity.Get<GridComponent>();
 
         assert(!d_gridEntities.contains({gc.x, gc.z}));
@@ -73,7 +73,7 @@ void GameGrid::OnStartup(Scene& scene)
 
 void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
 {
-    auto& camTr = d_camera.Get<TransformComponent>();
+    auto& camTr = d_camera.Get<Transform3DComponent>();
 
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
@@ -88,11 +88,11 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
     glm::vec3 mousePos = cameraPos + lambda * direction;
     d_hovered = {(int)std::floor(mousePos.x), (int)std::floor(mousePos.z)};
 
-    d_hoveredSquare.Get<TransformComponent>().position = { d_hovered.x + 0.5f, 0.05f, d_hovered.y + 0.5f };
+    d_hoveredSquare.Get<Transform3DComponent>().position = { d_hovered.x + 0.5f, 0.05f, d_hovered.y + 0.5f };
     if (d_selected.has_value()) {
-        d_selectedSquare.Get<TransformComponent>().position = { d_selected.value().x + 0.5f, 0.05f, d_selected.value().y + 0.5f };
+        d_selectedSquare.Get<Transform3DComponent>().position = { d_selected.value().x + 0.5f, 0.05f, d_selected.value().y + 0.5f };
     } else {
-        d_selectedSquare.Get<TransformComponent>().position = { 0.5f, -1.0f, 0.5f };
+        d_selectedSquare.Get<Transform3DComponent>().position = { 0.5f, -1.0f, 0.5f };
     }
 }
 

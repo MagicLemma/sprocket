@@ -52,7 +52,7 @@ rp3d::Transform Convert(const glm::vec3& position, const glm::quat& orientation)
     return t;
 }
 
-rp3d::Transform Convert(const TransformComponent& transform)
+rp3d::Transform Convert(const Transform3DComponent& transform)
 {
     return Convert(transform.position, transform.orientation);
 }
@@ -131,8 +131,8 @@ PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
 void PhysicsEngine::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<RigidBody3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
-        auto& tc = entity.Get<TransformComponent>();
+        assert(entity.Has<Transform3DComponent>());
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& rc = entity.Get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[entity];
@@ -152,10 +152,10 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 
     scene.Entities().OnAdd<BoxCollider3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
+        assert(entity.Has<Transform3DComponent>());
         assert(entity.Has<RigidBody3DComponent>());
 
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& bc = entity.Get<BoxCollider3DComponent>();
         auto& entry = d_impl->entityData[entity];
 
@@ -174,10 +174,10 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 
     scene.Entities().OnAdd<SphereCollider3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
+        assert(entity.Has<Transform3DComponent>());
         assert(entity.Has<RigidBody3DComponent>());
 
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& sc = entity.Get<SphereCollider3DComponent>();
         auto& entry = d_impl->entityData[entity];
         
@@ -194,10 +194,10 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 
     scene.Entities().OnAdd<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
+        assert(entity.Has<Transform3DComponent>());
         assert(entity.Has<RigidBody3DComponent>());
 
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& cc = entity.Get<CapsuleCollider3DComponent>();
         auto& entry = d_impl->entityData[entity];
         
@@ -220,7 +220,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
     for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
-        const auto& tc = entity.Get<TransformComponent>();
+        const auto& tc = entity.Get<Transform3DComponent>();
         const auto& physics = entity.Get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[entity];
@@ -265,7 +265,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
 
     // Post Update
     for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& rc = entity.Get<RigidBody3DComponent>();
         const rp3d::RigidBody* body = d_impl->entityData[entity].body;
 

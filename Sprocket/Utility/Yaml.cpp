@@ -117,6 +117,13 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
 
 namespace Sprocket {
 
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+    return out;
+}
+
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
 {
     out << YAML::Flow;

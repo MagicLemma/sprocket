@@ -14,7 +14,7 @@ function Init(entity)
 end
 
 function OnUpdate(entity, dt)
-    local pos = GetTransformComponent(entity).position
+    local pos = GetTransform3DComponent(entity).position
 
     if ABS_VERT == nil then ABS_VERT = pos.y end
 

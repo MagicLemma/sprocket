@@ -38,7 +38,8 @@ struct convert<glm::mat4>
 }
 
 namespace Sprocket {
- 
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);

@@ -20,7 +20,7 @@ void Save(const std::string& file, ecs::Registry* reg)
     out << YAML::Key << "Version" << YAML::Value << 2;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : reg->Fast()) {
+    for (auto entity : reg->Each()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
 #ifdef DATAMATIC_BLOCK SAVABLE=true
@@ -44,7 +44,7 @@ void Load(const std::string& file, ecs::Registry* reg)
 {
     // Must be a clean scene
     u32 count = 0;
-    for (ecs::Entity e : reg->Fast()) {
+    for (ecs::Entity e : reg->Each()) {
         if (!e.Has<TemporaryComponent>()) ++count;
     }
     assert(count == 0);
@@ -86,7 +86,7 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
-    for (auto entity : source->Fast()) {
+    for (auto entity : source->Each()) {
         Copy(target, entity);
     }
 }
