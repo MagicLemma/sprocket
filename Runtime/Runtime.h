@@ -11,7 +11,7 @@ class Runtime
     Sprocket::AssetManager d_assetManager;
 
     // Rendering
-    Sprocket::EntityRenderer d_entityRenderer;
+    Sprocket::Scene3DRenderer d_entityRenderer;
     Sprocket::SkyboxRenderer d_skyboxRenderer;
 
     Sprocket::ParticleManager d_particleManager;

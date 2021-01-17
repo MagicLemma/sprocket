@@ -80,7 +80,7 @@
 #include "Graphics/PostProcessing/Negative.h"
 
 #include "Graphics/Rendering/ColliderRenderer.h"
-#include "Graphics/Rendering/EntityRenderer.h"
+#include "Graphics/Rendering/Scene3DRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
 // AUDIO

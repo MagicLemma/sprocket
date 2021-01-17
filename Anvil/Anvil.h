@@ -17,7 +17,7 @@ class Anvil
     Camera d_editorCamera;
 
     // Rendering
-    EntityRenderer d_entityRenderer;
+    Scene3DRenderer d_entityRenderer;
     SkyboxRenderer d_skyboxRenderer;
     ColliderRenderer d_colliderRenderer;
 

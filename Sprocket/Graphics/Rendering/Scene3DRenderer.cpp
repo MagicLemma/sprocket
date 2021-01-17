@@ -1,4 +1,4 @@
-#include "EntityRenderer.h"
+#include "Scene3DRenderer.h"
 #include "Maths.h"
 #include "AssetManager.h"
 #include "RenderContext.h"
@@ -14,8 +14,8 @@
 namespace Sprocket {
 namespace {
 
-std::array<glm::mat4, EntityRenderer::MAX_BONES> DefaultBoneTransforms() {
-    std::array<glm::mat4, EntityRenderer::MAX_BONES> arr;
+std::array<glm::mat4, Scene3DRenderer::MAX_BONES> DefaultBoneTransforms() {
+    std::array<glm::mat4, Scene3DRenderer::MAX_BONES> arr;
     std::fill(arr.begin(), arr.end(), glm::mat4(1.0));
     return arr;
 };
@@ -88,10 +88,10 @@ void UploadMaterial(
     AssetManager* assetManager
 )
 {
-    assetManager->GetTexture(material->albedoMap)->Bind(EntityRenderer::ALBEDO_SLOT);
-    assetManager->GetTexture(material->normalMap)->Bind(EntityRenderer::NORMAL_SLOT);
-    assetManager->GetTexture(material->metallicMap)->Bind(EntityRenderer::METALLIC_SLOT);
-    assetManager->GetTexture(material->roughnessMap)->Bind(EntityRenderer::ROUGHNESS_SLOT);
+    assetManager->GetTexture(material->albedoMap)->Bind(Scene3DRenderer::ALBEDO_SLOT);
+    assetManager->GetTexture(material->normalMap)->Bind(Scene3DRenderer::NORMAL_SLOT);
+    assetManager->GetTexture(material->metallicMap)->Bind(Scene3DRenderer::METALLIC_SLOT);
+    assetManager->GetTexture(material->roughnessMap)->Bind(Scene3DRenderer::ROUGHNESS_SLOT);
 
     shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
     shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
@@ -105,7 +105,7 @@ void UploadMaterial(
 
 }
 
-EntityRenderer::EntityRenderer(AssetManager* assetManager)
+Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_assetManager(assetManager)
     , d_particleManager(nullptr)
@@ -128,7 +128,7 @@ EntityRenderer::EntityRenderer(AssetManager* assetManager)
     d_animatedShader.Unbind();
 }
 
-void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
+void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     d_staticShader.Bind();
     d_staticShader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
@@ -143,7 +143,7 @@ void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
     shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
 }
 
-void EntityRenderer::Draw(
+void Scene3DRenderer::Draw(
     const glm::mat4& proj,
     const glm::mat4& view,
     Scene& scene)
@@ -218,14 +218,14 @@ void EntityRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void EntityRenderer::Draw(const ecs::Entity& camera, Scene& scene)
+void Scene3DRenderer::Draw(const ecs::Entity& camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 
-void EntityRenderer::EnableParticles(ParticleManager* particleManager)
+void Scene3DRenderer::EnableParticles(ParticleManager* particleManager)
 {
     d_particleManager = particleManager;
 }
