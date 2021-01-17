@@ -34,7 +34,7 @@ void ColliderRenderer::Draw(
     d_vao->SetModel(s_cube.get());
     for (auto entity : scene.Entities().View<BoxCollider3DComponent>()) {
         const auto& c = entity.Get<BoxCollider3DComponent>();
-        auto tr = entity.Get<TransformComponent>();
+        auto tr = entity.Get<Transform3DComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, c.halfExtents);
@@ -49,7 +49,7 @@ void ColliderRenderer::Draw(
     d_vao->SetModel(s_sphere.get());
     for (auto entity : scene.Entities().View<SphereCollider3DComponent>()) {
         const auto& c = entity.Get<SphereCollider3DComponent>();
-        auto tr = entity.Get<TransformComponent>();
+        auto tr = entity.Get<Transform3DComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, {c.radius, c.radius, c.radius});
@@ -64,7 +64,7 @@ void ColliderRenderer::Draw(
         const auto& c = entity.Get<CapsuleCollider3DComponent>();
 
         {  // Top Hemisphere
-            auto tr = entity.Get<TransformComponent>();
+            auto tr = entity.Get<Transform3DComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, c.height/2, 0.0});
@@ -75,7 +75,7 @@ void ColliderRenderer::Draw(
         }
 
         {  // Middle Cylinder
-            auto tr = entity.Get<TransformComponent>();
+            auto tr = entity.Get<Transform3DComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::scale(transform, {c.radius, c.height, c.radius});
@@ -85,7 +85,7 @@ void ColliderRenderer::Draw(
         }
 
         {  // Bottom Hemisphere
-            auto tr = entity.Get<TransformComponent>();
+            auto tr = entity.Get<Transform3DComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, -c.height/2, 0.0});

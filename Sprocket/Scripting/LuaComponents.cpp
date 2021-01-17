@@ -37,6 +37,13 @@ int Push(lua_State* L, const bool& value)
     return 1;
 }
 
+int Push(lua_State* L, const glm::vec2& value)
+{
+    lua_pushnumber(L, value.x);
+    lua_pushnumber(L, value.y);
+    return 3;
+}
+
 int Push(lua_State* L, const glm::vec3& value)
 {
     lua_pushnumber(L, value.x);
@@ -80,6 +87,13 @@ template <> glm::vec3 Pull(lua_State* L, int& count)
     return {x, y, z};
 }
 
+template <> glm::vec2 Pull(lua_State* L, int& count)
+{
+    float x = (float)lua_tonumber(L, count++);
+    float y = (float)lua_tonumber(L, count++);
+    return {x, y};
+}
+
 template <> glm::quat Pull(lua_State* L, int& count)
 {
     float x = (float)lua_tonumber(L, count++);
@@ -100,6 +114,7 @@ template <> constexpr int Dimension<int>() { return 1; }
 template <> constexpr int Dimension<float>() { return 1; }
 template <> constexpr int Dimension<bool>() { return 1; }
 template <> constexpr int Dimension<std::string>() { return 1; }
+template <> constexpr int Dimension<glm::vec2>() { return 2; }
 template <> constexpr int Dimension<glm::vec3>() { return 3; }
 template <> constexpr int Dimension<glm::quat>() { return 4; }
 
@@ -110,7 +125,16 @@ constexpr int NameComponentDimension()
     return count;
 }
 
-constexpr int TransformComponentDimension()
+constexpr int Transform2DComponentDimension()
+{
+    int count = 0;
+    count += Dimension<glm::vec2>(); // position
+    count += Dimension<float>(); // rotation
+    count += Dimension<glm::vec2>(); // scale
+    return count;
+}
+
+constexpr int Transform3DComponentDimension()
 {
     int count = 0;
     count += Dimension<glm::vec3>(); // position
@@ -177,7 +201,7 @@ constexpr int ScriptComponentDimension()
     return count;
 }
 
-constexpr int CameraComponentDimension()
+constexpr int Camera3DComponentDimension()
 {
     int count = 0;
     count += Dimension<float>(); // fov
@@ -246,7 +270,7 @@ constexpr int ParticleComponentDimension()
     return count;
 }
 
-constexpr int AnimationComponentDimension()
+constexpr int MeshAnimationComponentDimension()
 {
     int count = 0;
     count += Dimension<std::string>(); // name
@@ -274,10 +298,15 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_AddNameComponent", &Lua::AddNameComponent);
     lua_register(L, "HasNameComponent", &Lua_Has<NameComponent>);
 
-    lua_register(L, "Lua_GetTransformComponent", &Lua::GetTransformComponent);
-    lua_register(L, "Lua_SetTransformComponent", &Lua::SetTransformComponent);
-    lua_register(L, "Lua_AddTransformComponent", &Lua::AddTransformComponent);
-    lua_register(L, "HasTransformComponent", &Lua_Has<TransformComponent>);
+    lua_register(L, "Lua_GetTransform2DComponent", &Lua::GetTransform2DComponent);
+    lua_register(L, "Lua_SetTransform2DComponent", &Lua::SetTransform2DComponent);
+    lua_register(L, "Lua_AddTransform2DComponent", &Lua::AddTransform2DComponent);
+    lua_register(L, "HasTransform2DComponent", &Lua_Has<Transform2DComponent>);
+
+    lua_register(L, "Lua_GetTransform3DComponent", &Lua::GetTransform3DComponent);
+    lua_register(L, "Lua_SetTransform3DComponent", &Lua::SetTransform3DComponent);
+    lua_register(L, "Lua_AddTransform3DComponent", &Lua::AddTransform3DComponent);
+    lua_register(L, "HasTransform3DComponent", &Lua_Has<Transform3DComponent>);
 
     lua_register(L, "Lua_GetModelComponent", &Lua::GetModelComponent);
     lua_register(L, "Lua_SetModelComponent", &Lua::SetModelComponent);
@@ -309,10 +338,10 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_AddScriptComponent", &Lua::AddScriptComponent);
     lua_register(L, "HasScriptComponent", &Lua_Has<ScriptComponent>);
 
-    lua_register(L, "Lua_GetCameraComponent", &Lua::GetCameraComponent);
-    lua_register(L, "Lua_SetCameraComponent", &Lua::SetCameraComponent);
-    lua_register(L, "Lua_AddCameraComponent", &Lua::AddCameraComponent);
-    lua_register(L, "HasCameraComponent", &Lua_Has<CameraComponent>);
+    lua_register(L, "Lua_GetCamera3DComponent", &Lua::GetCamera3DComponent);
+    lua_register(L, "Lua_SetCamera3DComponent", &Lua::SetCamera3DComponent);
+    lua_register(L, "Lua_AddCamera3DComponent", &Lua::AddCamera3DComponent);
+    lua_register(L, "HasCamera3DComponent", &Lua_Has<Camera3DComponent>);
 
     lua_register(L, "Lua_GetSelectComponent", &Lua::GetSelectComponent);
     lua_register(L, "Lua_SetSelectComponent", &Lua::SetSelectComponent);
@@ -349,10 +378,10 @@ void RegisterComponentFunctions(lua_State* L)
     lua_register(L, "Lua_AddParticleComponent", &Lua::AddParticleComponent);
     lua_register(L, "HasParticleComponent", &Lua_Has<ParticleComponent>);
 
-    lua_register(L, "Lua_GetAnimationComponent", &Lua::GetAnimationComponent);
-    lua_register(L, "Lua_SetAnimationComponent", &Lua::SetAnimationComponent);
-    lua_register(L, "Lua_AddAnimationComponent", &Lua::AddAnimationComponent);
-    lua_register(L, "HasAnimationComponent", &Lua_Has<AnimationComponent>);
+    lua_register(L, "Lua_GetMeshAnimationComponent", &Lua::GetMeshAnimationComponent);
+    lua_register(L, "Lua_SetMeshAnimationComponent", &Lua::SetMeshAnimationComponent);
+    lua_register(L, "Lua_AddMeshAnimationComponent", &Lua::AddMeshAnimationComponent);
+    lua_register(L, "HasMeshAnimationComponent", &Lua_Has<MeshAnimationComponent>);
 
 }
 
@@ -396,44 +425,88 @@ int AddNameComponent(lua_State* L)
     return 0;
 }
 
-int GetTransformComponent(lua_State* L)
+int GetTransform2DComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    assert(e.Has<TransformComponent>());
+    assert(e.Has<Transform2DComponent>());
 
     int count = 0;
-    const auto& c = e.Get<TransformComponent>();
+    const auto& c = e.Get<Transform2DComponent>();
+    count += Push(L, c.position);
+    count += Push(L, c.rotation);
+    count += Push(L, c.scale);
+    return count;
+}
+
+int SetTransform2DComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, Transform2DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+    auto& c = e.Get<Transform2DComponent>();
+    c.position = Pull<glm::vec2>(L, count);
+    c.rotation = Pull<float>(L, count);
+    c.scale = Pull<glm::vec2>(L, count);
+    return 0;
+}
+
+int AddTransform2DComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, Transform2DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+
+    int count = 2;
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+    assert(!e.Has<Transform2DComponent>());
+
+    Transform2DComponent c;
+    c.position = Pull<glm::vec2>(L, count);
+    c.rotation = Pull<float>(L, count);
+    c.scale = Pull<glm::vec2>(L, count);
+    e.Add<Transform2DComponent>(c);
+    return 0;
+}
+
+int GetTransform3DComponent(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+    ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+    assert(e.Has<Transform3DComponent>());
+
+    int count = 0;
+    const auto& c = e.Get<Transform3DComponent>();
     count += Push(L, c.position);
     count += Push(L, c.scale);
     return count;
 }
 
-int SetTransformComponent(lua_State* L)
+int SetTransform3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, TransformComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, Transform3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    auto& c = e.Get<TransformComponent>();
+    auto& c = e.Get<Transform3DComponent>();
     c.position = Pull<glm::vec3>(L, count);
     c.scale = Pull<glm::vec3>(L, count);
     return 0;
 }
 
-int AddTransformComponent(lua_State* L)
+int AddTransform3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, TransformComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, Transform3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    assert(!e.Has<TransformComponent>());
+    assert(!e.Has<Transform3DComponent>());
 
-    TransformComponent c;
+    Transform3DComponent c;
     c.position = Pull<glm::vec3>(L, count);
     c.scale = Pull<glm::vec3>(L, count);
-    e.Add<TransformComponent>(c);
+    e.Add<Transform3DComponent>(c);
     return 0;
 }
 
@@ -716,44 +789,44 @@ int AddScriptComponent(lua_State* L)
     return 0;
 }
 
-int GetCameraComponent(lua_State* L)
+int GetCamera3DComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    assert(e.Has<CameraComponent>());
+    assert(e.Has<Camera3DComponent>());
 
     int count = 0;
-    const auto& c = e.Get<CameraComponent>();
+    const auto& c = e.Get<Camera3DComponent>();
     count += Push(L, c.fov);
     count += Push(L, c.pitch);
     return count;
 }
 
-int SetCameraComponent(lua_State* L)
+int SetCamera3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, CameraComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, Camera3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    auto& c = e.Get<CameraComponent>();
+    auto& c = e.Get<Camera3DComponent>();
     c.fov = Pull<float>(L, count);
     c.pitch = Pull<float>(L, count);
     return 0;
 }
 
-int AddCameraComponent(lua_State* L)
+int AddCamera3DComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, CameraComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, Camera3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    assert(!e.Has<CameraComponent>());
+    assert(!e.Has<Camera3DComponent>());
 
-    CameraComponent c;
+    Camera3DComponent c;
     c.fov = Pull<float>(L, count);
     c.pitch = Pull<float>(L, count);
-    e.Add<CameraComponent>(c);
+    e.Add<Camera3DComponent>(c);
     return 0;
 }
 
@@ -1059,47 +1132,47 @@ int AddParticleComponent(lua_State* L)
     return 0;
 }
 
-int GetAnimationComponent(lua_State* L)
+int GetMeshAnimationComponent(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    assert(e.Has<AnimationComponent>());
+    assert(e.Has<MeshAnimationComponent>());
 
     int count = 0;
-    const auto& c = e.Get<AnimationComponent>();
+    const auto& c = e.Get<MeshAnimationComponent>();
     count += Push(L, c.name);
     count += Push(L, c.time);
     count += Push(L, c.speed);
     return count;
 }
 
-int SetAnimationComponent(lua_State* L)
+int SetMeshAnimationComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, AnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, MeshAnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    auto& c = e.Get<AnimationComponent>();
+    auto& c = e.Get<MeshAnimationComponent>();
     c.name = Pull<std::string>(L, count);
     c.time = Pull<float>(L, count);
     c.speed = Pull<float>(L, count);
     return 0;
 }
 
-int AddAnimationComponent(lua_State* L)
+int AddMeshAnimationComponent(lua_State* L)
 {
-    if (!CheckArgCount(L, AnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, MeshAnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
     int count = 2;
     ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    assert(!e.Has<AnimationComponent>());
+    assert(!e.Has<MeshAnimationComponent>());
 
-    AnimationComponent c;
+    MeshAnimationComponent c;
     c.name = Pull<std::string>(L, count);
     c.time = Pull<float>(L, count);
     c.speed = Pull<float>(L, count);
-    e.Add<AnimationComponent>(c);
+    e.Add<MeshAnimationComponent>(c);
     return 0;
 }
 

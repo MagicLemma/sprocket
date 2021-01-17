@@ -8,8 +8,8 @@ namespace Audio {
 
 void SetListener(const ecs::Entity& entity)
 {
-    if (!entity.Has<TransformComponent>()) { return; }
-    auto tr = entity.Get<TransformComponent>();
+    if (!entity.Has<Transform3DComponent>()) { return; }
+    auto tr = entity.Get<Transform3DComponent>();
     auto pos = tr.position;
     sf::Listener::setPosition(pos.x, pos.y, pos.z);
 

@@ -1,4 +1,4 @@
-#include "EntityRenderer.h"
+#include "Scene3DRenderer.h"
 #include "Maths.h"
 #include "AssetManager.h"
 #include "RenderContext.h"
@@ -9,8 +9,16 @@
 #include "Types.h"
 #include "HashPair.h"
 
+#include <algorithm>
+
 namespace Sprocket {
 namespace {
+
+std::array<glm::mat4, Scene3DRenderer::MAX_BONES> DefaultBoneTransforms() {
+    std::array<glm::mat4, Scene3DRenderer::MAX_BONES> arr;
+    std::fill(arr.begin(), arr.end(), glm::mat4(1.0));
+    return arr;
+};
 
 std::unique_ptr<Buffer> GetInstanceBuffer()
 {
@@ -52,10 +60,10 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    auto lights = scene.Entities().View<LightComponent, TransformComponent>();
+    auto lights = scene.Entities().View<LightComponent, Transform3DComponent>();
     for (auto entity : lights) {
         if (i < MAX_NUM_LIGHTS) {
-            auto position = entity.Get<TransformComponent>().position;
+            auto position = entity.Get<Transform3DComponent>().position;
             auto light = entity.Get<LightComponent>();
             shader.LoadVec3(ArrayName("u_light_pos", i), position);
             shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
@@ -80,10 +88,10 @@ void UploadMaterial(
     AssetManager* assetManager
 )
 {
-    assetManager->GetTexture(material->albedoMap)->Bind(EntityRenderer::ALBEDO_SLOT);
-    assetManager->GetTexture(material->normalMap)->Bind(EntityRenderer::NORMAL_SLOT);
-    assetManager->GetTexture(material->metallicMap)->Bind(EntityRenderer::METALLIC_SLOT);
-    assetManager->GetTexture(material->roughnessMap)->Bind(EntityRenderer::ROUGHNESS_SLOT);
+    assetManager->GetTexture(material->albedoMap)->Bind(Scene3DRenderer::ALBEDO_SLOT);
+    assetManager->GetTexture(material->normalMap)->Bind(Scene3DRenderer::NORMAL_SLOT);
+    assetManager->GetTexture(material->metallicMap)->Bind(Scene3DRenderer::METALLIC_SLOT);
+    assetManager->GetTexture(material->roughnessMap)->Bind(Scene3DRenderer::ROUGHNESS_SLOT);
 
     shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
     shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
@@ -97,7 +105,7 @@ void UploadMaterial(
 
 }
 
-EntityRenderer::EntityRenderer(AssetManager* assetManager)
+Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_assetManager(assetManager)
     , d_particleManager(nullptr)
@@ -120,7 +128,7 @@ EntityRenderer::EntityRenderer(AssetManager* assetManager)
     d_animatedShader.Unbind();
 }
 
-void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
+void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     d_staticShader.Bind();
     d_staticShader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
@@ -135,7 +143,7 @@ void EntityRenderer::EnableShadows(const ShadowMap& shadowMap)
     shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
 }
 
-void EntityRenderer::Draw(
+void Scene3DRenderer::Draw(
     const glm::mat4& proj,
     const glm::mat4& view,
     Scene& scene)
@@ -150,8 +158,8 @@ void EntityRenderer::Draw(
     std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent, TransformComponent>()) {
-        const auto& tc = entity.Get<TransformComponent>();
+    for (auto entity : scene.Entities().View<ModelComponent, Transform3DComponent>()) {
+        const auto& tc = entity.Get<Transform3DComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
@@ -180,7 +188,7 @@ void EntityRenderer::Draw(
 
     d_animatedShader.Bind();
     for (auto entity : scene.Entities().View<ModelComponent>()) {
-        const auto& tc = entity.Get<TransformComponent>();
+        const auto& tc = entity.Get<Transform3DComponent>();
         const auto& mc = entity.Get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
@@ -191,19 +199,15 @@ void EntityRenderer::Draw(
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        if (entity.Has<AnimationComponent>()) {
-            const auto& ac = entity.Get<AnimationComponent>();
+        if (entity.Has<MeshAnimationComponent>()) {
+            const auto& ac = entity.Get<MeshAnimationComponent>();
             auto poses = mesh->GetPose(ac.name, ac.time);
             
             int numBones = std::min(MAX_BONES, (int)poses.size());
             d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
         }
         else {
-            static const auto clear = []() {
-                std::array<glm::mat4, MAX_BONES> arr;
-                for (auto& x : arr) { x = glm::mat4(1.0); }
-                return arr;
-            }();
+            static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
             d_animatedShader.LoadMat4("u_bone_transforms", clear[0], MAX_BONES);
         }
 
@@ -214,14 +218,14 @@ void EntityRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void EntityRenderer::Draw(const ecs::Entity& camera, Scene& scene)
+void Scene3DRenderer::Draw(const ecs::Entity& camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);
     Draw(proj, view, scene);
 }
 
-void EntityRenderer::EnableParticles(ParticleManager* particleManager)
+void Scene3DRenderer::EnableParticles(ParticleManager* particleManager)
 {
     d_particleManager = particleManager;
 }

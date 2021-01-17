@@ -10,7 +10,10 @@
 
 namespace Sprocket {
 
-class EntityRenderer
+class Scene3DRenderer
+// Renders a scene as a 3D Scene. This makes use of components such as
+// Transform3DComponent and ModelComponent, and will ignore 2D components
+// such as Transform2DComponent and SpriteComponent.
 {
 public:
     // PBR Texture Slots
@@ -38,7 +41,7 @@ private:
     std::vector<InstanceData> d_instanceData;
 
 public:
-    EntityRenderer(AssetManager* assetManager);
+    Scene3DRenderer(AssetManager* assetManager);
 
     void Draw(const ecs::Entity& camera, Scene& scene);
     void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);

@@ -17,22 +17,42 @@ function AddNameComponent(entity, c)
 end
 
 
-TransformComponent = Class(function(self, position, scale)
+Transform2DComponent = Class(function(self, position, rotation, scale)
+    self.position = position
+    self.rotation = rotation
+    self.scale = scale
+end)
+
+function GetTransform2DComponent(entity)
+    x0, x1, x2, x3, x4 = Lua_GetTransform2DComponent(entity)
+    return Transform2DComponent(Vec3(x0, x1), x2, Vec3(x3, x4))
+end
+
+function SetTransform2DComponent(entity, c)
+    Lua_SetTransform2DComponent(entity, c.position, c.rotation, c.scale)
+end
+
+function AddTransform2DComponent(entity, c)
+    Lua_AddTransform2DComponent(entity, c.position, c.rotation, c.scale)
+end
+
+
+Transform3DComponent = Class(function(self, position, scale)
     self.position = position
     self.scale = scale
 end)
 
-function GetTransformComponent(entity)
-    x0, x1, x2, x3, x4, x5 = Lua_GetTransformComponent(entity)
-    return TransformComponent(Vec3(x0, x1, x2), Vec3(x3, x4, x5))
+function GetTransform3DComponent(entity)
+    x0, x1, x2, x3, x4, x5 = Lua_GetTransform3DComponent(entity)
+    return Transform3DComponent(Vec3(x0, x1, x2), Vec3(x3, x4, x5))
 end
 
-function SetTransformComponent(entity, c)
-    Lua_SetTransformComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
+function SetTransform3DComponent(entity, c)
+    Lua_SetTransform3DComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
 end
 
-function AddTransformComponent(entity, c)
-    Lua_AddTransformComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
+function AddTransform3DComponent(entity, c)
+    Lua_AddTransform3DComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
 end
 
 
@@ -161,22 +181,22 @@ function AddScriptComponent(entity, c)
 end
 
 
-CameraComponent = Class(function(self, fov, pitch)
+Camera3DComponent = Class(function(self, fov, pitch)
     self.fov = fov
     self.pitch = pitch
 end)
 
-function GetCameraComponent(entity)
-    x0, x1 = Lua_GetCameraComponent(entity)
-    return CameraComponent(x0, x1)
+function GetCamera3DComponent(entity)
+    x0, x1 = Lua_GetCamera3DComponent(entity)
+    return Camera3DComponent(x0, x1)
 end
 
-function SetCameraComponent(entity, c)
-    Lua_SetCameraComponent(entity, c.fov, c.pitch)
+function SetCamera3DComponent(entity, c)
+    Lua_SetCamera3DComponent(entity, c.fov, c.pitch)
 end
 
-function AddCameraComponent(entity, c)
-    Lua_AddCameraComponent(entity, c.fov, c.pitch)
+function AddCamera3DComponent(entity, c)
+    Lua_AddCamera3DComponent(entity, c.fov, c.pitch)
 end
 
 
@@ -318,23 +338,23 @@ function AddParticleComponent(entity, c)
 end
 
 
-AnimationComponent = Class(function(self, name, time, speed)
+MeshAnimationComponent = Class(function(self, name, time, speed)
     self.name = name
     self.time = time
     self.speed = speed
 end)
 
-function GetAnimationComponent(entity)
-    x0, x1, x2 = Lua_GetAnimationComponent(entity)
-    return AnimationComponent(x0, x1, x2)
+function GetMeshAnimationComponent(entity)
+    x0, x1, x2 = Lua_GetMeshAnimationComponent(entity)
+    return MeshAnimationComponent(x0, x1, x2)
 end
 
-function SetAnimationComponent(entity, c)
-    Lua_SetAnimationComponent(entity, c.name, c.time, c.speed)
+function SetMeshAnimationComponent(entity, c)
+    Lua_SetMeshAnimationComponent(entity, c.name, c.time, c.speed)
 end
 
-function AddAnimationComponent(entity, c)
-    Lua_AddAnimationComponent(entity, c.name, c.time, c.speed)
+function AddMeshAnimationComponent(entity, c)
+    Lua_AddMeshAnimationComponent(entity, c.name, c.time, c.speed)
 end
 
 

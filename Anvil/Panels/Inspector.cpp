@@ -14,7 +14,7 @@ namespace {
 
 void ShowGuizmo(
     Anvil& editor,
-    TransformComponent& c,
+    Transform3DComponent& c,
     ImGuizmo::OPERATION mode,
     ImGuizmo::MODE coords,
     glm::vec3* snap = nullptr)
@@ -73,18 +73,32 @@ void Inspector::Show(Anvil& editor)
         
     }
 
-    if (entity.Has<TransformComponent>()) {
-        auto& c = entity.Get<TransformComponent>();
-        if (ImGui::CollapsingHeader("Transform")) {
+    if (entity.Has<Transform2DComponent>()) {
+        auto& c = entity.Get<Transform2DComponent>();
+        if (ImGui::CollapsingHeader("Transform 2D")) {
+            ImGui::PushID(count++);
+            ImGui::DragFloat2("Position", &c.position.x, 0.1f);
+            ImGui::DragFloat("Rotation", &c.rotation, 0.01f);
+            ImGui::DragFloat2("Scale", &c.scale.x, 0.1f);
+            
+            if (ImGui::Button("Delete")) { entity.Remove<Transform2DComponent>(); }
+            ImGui::PopID();
+        }
+        
+    }
+
+    if (entity.Has<Transform3DComponent>()) {
+        auto& c = entity.Get<Transform3DComponent>();
+        if (ImGui::CollapsingHeader("Transform 3D")) {
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
-            ImGuiXtra::GuizmoSettings(d_mode, d_coords, d_useSnap, d_snap);
-            if (ImGui::Button("Delete")) { entity.Remove<TransformComponent>(); }
+            
+            if (ImGui::Button("Delete")) { entity.Remove<Transform3DComponent>(); }
             ImGui::PopID();
         }
-        ShowGuizmo(editor, c, d_mode, d_coords, d_useSnap ? &d_snap : nullptr);
+        
     }
 
     if (entity.Has<ModelComponent>()) {
@@ -179,15 +193,15 @@ void Inspector::Show(Anvil& editor)
         
     }
 
-    if (entity.Has<CameraComponent>()) {
-        auto& c = entity.Get<CameraComponent>();
-        if (ImGui::CollapsingHeader("Camera")) {
+    if (entity.Has<Camera3DComponent>()) {
+        auto& c = entity.Get<Camera3DComponent>();
+        if (ImGui::CollapsingHeader("Camera 3D")) {
             ImGui::PushID(count++);
             ;
             ImGui::DragFloat("FOV", &c.fov, 0.01f);
             ImGui::DragFloat("Pitch", &c.pitch, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.Remove<CameraComponent>(); }
+            if (ImGui::Button("Delete")) { entity.Remove<Camera3DComponent>(); }
             ImGui::PopID();
         }
         
@@ -291,15 +305,15 @@ void Inspector::Show(Anvil& editor)
         
     }
 
-    if (entity.Has<AnimationComponent>()) {
-        auto& c = entity.Get<AnimationComponent>();
-        if (ImGui::CollapsingHeader("Animation")) {
+    if (entity.Has<MeshAnimationComponent>()) {
+        auto& c = entity.Get<MeshAnimationComponent>();
+        if (ImGui::CollapsingHeader("Mesh Animation")) {
             ImGui::PushID(count++);
             ImGuiXtra::TextModifiable(c.name);
             ImGui::DragFloat("Time", &c.time, 0.01f);
             ImGui::DragFloat("Speed", &c.speed, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.Remove<AnimationComponent>(); }
+            if (ImGui::Button("Delete")) { entity.Remove<MeshAnimationComponent>(); }
             ImGui::PopID();
         }
         
@@ -320,9 +334,13 @@ void Inspector::Show(Anvil& editor)
             NameComponent c;
             entity.Add<NameComponent>(c);
         }
-        if (!entity.Has<TransformComponent>() && ImGui::Selectable("Transform")) {
-            TransformComponent c;
-            entity.Add<TransformComponent>(c);
+        if (!entity.Has<Transform2DComponent>() && ImGui::Selectable("Transform 2D")) {
+            Transform2DComponent c;
+            entity.Add<Transform2DComponent>(c);
+        }
+        if (!entity.Has<Transform3DComponent>() && ImGui::Selectable("Transform 3D")) {
+            Transform3DComponent c;
+            entity.Add<Transform3DComponent>(c);
         }
         if (!entity.Has<ModelComponent>() && ImGui::Selectable("Model")) {
             ModelComponent c;
@@ -348,9 +366,9 @@ void Inspector::Show(Anvil& editor)
             ScriptComponent c;
             entity.Add<ScriptComponent>(c);
         }
-        if (!entity.Has<CameraComponent>() && ImGui::Selectable("Camera")) {
-            CameraComponent c;
-            entity.Add<CameraComponent>(c);
+        if (!entity.Has<Camera3DComponent>() && ImGui::Selectable("Camera 3D")) {
+            Camera3DComponent c;
+            entity.Add<Camera3DComponent>(c);
         }
         if (!entity.Has<SelectComponent>() && ImGui::Selectable("Select")) {
             SelectComponent c;
@@ -380,9 +398,9 @@ void Inspector::Show(Anvil& editor)
             ParticleComponent c;
             entity.Add<ParticleComponent>(c);
         }
-        if (!entity.Has<AnimationComponent>() && ImGui::Selectable("Animation")) {
-            AnimationComponent c;
-            entity.Add<AnimationComponent>(c);
+        if (!entity.Has<MeshAnimationComponent>() && ImGui::Selectable("Mesh Animation")) {
+            MeshAnimationComponent c;
+            entity.Add<MeshAnimationComponent>(c);
         }
         ImGui::EndMenu();
     }

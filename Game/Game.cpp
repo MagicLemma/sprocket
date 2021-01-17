@@ -158,7 +158,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     }
 
     if (auto e = event.As<MouseButtonPressedEvent>()) {
-        auto& tr = d_camera.Get<TransformComponent>();
+        auto& tr = d_camera.Get<Transform3DComponent>();
         if (e->Mods() & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
@@ -177,7 +177,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
 
             if (e->Button() == Mouse::LEFT) {
                 std::queue<glm::vec3>().swap(path.markers);
-                auto pos = d_worker.Get<TransformComponent>().position;
+                auto pos = d_worker.Get<Transform3DComponent>().position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
                     path.markers = GenerateAStarPath(
                         pos,
@@ -243,7 +243,8 @@ void WorldLayer::OnRender()
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
+    auto& tc = d_camera.Get<Transform3DComponent>();
+    glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
     d_shadowMap.Draw(
         d_scene.Entities().Find<SunComponent>().Get<SunComponent>().direction,
         target,
@@ -449,7 +450,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     auto& name = newEntity.Add<NameComponent>();
     name.name = "Tree";
 
-    auto& tr = newEntity.Add<TransformComponent>();
+    auto& tr = newEntity.Add<Transform3DComponent>();
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
     float r = Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
@@ -474,7 +475,7 @@ void WorldLayer::AddRockBase(
     auto& n = newEntity.Add<NameComponent>();
     n.name = name;
 
-    auto& tr = newEntity.Add<TransformComponent>();
+    auto& tr = newEntity.Add<Transform3DComponent>();
     tr.position.y -= Random(0.0f, 0.5f);
     float randomRotation = glm::half_pi<float>() * Random(0, 3);
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});

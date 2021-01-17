@@ -35,9 +35,17 @@ void Save(const std::string& file, ecs::Registry* reg)
             out << YAML::Key << "name" << YAML::Value << c.name;
             out << YAML::EndMap;
         }
-        if (entity.Has<TransformComponent>()) {
-            const auto& c = entity.Get<TransformComponent>();
-            out << YAML::Key << "TransformComponent" << YAML::BeginMap;
+        if (entity.Has<Transform2DComponent>()) {
+            const auto& c = entity.Get<Transform2DComponent>();
+            out << YAML::Key << "Transform2DComponent" << YAML::BeginMap;
+            out << YAML::Key << "position" << YAML::Value << c.position;
+            out << YAML::Key << "rotation" << YAML::Value << c.rotation;
+            out << YAML::Key << "scale" << YAML::Value << c.scale;
+            out << YAML::EndMap;
+        }
+        if (entity.Has<Transform3DComponent>()) {
+            const auto& c = entity.Get<Transform3DComponent>();
+            out << YAML::Key << "Transform3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
             out << YAML::Key << "orientation" << YAML::Value << c.orientation;
             out << YAML::Key << "scale" << YAML::Value << c.scale;
@@ -97,9 +105,9 @@ void Save(const std::string& file, ecs::Registry* reg)
             out << YAML::Key << "active" << YAML::Value << c.active;
             out << YAML::EndMap;
         }
-        if (entity.Has<CameraComponent>()) {
-            const auto& c = entity.Get<CameraComponent>();
-            out << YAML::Key << "CameraComponent" << YAML::BeginMap;
+        if (entity.Has<Camera3DComponent>()) {
+            const auto& c = entity.Get<Camera3DComponent>();
+            out << YAML::Key << "Camera3DComponent" << YAML::BeginMap;
             out << YAML::Key << "fov" << YAML::Value << c.fov;
             out << YAML::Key << "pitch" << YAML::Value << c.pitch;
             out << YAML::EndMap;
@@ -156,9 +164,9 @@ void Save(const std::string& file, ecs::Registry* reg)
             out << YAML::Key << "life" << YAML::Value << c.life;
             out << YAML::EndMap;
         }
-        if (entity.Has<AnimationComponent>()) {
-            const auto& c = entity.Get<AnimationComponent>();
-            out << YAML::Key << "AnimationComponent" << YAML::BeginMap;
+        if (entity.Has<MeshAnimationComponent>()) {
+            const auto& c = entity.Get<MeshAnimationComponent>();
+            out << YAML::Key << "MeshAnimationComponent" << YAML::BeginMap;
             out << YAML::Key << "name" << YAML::Value << c.name;
             out << YAML::Key << "time" << YAML::Value << c.time;
             out << YAML::Key << "speed" << YAML::Value << c.speed;
@@ -205,12 +213,19 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.name = spec["name"] ? spec["name"].as<std::string>() : "Entity";
             e.Add<NameComponent>(c);
         }
-        if (auto spec = entity["TransformComponent"]) {
-            TransformComponent c;
+        if (auto spec = entity["Transform2DComponent"]) {
+            Transform2DComponent c;
+            c.position = spec["position"] ? spec["position"].as<glm::vec2>() : glm::vec2{0.0f, 0.0f};
+            c.rotation = spec["rotation"] ? spec["rotation"].as<float>() : 0.0f;
+            c.scale = spec["scale"] ? spec["scale"].as<glm::vec2>() : glm::vec2{1.0f, 1.0f};
+            e.Add<Transform2DComponent>(c);
+        }
+        if (auto spec = entity["Transform3DComponent"]) {
+            Transform3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.scale = spec["scale"] ? spec["scale"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
-            e.Add<TransformComponent>(c);
+            e.Add<Transform3DComponent>(c);
         }
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
@@ -260,11 +275,11 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.active = spec["active"] ? spec["active"].as<bool>() : true;
             e.Add<ScriptComponent>(c);
         }
-        if (auto spec = entity["CameraComponent"]) {
-            CameraComponent c;
+        if (auto spec = entity["Camera3DComponent"]) {
+            Camera3DComponent c;
             c.fov = spec["fov"] ? spec["fov"].as<float>() : 70.0f;
             c.pitch = spec["pitch"] ? spec["pitch"].as<float>() : 0.0f;
-            e.Add<CameraComponent>(c);
+            e.Add<Camera3DComponent>(c);
         }
         if (auto spec = entity["SelectComponent"]) {
             SelectComponent c;
@@ -311,12 +326,12 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;
             e.Add<ParticleComponent>(c);
         }
-        if (auto spec = entity["AnimationComponent"]) {
-            AnimationComponent c;
+        if (auto spec = entity["MeshAnimationComponent"]) {
+            MeshAnimationComponent c;
             c.name = spec["name"] ? spec["name"].as<std::string>() : "";
             c.time = spec["time"] ? spec["time"].as<float>() : 0.0f;
             c.speed = spec["speed"] ? spec["speed"].as<float>() : 1.0f;
-            e.Add<AnimationComponent>(c);
+            e.Add<MeshAnimationComponent>(c);
         }
     }
 }
@@ -330,8 +345,11 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
     if (entity.Has<NameComponent>()) {
         e.Add<NameComponent>(entity.Get<NameComponent>());
     }
-    if (entity.Has<TransformComponent>()) {
-        e.Add<TransformComponent>(entity.Get<TransformComponent>());
+    if (entity.Has<Transform2DComponent>()) {
+        e.Add<Transform2DComponent>(entity.Get<Transform2DComponent>());
+    }
+    if (entity.Has<Transform3DComponent>()) {
+        e.Add<Transform3DComponent>(entity.Get<Transform3DComponent>());
     }
     if (entity.Has<ModelComponent>()) {
         e.Add<ModelComponent>(entity.Get<ModelComponent>());
@@ -351,8 +369,8 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
     if (entity.Has<ScriptComponent>()) {
         e.Add<ScriptComponent>(entity.Get<ScriptComponent>());
     }
-    if (entity.Has<CameraComponent>()) {
-        e.Add<CameraComponent>(entity.Get<CameraComponent>());
+    if (entity.Has<Camera3DComponent>()) {
+        e.Add<Camera3DComponent>(entity.Get<Camera3DComponent>());
     }
     if (entity.Has<SelectComponent>()) {
         e.Add<SelectComponent>(entity.Get<SelectComponent>());
@@ -375,8 +393,8 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
     if (entity.Has<ParticleComponent>()) {
         e.Add<ParticleComponent>(entity.Get<ParticleComponent>());
     }
-    if (entity.Has<AnimationComponent>()) {
-        e.Add<AnimationComponent>(entity.Get<AnimationComponent>());
+    if (entity.Has<MeshAnimationComponent>()) {
+        e.Add<MeshAnimationComponent>(entity.Get<MeshAnimationComponent>());
     }
     return e;
 }

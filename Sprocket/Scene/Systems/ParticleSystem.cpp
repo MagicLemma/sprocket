@@ -12,7 +12,7 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 void ParticleSystem::OnUpdate(Scene& scene, double dt)
 {
     for (auto entity : scene.Entities().View<ParticleComponent>()) {
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& pc = entity.Get<ParticleComponent>();
 
         pc.accumulator += dt;

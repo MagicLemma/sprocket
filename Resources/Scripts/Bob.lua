@@ -4,7 +4,7 @@ end
 
 function OnUpdate(entity, dt)
     TIMER = TIMER + dt
-    local pos = GetTransformComponent(entity)
+    local pos = GetTransform3DComponent(entity)
     pos.position.y = 2 + math.sin(TIMER)
-    SetTransformComponent(entity, pos)
+    SetTransform3DComponent(entity, pos)
 end

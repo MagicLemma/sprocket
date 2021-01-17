@@ -21,9 +21,9 @@ function OnUpdate(entity, dt)
     
     YAW = YAW - dx * rotateSpeed
 
-    local camera = GetCameraComponent(entity)
+    local camera = GetCamera3DComponent(entity)
     camera.pitch = Clamp(camera.pitch - rotateSpeed * dy, math.rad(-89), math.rad(89))
-    SetCameraComponent(entity, camera)
+    SetCamera3DComponent(entity, camera)
 
     MakeUpright(entity, YAW)
 
@@ -55,10 +55,10 @@ function OnUpdate(entity, dt)
     physics.force = physics.force + (10 * dv) -- TODO: Replace 10 with mass
     SetRigidBody3DComponent(entity, physics)
 
-    local transform = GetTransformComponent(entity)
+    local transform = GetTransform3DComponent(entity)
     if transform.position.y < -1 then
         transform.position = SPAWN_POINT
-        SetTransformComponent(entity, transform)
+        SetTransform3DComponent(entity, transform)
     end
 
 end
@@ -71,11 +71,11 @@ function OnMouseButtonPressedEvent(consumed, button, action, mods)
     local newEntity = NewEntity()
 
     local dir = GetForwardsDir(ENTITY)
-    local pos = GetTransformComponent(ENTITY).position
+    local pos = GetTransform3DComponent(ENTITY).position
     local vel = GetRigidBody3DComponent(ENTITY).velocity
     
-    local tc = TransformComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
-    AddTransformComponent(newEntity, tc)
+    local tc = Transform3DComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
+    AddTransform3DComponent(newEntity, tc)
 
     --local mc = ModelComponent(
     --    "Resources/Models/Sphere.obj", 

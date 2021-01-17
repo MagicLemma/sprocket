@@ -23,7 +23,7 @@ class WorldLayer
     Sprocket::ecs::Entity d_worker;
     
     // RENDERING
-    Sprocket::EntityRenderer  d_entityRenderer;
+    Sprocket::Scene3DRenderer  d_entityRenderer;
     Sprocket::PostProcessor   d_postProcessor;
 
     // Additional world setup

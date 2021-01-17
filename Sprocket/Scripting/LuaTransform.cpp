@@ -39,7 +39,7 @@ int SetLookAt(lua_State* L)
     float ty = (float)lua_tonumber(L, 6);
     float tz = (float)lua_tonumber(L, 7);
 
-    auto& tr = entity.Get<TransformComponent>();
+    auto& tr = entity.Get<Transform3DComponent>();
     tr.position = {px, py, pz};
     tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, {tx, ty, tz}, {0.0, 1.0, 0.0})));
     return 0;
@@ -50,7 +50,7 @@ int RotateY(lua_State* L)
     if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
     ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    auto& tr = entity.Get<TransformComponent>();
+    auto& tr = entity.Get<Transform3DComponent>();
 
     float yaw = (float)lua_tonumber(L, 2);
     tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
@@ -62,11 +62,11 @@ int GetForwardsDir(lua_State* L)
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    auto& tr = entity.Get<TransformComponent>();
+    auto& tr = entity.Get<Transform3DComponent>();
     auto o = tr.orientation;
     
-    if (entity.Has<CameraComponent>()) {
-        auto pitch = entity.Get<CameraComponent>().pitch;
+    if (entity.Has<Camera3DComponent>()) {
+        auto pitch = entity.Get<Camera3DComponent>().pitch;
         o = glm::rotate(o, pitch, {1, 0, 0});
     }
 
@@ -83,7 +83,7 @@ int GetRightDir(lua_State* L)
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
     ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    auto& tr = entity.Get<TransformComponent>();
+    auto& tr = entity.Get<Transform3DComponent>();
     auto right = Maths::Right(tr.orientation);
     lua_pushnumber(L, right.x);
     lua_pushnumber(L, right.y);
@@ -95,7 +95,7 @@ int MakeUpright(lua_State* L)
 {
     if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
     ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    auto& tr = entity.Get<TransformComponent>();
+    auto& tr = entity.Get<Transform3DComponent>();
     float yaw = (float)lua_tonumber(L, 2);
     tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
     return 0;

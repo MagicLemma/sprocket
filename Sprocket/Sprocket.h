@@ -29,7 +29,7 @@
 #include "Scene/Systems/AnimationSystem.h"
 #include "Scene/Systems/CameraSystem.h"
 #include "Scene/Systems/ParticleSystem.h"
-#include "Scene/Systems/PhysicsEngine.h"
+#include "Scene/Systems/PhysicsEngine3D.h"
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/PathFollower.h"
 #include "Scene/Systems/ScriptRunner.h"
@@ -80,7 +80,7 @@
 #include "Graphics/PostProcessing/Negative.h"
 
 #include "Graphics/Rendering/ColliderRenderer.h"
-#include "Graphics/Rendering/EntityRenderer.h"
+#include "Graphics/Rendering/Scene3DRenderer.h"
 #include "Graphics/Rendering/SkyboxRenderer.h"
 
 // AUDIO

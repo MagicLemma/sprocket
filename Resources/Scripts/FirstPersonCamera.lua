@@ -8,7 +8,7 @@ function OnUpdate(entity, dt)
     local speed = 10 * dt
     local r = GetRightDir(entity)
     
-    local transform = GetTransformComponent(entity)
+    local transform = GetTransform3DComponent(entity)
     local new_pos = transform.position
     if IsKeyDown(Keyboard.W) then new_pos = new_pos + speed * f end
     if IsKeyDown(Keyboard.S) then new_pos = new_pos - speed * f end
@@ -17,7 +17,7 @@ function OnUpdate(entity, dt)
     if IsKeyDown(Keyboard.SPACE) then new_pos.y = new_pos.y + speed end
     if IsKeyDown(Keyboard.LSHIFT) then new_pos.y = new_pos.y - speed end
     transform.position = new_pos
-    SetTransformComponent(entity, transform)
+    SetTransform3DComponent(entity, transform)
 
     local dx, dy = GetMouseOffset()
     RotateY(entity, 10 * dx)

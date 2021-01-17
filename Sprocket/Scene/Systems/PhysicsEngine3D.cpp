@@ -1,4 +1,4 @@
-#include "PhysicsEngine.h"
+#include "PhysicsEngine3D.h"
 #include "Log.h"
 #include "Scene.h"
 #include "Components.h"
@@ -52,7 +52,7 @@ rp3d::Transform Convert(const glm::vec3& position, const glm::quat& orientation)
     return t;
 }
 
-rp3d::Transform Convert(const TransformComponent& transform)
+rp3d::Transform Convert(const Transform3DComponent& transform)
 {
     return Convert(transform.position, transform.orientation);
 }
@@ -97,7 +97,7 @@ struct EntityData
     rp3d::Collider* capsuleCollider = nullptr;
 };
 
-struct PhysicsEngineImpl
+struct PhysicsEngine3DImpl
 {
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
@@ -106,7 +106,7 @@ struct PhysicsEngineImpl
 
     std::unordered_map<ecs::Entity, EntityData> entityData;
 
-    PhysicsEngineImpl(const glm::vec3& gravity)
+    PhysicsEngine3DImpl(const glm::vec3& gravity)
     {
         rp3d::PhysicsWorld::WorldSettings settings;
         settings.gravity = Convert(gravity);
@@ -114,7 +114,7 @@ struct PhysicsEngineImpl
         world = pc.createPhysicsWorld(settings);
     }
 
-    ~PhysicsEngineImpl()
+    ~PhysicsEngine3DImpl()
     {
         for (auto& [entity, data] : entityData) {
             world->destroyRigidBody(data.body);
@@ -123,16 +123,38 @@ struct PhysicsEngineImpl
     }
 };
 
-PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
-    : d_impl(std::make_unique<PhysicsEngineImpl>(gravity))
+namespace {
+
+bool IsOnFloor(const PhysicsEngine3DImpl& impl, ecs::Entity entity)
+{
+    // Get the point at the bottom of the rigid body.
+    auto aabb = impl.entityData.at(entity).body->getAABB();
+    rp3d::Vector3 playerBase = aabb.getCenter();
+    playerBase.y = aabb.getMin().y;
+
+    // Raycast down from this point. We actually raycast from slightly
+    // higher which works more consistently for some reason. TODO: Find
+    // out why
+    rp3d::Vector3 up(0.0f, 1.0f, 0.0f);
+    float delta = 0.1f;
+    rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
+    RaycastCB cb;
+    impl.world->raycast(ray, &cb);
+    return cb.GetEntity() != ecs::Null;
+}
+
+}
+
+PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
+    : d_impl(std::make_unique<PhysicsEngine3DImpl>(gravity))
 {
 }
 
-void PhysicsEngine::OnStartup(Scene& scene)
+void PhysicsEngine3D::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<RigidBody3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
-        auto& tc = entity.Get<TransformComponent>();
+        assert(entity.Has<Transform3DComponent>());
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& rc = entity.Get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[entity];
@@ -152,10 +174,10 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 
     scene.Entities().OnAdd<BoxCollider3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
+        assert(entity.Has<Transform3DComponent>());
         assert(entity.Has<RigidBody3DComponent>());
 
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& bc = entity.Get<BoxCollider3DComponent>();
         auto& entry = d_impl->entityData[entity];
 
@@ -174,10 +196,10 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 
     scene.Entities().OnAdd<SphereCollider3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
+        assert(entity.Has<Transform3DComponent>());
         assert(entity.Has<RigidBody3DComponent>());
 
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& sc = entity.Get<SphereCollider3DComponent>();
         auto& entry = d_impl->entityData[entity];
         
@@ -194,10 +216,10 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 
     scene.Entities().OnAdd<CapsuleCollider3DComponent>([&](ecs::Entity entity) {
-        assert(entity.Has<TransformComponent>());
+        assert(entity.Has<Transform3DComponent>());
         assert(entity.Has<RigidBody3DComponent>());
 
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& cc = entity.Get<CapsuleCollider3DComponent>();
         auto& entry = d_impl->entityData[entity];
         
@@ -214,13 +236,13 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 }
 
-void PhysicsEngine::OnUpdate(Scene& scene, double dt)
+void PhysicsEngine3D::OnUpdate(Scene& scene, double dt)
 {
     // Pre Update
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
     for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
-        const auto& tc = entity.Get<TransformComponent>();
+        const auto& tc = entity.Get<Transform3DComponent>();
         const auto& physics = entity.Get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[entity];
@@ -265,7 +287,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
 
     // Post Update
     for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
-        auto& tc = entity.Get<TransformComponent>();
+        auto& tc = entity.Get<Transform3DComponent>();
         auto& rc = entity.Get<RigidBody3DComponent>();
         const rp3d::RigidBody* body = d_impl->entityData[entity].body;
 
@@ -274,11 +296,11 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
         rc.velocity = Convert(body->getLinearVelocity());
 
         rc.force = {0.0, 0.0, 0.0};
-        rc.onFloor = IsOnFloor(entity);
+        rc.onFloor = IsOnFloor(*d_impl, entity);
     }
 }
 
-ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
+ecs::Entity PhysicsEngine3D::Raycast(const glm::vec3& base,
                                    const glm::vec3& direction)
 {
     glm::vec3 d = glm::normalize(direction);
@@ -291,24 +313,6 @@ ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
     RaycastCB cb;
     d_impl->world->raycast(ray, &cb);
     return cb.GetEntity();
-}
-
-bool PhysicsEngine::IsOnFloor(ecs::Entity entity) const
-{
-    // Get the point at the bottom of the rigid body.
-    auto aabb = d_impl->entityData[entity].body->getAABB();
-    rp3d::Vector3 playerBase = aabb.getCenter();
-    playerBase.y = aabb.getMin().y;
-
-    // Raycast down from this point. We actually raycast from slightly
-    // higher which works more consistently for some reason. TODO: Find
-    // out why
-    rp3d::Vector3 up(0.0f, 1.0f, 0.0f);
-    float delta = 0.1f;
-    rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
-    RaycastCB cb;
-    d_impl->world->raycast(ray, &cb);
-    return cb.GetEntity() != ecs::Null;
 }
 
 }
