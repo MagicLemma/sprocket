@@ -29,7 +29,7 @@
 #include "Scene/Systems/AnimationSystem.h"
 #include "Scene/Systems/CameraSystem.h"
 #include "Scene/Systems/ParticleSystem.h"
-#include "Scene/Systems/PhysicsEngine.h"
+#include "Scene/Systems/PhysicsEngine3D.h"
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/PathFollower.h"
 #include "Scene/Systems/ScriptRunner.h"

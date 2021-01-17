@@ -1,4 +1,4 @@
-#include "PhysicsEngine.h"
+#include "PhysicsEngine3D.h"
 #include "Log.h"
 #include "Scene.h"
 #include "Components.h"
@@ -97,7 +97,7 @@ struct EntityData
     rp3d::Collider* capsuleCollider = nullptr;
 };
 
-struct PhysicsEngineImpl
+struct PhysicsEngine3DImpl
 {
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
@@ -106,7 +106,7 @@ struct PhysicsEngineImpl
 
     std::unordered_map<ecs::Entity, EntityData> entityData;
 
-    PhysicsEngineImpl(const glm::vec3& gravity)
+    PhysicsEngine3DImpl(const glm::vec3& gravity)
     {
         rp3d::PhysicsWorld::WorldSettings settings;
         settings.gravity = Convert(gravity);
@@ -114,7 +114,7 @@ struct PhysicsEngineImpl
         world = pc.createPhysicsWorld(settings);
     }
 
-    ~PhysicsEngineImpl()
+    ~PhysicsEngine3DImpl()
     {
         for (auto& [entity, data] : entityData) {
             world->destroyRigidBody(data.body);
@@ -123,12 +123,12 @@ struct PhysicsEngineImpl
     }
 };
 
-PhysicsEngine::PhysicsEngine(const glm::vec3& gravity)
-    : d_impl(std::make_unique<PhysicsEngineImpl>(gravity))
+PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
+    : d_impl(std::make_unique<PhysicsEngine3DImpl>(gravity))
 {
 }
 
-void PhysicsEngine::OnStartup(Scene& scene)
+void PhysicsEngine3D::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<RigidBody3DComponent>([&](ecs::Entity entity) {
         assert(entity.Has<Transform3DComponent>());
@@ -214,7 +214,7 @@ void PhysicsEngine::OnStartup(Scene& scene)
     });
 }
 
-void PhysicsEngine::OnUpdate(Scene& scene, double dt)
+void PhysicsEngine3D::OnUpdate(Scene& scene, double dt)
 {
     // Pre Update
     // Do this even if not running so that the physics engine stays up
@@ -278,7 +278,7 @@ void PhysicsEngine::OnUpdate(Scene& scene, double dt)
     }
 }
 
-ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
+ecs::Entity PhysicsEngine3D::Raycast(const glm::vec3& base,
                                    const glm::vec3& direction)
 {
     glm::vec3 d = glm::normalize(direction);
@@ -293,7 +293,7 @@ ecs::Entity PhysicsEngine::Raycast(const glm::vec3& base,
     return cb.GetEntity();
 }
 
-bool PhysicsEngine::IsOnFloor(ecs::Entity entity) const
+bool PhysicsEngine3D::IsOnFloor(ecs::Entity entity) const
 {
     // Get the point at the bottom of the rigid body.
     auto aabb = d_impl->entityData[entity].body->getAABB();

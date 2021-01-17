@@ -25,7 +25,7 @@ Runtime::Runtime(Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
-    d_scene.Add<PhysicsEngine>();
+    d_scene.Add<PhysicsEngine3D>();
     d_scene.Add<ScriptRunner>(d_window);
     d_scene.Add<CameraSystem>(d_window->AspectRatio());
     d_scene.Add<ParticleSystem>(&d_particleManager);

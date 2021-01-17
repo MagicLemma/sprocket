@@ -195,7 +195,7 @@ void Anvil::OnRender()
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(); 
-                d_activeScene->Add<PhysicsEngine>();
+                d_activeScene->Add<PhysicsEngine3D>();
                 d_activeScene->Add<CameraSystem>(d_window->AspectRatio());
                 d_activeScene->Add<ScriptRunner>(d_window);
                 d_activeScene->Add<ParticleSystem>(&d_particleManager);
