@@ -123,6 +123,28 @@ struct PhysicsEngine3DImpl
     }
 };
 
+namespace {
+
+bool IsOnFloor(const PhysicsEngine3DImpl& impl, ecs::Entity entity)
+{
+    // Get the point at the bottom of the rigid body.
+    auto aabb = impl.entityData.at(entity).body->getAABB();
+    rp3d::Vector3 playerBase = aabb.getCenter();
+    playerBase.y = aabb.getMin().y;
+
+    // Raycast down from this point. We actually raycast from slightly
+    // higher which works more consistently for some reason. TODO: Find
+    // out why
+    rp3d::Vector3 up(0.0f, 1.0f, 0.0f);
+    float delta = 0.1f;
+    rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
+    RaycastCB cb;
+    impl.world->raycast(ray, &cb);
+    return cb.GetEntity() != ecs::Null;
+}
+
+}
+
 PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
     : d_impl(std::make_unique<PhysicsEngine3DImpl>(gravity))
 {
@@ -274,7 +296,7 @@ void PhysicsEngine3D::OnUpdate(Scene& scene, double dt)
         rc.velocity = Convert(body->getLinearVelocity());
 
         rc.force = {0.0, 0.0, 0.0};
-        rc.onFloor = IsOnFloor(entity);
+        rc.onFloor = IsOnFloor(*d_impl, entity);
     }
 }
 
@@ -291,24 +313,6 @@ ecs::Entity PhysicsEngine3D::Raycast(const glm::vec3& base,
     RaycastCB cb;
     d_impl->world->raycast(ray, &cb);
     return cb.GetEntity();
-}
-
-bool PhysicsEngine3D::IsOnFloor(ecs::Entity entity) const
-{
-    // Get the point at the bottom of the rigid body.
-    auto aabb = d_impl->entityData[entity].body->getAABB();
-    rp3d::Vector3 playerBase = aabb.getCenter();
-    playerBase.y = aabb.getMin().y;
-
-    // Raycast down from this point. We actually raycast from slightly
-    // higher which works more consistently for some reason. TODO: Find
-    // out why
-    rp3d::Vector3 up(0.0f, 1.0f, 0.0f);
-    float delta = 0.1f;
-    rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
-    RaycastCB cb;
-    d_impl->world->raycast(ray, &cb);
-    return cb.GetEntity() != ecs::Null;
 }
 
 }

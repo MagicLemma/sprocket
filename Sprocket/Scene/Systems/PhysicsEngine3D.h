@@ -16,10 +16,6 @@ class PhysicsEngine3D : public EntitySystem
 
     std::unique_ptr<PhysicsEngine3DImpl> d_impl;
 
-    bool IsOnFloor(ecs::Entity entity) const; 
-        // Returns true if the given Entity is colliding with another
-        // Entity directly below it. TODO: Make this more general.
-
 public:
     PhysicsEngine3D(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
     ~PhysicsEngine3D() = default;
