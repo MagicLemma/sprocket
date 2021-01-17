@@ -9,8 +9,16 @@
 #include "Types.h"
 #include "HashPair.h"
 
+#include <algorithm>
+
 namespace Sprocket {
 namespace {
+
+std::array<glm::mat4, EntityRenderer::MAX_BONES> DefaultBoneTransforms() {
+    std::array<glm::mat4, EntityRenderer::MAX_BONES> arr;
+    std::fill(arr.begin(), arr.end(), glm::mat4(1.0));
+    return arr;
+};
 
 std::unique_ptr<Buffer> GetInstanceBuffer()
 {
@@ -199,11 +207,7 @@ void EntityRenderer::Draw(
             d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
         }
         else {
-            static const auto clear = []() {
-                std::array<glm::mat4, MAX_BONES> arr;
-                for (auto& x : arr) { x = glm::mat4(1.0); }
-                return arr;
-            }();
+            static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
             d_animatedShader.LoadMat4("u_bone_transforms", clear[0], MAX_BONES);
         }
 

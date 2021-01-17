@@ -92,6 +92,7 @@
         "matrixfunctions": "cpp",
         "polynomials": "cpp",
         "adolcforward": "cpp",
-        "clocale": "cpp"
+        "clocale": "cpp",
+        "ranges": "cpp"
     }
 }
