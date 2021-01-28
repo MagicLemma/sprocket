@@ -112,7 +112,7 @@ void DevUI::OnEvent(Event& event)
 
     else if (auto e = event.As<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->XPos(), e->YPos());
-        if (ImGui::IsAnyWindowHovered()) { e->Consume(); }
+        if (ImGui::IsAnyItemHovered()) { e->Consume(); }
     }
 
     else if (auto e = event.As<MouseScrolledEvent>()) {
