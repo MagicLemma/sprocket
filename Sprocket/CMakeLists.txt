@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(Sprocket)
-add_subdirectory(Vendor/reactphysics3d)
+
+add_subdirectory(Vendor)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
@@ -15,7 +16,6 @@ find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
 find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
 find_package(yaml-cpp CONFIG REQUIRED)
@@ -102,19 +102,16 @@ add_library(Sprocket STATIC
             Scripting/LuaComponents.cpp
             Scripting/LuaGlobals.cpp
             Scripting/LuaTransform.cpp
-            Scripting/LuaInput.cpp
-            
-            Vendor/ImGuizmo/ImGuizmo.cpp)
+            Scripting/LuaInput.cpp)
 
 target_link_libraries(Sprocket PUBLIC
+                      SprocketVendor
                       glfw
                       glad::glad
                       glm
                       spdlog::spdlog
                       freetype
-                      reactphysics3d
                       assimp::assimp
-                      imgui::imgui
                       sfml-system
                       sfml-audio
                       yaml-cpp
@@ -141,9 +138,6 @@ target_include_directories(Sprocket PUBLIC
                            ./Scripting
                            ./UI
                            ./UI/Font
-                           ./Vendor/ImGuizmo
-                           ./Vendor/ftgl
-                           ./Vendor/cpp-itertools
                            ${STB_INCLUDE_DIR}
                            ${LUA_INCLUDE_DIR}
                            ${SFML_INCLUDE_DIR})
