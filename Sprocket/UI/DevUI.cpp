@@ -20,6 +20,7 @@ void SetBackendFlags()
     ImGuiIO& io = ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
 void SetClipboardCallbacks(Window* window)
@@ -164,8 +165,7 @@ void DevUI::OnUpdate(double dt)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;
-    io.DisplaySize = ImVec2((float)d_window->Width(),
-                            (float)d_window->Height());
+    io.DisplaySize = ImVec2((float)d_window->Width(), (float)d_window->Height());
     
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }

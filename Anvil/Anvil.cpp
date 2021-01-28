@@ -138,22 +138,18 @@ void Anvil::OnRender()
 
     d_ui.StartFrame();
 
-    auto& style = ImGui::GetStyle();
-    style.WindowRounding = 0.0f;
-
     ImGuiWindowFlags flags = 
         ImGuiWindowFlags_NoNav |
         ImGuiWindowFlags_NoNavFocus |
-        ImGuiWindowFlags_NoNavInputs |
-        ImGuiWindowFlags_NoResize |
-        ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoResize;
-    if (d_playingGame) {
-        flags |= ImGuiWindowFlags_NoDecoration;
-    }
+        ImGuiWindowFlags_NoNavInputs;
 
     bool open = true;
     float menuBarHeight = 19.0f;
+
+    bool show = true;
+    //ImGui::ShowDemoWindow(&show);
+
+    ImGui::DockSpaceOverViewport();
 
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
@@ -215,10 +211,7 @@ void Anvil::OnRender()
     float h = (float)d_window->Height();
 
     // VIEWPORT
-    ImGui::SetNextWindowPos({0.0, menuBarHeight});
-    ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
+    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
@@ -226,31 +219,16 @@ void Anvil::OnRender()
         ImGuiXtra::SetGuizmo();
         ImGui::End();
     }
-    ImGui::PopStyleVar();
 
     // INSPECTOR
-    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight + (h - menuBarHeight)/2.0f});
-    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
     if (ImGui::Begin("Inspector", &open, flags)) {
         d_inspector.Show(*this);
         ImGui::End();
     }
 
-    // BOTTOM PANEL
-    ImGui::SetNextWindowPos({0.0, 0.8f * h + menuBarHeight});
-    ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
-    if (ImGui::Begin("BottomPanel", &open, flags)) {
-        ImGui::Checkbox("Show Colliders", &d_showColliders);
-        ImGui::Text(fmt::format("Loading Meshes: {}", d_assetManager.IsLoadingMeshes() ? "Yes" : "No").c_str());
-        ImGui::Text(fmt::format("Loading Textures: {}", d_assetManager.IsLoadingTextures() ? "Yes" : "No").c_str());
-        ImGui::End();
-    }
-
     // EXPLORER
-    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
-    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
     static std::string search;
-    if (ImGui::Begin("Explorer", &open, flags | ImGuiWindowFlags_NoDecoration)) {
+    if (ImGui::Begin("Explorer", &open, flags)) {
         ImGuiXtra::TextModifiable(search);
         ImGui::SameLine();
         if (ImGui::Button("X")) {
