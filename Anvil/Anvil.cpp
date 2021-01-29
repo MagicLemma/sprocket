@@ -119,19 +119,19 @@ void Anvil::OnRender()
         d_viewport.SetScreenSize(d_viewportSize.x, d_viewportSize.y);
     }
 
+    float aspectRatio = (float)d_viewport.Width()/(float)d_viewport.Height();
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
+
     d_entityRenderer.EnableParticles(&d_particleManager);
     d_viewport.Bind();
     if (d_playingGame) {
-        d_entityRenderer.Draw(d_runtimeCamera, *d_activeScene);
-        d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
+        d_entityRenderer.Draw(proj, MakeView(d_runtimeCamera), *d_activeScene);
+        d_skyboxRenderer.Draw(d_skybox, proj, MakeView(d_runtimeCamera));
         if (d_showColliders) {
-            d_colliderRenderer.Draw(d_runtimeCamera, *d_activeScene);
+            d_colliderRenderer.Draw(proj, MakeView(d_runtimeCamera), *d_activeScene);
         }
     }
     else {
-        float aspectRatio = (float)d_viewport.Width()/(float)d_viewport.Height();
-        glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
-
         d_entityRenderer.Draw(proj, d_editorCamera.View(), *d_activeScene);
         d_skyboxRenderer.Draw(d_skybox, proj, d_editorCamera.View());
         if (d_showColliders) {
