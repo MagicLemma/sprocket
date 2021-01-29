@@ -40,4 +40,10 @@ glm::ivec4 Viewport::Current()
     return original;
 }
 
+float Viewport::CurrentAspectRatio()
+{
+    glm::ivec4 view = Current();
+    return (float)view.z/(float)view.w; // width / height
+}
+
 }

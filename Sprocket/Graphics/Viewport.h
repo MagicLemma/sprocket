@@ -25,7 +25,11 @@ public:
     void Set(int x, int y, int width, int height);
     void Restore();
 
-    static glm::ivec4 Current(); // Returns the current dimensions of the viewport
+    // Returns the current dimensions of the viewport
+    static glm::ivec4 Current();
+
+    // Returns the current aspect ratio of the viewport
+    static float CurrentAspectRatio();
 };
 
 }

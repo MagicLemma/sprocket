@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Log.h"
 #include "Components.h"
+#include "Viewport.h"
 
 namespace Sprocket {
 
@@ -23,11 +24,13 @@ glm::mat4 MakeView(const ecs::Entity& entity)
 
 glm::mat4 MakeProj(const ecs::Entity& entity)
 {
-    if (!entity.Has<Camera3DComponent>()) {
-        return glm::mat4(1.0);
+    float fov = glm::radians(70.0f);
+
+    if (entity.Has<Camera3DComponent>()) {
+        fov = glm::radians(entity.Get<Camera3DComponent>().fov);
     }
 
-    return entity.Get<Camera3DComponent>().projection;
+    return glm::perspective(fov, Viewport::CurrentAspectRatio(), 0.01f, 1000.0f);
 }
 
 }
