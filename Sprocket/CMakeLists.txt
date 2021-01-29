@@ -72,6 +72,7 @@ add_library(Sprocket STATIC
             Graphics/ShadowMap.cpp
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp
+            Graphics/Viewport.cpp
 
             Graphics/Rendering/ColliderRenderer.cpp
             Graphics/Rendering/Scene3DRenderer.cpp

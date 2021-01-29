@@ -24,6 +24,7 @@ class Anvil
     ParticleManager d_particleManager;
 
     FrameBuffer d_viewport;
+    glm::ivec2 d_viewportSize;
 
     DevUI d_ui;
     bool d_isViewportHovered = false;

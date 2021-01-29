@@ -1,6 +1,9 @@
 #pragma once
 #include "Types.h"
 #include "Texture.h"
+#include "Viewport.h"
+
+#include <optional>
 
 namespace Sprocket {
 
@@ -14,6 +17,8 @@ class FrameBuffer
     int d_width;
     int d_height;
 
+    Viewport d_viewport;
+
     FrameBuffer(const FrameBuffer&) = delete;
     FrameBuffer& operator=(const FrameBuffer&) = delete;
 
@@ -21,8 +26,8 @@ public:
     FrameBuffer(int width, int height);
     ~FrameBuffer();
 
-    void Bind() const;
-    void Unbind() const;
+    void Bind();
+    void Unbind();
         // Bind/unbind for writing. Any render calls while this is
         // bound for writing will cause objects to be rendered onto
         // this objects texture.
@@ -41,6 +46,7 @@ public:
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }
+    glm::ivec2 Size() const { return {Width(), Height()}; }
 };
 
 }

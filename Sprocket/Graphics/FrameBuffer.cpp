@@ -20,16 +20,19 @@ FrameBuffer::~FrameBuffer()
     glDeleteFramebuffers(1, &d_fbo);
 }
 
-void FrameBuffer::Bind() const
+void FrameBuffer::Bind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
+
+    d_viewport.Set(0, 0, d_width, d_height);
 }
 
-void FrameBuffer::Unbind() const
+void FrameBuffer::Unbind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    d_viewport.Restore();
 }
 
 void FrameBuffer::BindTexture() const

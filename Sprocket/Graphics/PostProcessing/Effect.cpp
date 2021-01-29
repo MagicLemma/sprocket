@@ -13,12 +13,12 @@ Effect::Effect(int width, int height,
 {
 }
 
-void Effect::BindForWrite() const
+void Effect::BindForWrite()
 {
     d_frameBuffer.Bind();
 }
 
-void Effect::UnbindForWrite() const
+void Effect::UnbindForWrite()
 {
     d_frameBuffer.Unbind();
 }

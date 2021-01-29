@@ -113,6 +113,12 @@ void Anvil::OnUpdate(double dt)
 
 void Anvil::OnRender()
 {
+    // If the size of the viewport has changed since the previous frame, recreate
+    // the framebuffer.
+    if (d_viewportSize != d_viewport.Size() && d_viewportSize.x > 0 && d_viewportSize.y > 0) {
+        d_viewport.SetScreenSize(d_viewportSize.x, d_viewportSize.y);
+    }
+
     d_entityRenderer.EnableParticles(&d_particleManager);
     d_viewport.Bind();
     if (d_playingGame) {
@@ -124,7 +130,6 @@ void Anvil::OnRender()
     }
     else {
         float aspectRatio = (float)d_viewport.Width()/(float)d_viewport.Height();
-        SPKT_LOG_INFO("Width {}, Height {}, Aspect Ratio {}", d_viewport.Width(), d_viewport.Height(), aspectRatio);
         glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
 
         d_entityRenderer.Draw(proj, d_editorCamera.View(), *d_activeScene);
@@ -201,18 +206,11 @@ void Anvil::OnRender()
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
+
         ImVec2 size = ImGui::GetContentRegionAvail();
-        glm::ivec2 viewportSize = glm::ivec2{size.x, size.y};
+        d_viewportSize = glm::ivec2{size.x, size.y};
 
         ImGuiXtra::Image(d_viewport.GetTexture());
-        //const auto* texture = d_viewport.GetTexture();
-        //ImGui::Image((void*)texture->Id(), ImVec2{(float)texture->Width(), (float)texture->Height()}, ImVec2{0, 1}, ImVec2{1, 0});
-
-        if (viewportSize != glm::ivec2{d_viewport.Width(), d_viewport.Height()}) {
-            d_viewport.SetScreenSize(viewportSize.x, viewportSize.y);
-            SPKT_LOG_INFO("Resizing viewport to {} {}", viewportSize.x, viewportSize.y);
-        }
-
         ImGuiXtra::SetGuizmo();
         ImGui::End();
     }
