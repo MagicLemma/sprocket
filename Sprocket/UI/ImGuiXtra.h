@@ -38,6 +38,9 @@ void Image(const Texture* image,
 // aspect ratio. The size is the height in pixels.
 void Image(const Texture* image, float size);
 
+// An even more simple version where the size is the native size of the image.
+void Image(const Texture* image);
+
 // Adds the Gizmo to the current panels draw list
 void SetGuizmo();
 

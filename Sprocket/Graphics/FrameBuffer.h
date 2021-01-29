@@ -30,6 +30,9 @@ public:
     void BindTexture() const;
     void UnbindTexture() const;
 
+    // An alias for GetColour. TODO: Make FrameBuffer more general
+    Texture* GetTexture() const { return GetColour(); }
+
     Texture* GetColour() const { return d_colour.get(); }
     Texture* GetDepth() const { return d_depth.get(); }
 

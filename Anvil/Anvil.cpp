@@ -56,10 +56,6 @@ Anvil::Anvil(Window* window)
 
 void Anvil::OnEvent(Event& event)
 {
-    if (auto e = event.As<WindowResizeEvent>()) {
-        d_viewport.SetScreenSize(e->Width(), e->Height());
-    }
-
     if (auto e = event.As<KeyboardButtonPressedEvent>()) {
         if (e->Key() == Keyboard::ESC) {
             if (d_playingGame) {
@@ -118,7 +114,6 @@ void Anvil::OnUpdate(double dt)
 void Anvil::OnRender()
 {
     d_entityRenderer.EnableParticles(&d_particleManager);
-
     d_viewport.Bind();
     if (d_playingGame) {
         d_entityRenderer.Draw(d_runtimeCamera, *d_activeScene);
@@ -128,26 +123,19 @@ void Anvil::OnRender()
         }
     }
     else {
-        d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
-        d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
+        float aspectRatio = (float)d_viewport.Width()/(float)d_viewport.Height();
+        SPKT_LOG_INFO("Width {}, Height {}, Aspect Ratio {}", d_viewport.Width(), d_viewport.Height(), aspectRatio);
+        glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
+
+        d_entityRenderer.Draw(proj, d_editorCamera.View(), *d_activeScene);
+        d_skyboxRenderer.Draw(d_skybox, proj, d_editorCamera.View());
         if (d_showColliders) {
-            d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
+            d_colliderRenderer.Draw(proj, d_editorCamera.View(), *d_activeScene);
         }
     }
     d_viewport.Unbind();
 
     d_ui.StartFrame();
-
-    ImGuiWindowFlags flags = 
-        ImGuiWindowFlags_NoNav |
-        ImGuiWindowFlags_NoNavFocus |
-        ImGuiWindowFlags_NoNavInputs;
-
-    bool open = true;
-    float menuBarHeight = 19.0f;
-
-    bool show = true;
-    //ImGui::ShowDemoWindow(&show);
 
     ImGui::DockSpaceOverViewport();
 
@@ -207,28 +195,38 @@ void Anvil::OnRender()
         ImGui::EndMainMenuBar();
     }
 
-    float w = (float)d_window->Width();
-    float h = (float)d_window->Height();
-
     // VIEWPORT
-    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
+    if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
-        ImGuiXtra::Image(d_viewport.GetColour(), {0.8f * w, 0.8f * h});
+        ImVec2 size = ImGui::GetContentRegionAvail();
+        glm::ivec2 viewportSize = glm::ivec2{size.x, size.y};
+
+        ImGuiXtra::Image(d_viewport.GetTexture());
+        //const auto* texture = d_viewport.GetTexture();
+        //ImGui::Image((void*)texture->Id(), ImVec2{(float)texture->Width(), (float)texture->Height()}, ImVec2{0, 1}, ImVec2{1, 0});
+
+        if (viewportSize != glm::ivec2{d_viewport.Width(), d_viewport.Height()}) {
+            d_viewport.SetScreenSize(viewportSize.x, viewportSize.y);
+            SPKT_LOG_INFO("Resizing viewport to {} {}", viewportSize.x, viewportSize.y);
+        }
+
         ImGuiXtra::SetGuizmo();
         ImGui::End();
     }
+    ImGui::PopStyleVar();
 
     // INSPECTOR
-    if (ImGui::Begin("Inspector", &open, flags)) {
+    if (ImGui::Begin("Inspector")) {
         d_inspector.Show(*this);
         ImGui::End();
     }
 
     // EXPLORER
     static std::string search;
-    if (ImGui::Begin("Explorer", &open, flags)) {
+    if (ImGui::Begin("Explorer")) {
         ImGuiXtra::TextModifiable(search);
         ImGui::SameLine();
         if (ImGui::Button("X")) {

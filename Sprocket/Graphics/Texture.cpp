@@ -45,8 +45,6 @@ Texture::Texture(int width, int height, Channels channels)
     , d_height(height)
     , d_channels(channels)
 {
-    glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
-    SetTextureParameters(d_id);
     Resize(width, height);
 }
 
@@ -74,6 +72,13 @@ std::unique_ptr<Texture> Texture::FromFile(const std::string file)
 
 void Texture::Resize(int width, int height)
 {
+    if (d_id) {
+        glDeleteTextures(1, &d_id);
+    }
+
+    glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
+    SetTextureParameters(d_id);
+
     int ifmt, fmt;
     switch (d_channels) {
         case Channels::RGBA: {
@@ -85,7 +90,7 @@ void Texture::Resize(int width, int height)
             fmt = GL_RED;
         } break;
         case Channels::DEPTH: {
-            ifmt = GL_DEPTH_COMPONENT16;
+            ifmt = GL_DEPTH24_STENCIL8;
             fmt = GL_DEPTH_COMPONENT;
         } break;
     }
@@ -93,6 +98,9 @@ void Texture::Resize(int width, int height)
     glBindTexture(GL_TEXTURE_2D, d_id);
     glTexImage2D(GL_TEXTURE_2D, 0, ifmt, width, height, 0, fmt, GL_UNSIGNED_BYTE, nullptr);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    d_width = width;
+    d_height = height;
 }
 
 void Texture::Bind(int slot) const

@@ -24,6 +24,7 @@ class Anvil
     ParticleManager d_particleManager;
 
     FrameBuffer d_viewport;
+
     DevUI d_ui;
     bool d_isViewportHovered = false;
     bool d_isViewportFocused = false;
