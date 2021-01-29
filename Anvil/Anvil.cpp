@@ -67,6 +67,16 @@ void Anvil::OnEvent(Event& event)
                 d_selected = ecs::Null;
             }
             e->Consume();
+        } else if (e->Key() == Keyboard::F11) {
+            if (d_window->IsFullscreen()) {
+                SPKT_LOG_INFO("WIndowing!");
+                d_window->SetWindowed(1280, 720);
+            }
+            else {
+                SPKT_LOG_INFO("Fullscreening!");
+                d_window->SetFullscreen();
+            }
+            e->Consume();
         }
     }
 
@@ -217,14 +227,16 @@ void Anvil::OnRender()
     ImGui::PopStyleVar();
 
     // INSPECTOR
-    if (ImGui::Begin("Inspector")) {
+    static bool showInspector = true;
+    if (ImGui::Begin("Inspector", &showInspector)) {
         d_inspector.Show(*this);
         ImGui::End();
     }
 
     // EXPLORER
     static std::string search;
-    if (ImGui::Begin("Explorer")) {
+    static bool showExplorer = true;
+    if (ImGui::Begin("Explorer", &showExplorer)) {
         ImGuiXtra::TextModifiable(search);
         ImGui::SameLine();
         if (ImGui::Button("X")) {

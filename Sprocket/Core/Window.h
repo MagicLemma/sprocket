@@ -20,6 +20,7 @@ struct WindowData
 	u32 width;
 	u32 height;
 
+	bool fullscreen = false;
 	bool running = true;
 	bool focused = true;
 
@@ -67,6 +68,9 @@ public:
 	std::string GetWindowName() const;
 	void SetWindowName(const std::string& name);
 	void SetCursorVisibility(bool visibility);
+	void SetFullscreen();
+	void SetWindowed(int width, int height);
+	bool IsFullscreen() const;
 
 	// Mouse Utilities
 	glm::vec2 GetMousePos() const;

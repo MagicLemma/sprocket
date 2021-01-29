@@ -206,6 +206,32 @@ void Window::SetCursorVisibility(bool visibility)
 	glfwSetInputMode(d_impl->window, GLFW_CURSOR, show);
 }
 
+void Window::SetFullscreen()
+{
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	glfwSetWindowMonitor(
+		d_impl->window,
+		monitor,
+		0,
+		0,
+		mode->width,
+		mode->height,
+		mode->refreshRate);
+	d_data.fullscreen = true;
+}
+
+void Window::SetWindowed(int width, int height)
+{
+	glfwSetWindowMonitor(d_impl->window, nullptr, 50, 50, width, height, 0);
+	d_data.fullscreen = false;
+}
+
+bool Window::IsFullscreen() const
+{
+	return d_data.fullscreen;
+}
+
 glm::vec2 Window::GetMousePos() const
 {
 	return d_mousePos;

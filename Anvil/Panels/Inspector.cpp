@@ -402,7 +402,7 @@ void Inspector::Show(Anvil& editor)
             MeshAnimationComponent c;
             entity.Add<MeshAnimationComponent>(c);
         }
-        ImGui::EndMenu();
+        ImGui::EndPopup();
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
