@@ -85,6 +85,7 @@ DevUI::DevUI(Window* window)
     SetClipboardCallbacks(window);
     SetKeyMappings();
 
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
     unsigned char* data;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
