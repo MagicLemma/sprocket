@@ -15,6 +15,11 @@
 namespace Sprocket {
 namespace {
 
+void SetDarkTheme()
+{
+    auto& colours = ImGui::GetStyle().Colors;
+}
+
 void SetBackendFlags()
 {
     ImGuiIO& io = ImGui::GetIO();
@@ -78,13 +83,12 @@ DevUI::DevUI(Window* window)
     ImGui::CreateContext();
     IMGUI_CHECKVERSION();
 
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui::StyleColorsDark();
-    
     SetBackendFlags();
     SetClipboardCallbacks(window);
     SetKeyMappings();
+    SetDarkTheme();
 
+    ImGuiIO& io = ImGui::GetIO();    
     io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
     unsigned char* data;
     int width, height;

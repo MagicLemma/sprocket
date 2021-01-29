@@ -63,17 +63,18 @@ void Anvil::OnEvent(Event& event)
                 d_activeScene = d_scene;
                 d_window->SetCursorVisibility(true);
             }
-            else {
+            else if (d_selected != ecs::Null) {
                 d_selected = ecs::Null;
+            }
+            else if (d_window->IsFullscreen()) {
+                d_window->SetWindowed(1280, 720);
             }
             e->Consume();
         } else if (e->Key() == Keyboard::F11) {
             if (d_window->IsFullscreen()) {
-                SPKT_LOG_INFO("WIndowing!");
                 d_window->SetWindowed(1280, 720);
             }
             else {
-                SPKT_LOG_INFO("Fullscreening!");
                 d_window->SetFullscreen();
             }
             e->Consume();
