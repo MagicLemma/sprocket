@@ -47,9 +47,7 @@ void TextModifiable(std::string& text)
 {
     char nameStr[128] = "";
     std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
-    ImGui::PushID(200);
-    ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
-    ImGui::PopID();
+    ImGui::InputText("##", nameStr, IM_ARRAYSIZE(nameStr));
     text = std::string(nameStr);
 }
 
