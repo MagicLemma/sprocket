@@ -71,6 +71,20 @@ void SetKeyMappings()
     io.KeyMap[ImGuiKey_Z] =           Keyboard::Z;
 }
 
+// Loads the font atlas and assigns it to ImGui. Returns the pointer
+// for the caller to own.
+std::unique_ptr<Texture> SetFont(std::string_view font, float size)
+{
+    ImGuiIO& io = ImGui::GetIO();    
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
+    unsigned char* data;
+    int width, height;
+    io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
+    auto texture = std::make_unique<Texture>(width, height, data);
+    io.Fonts->TexID = reinterpret_cast<void*>(texture->Id());
+    return texture;
+}
+
 }
 
 DevUI::DevUI(Window* window)
@@ -88,17 +102,11 @@ DevUI::DevUI(Window* window)
     SetKeyMappings();
     SetDarkTheme();
 
-    ImGuiIO& io = ImGui::GetIO();    
-    io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
-    unsigned char* data;
-    int width, height;
-    io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-    d_fontAtlas = std::make_unique<Texture>(width, height, data);
-    io.Fonts->TexID = (ImTextureID)(u32)(intptr_t)d_fontAtlas->Id();
+    d_fontAtlas = SetFont("Resources/Fonts/Calibri.ttf", 15.0f);
 
     // Reason: when the viewport isn't docked and we have a selected entity,
     // attempting to move the entity just moved the window.
-    io.ConfigWindowsMoveFromTitleBarOnly = true;
+    ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
     BufferLayout bufferLayout(sizeof(ImDrawVert));
     bufferLayout.AddAttribute(DataType::FLOAT, 2);
@@ -175,7 +183,6 @@ void DevUI::OnUpdate(double dt)
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;
     io.DisplaySize = ImVec2((float)d_window->Width(), (float)d_window->Height());
-    
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
 
@@ -188,7 +195,7 @@ void DevUI::StartFrame()
 void DevUI::EndFrame()
 {
     ImGui::Render();
-
+    
     Sprocket::RenderContext rc;  
     rc.AlphaBlending(true);
     rc.FaceCulling(false);
