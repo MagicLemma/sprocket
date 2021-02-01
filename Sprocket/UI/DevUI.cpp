@@ -96,6 +96,10 @@ DevUI::DevUI(Window* window)
     d_fontAtlas = std::make_unique<Texture>(width, height, data);
     io.Fonts->TexID = (ImTextureID)(u32)(intptr_t)d_fontAtlas->Id();
 
+    // Reason: when the viewport isn't docked and we have a selected entity,
+    // attempting to move the entity just moved the window.
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
+
     BufferLayout bufferLayout(sizeof(ImDrawVert));
     bufferLayout.AddAttribute(DataType::FLOAT, 2);
     bufferLayout.AddAttribute(DataType::FLOAT, 2);
