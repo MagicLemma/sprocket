@@ -132,24 +132,26 @@ void Anvil::OnRender()
 
     d_entityRenderer.EnableParticles(&d_particleManager);
     d_viewport.Bind();
-    if (d_playingGame) {
-        d_entityRenderer.Draw(MakeProj(d_runtimeCamera), MakeView(d_runtimeCamera), *d_activeScene);
-        d_skyboxRenderer.Draw(d_skybox, MakeProj(d_runtimeCamera), MakeView(d_runtimeCamera));
-        if (d_showColliders) {
-            d_colliderRenderer.Draw(MakeProj(d_runtimeCamera), MakeView(d_runtimeCamera), *d_activeScene);
-        }
-    }
-    else {
-        float aspectRatio = (float)d_viewport.Width()/(float)d_viewport.Height();
-        glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 1000.0f);
 
-        d_entityRenderer.Draw(proj, d_editorCamera.View(), *d_activeScene);
-        d_skyboxRenderer.Draw(d_skybox, proj, d_editorCamera.View());
-        if (d_showColliders) {
-            d_colliderRenderer.Draw(proj, d_editorCamera.View(), *d_activeScene);
-        }
+    glm::mat4 proj, view;
+    if (d_playingGame) {
+        proj = MakeProj(d_runtimeCamera);
+        view = MakeView(d_runtimeCamera);
+    } else {
+        proj = d_editorCamera.Proj();
+        view = d_editorCamera.View();
     }
+    assert(proj != glm::mat4());
+    assert(view != glm::mat4());
+
+    d_entityRenderer.Draw(proj, view, *d_activeScene);
+    d_skyboxRenderer.Draw(d_skybox, proj, view);
+    if (d_showColliders) {
+        d_colliderRenderer.Draw(proj, view, *d_activeScene);
+    }
+
     d_viewport.Unbind();
+
 
     d_ui.StartFrame();
 
@@ -221,8 +223,16 @@ void Anvil::OnRender()
         ImVec2 size = ImGui::GetContentRegionAvail();
         d_viewportSize = glm::ivec2{size.x, size.y};
 
+        //auto viewportMouse = ImGuiXtra::GetMousePosWindowCoords();
+
         ImGuiXtra::Image(d_viewport.GetTexture());
-        ImGuiXtra::SetGuizmo();
+
+        if (!IsGameRunning() && d_selected.Valid() && d_selected.Has<Transform3DComponent>()) {
+            auto& c = d_selected.Get<Transform3DComponent>();
+            auto tr = Maths::Transform(c.position, c.orientation, c.scale);
+            ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
+            Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
+        }
         ImGui::End();
     }
     ImGui::PopStyleVar();

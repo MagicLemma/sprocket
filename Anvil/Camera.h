@@ -27,7 +27,6 @@ public:
     void OnUpdate(double dt);
     void OnEvent(Event& event);
 
-    glm::mat4 Proj(int width, int height) const;
     glm::mat4 Proj() const;
     glm::mat4 View() const;
 };

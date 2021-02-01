@@ -5,14 +5,8 @@ class Inspector(Plugin):
 
     @compmethod
     def GuizmoSettings(comp, flags):
-        if comp["Name"] == "TransformComponent":
-            return "ImGuiXtra::GuizmoSettings(d_mode, d_coords, d_useSnap, d_snap);"
-        return ""
-    
-    @compmethod
-    def Guizmo(comp, flags):
-        if comp["Name"] == "TransformComponent":
-            return "ShowGuizmo(editor, c, d_mode, d_coords, d_useSnap ? &d_snap : nullptr);"
+        if comp["Name"] == "Transform3DComponent":
+            return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
     @attrmethod

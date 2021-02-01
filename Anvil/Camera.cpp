@@ -92,14 +92,10 @@ void Camera::OnEvent(Event& event)
     }
 }
 
-glm::mat4 Camera::Proj(int width, int height) const
-{
-    return glm::perspective(glm::radians(70.0f), (float)width/(float)height, 0.1f, 1000.0f);
-}
-
 glm::mat4 Camera::Proj() const
 {
-    return glm::perspective(70.0f, d_window->AspectRatio(), 0.1f, 1000.0f);
+    float aspectRatio = Viewport::CurrentAspectRatio();
+    return glm::perspective(70.0f, aspectRatio, 0.1f, 1000.0f);
 }
 
 glm::mat4 Camera::View() const

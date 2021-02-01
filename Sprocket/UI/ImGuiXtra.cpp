@@ -1,4 +1,5 @@
 #include "ImGuiXtra.h"
+#include "Log.h"
 #include "FileBrowser.h"
 
 #include <imgui.h>
@@ -83,15 +84,6 @@ void Image(const Texture* image)
     Image(image, {(float)image->Width(), (float)image->Height()});
 }
 
-void SetGuizmo()
-{
-    float rw = ImGui::GetWindowWidth();
-    float rh = ImGui::GetWindowHeight();
-    ImGuizmo::SetDrawlist();
-    ImGuizmo::SetOrthographic(false);
-    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
-}
-
 void GuizmoSettings(
     ImGuizmo::OPERATION& mode,
     ImGuizmo::MODE& coords,
@@ -131,16 +123,31 @@ void Guizmo(
     glm::mat4* matrix,
     const glm::mat4& view,
     const glm::mat4& projection,
-    ImGuizmo::OPERATION mode,
-    ImGuizmo::MODE coords)
+    ImGuizmo::OPERATION operation,
+    ImGuizmo::MODE mode)
 {
+    float rw = ImGui::GetWindowWidth();
+    float rh = ImGui::GetWindowHeight();
+    ImGuizmo::SetDrawlist();
+    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
+
     ImGuizmo::Manipulate(
         glm::value_ptr(view),
         glm::value_ptr(projection),
+        operation,
         mode,
-        coords,
         glm::value_ptr(*matrix)
     );
+}
+
+glm::vec2 GetMousePosWindowCoords()
+{
+    auto mouse = ImGui::GetMousePos();
+    auto topLeft = ImGui::GetWindowPos();
+    float titleBarHeight = ImGui::GetFontSize() + 2 * ImGui::GetStyle().FramePadding.y;
+    topLeft.y += titleBarHeight;
+    return {mouse.x - topLeft.x, mouse.y - topLeft.y};
 }
 
 void Euler(const std::string& name, glm::quat* q)
