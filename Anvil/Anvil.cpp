@@ -337,6 +337,11 @@ void Anvil::OnRender()
         ImGui::End();
     }
 
+    if (ImGui::Begin("Options")) {
+        ImGui::Checkbox("Show Colliders", &d_showColliders);
+        ImGui::End();
+    }
+
     d_ui.EndFrame();    
 }
 
