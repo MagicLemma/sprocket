@@ -30,7 +30,7 @@ function OnUpdate(entity, dt)
                 if rbc.frozen == false then
                     local e_pos = GetTransform3DComponent(e).position
                     if Mag(e_pos - pos) < 10 then
-                        rbc.velocity = rbc.velocity + 5 * (e_pos - pos)
+                        rbc.velocity = rbc.velocity + 10 * (e_pos - pos)
                     end
                 end
                 SetRigidBody3DComponent(e, rbc)

@@ -210,7 +210,7 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.Get<LightComponent>();
         if (ImGui::CollapsingHeader("Light")) {
             ImGui::PushID(count++);
-            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
@@ -222,7 +222,7 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.Get<SunComponent>();
         if (ImGui::CollapsingHeader("Sun")) {
             ImGui::PushID(count++);
-            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             ImGui::DragFloat3("Direction", &c.direction.x, 0.1f);
             ImGui::Checkbox("Shadows", &c.shadows);
@@ -236,7 +236,7 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.Get<AmbienceComponent>();
         if (ImGui::CollapsingHeader("Ambience")) {
             ImGui::PushID(count++);
-            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<AmbienceComponent>(); }

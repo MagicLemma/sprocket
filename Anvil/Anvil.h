@@ -55,6 +55,9 @@ class Anvil
 
     void MaterialUI(std::string& texture);
 
+    glm::mat4 GetViewMatrix() const;
+    glm::mat4 GetProjMatrix() const;
+
 public:
     Anvil(Window* window);
 

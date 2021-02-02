@@ -122,6 +122,16 @@ void Anvil::OnUpdate(double dt)
     }
 }
 
+glm::mat4 Anvil::GetProjMatrix() const
+{
+    return d_playingGame ? MakeProj(d_runtimeCamera) : d_editorCamera.Proj();
+}
+
+glm::mat4 Anvil::GetViewMatrix() const
+{
+    return d_playingGame ? MakeView(d_runtimeCamera) : d_editorCamera.View();
+}
+
 void Anvil::OnRender()
 {
     // If the size of the viewport has changed since the previous frame, recreate
@@ -133,16 +143,8 @@ void Anvil::OnRender()
     d_entityRenderer.EnableParticles(&d_particleManager);
     d_viewport.Bind();
 
-    glm::mat4 proj, view;
-    if (d_playingGame) {
-        proj = MakeProj(d_runtimeCamera);
-        view = MakeView(d_runtimeCamera);
-    } else {
-        proj = d_editorCamera.Proj();
-        view = d_editorCamera.View();
-    }
-    assert(proj != glm::mat4());
-    assert(view != glm::mat4());
+    glm::mat4 proj = GetProjMatrix();
+    glm::mat4 view = GetViewMatrix();
 
     d_entityRenderer.Draw(proj, view, *d_activeScene);
     d_skyboxRenderer.Draw(d_skybox, proj, view);

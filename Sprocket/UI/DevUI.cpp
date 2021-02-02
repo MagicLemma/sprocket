@@ -18,10 +18,12 @@ namespace {
 void SetDarkTheme()
 {
     // Colour scheme by github.com/Raikiri
-    ImGui::GetStyle().FrameRounding = 5.0f;
-    ImGui::GetStyle().GrabRounding = 5.0f;
+    auto& style = ImGui::GetStyle();
+    style.FrameRounding = 5.0f;
+    style.GrabRounding = 5.0f;
+    style.PopupRounding = 5.0f;
     
-    ImVec4* colours = ImGui::GetStyle().Colors;
+    ImVec4* colours = style.Colors;
     colours[ImGuiCol_Text] = ImVec4(0.94f, 0.96f, 0.98f, 1.00f);
     colours[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
     colours[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
