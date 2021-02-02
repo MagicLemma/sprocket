@@ -10,32 +10,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Sprocket {
-namespace {
-
-void ShowGuizmo(
-    Anvil& editor,
-    Transform3DComponent& c,
-    ImGuizmo::OPERATION mode,
-    ImGuizmo::MODE coords,
-    glm::vec3* snap = nullptr)
-{
-    if (!editor.IsGameRunning()) {
-        auto& camera = editor.GetEditorCamera();
-        auto tr = Maths::Transform(c.position, c.orientation, c.scale);
-        ImGuizmo::Manipulate(
-            glm::value_ptr(camera.View()),
-            glm::value_ptr(camera.Proj()),
-            mode,
-            coords,
-            glm::value_ptr(tr),
-            nullptr,
-            &snap->x
-        );
-        Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
-    }
-}
-
-}
 
 void Inspector::Show(Anvil& editor)
 {
@@ -58,7 +32,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<TemporaryComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<NameComponent>()) {
@@ -70,7 +43,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<NameComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<Transform2DComponent>()) {
@@ -84,7 +56,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<Transform2DComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<Transform3DComponent>()) {
@@ -94,11 +65,10 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
-            
+            ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
             if (ImGui::Button("Delete")) { entity.Remove<Transform3DComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<ModelComponent>()) {
@@ -111,7 +81,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<ModelComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<RigidBody3DComponent>()) {
@@ -130,7 +99,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<RigidBody3DComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<BoxCollider3DComponent>()) {
@@ -146,7 +114,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<BoxCollider3DComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<SphereCollider3DComponent>()) {
@@ -161,7 +128,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<SphereCollider3DComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<CapsuleCollider3DComponent>()) {
@@ -177,7 +143,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<CapsuleCollider3DComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<ScriptComponent>()) {
@@ -190,7 +155,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<ScriptComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<Camera3DComponent>()) {
@@ -204,7 +168,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<Camera3DComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<SelectComponent>()) {
@@ -217,7 +180,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<SelectComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<PathComponent>()) {
@@ -230,7 +192,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<PathComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<GridComponent>()) {
@@ -243,27 +204,25 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<GridComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<LightComponent>()) {
         auto& c = entity.Get<LightComponent>();
         if (ImGui::CollapsingHeader("Light")) {
             ImGui::PushID(count++);
-            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<LightComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<SunComponent>()) {
         auto& c = entity.Get<SunComponent>();
         if (ImGui::CollapsingHeader("Sun")) {
             ImGui::PushID(count++);
-            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             ImGui::DragFloat3("Direction", &c.direction.x, 0.1f);
             ImGui::Checkbox("Shadows", &c.shadows);
@@ -271,20 +230,18 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<SunComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<AmbienceComponent>()) {
         auto& c = entity.Get<AmbienceComponent>();
         if (ImGui::CollapsingHeader("Ambience")) {
             ImGui::PushID(count++);
-            ImGui::ColorPicker3("Colour", &c.colour.r);
+            ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.Remove<AmbienceComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<ParticleComponent>()) {
@@ -302,7 +259,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<ParticleComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     if (entity.Has<MeshAnimationComponent>()) {
@@ -316,7 +272,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<MeshAnimationComponent>(); }
             ImGui::PopID();
         }
-        
     }
 
     ImGui::Separator();

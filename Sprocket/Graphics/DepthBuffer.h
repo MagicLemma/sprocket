@@ -1,15 +1,13 @@
 #pragma once
-#include "Window.h"
 #include "Types.h"
 #include "Texture.h"
+#include "Viewport.h"
 
 namespace Sprocket {
 
 class DepthBuffer
 // TODO: Merge with FrameBuffer class, as this is just an FBO.
 {
-    Window* d_window; 
-
     u32 d_fbo;
 
     std::unique_ptr<Texture> d_depth;
@@ -17,15 +15,17 @@ class DepthBuffer
     int d_width;
     int d_height;
 
+    Viewport d_viewport;
+
     DepthBuffer(const DepthBuffer&) = delete;
     DepthBuffer& operator=(const DepthBuffer&) = delete;
 
 public:
-    DepthBuffer(Window* window, int width, int height);
+    DepthBuffer(int width, int height);
     ~DepthBuffer();
 
-    void Bind() const;
-    void Unbind() const;
+    void Bind();
+    void Unbind();
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }

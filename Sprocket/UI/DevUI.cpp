@@ -15,11 +15,71 @@
 namespace Sprocket {
 namespace {
 
+void SetDarkTheme()
+{
+    // Colour scheme by github.com/Raikiri
+    auto& style = ImGui::GetStyle();
+    style.FrameRounding = 5.0f;
+    style.GrabRounding = 5.0f;
+    style.PopupRounding = 5.0f;
+    
+    ImVec4* colours = style.Colors;
+    colours[ImGuiCol_Text] = ImVec4(0.94f, 0.96f, 0.98f, 1.00f);
+    colours[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
+    colours[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+    colours[ImGuiCol_ChildBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
+    colours[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+    colours[ImGuiCol_Border] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
+    colours[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colours[ImGuiCol_FrameBg] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+    colours[ImGuiCol_FrameBgHovered] = ImVec4(0.12f, 0.20f, 0.28f, 1.00f);
+    colours[ImGuiCol_FrameBgActive] = ImVec4(0.09f, 0.12f, 0.14f, 1.00f);
+    colours[ImGuiCol_TitleBg] = ImVec4(0.09f, 0.12f, 0.14f, 0.65f);
+    colours[ImGuiCol_TitleBgActive] = ImVec4(0.08f, 0.10f, 0.12f, 1.00f);
+    colours[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
+    colours[ImGuiCol_MenuBarBg] = ImVec4(0.15f, 0.18f, 0.22f, 1.00f);
+    colours[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.39f);
+    colours[ImGuiCol_ScrollbarGrab] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+    colours[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.18f, 0.22f, 0.25f, 1.00f);
+    colours[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.09f, 0.21f, 0.31f, 1.00f);
+    colours[ImGuiCol_CheckMark] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
+    colours[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
+    colours[ImGuiCol_SliderGrabActive] = ImVec4(0.37f, 0.61f, 1.00f, 1.00f);
+    colours[ImGuiCol_Button] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+    colours[ImGuiCol_ButtonHovered] = ImVec4(0.28f, 0.56f, 1.00f, 1.00f);
+    colours[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
+    colours[ImGuiCol_Header] = ImVec4(0.20f, 0.25f, 0.29f, 0.55f);
+    colours[ImGuiCol_HeaderHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+    colours[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    colours[ImGuiCol_Separator] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+    colours[ImGuiCol_SeparatorHovered] = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
+    colours[ImGuiCol_SeparatorActive] = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
+    colours[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.59f, 0.98f, 0.25f);
+    colours[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+    colours[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+    colours[ImGuiCol_Tab] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+    colours[ImGuiCol_TabHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+    colours[ImGuiCol_TabActive] = ImVec4(0.20f, 0.25f, 0.29f, 1.00f);
+    colours[ImGuiCol_TabUnfocused] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+    colours[ImGuiCol_TabUnfocusedActive] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+    colours[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+    colours[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+    colours[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+    colours[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+    colours[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+    colours[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+    colours[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    colours[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+    colours[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+    colours[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+}
+
 void SetBackendFlags()
 {
     ImGuiIO& io = ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
 void SetClipboardCallbacks(Window* window)
@@ -65,6 +125,20 @@ void SetKeyMappings()
     io.KeyMap[ImGuiKey_Z] =           Keyboard::Z;
 }
 
+// Loads the font atlas and assigns it to ImGui. Returns the pointer
+// for the caller to own.
+std::unique_ptr<Texture> SetFont(std::string_view font, float size)
+{
+    ImGuiIO& io = ImGui::GetIO();    
+    io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
+    unsigned char* data;
+    int width, height;
+    io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
+    auto texture = std::make_unique<Texture>(width, height, data);
+    io.Fonts->TexID = reinterpret_cast<void*>(texture->Id());
+    return texture;
+}
+
 }
 
 DevUI::DevUI(Window* window)
@@ -77,24 +151,24 @@ DevUI::DevUI(Window* window)
     ImGui::CreateContext();
     IMGUI_CHECKVERSION();
 
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui::StyleColorsDark();
-    
     SetBackendFlags();
     SetClipboardCallbacks(window);
     SetKeyMappings();
+    SetDarkTheme();
 
-    unsigned char* data;
-    int width, height;
-    io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-    d_fontAtlas = std::make_unique<Texture>(width, height, data);
-    io.Fonts->TexID = (ImTextureID)(u32)(intptr_t)d_fontAtlas->Id();
+    d_fontAtlas = SetFont("Resources/Fonts/Calibri.ttf", 15.0f);
+
+    // Reason: when the viewport isn't docked and we have a selected entity,
+    // attempting to move the entity just moved the window.
+    ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
     BufferLayout bufferLayout(sizeof(ImDrawVert));
     bufferLayout.AddAttribute(DataType::FLOAT, 2);
     bufferLayout.AddAttribute(DataType::FLOAT, 2);
     bufferLayout.AddAttribute(DataType::UBYTE, 4);
     d_buffer.SetBufferLayout(bufferLayout);
+
+    
 }
 
 void DevUI::OnEvent(Event& event)
@@ -112,7 +186,7 @@ void DevUI::OnEvent(Event& event)
 
     else if (auto e = event.As<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->XPos(), e->YPos());
-        if (ImGui::IsAnyWindowHovered()) { e->Consume(); }
+        if (ImGui::IsAnyItemHovered()) { e->Consume(); }
     }
 
     else if (auto e = event.As<MouseScrolledEvent>()) {
@@ -164,9 +238,7 @@ void DevUI::OnUpdate(double dt)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;
-    io.DisplaySize = ImVec2((float)d_window->Width(),
-                            (float)d_window->Height());
-    
+    io.DisplaySize = ImVec2((float)d_window->Width(), (float)d_window->Height());
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
 

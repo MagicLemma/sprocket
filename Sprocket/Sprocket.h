@@ -73,6 +73,7 @@
 #include "Graphics/ParticleManager.h"
 #include "Graphics/StreamBuffer.h"
 #include "Graphics/VertexArray.h"
+#include "Graphics/Viewport.h"
 
 #include "Graphics/PostProcessing/PostProcessor.h"
 #include "Graphics/PostProcessing/Effect.h"

@@ -25,8 +25,8 @@ public:
 
     virtual ~Effect() {}
 
-    void BindForWrite() const;
-    void UnbindForWrite() const;
+    void BindForWrite();
+    void UnbindForWrite();
         // Bind/unbind for writing. Any render calls while this is
         // bound for writing will cause objects to be rendered onto
         // this objects texture.

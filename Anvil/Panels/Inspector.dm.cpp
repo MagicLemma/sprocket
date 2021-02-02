@@ -9,32 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Sprocket {
-namespace {
-
-void ShowGuizmo(
-    Anvil& editor,
-    Transform3DComponent& c,
-    ImGuizmo::OPERATION mode,
-    ImGuizmo::MODE coords,
-    glm::vec3* snap = nullptr)
-{
-    if (!editor.IsGameRunning()) {
-        auto& camera = editor.GetEditorCamera();
-        auto tr = Maths::Transform(c.position, c.orientation, c.scale);
-        ImGuizmo::Manipulate(
-            glm::value_ptr(camera.View()),
-            glm::value_ptr(camera.Proj()),
-            mode,
-            coords,
-            glm::value_ptr(tr),
-            nullptr,
-            &snap->x
-        );
-        Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
-    }
-}
-
-}
 
 void Inspector::Show(Anvil& editor)
 {
@@ -59,7 +33,6 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::Button("Delete")) { entity.Remove<{{Comp.Name}}>(); }
             ImGui::PopID();
         }
-        {{Comp.Inspector.Guizmo}}
     }
 
 #endif

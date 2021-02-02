@@ -38,8 +38,8 @@ void Image(const Texture* image,
 // aspect ratio. The size is the height in pixels.
 void Image(const Texture* image, float size);
 
-// Adds the Gizmo to the current panels draw list
-void SetGuizmo();
+// An even more simple version where the size is the native size of the image.
+void Image(const Texture* image);
 
 void GuizmoSettings(
     ImGuizmo::OPERATION& mode,
@@ -55,6 +55,10 @@ void Guizmo(
     ImGuizmo::OPERATION mode,
     ImGuizmo::MODE coords
 );
+
+// Returns the coords of the mouse with respect to the top left of the current
+// window.
+glm::vec2 GetMousePosWindowCoords();
 
 // Displays a quaternion in Euler angles form.
 void Euler(const std::string& name, glm::quat* q);

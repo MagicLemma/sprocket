@@ -5,14 +5,8 @@ class Inspector(Plugin):
 
     @compmethod
     def GuizmoSettings(comp, flags):
-        if comp["Name"] == "TransformComponent":
-            return "ImGuiXtra::GuizmoSettings(d_mode, d_coords, d_useSnap, d_snap);"
-        return ""
-    
-    @compmethod
-    def Guizmo(comp, flags):
-        if comp["Name"] == "TransformComponent":
-            return "ShowGuizmo(editor, c, d_mode, d_coords, d_useSnap ? &d_snap : nullptr);"
+        if comp["Name"] == "Transform3DComponent":
+            return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
     @attrmethod
@@ -39,11 +33,11 @@ class Inspector(Plugin):
             return f'ImGui::DragFloat2("{display}", &c.{name}.x, 0.1f)'
         if cpp_type == "glm::vec3":
             if cpp_subtype == "Colour":
-                return f'ImGui::ColorPicker3("{display}", &c.{name}.r)'
+                return f'ImGui::ColorEdit3("{display}", &c.{name}.r)'
             return f'ImGui::DragFloat3("{display}", &c.{name}.x, 0.1f)'
         if cpp_type == "glm::vec4":
             if cpp_subtype == "Colour":
-                return f'ImGui::ColorPicker4("{display}", &c.{name}.r)'
+                return f'ImGui::ColorEdit4("{display}", &c.{name}.r)'
             return f'ImGui::DragFloat4("{display}", &c.{name}.x, 0.1f)'
         if cpp_type == "glm::quat":
             return f'ImGuiXtra::Euler("{display}", &c.{name})'

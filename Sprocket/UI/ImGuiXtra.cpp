@@ -1,4 +1,5 @@
 #include "ImGuiXtra.h"
+#include "Log.h"
 #include "FileBrowser.h"
 
 #include <imgui.h>
@@ -47,7 +48,7 @@ void TextModifiable(std::string& text)
 {
     char nameStr[128] = "";
     std::memcpy(nameStr, text.c_str(), std::strlen(text.c_str()));
-    ImGui::InputText("", nameStr, IM_ARRAYSIZE(nameStr));
+    ImGui::InputText("##", nameStr, IM_ARRAYSIZE(nameStr));
     text = std::string(nameStr);
 }
 
@@ -78,13 +79,9 @@ void Image(const Texture* image, float size)
     Image(image, {image->AspectRatio() * size, size});
 }
 
-void SetGuizmo()
+void Image(const Texture* image)
 {
-    float rw = ImGui::GetWindowWidth();
-    float rh = ImGui::GetWindowHeight();
-    ImGuizmo::SetDrawlist();
-    ImGuizmo::SetOrthographic(false);
-    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
+    Image(image, {(float)image->Width(), (float)image->Height()});
 }
 
 void GuizmoSettings(
@@ -126,16 +123,31 @@ void Guizmo(
     glm::mat4* matrix,
     const glm::mat4& view,
     const glm::mat4& projection,
-    ImGuizmo::OPERATION mode,
-    ImGuizmo::MODE coords)
+    ImGuizmo::OPERATION operation,
+    ImGuizmo::MODE mode)
 {
+    float rw = ImGui::GetWindowWidth();
+    float rh = ImGui::GetWindowHeight();
+    ImGuizmo::SetDrawlist();
+    ImGuizmo::SetOrthographic(false);
+    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, rw, rh);
+
     ImGuizmo::Manipulate(
         glm::value_ptr(view),
         glm::value_ptr(projection),
+        operation,
         mode,
-        coords,
         glm::value_ptr(*matrix)
     );
+}
+
+glm::vec2 GetMousePosWindowCoords()
+{
+    auto mouse = ImGui::GetMousePos();
+    auto topLeft = ImGui::GetWindowPos();
+    float titleBarHeight = ImGui::GetFontSize() + 2 * ImGui::GetStyle().FramePadding.y;
+    topLeft.y += titleBarHeight;
+    return {mouse.x - topLeft.x, mouse.y - topLeft.y};
 }
 
 void Euler(const std::string& name, glm::quat* q)

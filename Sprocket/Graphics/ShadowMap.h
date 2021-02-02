@@ -1,6 +1,5 @@
 #pragma once
 #include "Shader.h"
-#include "Window.h"
 
 #include "ECS.h"
 #include "DepthBuffer.h"
@@ -14,7 +13,6 @@ namespace Sprocket {
 
 class ShadowMap
 {
-    Window*         d_window;
     AssetManager*   d_assetManager;
 
     Shader  d_shader;
@@ -30,7 +28,7 @@ class ShadowMap
     std::vector<InstanceData> d_instanceData;
 
 public:
-    ShadowMap(Window* window, AssetManager* assetManager);
+    ShadowMap(AssetManager* assetManager);
 
     void Draw(const glm::vec3& sunDirection, const glm::vec3& centre, Scene& scene);
 

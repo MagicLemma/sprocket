@@ -10,15 +10,9 @@ FrameBuffer::FrameBuffer(int width, int height)
     , d_depth(std::make_unique<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
+    , d_fbo(0)
 {
-    glCreateFramebuffers(1, &d_fbo);
-    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_colour->Id(), 0);
-    glNamedFramebufferTexture(d_fbo, GL_DEPTH_ATTACHMENT, d_depth->Id(), 0);
-
-    // Validate the framebuffer.
-    if (glCheckNamedFramebufferStatus(d_fbo, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        SPKT_LOG_ERROR("Created FBO is not complete!");
-    }
+    SetScreenSize(width, height);
 }
 
 FrameBuffer::~FrameBuffer()
@@ -26,16 +20,19 @@ FrameBuffer::~FrameBuffer()
     glDeleteFramebuffers(1, &d_fbo);
 }
 
-void FrameBuffer::Bind() const
+void FrameBuffer::Bind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
+
+    d_viewport.Set(0, 0, d_width, d_height);
 }
 
-void FrameBuffer::Unbind() const
+void FrameBuffer::Unbind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    d_viewport.Restore();
 }
 
 void FrameBuffer::BindTexture() const
@@ -50,10 +47,27 @@ void FrameBuffer::UnbindTexture() const
 
 void FrameBuffer::SetScreenSize(int width, int height)
 {
+    if (d_fbo) { // When called from constructor, nothing to delete, and no need to resize
+        if (width == d_width && height == d_height) {
+            return; // Nothing to do;
+        }
+
+        glDeleteFramebuffers(1, &d_fbo);
+        d_colour->Resize(width, height);
+        d_depth->Resize(width, height);
+    }
+
+    glCreateFramebuffers(1, &d_fbo);
+    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_colour->Id(), 0);
+    glNamedFramebufferTexture(d_fbo, GL_DEPTH_ATTACHMENT, d_depth->Id(), 0);
+
+    // Validate the framebuffer.
+    if (glCheckNamedFramebufferStatus(d_fbo, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        SPKT_LOG_ERROR("Created FBO is not complete!");
+    }
+
     d_width = width;
     d_height = height;
-    d_colour->Resize(width, height);
-    d_depth->Resize(width, height);
 }
 
 }

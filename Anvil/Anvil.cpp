@@ -56,10 +56,6 @@ Anvil::Anvil(Window* window)
 
 void Anvil::OnEvent(Event& event)
 {
-    if (auto e = event.As<WindowResizeEvent>()) {
-        d_viewport.SetScreenSize(e->Width(), e->Height());
-    }
-
     if (auto e = event.As<KeyboardButtonPressedEvent>()) {
         if (e->Key() == Keyboard::ESC) {
             if (d_playingGame) {
@@ -67,8 +63,19 @@ void Anvil::OnEvent(Event& event)
                 d_activeScene = d_scene;
                 d_window->SetCursorVisibility(true);
             }
-            else {
+            else if (d_selected != ecs::Null) {
                 d_selected = ecs::Null;
+            }
+            else if (d_window->IsFullscreen()) {
+                d_window->SetWindowed(1280, 720);
+            }
+            e->Consume();
+        } else if (e->Key() == Keyboard::F11) {
+            if (d_window->IsFullscreen()) {
+                d_window->SetWindowed(1280, 720);
+            }
+            else {
+                d_window->SetFullscreen();
             }
             e->Consume();
         }
@@ -115,45 +122,42 @@ void Anvil::OnUpdate(double dt)
     }
 }
 
+glm::mat4 Anvil::GetProjMatrix() const
+{
+    return d_playingGame ? MakeProj(d_runtimeCamera) : d_editorCamera.Proj();
+}
+
+glm::mat4 Anvil::GetViewMatrix() const
+{
+    return d_playingGame ? MakeView(d_runtimeCamera) : d_editorCamera.View();
+}
+
 void Anvil::OnRender()
 {
-    d_entityRenderer.EnableParticles(&d_particleManager);
+    // If the size of the viewport has changed since the previous frame, recreate
+    // the framebuffer.
+    if (d_viewportSize != d_viewport.Size() && d_viewportSize.x > 0 && d_viewportSize.y > 0) {
+        d_viewport.SetScreenSize(d_viewportSize.x, d_viewportSize.y);
+    }
 
+    d_entityRenderer.EnableParticles(&d_particleManager);
     d_viewport.Bind();
-    if (d_playingGame) {
-        d_entityRenderer.Draw(d_runtimeCamera, *d_activeScene);
-        d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
-        if (d_showColliders) {
-            d_colliderRenderer.Draw(d_runtimeCamera, *d_activeScene);
-        }
+
+    glm::mat4 proj = GetProjMatrix();
+    glm::mat4 view = GetViewMatrix();
+
+    d_entityRenderer.Draw(proj, view, *d_activeScene);
+    d_skyboxRenderer.Draw(d_skybox, proj, view);
+    if (d_showColliders) {
+        d_colliderRenderer.Draw(proj, view, *d_activeScene);
     }
-    else {
-        d_entityRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
-        d_skyboxRenderer.Draw(d_skybox, d_editorCamera.Proj(), d_editorCamera.View());
-        if (d_showColliders) {
-            d_colliderRenderer.Draw(d_editorCamera.Proj(), d_editorCamera.View(), *d_activeScene);
-        }
-    }
+
     d_viewport.Unbind();
+
 
     d_ui.StartFrame();
 
-    auto& style = ImGui::GetStyle();
-    style.WindowRounding = 0.0f;
-
-    ImGuiWindowFlags flags = 
-        ImGuiWindowFlags_NoNav |
-        ImGuiWindowFlags_NoNavFocus |
-        ImGuiWindowFlags_NoNavInputs |
-        ImGuiWindowFlags_NoResize |
-        ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoResize;
-    if (d_playingGame) {
-        flags |= ImGuiWindowFlags_NoDecoration;
-    }
-
-    bool open = true;
-    float menuBarHeight = 19.0f;
+    ImGui::DockSpaceOverViewport();
 
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
@@ -211,46 +215,41 @@ void Anvil::OnRender()
         ImGui::EndMainMenuBar();
     }
 
-    float w = (float)d_window->Width();
-    float h = (float)d_window->Height();
-
     // VIEWPORT
-    ImGui::SetNextWindowPos({0.0, menuBarHeight});
-    ImGui::SetNextWindowSize({0.8f * w, 0.8f * h});
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0, 0});
-    if (ImGui::Begin("Viewport", &open, flags | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
+    if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
         d_isViewportHovered = ImGui::IsWindowHovered();
         d_isViewportFocused = ImGui::IsWindowFocused();
         d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
-        ImGuiXtra::Image(d_viewport.GetColour(), {0.8f * w, 0.8f * h});
-        ImGuiXtra::SetGuizmo();
+
+        ImVec2 size = ImGui::GetContentRegionAvail();
+        d_viewportSize = glm::ivec2{size.x, size.y};
+
+        //auto viewportMouse = ImGuiXtra::GetMousePosWindowCoords();
+
+        ImGuiXtra::Image(d_viewport.GetTexture());
+
+        if (!IsGameRunning() && d_selected.Valid() && d_selected.Has<Transform3DComponent>()) {
+            auto& c = d_selected.Get<Transform3DComponent>();
+            auto tr = Maths::Transform(c.position, c.orientation, c.scale);
+            ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
+            Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
+        }
         ImGui::End();
     }
     ImGui::PopStyleVar();
 
     // INSPECTOR
-    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight + (h - menuBarHeight)/2.0f});
-    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
-    if (ImGui::Begin("Inspector", &open, flags)) {
+    static bool showInspector = true;
+    if (ImGui::Begin("Inspector", &showInspector)) {
         d_inspector.Show(*this);
         ImGui::End();
     }
 
-    // BOTTOM PANEL
-    ImGui::SetNextWindowPos({0.0, 0.8f * h + menuBarHeight});
-    ImGui::SetNextWindowSize({0.8f * w, h - menuBarHeight - 0.8f * h});
-    if (ImGui::Begin("BottomPanel", &open, flags)) {
-        ImGui::Checkbox("Show Colliders", &d_showColliders);
-        ImGui::Text(fmt::format("Loading Meshes: {}", d_assetManager.IsLoadingMeshes() ? "Yes" : "No").c_str());
-        ImGui::Text(fmt::format("Loading Textures: {}", d_assetManager.IsLoadingTextures() ? "Yes" : "No").c_str());
-        ImGui::End();
-    }
-
     // EXPLORER
-    ImGui::SetNextWindowPos({0.8f * w, menuBarHeight});
-    ImGui::SetNextWindowSize({0.2f * w, (h - menuBarHeight)/2.0f});
     static std::string search;
-    if (ImGui::Begin("Explorer", &open, flags | ImGuiWindowFlags_NoDecoration)) {
+    static bool showExplorer = true;
+    if (ImGui::Begin("Explorer", &showExplorer)) {
         ImGuiXtra::TextModifiable(search);
         ImGui::SameLine();
         if (ImGui::Button("X")) {
@@ -335,6 +334,11 @@ void Anvil::OnRender()
 
             ImGui::EndTabBar();
         }
+        ImGui::End();
+    }
+
+    if (ImGui::Begin("Options")) {
+        ImGui::Checkbox("Show Colliders", &d_showColliders);
         ImGui::End();
     }
 
