@@ -24,6 +24,10 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
+    ImGui::Text("ID:");
+    ImGui::SameLine();
+    ImGui::Text(std::to_string(entity.Id()).c_str());
+
     if (entity.Has<TemporaryComponent>()) {
         auto& c = entity.Get<TemporaryComponent>();
         if (ImGui::CollapsingHeader("Temporary")) {

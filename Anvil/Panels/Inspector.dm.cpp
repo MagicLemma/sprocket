@@ -23,6 +23,10 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
+    ImGui::Text("ID:");
+    ImGui::SameLine();
+    ImGui::Text(std::to_string(entity.Id()).c_str());
+
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         auto& c = entity.Get<{{Comp.Name}}>();

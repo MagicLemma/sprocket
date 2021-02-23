@@ -23,6 +23,17 @@ bool SubstringCI(const std::string& string, const std::string& substr) {
     return it != string.end();
 }
 
+bool IsInteger(const std::string& s)
+{
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
+
+bool MatchID(int id, const std::string& match) {
+    return IsInteger(match) && id == std::stoi(match);
+}
+
 }
 
 Anvil::Anvil(Window* window) 
@@ -260,7 +271,7 @@ void Anvil::OnRender()
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
                 for (auto entity : d_scene->Entities().Each()) {
-                    if (SubstringCI(Name(entity), search)) {
+                    if (SubstringCI(Name(entity), search) || MatchID(entity.Id(), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {
                             d_selected = entity;
