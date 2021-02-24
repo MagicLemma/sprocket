@@ -31,7 +31,7 @@ class Anvil
     bool d_isViewportFocused = false;
 
     // Scene
-    std::string d_sceneFile = "Resources/AnvilNew.yaml";
+    std::string d_sceneFile = "Resources/Anvil.yaml";
     std::shared_ptr<Scene> d_activeScene;
     std::shared_ptr<Scene> d_scene;
     ecs::Entity d_runtimeCamera;

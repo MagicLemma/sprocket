@@ -5,7 +5,6 @@
 #include "Maths.h"
 #include "Yaml.h"
 #include "Scene.h"
-#include "Updater.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -188,20 +187,12 @@ void Save(const std::string& file, ecs::Registry* reg)
 
 void Load(const std::string& file, ecs::Registry* reg)
 {
-    // Must be a clean scene
-    u32 count = 0;
-    for (ecs::Entity e : reg->Each()) {
-        if (!e.Has<TemporaryComponent>()) ++count;
-    }
-    assert(count == 0);
-
     std::ifstream stream(file);
     std::stringstream sstream;
     sstream << stream.rdbuf();
-
     YAML::Node data = YAML::Load(sstream.str());
 
-    if (!data["Components"] & !data["Entities"]) {
+    if (!data["Entities"] || !data["Components"]) {
         return; // TODO: Error checking
     }
 
@@ -210,43 +201,43 @@ void Load(const std::string& file, ecs::Registry* reg)
     for (auto slot : data["Entities"]) {
         slots.push_back(slot.as<ecs::Registry::Slot>());
     }
-    reg->SetSlotInfo(slots);
+    reg->SetSlotInfo(slots); // Also clears the reg if it was non-empty.
 
-    auto components = data["Components"];
-    for (auto c : components) {
-        u32 id = c.first.as<u32>();
-        auto entity = c.second;
+    auto componentData = data["Components"];
+    for (auto handle : componentData) {
+        u32 id = handle.first.as<u32>();
+        auto components = handle.second;
         ecs::Entity e = reg->Get(id);
-        if (auto spec = entity["TemporaryComponent"]) {
+        if (auto spec = components["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add<TemporaryComponent>(c);
         }
-        if (auto spec = entity["NameComponent"]) {
+        if (auto spec = components["NameComponent"]) {
             NameComponent c;
             c.name = spec["name"] ? spec["name"].as<std::string>() : "Entity";
             e.Add<NameComponent>(c);
         }
-        if (auto spec = entity["Transform2DComponent"]) {
+        if (auto spec = components["Transform2DComponent"]) {
             Transform2DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec2>() : glm::vec2{0.0f, 0.0f};
             c.rotation = spec["rotation"] ? spec["rotation"].as<float>() : 0.0f;
             c.scale = spec["scale"] ? spec["scale"].as<glm::vec2>() : glm::vec2{1.0f, 1.0f};
             e.Add<Transform2DComponent>(c);
         }
-        if (auto spec = entity["Transform3DComponent"]) {
+        if (auto spec = components["Transform3DComponent"]) {
             Transform3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
             c.scale = spec["scale"] ? spec["scale"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             e.Add<Transform3DComponent>(c);
         }
-        if (auto spec = entity["ModelComponent"]) {
+        if (auto spec = components["ModelComponent"]) {
             ModelComponent c;
             c.mesh = spec["mesh"] ? spec["mesh"].as<std::string>() : "";
             c.material = spec["material"] ? spec["material"].as<std::string>() : "";
             e.Add<ModelComponent>(c);
         }
-        if (auto spec = entity["RigidBody3DComponent"]) {
+        if (auto spec = components["RigidBody3DComponent"]) {
             RigidBody3DComponent c;
             c.velocity = spec["velocity"] ? spec["velocity"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.gravity = spec["gravity"] ? spec["gravity"].as<bool>() : true;
@@ -256,7 +247,7 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.rollingResistance = spec["rollingResistance"] ? spec["rollingResistance"].as<float>() : 0.0f;
             e.Add<RigidBody3DComponent>(c);
         }
-        if (auto spec = entity["BoxCollider3DComponent"]) {
+        if (auto spec = components["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
@@ -265,7 +256,7 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.applyScale = spec["applyScale"] ? spec["applyScale"].as<bool>() : true;
             e.Add<BoxCollider3DComponent>(c);
         }
-        if (auto spec = entity["SphereCollider3DComponent"]) {
+        if (auto spec = components["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
@@ -273,7 +264,7 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
             e.Add<SphereCollider3DComponent>(c);
         }
-        if (auto spec = entity["CapsuleCollider3DComponent"]) {
+        if (auto spec = components["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
             c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
             c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
@@ -282,40 +273,40 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.height = spec["height"] ? spec["height"].as<float>() : 1.0f;
             e.Add<CapsuleCollider3DComponent>(c);
         }
-        if (auto spec = entity["ScriptComponent"]) {
+        if (auto spec = components["ScriptComponent"]) {
             ScriptComponent c;
             c.script = spec["script"] ? spec["script"].as<std::string>() : "";
             c.active = spec["active"] ? spec["active"].as<bool>() : true;
             e.Add<ScriptComponent>(c);
         }
-        if (auto spec = entity["Camera3DComponent"]) {
+        if (auto spec = components["Camera3DComponent"]) {
             Camera3DComponent c;
             c.fov = spec["fov"] ? spec["fov"].as<float>() : 70.0f;
             c.pitch = spec["pitch"] ? spec["pitch"].as<float>() : 0.0f;
             e.Add<Camera3DComponent>(c);
         }
-        if (auto spec = entity["SelectComponent"]) {
+        if (auto spec = components["SelectComponent"]) {
             SelectComponent c;
             e.Add<SelectComponent>(c);
         }
-        if (auto spec = entity["PathComponent"]) {
+        if (auto spec = components["PathComponent"]) {
             PathComponent c;
             c.speed = spec["speed"] ? spec["speed"].as<float>() : 0.0f;
             e.Add<PathComponent>(c);
         }
-        if (auto spec = entity["GridComponent"]) {
+        if (auto spec = components["GridComponent"]) {
             GridComponent c;
             c.x = spec["x"] ? spec["x"].as<int>() : 0;
             c.z = spec["z"] ? spec["z"].as<int>() : 0;
             e.Add<GridComponent>(c);
         }
-        if (auto spec = entity["LightComponent"]) {
+        if (auto spec = components["LightComponent"]) {
             LightComponent c;
             c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add<LightComponent>(c);
         }
-        if (auto spec = entity["SunComponent"]) {
+        if (auto spec = components["SunComponent"]) {
             SunComponent c;
             c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
@@ -323,13 +314,13 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.shadows = spec["shadows"] ? spec["shadows"].as<bool>() : false;
             e.Add<SunComponent>(c);
         }
-        if (auto spec = entity["AmbienceComponent"]) {
+        if (auto spec = components["AmbienceComponent"]) {
             AmbienceComponent c;
             c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
             c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
             e.Add<AmbienceComponent>(c);
         }
-        if (auto spec = entity["ParticleComponent"]) {
+        if (auto spec = components["ParticleComponent"]) {
             ParticleComponent c;
             c.interval = spec["interval"] ? spec["interval"].as<float>() : 1.0f;
             c.velocity = spec["velocity"] ? spec["velocity"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
@@ -339,7 +330,7 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;
             e.Add<ParticleComponent>(c);
         }
-        if (auto spec = entity["MeshAnimationComponent"]) {
+        if (auto spec = components["MeshAnimationComponent"]) {
             MeshAnimationComponent c;
             c.name = spec["name"] ? spec["name"].as<std::string>() : "";
             c.time = spec["time"] ? spec["time"].as<float>() : 0.0f;
