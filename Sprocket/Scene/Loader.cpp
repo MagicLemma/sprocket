@@ -18,12 +18,17 @@ void Save(const std::string& file, ecs::Registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Version" << YAML::Value << 2;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
+    for (const auto& slot : reg->SlotInfo()) {
+        out << slot;
+    }
+    out << YAML::EndSeq;
+
+    out << YAML::Key << "Components" << YAML::BeginMap;
     for (auto entity : reg->Each()) {
         if (entity.Has<TemporaryComponent>()) { return; }
-        out << YAML::BeginMap;
+        out << YAML::Key << entity.Id() << YAML::Value << YAML::BeginMap;
         if (entity.Has<TemporaryComponent>()) {
             const auto& c = entity.Get<TemporaryComponent>();
             out << YAML::Key << "TemporaryComponent" << YAML::BeginMap;
@@ -174,7 +179,7 @@ void Save(const std::string& file, ecs::Registry* reg)
         }
         out << YAML::EndMap;
     }
-    out << YAML::EndSeq;
+    out << YAML::EndMap;
     out << YAML::EndMap;
 
     std::ofstream fout(file);

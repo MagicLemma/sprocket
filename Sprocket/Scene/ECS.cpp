@@ -1,5 +1,6 @@
 #include "ECS.h"
 #include "Components.h"
+#include "Log.h"
 
 #include <cpp-itertools.hpp>
 
