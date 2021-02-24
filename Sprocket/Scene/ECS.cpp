@@ -1,6 +1,8 @@
 #include "ECS.h"
 #include "Components.h"
 
+#include <cpp-itertools.hpp>
+
 #include <algorithm>
 
 namespace Sprocket {
@@ -151,6 +153,41 @@ cppcoro::generator<Entity> Registry::Each()
     for (const auto& [index, version] : d_entities.Fast()) {
         co_yield {this, index, version};
     }
+}
+
+Registry::Registry(const std::vector<Slot>& slots)
+{
+    for (const auto& [indexull, slot] : itertools::enumerate(slots)) {
+        u16 index = static_cast<u16>(indexull);
+        const auto& [version, active] = slot;
+
+        if (active) {
+            d_entities.Insert(index, version);
+        } else {
+            d_pool.push({index, version});
+        }
+    }
+}
+
+std::vector<Registry::Slot> Registry::SlotInfo() const
+{
+    std::vector<Registry::Slot> slots;
+    slots.resize(d_entities.Size() + d_pool.size());
+
+    // Alive entities
+    for (const auto& [index, version] : d_entities.Fast()) {
+        slots[index] = {version, true};
+    }
+
+    // Dead entities
+    auto pool = d_pool;
+    while (!pool.empty()) {
+        auto [index, version] = pool.front();
+        pool.pop();
+        slots[index] = {version, false};
+    }
+
+    return slots;
 }
 
 }

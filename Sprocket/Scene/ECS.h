@@ -128,6 +128,27 @@ public:
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     friend class Entity;
+
+// This section contains helper functions for serialising a registry and should just
+// be ignored at runtime.
+public:
+
+    struct Slot
+    {
+        u16 version;
+        bool active;
+    };
+
+    // Constructs a registry with entity handles for all active slots and adds all
+    // inactive slots to the dead entity pool. All active entities will have no
+    // components and should be added separately.
+    Registry(const std::vector<Slot>& slots);
+
+    // Returns a vector of Slots describing the current internal structure of Entity
+    // handles. A living entity in index 2 with version 4 will be at index 2 in the
+    // returned vector and will have version == 4, active == true. ALl dead entities
+    // in the pool will have active == false.
+    std::vector<Slot> SlotInfo() const;
 };
 
 // An "empty" entity.
