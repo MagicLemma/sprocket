@@ -46,7 +46,7 @@ void Entity::Delete()
         d_registry->d_entities.Erase(d_index);
 
         // Add the entity slot to the pool of available IDs.
-        d_registry->d_pool.push({d_index, d_version});
+        d_registry->d_pool.push_back({d_index, d_version});
     }
 }
 
@@ -100,7 +100,7 @@ Entity Registry::New()
     // If there is a slot in the pool, pop it and bump its version.
     if (!d_pool.empty()) {
         std::tie(index, version) = d_pool.front();
-        d_pool.pop();
+        d_pool.pop_front();
         ++version;
     }
     // Otherwise we append on the end.
@@ -128,7 +128,7 @@ void Registry::DeleteAll()
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<std::pair<u16, u16>>().swap(d_pool);
+    d_pool.clear();
 
     // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
@@ -140,7 +140,7 @@ void Registry::Clear()
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<std::pair<u16, u16>>().swap(d_pool);
+    d_pool.clear();
 }
 
 std::size_t Registry::Size() const
@@ -164,7 +164,7 @@ Registry::Registry(const std::vector<Slot>& slots)
         if (active) {
             d_entities.Insert(index, version);
         } else {
-            d_pool.push({index, version});
+            d_pool.push_back({index, version});
         }
     }
 }
@@ -180,10 +180,7 @@ std::vector<Registry::Slot> Registry::SlotInfo() const
     }
 
     // Dead entities
-    auto pool = d_pool;
-    while (!pool.empty()) {
-        auto [index, version] = pool.front();
-        pool.pop();
+    for (const auto& [index, version] : d_pool) {
         slots[index] = {version, false};
     }
 

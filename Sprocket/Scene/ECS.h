@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <typeinfo>
 #include <typeindex>
-#include <queue>
+#include <deque>
 #include <functional>
 #include <limits>
 #include <vector>
@@ -66,7 +66,7 @@ private:
 
     // When an entity is removed, their slot/version is added to the pool so that it
     // can be reused.
-    std::queue<std::pair<u16, u16>> d_pool;
+    std::deque<std::pair<u16, u16>> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
