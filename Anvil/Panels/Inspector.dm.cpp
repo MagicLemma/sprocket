@@ -23,9 +23,9 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
-    ImGui::Text("ID:");
+    ImGui::Text("ID %d", entity.Id());
     ImGui::SameLine();
-    ImGui::Text(std::to_string(entity.Id()).c_str());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "Index %d Version %d", entity.Index(), entity.Version());
 
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {

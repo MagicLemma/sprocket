@@ -271,11 +271,13 @@ void Anvil::OnRender()
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
                 for (auto entity : d_scene->Entities().Each()) {
-                    if (SubstringCI(Name(entity), search) || MatchID(entity.Id(), search)) {
+                    if (SubstringCI(Name(entity), search) || SubstringCI(std::to_string(entity.Id()), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {
                             d_selected = entity;
                         }
+                        ImGui::SameLine();
+                        ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "%d", entity.Id());
                         ImGui::PopID();
                     }
                 }
