@@ -92,7 +92,7 @@ public:
     Entity New();
 
     // Given an entity ID, return the entity handle associated to it.
-    Entity Get(u32 id); 
+    Entity Get(u32 id);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
@@ -120,7 +120,9 @@ public:
     template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
     // Registers a function that will be called whenever a Comp is added to an
-    // entity. This is called after the component has been added.
+    // entity. This is called after the component has been added. This function
+    // will also invoke the callback for all existing entities with the given
+    // component.
     template <typename Comp> void OnAdd(const EntityCallback& cb);
 
     // Registers a function that will be called whenever a Comp is removed from
@@ -164,6 +166,9 @@ template <typename Comp>
 void Registry::OnAdd(const EntityCallback& cb)
 {
     d_comps[typeid(Comp)].onAdd.push_back(cb);
+    for (auto e : View<Comp>()) {
+        cb(e);
+    }
 }
 
 template <typename Comp>

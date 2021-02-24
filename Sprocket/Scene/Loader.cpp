@@ -12,9 +12,74 @@
 
 namespace Sprocket {
 namespace Loader {
+namespace {
+
+void CopyComponents(ecs::Entity target, ecs::Entity source)
+{
+    if (source.Has<TemporaryComponent>()) {
+        target.Add<TemporaryComponent>(source.Get<TemporaryComponent>());
+    }
+    if (source.Has<NameComponent>()) {
+        target.Add<NameComponent>(source.Get<NameComponent>());
+    }
+    if (source.Has<Transform2DComponent>()) {
+        target.Add<Transform2DComponent>(source.Get<Transform2DComponent>());
+    }
+    if (source.Has<Transform3DComponent>()) {
+        target.Add<Transform3DComponent>(source.Get<Transform3DComponent>());
+    }
+    if (source.Has<ModelComponent>()) {
+        target.Add<ModelComponent>(source.Get<ModelComponent>());
+    }
+    if (source.Has<RigidBody3DComponent>()) {
+        target.Add<RigidBody3DComponent>(source.Get<RigidBody3DComponent>());
+    }
+    if (source.Has<BoxCollider3DComponent>()) {
+        target.Add<BoxCollider3DComponent>(source.Get<BoxCollider3DComponent>());
+    }
+    if (source.Has<SphereCollider3DComponent>()) {
+        target.Add<SphereCollider3DComponent>(source.Get<SphereCollider3DComponent>());
+    }
+    if (source.Has<CapsuleCollider3DComponent>()) {
+        target.Add<CapsuleCollider3DComponent>(source.Get<CapsuleCollider3DComponent>());
+    }
+    if (source.Has<ScriptComponent>()) {
+        target.Add<ScriptComponent>(source.Get<ScriptComponent>());
+    }
+    if (source.Has<Camera3DComponent>()) {
+        target.Add<Camera3DComponent>(source.Get<Camera3DComponent>());
+    }
+    if (source.Has<SelectComponent>()) {
+        target.Add<SelectComponent>(source.Get<SelectComponent>());
+    }
+    if (source.Has<PathComponent>()) {
+        target.Add<PathComponent>(source.Get<PathComponent>());
+    }
+    if (source.Has<GridComponent>()) {
+        target.Add<GridComponent>(source.Get<GridComponent>());
+    }
+    if (source.Has<LightComponent>()) {
+        target.Add<LightComponent>(source.Get<LightComponent>());
+    }
+    if (source.Has<SunComponent>()) {
+        target.Add<SunComponent>(source.Get<SunComponent>());
+    }
+    if (source.Has<AmbienceComponent>()) {
+        target.Add<AmbienceComponent>(source.Get<AmbienceComponent>());
+    }
+    if (source.Has<ParticleComponent>()) {
+        target.Add<ParticleComponent>(source.Get<ParticleComponent>());
+    }
+    if (source.Has<MeshAnimationComponent>()) {
+        target.Add<MeshAnimationComponent>(source.Get<MeshAnimationComponent>());
+    }
+}
+
+}
 
 void Save(const std::string& file, ecs::Registry* reg)
 {
+    assert(reg);
     YAML::Emitter out;
     out << YAML::BeginMap;
 
@@ -187,6 +252,7 @@ void Save(const std::string& file, ecs::Registry* reg)
 
 void Load(const std::string& file, ecs::Registry* reg)
 {
+    assert(reg);
     std::ifstream stream(file);
     std::stringstream sstream;
     sstream << stream.rdbuf();
@@ -340,73 +406,23 @@ void Load(const std::string& file, ecs::Registry* reg)
     }
 }
 
-ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
+ecs::Entity Duplicate(ecs::Registry* reg, ecs::Entity entity)
 {
+    assert(reg);
     ecs::Entity e = reg->New();
-    if (entity.Has<TemporaryComponent>()) {
-        e.Add<TemporaryComponent>(entity.Get<TemporaryComponent>());
-    }
-    if (entity.Has<NameComponent>()) {
-        e.Add<NameComponent>(entity.Get<NameComponent>());
-    }
-    if (entity.Has<Transform2DComponent>()) {
-        e.Add<Transform2DComponent>(entity.Get<Transform2DComponent>());
-    }
-    if (entity.Has<Transform3DComponent>()) {
-        e.Add<Transform3DComponent>(entity.Get<Transform3DComponent>());
-    }
-    if (entity.Has<ModelComponent>()) {
-        e.Add<ModelComponent>(entity.Get<ModelComponent>());
-    }
-    if (entity.Has<RigidBody3DComponent>()) {
-        e.Add<RigidBody3DComponent>(entity.Get<RigidBody3DComponent>());
-    }
-    if (entity.Has<BoxCollider3DComponent>()) {
-        e.Add<BoxCollider3DComponent>(entity.Get<BoxCollider3DComponent>());
-    }
-    if (entity.Has<SphereCollider3DComponent>()) {
-        e.Add<SphereCollider3DComponent>(entity.Get<SphereCollider3DComponent>());
-    }
-    if (entity.Has<CapsuleCollider3DComponent>()) {
-        e.Add<CapsuleCollider3DComponent>(entity.Get<CapsuleCollider3DComponent>());
-    }
-    if (entity.Has<ScriptComponent>()) {
-        e.Add<ScriptComponent>(entity.Get<ScriptComponent>());
-    }
-    if (entity.Has<Camera3DComponent>()) {
-        e.Add<Camera3DComponent>(entity.Get<Camera3DComponent>());
-    }
-    if (entity.Has<SelectComponent>()) {
-        e.Add<SelectComponent>(entity.Get<SelectComponent>());
-    }
-    if (entity.Has<PathComponent>()) {
-        e.Add<PathComponent>(entity.Get<PathComponent>());
-    }
-    if (entity.Has<GridComponent>()) {
-        e.Add<GridComponent>(entity.Get<GridComponent>());
-    }
-    if (entity.Has<LightComponent>()) {
-        e.Add<LightComponent>(entity.Get<LightComponent>());
-    }
-    if (entity.Has<SunComponent>()) {
-        e.Add<SunComponent>(entity.Get<SunComponent>());
-    }
-    if (entity.Has<AmbienceComponent>()) {
-        e.Add<AmbienceComponent>(entity.Get<AmbienceComponent>());
-    }
-    if (entity.Has<ParticleComponent>()) {
-        e.Add<ParticleComponent>(entity.Get<ParticleComponent>());
-    }
-    if (entity.Has<MeshAnimationComponent>()) {
-        e.Add<MeshAnimationComponent>(entity.Get<MeshAnimationComponent>());
-    }
+    CopyComponents(e, entity);
     return e;
 }
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
+    assert(source);
+    assert(target);
+
+    target->SetSlotInfo(source->SlotInfo());
     for (auto entity : source->Each()) {
-        Copy(target, entity);
+        ecs::Entity e = target->Get(entity.Id());
+        CopyComponents(e, entity);
     }
 }
 

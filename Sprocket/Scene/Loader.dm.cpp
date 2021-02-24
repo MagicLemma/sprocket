@@ -11,9 +11,22 @@
 
 namespace Sprocket {
 namespace Loader {
+namespace {
+
+void CopyComponents(ecs::Entity target, ecs::Entity source)
+{
+#ifdef DATAMATIC_BLOCK
+    if (source.Has<{{Comp.Name}}>()) {
+        target.Add<{{Comp.Name}}>(source.Get<{{Comp.Name}}>());
+    }
+#endif
+}
+
+}
 
 void Save(const std::string& file, ecs::Registry* reg)
 {
+    assert(reg);
     YAML::Emitter out;
     out << YAML::BeginMap;
 
@@ -46,6 +59,7 @@ void Save(const std::string& file, ecs::Registry* reg)
 
 void Load(const std::string& file, ecs::Registry* reg)
 {
+    assert(reg);
     std::ifstream stream(file);
     std::stringstream sstream;
     sstream << stream.rdbuf();
@@ -77,21 +91,23 @@ void Load(const std::string& file, ecs::Registry* reg)
     }
 }
 
-ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
+ecs::Entity Duplicate(ecs::Registry* reg, ecs::Entity entity)
 {
+    assert(reg);
     ecs::Entity e = reg->New();
-#ifdef DATAMATIC_BLOCK
-    if (entity.Has<{{Comp.Name}}>()) {
-        e.Add<{{Comp.Name}}>(entity.Get<{{Comp.Name}}>());
-    }
-#endif
+    CopyComponents(e, entity);
     return e;
 }
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
+    assert(source);
+    assert(target);
+    
+    target->SetSlotInfo(source->SlotInfo());
     for (auto entity : source->Each()) {
-        Copy(target, entity);
+        ecs::Entity e = target->Get(entity.Id());
+        CopyComponents(e, entity);
     }
 }
 
