@@ -156,8 +156,9 @@ cppcoro::generator<Entity> Registry::Each()
     }
 }
 
-Registry::Registry(const std::vector<Slot>& slots)
+void Registry::SetSlotInfo(const std::vector<Slot>& slots)
 {
+    Clear();
     for (const auto& [indexull, slot] : itertools::enumerate(slots)) {
         u16 index = static_cast<u16>(indexull);
         const auto& [version, active] = slot;

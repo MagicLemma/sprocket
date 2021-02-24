@@ -200,15 +200,23 @@ void Load(const std::string& file, ecs::Registry* reg)
     sstream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(sstream.str());
-    UpdateScene(data);
 
-    if (!data["Entities"]) {
+    if (!data["Components"] & !data["Entities"]) {
         return; // TODO: Error checking
     }
 
-    auto entities = data["Entities"];
-    for (auto entity : entities) {
-        ecs::Entity e = reg->New();
+    std::vector<ecs::Registry::Slot> slots;
+    slots.reserve(data["Entities"].size());
+    for (auto slot : data["Entities"]) {
+        slots.push_back(slot.as<ecs::Registry::Slot>());
+    }
+    reg->SetSlotInfo(slots);
+
+    auto components = data["Components"];
+    for (auto c : components) {
+        u32 id = c.first.as<u32>();
+        auto entity = c.second;
+        ecs::Entity e = reg->Get(id);
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add<TemporaryComponent>(c);

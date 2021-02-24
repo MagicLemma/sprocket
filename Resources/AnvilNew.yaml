@@ -35,7 +35,7 @@ Entities:
   - [0, true]
   - [0, true]
   - [0, true]
-  - [0, true]
+  - [1, true]
 Components:
   0:
     NameComponent:
@@ -814,5 +814,5 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  36:
+  65572:
     {}
