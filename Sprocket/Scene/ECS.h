@@ -21,20 +21,20 @@ class Registry;
 
 static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
 static constexpr u16 NULL_INDEX = std::numeric_limits<u32>::max();
-static constexpr u16 NULL_VERSION = std::numeric_limits<u32>::max();
+static constexpr u16 NULL_VERSION = std::numeric_limits<u64>::max();
 
 class Entity
 {
     Registry* d_registry;
     u16       d_index;
-    u16       d_version;
+    u64       d_guid;
 
     bool Has(std::type_index type) const;
     void Remove(std::type_index type);
 
 public:
-    Entity(Registry* r, u16 i, u16 v) : d_registry(r), d_index(i), d_version(v) {}
-    Entity() : d_registry(nullptr), d_index(NULL_INDEX), d_version(NULL_VERSION) {}
+    Entity(Registry* r, u16 i, u64 g) : d_registry(r), d_index(i), d_guid(g) {}
+    Entity() : d_registry(nullptr), d_index(NULL_INDEX), d_guid(NULL_VERSION) {}
 
     bool Valid() const;
     void Delete();
@@ -45,7 +45,7 @@ public:
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
 
-    u32 Id() const;
+    u64 Id() const;
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
@@ -60,11 +60,11 @@ public:
 
 private:
     // Stores the current version of each entity.
-    SparseSet<u16> d_entities;
+    SparseSet<u64> d_entities;
 
     // When an entity is removed, their slot/version is added to the pool so that it
     // can be reused.
-    std::queue<std::pair<u16, u16>> d_pool;
+    std::queue<u16> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -88,9 +88,6 @@ public:
 
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
     Entity New();
-
-    // Given an entity ID, return the entity handle associated to it.
-    Entity Get(u32 id); 
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
