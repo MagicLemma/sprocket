@@ -89,24 +89,6 @@ Node convert<glm::mat4>::encode(const glm::mat4& rhs)
     return n;
 }
 
-Node convert<ecs::Registry::Slot>::encode(const ecs::Registry::Slot& rhs)
-{
-    Node n;
-    n.push_back(rhs.version);
-    n.push_back(rhs.active);
-    return n;
-}
-
-bool convert<ecs::Registry::Slot>::decode(const Node& node, ecs::Registry::Slot& rhs)
-{
-    if (!node.IsSequence() || node.size() != 2)
-        return false;
-
-    rhs.version = node[0].as<u16>();
-    rhs.active = node[1].as<bool>();
-    return true;
-}
-
 bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
 {
     if (!node.IsSequence() || node.size() != 16)
@@ -164,13 +146,6 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
                           << m[2][0] << m[2][1] << m[2][2] << m[2][3]
                           << m[3][0] << m[3][1] << m[3][2] << m[3][3]
                           << YAML::EndSeq;
-    return out;
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const ecs::Registry::Slot& s)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << s.version << s.active << YAML::EndSeq;
     return out;
 }
 

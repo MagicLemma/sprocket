@@ -1,58 +1,18 @@
+Version: 2
 Entities:
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [0, true]
-  - [1, true]
-Components:
-  0:
-    NameComponent:
+  - NameComponent:
       name: Ambience
     AmbienceComponent:
       colour: [1, 1, 1]
       brightness: 0.03
-  1:
-    NameComponent:
+  - NameComponent:
       name: Sun
     SunComponent:
       colour: [0.9019608, 0.8005289, 0.6720492]
       brightness: 1.6
       direction: [0, -0.9805147, -0.196446]
       shadows: false
-  2:
-    NameComponent:
+  - NameComponent:
       name: Running Character
     Transform3DComponent:
       position: [-12.34701, 0.2741509, -6.543652]
@@ -65,8 +25,7 @@ Components:
       name: Armature|ArmatureAction
       time: 5
       speed: 1
-  3:
-    NameComponent:
+  - NameComponent:
       name: Bridge Thin 3
     Transform3DComponent:
       position: [0, 0, 10]
@@ -90,8 +49,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  4:
-    NameComponent:
+  - NameComponent:
       name: Bridge Thin 2
     Transform3DComponent:
       position: [0, 0, 9]
@@ -115,8 +73,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  5:
-    NameComponent:
+  - NameComponent:
       name: Player
     Transform3DComponent:
       position: [-14.72964, 1.646085, -0.107402]
@@ -146,8 +103,7 @@ Components:
       pitch: 0
     SelectComponent:
       {}
-  6:
-    NameComponent:
+  - NameComponent:
       name: Bridge Thin 1
     Transform3DComponent:
       position: [0, 0, 8]
@@ -171,8 +127,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  7:
-    NameComponent:
+  - NameComponent:
       name: Bridge Wide
     Transform3DComponent:
       position: [-0.1458986, 0.02311094, -8.724297]
@@ -196,8 +151,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  8:
-    NameComponent:
+  - NameComponent:
       name: Platform (Angled)
     Transform3DComponent:
       position: [0.001507398, 2.274611, 21.75628]
@@ -221,8 +175,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  9:
-    NameComponent:
+  - NameComponent:
       name: Platform (Blue)
     Transform3DComponent:
       position: [-10, 0, 0]
@@ -246,8 +199,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  10:
-    NameComponent:
+  - NameComponent:
       name: Island
     Transform3DComponent:
       position: [0, -7, -30]
@@ -258,8 +210,7 @@ Components:
       material: Resources/Materials/green.yaml
     SelectComponent:
       {}
-  11:
-    NameComponent:
+  - NameComponent:
       name: Platform (Red)
     Transform3DComponent:
       position: [10, 0, 0]
@@ -283,8 +234,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  12:
-    NameComponent:
+  - NameComponent:
       name: Red Light
     Transform3DComponent:
       position: [14, 5, 0]
@@ -293,8 +243,7 @@ Components:
     LightComponent:
       colour: [1, 0, 0]
       brightness: 2
-  13:
-    NameComponent:
+  - NameComponent:
       name: Blue Light
     Transform3DComponent:
       position: [-14, 5, 0]
@@ -303,8 +252,7 @@ Components:
     LightComponent:
       colour: [0, 0, 1]
       brightness: 2
-  14:
-    NameComponent:
+  - NameComponent:
       name: Green Light
     Transform3DComponent:
       position: [-1.224496, 2.567594, -9.963178]
@@ -313,8 +261,7 @@ Components:
     LightComponent:
       colour: [0.72, 0.6289493, 0.09920003]
       brightness: 43.9
-  15:
-    NameComponent:
+  - NameComponent:
       name: White Light
     Transform3DComponent:
       position: [-8.66809, 20.76288, -13.71229]
@@ -323,8 +270,7 @@ Components:
     LightComponent:
       colour: [0.904, 0.7333333, 1]
       brightness: 260.9
-  16:
-    NameComponent:
+  - NameComponent:
       name: Pit Wall 4
     Transform3DComponent:
       position: [-22.48153, -0.7553417, 11.35812]
@@ -348,8 +294,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  17:
-    NameComponent:
+  - NameComponent:
       name: Pit Wall 3
     Transform3DComponent:
       position: [-22.48153, -0.7553417, 1.987747]
@@ -373,8 +318,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  18:
-    NameComponent:
+  - NameComponent:
       name: Pit Wall 2
     Transform3DComponent:
       position: [-17.76336, -0.7553418, 6.675583]
@@ -398,8 +342,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  19:
-    NameComponent:
+  - NameComponent:
       name: Pit Wall 1
     Transform3DComponent:
       position: [-27.19478, -0.7553418, 6.675583]
@@ -423,8 +366,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  20:
-    NameComponent:
+  - NameComponent:
       name: Pit Floor
     Transform3DComponent:
       position: [-22.48153, -1.756183, 6.635912]
@@ -448,8 +390,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  21:
-    NameComponent:
+  - NameComponent:
       name: Pit Crate
     Transform3DComponent:
       position: [-18.92559, -1.5, 10.18482]
@@ -473,8 +414,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  22:
-    NameComponent:
+  - NameComponent:
       name: Sphere (Particles)
     Transform3DComponent:
       position: [-8.352023, 2.686497, 12.41776]
@@ -504,8 +444,7 @@ Components:
       acceleration: [0, -9.81, 0]
       scale: [5, 5, 5]
       life: 60.5
-  23:
-    NameComponent:
+  - NameComponent:
       name: Sphere (No Particles)
     Transform3DComponent:
       position: [-12.44487, 2.686496, 12.44196]
@@ -528,8 +467,7 @@ Components:
       radius: 1
     SelectComponent:
       {}
-  24:
-    NameComponent:
+  - NameComponent:
       name: Tree Small
     Transform3DComponent:
       position: [-14.01267, 0.3019291, -13.35674]
@@ -551,8 +489,7 @@ Components:
       mass: 1
       halfExtents: [0.25, 0.8, 0.25]
       applyScale: true
-  25:
-    NameComponent:
+  - NameComponent:
       name: Tree Large
     Transform3DComponent:
       position: [-4.764427, 0.301929, -26.94802]
@@ -561,8 +498,7 @@ Components:
     ModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
-  26:
-    NameComponent:
+  - NameComponent:
       name: Pistol
     Transform3DComponent:
       position: [7.777368, 2.526275, -10.93738]
@@ -589,8 +525,7 @@ Components:
       active: true
     SelectComponent:
       {}
-  27:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
       position: [-22.08163, 1.329976, -4.062364]
@@ -614,8 +549,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  28:
-    NameComponent:
+  - NameComponent:
       name: Crate Upper
     Transform3DComponent:
       position: [-24.50688, 2.658418, -6.193301]
@@ -639,8 +573,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  29:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
       position: [-7.520597, 3.294004, -4.062364]
@@ -664,8 +597,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  30:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
       position: [-7.520597, 4.494779, -4.062364]
@@ -689,11 +621,10 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  31:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
-      position: [-9.982604, 5.576144, -4.062364]
+      position: [-7.648428, 5.646762, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
     ModelComponent:
@@ -704,8 +635,8 @@ Components:
       gravity: true
       frozen: false
       bounciness: 0.046
-      frictionCoefficient: 0.158
-      rollingResistance: 0.112
+      frictionCoefficient: 0.23
+      rollingResistance: 0.132
     BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
@@ -714,8 +645,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  32:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
       position: [-8.850865, 5.689884, -4.062364]
@@ -739,11 +669,10 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  33:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
-      position: [-10.13275, 4.474674, -4.062364]
+      position: [-8.850865, 4.496203, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
     ModelComponent:
@@ -754,8 +683,8 @@ Components:
       gravity: true
       frozen: false
       bounciness: 0.046
-      frictionCoefficient: 0.158
-      rollingResistance: 0.112
+      frictionCoefficient: 0.092
+      rollingResistance: 0.099
     BoxCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
@@ -764,8 +693,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  34:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
       position: [-8.850865, 3.253146, -4.062364]
@@ -789,8 +717,7 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  35:
-    NameComponent:
+  - NameComponent:
       name: Crate Lower
     Transform3DComponent:
       position: [-10.13275, 3.253146, -4.062364]
@@ -814,5 +741,51 @@ Components:
       applyScale: true
     SelectComponent:
       {}
-  65572:
-    {}
+  - NameComponent:
+      name: Crate Lower
+    Transform3DComponent:
+      position: [-10.13275, 4.474674, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.158
+      rollingResistance: 0.112
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - NameComponent:
+      name: Crate Lower
+    Transform3DComponent:
+      position: [-9.982604, 5.576144, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.158
+      rollingResistance: 0.112
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}

@@ -58,7 +58,6 @@ public:
     // Provides a generator that loops over the packed set, which is fast but
     // results in undefined behaviour when removing elements.
     cppcoro::generator<std::pair<const IndexType, ValueType>&> Fast();
-    cppcoro::generator<const std::pair<IndexType, ValueType>&> Fast() const;
 
     // Provides a generator that loops over the sparse set, which is slower but
     // safe for deleting the current element.
@@ -150,14 +149,6 @@ cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, 
     for (auto pair : d_packed) {
         co_yield pair;
     }
-}
-
-template <typename ValueType, typename IndexType>
-cppcoro::generator<const std::pair<IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Fast() const
-{
-    for (auto pair : d_packed) {
-        co_yield pair;
-    }   
 }
 
 template <typename ValueType, typename IndexType>

@@ -4,6 +4,7 @@
 #include "Maths.h"
 #include "Yaml.h"
 #include "Scene.h"
+#include "Updater.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -11,35 +12,17 @@
 
 namespace Sprocket {
 namespace Loader {
-namespace {
-
-void CopyComponents(ecs::Entity target, ecs::Entity source)
-{
-#ifdef DATAMATIC_BLOCK
-    if (source.Has<{{Comp.Name}}>()) {
-        target.Add<{{Comp.Name}}>(source.Get<{{Comp.Name}}>());
-    }
-#endif
-}
-
-}
 
 void Save(const std::string& file, ecs::Registry* reg)
 {
-    assert(reg);
     YAML::Emitter out;
     out << YAML::BeginMap;
+    out << YAML::Key << "Version" << YAML::Value << 2;
 
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (const auto& slot : reg->SlotInfo()) {
-        out << slot;
-    }
-    out << YAML::EndSeq;
-
-    out << YAML::Key << "Components" << YAML::BeginMap;
     for (auto entity : reg->Each()) {
         if (entity.Has<TemporaryComponent>()) { return; }
-        out << YAML::Key << entity.Id() << YAML::Value << YAML::BeginMap;
+        out << YAML::BeginMap;
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (entity.Has<{{Comp.Name}}>()) {
             const auto& c = entity.Get<{{Comp.Name}}>();
@@ -50,7 +33,7 @@ void Save(const std::string& file, ecs::Registry* reg)
 #endif
         out << YAML::EndMap;
     }
-    out << YAML::EndMap;
+    out << YAML::EndSeq;
     out << YAML::EndMap;
 
     std::ofstream fout(file);
@@ -59,30 +42,29 @@ void Save(const std::string& file, ecs::Registry* reg)
 
 void Load(const std::string& file, ecs::Registry* reg)
 {
-    assert(reg);
+    // Must be a clean scene
+    u32 count = 0;
+    for (ecs::Entity e : reg->Each()) {
+        if (!e.Has<TemporaryComponent>()) ++count;
+    }
+    assert(count == 0);
+
     std::ifstream stream(file);
     std::stringstream sstream;
     sstream << stream.rdbuf();
-    YAML::Node data = YAML::Load(sstream.str());
 
-    if (!data["Entities"] || !data["Components"]) {
+    YAML::Node data = YAML::Load(sstream.str());
+    UpdateScene(data);
+
+    if (!data["Entities"]) {
         return; // TODO: Error checking
     }
 
-    std::vector<ecs::Registry::Slot> slots;
-    slots.reserve(data["Entities"].size());
-    for (auto slot : data["Entities"]) {
-        slots.push_back(slot.as<ecs::Registry::Slot>());
-    }
-    reg->SetSlotInfo(slots); // Also clears the reg if it was non-empty.
-
-    auto componentData = data["Components"];
-    for (auto handle : componentData) {
-        u32 id = handle.first.as<u32>();
-        auto components = handle.second;
-        ecs::Entity e = reg->Get(id);
+    auto entities = data["Entities"];
+    for (auto entity : entities) {
+        ecs::Entity e = reg->New();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
-        if (auto spec = components["{{Comp.Name}}"]) {
+        if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
             c.{{Attr.Name}} = spec["{{Attr.Name}}"] ? spec["{{Attr.Name}}"].as<{{Attr.Type}}>() : {{Attr.Default}};
             e.Add<{{Comp.Name}}>(c);
@@ -91,23 +73,21 @@ void Load(const std::string& file, ecs::Registry* reg)
     }
 }
 
-ecs::Entity Duplicate(ecs::Registry* reg, ecs::Entity entity)
+ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 {
-    assert(reg);
     ecs::Entity e = reg->New();
-    CopyComponents(e, entity);
+#ifdef DATAMATIC_BLOCK
+    if (entity.Has<{{Comp.Name}}>()) {
+        e.Add<{{Comp.Name}}>(entity.Get<{{Comp.Name}}>());
+    }
+#endif
     return e;
 }
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
-    assert(source);
-    assert(target);
-    
-    target->SetSlotInfo(source->SlotInfo());
     for (auto entity : source->Each()) {
-        ecs::Entity e = target->Get(entity.Id());
-        CopyComponents(e, entity);
+        Copy(target, entity);
     }
 }
 

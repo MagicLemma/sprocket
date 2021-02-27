@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <typeinfo>
 #include <typeindex>
-#include <deque>
+#include <queue>
 #include <functional>
 #include <limits>
 #include <vector>
@@ -46,7 +46,6 @@ public:
     template <typename Comp> bool Has() const;
 
     u32 Id() const;
-    u16 Index() const;
     u16 Version() const;
 
     bool operator==(Entity other) const;
@@ -66,7 +65,7 @@ private:
 
     // When an entity is removed, their slot/version is added to the pool so that it
     // can be reused.
-    std::deque<std::pair<u16, u16>> d_pool;
+    std::queue<std::pair<u16, u16>> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -92,7 +91,7 @@ public:
     Entity New();
 
     // Given an entity ID, return the entity handle associated to it.
-    Entity Get(u32 id);
+    Entity Get(u32 id); 
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
@@ -120,9 +119,7 @@ public:
     template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
     // Registers a function that will be called whenever a Comp is added to an
-    // entity. This is called after the component has been added. This function
-    // will also invoke the callback for all existing entities with the given
-    // component.
+    // entity. This is called after the component has been added.
     template <typename Comp> void OnAdd(const EntityCallback& cb);
 
     // Registers a function that will be called whenever a Comp is removed from
@@ -130,27 +127,6 @@ public:
     template <typename Comp> void OnRemove(const EntityCallback& cb);
 
     friend class Entity;
-
-// This section contains helper functions for serialising a registry and should just
-// be ignored at runtime.
-public:
-
-    struct Slot
-    {
-        u16 version;
-        bool active;
-    };
-
-    // Clears the registry and populates with entity handles for all active slots
-    // and adds all inactive slots to the dead entity pool. All active entities
-    // will have no components and should be added separately.
-    void SetSlotInfo(const std::vector<Slot>& slots);
-
-    // Returns a vector of Slots describing the current internal structure of Entity
-    // handles. A living entity in index 2 with version 4 will be at index 2 in the
-    // returned vector and will have version == 4, active == true. ALl dead entities
-    // in the pool will have active == false.
-    std::vector<Slot> SlotInfo() const;
 };
 
 // An "empty" entity.
@@ -166,9 +142,6 @@ template <typename Comp>
 void Registry::OnAdd(const EntityCallback& cb)
 {
     d_comps[typeid(Comp)].onAdd.push_back(cb);
-    for (auto e : View<Comp>()) {
-        cb(e);
-    }
 }
 
 template <typename Comp>

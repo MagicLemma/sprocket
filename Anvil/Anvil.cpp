@@ -199,12 +199,12 @@ void Anvil::OnRender()
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(); 
-                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
                 d_activeScene->Add<PhysicsEngine3D>();
                 d_activeScene->Add<CameraSystem>(d_window->AspectRatio());
                 d_activeScene->Add<ScriptRunner>(d_window);
                 d_activeScene->Add<ParticleSystem>(&d_particleManager);
                 d_activeScene->Add<AnimationSystem>();
+                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
                 d_playingGame = true;
                 d_runtimeCamera = d_activeScene->Entities().Find<Camera3DComponent>();
@@ -260,13 +260,11 @@ void Anvil::OnRender()
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
                 for (auto entity : d_scene->Entities().Each()) {
-                    if (SubstringCI(Name(entity), search) || SubstringCI(std::to_string(entity.Id()), search)) {
+                    if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(entity.Id());
                         if (ImGui::Selectable(Name(entity).c_str())) {
                             d_selected = entity;
                         }
-                        ImGui::SameLine();
-                        ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "%d", entity.Id());
                         ImGui::PopID();
                     }
                 }

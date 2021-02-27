@@ -23,10 +23,6 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
-    ImGui::Text("ID %d", entity.Id());
-    ImGui::SameLine();
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "Index %d Version %d", entity.Index(), entity.Version());
-
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         auto& c = entity.Get<{{Comp.Name}}>();
@@ -57,7 +53,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        ecs::Entity copy = Loader::Duplicate(&editor.GetScene()->Entities(), entity);
+        ecs::Entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

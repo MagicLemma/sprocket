@@ -1,8 +1,5 @@
 #include "ECS.h"
 #include "Components.h"
-#include "Log.h"
-
-#include <cpp-itertools.hpp>
 
 #include <algorithm>
 
@@ -47,18 +44,13 @@ void Entity::Delete()
         d_registry->d_entities.Erase(d_index);
 
         // Add the entity slot to the pool of available IDs.
-        d_registry->d_pool.push_back({d_index, d_version});
+        d_registry->d_pool.push({d_index, d_version});
     }
 }
 
 u32 Entity::Id() const
 {
     return (u32)d_version << 16 | d_index;
-}
-
-u16 Entity::Index() const
-{
-    return d_index;
 }
 
 u16 Entity::Version() const
@@ -101,7 +93,7 @@ Entity Registry::New()
     // If there is a slot in the pool, pop it and bump its version.
     if (!d_pool.empty()) {
         std::tie(index, version) = d_pool.front();
-        d_pool.pop_front();
+        d_pool.pop();
         ++version;
     }
     // Otherwise we append on the end.
@@ -129,7 +121,7 @@ void Registry::DeleteAll()
 
     // Reset all entity storage
     d_entities.Clear();
-    d_pool.clear();
+    std::queue<std::pair<u16, u16>>().swap(d_pool);
 
     // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
@@ -141,7 +133,7 @@ void Registry::Clear()
 
     // Reset all entity storage
     d_entities.Clear();
-    d_pool.clear();
+    std::queue<std::pair<u16, u16>>().swap(d_pool);
 }
 
 std::size_t Registry::Size() const
@@ -154,39 +146,6 @@ cppcoro::generator<Entity> Registry::Each()
     for (const auto& [index, version] : d_entities.Fast()) {
         co_yield {this, index, version};
     }
-}
-
-void Registry::SetSlotInfo(const std::vector<Slot>& slots)
-{
-    Clear();
-    for (const auto& [indexull, slot] : itertools::enumerate(slots)) {
-        u16 index = static_cast<u16>(indexull);
-        const auto& [version, active] = slot;
-
-        if (active) {
-            d_entities.Insert(index, version);
-        } else {
-            d_pool.push_back({index, version});
-        }
-    }
-}
-
-std::vector<Registry::Slot> Registry::SlotInfo() const
-{
-    std::vector<Registry::Slot> slots;
-    slots.resize(d_entities.Size() + d_pool.size());
-
-    // Alive entities
-    for (const auto& [index, version] : d_entities.Fast()) {
-        slots[index] = {version, true};
-    }
-
-    // Dead entities
-    for (const auto& [index, version] : d_pool) {
-        slots[index] = {version, false};
-    }
-
-    return slots;
 }
 
 }
