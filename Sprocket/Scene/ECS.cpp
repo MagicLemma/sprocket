@@ -50,7 +50,7 @@ void Entity::Delete()
     }
 }
 
-u64 Entity::Id() const
+guid::GUID Entity::Id() const
 {
     return d_guid;
 }
@@ -84,23 +84,15 @@ bool Entity::Has(std::type_index type) const
 
 Entity Registry::New()
 {
-    static std::random_device rd;
-    static std::mt19937_64 engine(rd());
-    static std::uniform_int_distribution dist(1);
+    u16 index = d_entities.Size();
 
-    u16 index = 0;
-
-    // If there is a slot in the pool, pop it and bump its version.
+    // If there is a slot in the pool, use that instead.
     if (!d_pool.empty()) {
         index = d_pool.front();
         d_pool.pop();
     }
-    // Otherwise we append on the end.
-    else {
-        index = d_entities.Size(); // size of sparse == size of packed here
-    }
 
-    u64 guid = dist(engine);
+    guid::GUID guid = d_generator.New();
 
     d_entities.Insert(index, guid);
     return {this, index, guid};

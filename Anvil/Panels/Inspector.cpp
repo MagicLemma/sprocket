@@ -24,7 +24,7 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
-    ImGui::Text("GUID: %llu", entity.Id());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), guid::Stringify(entity.Id()).c_str());
 
     if (entity.Has<TemporaryComponent>()) {
         auto& c = entity.Get<TemporaryComponent>();

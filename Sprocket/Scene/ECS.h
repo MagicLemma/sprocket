@@ -12,6 +12,8 @@
 #include <cassert>
 #include <any>
 
+#include "GUID.h"
+
 #include <cppcoro/generator.hpp>
 
 namespace Sprocket {
@@ -19,22 +21,18 @@ namespace ecs {
     
 class Registry;
 
-static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
-static constexpr u16 NULL_INDEX = std::numeric_limits<u32>::max();
-static constexpr u16 NULL_VERSION = std::numeric_limits<u64>::max();
-
 class Entity
 {
-    Registry* d_registry;
-    u16       d_index;
-    u64       d_guid;
+    Registry*  d_registry;
+    u16        d_index;
+    guid::GUID d_guid;
 
     bool Has(std::type_index type) const;
     void Remove(std::type_index type);
 
 public:
-    Entity(Registry* r, u16 i, u64 g) : d_registry(r), d_index(i), d_guid(g) {}
-    Entity() : d_registry(nullptr), d_index(NULL_INDEX), d_guid(NULL_VERSION) {}
+    Entity(Registry* r, u16 i, guid::GUID g) : d_registry(r), d_index(i), d_guid(g) {}
+    Entity() : d_registry(nullptr), d_index(0), d_guid(guid::Zero()) {}
 
     bool Valid() const;
     void Delete();
@@ -45,7 +43,7 @@ public:
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
 
-    u64 Id() const;
+    guid::GUID Id() const;
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
@@ -59,8 +57,11 @@ public:
     using EntityPredicate = std::function<bool(Entity)>;
 
 private:
+    // Generates GUIDs for new Entities 
+    guid::Generator d_generator;
+
     // Stores the current version of each entity.
-    SparseSet<u64> d_entities;
+    SparseSet<guid::GUID> d_entities;
 
     // When an entity is removed, their slot/version is added to the pool so that it
     // can be reused.
@@ -126,7 +127,7 @@ public:
 };
 
 // An "empty" entity.
-static const Entity Null(nullptr, NULL_INDEX, NULL_VERSION);
+static const Entity Null{};
 
 // ==============================================================
 //                      TEMPLATE DEFINITIONS
@@ -246,7 +247,9 @@ template <> struct hash<Sprocket::ecs::Entity>
 {
     std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
     {
-        return std::hash<std::uint32_t>{}(entity.Id());
+        auto id = entity.Id();
+        std::hash<std::uint32_t> hasher{};
+        return hasher(id[0]) ^ hasher(id[1]) ^ hasher(id[2]) ^ hasher(id[3]);
     };
 };
 
