@@ -24,6 +24,8 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
+    ImGui::Text("GUID: %llu", entity.Id());
+
     if (entity.Has<TemporaryComponent>()) {
         auto& c = entity.Get<TemporaryComponent>();
         if (ImGui::CollapsingHeader("Temporary")) {

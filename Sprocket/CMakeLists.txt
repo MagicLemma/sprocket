@@ -22,7 +22,6 @@ find_package(yaml-cpp CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(tsl-hopscotch-map CONFIG REQUIRED)
 find_package(cppcoro CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
@@ -119,8 +118,6 @@ target_link_libraries(Sprocket PUBLIC
                       yaml-cpp
                       tsl::hopscotch_map
                       cppcoro
-                      fmt::fmt
-                      fmt::fmt-header-only
                       ${LUA_LIBRARIES})
 
 target_link_libraries(Sprocket PRIVATE asio asio::asio)
