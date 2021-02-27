@@ -46,7 +46,6 @@ public:
     template <typename Comp> bool Has() const;
 
     u32 Id() const;
-    u16 Version() const;
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;

@@ -53,11 +53,6 @@ u32 Entity::Id() const
     return (u32)d_version << 16 | d_index;
 }
 
-u16 Entity::Version() const
-{
-    return d_version;
-}
-
 void Entity::Remove(std::type_index type)
 {
     assert(Valid());
