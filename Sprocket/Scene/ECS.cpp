@@ -84,7 +84,7 @@ bool Entity::Has(std::type_index type) const
 
 Entity Registry::New()
 {
-    u16 index = d_entities.Size();
+    std::size_t index = d_entities.Size();
 
     // If there is a slot in the pool, use that instead.
     if (!d_pool.empty()) {
@@ -107,7 +107,7 @@ void Registry::DeleteAll()
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<u16>().swap(d_pool);
+    std::queue<std::size_t>().swap(d_pool);
 
     // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
@@ -119,7 +119,7 @@ void Registry::Clear()
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<u16>().swap(d_pool);
+    std::queue<std::size_t>().swap(d_pool);
 }
 
 std::size_t Registry::Size() const

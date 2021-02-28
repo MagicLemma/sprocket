@@ -21,8 +21,10 @@ public:
     GUID New();
 };
 
-std::string Stringify(const GUID& guid);
+// Returns a string representation of the GUID.
+std::string Stringify(GUID guid);
 
+// Returns a "zero" GUID, useful for default or null values.
 GUID Zero();
 
 }

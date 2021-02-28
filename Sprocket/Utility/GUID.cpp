@@ -36,7 +36,7 @@ GUID Generator::New()
     return guid;
 }
 
-std::string Stringify(const GUID& guid)
+std::string Stringify(GUID guid)
 {
     std::stringstream sstream;
     sstream << std::hex << guid[0] << "-" << guid[1] << "-" << guid[2] << "-" << guid[3];

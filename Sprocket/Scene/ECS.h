@@ -23,15 +23,15 @@ class Registry;
 
 class Entity
 {
-    Registry*  d_registry;
-    u16        d_index;
-    guid::GUID d_guid;
+    Registry*   d_registry;
+    std::size_t d_index;
+    guid::GUID  d_guid;
 
     bool Has(std::type_index type) const;
     void Remove(std::type_index type);
 
 public:
-    Entity(Registry* r, u16 i, guid::GUID g) : d_registry(r), d_index(i), d_guid(g) {}
+    Entity(Registry* r, std::size_t i, guid::GUID g) : d_registry(r), d_index(i), d_guid(g) {}
     Entity() : d_registry(nullptr), d_index(0), d_guid(guid::Zero()) {}
 
     bool Valid() const;
@@ -65,7 +65,7 @@ private:
 
     // When an entity is removed, their slot/version is added to the pool so that it
     // can be reused.
-    std::queue<u16> d_pool;
+    std::queue<std::size_t> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
