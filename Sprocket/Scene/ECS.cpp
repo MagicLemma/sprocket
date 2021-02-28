@@ -46,8 +46,8 @@ void Entity::Delete()
             if (Has(type)) { Remove(type); }
         }
         d_registry->d_entities.Erase(d_index);
-        d_registry->d_pool.push(d_index);
-        d_registry->d_guidMap.erase(d_guid);
+        d_registry->d_pool.push_back(d_index);
+        d_registry->d_lookup.erase(d_guid);
     }
 }
 
@@ -93,23 +93,23 @@ Entity Registry::New(const guid::GUID& guid)
 {
     assert(guid != guid::Zero);
 
+    // If there is a slot in the pool, use that, otherwise increase the
+    // the size of the entity sparse set.
     std::size_t index = d_entities.Size();
-
-    // If there is a slot in the pool, use that instead.
     if (!d_pool.empty()) {
         index = d_pool.front();
-        d_pool.pop();
+        d_pool.pop_front();
     }
 
     d_entities.Insert(index, guid);
-    d_guidMap.emplace(guid, index);
+    d_lookup.emplace(guid, index);
     return {this, index, guid};
 }
 
 Entity Registry::Get(const guid::GUID& guid)
 {
-    auto it = d_guidMap.find(guid);
-    if (it != d_guidMap.end()) {
+    auto it = d_lookup.find(guid);
+    if (it != d_lookup.end()) {
         return Entity{this, it->second, guid};
     }
     return ecs::Null;
@@ -118,13 +118,13 @@ Entity Registry::Get(const guid::GUID& guid)
 void Registry::DeleteAll()
 {
     // Clean up components, triggering onRemove behaviour
-    for (const auto& [index, version] : d_entities.Safe()) {
-        Entity{this, index, version}.Delete();
+    for (const auto& [index, guid] : d_entities.Safe()) {
+        Entity{this, index, guid}.Delete();
     }
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<std::size_t>().swap(d_pool);
+    d_pool.clear();
 
     // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
@@ -136,7 +136,7 @@ void Registry::Clear()
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<std::size_t>().swap(d_pool);
+    d_pool.clear();
 }
 
 std::size_t Registry::Size() const

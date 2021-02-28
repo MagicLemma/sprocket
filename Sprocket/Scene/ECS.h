@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <typeinfo>
 #include <typeindex>
-#include <queue>
+#include <deque>
 #include <functional>
 #include <limits>
 #include <vector>
@@ -60,15 +60,15 @@ private:
     // Generates GUIDs for new Entities 
     guid::Generator d_generator;
 
-    // Stores all existing GUIDs. Allows for index -> guid lookup as well as cache
-    // friendly iteration over all entities.
+    // Stores all existing active GUIDs. Allows for index -> guid lookup as well
+    // as cache friendly iteration over all entities.
     SparseSet<guid::GUID> d_entities;
 
-    // Stores a guid -> index lookup
-    std::unordered_map<guid::GUID, std::size_t> d_guidMap;
+    // Stores a guid -> index lookup. Used for the Registry::Get function.
+    std::unordered_map<guid::GUID, std::size_t> d_lookup;
 
     // When an entity is deleted, their index is added to the pool for reuse.
-    std::queue<std::size_t> d_pool;
+    std::deque<std::size_t> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
