@@ -47,6 +47,7 @@ void Entity::Delete()
         }
         d_registry->d_entities.Erase(d_index);
         d_registry->d_pool.push(d_index);
+        d_registry->d_guidMap.erase(d_guid);
     }
 }
 
@@ -101,7 +102,17 @@ Entity Registry::New(const guid::GUID& guid)
     }
 
     d_entities.Insert(index, guid);
+    d_guidMap.emplace(guid, index);
     return {this, index, guid};
+}
+
+Entity Registry::Get(const guid::GUID& guid)
+{
+    auto it = d_guidMap.find(guid);
+    if (it != d_guidMap.end()) {
+        return Entity{this, it->second, guid};
+    }
+    return ecs::Null;
 }
 
 void Registry::DeleteAll()

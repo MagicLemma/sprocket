@@ -1,4 +1,3 @@
-Version: 2
 Entities:
   - "@GUID": [2098743053, 3416812330, 1103186834, 3618618308]
     NameComponent:
@@ -440,9 +439,9 @@ Entities:
     NameComponent:
       name: Sphere (Particles)
     Transform3DComponent:
-      position: [-8.352023, 2.686497, 12.41776]
-      orientation: [1, 0, 0, 0]
-      scale: [1, 1, 1]
+      position: [-8.223997, 3.113689, 13.42588]
+      orientation: [0.830207, -0.4590113, 0.2768358, 0.1530587]
+      scale: [0.9999998, 0.9999994, 0.9999995]
     ModelComponent:
       mesh: Resources/Models/Sphere.obj
       material: Resources/Materials/grey.yaml
@@ -827,3 +826,4 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
+  - "@GUID": [2975728627, 3405795138, 1061465761, 4133211187]

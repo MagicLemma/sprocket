@@ -60,8 +60,12 @@ private:
     // Generates GUIDs for new Entities 
     guid::Generator d_generator;
 
-    // Stores the current version of each entity.
+    // Stores all existing GUIDs. Allows for index -> guid lookup as well as cache
+    // friendly iteration over all entities.
     SparseSet<guid::GUID> d_entities;
+
+    // Stores a guid -> index lookup
+    std::unordered_map<guid::GUID, std::size_t> d_guidMap;
 
     // When an entity is deleted, their index is added to the pool for reuse.
     std::queue<std::size_t> d_pool;
@@ -92,6 +96,9 @@ public:
     // Creates a new entity with no components and with the given guid. No checks on the
     // validity of the guid are made, except for that it cannot be guid::Zero.
     Entity New(const guid::GUID& guid);
+
+    // Returns the entity corresponding to the given GUID, and ecs::Null otherwise.
+    Entity Get(const guid::GUID& guid);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
@@ -250,9 +257,7 @@ template <> struct hash<Sprocket::ecs::Entity>
 {
     std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
     {
-        auto id = entity.Id();
-        std::hash<std::uint32_t> hasher{};
-        return hasher(id[0]) ^ hasher(id[1]) ^ hasher(id[2]) ^ hasher(id[3]);
+        return std::hash<Sprocket::guid::GUID>{}(entity.Id());
     };
 };
 

@@ -29,3 +29,16 @@ static const GUID Zero{0, 0, 0, 0};
 
 }
 }
+
+namespace std {
+
+template <> struct hash<Sprocket::guid::GUID>
+{
+    std::size_t operator()(const Sprocket::guid::GUID& guid) const noexcept
+    {
+        std::hash<std::uint32_t> hasher;
+        return hasher(guid[0]) ^ hasher(guid[1]) ^ hasher(guid[2]) ^ hasher(guid[3]);
+    };
+};
+
+}
