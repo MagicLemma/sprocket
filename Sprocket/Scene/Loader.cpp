@@ -24,6 +24,10 @@ void Save(const std::string& file, ecs::Registry* reg)
     for (auto entity : reg->Each()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
+        out << YAML::Key << "@GUID" << YAML::Value;
+        out << YAML::Flow << YAML::BeginSeq;
+        out << entity.Id()[0] << entity.Id()[1] << entity.Id()[2] << entity.Id()[3];
+        out << YAML::EndSeq;
         if (entity.Has<TemporaryComponent>()) {
             const auto& c = entity.Get<TemporaryComponent>();
             out << YAML::Key << "TemporaryComponent" << YAML::BeginMap;
@@ -203,7 +207,11 @@ void Load(const std::string& file, ecs::Registry* reg)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ecs::Entity e = reg->New();
+        
+        auto g = entity["@GUID"];
+        guid::GUID guid{g[0].as<u32>(), g[1].as<u32>(), g[2].as<u32>(), g[3].as<u32>()};
+        ecs::Entity e = reg->New(guid);
+        
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add<TemporaryComponent>(c);
