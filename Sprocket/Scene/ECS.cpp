@@ -7,6 +7,20 @@
 namespace Sprocket {
 namespace ecs {
 
+Entity::Entity(Registry* r, std::size_t i, guid::GUID g)
+    : d_registry(r)
+    , d_index(i)
+    , d_guid(g)
+{ 
+}
+
+Entity::Entity()
+    : d_registry(nullptr)
+    , d_index(0)
+    , d_guid(guid::Zero)
+{
+}
+
 bool Entity::operator==(Entity other) const
 {
     // Change this to only compare registry and guid. If both of these

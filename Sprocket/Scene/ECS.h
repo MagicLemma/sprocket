@@ -1,6 +1,7 @@
 #pragma once
 #include "Types.h"
 #include "SparseSet.h"
+#include "GUID.h"
 
 #include <unordered_map>
 #include <typeinfo>
@@ -11,8 +12,6 @@
 #include <vector>
 #include <cassert>
 #include <any>
-
-#include "GUID.h"
 
 #include <cppcoro/generator.hpp>
 
@@ -31,8 +30,10 @@ class Entity
     void Remove(std::type_index type);
 
 public:
-    Entity(Registry* r, std::size_t i, guid::GUID g) : d_registry(r), d_index(i), d_guid(g) {}
-    Entity() : d_registry(nullptr), d_index(0), d_guid(guid::Zero) {}
+    // Construction of entities should not be done directly, instead they should
+    // be constructed via a Registry.
+    Entity(Registry* r, std::size_t i, guid::GUID g);
+    Entity();
 
     bool Valid() const;
     void Delete();
@@ -86,6 +87,10 @@ private:
     };
 
     std::unordered_map<std::type_index, ComponentData> d_comps;
+
+    Registry& operator=(const Registry&) = delete;
+    Registry(const Registry&) = delete;
+    Registry(Registry&&) = delete;
 
 public:
     Registry() = default;
