@@ -1,7 +1,7 @@
 #include "KeyboardEvent.h"
 #include "Types.h"
 
-#include <sstream>
+#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -14,9 +14,7 @@ KeyboardButtonPressedEvent::KeyboardButtonPressedEvent(int key, int scancode, in
 
 std::string KeyboardButtonPressedEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "KeyboardButtonPressedEvent: " << d_key << ", " << d_scancode << ", " << d_mods;
-	return ss.str();
+	return fmt::format("KeyboardButtonPressedEvent: {}, {}, {}", d_key, d_scancode, d_mods);
 }
 
 KeyboardButtonReleasedEvent::KeyboardButtonReleasedEvent(int key, int scancode, int mods)
@@ -28,9 +26,7 @@ KeyboardButtonReleasedEvent::KeyboardButtonReleasedEvent(int key, int scancode, 
 
 std::string KeyboardButtonReleasedEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "KeyboardButtonReleasedEvent: " << d_key << ", " << d_scancode << ", " << d_mods;
-	return ss.str();
+	return fmt::format("KeyboardButtonReleasedEvent: {}, {}, {}", d_key, d_scancode, d_mods);
 }
 
 KeyboardButtonHeldEvent::KeyboardButtonHeldEvent(int key, int scancode, int mods)
@@ -42,9 +38,7 @@ KeyboardButtonHeldEvent::KeyboardButtonHeldEvent(int key, int scancode, int mods
 
 std::string KeyboardButtonHeldEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "KeyboardButtonHeldEvent: " << d_key << ", " << d_scancode << ", " << d_mods;
-	return ss.str();
+	return fmt::format("KeyboardButtonHeldEvent: {}, {}, {}", d_key, d_scancode, d_mods);
 }
 
 KeyboardKeyTypedEvent::KeyboardKeyTypedEvent(u32 key)
@@ -54,9 +48,7 @@ KeyboardKeyTypedEvent::KeyboardKeyTypedEvent(u32 key)
 
 std::string KeyboardKeyTypedEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "KeyboardKeyTypedEvent: " << d_key;
-	return ss.str();
+	return fmt::format("KeyboardKeyTypedEvent: {}", d_key);
 }
 
 }

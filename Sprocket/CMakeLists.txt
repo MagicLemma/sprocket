@@ -13,6 +13,7 @@ include(FindLua)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
@@ -110,6 +111,7 @@ target_link_libraries(Sprocket PUBLIC
                       glfw
                       glad::glad
                       glm
+                      fmt::fmt
                       spdlog::spdlog
                       freetype
                       assimp::assimp

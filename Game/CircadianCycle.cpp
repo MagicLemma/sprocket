@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <glm/trigonometric.hpp>
+#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -122,9 +123,7 @@ std::string CircadianCycle::ToString(bool twelveHour) const
         if (hours > 12) { hours -= 12; }
     }
     
-    std::stringstream sstream;
-    sstream << hours << ":" << mins << ":" << seconds << " " << suffix;
-    return sstream.str();
+    return fmt::format("{}:{}:{}:{}", hours, mins, seconds, suffix);
 }
 
 }

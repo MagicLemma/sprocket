@@ -22,8 +22,7 @@ int main()
 #endif
     Sprocket::Log::Init();
     using namespace Sprocket;
-    std::random_device rd;
-    SPKT_LOG_INFO("{}", rd());
-    SPKT_LOG_INFO("{}", rd());
-    SPKT_LOG_INFO("{}", rd());
+    glm::vec3 x{1.1234, 2.4567, 3.00343};
+    auto pr = Sprocket::Printer::PrintVec3(x, 1);
+    SPKT_LOG_INFO("{}", pr);
 }
