@@ -1,11 +1,12 @@
 #pragma once
 #include "Types.h"
 #include "SparseSet.h"
+#include "GUID.h"
 
 #include <unordered_map>
 #include <typeinfo>
 #include <typeindex>
-#include <queue>
+#include <deque>
 #include <functional>
 #include <limits>
 #include <vector>
@@ -19,22 +20,20 @@ namespace ecs {
     
 class Registry;
 
-static constexpr u32 NULL_ID = std::numeric_limits<u32>::max();
-static constexpr u16 NULL_INDEX = std::numeric_limits<u32>::max();
-static constexpr u16 NULL_VERSION = std::numeric_limits<u32>::max();
-
 class Entity
 {
-    Registry* d_registry;
-    u16       d_index;
-    u16       d_version;
+    Registry*   d_registry;
+    std::size_t d_index;
+    guid::GUID  d_guid;
 
     bool Has(std::type_index type) const;
     void Remove(std::type_index type);
 
 public:
-    Entity(Registry* r, u16 i, u16 v) : d_registry(r), d_index(i), d_version(v) {}
-    Entity() : d_registry(nullptr), d_index(NULL_INDEX), d_version(NULL_VERSION) {}
+    // Construction of entities should not be done directly, instead they should
+    // be constructed via a Registry.
+    Entity(Registry* r, std::size_t i, guid::GUID g);
+    Entity();
 
     bool Valid() const;
     void Delete();
@@ -45,8 +44,7 @@ public:
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
 
-    u32 Id() const;
-    u16 Version() const;
+    guid::GUID Id() const;
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
@@ -60,12 +58,18 @@ public:
     using EntityPredicate = std::function<bool(Entity)>;
 
 private:
-    // Stores the current version of each entity.
-    SparseSet<u16> d_entities;
+    // Generates GUIDs for new Entities 
+    guid::Generator d_generator;
 
-    // When an entity is removed, their slot/version is added to the pool so that it
-    // can be reused.
-    std::queue<std::pair<u16, u16>> d_pool;
+    // Stores all existing active GUIDs. Allows for index -> guid lookup as well
+    // as cache friendly iteration over all entities.
+    SparseSet<guid::GUID> d_entities;
+
+    // Stores a guid -> index lookup. Used for the Registry::Get function.
+    std::unordered_map<guid::GUID, std::size_t> d_lookup;
+
+    // When an entity is deleted, their index is added to the pool for reuse.
+    std::deque<std::size_t> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -84,14 +88,22 @@ private:
 
     std::unordered_map<std::type_index, ComponentData> d_comps;
 
+    Registry& operator=(const Registry&) = delete;
+    Registry(const Registry&) = delete;
+    Registry(Registry&&) = delete;
+
 public:
     Registry() = default;
 
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
     Entity New();
 
-    // Given an entity ID, return the entity handle associated to it.
-    Entity Get(u32 id); 
+    // Creates a new entity with no components and with the given guid. No checks on the
+    // validity of the guid are made, except for that it cannot be guid::Zero.
+    Entity New(const guid::GUID& guid);
+
+    // Returns the entity corresponding to the given GUID, and ecs::Null otherwise.
+    Entity Get(const guid::GUID& guid);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
@@ -130,7 +142,7 @@ public:
 };
 
 // An "empty" entity.
-static const Entity Null(nullptr, NULL_INDEX, NULL_VERSION);
+static const Entity Null{};
 
 // ==============================================================
 //                      TEMPLATE DEFINITIONS
@@ -250,7 +262,7 @@ template <> struct hash<Sprocket::ecs::Entity>
 {
     std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
     {
-        return std::hash<std::uint32_t>{}(entity.Id());
+        return std::hash<Sprocket::guid::GUID>{}(entity.Id());
     };
 };
 

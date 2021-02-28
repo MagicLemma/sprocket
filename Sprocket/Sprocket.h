@@ -23,7 +23,6 @@
 #include "Scene/Components.h"
 #include "Scene/Scene.h"
 #include "Scene/Loader.h"
-#include "Scene/Updater.h"
 #include "Scene/EntitySystem.h"
 
 #include "Scene/Systems/AnimationSystem.h"
@@ -44,6 +43,7 @@
 #include "Utility/Log.h"
 #include "Utility/Colour.h"
 #include "Utility/FileBrowser.h"
+#include "Utility/GUID.h"
 #include "Utility/HashPair.h"
 #include "Utility/InputProxy.h"
 #include "Utility/Maths.h"

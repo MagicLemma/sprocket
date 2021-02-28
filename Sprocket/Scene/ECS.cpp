@@ -2,15 +2,33 @@
 #include "Components.h"
 
 #include <algorithm>
+#include <random>
 
 namespace Sprocket {
 namespace ecs {
 
+Entity::Entity(Registry* r, std::size_t i, guid::GUID g)
+    : d_registry(r)
+    , d_index(i)
+    , d_guid(g)
+{ 
+}
+
+Entity::Entity()
+    : d_registry(nullptr)
+    , d_index(0)
+    , d_guid(guid::Zero)
+{
+}
+
 bool Entity::operator==(Entity other) const
 {
+    // Change this to only compare registry and guid. If both of these
+    // are equal but the index is wrong, we have badly screwed something
+    // up, OR have a guid clash. Should assert
     return d_registry == other.d_registry
         && d_index == other.d_index
-        && d_version == other.d_version;
+        && d_guid == other.d_guid;
 }
 
 bool Entity::operator!=(Entity other) const
@@ -22,7 +40,7 @@ Entity& Entity::operator=(Entity other)
 {
     d_registry = other.d_registry;
     d_index = other.d_index;
-    d_version = other.d_version;
+    d_guid = other.d_guid;
     return *this;
 }
 
@@ -31,7 +49,7 @@ bool Entity::Valid() const
      return *this != ecs::Null
          && d_registry
          && d_registry->d_entities.Has(d_index)
-         && d_registry->d_entities[d_index] == d_version;
+         && d_registry->d_entities[d_index] == d_guid;
 }
 
 void Entity::Delete() 
@@ -42,20 +60,14 @@ void Entity::Delete()
             if (Has(type)) { Remove(type); }
         }
         d_registry->d_entities.Erase(d_index);
-
-        // Add the entity slot to the pool of available IDs.
-        d_registry->d_pool.push({d_index, d_version});
+        d_registry->d_pool.push_back(d_index);
+        d_registry->d_lookup.erase(d_guid);
     }
 }
 
-u32 Entity::Id() const
+guid::GUID Entity::Id() const
 {
-    return (u32)d_version << 16 | d_index;
-}
-
-u16 Entity::Version() const
-{
-    return d_version;
+    return d_guid;
 }
 
 void Entity::Remove(std::type_index type)
@@ -87,41 +99,46 @@ bool Entity::Has(std::type_index type) const
 
 Entity Registry::New()
 {
-    u16 index = 0;
-    u16 version = 0;
-
-    // If there is a slot in the pool, pop it and bump its version.
-    if (!d_pool.empty()) {
-        std::tie(index, version) = d_pool.front();
-        d_pool.pop();
-        ++version;
-    }
-    // Otherwise we append on the end.
-    else {
-        index = d_entities.Size(); // size of sparse == size of packed here
-    }
-
-    d_entities.Insert(index, version);
-    return {this, index, version};
+    guid::GUID guid = d_generator.New();
+    return New(guid);
 }
 
-Entity Registry::Get(u32 id)
+Entity Registry::New(const guid::GUID& guid)
 {
-    u16 index = (u16)id;
-    u16 version = (u32)(id >> 16);
-    return {this, index, version};
+    assert(guid != guid::Zero);
+
+    // If there is a slot in the pool, use that, otherwise increase the
+    // the size of the entity sparse set.
+    std::size_t index = d_entities.Size();
+    if (!d_pool.empty()) {
+        index = d_pool.front();
+        d_pool.pop_front();
+    }
+
+    d_entities.Insert(index, guid);
+    d_lookup.emplace(guid, index);
+    return {this, index, guid};
+}
+
+Entity Registry::Get(const guid::GUID& guid)
+{
+    auto it = d_lookup.find(guid);
+    if (it != d_lookup.end()) {
+        return Entity{this, it->second, guid};
+    }
+    return ecs::Null;
 }
 
 void Registry::DeleteAll()
 {
     // Clean up components, triggering onRemove behaviour
-    for (const auto& [index, version] : d_entities.Safe()) {
-        Entity{this, index, version}.Delete();
+    for (const auto& [index, guid] : d_entities.Safe()) {
+        Entity{this, index, guid}.Delete();
     }
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<std::pair<u16, u16>>().swap(d_pool);
+    d_pool.clear();
 
     // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
@@ -133,7 +150,7 @@ void Registry::Clear()
 
     // Reset all entity storage
     d_entities.Clear();
-    std::queue<std::pair<u16, u16>>().swap(d_pool);
+    d_pool.clear();
 }
 
 std::size_t Registry::Size() const
@@ -143,8 +160,8 @@ std::size_t Registry::Size() const
 
 cppcoro::generator<Entity> Registry::Each()
 {
-    for (const auto& [index, version] : d_entities.Fast()) {
-        co_yield {this, index, version};
+    for (const auto& [index, guid] : d_entities.Fast()) {
+        co_yield {this, index, guid};
     }
 }
 

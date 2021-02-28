@@ -46,7 +46,6 @@ add_library(Sprocket STATIC
             Scene/Scene.cpp
             Scene/EntitySystem.cpp
             Scene/Loader.cpp
-            Scene/Updater.cpp
 
             Scene/Systems/AnimationSystem.cpp
             Scene/Systems/CameraSystem.cpp
@@ -91,6 +90,7 @@ add_library(Sprocket STATIC
             Utility/Log.cpp
             Utility/Colour.cpp
             Utility/FileBrowser.cpp
+            Utility/GUID.cpp
             Utility/InputProxy.cpp
             Utility/Printer.cpp
             Utility/Random.cpp
