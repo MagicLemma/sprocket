@@ -4,7 +4,6 @@
 #include "Maths.h"
 #include "Yaml.h"
 #include "Scene.h"
-#include "Updater.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -17,12 +16,11 @@ void Save(const std::string& file, ecs::Registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Version" << YAML::Value << 2;
-
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto entity : reg->Each()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
+        out << YAML::Key << "@GUID" << YAML::Value << entity.Id();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (entity.Has<{{Comp.Name}}>()) {
             const auto& c = entity.Get<{{Comp.Name}}>();
@@ -54,7 +52,6 @@ void Load(const std::string& file, ecs::Registry* reg)
     sstream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(sstream.str());
-    UpdateScene(data);
 
     if (!data["Entities"]) {
         return; // TODO: Error checking
@@ -62,7 +59,7 @@ void Load(const std::string& file, ecs::Registry* reg)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ecs::Entity e = reg->New();
+        ecs::Entity e = reg->New(entity["@GUID"].as<guid::GUID>());
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;

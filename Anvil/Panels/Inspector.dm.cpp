@@ -23,6 +23,8 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), guid::Stringify(entity.Id()).c_str());
+
 #ifdef DATAMATIC_BLOCK
     if (entity.Has<{{Comp.Name}}>()) {
         auto& c = entity.Get<{{Comp.Name}}>();

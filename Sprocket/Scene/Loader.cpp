@@ -5,7 +5,6 @@
 #include "Maths.h"
 #include "Yaml.h"
 #include "Scene.h"
-#include "Updater.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -18,16 +17,11 @@ void Save(const std::string& file, ecs::Registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
-    out << YAML::Key << "Version" << YAML::Value << 2;
-
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto entity : reg->Each()) {
         if (entity.Has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
-        out << YAML::Key << "@GUID" << YAML::Value;
-        out << YAML::Flow << YAML::BeginSeq;
-        out << entity.Id()[0] << entity.Id()[1] << entity.Id()[2] << entity.Id()[3];
-        out << YAML::EndSeq;
+        out << YAML::Key << "@GUID" << YAML::Value << entity.Id();
         if (entity.Has<TemporaryComponent>()) {
             const auto& c = entity.Get<TemporaryComponent>();
             out << YAML::Key << "TemporaryComponent" << YAML::BeginMap;
@@ -199,7 +193,6 @@ void Load(const std::string& file, ecs::Registry* reg)
     sstream << stream.rdbuf();
 
     YAML::Node data = YAML::Load(sstream.str());
-    UpdateScene(data);
 
     if (!data["Entities"]) {
         return; // TODO: Error checking
@@ -207,11 +200,7 @@ void Load(const std::string& file, ecs::Registry* reg)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        
-        auto g = entity["@GUID"];
-        guid::GUID guid{g[0].as<u32>(), g[1].as<u32>(), g[2].as<u32>(), g[3].as<u32>()};
-        ecs::Entity e = reg->New(guid);
-        
+        ecs::Entity e = reg->New(entity["@GUID"].as<guid::GUID>());
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.Add<TemporaryComponent>(c);
