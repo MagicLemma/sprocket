@@ -84,6 +84,14 @@ bool Entity::Has(std::type_index type) const
 
 Entity Registry::New()
 {
+    guid::GUID guid = d_generator.New();
+    return New(guid);
+}
+
+Entity Registry::New(const guid::GUID& guid)
+{
+    assert(guid != guid::Zero);
+
     std::size_t index = d_entities.Size();
 
     // If there is a slot in the pool, use that instead.
@@ -91,8 +99,6 @@ Entity Registry::New()
         index = d_pool.front();
         d_pool.pop();
     }
-
-    guid::GUID guid = d_generator.New();
 
     d_entities.Insert(index, guid);
     return {this, index, guid};

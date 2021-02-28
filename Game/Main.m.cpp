@@ -22,11 +22,8 @@ int main()
 #endif
     Sprocket::Log::Init();
     using namespace Sprocket;
-    SPKT_LOG_INFO("Size of int = {}", sizeof(int));
-    SPKT_LOG_INFO("Size of int& = {}", sizeof(int&));
-    SPKT_LOG_INFO("Size of guid::GUID = {}", sizeof(guid::GUID));
-    SPKT_LOG_INFO("Size of ecs::Entity = {}", sizeof(ecs::Entity));
-    SPKT_LOG_INFO("Size of Foo = {}", sizeof(Foo));
-    SPKT_LOG_INFO("Size of uint64 = {}", sizeof(uint64_t));
-    SPKT_LOG_INFO("Size of uint64 = {}", sizeof(std::size_t));
+    std::random_device rd;
+    SPKT_LOG_INFO("{}", rd());
+    SPKT_LOG_INFO("{}", rd());
+    SPKT_LOG_INFO("{}", rd());
 }

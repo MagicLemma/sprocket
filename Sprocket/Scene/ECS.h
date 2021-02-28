@@ -32,7 +32,7 @@ class Entity
 
 public:
     Entity(Registry* r, std::size_t i, guid::GUID g) : d_registry(r), d_index(i), d_guid(g) {}
-    Entity() : d_registry(nullptr), d_index(0), d_guid(guid::Zero()) {}
+    Entity() : d_registry(nullptr), d_index(0), d_guid(guid::Zero) {}
 
     bool Valid() const;
     void Delete();
@@ -63,8 +63,7 @@ private:
     // Stores the current version of each entity.
     SparseSet<guid::GUID> d_entities;
 
-    // When an entity is removed, their slot/version is added to the pool so that it
-    // can be reused.
+    // When an entity is deleted, their index is added to the pool for reuse.
     std::queue<std::size_t> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
@@ -89,6 +88,10 @@ public:
 
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
     Entity New();
+
+    // Creates a new entity with no components and with the given guid. No checks on the
+    // validity of the guid are made, except for that it cannot be guid::Zero.
+    Entity New(const guid::GUID& guid);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
