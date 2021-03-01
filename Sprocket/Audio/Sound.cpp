@@ -15,9 +15,9 @@ Sound::Sound()
 {
 }
 
-bool Sound::Load(const std::string& filename)
+bool Sound::Load(std::string_view filename)
 {
-    return d_impl->buffer.loadFromFile(filename);
+    return d_impl->buffer.loadFromFile(std::string(filename));
 }
 
 struct SourceImpl

@@ -94,54 +94,54 @@ void Shader::Unbind() const
     glUseProgram(0);
 }
 
-u32 Shader::GetUniformLocation(const std::string& name) const
+u32 Shader::GetUniformLocation(std::string_view name) const
 {
-	return glGetUniformLocation(d_programId, name.c_str());
+	return glGetUniformLocation(d_programId, std::string(name).c_str());
 }
 
-void Shader::LoadFloat(const std::string& name, float value) const
+void Shader::LoadFloat(std::string_view name, float value) const
 {
 	glUniform1f(GetUniformLocation(name), value);
 }
 
-void Shader::LoadSampler(const std::string& name, int value) const
+void Shader::LoadSampler(std::string_view name, int value) const
 {
 	glProgramUniform1i(d_programId, GetUniformLocation(name), value);
 }
 
-void Shader::LoadInt(const std::string& name, int value) const
+void Shader::LoadInt(std::string_view name, int value) const
 {
 	glUniform1i(GetUniformLocation(name), value);
 }
 
-void Shader::LoadVec2(const std::string& name, const glm::vec2& vector) const
+void Shader::LoadVec2(std::string_view name, const glm::vec2& vector) const
 {
 	glUniform2f(GetUniformLocation(name), vector.x, vector.y);
 }
 
-void Shader::LoadVec3(const std::string& name, const glm::vec3& vector) const
+void Shader::LoadVec3(std::string_view name, const glm::vec3& vector) const
 {
 	glUniform3f(GetUniformLocation(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::LoadVec4(const std::string& name, const glm::vec4& vector) const
+void Shader::LoadVec4(std::string_view name, const glm::vec4& vector) const
 {
 	glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 }
 
-void Shader::LoadQuat(const std::string& name, const glm::quat& quat) const
+void Shader::LoadQuat(std::string_view name, const glm::quat& quat) const
 {
 	glUniform4f(GetUniformLocation(name), quat.x, quat.y, quat.z, quat.w);
 }
 
-void Shader::LoadMat4(const std::string& name, const glm::mat4& matrix, int count) const
+void Shader::LoadMat4(std::string_view name, const glm::mat4& matrix, int count) const
 {
 	glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, glm::value_ptr(matrix));
 }
 
-std::string ArrayName(const std::string& uniformName, size_t index)
+std::string ArrayName(std::string_view uniformName, std::size_t index)
 {
-	return fmt::format("[{}]", uniformName);
+	return fmt::format("{}[{}]", uniformName, index);
 }
 
 bool Shader::Reload()

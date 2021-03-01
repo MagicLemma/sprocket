@@ -15,6 +15,7 @@
 
 #include <cpp-itertools.hpp>
 #include <glad/glad.h>
+#include <fmt/core.h>
 
 namespace Sprocket {
 namespace {
@@ -56,7 +57,7 @@ void DrawCommand::AddQuad(const glm::vec4& colour, const glm::vec4& quad)
     indices.push_back(index + 3);
 }
 
-void DrawCommand::AddText(const std::string& text,
+void DrawCommand::AddText(std::string_view text,
                           const glm::vec4& quad,
                           const TextProperties& properties)
 {
@@ -149,14 +150,14 @@ glm::vec4 UIEngine::ApplyOffset(const glm::vec4& region)
     return region;
 }
 
-WidgetInfo UIEngine::Register(const std::string& name, const glm::vec4& region)
+WidgetInfo UIEngine::Register(std::string_view name, const glm::vec4& region)
 {
     assert(d_currentPanel);
     
     WidgetInfo info;
     info.quad = ApplyOffset(region);
     
-    std::string prefixedName = d_currentPanel->name + "##" + name;
+    std::string prefixedName = fmt::format("{}##{}", d_currentPanel->name, name);
     std::size_t hash = std::hash<std::string>{}(prefixedName);
     d_currentPanel->widgetRegions.push_back({hash, info.quad});
 
@@ -380,10 +381,10 @@ void UIEngine::EndFrame()
     d_buffer.Unbind();
 }
 
-void UIEngine::StartPanel(const std::string& name, glm::vec4* region, PanelType type)
+void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType type)
 {
     assert(!d_currentPanel);
-    std::size_t hash = std::hash<std::string>{}(name);
+    std::size_t hash = std::hash<std::string_view>{}(name);
 
     auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
     if (it == d_panelOrder.end()) {

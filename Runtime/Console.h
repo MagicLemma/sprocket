@@ -1,5 +1,6 @@
 #include <Sprocket.h>
 #include <deque>
+#include <string_view>
 
 namespace Sprocket {
 
@@ -17,7 +18,7 @@ class Console
     std::string             d_commandLine;
     std::deque<ConsoleLine> d_consoleLines;
 
-    void HandleCommand(const std::string& command);
+    void HandleCommand(std::string_view command);
 
 public:
     Console(Window* window);

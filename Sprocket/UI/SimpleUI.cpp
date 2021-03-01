@@ -10,6 +10,7 @@
 #include <functional>
 #include <sstream>
 #include <cassert>
+#include <string_view>
 #include <algorithm>
 
 #include <cpp-itertools.hpp>
@@ -74,7 +75,7 @@ void SimpleUI::EndFrame()
     d_engine.EndFrame();
 }
 
-void SimpleUI::StartPanel(const std::string& name, glm::vec4* region, PanelType type)
+void SimpleUI::StartPanel(std::string_view name, glm::vec4* region, PanelType type)
 {
     d_engine.StartPanel(name, region, type);
 
@@ -97,7 +98,7 @@ void SimpleUI::Quad(const glm::vec4& colour, const glm::vec4& quad)
 }
 
 void SimpleUI::Text(
-    const std::string& text,
+    std::string_view text,
     float size,
     const glm::vec4& quad,
     const glm::vec4& colour)
@@ -113,7 +114,7 @@ void SimpleUI::Text(
 }
 
 void SimpleUI::Text(
-    const std::string& text,
+    std::string_view text,
     float size,
     const glm::vec2& position,
     const glm::vec4& colour)
@@ -130,7 +131,7 @@ void SimpleUI::Text(
 }
 
 void SimpleUI::TextModifiable(
-    const std::string& name,
+    std::string_view name,
     const glm::vec4& region,
     std::string* text,
     const glm::vec4& colour)
@@ -169,7 +170,7 @@ void SimpleUI::TextModifiable(
     d_engine.SubmitDrawCommand(cmd);
 }
 
-bool SimpleUI::Button(const std::string& name, const glm::vec4& region)
+bool SimpleUI::Button(std::string_view name, const glm::vec4& region)
 {
     auto info = d_engine.Register(name, region);
 
@@ -194,7 +195,7 @@ bool SimpleUI::Button(const std::string& name, const glm::vec4& region)
     return info.onClick;
 }
 
-bool SimpleUI::Checkbox(const std::string& name,
+bool SimpleUI::Checkbox(std::string_view name,
                         const glm::vec4& region,
                         bool* value)
 {
@@ -256,7 +257,7 @@ void SimpleUI::Slider(const std::string& name,
     }    
 }
 
-void SimpleUI::Dragger(const std::string& name,
+void SimpleUI::Dragger(std::string_view name,
                        const glm::vec4& region,
                        float* value, float speed)
 {
@@ -269,14 +270,14 @@ void SimpleUI::Dragger(const std::string& name,
 
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(colour, info.quad);
-    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 2), info.quad, tp);
+    cmd.AddText(fmt::format("{}:{:.2f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         *value += d_window->GetMouseOffset().x * speed;
     }    
 }
 
-void SimpleUI::Image(const std::string& name,
+void SimpleUI::Image(std::string_view name,
                      const Texture* image,
                      const glm::vec2& position)
 {

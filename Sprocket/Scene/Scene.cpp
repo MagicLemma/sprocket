@@ -4,9 +4,9 @@
 
 namespace Sprocket {
 
-void Scene::Load(const std::string& file)
+void Scene::Load(std::string_view file)
 {
-    Loader::Load(file, &Entities());
+    Loader::Load(std::string(file), &Entities());
 }
 
 void Scene::OnUpdate(double dt)

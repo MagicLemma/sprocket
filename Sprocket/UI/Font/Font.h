@@ -42,7 +42,7 @@ public:
 
     void Bind(int slot) const { d_atlas.Bind(slot); }
 
-    float TextWidth(const std::string& text, float size);
+    float TextWidth(std::string_view text, float size);
 
     Texture* GetAtlas() const { return d_atlas.GetAtlas(); }
 };
