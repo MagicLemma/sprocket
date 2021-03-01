@@ -3,6 +3,9 @@
 #include "FileBrowser.h"
 #include "ImGuiXtra.cpp"
 
+#include <fmt/core.h>
+#include <string_view>
+
 namespace Sprocket {
 namespace {
 
@@ -14,7 +17,7 @@ std::string Name(const ecs::Entity& entity)
     return "Entity";
 }
 
-bool SubstringCI(const std::string& string, const std::string& substr) {
+bool SubstringCI(std::string_view string, std::string_view substr) {
     auto it = std::search(
         string.begin(), string.end(),
         substr.begin(), substr.end(),
@@ -91,7 +94,7 @@ void Anvil::OnEvent(Event& event)
 void Anvil::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
-    d_window->SetWindowName(std::string("Anvil: " + d_sceneFile));
+    d_window->SetWindowName(fmt::format("Anvil: {}", d_sceneFile));
 
     // Create the Shadow Map
     //float lambda = 5.0f; // TODO: Calculate the floor intersection point
@@ -274,15 +277,16 @@ void Anvil::OnRender()
                 ImGui::EndTabItem();
             }
 
+            std::hash<std::string> hasher;
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
                 for (auto& [file, material] : d_assetManager.Materials()) {
-                    ImGui::PushID(std::hash<std::string>{}(material->file));
+                    ImGui::PushID(hasher(material->file));
                     if (ImGui::CollapsingHeader(material->name.c_str())) {
                         ImGui::Text(file.c_str());
                         ImGui::Separator();
 
-                        ImGui::PushID(std::hash<std::string>{}("Albedo"));
+                        ImGui::PushID(hasher("Albedo"));
                         ImGui::Text("Albedo");
                         ImGui::Checkbox("Use Map", &material->useAlbedoMap);
                         if (material->useAlbedoMap) {
@@ -293,7 +297,7 @@ void Anvil::OnRender()
                         ImGui::PopID();
                         ImGui::Separator();
 
-                        ImGui::PushID(std::hash<std::string>{}("Normal"));
+                        ImGui::PushID(hasher("Normal"));
                         ImGui::Text("Normal");
                         ImGui::Checkbox("Use Map", &material->useNormalMap);
                         if (material->useNormalMap) {
@@ -302,7 +306,7 @@ void Anvil::OnRender()
                         ImGui::PopID();
                         ImGui::Separator();
 
-                        ImGui::PushID(std::hash<std::string>{}("Metallic"));
+                        ImGui::PushID(hasher("Metallic"));
                         ImGui::Text("Metallic");
                         ImGui::Checkbox("Use Map", &material->useMetallicMap);
                         if (material->useMetallicMap) {
@@ -313,7 +317,7 @@ void Anvil::OnRender()
                         ImGui::PopID();
                         ImGui::Separator();
                         
-                        ImGui::PushID(std::hash<std::string>{}("Roughness"));
+                        ImGui::PushID(hasher("Roughness"));
                         ImGui::Text("Roughness");
                         ImGui::Checkbox("Use Map", &material->useRoughnessMap);
                         if (material->useRoughnessMap) {

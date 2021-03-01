@@ -1,6 +1,6 @@
 #include "GUID.h"
 
-#include <sstream>
+#include <fmt/core.h>
 
 namespace Sprocket {
 namespace guid {
@@ -38,9 +38,7 @@ GUID Generator::New()
 
 std::string Stringify(const GUID& guid)
 {
-    std::stringstream sstream;
-    sstream << std::hex << guid[0] << "-" << guid[1] << "-" << guid[2] << "-" << guid[3];
-    return sstream.str();
+    return fmt::format("{:x}-{:x}-{:x}-{:x}", guid[0], guid[1], guid[2], guid[3]);
 }
 
 }

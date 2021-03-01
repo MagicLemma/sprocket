@@ -13,17 +13,9 @@ struct Foo
 
 int main()
 {
-#if 0
     Sprocket::Window window("Game");
     WorldLayer game(&window);
     Sprocket::RunOptions options;
     options.showFramerate = true;
     return Sprocket::Run(game, window, options);
-#endif
-    Sprocket::Log::Init();
-    using namespace Sprocket;
-    std::random_device rd;
-    SPKT_LOG_INFO("{}", rd());
-    SPKT_LOG_INFO("{}", rd());
-    SPKT_LOG_INFO("{}", rd());
 }

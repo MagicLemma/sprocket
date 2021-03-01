@@ -212,7 +212,7 @@ float Font::GetKerning(char left, char right, float size)
     return 0.0f;
 }
 
-float Font::TextWidth(const std::string& text, float size)
+float Font::TextWidth(std::string_view text, float size)
 {
     float width = 0;
     for (int i = 0; i != text.size(); ++i) {

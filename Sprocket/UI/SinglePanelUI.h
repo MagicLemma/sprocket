@@ -11,6 +11,7 @@
 #include <optional>
 #include <chrono>
 #include <deque>
+#include <string_view>
 
 namespace Sprocket {
 
@@ -45,10 +46,10 @@ public:
     void StartFrame();
     void EndFrame();
 
-    bool Button(const std::string& name,
+    bool Button(std::string_view name,
                 const glm::vec4& region);
 
-    void Slider(const std::string& name,
+    void Slider(std::string_view name,
                 const glm::vec4& region,
                 float* value, float min, float max);
 

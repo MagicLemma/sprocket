@@ -13,6 +13,7 @@ include(FindLua)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(freetype CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
@@ -20,7 +21,6 @@ find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
-find_package(tsl-hopscotch-map CONFIG REQUIRED)
 find_package(cppcoro CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
@@ -44,7 +44,6 @@ add_library(Sprocket STATIC
             Scene/ECS.cpp
             Scene/Camera.cpp
             Scene/Scene.cpp
-            Scene/EntitySystem.cpp
             Scene/Loader.cpp
 
             Scene/Systems/AnimationSystem.cpp
@@ -92,7 +91,6 @@ add_library(Sprocket STATIC
             Utility/FileBrowser.cpp
             Utility/GUID.cpp
             Utility/InputProxy.cpp
-            Utility/Printer.cpp
             Utility/Random.cpp
             Utility/Maths.cpp
             Utility/Stopwatch.cpp
@@ -110,13 +108,13 @@ target_link_libraries(Sprocket PUBLIC
                       glfw
                       glad::glad
                       glm
+                      fmt::fmt
                       spdlog::spdlog
                       freetype
                       assimp::assimp
                       sfml-system
                       sfml-audio
                       yaml-cpp
-                      tsl::hopscotch_map
                       cppcoro
                       ${LUA_LIBRARIES})
 

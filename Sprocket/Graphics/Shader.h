@@ -3,6 +3,7 @@
 #include "Types.h"
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <sstream>
 
@@ -55,7 +56,7 @@ public:
 };
 
 // HELPER FUNCTIONS
-std::string ArrayName(const std::string& uniformName, size_t index);
+std::string ArrayName(std::string_view uniformName, std::size_t index);
     // Give a name for a uniform that is an array, return the accessor
     // name for the given index.
 

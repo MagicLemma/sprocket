@@ -4,6 +4,7 @@
 #include "Log.h"
 
 #include <exception>
+#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -30,7 +31,7 @@ int Run(App& app, Window& window, const RunOptions& options = {})
         app.OnRender();
 
         if (options.showFramerate) {
-            window.SetWindowName(name + " [FPS: " + std::to_string(watch.Framerate()) + "]");
+            window.SetWindowName(fmt::format("{} [FPS: {}]", name, watch.Framerate()));
         }
 
         window.OnUpdate();

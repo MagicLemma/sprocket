@@ -11,6 +11,7 @@
 #include <optional>
 #include <chrono>
 #include <deque>
+#include <string_view>
 
 namespace Sprocket {
 
@@ -45,44 +46,44 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name, glm::vec4* region, PanelType type);
+    void StartPanel(std::string_view name, glm::vec4* region, PanelType type);
     void EndPanel();
 
     void Quad(const glm::vec4& colour,
               const glm::vec4& region);
 
     // TODO: Simplify the text API, it's a bit messy currently
-    void Text(const std::string& text,
+    void Text(std::string_view text,
               float size,
               const glm::vec4& region,
               const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
-    void Text(const std::string& text,
+    void Text(std::string_view text,
               float size,
               const glm::vec2& position,
               const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
-    void TextModifiable(const std::string& name,
+    void TextModifiable(std::string_view name,
                         const glm::vec4& region,
                         std::string* text,
                         const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
-    bool Button(const std::string& name,
+    bool Button(std::string_view name,
                 const glm::vec4& region);
 
-    bool Checkbox(const std::string& name,
+    bool Checkbox(std::string_view name,
                   const glm::vec4& region,
                   bool* value);
 
-    void Slider(const std::string& name,
+    void Slider(std::string_view name,
                 const glm::vec4& region,
                 float* value, float min, float max);
 
-    void Dragger(const std::string& name,
+    void Dragger(std::string_view name,
                  const glm::vec4& region,
                  float* value, float speed);
 
-    void Image(const std::string& name,
+    void Image(std::string_view name,
                const Texture* image,
                const glm::vec2& position);
 

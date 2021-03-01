@@ -100,7 +100,7 @@ WorldLayer::WorldLayer(Window* window)
 
 }
 
-void WorldLayer::LoadScene(const std::string& file)
+void WorldLayer::LoadScene(std::string_view file)
 {
     using namespace Sprocket;
 
@@ -466,8 +466,8 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
 
 void WorldLayer::AddRockBase(
     const glm::ivec2& pos,
-    const std::string& material,
-    const std::string& name)
+    std::string_view material,
+    std::string_view name)
 {
     using namespace Sprocket;
 

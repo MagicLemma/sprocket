@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <random>
+#include <string_view>
 
 enum class Mode { PLAYER, EDITOR };
 
@@ -50,13 +51,13 @@ public:
     void OnUpdate(double dt);
     void OnRender();
 
-    void LoadScene(const std::string& file);
+    void LoadScene(std::string_view file);
 
     void AddTree(const glm::ivec2& pos);
 
     void AddRockBase(const glm::ivec2& pos,
-                     const std::string& tex,
-                     const std::string& name);
+                     std::string_view tex,
+                     std::string_view name);
     
     void AddRock(const glm::ivec2& pos);
     void AddIron(const glm::ivec2& pos);

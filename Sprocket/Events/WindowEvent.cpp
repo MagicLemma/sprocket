@@ -1,7 +1,7 @@
 #include "WindowEvent.h"
 #include "Types.h"
 
-#include <sstream>
+#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -13,9 +13,7 @@ WindowResizeEvent::WindowResizeEvent(u32 width, u32 height)
 
 std::string WindowResizeEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "WindowResizeEvent: " << d_width << ", " << d_height;
-	return ss.str();
+	return fmt::format("WindowResizeEvent: {}, {}", d_width, d_height);
 }
 
 std::string WindowClosedEvent::ToString() const

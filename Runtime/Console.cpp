@@ -1,6 +1,7 @@
 #include "Console.h"
 #include <Sprocket.h>
 #include <filesystem>
+#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -65,7 +66,7 @@ void Console::Draw()
     d_ui.EndFrame();
 }
 
-void Console::HandleCommand(const std::string& command)
+void Console::HandleCommand(std::string_view command)
 {
     if (command == "clear") {
         d_consoleLines.clear();
@@ -75,7 +76,7 @@ void Console::HandleCommand(const std::string& command)
     }
     else if (command.substr(0, 5) == "echo ") {
         d_consoleLines.push_front({
-            " > " + command.substr(5),
+            fmt::format(" > {}", command.substr(5)),
             glm::vec4{0.7, 0.7, 0.7, 1.0}
         });
     }
@@ -83,12 +84,12 @@ void Console::HandleCommand(const std::string& command)
         Sprocket::LuaEngine engine;
         if (command.size() > 4) {  // Script name is at least a single character
             auto name = command.substr(4);
-            auto script = std::string("Resources/Scripts/") + name;
+            auto script = fmt::format("Resources/Scripts/{}", name);
             if (std::filesystem::exists(script)) {
                 engine.RunScript(script);
             } else {
                 d_consoleLines.push_front({
-                    " > Could not find script '" + name + "'",
+                    fmt::format(" > Could not find script '{}'", name),
                     glm::vec4{1.0, 0.0, 0.0, 1.0}
                 });
             }

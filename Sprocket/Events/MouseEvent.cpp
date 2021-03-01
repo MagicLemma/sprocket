@@ -1,6 +1,6 @@
 #include "Events/MouseEvent.h"
 
-#include <sstream>
+#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -13,9 +13,8 @@ MouseButtonPressedEvent::MouseButtonPressedEvent(int button, int action, int mod
 
 std::string MouseButtonPressedEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "MouseButtonPressedEvent: " << d_button << ", " << d_action << ", " << d_mods;
-	return ss.str();
+	return fmt::format("MouseButtonPressedEvent: {}, {}, {}", d_button, d_action, d_mods);
+
 }
 
 MouseButtonReleasedEvent::MouseButtonReleasedEvent(int button, int action, int mods)
@@ -27,9 +26,7 @@ MouseButtonReleasedEvent::MouseButtonReleasedEvent(int button, int action, int m
 
 std::string MouseButtonReleasedEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "MouseButtonReleasedEvent: " << d_button << ", " << d_action << ", " << d_mods;
-	return ss.str();
+	return fmt::format("MouseButtonPressedEvent: {}, {}, {}", d_button, d_action, d_mods);
 }
 
 MouseMovedEvent::MouseMovedEvent(float xPos, float yPos)
@@ -40,9 +37,7 @@ MouseMovedEvent::MouseMovedEvent(float xPos, float yPos)
 
 std::string MouseMovedEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "MouseMovedEvent: " << d_xPos << ", " << d_yPos;
-	return ss.str();
+	return fmt::format("MouseMovedEvent: {}, {}", d_xPos, d_yPos);
 }
 
 MouseScrolledEvent::MouseScrolledEvent(float xOffset, float yOffset)
@@ -53,9 +48,7 @@ MouseScrolledEvent::MouseScrolledEvent(float xOffset, float yOffset)
 
 std::string MouseScrolledEvent::ToString() const
 {
-	std::stringstream ss;
-	ss << "MouseScrolledEvent: " << d_xOffset << ", " << d_yOffset;
-	return ss.str();
+	return fmt::format("MouseScrolledEvent: {}, {}", d_xOffset, d_yOffset);
 }
 
 }

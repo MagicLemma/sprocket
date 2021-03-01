@@ -11,7 +11,7 @@ AssetManager::AssetManager()
 {
 }
 
-Mesh* AssetManager::GetMesh(const std::string& file)
+Mesh* AssetManager::GetMesh(std::string_view file)
 {
     if (file == "") { return d_defaultMesh.get(); }
     std::string filepath = std::filesystem::absolute(file).string();
@@ -37,7 +37,7 @@ Mesh* AssetManager::GetMesh(const std::string& file)
     return d_defaultMesh.get();
 }
 
-Texture* AssetManager::GetTexture(const std::string& file)
+Texture* AssetManager::GetTexture(std::string_view file)
 {
     if (file == "") { return d_defaultTexture.get(); }
     std::string filepath = std::filesystem::absolute(file).string();
@@ -63,7 +63,7 @@ Texture* AssetManager::GetTexture(const std::string& file)
     return d_defaultTexture.get();
 }
 
-Material* AssetManager::GetMaterial(const std::string& file)
+Material* AssetManager::GetMaterial(std::string_view file)
 {
     if (file == "") { return d_defaultMaterial.get(); }
     std::string filepath = std::filesystem::absolute(file).string();

@@ -25,8 +25,8 @@ struct Material
     bool useRoughnessMap = false;
 
     glm::vec3 albedo = {1.0f, 1.0f, 1.0f};
-    float       metallic = 0.0f;  // AKA Reflectivity
-    float       roughness = 1.0f; // AKA Shine Damper
+    float     metallic = 0.0f;  // AKA Reflectivity
+    float     roughness = 1.0f; // AKA Shine Damper
     // If the normal map is not used, the "default" value used is
     // the normal in the Model VBO.
 };

@@ -9,6 +9,7 @@
 #include <typeindex>
 #include <typeinfo>
 #include <unordered_map>
+#include <string_view>
 
 namespace Sprocket {
     
@@ -28,7 +29,7 @@ public:
     template <typename T> bool Has();
     template <typename T> T& Get();
 
-    void Load(const std::string& file);
+    void Load(std::string_view file);
 
     void OnUpdate(double dt);
     void OnEvent(Event& event);

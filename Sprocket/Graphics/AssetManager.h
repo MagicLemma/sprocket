@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <future>
 
 namespace Sprocket {
@@ -44,9 +45,9 @@ public:
 public:
     AssetManager();
 
-    Mesh* GetMesh(const std::string& file);
-    Texture* GetTexture(const std::string& file);
-    Material* GetMaterial(const std::string& file);
+    Mesh* GetMesh(std::string_view file);
+    Texture* GetTexture(std::string_view file);
+    Material* GetMaterial(std::string_view file);
 
     auto Meshes()    { return Iterator(&d_meshes); }
     auto Textures()  { return Iterator(&d_textures); }

@@ -93,6 +93,7 @@
         "polynomials": "cpp",
         "adolcforward": "cpp",
         "clocale": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "string_view": "cpp"
     }
 }

@@ -10,9 +10,8 @@
 #include <unordered_map>
 #include <optional>
 #include <chrono>
+#include <string_view>
 #include <deque>
-
-#include <tsl/hopscotch_map.h>
 
 namespace Sprocket {
 
@@ -56,7 +55,7 @@ struct DrawCommand
 
     // Helper for adding a string of test to the text vertex and index buffers. Uses the
     // font stored in the draw command.
-    void AddText(const std::string& text,
+    void AddText(std::string_view text,
                  const glm::vec4& quad,
                  const TextProperties& properties = {});
 };
@@ -146,7 +145,7 @@ class UIEngine
     StreamBuffer d_buffer;
     
     // Panel info 
-    tsl::hopscotch_map<std::size_t, Panel> d_panels;
+    std::unordered_map<std::size_t, Panel> d_panels;
     Panel* d_currentPanel = nullptr;
     std::deque<std::size_t> d_panelOrder;
 
@@ -158,7 +157,7 @@ class UIEngine
     // Hash -> time map keeping track of the last time each
     // widget was unselected. Used to calculate the unhovered
     // and unclicked times.
-    tsl::hopscotch_map<std::size_t, WidgetTimes> d_widgetTimes;
+    std::unordered_map<std::size_t, WidgetTimes> d_widgetTimes;
 
     // A steadily increasing timer used to set the unselected
     // times in the maps above.
@@ -188,7 +187,7 @@ public:
     // position of the region is with respect to the position of the active panel.
     // If this widget will consume keyboard input, it needs to be stated here. Widgets
     // only consume keyboard events while in focus.
-    WidgetInfo Register(const std::string& name, const glm::vec4& region);
+    WidgetInfo Register(std::string_view name, const glm::vec4& region);
 
     // Returns the region offsetted by the position of the current
     // panel if there is one, or region otherwise.
@@ -206,7 +205,7 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(const std::string& name, glm::vec4* region, PanelType type);
+    void StartPanel(std::string_view name, glm::vec4* region, PanelType type);
     void EndPanel();
 };
 

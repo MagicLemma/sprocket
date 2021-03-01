@@ -4,12 +4,12 @@
 #include "Types.h"
 
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <filesystem>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -139,11 +139,9 @@ void Shader::LoadMat4(const std::string& name, const glm::mat4& matrix, int coun
 	glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, glm::value_ptr(matrix));
 }
 
-std::string ArrayName(const std::string& uniformName, size_t index)
+std::string ArrayName(std::string_view uniformName, std::size_t index)
 {
-	std::stringstream ss;
-	ss << uniformName << "[" << index << "]";
-	return ss.str();
+	return fmt::format("{}[{}]", uniformName, index);
 }
 
 bool Shader::Reload()
