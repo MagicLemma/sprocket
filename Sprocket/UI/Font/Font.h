@@ -12,12 +12,10 @@
 #include <utility>
 #include <unordered_map>
 
-#include <tsl/hopscotch_map.h>
-
 namespace Sprocket {
 
-using KerningMap = tsl::hopscotch_map<std::pair<u32, u32>, float, HashPair>;
-using GlyphMap = tsl::hopscotch_map<u32, Glyph>;
+using KerningMap = std::unordered_map<std::pair<u32, u32>, float, HashPair>;
+using GlyphMap = std::unordered_map<u32, Glyph>;
 
 struct SizedFontData
 {
@@ -30,7 +28,7 @@ class Font
     std::string d_filename;
     
     FontAtlas  d_atlas;
-    tsl::hopscotch_map<float, SizedFontData> d_fontData;
+    std::unordered_map<float, SizedFontData> d_fontData;
 
     bool LoadGlyph(char c, float size);
 

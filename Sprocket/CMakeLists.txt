@@ -21,7 +21,6 @@ find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
-find_package(tsl-hopscotch-map CONFIG REQUIRED)
 find_package(cppcoro CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
@@ -116,7 +115,6 @@ target_link_libraries(Sprocket PUBLIC
                       sfml-system
                       sfml-audio
                       yaml-cpp
-                      tsl::hopscotch_map
                       cppcoro
                       ${LUA_LIBRARIES})
 

@@ -2,6 +2,7 @@
 - glfw3
 - glad 
 - glm 
+- fmt
 - spdlog 
 - freetype 
 - assimp
@@ -11,4 +12,3 @@
 - sfml-system
 - sfml-audio
 - yaml-cpp
-- tsl-hopscotch-map
