@@ -26,7 +26,7 @@ class Shader
     u32 CompileShader(u32 type, const std::string& source);
 
     // Shader Uniform Getter
-    u32 GetUniformLocation(std::string_view name) const;
+    u32 GetUniformLocation(const std::string& name) const;
 
 public:
     Shader(const std::string& vertShaderFile,
@@ -45,14 +45,14 @@ public:
     void Unbind() const;
 
     // Shader Uniform Setters
-    void LoadSampler(std::string_view name, int value) const;
-    void LoadInt(std::string_view name, int value) const;
-    void LoadFloat(std::string_view name, float value) const;
-    void LoadVec2(std::string_view name, const glm::vec2& vector) const;
-    void LoadVec3(std::string_view name, const glm::vec3& vector) const;
-    void LoadVec4(std::string_view name, const glm::vec4& vector) const;
-    void LoadQuat(std::string_view name, const glm::quat& quat) const;
-    void LoadMat4(std::string_view name, const glm::mat4& matrix, int count = 1) const;
+    void LoadSampler(const std::string& name, int value) const;
+    void LoadInt(const std::string& name, int value) const;
+    void LoadFloat(const std::string& name, float value) const;
+    void LoadVec2(const std::string& name, const glm::vec2& vector) const;
+    void LoadVec3(const std::string& name, const glm::vec3& vector) const;
+    void LoadVec4(const std::string& name, const glm::vec4& vector) const;
+    void LoadQuat(const std::string& name, const glm::quat& quat) const;
+    void LoadMat4(const std::string& name, const glm::mat4& matrix, int count = 1) const;
 };
 
 // HELPER FUNCTIONS
