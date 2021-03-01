@@ -79,7 +79,7 @@ void SinglePanelUI::EndFrame()
     d_engine.EndFrame();
 }
 
-bool SinglePanelUI::Button(const std::string& name, const glm::vec4& region)
+bool SinglePanelUI::Button(std::string_view name, const glm::vec4& region)
 {
     auto info = d_engine.Register(name, region);
 
@@ -104,9 +104,9 @@ bool SinglePanelUI::Button(const std::string& name, const glm::vec4& region)
     return info.onClick;
 }
 
-void SinglePanelUI::Slider(const std::string& name,
-                      const glm::vec4& region,
-                      float* value, float min, float max)
+void SinglePanelUI::Slider(std::string_view name,
+                           const glm::vec4& region,
+                           float* value, float min, float max)
 {
     auto info = d_engine.Register(name, region);
 

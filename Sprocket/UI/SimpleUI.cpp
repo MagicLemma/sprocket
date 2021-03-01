@@ -227,7 +227,7 @@ bool SimpleUI::Checkbox(std::string_view name,
     return *value; 
 }
 
-void SimpleUI::Slider(const std::string& name,
+void SimpleUI::Slider(std::string_view name,
                       const glm::vec4& region,
                       float* value, float min, float max)
 {

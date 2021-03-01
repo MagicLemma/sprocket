@@ -75,7 +75,7 @@ public:
                   const glm::vec4& region,
                   bool* value);
 
-    void Slider(const std::string& name,
+    void Slider(std::string_view name,
                 const glm::vec4& region,
                 float* value, float min, float max);
 
