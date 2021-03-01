@@ -25,7 +25,7 @@ private:
     static_assert(std::is_copy_constructible<ValueType>());
     static_assert(std::is_integral<IndexType>());
 
-    const IndexType EMPTY = std::numeric_limits<IndexType>::max();
+    static const IndexType EMPTY = std::numeric_limits<IndexType>::max();
 
     PackedType d_packed;
     SparseType d_sparse;

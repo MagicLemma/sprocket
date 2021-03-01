@@ -15,9 +15,9 @@ Music::Music()
 {
 }
 
-bool Music::Load(std::string_view filename)
+bool Music::Load(const std::string& filename)
 {
-    return d_impl->music.openFromFile(std::string(filename));
+    return d_impl->music.openFromFile(filename);
 }
 
 void Music::Play() const

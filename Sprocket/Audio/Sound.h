@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <string_view>
 #include <memory>
 
 #include "Maths.h"
@@ -17,7 +16,7 @@ class Sound
 
 public:
     Sound();
-    bool Load(std::string_view filename);
+    bool Load(const std::string& filename);
     friend class Source;
 };
 

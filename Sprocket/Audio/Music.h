@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <string_view>
 #include <memory>
 
 namespace Sprocket {
@@ -14,7 +13,7 @@ class Music
 
 public:
     Music();
-    bool Load(std::string_view filename);
+    bool Load(const std::string& filename);
     
     void Play() const;
     void Pause() const;

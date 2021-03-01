@@ -5,7 +5,6 @@
 #include "Maths.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
-#include "Printer.h"
 
 #include <functional>
 #include <sstream>
@@ -13,6 +12,7 @@
 #include <string_view>
 #include <algorithm>
 
+#include <fmt/core.h>
 #include <cpp-itertools.hpp>
 
 namespace Sprocket {
@@ -247,7 +247,7 @@ void SimpleUI::Slider(const std::string& name,
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(leftColour, {x, y, ratio * width, height});
     cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    cmd.AddText(name + ": " + Printer::PrintFloat(*value, 0), info.quad, tp);
+    cmd.AddText(fmt::format("{}: {:.0f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         auto mouse = d_window->GetMousePos();
