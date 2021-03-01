@@ -1,28 +1,49 @@
 #include "Log.h"
 
-#include <exception>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
-#include <spdlog/sinks/stdout_color_sinks.h>
+#include <iostream>
 
 namespace Sprocket {
 namespace Log {
-
 namespace {
-	std::shared_ptr<spdlog::logger> s_logger_p;
+
+#ifdef _WIN32
+HANDLE g_stdin;
+DWORD  g_old_mode;
+#endif
+
 }
 
 void Init()
 {
-	if (s_logger_p == nullptr) {
-		spdlog::set_pattern("%^[%T] %n: %v%$");
-		s_logger_p = spdlog::stdout_color_mt("Sprocket");
-		s_logger_p->set_level(spdlog::level::trace);
+#ifdef _WIN32
+	g_stdin = GetStdHandle(STD_INPUT_HANDLE);
+	if (g_stdin == INVALID_HANDLE_VALUE) {
+		std::cerr << "Could not get stdin handle\n";
+		return;
 	}
-}
 
-std::shared_ptr<spdlog::logger>& Logger()
-{
-	return s_logger_p;
+	//if (!GetConsoleMode(g_stdin, &g_old_mode)) {
+	//	std::cerr << "Could not get current console mode\n";
+	//	return;
+	//}
+//
+	//DWORD mode = g_old_mode | ENABLE_VIRTUAL_TERMINAL_INPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	//if (!SetConsoleMode(g_stdin, mode)) {
+	//	std::cerr << "Failed to set console colouring\n";
+	//	return;
+	//}
+
+	for (int k = 1; k < 255; ++k)
+	{
+		// pick the colorattribute k you want
+		SetConsoleTextAttribute(g_stdin, k);
+		std::cout << k << " I want to be nice today!" << std::endl;
+	}
+#endif
 }
 
 }
