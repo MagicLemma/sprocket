@@ -3,7 +3,6 @@
 - glad 
 - glm 
 - fmt
-- spdlog 
 - freetype 
 - assimp
 - imgui
