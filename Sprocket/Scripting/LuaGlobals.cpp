@@ -42,7 +42,7 @@ bool CheckReturnCode(lua_State* L, int rc)
 {
     if (rc != LUA_OK) {
         const char* error = lua_tostring(L, -1);
-        SPKT_LOG_ERROR("[Lua]: {}", error);
+        log::error("[Lua]: {}", error);
         return false;
     }
     return true;
@@ -52,7 +52,7 @@ bool CheckArgCount(lua_State* L, int argc)
 {
     int args = lua_gettop(L);
     if (args != argc) {
-        SPKT_LOG_ERROR("[Lua]: Expected {} args, got {}", argc, args);
+        log::error("[Lua]: Expected {} args, got {}", argc, args);
         return false;
     }
     return true;

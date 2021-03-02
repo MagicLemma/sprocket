@@ -417,7 +417,12 @@ void WorldLayer::OnRender()
     d_escapeMenu.StartPanel("Button Panel", &shape2, PanelType::DRAGGABLE);
     d_escapeMenu.Text("Buttons", 36.0f, {0, 0, 400, 100});
     glm::vec4 buttonQuad{10, 100, 400 - 20, 50};
-    d_escapeMenu.Button("Button 1", buttonQuad);
+    if (d_escapeMenu.Button("Button 1", buttonQuad)) {
+        log::warn("Warn");
+        log::info("Info");
+        log::error("Error");
+        log::fatal("Fatal");
+    }
     buttonQuad.y += 60;
     d_escapeMenu.Button("Button 2", buttonQuad);
     buttonQuad.y += 60;

@@ -19,7 +19,7 @@ namespace {
 std::string ParseShader(const std::string& filepath)
 {
 	if (!std::filesystem::exists(filepath)) {
-		SPKT_LOG_FATAL("Shader file '{}' does not exist!", filepath);
+		log::fatal("Shader file '{}' does not exist!", filepath);
 	}
 	std::ifstream stream(filepath);
 	std::string shader((std::istreambuf_iterator<char>(stream)),
@@ -76,7 +76,7 @@ u32 Shader::CompileShader(u32 type, const std::string& source)
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 
 	if (result == GL_FALSE) {
-        SPKT_LOG_ERROR("Could not compile shader {}", (type == GL_VERTEX_SHADER) ? "VERTEX" : "FRAGMENT");
+        log::error("Could not compile shader {}", (type == GL_VERTEX_SHADER) ? "VERTEX" : "FRAGMENT");
 		glDeleteShader(id);
 		return 0;
 	}

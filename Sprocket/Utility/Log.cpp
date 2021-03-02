@@ -1,47 +1,29 @@
 #include "Log.h"
 
-#ifdef _WIN32
-#include <Windows.h>
-#endif
+#include <fmt/core.h>
+#include <fmt/color.h>
 
-#include <iostream>
+#ifdef _WIN32
+#include "Windows.h"
+#endif
 
 namespace Sprocket {
-namespace Log {
+namespace log {
 namespace {
 
-#ifdef _WIN32
-HANDLE g_stdin;
-DWORD  g_old_mode;
-#endif
+bool g_inited = false;
 
 }
 
-void Init()
+void init()
 {
 #ifdef _WIN32
-	g_stdin = GetStdHandle(STD_INPUT_HANDLE);
-	if (g_stdin == INVALID_HANDLE_VALUE) {
-		std::cerr << "Could not get stdin handle\n";
-		return;
-	}
-
-	//if (!GetConsoleMode(g_stdin, &g_old_mode)) {
-	//	std::cerr << "Could not get current console mode\n";
-	//	return;
-	//}
-//
-	//DWORD mode = g_old_mode | ENABLE_VIRTUAL_TERMINAL_INPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-	//if (!SetConsoleMode(g_stdin, mode)) {
-	//	std::cerr << "Failed to set console colouring\n";
-	//	return;
-	//}
-
-	for (int k = 1; k < 255; ++k)
-	{
-		// pick the colorattribute k you want
-		SetConsoleTextAttribute(g_stdin, k);
-		std::cout << k << " I want to be nice today!" << std::endl;
+	if (!g_inited) {
+		DWORD termFlags;
+		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (GetConsoleMode(handle, &termFlags))
+			SetConsoleMode(handle, termFlags | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+		g_inited = true;
 	}
 #endif
 }

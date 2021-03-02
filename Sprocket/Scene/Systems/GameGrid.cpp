@@ -63,7 +63,7 @@ void GameGrid::OnStartup(Scene& scene)
 
         auto it = d_gridEntities.find({gc.x, gc.z});
         if (it == d_gridEntities.end()) {
-            SPKT_LOG_WARN("No entity exists at this coord!");
+            log::warn("No entity exists at this coord!");
         }
         else {
             d_gridEntities.erase(it);

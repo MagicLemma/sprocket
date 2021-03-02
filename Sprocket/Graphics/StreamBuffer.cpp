@@ -51,7 +51,7 @@ void StreamBuffer::SetBufferLayout(const BufferLayout& layout) const
         Unbind();
     }
     else {
-        SPKT_LOG_ERROR("Buffer layout is not complete!");
+        log::error("Buffer layout is not complete!");
     }
 }
 

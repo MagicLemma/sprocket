@@ -17,7 +17,7 @@ namespace {
 void DoFile(lua_State* L, const char* file)
 {
     if (luaL_dofile(L, file)) {
-        SPKT_LOG_ERROR("[Lua]: Could not load {}", lua_tostring(L, -1));
+        log::error("[Lua]: Could not load {}", lua_tostring(L, -1));
     }
 }
 
@@ -53,23 +53,23 @@ void LuaEngine::PrintErrors(int rc) const
     std::string err = lua_tostring(d_L, -1);
     switch (rc) {
         case LUA_ERRRUN:
-            SPKT_LOG_ERROR("[Lua]: Runtime error: {}", err);
+            log::error("[Lua]: Runtime error: {}", err);
             return;
         case LUA_ERRMEM:
-            SPKT_LOG_ERROR("[Lua]: Memory allocation error: {}", err);
+            log::error("[Lua]: Memory allocation error: {}", err);
             return;
         case LUA_ERRERR:
-            SPKT_LOG_ERROR("[Lua]: Error handler func failed: {}", err);
+            log::error("[Lua]: Error handler func failed: {}", err);
             return;
         default:
-            SPKT_LOG_ERROR("[Lua]: Unknown error: {}", err);
+            log::error("[Lua]: Unknown error: {}", err);
     }
 }
 
 void LuaEngine::RunScript(const std::string& filename)
 {
     if (filename.empty()) {
-        SPKT_LOG_WARN("Tried to start an empty script!");
+        log::warn("Tried to start an empty script!");
         return;
     }
     
@@ -325,17 +325,17 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
 
 void LuaEngine::PrintGlobals()
 {
-    SPKT_LOG_INFO("Starting globals");
+    log::info("Starting globals");
     lua_pushglobaltable(d_L);
     lua_pushnil(d_L);
     while (lua_next(d_L, -2) != 0) {
         if (lua_isnumber(d_L, -1)) {
-            SPKT_LOG_INFO("{} = {}", lua_tostring(d_L, -2), lua_tonumber(d_L, -1));
+            log::info("{} = {}", lua_tostring(d_L, -2), lua_tonumber(d_L, -1));
         }
         lua_pop(d_L, 1);
     }
     lua_pop(d_L, 1);
-    SPKT_LOG_INFO("Ending globals");
+    log::info("Ending globals");
 }
 
 }

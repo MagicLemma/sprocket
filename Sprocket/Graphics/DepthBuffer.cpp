@@ -22,7 +22,7 @@ DepthBuffer::DepthBuffer(int width, int height)
     
      // Validate the framebuffer.
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        SPKT_LOG_ERROR("Created FBO is not complete!");
+        log::error("Created FBO is not complete!");
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -76,7 +76,7 @@ std::queue<glm::vec3> GenerateAStarPath(
     std::queue<glm::vec3> path;
 
     if (current->position != p2) {
-        SPKT_LOG_INFO("No path found!");
+        log::info("No path found!");
         return path;
     }
 
