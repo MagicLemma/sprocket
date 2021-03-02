@@ -1,7 +1,8 @@
 #include "FileBrowser.h"
 
-#include <GLFW/glfw3.h>
+#ifdef _WIN32
 
+#include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 #include <Windows.h>
@@ -51,3 +52,4 @@ std::string SaveFile(Window* window, const char* filter)
 }
 
 }
+#endif
