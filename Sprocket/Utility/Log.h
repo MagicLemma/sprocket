@@ -1,22 +1,41 @@
 #pragma once
+#include <string>
 #include <memory>
-#include <iostream>
-
-#include <spdlog/spdlog.h>
+#include <fmt/core.h>
+#include <fmt/color.h>
 
 namespace Sprocket {
-namespace Log {
+namespace log {
 
-void Init();
+void init();
 
-std::shared_ptr<spdlog::logger> &Logger();
+template <typename Format, typename... Args>
+void warn(Format&& format, Args&&... args)
+{
+    std::string message = fmt::format(format, std::forward<Args>(args)...);
+    fmt::print(fmt::fg(fmt::color::azure), "[WARN]: {}\n", message);
+}
+
+template <typename Format, typename... Args>
+void info(Format&& format, Args&&... args)
+{
+    std::string message = fmt::format(format, std::forward<Args>(args)...);
+    fmt::print(fmt::fg(fmt::color::light_green), "[INFO]: {}\n", message);
+}
+
+template <typename Format, typename... Args>
+void error(Format&& format, Args&&... args)
+{
+    std::string message = fmt::format(format, std::forward<Args>(args)...);
+    fmt::print(fmt::fg(fmt::color::orange), "[ERROR]: {}\n", message);
+}
+
+template <typename Format, typename... Args>
+void fatal(Format& format, Args&&... args)
+{
+    std::string message = fmt::format(format, std::forward<Args>(args)...);
+    fmt::print(fmt::fg(fmt::color::magenta), "[FATAL]: {}\n", message);
+}
 
 }
 }
-
-// Log macros
-#define SPKT_LOG_TRACE(...) ::Sprocket::Log::Logger()->trace(__VA_ARGS__)
-#define SPKT_LOG_INFO(...)  ::Sprocket::Log::Logger()->info(__VA_ARGS__)
-#define SPKT_LOG_WARN(...)  ::Sprocket::Log::Logger()->warn(__VA_ARGS__)
-#define SPKT_LOG_ERROR(...) ::Sprocket::Log::Logger()->error(__VA_ARGS__)
-#define SPKT_LOG_FATAL(...) ::Sprocket::Log::Logger()->critical(__VA_ARGS__)

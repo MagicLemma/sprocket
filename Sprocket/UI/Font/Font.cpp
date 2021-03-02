@@ -169,7 +169,7 @@ bool Font::LoadGlyph(char c, float size)
     FT_Bitmap bitmap  = slot->bitmap;
     auto region = d_atlas.GetRegion(bitmap.width, bitmap.rows);
     if (region.x < 0) {
-        SPKT_LOG_ERROR("Texture atlas is full!");
+        log::error("Texture atlas is full!");
         FT_Done_Face(face);
         FT_Done_FreeType(library);
         return false;

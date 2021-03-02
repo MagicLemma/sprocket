@@ -167,34 +167,34 @@ void Anvil::OnRender()
             if (ImGui::MenuItem("New")) {
                 std::string file = SaveFile(d_window, "*.yaml");
                 if (!file.empty()) {
-                    SPKT_LOG_INFO("Creating {}...", d_sceneFile);
+                    log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
                     d_scene->Clear();
-                    SPKT_LOG_INFO("...done!");
+                    log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Open")) {
                 std::string file = OpenFile(d_window, "*.yaml");
                 if (!file.empty()) {
-                    SPKT_LOG_INFO("Loading {}...", d_sceneFile);
+                    log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
                     d_scene->Clear();
                     Loader::Load(file, &d_scene->Entities());
-                    SPKT_LOG_INFO("...done!");
+                    log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
-                SPKT_LOG_INFO("Saving {}...", d_sceneFile);
+                log::info("Saving {}...", d_sceneFile);
                 Loader::Save(d_sceneFile, &d_scene->Entities());
-                SPKT_LOG_INFO("...done!");
+                log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
                 std::string file = SaveFile(d_window, "*.yaml");
                 if (!file.empty()) {
-                    SPKT_LOG_INFO("Saving as {}...", file);
+                    log::info("Saving as {}...", file);
                     d_sceneFile = file;
                     Loader::Save(file, &d_scene->Entities());
-                    SPKT_LOG_INFO("...done!");
+                    log::info("...done!");
                 }
             }
             ImGui::EndMenu();

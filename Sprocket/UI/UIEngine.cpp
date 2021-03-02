@@ -62,7 +62,7 @@ void DrawCommand::AddText(std::string_view text,
                           const TextProperties& properties)
 {
     if (font == nullptr) {
-        SPKT_LOG_ERROR("Tried to add text to a draw command with no font!");
+        log::error("Tried to add text to a draw command with no font!");
         return;
     }
 

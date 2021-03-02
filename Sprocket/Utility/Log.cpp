@@ -1,28 +1,27 @@
 #include "Log.h"
 
-#include <exception>
+#include <fmt/core.h>
+#include <fmt/color.h>
 
-#include <spdlog/sinks/stdout_color_sinks.h>
+#ifdef _WIN32
+#include "Windows.h"
+#endif
 
 namespace Sprocket {
-namespace Log {
+namespace log {
 
-namespace {
-	std::shared_ptr<spdlog::logger> s_logger_p;
-}
-
-void Init()
+void init()
 {
-	if (s_logger_p == nullptr) {
-		spdlog::set_pattern("%^[%T] %n: %v%$");
-		s_logger_p = spdlog::stdout_color_mt("Sprocket");
-		s_logger_p->set_level(spdlog::level::trace);
+#ifdef _WIN32
+	static bool inited = false;
+	if (!inited) {
+		DWORD termFlags;
+		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (GetConsoleMode(handle, &termFlags))
+			SetConsoleMode(handle, termFlags | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+		inited = true;
 	}
-}
-
-std::shared_ptr<spdlog::logger>& Logger()
-{
-	return s_logger_p;
+#endif
 }
 
 }

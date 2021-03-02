@@ -63,7 +63,7 @@ void FrameBuffer::SetScreenSize(int width, int height)
 
     // Validate the framebuffer.
     if (glCheckNamedFramebufferStatus(d_fbo, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        SPKT_LOG_ERROR("Created FBO is not complete!");
+        log::error("Created FBO is not complete!");
     }
 
     d_width = width;
