@@ -2,6 +2,9 @@
 
 #include <fmt/core.h>
 #include <fmt/color.h>
+#include <fmt/chrono.h>
+
+#include <chrono>
 
 #ifdef _WIN32
 #include "Windows.h"
@@ -9,6 +12,17 @@
 
 namespace Sprocket {
 namespace log {
+namespace {
+
+std::chrono::system_clock::duration time_today()
+{
+	using days = std::chrono::duration<int, std::ratio<86400>>; // Will be in C++20
+
+	auto now = std::chrono::system_clock::now();
+	return now - std::chrono::floor<days>(now);
+}
+
+}
 
 void init()
 {
@@ -22,6 +36,13 @@ void init()
 		inited = true;
 	}
 #endif
+}
+
+void prefixed_log(std::string_view prefix, std::string_view message)
+{
+	fmt::print(fmt::fg(fmt::color::white), "{:%H:%M:%S} [", time_today());
+    fmt::print(prefix);
+    fmt::print(fmt::fg(fmt::color::white), "] {}\n", message);
 }
 
 }

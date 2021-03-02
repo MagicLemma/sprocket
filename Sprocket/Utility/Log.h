@@ -9,33 +9,39 @@ namespace log {
 
 void init();
 
-template <typename Format, typename... Args>
-void warn(Format&& format, Args&&... args)
+template <typename... Args>
+void warn(std::string_view format, Args&&... args)
 {
-    std::string message = fmt::format(format, std::forward<Args>(args)...);
-    fmt::print(fmt::fg(fmt::color::azure), "[WARN]: {}\n", message);
+    std::string prefix = fmt::format(fmt::fg(fmt::color::aqua), "WARN");
+    std::string log = fmt::format(format, std::forward<Args>(args)...);
+    prefixed_log(prefix, log);
 }
 
-template <typename Format, typename... Args>
-void info(Format&& format, Args&&... args)
+template <typename... Args>
+void info(std::string_view format, Args&&... args)
 {
-    std::string message = fmt::format(format, std::forward<Args>(args)...);
-    fmt::print(fmt::fg(fmt::color::light_green), "[INFO]: {}\n", message);
+    std::string prefix = fmt::format(fmt::fg(fmt::color::light_green), "INFO");
+    std::string log = fmt::format(format, std::forward<Args>(args)...);
+    prefixed_log(prefix, log);
 }
 
-template <typename Format, typename... Args>
-void error(Format&& format, Args&&... args)
+template <typename... Args>
+void error(std::string_view format, Args&&... args)
 {
-    std::string message = fmt::format(format, std::forward<Args>(args)...);
-    fmt::print(fmt::fg(fmt::color::orange), "[ERROR]: {}\n", message);
+    std::string prefix = fmt::format(fmt::fg(fmt::color::orange), "ERROR");
+    std::string log = fmt::format(format, std::forward<Args>(args)...);
+    prefixed_log(prefix, log);
 }
 
-template <typename Format, typename... Args>
-void fatal(Format& format, Args&&... args)
+template <typename... Args>
+void fatal(std::string_view format, Args&&... args)
 {
-    std::string message = fmt::format(format, std::forward<Args>(args)...);
-    fmt::print(fmt::fg(fmt::color::magenta), "[FATAL]: {}\n", message);
+    std::string prefix = fmt::format(fmt::fg(fmt::color::magenta), "FATAL");
+    std::string log = fmt::format(format, std::forward<Args>(args)...);
+    prefixed_log(prefix, log);
 }
+
+void prefixed_log(std::string_view prefix, std::string_view message);
 
 }
 }
