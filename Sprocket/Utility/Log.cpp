@@ -9,21 +9,17 @@
 
 namespace Sprocket {
 namespace log {
-namespace {
-
-bool g_inited = false;
-
-}
 
 void init()
 {
 #ifdef _WIN32
-	if (!g_inited) {
+	static bool inited = false;
+	if (!inited) {
 		DWORD termFlags;
 		HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 		if (GetConsoleMode(handle, &termFlags))
 			SetConsoleMode(handle, termFlags | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-		g_inited = true;
+		inited = true;
 	}
 #endif
 }
