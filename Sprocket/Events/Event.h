@@ -9,9 +9,8 @@ class Event
 	bool d_consumed = false;
 
 public:
-	virtual int CategoryFlags() const = 0;
-	virtual std::string ToString() const = 0;
-
+	virtual ~Event() {}
+	
 	bool IsConsumed() const { return d_consumed; }
 	void Consume() { d_consumed = true; }
 		// A flag that can be set if something has used the event
