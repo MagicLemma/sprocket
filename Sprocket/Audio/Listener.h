@@ -1,6 +1,5 @@
 #pragma once
 #include "ECS.h"
-#include "Event.h"
 
 namespace Sprocket {
 namespace Audio {

@@ -1,5 +1,5 @@
 #pragma once
-#include "Event.h"
+#include "Events.h"
 #include "Maths.h"
 #include "Types.h"
 
@@ -10,7 +10,7 @@
 
 namespace Sprocket {
 
-using EventCallback = std::function<void(Event&)>;
+using EventCallback = std::function<void(ev::Event&)>;
 
 struct WindowImpl;
 
@@ -24,7 +24,7 @@ struct WindowData
 	bool running = true;
 	bool focused = true;
 
-	EventCallback callback = [](Event&) {};
+	EventCallback callback = [](ev::Event&) {};
 };
 
 class Window

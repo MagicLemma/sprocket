@@ -128,21 +128,21 @@ void WorldLayer::LoadScene(std::string_view file)
     assert(d_camera != ecs::Null);
 }
 
-void WorldLayer::OnEvent(Sprocket::Event& event)
+void WorldLayer::OnEvent(Sprocket::ev::Event& event)
 {
     using namespace Sprocket;
 
     // Escape Menu event handling
-    if (auto e = event.As<Sprocket::KeyboardButtonPressedEvent>()) {
-        if (!e->IsConsumed() && e->Key() == Sprocket::Keyboard::ESC) {
+    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+        if (!event.is_consumed() && data->key == Keyboard::ESC) {
             d_paused = !d_paused;
-            e->Consume();
+            event.consume();
         }
     }
 
     if (d_paused) {
         d_escapeMenu.OnEvent(event);
-        event.Consume();
+        event.consume();
     }
 
     // Editor UI event handling
@@ -153,13 +153,13 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
     // Game World event handling
     d_hoveredEntityUI.OnEvent(event);
 
-    if (auto e = event.As<WindowResizeEvent>()) {
-        d_postProcessor.SetScreenSize(e->Width(), e->Height());
+    if (auto data = event.get_if<ev::WindowResize>()) {
+        d_postProcessor.SetScreenSize(data->width, data->height);
     }
 
-    if (auto e = event.As<MouseButtonPressedEvent>()) {
+    if (auto data = event.get_if<ev::MouseButtonPressed>()) {
         auto& tr = d_camera.Get<Transform3DComponent>();
-        if (e->Mods() & KeyModifier::CTRL) {
+        if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
                 d_window->GetMousePos(),
@@ -175,7 +175,7 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
             
             auto& path = d_worker.Get<PathComponent>();
 
-            if (e->Button() == Mouse::LEFT) {
+            if (data->button == Mouse::LEFT) {
                 std::queue<glm::vec3>().swap(path.markers);
                 auto pos = d_worker.Get<Transform3DComponent>().position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
@@ -190,11 +190,11 @@ void WorldLayer::OnEvent(Sprocket::Event& event)
                 } else {
                     path.markers.push(mousePos);
                 }
-                e->Consume();
+                event.consume();
             }
-            else if (e->Button() == Mouse::RIGHT) {
+            else if (data->button == Mouse::RIGHT) {
                 std::queue<glm::vec3>().swap(path.markers);
-                e->Consume();
+                event.consume();
             }
         }
     }

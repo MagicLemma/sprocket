@@ -19,7 +19,7 @@ int Run(App& app, Window& window, const RunOptions& options = {})
     std::string name = window.GetWindowName();
     Stopwatch watch;
 
-    window.SetCallback([&app](Event& event) {
+    window.SetCallback([&app](ev::Event& event) {
         app.OnEvent(event);
     });
 

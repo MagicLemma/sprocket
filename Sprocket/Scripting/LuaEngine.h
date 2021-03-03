@@ -1,9 +1,6 @@
 #pragma once
-#include "Event.h"
+#include "Events.h"
 #include "InputProxy.h"
-#include "MouseEvent.h"
-#include "WindowEvent.h"
-#include "KeyboardEvent.h"
 #include "Scene.h"
 #include "Window.h"
 
@@ -39,24 +36,23 @@ public:
     void Set(const std::string& name, Type&& value);
 
     // Window Events
-    void CallOnWindowResizeEvent(WindowResizeEvent* e);
-    void CallOnWindowClosedEvent(WindowClosedEvent* e);
-    void CallOnWindowGotFocusEvent(WindowGotFocusEvent* e);
-    void CallOnWindowLostFocusEvent(WindowLostFocusEvent* e);
-    void CallOnWindowMaximizeEvent(WindowMaximizeEvent* e);
-    void CallOnWindowMinimizeEvent(WindowMinimizeEvent* e);
+    void CallOnWindowResizeEvent(ev::Event& event);
+    void CallOnWindowGotFocusEvent(ev::Event& event);
+    void CallOnWindowLostFocusEvent(ev::Event& event);
+    void CallOnWindowMaximizeEvent(ev::Event& event);
+    void CallOnWindowMinimizeEvent(ev::Event& event);
 
     // Mouse Events
-    void CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e);
-    void CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e);
-    void CallOnMouseMovedEvent(MouseMovedEvent* e);
-    void CallOnMouseScrolledEvent(MouseScrolledEvent* e);
+    void CallOnMouseButtonPressedEvent(ev::Event& event);
+    void CallOnMouseButtonReleasedEvent(ev::Event& event);
+    void CallOnMouseMovedEvent(ev::Event& event);
+    void CallOnMouseScrolledEvent(ev::Event& event);
 
     // Keyboard Events
-    void CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e);
-    void CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e);
-    void CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e);
-    void CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e);
+    void CallOnKeyboardButtonPressedEvent(ev::Event& event);
+    void CallOnKeyboardButtonReleasedEvent(ev::Event& event);
+    void CallOnKeyboardButtonHeldEvent(ev::Event& event);
+    void CallOnKeyboardKeyTypedEvent(ev::Event& event);
 
     // Do not copy these things
     LuaEngine(LuaEngine&&) = delete;

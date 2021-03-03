@@ -1,7 +1,7 @@
 #pragma once
 #include "ECS.h"
 #include "EntitySystem.h"
-#include "Event.h"
+#include "Events.h"
 #include "Maths.h"
 
 #include <memory>
@@ -32,7 +32,7 @@ public:
     void Load(std::string_view file);
 
     void OnUpdate(double dt);
-    void OnEvent(Event& event);
+    void OnEvent(ev::Event& event);
 
     std::size_t Size() const;
 

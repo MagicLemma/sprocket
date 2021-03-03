@@ -1,7 +1,5 @@
 #include "DevUI.h"
-#include "MouseEvent.h"
-#include "KeyboardEvent.h"
-#include "WindowEvent.h"
+#include "Events.h"
 #include "KeyboardCodes.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
@@ -171,61 +169,61 @@ DevUI::DevUI(Window* window)
     
 }
 
-void DevUI::OnEvent(Event& event)
+void DevUI::OnEvent(ev::Event& event)
 {
     ImGuiIO& io = ImGui::GetIO();
 
-    if (auto e = event.As<MouseButtonPressedEvent>()) {    
-        if (e->IsConsumed()) { return; }
-        io.MouseDown[e->Button()] = true;
-        if (d_blockEvents && io.WantCaptureMouse) { e->Consume(); }
+    if (auto data = event.get_if<ev::MouseButtonPressed>()) {    
+        if (event.is_consumed()) { return; }
+        io.MouseDown[data->button] = true;
+        if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
     }
     
-    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-        io.MouseDown[e->Button()] = false;
+    else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
+        io.MouseDown[data->button] = false;
     }
 
-    else if (auto e = event.As<MouseMovedEvent>()) {
-        io.MousePos = ImVec2(e->XPos(), e->YPos());
-        if (ImGui::IsAnyItemHovered()) { e->Consume(); }
-        if (d_blockEvents && io.WantCaptureMouse) { e->Consume(); }
+    else if (auto data = event.get_if<ev::MouseMoved>()) {
+        io.MousePos = ImVec2(data->x_pos, data->y_pos);
+        if (ImGui::IsAnyItemHovered()) { event.consume(); }
+        if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
     }
 
-    else if (auto e = event.As<MouseScrolledEvent>()) {
-        io.MouseWheel += e->YOffset();
-        io.MouseWheelH += e->XOffset();
-        if (d_blockEvents && io.WantCaptureMouse) { e->Consume(); }
+    else if (auto data = event.get_if<ev::MouseScrolled>()) {
+        io.MouseWheel += data->y_offset;
+        io.MouseWheelH += data->x_offset;
+        if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
     }
 
-    else if (auto e = event.As<WindowResizeEvent>()) {
-        io.DisplaySize = ImVec2((float)e->Width(), (float)e->Height());
+    else if (auto data = event.get_if<ev::WindowResize>()) {
+        io.DisplaySize = ImVec2((float)data->width, (float)data->height);
         io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
     }
 
-    else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-        if (e->IsConsumed()) { return; }
-        io.KeysDown[e->Key()] = true;
-        io.KeyCtrl  = e->Mods() & KeyModifier::CTRL;
-        io.KeyShift = e->Mods() & KeyModifier::SHIFT;
-        io.KeyAlt   = e->Mods() & KeyModifier::ALT;
-        io.KeySuper = e->Mods() & KeyModifier::SUPER;
-        if (d_blockEvents && io.WantCaptureKeyboard) { e->Consume(); }
+    else if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+        if (event.is_consumed()) { return; }
+        io.KeysDown[data->key] = true;
+        io.KeyCtrl  = data->mods & KeyModifier::CTRL;
+        io.KeyShift = data->mods & KeyModifier::SHIFT;
+        io.KeyAlt   = data->mods & KeyModifier::ALT;
+        io.KeySuper = data->mods & KeyModifier::SUPER;
+        if (d_blockEvents && io.WantCaptureKeyboard) { event.consume(); }
     }
 
-    else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
-        io.KeysDown[e->Key()] = false;
-        io.KeyCtrl  = e->Mods() & KeyModifier::CTRL;
-        io.KeyShift = e->Mods() & KeyModifier::SHIFT;
-        io.KeyAlt   = e->Mods() & KeyModifier::ALT;
-        io.KeySuper = e->Mods() & KeyModifier::SUPER;
+    else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
+        io.KeysDown[data->key] = false;
+        io.KeyCtrl  = data->mods & KeyModifier::CTRL;
+        io.KeyShift = data->mods & KeyModifier::SHIFT;
+        io.KeyAlt   = data->mods & KeyModifier::ALT;
+        io.KeySuper = data->mods & KeyModifier::SUPER;
     }
 
-    else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
-        if (e->IsConsumed()) { return; }
-        if (e->Key() > 0 && e->Key() < 0x10000) {
-            io.AddInputCharacter((unsigned short)e->Key());
+    else if (auto data = event.get_if<ev::KeyboardTyped>()) {
+        if (event.is_consumed()) { return; }
+        if (data->key > 0 && data->key < 0x10000) {
+            io.AddInputCharacter((unsigned short)data->key);
         }
-        if (d_blockEvents && io.WantCaptureKeyboard) { e->Consume(); }
+        if (d_blockEvents && io.WantCaptureKeyboard) { event.consume(); }
     }
 }
 

@@ -53,7 +53,7 @@ SinglePanelUI::SinglePanelUI(Window* window)
 {
 }
 
-void SinglePanelUI::OnEvent(Event& event)
+void SinglePanelUI::OnEvent(ev::Event& event)
 {
     d_engine.OnEvent(event);
 }

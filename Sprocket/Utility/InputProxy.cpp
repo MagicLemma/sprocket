@@ -1,26 +1,24 @@
 #include "InputProxy.h"
-#include "KeyboardEvent.h"
-#include "MouseEvent.h"
-#include "Event.h"
+#include "Events.h"
 
 namespace Sprocket {
     
-void InputProxy::OnEvent(Event& event)
+void InputProxy::OnEvent(ev::Event& event)
 {
-    if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-        if (event.IsConsumed()) { return; }
-        d_keys[e->Key()] = true;
-        if (d_consumedKeys.contains(e->Key())) { e->Consume(); }
+    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+        if (event.is_consumed()) { return; }
+        d_keys[data->key] = true;
+        if (d_consumedKeys.contains(data->key)) { event.consume(); }
     }
-    else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
-        d_keys[e->Key()] = false;
+    else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
+        d_keys[data->key] = false;
     }
-    else if (auto e = event.As<MouseButtonPressedEvent>()) {
-        if (event.IsConsumed()) { return; }
-        d_buttons[e->Button()] = true;
+    else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
+        if (event.is_consumed()) { return; }
+        d_buttons[data->button] = true;
     }
-    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-        d_buttons[e->Button()] = false;
+    else if (auto e = event.get_if<ev::MouseButtonReleased>()) {
+        d_buttons[data->button] = false;
     }
 }
 

@@ -80,15 +80,15 @@ void Camera::OnUpdate(double dt)
     }
 }
 
-void Camera::OnEvent(Event& event)
+void Camera::OnEvent(ev::Event& event)
 {
     d_input.OnEvent(event);
 
-    if (auto e = event.As<MouseScrolledEvent>()) {
-        if (e->IsConsumed()) { return; }
-        d_absVert -= e->YOffset();
+    if (auto data = event.get_if<ev::MouseScrolled>()) {
+        if (event.is_consumed()) { return; }
+        d_absVert -= data->y_offset;
         d_absVert = std::clamp(d_absVert, d_absMin, d_absMax);
-        e->Consume();
+        event.consume();
     }
 }
 

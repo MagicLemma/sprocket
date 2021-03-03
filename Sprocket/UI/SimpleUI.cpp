@@ -55,7 +55,7 @@ SimpleUI::SimpleUI(Window* window)
 {
 }
 
-void SimpleUI::OnEvent(Event& event)
+void SimpleUI::OnEvent(ev::Event& event)
 {
     d_engine.OnEvent(event);
 }

@@ -1,6 +1,6 @@
 #include "CameraSystem.h"
 #include "Components.h"
-#include "WindowEvent.h"
+#include "Events.h"
 #include "Scene.h"
 #include "ECS.h"
 
@@ -20,10 +20,10 @@ void CameraSystem::OnStartup(Scene& scene)
     });
 }
 
-void CameraSystem::OnEvent(Scene& scene, Event& event)
+void CameraSystem::OnEvent(Scene& scene, ev::Event& event)
 {
-    if (auto e = event.As<WindowResizeEvent>()) {
-        d_aspectRatio = e->AspectRatio();
+    if (auto e = event.get_if<ev::WindowResize>()) {
+        d_aspectRatio = (float)e->width / e->height;
 
         for (auto entity : scene.Entities().View<Camera3DComponent>()) {
             auto& camera = entity.Get<Camera3DComponent>();

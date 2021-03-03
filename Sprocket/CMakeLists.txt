@@ -79,11 +79,6 @@ add_library(Sprocket STATIC
             Graphics/PostProcessing/Negative.cpp
             Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
-
-            Events/Event.cpp
-            Events/WindowEvent.cpp
-            Events/KeyboardEvent.cpp
-            Events/MouseEvent.cpp
             
             Utility/Log.cpp
             Utility/Colour.cpp

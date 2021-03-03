@@ -36,7 +36,7 @@ public:
 
     void OnStartup(Scene& scene) override;
     void OnUpdate(Scene& scene, double dt) override;
-    void OnEvent(Scene& scene, Event& event) override;
+    void OnEvent(Scene& scene, ev::Event& event) override;
 
     ecs::Entity At(const glm::ivec2& pos) const;
 

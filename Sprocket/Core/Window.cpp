@@ -1,9 +1,5 @@
 #include "Window.h"
 #include "Log.h"
-#include "WindowEvent.h"
-#include "KeyboardEvent.h"
-#include "MouseEvent.h"
-#include "Log.h"
 #include "Types.h"
 
 #include <glad/glad.h>
@@ -69,7 +65,7 @@ Window::Window(const std::string& name, u32 width, u32 height)
 		glViewport(0, 0, width, height);
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		WindowResizeEvent event(width, height);
+		auto event = ev::make_event<ev::WindowResize>(width, height);
 		data->width = width;
 		data->height = height;
 		data->callback(event);
@@ -79,7 +75,7 @@ Window::Window(const std::string& name, u32 width, u32 height)
 	{
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		WindowClosedEvent event;
+		auto event = ev::make_event<ev::WindowClosed>();
 		data->running = false;
 		data->callback(event);
 	});
@@ -90,15 +86,15 @@ Window::Window(const std::string& name, u32 width, u32 height)
 		switch (action)
 		{
 			case GLFW_PRESS: {
-				KeyboardButtonPressedEvent event(key, scancode, mods);
+				auto event = ev::make_event<ev::KeyboardButtonPressed>(key, scancode, mods);
 				data->callback(event);
 			} break;
 			case GLFW_RELEASE: {
-				KeyboardButtonReleasedEvent event(key, scancode, mods);
+				auto event = ev::make_event<ev::KeyboardButtonReleased>(key, scancode, mods);
 				data->callback(event);
 			} break;
 			case GLFW_REPEAT: {
-				KeyboardButtonHeldEvent event(key, scancode, mods);
+				auto event = ev::make_event<ev::KeyboardButtonHeld>(key, scancode, mods);
 				data->callback(event);
 			} break;
 		}
@@ -110,41 +106,39 @@ Window::Window(const std::string& name, u32 width, u32 height)
 		switch (action)
 		{
 		case GLFW_PRESS: {
-			MouseButtonPressedEvent event(button, action, mods);
+			auto event = ev::make_event<ev::MouseButtonPressed>(button, action, mods);
 			data->callback(event);
 		} break;
 		case GLFW_RELEASE: {
-			MouseButtonReleasedEvent event(button, action, mods);
+			auto event = ev::make_event<ev::MouseButtonReleased>(button, action, mods);
 			data->callback(event);
 		} break;
 		}
 	});
 
-	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double xPos, double yPos) {
+	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double x_pos, double y_pos) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		MouseMovedEvent event(static_cast<float>(xPos),
-		                      static_cast<float>(yPos));
+		auto event = ev::make_event<ev::MouseMoved>(x_pos, y_pos);
 		data->callback(event);
 	});
 
-	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double xOffset, double yOffset) {
+	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double x_offset, double y_offset) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		MouseScrolledEvent event(static_cast<float>(xOffset),
-		                         static_cast<float>(yOffset));
+		auto event = ev::make_event<ev::MouseScrolled>(x_offset, y_offset);
 		data->callback(event);
 	});
 
 	glfwSetWindowFocusCallback(d_impl->window, [](GLFWwindow* window, int focused) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (focused) {
-			WindowGotFocusEvent event;
+			auto event = ev::make_event<ev::WindowGotFocus>();
 			data->focused = true;
 			data->callback(event);
 		}
 		else {
-			WindowLostFocusEvent event;
+			auto event = ev::make_event<ev::WindowLostFocus>();
 			data->focused = false;
 			data->callback(event);
 		}
@@ -153,11 +147,11 @@ Window::Window(const std::string& name, u32 width, u32 height)
 	glfwSetWindowMaximizeCallback(d_impl->window, [](GLFWwindow* window, int maximized) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (maximized) {
-			WindowMaximizeEvent event;
+			auto event = ev::make_event<ev::WindowMaximize>();
 			data->callback(event);
 		}
 		else {
-			WindowMinimizeEvent event;
+			auto event = ev::make_event<ev::WindowMinimize>();
 			data->callback(event);
 		}
 	});
@@ -165,7 +159,7 @@ Window::Window(const std::string& name, u32 width, u32 height)
 	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, u32 key) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		KeyboardKeyTypedEvent event(key);
+		auto event = ev::make_event<ev::KeyboardTyped>(key);
 		data->callback(event);
 	});
 }
