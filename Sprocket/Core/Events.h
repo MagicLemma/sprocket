@@ -12,8 +12,9 @@ class Event
 	bool     d_consumed = false;
 
 public:
-	explicit Event(const std::any& event)
-		: d_event(event)
+	template <typename T, typename... Args>
+	explicit Event(std::in_place_type_t<T>, Args&&... args)
+		: d_event(std::in_place_type<T>, std::forward<Args>(args)...)
 	{}
 
 	template <typename T> bool is() const { return d_event.type() == typeid(T); }
@@ -27,7 +28,7 @@ public:
 template <typename T, typename... Args>
 Event make_event(Args&&... args)
 {
-	return Event(std::make_any<T>(std::forward<Args>(args)...));
+	return Event(std::in_place_type<T>, std::forward<Args>(args)...);
 }
 
 // KEYBOARD EVENTS 
