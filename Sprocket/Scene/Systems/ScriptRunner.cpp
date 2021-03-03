@@ -54,7 +54,7 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
     }
 }
 
-void ScriptRunner::OnEvent(Scene& scene, Event& event)
+void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
 {
     d_input.OnEvent(event);
 
@@ -63,51 +63,48 @@ void ScriptRunner::OnEvent(Scene& scene, Event& event)
         auto& [script, alive] = pair;
         if (!(alive && entity.Get<ScriptComponent>().active)) { continue; }
 
-        if (auto e = event.As<WindowResizeEvent>()) {
-            script.CallOnWindowResizeEvent(e);
+        if (event.is<ev::WindowResize>()) {
+            script.CallOnWindowResizeEvent(event);
         }
-        else if (auto e = event.As<WindowClosedEvent>()) {
-            script.CallOnWindowClosedEvent(e);
+        else if (event.is<ev::WindowGotFocus>()) {
+            script.CallOnWindowGotFocusEvent(event);
         }
-        else if (auto e = event.As<WindowGotFocusEvent>()) {
-            script.CallOnWindowGotFocusEvent(e);
+        else if (event.is<ev::WindowLostFocus>()) {
+            script.CallOnWindowLostFocusEvent(event);
         }
-        else if (auto e = event.As<WindowLostFocusEvent>()) {
-            script.CallOnWindowLostFocusEvent(e);
+        else if (event.is<ev::WindowMaximize>()) {
+            script.CallOnWindowMaximizeEvent(event);
         }
-        else if (auto e = event.As<WindowMaximizeEvent>()) {
-            script.CallOnWindowMaximizeEvent(e);
-        }
-        else if (auto e = event.As<WindowMinimizeEvent>()) {
-            script.CallOnWindowMinimizeEvent(e);
+        else if (event.is<ev::WindowMinimize>()) {
+            script.CallOnWindowMinimizeEvent(event);
         }
 
         // MOUSE EVENTS
-        else if (auto e = event.As<MouseButtonPressedEvent>()) {
-            script.CallOnMouseButtonPressedEvent(e);
+        else if (event.is<ev::MouseButtonPressed>()) {
+            script.CallOnMouseButtonPressedEvent(event);
         }
-        else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-            script.CallOnMouseButtonReleasedEvent(e);
+        else if (event.is<ev::MouseButtonReleased>()) {
+            script.CallOnMouseButtonReleasedEvent(event);
         }
-        else if (auto e = event.As<MouseMovedEvent>()) {
-            script.CallOnMouseMovedEvent(e);
+        else if (event.is<ev::MouseMoved>()) {
+            script.CallOnMouseMovedEvent(event);
         }
-        else if (auto e = event.As<MouseScrolledEvent>()) {
-            script.CallOnMouseScrolledEvent(e);
+        else if (event.is<ev::MouseScrolled>()) {
+            script.CallOnMouseScrolledEvent(event);
         }
             
         // KEYBOARD
-        else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-            script.CallOnKeyboardButtonPressedEvent(e);
+        else if (event.is<ev::KeyboardButtonPressed>()) {
+            script.CallOnKeyboardButtonPressedEvent(event);
         }
-        else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
-            script.CallOnKeyboardButtonReleasedEvent(e);
+        else if (event.is<ev::KeyboardButtonReleased>()) {
+            script.CallOnKeyboardButtonReleasedEvent(event);
         }
-        else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
-            script.CallOnKeyboardButtonHeldEvent(e);
+        else if (event.is<ev::KeyboardButtonHeld>()) {
+            script.CallOnKeyboardButtonHeldEvent(event);
         }
-        else if (auto e = event.As<KeyboardKeyTypedEvent>()) {
-            script.CallOnKeyboardKeyTypedEvent(e);
+        else if (event.is<ev::KeyboardTyped>()) {
+            script.CallOnKeyboardKeyTypedEvent(event);
         }
     }
 }

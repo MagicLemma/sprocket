@@ -2,7 +2,6 @@
 #include "Camera.h"
 #include "Components.h"
 #include "Scene.h"
-#include "MouseEvent.h"
 #include "MouseCodes.h"
 #include "Log.h"
 
@@ -96,12 +95,12 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
     }
 }
 
-void GameGrid::OnEvent(Scene& scene, Event& event)
+void GameGrid::OnEvent(Scene& scene, ev::Event& event)
 {
-    if (event.IsConsumed()) { return; }
+    if (event.is_consumed()) { return; }
 
-    if (auto e = event.As<MouseButtonPressedEvent>()) {
-        if (e->Button() == Mouse::LEFT) {
+    if (auto e = event.get_if<ev::MouseButtonPressed>()) {
+        if (e->button == Mouse::LEFT) {
             d_selected = d_hovered;
         }
         else {

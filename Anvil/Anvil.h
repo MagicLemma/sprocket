@@ -61,7 +61,7 @@ class Anvil
 public:
     Anvil(Window* window);
 
-    void OnEvent(Event& event);
+    void OnEvent(ev::Event& event);
     void OnUpdate(double dt);
     void OnRender();
 

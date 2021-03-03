@@ -28,14 +28,14 @@ void Console::OnUpdate(double dt)
     d_ui.OnUpdate(dt);
 }
 
-void Console::OnEvent(Event& event)
+void Console::OnEvent(ev::Event& event)
 {
-    auto e = event.As<KeyboardButtonPressedEvent>();
-    if (e && e->Key() == Keyboard::ENTER) {
+    auto data = event.get_if<ev::KeyboardButtonPressed>();
+    if (data && data->key == Keyboard::ENTER) {
         d_consoleLines.push_front({d_commandLine, glm::vec4{1.0, 1.0, 1.0, 1.0}});
         HandleCommand(d_commandLine);
         d_commandLine = "";
-        e->Consume();
+        event.consume();
     } else {
         d_ui.OnEvent(event);
     }

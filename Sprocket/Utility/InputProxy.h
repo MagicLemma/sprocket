@@ -1,11 +1,10 @@
 #pragma once
-#include "Event.h"
-
 #include <array>
 #include <unordered_map>
 #include <unordered_set>
 
 namespace Sprocket {
+namespace ev { class Event; }
 
 class InputProxy
 {
@@ -17,7 +16,7 @@ class InputProxy
     std::unordered_set<int> d_consumedKeys;
 
 public:
-    void OnEvent(Event& event);
+    void OnEvent(ev::Event& event);
 
     bool IsMouseDown(int button) const;
     bool IsKeyboardDown(int key) const;

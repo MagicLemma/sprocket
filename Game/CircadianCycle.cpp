@@ -123,7 +123,7 @@ std::string CircadianCycle::ToString(bool twelveHour) const
         if (hours > 12) { hours -= 12; }
     }
     
-    return fmt::format("{}:{}:{}:{}", hours, mins, seconds, suffix);
+    return fmt::format("{}:{}:{:.2f}:{}", hours, mins, seconds, suffix);
 }
 
 }

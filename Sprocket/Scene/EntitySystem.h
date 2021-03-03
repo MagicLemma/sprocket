@@ -3,7 +3,7 @@
 namespace Sprocket {
 
 class Scene;
-class Event;
+namespace ev { class Event; }
 
 class EntitySystem
 {
@@ -18,7 +18,7 @@ public:
     virtual void OnUpdate(Scene& scene, double dt) {};
         // Called every tick of the game loop.
 
-    virtual void OnEvent(Scene& scene, Event& event) {};
+    virtual void OnEvent(Scene& scene, ev::Event& event) {};
         // Called with every event so systems can consume them.
 
 private:

@@ -24,7 +24,7 @@ public:
     Console(Window* window);
 
     void OnUpdate(double dt);
-    void OnEvent(Event& event);
+    void OnEvent(ev::Event& event);
     void Draw();
 };
 

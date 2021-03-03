@@ -76,8 +76,9 @@ void LuaEngine::RunScript(const std::string& filename)
     DoFile(d_L, filename.c_str());
 }
 
-void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
+void LuaEngine::CallOnWindowResizeEvent(ev::Event& event)
 {
+    assert(event.is<ev::WindowResize>());
     lua_getglobal(d_L, "OnWindowResizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -85,21 +86,20 @@ void LuaEngine::CallOnWindowResizeEvent(WindowResizeEvent* e)
         return;
     }
 
-    Push(e->IsConsumed());
-    Push(e->Width());
-    Push(e->Height());
+    const auto& data = event.get<ev::WindowResize>();
+    Push(event.is_consumed());
+    Push(data.width);
+    Push(data.height);
 
     int rc = lua_pcall(d_L, 3, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnWindowClosedEvent(WindowClosedEvent* e)
-{}
-
-void LuaEngine::CallOnWindowGotFocusEvent(WindowGotFocusEvent* e)
+void LuaEngine::CallOnWindowGotFocusEvent(ev::Event& event)
 {
+    assert(event.is<ev::WindowGotFocus>());
     lua_getglobal(d_L, "OnWindowGotFocusEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -107,16 +107,17 @@ void LuaEngine::CallOnWindowGotFocusEvent(WindowGotFocusEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
+    Push(event.is_consumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnWindowLostFocusEvent(WindowLostFocusEvent* e)
+void LuaEngine::CallOnWindowLostFocusEvent(ev::Event& event)
 {
+    assert(event.is<ev::WindowLostFocus>());
     lua_getglobal(d_L, "OnWindowLostFocusEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -124,16 +125,17 @@ void LuaEngine::CallOnWindowLostFocusEvent(WindowLostFocusEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
+    Push(event.is_consumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
+void LuaEngine::CallOnWindowMaximizeEvent(ev::Event& event)
 {
+    assert(event.is<ev::WindowMaximize>());
     lua_getglobal(d_L, "OnWindowMaximizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -141,16 +143,17 @@ void LuaEngine::CallOnWindowMaximizeEvent(WindowMaximizeEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
+    Push(event.is_consumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
+void LuaEngine::CallOnWindowMinimizeEvent(ev::Event& event)
 {
+    assert(event.is<ev::WindowMinimize>());
     lua_getglobal(d_L, "OnWindowMinimizeEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -158,16 +161,17 @@ void LuaEngine::CallOnWindowMinimizeEvent(WindowMinimizeEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
+    Push(event.is_consumed());
 
     int rc = lua_pcall(d_L, 1, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
+void LuaEngine::CallOnMouseButtonPressedEvent(ev::Event& event)
 {
+    assert(event.is<ev::MouseButtonPressed>());
     lua_getglobal(d_L, "OnMouseButtonPressedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -175,20 +179,22 @@ void LuaEngine::CallOnMouseButtonPressedEvent(MouseButtonPressedEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
-    Push(e->Button());
-    Push(e->Action());
-    Push(e->Mods());
+    const auto& data = event.get<ev::MouseButtonPressed>();
+    Push(event.is_consumed());
+    Push(data.button);
+    Push(data.action);
+    Push(data.mods);
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
 
-void LuaEngine::CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e)
+void LuaEngine::CallOnMouseButtonReleasedEvent(ev::Event& event)
 {
+    assert(event.is<ev::MouseButtonReleased>());
     lua_getglobal(d_L, "MouseButtonReleasedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -196,19 +202,21 @@ void LuaEngine::CallOnMouseButtonReleasedEvent(MouseButtonReleasedEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
-    Push(e->Button());
-    Push(e->Action());
-    Push(e->Mods());
+    const auto& data = event.get<ev::MouseButtonReleased>();
+    Push(event.is_consumed());
+    Push(data.button);
+    Push(data.action);
+    Push(data.mods);
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnMouseMovedEvent(MouseMovedEvent* e)
+void LuaEngine::CallOnMouseMovedEvent(ev::Event& event)
 {
+    assert(event.is<ev::MouseMoved>());
     lua_getglobal(d_L, "OnMouseMovedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -216,18 +224,20 @@ void LuaEngine::CallOnMouseMovedEvent(MouseMovedEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
-    Push(e->XPos());
-    Push(e->YPos());
+    const auto& data = event.get<ev::MouseMoved>();
+    Push(event.is_consumed());
+    Push(data.x_pos);
+    Push(data.y_pos);
 
     int rc = lua_pcall(d_L, 3, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
+void LuaEngine::CallOnMouseScrolledEvent(ev::Event& event)
 {
+    assert(event.is<ev::MouseScrolled>());
     lua_getglobal(d_L, "OnMouseScrolledEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -235,18 +245,20 @@ void LuaEngine::CallOnMouseScrolledEvent(MouseScrolledEvent* e)
         return;
     }
     
-    Push(e->IsConsumed());
-    Push(e->XOffset());
-    Push(e->YOffset());
+    const auto& data = event.get<ev::MouseScrolled>();
+    Push(event.is_consumed());
+    Push(data.x_offset);
+    Push(data.y_offset);
 
     int rc = lua_pcall(d_L, 3, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e)
+void LuaEngine::CallOnKeyboardButtonPressedEvent(ev::Event& event)
 {
+    assert(event.is<ev::KeyboardButtonPressed>());
     lua_getglobal(d_L, "OnKeyboardButtonPressedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -254,19 +266,21 @@ void LuaEngine::CallOnKeyboardButtonPressedEvent(KeyboardButtonPressedEvent* e)
         return;
     }
 
-    Push(e->IsConsumed());
-    Push(e->Key());
-    Push(e->Scancode());
-    Push(e->Mods());
+    const auto& data = event.get<ev::KeyboardButtonPressed>();
+    Push(event.is_consumed());
+    Push(data.key);
+    Push(data.scancode);
+    Push(data.mods);
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e)
+void LuaEngine::CallOnKeyboardButtonReleasedEvent(ev::Event& event)
 {
+    assert(event.is<ev::KeyboardButtonReleased>());
     lua_getglobal(d_L, "OnKeyboardButtonReleasedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -274,19 +288,21 @@ void LuaEngine::CallOnKeyboardButtonReleasedEvent(KeyboardButtonReleasedEvent* e
         return;
     }
 
-    Push(e->IsConsumed());
-    Push(e->Key());
-    Push(e->Scancode());
-    Push(e->Mods());
+    const auto& data = event.get<ev::KeyboardButtonReleased>();
+    Push(event.is_consumed());
+    Push(data.key);
+    Push(data.scancode);
+    Push(data.mods);
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e)
+void LuaEngine::CallOnKeyboardButtonHeldEvent(ev::Event& event)
 {
+    assert(event.is<ev::KeyboardButtonHeld>());
     lua_getglobal(d_L, "OnKeyboardButtonHeldEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -294,19 +310,21 @@ void LuaEngine::CallOnKeyboardButtonHeldEvent(KeyboardButtonHeldEvent* e)
         return;
     }
 
-    Push(e->IsConsumed());
-    Push(e->Key());
-    Push(e->Scancode());
-    Push(e->Mods());
+    const auto& data = event.get<ev::KeyboardButtonHeld>();
+    Push(event.is_consumed());
+    Push(data.key);
+    Push(data.scancode);
+    Push(data.mods);
 
     int rc = lua_pcall(d_L, 4, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
-void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
+void LuaEngine::CallOnKeyboardKeyTypedEvent(ev::Event& event)
 {
+    assert(event.is<ev::KeyboardTyped>());
     lua_getglobal(d_L, "OnKeyboardKeyTypedEvent");
 
     if (!lua_isfunction(d_L, -1)) {
@@ -314,13 +332,14 @@ void LuaEngine::CallOnKeyboardKeyTypedEvent(KeyboardKeyTypedEvent* e)
         return;
     }
 
-    Push(e->IsConsumed());
-    Push(e->Key());
+    const auto& data = event.get<ev::KeyboardTyped>();
+    Push(event.is_consumed());
+    Push(data.key);
 
     int rc = lua_pcall(d_L, 2, 1, 0);
     PrintErrors(rc);
 
-    if (lua_toboolean(d_L, -1)) { e->Consume(); }
+    if (lua_toboolean(d_L, -1)) { event.consume(); }
 }
 
 void LuaEngine::PrintGlobals()

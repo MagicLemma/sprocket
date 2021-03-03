@@ -35,18 +35,18 @@ Runtime::Runtime(Window* window)
     d_runtimeCamera = d_scene.Entities().Find<Camera3DComponent>();
 }
 
-void Runtime::OnEvent(Event& event)
+void Runtime::OnEvent(ev::Event& event)
 {
-    if (auto e = event.As<KeyboardKeyTypedEvent>()) {
-        if (e->Key() == Keyboard::BACK_TICK) {
+    if (auto data = event.get_if<ev::KeyboardTyped>()) {
+        if (data->key == Keyboard::BACK_TICK) {
             d_consoleActive = !d_consoleActive;
-            e->Consume();
+            event.consume();
         }
     }
 
     if (d_consoleActive) {
         d_console.OnEvent(event);
-        event.Consume();
+        event.consume();
     }
 
     d_scene.OnEvent(event);

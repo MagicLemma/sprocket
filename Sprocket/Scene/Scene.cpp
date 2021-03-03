@@ -16,7 +16,7 @@ void Scene::OnUpdate(double dt)
     }
 }
 
-void Scene::OnEvent(Event& event)
+void Scene::OnEvent(ev::Event& event)
 {
     for (auto& system : d_systems) {
         system->OnEvent(*this, event);

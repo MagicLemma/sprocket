@@ -1,7 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Shader.h"
-#include "Event.h"
+#include "Events.h"
 #include "Texture.h"
 #include "StreamBuffer.h"
 
@@ -25,7 +25,7 @@ class DevUI
 public:
     DevUI(Window* window);
 
-    void OnEvent(Event& event);
+    void OnEvent(ev::Event& event);
     void OnUpdate(double dt);
 
     void BlockEvents(bool val) { d_blockEvents = val; }

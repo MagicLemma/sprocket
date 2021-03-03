@@ -1,7 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Shader.h"
-#include "Event.h"
+#include "Events.h"
 #include "StreamBuffer.h"
 #include "Font.h"
 #include "UIEngine.h"
@@ -40,7 +40,7 @@ public:
 
     Font* GetFont() { return &d_font; }
 
-    void OnEvent(Event& event);
+    void OnEvent(ev::Event& event);
     void OnUpdate(double dt);
 
     void StartFrame();

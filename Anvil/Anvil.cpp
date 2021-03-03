@@ -57,10 +57,10 @@ Anvil::Anvil(Window* window)
     d_activeScene = d_scene;
 }
 
-void Anvil::OnEvent(Event& event)
+void Anvil::OnEvent(ev::Event& event)
 {
-    if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-        if (e->Key() == Keyboard::ESC) {
+    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+        if (data->key == Keyboard::ESC) {
             if (d_playingGame) {
                 d_playingGame = false;
                 d_activeScene = d_scene;
@@ -72,15 +72,15 @@ void Anvil::OnEvent(Event& event)
             else if (d_window->IsFullscreen()) {
                 d_window->SetWindowed(1280, 720);
             }
-            e->Consume();
-        } else if (e->Key() == Keyboard::F11) {
+            event.consume();
+        } else if (data->key == Keyboard::F11) {
             if (d_window->IsFullscreen()) {
                 d_window->SetWindowed(1280, 720);
             }
             else {
                 d_window->SetFullscreen();
             }
-            e->Consume();
+            event.consume();
         }
     }
 

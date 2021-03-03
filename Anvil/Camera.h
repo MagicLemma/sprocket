@@ -25,7 +25,7 @@ public:
     Camera(Window* window, const glm::vec3& target);
 
     void OnUpdate(double dt);
-    void OnEvent(Event& event);
+    void OnEvent(ev::Event& event);
 
     glm::mat4 Proj() const;
     glm::mat4 View() const;

@@ -4,6 +4,7 @@
 
 // CORE
 #include "Core/Window.h"
+#include "Core/Events.h"
 #include "Core/GameLoop.h"
 
 // UI
@@ -32,12 +33,6 @@
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/PathFollower.h"
 #include "Scene/Systems/ScriptRunner.h"
-
-// EVENTS
-#include "Events/Event.h"
-#include "Events/KeyboardEvent.h"
-#include "Events/MouseEvent.h"
-#include "Events/WindowEvent.h"
 
 // UTILITY
 #include "Utility/Log.h"

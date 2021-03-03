@@ -5,8 +5,6 @@
 #include "Maths.h"
 #include "RenderContext.h"
 #include "BufferLayout.h"
-#include "KeyboardEvent.h"
-#include "MouseEvent.h"
 
 #include <functional>
 #include <sstream>
@@ -213,35 +211,35 @@ DrawCommand& UIEngine::GetDrawCommand()
     return d_currentPanel->mainCommand;
 }
 
-void UIEngine::OnEvent(Event& event)
+void UIEngine::OnEvent(ev::Event& event)
 {
-    if (d_focused != 0 && !event.IsConsumed()) {
-        if (auto e = event.As<KeyboardKeyTypedEvent>()) {
-            d_keyPresses.push_back(e->Key());
-            e->Consume();
+    if (d_focused != 0 && !event.is_consumed()) {
+        if (auto data = event.get_if<ev::KeyboardTyped>()) {
+            d_keyPresses.push_back(data->key);
+            event.consume();
         }
-        else if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-            if (e->Key() == Keyboard::BACKSPACE) {
+        else if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+            if (data->key == Keyboard::BACKSPACE) {
                 d_keyPresses.push_back(Keyboard::BACKSPACE);
-                e->Consume();
+                event.consume();
             }
         }
-        else if (auto e = event.As<KeyboardButtonHeldEvent>()) {
-            if (e->Key() == Keyboard::BACKSPACE) {
+        else if (auto data = event.get_if<ev::KeyboardButtonHeld>()) {
+            if (data->key == Keyboard::BACKSPACE) {
                 d_keyPresses.push_back(Keyboard::BACKSPACE);
-                e->Consume();
+                event.consume();
             }
         }
     }
 
-    if (auto e = event.As<MouseButtonPressedEvent>()) {
-        if (e->Button() == Mouse::LEFT) {
+    if (auto data = event.get_if<ev::MouseButtonPressed>()) {
+        if (data->button == Mouse::LEFT) {
             d_mouseClicked = true;
-            if (d_consumeMouseEvents) { e->Consume(); }
+            if (d_consumeMouseEvents) { event.consume(); }
         }
     }
-    if (auto e = event.As<MouseButtonReleasedEvent>()) {
-        if (e->Button() == Mouse::LEFT) {
+    if (auto data = event.get_if<ev::MouseButtonReleased>()) {
+        if (data->button == Mouse::LEFT) {
             d_widgetTimes[d_clicked].unclickedTime = d_time;
             d_clicked = 0;
         }
