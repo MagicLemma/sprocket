@@ -4,16 +4,6 @@
 
 namespace Sprocket {
 
-enum EventCategory
-{
-	NONE = 0,
-
-	WINDOW             = 1 << 1,
-	INPUT              = 1 << 2,
-	KEYBOARD           = 1 << 3,
-	MOUSE              = 1 << 4
-};
-
 class Event
 {
 	bool d_consumed = false;
@@ -36,11 +26,6 @@ public:
 	template <typename Type> Type* As()
 	{
 		return dynamic_cast<Type*>(this);
-	}
-
-	template <EventCategory Category> bool In()
-	{
-		return CategoryFlags() & Category; 
 	}
 };
 

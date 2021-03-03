@@ -178,6 +178,7 @@ void DevUI::OnEvent(Event& event)
     if (auto e = event.As<MouseButtonPressedEvent>()) {    
         if (e->IsConsumed()) { return; }
         io.MouseDown[e->Button()] = true;
+        if (d_blockEvents && io.WantCaptureMouse) { e->Consume(); }
     }
     
     else if (auto e = event.As<MouseButtonReleasedEvent>()) {
@@ -187,11 +188,13 @@ void DevUI::OnEvent(Event& event)
     else if (auto e = event.As<MouseMovedEvent>()) {
         io.MousePos = ImVec2(e->XPos(), e->YPos());
         if (ImGui::IsAnyItemHovered()) { e->Consume(); }
+        if (d_blockEvents && io.WantCaptureMouse) { e->Consume(); }
     }
 
     else if (auto e = event.As<MouseScrolledEvent>()) {
         io.MouseWheel += e->YOffset();
         io.MouseWheelH += e->XOffset();
+        if (d_blockEvents && io.WantCaptureMouse) { e->Consume(); }
     }
 
     else if (auto e = event.As<WindowResizeEvent>()) {
@@ -206,6 +209,7 @@ void DevUI::OnEvent(Event& event)
         io.KeyShift = e->Mods() & KeyModifier::SHIFT;
         io.KeyAlt   = e->Mods() & KeyModifier::ALT;
         io.KeySuper = e->Mods() & KeyModifier::SUPER;
+        if (d_blockEvents && io.WantCaptureKeyboard) { e->Consume(); }
     }
 
     else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
@@ -221,16 +225,7 @@ void DevUI::OnEvent(Event& event)
         if (e->Key() > 0 && e->Key() < 0x10000) {
             io.AddInputCharacter((unsigned short)e->Key());
         }
-    }
-
-    if (d_blockEvents) {
-        if (event.In<EventCategory::KEYBOARD>() && io.WantCaptureKeyboard) {
-            event.Consume();
-        }
-
-        if (event.In<EventCategory::MOUSE>() && io.WantCaptureMouse) {
-            event.Consume();
-        }
+        if (d_blockEvents && io.WantCaptureKeyboard) { e->Consume(); }
     }
 }
 

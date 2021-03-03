@@ -7,24 +7,20 @@ namespace Sprocket {
     
 void InputProxy::OnEvent(Event& event)
 {
-    if (event.In<EventCategory::KEYBOARD>()) {
-        if (auto e = event.As<KeyboardButtonPressedEvent>()) {
-            if (event.IsConsumed()) { return; }
-            d_keys[e->Key()] = true;
-            if (d_consumedKeys.contains(e->Key())) { e->Consume(); }
-        }
-        else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
-            d_keys[e->Key()] = false;
-        }
+    if (auto e = event.As<KeyboardButtonPressedEvent>()) {
+        if (event.IsConsumed()) { return; }
+        d_keys[e->Key()] = true;
+        if (d_consumedKeys.contains(e->Key())) { e->Consume(); }
     }
-    else if (event.In<EventCategory::MOUSE>()) {
-        if (auto e = event.As<MouseButtonPressedEvent>()) {
-            if (event.IsConsumed()) { return; }
-            d_buttons[e->Button()] = true;
-        }
-        else if (auto e = event.As<MouseButtonReleasedEvent>()) {
-            d_buttons[e->Button()] = false;
-        }
+    else if (auto e = event.As<KeyboardButtonReleasedEvent>()) {
+        d_keys[e->Key()] = false;
+    }
+    else if (auto e = event.As<MouseButtonPressedEvent>()) {
+        if (event.IsConsumed()) { return; }
+        d_buttons[e->Button()] = true;
+    }
+    else if (auto e = event.As<MouseButtonReleasedEvent>()) {
+        d_buttons[e->Button()] = false;
     }
 }
 
