@@ -2,6 +2,7 @@
 #include "Types.h"
 
 #include <array>
+#include <string>
 #include <cstdint>
 
 namespace Sprocket {

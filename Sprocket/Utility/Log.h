@@ -9,6 +9,8 @@ namespace log {
 
 void init();
 
+void prefixed_log(std::string_view prefix, std::string_view message);
+
 template <typename... Args>
 void warn(std::string_view format, Args&&... args)
 {
@@ -40,8 +42,6 @@ void fatal(std::string_view format, Args&&... args)
     std::string log = fmt::format(format, std::forward<Args>(args)...);
     prefixed_log(prefix, log);
 }
-
-void prefixed_log(std::string_view prefix, std::string_view message);
 
 }
 }
