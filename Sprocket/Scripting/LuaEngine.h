@@ -54,25 +54,6 @@ public:
 
     void on_event(ev::Event& event);
 
-    // Window Events
-    void CallOnWindowResizeEvent(ev::Event& event);
-    void CallOnWindowGotFocusEvent(ev::Event& event);
-    void CallOnWindowLostFocusEvent(ev::Event& event);
-    void CallOnWindowMaximizeEvent(ev::Event& event);
-    void CallOnWindowMinimizeEvent(ev::Event& event);
-
-    // Mouse Events
-    void CallOnMouseButtonPressedEvent(ev::Event& event);
-    void CallOnMouseButtonReleasedEvent(ev::Event& event);
-    void CallOnMouseMovedEvent(ev::Event& event);
-    void CallOnMouseScrolledEvent(ev::Event& event);
-
-    // Keyboard Events
-    void CallOnKeyboardButtonPressedEvent(ev::Event& event);
-    void CallOnKeyboardButtonReleasedEvent(ev::Event& event);
-    void CallOnKeyboardButtonHeldEvent(ev::Event& event);
-    void CallOnKeyboardKeyTypedEvent(ev::Event& event);
-
     // Do not copy these things
     LuaEngine(LuaEngine&&) = delete;
 };

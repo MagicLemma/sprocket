@@ -123,8 +123,7 @@ void LuaEngine::RunScript(const std::string& filename)
 
 void LuaEngine::on_event(ev::Event& event)
 {
-    auto handler = [this, &event](const char* f, auto&&... args)
-    {
+    const auto handler = [this, &event](const char* f, auto&&... args) {
         lua_getglobal(d_L, f);
         if (!lua_isfunction(d_L, -1)) {
             lua_pop(d_L, -1);
@@ -185,71 +184,6 @@ void LuaEngine::on_event(ev::Event& event)
         log::warn("Event with unknown type {}", event.type_name());
         return;
     }
-}
-
-void LuaEngine::CallOnWindowResizeEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnWindowGotFocusEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnWindowLostFocusEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnWindowMaximizeEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnWindowMinimizeEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnMouseButtonPressedEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnMouseButtonReleasedEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnMouseMovedEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnMouseScrolledEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnKeyboardButtonPressedEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnKeyboardButtonReleasedEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnKeyboardButtonHeldEvent(ev::Event& event)
-{
-    on_event(event);
-}
-
-void LuaEngine::CallOnKeyboardKeyTypedEvent(ev::Event& event)
-{
-    on_event(event);
 }
 
 void LuaEngine::PrintGlobals()

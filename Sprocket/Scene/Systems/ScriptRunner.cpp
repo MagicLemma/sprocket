@@ -62,50 +62,7 @@ void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
     for (auto& [entity, pair] : d_engines) {
         auto& [script, alive] = pair;
         if (!(alive && entity.Get<ScriptComponent>().active)) { continue; }
-
-        if (event.is<ev::WindowResize>()) {
-            script.CallOnWindowResizeEvent(event);
-        }
-        else if (event.is<ev::WindowGotFocus>()) {
-            script.CallOnWindowGotFocusEvent(event);
-        }
-        else if (event.is<ev::WindowLostFocus>()) {
-            script.CallOnWindowLostFocusEvent(event);
-        }
-        else if (event.is<ev::WindowMaximize>()) {
-            script.CallOnWindowMaximizeEvent(event);
-        }
-        else if (event.is<ev::WindowMinimize>()) {
-            script.CallOnWindowMinimizeEvent(event);
-        }
-
-        // MOUSE EVENTS
-        else if (event.is<ev::MouseButtonPressed>()) {
-            script.CallOnMouseButtonPressedEvent(event);
-        }
-        else if (event.is<ev::MouseButtonReleased>()) {
-            script.CallOnMouseButtonReleasedEvent(event);
-        }
-        else if (event.is<ev::MouseMoved>()) {
-            script.CallOnMouseMovedEvent(event);
-        }
-        else if (event.is<ev::MouseScrolled>()) {
-            script.CallOnMouseScrolledEvent(event);
-        }
-            
-        // KEYBOARD
-        else if (event.is<ev::KeyboardButtonPressed>()) {
-            script.CallOnKeyboardButtonPressedEvent(event);
-        }
-        else if (event.is<ev::KeyboardButtonReleased>()) {
-            script.CallOnKeyboardButtonReleasedEvent(event);
-        }
-        else if (event.is<ev::KeyboardButtonHeld>()) {
-            script.CallOnKeyboardButtonHeldEvent(event);
-        }
-        else if (event.is<ev::KeyboardTyped>()) {
-            script.CallOnKeyboardKeyTypedEvent(event);
-        }
+        script.on_event(event);
     }
 }
 
