@@ -10,10 +10,11 @@
 #include <lua.hpp>
 
 namespace Sprocket {
+namespace lua {
 
 class LuaEngine
 {
-    std::unique_ptr<lua_State, std::function<void(lua_State*)>> d_L;
+    std::unique_ptr<lua_State, void(*)(lua_State*)> d_L;
 
     void push_value(bool val);
     void push_value(char val);
@@ -81,4 +82,5 @@ void LuaEngine::set_value(const std::string& name, Type&& value)
     lua_setglobal(d_L.get(), name.c_str());
 }
 
+}
 }

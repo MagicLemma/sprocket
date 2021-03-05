@@ -81,7 +81,7 @@ void Console::HandleCommand(std::string_view command)
         });
     }
     else if (command.substr(0, 4) == "run ") {
-        Sprocket::LuaEngine engine;
+        Sprocket::lua::LuaEngine engine;
         if (command.size() > 4) {  // Script name is at least a single character
             auto name = command.substr(4);
             auto script = fmt::format("Resources/Scripts/{}", name);

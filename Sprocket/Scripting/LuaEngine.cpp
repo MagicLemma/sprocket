@@ -11,7 +11,7 @@
 #include <lua.hpp>
 
 namespace Sprocket {
-
+namespace lua {
 namespace {
 
 void DoFile(lua_State* L, const char* file)
@@ -196,4 +196,5 @@ void LuaEngine::print_globals()
     log::info("Ending globals");
 }
 
+}
 }
