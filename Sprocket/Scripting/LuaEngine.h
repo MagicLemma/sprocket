@@ -15,10 +15,27 @@ class LuaEngine
 {
     lua_State* d_L;
 
-    template <typename T>
-    void Push(const T& val);
+    // Push primitives
+    void Push(bool val);
+    void Push(char val);
+    void Push(int val);
+    void Push(float val);
+    void Push(double val);
+
+    // Push strings
+    void Push(const char* val);
+    void Push(const std::string& val);
+
+    // Push pointers
+    void Push(void* val);
+    template <typename T> void Push(T* val);
+
+    // Push trivial objects
+    template <typename T> void Push(const T& val);
 
     void PrintErrors(int rc) const;
+
+    void* allocate(std::size_t size);
 
 public:
     LuaEngine();
@@ -34,6 +51,8 @@ public:
 
     template <typename Type>
     void Set(const std::string& name, Type&& value);
+
+    void on_event(ev::Event& event);
 
     // Window Events
     void CallOnWindowResizeEvent(ev::Event& event);
@@ -58,30 +77,16 @@ public:
     LuaEngine(LuaEngine&&) = delete;
 };
 
-template <typename T>
-void LuaEngine::Push(const T& val)
+template <typename T> void LuaEngine::Push(T* val)
 {
-    if constexpr (std::is_pointer<T>()) {
-        lua_pushlightuserdata(d_L, (void*)val);
-    }
-    else if constexpr (std::is_same<T, bool>()) {
-        lua_pushboolean(d_L, val);
-    }
-    else if constexpr (std::is_integral<T>()) {
-        lua_pushinteger(d_L, val);
-    }
-    else if constexpr (std::is_floating_point<T>()) {
-        lua_pushnumber(d_L, val);
-    }
-    else if constexpr (std::is_same<T, std::string>()) {
-        lua_pushstring(d_L, val);
-    }
-    else if constexpr (std::is_copy_assignable<T>() && std::is_trivially_destructible<T>()) {
-        *(T*)lua_newuserdata(d_L, sizeof(T)) = val;
-    }
-    else {
-        static_assert(false);
-    }
+    Push(static_cast<void*>(val));
+}
+
+template <typename T> void LuaEngine::Push(const T& val)
+{
+    static_assert(std::is_copy_assignable_v<T>);
+    static_assert(std::is_trivially_destructible_v<T>);
+    *static_cast<T*>(allocate(sizeof(T))) = val;
 }
 
 template <typename... Args>

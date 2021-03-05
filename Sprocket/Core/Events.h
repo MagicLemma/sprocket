@@ -1,5 +1,6 @@
 #pragma once
 #include <any>
+#include <string>
 
 #include "Types.h"
 
@@ -23,6 +24,8 @@ public:
 
 	bool is_consumed() const noexcept { return d_consumed; }
 	void consume() noexcept { d_consumed = true; }
+
+	std::string type_name() const noexcept { return d_event.type().name(); }
 };
 
 template <typename T, typename... Args>
