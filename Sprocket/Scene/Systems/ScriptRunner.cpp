@@ -17,20 +17,20 @@ ScriptRunner::ScriptRunner(Window* window)
 void ScriptRunner::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
-        auto& [engine, alive] = d_engines[entity];
-        alive = true;
-
-        engine.set_value("__scene__", &scene);
-        engine.set_value("__window__", d_window);
-        engine.set_value("__input__", &d_input);
-
-        engine.run_script(entity.Get<ScriptComponent>().script);
-        engine.call_function("Init", entity);
-        engine.print_globals();
+        lua::Script script(entity.Get<ScriptComponent>().script);
+        script.set_value("__scene__", &scene);
+        script.set_value("__window__", d_window);
+        script.set_value("__input__", &d_input);
+        script.call_function("Init", entity);
+        script.print_globals();
+        d_engines.emplace(entity, std::make_pair(std::move(script), true));
     });
 
     scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
-        d_engines[entity].second = false; // alive = false
+        auto it = d_engines.find(entity);
+        if (it != d_engines.end()) {
+            it->second.second = false; // alive = false
+        }
     });
 }
 

@@ -23,7 +23,28 @@ void DoFile(lua_State* L, const char* file)
 
 }
 
-LuaEngine::LuaEngine()
+Script::Script(const std::string& file)
+    : d_L(luaL_newstate(), [](lua_State* L) { lua_close(L); })
+{
+    lua_State* L = d_L.get();
+    luaL_openlibs(L);
+
+    // Core Sprocket Constants and Helper Functions
+    DoFile(L, "Sprocket/Scripting/Sprocket_Base.lua");
+    DoFile(L, "Sprocket/Scripting/Sprocket_Maths.lua");
+    DoFile(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
+    DoFile(L, "Sprocket/Scripting/Sprocket_Components.lua");
+    DoFile(L, "Sprocket/Scripting/Sprocket_Scene.lua");
+
+    RegisterTransformFunctions(L);
+    RegisterInputFunctions(L);
+    RegisterComponentFunctions(L);
+    RegisterEntityFunctions(L);
+
+    DoFile(d_L.get(), file.c_str());
+}
+
+Script::Script()
     : d_L(luaL_newstate(), [](lua_State* L) { lua_close(L); })
 {
     lua_State* L = d_L.get();
@@ -42,52 +63,52 @@ LuaEngine::LuaEngine()
     RegisterEntityFunctions(L);
 }
 
-void* LuaEngine::allocate(std::size_t size)
+void* Script::allocate(std::size_t size)
 {
     return lua_newuserdata(d_L.get(), size);
 }
 
-void LuaEngine::push_value(bool val)
+void Script::push_value(bool val)
 {
     lua_pushboolean(d_L.get(), val);
 }
 
-void LuaEngine::push_value(char val)
+void Script::push_value(char val)
 {
     lua_pushstring(d_L.get(), std::string(1, val).c_str());
 }
 
-void LuaEngine::push_value(int val)
+void Script::push_value(int val)
 {
     lua_pushinteger(d_L.get(), val);
 }
 
-void LuaEngine::push_value(float val)
+void Script::push_value(float val)
 {
     lua_pushnumber(d_L.get(), val);
 }
 
-void LuaEngine::push_value(double val)
+void Script::push_value(double val)
 {
     lua_pushnumber(d_L.get(), val);
 }
 
-void LuaEngine::push_value(const char* val)
+void Script::push_value(const char* val)
 {
     lua_pushstring(d_L.get(), val);
 }
 
-void LuaEngine::push_value(const std::string& val)
+void Script::push_value(const std::string& val)
 {
     lua_pushstring(d_L.get(), val.c_str());
 }
 
-void LuaEngine::push_value(void* val)
+void Script::push_value(void* val)
 {
     lua_pushlightuserdata(d_L.get(), val);
 }
 
-void LuaEngine::print_errors(int rc) const
+void Script::print_errors(int rc) const
 {
     if (rc == LUA_OK) { return; } // No error
     
@@ -107,17 +128,7 @@ void LuaEngine::print_errors(int rc) const
     }
 }
 
-void LuaEngine::run_script(const std::string& filename)
-{
-    if (filename.empty()) {
-        log::warn("Tried to start an empty script!");
-        return;
-    }
-    
-    DoFile(d_L.get(), filename.c_str());
-}
-
-void LuaEngine::on_event(ev::Event& event)
+void Script::on_event(ev::Event& event)
 {
     const auto handler = [this, &event](const char* f, auto&&... args) {
         lua_getglobal(d_L.get(), f);
@@ -127,7 +138,7 @@ void LuaEngine::on_event(ev::Event& event)
         }
 
         push_value(event.is_consumed());
-        (push_value(args), ...);
+        (push_value(std::forward<decltype(args)>(args)), ...);
 
         print_errors(lua_pcall(d_L.get(), 1 + sizeof...(args), 1, 0));
 
@@ -150,6 +161,9 @@ void LuaEngine::on_event(ev::Event& event)
     }
     else if (auto x = event.get_if<ev::WindowMinimize>()) {
         handler("OnWindowMinimizeEvent");
+    }
+    else if (auto x = event.get_if<ev::WindowClosed>()) {
+        // pass
     }
     else if (auto x = event.get_if<ev::MouseButtonPressed>()) {
         handler("OnMouseButtonPressedEvent", x->button, x->action, x->mods);
@@ -181,7 +195,7 @@ void LuaEngine::on_event(ev::Event& event)
     }
 }
 
-void LuaEngine::print_globals()
+void Script::print_globals()
 {
     log::info("Starting globals");
     lua_pushglobaltable(d_L.get());

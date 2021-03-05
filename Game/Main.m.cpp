@@ -19,6 +19,6 @@ int main()
 #endif
     log::init();
 
-    log::info("{}", sizeof(std::unique_ptr<int>));
-    log::info("{}", sizeof(std::unique_ptr<int, void(*)(int*)>));
+    lua::Script engine;
+    engine.call_function("print", 32, "nice");
 }

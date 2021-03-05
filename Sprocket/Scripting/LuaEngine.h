@@ -12,10 +12,26 @@
 namespace Sprocket {
 namespace lua {
 
-class LuaEngine
+class Script
 {
     std::unique_ptr<lua_State, void(*)(lua_State*)> d_L;
 
+public:
+    explicit Script();
+    explicit Script(const std::string& file);
+
+    // TODO: Remove
+    void print_globals();
+
+    template <typename... Args>
+    void call_function(const std::string& function, Args&&... args);
+
+    template <typename Type>
+    void set_value(const std::string& name, Type&& value);
+
+    void on_event(ev::Event& event);
+
+private:
     void push_value(bool val);
     void push_value(char val);
     void push_value(int val);
@@ -30,30 +46,14 @@ class LuaEngine
     void print_errors(int rc) const;
 
     void* allocate(std::size_t size);
-
-public:
-    LuaEngine();
-
-    void run_script(const std::string& filename);
-
-    // TODO: Remove
-    void print_globals();
-
-    template <typename... Args>
-    void call_function(const std::string& function, Args&&... args);
-
-    template <typename Type>
-    void set_value(const std::string& name, Type&& value);
-
-    void on_event(ev::Event& event);
 };
 
-template <typename T> void LuaEngine::push_value(T* val)
+template <typename T> void Script::push_value(T* val)
 {
     push_value(static_cast<void*>(val));
 }
 
-template <typename T> void LuaEngine::push_value(const T& val)
+template <typename T> void Script::push_value(const T& val)
 {
     static_assert(std::is_copy_assignable_v<T>);
     static_assert(std::is_trivially_destructible_v<T>);
@@ -61,7 +61,7 @@ template <typename T> void LuaEngine::push_value(const T& val)
 }
 
 template <typename... Args>
-void LuaEngine::call_function(const std::string& function, Args&&... args)
+void Script::call_function(const std::string& function, Args&&... args)
 {
     lua_getglobal(d_L.get(), function.c_str());
     if (!lua_isfunction(d_L.get(), -1)) {
@@ -76,7 +76,7 @@ void LuaEngine::call_function(const std::string& function, Args&&... args)
 }
 
 template <typename Type>
-void LuaEngine::set_value(const std::string& name, Type&& value)
+void Script::set_value(const std::string& name, Type&& value)
 {
     push_value(std::forward<Type>(value));
     lua_setglobal(d_L.get(), name.c_str());
