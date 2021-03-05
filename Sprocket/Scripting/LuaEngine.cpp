@@ -51,47 +51,47 @@ void* LuaEngine::allocate(std::size_t size)
     return lua_newuserdata(d_L, size);
 }
 
-void LuaEngine::Push(bool val)
+void LuaEngine::push_value(bool val)
 {
     lua_pushboolean(d_L, val);
 }
 
-void LuaEngine::Push(char val)
+void LuaEngine::push_value(char val)
 {
     lua_pushstring(d_L, std::string(1, val).c_str());
 }
 
-void LuaEngine::Push(int val)
+void LuaEngine::push_value(int val)
 {
     lua_pushinteger(d_L, val);
 }
 
-void LuaEngine::Push(float val)
+void LuaEngine::push_value(float val)
 {
     lua_pushnumber(d_L, val);
 }
 
-void LuaEngine::Push(double val)
+void LuaEngine::push_value(double val)
 {
     lua_pushnumber(d_L, val);
 }
 
-void LuaEngine::Push(const char* val)
+void LuaEngine::push_value(const char* val)
 {
     lua_pushstring(d_L, val);
 }
 
-void LuaEngine::Push(const std::string& val)
+void LuaEngine::push_value(const std::string& val)
 {
     lua_pushstring(d_L, val.c_str());
 }
 
-void LuaEngine::Push(void* val)
+void LuaEngine::push_value(void* val)
 {
     lua_pushlightuserdata(d_L, val);
 }
 
-void LuaEngine::PrintErrors(int rc) const
+void LuaEngine::print_errors(int rc) const
 {
     if (rc == LUA_OK) { return; } // No error
     
@@ -130,12 +130,11 @@ void LuaEngine::on_event(ev::Event& event)
             return;
         }
 
-        Push(event.is_consumed());
-        (Push(args), ...);
+        push_value(event.is_consumed());
+        (push_value(args), ...);
 
-        int rc = lua_pcall(d_L, 1 + sizeof...(args), 1, 0);
+        print_errors(lua_pcall(d_L, 1 + sizeof...(args), 1, 0));
 
-        PrintErrors(rc);
         if (lua_toboolean(d_L, -1)) {
             event.consume();
         }

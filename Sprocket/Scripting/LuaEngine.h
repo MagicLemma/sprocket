@@ -15,25 +15,18 @@ class LuaEngine
 {
     lua_State* d_L;
 
-    // Push primitives
-    void Push(bool val);
-    void Push(char val);
-    void Push(int val);
-    void Push(float val);
-    void Push(double val);
+    void push_value(bool val);
+    void push_value(char val);
+    void push_value(int val);
+    void push_value(float val);
+    void push_value(double val);
+    void push_value(const char* val);
+    void push_value(const std::string& val);
+    void push_value(void* val);
+    template <typename T> void push_value(T* val);
+    template <typename T> void push_value(const T& val);
 
-    // Push strings
-    void Push(const char* val);
-    void Push(const std::string& val);
-
-    // Push pointers
-    void Push(void* val);
-    template <typename T> void Push(T* val);
-
-    // Push trivial objects
-    template <typename T> void Push(const T& val);
-
-    void PrintErrors(int rc) const;
+    void print_errors(int rc) const;
 
     void* allocate(std::size_t size);
 
@@ -58,12 +51,12 @@ public:
     LuaEngine(LuaEngine&&) = delete;
 };
 
-template <typename T> void LuaEngine::Push(T* val)
+template <typename T> void LuaEngine::push_value(T* val)
 {
-    Push(static_cast<void*>(val));
+    push_value(static_cast<void*>(val));
 }
 
-template <typename T> void LuaEngine::Push(const T& val)
+template <typename T> void LuaEngine::push_value(const T& val)
 {
     static_assert(std::is_copy_assignable_v<T>);
     static_assert(std::is_trivially_destructible_v<T>);
@@ -79,16 +72,16 @@ void LuaEngine::Call(const std::string& function, Args&&... args)
         return;
     }
 
-    (Push(std::forward<Args>(args)), ...);
+    (push_value(std::forward<Args>(args)), ...);
 
     int rc = lua_pcall(d_L, sizeof...(Args), 0, 0);
-    PrintErrors(rc);
+    print_errors(rc);
 }
 
 template <typename Type>
 void LuaEngine::Set(const std::string& name, Type&& value)
 {
-    Push(std::forward<Type>(value));
+    push_value(std::forward<Type>(value));
     lua_setglobal(d_L, name.c_str());
 }
 
