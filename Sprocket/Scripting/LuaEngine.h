@@ -34,16 +34,16 @@ public:
     LuaEngine();
     ~LuaEngine();
 
-    void RunScript(const std::string& filename);
+    void run_script(const std::string& filename);
 
     // TODO: Remove
-    void PrintGlobals();
+    void print_globals();
 
     template <typename... Args>
-    void Call(const std::string& function, Args&&... args);
+    void call_function(const std::string& function, Args&&... args);
 
     template <typename Type>
-    void Set(const std::string& name, Type&& value);
+    void set_value(const std::string& name, Type&& value);
 
     void on_event(ev::Event& event);
 
@@ -64,7 +64,7 @@ template <typename T> void LuaEngine::push_value(const T& val)
 }
 
 template <typename... Args>
-void LuaEngine::Call(const std::string& function, Args&&... args)
+void LuaEngine::call_function(const std::string& function, Args&&... args)
 {
     lua_getglobal(d_L, function.c_str());
     if (!lua_isfunction(d_L, -1)) {
@@ -79,7 +79,7 @@ void LuaEngine::Call(const std::string& function, Args&&... args)
 }
 
 template <typename Type>
-void LuaEngine::Set(const std::string& name, Type&& value)
+void LuaEngine::set_value(const std::string& name, Type&& value)
 {
     push_value(std::forward<Type>(value));
     lua_setglobal(d_L, name.c_str());

@@ -20,13 +20,13 @@ void ScriptRunner::OnStartup(Scene& scene)
         auto& [engine, alive] = d_engines[entity];
         alive = true;
 
-        engine.Set("__scene__", &scene);
-        engine.Set("__window__", d_window);
-        engine.Set("__input__", &d_input);
+        engine.set_value("__scene__", &scene);
+        engine.set_value("__window__", d_window);
+        engine.set_value("__input__", &d_input);
 
-        engine.RunScript(entity.Get<ScriptComponent>().script);
-        engine.Call("Init", entity);
-        engine.PrintGlobals();
+        engine.run_script(entity.Get<ScriptComponent>().script);
+        engine.call_function("Init", entity);
+        engine.print_globals();
     });
 
     scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
@@ -45,7 +45,7 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
 
         if (alive) {
             if (entity.Get<ScriptComponent>().active) {
-                script.Call("OnUpdate", entity, dt);
+                script.call_function("OnUpdate", entity, dt);
             }
             ++it;
         } else {

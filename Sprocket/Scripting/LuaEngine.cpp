@@ -111,7 +111,7 @@ void LuaEngine::print_errors(int rc) const
     }
 }
 
-void LuaEngine::RunScript(const std::string& filename)
+void LuaEngine::run_script(const std::string& filename)
 {
     if (filename.empty()) {
         log::warn("Tried to start an empty script!");
@@ -185,7 +185,7 @@ void LuaEngine::on_event(ev::Event& event)
     }
 }
 
-void LuaEngine::PrintGlobals()
+void LuaEngine::print_globals()
 {
     log::info("Starting globals");
     lua_pushglobaltable(d_L);

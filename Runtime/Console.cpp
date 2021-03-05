@@ -86,7 +86,7 @@ void Console::HandleCommand(std::string_view command)
             auto name = command.substr(4);
             auto script = fmt::format("Resources/Scripts/{}", name);
             if (std::filesystem::exists(script)) {
-                engine.RunScript(script);
+                engine.run_script(script);
             } else {
                 d_consoleLines.push_front({
                     fmt::format(" > Could not find script '{}'", name),
