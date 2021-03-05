@@ -5,7 +5,7 @@
 #include "Window.h"
 
 #include <string>
-#include <unordered_map>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -13,7 +13,7 @@ namespace Sprocket {
 
 class LuaEngine
 {
-    lua_State* d_L;
+    std::unique_ptr<lua_State, std::function<void(lua_State*)>> d_L;
 
     void push_value(bool val);
     void push_value(char val);
@@ -32,7 +32,6 @@ class LuaEngine
 
 public:
     LuaEngine();
-    ~LuaEngine();
 
     void run_script(const std::string& filename);
 
@@ -46,9 +45,6 @@ public:
     void set_value(const std::string& name, Type&& value);
 
     void on_event(ev::Event& event);
-
-    // Do not copy these things
-    LuaEngine(LuaEngine&&) = delete;
 };
 
 template <typename T> void LuaEngine::push_value(T* val)
@@ -66,15 +62,15 @@ template <typename T> void LuaEngine::push_value(const T& val)
 template <typename... Args>
 void LuaEngine::call_function(const std::string& function, Args&&... args)
 {
-    lua_getglobal(d_L, function.c_str());
-    if (!lua_isfunction(d_L, -1)) {
-        lua_pop(d_L, -1);
+    lua_getglobal(d_L.get(), function.c_str());
+    if (!lua_isfunction(d_L.get(), -1)) {
+        lua_pop(d_L.get(), -1);
         return;
     }
 
     (push_value(std::forward<Args>(args)), ...);
 
-    int rc = lua_pcall(d_L, sizeof...(Args), 0, 0);
+    int rc = lua_pcall(d_L.get(), sizeof...(Args), 0, 0);
     print_errors(rc);
 }
 
@@ -82,7 +78,7 @@ template <typename Type>
 void LuaEngine::set_value(const std::string& name, Type&& value)
 {
     push_value(std::forward<Type>(value));
-    lua_setglobal(d_L, name.c_str());
+    lua_setglobal(d_L.get(), name.c_str());
 }
 
 }
