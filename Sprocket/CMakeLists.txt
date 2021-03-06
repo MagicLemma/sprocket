@@ -93,9 +93,7 @@ add_library(Sprocket STATIC
             Scripting/LuaEngine.cpp
             Scripting/LuaEntity.cpp
             Scripting/LuaComponents.cpp
-            Scripting/LuaGlobals.cpp
-            Scripting/LuaTransform.cpp
-            Scripting/LuaInput.cpp)
+            Scripting/LuaGlobals.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       SprocketVendor

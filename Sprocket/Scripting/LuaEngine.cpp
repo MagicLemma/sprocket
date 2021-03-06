@@ -1,8 +1,6 @@
 #include "LuaEngine.h"
 #include "LuaGlobals.h"
 #include "LuaEntity.h"
-#include "LuaTransform.h"
-#include "LuaInput.h"
 #include "LuaComponents.h"
 #include "Log.h"
 #include "ECS.h"
@@ -36,10 +34,11 @@ Script::Script(const std::string& file)
     DoFile(L, "Sprocket/Scripting/Sprocket_Components.lua");
     DoFile(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
-    RegisterTransformFunctions(L);
-    RegisterInputFunctions(L);
     RegisterComponentFunctions(L);
-    RegisterEntityFunctions(L);
+
+    lua::register_scene_functions(L);
+    lua::register_entity_transformation_functions(L);
+    lua::register_input_functions(L);
 
     DoFile(d_L.get(), file.c_str());
 }
@@ -57,10 +56,11 @@ Script::Script()
     DoFile(L, "Sprocket/Scripting/Sprocket_Components.lua");
     DoFile(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
-    RegisterTransformFunctions(L);
-    RegisterInputFunctions(L);
     RegisterComponentFunctions(L);
-    RegisterEntityFunctions(L);
+
+    lua::register_scene_functions(L);
+    lua::register_entity_transformation_functions(L);
+    lua::register_input_functions(L);
 }
 
 void* Script::allocate(std::size_t size)
