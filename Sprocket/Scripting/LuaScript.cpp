@@ -29,7 +29,6 @@ Script::Script(const std::string& file)
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
-    do_file(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
     lua::register_entity_transformation_functions(L);
     lua::register_entity_component_functions(L);
@@ -48,7 +47,6 @@ Script::Script()
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
-    do_file(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
     lua::register_entity_transformation_functions(L);
     lua::register_entity_component_functions(L);

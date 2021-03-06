@@ -15,37 +15,25 @@ namespace Sprocket {
 namespace lua {
 namespace {
 
-Scene* GetScene(lua_State* L)
+void do_file(lua_State* L, const char* file)
 {
-    lua_getglobal(L, "__scene__");
-    Scene* s = nullptr;
-    if (!lua_isnil(L, -1)) {
-        s = (Scene*)lua_touserdata(L, -1);
+    if (luaL_dofile(L, file)) {
+        log::error("[Lua]: Could not load {}", lua_tostring(L, -1));
     }
-    lua_pop(L, 1);
-    return s;
 }
 
-Window* GetWindow(lua_State* L)
+template <typename T>
+T* get_pointer(lua_State* L, const std::string& var_name)
 {
-    lua_getglobal(L, "__window__");
-    Window* w = nullptr;
-    if (!lua_isnil(L, -1)) {
-        w = (Window*)lua_touserdata(L, -1);
+    lua_getglobal(L, var_name.c_str());
+    T* ret = nullptr;
+    if (lua_islightuserdata(L, -1)) {
+        ret = static_cast<T*>(lua_touserdata(L, -1));
+    } else {
+        log::error("Variable {} is not light user data", var_name);
     }
     lua_pop(L, 1);
-    return w;
-}
-
-InputProxy* GetInput(lua_State* L)
-{
-    lua_getglobal(L, "__input__");
-    InputProxy* ip = nullptr;
-    if (!lua_isnil(L, -1)) {
-        ip = (InputProxy*)lua_touserdata(L, -1);
-    }
-    lua_pop(L, 1);
-    return ip;
+    return ret;
 }
 
 bool CheckReturnCode(lua_State* L, int rc)
@@ -73,17 +61,15 @@ bool CheckArgCount(lua_State* L, int argc)
 void register_scene_functions(lua::Script& script, Scene& scene)
 {
     lua_State* L = script.native_handle();
+
+    // Load a pointer to the given scene into the script virtual machine.
     script.set_value("__scene__", &scene);
 
-    using Generator = cppcoro::generator<ecs::Entity>;
-    using Iterator = typename Generator::iterator;
-
-    static_assert(std::is_trivially_destructible_v<Iterator>);
-    
+    // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
-        *luaEntity = GetScene(L)->Entities().New();
+        *luaEntity = get_pointer<Scene>(L, "__scene__")->Entities().New();
         return 1;
     });
 
@@ -94,20 +80,27 @@ void register_scene_functions(lua::Script& script, Scene& scene)
         return 0;
     });
 
-    lua_register(L, "Each_New", [](lua_State* L) {
+    // Add functions for iterating over all entities in __scene__. The C++ functions
+    // should not be used directly, instead they should be used via the Scene:Each
+    // function implemented last in Lua.
+    using Generator = cppcoro::generator<ecs::Entity>;
+    using Iterator = typename Generator::iterator;
+    static_assert(std::is_trivially_destructible_v<Iterator>);
+    
+    lua_register(L, "_Each_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(GetScene(L)->Entities().Each());
+        auto gen = new Generator(get_pointer<Scene>(L, "__scene__")->Entities().Each());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
 
-    lua_register(L, "Each_Delete", [](lua_State* L) {
+    lua_register(L, "_Each_Delete", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         delete static_cast<Generator*>(lua_touserdata(L, 1));
         return 0;
     });
 
-    lua_register(L, "Each_Iter_Start", [](lua_State*L) {
+    lua_register(L, "_Each_Iter_Start", [](lua_State*L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto gen = static_cast<Generator*>(lua_touserdata(L, 1));
 
@@ -116,7 +109,7 @@ void register_scene_functions(lua::Script& script, Scene& scene)
         return 1;
     });
 
-    lua_register(L, "Each_Iter_Valid", [](lua_State* L) {
+    lua_register(L, "_Each_Iter_Valid", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         auto gen = static_cast<Generator*>(lua_touserdata(L, 1));
         auto iter = static_cast<Iterator*>(lua_touserdata(L, 2));
@@ -125,14 +118,14 @@ void register_scene_functions(lua::Script& script, Scene& scene)
         return 1;
     });
 
-    lua_register(L, "Each_Iter_Next", [](lua_State* L) {
+    lua_register(L, "_Each_Iter_Next", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto iter = static_cast<Iterator*>(lua_touserdata(L, 1));
         ++(*iter);
         return 0;   
     });
 
-    lua_register(L, "Each_Iter_Get", [](lua_State* L) {
+    lua_register(L, "_Each_Iter_Get", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto iterator = static_cast<Iterator*>(lua_touserdata(L, 1));
 
@@ -140,6 +133,27 @@ void register_scene_functions(lua::Script& script, Scene& scene)
         *luaEntity = **iterator;
         return 1;
     });
+
+    // Hook all of the above functions into a single generator function.
+    luaL_dostring(L, R"lua(
+        Scene = Class(function(self)
+        end)
+
+        function Scene:Each()
+            local generator = _Each_New()
+            local iter = _Each_Iter_Start(generator)
+
+            return function()
+                if _Each_Iter_Valid(generator, iter) then
+                    local entity = _Each_Iter_Get(iter)
+                    _Each_Iter_Next(iter)
+                    return entity
+                else
+                    _Each_Delete(generator)
+                end
+            end
+        end
+    )lua");
 }
 
 void register_entity_transformation_functions(lua_State* L)
@@ -220,21 +234,21 @@ void register_input_functions(lua_State* L)
     lua_register(L, "IsKeyDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        if (auto ip = GetInput(L); ip) {
+        if (auto ip = get_pointer<InputProxy>(L, "__input__"); ip) {
             int x = (int)lua_tointeger(L, 1);
             lua_pushboolean(L, ip->IsKeyboardDown(x));
         }
         else {
             lua_pushboolean(L, false);
         }
-        
+
         return 1;
     });
-    
+
     lua_register(L, "IsMouseDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        if (auto ip = GetInput(L); ip) {
+        if (auto ip = get_pointer<InputProxy>(L, "__input__"); ip) {
             int x = (int)lua_tointeger(L, 1);
             lua_pushboolean(L, ip->IsMouseDown(x));
         }
@@ -248,7 +262,7 @@ void register_input_functions(lua_State* L)
     lua_register(L, "GetMousePos", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
-        if (auto w = GetWindow(L); w) {
+        if (auto w = get_pointer<Window>(L, "__window__"); w) {
             auto offset = w->GetMousePos();
             lua_pushnumber(L, offset.x);
             lua_pushnumber(L, offset.y);
@@ -262,7 +276,7 @@ void register_input_functions(lua_State* L)
     lua_register(L, "GetMouseOffset", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
 
-        if (auto w = GetWindow(L); w) {
+        if (auto w = get_pointer<Window>(L, "__window__"); w) {
             auto offset = w->GetMouseOffset();
             lua_pushnumber(L, offset.x);
             lua_pushnumber(L, offset.y);
