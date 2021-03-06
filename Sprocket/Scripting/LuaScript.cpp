@@ -27,7 +27,6 @@ Script::Script(const std::string& file)
 
     // Core Sprocket Constants and Helper Functions
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
-    do_file(L, "Sprocket/Scripting/Sprocket_Maths.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Scene.lua");
@@ -48,7 +47,6 @@ Script::Script()
 
     // Core Sprocket Constants and Helper Functions
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
-    do_file(L, "Sprocket/Scripting/Sprocket_Maths.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Scene.lua");
