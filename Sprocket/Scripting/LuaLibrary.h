@@ -5,12 +5,17 @@
 struct lua_State;
 
 namespace Sprocket {
+
+class Scene;
+
 namespace lua {
+
+class Script;
 
 // Loads the given scene into the given lua state, and provides functions for
 // creating/deleting entities as well as iterating entities. These assume that there
 // is a global called __scene__ that points to an ecs::Scene.
-void register_scene_functions(lua_State* L);
+void register_scene_functions(lua::Script& script, Scene& scene);
 
 // Loads a bunch of helper functions to ease entity manipulation.
 void register_entity_transformation_functions(lua_State* L);

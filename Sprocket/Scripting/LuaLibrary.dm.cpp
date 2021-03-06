@@ -1,4 +1,5 @@
 #include "LuaLibrary.h"
+#include "LuaScript.h"
 #include "ECS.h"
 #include "Scene.h"
 #include "InputProxy.h"
@@ -69,8 +70,11 @@ bool CheckArgCount(lua_State* L, int argc)
 
 }
 
-void register_scene_functions(lua_State* L)
+void register_scene_functions(lua::Script& script, Scene& scene)
 {
+    lua_State* L = script.native_handle();
+    script.set_value("__scene__", &scene);
+
     using Generator = cppcoro::generator<ecs::Entity>;
     using Iterator = typename Generator::iterator;
 

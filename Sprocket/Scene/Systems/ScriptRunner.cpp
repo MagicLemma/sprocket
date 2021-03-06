@@ -3,6 +3,7 @@
 #include "ECS.h"
 #include "Scene.h"
 #include "LuaScript.h"
+#include "LuaLibrary.h"
 #include "Components.h"
 
 #include <utility>
@@ -18,7 +19,7 @@ void ScriptRunner::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
         lua::Script script(entity.Get<ScriptComponent>().script);
-        script.set_value("__scene__", &scene);
+        lua::register_scene_functions(script, scene);
         script.set_value("__window__", d_window);
         script.set_value("__input__", &d_input);
         script.call_function("Init", entity);

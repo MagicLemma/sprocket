@@ -28,6 +28,8 @@ public:
 
     void on_event(ev::Event& event);
 
+    lua_State* native_handle() const { return d_L.get(); }
+
 private:
     void push_value(bool val);
     void push_value(char val);
