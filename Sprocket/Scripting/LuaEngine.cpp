@@ -1,5 +1,4 @@
 #include "LuaEngine.h"
-#include "LuaGlobals.h"
 #include "LuaEntity.h"
 #include "Log.h"
 #include "ECS.h"
