@@ -138,17 +138,6 @@ template<typename T> int Lua_Has(lua_State* L)
 
 }
 
-void RegisterComponentFunctions(lua_State* L)
-{
-#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
-    lua_register(L, "Lua_Get{{Comp.Name}}", &Lua::Get{{Comp.Name}});
-    lua_register(L, "Lua_Set{{Comp.Name}}", &Lua::Set{{Comp.Name}});
-    lua_register(L, "Lua_Add{{Comp.Name}}", &Lua::Add{{Comp.Name}});
-    lua_register(L, "Has{{Comp.Name}}", &Lua_Has<{{Comp.Name}}>);
-
-#endif
-}
-
 namespace Lua {
 
 #ifdef DATAMATIC_BLOCK SCRIPTABLE=true
@@ -191,6 +180,17 @@ int Add{{Comp.Name}}(lua_State* L)
 }
 
 #endif
-
 }
+
+void RegisterComponentFunctions(lua_State* L)
+{
+#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
+    lua_register(L, "Lua_Get{{Comp.Name}}", &Lua::Get{{Comp.Name}});
+    lua_register(L, "Lua_Set{{Comp.Name}}", &Lua::Set{{Comp.Name}});
+    lua_register(L, "Lua_Add{{Comp.Name}}", &Lua::Add{{Comp.Name}});
+    lua_register(L, "Has{{Comp.Name}}", &Lua_Has<{{Comp.Name}}>);
+
+#endif
+}
+
 }

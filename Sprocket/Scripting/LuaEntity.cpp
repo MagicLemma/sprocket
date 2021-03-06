@@ -84,7 +84,7 @@ void register_scene_functions(lua_State* L)
 
 void register_entity_transformation_functions(lua_State* L)
 {
-    lua_register(L, "SetLookAt", [](lua_State* L) {
+    lua_register(L, "Lua_SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -113,7 +113,7 @@ void register_entity_transformation_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "GetForwardsDir", [](lua_State* L) {
+    lua_register(L, "Lua_GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -133,7 +133,7 @@ void register_entity_transformation_functions(lua_State* L)
         return 3;
     });
 
-    lua_register(L, "GetRightDir", [](lua_State* L) {
+    lua_register(L, "Lua_GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
