@@ -86,7 +86,6 @@
 // SCRIPTING
 #include "Scripting/LuaEngine.h"
 #include "Scripting/LuaEntity.h"
-#include "Scripting/LuaComponents.h"
 #include "Scripting/LuaGlobals.h"
 
 // VENDOR: TODO - Remove this

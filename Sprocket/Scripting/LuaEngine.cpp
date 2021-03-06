@@ -1,7 +1,6 @@
 #include "LuaEngine.h"
 #include "LuaGlobals.h"
 #include "LuaEntity.h"
-#include "LuaComponents.h"
 #include "Log.h"
 #include "ECS.h"
 #include "Components.h"
@@ -34,10 +33,9 @@ Script::Script(const std::string& file)
     DoFile(L, "Sprocket/Scripting/Sprocket_Components.lua");
     DoFile(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
-    RegisterComponentFunctions(L);
-
     lua::register_scene_functions(L);
     lua::register_entity_transformation_functions(L);
+    lua::register_entity_component_functions(L);
     lua::register_input_functions(L);
 
     DoFile(d_L.get(), file.c_str());
@@ -56,10 +54,9 @@ Script::Script()
     DoFile(L, "Sprocket/Scripting/Sprocket_Components.lua");
     DoFile(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
-    RegisterComponentFunctions(L);
-
     lua::register_scene_functions(L);
     lua::register_entity_transformation_functions(L);
+    lua::register_entity_component_functions(L);
     lua::register_input_functions(L);
 }
 
