@@ -10,7 +10,7 @@ namespace Sprocket {
 namespace lua {
 namespace {
 
-void DoFile(lua_State* L, const char* file)
+void do_file(lua_State* L, const char* file)
 {
     if (luaL_dofile(L, file)) {
         log::error("[Lua]: Could not load {}", lua_tostring(L, -1));
@@ -26,18 +26,18 @@ Script::Script(const std::string& file)
     luaL_openlibs(L);
 
     // Core Sprocket Constants and Helper Functions
-    DoFile(L, "Sprocket/Scripting/Sprocket_Base.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Maths.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Components.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Scene.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Maths.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
     lua::register_scene_functions(L);
     lua::register_entity_transformation_functions(L);
     lua::register_entity_component_functions(L);
     lua::register_input_functions(L);
 
-    DoFile(d_L.get(), file.c_str());
+    do_file(d_L.get(), file.c_str());
 }
 
 Script::Script()
@@ -47,11 +47,11 @@ Script::Script()
     luaL_openlibs(L);
 
     // Core Sprocket Constants and Helper Functions
-    DoFile(L, "Sprocket/Scripting/Sprocket_Base.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Maths.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Components.lua");
-    DoFile(L, "Sprocket/Scripting/Sprocket_Scene.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Maths.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Bindings.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
+    do_file(L, "Sprocket/Scripting/Sprocket_Scene.lua");
 
     lua::register_scene_functions(L);
     lua::register_entity_transformation_functions(L);
