@@ -1,12 +1,10 @@
 #pragma once
+// Functions for loading C++ implemented Lua functions into the given
+// lua state.
 
 struct lua_State;
 
 namespace Sprocket {
-
-class InputProxy;
-namespace ecs { class Scene; }
-
 namespace lua {
 
 // Loads the given scene into the given lua state, and provides functions for

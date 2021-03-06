@@ -2,7 +2,7 @@
 #include "Log.h"
 #include "ECS.h"
 #include "Scene.h"
-#include "LuaEngine.h"
+#include "LuaScript.h"
 #include "Components.h"
 
 #include <utility>

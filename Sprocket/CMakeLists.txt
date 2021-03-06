@@ -90,8 +90,8 @@ add_library(Sprocket STATIC
             Utility/Stopwatch.cpp
             Utility/Yaml.cpp
 
-            Scripting/LuaEngine.cpp
-            Scripting/LuaEntity.cpp)
+            Scripting/LuaScript.cpp
+            Scripting/LuaLibrary.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       SprocketVendor

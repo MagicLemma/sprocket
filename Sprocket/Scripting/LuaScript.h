@@ -1,8 +1,5 @@
 #pragma once
 #include "Events.h"
-#include "InputProxy.h"
-#include "Scene.h"
-#include "Window.h"
 
 #include <string>
 #include <memory>

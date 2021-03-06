@@ -1,5 +1,5 @@
-#include "LuaEngine.h"
-#include "LuaEntity.h"
+#include "LuaScript.h"
+#include "LuaLibrary.h"
 #include "Log.h"
 #include "ECS.h"
 #include "Components.h"

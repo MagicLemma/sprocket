@@ -1,5 +1,6 @@
 #pragma once
-#include "LuaEngine.h"
+#include "LuaScript.h"
+#include "ECS.h"
 #include "EntitySystem.h"
 #include "InputProxy.h"
 #include "Window.h"
