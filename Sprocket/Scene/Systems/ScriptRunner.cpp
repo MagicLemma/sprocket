@@ -20,8 +20,8 @@ void ScriptRunner::OnStartup(Scene& scene)
     scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
         lua::Script script(entity.Get<ScriptComponent>().script);
         lua::register_scene_functions(script, scene);
-        script.set_value("__window__", d_window);
-        script.set_value("__input__", &d_input);
+        lua::register_input_functions(script, d_input);
+        lua::register_window_functions(script, *d_window);
         script.call_function("Init", entity);
         script.print_globals();
         d_engines.emplace(entity, std::make_pair(std::move(script), true));

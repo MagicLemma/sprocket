@@ -32,7 +32,6 @@ Script::Script(const std::string& file)
 
     lua::register_entity_transformation_functions(L);
     lua::register_entity_component_functions(L);
-    lua::register_input_functions(L);
 
     do_file(d_L.get(), file.c_str());
 }
@@ -50,7 +49,6 @@ Script::Script()
 
     lua::register_entity_transformation_functions(L);
     lua::register_entity_component_functions(L);
-    lua::register_input_functions(L);
 }
 
 void* Script::allocate(std::size_t size)
