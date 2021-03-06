@@ -224,7 +224,7 @@ void register_window_functions(lua::Script& script, Window& window)
 
 void register_entity_transformation_functions(lua_State* L)
 {
-    lua_register(L, "Lua_SetLookAt", [](lua_State* L) {
+    lua_register(L, "_SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -242,6 +242,12 @@ void register_entity_transformation_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function SetLookAt(entity, pos, target)
+            _SetLookAt(entity, pos.x, pos.y, pos.z, target.x, target.y, target.z)
+        end
+    )lua");
+
     lua_register(L, "RotateY", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
@@ -253,7 +259,7 @@ void register_entity_transformation_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_GetForwardsDir", [](lua_State* L) {
+    lua_register(L, "_GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -273,7 +279,14 @@ void register_entity_transformation_functions(lua_State* L)
         return 3;
     });
 
-    lua_register(L, "Lua_GetRightDir", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetForwardsDir(entity)
+            local x, y, z = _GetForwardsDir(entity)
+            return Vec3(x, y, z)
+        end
+    )lua");
+
+    lua_register(L, "_GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -284,6 +297,13 @@ void register_entity_transformation_functions(lua_State* L)
         lua_pushnumber(L, right.z);
         return 3;
     });
+
+    luaL_dostring(L, R"lua(
+        function GetRightDir(entity)
+            local x, y, z = _GetRightDir(entity)
+            return Vec3(x, y, z)
+        end
+    )lua");
 
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
