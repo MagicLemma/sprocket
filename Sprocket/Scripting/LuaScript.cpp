@@ -24,7 +24,7 @@ Script::Script(const std::string& file)
     lua_State* L = d_L.get();
     luaL_openlibs(L);
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
-    do_file(d_L.get(), file.c_str());
+    do_file(L, file.c_str());
 }
 
 Script::Script()
@@ -87,84 +87,27 @@ void Script::print_errors(int rc) const
     std::string err = lua_tostring(d_L.get(), -1);
     switch (rc) {
         case LUA_ERRRUN:
-            log::error("[Lua]: Runtime error: {}", err);
+            log::error("[Lua] Runtime error: {}", err);
             return;
         case LUA_ERRMEM:
-            log::error("[Lua]: Memory allocation error: {}", err);
+            log::error("[Lua] Memory allocation error: {}", err);
             return;
         case LUA_ERRERR:
-            log::error("[Lua]: Error handler func failed: {}", err);
+            log::error("[Lua] Error handler func failed: {}", err);
             return;
         default:
-            log::error("[Lua]: Unknown error: {}", err);
+            log::error("[Lua] Unknown error: {}", err);
     }
 }
 
-void Script::on_event(ev::Event& event)
+bool Script::has_function(const std::string& function)
 {
-    const auto handler = [this, &event](const char* f, auto&&... args) {
-        lua_getglobal(d_L.get(), f);
-        if (!lua_isfunction(d_L.get(), -1)) {
-            lua_pop(d_L.get(), -1);
-            return;
-        }
-
-        push_value(event.is_consumed());
-        (push_value(std::forward<decltype(args)>(args)), ...);
-
-        print_errors(lua_pcall(d_L.get(), 1 + sizeof...(args), 1, 0));
-
-        if (lua_toboolean(d_L.get(), -1)) {
-            event.consume();
-        }
-    };
-
-    if (auto x = event.get_if<ev::WindowResize>()) {
-        handler("OnWindowResizeEvent", x->width, x->height);
+    lua_getglobal(d_L.get(), function.c_str());
+    if (!lua_isfunction(d_L.get(), -1)) {
+        lua_pop(d_L.get(), -1);
+        return false;
     }
-    else if (auto x = event.get_if<ev::WindowGotFocus>()) {
-        handler("OnWindowGotFocusEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowLostFocus>()) {
-        handler("OnWindowLostFocusEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowMaximize>()) {
-        handler("OnWindowMaximizeEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowMinimize>()) {
-        handler("OnWindowMinimizeEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowClosed>()) {
-        // pass
-    }
-    else if (auto x = event.get_if<ev::MouseButtonPressed>()) {
-        handler("OnMouseButtonPressedEvent", x->button, x->action, x->mods);
-    }
-    else if (auto x = event.get_if<ev::MouseButtonReleased>()) {
-        handler("OnMouseButtonReleasedEvent", x->button, x->action, x->mods);
-    }
-    else if (auto x = event.get_if<ev::MouseMoved>()) {
-        handler("OnMouseMovedEvent", x->x_pos, x->y_pos);
-    }
-    else if (auto x = event.get_if<ev::MouseScrolled>()) {
-        handler("OnMouseScrolledEvent", x->x_offset, x->y_offset);
-    }
-    else if (auto x = event.get_if<ev::KeyboardButtonPressed>()) {
-        handler("OnKeyboardButtonPressedEvent", x->key, x->scancode, x->mods);
-    }
-    else if (auto x = event.get_if<ev::KeyboardButtonReleased>()) {
-        handler("OnKeyboardButtonReleasedEvent", x->key, x->scancode, x->mods);
-    }
-    else if (auto x = event.get_if<ev::KeyboardButtonHeld>()) {
-        handler("OnKeyboardButtonHeldEvent", x->key, x->scancode, x->mods);
-    }
-    else if (auto x = event.get_if<ev::KeyboardTyped>()) {
-        handler("OnKeyboardKeyTypedEvent", x->key);
-    }
-    else {
-        log::warn("Event with unknown type {}", event.type_name());
-        return;
-    }
+    return true;
 }
 
 void Script::print_globals()
