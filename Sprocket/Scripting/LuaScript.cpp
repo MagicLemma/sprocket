@@ -24,7 +24,7 @@ Script::Script(const std::string& file)
     lua_State* L = d_L.get();
     luaL_openlibs(L);
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
-    do_file(d_L.get(), file.c_str());
+    do_file(L, file.c_str());
 }
 
 Script::Script()

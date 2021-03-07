@@ -1,10 +1,12 @@
 #pragma once
 #include "Events.h"
+#include "Log.h"
 
 #include <string>
 #include <memory>
 
 #include <lua.hpp>
+#include <cassert>
 
 namespace Sprocket {
 namespace lua {
@@ -20,8 +22,8 @@ public:
     // TODO: Remove
     void print_globals();
 
-    template <typename... Args>
-    void call_function(const std::string& function, Args&&... args);
+    template <typename... Args, typename Return = void>
+    Return call_function(const std::string& function, Args&&... args);
 
     template <typename Type>
     void set_value(const std::string& name, Type&& value);
@@ -59,19 +61,58 @@ template <typename T> void Script::push_value(const T& val)
     *static_cast<T*>(allocate(sizeof(T))) = val;
 }
 
-template <typename... Args>
-void Script::call_function(const std::string& function, Args&&... args)
+template <typename... Args, typename Return>
+Return Script::call_function(const std::string& function, Args&&... args)
 {
-    lua_getglobal(d_L.get(), function.c_str());
-    if (!lua_isfunction(d_L.get(), -1)) {
-        lua_pop(d_L.get(), -1);
+    lua_State* L = d_L.get();
+
+    lua_getglobal(L, function.c_str());
+    if (!lua_isfunction(L, -1)) {
+        lua_pop(L, -1);
         return;
     }
 
     (push_value(std::forward<Args>(args)), ...);
 
-    int rc = lua_pcall(d_L.get(), sizeof...(Args), 0, 0);
-    print_errors(rc);
+    if constexpr (std::is_void_v<Return>) {
+        int rc = lua_pcall(L, sizeof...(Args), 0, 0);
+        print_errors(rc);
+    }
+    else {
+        int rc = lua_pcall(L, sizeof...(Args), 1, 0);
+        print_errors(rc);
+        if (rc != LUA_OK) {
+            log::fatal("Lua function returning a value failed, could fall into undefined state!");
+            std::abort();
+        }
+        if constexpr (std::is_same_v<Return, bool>) {
+            assert(lua_isboolean(L, -1));
+            return static_cast<bool>(lua_toboolean(L, -1));
+        }
+        else if constexpr (std::is_integral_v<Return>) {
+            assert(lua_isinteger(L, -1));
+            return lua_tointeger(L, -1);
+        }
+        else if constexpr (std::is_floating_point_v<Return>) {
+            assert(lua_isnumber(L, -1));
+            return static_cast<Return>(lua_tonumber(L, -1));
+        }
+        else if constexpr (std::is_same_v<Return, const char*>) {
+            assert(lua_isstring(L, -1));
+            return static_cast<const char*>(lua_tostring(L, -1));
+        }
+        else if constexpr (std::is_same_v<Return, std::string>) {
+            assert(lua_isstring(L, -1));
+            return std::string(lua_tostring(L, -1));
+        }
+        else if constexpr (std::is_pointer_v<Return>) {
+            assert(lua_islightuserdata(L, -1));
+            return static_cast<Return>(lua_touserdata(L, -1));
+        }
+        else {
+            static_assert(false, "Cannot convert to this type from a lua call!");
+        }
+    }
 }
 
 template <typename Type>
