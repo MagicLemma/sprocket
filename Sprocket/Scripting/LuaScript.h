@@ -87,8 +87,7 @@ Return Script::call_function(const std::string& function, Args&&... args)
         int rc = lua_pcall(L, sizeof...(Args), 1, 0);
         print_errors(rc);
         if (rc != LUA_OK) {
-            log::fatal("Lua function returning a value failed, could fall into undefined state!");
-            std::abort();
+            return {};
         }
         if constexpr (std::is_same_v<Return, bool>) {
             assert(lua_isboolean(L, -1));
