@@ -3,6 +3,8 @@
     self.{{Attr.Name}} = {{Attr.Name}}
 end)
 
-{{Comp.Lua.Impl}}
+{{Comp.Lua.Getter}}
+{{Comp.Lua.Setter}}
+{{Comp.Lua.Adder}}
 
 #endif
