@@ -64,9 +64,7 @@ function OnUpdate(entity, dt)
 end
 
 
-function OnMouseButtonPressedEvent(consumed, button, action, mods)
-    if consumed then return false end
-
+function OnMouseButtonPressedEvent(button, action, mods)
     local newEntity = NewEntity()
 
     local dir = GetForwardsDir(ENTITY)

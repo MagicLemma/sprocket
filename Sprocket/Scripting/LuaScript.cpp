@@ -113,7 +113,8 @@ bool Script::has_function(const std::string& function)
 void Script::on_event(ev::Event& event)
 {
     const auto handler = [this, &event](const char* f, auto&&... args) {
-        if (has_function(f) && call_function<bool>(f, event.is_consumed(), std::forward<decltype(args)>(args)...)) {
+        if (has_function(f) && call_function<bool>(f, std::forward<decltype(args)>(args)...))
+        {
             log::info("[Lua] Consuming event {}", event.type_name());
             event.consume();
         }

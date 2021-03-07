@@ -62,12 +62,9 @@ function OnUpdate(entity, dt)
     SetLookAt(entity, pos, TARGET)
 end
 
-function OnMouseButtonPressedEvent(consumed, button, action, mods) end
+function OnMouseButtonPressedEvent(button, action, mods) end
 
-function OnMouseScrolledEvent(consumed, xOffset, yOffset)
-    if consumed then return false end
-        -- Don't react to consumed events
-
+function OnMouseScrolledEvent(xOffset, yOffset)
     if ABS_VERT == nil then return false end
         -- If we receive an event before update, just ignore it
 
@@ -75,4 +72,4 @@ function OnMouseScrolledEvent(consumed, xOffset, yOffset)
     return true
 end
 
-function OnWindowResizeEvent(consumed, width, height) end
+function OnWindowResizeEvent(width, height) end
