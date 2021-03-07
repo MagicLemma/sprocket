@@ -87,34 +87,34 @@ void Script::print_errors(int rc) const
     std::string err = lua_tostring(d_L.get(), -1);
     switch (rc) {
         case LUA_ERRRUN:
-            log::error("[Lua]: Runtime error: {}", err);
+            log::error("[Lua] Runtime error: {}", err);
             return;
         case LUA_ERRMEM:
-            log::error("[Lua]: Memory allocation error: {}", err);
+            log::error("[Lua] Memory allocation error: {}", err);
             return;
         case LUA_ERRERR:
-            log::error("[Lua]: Error handler func failed: {}", err);
+            log::error("[Lua] Error handler func failed: {}", err);
             return;
         default:
-            log::error("[Lua]: Unknown error: {}", err);
+            log::error("[Lua] Unknown error: {}", err);
     }
+}
+
+bool Script::has_function(const std::string& function)
+{
+    lua_getglobal(d_L.get(), function.c_str());
+    if (!lua_isfunction(d_L.get(), -1)) {
+        lua_pop(d_L.get(), -1);
+        return false;
+    }
+    return true;
 }
 
 void Script::on_event(ev::Event& event)
 {
     const auto handler = [this, &event](const char* f, auto&&... args) {
-        lua_getglobal(d_L.get(), f);
-        if (!lua_isfunction(d_L.get(), -1)) {
-            lua_pop(d_L.get(), -1);
-            return;
-        }
-
-        push_value(event.is_consumed());
-        (push_value(std::forward<decltype(args)>(args)), ...);
-
-        print_errors(lua_pcall(d_L.get(), 1 + sizeof...(args), 1, 0));
-
-        if (lua_toboolean(d_L.get(), -1)) {
+        if (has_function(f) && call_function<bool>(f, event.is_consumed(), std::forward<decltype(args)>(args)...)) {
+            log::info("[Lua] Consuming event {}", event.type_name());
             event.consume();
         }
     };

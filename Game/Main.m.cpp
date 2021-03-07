@@ -16,7 +16,7 @@ int main()
     //options.showFramerate = true;
     //return Sprocket::Run(game, window, options);
 
-    lua::Script script;
-    double value = script.call_function<double>("Sin", 50);
+    lua::Script script("Resources/Temp.lua");
+    int value = script.call_function<int>("foo", 50);
     log::info("Got value {}", value);
 }

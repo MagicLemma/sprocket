@@ -22,6 +22,8 @@ public:
     // TODO: Remove
     void print_globals();
 
+    bool has_function(const std::string& function);
+
     template <typename Return, typename... Args>
     Return call_function(const std::string& function, Args&&... args);
 
@@ -91,7 +93,9 @@ Return Script::call_function(const std::string& function, Args&&... args)
         }
         if constexpr (std::is_same_v<Return, bool>) {
             assert(lua_isboolean(L, -1));
-            return static_cast<bool>(lua_toboolean(L, -1));
+            int y = lua_toboolean(L, -1);
+            log::info("Here! {}", y);
+            return y;
         }
         else if constexpr (std::is_integral_v<Return>) {
             assert(lua_isinteger(L, -1));

@@ -65,7 +65,6 @@ end
 
 
 function OnMouseButtonPressedEvent(consumed, button, action, mods)
-
     if consumed then return false end
 
     local newEntity = NewEntity()
