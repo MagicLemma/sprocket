@@ -63,11 +63,65 @@ void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
 {
     d_input.OnEvent(event);
 
-    // WINDOW EVENTS
+    const auto handler = [&event](lua::Script& script, const char* f, auto&&... args)
+    {
+        if (script.has_function(f) && script.call_function<bool>(f, args...)) {
+            event.consume();
+        }
+    };
+
     for (auto& [entity, pair] : d_engines) {
         auto& [script, alive] = pair;
-        if (!(alive && entity.Get<ScriptComponent>().active)) { continue; }
-        script.on_event(event);
+        if (!(alive && entity.Get<ScriptComponent>().active)) {
+            continue;
+        }
+
+        if (auto x = event.get_if<ev::WindowResize>()) {
+            handler(script, "OnWindowResizeEvent", x->width, x->height);
+        }
+        else if (auto x = event.get_if<ev::WindowGotFocus>()) {
+            handler(script, "OnWindowGotFocusEvent");
+        }
+        else if (auto x = event.get_if<ev::WindowLostFocus>()) {
+            handler(script, "OnWindowLostFocusEvent");
+        }
+        else if (auto x = event.get_if<ev::WindowMaximize>()) {
+            handler(script, "OnWindowMaximizeEvent");
+        }
+        else if (auto x = event.get_if<ev::WindowMinimize>()) {
+            handler(script, "OnWindowMinimizeEvent");
+        }
+        else if (auto x = event.get_if<ev::WindowClosed>()) {
+            // pass
+        }
+        else if (auto x = event.get_if<ev::MouseButtonPressed>()) {
+            handler(script, "OnMouseButtonPressedEvent", x->button, x->action, x->mods);
+        }
+        else if (auto x = event.get_if<ev::MouseButtonReleased>()) {
+            handler(script, "OnMouseButtonReleasedEvent", x->button, x->action, x->mods);
+        }
+        else if (auto x = event.get_if<ev::MouseMoved>()) {
+            handler(script, "OnMouseMovedEvent", x->x_pos, x->y_pos);
+        }
+        else if (auto x = event.get_if<ev::MouseScrolled>()) {
+            handler(script, "OnMouseScrolledEvent", x->x_offset, x->y_offset);
+        }
+        else if (auto x = event.get_if<ev::KeyboardButtonPressed>()) {
+            handler(script, "OnKeyboardButtonPressedEvent", x->key, x->scancode, x->mods);
+        }
+        else if (auto x = event.get_if<ev::KeyboardButtonReleased>()) {
+            handler(script, "OnKeyboardButtonReleasedEvent", x->key, x->scancode, x->mods);
+        }
+        else if (auto x = event.get_if<ev::KeyboardButtonHeld>()) {
+            handler(script, "OnKeyboardButtonHeldEvent", x->key, x->scancode, x->mods);
+        }
+        else if (auto x = event.get_if<ev::KeyboardTyped>()) {
+            handler(script, "OnKeyboardKeyTypedEvent", x->key);
+        }
+        else {
+            log::warn("Event with unknown type {}", event.type_name());
+            return;
+        }
     }
 }
 

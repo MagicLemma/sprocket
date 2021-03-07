@@ -110,64 +110,6 @@ bool Script::has_function(const std::string& function)
     return true;
 }
 
-void Script::on_event(ev::Event& event)
-{
-    const auto handler = [this, &event](const char* f, auto&&... args) {
-        if (has_function(f) && call_function<bool>(f, std::forward<decltype(args)>(args)...))
-        {
-            log::info("[Lua] Consuming event {}", event.type_name());
-            event.consume();
-        }
-    };
-
-    if (auto x = event.get_if<ev::WindowResize>()) {
-        handler("OnWindowResizeEvent", x->width, x->height);
-    }
-    else if (auto x = event.get_if<ev::WindowGotFocus>()) {
-        handler("OnWindowGotFocusEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowLostFocus>()) {
-        handler("OnWindowLostFocusEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowMaximize>()) {
-        handler("OnWindowMaximizeEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowMinimize>()) {
-        handler("OnWindowMinimizeEvent");
-    }
-    else if (auto x = event.get_if<ev::WindowClosed>()) {
-        // pass
-    }
-    else if (auto x = event.get_if<ev::MouseButtonPressed>()) {
-        handler("OnMouseButtonPressedEvent", x->button, x->action, x->mods);
-    }
-    else if (auto x = event.get_if<ev::MouseButtonReleased>()) {
-        handler("OnMouseButtonReleasedEvent", x->button, x->action, x->mods);
-    }
-    else if (auto x = event.get_if<ev::MouseMoved>()) {
-        handler("OnMouseMovedEvent", x->x_pos, x->y_pos);
-    }
-    else if (auto x = event.get_if<ev::MouseScrolled>()) {
-        handler("OnMouseScrolledEvent", x->x_offset, x->y_offset);
-    }
-    else if (auto x = event.get_if<ev::KeyboardButtonPressed>()) {
-        handler("OnKeyboardButtonPressedEvent", x->key, x->scancode, x->mods);
-    }
-    else if (auto x = event.get_if<ev::KeyboardButtonReleased>()) {
-        handler("OnKeyboardButtonReleasedEvent", x->key, x->scancode, x->mods);
-    }
-    else if (auto x = event.get_if<ev::KeyboardButtonHeld>()) {
-        handler("OnKeyboardButtonHeldEvent", x->key, x->scancode, x->mods);
-    }
-    else if (auto x = event.get_if<ev::KeyboardTyped>()) {
-        handler("OnKeyboardKeyTypedEvent", x->key);
-    }
-    else {
-        log::warn("Event with unknown type {}", event.type_name());
-        return;
-    }
-}
-
 void Script::print_globals()
 {
     log::info("Starting globals");

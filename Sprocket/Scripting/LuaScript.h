@@ -1,5 +1,4 @@
 #pragma once
-#include "Events.h"
 #include "Log.h"
 
 #include <string>
@@ -29,8 +28,6 @@ public:
 
     template <typename Type>
     void set_value(const std::string& name, Type&& value);
-
-    void on_event(ev::Event& event);
 
     lua_State* native_handle() const { return d_L.get(); }
 
@@ -94,7 +91,6 @@ Return Script::call_function(const std::string& function, Args&&... args)
         if constexpr (std::is_same_v<Return, bool>) {
             assert(lua_isboolean(L, -1));
             int y = lua_toboolean(L, -1);
-            log::info("Here! {}", y);
             return y;
         }
         else if constexpr (std::is_integral_v<Return>) {
