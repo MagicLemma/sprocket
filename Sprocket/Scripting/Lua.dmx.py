@@ -32,12 +32,13 @@ class Lua(Plugin):
         out = ""
         num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
         name = comp["Name"]
+        indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Get{name}(entity)\n'
-        pack = ", ".join([f'x{i}' for i in range(num_attrs)])
-        out += "    " + pack + f" = Lua_Get{name}(entity)\n"
-        out += f'    return {name}({", ".join(constructor_sig)})\n'
-        out += "end\n"
+        pack = indent + "    " + ", ".join([f'x{i}' for i in range(num_attrs)])
+        out += pack + f" = _Get{name}(entity)\n"
+        out += indent + f'    return {name}({", ".join(constructor_sig)})\n'
+        out += indent + "end"
         return out
 
     @compmethod
@@ -45,9 +46,10 @@ class Lua(Plugin):
         out = ""
         num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
         name = comp["Name"]
+        indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Set{name}(entity, c)\n'
-        out += f'    Lua_Set{name}(entity, '
+        out += indent + f'    _Set{name}(entity, '
         args = []
         for attr in comp["Attributes"]:
             n = attr["Name"]
@@ -59,7 +61,7 @@ class Lua(Plugin):
                 args.append(f'c.{attr["Name"]}')
         out += ", ".join(args)
         out += ')\n'
-        out += "end\n"
+        out += indent + "end"
         return out
 
     @compmethod
@@ -67,9 +69,10 @@ class Lua(Plugin):
         out = ""
         num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
         name = comp["Name"]
+        indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Add{name}(entity, c)\n'
-        out += f'    Lua_Add{name}(entity, '
+        out += indent + f'    _Add{name}(entity, '
         args = []
         for attr in comp["Attributes"]:
             n = attr["Name"]
@@ -81,5 +84,5 @@ class Lua(Plugin):
                 args.append(f'c.{attr["Name"]}')
         out += ", ".join(args)
         out += ')\n'
-        out += "end\n"
+        out += indent + "end"
         return out

@@ -225,7 +225,7 @@ void register_window_functions(lua::Script& script, Window& window)
 void register_entity_transformation_functions(lua::Script& script)
 {
     lua_State* L = script.native_handle();
-    
+
     lua_register(L, "_SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
@@ -451,7 +451,15 @@ template<typename T> int Lua_Has(lua_State* L)
 void register_entity_component_functions(lua_State* L)
 {
 #ifdef DATAMATIC_BLOCK SCRIPTABLE=true
-    lua_register(L, "Lua_Get{{Comp.Name}}", [](lua_State* L) {
+    // Functions for {{Comp.Name}} =====================================================
+
+    luaL_dostring(L, R"lua(
+        {{Comp.Name}} = Class(function(self, {{Comp.Lua.Sig}})
+            self.{{Attr.Name}} = {{Attr.Name}}
+        end)
+    )lua");
+
+    lua_register(L, "_Get{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -463,7 +471,11 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_Set{{Comp.Name}}", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        {{Comp.Lua.Getter}}
+    )lua");
+
+    lua_register(L, "_Set{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -473,7 +485,11 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_Add{{Comp.Name}}", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        {{Comp.Lua.Setter}}
+    )lua");
+
+    lua_register(L, "_Add{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -485,6 +501,10 @@ void register_entity_component_functions(lua_State* L)
         e.Add<{{Comp.Name}}>(c);
         return 0;
     });
+
+    luaL_dostring(L, R"lua(
+        {{Comp.Lua.Adder}}
+    )lua");
 
     lua_register(L, "Has{{Comp.Name}}", &Lua_Has<{{Comp.Name}}>);
 

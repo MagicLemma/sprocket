@@ -603,7 +603,15 @@ template<typename T> int Lua_Has(lua_State* L)
 
 void register_entity_component_functions(lua_State* L)
 {
-    lua_register(L, "Lua_GetNameComponent", [](lua_State* L) {
+    // Functions for NameComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        NameComponent = Class(function(self, name)
+            self.name = name
+        end)
+    )lua");
+
+    lua_register(L, "_GetNameComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -615,7 +623,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetNameComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetNameComponent(entity)
+            x0 = _GetNameComponent(entity)
+            return NameComponent(x0)
+        end
+    )lua");
+
+    lua_register(L, "_SetNameComponent", [](lua_State* L) {
         if (!CheckArgCount(L, NameComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -625,7 +640,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddNameComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetNameComponent(entity, c)
+            _SetNameComponent(entity, c.name)
+        end
+    )lua");
+
+    lua_register(L, "_AddNameComponent", [](lua_State* L) {
         if (!CheckArgCount(L, NameComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -638,9 +659,25 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddNameComponent(entity, c)
+            _AddNameComponent(entity, c.name)
+        end
+    )lua");
+
     lua_register(L, "HasNameComponent", &Lua_Has<NameComponent>);
 
-    lua_register(L, "Lua_GetTransform2DComponent", [](lua_State* L) {
+    // Functions for Transform2DComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        Transform2DComponent = Class(function(self, position, rotation, scale)
+            self.position = position
+            self.rotation = rotation
+            self.scale = scale
+        end)
+    )lua");
+
+    lua_register(L, "_GetTransform2DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -654,7 +691,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetTransform2DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetTransform2DComponent(entity)
+            x0, x1, x2, x3, x4 = _GetTransform2DComponent(entity)
+            return Transform2DComponent(Vec3(x0, x1), x2, Vec3(x3, x4))
+        end
+    )lua");
+
+    lua_register(L, "_SetTransform2DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Transform2DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -666,7 +710,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddTransform2DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetTransform2DComponent(entity, c)
+            _SetTransform2DComponent(entity, c.position, c.rotation, c.scale)
+        end
+    )lua");
+
+    lua_register(L, "_AddTransform2DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Transform2DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -681,9 +731,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddTransform2DComponent(entity, c)
+            _AddTransform2DComponent(entity, c.position, c.rotation, c.scale)
+        end
+    )lua");
+
     lua_register(L, "HasTransform2DComponent", &Lua_Has<Transform2DComponent>);
 
-    lua_register(L, "Lua_GetTransform3DComponent", [](lua_State* L) {
+    // Functions for Transform3DComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        Transform3DComponent = Class(function(self, position, scale)
+            self.position = position
+            self.scale = scale
+        end)
+    )lua");
+
+    lua_register(L, "_GetTransform3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -696,7 +761,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetTransform3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetTransform3DComponent(entity)
+            x0, x1, x2, x3, x4, x5 = _GetTransform3DComponent(entity)
+            return Transform3DComponent(Vec3(x0, x1, x2), Vec3(x3, x4, x5))
+        end
+    )lua");
+
+    lua_register(L, "_SetTransform3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Transform3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -707,7 +779,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddTransform3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetTransform3DComponent(entity, c)
+            _SetTransform3DComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
+        end
+    )lua");
+
+    lua_register(L, "_AddTransform3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Transform3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -721,9 +799,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddTransform3DComponent(entity, c)
+            _AddTransform3DComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
+        end
+    )lua");
+
     lua_register(L, "HasTransform3DComponent", &Lua_Has<Transform3DComponent>);
 
-    lua_register(L, "Lua_GetModelComponent", [](lua_State* L) {
+    // Functions for ModelComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        ModelComponent = Class(function(self, mesh, material)
+            self.mesh = mesh
+            self.material = material
+        end)
+    )lua");
+
+    lua_register(L, "_GetModelComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -736,7 +829,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetModelComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetModelComponent(entity)
+            x0, x1 = _GetModelComponent(entity)
+            return ModelComponent(x0, x1)
+        end
+    )lua");
+
+    lua_register(L, "_SetModelComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ModelComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -747,7 +847,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddModelComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetModelComponent(entity, c)
+            _SetModelComponent(entity, c.mesh, c.material)
+        end
+    )lua");
+
+    lua_register(L, "_AddModelComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ModelComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -761,9 +867,30 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddModelComponent(entity, c)
+            _AddModelComponent(entity, c.mesh, c.material)
+        end
+    )lua");
+
     lua_register(L, "HasModelComponent", &Lua_Has<ModelComponent>);
 
-    lua_register(L, "Lua_GetRigidBody3DComponent", [](lua_State* L) {
+    // Functions for RigidBody3DComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        RigidBody3DComponent = Class(function(self, velocity, gravity, frozen, bounciness, frictionCoefficient, rollingResistance, force, onFloor)
+            self.velocity = velocity
+            self.gravity = gravity
+            self.frozen = frozen
+            self.bounciness = bounciness
+            self.frictionCoefficient = frictionCoefficient
+            self.rollingResistance = rollingResistance
+            self.force = force
+            self.onFloor = onFloor
+        end)
+    )lua");
+
+    lua_register(L, "_GetRigidBody3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -782,7 +909,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetRigidBody3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetRigidBody3DComponent(entity)
+            x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = _GetRigidBody3DComponent(entity)
+            return RigidBody3DComponent(Vec3(x0, x1, x2), x3, x4, x5, x6, x7, Vec3(x8, x9, x10), x11)
+        end
+    )lua");
+
+    lua_register(L, "_SetRigidBody3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, RigidBody3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -799,7 +933,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddRigidBody3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetRigidBody3DComponent(entity, c)
+            _SetRigidBody3DComponent(entity, c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
+        end
+    )lua");
+
+    lua_register(L, "_AddRigidBody3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, RigidBody3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -819,9 +959,26 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddRigidBody3DComponent(entity, c)
+            _AddRigidBody3DComponent(entity, c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
+        end
+    )lua");
+
     lua_register(L, "HasRigidBody3DComponent", &Lua_Has<RigidBody3DComponent>);
 
-    lua_register(L, "Lua_GetBoxCollider3DComponent", [](lua_State* L) {
+    // Functions for BoxCollider3DComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        BoxCollider3DComponent = Class(function(self, position, mass, halfExtents, applyScale)
+            self.position = position
+            self.mass = mass
+            self.halfExtents = halfExtents
+            self.applyScale = applyScale
+        end)
+    )lua");
+
+    lua_register(L, "_GetBoxCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -836,7 +993,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetBoxCollider3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetBoxCollider3DComponent(entity)
+            x0, x1, x2, x3, x4, x5, x6, x7 = _GetBoxCollider3DComponent(entity)
+            return BoxCollider3DComponent(Vec3(x0, x1, x2), x3, Vec3(x4, x5, x6), x7)
+        end
+    )lua");
+
+    lua_register(L, "_SetBoxCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, BoxCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -849,7 +1013,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddBoxCollider3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetBoxCollider3DComponent(entity, c)
+            _SetBoxCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.halfExtents.x, c.halfExtents.y, c.halfExtents.z, c.applyScale)
+        end
+    )lua");
+
+    lua_register(L, "_AddBoxCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, BoxCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -865,9 +1035,25 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddBoxCollider3DComponent(entity, c)
+            _AddBoxCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.halfExtents.x, c.halfExtents.y, c.halfExtents.z, c.applyScale)
+        end
+    )lua");
+
     lua_register(L, "HasBoxCollider3DComponent", &Lua_Has<BoxCollider3DComponent>);
 
-    lua_register(L, "Lua_GetSphereCollider3DComponent", [](lua_State* L) {
+    // Functions for SphereCollider3DComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        SphereCollider3DComponent = Class(function(self, position, mass, radius)
+            self.position = position
+            self.mass = mass
+            self.radius = radius
+        end)
+    )lua");
+
+    lua_register(L, "_GetSphereCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -881,7 +1067,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetSphereCollider3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetSphereCollider3DComponent(entity)
+            x0, x1, x2, x3, x4 = _GetSphereCollider3DComponent(entity)
+            return SphereCollider3DComponent(Vec3(x0, x1, x2), x3, x4)
+        end
+    )lua");
+
+    lua_register(L, "_SetSphereCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SphereCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -893,7 +1086,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddSphereCollider3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetSphereCollider3DComponent(entity, c)
+            _SetSphereCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius)
+        end
+    )lua");
+
+    lua_register(L, "_AddSphereCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SphereCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -908,9 +1107,26 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddSphereCollider3DComponent(entity, c)
+            _AddSphereCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius)
+        end
+    )lua");
+
     lua_register(L, "HasSphereCollider3DComponent", &Lua_Has<SphereCollider3DComponent>);
 
-    lua_register(L, "Lua_GetCapsuleCollider3DComponent", [](lua_State* L) {
+    // Functions for CapsuleCollider3DComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        CapsuleCollider3DComponent = Class(function(self, position, mass, radius, height)
+            self.position = position
+            self.mass = mass
+            self.radius = radius
+            self.height = height
+        end)
+    )lua");
+
+    lua_register(L, "_GetCapsuleCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -925,7 +1141,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetCapsuleCollider3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetCapsuleCollider3DComponent(entity)
+            x0, x1, x2, x3, x4, x5 = _GetCapsuleCollider3DComponent(entity)
+            return CapsuleCollider3DComponent(Vec3(x0, x1, x2), x3, x4, x5)
+        end
+    )lua");
+
+    lua_register(L, "_SetCapsuleCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, CapsuleCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -938,7 +1161,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddCapsuleCollider3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetCapsuleCollider3DComponent(entity, c)
+            _SetCapsuleCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius, c.height)
+        end
+    )lua");
+
+    lua_register(L, "_AddCapsuleCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, CapsuleCollider3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -954,9 +1183,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddCapsuleCollider3DComponent(entity, c)
+            _AddCapsuleCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius, c.height)
+        end
+    )lua");
+
     lua_register(L, "HasCapsuleCollider3DComponent", &Lua_Has<CapsuleCollider3DComponent>);
 
-    lua_register(L, "Lua_GetScriptComponent", [](lua_State* L) {
+    // Functions for ScriptComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        ScriptComponent = Class(function(self, script, active)
+            self.script = script
+            self.active = active
+        end)
+    )lua");
+
+    lua_register(L, "_GetScriptComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -969,7 +1213,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetScriptComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetScriptComponent(entity)
+            x0, x1 = _GetScriptComponent(entity)
+            return ScriptComponent(x0, x1)
+        end
+    )lua");
+
+    lua_register(L, "_SetScriptComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -980,7 +1231,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddScriptComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetScriptComponent(entity, c)
+            _SetScriptComponent(entity, c.script, c.active)
+        end
+    )lua");
+
+    lua_register(L, "_AddScriptComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ScriptComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -994,9 +1251,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddScriptComponent(entity, c)
+            _AddScriptComponent(entity, c.script, c.active)
+        end
+    )lua");
+
     lua_register(L, "HasScriptComponent", &Lua_Has<ScriptComponent>);
 
-    lua_register(L, "Lua_GetCamera3DComponent", [](lua_State* L) {
+    // Functions for Camera3DComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        Camera3DComponent = Class(function(self, fov, pitch)
+            self.fov = fov
+            self.pitch = pitch
+        end)
+    )lua");
+
+    lua_register(L, "_GetCamera3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1009,7 +1281,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetCamera3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetCamera3DComponent(entity)
+            x0, x1 = _GetCamera3DComponent(entity)
+            return Camera3DComponent(x0, x1)
+        end
+    )lua");
+
+    lua_register(L, "_SetCamera3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Camera3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1020,7 +1299,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddCamera3DComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetCamera3DComponent(entity, c)
+            _SetCamera3DComponent(entity, c.fov, c.pitch)
+        end
+    )lua");
+
+    lua_register(L, "_AddCamera3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Camera3DComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1034,9 +1319,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddCamera3DComponent(entity, c)
+            _AddCamera3DComponent(entity, c.fov, c.pitch)
+        end
+    )lua");
+
     lua_register(L, "HasCamera3DComponent", &Lua_Has<Camera3DComponent>);
 
-    lua_register(L, "Lua_GetSelectComponent", [](lua_State* L) {
+    // Functions for SelectComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        SelectComponent = Class(function(self, selected, hovered)
+            self.selected = selected
+            self.hovered = hovered
+        end)
+    )lua");
+
+    lua_register(L, "_GetSelectComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1049,7 +1349,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetSelectComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetSelectComponent(entity)
+            x0, x1 = _GetSelectComponent(entity)
+            return SelectComponent(x0, x1)
+        end
+    )lua");
+
+    lua_register(L, "_SetSelectComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SelectComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1060,7 +1367,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddSelectComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetSelectComponent(entity, c)
+            _SetSelectComponent(entity, c.selected, c.hovered)
+        end
+    )lua");
+
+    lua_register(L, "_AddSelectComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SelectComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1074,9 +1387,23 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddSelectComponent(entity, c)
+            _AddSelectComponent(entity, c.selected, c.hovered)
+        end
+    )lua");
+
     lua_register(L, "HasSelectComponent", &Lua_Has<SelectComponent>);
 
-    lua_register(L, "Lua_GetPathComponent", [](lua_State* L) {
+    // Functions for PathComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        PathComponent = Class(function(self, speed)
+            self.speed = speed
+        end)
+    )lua");
+
+    lua_register(L, "_GetPathComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1088,7 +1415,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetPathComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetPathComponent(entity)
+            x0 = _GetPathComponent(entity)
+            return PathComponent(x0)
+        end
+    )lua");
+
+    lua_register(L, "_SetPathComponent", [](lua_State* L) {
         if (!CheckArgCount(L, PathComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1098,7 +1432,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddPathComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetPathComponent(entity, c)
+            _SetPathComponent(entity, c.speed)
+        end
+    )lua");
+
+    lua_register(L, "_AddPathComponent", [](lua_State* L) {
         if (!CheckArgCount(L, PathComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1111,9 +1451,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddPathComponent(entity, c)
+            _AddPathComponent(entity, c.speed)
+        end
+    )lua");
+
     lua_register(L, "HasPathComponent", &Lua_Has<PathComponent>);
 
-    lua_register(L, "Lua_GetGridComponent", [](lua_State* L) {
+    // Functions for GridComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        GridComponent = Class(function(self, x, z)
+            self.x = x
+            self.z = z
+        end)
+    )lua");
+
+    lua_register(L, "_GetGridComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1126,7 +1481,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetGridComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetGridComponent(entity)
+            x0, x1 = _GetGridComponent(entity)
+            return GridComponent(x0, x1)
+        end
+    )lua");
+
+    lua_register(L, "_SetGridComponent", [](lua_State* L) {
         if (!CheckArgCount(L, GridComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1137,7 +1499,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddGridComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetGridComponent(entity, c)
+            _SetGridComponent(entity, c.x, c.z)
+        end
+    )lua");
+
+    lua_register(L, "_AddGridComponent", [](lua_State* L) {
         if (!CheckArgCount(L, GridComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1151,9 +1519,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddGridComponent(entity, c)
+            _AddGridComponent(entity, c.x, c.z)
+        end
+    )lua");
+
     lua_register(L, "HasGridComponent", &Lua_Has<GridComponent>);
 
-    lua_register(L, "Lua_GetLightComponent", [](lua_State* L) {
+    // Functions for LightComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        LightComponent = Class(function(self, colour, brightness)
+            self.colour = colour
+            self.brightness = brightness
+        end)
+    )lua");
+
+    lua_register(L, "_GetLightComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1166,7 +1549,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetLightComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetLightComponent(entity)
+            x0, x1, x2, x3 = _GetLightComponent(entity)
+            return LightComponent(Vec3(x0, x1, x2), x3)
+        end
+    )lua");
+
+    lua_register(L, "_SetLightComponent", [](lua_State* L) {
         if (!CheckArgCount(L, LightComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1177,7 +1567,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddLightComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetLightComponent(entity, c)
+            _SetLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+        end
+    )lua");
+
+    lua_register(L, "_AddLightComponent", [](lua_State* L) {
         if (!CheckArgCount(L, LightComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1191,9 +1587,26 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddLightComponent(entity, c)
+            _AddLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+        end
+    )lua");
+
     lua_register(L, "HasLightComponent", &Lua_Has<LightComponent>);
 
-    lua_register(L, "Lua_GetSunComponent", [](lua_State* L) {
+    // Functions for SunComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        SunComponent = Class(function(self, colour, brightness, direction, shadows)
+            self.colour = colour
+            self.brightness = brightness
+            self.direction = direction
+            self.shadows = shadows
+        end)
+    )lua");
+
+    lua_register(L, "_GetSunComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1208,7 +1621,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetSunComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetSunComponent(entity)
+            x0, x1, x2, x3, x4, x5, x6, x7 = _GetSunComponent(entity)
+            return SunComponent(Vec3(x0, x1, x2), x3, Vec3(x4, x5, x6), x7)
+        end
+    )lua");
+
+    lua_register(L, "_SetSunComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1221,7 +1641,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddSunComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetSunComponent(entity, c)
+            _SetSunComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness, c.direction.x, c.direction.y, c.direction.z, c.shadows)
+        end
+    )lua");
+
+    lua_register(L, "_AddSunComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SunComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1237,9 +1663,24 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddSunComponent(entity, c)
+            _AddSunComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness, c.direction.x, c.direction.y, c.direction.z, c.shadows)
+        end
+    )lua");
+
     lua_register(L, "HasSunComponent", &Lua_Has<SunComponent>);
 
-    lua_register(L, "Lua_GetAmbienceComponent", [](lua_State* L) {
+    // Functions for AmbienceComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        AmbienceComponent = Class(function(self, colour, brightness)
+            self.colour = colour
+            self.brightness = brightness
+        end)
+    )lua");
+
+    lua_register(L, "_GetAmbienceComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1252,7 +1693,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetAmbienceComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetAmbienceComponent(entity)
+            x0, x1, x2, x3 = _GetAmbienceComponent(entity)
+            return AmbienceComponent(Vec3(x0, x1, x2), x3)
+        end
+    )lua");
+
+    lua_register(L, "_SetAmbienceComponent", [](lua_State* L) {
         if (!CheckArgCount(L, AmbienceComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1263,7 +1711,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddAmbienceComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetAmbienceComponent(entity, c)
+            _SetAmbienceComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+        end
+    )lua");
+
+    lua_register(L, "_AddAmbienceComponent", [](lua_State* L) {
         if (!CheckArgCount(L, AmbienceComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1277,9 +1731,28 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddAmbienceComponent(entity, c)
+            _AddAmbienceComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+        end
+    )lua");
+
     lua_register(L, "HasAmbienceComponent", &Lua_Has<AmbienceComponent>);
 
-    lua_register(L, "Lua_GetParticleComponent", [](lua_State* L) {
+    // Functions for ParticleComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        ParticleComponent = Class(function(self, interval, velocity, velocityNoise, acceleration, scale, life)
+            self.interval = interval
+            self.velocity = velocity
+            self.velocityNoise = velocityNoise
+            self.acceleration = acceleration
+            self.scale = scale
+            self.life = life
+        end)
+    )lua");
+
+    lua_register(L, "_GetParticleComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1296,7 +1769,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetParticleComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetParticleComponent(entity)
+            x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = _GetParticleComponent(entity)
+            return ParticleComponent(x0, Vec3(x1, x2, x3), x4, Vec3(x5, x6, x7), Vec3(x8, x9, x10), x11)
+        end
+    )lua");
+
+    lua_register(L, "_SetParticleComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ParticleComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1311,7 +1791,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddParticleComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetParticleComponent(entity, c)
+            _SetParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
+        end
+    )lua");
+
+    lua_register(L, "_AddParticleComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ParticleComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1329,9 +1815,25 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
+    luaL_dostring(L, R"lua(
+        function AddParticleComponent(entity, c)
+            _AddParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
+        end
+    )lua");
+
     lua_register(L, "HasParticleComponent", &Lua_Has<ParticleComponent>);
 
-    lua_register(L, "Lua_GetMeshAnimationComponent", [](lua_State* L) {
+    // Functions for MeshAnimationComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        MeshAnimationComponent = Class(function(self, name, time, speed)
+            self.name = name
+            self.time = time
+            self.speed = speed
+        end)
+    )lua");
+
+    lua_register(L, "_GetMeshAnimationComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -1345,7 +1847,14 @@ void register_entity_component_functions(lua_State* L)
         return count;
     });
 
-    lua_register(L, "Lua_SetMeshAnimationComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function GetMeshAnimationComponent(entity)
+            x0, x1, x2 = _GetMeshAnimationComponent(entity)
+            return MeshAnimationComponent(x0, x1, x2)
+        end
+    )lua");
+
+    lua_register(L, "_SetMeshAnimationComponent", [](lua_State* L) {
         if (!CheckArgCount(L, MeshAnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1357,7 +1866,13 @@ void register_entity_component_functions(lua_State* L)
         return 0;
     });
 
-    lua_register(L, "Lua_AddMeshAnimationComponent", [](lua_State* L) {
+    luaL_dostring(L, R"lua(
+        function SetMeshAnimationComponent(entity, c)
+            _SetMeshAnimationComponent(entity, c.name, c.time, c.speed)
+        end
+    )lua");
+
+    lua_register(L, "_AddMeshAnimationComponent", [](lua_State* L) {
         if (!CheckArgCount(L, MeshAnimationComponentDimension() + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
@@ -1371,6 +1886,12 @@ void register_entity_component_functions(lua_State* L)
         e.Add<MeshAnimationComponent>(c);
         return 0;
     });
+
+    luaL_dostring(L, R"lua(
+        function AddMeshAnimationComponent(entity, c)
+            _AddMeshAnimationComponent(entity, c.name, c.time, c.speed)
+        end
+    )lua");
 
     lua_register(L, "HasMeshAnimationComponent", &Lua_Has<MeshAnimationComponent>);
 
