@@ -3,13 +3,10 @@
 #include "Game.h"
 
 #include <cpp-itertools.hpp>
+#include <memory>
+#include <functional>
 
-struct Foo
-{
-    int* x;
-    uint8_t y;
-    uint32_t z[4];
-};
+using namespace Sprocket;
 
 int main()
 {

@@ -4,6 +4,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <cstdlib>
 
 namespace Sprocket {
 
@@ -17,9 +18,10 @@ Window::Window(const std::string& name, u32 width, u32 height)
 	, d_data({name, width, height})
 	, d_clearColour({1.0, 1.0, 1.0})
 {
-	log::init();
-	
-	glfwInit();
+	if (GLFW_TRUE != glfwInit()) {
+		log::fatal("Failed to initialise GLFW");
+		std::exit(-1);
+	}
 
 	d_impl->window = glfwCreateWindow(
 		d_data.width,
@@ -29,11 +31,19 @@ Window::Window(const std::string& name, u32 width, u32 height)
 		nullptr
 	);
 
+	if (!d_impl->window) {
+		log::fatal("Failed to create window");
+		std::exit(-2);
+	}
+
 	glfwMakeContextCurrent(d_impl->window);
 	glfwSetWindowUserPointer(d_impl->window, &d_data);
 
 	// Initialise GLAD
-	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	if (0 == gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		log::fatal("Failed to initialise GLAD");
+		std::exit(-3);
+	}
 
 	int versionMajor;
 	int versionMinor;

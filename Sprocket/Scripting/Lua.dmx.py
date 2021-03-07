@@ -6,9 +6,8 @@ class Lua(Plugin):
     def Sig(comp, flags):
         return ", ".join(attr['Name'] for attr in comp['Attributes'] if attr["Flags"]["SCRIPTABLE"])
 
-    @compmethod
-    def Impl(comp, flags):
-        out = ""
+    @staticmethod
+    def get_attr_count_and_sig(comp):
         num_attrs = 0
         constructor_sig = []
         for attr in comp["Attributes"]:
@@ -26,19 +25,31 @@ class Lua(Plugin):
             else:
                 constructor_sig.append(f"x{num_attrs}")
                 num_attrs += 1
+        return num_attrs, constructor_sig
 
+    @compmethod
+    def Getter(comp, flags):
+        out = ""
+        num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
         name = comp["Name"]
-        if not comp["Flags"]["SCRIPTABLE"]:
-            return out
+        indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Get{name}(entity)\n'
-        pack = ", ".join([f'x{i}' for i in range(num_attrs)])
-        out += "    " + pack + f" = Lua_Get{name}(entity)\n"
-        out += f'    return {name}({", ".join(constructor_sig)})\n'
-        out += "end\n\n"
+        pack = indent + "    " + ", ".join([f'x{i}' for i in range(num_attrs)])
+        out += pack + f" = _Get{name}(entity)\n"
+        out += indent + f'    return {name}({", ".join(constructor_sig)})\n'
+        out += indent + "end"
+        return out
+
+    @compmethod
+    def Setter(comp, flags):
+        out = ""
+        num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
+        name = comp["Name"]
+        indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Set{name}(entity, c)\n'
-        out += f'    Lua_Set{name}(entity, '
+        out += indent + f'    _Set{name}(entity, '
         args = []
         for attr in comp["Attributes"]:
             n = attr["Name"]
@@ -50,10 +61,18 @@ class Lua(Plugin):
                 args.append(f'c.{attr["Name"]}')
         out += ", ".join(args)
         out += ')\n'
-        out += "end\n\n"
+        out += indent + "end"
+        return out
+
+    @compmethod
+    def Adder(comp, flags):
+        out = ""
+        num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
+        name = comp["Name"]
+        indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Add{name}(entity, c)\n'
-        out += f'    Lua_Add{name}(entity, '
+        out += indent + f'    _Add{name}(entity, '
         args = []
         for attr in comp["Attributes"]:
             n = attr["Name"]
@@ -65,5 +84,5 @@ class Lua(Plugin):
                 args.append(f'c.{attr["Name"]}')
         out += ", ".join(args)
         out += ')\n'
-        out += "end\n"
+        out += indent + "end"
         return out

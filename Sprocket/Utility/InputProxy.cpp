@@ -17,7 +17,7 @@ void InputProxy::OnEvent(ev::Event& event)
         if (event.is_consumed()) { return; }
         d_buttons[data->button] = true;
     }
-    else if (auto e = event.get_if<ev::MouseButtonReleased>()) {
+    else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
         d_buttons[data->button] = false;
     }
 }

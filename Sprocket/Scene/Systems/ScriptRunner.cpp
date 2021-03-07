@@ -2,7 +2,8 @@
 #include "Log.h"
 #include "ECS.h"
 #include "Scene.h"
-#include "LuaEngine.h"
+#include "LuaScript.h"
+#include "LuaLibrary.h"
 #include "Components.h"
 
 #include <utility>
@@ -17,20 +18,24 @@ ScriptRunner::ScriptRunner(Window* window)
 void ScriptRunner::OnStartup(Scene& scene)
 {
     scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
-        auto& [engine, alive] = d_engines[entity];
-        alive = true;
+        lua::Script script(entity.Get<ScriptComponent>().script);
+        lua::register_scene_functions(script, scene);
+        lua::register_input_functions(script, d_input);
+        lua::register_window_functions(script, *d_window);
 
-        engine.Set("__scene__", &scene);
-        engine.Set("__window__", d_window);
-        engine.Set("__input__", &d_input);
+        lua::register_entity_transformation_functions(script);
+        lua::register_entity_component_functions(script);
 
-        engine.RunScript(entity.Get<ScriptComponent>().script);
-        engine.Call("Init", entity);
-        engine.PrintGlobals();
+        script.call_function("Init", entity);
+        script.print_globals();
+        d_engines.emplace(entity, std::make_pair(std::move(script), true));
     });
 
     scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
-        d_engines[entity].second = false; // alive = false
+        auto it = d_engines.find(entity);
+        if (it != d_engines.end()) {
+            it->second.second = false; // alive = false
+        }
     });
 }
 
@@ -45,7 +50,7 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
 
         if (alive) {
             if (entity.Get<ScriptComponent>().active) {
-                script.Call("OnUpdate", entity, dt);
+                script.call_function("OnUpdate", entity, dt);
             }
             ++it;
         } else {
@@ -62,50 +67,7 @@ void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
     for (auto& [entity, pair] : d_engines) {
         auto& [script, alive] = pair;
         if (!(alive && entity.Get<ScriptComponent>().active)) { continue; }
-
-        if (event.is<ev::WindowResize>()) {
-            script.CallOnWindowResizeEvent(event);
-        }
-        else if (event.is<ev::WindowGotFocus>()) {
-            script.CallOnWindowGotFocusEvent(event);
-        }
-        else if (event.is<ev::WindowLostFocus>()) {
-            script.CallOnWindowLostFocusEvent(event);
-        }
-        else if (event.is<ev::WindowMaximize>()) {
-            script.CallOnWindowMaximizeEvent(event);
-        }
-        else if (event.is<ev::WindowMinimize>()) {
-            script.CallOnWindowMinimizeEvent(event);
-        }
-
-        // MOUSE EVENTS
-        else if (event.is<ev::MouseButtonPressed>()) {
-            script.CallOnMouseButtonPressedEvent(event);
-        }
-        else if (event.is<ev::MouseButtonReleased>()) {
-            script.CallOnMouseButtonReleasedEvent(event);
-        }
-        else if (event.is<ev::MouseMoved>()) {
-            script.CallOnMouseMovedEvent(event);
-        }
-        else if (event.is<ev::MouseScrolled>()) {
-            script.CallOnMouseScrolledEvent(event);
-        }
-            
-        // KEYBOARD
-        else if (event.is<ev::KeyboardButtonPressed>()) {
-            script.CallOnKeyboardButtonPressedEvent(event);
-        }
-        else if (event.is<ev::KeyboardButtonReleased>()) {
-            script.CallOnKeyboardButtonReleasedEvent(event);
-        }
-        else if (event.is<ev::KeyboardButtonHeld>()) {
-            script.CallOnKeyboardButtonHeldEvent(event);
-        }
-        else if (event.is<ev::KeyboardTyped>()) {
-            script.CallOnKeyboardKeyTypedEvent(event);
-        }
+        script.on_event(event);
     }
 }
 

@@ -84,12 +84,8 @@
 #include "Audio/Sound.h"
 
 // SCRIPTING
-#include "Scripting/LuaEngine.h"
-#include "Scripting/LuaEntity.h"
-#include "Scripting/LuaComponents.h"
-#include "Scripting/LuaGlobals.h"
-#include "Scripting/LuaTransform.h"
-#include "Scripting/LuaInput.h"
+#include "Scripting/LuaScript.h"
+#include "Scripting/LuaLibrary.h"
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"

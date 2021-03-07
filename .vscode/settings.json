@@ -94,6 +94,9 @@
         "adolcforward": "cpp",
         "clocale": "cpp",
         "ranges": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "bit": "cpp",
+        "compare": "cpp",
+        "stop_token": "cpp"
     }
 }

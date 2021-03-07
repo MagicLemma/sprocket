@@ -81,12 +81,11 @@ void Console::HandleCommand(std::string_view command)
         });
     }
     else if (command.substr(0, 4) == "run ") {
-        Sprocket::LuaEngine engine;
         if (command.size() > 4) {  // Script name is at least a single character
             auto name = command.substr(4);
-            auto script = fmt::format("Resources/Scripts/{}", name);
-            if (std::filesystem::exists(script)) {
-                engine.RunScript(script);
+            auto script_file = fmt::format("Resources/Scripts/{}", name);
+            if (std::filesystem::exists(script_file)) {
+                lua::Script script(script_file);
             } else {
                 d_consoleLines.push_front({
                     fmt::format(" > Could not find script '{}'", name),
