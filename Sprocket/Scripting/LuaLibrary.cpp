@@ -601,8 +601,10 @@ template<typename T> int Lua_Has(lua_State* L)
 
 }
 
-void register_entity_component_functions(lua_State* L)
+void register_entity_component_functions(lua::Script& script)
 {
+    lua_State* L = script.native_handle();
+
     // Functions for NameComponent =====================================================
 
     luaL_dostring(L, R"lua(

@@ -24,7 +24,8 @@ void ScriptRunner::OnStartup(Scene& scene)
         lua::register_window_functions(script, *d_window);
 
         lua::register_entity_transformation_functions(script);
-        
+        lua::register_entity_component_functions(script);
+
         script.call_function("Init", entity);
         script.print_globals();
         d_engines.emplace(entity, std::make_pair(std::move(script), true));
