@@ -43,6 +43,8 @@ private:
     template <typename T> void push_value(T* val);
     template <typename T> void push_value(const T& val);
 
+    template <typename T> T pull_value();
+
     void print_errors(int rc) const;
 
     void* allocate(std::size_t size);
@@ -88,34 +90,58 @@ Return Script::call_function(const std::string& function, Args&&... args)
         if (rc != LUA_OK) {
             return {};
         }
-        if constexpr (std::is_same_v<Return, bool>) {
-            assert(lua_isboolean(L, -1));
-            int y = lua_toboolean(L, -1);
-            return y;
-        }
-        else if constexpr (std::is_integral_v<Return>) {
-            assert(lua_isinteger(L, -1));
-            return lua_tointeger(L, -1);
-        }
-        else if constexpr (std::is_floating_point_v<Return>) {
-            assert(lua_isnumber(L, -1));
-            return static_cast<Return>(lua_tonumber(L, -1));
-        }
-        else if constexpr (std::is_same_v<Return, const char*>) {
-            assert(lua_isstring(L, -1));
-            return static_cast<const char*>(lua_tostring(L, -1));
-        }
-        else if constexpr (std::is_same_v<Return, std::string>) {
-            assert(lua_isstring(L, -1));
-            return std::string(lua_tostring(L, -1));
-        }
-        else if constexpr (std::is_pointer_v<Return>) {
-            assert(lua_islightuserdata(L, -1));
-            return static_cast<Return>(lua_touserdata(L, -1));
-        }
-        else {
-            static_assert(false, "Cannot convert to this type from a lua call!");
-        }
+        return pull_value<Return>();
+    }
+}
+
+template <typename T>
+T Script::pull_value()
+{
+    lua_State* L = d_L.get();
+    if constexpr (std::is_same_v<T, bool>) {
+        assert(lua_isboolean(L, -1));
+        T val = lua_toboolean(L, -1);
+        lua_pop(L, 1);
+        return val;
+    }
+    else if constexpr (std::is_integral_v<T>) {
+        assert(lua_isinteger(L, -1));
+        T val = static_cast<int>(lua_tointeger(L, -1));
+        lua_pop(L, 1);
+        return val;
+    }
+    else if constexpr (std::is_floating_point_v<T>) {
+        assert(lua_isnumber(L, -1));
+        T val = static_cast<T>(lua_tonumber(L, -1));
+        lua_pop(L, 1);
+        return val;
+    }
+    else if constexpr (std::is_same_v<T, const char*>) {
+        assert(lua_isstring(L, -1));
+        const char* val = lua_tostring(L, -1);
+        lua_pop(L, 1);
+        return val;
+    }
+    else if constexpr (std::is_same_v<T, std::string>) {
+        assert(lua_isstring(L, -1));
+        T val = std::string(lua_tostring(L, -1));
+        lua_pop(L, 1);
+        return val;
+    }
+    else if constexpr (std::is_pointer_v<T>) {
+        assert(lua_islightuserdata(L, -1));
+        T val = static_cast<T>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        return val;
+    }
+    else if constexpr (std::is_copy_assignable_v<T> && std::is_trivially_destructible_v<T>) {
+        assert(lua_isuserdata(L, -1));
+        T val = *static_cast<T*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        return val;
+    }
+    else {
+        static_assert(false, "Cannot convert to this type from a lua call!");
     }
 }
 
