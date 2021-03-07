@@ -22,7 +22,7 @@ public:
     // TODO: Remove
     void print_globals();
 
-    template <typename... Args, typename Return = void>
+    template <typename Return, typename... Args>
     Return call_function(const std::string& function, Args&&... args);
 
     template <typename Type>
@@ -61,15 +61,20 @@ template <typename T> void Script::push_value(const T& val)
     *static_cast<T*>(allocate(sizeof(T))) = val;
 }
 
-template <typename... Args, typename Return>
+template <typename Return, typename... Args>
 Return Script::call_function(const std::string& function, Args&&... args)
 {
     lua_State* L = d_L.get();
 
     lua_getglobal(L, function.c_str());
     if (!lua_isfunction(L, -1)) {
+        log::error("Could not find function '{}'", function);
         lua_pop(L, -1);
-        return;
+        if constexpr (!std::is_void_v<Return>) {
+            return {};
+        } else {
+            return;
+        }
     }
 
     (push_value(std::forward<Args>(args)), ...);

@@ -109,3 +109,7 @@ function Normalised(vector)
    end
    return Vec3(vector.x / mag, vector.y / mag, vector.z / mag)
 end
+
+function Sin(x)
+   return math.sin(x)
+end

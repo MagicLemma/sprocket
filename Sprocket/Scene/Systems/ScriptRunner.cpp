@@ -26,7 +26,7 @@ void ScriptRunner::OnStartup(Scene& scene)
         lua::register_entity_transformation_functions(script);
         lua::register_entity_component_functions(script);
 
-        script.call_function("Init", entity);
+        script.call_function<void>("Init", entity);
         script.print_globals();
         d_engines.emplace(entity, std::make_pair(std::move(script), true));
     });
@@ -50,7 +50,7 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
 
         if (alive) {
             if (entity.Get<ScriptComponent>().active) {
-                script.call_function("OnUpdate", entity, dt);
+                script.call_function<void>("OnUpdate", entity, dt);
             }
             ++it;
         } else {
