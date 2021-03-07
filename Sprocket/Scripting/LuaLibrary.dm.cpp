@@ -222,8 +222,10 @@ void register_window_functions(lua::Script& script, Window& window)
     });
 }
 
-void register_entity_transformation_functions(lua_State* L)
+void register_entity_transformation_functions(lua::Script& script)
 {
+    lua_State* L = script.native_handle();
+    
     lua_register(L, "_SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 

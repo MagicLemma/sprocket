@@ -28,8 +28,6 @@ Script::Script(const std::string& file)
     // Core Sprocket Constants and Helper Functions
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
-
-    lua::register_entity_transformation_functions(L);
     lua::register_entity_component_functions(L);
 
     do_file(d_L.get(), file.c_str());
@@ -44,8 +42,6 @@ Script::Script()
     // Core Sprocket Constants and Helper Functions
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
     do_file(L, "Sprocket/Scripting/Sprocket_Components.lua");
-
-    lua::register_entity_transformation_functions(L);
     lua::register_entity_component_functions(L);
 }
 
