@@ -35,51 +35,6 @@ Script::Script()
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
 }
 
-void* Script::allocate(std::size_t size)
-{
-    return lua_newuserdata(d_L.get(), size);
-}
-
-void Script::push_value(bool val)
-{
-    lua_pushboolean(d_L.get(), val);
-}
-
-void Script::push_value(char val)
-{
-    lua_pushstring(d_L.get(), std::string(1, val).c_str());
-}
-
-void Script::push_value(int val)
-{
-    lua_pushinteger(d_L.get(), val);
-}
-
-void Script::push_value(float val)
-{
-    lua_pushnumber(d_L.get(), val);
-}
-
-void Script::push_value(double val)
-{
-    lua_pushnumber(d_L.get(), val);
-}
-
-void Script::push_value(const char* val)
-{
-    lua_pushstring(d_L.get(), val);
-}
-
-void Script::push_value(const std::string& val)
-{
-    lua_pushstring(d_L.get(), val.c_str());
-}
-
-void Script::push_value(void* val)
-{
-    lua_pushlightuserdata(d_L.get(), val);
-}
-
 void Script::print_errors(int rc) const
 {
     if (rc == LUA_OK) { return; } // No error

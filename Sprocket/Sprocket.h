@@ -86,6 +86,7 @@
 // SCRIPTING
 #include "Scripting/LuaScript.h"
 #include "Scripting/LuaLibrary.h"
+#include "Scripting/LuaConverter.h"
 
 // VENDOR: TODO - Remove this
 #include "Vendor/ImGuizmo/ImGuizmo.h"
