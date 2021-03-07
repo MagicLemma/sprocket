@@ -508,6 +508,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "Has{{Comp.Name}}", &Lua_Has<{{Comp.Name}}>);
 
+
 #endif
 }
 

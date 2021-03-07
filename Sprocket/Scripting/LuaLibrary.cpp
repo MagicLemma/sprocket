@@ -667,6 +667,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasNameComponent", &Lua_Has<NameComponent>);
 
+
     // Functions for Transform2DComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -739,6 +740,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasTransform2DComponent", &Lua_Has<Transform2DComponent>);
 
+
     // Functions for Transform3DComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -807,6 +809,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasTransform3DComponent", &Lua_Has<Transform3DComponent>);
 
+
     // Functions for ModelComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -874,6 +877,7 @@ void register_entity_component_functions(lua_State* L)
     )lua");
 
     lua_register(L, "HasModelComponent", &Lua_Has<ModelComponent>);
+
 
     // Functions for RigidBody3DComponent =====================================================
 
@@ -967,6 +971,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasRigidBody3DComponent", &Lua_Has<RigidBody3DComponent>);
 
+
     // Functions for BoxCollider3DComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1043,6 +1048,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasBoxCollider3DComponent", &Lua_Has<BoxCollider3DComponent>);
 
+
     // Functions for SphereCollider3DComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1114,6 +1120,7 @@ void register_entity_component_functions(lua_State* L)
     )lua");
 
     lua_register(L, "HasSphereCollider3DComponent", &Lua_Has<SphereCollider3DComponent>);
+
 
     // Functions for CapsuleCollider3DComponent =====================================================
 
@@ -1191,6 +1198,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasCapsuleCollider3DComponent", &Lua_Has<CapsuleCollider3DComponent>);
 
+
     // Functions for ScriptComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1258,6 +1266,7 @@ void register_entity_component_functions(lua_State* L)
     )lua");
 
     lua_register(L, "HasScriptComponent", &Lua_Has<ScriptComponent>);
+
 
     // Functions for Camera3DComponent =====================================================
 
@@ -1327,6 +1336,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasCamera3DComponent", &Lua_Has<Camera3DComponent>);
 
+
     // Functions for SelectComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1395,6 +1405,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasSelectComponent", &Lua_Has<SelectComponent>);
 
+
     // Functions for PathComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1458,6 +1469,7 @@ void register_entity_component_functions(lua_State* L)
     )lua");
 
     lua_register(L, "HasPathComponent", &Lua_Has<PathComponent>);
+
 
     // Functions for GridComponent =====================================================
 
@@ -1527,6 +1539,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasGridComponent", &Lua_Has<GridComponent>);
 
+
     // Functions for LightComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1594,6 +1607,7 @@ void register_entity_component_functions(lua_State* L)
     )lua");
 
     lua_register(L, "HasLightComponent", &Lua_Has<LightComponent>);
+
 
     // Functions for SunComponent =====================================================
 
@@ -1671,6 +1685,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasSunComponent", &Lua_Has<SunComponent>);
 
+
     // Functions for AmbienceComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1738,6 +1753,7 @@ void register_entity_component_functions(lua_State* L)
     )lua");
 
     lua_register(L, "HasAmbienceComponent", &Lua_Has<AmbienceComponent>);
+
 
     // Functions for ParticleComponent =====================================================
 
@@ -1823,6 +1839,7 @@ void register_entity_component_functions(lua_State* L)
 
     lua_register(L, "HasParticleComponent", &Lua_Has<ParticleComponent>);
 
+
     // Functions for MeshAnimationComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1894,6 +1911,7 @@ void register_entity_component_functions(lua_State* L)
     )lua");
 
     lua_register(L, "HasMeshAnimationComponent", &Lua_Has<MeshAnimationComponent>);
+
 
 }
 
