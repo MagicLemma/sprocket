@@ -57,6 +57,14 @@ bool CheckArgCount(lua_State* L, int argc)
     return true;
 }
 
+template <typename T> int _has_impl(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+    lua_pushboolean(L, entity.Has<T>());
+    return 1;
+}
+
 }
 
 void register_scene_functions(lua::Script& script, Scene& scene)
@@ -373,40 +381,6 @@ template <> glm::quat Pull(lua_State* L, int& count)
     return {x, y, z, w};
 }
 
-// DIMENSION
-template <typename T> constexpr int Dimension()
-{
-    static_assert(sizeof(T) == -1);
-    return 0;
-}
-
-template <> constexpr int Dimension<int>() { return 1; }
-template <> constexpr int Dimension<float>() { return 1; }
-template <> constexpr int Dimension<bool>() { return 1; }
-template <> constexpr int Dimension<std::string>() { return 1; }
-template <> constexpr int Dimension<glm::vec2>() { return 2; }
-template <> constexpr int Dimension<glm::vec3>() { return 3; }
-template <> constexpr int Dimension<glm::quat>() { return 4; }
-
-#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
-constexpr int {{Comp.Name}}Dimension()
-{
-    int count = 0;
-    count += Dimension<{{Attr.Type}}>(); // {{Attr.Name}}
-    return count;
-} 
-
-#endif
-
-template<typename T> int Lua_Has(lua_State* L)
-{
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-    ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    lua_pushboolean(L, entity.Has<T>());
-    return 1;
-}
-
 }
 
 void register_entity_component_functions(lua::Script& script)
@@ -415,6 +389,8 @@ void register_entity_component_functions(lua::Script& script)
 
 #ifdef DATAMATIC_BLOCK SCRIPTABLE=true
     // Functions for {{Comp.Name}} =====================================================
+
+    constexpr int {{Comp.Name}}_dimension = {{Comp.Lua.dimension}};
 
     luaL_dostring(L, R"lua(
         {{Comp.Name}} = Class(function(self, {{Comp.Lua.Sig}})
@@ -431,6 +407,7 @@ void register_entity_component_functions(lua::Script& script)
         int count = 0;
         const auto& c = e.Get<{{Comp.Name}}>();
         count += Converter<{{Attr.Type}}>::push_to(L, c.{{Attr.Name}});
+        assert(count == {{Comp.Name}}_dimension);
         return count;
     });
 
@@ -439,12 +416,13 @@ void register_entity_component_functions(lua::Script& script)
     )lua");
 
     lua_register(L, "_Set{{Comp.Name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
         auto& c = e.Get<{{Comp.Name}}>();
         c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
+        assert(count == {{Comp.Name}}_dimension + 2);
         return 0;
     });
 
@@ -453,7 +431,7 @@ void register_entity_component_functions(lua::Script& script)
     )lua");
 
     lua_register(L, "_Add{{Comp.Name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 2;
         ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
@@ -462,6 +440,7 @@ void register_entity_component_functions(lua::Script& script)
         {{Comp.Name}} c;
         c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
         e.Add<{{Comp.Name}}>(c);
+        assert(count == {{Comp.Name}}_dimension + 2);
         return 0;
     });
 
@@ -469,7 +448,7 @@ void register_entity_component_functions(lua::Script& script)
         {{Comp.Lua.Adder}}
     )lua");
 
-    lua_register(L, "Has{{Comp.Name}}", &Lua_Has<{{Comp.Name}}>);
+    lua_register(L, "Has{{Comp.Name}}", &_has_impl<{{Comp.Name}}>);
 
 
 #endif
