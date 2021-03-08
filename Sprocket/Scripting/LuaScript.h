@@ -43,15 +43,7 @@ Return Script::call_function(const std::string& function, Args&&... args)
     lua_State* L = d_L.get();
 
     lua_getglobal(L, function.c_str());
-    if (!lua_isfunction(L, -1)) {
-        log::error("Could not find function '{}'", function);
-        lua_pop(L, -1);
-        if constexpr (!std::is_void_v<Return>) {
-            return {};
-        } else {
-            return;
-        }
-    }
+    assert(lua_isfunction(L, -1));
 
     (Converter<std::decay_t<Args>>::push_to(L, args), ...);
 

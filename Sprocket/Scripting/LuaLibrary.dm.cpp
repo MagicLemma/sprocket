@@ -1,5 +1,6 @@
 #include "LuaLibrary.h"
 #include "LuaScript.h"
+#include "LuaConverter.h"
 #include "ECS.h"
 #include "Scene.h"
 #include "InputProxy.h"
@@ -321,46 +322,6 @@ void register_entity_transformation_functions(lua::Script& script)
 
 namespace {
 
-// PUSH
-int Push(lua_State* L, int value)
-{
-    lua_pushnumber(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, float value)
-{
-    lua_pushnumber(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, const std::string& value)
-{
-    lua_pushstring(L, value.c_str());
-    return 1;
-}
-
-int Push(lua_State* L, const bool& value)
-{
-    lua_pushboolean(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, const glm::vec2& value)
-{
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
-    return 3;
-}
-
-int Push(lua_State* L, const glm::vec3& value)
-{
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
-    lua_pushnumber(L, value.z);
-    return 3;
-}
-
 // PULL
 template <typename T> T Pull(lua_State* L, int& count)
 {
@@ -469,7 +430,7 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<{{Comp.Name}}>();
-        count += Push(L, c.{{Attr.Name}});
+        count += Converter<{{Attr.Type}}>::push_to(L, c.{{Attr.Name}});
         return count;
     });
 

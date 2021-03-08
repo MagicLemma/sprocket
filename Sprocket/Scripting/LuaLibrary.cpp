@@ -1,6 +1,7 @@
 // GENERATED FILE
 #include "LuaLibrary.h"
 #include "LuaScript.h"
+#include "LuaConverter.h"
 #include "ECS.h"
 #include "Scene.h"
 #include "InputProxy.h"
@@ -322,46 +323,6 @@ void register_entity_transformation_functions(lua::Script& script)
 
 namespace {
 
-// PUSH
-int Push(lua_State* L, int value)
-{
-    lua_pushnumber(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, float value)
-{
-    lua_pushnumber(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, const std::string& value)
-{
-    lua_pushstring(L, value.c_str());
-    return 1;
-}
-
-int Push(lua_State* L, const bool& value)
-{
-    lua_pushboolean(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, const glm::vec2& value)
-{
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
-    return 3;
-}
-
-int Push(lua_State* L, const glm::vec3& value)
-{
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
-    lua_pushnumber(L, value.z);
-    return 3;
-}
-
 // PULL
 template <typename T> T Pull(lua_State* L, int& count)
 {
@@ -621,7 +582,7 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<NameComponent>();
-        count += Push(L, c.name);
+        count += Converter<std::string>::push_to(L, c.name);
         return count;
     });
 
@@ -688,9 +649,9 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<Transform2DComponent>();
-        count += Push(L, c.position);
-        count += Push(L, c.rotation);
-        count += Push(L, c.scale);
+        count += Converter<glm::vec2>::push_to(L, c.position);
+        count += Converter<float>::push_to(L, c.rotation);
+        count += Converter<glm::vec2>::push_to(L, c.scale);
         return count;
     });
 
@@ -760,8 +721,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<Transform3DComponent>();
-        count += Push(L, c.position);
-        count += Push(L, c.scale);
+        count += Converter<glm::vec3>::push_to(L, c.position);
+        count += Converter<glm::vec3>::push_to(L, c.scale);
         return count;
     });
 
@@ -829,8 +790,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<ModelComponent>();
-        count += Push(L, c.mesh);
-        count += Push(L, c.material);
+        count += Converter<std::string>::push_to(L, c.mesh);
+        count += Converter<std::string>::push_to(L, c.material);
         return count;
     });
 
@@ -904,14 +865,14 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<RigidBody3DComponent>();
-        count += Push(L, c.velocity);
-        count += Push(L, c.gravity);
-        count += Push(L, c.frozen);
-        count += Push(L, c.bounciness);
-        count += Push(L, c.frictionCoefficient);
-        count += Push(L, c.rollingResistance);
-        count += Push(L, c.force);
-        count += Push(L, c.onFloor);
+        count += Converter<glm::vec3>::push_to(L, c.velocity);
+        count += Converter<bool>::push_to(L, c.gravity);
+        count += Converter<bool>::push_to(L, c.frozen);
+        count += Converter<float>::push_to(L, c.bounciness);
+        count += Converter<float>::push_to(L, c.frictionCoefficient);
+        count += Converter<float>::push_to(L, c.rollingResistance);
+        count += Converter<glm::vec3>::push_to(L, c.force);
+        count += Converter<bool>::push_to(L, c.onFloor);
         return count;
     });
 
@@ -993,10 +954,10 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<BoxCollider3DComponent>();
-        count += Push(L, c.position);
-        count += Push(L, c.mass);
-        count += Push(L, c.halfExtents);
-        count += Push(L, c.applyScale);
+        count += Converter<glm::vec3>::push_to(L, c.position);
+        count += Converter<float>::push_to(L, c.mass);
+        count += Converter<glm::vec3>::push_to(L, c.halfExtents);
+        count += Converter<bool>::push_to(L, c.applyScale);
         return count;
     });
 
@@ -1069,9 +1030,9 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<SphereCollider3DComponent>();
-        count += Push(L, c.position);
-        count += Push(L, c.mass);
-        count += Push(L, c.radius);
+        count += Converter<glm::vec3>::push_to(L, c.position);
+        count += Converter<float>::push_to(L, c.mass);
+        count += Converter<float>::push_to(L, c.radius);
         return count;
     });
 
@@ -1143,10 +1104,10 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<CapsuleCollider3DComponent>();
-        count += Push(L, c.position);
-        count += Push(L, c.mass);
-        count += Push(L, c.radius);
-        count += Push(L, c.height);
+        count += Converter<glm::vec3>::push_to(L, c.position);
+        count += Converter<float>::push_to(L, c.mass);
+        count += Converter<float>::push_to(L, c.radius);
+        count += Converter<float>::push_to(L, c.height);
         return count;
     });
 
@@ -1218,8 +1179,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<ScriptComponent>();
-        count += Push(L, c.script);
-        count += Push(L, c.active);
+        count += Converter<std::string>::push_to(L, c.script);
+        count += Converter<bool>::push_to(L, c.active);
         return count;
     });
 
@@ -1287,8 +1248,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<Camera3DComponent>();
-        count += Push(L, c.fov);
-        count += Push(L, c.pitch);
+        count += Converter<float>::push_to(L, c.fov);
+        count += Converter<float>::push_to(L, c.pitch);
         return count;
     });
 
@@ -1356,8 +1317,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<SelectComponent>();
-        count += Push(L, c.selected);
-        count += Push(L, c.hovered);
+        count += Converter<bool>::push_to(L, c.selected);
+        count += Converter<bool>::push_to(L, c.hovered);
         return count;
     });
 
@@ -1424,7 +1385,7 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<PathComponent>();
-        count += Push(L, c.speed);
+        count += Converter<float>::push_to(L, c.speed);
         return count;
     });
 
@@ -1490,8 +1451,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<GridComponent>();
-        count += Push(L, c.x);
-        count += Push(L, c.z);
+        count += Converter<int>::push_to(L, c.x);
+        count += Converter<int>::push_to(L, c.z);
         return count;
     });
 
@@ -1559,8 +1520,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<LightComponent>();
-        count += Push(L, c.colour);
-        count += Push(L, c.brightness);
+        count += Converter<glm::vec3>::push_to(L, c.colour);
+        count += Converter<float>::push_to(L, c.brightness);
         return count;
     });
 
@@ -1630,10 +1591,10 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<SunComponent>();
-        count += Push(L, c.colour);
-        count += Push(L, c.brightness);
-        count += Push(L, c.direction);
-        count += Push(L, c.shadows);
+        count += Converter<glm::vec3>::push_to(L, c.colour);
+        count += Converter<float>::push_to(L, c.brightness);
+        count += Converter<glm::vec3>::push_to(L, c.direction);
+        count += Converter<bool>::push_to(L, c.shadows);
         return count;
     });
 
@@ -1705,8 +1666,8 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<AmbienceComponent>();
-        count += Push(L, c.colour);
-        count += Push(L, c.brightness);
+        count += Converter<glm::vec3>::push_to(L, c.colour);
+        count += Converter<float>::push_to(L, c.brightness);
         return count;
     });
 
@@ -1778,12 +1739,12 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<ParticleComponent>();
-        count += Push(L, c.interval);
-        count += Push(L, c.velocity);
-        count += Push(L, c.velocityNoise);
-        count += Push(L, c.acceleration);
-        count += Push(L, c.scale);
-        count += Push(L, c.life);
+        count += Converter<float>::push_to(L, c.interval);
+        count += Converter<glm::vec3>::push_to(L, c.velocity);
+        count += Converter<float>::push_to(L, c.velocityNoise);
+        count += Converter<glm::vec3>::push_to(L, c.acceleration);
+        count += Converter<glm::vec3>::push_to(L, c.scale);
+        count += Converter<float>::push_to(L, c.life);
         return count;
     });
 
@@ -1860,9 +1821,9 @@ void register_entity_component_functions(lua::Script& script)
 
         int count = 0;
         const auto& c = e.Get<MeshAnimationComponent>();
-        count += Push(L, c.name);
-        count += Push(L, c.time);
-        count += Push(L, c.speed);
+        count += Converter<std::string>::push_to(L, c.name);
+        count += Converter<float>::push_to(L, c.time);
+        count += Converter<float>::push_to(L, c.speed);
         return count;
     });
 

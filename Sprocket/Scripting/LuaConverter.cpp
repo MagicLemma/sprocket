@@ -15,9 +15,10 @@ int Converter<int>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<int>::push_to(lua_State* L, const int& value)
+int Converter<int>::push_to(lua_State* L, const int& value)
 {
     lua_pushinteger(L, value);
+    return 1;
 }
 
 
@@ -29,11 +30,11 @@ u32 Converter<u32>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<u32>::push_to(lua_State* L, const u32& value)
+int Converter<u32>::push_to(lua_State* L, const u32& value)
 {
     lua_pushinteger(L, value);
+    return 1;
 }
-
 
 
 bool Converter<bool>::pull_from(lua_State* L)
@@ -44,9 +45,10 @@ bool Converter<bool>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<bool>::push_to(lua_State* L, const bool& value)
+int Converter<bool>::push_to(lua_State* L, const bool& value)
 {
     lua_pushboolean(L, value);
+    return 1;
 }
 
 
@@ -58,9 +60,10 @@ double Converter<double>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<double>::push_to(lua_State* L, const double& value)
+int Converter<double>::push_to(lua_State* L, const double& value)
 {
     lua_pushnumber(L, value);
+    return 1;
 }
 
 
@@ -72,9 +75,10 @@ float Converter<float>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<float>::push_to(lua_State* L, const float& value)
+int Converter<float>::push_to(lua_State* L, const float& value)
 {
     lua_pushnumber(L, value);
+    return 1;
 }
 
 
@@ -86,9 +90,10 @@ const char* Converter<const char*>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<const char*>::push_to(lua_State* L, const char* value)
+int Converter<const char*>::push_to(lua_State* L, const char* value)
 {
     lua_pushstring(L, value);
+    return 1;
 }
 
 
@@ -100,9 +105,10 @@ std::string Converter<std::string>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<std::string>::push_to(lua_State* L, const std::string& value)
+int Converter<std::string>::push_to(lua_State* L, const std::string& value)
 {
     lua_pushstring(L, value.c_str());
+    return 1;
 }
 
 
@@ -114,9 +120,10 @@ void* Converter<void*>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<void*>::push_to(lua_State* L, void* value)
+int Converter<void*>::push_to(lua_State* L, void* value)
 {
     lua_pushlightuserdata(L, value);
+    return 1;
 }
 
 
@@ -128,10 +135,28 @@ ecs::Entity Converter<ecs::Entity>::pull_from(lua_State* L)
     return val;
 }
 
-void Converter<ecs::Entity>::push_to(lua_State* L, ecs::Entity value)
+int Converter<ecs::Entity>::push_to(lua_State* L, ecs::Entity value)
 {
     ecs::Entity* handle = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
     *handle = value;
+    return 1;
+}
+
+
+int Converter<glm::vec2>::push_to(lua_State* L, const glm::vec2& value)
+{
+    Converter<float>::push_to(L, value.x);
+    Converter<float>::push_to(L, value.y);
+    return 2;
+}
+
+
+int Converter<glm::vec3>::push_to(lua_State* L, const glm::vec3& value)
+{
+    Converter<float>::push_to(L, value.x);
+    Converter<float>::push_to(L, value.y);
+    Converter<float>::push_to(L, value.z);
+    return 3;
 }
 
 
