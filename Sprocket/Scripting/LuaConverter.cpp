@@ -9,7 +9,8 @@ namespace lua {
 
 int Converter<int>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -20,15 +21,16 @@ int Converter<int>::push(lua_State* L, const int& value)
     return dimension;
 }
 
-int Converter<int>::read(lua_State* L, int read_ptr)
+int Converter<int>::read(lua_State* L, int& read_ptr)
 {
-    return static_cast<int>(lua_tointeger(L, read_ptr));
+    return static_cast<int>(lua_tointeger(L, read_ptr++));
 }
 
 
 u32 Converter<u32>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -39,15 +41,16 @@ int Converter<u32>::push(lua_State* L, const u32& value)
     return dimension;
 }
 
-u32 Converter<u32>::read(lua_State* L, int read_ptr)
+u32 Converter<u32>::read(lua_State* L, int& read_ptr)
 {
-    return static_cast<u32>(lua_tointeger(L, read_ptr));
+    return static_cast<u32>(lua_tointeger(L, read_ptr++));
 }
 
 
 bool Converter<bool>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -58,15 +61,16 @@ int Converter<bool>::push(lua_State* L, const bool& value)
     return dimension;
 }
 
-bool Converter<bool>::read(lua_State* L, int read_ptr)
+bool Converter<bool>::read(lua_State* L, int& read_ptr)
 {
-    return static_cast<bool>(lua_toboolean(L, read_ptr));
+    return static_cast<bool>(lua_toboolean(L, read_ptr++));
 }
 
 
 float Converter<float>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -77,15 +81,16 @@ int Converter<float>::push(lua_State* L, const float& value)
     return dimension;
 }
 
-float Converter<float>::read(lua_State* L, int read_ptr)
+float Converter<float>::read(lua_State* L, int& read_ptr)
 {
-    return static_cast<float>(lua_tonumber(L, read_ptr));
+    return static_cast<float>(lua_tonumber(L, read_ptr++));
 }
 
 
 double Converter<double>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -96,15 +101,16 @@ int Converter<double>::push(lua_State* L, const double& value)
     return dimension;
 }
 
-double Converter<double>::read(lua_State* L, int read_ptr)
+double Converter<double>::read(lua_State* L, int& read_ptr)
 {
-    return static_cast<double>(lua_tonumber(L, read_ptr));
+    return static_cast<double>(lua_tonumber(L, read_ptr++));
 }
 
 
 const char* Converter<const char*>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -115,15 +121,16 @@ int Converter<const char*>::push(lua_State* L, const char* value)
     return dimension;
 }
 
-const char* Converter<const char*>::read(lua_State* L, int read_ptr)
+const char* Converter<const char*>::read(lua_State* L, int& read_ptr)
 {
-    return lua_tostring(L, read_ptr);
+    return lua_tostring(L, read_ptr++);
 }
 
 
 std::string Converter<std::string>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -134,15 +141,16 @@ int Converter<std::string>::push(lua_State* L, const std::string& value)
     return dimension;
 }
 
-std::string Converter<std::string>::read(lua_State* L, int read_ptr)
+std::string Converter<std::string>::read(lua_State* L, int& read_ptr)
 {
-    return lua_tostring(L, read_ptr);
+    return lua_tostring(L, read_ptr++);
 }
 
 
 void* Converter<void*>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -153,15 +161,16 @@ int Converter<void*>::push(lua_State* L, void* value)
     return dimension;
 }
 
-void* Converter<void*>::read(lua_State* L, int read_ptr)
+void* Converter<void*>::read(lua_State* L, int& read_ptr)
 {
-    return lua_touserdata(L, read_ptr);
+    return lua_touserdata(L, read_ptr++);
 }
 
 
 ecs::Entity Converter<ecs::Entity>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -173,15 +182,16 @@ int Converter<ecs::Entity>::push(lua_State* L, const ecs::Entity& value)
     return dimension;
 }
 
-ecs::Entity Converter<ecs::Entity>::read(lua_State* L, int read_ptr)
+ecs::Entity Converter<ecs::Entity>::read(lua_State* L, int& read_ptr)
 {
-    return *static_cast<ecs::Entity*>(lua_touserdata(L, read_ptr));
+    return *static_cast<ecs::Entity*>(lua_touserdata(L, read_ptr++));
 }
 
 
 glm::vec2 Converter<glm::vec2>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -193,17 +203,18 @@ int Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)
     return dimension;
 }
 
-glm::vec2 Converter<glm::vec2>::read(lua_State* L, int read_ptr)
+glm::vec2 Converter<glm::vec2>::read(lua_State* L, int& read_ptr)
 {
-    float x = lua_tonumber(L, read_ptr);
-    float y = lua_tonumber(L, read_ptr+1);
+    float x = (float)lua_tonumber(L, read_ptr++);
+    float y = (float)lua_tonumber(L, read_ptr++);
     return {x, y};
 }
 
 
 glm::vec3 Converter<glm::vec3>::pop(lua_State* L)
 {
-    auto ret = read(L, -dimension);
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
     lua_pop(L, dimension);
     return ret;
 }
@@ -216,11 +227,11 @@ int Converter<glm::vec3>::push(lua_State* L, const glm::vec3& value)
     return dimension;
 }
 
-glm::vec3 Converter<glm::vec3>::read(lua_State* L, int read_ptr)
+glm::vec3 Converter<glm::vec3>::read(lua_State* L, int& read_ptr)
 {
-    float x = lua_tonumber(L, read_ptr);
-    float y = lua_tonumber(L, read_ptr+1);
-    float z = lua_tonumber(L, read_ptr+2);
+    float x = lua_tonumber(L, read_ptr++);
+    float y = lua_tonumber(L, read_ptr++);
+    float z = lua_tonumber(L, read_ptr++);
     return {x, y, z};
 }
 

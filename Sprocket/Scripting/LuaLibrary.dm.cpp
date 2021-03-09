@@ -345,7 +345,8 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_Get{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
         assert(e.Has<{{Comp.Name}}>());
 
         int count = 0;
@@ -362,11 +363,11 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_Set{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
         auto& c = e.Get<{{Comp.Name}}>();
-        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, count); count += Converter<{{Attr.Type}}>::dimension;
-        assert(count == {{Comp.Name}}_dimension + 2);
+        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
+        assert(ptr == {{Comp.Name}}_dimension + 2);
         return 0;
     });
 
@@ -377,14 +378,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_Add{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
         assert(!e.Has<{{Comp.Name}}>());
 
         {{Comp.Name}} c;
-        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, count); count += Converter<{{Attr.Type}}>::dimension;
+        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
         e.Add<{{Comp.Name}}>(c);
-        assert(count == {{Comp.Name}}_dimension + 2);
+        assert(ptr == {{Comp.Name}}_dimension + 2);
         return 0;
     });
 
