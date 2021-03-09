@@ -282,12 +282,7 @@ void register_entity_transformation_functions(lua::Script& script)
             o = glm::rotate(o, pitch, {1, 0, 0});
         }
 
-        auto forwards = Maths::Forwards(o);
-
-        lua_pushnumber(L, forwards.x);
-        lua_pushnumber(L, forwards.y);
-        lua_pushnumber(L, forwards.z);
-        return 3;
+        return Converter<glm::vec3>::push(L, Maths::Forwards(o));
     });
 
     luaL_dostring(L, R"lua(
@@ -299,14 +294,10 @@ void register_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "_GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int ptr = 1;
+        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
         auto& tr = entity.Get<Transform3DComponent>();
-        auto right = Maths::Right(tr.orientation);
-        lua_pushnumber(L, right.x);
-        lua_pushnumber(L, right.y);
-        lua_pushnumber(L, right.z);
-        return 3;
+        return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
 
     luaL_dostring(L, R"lua(
@@ -318,9 +309,10 @@ void register_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int ptr = 1;
+        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
         auto& tr = entity.Get<Transform3DComponent>();
-        float yaw = (float)lua_tonumber(L, 2);
+        float yaw = Converter<float>::read(L, ptr);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
     });

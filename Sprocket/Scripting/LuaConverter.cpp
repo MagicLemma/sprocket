@@ -23,6 +23,7 @@ int Converter<int>::push(lua_State* L, const int& value)
 
 int Converter<int>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isinteger(L, read_ptr));
     return static_cast<int>(lua_tointeger(L, read_ptr++));
 }
 
@@ -43,6 +44,7 @@ int Converter<u32>::push(lua_State* L, const u32& value)
 
 u32 Converter<u32>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isinteger(L, read_ptr));
     return static_cast<u32>(lua_tointeger(L, read_ptr++));
 }
 
@@ -63,6 +65,7 @@ int Converter<bool>::push(lua_State* L, const bool& value)
 
 bool Converter<bool>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isboolean(L, read_ptr));
     return static_cast<bool>(lua_toboolean(L, read_ptr++));
 }
 
@@ -83,6 +86,7 @@ int Converter<float>::push(lua_State* L, const float& value)
 
 float Converter<float>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isnumber(L, read_ptr));
     return static_cast<float>(lua_tonumber(L, read_ptr++));
 }
 
@@ -103,6 +107,7 @@ int Converter<double>::push(lua_State* L, const double& value)
 
 double Converter<double>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isnumber(L, read_ptr));
     return static_cast<double>(lua_tonumber(L, read_ptr++));
 }
 
@@ -123,6 +128,7 @@ int Converter<const char*>::push(lua_State* L, const char* value)
 
 const char* Converter<const char*>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isstring(L, read_ptr));
     return lua_tostring(L, read_ptr++);
 }
 
@@ -143,6 +149,7 @@ int Converter<std::string>::push(lua_State* L, const std::string& value)
 
 std::string Converter<std::string>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isstring(L, read_ptr));
     return lua_tostring(L, read_ptr++);
 }
 
@@ -163,6 +170,7 @@ int Converter<void*>::push(lua_State* L, void* value)
 
 void* Converter<void*>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_islightuserdata(L, read_ptr));
     return lua_touserdata(L, read_ptr++);
 }
 
@@ -184,6 +192,7 @@ int Converter<ecs::Entity>::push(lua_State* L, const ecs::Entity& value)
 
 ecs::Entity Converter<ecs::Entity>::read(lua_State* L, int& read_ptr)
 {
+    assert(lua_isuserdata(L, read_ptr));
     return *static_cast<ecs::Entity*>(lua_touserdata(L, read_ptr++));
 }
 

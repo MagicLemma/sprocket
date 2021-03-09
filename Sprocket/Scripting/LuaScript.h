@@ -52,6 +52,8 @@ Return Script::call_function(const std::string& function, Args&&... args)
         print_errors(rc);
     }
     else {
+        // Not supporting more complex return types yet
+        static_assert(lua::Converter<Return>::dimension == 1);
         int rc = lua_pcall(L, sizeof...(Args), 1, 0);
         print_errors(rc);
         if (rc != LUA_OK) {
