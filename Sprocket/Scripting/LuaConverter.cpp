@@ -198,15 +198,15 @@ glm::vec2 Converter<glm::vec2>::pop(lua_State* L)
 
 int Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)
 {
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
+    Converter<float>::push(L, value.x);
+    Converter<float>::push(L, value.y);
     return dimension;
 }
 
 glm::vec2 Converter<glm::vec2>::read(lua_State* L, int& read_ptr)
 {
-    float x = (float)lua_tonumber(L, read_ptr++);
-    float y = (float)lua_tonumber(L, read_ptr++);
+    float x = Converter<float>::read(L, read_ptr);
+    float y = Converter<float>::read(L, read_ptr);
     return {x, y};
 }
 
@@ -221,17 +221,17 @@ glm::vec3 Converter<glm::vec3>::pop(lua_State* L)
 
 int Converter<glm::vec3>::push(lua_State* L, const glm::vec3& value)
 {
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
-    lua_pushnumber(L, value.z);
+    Converter<float>::push(L, value.x);
+    Converter<float>::push(L, value.y);
+    Converter<float>::push(L, value.z);
     return dimension;
 }
 
 glm::vec3 Converter<glm::vec3>::read(lua_State* L, int& read_ptr)
 {
-    float x = lua_tonumber(L, read_ptr++);
-    float y = lua_tonumber(L, read_ptr++);
-    float z = lua_tonumber(L, read_ptr++);
+    float x = Converter<float>::read(L, read_ptr);
+    float y = Converter<float>::read(L, read_ptr);
+    float z = Converter<float>::read(L, read_ptr);
     return {x, y, z};
 }
 

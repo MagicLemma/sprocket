@@ -14,9 +14,17 @@ namespace lua {
 
 template <typename T> struct Converter
 {
+    // The number of elements that this type exchanges with Lua.
     static constexpr int dimension = 0;
+
+    // Pops from the top of the Lua stack.
     static T pop(lua_State* L) { static_assert(false); }
+
+    // Pushes to the top of the Lua stack. Returns the dimension.
     static int push(lua_State* L, const T& value) { static_assert(false); }
+    
+    // Reads at the given position in the Lua stack, advancing the pointer
+    // to the position after the last element used by this type.
     static T read(lua_State* L, int& read_ptr) { static_assert(false); }
 };
 
@@ -87,7 +95,6 @@ template <> struct Converter<void*>
 template <typename T> struct Converter<T*>
 {
     static constexpr int dimension = 1;
-
     static T* pop(lua_State* L) {
         return (T*)Converter<void*>::pop(L);
     }
