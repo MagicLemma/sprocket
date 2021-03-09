@@ -1,6 +1,23 @@
 from Datamatic.Plugins import Plugin, compmethod
+from Datamatic.Types import get
+
+def from_attr(attr):
+    """
+    Return the datamatic representation of an attribute default. TODO: move this to
+    datamatic lib. This will never throw an exception because this expression will
+    have all been validated before getting this far.
+    """
+    return get(attr['Type'])(attr['Default'])
 
 class Lua(Plugin):
+
+    @compmethod
+    def dimension(comp, flags):
+        count = 0
+        for attr in comp['Attributes']:
+            if attr["Flags"]["SCRIPTABLE"]:
+                count += len(vars(from_attr(attr)))
+        return str(count)
     
     @compmethod
     def Sig(comp, flags):

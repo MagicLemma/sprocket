@@ -1,5 +1,6 @@
 #include "LuaLibrary.h"
 #include "LuaScript.h"
+#include "LuaConverter.h"
 #include "ECS.h"
 #include "Scene.h"
 #include "InputProxy.h"
@@ -54,6 +55,14 @@ bool CheckArgCount(lua_State* L, int argc)
         return false;
     }
     return true;
+}
+
+template <typename T> int _has_impl(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+    lua_pushboolean(L, entity.Has<T>());
+    return 1;
 }
 
 }
@@ -273,12 +282,7 @@ void register_entity_transformation_functions(lua::Script& script)
             o = glm::rotate(o, pitch, {1, 0, 0});
         }
 
-        auto forwards = Maths::Forwards(o);
-
-        lua_pushnumber(L, forwards.x);
-        lua_pushnumber(L, forwards.y);
-        lua_pushnumber(L, forwards.z);
-        return 3;
+        return Converter<glm::vec3>::push(L, Maths::Forwards(o));
     });
 
     luaL_dostring(L, R"lua(
@@ -290,14 +294,10 @@ void register_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "_GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int ptr = 1;
+        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
         auto& tr = entity.Get<Transform3DComponent>();
-        auto right = Maths::Right(tr.orientation);
-        lua_pushnumber(L, right.x);
-        lua_pushnumber(L, right.y);
-        lua_pushnumber(L, right.z);
-        return 3;
+        return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
 
     luaL_dostring(L, R"lua(
@@ -309,151 +309,24 @@ void register_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int ptr = 1;
+        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
         auto& tr = entity.Get<Transform3DComponent>();
-        float yaw = (float)lua_tonumber(L, 2);
+        float yaw = Converter<float>::read(L, ptr);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
     });
 }
 
-// COMPONENT RELATED CODE - MOSTLY GENERATED
-
-namespace {
-
-// PUSH
-int Push(lua_State* L, int value)
-{
-    lua_pushnumber(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, float value)
-{
-    lua_pushnumber(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, const std::string& value)
-{
-    lua_pushstring(L, value.c_str());
-    return 1;
-}
-
-int Push(lua_State* L, const bool& value)
-{
-    lua_pushboolean(L, value);
-    return 1;
-}
-
-int Push(lua_State* L, const glm::vec2& value)
-{
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
-    return 3;
-}
-
-int Push(lua_State* L, const glm::vec3& value)
-{
-    lua_pushnumber(L, value.x);
-    lua_pushnumber(L, value.y);
-    lua_pushnumber(L, value.z);
-    return 3;
-}
-
-// PULL
-template <typename T> T Pull(lua_State* L, int& count)
-{
-    static_assert(sizeof(T) == -1);
-    return T();
-}
-
-template <> int Pull(lua_State* L, int& count)
-{
-    return (int)lua_tonumber(L, count++);
-}
-
-template <> float Pull(lua_State* L, int& count)
-{
-    return (float)lua_tonumber(L, count++);
-}
-
-template <> std::string Pull(lua_State* L, int& count)
-{
-    return std::string(lua_tostring(L, count++));
-}
-
-template <> bool Pull(lua_State* L, int& count)
-{
-    return (bool)lua_toboolean(L, count++);
-}
-
-template <> glm::vec3 Pull(lua_State* L, int& count)
-{
-    float x = (float)lua_tonumber(L, count++);
-    float y = (float)lua_tonumber(L, count++);
-    float z = (float)lua_tonumber(L, count++);
-    return {x, y, z};
-}
-
-template <> glm::vec2 Pull(lua_State* L, int& count)
-{
-    float x = (float)lua_tonumber(L, count++);
-    float y = (float)lua_tonumber(L, count++);
-    return {x, y};
-}
-
-template <> glm::quat Pull(lua_State* L, int& count)
-{
-    float x = (float)lua_tonumber(L, count++);
-    float y = (float)lua_tonumber(L, count++);
-    float z = (float)lua_tonumber(L, count++);
-    float w = (float)lua_tonumber(L, count++);
-    return {x, y, z, w};
-}
-
-// DIMENSION
-template <typename T> constexpr int Dimension()
-{
-    static_assert(sizeof(T) == -1);
-    return 0;
-}
-
-template <> constexpr int Dimension<int>() { return 1; }
-template <> constexpr int Dimension<float>() { return 1; }
-template <> constexpr int Dimension<bool>() { return 1; }
-template <> constexpr int Dimension<std::string>() { return 1; }
-template <> constexpr int Dimension<glm::vec2>() { return 2; }
-template <> constexpr int Dimension<glm::vec3>() { return 3; }
-template <> constexpr int Dimension<glm::quat>() { return 4; }
-
-#ifdef DATAMATIC_BLOCK SCRIPTABLE=true
-constexpr int {{Comp.Name}}Dimension()
-{
-    int count = 0;
-    count += Dimension<{{Attr.Type}}>(); // {{Attr.Name}}
-    return count;
-} 
-
-#endif
-
-template<typename T> int Lua_Has(lua_State* L)
-{
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-    ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    lua_pushboolean(L, entity.Has<T>());
-    return 1;
-}
-
-}
-
+// COMPONENT RELATED CODE - GENERATED BY DATAMATIC
 void register_entity_component_functions(lua::Script& script)
 {
     lua_State* L = script.native_handle();
 
 #ifdef DATAMATIC_BLOCK SCRIPTABLE=true
     // Functions for {{Comp.Name}} =====================================================
+
+    constexpr int {{Comp.Name}}_dimension = {{Comp.Lua.dimension}};
 
     luaL_dostring(L, R"lua(
         {{Comp.Name}} = Class(function(self, {{Comp.Lua.Sig}})
@@ -464,12 +337,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_Get{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
         assert(e.Has<{{Comp.Name}}>());
 
         int count = 0;
         const auto& c = e.Get<{{Comp.Name}}>();
-        count += Push(L, c.{{Attr.Name}});
+        count += Converter<{{Attr.Type}}>::push(L, c.{{Attr.Name}});
+        assert(count == {{Comp.Name}}_dimension);
         return count;
     });
 
@@ -478,12 +353,13 @@ void register_entity_component_functions(lua::Script& script)
     )lua");
 
     lua_register(L, "_Set{{Comp.Name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
         auto& c = e.Get<{{Comp.Name}}>();
-        c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
+        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
+        assert(ptr == {{Comp.Name}}_dimension + 2);
         return 0;
     });
 
@@ -492,15 +368,16 @@ void register_entity_component_functions(lua::Script& script)
     )lua");
 
     lua_register(L, "_Add{{Comp.Name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp.Name}}Dimension() + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
         assert(!e.Has<{{Comp.Name}}>());
 
         {{Comp.Name}} c;
-        c.{{Attr.Name}} = Pull<{{Attr.Type}}>(L, count);
+        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
         e.Add<{{Comp.Name}}>(c);
+        assert(ptr == {{Comp.Name}}_dimension + 2);
         return 0;
     });
 
@@ -508,7 +385,7 @@ void register_entity_component_functions(lua::Script& script)
         {{Comp.Lua.Adder}}
     )lua");
 
-    lua_register(L, "Has{{Comp.Name}}", &Lua_Has<{{Comp.Name}}>);
+    lua_register(L, "Has{{Comp.Name}}", &_has_impl<{{Comp.Name}}>);
 
 
 #endif

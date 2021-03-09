@@ -35,51 +35,6 @@ Script::Script()
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
 }
 
-void* Script::allocate(std::size_t size)
-{
-    return lua_newuserdata(d_L.get(), size);
-}
-
-void Script::push_value(bool val)
-{
-    lua_pushboolean(d_L.get(), val);
-}
-
-void Script::push_value(char val)
-{
-    lua_pushstring(d_L.get(), std::string(1, val).c_str());
-}
-
-void Script::push_value(int val)
-{
-    lua_pushinteger(d_L.get(), val);
-}
-
-void Script::push_value(float val)
-{
-    lua_pushnumber(d_L.get(), val);
-}
-
-void Script::push_value(double val)
-{
-    lua_pushnumber(d_L.get(), val);
-}
-
-void Script::push_value(const char* val)
-{
-    lua_pushstring(d_L.get(), val);
-}
-
-void Script::push_value(const std::string& val)
-{
-    lua_pushstring(d_L.get(), val.c_str());
-}
-
-void Script::push_value(void* val)
-{
-    lua_pushlightuserdata(d_L.get(), val);
-}
-
 void Script::print_errors(int rc) const
 {
     if (rc == LUA_OK) { return; } // No error
@@ -112,14 +67,16 @@ bool Script::has_function(const std::string& function)
 
 void Script::print_globals()
 {
+    lua_State* L = d_L.get();
+
     log::info("Starting globals");
-    lua_pushglobaltable(d_L.get());
-    lua_pushnil(d_L.get());
-    while (lua_next(d_L.get(), -2) != 0) {
-        if (lua_isnumber(d_L.get(), -1)) {
-            log::info("{} = {}", lua_tostring(d_L.get(), -2), lua_tonumber(d_L.get(), -1));
+    lua_pushglobaltable(L);
+    lua_pushnil(L);
+    while (lua_next(L, -2) != 0) {
+        if (lua_isnumber(L, -1)) {
+            log::info("{} = {}", lua_tostring(L, -2), lua_tonumber(L, -1));
         }
-        lua_pop(d_L.get(), 1);
+        lua_pop(L, 1);
     }
     lua_pop(d_L.get(), 1);
     log::info("Ending globals");

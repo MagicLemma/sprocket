@@ -91,7 +91,8 @@ add_library(Sprocket STATIC
             Utility/Yaml.cpp
 
             Scripting/LuaScript.cpp
-            Scripting/LuaLibrary.cpp)
+            Scripting/LuaLibrary.cpp
+            Scripting/LuaConverter.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       SprocketVendor
