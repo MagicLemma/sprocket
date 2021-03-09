@@ -15,6 +15,8 @@ class Script
 {
     std::unique_ptr<lua_State, void(*)(lua_State*)> d_L;
 
+    void print_errors(int rc) const;
+
 public:
     explicit Script();
     explicit Script(const std::string& file);
@@ -31,10 +33,6 @@ public:
     void set_value(const std::string& name, Type&& value);
 
     lua_State* native_handle() const { return d_L.get(); }
-
-private:
-
-    void print_errors(int rc) const;
 };
 
 template <typename Return, typename... Args>
