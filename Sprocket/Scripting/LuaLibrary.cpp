@@ -345,12 +345,12 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetNameComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<NameComponent>());
 
         int count = 0;
         const auto& c = e.Get<NameComponent>();
-        count += Converter<std::string>::push_to(L, c.name);
+        count += Converter<std::string>::push(L, c.name);
         assert(count == NameComponent_dimension);
         return count;
     });
@@ -366,9 +366,9 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, NameComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<NameComponent>();
-        c.name = Converter<std::string>::get_from_signature(L, count);
+        c.name = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
         assert(count == NameComponent_dimension + 2);
         return 0;
     });
@@ -382,12 +382,12 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddNameComponent", [](lua_State* L) {
         if (!CheckArgCount(L, NameComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<NameComponent>());
 
         NameComponent c;
-        c.name = Converter<std::string>::get_from_signature(L, count);
+        c.name = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
         e.Add<NameComponent>(c);
         assert(count == NameComponent_dimension + 2);
         return 0;
@@ -417,14 +417,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetTransform2DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<Transform2DComponent>());
 
         int count = 0;
         const auto& c = e.Get<Transform2DComponent>();
-        count += Converter<glm::vec2>::push_to(L, c.position);
-        count += Converter<float>::push_to(L, c.rotation);
-        count += Converter<glm::vec2>::push_to(L, c.scale);
+        count += Converter<glm::vec2>::push(L, c.position);
+        count += Converter<float>::push(L, c.rotation);
+        count += Converter<glm::vec2>::push(L, c.scale);
         assert(count == Transform2DComponent_dimension);
         return count;
     });
@@ -440,11 +440,11 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Transform2DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<Transform2DComponent>();
-        c.position = Converter<glm::vec2>::get_from_signature(L, count);
-        c.rotation = Converter<float>::get_from_signature(L, count);
-        c.scale = Converter<glm::vec2>::get_from_signature(L, count);
+        c.position = Converter<glm::vec2>::read(L, count); count += Converter<glm::vec2>::dimension;
+        c.rotation = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.scale = Converter<glm::vec2>::read(L, count); count += Converter<glm::vec2>::dimension;
         assert(count == Transform2DComponent_dimension + 2);
         return 0;
     });
@@ -458,14 +458,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddTransform2DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Transform2DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<Transform2DComponent>());
 
         Transform2DComponent c;
-        c.position = Converter<glm::vec2>::get_from_signature(L, count);
-        c.rotation = Converter<float>::get_from_signature(L, count);
-        c.scale = Converter<glm::vec2>::get_from_signature(L, count);
+        c.position = Converter<glm::vec2>::read(L, count); count += Converter<glm::vec2>::dimension;
+        c.rotation = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.scale = Converter<glm::vec2>::read(L, count); count += Converter<glm::vec2>::dimension;
         e.Add<Transform2DComponent>(c);
         assert(count == Transform2DComponent_dimension + 2);
         return 0;
@@ -494,13 +494,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetTransform3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<Transform3DComponent>());
 
         int count = 0;
         const auto& c = e.Get<Transform3DComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.position);
-        count += Converter<glm::vec3>::push_to(L, c.scale);
+        count += Converter<glm::vec3>::push(L, c.position);
+        count += Converter<glm::vec3>::push(L, c.scale);
         assert(count == Transform3DComponent_dimension);
         return count;
     });
@@ -516,10 +516,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Transform3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<Transform3DComponent>();
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.scale = Converter<glm::vec3>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.scale = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
         assert(count == Transform3DComponent_dimension + 2);
         return 0;
     });
@@ -533,13 +533,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddTransform3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Transform3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<Transform3DComponent>());
 
         Transform3DComponent c;
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.scale = Converter<glm::vec3>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.scale = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
         e.Add<Transform3DComponent>(c);
         assert(count == Transform3DComponent_dimension + 2);
         return 0;
@@ -568,13 +568,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetModelComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<ModelComponent>());
 
         int count = 0;
         const auto& c = e.Get<ModelComponent>();
-        count += Converter<std::string>::push_to(L, c.mesh);
-        count += Converter<std::string>::push_to(L, c.material);
+        count += Converter<std::string>::push(L, c.mesh);
+        count += Converter<std::string>::push(L, c.material);
         assert(count == ModelComponent_dimension);
         return count;
     });
@@ -590,10 +590,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ModelComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<ModelComponent>();
-        c.mesh = Converter<std::string>::get_from_signature(L, count);
-        c.material = Converter<std::string>::get_from_signature(L, count);
+        c.mesh = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
+        c.material = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
         assert(count == ModelComponent_dimension + 2);
         return 0;
     });
@@ -607,13 +607,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddModelComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ModelComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<ModelComponent>());
 
         ModelComponent c;
-        c.mesh = Converter<std::string>::get_from_signature(L, count);
-        c.material = Converter<std::string>::get_from_signature(L, count);
+        c.mesh = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
+        c.material = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
         e.Add<ModelComponent>(c);
         assert(count == ModelComponent_dimension + 2);
         return 0;
@@ -648,19 +648,19 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetRigidBody3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<RigidBody3DComponent>());
 
         int count = 0;
         const auto& c = e.Get<RigidBody3DComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.velocity);
-        count += Converter<bool>::push_to(L, c.gravity);
-        count += Converter<bool>::push_to(L, c.frozen);
-        count += Converter<float>::push_to(L, c.bounciness);
-        count += Converter<float>::push_to(L, c.frictionCoefficient);
-        count += Converter<float>::push_to(L, c.rollingResistance);
-        count += Converter<glm::vec3>::push_to(L, c.force);
-        count += Converter<bool>::push_to(L, c.onFloor);
+        count += Converter<glm::vec3>::push(L, c.velocity);
+        count += Converter<bool>::push(L, c.gravity);
+        count += Converter<bool>::push(L, c.frozen);
+        count += Converter<float>::push(L, c.bounciness);
+        count += Converter<float>::push(L, c.frictionCoefficient);
+        count += Converter<float>::push(L, c.rollingResistance);
+        count += Converter<glm::vec3>::push(L, c.force);
+        count += Converter<bool>::push(L, c.onFloor);
         assert(count == RigidBody3DComponent_dimension);
         return count;
     });
@@ -676,16 +676,16 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, RigidBody3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<RigidBody3DComponent>();
-        c.velocity = Converter<glm::vec3>::get_from_signature(L, count);
-        c.gravity = Converter<bool>::get_from_signature(L, count);
-        c.frozen = Converter<bool>::get_from_signature(L, count);
-        c.bounciness = Converter<float>::get_from_signature(L, count);
-        c.frictionCoefficient = Converter<float>::get_from_signature(L, count);
-        c.rollingResistance = Converter<float>::get_from_signature(L, count);
-        c.force = Converter<glm::vec3>::get_from_signature(L, count);
-        c.onFloor = Converter<bool>::get_from_signature(L, count);
+        c.velocity = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.gravity = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
+        c.frozen = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
+        c.bounciness = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.frictionCoefficient = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.rollingResistance = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.force = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.onFloor = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         assert(count == RigidBody3DComponent_dimension + 2);
         return 0;
     });
@@ -699,19 +699,19 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddRigidBody3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, RigidBody3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<RigidBody3DComponent>());
 
         RigidBody3DComponent c;
-        c.velocity = Converter<glm::vec3>::get_from_signature(L, count);
-        c.gravity = Converter<bool>::get_from_signature(L, count);
-        c.frozen = Converter<bool>::get_from_signature(L, count);
-        c.bounciness = Converter<float>::get_from_signature(L, count);
-        c.frictionCoefficient = Converter<float>::get_from_signature(L, count);
-        c.rollingResistance = Converter<float>::get_from_signature(L, count);
-        c.force = Converter<glm::vec3>::get_from_signature(L, count);
-        c.onFloor = Converter<bool>::get_from_signature(L, count);
+        c.velocity = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.gravity = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
+        c.frozen = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
+        c.bounciness = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.frictionCoefficient = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.rollingResistance = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.force = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.onFloor = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         e.Add<RigidBody3DComponent>(c);
         assert(count == RigidBody3DComponent_dimension + 2);
         return 0;
@@ -742,15 +742,15 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetBoxCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<BoxCollider3DComponent>());
 
         int count = 0;
         const auto& c = e.Get<BoxCollider3DComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.position);
-        count += Converter<float>::push_to(L, c.mass);
-        count += Converter<glm::vec3>::push_to(L, c.halfExtents);
-        count += Converter<bool>::push_to(L, c.applyScale);
+        count += Converter<glm::vec3>::push(L, c.position);
+        count += Converter<float>::push(L, c.mass);
+        count += Converter<glm::vec3>::push(L, c.halfExtents);
+        count += Converter<bool>::push(L, c.applyScale);
         assert(count == BoxCollider3DComponent_dimension);
         return count;
     });
@@ -766,12 +766,12 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, BoxCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<BoxCollider3DComponent>();
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.mass = Converter<float>::get_from_signature(L, count);
-        c.halfExtents = Converter<glm::vec3>::get_from_signature(L, count);
-        c.applyScale = Converter<bool>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.mass = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.halfExtents = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.applyScale = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         assert(count == BoxCollider3DComponent_dimension + 2);
         return 0;
     });
@@ -785,15 +785,15 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddBoxCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, BoxCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<BoxCollider3DComponent>());
 
         BoxCollider3DComponent c;
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.mass = Converter<float>::get_from_signature(L, count);
-        c.halfExtents = Converter<glm::vec3>::get_from_signature(L, count);
-        c.applyScale = Converter<bool>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.mass = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.halfExtents = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.applyScale = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         e.Add<BoxCollider3DComponent>(c);
         assert(count == BoxCollider3DComponent_dimension + 2);
         return 0;
@@ -823,14 +823,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetSphereCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<SphereCollider3DComponent>());
 
         int count = 0;
         const auto& c = e.Get<SphereCollider3DComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.position);
-        count += Converter<float>::push_to(L, c.mass);
-        count += Converter<float>::push_to(L, c.radius);
+        count += Converter<glm::vec3>::push(L, c.position);
+        count += Converter<float>::push(L, c.mass);
+        count += Converter<float>::push(L, c.radius);
         assert(count == SphereCollider3DComponent_dimension);
         return count;
     });
@@ -846,11 +846,11 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SphereCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<SphereCollider3DComponent>();
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.mass = Converter<float>::get_from_signature(L, count);
-        c.radius = Converter<float>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.mass = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.radius = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == SphereCollider3DComponent_dimension + 2);
         return 0;
     });
@@ -864,14 +864,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddSphereCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SphereCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<SphereCollider3DComponent>());
 
         SphereCollider3DComponent c;
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.mass = Converter<float>::get_from_signature(L, count);
-        c.radius = Converter<float>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.mass = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.radius = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<SphereCollider3DComponent>(c);
         assert(count == SphereCollider3DComponent_dimension + 2);
         return 0;
@@ -902,15 +902,15 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetCapsuleCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<CapsuleCollider3DComponent>());
 
         int count = 0;
         const auto& c = e.Get<CapsuleCollider3DComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.position);
-        count += Converter<float>::push_to(L, c.mass);
-        count += Converter<float>::push_to(L, c.radius);
-        count += Converter<float>::push_to(L, c.height);
+        count += Converter<glm::vec3>::push(L, c.position);
+        count += Converter<float>::push(L, c.mass);
+        count += Converter<float>::push(L, c.radius);
+        count += Converter<float>::push(L, c.height);
         assert(count == CapsuleCollider3DComponent_dimension);
         return count;
     });
@@ -926,12 +926,12 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, CapsuleCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<CapsuleCollider3DComponent>();
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.mass = Converter<float>::get_from_signature(L, count);
-        c.radius = Converter<float>::get_from_signature(L, count);
-        c.height = Converter<float>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.mass = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.radius = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.height = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == CapsuleCollider3DComponent_dimension + 2);
         return 0;
     });
@@ -945,15 +945,15 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddCapsuleCollider3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, CapsuleCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<CapsuleCollider3DComponent>());
 
         CapsuleCollider3DComponent c;
-        c.position = Converter<glm::vec3>::get_from_signature(L, count);
-        c.mass = Converter<float>::get_from_signature(L, count);
-        c.radius = Converter<float>::get_from_signature(L, count);
-        c.height = Converter<float>::get_from_signature(L, count);
+        c.position = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.mass = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.radius = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.height = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<CapsuleCollider3DComponent>(c);
         assert(count == CapsuleCollider3DComponent_dimension + 2);
         return 0;
@@ -982,13 +982,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetScriptComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<ScriptComponent>());
 
         int count = 0;
         const auto& c = e.Get<ScriptComponent>();
-        count += Converter<std::string>::push_to(L, c.script);
-        count += Converter<bool>::push_to(L, c.active);
+        count += Converter<std::string>::push(L, c.script);
+        count += Converter<bool>::push(L, c.active);
         assert(count == ScriptComponent_dimension);
         return count;
     });
@@ -1004,10 +1004,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ScriptComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<ScriptComponent>();
-        c.script = Converter<std::string>::get_from_signature(L, count);
-        c.active = Converter<bool>::get_from_signature(L, count);
+        c.script = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
+        c.active = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         assert(count == ScriptComponent_dimension + 2);
         return 0;
     });
@@ -1021,13 +1021,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddScriptComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ScriptComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<ScriptComponent>());
 
         ScriptComponent c;
-        c.script = Converter<std::string>::get_from_signature(L, count);
-        c.active = Converter<bool>::get_from_signature(L, count);
+        c.script = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
+        c.active = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         e.Add<ScriptComponent>(c);
         assert(count == ScriptComponent_dimension + 2);
         return 0;
@@ -1056,13 +1056,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetCamera3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<Camera3DComponent>());
 
         int count = 0;
         const auto& c = e.Get<Camera3DComponent>();
-        count += Converter<float>::push_to(L, c.fov);
-        count += Converter<float>::push_to(L, c.pitch);
+        count += Converter<float>::push(L, c.fov);
+        count += Converter<float>::push(L, c.pitch);
         assert(count == Camera3DComponent_dimension);
         return count;
     });
@@ -1078,10 +1078,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Camera3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<Camera3DComponent>();
-        c.fov = Converter<float>::get_from_signature(L, count);
-        c.pitch = Converter<float>::get_from_signature(L, count);
+        c.fov = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.pitch = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == Camera3DComponent_dimension + 2);
         return 0;
     });
@@ -1095,13 +1095,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddCamera3DComponent", [](lua_State* L) {
         if (!CheckArgCount(L, Camera3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<Camera3DComponent>());
 
         Camera3DComponent c;
-        c.fov = Converter<float>::get_from_signature(L, count);
-        c.pitch = Converter<float>::get_from_signature(L, count);
+        c.fov = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.pitch = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<Camera3DComponent>(c);
         assert(count == Camera3DComponent_dimension + 2);
         return 0;
@@ -1130,13 +1130,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetSelectComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<SelectComponent>());
 
         int count = 0;
         const auto& c = e.Get<SelectComponent>();
-        count += Converter<bool>::push_to(L, c.selected);
-        count += Converter<bool>::push_to(L, c.hovered);
+        count += Converter<bool>::push(L, c.selected);
+        count += Converter<bool>::push(L, c.hovered);
         assert(count == SelectComponent_dimension);
         return count;
     });
@@ -1152,10 +1152,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SelectComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<SelectComponent>();
-        c.selected = Converter<bool>::get_from_signature(L, count);
-        c.hovered = Converter<bool>::get_from_signature(L, count);
+        c.selected = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
+        c.hovered = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         assert(count == SelectComponent_dimension + 2);
         return 0;
     });
@@ -1169,13 +1169,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddSelectComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SelectComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<SelectComponent>());
 
         SelectComponent c;
-        c.selected = Converter<bool>::get_from_signature(L, count);
-        c.hovered = Converter<bool>::get_from_signature(L, count);
+        c.selected = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
+        c.hovered = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         e.Add<SelectComponent>(c);
         assert(count == SelectComponent_dimension + 2);
         return 0;
@@ -1203,12 +1203,12 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetPathComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<PathComponent>());
 
         int count = 0;
         const auto& c = e.Get<PathComponent>();
-        count += Converter<float>::push_to(L, c.speed);
+        count += Converter<float>::push(L, c.speed);
         assert(count == PathComponent_dimension);
         return count;
     });
@@ -1224,9 +1224,9 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, PathComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<PathComponent>();
-        c.speed = Converter<float>::get_from_signature(L, count);
+        c.speed = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == PathComponent_dimension + 2);
         return 0;
     });
@@ -1240,12 +1240,12 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddPathComponent", [](lua_State* L) {
         if (!CheckArgCount(L, PathComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<PathComponent>());
 
         PathComponent c;
-        c.speed = Converter<float>::get_from_signature(L, count);
+        c.speed = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<PathComponent>(c);
         assert(count == PathComponent_dimension + 2);
         return 0;
@@ -1274,13 +1274,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetGridComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<GridComponent>());
 
         int count = 0;
         const auto& c = e.Get<GridComponent>();
-        count += Converter<int>::push_to(L, c.x);
-        count += Converter<int>::push_to(L, c.z);
+        count += Converter<int>::push(L, c.x);
+        count += Converter<int>::push(L, c.z);
         assert(count == GridComponent_dimension);
         return count;
     });
@@ -1296,10 +1296,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, GridComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<GridComponent>();
-        c.x = Converter<int>::get_from_signature(L, count);
-        c.z = Converter<int>::get_from_signature(L, count);
+        c.x = Converter<int>::read(L, count); count += Converter<int>::dimension;
+        c.z = Converter<int>::read(L, count); count += Converter<int>::dimension;
         assert(count == GridComponent_dimension + 2);
         return 0;
     });
@@ -1313,13 +1313,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddGridComponent", [](lua_State* L) {
         if (!CheckArgCount(L, GridComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<GridComponent>());
 
         GridComponent c;
-        c.x = Converter<int>::get_from_signature(L, count);
-        c.z = Converter<int>::get_from_signature(L, count);
+        c.x = Converter<int>::read(L, count); count += Converter<int>::dimension;
+        c.z = Converter<int>::read(L, count); count += Converter<int>::dimension;
         e.Add<GridComponent>(c);
         assert(count == GridComponent_dimension + 2);
         return 0;
@@ -1348,13 +1348,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetLightComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<LightComponent>());
 
         int count = 0;
         const auto& c = e.Get<LightComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.colour);
-        count += Converter<float>::push_to(L, c.brightness);
+        count += Converter<glm::vec3>::push(L, c.colour);
+        count += Converter<float>::push(L, c.brightness);
         assert(count == LightComponent_dimension);
         return count;
     });
@@ -1370,10 +1370,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, LightComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<LightComponent>();
-        c.colour = Converter<glm::vec3>::get_from_signature(L, count);
-        c.brightness = Converter<float>::get_from_signature(L, count);
+        c.colour = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.brightness = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == LightComponent_dimension + 2);
         return 0;
     });
@@ -1387,13 +1387,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddLightComponent", [](lua_State* L) {
         if (!CheckArgCount(L, LightComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<LightComponent>());
 
         LightComponent c;
-        c.colour = Converter<glm::vec3>::get_from_signature(L, count);
-        c.brightness = Converter<float>::get_from_signature(L, count);
+        c.colour = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.brightness = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<LightComponent>(c);
         assert(count == LightComponent_dimension + 2);
         return 0;
@@ -1424,15 +1424,15 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetSunComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<SunComponent>());
 
         int count = 0;
         const auto& c = e.Get<SunComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.colour);
-        count += Converter<float>::push_to(L, c.brightness);
-        count += Converter<glm::vec3>::push_to(L, c.direction);
-        count += Converter<bool>::push_to(L, c.shadows);
+        count += Converter<glm::vec3>::push(L, c.colour);
+        count += Converter<float>::push(L, c.brightness);
+        count += Converter<glm::vec3>::push(L, c.direction);
+        count += Converter<bool>::push(L, c.shadows);
         assert(count == SunComponent_dimension);
         return count;
     });
@@ -1448,12 +1448,12 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SunComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<SunComponent>();
-        c.colour = Converter<glm::vec3>::get_from_signature(L, count);
-        c.brightness = Converter<float>::get_from_signature(L, count);
-        c.direction = Converter<glm::vec3>::get_from_signature(L, count);
-        c.shadows = Converter<bool>::get_from_signature(L, count);
+        c.colour = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.brightness = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.direction = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.shadows = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         assert(count == SunComponent_dimension + 2);
         return 0;
     });
@@ -1467,15 +1467,15 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddSunComponent", [](lua_State* L) {
         if (!CheckArgCount(L, SunComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<SunComponent>());
 
         SunComponent c;
-        c.colour = Converter<glm::vec3>::get_from_signature(L, count);
-        c.brightness = Converter<float>::get_from_signature(L, count);
-        c.direction = Converter<glm::vec3>::get_from_signature(L, count);
-        c.shadows = Converter<bool>::get_from_signature(L, count);
+        c.colour = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.brightness = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.direction = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.shadows = Converter<bool>::read(L, count); count += Converter<bool>::dimension;
         e.Add<SunComponent>(c);
         assert(count == SunComponent_dimension + 2);
         return 0;
@@ -1504,13 +1504,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetAmbienceComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<AmbienceComponent>());
 
         int count = 0;
         const auto& c = e.Get<AmbienceComponent>();
-        count += Converter<glm::vec3>::push_to(L, c.colour);
-        count += Converter<float>::push_to(L, c.brightness);
+        count += Converter<glm::vec3>::push(L, c.colour);
+        count += Converter<float>::push(L, c.brightness);
         assert(count == AmbienceComponent_dimension);
         return count;
     });
@@ -1526,10 +1526,10 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, AmbienceComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<AmbienceComponent>();
-        c.colour = Converter<glm::vec3>::get_from_signature(L, count);
-        c.brightness = Converter<float>::get_from_signature(L, count);
+        c.colour = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.brightness = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == AmbienceComponent_dimension + 2);
         return 0;
     });
@@ -1543,13 +1543,13 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddAmbienceComponent", [](lua_State* L) {
         if (!CheckArgCount(L, AmbienceComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<AmbienceComponent>());
 
         AmbienceComponent c;
-        c.colour = Converter<glm::vec3>::get_from_signature(L, count);
-        c.brightness = Converter<float>::get_from_signature(L, count);
+        c.colour = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.brightness = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<AmbienceComponent>(c);
         assert(count == AmbienceComponent_dimension + 2);
         return 0;
@@ -1582,17 +1582,17 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetParticleComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<ParticleComponent>());
 
         int count = 0;
         const auto& c = e.Get<ParticleComponent>();
-        count += Converter<float>::push_to(L, c.interval);
-        count += Converter<glm::vec3>::push_to(L, c.velocity);
-        count += Converter<float>::push_to(L, c.velocityNoise);
-        count += Converter<glm::vec3>::push_to(L, c.acceleration);
-        count += Converter<glm::vec3>::push_to(L, c.scale);
-        count += Converter<float>::push_to(L, c.life);
+        count += Converter<float>::push(L, c.interval);
+        count += Converter<glm::vec3>::push(L, c.velocity);
+        count += Converter<float>::push(L, c.velocityNoise);
+        count += Converter<glm::vec3>::push(L, c.acceleration);
+        count += Converter<glm::vec3>::push(L, c.scale);
+        count += Converter<float>::push(L, c.life);
         assert(count == ParticleComponent_dimension);
         return count;
     });
@@ -1608,14 +1608,14 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ParticleComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<ParticleComponent>();
-        c.interval = Converter<float>::get_from_signature(L, count);
-        c.velocity = Converter<glm::vec3>::get_from_signature(L, count);
-        c.velocityNoise = Converter<float>::get_from_signature(L, count);
-        c.acceleration = Converter<glm::vec3>::get_from_signature(L, count);
-        c.scale = Converter<glm::vec3>::get_from_signature(L, count);
-        c.life = Converter<float>::get_from_signature(L, count);
+        c.interval = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.velocity = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.velocityNoise = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.acceleration = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.scale = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.life = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == ParticleComponent_dimension + 2);
         return 0;
     });
@@ -1629,17 +1629,17 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddParticleComponent", [](lua_State* L) {
         if (!CheckArgCount(L, ParticleComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<ParticleComponent>());
 
         ParticleComponent c;
-        c.interval = Converter<float>::get_from_signature(L, count);
-        c.velocity = Converter<glm::vec3>::get_from_signature(L, count);
-        c.velocityNoise = Converter<float>::get_from_signature(L, count);
-        c.acceleration = Converter<glm::vec3>::get_from_signature(L, count);
-        c.scale = Converter<glm::vec3>::get_from_signature(L, count);
-        c.life = Converter<float>::get_from_signature(L, count);
+        c.interval = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.velocity = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.velocityNoise = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.acceleration = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.scale = Converter<glm::vec3>::read(L, count); count += Converter<glm::vec3>::dimension;
+        c.life = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<ParticleComponent>(c);
         assert(count == ParticleComponent_dimension + 2);
         return 0;
@@ -1669,14 +1669,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_GetMeshAnimationComponent", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<MeshAnimationComponent>());
 
         int count = 0;
         const auto& c = e.Get<MeshAnimationComponent>();
-        count += Converter<std::string>::push_to(L, c.name);
-        count += Converter<float>::push_to(L, c.time);
-        count += Converter<float>::push_to(L, c.speed);
+        count += Converter<std::string>::push(L, c.name);
+        count += Converter<float>::push(L, c.time);
+        count += Converter<float>::push(L, c.speed);
         assert(count == MeshAnimationComponent_dimension);
         return count;
     });
@@ -1692,11 +1692,11 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, MeshAnimationComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<MeshAnimationComponent>();
-        c.name = Converter<std::string>::get_from_signature(L, count);
-        c.time = Converter<float>::get_from_signature(L, count);
-        c.speed = Converter<float>::get_from_signature(L, count);
+        c.name = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
+        c.time = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.speed = Converter<float>::read(L, count); count += Converter<float>::dimension;
         assert(count == MeshAnimationComponent_dimension + 2);
         return 0;
     });
@@ -1710,14 +1710,14 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_AddMeshAnimationComponent", [](lua_State* L) {
         if (!CheckArgCount(L, MeshAnimationComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<MeshAnimationComponent>());
 
         MeshAnimationComponent c;
-        c.name = Converter<std::string>::get_from_signature(L, count);
-        c.time = Converter<float>::get_from_signature(L, count);
-        c.speed = Converter<float>::get_from_signature(L, count);
+        c.name = Converter<std::string>::read(L, count); count += Converter<std::string>::dimension;
+        c.time = Converter<float>::read(L, count); count += Converter<float>::dimension;
+        c.speed = Converter<float>::read(L, count); count += Converter<float>::dimension;
         e.Add<MeshAnimationComponent>(c);
         assert(count == MeshAnimationComponent_dimension + 2);
         return 0;

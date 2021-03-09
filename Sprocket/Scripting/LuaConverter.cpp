@@ -7,215 +7,220 @@
 namespace Sprocket {
 namespace lua {
 
-int Converter<int>::pull_from(lua_State* L)
+int Converter<int>::pop(lua_State* L)
 {
-    assert(lua_isinteger(L, -1));
-    auto val = static_cast<int>(lua_tointeger(L, -1));
-    lua_pop(L, 1);
-    return val;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-int Converter<int>::push_to(lua_State* L, const int& value)
-{
-    lua_pushinteger(L, value);
-    return 1;
-}
-
-int Converter<int>::get_from_signature(lua_State* L, int& count)
-{
-    return static_cast<int>(lua_tointeger(L, count++));
-}
-
-
-u32 Converter<u32>::pull_from(lua_State* L)
-{
-    assert(lua_isinteger(L, -1));
-    auto val = static_cast<u32>(lua_tointeger(L, -1));
-    lua_pop(L, 1);
-    return val;
-}
-
-int Converter<u32>::push_to(lua_State* L, const u32& value)
+int Converter<int>::push(lua_State* L, const int& value)
 {
     lua_pushinteger(L, value);
-    return 1;
+    return dimension;
 }
 
-u32 Converter<u32>::get_from_signature(lua_State* L, int& count)
+int Converter<int>::read(lua_State* L, int read_ptr)
 {
-    return static_cast<u32>(lua_tointeger(L, count++));
+    return static_cast<int>(lua_tointeger(L, read_ptr));
 }
 
 
-bool Converter<bool>::pull_from(lua_State* L)
+u32 Converter<u32>::pop(lua_State* L)
 {
-    assert(lua_isboolean(L, -1));
-    auto val = static_cast<bool>(lua_toboolean(L, -1));
-    lua_pop(L, 1);
-    return val;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-int Converter<bool>::push_to(lua_State* L, const bool& value)
+int Converter<u32>::push(lua_State* L, const u32& value)
+{
+    lua_pushinteger(L, value);
+    return dimension;
+}
+
+u32 Converter<u32>::read(lua_State* L, int read_ptr)
+{
+    return static_cast<u32>(lua_tointeger(L, read_ptr));
+}
+
+
+bool Converter<bool>::pop(lua_State* L)
+{
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
+}
+
+int Converter<bool>::push(lua_State* L, const bool& value)
 {
     lua_pushboolean(L, value);
-    return 1;
+    return dimension;
 }
 
-bool Converter<bool>::get_from_signature(lua_State* L, int& count)
+bool Converter<bool>::read(lua_State* L, int read_ptr)
 {
-    return static_cast<bool>(lua_toboolean(L, count++));
+    return static_cast<bool>(lua_toboolean(L, read_ptr));
 }
 
 
-double Converter<double>::pull_from(lua_State* L)
+float Converter<float>::pop(lua_State* L)
 {
-    assert(lua_isnumber(L, -1));
-    auto val = static_cast<double>(lua_tonumber(L, -1));
-    lua_pop(L, 1);
-    return val;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-int Converter<double>::push_to(lua_State* L, const double& value)
-{
-    lua_pushnumber(L, value);
-    return 1;
-}
-
-double Converter<double>::get_from_signature(lua_State* L, int& count)
-{
-    return static_cast<double>(lua_tonumber(L, count++));
-}
-
-
-float Converter<float>::pull_from(lua_State* L)
-{
-    assert(lua_isnumber(L, -1));
-    auto val = static_cast<float>(lua_tonumber(L, -1));
-    lua_pop(L, 1);
-    return val;
-}
-
-int Converter<float>::push_to(lua_State* L, const float& value)
+int Converter<float>::push(lua_State* L, const float& value)
 {
     lua_pushnumber(L, value);
-    return 1;
+    return dimension;
 }
 
-float Converter<float>::get_from_signature(lua_State* L, int& count)
+float Converter<float>::read(lua_State* L, int read_ptr)
 {
-    return static_cast<float>(lua_tonumber(L, count++));
+    return static_cast<float>(lua_tonumber(L, read_ptr));
 }
 
 
-const char* Converter<const char*>::pull_from(lua_State* L)
+double Converter<double>::pop(lua_State* L)
 {
-    assert(lua_isstring(L, -1));
-    auto val = lua_tostring(L, -1);
-    lua_pop(L, 1);
-    return val;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-int Converter<const char*>::push_to(lua_State* L, const char* value)
+int Converter<double>::push(lua_State* L, const double& value)
+{
+    lua_pushnumber(L, value);
+    return dimension;
+}
+
+double Converter<double>::read(lua_State* L, int read_ptr)
+{
+    return static_cast<double>(lua_tonumber(L, read_ptr));
+}
+
+
+const char* Converter<const char*>::pop(lua_State* L)
+{
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
+}
+
+int Converter<const char*>::push(lua_State* L, const char* value)
 {
     lua_pushstring(L, value);
-    return 1;
+    return dimension;
 }
 
-const char* Converter<const char*>::get_from_signature(lua_State* L, int& count)
+const char* Converter<const char*>::read(lua_State* L, int read_ptr)
 {
-    return lua_tostring(L, count++);
+    return lua_tostring(L, read_ptr);
 }
 
 
-std::string Converter<std::string>::pull_from(lua_State* L)
+std::string Converter<std::string>::pop(lua_State* L)
 {
-    assert(lua_isstring(L, -1));
-    auto val = std::string(lua_tostring(L, -1));
-    lua_pop(L, 1);
-    return val;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-int Converter<std::string>::push_to(lua_State* L, const std::string& value)
+int Converter<std::string>::push(lua_State* L, const std::string& value)
 {
     lua_pushstring(L, value.c_str());
-    return 1;
+    return dimension;
 }
 
-std::string Converter<std::string>::get_from_signature(lua_State* L, int& count)
+std::string Converter<std::string>::read(lua_State* L, int read_ptr)
 {
-    return std::string(lua_tostring(L, count++));
+    return lua_tostring(L, read_ptr);
 }
 
 
-void* Converter<void*>::pull_from(lua_State* L)
+void* Converter<void*>::pop(lua_State* L)
 {
-    assert(lua_islightuserdata(L, -1));
-    auto val = lua_touserdata(L, -1);
-    lua_pop(L, 1);
-    return val;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-int Converter<void*>::push_to(lua_State* L, void* value)
+int Converter<void*>::push(lua_State* L, void* value)
 {
     lua_pushlightuserdata(L, value);
-    return 1;
+    return dimension;
 }
 
-void* Converter<void*>::get_from_signature(lua_State* L, int& count)
+void* Converter<void*>::read(lua_State* L, int read_ptr)
 {
-    return lua_touserdata(L, count++);
+    return lua_touserdata(L, read_ptr);
 }
 
 
-ecs::Entity Converter<ecs::Entity>::pull_from(lua_State* L)
+ecs::Entity Converter<ecs::Entity>::pop(lua_State* L)
 {
-    assert(lua_isuserdata(L, -1));
-    auto val = *static_cast<ecs::Entity*>(lua_touserdata(L, -1));
-    lua_pop(L, 1);
-    return val;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-int Converter<ecs::Entity>::push_to(lua_State* L, ecs::Entity value)
+int Converter<ecs::Entity>::push(lua_State* L, const ecs::Entity& value)
 {
     ecs::Entity* handle = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
     *handle = value;
-    return 1;
+    return dimension;
 }
 
-ecs::Entity Converter<ecs::Entity>::get_from_signature(lua_State* L, int& count)
+ecs::Entity Converter<ecs::Entity>::read(lua_State* L, int read_ptr)
 {
-    return *static_cast<ecs::Entity*>(lua_touserdata(L, count++));
+    return *static_cast<ecs::Entity*>(lua_touserdata(L, read_ptr));
 }
 
 
-int Converter<glm::vec2>::push_to(lua_State* L, const glm::vec2& value)
+glm::vec2 Converter<glm::vec2>::pop(lua_State* L)
 {
-    Converter<float>::push_to(L, value.x);
-    Converter<float>::push_to(L, value.y);
-    return 2;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-glm::vec2 Converter<glm::vec2>::get_from_signature(lua_State* L, int& count)
+int Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)
 {
-    auto x = (float)lua_tonumber(L, count++);
-    auto y = (float)lua_tonumber(L, count++);
+    lua_pushnumber(L, value.x);
+    lua_pushnumber(L, value.y);
+    return dimension;
+}
+
+glm::vec2 Converter<glm::vec2>::read(lua_State* L, int read_ptr)
+{
+    float x = lua_tonumber(L, read_ptr);
+    float y = lua_tonumber(L, read_ptr+1);
     return {x, y};
 }
 
 
-int Converter<glm::vec3>::push_to(lua_State* L, const glm::vec3& value)
+glm::vec3 Converter<glm::vec3>::pop(lua_State* L)
 {
-    Converter<float>::push_to(L, value.x);
-    Converter<float>::push_to(L, value.y);
-    Converter<float>::push_to(L, value.z);
-    return 3;
+    auto ret = read(L, -dimension);
+    lua_pop(L, dimension);
+    return ret;
 }
 
-glm::vec3 Converter<glm::vec3>::get_from_signature(lua_State* L, int& count)
+int Converter<glm::vec3>::push(lua_State* L, const glm::vec3& value)
 {
-    auto x = (float)lua_tonumber(L, count++);
-    auto y = (float)lua_tonumber(L, count++);
-    auto z = (float)lua_tonumber(L, count++);
+    lua_pushnumber(L, value.x);
+    lua_pushnumber(L, value.y);
+    lua_pushnumber(L, value.z);
+    return dimension;
+}
+
+glm::vec3 Converter<glm::vec3>::read(lua_State* L, int read_ptr)
+{
+    float x = lua_tonumber(L, read_ptr);
+    float y = lua_tonumber(L, read_ptr+1);
+    float z = lua_tonumber(L, read_ptr+2);
     return {x, y, z};
 }
 

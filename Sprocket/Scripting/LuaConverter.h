@@ -14,98 +14,97 @@ namespace lua {
 
 template <typename T> struct Converter
 {
-    // Pulls from the top of the stack and removes the values.
-    static T pull_from(lua_State* L) { static_assert(false); }
-
-    // Pushes the given value to the top of the stack. More complicated object are pushed
-    // as their parts, for example, vec3 is pushed as 3 floats.
-    static int push_to(lua_State* L, const T& value) { static_assert(false); }
-
-    // Constructs a T by getting values from the stack starting at position "count",
-    // and goes up the stack if it needs more than one value. "count" will be modified
-    // to point at the next position in the stack immediately after the last element
-    // used to make T. No values are popped from the stack. This is intended to be used
-    // in C++ implementations of Lua functions where more complicated objects must be
-    // passed by their parts, such as a vec3 being passed as 3 floats.
-    static T get_from_signature(lua_State* L, int& count) { static_assert(false); }
+    static constexpr int dimension = 0;
+    static T pop(lua_State* L) { static_assert(false); }
+    static int push(lua_State* L, const T& value) { static_assert(false); }
+    static T read(lua_State* L, int read_ptr) { static_assert(false); }
 };
 
 template <> struct Converter<int>
 {
-    static int pull_from(lua_State* L);
-    static int push_to(lua_State* L, const int& value);
-    static int get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static int pop(lua_State* L);
+    static int push(lua_State* L, const int& value);
+    static int read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<u32>
 {
-    static u32 pull_from(lua_State* L);
-    static int push_to(lua_State* L, const u32& value);
-    static u32 get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static u32 pop(lua_State* L);
+    static int push(lua_State* L, const u32& value);
+    static u32 read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<bool>
 {
-    static bool pull_from(lua_State* L);
-    static int push_to(lua_State* L, const bool& value);
-    static bool get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static bool pop(lua_State* L);
+    static int push(lua_State* L, const bool& value);
+    static bool read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<float>
 {
-    static float pull_from(lua_State* L);
-    static int push_to(lua_State* L, const float& value);
-    static float get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static float pop(lua_State* L);
+    static int push(lua_State* L, const float& value);
+    static float read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<double>
 {
-    static double pull_from(lua_State* L);
-    static int push_to(lua_State* L, const double& value);
-    static double get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static double pop(lua_State* L);
+    static int push(lua_State* L, const double& value);
+    static double read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<const char*>
 {
-    static const char* pull_from(lua_State* L);
-    static int push_to(lua_State* L, const char* value);
-    static const char* get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static const char* pop(lua_State* L);
+    static int push(lua_State* L, const char* value);
+    static const char* read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<std::string>
 {
-    static std::string pull_from(lua_State* L);
-    static int push_to(lua_State* L, const std::string& value);
-    static std::string get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static std::string pop(lua_State* L);
+    static int push(lua_State* L, const std::string& value);
+    static std::string read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<void*>
 {
-    static void* pull_from(lua_State* L);
-    static int push_to(lua_State* L, void* value);
-    static void* get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static void* pop(lua_State* L);
+    static int push(lua_State* L, void* value);
+    static void* read(lua_State* L, int read_ptr);
 };
 
 template <typename T> struct Converter<T*>
 {
-    static T* pull_from(lua_State* L) {
-        return static_cast<T*>(Converter<void*>::pull_from(L));
-    }
+    static constexpr int dimension = 1;
 
-    static int push_to(lua_State* L, T* value) {
-        return Converter<void*>::push_to(L, static_cast<void*>(value));
+    static T* pop(lua_State* L) {
+        return (T*)Converter<void*>::pop(L);
     }
-
-    static T* get_from_signature(lua_State* L, int& count) {
-        return static_cast<T*>(Converter<void*>::get_from_signature(L, count));
+    static int push(lua_State* L, T* value) {
+        return Converter<void*>::push(L, (void*)value);
+    }
+    static T* read(lua_State* L, int read_ptr) {
+        return (T*)Converter<void*>::read(L, read_ptr);
     }
 };
 
 template <> struct Converter<ecs::Entity>
 {
-    static ecs::Entity pull_from(lua_State* L);
-    static int push_to(lua_State* L, ecs::Entity value);
-    static ecs::Entity get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 1;
+    static ecs::Entity pop(lua_State* L);
+    static int push(lua_State* L, const ecs::Entity& value);
+    static ecs::Entity read(lua_State* L, int read_ptr);
 };
 
 // Implement the pull_from for these types when we need them, otherwise we are
@@ -113,16 +112,18 @@ template <> struct Converter<ecs::Entity>
 
 template <> struct Converter<glm::vec2>
 {
-    static glm::vec2 pull_from(lua_State* L) { return glm::vec2{1.0}; } // TODO: Implement
-    static int push_to(lua_State* L, const glm::vec2& value);
-    static glm::vec2 get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 2;
+    static glm::vec2 pop(lua_State* L);
+    static int push(lua_State* L, const glm::vec2& value);
+    static glm::vec2 read(lua_State* L, int read_ptr);
 };
 
 template <> struct Converter<glm::vec3>
 {
-    static glm::vec3 pull_from(lua_State* L) { return glm::vec3{1.0}; } // TODO: Implement
-    static int push_to(lua_State* L, const glm::vec3& value);
-    static glm::vec3 get_from_signature(lua_State* L, int& count);
+    static constexpr int dimension = 3;
+    static glm::vec3 pop(lua_State* L);
+    static int push(lua_State* L, const glm::vec3& value);
+    static glm::vec3 read(lua_State* L, int read_ptr);
 };
 
 }

@@ -345,12 +345,12 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_Get{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        ecs::Entity e = Converter<ecs::Entity>::read(L, 1);
         assert(e.Has<{{Comp.Name}}>());
 
         int count = 0;
         const auto& c = e.Get<{{Comp.Name}}>();
-        count += Converter<{{Attr.Type}}>::push_to(L, c.{{Attr.Name}});
+        count += Converter<{{Attr.Type}}>::push(L, c.{{Attr.Name}});
         assert(count == {{Comp.Name}}_dimension);
         return count;
     });
@@ -363,9 +363,9 @@ void register_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int count = 1;
-        ecs::Entity e = Converter<ecs::Entity>::get_from_signature(L, count);
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         auto& c = e.Get<{{Comp.Name}}>();
-        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::get_from_signature(L, count);
+        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, count); count += Converter<{{Attr.Type}}>::dimension;
         assert(count == {{Comp.Name}}_dimension + 2);
         return 0;
     });
@@ -377,12 +377,12 @@ void register_entity_component_functions(lua::Script& script)
     lua_register(L, "_Add{{Comp.Name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int count = 2;
-        ecs::Entity e = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        int count = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, count); count += Converter<ecs::Entity>::dimension;
         assert(!e.Has<{{Comp.Name}}>());
 
         {{Comp.Name}} c;
-        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::get_from_signature(L, count);
+        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, count); count += Converter<{{Attr.Type}}>::dimension;
         e.Add<{{Comp.Name}}>(c);
         assert(count == {{Comp.Name}}_dimension + 2);
         return 0;
