@@ -40,7 +40,6 @@
         "thread": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
-        "typeinfo": "cpp",
         "unordered_map": "cpp",
         "utility": "cpp",
         "vector": "cpp",
