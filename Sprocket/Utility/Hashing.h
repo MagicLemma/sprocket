@@ -45,6 +45,5 @@ template <typename T>
 constexpr type_hash_t type_hash = sdbm_hash(type_string<T>());
 
 static_assert(type_hash<int> != 0); // Check that it is actually calcualated at compile time
-static_assert(type_hash<std::unordered_map<int, float>> != type_hash<std::unordered_map<float, int>>);
 
 }
