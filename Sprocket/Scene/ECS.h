@@ -2,10 +2,9 @@
 #include "Types.h"
 #include "SparseSet.h"
 #include "GUID.h"
+#include "Hashing.h"
 
 #include <unordered_map>
-#include <typeinfo>
-#include <typeindex>
 #include <deque>
 #include <functional>
 #include <limits>
@@ -26,8 +25,8 @@ class Entity
     std::size_t d_index;
     guid::GUID  d_guid;
 
-    bool Has(std::type_index type) const;
-    void Remove(std::type_index type);
+    bool Has(std::size_t type) const;
+    void Remove(std::size_t type);
 
 public:
     // Construction of entities should not be done directly, instead they should
@@ -86,7 +85,7 @@ private:
         std::vector<EntityCallback> onRemove;
     };
 
-    std::unordered_map<std::type_index, ComponentData> d_comps;
+    std::unordered_map<std::size_t, ComponentData> d_comps;
 
     Registry& operator=(const Registry&) = delete;
     Registry(const Registry&) = delete;
@@ -153,19 +152,19 @@ static const Entity Null{};
 template <typename Comp>
 void Registry::OnAdd(const EntityCallback& cb)
 {
-    d_comps[typeid(Comp)].onAdd.push_back(cb);
+    d_comps[type_hash<Comp>].onAdd.push_back(cb);
 }
 
 template <typename Comp>
 void Registry::OnRemove(const EntityCallback& cb)
 {
-    d_comps[typeid(Comp)].onRemove.push_back(cb);
+    d_comps[type_hash<Comp>].onRemove.push_back(cb);
 }
 
 template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::View()
 {
-    for (auto& [index, comp] : d_comps[typeid(Comp)].instances.Fast()) {
+    for (auto& [index, comp] : d_comps[type_hash<Comp>].instances.Fast()) {
         Entity entity{this, index, d_entities[index]};
         if ((entity.Has<Rest>() && ...)) {
             co_yield entity;
@@ -199,7 +198,7 @@ template <typename Comp, typename... Args>
 Comp& Entity::Add(Args&&... args)
 {
     assert(Valid());
-    auto& data = d_registry->d_comps[typeid(Comp)];
+    auto& data = d_registry->d_comps[type_hash<Comp>];
     auto& entry = data.instances.Insert(
         d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
@@ -215,14 +214,14 @@ template <typename Comp>
 void Entity::Remove()
 {
     assert(Valid());
-    Remove(typeid(Comp));
+    Remove(type_hash<Comp>);
 }
 
 template <typename Comp>
 Comp& Entity::Get()
 {
     assert(Valid());
-    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[d_index];
+    auto& entry = d_registry->d_comps.at(type_hash<Comp>).instances[d_index];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -230,7 +229,7 @@ template <typename Comp>
 const Comp& Entity::Get() const
 {
     assert(Valid());
-    auto& entry = d_registry->d_comps.at(typeid(Comp)).instances[d_index];
+    auto& entry = d_registry->d_comps.at(type_hash<Comp>).instances[d_index];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -238,7 +237,7 @@ template <typename Comp>
 bool Entity::Has() const
 {
     assert(Valid());
-    return Has(typeid(Comp));
+    return Has(type_hash<Comp>);
 }
 
 // We can push an entity into the Lua stack by calling the Lua equivalent of malloc
