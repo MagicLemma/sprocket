@@ -1,7 +1,7 @@
 #pragma once
 #include "FontAtlas.h"
 #include "Maths.h"
-#include "HashPair.h"
+#include "Hashing.h"
 #include "Glyph.h"
 #include "Types.h"
 

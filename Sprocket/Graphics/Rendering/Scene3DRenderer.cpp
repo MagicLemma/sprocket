@@ -7,7 +7,7 @@
 #include "Scene.h"
 #include "ShadowMap.h"
 #include "Types.h"
-#include "HashPair.h"
+#include "Hashing.h"
 
 #include <algorithm>
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "ECS.h"
 #include "EntitySystem.h"
-#include "HashPair.h"
+#include "Hashing.h"
 #include "Window.h"
 #include "Maths.h"
 
