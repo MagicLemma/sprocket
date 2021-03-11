@@ -25,24 +25,19 @@ struct DotHash
 };
 
 template <typename T>
-constexpr const char* type_string()
+constexpr std::size_t sdbm_hash()
 {
-#ifdef _WIN32
-    return __FUNCSIG__;
-#endif
-}
-
-constexpr std::size_t sdbm_hash(const char* text, std::size_t hash = 0)
-{
-    if (text[0] == '\0') { return hash; } // We are done
-    std::size_t char_val = static_cast<std::size_t>(text[0]);
-    return sdbm_hash(&text[1], char_val + (hash << 6) + (hash << 16) - hash);
+    std::size_t hash = 0;
+    for (const auto& c : std::string_view{__FUNCSIG__}) {
+        hash = static_cast<std::size_t>(c) + (hash << 6) + (hash << 16) - hash;
+    }
+    return hash;
 };
 
 using type_hash_t = std::size_t;
 
 template <typename T>
-constexpr type_hash_t type_hash = sdbm_hash(type_string<T>());
+constexpr type_hash_t type_hash = sdbm_hash<T>();
 
 static_assert(type_hash<int> != 0); // Check that it is actually calcualated at compile time
 
