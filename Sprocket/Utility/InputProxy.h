@@ -1,7 +1,5 @@
 #pragma once
 #include <array>
-#include <unordered_map>
-#include <unordered_set>
 
 namespace Sprocket {
 namespace ev { class Event; }
