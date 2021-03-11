@@ -63,6 +63,10 @@ void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
 {
     d_input.on_event(event);
 
+    // This may be overly strict, change this if we ever need to react to consumed
+    // events in scripts.
+    if (event.is_consumed()) { return; }
+
     const auto handler = [&](lua::Script& script, const char* f, auto&&... args)
     {
         if (script.has_function(f) &&

@@ -235,8 +235,8 @@ void UIEngine::OnEvent(ev::Event& event)
     if (auto data = event.get_if<ev::MouseButtonPressed>()) {
         if (data->button == Mouse::LEFT) {
             d_mouseClicked = true;
-            if (d_consumeMouseEvents) { event.consume(); }
         }
+        if (d_consumeMouseEvents) { event.consume(); }
     }
     if (auto data = event.get_if<ev::MouseButtonReleased>()) {
         if (data->button == Mouse::LEFT) {
