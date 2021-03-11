@@ -1,5 +1,4 @@
 #include <Sprocket.h>
-#include <mutex>
 
 #include "Game.h"
 
