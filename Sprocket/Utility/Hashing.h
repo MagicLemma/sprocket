@@ -15,7 +15,7 @@ struct hash_pair {
 };
 
 template <typename T>
-constexpr std::size_t sdbm_hash()
+constexpr std::size_t sdbm_type_hash()
 {
     std::size_t hash = 0;
     for (const auto& c : std::string_view{__FUNCSIG__}) {
@@ -27,7 +27,7 @@ constexpr std::size_t sdbm_hash()
 using type_hash_t = std::size_t;
 
 template <typename T>
-constexpr type_hash_t type_hash = sdbm_hash<T>();
+constexpr type_hash_t type_hash = sdbm_type_hash<T>();
 
 static_assert(type_hash<int> != 0); // Check that it is actually calcualated at compile time
 
