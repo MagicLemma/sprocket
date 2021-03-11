@@ -2,9 +2,9 @@
 #include <utility>
 #include <string_view>
 
-namespace Sprocket {
+namespace spkt {
 
-struct HashPair { 
+struct hash_pair { 
     template <class T1, class T2> 
     std::size_t operator()(const std::pair<T1, T2>& p) const
     { 

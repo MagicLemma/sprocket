@@ -155,7 +155,11 @@ void Scene3DRenderer::Draw(
     UploadUniforms(d_staticShader, proj, view, scene);
     UploadUniforms(d_animatedShader, proj, view, scene);
 
-    std::unordered_map<std::pair<std::string, std::string>, std::vector<InstanceData>, HashPair> commands;
+    std::unordered_map<
+        std::pair<std::string, std::string>,
+        std::vector<InstanceData>,
+        spkt::hash_pair
+    > commands;
 
     d_staticShader.Bind();
     for (auto entity : scene.Entities().View<ModelComponent, Transform3DComponent>()) {

@@ -39,8 +39,8 @@ public:
 template <typename T, typename... Args>
 T& Scene::Add(Args&&... args)
 {
-    assert(d_lookup.find(type_hash<T>) == d_lookup.end());
-    d_lookup[type_hash<T>] = d_systems.size();
+    assert(d_lookup.find(spkt::type_hash<T>) == d_lookup.end());
+    d_lookup[spkt::type_hash<T>] = d_systems.size();
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
     d_systems.back()->OnStartup(*this);
     return *static_cast<T*>(d_systems.back().get());
@@ -53,7 +53,7 @@ template <typename T> bool Scene::Has()
 
 template <typename T> T& Scene::Get()
 {
-    auto it = d_lookup.find(type_hash<T>);
+    auto it = d_lookup.find(spkt::type_hash<T>);
     assert(it != d_lookup.end());
     return *static_cast<T*>(d_systems[it->second].get());
 }

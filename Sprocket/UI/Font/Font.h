@@ -14,7 +14,7 @@
 
 namespace Sprocket {
 
-using KerningMap = std::unordered_map<std::pair<u32, u32>, float, HashPair>;
+using KerningMap = std::unordered_map<std::pair<u32, u32>, float, spkt::hash_pair>;
 using GlyphMap = std::unordered_map<u32, Glyph>;
 
 struct SizedFontData
