@@ -1,7 +1,6 @@
 #pragma once
 #include <utility>
-#include <unordered_map>
-#include <typeinfo>
+#include <string_view>
 
 namespace Sprocket {
 
@@ -13,15 +12,6 @@ struct HashPair {
         auto hash2 = std::hash<T2>{}(p.second); 
         return hash1 ^ hash2; 
     } 
-};
-
-struct DotHash
-{
-    template <class T>
-    std::size_t operator()(const T& x) const
-    {
-        return x.Hash();
-    }
 };
 
 template <typename T>
