@@ -96,6 +96,7 @@
         "string_view": "cpp",
         "bit": "cpp",
         "compare": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "typeinfo": "cpp"
     }
 }
