@@ -61,11 +61,13 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
 
 void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
 {
-    d_input.OnEvent(event);
+    d_input.on_event(event);
 
-    const auto handler = [&event](lua::Script& script, const char* f, auto&&... args)
+    const auto handler = [&](lua::Script& script, const char* f, auto&&... args)
     {
-        if (script.has_function(f) && script.call_function<bool>(f, args...)) {
+        if (script.has_function(f) &&
+            script.call_function<bool>(f, std::forward<decltype(args)>(args)...))
+        {
             event.consume();
         }
     };

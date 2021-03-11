@@ -174,7 +174,7 @@ void register_input_functions(lua::Script& script, InputProxy& input)
 
         if (auto ip = get_pointer<InputProxy>(L, "__input__"); ip) {
             int x = (int)lua_tointeger(L, 1);
-            lua_pushboolean(L, ip->IsKeyboardDown(x));
+            lua_pushboolean(L, ip->is_keyboard_down(x));
         }
         else {
             lua_pushboolean(L, false);
@@ -188,7 +188,7 @@ void register_input_functions(lua::Script& script, InputProxy& input)
 
         if (auto ip = get_pointer<InputProxy>(L, "__input__"); ip) {
             int x = (int)lua_tointeger(L, 1);
-            lua_pushboolean(L, ip->IsMouseDown(x));
+            lua_pushboolean(L, ip->is_mouse_down(x));
         }
         else {
             lua_pushboolean(L, false);

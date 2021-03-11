@@ -8,20 +8,20 @@ namespace ev { class Event; }
 
 class InputProxy
 {
-    // Mouse
-    std::array<bool, 5> d_buttons;
+public:
+    static constexpr std::size_t NUM_KEYS = 512;
 
-    // Keyboard
-    std::unordered_map<int, bool> d_keys;
-    std::unordered_set<int> d_consumedKeys;
+private:
+    std::array<bool, NUM_KEYS> d_keyboard;
+    std::array<bool, 5> d_mouse;
 
 public:
-    void OnEvent(ev::Event& event);
+    InputProxy();
 
-    bool IsMouseDown(int button) const;
-    bool IsKeyboardDown(int key) const;
+    void on_event(ev::Event& event);
 
-    void ConsumeEventsFor(int key);
+    bool is_mouse_down(int button) const;
+    bool is_keyboard_down(int key) const;
 };
     
 }

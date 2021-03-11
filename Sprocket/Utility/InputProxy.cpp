@@ -1,43 +1,43 @@
 #include "InputProxy.h"
 #include "Events.h"
 
+#include <cassert>
+
 namespace Sprocket {
+
+InputProxy::InputProxy()
+{
+    d_keyboard.fill(false);
+    d_mouse.fill(false);
+}
     
-void InputProxy::OnEvent(ev::Event& event)
+void InputProxy::on_event(ev::Event& event)
 {
     if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
         if (event.is_consumed()) { return; }
-        d_keys[data->key] = true;
-        if (d_consumedKeys.contains(data->key)) { event.consume(); }
+        d_keyboard[data->key] = true;
     }
     else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
-        d_keys[data->key] = false;
+        d_keyboard[data->key] = false;
     }
     else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
         if (event.is_consumed()) { return; }
-        d_buttons[data->button] = true;
+        d_mouse[data->button] = true;
     }
     else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
-        d_buttons[data->button] = false;
+        d_mouse[data->button] = false;
     }
 }
 
-bool InputProxy::IsMouseDown(int button) const
+bool InputProxy::is_mouse_down(int button) const
 {
-    return d_buttons[button];
+    return d_mouse[button];
 }
 
-bool InputProxy::IsKeyboardDown(int key) const
+bool InputProxy::is_keyboard_down(int key) const
 {
-    if (auto it = d_keys.find(key); it != d_keys.end()) {
-        return it->second;
-    }
-    return false;
-}
-
-void InputProxy::ConsumeEventsFor(int key)
-{
-    d_consumedKeys.insert(key);
+    assert(key < NUM_KEYS);
+    return d_keyboard[key];
 }
 
 }

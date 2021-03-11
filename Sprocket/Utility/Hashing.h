@@ -4,7 +4,8 @@
 
 namespace spkt {
 
-struct hash_pair { 
+struct hash_pair
+{ 
     template <class T1, class T2> 
     std::size_t operator()(const std::pair<T1, T2>& p) const
     { 
@@ -19,7 +20,7 @@ constexpr std::size_t sdbm_type_hash()
 {
     std::size_t hash = 0;
     for (const auto& c : std::string_view{__FUNCSIG__}) {
-        hash = static_cast<std::size_t>(c) + (hash << 6) + (hash << 16) - hash;
+        hash = c + 65599 * hash;
     }
     return hash;
 };
