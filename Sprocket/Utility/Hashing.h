@@ -24,10 +24,8 @@ constexpr std::size_t sdbm_type_hash()
     return hash;
 };
 
-using type_hash_t = std::size_t;
-
 template <typename T>
-constexpr type_hash_t type_hash = sdbm_type_hash<T>();
+constexpr std::size_t type_hash = sdbm_type_hash<T>();
 
 static_assert(type_hash<int> != 0); // Check that it is actually calcualated at compile time
 

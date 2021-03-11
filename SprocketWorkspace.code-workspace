@@ -82,7 +82,6 @@
 			"numeric": "cpp",
 			"queue": "cpp",
 			"regex": "cpp",
-			"typeindex": "cpp",
 			"unordered_set": "cpp",
 			"valarray": "cpp",
 			"fft": "cpp"
