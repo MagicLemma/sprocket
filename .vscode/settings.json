@@ -40,7 +40,6 @@
         "thread": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
-        "typeinfo": "cpp",
         "unordered_map": "cpp",
         "utility": "cpp",
         "vector": "cpp",
@@ -76,7 +75,6 @@
         "queue": "cpp",
         "random": "cpp",
         "regex": "cpp",
-        "typeindex": "cpp",
         "unordered_set": "cpp",
         "valarray": "cpp",
         "fft": "cpp",
@@ -97,6 +95,6 @@
         "string_view": "cpp",
         "bit": "cpp",
         "compare": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
     }
 }

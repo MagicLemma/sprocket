@@ -39,7 +39,7 @@
 #include "Utility/Colour.h"
 #include "Utility/FileBrowser.h"
 #include "Utility/GUID.h"
-#include "Utility/HashPair.h"
+#include "Utility/Hashing.h"
 #include "Utility/InputProxy.h"
 #include "Utility/Maths.h"
 #include "Utility/KeyboardCodes.h"

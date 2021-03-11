@@ -70,7 +70,7 @@ guid::GUID Entity::Id() const
     return d_guid;
 }
 
-void Entity::Remove(std::type_index type)
+void Entity::Remove(std::size_t type)
 {
     assert(Valid());
     if (!Has(type)) { return; }
@@ -86,7 +86,7 @@ void Entity::Remove(std::type_index type)
     }
 }
 
-bool Entity::Has(std::type_index type) const
+bool Entity::Has(std::size_t type) const
 {
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
         if (it->second.instances.Has(d_index)) {

@@ -8,6 +8,10 @@
 #include <memory>
 #include <map>
 
+#ifndef _WIN32
+#error "Sprocket currently only supports Windows"
+#endif
+
 namespace Sprocket {
 
 using EventCallback = std::function<void(ev::Event&)>;

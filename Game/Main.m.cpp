@@ -4,7 +4,6 @@
 
 using namespace Sprocket;
 
-
 int main()
 {
     Sprocket::Window window("Game");

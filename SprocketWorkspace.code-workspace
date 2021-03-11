@@ -45,7 +45,6 @@
 			"thread": "cpp",
 			"tuple": "cpp",
 			"type_traits": "cpp",
-			"typeinfo": "cpp",
 			"unordered_map": "cpp",
 			"utility": "cpp",
 			"vector": "cpp",
@@ -83,7 +82,6 @@
 			"numeric": "cpp",
 			"queue": "cpp",
 			"regex": "cpp",
-			"typeindex": "cpp",
 			"unordered_set": "cpp",
 			"valarray": "cpp",
 			"fft": "cpp"
