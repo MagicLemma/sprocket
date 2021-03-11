@@ -16,12 +16,6 @@ Camera::Camera(Window* window, const glm::vec3& target)
     , d_absMin(2.0f)
     , d_absMax(10.0f)
 {
-    d_input.ConsumeEventsFor(Keyboard::W);
-    d_input.ConsumeEventsFor(Keyboard::A);
-    d_input.ConsumeEventsFor(Keyboard::S);
-    d_input.ConsumeEventsFor(Keyboard::D);
-    d_input.ConsumeEventsFor(Keyboard::Q);
-    d_input.ConsumeEventsFor(Keyboard::E);
 }
 
 void Camera::OnUpdate(double dt)
@@ -36,34 +30,34 @@ void Camera::OnUpdate(double dt)
     glm::vec3 up{0, 1, 0};
     glm::vec3 r = glm::cross(f, up);
 
-    if (d_input.IsKeyboardDown(Keyboard::W)) {
+    if (d_input.is_keyboard_down(Keyboard::W)) {
         d_target += moveSpeed * f;
     }
-    if (d_input.IsKeyboardDown(Keyboard::S)) {
+    if (d_input.is_keyboard_down(Keyboard::S)) {
         d_target -= moveSpeed * f;
     }
-    if (d_input.IsKeyboardDown(Keyboard::D)) {
+    if (d_input.is_keyboard_down(Keyboard::D)) {
         d_target += moveSpeed * r;
     }
-    if (d_input.IsKeyboardDown(Keyboard::A)) {
+    if (d_input.is_keyboard_down(Keyboard::A)) {
         d_target -= moveSpeed * r;
     }
 
-    if (d_input.IsKeyboardDown(Keyboard::E)) {
+    if (d_input.is_keyboard_down(Keyboard::E)) {
         d_yaw -= horizSpeed;
     }
-    if (d_input.IsKeyboardDown(Keyboard::Q)) {
+    if (d_input.is_keyboard_down(Keyboard::Q)) {
         d_yaw += horizSpeed;
     }
 
-    if (d_input.IsKeyboardDown(Keyboard::SPACE)) {
+    if (d_input.is_keyboard_down(Keyboard::SPACE)) {
         d_position.y += d_moveSpeed * dt;
         d_target.y += d_moveSpeed * dt;
         d_absVert += d_moveSpeed * dt;
         d_absMin += d_moveSpeed * dt;
         d_absMax += d_moveSpeed * dt;
     }
-    if (d_input.IsKeyboardDown(Keyboard::LSHIFT)) {
+    if (d_input.is_keyboard_down(Keyboard::LSHIFT)) {
         d_position.y -= d_moveSpeed * dt;
         d_target.y -= d_moveSpeed * dt;
         d_absVert -= d_moveSpeed * dt;
@@ -82,7 +76,7 @@ void Camera::OnUpdate(double dt)
 
 void Camera::OnEvent(ev::Event& event)
 {
-    d_input.OnEvent(event);
+    d_input.on_event(event);
 
     if (auto data = event.get_if<ev::MouseScrolled>()) {
         if (event.is_consumed()) { return; }

@@ -25,6 +25,7 @@ public:
 	bool is_consumed() const noexcept { return d_consumed; }
 	void consume() noexcept { d_consumed = true; }
 
+	// Implementation defined name, should only be used for logging.
 	std::string type_name() const noexcept { return d_event.type().name(); }
 };
 
