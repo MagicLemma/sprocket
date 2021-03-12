@@ -132,6 +132,9 @@ public:
     // removed from an entity.
     void set_callback(const std::function<void(ev::Event&)>& callback);
 
+    // Invokes the registry callback with the given event.
+    void emit(ev::Event& event);
+
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
     cppcoro::generator<Entity> Each();

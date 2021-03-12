@@ -20,8 +20,8 @@ public:
     PhysicsEngine3D(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
     ~PhysicsEngine3D() = default;
 
-    void OnEvent(Scene& scene, ev::Event& event) override;
-    void OnUpdate(Scene& scene, double dt) override;
+    void OnEvent(ecs::Registry& registry, ev::Event& event) override;
+    void OnUpdate(ecs::Registry& registry, double dt) override;
 
     ecs::Entity Raycast(const glm::vec3& base, const glm::vec3& direction);
         // Given a position in the world and a direction from that point,

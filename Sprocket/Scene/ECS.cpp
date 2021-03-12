@@ -162,6 +162,11 @@ void Registry::set_callback(const std::function<void(ev::Event&)>& callback)
     d_callback = callback;
 }
 
+void Registry::emit(ev::Event& event)
+{
+    d_callback(event);
+}
+
 cppcoro::generator<Entity> Registry::Each()
 {
     for (const auto& [index, guid] : d_entities.Fast()) {

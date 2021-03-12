@@ -19,14 +19,14 @@ void Scene::Load(std::string_view file)
 void Scene::OnUpdate(double dt)
 {
     for (auto& system : d_systems) {
-        system->OnUpdate(*this, dt);
+        system->OnUpdate(d_registry, dt);
     }
 }
 
 void Scene::OnEvent(ev::Event& event)
 {
     for (auto& system : d_systems) {
-        system->OnEvent(*this, event);
+        system->OnEvent(d_registry, event);
     }
 }
 

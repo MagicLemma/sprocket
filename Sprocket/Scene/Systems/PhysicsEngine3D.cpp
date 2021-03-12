@@ -151,7 +151,7 @@ PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
 {
 }
 
-void PhysicsEngine3D::OnEvent(Scene& scene, ev::Event& event)
+void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
 {
     if (auto data = event.get_if<ecs::ComponentAddedEvent<RigidBody3DComponent>>()) {
         assert(data->entity.Has<Transform3DComponent>());
@@ -163,7 +163,7 @@ void PhysicsEngine3D::OnEvent(Scene& scene, ev::Event& event)
         entry.body = d_impl->world->createRigidBody(Convert(tc));
         entry.body->setUserData(static_cast<void*>(&entry.entity));
     }
-    
+
     else if (auto data = event.get_if<ecs::ComponentRemovedEvent<RigidBody3DComponent>>()) {
         data->entity.Remove<BoxCollider3DComponent>();
         data->entity.Remove<SphereCollider3DComponent>();
@@ -237,12 +237,12 @@ void PhysicsEngine3D::OnEvent(Scene& scene, ev::Event& event)
     }
 }
 
-void PhysicsEngine3D::OnUpdate(Scene& scene, double dt)
+void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
 {
     // Pre Update
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
-    for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
+    for (auto entity : registry.View<RigidBody3DComponent>()) {
         const auto& tc = entity.Get<Transform3DComponent>();
         const auto& physics = entity.Get<RigidBody3DComponent>();
 
@@ -287,7 +287,7 @@ void PhysicsEngine3D::OnUpdate(Scene& scene, double dt)
     }
 
     // Post Update
-    for (auto entity : scene.Entities().View<RigidBody3DComponent>()) {
+    for (auto entity : registry.View<RigidBody3DComponent>()) {
         auto& tc = entity.Get<Transform3DComponent>();
         auto& rc = entity.Get<RigidBody3DComponent>();
         const rp3d::RigidBody* body = d_impl->entityData[entity].body;

@@ -1,12 +1,13 @@
 #include "PathFollower.h"
 #include "Components.h"
 #include "Maths.h"
+#include "ECS.h"
 
 namespace Sprocket {
 
-void PathFollower::OnUpdate(Sprocket::Scene& scene, double dt)
+void PathFollower::OnUpdate(ecs::Registry& registry, double dt)
 {
-    for (auto entity : scene.Entities().View<PathComponent>()) {
+    for (auto entity : registry.View<PathComponent>()) {
         auto& transform = entity.Get<Transform3DComponent>();
         auto& path = entity.Get<PathComponent>();
         if (path.markers.empty()) { return; }

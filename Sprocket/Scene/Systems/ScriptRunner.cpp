@@ -15,7 +15,7 @@ ScriptRunner::ScriptRunner(Window* window)
 {
 }
 
-void ScriptRunner::OnUpdate(Scene& scene, double dt)
+void ScriptRunner::OnUpdate(ecs::Registry&, double dt)
 {
     // We delete scripts here rather then with OnRemove otherwise we would segfault if
     // a script tries to delete its own entity, which is functionality that we want to
@@ -35,13 +35,13 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
     }
 }
 
-void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
+void ScriptRunner::OnEvent(ecs::Registry& registry, ev::Event& event)
 {
     d_input.on_event(event);
 
     if (auto data = event.get_if<ecs::ComponentAddedEvent<ScriptComponent>>()) {
         lua::Script script(data->entity.Get<ScriptComponent>().script);
-        lua::load_registry_functions(script, scene.Entities());
+        lua::load_registry_functions(script, registry);
         lua::load_input_functions(script, d_input);
         lua::load_window_functions(script, *d_window);
 

@@ -24,11 +24,11 @@ GameGrid::GameGrid(Window* window)
 {
 }
 
-void GameGrid::OnStartup(Scene& scene)
+void GameGrid::OnStartup(ecs::Registry& registry)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
-    d_hoveredSquare = scene.Entities().New();
+    d_hoveredSquare = registry.New();
     auto& n1 = d_hoveredSquare.Add<NameComponent>();
     d_hoveredSquare.Add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
@@ -37,7 +37,7 @@ void GameGrid::OnStartup(Scene& scene)
     auto& model1 = d_hoveredSquare.Add<ModelComponent>();
     model1.mesh = gridSquare;
 
-    d_selectedSquare = scene.Entities().New();
+    d_selectedSquare = registry.New();
     auto& n2 = d_selectedSquare.Add<NameComponent>();
     d_selectedSquare.Add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
@@ -47,7 +47,7 @@ void GameGrid::OnStartup(Scene& scene)
     model2.mesh = gridSquare;
 }
 
-void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
+void GameGrid::OnUpdate(ecs::Registry&, double dt)
 {
     auto& camTr = d_camera.Get<Transform3DComponent>();
 
@@ -72,7 +72,7 @@ void GameGrid::OnUpdate(Sprocket::Scene&, double dt)
     }
 }
 
-void GameGrid::OnEvent(Scene& scene, ev::Event& event)
+void GameGrid::OnEvent(ecs::Registry&, ev::Event& event)
 {
     if (auto data = event.get_if<ecs::ComponentAddedEvent<GridComponent>>()) {
         auto& transform = data->entity.Get<Transform3DComponent>();
