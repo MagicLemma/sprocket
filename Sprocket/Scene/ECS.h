@@ -96,14 +96,6 @@ private:
 
         // Returns an ev::Event containing a ComponentRemoveEvent<T>.
         std::function<ev::Event(ecs::Entity)> make_remove_event;
-
-        // Callbacks triggered whenever a new instance of this component is added. These
-        // are called after the component has been added.
-        std::vector<EntityCallback> onAdd;
-
-        // Callbacks triggers whenever an instance of this component is remove. These
-        // are called before the component has been removed.
-        std::vector<EntityCallback> onRemove;
     };
 
     std::unordered_map<std::size_t, ComponentData> d_comps;
@@ -154,14 +146,6 @@ public:
     // none is found. Can optionally provide components to filter on.
     template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
-    // Registers a function that will be called whenever a Comp is added to an
-    // entity. This is called after the component has been added.
-    template <typename Comp> void OnAdd(const EntityCallback& cb);
-
-    // Registers a function that will be called whenever a Comp is removed from
-    // an entity. This is called before the compoent has been removed.
-    template <typename Comp> void OnRemove(const EntityCallback& cb);
-
     friend class Entity;
 };
 
@@ -173,18 +157,6 @@ static const Entity Null{};
 // ==============================================================
 
 // REGISTRY TEMPLATES
-
-template <typename Comp>
-void Registry::OnAdd(const EntityCallback& cb)
-{
-    d_comps[spkt::type_hash<Comp>].onAdd.push_back(cb);
-}
-
-template <typename Comp>
-void Registry::OnRemove(const EntityCallback& cb)
-{
-    d_comps[spkt::type_hash<Comp>].onRemove.push_back(cb);
-}
 
 template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::View()
@@ -224,22 +196,21 @@ Comp& Entity::Add(Args&&... args)
 {
     assert(Valid());
 
-    // If this is the first instance of this component, create the make_remove_event function.
-    //if (d_registry->d_comps.find(spkt::type_hash<Comp>) == d_registry->d_comps.end()) {
-    //    auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
-    //}
-
     auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
-    data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
-        return ev::make_event<ecs::ComponentRemovedEvent<Comp>>(entity);
-    };
+
+    // If this is the first instance of this component, create the make_remove_event
+    // function which will be called whenever an entity is deleted. This is needed because
+    // the type of the component is not available at deletion time.
+    if (!data.make_remove_event) {
+        data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
+            return ev::make_event<ecs::ComponentRemovedEvent<Comp>>(entity);
+        };
+    }
+
     auto& entry = data.instances.Insert(
         d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
-    for (const auto& cb : data.onAdd) {
-        cb(*this);
-    }
     ev::Event event = ev::make_event<ComponentAddedEvent<Comp>>(*this);
     d_registry->d_callback(event);
 

@@ -77,9 +77,6 @@ void Entity::Remove(std::size_t type) const
 
     auto& data = d_registry->d_comps[type];
     
-    for (const auto& cb : data.onRemove) {
-        cb(*this);
-    }
     ev::Event event = data.make_remove_event(*this);
     d_registry->d_callback(event);
 
@@ -135,7 +132,7 @@ Entity Registry::Get(const guid::GUID& guid)
 
 void Registry::DeleteAll()
 {
-    // Clean up components, triggering onRemove behaviour
+    // Clean up components, triggering on remove behaviour
     for (const auto& [index, guid] : d_entities.Safe()) {
         Entity{this, index, guid}.Delete();
     }
@@ -143,8 +140,6 @@ void Registry::DeleteAll()
     // Reset all entity storage
     d_entities.Clear();
     d_pool.clear();
-
-    // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
 
 void Registry::Clear()
