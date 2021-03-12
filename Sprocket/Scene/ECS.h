@@ -27,7 +27,7 @@ class Entity
     guid::GUID  d_guid;
 
     bool Has(std::size_t type) const;
-    void Remove(std::size_t type);
+    void Remove(std::size_t type) const;
 
 public:
     // Construction of entities should not be done directly, instead they should
@@ -39,7 +39,7 @@ public:
     void Delete();
 
     template <typename Comp, typename... Args> Comp& Add(Args&&... args);
-    template <typename Comp> void Remove();
+    template <typename Comp> void Remove() const;
     template <typename Comp> Comp& Get();
     template <typename Comp> const Comp& Get() const;
     template <typename Comp> bool Has() const;
@@ -55,14 +55,14 @@ template <typename Comp>
 struct ComponentAddedEvent
 {
     ecs::Entity entity;
-    ComponentAddedEvent(const ecs::Entity& e) : entity(e) {}
+    ComponentAddedEvent(ecs::Entity& e) : entity(e) {}
 };
 
 template <typename Comp>
 struct ComponentRemovedEvent
 {
     ecs::Entity entity;
-    ComponentRemovedEvent(const ecs::Entity& e) : entity(e) {}
+    ComponentRemovedEvent(ecs::Entity& e) : entity(e) {}
 };
 
 class Registry
@@ -248,7 +248,7 @@ Comp& Entity::Add(Args&&... args)
 }
 
 template <typename Comp>
-void Entity::Remove()
+void Entity::Remove() const
 {
     assert(Valid());
     Remove(spkt::type_hash<Comp>);

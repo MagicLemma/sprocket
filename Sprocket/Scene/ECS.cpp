@@ -70,7 +70,7 @@ guid::GUID Entity::Id() const
     return d_guid;
 }
 
-void Entity::Remove(std::size_t type)
+void Entity::Remove(std::size_t type) const
 {
     assert(Valid());
     if (!Has(type)) { return; }
