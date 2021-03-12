@@ -18,6 +18,8 @@ class Scene
     ecs::Registry d_registry;
 
 public:
+    Scene();
+    
     ecs::Registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>

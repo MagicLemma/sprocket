@@ -160,6 +160,11 @@ std::size_t Registry::Size() const
     return d_entities.Size();
 }
 
+void Registry::set_callback(const std::function<void(ev::Event&)>& callback)
+{
+    d_callback = callback;
+}
+
 cppcoro::generator<Entity> Registry::Each()
 {
     for (const auto& [index, guid] : d_entities.Fast()) {

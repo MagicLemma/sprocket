@@ -4,6 +4,13 @@
 
 namespace Sprocket {
 
+Scene::Scene()
+{
+    d_registry.set_callback([&](ev::Event& event) {
+        OnEvent(event);
+    });
+}
+
 void Scene::Load(std::string_view file)
 {
     Loader::Load(std::string(file), &Entities());
