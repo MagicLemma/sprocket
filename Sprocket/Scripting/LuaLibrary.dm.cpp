@@ -67,16 +67,16 @@ template <typename T> int _has_impl(lua_State* L)
 
 }
 
-void load_registry_functions(lua::Script& script, Scene& scene)
+void load_registry_functions(lua::Script& script, ecs::Registry& registry)
 {
     lua_State* L = script.native_handle();
-    script.set_value("__scene__", &scene);
+    script.set_value("__registry__", &registry);
 
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
-        *luaEntity = get_pointer<Scene>(L, "__scene__")->Entities().New();
+        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->New();
         return 1;
     });
 
@@ -96,7 +96,7 @@ void load_registry_functions(lua::Script& script, Scene& scene)
     
     lua_register(L, "_Each_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<Scene>(L, "__scene__")->Entities().Each());
+        auto gen = new Generator(get_pointer<ecs::Registry>(L, "__registry__")->Each());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
