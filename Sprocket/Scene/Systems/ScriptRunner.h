@@ -19,9 +19,8 @@ class ScriptRunner : public EntitySystem
 public:
     ScriptRunner(Window* window);
 
-    void OnStartup(Scene& scene) override;
-    void OnUpdate(Scene& scene, double dt) override;
-    void OnEvent(Scene& scene, ev::Event& event) override;
+    void OnUpdate(ecs::Registry& registry, double dt) override;
+    void OnEvent(ecs::Registry& registry, ev::Event& event) override;
 };
 
 }

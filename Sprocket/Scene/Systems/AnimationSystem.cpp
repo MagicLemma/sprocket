@@ -5,9 +5,9 @@
 
 namespace Sprocket {
 
-void AnimationSystem::OnUpdate(Scene& scene, double dt)
+void AnimationSystem::OnUpdate(ecs::Registry& registry, double dt)
 {
-    for (auto entity : scene.Entities().View<MeshAnimationComponent>()) {
+    for (auto entity : registry.View<MeshAnimationComponent>()) {
         auto& ac = entity.Get<MeshAnimationComponent>();
         ac.time += (float)dt * ac.speed;
     }

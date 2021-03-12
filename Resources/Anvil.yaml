@@ -827,3 +827,31 @@ Entities:
     SelectComponent:
       {}
   - "@GUID": [2975728627, 3405795138, 1061465761, 4133211187]
+  - "@GUID": [2643430735, 3537092796, 3135682508, 2745782134]
+    NameComponent:
+      name: Bouncing Ball
+    Transform3DComponent:
+      position: [10.48544, 4.043168, -6.103516e-05]
+      orientation: [1, 0, 0, 0]
+      scale: [0.32, 0.32, 0.32]
+    ModelComponent:
+      mesh: D:\dev\Sprocket\Resources\Models\Sphere.obj
+      material: ""
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 1
+      frictionCoefficient: 0.3
+      rollingResistance: 0
+    SphereCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      radius: 0.38
+    ScriptComponent:
+      script: D:\dev\Sprocket\Resources\Scripts\LightOnBounce.lua
+      active: true
+    LightComponent:
+      colour: [1, 1, 1]
+      brightness: 100

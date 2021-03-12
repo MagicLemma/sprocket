@@ -3,6 +3,7 @@
 #include "SparseSet.h"
 #include "GUID.h"
 #include "Hashing.h"
+#include "Events.h"
 
 #include <unordered_map>
 #include <deque>
@@ -26,7 +27,7 @@ class Entity
     guid::GUID  d_guid;
 
     bool Has(std::size_t type) const;
-    void Remove(std::size_t type);
+    void Remove(std::size_t type) const;
 
 public:
     // Construction of entities should not be done directly, instead they should
@@ -38,9 +39,8 @@ public:
     void Delete();
 
     template <typename Comp, typename... Args> Comp& Add(Args&&... args);
-    template <typename Comp> void Remove();
-    template <typename Comp> Comp& Get();
-    template <typename Comp> const Comp& Get() const;
+    template <typename Comp> void Remove() const;
+    template <typename Comp> Comp& Get() const;
     template <typename Comp> bool Has() const;
 
     guid::GUID Id() const;
@@ -50,6 +50,20 @@ public:
     Entity& operator=(Entity other);
 };
 
+template <typename Comp>
+struct ComponentAddedEvent
+{
+    ecs::Entity entity;
+    ComponentAddedEvent(ecs::Entity& e) : entity(e) {}
+};
+
+template <typename Comp>
+struct ComponentRemovedEvent
+{
+    ecs::Entity entity;
+    ComponentRemovedEvent(ecs::Entity& e) : entity(e) {}
+};
+
 class Registry
 {
 public:
@@ -57,6 +71,10 @@ public:
     using EntityPredicate = std::function<bool(Entity)>;
 
 private:
+    // Callback that is invoked whenever a component is added or removed
+    // from an entity.
+    std::function<void(ev::Event&)> d_callback = [](ev::Event&) {};
+
     // Generates GUIDs for new Entities 
     guid::Generator d_generator;
 
@@ -76,13 +94,8 @@ private:
         // All instances of this component.
         SparseSet<std::any> instances;
 
-        // Callbacks triggered whenever a new instance of this component is added. These
-        // are called after the component has been added.
-        std::vector<EntityCallback> onAdd;
-
-        // Callbacks triggers whenever an instance of this component is remove. These
-        // are called before the component has been removed.
-        std::vector<EntityCallback> onRemove;
+        // Returns an ev::Event containing a ComponentRemoveEvent<T>.
+        std::function<ev::Event(ecs::Entity)> make_remove_event;
     };
 
     std::unordered_map<std::size_t, ComponentData> d_comps;
@@ -115,6 +128,13 @@ public:
     // Number of active entities in the registry.
     std::size_t Size() const;
 
+    // Sets the callback that will be invoked whenever a component is added or
+    // removed from an entity.
+    void set_callback(const std::function<void(ev::Event&)>& callback);
+
+    // Invokes the registry callback with the given event.
+    void emit(ev::Event& event);
+
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
     cppcoro::generator<Entity> Each();
@@ -129,14 +149,6 @@ public:
     // none is found. Can optionally provide components to filter on.
     template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
-    // Registers a function that will be called whenever a Comp is added to an
-    // entity. This is called after the component has been added.
-    template <typename Comp> void OnAdd(const EntityCallback& cb);
-
-    // Registers a function that will be called whenever a Comp is removed from
-    // an entity. This is called before the compoent has been removed.
-    template <typename Comp> void OnRemove(const EntityCallback& cb);
-
     friend class Entity;
 };
 
@@ -148,18 +160,6 @@ static const Entity Null{};
 // ==============================================================
 
 // REGISTRY TEMPLATES
-
-template <typename Comp>
-void Registry::OnAdd(const EntityCallback& cb)
-{
-    d_comps[spkt::type_hash<Comp>].onAdd.push_back(cb);
-}
-
-template <typename Comp>
-void Registry::OnRemove(const EntityCallback& cb)
-{
-    d_comps[spkt::type_hash<Comp>].onRemove.push_back(cb);
-}
 
 template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::View()
@@ -198,35 +198,37 @@ template <typename Comp, typename... Args>
 Comp& Entity::Add(Args&&... args)
 {
     assert(Valid());
+
     auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
+
+    // If this is the first instance of this component, create the make_remove_event
+    // function which will be called whenever an entity is deleted. This is needed because
+    // the type of the component is not available at deletion time.
+    if (!data.make_remove_event) {
+        data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
+            return ev::make_event<ecs::ComponentRemovedEvent<Comp>>(entity);
+        };
+    }
+
     auto& entry = data.instances.Insert(
         d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
-    for (const auto& cb : data.onAdd) {
-        cb(*this);
-    }
+    ev::Event event = ev::make_event<ComponentAddedEvent<Comp>>(*this);
+    d_registry->d_callback(event);
 
     return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
-void Entity::Remove()
+void Entity::Remove() const
 {
     assert(Valid());
     Remove(spkt::type_hash<Comp>);
 }
 
 template <typename Comp>
-Comp& Entity::Get()
-{
-    assert(Valid());
-    auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];
-    return std::any_cast<Comp&>(entry);
-}
-
-template <typename Comp>
-const Comp& Entity::Get() const
+Comp& Entity::Get() const
 {
     assert(Valid());
     auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];

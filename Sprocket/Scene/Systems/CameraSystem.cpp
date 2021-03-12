@@ -10,22 +10,18 @@ CameraSystem::CameraSystem(float aspectRatio)
     : d_aspectRatio(aspectRatio)
 {}
 
-void CameraSystem::OnStartup(Scene& scene)
+void CameraSystem::OnEvent(ecs::Registry& registry, ev::Event& event)
 {
-    scene.Entities().OnAdd<Camera3DComponent>([&](ecs::Entity entity) {
-        auto& camera = entity.Get<Camera3DComponent>();
+    if (auto data = event.get_if<ecs::ComponentAddedEvent<Camera3DComponent>>()) {
+        auto& camera = data->entity.Get<Camera3DComponent>();
         camera.projection = glm::perspective(
             camera.fov, d_aspectRatio, 0.1f, 1000.0f
         );
-    });
-}
+    }
+    else if (auto data = event.get_if<ev::WindowResize>()) {
+        d_aspectRatio = (float)data->width / data->height;
 
-void CameraSystem::OnEvent(Scene& scene, ev::Event& event)
-{
-    if (auto e = event.get_if<ev::WindowResize>()) {
-        d_aspectRatio = (float)e->width / e->height;
-
-        for (auto entity : scene.Entities().View<Camera3DComponent>()) {
+        for (auto entity : registry.View<Camera3DComponent>()) {
             auto& camera = entity.Get<Camera3DComponent>();
             camera.projection = glm::perspective(
                 camera.fov, d_aspectRatio, 0.1f, 1000.0f

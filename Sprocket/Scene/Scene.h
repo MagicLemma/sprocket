@@ -18,6 +18,8 @@ class Scene
     ecs::Registry d_registry;
 
 public:
+    Scene();
+
     ecs::Registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>
@@ -39,10 +41,11 @@ public:
 template <typename T, typename... Args>
 T& Scene::Add(Args&&... args)
 {
+    assert(d_registry.Size() == 0);
     assert(d_lookup.find(spkt::type_hash<T>) == d_lookup.end());
     d_lookup[spkt::type_hash<T>] = d_systems.size();
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
-    d_systems.back()->OnStartup(*this);
+    d_systems.back()->OnStartup(d_registry);
     return *static_cast<T*>(d_systems.back().get());
 }
 

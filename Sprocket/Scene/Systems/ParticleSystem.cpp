@@ -1,5 +1,6 @@
 #include "ParticleSystem.h"
 #include "Components.h"
+#include "ECS.h"
 #include "Random.h"
 
 namespace Sprocket {
@@ -9,9 +10,9 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 {
 }
 
-void ParticleSystem::OnUpdate(Scene& scene, double dt)
+void ParticleSystem::OnUpdate(ecs::Registry& registry, double dt)
 {
-    for (auto entity : scene.Entities().View<ParticleComponent>()) {
+    for (auto entity : registry.View<ParticleComponent>()) {
         auto& tc = entity.Get<Transform3DComponent>();
         auto& pc = entity.Get<ParticleComponent>();
 

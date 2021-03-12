@@ -70,14 +70,15 @@ guid::GUID Entity::Id() const
     return d_guid;
 }
 
-void Entity::Remove(std::size_t type)
+void Entity::Remove(std::size_t type) const
 {
     assert(Valid());
     if (!Has(type)) { return; }
+
+    auto& data = d_registry->d_comps[type];
     
-    for (const auto& cb : d_registry->d_comps[type].onRemove) {
-        cb(*this);
-    }
+    ev::Event event = data.make_remove_event(*this);
+    d_registry->d_callback(event);
 
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
         if (it->second.instances.Has(d_index)) {
@@ -131,7 +132,7 @@ Entity Registry::Get(const guid::GUID& guid)
 
 void Registry::DeleteAll()
 {
-    // Clean up components, triggering onRemove behaviour
+    // Clean up components, triggering on remove behaviour
     for (const auto& [index, guid] : d_entities.Safe()) {
         Entity{this, index, guid}.Delete();
     }
@@ -139,8 +140,6 @@ void Registry::DeleteAll()
     // Reset all entity storage
     d_entities.Clear();
     d_pool.clear();
-
-    // TODO: Also reset component storage without affecting OnAdd/OnRemove callbacks
 }
 
 void Registry::Clear()
@@ -156,6 +155,16 @@ void Registry::Clear()
 std::size_t Registry::Size() const
 {
     return d_entities.Size();
+}
+
+void Registry::set_callback(const std::function<void(ev::Event&)>& callback)
+{
+    d_callback = callback;
+}
+
+void Registry::emit(ev::Event& event)
+{
+    d_callback(event);
 }
 
 cppcoro::generator<Entity> Registry::Each()
