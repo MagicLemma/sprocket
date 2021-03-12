@@ -78,6 +78,8 @@ void Entity::Remove(std::size_t type)
     for (const auto& cb : d_registry->d_comps[type].onRemove) {
         cb(*this);
     }
+    ev::Event event = ev::make_event<ComponentRemovedEvent>(*this);
+    d_registry->d_callback(event);
 
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
         if (it->second.instances.Has(d_index)) {

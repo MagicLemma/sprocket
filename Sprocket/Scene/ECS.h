@@ -3,6 +3,7 @@
 #include "SparseSet.h"
 #include "GUID.h"
 #include "Hashing.h"
+#include "Events.h"
 
 #include <unordered_map>
 #include <deque>
@@ -50,6 +51,18 @@ public:
     Entity& operator=(Entity other);
 };
 
+struct ComponentAddedEvent
+{
+    ecs::Entity entity;
+    ComponentAddedEvent(const ecs::Entity& e) : entity(e) {}
+};
+
+struct ComponentRemovedEvent
+{
+    ecs::Entity entity;
+    ComponentRemovedEvent(const ecs::Entity& e) : entity(e) {}
+};
+
 class Registry
 {
 public:
@@ -57,6 +70,10 @@ public:
     using EntityPredicate = std::function<bool(Entity)>;
 
 private:
+    // Callback that is invoked whenever a component is added or removed
+    // from an entity.
+    std::function<void(ev::Event&)> d_callback = [](ev::Event&) {};
+
     // Generates GUIDs for new Entities 
     guid::Generator d_generator;
 
@@ -114,6 +131,10 @@ public:
 
     // Number of active entities in the registry.
     std::size_t Size() const;
+
+    // Sets the callback that will be invoked whenever a component is added or
+    // removed from an entity.
+    void set_callback(const std::function<void(ev::Event&)>& callback);
 
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
@@ -206,6 +227,8 @@ Comp& Entity::Add(Args&&... args)
     for (const auto& cb : data.onAdd) {
         cb(*this);
     }
+    ev::Event event = ev::make_event<ComponentAddedEvent>(*this);
+    d_registry->d_callback(event);
 
     return std::any_cast<Comp&>(entry);
 }
