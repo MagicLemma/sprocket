@@ -52,8 +52,8 @@ void Console::Draw()
 
     double boxHeight = 50.0;
     d_ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &d_commandLine);
-    while (d_consoleLines.size() > 100) {
-        d_consoleLines.pop_back();
+    if (d_consoleLines.size() > 100) {
+        d_consoleLines.resize(100);
     }
     glm::vec2 region = {10, H - 10 - boxHeight - 50};
     float fontSize = 24.0f;
