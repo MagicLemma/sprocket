@@ -41,12 +41,12 @@ void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
 
     if (auto data = event.get_if<ecs::ComponentAddedEvent<ScriptComponent>>()) {
         lua::Script script(data->entity.Get<ScriptComponent>().script);
-        lua::register_scene_functions(script, scene);
-        lua::register_input_functions(script, d_input);
-        lua::register_window_functions(script, *d_window);
+        lua::load_registry_functions(script, scene);
+        lua::load_input_functions(script, d_input);
+        lua::load_window_functions(script, *d_window);
 
-        lua::register_entity_transformation_functions(script);
-        lua::register_entity_component_functions(script);
+        lua::load_entity_transformation_functions(script);
+        lua::load_entity_component_functions(script);
 
         script.call_function<void>("Init", data->entity);
         script.print_globals();
