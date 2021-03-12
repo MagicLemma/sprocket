@@ -74,11 +74,13 @@ void Entity::Remove(std::size_t type)
 {
     assert(Valid());
     if (!Has(type)) { return; }
+
+    auto& data = d_registry->d_comps[type];
     
-    for (const auto& cb : d_registry->d_comps[type].onRemove) {
+    for (const auto& cb : data.onRemove) {
         cb(*this);
     }
-    ev::Event event = ev::make_event<ComponentRemovedEvent>(*this);
+    ev::Event event = data.make_remove_event(*this);
     d_registry->d_callback(event);
 
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {

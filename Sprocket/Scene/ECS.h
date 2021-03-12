@@ -51,12 +51,14 @@ public:
     Entity& operator=(Entity other);
 };
 
+template <typename Comp>
 struct ComponentAddedEvent
 {
     ecs::Entity entity;
     ComponentAddedEvent(const ecs::Entity& e) : entity(e) {}
 };
 
+template <typename Comp>
 struct ComponentRemovedEvent
 {
     ecs::Entity entity;
@@ -92,6 +94,9 @@ private:
     {
         // All instances of this component.
         SparseSet<std::any> instances;
+
+        // Returns an ev::Event containing a ComponentRemoveEvent<T>.
+        std::function<ev::Event(ecs::Entity)> make_remove_event;
 
         // Callbacks triggered whenever a new instance of this component is added. These
         // are called after the component has been added.
@@ -219,7 +224,16 @@ template <typename Comp, typename... Args>
 Comp& Entity::Add(Args&&... args)
 {
     assert(Valid());
+
+    // If this is the first instance of this component, create the make_remove_event function.
+    //if (d_registry->d_comps.find(spkt::type_hash<Comp>) == d_registry->d_comps.end()) {
+    //    auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
+    //}
+
     auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
+    data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
+        return ev::make_event<ecs::ComponentRemovedEvent<Comp>>(entity);
+    };
     auto& entry = data.instances.Insert(
         d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
@@ -227,7 +241,7 @@ Comp& Entity::Add(Args&&... args)
     for (const auto& cb : data.onAdd) {
         cb(*this);
     }
-    ev::Event event = ev::make_event<ComponentAddedEvent>(*this);
+    ev::Event event = ev::make_event<ComponentAddedEvent<Comp>>(*this);
     d_registry->d_callback(event);
 
     return std::any_cast<Comp&>(entry);

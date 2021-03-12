@@ -15,30 +15,6 @@ ScriptRunner::ScriptRunner(Window* window)
 {
 }
 
-void ScriptRunner::OnStartup(Scene& scene)
-{
-    scene.Entities().OnAdd<ScriptComponent>([&](ecs::Entity entity) {
-        lua::Script script(entity.Get<ScriptComponent>().script);
-        lua::register_scene_functions(script, scene);
-        lua::register_input_functions(script, d_input);
-        lua::register_window_functions(script, *d_window);
-
-        lua::register_entity_transformation_functions(script);
-        lua::register_entity_component_functions(script);
-
-        script.call_function<void>("Init", entity);
-        script.print_globals();
-        d_engines.emplace(entity, std::make_pair(std::move(script), true));
-    });
-
-    scene.Entities().OnRemove<ScriptComponent>([&](ecs::Entity entity) {
-        auto it = d_engines.find(entity);
-        if (it != d_engines.end()) {
-            it->second.second = false; // alive = false
-        }
-    });
-}
-
 void ScriptRunner::OnUpdate(Scene& scene, double dt)
 {
     // We delete scripts here rather then with OnRemove otherwise we would segfault if
@@ -62,6 +38,26 @@ void ScriptRunner::OnUpdate(Scene& scene, double dt)
 void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
 {
     d_input.on_event(event);
+
+    if (auto data = event.get_if<ecs::ComponentAddedEvent<ScriptComponent>>()) {
+        lua::Script script(data->entity.Get<ScriptComponent>().script);
+        lua::register_scene_functions(script, scene);
+        lua::register_input_functions(script, d_input);
+        lua::register_window_functions(script, *d_window);
+
+        lua::register_entity_transformation_functions(script);
+        lua::register_entity_component_functions(script);
+
+        script.call_function<void>("Init", data->entity);
+        script.print_globals();
+        d_engines.emplace(data->entity, std::make_pair(std::move(script), true));
+    }
+    else if (auto data = event.get_if<ecs::ComponentRemovedEvent<ScriptComponent>>()) {
+        auto it = d_engines.find(data->entity);
+        if (it != d_engines.end()) {
+            it->second.second = false; // alive = false
+        }
+    }
 
     // This may be overly strict, change this if we ever need to react to consumed
     // events in scripts.
@@ -125,7 +121,6 @@ void ScriptRunner::OnEvent(Scene& scene, ev::Event& event)
             handler(script, "OnKeyboardKeyTypedEvent", x->key);
         }
         else {
-            log::warn("Event with unknown type {}", event.type_name());
             return;
         }
     }
