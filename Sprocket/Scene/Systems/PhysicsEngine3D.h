@@ -10,6 +10,13 @@ namespace Sprocket {
 
 struct PhysicsEngine3DImpl;
 
+struct CollisionEvent
+{
+    ecs::Entity entity1;
+    ecs::Entity entity2;
+    CollisionEvent(ecs::Entity e1, ecs::Entity e2) : entity1(e1), entity2(e2) {}
+};
+
 class PhysicsEngine3D : public EntitySystem
 {
     static constexpr float TIME_STEP = 1.0f / 60.0f;
@@ -20,6 +27,7 @@ public:
     PhysicsEngine3D(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
     ~PhysicsEngine3D() = default;
 
+    void OnStartup(ecs::Registry& registry) override;
     void OnEvent(ecs::Registry& registry, ev::Event& event) override;
     void OnUpdate(ecs::Registry& registry, double dt) override;
 

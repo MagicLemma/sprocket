@@ -5,6 +5,7 @@
 #include "LuaScript.h"
 #include "LuaLibrary.h"
 #include "Components.h"
+#include "PhysicsEngine3D.h"
 
 #include <utility>
 
@@ -119,6 +120,9 @@ void ScriptRunner::OnEvent(ecs::Registry& registry, ev::Event& event)
         }
         else if (auto x = event.get_if<ev::KeyboardTyped>()) {
             handler(script, "OnKeyboardKeyTypedEvent", x->key);
+        }
+        else if (auto x = event.get_if<CollisionEvent>()) {
+            handler(script, "OnCollisionEvent", x->entity1, x->entity2);
         }
         else {
             return;

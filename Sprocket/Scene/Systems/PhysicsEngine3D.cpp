@@ -85,6 +85,37 @@ public:
     float Fraction() const { return d_fraction; }
 };
 
+class EventListener : public rp3d::EventListener
+{
+    ecs::Registry* registry;
+
+public:
+    EventListener(ecs::Registry* r) : registry(r) {
+        assert(r);
+    }
+
+    void onContact(const rp3d::CollisionCallback::CallbackData& data) override
+    {
+        const auto name = [](const ecs::Entity& e) {
+            if (e.Has<NameComponent>()) {
+                return e.Get<NameComponent>().name;
+            }
+            return guid::Stringify(e.Id());
+        };
+
+        for (u32 p = 0; p != data.getNbContactPairs(); ++p) {
+            auto pair = data.getContactPair(p);
+            auto type = pair.getEventType();
+            if (type == rp3d::CollisionCallback::ContactPair::EventType::ContactStart) {
+                ecs::Entity e1 = *static_cast<ecs::Entity*>(pair.getBody1()->getUserData());
+                ecs::Entity e2 = *static_cast<ecs::Entity*>(pair.getBody2()->getUserData());
+                ev::Event event = ev::make_event<CollisionEvent>(e1, e2);
+                registry->emit(event);
+            }
+        }
+    }
+};
+
 }
 
 struct EntityData
@@ -102,6 +133,8 @@ struct PhysicsEngine3DImpl
 {
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
+
+    std::unique_ptr<EventListener> listener;
 
     float lastFrameLength = 0;
 
@@ -235,6 +268,12 @@ void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
         auto& entry = d_impl->entityData[data->entity];
         entry.body->removeCollider(entry.capsuleCollider);
     }
+}
+
+void PhysicsEngine3D::OnStartup(ecs::Registry& registry)
+{
+    d_impl->listener = std::make_unique<EventListener>(&registry);
+    d_impl->world->setEventListener(d_impl->listener.get());
 }
 
 void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
