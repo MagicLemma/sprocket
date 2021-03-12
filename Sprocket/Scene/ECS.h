@@ -40,8 +40,7 @@ public:
 
     template <typename Comp, typename... Args> Comp& Add(Args&&... args);
     template <typename Comp> void Remove() const;
-    template <typename Comp> Comp& Get();
-    template <typename Comp> const Comp& Get() const;
+    template <typename Comp> Comp& Get() const;
     template <typename Comp> bool Has() const;
 
     guid::GUID Id() const;
@@ -255,15 +254,7 @@ void Entity::Remove() const
 }
 
 template <typename Comp>
-Comp& Entity::Get()
-{
-    assert(Valid());
-    auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];
-    return std::any_cast<Comp&>(entry);
-}
-
-template <typename Comp>
-const Comp& Entity::Get() const
+Comp& Entity::Get() const
 {
     assert(Valid());
     auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];
