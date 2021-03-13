@@ -316,7 +316,7 @@ void WorldLayer::OnRender()
 
 
         auto hovered = grid.Hovered();
-        if (hovered.Valid()) {
+        if (hovered.valid()) {
             float width = 200;
             float height = 50;
             float x = std::min(mouse.x - 5, w - width - 10);

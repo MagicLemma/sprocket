@@ -232,7 +232,7 @@ void Anvil::OnRender()
 
         ImGuiXtra::Image(d_viewport.GetTexture());
 
-        if (!IsGameRunning() && d_selected.Valid() && d_selected.Has<Transform3DComponent>()) {
+        if (!IsGameRunning() && d_selected.valid() && d_selected.Has<Transform3DComponent>()) {
             auto& c = d_selected.Get<Transform3DComponent>();
             auto tr = Maths::Transform(c.position, c.orientation, c.scale);
             ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());

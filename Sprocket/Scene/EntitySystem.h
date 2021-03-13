@@ -23,13 +23,8 @@ public:
         // Called with every event so systems can consume them.
 
 private:
-    // EntitySystems can not be copied.
     EntitySystem(const EntitySystem&) = delete;
     EntitySystem& operator=(const EntitySystem&) = delete;
-
-    // EntitySystems can not be moved.
-    EntitySystem(EntitySystem&&) = delete;
-    EntitySystem& operator=(EntitySystem&&) = delete;
 };
 
 }

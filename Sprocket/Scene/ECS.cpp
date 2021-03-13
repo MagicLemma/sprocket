@@ -44,7 +44,7 @@ Entity& Entity::operator=(Entity other)
     return *this;
 }
 
-bool Entity::Valid() const
+bool Entity::valid() const
 {
      return *this != ecs::Null
          && d_registry
@@ -54,7 +54,7 @@ bool Entity::Valid() const
 
 void Entity::Delete() 
 {
-    if (Valid()) {
+    if (valid()) {
         // Clean up all components
         for (auto& [type, data] : d_registry->d_comps) {
             if (Has(type)) { Remove(type); }
@@ -72,7 +72,7 @@ guid::GUID Entity::Id() const
 
 void Entity::Remove(std::size_t type) const
 {
-    assert(Valid());
+    assert(valid());
     if (!Has(type)) { return; }
 
     auto& data = d_registry->d_comps[type];

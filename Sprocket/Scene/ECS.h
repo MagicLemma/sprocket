@@ -35,7 +35,7 @@ public:
     Entity(Registry* r, std::size_t i, guid::GUID g);
     Entity();
 
-    bool Valid() const;
+    bool valid() const;
     void Delete();
 
     template <typename Comp, typename... Args> Comp& Add(Args&&... args);
@@ -197,7 +197,7 @@ Entity Registry::Find(const EntityPredicate& pred)
 template <typename Comp, typename... Args>
 Comp& Entity::Add(Args&&... args)
 {
-    assert(Valid());
+    assert(valid());
 
     auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
 
@@ -223,14 +223,14 @@ Comp& Entity::Add(Args&&... args)
 template <typename Comp>
 void Entity::Remove() const
 {
-    assert(Valid());
+    assert(valid());
     Remove(spkt::type_hash<Comp>);
 }
 
 template <typename Comp>
 Comp& Entity::Get() const
 {
-    assert(Valid());
+    assert(valid());
     auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];
     return std::any_cast<Comp&>(entry);
 }
@@ -238,7 +238,7 @@ Comp& Entity::Get() const
 template <typename Comp>
 bool Entity::Has() const
 {
-    assert(Valid());
+    assert(valid());
     return Has(spkt::type_hash<Comp>);
 }
 
