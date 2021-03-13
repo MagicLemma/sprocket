@@ -13,8 +13,8 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 void ParticleSystem::OnUpdate(ecs::Registry& registry, double dt)
 {
     for (auto entity : registry.View<ParticleComponent>()) {
-        auto& tc = entity.Get<Transform3DComponent>();
-        auto& pc = entity.Get<ParticleComponent>();
+        auto& tc = entity.get<Transform3DComponent>();
+        auto& pc = entity.get<ParticleComponent>();
 
         pc.accumulator += dt;
         while (pc.accumulator > pc.interval) {

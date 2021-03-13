@@ -26,8 +26,8 @@ class Entity
     std::size_t d_index;
     guid::GUID  d_guid;
 
-    bool Has(std::size_t type) const;
-    void Remove(std::size_t type) const;
+    bool has(std::size_t type) const;
+    void remove(std::size_t type) const;
 
 public:
     // Construction of entities should not be done directly, instead they should
@@ -38,12 +38,12 @@ public:
     bool valid() const;
     void destroy();
 
-    template <typename Comp, typename... Args> Comp& Add(Args&&... args);
-    template <typename Comp> void Remove() const;
-    template <typename Comp> Comp& Get() const;
-    template <typename Comp> bool Has() const;
+    template <typename Comp, typename... Args> Comp& add(Args&&... args);
+    template <typename Comp> void remove() const;
+    template <typename Comp> Comp& get() const;
+    template <typename Comp> bool has() const;
 
-    guid::GUID Id() const;
+    guid::GUID id() const;
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
@@ -166,7 +166,7 @@ cppcoro::generator<Entity> Registry::View()
 {
     for (auto& [index, comp] : d_comps[spkt::type_hash<Comp>].instances.Fast()) {
         Entity entity{this, index, d_entities[index]};
-        if ((entity.Has<Rest>() && ...)) {
+        if ((entity.has<Rest>() && ...)) {
             co_yield entity;
         }
     }
@@ -195,7 +195,7 @@ Entity Registry::Find(const EntityPredicate& pred)
 // ENTITY TEMPLATES
 
 template <typename Comp, typename... Args>
-Comp& Entity::Add(Args&&... args)
+Comp& Entity::add(Args&&... args)
 {
     assert(valid());
 
@@ -221,14 +221,14 @@ Comp& Entity::Add(Args&&... args)
 }
 
 template <typename Comp>
-void Entity::Remove() const
+void Entity::remove() const
 {
     assert(valid());
-    Remove(spkt::type_hash<Comp>);
+    remove(spkt::type_hash<Comp>);
 }
 
 template <typename Comp>
-Comp& Entity::Get() const
+Comp& Entity::get() const
 {
     assert(valid());
     auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];
@@ -236,10 +236,10 @@ Comp& Entity::Get() const
 }
 
 template <typename Comp>
-bool Entity::Has() const
+bool Entity::has() const
 {
     assert(valid());
-    return Has(spkt::type_hash<Comp>);
+    return has(spkt::type_hash<Comp>);
 }
 
 // We can push an entity into the Lua stack by calling the Lua equivalent of malloc
@@ -263,7 +263,7 @@ template <> struct hash<Sprocket::ecs::Entity>
 {
     std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
     {
-        return std::hash<Sprocket::guid::GUID>{}(entity.Id());
+        return std::hash<Sprocket::guid::GUID>{}(entity.id());
     };
 };
 

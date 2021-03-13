@@ -97,10 +97,10 @@ public:
     void onContact(const rp3d::CollisionCallback::CallbackData& data) override
     {
         const auto name = [](const ecs::Entity& e) {
-            if (e.Has<NameComponent>()) {
-                return e.Get<NameComponent>().name;
+            if (e.has<NameComponent>()) {
+                return e.get<NameComponent>().name;
             }
-            return guid::Stringify(e.Id());
+            return guid::Stringify(e.id());
         };
 
         for (u32 p = 0; p != data.getNbContactPairs(); ++p) {
@@ -187,9 +187,9 @@ PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
 void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
 {
     if (auto data = event.get_if<ecs::ComponentAddedEvent<RigidBody3DComponent>>()) {
-        assert(data->entity.Has<Transform3DComponent>());
-        auto& tc = data->entity.Get<Transform3DComponent>();
-        auto& rc = data->entity.Get<RigidBody3DComponent>();
+        assert(data->entity.has<Transform3DComponent>());
+        auto& tc = data->entity.get<Transform3DComponent>();
+        auto& rc = data->entity.get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[data->entity];
         entry.entity = data->entity;
@@ -198,9 +198,9 @@ void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
     }
 
     else if (auto data = event.get_if<ecs::ComponentRemovedEvent<RigidBody3DComponent>>()) {
-        data->entity.Remove<BoxCollider3DComponent>();
-        data->entity.Remove<SphereCollider3DComponent>();
-        data->entity.Remove<CapsuleCollider3DComponent>();
+        data->entity.remove<BoxCollider3DComponent>();
+        data->entity.remove<SphereCollider3DComponent>();
+        data->entity.remove<CapsuleCollider3DComponent>();
 
         auto rigidBodyIt = d_impl->entityData.find(data->entity);
         d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
@@ -208,11 +208,11 @@ void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
     }
 
     else if (auto data = event.get_if<ecs::ComponentAddedEvent<BoxCollider3DComponent>>()) {
-        assert(data->entity.Has<Transform3DComponent>());
-        assert(data->entity.Has<RigidBody3DComponent>());
+        assert(data->entity.has<Transform3DComponent>());
+        assert(data->entity.has<RigidBody3DComponent>());
 
-        auto& tc = data->entity.Get<Transform3DComponent>();
-        auto& bc = data->entity.Get<BoxCollider3DComponent>();
+        auto& tc = data->entity.get<Transform3DComponent>();
+        auto& bc = data->entity.get<BoxCollider3DComponent>();
         auto& entry = d_impl->entityData[data->entity];
 
         glm::vec3 dimensions = bc.halfExtents;
@@ -221,7 +221,7 @@ void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
         rp3d::Transform transform = Convert(bc.position, bc.orientation);
 
         entry.boxCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.boxCollider, data->entity.Get<RigidBody3DComponent>());
+        SetMaterial(entry.boxCollider, data->entity.get<RigidBody3DComponent>());
     }
 
     else if (auto data = event.get_if<ecs::ComponentRemovedEvent<BoxCollider3DComponent>>()) {
@@ -230,18 +230,18 @@ void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
     }
 
     else if (auto data = event.get_if<ecs::ComponentAddedEvent<SphereCollider3DComponent>>()) {
-        assert(data->entity.Has<Transform3DComponent>());
-        assert(data->entity.Has<RigidBody3DComponent>());
+        assert(data->entity.has<Transform3DComponent>());
+        assert(data->entity.has<RigidBody3DComponent>());
 
-        auto& tc = data->entity.Get<Transform3DComponent>();
-        auto& sc = data->entity.Get<SphereCollider3DComponent>();
+        auto& tc = data->entity.get<Transform3DComponent>();
+        auto& sc = data->entity.get<SphereCollider3DComponent>();
         auto& entry = d_impl->entityData[data->entity];
         
         rp3d::SphereShape* shape = d_impl->pc.createSphereShape(sc.radius);
         rp3d::Transform transform = Convert(sc.position, sc.orientation);
 
         entry.sphereCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.sphereCollider, data->entity.Get<RigidBody3DComponent>());   
+        SetMaterial(entry.sphereCollider, data->entity.get<RigidBody3DComponent>());   
     }
 
     else if (auto data = event.get_if<ecs::ComponentRemovedEvent<SphereCollider3DComponent>>()) {
@@ -250,18 +250,18 @@ void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
     }
 
     else if (auto data = event.get_if<ecs::ComponentAddedEvent<CapsuleCollider3DComponent>>()) {
-        assert(data->entity.Has<Transform3DComponent>());
-        assert(data->entity.Has<RigidBody3DComponent>());
+        assert(data->entity.has<Transform3DComponent>());
+        assert(data->entity.has<RigidBody3DComponent>());
 
-        auto& tc = data->entity.Get<Transform3DComponent>();
-        auto& cc = data->entity.Get<CapsuleCollider3DComponent>();
+        auto& tc = data->entity.get<Transform3DComponent>();
+        auto& cc = data->entity.get<CapsuleCollider3DComponent>();
         auto& entry = d_impl->entityData[data->entity];
         
         rp3d::CapsuleShape* shape = d_impl->pc.createCapsuleShape(cc.radius, cc.height);
         rp3d::Transform transform = Convert(cc.position, cc.orientation);
 
         entry.capsuleCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.capsuleCollider, data->entity.Get<RigidBody3DComponent>()); 
+        SetMaterial(entry.capsuleCollider, data->entity.get<RigidBody3DComponent>()); 
     }
 
     else if (auto data = event.get_if<ecs::ComponentRemovedEvent<CapsuleCollider3DComponent>>()) {
@@ -282,8 +282,8 @@ void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
     for (auto entity : registry.View<RigidBody3DComponent>()) {
-        const auto& tc = entity.Get<Transform3DComponent>();
-        const auto& physics = entity.Get<RigidBody3DComponent>();
+        const auto& tc = entity.get<Transform3DComponent>();
+        const auto& physics = entity.get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[entity];
         rp3d::RigidBody* body = entry.body;
@@ -300,9 +300,9 @@ void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
 
             // TODO: Move to RigidBody3DComponent
             float mass = 0;
-            if (entity.Has<BoxCollider3DComponent>()) { mass += entity.Get<BoxCollider3DComponent>().mass; }
-            if (entity.Has<SphereCollider3DComponent>()) { mass += entity.Get<SphereCollider3DComponent>().mass; }
-            if (entity.Has<CapsuleCollider3DComponent>()) { mass += entity.Get<CapsuleCollider3DComponent>().mass; }
+            if (entity.has<BoxCollider3DComponent>()) { mass += entity.get<BoxCollider3DComponent>().mass; }
+            if (entity.has<SphereCollider3DComponent>()) { mass += entity.get<SphereCollider3DComponent>().mass; }
+            if (entity.has<CapsuleCollider3DComponent>()) { mass += entity.get<CapsuleCollider3DComponent>().mass; }
             body->setMass(mass);
         }
 
@@ -327,8 +327,8 @@ void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
 
     // Post Update
     for (auto entity : registry.View<RigidBody3DComponent>()) {
-        auto& tc = entity.Get<Transform3DComponent>();
-        auto& rc = entity.Get<RigidBody3DComponent>();
+        auto& tc = entity.get<Transform3DComponent>();
+        auto& rc = entity.get<RigidBody3DComponent>();
         const rp3d::RigidBody* body = d_impl->entityData[entity].body;
 
         tc.position = Convert(body->getTransform().getPosition());

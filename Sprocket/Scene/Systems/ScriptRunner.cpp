@@ -26,7 +26,7 @@ void ScriptRunner::OnUpdate(ecs::Registry&, double dt)
         auto& [script, alive] = it->second;
 
         if (alive) {
-            if (entity.Get<ScriptComponent>().active) {
+            if (entity.get<ScriptComponent>().active) {
                 script.call_function<void>("OnUpdate", entity, dt);
             }
             ++it;
@@ -41,7 +41,7 @@ void ScriptRunner::OnEvent(ecs::Registry& registry, ev::Event& event)
     d_input.on_event(event);
 
     if (auto data = event.get_if<ecs::ComponentAddedEvent<ScriptComponent>>()) {
-        lua::Script script(data->entity.Get<ScriptComponent>().script);
+        lua::Script script(data->entity.get<ScriptComponent>().script);
         lua::load_registry_functions(script, registry);
         lua::load_input_functions(script, d_input);
         lua::load_window_functions(script, *d_window);
@@ -75,7 +75,7 @@ void ScriptRunner::OnEvent(ecs::Registry& registry, ev::Event& event)
 
     for (auto& [entity, pair] : d_engines) {
         auto& [script, alive] = pair;
-        if (!(alive && entity.Get<ScriptComponent>().active)) {
+        if (!(alive && entity.get<ScriptComponent>().active)) {
             continue;
         }
 

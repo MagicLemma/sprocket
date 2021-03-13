@@ -57,7 +57,7 @@ void Entity::destroy()
     if (valid()) {
         // Clean up all components
         for (auto& [type, data] : d_registry->d_comps) {
-            if (Has(type)) { Remove(type); }
+            if (has(type)) { remove(type); }
         }
         d_registry->d_entities.Erase(d_index);
         d_registry->d_pool.push_back(d_index);
@@ -65,15 +65,15 @@ void Entity::destroy()
     }
 }
 
-guid::GUID Entity::Id() const
+guid::GUID Entity::id() const
 {
     return d_guid;
 }
 
-void Entity::Remove(std::size_t type) const
+void Entity::remove(std::size_t type) const
 {
     assert(valid());
-    if (!Has(type)) { return; }
+    if (!has(type)) { return; }
 
     auto& data = d_registry->d_comps[type];
     
@@ -87,7 +87,7 @@ void Entity::Remove(std::size_t type) const
     }
 }
 
-bool Entity::Has(std::size_t type) const
+bool Entity::has(std::size_t type) const
 {
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
         if (it->second.instances.Has(d_index)) {

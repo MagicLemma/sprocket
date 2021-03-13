@@ -43,7 +43,7 @@ void Load(const std::string& file, ecs::Registry* reg)
     // Must be a clean scene
     u32 count = 0;
     for (ecs::Entity e : reg->Each()) {
-        if (!e.Has<TemporaryComponent>()) ++count;
+        if (!e.has<TemporaryComponent>()) ++count;
     }
     assert(count == 0);
 

@@ -53,8 +53,8 @@ void ShadowMap::Draw(
 
     std::unordered_map<std::string, std::vector<InstanceData>> commands;
     for (auto entity : scene.Entities().View<ModelComponent>()) {
-        const auto& tc = entity.Get<Transform3DComponent>();
-        const auto& mc = entity.Get<ModelComponent>();
+        const auto& tc = entity.get<Transform3DComponent>();
+        const auto& mc = entity.get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
         commands[mc.mesh].push_back({ tc.position, tc.orientation, tc.scale });
     }

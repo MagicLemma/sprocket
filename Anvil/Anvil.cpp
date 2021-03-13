@@ -11,8 +11,8 @@ namespace {
 
 std::string Name(const ecs::Entity& entity)
 {
-    if (entity.Has<NameComponent>()) {
-        return entity.Get<NameComponent>().name;
+    if (entity.has<NameComponent>()) {
+        return entity.get<NameComponent>().name;
     }
     return "Entity";
 }
@@ -51,7 +51,7 @@ Anvil::Anvil(Window* window)
     d_scene->Load(d_sceneFile);
 
     d_runtimeCamera = d_scene->Entities().Find([](ecs::Entity entity) {
-        return entity.Has<Camera3DComponent>();
+        return entity.has<Camera3DComponent>();
     });
 
     d_activeScene = d_scene;
@@ -115,7 +115,7 @@ void Anvil::OnUpdate(double dt)
     
     std::vector<ecs::Entity> toDelete;
     for (auto entity : d_activeScene->Entities().View<Transform3DComponent>()) {
-        auto& transform = entity.Get<Transform3DComponent>();
+        auto& transform = entity.get<Transform3DComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);
         }
@@ -232,8 +232,8 @@ void Anvil::OnRender()
 
         ImGuiXtra::Image(d_viewport.GetTexture());
 
-        if (!IsGameRunning() && d_selected.valid() && d_selected.Has<Transform3DComponent>()) {
-            auto& c = d_selected.Get<Transform3DComponent>();
+        if (!IsGameRunning() && d_selected.valid() && d_selected.has<Transform3DComponent>()) {
+            auto& c = d_selected.get<Transform3DComponent>();
             auto tr = Maths::Transform(c.position, c.orientation, c.scale);
             ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
             Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);

@@ -11,8 +11,8 @@
 namespace Sprocket {
 
 std::string Name(const ecs::Entity& e) {
-    if (e.Has<NameComponent>()) {
-        return e.Get<NameComponent>().name;
+    if (e.has<NameComponent>()) {
+        return e.get<NameComponent>().name;
     }
     return "Entity";
 }
@@ -29,27 +29,27 @@ void GameGrid::OnStartup(ecs::Registry& registry)
     std::string gridSquare = "Resources/Models/Square.obj";
 
     d_hoveredSquare = registry.New();
-    auto& n1 = d_hoveredSquare.Add<NameComponent>();
-    d_hoveredSquare.Add<TemporaryComponent>();
+    auto& n1 = d_hoveredSquare.add<NameComponent>();
+    d_hoveredSquare.add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
-    auto& tr1 = d_hoveredSquare.Add<Transform3DComponent>();
+    auto& tr1 = d_hoveredSquare.add<Transform3DComponent>();
     tr1.scale = {0.3f, 0.3f, 0.3f};
-    auto& model1 = d_hoveredSquare.Add<ModelComponent>();
+    auto& model1 = d_hoveredSquare.add<ModelComponent>();
     model1.mesh = gridSquare;
 
     d_selectedSquare = registry.New();
-    auto& n2 = d_selectedSquare.Add<NameComponent>();
-    d_selectedSquare.Add<TemporaryComponent>();
+    auto& n2 = d_selectedSquare.add<NameComponent>();
+    d_selectedSquare.add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
-    auto& tr2 = d_selectedSquare.Add<Transform3DComponent>();
+    auto& tr2 = d_selectedSquare.add<Transform3DComponent>();
     tr2.scale = {0.5f, 0.5f, 0.5f};
-    auto& model2 = d_selectedSquare.Add<ModelComponent>();
+    auto& model2 = d_selectedSquare.add<ModelComponent>();
     model2.mesh = gridSquare;
 }
 
 void GameGrid::OnUpdate(ecs::Registry&, double dt)
 {
-    auto& camTr = d_camera.Get<Transform3DComponent>();
+    auto& camTr = d_camera.get<Transform3DComponent>();
 
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
@@ -64,19 +64,19 @@ void GameGrid::OnUpdate(ecs::Registry&, double dt)
     glm::vec3 mousePos = cameraPos + lambda * direction;
     d_hovered = {(int)std::floor(mousePos.x), (int)std::floor(mousePos.z)};
 
-    d_hoveredSquare.Get<Transform3DComponent>().position = { d_hovered.x + 0.5f, 0.05f, d_hovered.y + 0.5f };
+    d_hoveredSquare.get<Transform3DComponent>().position = { d_hovered.x + 0.5f, 0.05f, d_hovered.y + 0.5f };
     if (d_selected.has_value()) {
-        d_selectedSquare.Get<Transform3DComponent>().position = { d_selected.value().x + 0.5f, 0.05f, d_selected.value().y + 0.5f };
+        d_selectedSquare.get<Transform3DComponent>().position = { d_selected.value().x + 0.5f, 0.05f, d_selected.value().y + 0.5f };
     } else {
-        d_selectedSquare.Get<Transform3DComponent>().position = { 0.5f, -1.0f, 0.5f };
+        d_selectedSquare.get<Transform3DComponent>().position = { 0.5f, -1.0f, 0.5f };
     }
 }
 
 void GameGrid::OnEvent(ecs::Registry&, ev::Event& event)
 {
     if (auto data = event.get_if<ecs::ComponentAddedEvent<GridComponent>>()) {
-        auto& transform = data->entity.Get<Transform3DComponent>();
-        const auto& gc = data->entity.Get<GridComponent>();
+        auto& transform = data->entity.get<Transform3DComponent>();
+        const auto& gc = data->entity.get<GridComponent>();
 
         assert(!d_gridEntities.contains({gc.x, gc.z}));
     
@@ -86,7 +86,7 @@ void GameGrid::OnEvent(ecs::Registry&, ev::Event& event)
     }
 
     else if (auto data = event.get_if<ecs::ComponentAddedEvent<GridComponent>>()) {
-        auto& gc = data->entity.Get<GridComponent>();
+        auto& gc = data->entity.get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});
         if (it == d_gridEntities.end()) {

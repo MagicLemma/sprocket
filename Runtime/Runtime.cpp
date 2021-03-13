@@ -65,7 +65,7 @@ void Runtime::OnUpdate(double dt)
     
     std::vector<ecs::Entity> toDelete;
     for (auto entity : d_scene.Entities().View<Transform3DComponent>()) {
-        auto& transform = entity.Get<Transform3DComponent>();
+        auto& transform = entity.get<Transform3DComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);
         }
