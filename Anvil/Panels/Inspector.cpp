@@ -367,7 +367,7 @@ void Inspector::Show(Anvil& editor)
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
-        entity.Delete();
+        entity.destroy();
         editor.ClearSelected();
     }
 }

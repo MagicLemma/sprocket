@@ -84,7 +84,7 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-        luaEntity->Delete();
+        luaEntity->destroy();
         return 0;
     });
 

@@ -71,7 +71,7 @@ void Runtime::OnUpdate(double dt)
         }
     }
     for (auto entity : toDelete) {
-        entity.Delete();
+        entity.destroy();
     }
 }
 

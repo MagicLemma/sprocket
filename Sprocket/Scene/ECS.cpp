@@ -52,7 +52,7 @@ bool Entity::valid() const
          && d_registry->d_entities[d_index] == d_guid;
 }
 
-void Entity::Delete() 
+void Entity::destroy() 
 {
     if (valid()) {
         // Clean up all components
@@ -134,7 +134,7 @@ void Registry::DeleteAll()
 {
     // Clean up components, triggering on remove behaviour
     for (const auto& [index, guid] : d_entities.Safe()) {
-        Entity{this, index, guid}.Delete();
+        Entity{this, index, guid}.destroy();
     }
 
     // Reset all entity storage

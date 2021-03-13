@@ -36,7 +36,7 @@ public:
     Entity();
 
     bool valid() const;
-    void Delete();
+    void destroy();
 
     template <typename Comp, typename... Args> Comp& Add(Args&&... args);
     template <typename Comp> void Remove() const;
