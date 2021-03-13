@@ -200,7 +200,7 @@ void Load(const std::string& file, ecs::Registry* reg)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ecs::Entity e = reg->New(entity["@GUID"].as<guid::GUID>());
+        ecs::Entity e = reg->create(entity["@GUID"].as<guid::GUID>());
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
             e.add<TemporaryComponent>(c);
@@ -335,7 +335,7 @@ void Load(const std::string& file, ecs::Registry* reg)
 
 ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 {
-    ecs::Entity e = reg->New();
+    ecs::Entity e = reg->create();
     if (entity.has<TemporaryComponent>()) {
         e.add<TemporaryComponent>(entity.get<TemporaryComponent>());
     }

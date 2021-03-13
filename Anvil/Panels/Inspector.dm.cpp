@@ -14,25 +14,25 @@ void Inspector::Show(Anvil& editor)
 {
     ecs::Entity entity = editor.Selected();
 
-    if (!editor.Selected().Valid()) {
+    if (!editor.Selected().valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->Entities().New();
+            auto e = editor.GetScene()->Entities().create();
             editor.SetSelected(e);
         }
         return;
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), guid::Stringify(entity.Id()).c_str());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), guid::Stringify(entity.id()).c_str());
 
 #ifdef DATAMATIC_BLOCK
-    if (entity.Has<{{Comp.Name}}>()) {
-        auto& c = entity.Get<{{Comp.Name}}>();
+    if (entity.has<{{Comp.Name}}>()) {
+        auto& c = entity.get<{{Comp.Name}}>();
         if (ImGui::CollapsingHeader("{{Comp.DisplayName}}")) {
             ImGui::PushID(count++);
             {{Attr.Inspector.Display}};
             {{Comp.Inspector.GuizmoSettings}}
-            if (ImGui::Button("Delete")) { entity.Remove<{{Comp.Name}}>(); }
+            if (ImGui::Button("Delete")) { entity.remove<{{Comp.Name}}>(); }
             ImGui::PopID();
         }
     }
@@ -46,9 +46,9 @@ void Inspector::Show(Anvil& editor)
 
     if (ImGui::BeginPopup("missing_components_list")) {
 #ifdef DATAMATIC_BLOCK
-        if (!entity.Has<{{Comp.Name}}>() && ImGui::Selectable("{{Comp.DisplayName}}")) {
+        if (!entity.has<{{Comp.Name}}>() && ImGui::Selectable("{{Comp.DisplayName}}")) {
             {{Comp.Name}} c;
-            entity.Add<{{Comp.Name}}>(c);
+            entity.add<{{Comp.Name}}>(c);
         }
 #endif
         ImGui::EndMenu();
@@ -59,7 +59,7 @@ void Inspector::Show(Anvil& editor)
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
-        entity.Delete();
+        entity.destroy();
         editor.ClearSelected();
     }
 }

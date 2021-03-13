@@ -98,13 +98,13 @@ bool Entity::has(std::size_t type) const
     return false;
 }
 
-Entity Registry::New()
+Entity Registry::create()
 {
     guid::GUID guid = d_generator.New();
-    return New(guid);
+    return create(guid);
 }
 
-Entity Registry::New(const guid::GUID& guid)
+Entity Registry::create(const guid::GUID& guid)
 {
     assert(guid != guid::Zero);
 
@@ -121,7 +121,7 @@ Entity Registry::New(const guid::GUID& guid)
     return {this, index, guid};
 }
 
-Entity Registry::Get(const guid::GUID& guid)
+Entity Registry::get(const guid::GUID& guid)
 {
     auto it = d_lookup.find(guid);
     if (it != d_lookup.end()) {

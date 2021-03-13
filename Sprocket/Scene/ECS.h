@@ -102,20 +102,19 @@ private:
 
     Registry& operator=(const Registry&) = delete;
     Registry(const Registry&) = delete;
-    Registry(Registry&&) = delete;
 
 public:
     Registry() = default;
 
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
-    Entity New();
+    Entity create();
 
     // Creates a new entity with no components and with the given guid. No checks on the
     // validity of the guid are made, except for that it cannot be guid::Zero.
-    Entity New(const guid::GUID& guid);
+    Entity create(const guid::GUID& guid);
 
     // Returns the entity corresponding to the given GUID, and ecs::Null otherwise.
-    Entity Get(const guid::GUID& guid);
+    Entity get(const guid::GUID& guid);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.

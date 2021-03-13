@@ -17,7 +17,7 @@ void Inspector::Show(Anvil& editor)
 
     if (!editor.Selected().valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->Entities().New();
+            auto e = editor.GetScene()->Entities().create();
             editor.SetSelected(e);
         }
         return;

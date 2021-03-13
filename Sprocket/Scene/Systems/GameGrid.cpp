@@ -28,7 +28,7 @@ void GameGrid::OnStartup(ecs::Registry& registry)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
-    d_hoveredSquare = registry.New();
+    d_hoveredSquare = registry.create();
     auto& n1 = d_hoveredSquare.add<NameComponent>();
     d_hoveredSquare.add<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
@@ -37,7 +37,7 @@ void GameGrid::OnStartup(ecs::Registry& registry)
     auto& model1 = d_hoveredSquare.add<ModelComponent>();
     model1.mesh = gridSquare;
 
-    d_selectedSquare = registry.New();
+    d_selectedSquare = registry.create();
     auto& n2 = d_selectedSquare.add<NameComponent>();
     d_selectedSquare.add<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";

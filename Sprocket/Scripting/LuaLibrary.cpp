@@ -77,7 +77,7 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
-        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->New();
+        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->create();
         return 1;
     });
 

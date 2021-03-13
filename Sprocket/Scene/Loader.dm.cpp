@@ -18,12 +18,12 @@ void Save(const std::string& file, ecs::Registry* reg)
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto entity : reg->Each()) {
-        if (entity.Has<TemporaryComponent>()) { return; }
+        if (entity.has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
-        out << YAML::Key << "@GUID" << YAML::Value << entity.Id();
+        out << YAML::Key << "@GUID" << YAML::Value << entity.id();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
-        if (entity.Has<{{Comp.Name}}>()) {
-            const auto& c = entity.Get<{{Comp.Name}}>();
+        if (entity.has<{{Comp.Name}}>()) {
+            const auto& c = entity.get<{{Comp.Name}}>();
             out << YAML::Key << "{{Comp.Name}}" << YAML::BeginMap;
             out << YAML::Key << "{{Attr.Name}}" << YAML::Value << c.{{Attr.Name}};
             out << YAML::EndMap;
@@ -59,12 +59,12 @@ void Load(const std::string& file, ecs::Registry* reg)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ecs::Entity e = reg->New(entity["@GUID"].as<guid::GUID>());
+        ecs::Entity e = reg->create(entity["@GUID"].as<guid::GUID>());
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
             c.{{Attr.Name}} = spec["{{Attr.Name}}"] ? spec["{{Attr.Name}}"].as<{{Attr.Type}}>() : {{Attr.Default}};
-            e.Add<{{Comp.Name}}>(c);
+            e.add<{{Comp.Name}}>(c);
         }
 #endif
     }
@@ -72,10 +72,10 @@ void Load(const std::string& file, ecs::Registry* reg)
 
 ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 {
-    ecs::Entity e = reg->New();
+    ecs::Entity e = reg->create();
 #ifdef DATAMATIC_BLOCK
-    if (entity.Has<{{Comp.Name}}>()) {
-        e.Add<{{Comp.Name}}>(entity.Get<{{Comp.Name}}>());
+    if (entity.has<{{Comp.Name}}>()) {
+        e.add<{{Comp.Name}}>(entity.get<{{Comp.Name}}>());
     }
 #endif
     return e;

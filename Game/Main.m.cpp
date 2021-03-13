@@ -4,6 +4,13 @@
 
 using namespace Sprocket;
 
+struct Foo
+{
+    int x;
+    double y;
+    float z;
+};
+
 int main()
 {
     Sprocket::Window window("Game");

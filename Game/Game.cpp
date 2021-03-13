@@ -450,7 +450,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Entities().New();
+    auto newEntity = d_scene.Entities().create();
 
     auto& name = newEntity.add<NameComponent>();
     name.name = "Tree";
@@ -476,7 +476,7 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Entities().New();
+    auto newEntity = d_scene.Entities().create();
     auto& n = newEntity.add<NameComponent>();
     n.name = name;
 

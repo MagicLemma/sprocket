@@ -61,7 +61,7 @@ template <typename T> int _has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    lua_pushboolean(L, entity.Has<T>());
+    lua_pushboolean(L, entity.has<T>());
     return 1;
 }
 
@@ -76,14 +76,14 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
-        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->New();
+        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->create();
         return 1;
     });
 
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-        luaEntity->Delete();
+        luaEntity->destroy();
         return 0;
     });
 
@@ -247,7 +247,7 @@ void load_entity_transformation_functions(lua::Script& script)
         float ty = (float)lua_tonumber(L, 6);
         float tz = (float)lua_tonumber(L, 7);
 
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         tr.position = glm::vec3(px, py, pz);
         tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, {tx, ty, tz}, {0.0, 1.0, 0.0})));
         return 0;
@@ -263,7 +263,7 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
 
         float yaw = (float)lua_tonumber(L, 2);
         tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
@@ -274,11 +274,11 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         auto o = tr.orientation;
         
-        if (entity.Has<Camera3DComponent>()) {
-            auto pitch = entity.Get<Camera3DComponent>().pitch;
+        if (entity.has<Camera3DComponent>()) {
+            auto pitch = entity.get<Camera3DComponent>().pitch;
             o = glm::rotate(o, pitch, {1, 0, 0});
         }
 
@@ -296,7 +296,7 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
         ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
 
@@ -311,7 +311,7 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
         ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         float yaw = Converter<float>::read(L, ptr);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
@@ -347,10 +347,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<{{Comp.Name}}>());
+        assert(e.has<{{Comp.Name}}>());
 
         int count = 0;
-        const auto& c = e.Get<{{Comp.Name}}>();
+        const auto& c = e.get<{{Comp.Name}}>();
         count += Converter<{{Attr.Type}}>::push(L, c.{{Attr.Name}});
         assert(count == {{Comp.Name}}_dimension);
         return count;
@@ -365,7 +365,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<{{Comp.Name}}>();
+        auto& c = e.get<{{Comp.Name}}>();
         c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
         assert(ptr == {{Comp.Name}}_dimension + 2);
         return 0;
@@ -380,11 +380,11 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<{{Comp.Name}}>());
+        assert(!e.has<{{Comp.Name}}>());
 
         {{Comp.Name}} c;
         c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
-        e.Add<{{Comp.Name}}>(c);
+        e.add<{{Comp.Name}}>(c);
         assert(ptr == {{Comp.Name}}_dimension + 2);
         return 0;
     });
