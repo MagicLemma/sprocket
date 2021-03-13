@@ -152,7 +152,7 @@ void Registry::reset()
     d_pool.clear();
 }
 
-std::size_t Registry::Size() const
+std::size_t Registry::size() const
 {
     return d_entities.Size();
 }
@@ -167,7 +167,7 @@ void Registry::emit(ev::Event& event)
     d_callback(event);
 }
 
-cppcoro::generator<Entity> Registry::Each()
+cppcoro::generator<Entity> Registry::all()
 {
     for (const auto& [index, guid] : d_entities.Fast()) {
         co_yield {this, index, guid};

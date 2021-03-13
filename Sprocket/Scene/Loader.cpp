@@ -18,7 +18,7 @@ void Save(const std::string& file, ecs::Registry* reg)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : reg->Each()) {
+    for (auto entity : reg->all()) {
         if (entity.has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
         out << YAML::Key << "@GUID" << YAML::Value << entity.id();
@@ -183,7 +183,7 @@ void Load(const std::string& file, ecs::Registry* reg)
 {
     // Must be a clean scene
     u32 count = 0;
-    for (ecs::Entity e : reg->Each()) {
+    for (ecs::Entity e : reg->all()) {
         if (!e.has<TemporaryComponent>()) ++count;
     }
     assert(count == 0);
@@ -398,7 +398,7 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
-    for (auto entity : source->Each()) {
+    for (auto entity : source->all()) {
         Copy(target, entity);
     }
 }

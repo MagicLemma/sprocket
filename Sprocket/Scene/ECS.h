@@ -125,7 +125,7 @@ public:
     void reset();
 
     // Number of active entities in the registry.
-    std::size_t Size() const;
+    std::size_t size() const;
 
     // Sets the callback that will be invoked whenever a component is added or
     // removed from an entity.
@@ -136,17 +136,19 @@ public:
 
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
-    cppcoro::generator<Entity> Each();
+    cppcoro::generator<Entity> all();
 
     // Does a fast iteration over all entities with the given Comp. If any extra
     // component types are specified, only entities that have all of those types
     // will be yielded. This should only be used for modifying the components, not
     // adding/removing new ones.
-    template <typename Comp, typename... Rest> cppcoro::generator<Entity> View();
+    template <typename Comp, typename... Rest>
+    cppcoro::generator<Entity> View();
 
     // Returns the first entity satisfying the given predicate, or ECS::Null if
     // none is found. Can optionally provide components to filter on.
-    template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
+    template <typename... Comps>
+    Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
 
     friend class Entity;
 };
@@ -175,7 +177,7 @@ template <typename... Comps>
 Entity Registry::Find(const EntityPredicate& pred)
 {
     if constexpr (sizeof...(Comps) == 0) {
-        for (auto entity : Each()) {
+        for (auto entity : all()) {
             if (pred(entity)) {
                 return entity;
             }

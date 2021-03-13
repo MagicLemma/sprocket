@@ -97,7 +97,7 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
 
     lua_register(L, "_Each_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<ecs::Registry>(L, "__registry__")->Each());
+        auto gen = new Generator(get_pointer<ecs::Registry>(L, "__registry__")->all());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });

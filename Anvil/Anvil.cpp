@@ -263,7 +263,7 @@ void Anvil::OnRender()
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
                 int i = 0;
-                for (auto entity : d_scene->Entities().Each()) {
+                for (auto entity : d_scene->Entities().all()) {
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(i);
                         if (ImGui::Selectable(Name(entity).c_str())) {

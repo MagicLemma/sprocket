@@ -32,7 +32,7 @@ void Scene::OnEvent(ev::Event& event)
 
 std::size_t Scene::Size() const
 {
-    return d_registry.Size();
+    return d_registry.size();
 }
 
 void Scene::Clear()
