@@ -32,7 +32,7 @@ Runtime::Runtime(Window* window)
     d_scene.Add<AnimationSystem>();
     d_scene.Load("Resources/Anvil.yaml");
 
-    d_runtimeCamera = d_scene.Entities().Find<Camera3DComponent>();
+    d_runtimeCamera = d_scene.Entities().find<Camera3DComponent>();
 }
 
 void Runtime::OnEvent(ev::Event& event)

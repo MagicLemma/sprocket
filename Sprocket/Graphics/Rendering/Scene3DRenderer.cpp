@@ -44,7 +44,7 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    if (const auto& s = scene.Entities().Find<SunComponent>(); s != ecs::Null) {
+    if (const auto& s = scene.Entities().find<SunComponent>(); s != ecs::Null) {
         const auto& sun = s.get<SunComponent>();
         shader.LoadVec3("u_sun_direction", sun.direction);
         shader.LoadVec3("u_sun_colour", sun.colour);
@@ -52,7 +52,7 @@ void UploadUniforms(
     }
 
     // Load ambience to shader
-    if (const auto& a = scene.Entities().Find<AmbienceComponent>(); a != ecs::Null) {
+    if (const auto& a = scene.Entities().find<AmbienceComponent>(); a != ecs::Null) {
         const auto& ambience = a.get<AmbienceComponent>();
         shader.LoadVec3("u_ambience_colour", ambience.colour);
         shader.LoadFloat("u_ambience_brightness", ambience.brightness);

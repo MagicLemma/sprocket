@@ -50,7 +50,7 @@ Anvil::Anvil(Window* window)
     d_scene = std::make_shared<Scene>();    
     d_scene->Load(d_sceneFile);
 
-    d_runtimeCamera = d_scene->Entities().Find([](ecs::Entity entity) {
+    d_runtimeCamera = d_scene->Entities().find([](ecs::Entity entity) {
         return entity.has<Camera3DComponent>();
     });
 
@@ -94,7 +94,7 @@ void Anvil::OnEvent(ev::Event& event)
 void Anvil::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
-    d_window->SetWindowName(fmt::format("Anvil: {}", d_sceneFile));
+    //d_window->SetWindowName(fmt::format("Anvil: {}", d_sceneFile));
 
     // Create the Shadow Map
     //float lambda = 5.0f; // TODO: Calculate the floor intersection point
@@ -210,7 +210,7 @@ void Anvil::OnRender()
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->Entities().Find<Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->Entities().find<Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();

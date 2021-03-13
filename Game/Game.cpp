@@ -92,7 +92,7 @@ WorldLayer::WorldLayer(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& sun = d_scene.Entities().Find<SunComponent>().get<SunComponent>();
+    auto& sun = d_scene.Entities().find<SunComponent>().get<SunComponent>();
     sun.direction = d_cycle.GetSunDir();
 
     d_postProcessor.AddEffect<GaussianVert>();
@@ -114,11 +114,11 @@ void WorldLayer::LoadScene(std::string_view file)
 
     d_sceneFile = file;
 
-    d_worker = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
+    d_worker = d_scene.Entities().find<NameComponent>([](ecs::Entity entity) {
         return entity.get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
+    d_camera = d_scene.Entities().find<NameComponent>([](ecs::Entity entity) {
         return entity.get<NameComponent>().name == "Camera";
     });
 
@@ -212,7 +212,7 @@ void WorldLayer::OnUpdate(double dt)
         d_cycle.OnUpdate(dt);
     }
     
-    auto& sun = d_scene.Entities().Find<SunComponent>().get<SunComponent>();
+    auto& sun = d_scene.Entities().find<SunComponent>().get<SunComponent>();
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -246,7 +246,7 @@ void WorldLayer::OnRender()
     auto& tc = d_camera.get<Transform3DComponent>();
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
     d_shadowMap.Draw(
-        d_scene.Entities().Find<SunComponent>().get<SunComponent>().direction,
+        d_scene.Entities().find<SunComponent>().get<SunComponent>().direction,
         target,
         d_scene
     );

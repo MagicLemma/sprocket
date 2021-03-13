@@ -28,6 +28,9 @@ constexpr std::size_t sdbm_type_hash()
 template <typename T>
 constexpr std::size_t type_hash = sdbm_type_hash<T>();
 
-static_assert(type_hash<int> != 0); // Check that it is actually calcualated at compile time
+// Check that it is actually calcualated at compile time
+// Will fail if the function_name source doesnt give unique
+// values on this platform
+static_assert(type_hash<int> != type_hash<float>);
 
 }

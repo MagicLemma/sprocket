@@ -71,8 +71,7 @@ public:
     using EntityPredicate = std::function<bool(Entity)>;
 
 private:
-    // Callback that is invoked whenever a component is added or removed
-    // from an entity.
+    // Callback that is invoked whenever a component is added or removed from an entity.
     std::function<void(ev::Event&)> d_callback = [](ev::Event&) {};
 
     // Generates GUIDs for new Entities 
@@ -148,7 +147,7 @@ public:
     // Returns the first entity satisfying the given predicate, or ECS::Null if
     // none is found. Can optionally provide components to filter on.
     template <typename... Comps>
-    Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
+    Entity find(const EntityPredicate& pred = [](Entity){ return true; });
 
     friend class Entity;
 };
@@ -174,7 +173,7 @@ cppcoro::generator<Entity> Registry::view()
 }
 
 template <typename... Comps>
-Entity Registry::Find(const EntityPredicate& pred)
+Entity Registry::find(const EntityPredicate& pred)
 {
     if constexpr (sizeof...(Comps) == 0) {
         for (auto entity : all()) {
