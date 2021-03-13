@@ -130,7 +130,7 @@ Entity Registry::get(const guid::GUID& guid)
     return ecs::Null;
 }
 
-void Registry::DeleteAll()
+void Registry::clear()
 {
     // Clean up components, triggering on remove behaviour
     for (const auto& [index, guid] : d_entities.Safe()) {
@@ -142,7 +142,7 @@ void Registry::DeleteAll()
     d_pool.clear();
 }
 
-void Registry::Clear()
+void Registry::reset()
 {
     // Reset all components and remove all callbacks
     d_comps.clear();
