@@ -114,7 +114,7 @@ void Anvil::OnUpdate(double dt)
     }
     
     std::vector<ecs::Entity> toDelete;
-    for (auto entity : d_activeScene->Entities().View<Transform3DComponent>()) {
+    for (auto entity : d_activeScene->Entities().view<Transform3DComponent>()) {
         auto& transform = entity.get<Transform3DComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);

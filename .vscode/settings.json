@@ -97,6 +97,7 @@
         "compare": "cpp",
         "stop_token": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "coroutine": "cpp"
     }
 }

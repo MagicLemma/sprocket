@@ -21,7 +21,7 @@ void CameraSystem::OnEvent(ecs::Registry& registry, ev::Event& event)
     else if (auto data = event.get_if<ev::WindowResize>()) {
         d_aspectRatio = (float)data->width / data->height;
 
-        for (auto entity : registry.View<Camera3DComponent>()) {
+        for (auto entity : registry.view<Camera3DComponent>()) {
             auto& camera = entity.get<Camera3DComponent>();
             camera.projection = glm::perspective(
                 camera.fov, d_aspectRatio, 0.1f, 1000.0f

@@ -32,7 +32,7 @@ void ColliderRenderer::Draw(
     
     static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube.get());
-    for (auto entity : scene.Entities().View<BoxCollider3DComponent>()) {
+    for (auto entity : scene.Entities().view<BoxCollider3DComponent>()) {
         const auto& c = entity.get<BoxCollider3DComponent>();
         auto tr = entity.get<Transform3DComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
@@ -47,7 +47,7 @@ void ColliderRenderer::Draw(
 
     static auto s_sphere = Mesh::FromFile("Resources/Models/LowPolySphere.obj");
     d_vao->SetModel(s_sphere.get());
-    for (auto entity : scene.Entities().View<SphereCollider3DComponent>()) {
+    for (auto entity : scene.Entities().view<SphereCollider3DComponent>()) {
         const auto& c = entity.get<SphereCollider3DComponent>();
         auto tr = entity.get<Transform3DComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
@@ -60,7 +60,7 @@ void ColliderRenderer::Draw(
     static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
 
-    for (auto entity : scene.Entities().View<CapsuleCollider3DComponent>()) {
+    for (auto entity : scene.Entities().view<CapsuleCollider3DComponent>()) {
         const auto& c = entity.get<CapsuleCollider3DComponent>();
 
         {  // Top Hemisphere

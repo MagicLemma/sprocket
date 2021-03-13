@@ -143,7 +143,7 @@ public:
     // will be yielded. This should only be used for modifying the components, not
     // adding/removing new ones.
     template <typename Comp, typename... Rest>
-    cppcoro::generator<Entity> View();
+    cppcoro::generator<Entity> view();
 
     // Returns the first entity satisfying the given predicate, or ECS::Null if
     // none is found. Can optionally provide components to filter on.
@@ -163,7 +163,7 @@ static const Entity Null{};
 // REGISTRY TEMPLATES
 
 template <typename Comp, typename... Rest>
-cppcoro::generator<Entity> Registry::View()
+cppcoro::generator<Entity> Registry::view()
 {
     for (auto& [index, comp] : d_comps[spkt::type_hash<Comp>].instances.Fast()) {
         Entity entity{this, index, d_entities[index]};
@@ -184,7 +184,7 @@ Entity Registry::Find(const EntityPredicate& pred)
         }
     }
     else {
-        for (auto entity : View<Comps...>()) {
+        for (auto entity : view<Comps...>()) {
             if (pred(entity)) {
                 return entity;
             }

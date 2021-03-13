@@ -281,7 +281,7 @@ void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
     // Pre Update
     // Do this even if not running so that the physics engine stays up
     // to date with the scene.
-    for (auto entity : registry.View<RigidBody3DComponent>()) {
+    for (auto entity : registry.view<RigidBody3DComponent>()) {
         const auto& tc = entity.get<Transform3DComponent>();
         const auto& physics = entity.get<RigidBody3DComponent>();
 
@@ -326,7 +326,7 @@ void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
     }
 
     // Post Update
-    for (auto entity : registry.View<RigidBody3DComponent>()) {
+    for (auto entity : registry.view<RigidBody3DComponent>()) {
         auto& tc = entity.get<Transform3DComponent>();
         auto& rc = entity.get<RigidBody3DComponent>();
         const rp3d::RigidBody* body = d_impl->entityData[entity].body;

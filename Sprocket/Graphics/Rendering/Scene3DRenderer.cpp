@@ -60,7 +60,7 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    auto lights = scene.Entities().View<LightComponent, Transform3DComponent>();
+    auto lights = scene.Entities().view<LightComponent, Transform3DComponent>();
     for (auto entity : lights) {
         if (i < MAX_NUM_LIGHTS) {
             auto position = entity.get<Transform3DComponent>().position;
@@ -162,7 +162,7 @@ void Scene3DRenderer::Draw(
     > commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent, Transform3DComponent>()) {
+    for (auto entity : scene.Entities().view<ModelComponent, Transform3DComponent>()) {
         const auto& tc = entity.get<Transform3DComponent>();
         const auto& mc = entity.get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
@@ -191,7 +191,7 @@ void Scene3DRenderer::Draw(
     }
 
     d_animatedShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent>()) {
+    for (auto entity : scene.Entities().view<ModelComponent>()) {
         const auto& tc = entity.get<Transform3DComponent>();
         const auto& mc = entity.get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }

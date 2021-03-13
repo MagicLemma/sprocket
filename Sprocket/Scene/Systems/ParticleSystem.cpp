@@ -12,7 +12,7 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 
 void ParticleSystem::OnUpdate(ecs::Registry& registry, double dt)
 {
-    for (auto entity : registry.View<ParticleComponent>()) {
+    for (auto entity : registry.view<ParticleComponent>()) {
         auto& tc = entity.get<Transform3DComponent>();
         auto& pc = entity.get<ParticleComponent>();
 
