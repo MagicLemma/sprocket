@@ -5,11 +5,11 @@
 
 namespace Sprocket {
 
-void PathFollower::OnUpdate(ecs::Registry& registry, double dt)
+void PathFollower::on_update(ecs::Registry& registry, const ev::Dispatcher&, double dt)
 {
-    for (auto entity : registry.View<PathComponent>()) {
-        auto& transform = entity.Get<Transform3DComponent>();
-        auto& path = entity.Get<PathComponent>();
+    for (auto entity : registry.view<PathComponent>()) {
+        auto& transform = entity.get<Transform3DComponent>();
+        auto& path = entity.get<PathComponent>();
         if (path.markers.empty()) { return; }
         
         glm::vec3 direction = glm::normalize(path.markers.front() - transform.position);

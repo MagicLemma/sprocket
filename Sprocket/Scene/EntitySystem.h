@@ -3,7 +3,7 @@
 namespace Sprocket {
 
 class Scene;
-namespace ev { class Event; }
+namespace ev { class Event; class Dispatcher; }
 namespace ecs { class Registry; }
 
 class EntitySystem
@@ -12,24 +12,16 @@ public:
     EntitySystem() = default;
     virtual ~EntitySystem() {};
 
-    virtual void OnStartup(ecs::Registry& registry) {};
+    virtual void on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher) {};
         // Called once when starting the scene. There may be
         // entities in the scene by this point.
     
-    virtual void OnUpdate(ecs::Registry& registry, double dt) {};
+    virtual void on_update(ecs::Registry& registry, const ev::Dispatcher& dispatcher, double dt) {};
         // Called every tick of the game loop.
 
-    virtual void OnEvent(ecs::Registry& registry, ev::Event& event) {};
-        // Called with every event so systems can consume them.
-
 private:
-    // EntitySystems can not be copied.
     EntitySystem(const EntitySystem&) = delete;
     EntitySystem& operator=(const EntitySystem&) = delete;
-
-    // EntitySystems can not be moved.
-    EntitySystem(EntitySystem&&) = delete;
-    EntitySystem& operator=(EntitySystem&&) = delete;
 };
 
 }

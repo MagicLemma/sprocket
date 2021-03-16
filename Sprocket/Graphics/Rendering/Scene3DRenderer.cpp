@@ -44,27 +44,27 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    if (const auto& s = scene.Entities().Find<SunComponent>(); s != ecs::Null) {
-        const auto& sun = s.Get<SunComponent>();
+    if (const auto& s = scene.Entities().find<SunComponent>(); s != ecs::Null) {
+        const auto& sun = s.get<SunComponent>();
         shader.LoadVec3("u_sun_direction", sun.direction);
         shader.LoadVec3("u_sun_colour", sun.colour);
         shader.LoadFloat("u_sun_brightness", sun.brightness);
     }
 
     // Load ambience to shader
-    if (const auto& a = scene.Entities().Find<AmbienceComponent>(); a != ecs::Null) {
-        const auto& ambience = a.Get<AmbienceComponent>();
+    if (const auto& a = scene.Entities().find<AmbienceComponent>(); a != ecs::Null) {
+        const auto& ambience = a.get<AmbienceComponent>();
         shader.LoadVec3("u_ambience_colour", ambience.colour);
         shader.LoadFloat("u_ambience_brightness", ambience.brightness);
     }
     
     // Load point lights to shader
     std::size_t i = 0;
-    auto lights = scene.Entities().View<LightComponent, Transform3DComponent>();
+    auto lights = scene.Entities().view<LightComponent, Transform3DComponent>();
     for (auto entity : lights) {
         if (i < MAX_NUM_LIGHTS) {
-            auto position = entity.Get<Transform3DComponent>().position;
-            auto light = entity.Get<LightComponent>();
+            auto position = entity.get<Transform3DComponent>().position;
+            auto light = entity.get<LightComponent>();
             shader.LoadVec3(ArrayName("u_light_pos", i), position);
             shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
             shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
@@ -162,9 +162,9 @@ void Scene3DRenderer::Draw(
     > commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent, Transform3DComponent>()) {
-        const auto& tc = entity.Get<Transform3DComponent>();
-        const auto& mc = entity.Get<ModelComponent>();
+    for (auto entity : scene.Entities().view<ModelComponent, Transform3DComponent>()) {
+        const auto& tc = entity.get<Transform3DComponent>();
+        const auto& mc = entity.get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
         if (mesh->IsAnimated()) { continue; }
@@ -191,9 +191,9 @@ void Scene3DRenderer::Draw(
     }
 
     d_animatedShader.Bind();
-    for (auto entity : scene.Entities().View<ModelComponent>()) {
-        const auto& tc = entity.Get<Transform3DComponent>();
-        const auto& mc = entity.Get<ModelComponent>();
+    for (auto entity : scene.Entities().view<ModelComponent>()) {
+        const auto& tc = entity.get<Transform3DComponent>();
+        const auto& mc = entity.get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
         if (!mesh->IsAnimated()) { continue; }
@@ -203,8 +203,8 @@ void Scene3DRenderer::Draw(
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        if (entity.Has<MeshAnimationComponent>()) {
-            const auto& ac = entity.Get<MeshAnimationComponent>();
+        if (entity.has<MeshAnimationComponent>()) {
+            const auto& ac = entity.get<MeshAnimationComponent>();
             auto poses = mesh->GetPose(ac.name, ac.time);
             
             int numBones = std::min(MAX_BONES, (int)poses.size());

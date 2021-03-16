@@ -62,7 +62,7 @@ template <typename T> int _has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-    lua_pushboolean(L, entity.Has<T>());
+    lua_pushboolean(L, entity.has<T>());
     return 1;
 }
 
@@ -77,14 +77,14 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
-        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->New();
+        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->create();
         return 1;
     });
 
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto luaEntity = static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-        luaEntity->Delete();
+        luaEntity->destroy();
         return 0;
     });
 
@@ -97,7 +97,7 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
 
     lua_register(L, "_Each_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<ecs::Registry>(L, "__registry__")->Each());
+        auto gen = new Generator(get_pointer<ecs::Registry>(L, "__registry__")->all());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -248,7 +248,7 @@ void load_entity_transformation_functions(lua::Script& script)
         float ty = (float)lua_tonumber(L, 6);
         float tz = (float)lua_tonumber(L, 7);
 
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         tr.position = glm::vec3(px, py, pz);
         tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, {tx, ty, tz}, {0.0, 1.0, 0.0})));
         return 0;
@@ -264,7 +264,7 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
 
         float yaw = (float)lua_tonumber(L, 2);
         tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
@@ -275,11 +275,11 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         auto o = tr.orientation;
 
-        if (entity.Has<Camera3DComponent>()) {
-            auto pitch = entity.Get<Camera3DComponent>().pitch;
+        if (entity.has<Camera3DComponent>()) {
+            auto pitch = entity.get<Camera3DComponent>().pitch;
             o = glm::rotate(o, pitch, {1, 0, 0});
         }
 
@@ -297,7 +297,7 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
         ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
 
@@ -312,7 +312,7 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
         ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
-        auto& tr = entity.Get<Transform3DComponent>();
+        auto& tr = entity.get<Transform3DComponent>();
         float yaw = Converter<float>::read(L, ptr);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
@@ -347,10 +347,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<NameComponent>());
+        assert(e.has<NameComponent>());
 
         int count = 0;
-        const auto& c = e.Get<NameComponent>();
+        const auto& c = e.get<NameComponent>();
         count += Converter<std::string>::push(L, c.name);
         assert(count == NameComponent_dimension);
         return count;
@@ -368,7 +368,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<NameComponent>();
+        auto& c = e.get<NameComponent>();
         c.name = Converter<std::string>::read(L, ptr);
         assert(ptr == NameComponent_dimension + 2);
         return 0;
@@ -385,11 +385,11 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<NameComponent>());
+        assert(!e.has<NameComponent>());
 
         NameComponent c;
         c.name = Converter<std::string>::read(L, ptr);
-        e.Add<NameComponent>(c);
+        e.add<NameComponent>(c);
         assert(ptr == NameComponent_dimension + 2);
         return 0;
     });
@@ -420,10 +420,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<Transform2DComponent>());
+        assert(e.has<Transform2DComponent>());
 
         int count = 0;
-        const auto& c = e.Get<Transform2DComponent>();
+        const auto& c = e.get<Transform2DComponent>();
         count += Converter<glm::vec2>::push(L, c.position);
         count += Converter<float>::push(L, c.rotation);
         count += Converter<glm::vec2>::push(L, c.scale);
@@ -443,7 +443,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<Transform2DComponent>();
+        auto& c = e.get<Transform2DComponent>();
         c.position = Converter<glm::vec2>::read(L, ptr);
         c.rotation = Converter<float>::read(L, ptr);
         c.scale = Converter<glm::vec2>::read(L, ptr);
@@ -462,13 +462,13 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<Transform2DComponent>());
+        assert(!e.has<Transform2DComponent>());
 
         Transform2DComponent c;
         c.position = Converter<glm::vec2>::read(L, ptr);
         c.rotation = Converter<float>::read(L, ptr);
         c.scale = Converter<glm::vec2>::read(L, ptr);
-        e.Add<Transform2DComponent>(c);
+        e.add<Transform2DComponent>(c);
         assert(ptr == Transform2DComponent_dimension + 2);
         return 0;
     });
@@ -498,10 +498,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<Transform3DComponent>());
+        assert(e.has<Transform3DComponent>());
 
         int count = 0;
-        const auto& c = e.Get<Transform3DComponent>();
+        const auto& c = e.get<Transform3DComponent>();
         count += Converter<glm::vec3>::push(L, c.position);
         count += Converter<glm::vec3>::push(L, c.scale);
         assert(count == Transform3DComponent_dimension);
@@ -520,7 +520,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<Transform3DComponent>();
+        auto& c = e.get<Transform3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.scale = Converter<glm::vec3>::read(L, ptr);
         assert(ptr == Transform3DComponent_dimension + 2);
@@ -538,12 +538,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<Transform3DComponent>());
+        assert(!e.has<Transform3DComponent>());
 
         Transform3DComponent c;
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.scale = Converter<glm::vec3>::read(L, ptr);
-        e.Add<Transform3DComponent>(c);
+        e.add<Transform3DComponent>(c);
         assert(ptr == Transform3DComponent_dimension + 2);
         return 0;
     });
@@ -573,10 +573,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<ModelComponent>());
+        assert(e.has<ModelComponent>());
 
         int count = 0;
-        const auto& c = e.Get<ModelComponent>();
+        const auto& c = e.get<ModelComponent>();
         count += Converter<std::string>::push(L, c.mesh);
         count += Converter<std::string>::push(L, c.material);
         assert(count == ModelComponent_dimension);
@@ -595,7 +595,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<ModelComponent>();
+        auto& c = e.get<ModelComponent>();
         c.mesh = Converter<std::string>::read(L, ptr);
         c.material = Converter<std::string>::read(L, ptr);
         assert(ptr == ModelComponent_dimension + 2);
@@ -613,12 +613,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<ModelComponent>());
+        assert(!e.has<ModelComponent>());
 
         ModelComponent c;
         c.mesh = Converter<std::string>::read(L, ptr);
         c.material = Converter<std::string>::read(L, ptr);
-        e.Add<ModelComponent>(c);
+        e.add<ModelComponent>(c);
         assert(ptr == ModelComponent_dimension + 2);
         return 0;
     });
@@ -654,10 +654,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<RigidBody3DComponent>());
+        assert(e.has<RigidBody3DComponent>());
 
         int count = 0;
-        const auto& c = e.Get<RigidBody3DComponent>();
+        const auto& c = e.get<RigidBody3DComponent>();
         count += Converter<glm::vec3>::push(L, c.velocity);
         count += Converter<bool>::push(L, c.gravity);
         count += Converter<bool>::push(L, c.frozen);
@@ -682,7 +682,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<RigidBody3DComponent>();
+        auto& c = e.get<RigidBody3DComponent>();
         c.velocity = Converter<glm::vec3>::read(L, ptr);
         c.gravity = Converter<bool>::read(L, ptr);
         c.frozen = Converter<bool>::read(L, ptr);
@@ -706,7 +706,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<RigidBody3DComponent>());
+        assert(!e.has<RigidBody3DComponent>());
 
         RigidBody3DComponent c;
         c.velocity = Converter<glm::vec3>::read(L, ptr);
@@ -717,7 +717,7 @@ void load_entity_component_functions(lua::Script& script)
         c.rollingResistance = Converter<float>::read(L, ptr);
         c.force = Converter<glm::vec3>::read(L, ptr);
         c.onFloor = Converter<bool>::read(L, ptr);
-        e.Add<RigidBody3DComponent>(c);
+        e.add<RigidBody3DComponent>(c);
         assert(ptr == RigidBody3DComponent_dimension + 2);
         return 0;
     });
@@ -749,10 +749,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<BoxCollider3DComponent>());
+        assert(e.has<BoxCollider3DComponent>());
 
         int count = 0;
-        const auto& c = e.Get<BoxCollider3DComponent>();
+        const auto& c = e.get<BoxCollider3DComponent>();
         count += Converter<glm::vec3>::push(L, c.position);
         count += Converter<float>::push(L, c.mass);
         count += Converter<glm::vec3>::push(L, c.halfExtents);
@@ -773,7 +773,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<BoxCollider3DComponent>();
+        auto& c = e.get<BoxCollider3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
         c.halfExtents = Converter<glm::vec3>::read(L, ptr);
@@ -793,14 +793,14 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<BoxCollider3DComponent>());
+        assert(!e.has<BoxCollider3DComponent>());
 
         BoxCollider3DComponent c;
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
         c.halfExtents = Converter<glm::vec3>::read(L, ptr);
         c.applyScale = Converter<bool>::read(L, ptr);
-        e.Add<BoxCollider3DComponent>(c);
+        e.add<BoxCollider3DComponent>(c);
         assert(ptr == BoxCollider3DComponent_dimension + 2);
         return 0;
     });
@@ -831,10 +831,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<SphereCollider3DComponent>());
+        assert(e.has<SphereCollider3DComponent>());
 
         int count = 0;
-        const auto& c = e.Get<SphereCollider3DComponent>();
+        const auto& c = e.get<SphereCollider3DComponent>();
         count += Converter<glm::vec3>::push(L, c.position);
         count += Converter<float>::push(L, c.mass);
         count += Converter<float>::push(L, c.radius);
@@ -854,7 +854,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<SphereCollider3DComponent>();
+        auto& c = e.get<SphereCollider3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
         c.radius = Converter<float>::read(L, ptr);
@@ -873,13 +873,13 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<SphereCollider3DComponent>());
+        assert(!e.has<SphereCollider3DComponent>());
 
         SphereCollider3DComponent c;
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
         c.radius = Converter<float>::read(L, ptr);
-        e.Add<SphereCollider3DComponent>(c);
+        e.add<SphereCollider3DComponent>(c);
         assert(ptr == SphereCollider3DComponent_dimension + 2);
         return 0;
     });
@@ -911,10 +911,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<CapsuleCollider3DComponent>());
+        assert(e.has<CapsuleCollider3DComponent>());
 
         int count = 0;
-        const auto& c = e.Get<CapsuleCollider3DComponent>();
+        const auto& c = e.get<CapsuleCollider3DComponent>();
         count += Converter<glm::vec3>::push(L, c.position);
         count += Converter<float>::push(L, c.mass);
         count += Converter<float>::push(L, c.radius);
@@ -935,7 +935,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<CapsuleCollider3DComponent>();
+        auto& c = e.get<CapsuleCollider3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
         c.radius = Converter<float>::read(L, ptr);
@@ -955,14 +955,14 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<CapsuleCollider3DComponent>());
+        assert(!e.has<CapsuleCollider3DComponent>());
 
         CapsuleCollider3DComponent c;
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
         c.radius = Converter<float>::read(L, ptr);
         c.height = Converter<float>::read(L, ptr);
-        e.Add<CapsuleCollider3DComponent>(c);
+        e.add<CapsuleCollider3DComponent>(c);
         assert(ptr == CapsuleCollider3DComponent_dimension + 2);
         return 0;
     });
@@ -992,10 +992,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<ScriptComponent>());
+        assert(e.has<ScriptComponent>());
 
         int count = 0;
-        const auto& c = e.Get<ScriptComponent>();
+        const auto& c = e.get<ScriptComponent>();
         count += Converter<std::string>::push(L, c.script);
         count += Converter<bool>::push(L, c.active);
         assert(count == ScriptComponent_dimension);
@@ -1014,7 +1014,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<ScriptComponent>();
+        auto& c = e.get<ScriptComponent>();
         c.script = Converter<std::string>::read(L, ptr);
         c.active = Converter<bool>::read(L, ptr);
         assert(ptr == ScriptComponent_dimension + 2);
@@ -1032,12 +1032,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<ScriptComponent>());
+        assert(!e.has<ScriptComponent>());
 
         ScriptComponent c;
         c.script = Converter<std::string>::read(L, ptr);
         c.active = Converter<bool>::read(L, ptr);
-        e.Add<ScriptComponent>(c);
+        e.add<ScriptComponent>(c);
         assert(ptr == ScriptComponent_dimension + 2);
         return 0;
     });
@@ -1067,10 +1067,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<Camera3DComponent>());
+        assert(e.has<Camera3DComponent>());
 
         int count = 0;
-        const auto& c = e.Get<Camera3DComponent>();
+        const auto& c = e.get<Camera3DComponent>();
         count += Converter<float>::push(L, c.fov);
         count += Converter<float>::push(L, c.pitch);
         assert(count == Camera3DComponent_dimension);
@@ -1089,7 +1089,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<Camera3DComponent>();
+        auto& c = e.get<Camera3DComponent>();
         c.fov = Converter<float>::read(L, ptr);
         c.pitch = Converter<float>::read(L, ptr);
         assert(ptr == Camera3DComponent_dimension + 2);
@@ -1107,12 +1107,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<Camera3DComponent>());
+        assert(!e.has<Camera3DComponent>());
 
         Camera3DComponent c;
         c.fov = Converter<float>::read(L, ptr);
         c.pitch = Converter<float>::read(L, ptr);
-        e.Add<Camera3DComponent>(c);
+        e.add<Camera3DComponent>(c);
         assert(ptr == Camera3DComponent_dimension + 2);
         return 0;
     });
@@ -1142,10 +1142,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<SelectComponent>());
+        assert(e.has<SelectComponent>());
 
         int count = 0;
-        const auto& c = e.Get<SelectComponent>();
+        const auto& c = e.get<SelectComponent>();
         count += Converter<bool>::push(L, c.selected);
         count += Converter<bool>::push(L, c.hovered);
         assert(count == SelectComponent_dimension);
@@ -1164,7 +1164,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<SelectComponent>();
+        auto& c = e.get<SelectComponent>();
         c.selected = Converter<bool>::read(L, ptr);
         c.hovered = Converter<bool>::read(L, ptr);
         assert(ptr == SelectComponent_dimension + 2);
@@ -1182,12 +1182,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<SelectComponent>());
+        assert(!e.has<SelectComponent>());
 
         SelectComponent c;
         c.selected = Converter<bool>::read(L, ptr);
         c.hovered = Converter<bool>::read(L, ptr);
-        e.Add<SelectComponent>(c);
+        e.add<SelectComponent>(c);
         assert(ptr == SelectComponent_dimension + 2);
         return 0;
     });
@@ -1216,10 +1216,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<PathComponent>());
+        assert(e.has<PathComponent>());
 
         int count = 0;
-        const auto& c = e.Get<PathComponent>();
+        const auto& c = e.get<PathComponent>();
         count += Converter<float>::push(L, c.speed);
         assert(count == PathComponent_dimension);
         return count;
@@ -1237,7 +1237,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<PathComponent>();
+        auto& c = e.get<PathComponent>();
         c.speed = Converter<float>::read(L, ptr);
         assert(ptr == PathComponent_dimension + 2);
         return 0;
@@ -1254,11 +1254,11 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<PathComponent>());
+        assert(!e.has<PathComponent>());
 
         PathComponent c;
         c.speed = Converter<float>::read(L, ptr);
-        e.Add<PathComponent>(c);
+        e.add<PathComponent>(c);
         assert(ptr == PathComponent_dimension + 2);
         return 0;
     });
@@ -1288,10 +1288,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<GridComponent>());
+        assert(e.has<GridComponent>());
 
         int count = 0;
-        const auto& c = e.Get<GridComponent>();
+        const auto& c = e.get<GridComponent>();
         count += Converter<int>::push(L, c.x);
         count += Converter<int>::push(L, c.z);
         assert(count == GridComponent_dimension);
@@ -1310,7 +1310,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<GridComponent>();
+        auto& c = e.get<GridComponent>();
         c.x = Converter<int>::read(L, ptr);
         c.z = Converter<int>::read(L, ptr);
         assert(ptr == GridComponent_dimension + 2);
@@ -1328,12 +1328,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<GridComponent>());
+        assert(!e.has<GridComponent>());
 
         GridComponent c;
         c.x = Converter<int>::read(L, ptr);
         c.z = Converter<int>::read(L, ptr);
-        e.Add<GridComponent>(c);
+        e.add<GridComponent>(c);
         assert(ptr == GridComponent_dimension + 2);
         return 0;
     });
@@ -1363,10 +1363,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<LightComponent>());
+        assert(e.has<LightComponent>());
 
         int count = 0;
-        const auto& c = e.Get<LightComponent>();
+        const auto& c = e.get<LightComponent>();
         count += Converter<glm::vec3>::push(L, c.colour);
         count += Converter<float>::push(L, c.brightness);
         assert(count == LightComponent_dimension);
@@ -1385,7 +1385,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<LightComponent>();
+        auto& c = e.get<LightComponent>();
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
         assert(ptr == LightComponent_dimension + 2);
@@ -1403,12 +1403,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<LightComponent>());
+        assert(!e.has<LightComponent>());
 
         LightComponent c;
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
-        e.Add<LightComponent>(c);
+        e.add<LightComponent>(c);
         assert(ptr == LightComponent_dimension + 2);
         return 0;
     });
@@ -1440,10 +1440,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<SunComponent>());
+        assert(e.has<SunComponent>());
 
         int count = 0;
-        const auto& c = e.Get<SunComponent>();
+        const auto& c = e.get<SunComponent>();
         count += Converter<glm::vec3>::push(L, c.colour);
         count += Converter<float>::push(L, c.brightness);
         count += Converter<glm::vec3>::push(L, c.direction);
@@ -1464,7 +1464,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<SunComponent>();
+        auto& c = e.get<SunComponent>();
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
         c.direction = Converter<glm::vec3>::read(L, ptr);
@@ -1484,14 +1484,14 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<SunComponent>());
+        assert(!e.has<SunComponent>());
 
         SunComponent c;
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
         c.direction = Converter<glm::vec3>::read(L, ptr);
         c.shadows = Converter<bool>::read(L, ptr);
-        e.Add<SunComponent>(c);
+        e.add<SunComponent>(c);
         assert(ptr == SunComponent_dimension + 2);
         return 0;
     });
@@ -1521,10 +1521,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<AmbienceComponent>());
+        assert(e.has<AmbienceComponent>());
 
         int count = 0;
-        const auto& c = e.Get<AmbienceComponent>();
+        const auto& c = e.get<AmbienceComponent>();
         count += Converter<glm::vec3>::push(L, c.colour);
         count += Converter<float>::push(L, c.brightness);
         assert(count == AmbienceComponent_dimension);
@@ -1543,7 +1543,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<AmbienceComponent>();
+        auto& c = e.get<AmbienceComponent>();
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
         assert(ptr == AmbienceComponent_dimension + 2);
@@ -1561,12 +1561,12 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<AmbienceComponent>());
+        assert(!e.has<AmbienceComponent>());
 
         AmbienceComponent c;
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
-        e.Add<AmbienceComponent>(c);
+        e.add<AmbienceComponent>(c);
         assert(ptr == AmbienceComponent_dimension + 2);
         return 0;
     });
@@ -1600,10 +1600,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<ParticleComponent>());
+        assert(e.has<ParticleComponent>());
 
         int count = 0;
-        const auto& c = e.Get<ParticleComponent>();
+        const auto& c = e.get<ParticleComponent>();
         count += Converter<float>::push(L, c.interval);
         count += Converter<glm::vec3>::push(L, c.velocity);
         count += Converter<float>::push(L, c.velocityNoise);
@@ -1626,7 +1626,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<ParticleComponent>();
+        auto& c = e.get<ParticleComponent>();
         c.interval = Converter<float>::read(L, ptr);
         c.velocity = Converter<glm::vec3>::read(L, ptr);
         c.velocityNoise = Converter<float>::read(L, ptr);
@@ -1648,7 +1648,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<ParticleComponent>());
+        assert(!e.has<ParticleComponent>());
 
         ParticleComponent c;
         c.interval = Converter<float>::read(L, ptr);
@@ -1657,7 +1657,7 @@ void load_entity_component_functions(lua::Script& script)
         c.acceleration = Converter<glm::vec3>::read(L, ptr);
         c.scale = Converter<glm::vec3>::read(L, ptr);
         c.life = Converter<float>::read(L, ptr);
-        e.Add<ParticleComponent>(c);
+        e.add<ParticleComponent>(c);
         assert(ptr == ParticleComponent_dimension + 2);
         return 0;
     });
@@ -1688,10 +1688,10 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.Has<MeshAnimationComponent>());
+        assert(e.has<MeshAnimationComponent>());
 
         int count = 0;
-        const auto& c = e.Get<MeshAnimationComponent>();
+        const auto& c = e.get<MeshAnimationComponent>();
         count += Converter<std::string>::push(L, c.name);
         count += Converter<float>::push(L, c.time);
         count += Converter<float>::push(L, c.speed);
@@ -1711,7 +1711,7 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.Get<MeshAnimationComponent>();
+        auto& c = e.get<MeshAnimationComponent>();
         c.name = Converter<std::string>::read(L, ptr);
         c.time = Converter<float>::read(L, ptr);
         c.speed = Converter<float>::read(L, ptr);
@@ -1730,13 +1730,13 @@ void load_entity_component_functions(lua::Script& script)
 
         int ptr = 1;
         ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.Has<MeshAnimationComponent>());
+        assert(!e.has<MeshAnimationComponent>());
 
         MeshAnimationComponent c;
         c.name = Converter<std::string>::read(L, ptr);
         c.time = Converter<float>::read(L, ptr);
         c.speed = Converter<float>::read(L, ptr);
-        e.Add<MeshAnimationComponent>(c);
+        e.add<MeshAnimationComponent>(c);
         assert(ptr == MeshAnimationComponent_dimension + 2);
         return 0;
     });

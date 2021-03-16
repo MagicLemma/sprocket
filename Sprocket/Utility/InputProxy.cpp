@@ -10,7 +10,28 @@ InputProxy::InputProxy()
     d_keyboard.fill(false);
     d_mouse.fill(false);
 }
-    
+
+void InputProxy::on_startup(ev::Dispatcher& dispatcher)
+{
+    dispatcher.subscribe<ev::KeyboardButtonPressed>([&](ev::Event& event) {
+        if (event.is_consumed()) { return; }
+        d_keyboard[event.get<ev::KeyboardButtonPressed>().key] = true;
+    });
+
+    dispatcher.subscribe<ev::KeyboardButtonReleased>([&](ev::Event& event) {
+        d_keyboard[event.get<ev::KeyboardButtonReleased>().key] = false;
+    });
+
+    dispatcher.subscribe<ev::MouseButtonPressed>([&](ev::Event& event) {
+        if (event.is_consumed()) { return; }
+        d_mouse[event.get<ev::MouseButtonPressed>().button] = true;
+    });
+
+    dispatcher.subscribe<ev::MouseButtonReleased>([&](ev::Event& event) {
+        d_mouse[event.get<ev::MouseButtonReleased>().button] = false;
+    });
+}
+  
 void InputProxy::on_event(ev::Event& event)
 {
     if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {

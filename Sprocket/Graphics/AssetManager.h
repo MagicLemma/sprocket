@@ -18,11 +18,11 @@ class AssetManager
     std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
 
     // Primitives
-    std::unordered_map<std::string, std::unique_ptr<Mesh>>    d_meshes;
-    std::unordered_map<std::string, std::unique_ptr<Texture>> d_textures;
+    std::unordered_map<std::string, const std::unique_ptr<Mesh>>    d_meshes;
+    std::unordered_map<std::string, const std::unique_ptr<Texture>> d_textures;
     
     // Composites
-    std::unordered_map<std::string, std::unique_ptr<Material>> d_materials;
+    std::unordered_map<std::string, const std::unique_ptr<Material>> d_materials;
 
     // Defaults
     std::unique_ptr<Mesh>     d_defaultMesh;

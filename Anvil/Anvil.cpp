@@ -11,8 +11,8 @@ namespace {
 
 std::string Name(const ecs::Entity& entity)
 {
-    if (entity.Has<NameComponent>()) {
-        return entity.Get<NameComponent>().name;
+    if (entity.has<NameComponent>()) {
+        return entity.get<NameComponent>().name;
     }
     return "Entity";
 }
@@ -50,8 +50,8 @@ Anvil::Anvil(Window* window)
     d_scene = std::make_shared<Scene>();    
     d_scene->Load(d_sceneFile);
 
-    d_runtimeCamera = d_scene->Entities().Find([](ecs::Entity entity) {
-        return entity.Has<Camera3DComponent>();
+    d_runtimeCamera = d_scene->Entities().find([](ecs::Entity entity) {
+        return entity.has<Camera3DComponent>();
     });
 
     d_activeScene = d_scene;
@@ -94,7 +94,7 @@ void Anvil::OnEvent(ev::Event& event)
 void Anvil::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
-    d_window->SetWindowName(fmt::format("Anvil: {}", d_sceneFile));
+    //d_window->SetWindowName(fmt::format("Anvil: {}", d_sceneFile));
 
     // Create the Shadow Map
     //float lambda = 5.0f; // TODO: Calculate the floor intersection point
@@ -114,14 +114,14 @@ void Anvil::OnUpdate(double dt)
     }
     
     std::vector<ecs::Entity> toDelete;
-    for (auto entity : d_activeScene->Entities().View<Transform3DComponent>()) {
-        auto& transform = entity.Get<Transform3DComponent>();
+    for (auto entity : d_activeScene->Entities().view<Transform3DComponent>()) {
+        auto& transform = entity.get<Transform3DComponent>();
         if (transform.position.y < -50) {
             toDelete.push_back(entity);
         }
     }
     for (auto entity : toDelete) {
-        entity.Delete();
+        entity.destroy();
     }
 }
 
@@ -210,7 +210,7 @@ void Anvil::OnRender()
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->Entities().Find<Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->Entities().find<Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();
@@ -232,8 +232,8 @@ void Anvil::OnRender()
 
         ImGuiXtra::Image(d_viewport.GetTexture());
 
-        if (!IsGameRunning() && d_selected.Valid() && d_selected.Has<Transform3DComponent>()) {
-            auto& c = d_selected.Get<Transform3DComponent>();
+        if (!IsGameRunning() && d_selected.valid() && d_selected.has<Transform3DComponent>()) {
+            auto& c = d_selected.get<Transform3DComponent>();
             auto tr = Maths::Transform(c.position, c.orientation, c.scale);
             ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
             Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
@@ -263,7 +263,7 @@ void Anvil::OnRender()
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
                 int i = 0;
-                for (auto entity : d_scene->Entities().Each()) {
+                for (auto entity : d_scene->Entities().all()) {
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(i);
                         if (ImGui::Selectable(Name(entity).c_str())) {

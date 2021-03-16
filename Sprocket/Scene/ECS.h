@@ -2,7 +2,7 @@
 #include "Types.h"
 #include "SparseSet.h"
 #include "GUID.h"
-#include "Hashing.h"
+#include "TypeInfo.h"
 #include "Events.h"
 
 #include <unordered_map>
@@ -12,6 +12,7 @@
 #include <vector>
 #include <cassert>
 #include <any>
+#include <tuple>
 
 #include <cppcoro/generator.hpp>
 
@@ -26,8 +27,8 @@ class Entity
     std::size_t d_index;
     guid::GUID  d_guid;
 
-    bool Has(std::size_t type) const;
-    void Remove(std::size_t type) const;
+    bool has(spkt::type_info_t type) const;
+    void remove(spkt::type_info_t type) const;
 
 public:
     // Construction of entities should not be done directly, instead they should
@@ -35,15 +36,15 @@ public:
     Entity(Registry* r, std::size_t i, guid::GUID g);
     Entity();
 
-    bool Valid() const;
-    void Delete();
+    bool valid() const;
+    void destroy();
 
-    template <typename Comp, typename... Args> Comp& Add(Args&&... args);
-    template <typename Comp> void Remove() const;
-    template <typename Comp> Comp& Get() const;
-    template <typename Comp> bool Has() const;
+    template <typename Comp, typename... Args> Comp& add(Args&&... args);
+    template <typename Comp> void remove() const;
+    template <typename Comp> Comp& get() const;
+    template <typename Comp> bool has() const;
 
-    guid::GUID Id() const;
+    guid::GUID id() const;
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
@@ -51,17 +52,17 @@ public:
 };
 
 template <typename Comp>
-struct ComponentAddedEvent
+struct Added
 {
     ecs::Entity entity;
-    ComponentAddedEvent(ecs::Entity& e) : entity(e) {}
+    Added(ecs::Entity& e) : entity(e) {}
 };
 
 template <typename Comp>
-struct ComponentRemovedEvent
+struct Removed
 {
     ecs::Entity entity;
-    ComponentRemovedEvent(ecs::Entity& e) : entity(e) {}
+    Removed(ecs::Entity& e) : entity(e) {}
 };
 
 class Registry
@@ -71,8 +72,7 @@ public:
     using EntityPredicate = std::function<bool(Entity)>;
 
 private:
-    // Callback that is invoked whenever a component is added or removed
-    // from an entity.
+    // Callback that is invoked whenever a component is added or removed from an entity.
     std::function<void(ev::Event&)> d_callback = [](ev::Event&) {};
 
     // Generates GUIDs for new Entities 
@@ -98,35 +98,34 @@ private:
         std::function<ev::Event(ecs::Entity)> make_remove_event;
     };
 
-    std::unordered_map<std::size_t, ComponentData> d_comps;
+    std::unordered_map<spkt::type_info_t, ComponentData> d_comps;
 
     Registry& operator=(const Registry&) = delete;
     Registry(const Registry&) = delete;
-    Registry(Registry&&) = delete;
 
 public:
     Registry() = default;
 
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
-    Entity New();
+    Entity create();
 
     // Creates a new entity with no components and with the given guid. No checks on the
     // validity of the guid are made, except for that it cannot be guid::Zero.
-    Entity New(const guid::GUID& guid);
+    Entity create(const guid::GUID& guid);
 
     // Returns the entity corresponding to the given GUID, and ecs::Null otherwise.
-    Entity Get(const guid::GUID& guid);
+    Entity get(const guid::GUID& guid);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
-    void DeleteAll();
+    void clear();
 
     // Resets all internal storage, removing all entities (without calling OnRemove)
     // and removes all OnAdd/OnRemove callbacks.
-    void Clear();
+    void reset();
 
     // Number of active entities in the registry.
-    std::size_t Size() const;
+    std::size_t size() const;
 
     // Sets the callback that will be invoked whenever a component is added or
     // removed from an entity.
@@ -137,17 +136,19 @@ public:
 
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
-    cppcoro::generator<Entity> Each();
+    cppcoro::generator<Entity> all();
 
     // Does a fast iteration over all entities with the given Comp. If any extra
     // component types are specified, only entities that have all of those types
     // will be yielded. This should only be used for modifying the components, not
     // adding/removing new ones.
-    template <typename Comp, typename... Rest> cppcoro::generator<Entity> View();
+    template <typename Comp, typename... Rest>
+    cppcoro::generator<Entity> view();
 
     // Returns the first entity satisfying the given predicate, or ECS::Null if
     // none is found. Can optionally provide components to filter on.
-    template <typename... Comps> Entity Find(const EntityPredicate& pred = [](Entity){ return true; });
+    template <typename... Comps>
+    Entity find(const EntityPredicate& pred = [](Entity){ return true; });
 
     friend class Entity;
 };
@@ -162,28 +163,28 @@ static const Entity Null{};
 // REGISTRY TEMPLATES
 
 template <typename Comp, typename... Rest>
-cppcoro::generator<Entity> Registry::View()
+cppcoro::generator<Entity> Registry::view()
 {
-    for (auto& [index, comp] : d_comps[spkt::type_hash<Comp>].instances.Fast()) {
+    for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.Fast()) {
         Entity entity{this, index, d_entities[index]};
-        if ((entity.Has<Rest>() && ...)) {
+        if ((entity.has<Rest>() && ...)) {
             co_yield entity;
         }
     }
 }
 
 template <typename... Comps>
-Entity Registry::Find(const EntityPredicate& pred)
+Entity Registry::find(const EntityPredicate& pred)
 {
     if constexpr (sizeof...(Comps) == 0) {
-        for (auto entity : Each()) {
+        for (auto entity : all()) {
             if (pred(entity)) {
                 return entity;
             }
         }
     }
     else {
-        for (auto entity : View<Comps...>()) {
+        for (auto entity : view<Comps...>()) {
             if (pred(entity)) {
                 return entity;
             }
@@ -195,18 +196,18 @@ Entity Registry::Find(const EntityPredicate& pred)
 // ENTITY TEMPLATES
 
 template <typename Comp, typename... Args>
-Comp& Entity::Add(Args&&... args)
+Comp& Entity::add(Args&&... args)
 {
-    assert(Valid());
+    assert(valid());
 
-    auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
+    auto& data = d_registry->d_comps[spkt::type_info<Comp>];
 
     // If this is the first instance of this component, create the make_remove_event
     // function which will be called whenever an entity is deleted. This is needed because
     // the type of the component is not available at deletion time.
     if (!data.make_remove_event) {
         data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
-            return ev::make_event<ecs::ComponentRemovedEvent<Comp>>(entity);
+            return ev::make_event<ecs::Removed<Comp>>(entity);
         };
     }
 
@@ -214,32 +215,32 @@ Comp& Entity::Add(Args&&... args)
         d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
-    ev::Event event = ev::make_event<ComponentAddedEvent<Comp>>(*this);
+    ev::Event event = ev::make_event<Added<Comp>>(*this);
     d_registry->d_callback(event);
 
     return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
-void Entity::Remove() const
+void Entity::remove() const
 {
-    assert(Valid());
-    Remove(spkt::type_hash<Comp>);
+    assert(valid());
+    remove(spkt::type_info<Comp>);
 }
 
 template <typename Comp>
-Comp& Entity::Get() const
+Comp& Entity::get() const
 {
-    assert(Valid());
-    auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];
+    assert(valid());
+    auto& entry = d_registry->d_comps.at(spkt::type_info<Comp>).instances[d_index];
     return std::any_cast<Comp&>(entry);
 }
 
 template <typename Comp>
-bool Entity::Has() const
+bool Entity::has() const
 {
-    assert(Valid());
-    return Has(spkt::type_hash<Comp>);
+    assert(valid());
+    return has(spkt::type_info<Comp>);
 }
 
 // We can push an entity into the Lua stack by calling the Lua equivalent of malloc
@@ -263,7 +264,7 @@ template <> struct hash<Sprocket::ecs::Entity>
 {
     std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
     {
-        return std::hash<Sprocket::guid::GUID>{}(entity.Id());
+        return std::hash<Sprocket::guid::GUID>{}(entity.id());
     };
 };
 

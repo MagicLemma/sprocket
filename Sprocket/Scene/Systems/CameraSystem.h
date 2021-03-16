@@ -9,7 +9,7 @@ class CameraSystem : public EntitySystem
 
 public:
     CameraSystem(float aspectRatio);
-    void OnEvent(ecs::Registry& registry, ev::Event& event) override;
+    void on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher) override;
 };
 
 }

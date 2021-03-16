@@ -1,6 +1,9 @@
 #pragma once
 #include <any>
 #include <string>
+#include <typeinfo> // TODO: Replace with own version
+#include <typeindex>
+#include <functional>
 
 #include "Types.h"
 
@@ -19,7 +22,7 @@ public:
 	{}
 
 	template <typename T> bool is() const noexcept { return d_event.type() == typeid(T); }
-	template <typename T> T get() const { return std::any_cast<T>(d_event); }
+	template <typename T> const T& get() const { return std::any_cast<const T&>(d_event); }
 	template <typename T> const T* get_if() const noexcept { return std::any_cast<T>(&d_event); }
 
 	bool is_consumed() const noexcept { return d_consumed; }
@@ -27,6 +30,8 @@ public:
 
 	// Implementation defined name, should only be used for logging.
 	std::string type_name() const noexcept { return d_event.type().name(); }
+
+	const std::type_info& type_info() const noexcept { return d_event.type(); }
 };
 
 template <typename T, typename... Args>
@@ -34,6 +39,42 @@ Event make_event(Args&&... args)
 {
 	return Event(std::in_place_type<T>, std::forward<Args>(args)...);
 }
+
+class Dispatcher
+{
+public:
+	using EventHandler = std::function<void(ev::Event&)>;
+
+	template <typename T>
+	using EventHandlerTyped = std::function<void(ev::Event&, const T&)>;
+
+private:
+	std::unordered_map<std::type_index, std::vector<EventHandler>> d_handlers;
+
+public:
+	template <typename T>
+	void subscribe(const EventHandler& handler)
+	{
+		d_handlers[typeid(T)].push_back(handler);
+	}
+
+	template <typename T>
+	void subscribe(const EventHandlerTyped<T>& handler)
+	{
+		d_handlers[typeid(T)].push_back([&](ev::Event& event) {
+			handler(event, event.get<T>());
+		});
+	}
+
+	void publish(ev::Event& event) const
+	{
+		if (auto it = d_handlers.find(event.type_info()); it != d_handlers.end()) {
+			for (auto& handler : it->second) {
+				handler(event);
+			}
+		}
+	}
+};
 
 // KEYBOARD EVENTS 
 struct KeyboardButtonPressed {

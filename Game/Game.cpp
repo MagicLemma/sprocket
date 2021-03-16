@@ -92,7 +92,7 @@ WorldLayer::WorldLayer(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& sun = d_scene.Entities().Find<SunComponent>().Get<SunComponent>();
+    auto& sun = d_scene.Entities().find<SunComponent>().get<SunComponent>();
     sun.direction = d_cycle.GetSunDir();
 
     d_postProcessor.AddEffect<GaussianVert>();
@@ -114,12 +114,12 @@ void WorldLayer::LoadScene(std::string_view file)
 
     d_sceneFile = file;
 
-    d_worker = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
-        return entity.Get<NameComponent>().name == "Worker";
+    d_worker = d_scene.Entities().find<NameComponent>([](ecs::Entity entity) {
+        return entity.get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene.Entities().Find<NameComponent>([](ecs::Entity entity) {
-        return entity.Get<NameComponent>().name == "Camera";
+    d_camera = d_scene.Entities().find<NameComponent>([](ecs::Entity entity) {
+        return entity.get<NameComponent>().name == "Camera";
     });
 
     d_scene.Get<GameGrid>().SetCamera(d_camera);
@@ -158,7 +158,7 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
     }
 
     if (auto data = event.get_if<ev::MouseButtonPressed>()) {
-        auto& tr = d_camera.Get<Transform3DComponent>();
+        auto& tr = d_camera.get<Transform3DComponent>();
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
@@ -173,11 +173,11 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
             glm::vec3 mousePos = cameraPos + lambda * direction;
             mousePos.y = 0.5f;
             
-            auto& path = d_worker.Get<PathComponent>();
+            auto& path = d_worker.get<PathComponent>();
 
             if (data->button == Mouse::LEFT) {
                 std::queue<glm::vec3>().swap(path.markers);
-                auto pos = d_worker.Get<Transform3DComponent>().position;
+                auto pos = d_worker.get<Transform3DComponent>().position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
                     path.markers = GenerateAStarPath(
                         pos,
@@ -212,7 +212,7 @@ void WorldLayer::OnUpdate(double dt)
         d_cycle.OnUpdate(dt);
     }
     
-    auto& sun = d_scene.Entities().Find<SunComponent>().Get<SunComponent>();
+    auto& sun = d_scene.Entities().find<SunComponent>().get<SunComponent>();
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -243,10 +243,10 @@ void WorldLayer::OnRender()
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    auto& tc = d_camera.Get<Transform3DComponent>();
+    auto& tc = d_camera.get<Transform3DComponent>();
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
     d_shadowMap.Draw(
-        d_scene.Entities().Find<SunComponent>().Get<SunComponent>().direction,
+        d_scene.Entities().find<SunComponent>().get<SunComponent>().direction,
         target,
         d_scene
     );
@@ -283,32 +283,32 @@ void WorldLayer::OnRender()
                 
             auto pos = grid.SelectedPosition().value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                selected.Delete();
+                selected.destroy();
                 AddTree(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                selected.Delete();
+                selected.destroy();
                 AddRock(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                selected.Delete();
+                selected.destroy();
                 AddIron(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                selected.Delete();
+                selected.destroy();
                 AddTin(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                selected.Delete();
+                selected.destroy();
                 AddMithril(pos);
             }
 
             if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                selected.Delete();
+                selected.destroy();
             }
 
             d_hoveredEntityUI.EndPanel();
@@ -316,7 +316,7 @@ void WorldLayer::OnRender()
 
 
         auto hovered = grid.Hovered();
-        if (hovered.Valid()) {
+        if (hovered.valid()) {
             float width = 200;
             float height = 50;
             float x = std::min(mouse.x - 5, w - width - 10);
@@ -325,8 +325,8 @@ void WorldLayer::OnRender()
             glm::vec4 region{x, y, width, height};
             d_hoveredEntityUI.StartPanel("Hovered", &region, PanelType::UNCLICKABLE);
             std::string name = "Unnamed";
-            if (hovered.Has<NameComponent>()) {
-                name = hovered.Get<NameComponent>().name;
+            if (hovered.has<NameComponent>()) {
+                name = hovered.get<NameComponent>().name;
             }
             d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
             d_hoveredEntityUI.EndPanel();
@@ -450,23 +450,23 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Entities().New();
+    auto newEntity = d_scene.Entities().create();
 
-    auto& name = newEntity.Add<NameComponent>();
+    auto& name = newEntity.add<NameComponent>();
     name.name = "Tree";
 
-    auto& tr = newEntity.Add<Transform3DComponent>();
+    auto& tr = newEntity.add<Transform3DComponent>();
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
     float r = Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
-    auto& modelData = newEntity.Add<ModelComponent>();
+    auto& modelData = newEntity.add<ModelComponent>();
     modelData.mesh = "Resources/Models/BetterTree.obj";
     modelData.material = "Resources/Materials/tree.yaml";
-    newEntity.Add<SelectComponent>();
+    newEntity.add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.Add<GridComponent>(gc);
+    newEntity.add<GridComponent>(gc);
 }
 
 void WorldLayer::AddRockBase(
@@ -476,23 +476,23 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Entities().New();
-    auto& n = newEntity.Add<NameComponent>();
+    auto newEntity = d_scene.Entities().create();
+    auto& n = newEntity.add<NameComponent>();
     n.name = name;
 
-    auto& tr = newEntity.Add<Transform3DComponent>();
+    auto& tr = newEntity.add<Transform3DComponent>();
     tr.position.y -= Random(0.0f, 0.5f);
     float randomRotation = glm::half_pi<float>() * Random(0, 3);
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
     tr.scale = {1.1f, 1.1f, 1.1f};
 
-    auto& modelData = newEntity.Add<ModelComponent>();
+    auto& modelData = newEntity.add<ModelComponent>();
     modelData.mesh = "Resources/Models/Rock.obj";
     modelData.material = material;
-    newEntity.Add<SelectComponent>();
+    newEntity.add<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.Add<GridComponent>(gc);
+    newEntity.add<GridComponent>(gc);
 }
 
 void WorldLayer::AddRock(const glm::ivec2& pos)

@@ -44,7 +44,7 @@ Entity& Entity::operator=(Entity other)
     return *this;
 }
 
-bool Entity::Valid() const
+bool Entity::valid() const
 {
      return *this != ecs::Null
          && d_registry
@@ -52,12 +52,12 @@ bool Entity::Valid() const
          && d_registry->d_entities[d_index] == d_guid;
 }
 
-void Entity::Delete() 
+void Entity::destroy() 
 {
-    if (Valid()) {
+    if (valid()) {
         // Clean up all components
         for (auto& [type, data] : d_registry->d_comps) {
-            if (Has(type)) { Remove(type); }
+            if (has(type)) { remove(type); }
         }
         d_registry->d_entities.Erase(d_index);
         d_registry->d_pool.push_back(d_index);
@@ -65,15 +65,15 @@ void Entity::Delete()
     }
 }
 
-guid::GUID Entity::Id() const
+guid::GUID Entity::id() const
 {
     return d_guid;
 }
 
-void Entity::Remove(std::size_t type) const
+void Entity::remove(spkt::type_info_t type) const
 {
-    assert(Valid());
-    if (!Has(type)) { return; }
+    assert(valid());
+    if (!has(type)) { return; }
 
     auto& data = d_registry->d_comps[type];
     
@@ -87,7 +87,7 @@ void Entity::Remove(std::size_t type) const
     }
 }
 
-bool Entity::Has(std::size_t type) const
+bool Entity::has(spkt::type_info_t type) const
 {
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
         if (it->second.instances.Has(d_index)) {
@@ -98,13 +98,13 @@ bool Entity::Has(std::size_t type) const
     return false;
 }
 
-Entity Registry::New()
+Entity Registry::create()
 {
     guid::GUID guid = d_generator.New();
-    return New(guid);
+    return create(guid);
 }
 
-Entity Registry::New(const guid::GUID& guid)
+Entity Registry::create(const guid::GUID& guid)
 {
     assert(guid != guid::Zero);
 
@@ -121,7 +121,7 @@ Entity Registry::New(const guid::GUID& guid)
     return {this, index, guid};
 }
 
-Entity Registry::Get(const guid::GUID& guid)
+Entity Registry::get(const guid::GUID& guid)
 {
     auto it = d_lookup.find(guid);
     if (it != d_lookup.end()) {
@@ -130,11 +130,11 @@ Entity Registry::Get(const guid::GUID& guid)
     return ecs::Null;
 }
 
-void Registry::DeleteAll()
+void Registry::clear()
 {
     // Clean up components, triggering on remove behaviour
     for (const auto& [index, guid] : d_entities.Safe()) {
-        Entity{this, index, guid}.Delete();
+        Entity{this, index, guid}.destroy();
     }
 
     // Reset all entity storage
@@ -142,7 +142,7 @@ void Registry::DeleteAll()
     d_pool.clear();
 }
 
-void Registry::Clear()
+void Registry::reset()
 {
     // Reset all components and remove all callbacks
     d_comps.clear();
@@ -152,7 +152,7 @@ void Registry::Clear()
     d_pool.clear();
 }
 
-std::size_t Registry::Size() const
+std::size_t Registry::size() const
 {
     return d_entities.Size();
 }
@@ -167,7 +167,7 @@ void Registry::emit(ev::Event& event)
     d_callback(event);
 }
 
-cppcoro::generator<Entity> Registry::Each()
+cppcoro::generator<Entity> Registry::all()
 {
     for (const auto& [index, guid] : d_entities.Fast()) {
         co_yield {this, index, guid};

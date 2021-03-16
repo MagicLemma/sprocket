@@ -32,9 +32,9 @@ void ColliderRenderer::Draw(
     
     static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube.get());
-    for (auto entity : scene.Entities().View<BoxCollider3DComponent>()) {
-        const auto& c = entity.Get<BoxCollider3DComponent>();
-        auto tr = entity.Get<Transform3DComponent>();
+    for (auto entity : scene.Entities().view<BoxCollider3DComponent>()) {
+        const auto& c = entity.get<BoxCollider3DComponent>();
+        auto tr = entity.get<Transform3DComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, c.halfExtents);
@@ -47,9 +47,9 @@ void ColliderRenderer::Draw(
 
     static auto s_sphere = Mesh::FromFile("Resources/Models/LowPolySphere.obj");
     d_vao->SetModel(s_sphere.get());
-    for (auto entity : scene.Entities().View<SphereCollider3DComponent>()) {
-        const auto& c = entity.Get<SphereCollider3DComponent>();
-        auto tr = entity.Get<Transform3DComponent>();
+    for (auto entity : scene.Entities().view<SphereCollider3DComponent>()) {
+        const auto& c = entity.get<SphereCollider3DComponent>();
+        auto tr = entity.get<Transform3DComponent>();
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, {c.radius, c.radius, c.radius});
@@ -60,11 +60,11 @@ void ColliderRenderer::Draw(
     static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
 
-    for (auto entity : scene.Entities().View<CapsuleCollider3DComponent>()) {
-        const auto& c = entity.Get<CapsuleCollider3DComponent>();
+    for (auto entity : scene.Entities().view<CapsuleCollider3DComponent>()) {
+        const auto& c = entity.get<CapsuleCollider3DComponent>();
 
         {  // Top Hemisphere
-            auto tr = entity.Get<Transform3DComponent>();
+            auto tr = entity.get<Transform3DComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, c.height/2, 0.0});
@@ -75,7 +75,7 @@ void ColliderRenderer::Draw(
         }
 
         {  // Middle Cylinder
-            auto tr = entity.Get<Transform3DComponent>();
+            auto tr = entity.get<Transform3DComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::scale(transform, {c.radius, c.height, c.radius});
@@ -85,7 +85,7 @@ void ColliderRenderer::Draw(
         }
 
         {  // Bottom Hemisphere
-            auto tr = entity.Get<Transform3DComponent>();
+            auto tr = entity.get<Transform3DComponent>();
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, -c.height/2, 0.0});
