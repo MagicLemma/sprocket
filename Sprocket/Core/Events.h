@@ -22,7 +22,7 @@ public:
 	{}
 
 	template <typename T> bool is() const noexcept { return d_event.type() == typeid(T); }
-	template <typename T> T get() const { return std::any_cast<T>(d_event); }
+	template <typename T> const T& get() const { return std::any_cast<const T&>(d_event); }
 	template <typename T> const T* get_if() const noexcept { return std::any_cast<T>(&d_event); }
 
 	bool is_consumed() const noexcept { return d_consumed; }
