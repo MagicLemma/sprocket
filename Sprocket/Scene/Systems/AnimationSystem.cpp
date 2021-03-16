@@ -5,7 +5,7 @@
 
 namespace Sprocket {
 
-void AnimationSystem::on_update(ecs::Registry& registry, double dt)
+void AnimationSystem::on_update(ecs::Registry& registry, const ev::Dispatcher&, double dt)
 {
     for (auto entity : registry.view<MeshAnimationComponent>()) {
         auto& ac = entity.get<MeshAnimationComponent>();

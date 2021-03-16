@@ -6,7 +6,7 @@ namespace Sprocket {
 class AnimationSystem : public EntitySystem
 {
 public:
-    void on_update(ecs::Registry& registry, double dt) override;
+    void on_update(ecs::Registry& registry, const ev::Dispatcher& dispatcher, double dt) override;
 };
 
 }

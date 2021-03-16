@@ -87,13 +87,9 @@ public:
 
 class EventListener : public rp3d::EventListener
 {
-    ecs::Registry* registry;
+    std::vector<ev::Event> d_events;
 
 public:
-    EventListener(ecs::Registry* r) : registry(r) {
-        assert(r);
-    }
-
     void onContact(const rp3d::CollisionCallback::CallbackData& data) override
     {
         const auto name = [](const ecs::Entity& e) {
@@ -110,10 +106,12 @@ public:
                 ecs::Entity e1 = *static_cast<ecs::Entity*>(pair.getBody1()->getUserData());
                 ecs::Entity e2 = *static_cast<ecs::Entity*>(pair.getBody2()->getUserData());
                 ev::Event event = ev::make_event<CollisionEvent>(e1, e2);
-                registry->emit(event);
+                d_events.push_back(event);
             }
         }
     }
+
+    std::vector<ev::Event>& events() { return d_events; }
 };
 
 }
@@ -134,7 +132,7 @@ struct PhysicsEngine3DImpl
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
 
-    std::unique_ptr<EventListener> listener;
+    EventListener listener;
 
     float lastFrameLength = 0;
 
@@ -184,36 +182,44 @@ PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
 {
 }
 
-void PhysicsEngine3D::on_event(ecs::Registry& registry, ev::Event& event)
+void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
 {
-    if (auto data = event.get_if<ecs::ComponentAddedEvent<RigidBody3DComponent>>()) {
-        assert(data->entity.has<Transform3DComponent>());
-        auto& tc = data->entity.get<Transform3DComponent>();
-        auto& rc = data->entity.get<RigidBody3DComponent>();
+    d_impl->world->setEventListener(&d_impl->listener);
 
-        auto& entry = d_impl->entityData[data->entity];
-        entry.entity = data->entity;
+    dispatcher.subscribe<ecs::ComponentAddedEvent<RigidBody3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentAddedEvent<RigidBody3DComponent>>();
+
+        assert(data->entity.has<Transform3DComponent>());
+        auto& tc = data.entity.get<Transform3DComponent>();
+        auto& rc = data.entity.get<RigidBody3DComponent>();
+
+        auto& entry = d_impl->entityData[data.entity];
+        entry.entity = data.entity;
         entry.body = d_impl->world->createRigidBody(Convert(tc));
         entry.body->setUserData(static_cast<void*>(&entry.entity));
-    }
+    });
 
-    else if (auto data = event.get_if<ecs::ComponentRemovedEvent<RigidBody3DComponent>>()) {
-        data->entity.remove<BoxCollider3DComponent>();
-        data->entity.remove<SphereCollider3DComponent>();
-        data->entity.remove<CapsuleCollider3DComponent>();
+    dispatcher.subscribe<ecs::ComponentRemovedEvent<RigidBody3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentRemovedEvent<RigidBody3DComponent>>();
 
-        auto rigidBodyIt = d_impl->entityData.find(data->entity);
+        data.entity.remove<BoxCollider3DComponent>();
+        data.entity.remove<SphereCollider3DComponent>();
+        data.entity.remove<CapsuleCollider3DComponent>();
+
+        auto rigidBodyIt = d_impl->entityData.find(data.entity);
         d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
         d_impl->entityData.erase(rigidBodyIt);
-    }
+    });
 
-    else if (auto data = event.get_if<ecs::ComponentAddedEvent<BoxCollider3DComponent>>()) {
+    dispatcher.subscribe<ecs::ComponentAddedEvent<BoxCollider3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentAddedEvent<BoxCollider3DComponent>>();
+
         assert(data->entity.has<Transform3DComponent>());
         assert(data->entity.has<RigidBody3DComponent>());
 
-        auto& tc = data->entity.get<Transform3DComponent>();
-        auto& bc = data->entity.get<BoxCollider3DComponent>();
-        auto& entry = d_impl->entityData[data->entity];
+        auto& tc = data.entity.get<Transform3DComponent>();
+        auto& bc = data.entity.get<BoxCollider3DComponent>();
+        auto& entry = d_impl->entityData[data.entity];
 
         glm::vec3 dimensions = bc.halfExtents;
         if (bc.applyScale) { dimensions *= tc.scale; }
@@ -221,62 +227,66 @@ void PhysicsEngine3D::on_event(ecs::Registry& registry, ev::Event& event)
         rp3d::Transform transform = Convert(bc.position, bc.orientation);
 
         entry.boxCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.boxCollider, data->entity.get<RigidBody3DComponent>());
-    }
+        SetMaterial(entry.boxCollider, data.entity.get<RigidBody3DComponent>());
+    });
 
-    else if (auto data = event.get_if<ecs::ComponentRemovedEvent<BoxCollider3DComponent>>()) {
-        auto& entry = d_impl->entityData[data->entity];
+    dispatcher.subscribe<ecs::ComponentRemovedEvent<BoxCollider3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentRemovedEvent<BoxCollider3DComponent>>();
+
+        auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.boxCollider);
-    }
+    });
 
-    else if (auto data = event.get_if<ecs::ComponentAddedEvent<SphereCollider3DComponent>>()) {
+    dispatcher.subscribe<ecs::ComponentAddedEvent<SphereCollider3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentAddedEvent<SphereCollider3DComponent>>();
+
         assert(data->entity.has<Transform3DComponent>());
         assert(data->entity.has<RigidBody3DComponent>());
 
-        auto& tc = data->entity.get<Transform3DComponent>();
-        auto& sc = data->entity.get<SphereCollider3DComponent>();
-        auto& entry = d_impl->entityData[data->entity];
+        auto& tc = data.entity.get<Transform3DComponent>();
+        auto& sc = data.entity.get<SphereCollider3DComponent>();
+        auto& entry = d_impl->entityData[data.entity];
         
         rp3d::SphereShape* shape = d_impl->pc.createSphereShape(sc.radius);
         rp3d::Transform transform = Convert(sc.position, sc.orientation);
 
         entry.sphereCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.sphereCollider, data->entity.get<RigidBody3DComponent>());   
-    }
+        SetMaterial(entry.sphereCollider, data.entity.get<RigidBody3DComponent>());   
+    });
 
-    else if (auto data = event.get_if<ecs::ComponentRemovedEvent<SphereCollider3DComponent>>()) {
-        auto& entry = d_impl->entityData[data->entity];
+    dispatcher.subscribe<ecs::ComponentRemovedEvent<SphereCollider3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentRemovedEvent<SphereCollider3DComponent>>();
+
+        auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.sphereCollider);
-    }
+    });
 
-    else if (auto data = event.get_if<ecs::ComponentAddedEvent<CapsuleCollider3DComponent>>()) {
-        assert(data->entity.has<Transform3DComponent>());
-        assert(data->entity.has<RigidBody3DComponent>());
+    dispatcher.subscribe<ecs::ComponentAddedEvent<CapsuleCollider3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentAddedEvent<CapsuleCollider3DComponent>>();
 
-        auto& tc = data->entity.get<Transform3DComponent>();
-        auto& cc = data->entity.get<CapsuleCollider3DComponent>();
-        auto& entry = d_impl->entityData[data->entity];
+        assert(data.entity.has<Transform3DComponent>());
+        assert(data.entity.has<RigidBody3DComponent>());
+
+        auto& tc = data.entity.get<Transform3DComponent>();
+        auto& cc = data.entity.get<CapsuleCollider3DComponent>();
+        auto& entry = d_impl->entityData[data.entity];
         
         rp3d::CapsuleShape* shape = d_impl->pc.createCapsuleShape(cc.radius, cc.height);
         rp3d::Transform transform = Convert(cc.position, cc.orientation);
 
         entry.capsuleCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.capsuleCollider, data->entity.get<RigidBody3DComponent>()); 
-    }
+        SetMaterial(entry.capsuleCollider, data.entity.get<RigidBody3DComponent>()); 
+    });
 
-    else if (auto data = event.get_if<ecs::ComponentRemovedEvent<CapsuleCollider3DComponent>>()) {
-        auto& entry = d_impl->entityData[data->entity];
+    dispatcher.subscribe<ecs::ComponentRemovedEvent<CapsuleCollider3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentRemovedEvent<CapsuleCollider3DComponent>>();
+
+        auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.capsuleCollider);
-    }
+    });
 }
 
-void PhysicsEngine3D::on_startup(ecs::Registry& registry)
-{
-    d_impl->listener = std::make_unique<EventListener>(&registry);
-    d_impl->world->setEventListener(d_impl->listener.get());
-}
-
-void PhysicsEngine3D::on_update(ecs::Registry& registry, double dt)
+void PhysicsEngine3D::on_update(ecs::Registry& registry, const ev::Dispatcher& dispatcher, double dt)
 {
     // Pre Update
     // Do this even if not running so that the physics engine stays up
@@ -338,6 +348,12 @@ void PhysicsEngine3D::on_update(ecs::Registry& registry, double dt)
         rc.force = {0.0, 0.0, 0.0};
         rc.onFloor = IsOnFloor(*d_impl, entity);
     }
+
+    // Publish all generated events
+    for (auto& event : d_impl->listener.events()) {
+        dispatcher.publish(event);
+    }
+    d_impl->listener.events().clear();
 }
 
 ecs::Entity PhysicsEngine3D::Raycast(const glm::vec3& base,

@@ -16,7 +16,7 @@ ScriptRunner::ScriptRunner(Window* window)
 {
 }
 
-void ScriptRunner::on_update(ecs::Registry&, double dt)
+void ScriptRunner::on_update(ecs::Registry&, const ev::Dispatcher&, double dt)
 {
     // We delete scripts here rather then with OnRemove otherwise we would segfault if
     // a script tries to delete its own entity, which is functionality that we want to
@@ -36,12 +36,25 @@ void ScriptRunner::on_update(ecs::Registry&, double dt)
     }
 }
 
-void ScriptRunner::on_event(ecs::Registry& registry, ev::Event& event)
+cppcoro::generator<lua::Script&> ScriptRunner::active_scripts()
 {
-    d_input.on_event(event);
+     for (auto& [entity, pair] : d_engines) {
+        auto& [script, alive] = pair;
+        if (alive && entity.get<ScriptComponent>().active) {
+            co_yield script;
+        }
+    }
+}
 
-    if (auto data = event.get_if<ecs::ComponentAddedEvent<ScriptComponent>>()) {
-        lua::Script script(data->entity.get<ScriptComponent>().script);
+// TODO: Add more event handlers
+void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
+{
+    d_input.on_startup(dispatcher);
+
+    dispatcher.subscribe<ecs::ComponentAddedEvent<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentAddedEvent<ScriptComponent>>();
+
+        lua::Script script(data.entity.get<ScriptComponent>().script);
         lua::load_registry_functions(script, registry);
         lua::load_input_functions(script, d_input);
         lua::load_window_functions(script, *d_window);
@@ -49,85 +62,60 @@ void ScriptRunner::on_event(ecs::Registry& registry, ev::Event& event)
         lua::load_entity_transformation_functions(script);
         lua::load_entity_component_functions(script);
 
-        script.call_function<void>("Init", data->entity);
+        script.call_function<void>("Init", data.entity);
         script.print_globals();
-        d_engines.emplace(data->entity, std::make_pair(std::move(script), true));
-    }
-    else if (auto data = event.get_if<ecs::ComponentRemovedEvent<ScriptComponent>>()) {
-        auto it = d_engines.find(data->entity);
+        d_engines.emplace(data.entity, std::make_pair(std::move(script), true));
+    });
+
+    dispatcher.subscribe<ecs::ComponentRemovedEvent<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::ComponentRemovedEvent<ScriptComponent>>();
+
+        auto it = d_engines.find(data.entity);
         if (it != d_engines.end()) {
             it->second.second = false; // alive = false
         }
-    }
+    });
 
-    // This may be overly strict, change this if we ever need to react to consumed
-    // events in scripts.
-    if (event.is_consumed()) { return; }
 
-    const auto handler = [&](lua::Script& script, const char* f, auto&&... args)
-    {
-        if (script.has_function(f) &&
-            script.call_function<bool>(f, std::forward<decltype(args)>(args)...))
-        {
-            event.consume();
+    dispatcher.subscribe<ev::WindowResize>([&](ev::Event& event) {
+        auto data = event.get<ev::WindowResize>();
+        for (auto& script : active_scripts()) {
+            const char* f = "OnWindowResizeEvent";
+            if (script.has_function(f) && script.call_function<bool>(f, data.width, data.height)) {
+                event.consume();
+            }
         }
-    };
+    });
 
-    for (auto& [entity, pair] : d_engines) {
-        auto& [script, alive] = pair;
-        if (!(alive && entity.get<ScriptComponent>().active)) {
-            continue;
+    dispatcher.subscribe<ev::MouseButtonPressed>([&](ev::Event& event) {
+        auto data = event.get<ev::MouseButtonPressed>();
+        for (auto& script : active_scripts()) {
+            const char* f = "OnMouseButtonPressedEvent";
+            if (script.has_function(f) && script.call_function<bool>(f, data.button, data.action, data.mods)) {
+                event.consume();
+            }
         }
+    });
 
-        if (auto x = event.get_if<ev::WindowResize>()) {
-            handler(script, "OnWindowResizeEvent", x->width, x->height);
+    dispatcher.subscribe<ev::MouseScrolled>([&](ev::Event& event) {
+        auto data = event.get<ev::MouseScrolled>();
+        for (auto& script : active_scripts()) {
+            const char* f = "OnMouseScrolledEvent";
+            if (script.has_function(f) && script.call_function<bool>(f, data.x_offset, data.y_offset)) {
+                event.consume();
+            }
         }
-        else if (auto x = event.get_if<ev::WindowGotFocus>()) {
-            handler(script, "OnWindowGotFocusEvent");
+    });
+
+    dispatcher.subscribe<CollisionEvent>([&](ev::Event& event) {
+        auto data = event.get<CollisionEvent>();
+        for (auto& script : active_scripts()) {
+            const char* f = "OnCollisionEvent";
+            if (script.has_function(f) && script.call_function<bool>(f, data.entity1, data.entity2)) {
+                event.consume();
+            }
         }
-        else if (auto x = event.get_if<ev::WindowLostFocus>()) {
-            handler(script, "OnWindowLostFocusEvent");
-        }
-        else if (auto x = event.get_if<ev::WindowMaximize>()) {
-            handler(script, "OnWindowMaximizeEvent");
-        }
-        else if (auto x = event.get_if<ev::WindowMinimize>()) {
-            handler(script, "OnWindowMinimizeEvent");
-        }
-        else if (auto x = event.get_if<ev::WindowClosed>()) {
-            // pass
-        }
-        else if (auto x = event.get_if<ev::MouseButtonPressed>()) {
-            handler(script, "OnMouseButtonPressedEvent", x->button, x->action, x->mods);
-        }
-        else if (auto x = event.get_if<ev::MouseButtonReleased>()) {
-            handler(script, "OnMouseButtonReleasedEvent", x->button, x->action, x->mods);
-        }
-        else if (auto x = event.get_if<ev::MouseMoved>()) {
-            handler(script, "OnMouseMovedEvent", x->x_pos, x->y_pos);
-        }
-        else if (auto x = event.get_if<ev::MouseScrolled>()) {
-            handler(script, "OnMouseScrolledEvent", x->x_offset, x->y_offset);
-        }
-        else if (auto x = event.get_if<ev::KeyboardButtonPressed>()) {
-            handler(script, "OnKeyboardButtonPressedEvent", x->key, x->scancode, x->mods);
-        }
-        else if (auto x = event.get_if<ev::KeyboardButtonReleased>()) {
-            handler(script, "OnKeyboardButtonReleasedEvent", x->key, x->scancode, x->mods);
-        }
-        else if (auto x = event.get_if<ev::KeyboardButtonHeld>()) {
-            handler(script, "OnKeyboardButtonHeldEvent", x->key, x->scancode, x->mods);
-        }
-        else if (auto x = event.get_if<ev::KeyboardTyped>()) {
-            handler(script, "OnKeyboardKeyTypedEvent", x->key);
-        }
-        else if (auto x = event.get_if<CollisionEvent>()) {
-            handler(script, "OnCollisionEvent", x->entity1, x->entity2);
-        }
-        else {
-            return;
-        }
-    }
+    });
 }
 
 }

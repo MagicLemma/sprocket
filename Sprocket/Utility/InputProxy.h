@@ -2,7 +2,7 @@
 #include <array>
 
 namespace Sprocket {
-namespace ev { class Event; }
+namespace ev { class Event; class Dispatcher; }
 
 class InputProxy
 {
@@ -16,6 +16,7 @@ private:
 public:
     InputProxy();
 
+    void on_startup(ev::Dispatcher& dispatcher);
     void on_event(ev::Event& event);
 
     bool is_mouse_down(int button) const;
