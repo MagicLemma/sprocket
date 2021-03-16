@@ -24,7 +24,7 @@ GameGrid::GameGrid(Window* window)
 {
 }
 
-void GameGrid::OnStartup(ecs::Registry& registry)
+void GameGrid::on_startup(ecs::Registry& registry)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
@@ -47,7 +47,7 @@ void GameGrid::OnStartup(ecs::Registry& registry)
     model2.mesh = gridSquare;
 }
 
-void GameGrid::OnUpdate(ecs::Registry&, double dt)
+void GameGrid::on_update(ecs::Registry&, double dt)
 {
     auto& camTr = d_camera.get<Transform3DComponent>();
 
@@ -72,7 +72,7 @@ void GameGrid::OnUpdate(ecs::Registry&, double dt)
     }
 }
 
-void GameGrid::OnEvent(ecs::Registry&, ev::Event& event)
+void GameGrid::on_event(ecs::Registry&, ev::Event& event)
 {
     if (auto data = event.get_if<ecs::ComponentAddedEvent<GridComponent>>()) {
         auto& transform = data->entity.get<Transform3DComponent>();

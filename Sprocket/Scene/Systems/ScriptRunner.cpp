@@ -16,7 +16,7 @@ ScriptRunner::ScriptRunner(Window* window)
 {
 }
 
-void ScriptRunner::OnUpdate(ecs::Registry&, double dt)
+void ScriptRunner::on_update(ecs::Registry&, double dt)
 {
     // We delete scripts here rather then with OnRemove otherwise we would segfault if
     // a script tries to delete its own entity, which is functionality that we want to
@@ -36,7 +36,7 @@ void ScriptRunner::OnUpdate(ecs::Registry&, double dt)
     }
 }
 
-void ScriptRunner::OnEvent(ecs::Registry& registry, ev::Event& event)
+void ScriptRunner::on_event(ecs::Registry& registry, ev::Event& event)
 {
     d_input.on_event(event);
 

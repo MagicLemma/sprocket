@@ -5,7 +5,7 @@
 
 namespace Sprocket {
 
-void PathFollower::OnUpdate(ecs::Registry& registry, double dt)
+void PathFollower::on_update(ecs::Registry& registry, double dt)
 {
     for (auto entity : registry.view<PathComponent>()) {
         auto& transform = entity.get<Transform3DComponent>();

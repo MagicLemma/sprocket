@@ -1,8 +1,8 @@
-#include <Sprocket.h>
+#pragma once
+#include <string_view>
+#include <cstddef>
 
-#include "Game.h"
-
-using namespace Sprocket;
+namespace spkt {
 
 template <typename T>
 constexpr std::string_view type_name_raw() {
@@ -38,41 +38,32 @@ constexpr std::size_t sdbm_type_hash()
     return hash;
 };
 
-struct type_index
+struct type_info_t
 {
     const std::string_view name;
     const std::size_t      hash;
 
-    type_index(std::string_view name, std::size_t hash)
+    type_info_t(std::string_view name, std::size_t hash)
         : name(name)
         , hash(hash)
     {}
-};
 
-struct foo
-{
-    const char* x;
-    std::size_t y;
+    bool operator==(const type_info_t& other) const
+    {
+        return name == other.name && hash == other.hash;
+    }
 };
 
 template <typename T>
-type_index get_type_index()
-{
-    return {type_name<T>(), sdbm_type_hash<T>()};
+inline const type_info_t type_info = type_info_t(type_name<T>(), sdbm_type_hash<T>());
+
 }
 
-using XX = int;
-
-int main()
+template <>
+struct std::hash<spkt::type_info_t>
 {
-    //Sprocket::Window window("Game");
-    //WorldLayer game(&window);
-    //Sprocket::RunOptions options;
-    //options.showFramerate = true;
-    //return Sprocket::Run(game, window, options);
-    
-    auto index = get_type_index<Sprocket::ecs::Registry>();
-    log::info("{}", index.name);
-    log::info("{}", index.hash);
-    log::info("{}", sizeof(foo));
-}
+    std::size_t operator()(const spkt::type_info_t& info) const noexcept
+    {
+        return info.hash;
+    };
+};

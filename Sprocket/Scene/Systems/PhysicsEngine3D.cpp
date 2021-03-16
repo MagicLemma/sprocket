@@ -184,7 +184,7 @@ PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
 {
 }
 
-void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
+void PhysicsEngine3D::on_event(ecs::Registry& registry, ev::Event& event)
 {
     if (auto data = event.get_if<ecs::ComponentAddedEvent<RigidBody3DComponent>>()) {
         assert(data->entity.has<Transform3DComponent>());
@@ -270,13 +270,13 @@ void PhysicsEngine3D::OnEvent(ecs::Registry& registry, ev::Event& event)
     }
 }
 
-void PhysicsEngine3D::OnStartup(ecs::Registry& registry)
+void PhysicsEngine3D::on_startup(ecs::Registry& registry)
 {
     d_impl->listener = std::make_unique<EventListener>(&registry);
     d_impl->world->setEventListener(d_impl->listener.get());
 }
 
-void PhysicsEngine3D::OnUpdate(ecs::Registry& registry, double dt)
+void PhysicsEngine3D::on_update(ecs::Registry& registry, double dt)
 {
     // Pre Update
     // Do this even if not running so that the physics engine stays up

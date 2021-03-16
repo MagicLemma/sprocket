@@ -15,22 +15,4 @@ struct hash_pair
     } 
 };
 
-template <typename T>
-constexpr std::size_t sdbm_type_hash()
-{
-    std::size_t hash = 0;
-    for (const auto& c : std::string_view{__FUNCSIG__}) {
-        hash = c + 65599 * hash;
-    }
-    return hash;
-};
-
-template <typename T>
-constexpr std::size_t type_hash = sdbm_type_hash<T>();
-
-// Check that it is actually calcualated at compile time
-// Will fail if the function_name source doesnt give unique
-// values on this platform
-static_assert(type_hash<int> != type_hash<float>);
-
 }

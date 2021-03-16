@@ -47,6 +47,7 @@
 #include "Utility/SparseSet.h"
 #include "Utility/MouseCodes.h"
 #include "Utility/Stopwatch.h"
+#include "Utility/TypeInfo.h"
 #include "Utility/Types.h"
 #include "Utility/Yaml.h"
 

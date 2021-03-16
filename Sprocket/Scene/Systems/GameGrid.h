@@ -34,9 +34,9 @@ private:
 public:
     GameGrid(Window* window);
 
-    void OnStartup(ecs::Registry& registry) override;
-    void OnUpdate(ecs::Registry& registry, double dt) override;
-    void OnEvent(ecs::Registry& registry, ev::Event& event) override;
+    void on_startup(ecs::Registry& registry) override;
+    void on_update(ecs::Registry& registry, double dt) override;
+    void on_event(ecs::Registry& registry, ev::Event& event) override;
 
     ecs::Entity At(const glm::ivec2& pos) const;
 

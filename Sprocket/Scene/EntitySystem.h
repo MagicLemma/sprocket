@@ -12,14 +12,14 @@ public:
     EntitySystem() = default;
     virtual ~EntitySystem() {};
 
-    virtual void OnStartup(ecs::Registry& registry) {};
+    virtual void on_startup(ecs::Registry& registry) {};
         // Called once when starting the scene. There may be
         // entities in the scene by this point.
     
-    virtual void OnUpdate(ecs::Registry& registry, double dt) {};
+    virtual void on_update(ecs::Registry& registry, double dt) {};
         // Called every tick of the game loop.
 
-    virtual void OnEvent(ecs::Registry& registry, ev::Event& event) {};
+    virtual void on_event(ecs::Registry& registry, ev::Event& event) {};
         // Called with every event so systems can consume them.
 
 private:

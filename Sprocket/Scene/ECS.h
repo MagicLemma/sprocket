@@ -2,7 +2,7 @@
 #include "Types.h"
 #include "SparseSet.h"
 #include "GUID.h"
-#include "Hashing.h"
+#include "TypeInfo.h"
 #include "Events.h"
 
 #include <unordered_map>
@@ -26,8 +26,8 @@ class Entity
     std::size_t d_index;
     guid::GUID  d_guid;
 
-    bool has(std::size_t type) const;
-    void remove(std::size_t type) const;
+    bool has(spkt::type_info_t type) const;
+    void remove(spkt::type_info_t type) const;
 
 public:
     // Construction of entities should not be done directly, instead they should
@@ -97,7 +97,7 @@ private:
         std::function<ev::Event(ecs::Entity)> make_remove_event;
     };
 
-    std::unordered_map<std::size_t, ComponentData> d_comps;
+    std::unordered_map<spkt::type_info_t, ComponentData> d_comps;
 
     Registry& operator=(const Registry&) = delete;
     Registry(const Registry&) = delete;
@@ -164,7 +164,7 @@ static const Entity Null{};
 template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::view()
 {
-    for (auto& [index, comp] : d_comps[spkt::type_hash<Comp>].instances.Fast()) {
+    for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.Fast()) {
         Entity entity{this, index, d_entities[index]};
         if ((entity.has<Rest>() && ...)) {
             co_yield entity;
@@ -199,7 +199,7 @@ Comp& Entity::add(Args&&... args)
 {
     assert(valid());
 
-    auto& data = d_registry->d_comps[spkt::type_hash<Comp>];
+    auto& data = d_registry->d_comps[spkt::type_info<Comp>];
 
     // If this is the first instance of this component, create the make_remove_event
     // function which will be called whenever an entity is deleted. This is needed because
@@ -224,14 +224,14 @@ template <typename Comp>
 void Entity::remove() const
 {
     assert(valid());
-    remove(spkt::type_hash<Comp>);
+    remove(spkt::type_info<Comp>);
 }
 
 template <typename Comp>
 Comp& Entity::get() const
 {
     assert(valid());
-    auto& entry = d_registry->d_comps.at(spkt::type_hash<Comp>).instances[d_index];
+    auto& entry = d_registry->d_comps.at(spkt::type_info<Comp>).instances[d_index];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -239,7 +239,7 @@ template <typename Comp>
 bool Entity::has() const
 {
     assert(valid());
-    return has(spkt::type_hash<Comp>);
+    return has(spkt::type_info<Comp>);
 }
 
 // We can push an entity into the Lua stack by calling the Lua equivalent of malloc

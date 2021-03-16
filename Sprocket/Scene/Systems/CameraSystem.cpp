@@ -10,7 +10,7 @@ CameraSystem::CameraSystem(float aspectRatio)
     : d_aspectRatio(aspectRatio)
 {}
 
-void CameraSystem::OnEvent(ecs::Registry& registry, ev::Event& event)
+void CameraSystem::on_event(ecs::Registry& registry, ev::Event& event)
 {
     if (auto data = event.get_if<ecs::ComponentAddedEvent<Camera3DComponent>>()) {
         auto& camera = data->entity.get<Camera3DComponent>();
