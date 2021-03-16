@@ -1,6 +1,7 @@
 #pragma once
 #include <string_view>
 #include <cstddef>
+#include <memory>
 
 namespace spkt {
 
@@ -43,9 +44,10 @@ struct type_info_t
     const std::string_view name;
     const std::size_t      hash;
 
-    type_info_t(std::string_view name, std::size_t hash)
-        : name(name)
-        , hash(hash)
+    template <typename T>
+    explicit type_info_t(std::in_place_type_t<T>)
+        : name(type_name<T>())
+        , hash(sdbm_type_hash<T>())
     {}
 
     bool operator==(const type_info_t& other) const
@@ -55,7 +57,7 @@ struct type_info_t
 };
 
 template <typename T>
-inline const type_info_t type_info = type_info_t(type_name<T>(), sdbm_type_hash<T>());
+inline const type_info_t type_info = type_info_t(std::in_place_type<T>);
 
 }
 
