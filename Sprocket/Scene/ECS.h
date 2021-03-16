@@ -145,9 +145,6 @@ public:
     template <typename Comp, typename... Rest>
     cppcoro::generator<Entity> view();
 
-    template <typename Comp>
-    cppcoro::generator<std::tuple<Entity, Comp&>> view_get();
-
     // Returns the first entity satisfying the given predicate, or ECS::Null if
     // none is found. Can optionally provide components to filter on.
     template <typename... Comps>
@@ -173,15 +170,6 @@ cppcoro::generator<Entity> Registry::view()
         if ((entity.has<Rest>() && ...)) {
             co_yield entity;
         }
-    }
-}
-
-template <typename Comp>
-cppcoro::generator<std::tuple<Entity, Comp&>> Registry::view_get()
-{
-    for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.Fast()) {
-        Entity entity{this, index, d_entities[index]};
-        co_yield std::make_tuple(entity, std::ref(comp));
     }
 }
 
