@@ -179,9 +179,10 @@ PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
 void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
 {
     dispatcher.subscribe<ecs::Added<RigidBody3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Added<RigidBody3DComponent>>();
+        const auto& data = event.get<ecs::Added<RigidBody3DComponent>>();
 
-        assert(data->entity.has<Transform3DComponent>());
+        assert(data.entity.has<Transform3DComponent>());
+
         auto& tc = data.entity.get<Transform3DComponent>();
         auto& rc = data.entity.get<RigidBody3DComponent>();
 
@@ -191,8 +192,8 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         entry.body->setUserData(static_cast<void*>(&entry.entity));
     });
 
-    dispatcher.subscribe<ecs::Added<RigidBody3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Added<RigidBody3DComponent>>();
+    dispatcher.subscribe<ecs::Removed<RigidBody3DComponent>>([&](ev::Event& event) {
+        const auto& data = event.get<ecs::Removed<RigidBody3DComponent>>();
 
         data.entity.remove<BoxCollider3DComponent>();
         data.entity.remove<SphereCollider3DComponent>();
@@ -204,14 +205,17 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
     });
 
     dispatcher.subscribe<ecs::Added<BoxCollider3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Added<BoxCollider3DComponent>>();
+        const auto& data = event.get<ecs::Added<BoxCollider3DComponent>>();
 
-        assert(data->entity.has<Transform3DComponent>());
-        assert(data->entity.has<RigidBody3DComponent>());
+        assert(data.entity.has<Transform3DComponent>());
+        assert(data.entity.has<RigidBody3DComponent>());
 
         auto& tc = data.entity.get<Transform3DComponent>();
         auto& bc = data.entity.get<BoxCollider3DComponent>();
-        auto& entry = d_impl->entityData[data.entity];
+
+        auto it = d_impl->entityData.find(data.entity);
+        assert(it != d_impl->entityData.end());
+        auto& entry = it->second;
 
         glm::vec3 dimensions = bc.halfExtents;
         if (bc.applyScale) { dimensions *= tc.scale; }
@@ -223,17 +227,17 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
     });
 
     dispatcher.subscribe<ecs::Removed<BoxCollider3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Removed<BoxCollider3DComponent>>();
+        const auto& data = event.get<ecs::Removed<BoxCollider3DComponent>>();
 
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.boxCollider);
     });
 
     dispatcher.subscribe<ecs::Added<SphereCollider3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Added<SphereCollider3DComponent>>();
+        const auto& data = event.get<ecs::Added<SphereCollider3DComponent>>();
 
-        assert(data->entity.has<Transform3DComponent>());
-        assert(data->entity.has<RigidBody3DComponent>());
+        assert(data.entity.has<Transform3DComponent>());
+        assert(data.entity.has<RigidBody3DComponent>());
 
         auto& tc = data.entity.get<Transform3DComponent>();
         auto& sc = data.entity.get<SphereCollider3DComponent>();
@@ -247,14 +251,14 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
     });
 
     dispatcher.subscribe<ecs::Removed<SphereCollider3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Removed<SphereCollider3DComponent>>();
+        const auto& data = event.get<ecs::Removed<SphereCollider3DComponent>>();
 
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.sphereCollider);
     });
 
     dispatcher.subscribe<ecs::Added<CapsuleCollider3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Added<CapsuleCollider3DComponent>>();
+        const auto& data = event.get<ecs::Added<CapsuleCollider3DComponent>>();
 
         assert(data.entity.has<Transform3DComponent>());
         assert(data.entity.has<RigidBody3DComponent>());
@@ -271,7 +275,7 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
     });
 
     dispatcher.subscribe<ecs::Removed<CapsuleCollider3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Removed<CapsuleCollider3DComponent>>();
+        const auto& data = event.get<ecs::Removed<CapsuleCollider3DComponent>>();
 
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.capsuleCollider);
