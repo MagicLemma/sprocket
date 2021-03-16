@@ -51,17 +51,17 @@ public:
 };
 
 template <typename Comp>
-struct ComponentAddedEvent
+struct Added
 {
     ecs::Entity entity;
-    ComponentAddedEvent(ecs::Entity& e) : entity(e) {}
+    Added(ecs::Entity& e) : entity(e) {}
 };
 
 template <typename Comp>
-struct ComponentRemovedEvent
+struct Removed
 {
     ecs::Entity entity;
-    ComponentRemovedEvent(ecs::Entity& e) : entity(e) {}
+    Removed(ecs::Entity& e) : entity(e) {}
 };
 
 class Registry
@@ -206,7 +206,7 @@ Comp& Entity::add(Args&&... args)
     // the type of the component is not available at deletion time.
     if (!data.make_remove_event) {
         data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
-            return ev::make_event<ecs::ComponentRemovedEvent<Comp>>(entity);
+            return ev::make_event<ecs::Removed<Comp>>(entity);
         };
     }
 
@@ -214,7 +214,7 @@ Comp& Entity::add(Args&&... args)
         d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
-    ev::Event event = ev::make_event<ComponentAddedEvent<Comp>>(*this);
+    ev::Event event = ev::make_event<Added<Comp>>(*this);
     d_registry->d_callback(event);
 
     return std::any_cast<Comp&>(entry);

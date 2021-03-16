@@ -46,8 +46,8 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
     auto& model2 = d_selectedSquare.add<ModelComponent>();
     model2.mesh = gridSquare;
 
-    dispatcher.subscribe<ecs::ComponentAddedEvent<GridComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::ComponentAddedEvent<GridComponent>>();
+    dispatcher.subscribe<ecs::Added<GridComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::Added<GridComponent>>();
         auto& transform = data.entity.get<Transform3DComponent>();
         const auto& gc = data.entity.get<GridComponent>();
 
@@ -58,8 +58,8 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
         d_gridEntities[{gc.x, gc.z}] = data.entity;
     });
 
-    dispatcher.subscribe<ecs::ComponentRemovedEvent<GridComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::ComponentRemovedEvent<GridComponent>>();
+    dispatcher.subscribe<ecs::Removed<GridComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::Removed<GridComponent>>();
         auto& gc = data.entity.get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});
@@ -81,7 +81,7 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
     });
 }
 
-void GameGrid::on_update(ecs::Registry&, const ev::Dispatcher& d, double dt)
+void GameGrid::on_update(ecs::Registry&, const ev::Dispatcher&, double dt)
 {
     auto& camTr = d_camera.get<Transform3DComponent>();
 

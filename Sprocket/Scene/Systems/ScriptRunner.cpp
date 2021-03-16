@@ -51,8 +51,8 @@ void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatche
 {
     d_input.on_startup(dispatcher);
 
-    dispatcher.subscribe<ecs::ComponentAddedEvent<ScriptComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::ComponentAddedEvent<ScriptComponent>>();
+    dispatcher.subscribe<ecs::Added<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::Added<ScriptComponent>>();
 
         lua::Script script(data.entity.get<ScriptComponent>().script);
         lua::load_registry_functions(script, registry);
@@ -67,8 +67,8 @@ void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatche
         d_engines.emplace(data.entity, std::make_pair(std::move(script), true));
     });
 
-    dispatcher.subscribe<ecs::ComponentRemovedEvent<ScriptComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::ComponentRemovedEvent<ScriptComponent>>();
+    dispatcher.subscribe<ecs::Removed<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::Removed<ScriptComponent>>();
 
         auto it = d_engines.find(data.entity);
         if (it != d_engines.end()) {

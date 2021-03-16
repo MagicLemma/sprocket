@@ -12,8 +12,8 @@ CameraSystem::CameraSystem(float aspectRatio)
 
 void CameraSystem::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
 {
-    dispatcher.subscribe<ecs::ComponentAddedEvent<Camera3DComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::ComponentAddedEvent<Camera3DComponent>>();
+    dispatcher.subscribe<ecs::Added<Camera3DComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::Added<Camera3DComponent>>();
 
         auto& camera = data.entity.get<Camera3DComponent>();
         camera.projection = glm::perspective(
