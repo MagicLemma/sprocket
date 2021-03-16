@@ -45,6 +45,9 @@ class Dispatcher
 public:
 	using EventHandler = std::function<void(ev::Event&)>;
 
+	template <typename T>
+	using EventHandlerTyped = std::function<void(ev::Event&, const T&)>;
+
 private:
 	std::unordered_map<std::type_index, std::vector<EventHandler>> d_handlers;
 
@@ -53,6 +56,14 @@ public:
 	void subscribe(const EventHandler& handler)
 	{
 		d_handlers[typeid(T)].push_back(handler);
+	}
+
+	template <typename T>
+	void subscribe(const EventHandlerTyped<T>& handler)
+	{
+		d_handlers[typeid(T)].push_back([handler](ev::Event& event) {
+			handler(event, event.get<T>());
+		});
 	}
 
 	void publish(ev::Event& event) const

@@ -226,16 +226,12 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         SetMaterial(entry.boxCollider, data.entity.get<RigidBody3DComponent>());
     });
 
-    dispatcher.subscribe<ecs::Removed<BoxCollider3DComponent>>([&](ev::Event& event) {
-        const auto& data = event.get<ecs::Removed<BoxCollider3DComponent>>();
-
+    dispatcher.subscribe<ecs::Removed<BoxCollider3DComponent>>([&](ev::Event& event, const auto& data) {
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.boxCollider);
     });
 
-    dispatcher.subscribe<ecs::Added<SphereCollider3DComponent>>([&](ev::Event& event) {
-        const auto& data = event.get<ecs::Added<SphereCollider3DComponent>>();
-
+    dispatcher.subscribe<ecs::Added<SphereCollider3DComponent>>([&](ev::Event& event, const auto& data) {
         assert(data.entity.has<Transform3DComponent>());
         assert(data.entity.has<RigidBody3DComponent>());
 
@@ -250,16 +246,12 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         SetMaterial(entry.sphereCollider, data.entity.get<RigidBody3DComponent>());   
     });
 
-    dispatcher.subscribe<ecs::Removed<SphereCollider3DComponent>>([&](ev::Event& event) {
-        const auto& data = event.get<ecs::Removed<SphereCollider3DComponent>>();
-
+    dispatcher.subscribe<ecs::Removed<SphereCollider3DComponent>>([&](ev::Event& event, const auto& data) {
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.sphereCollider);
     });
 
-    dispatcher.subscribe<ecs::Added<CapsuleCollider3DComponent>>([&](ev::Event& event) {
-        const auto& data = event.get<ecs::Added<CapsuleCollider3DComponent>>();
-
+    dispatcher.subscribe<ecs::Added<CapsuleCollider3DComponent>>([&](ev::Event& event, const auto& data) {
         assert(data.entity.has<Transform3DComponent>());
         assert(data.entity.has<RigidBody3DComponent>());
 
@@ -274,9 +266,7 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         SetMaterial(entry.capsuleCollider, data.entity.get<RigidBody3DComponent>()); 
     });
 
-    dispatcher.subscribe<ecs::Removed<CapsuleCollider3DComponent>>([&](ev::Event& event) {
-        const auto& data = event.get<ecs::Removed<CapsuleCollider3DComponent>>();
-
+    dispatcher.subscribe<ecs::Removed<CapsuleCollider3DComponent>>([&](ev::Event& event, const auto& data) {
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.capsuleCollider);
     });
