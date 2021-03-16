@@ -180,9 +180,7 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
 {
     dispatcher.subscribe<ecs::Added<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
         assert(data.entity.has<Transform3DComponent>());
-
         auto& tc = data.entity.get<Transform3DComponent>();
-        auto& rc = data.entity.get<RigidBody3DComponent>();
 
         auto& entry = d_impl->entityData[data.entity];
         entry.entity = data.entity;

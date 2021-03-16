@@ -46,8 +46,7 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
     auto& model2 = d_selectedSquare.add<ModelComponent>();
     model2.mesh = gridSquare;
 
-    dispatcher.subscribe<ecs::Added<GridComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Added<GridComponent>>();
+    dispatcher.subscribe<ecs::Added<GridComponent>>([&](ev::Event& event, auto&& data) {
         auto& transform = data.entity.get<Transform3DComponent>();
         const auto& gc = data.entity.get<GridComponent>();
 
@@ -58,8 +57,7 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
         d_gridEntities[{gc.x, gc.z}] = data.entity;
     });
 
-    dispatcher.subscribe<ecs::Removed<GridComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Removed<GridComponent>>();
+    dispatcher.subscribe<ecs::Removed<GridComponent>>([&](ev::Event& eventm, auto&& data) {
         auto& gc = data.entity.get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});
@@ -71,8 +69,7 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
         }
     });
 
-    dispatcher.subscribe<ev::MouseButtonPressed>([&](ev::Event& event) {
-        auto data = event.get<ev::MouseButtonPressed>();
+    dispatcher.subscribe<ev::MouseButtonPressed>([&](ev::Event& event, auto&& data) {
         if (data.button == Mouse::LEFT) {
             d_selected = d_hovered;
         } else {
