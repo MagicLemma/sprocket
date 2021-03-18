@@ -22,21 +22,6 @@ enum class Identifier : std::uint64_t {};
 
 using Index = std::uint32_t;
 using Version = std::uint32_t;
-
-static constexpr Identifier null_id = std::numeric_limits<Identifier>::max();
-
-inline Identifier combine(Index i, Version v)
-{
-    using Int = std::underlying_type_t<Identifier>;
-    return static_cast<Identifier>(((Int)i << 32) + (Int)v);
-}
-
-inline std::pair<Index, Version> split(Identifier id)
-{
-    using Int = std::underlying_type_t<Identifier>;
-    Int id_int = static_cast<Int>(id);
-    return {(Index)(id_int >> 32), (Version)id_int};
-}
     
 class Registry;
 
@@ -158,6 +143,8 @@ public:
     template <typename... Comps>
     Entity find(const EntityPredicate& pred = [](Entity){ return true; });
 
+    static std::pair<Index, Version> split(Identifier id);
+
     friend class Entity;
 };
 
@@ -207,7 +194,7 @@ template <typename Comp, typename... Args>
 Comp& Entity::add(Args&&... args)
 {
     assert(valid());
-    auto [index, version] = split(d_identifier);
+    auto [index, version] = Registry::split(d_identifier);
 
     auto& data = d_registry->d_comps[spkt::type_info<Comp>];
 
@@ -241,7 +228,7 @@ template <typename Comp>
 Comp& Entity::get() const
 {
     assert(valid());
-    auto [index, version] = split(d_identifier);
+    auto [index, version] = Registry::split(d_identifier);
     auto& entry = d_registry->d_comps.at(spkt::type_info<Comp>).instances[index];
     return std::any_cast<Comp&>(entry);
 }

@@ -6,6 +6,17 @@
 
 namespace Sprocket {
 namespace ecs {
+namespace {
+
+static constexpr Identifier null_id = std::numeric_limits<Identifier>::max();
+
+Identifier combine(Index i, Version v)
+{
+    using Int = std::underlying_type_t<Identifier>;
+    return static_cast<Identifier>(((Int)i << 32) + (Int)v);
+}
+
+}
 
 Entity::Entity(Registry* r, Identifier i)
     : d_registry(r)
@@ -42,7 +53,7 @@ Entity& Entity::operator=(Entity other)
 
 bool Entity::valid() const
 {
-    auto [index, version] = split(d_identifier);
+    auto [index, version] = Registry::split(d_identifier);
     return *this != ecs::Null
         && d_registry
         && d_registry->d_entities.Has(index)
@@ -52,7 +63,7 @@ bool Entity::valid() const
 void Entity::destroy() 
 {
     if (valid()) {
-        auto [index, version] = split(d_identifier);
+        auto [index, version] = Registry::split(d_identifier);
 
         // Clean up all components
         for (auto& [type, data] : d_registry->d_comps) {
@@ -78,7 +89,7 @@ void Entity::remove(spkt::type_info_t type) const
     ev::Event event = data.make_remove_event(*this);
     d_registry->d_callback(event);
 
-    auto [index, version] = split(d_identifier);
+    auto [index, version] = Registry::split(d_identifier);
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
         if (it->second.instances.Has(index)) {
             it->second.instances.Erase(index);
@@ -88,7 +99,7 @@ void Entity::remove(spkt::type_info_t type) const
 
 bool Entity::has(spkt::type_info_t type) const
 {
-    auto [index, version] = split(d_identifier);
+    auto [index, version] = Registry::split(d_identifier);
     if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
         if (it->second.instances.Has(index)) {
             const auto& entry = it->second.instances[index];
@@ -160,6 +171,13 @@ cppcoro::generator<Entity> Registry::all()
     for (const auto& [index, id] : d_entities.Fast()) {
         co_yield {this, id};
     }
+}
+
+std::pair<Index, Version> Registry::split(Identifier id)
+{
+    using Int = std::underlying_type_t<Identifier>;
+    Int id_int = static_cast<Int>(id);
+    return {(Index)(id_int >> 32), (Version)id_int};
 }
 
 }
