@@ -19,7 +19,7 @@ struct CollisionEvent
 
 class PhysicsEngine3D : public EntitySystem
 {
-    static constexpr float TIME_STEP = 1.0f / 60.0f;
+    static constexpr float TIME_STEP = 1.0f / 120.0f;
 
     std::unique_ptr<PhysicsEngine3DImpl> d_impl;
 

@@ -62,7 +62,6 @@ void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatche
         lua::load_entity_component_functions(script);
 
         script.call_function<void>("Init", data.entity);
-        script.print_globals();
         d_engines.emplace(data.entity, std::make_pair(std::move(script), true));
     });
 

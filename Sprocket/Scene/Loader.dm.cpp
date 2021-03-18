@@ -101,8 +101,32 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
+    // First, set up new handles in the target scene and create a mapping between
+    // new and old IDs.
+    std::unordered_map<ecs::Identifier, ecs::Identifier> id_remapper;
     for (auto entity : source->all()) {
-        Copy(target, entity);
+        ecs::Identifier old_id = entity.id();
+        ecs::Identifier new_id = target->create().id();
+        id_remapper[old_id] = new_id;
+    }
+
+    const auto transform = [&](auto&& param) {
+        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
+            return id_remapper[param];
+        }
+        return param;
+    };
+
+    for (auto entity : source->all()) {
+        ecs::Entity e{target, id_remapper[entity.id()]};
+#ifdef DATAMATIC_BLOCK
+        if (entity.has<{{Comp.Name}}>()) {
+            const {{Comp.Name}}& source_comp = entity.get<{{Comp.Name}}>();
+            {{Comp.Name}} target_comp;
+            target_comp.{{Attr.Name}} = transform(source_comp.{{Attr.Name}});
+            e.add<{{Comp.Name}}>(target_comp);
+        }
+#endif
     }
 }
 

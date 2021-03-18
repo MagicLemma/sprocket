@@ -210,7 +210,7 @@ void Load(const std::string& file, ecs::Registry* reg)
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
     const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
+        if constexpr (std::is_same_v<std::decay_t<decltype(param)>, ecs::Identifier>) {
             return id_remapper[param];
         }
         return param;
@@ -219,6 +219,9 @@ void Load(const std::string& file, ecs::Registry* reg)
     for (auto entity : entities) {
         ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
         ecs::Identifier new_id = reg->create().id();
+        if (old_id != new_id) {
+            log::info("Remapping {} to {}", old_id, new_id);
+        }
         id_remapper[old_id] = new_id;
     }
 
@@ -430,8 +433,188 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
+    // First, set up new handles in the target scene and create a mapping between
+    // new and old IDs.
+    std::unordered_map<ecs::Identifier, ecs::Identifier> id_remapper;
     for (auto entity : source->all()) {
-        Copy(target, entity);
+        ecs::Identifier old_id = entity.id();
+        ecs::Identifier new_id = target->create().id();
+        if (old_id != new_id) {
+            log::info("Remapping {} to {}", old_id, new_id);
+        }
+        id_remapper[old_id] = new_id;
+    }
+
+    const auto transform = [&](auto&& param) {
+        if constexpr (std::is_same_v<std::decay_t<decltype(param)>, ecs::Identifier>) {
+            return id_remapper[param];
+        }
+        return param;
+    };
+
+    for (auto entity : source->all()) {
+        ecs::Entity e{target, id_remapper[entity.id()]};
+        if (entity.has<TemporaryComponent>()) {
+            const TemporaryComponent& source_comp = entity.get<TemporaryComponent>();
+            TemporaryComponent target_comp;
+            e.add<TemporaryComponent>(target_comp);
+        }
+        if (entity.has<NameComponent>()) {
+            const NameComponent& source_comp = entity.get<NameComponent>();
+            NameComponent target_comp;
+            target_comp.name = transform(source_comp.name);
+            e.add<NameComponent>(target_comp);
+        }
+        if (entity.has<Transform2DComponent>()) {
+            const Transform2DComponent& source_comp = entity.get<Transform2DComponent>();
+            Transform2DComponent target_comp;
+            target_comp.position = transform(source_comp.position);
+            target_comp.rotation = transform(source_comp.rotation);
+            target_comp.scale = transform(source_comp.scale);
+            e.add<Transform2DComponent>(target_comp);
+        }
+        if (entity.has<Transform3DComponent>()) {
+            const Transform3DComponent& source_comp = entity.get<Transform3DComponent>();
+            Transform3DComponent target_comp;
+            target_comp.position = transform(source_comp.position);
+            target_comp.orientation = transform(source_comp.orientation);
+            target_comp.scale = transform(source_comp.scale);
+            e.add<Transform3DComponent>(target_comp);
+        }
+        if (entity.has<ModelComponent>()) {
+            const ModelComponent& source_comp = entity.get<ModelComponent>();
+            ModelComponent target_comp;
+            target_comp.mesh = transform(source_comp.mesh);
+            target_comp.material = transform(source_comp.material);
+            e.add<ModelComponent>(target_comp);
+        }
+        if (entity.has<RigidBody3DComponent>()) {
+            const RigidBody3DComponent& source_comp = entity.get<RigidBody3DComponent>();
+            RigidBody3DComponent target_comp;
+            target_comp.velocity = transform(source_comp.velocity);
+            target_comp.gravity = transform(source_comp.gravity);
+            target_comp.frozen = transform(source_comp.frozen);
+            target_comp.bounciness = transform(source_comp.bounciness);
+            target_comp.frictionCoefficient = transform(source_comp.frictionCoefficient);
+            target_comp.rollingResistance = transform(source_comp.rollingResistance);
+            target_comp.force = transform(source_comp.force);
+            target_comp.onFloor = transform(source_comp.onFloor);
+            e.add<RigidBody3DComponent>(target_comp);
+        }
+        if (entity.has<BoxCollider3DComponent>()) {
+            const BoxCollider3DComponent& source_comp = entity.get<BoxCollider3DComponent>();
+            BoxCollider3DComponent target_comp;
+            target_comp.position = transform(source_comp.position);
+            target_comp.orientation = transform(source_comp.orientation);
+            target_comp.mass = transform(source_comp.mass);
+            target_comp.halfExtents = transform(source_comp.halfExtents);
+            target_comp.applyScale = transform(source_comp.applyScale);
+            e.add<BoxCollider3DComponent>(target_comp);
+        }
+        if (entity.has<SphereCollider3DComponent>()) {
+            const SphereCollider3DComponent& source_comp = entity.get<SphereCollider3DComponent>();
+            SphereCollider3DComponent target_comp;
+            target_comp.position = transform(source_comp.position);
+            target_comp.orientation = transform(source_comp.orientation);
+            target_comp.mass = transform(source_comp.mass);
+            target_comp.radius = transform(source_comp.radius);
+            e.add<SphereCollider3DComponent>(target_comp);
+        }
+        if (entity.has<CapsuleCollider3DComponent>()) {
+            const CapsuleCollider3DComponent& source_comp = entity.get<CapsuleCollider3DComponent>();
+            CapsuleCollider3DComponent target_comp;
+            target_comp.position = transform(source_comp.position);
+            target_comp.orientation = transform(source_comp.orientation);
+            target_comp.mass = transform(source_comp.mass);
+            target_comp.radius = transform(source_comp.radius);
+            target_comp.height = transform(source_comp.height);
+            e.add<CapsuleCollider3DComponent>(target_comp);
+        }
+        if (entity.has<ScriptComponent>()) {
+            const ScriptComponent& source_comp = entity.get<ScriptComponent>();
+            ScriptComponent target_comp;
+            target_comp.script = transform(source_comp.script);
+            target_comp.active = transform(source_comp.active);
+            e.add<ScriptComponent>(target_comp);
+        }
+        if (entity.has<Camera3DComponent>()) {
+            const Camera3DComponent& source_comp = entity.get<Camera3DComponent>();
+            Camera3DComponent target_comp;
+            target_comp.projection = transform(source_comp.projection);
+            target_comp.fov = transform(source_comp.fov);
+            target_comp.pitch = transform(source_comp.pitch);
+            e.add<Camera3DComponent>(target_comp);
+        }
+        if (entity.has<SelectComponent>()) {
+            const SelectComponent& source_comp = entity.get<SelectComponent>();
+            SelectComponent target_comp;
+            target_comp.selected = transform(source_comp.selected);
+            target_comp.hovered = transform(source_comp.hovered);
+            e.add<SelectComponent>(target_comp);
+        }
+        if (entity.has<PathComponent>()) {
+            const PathComponent& source_comp = entity.get<PathComponent>();
+            PathComponent target_comp;
+            target_comp.markers = transform(source_comp.markers);
+            target_comp.speed = transform(source_comp.speed);
+            e.add<PathComponent>(target_comp);
+        }
+        if (entity.has<GridComponent>()) {
+            const GridComponent& source_comp = entity.get<GridComponent>();
+            GridComponent target_comp;
+            target_comp.x = transform(source_comp.x);
+            target_comp.z = transform(source_comp.z);
+            e.add<GridComponent>(target_comp);
+        }
+        if (entity.has<LightComponent>()) {
+            const LightComponent& source_comp = entity.get<LightComponent>();
+            LightComponent target_comp;
+            target_comp.colour = transform(source_comp.colour);
+            target_comp.brightness = transform(source_comp.brightness);
+            e.add<LightComponent>(target_comp);
+        }
+        if (entity.has<SunComponent>()) {
+            const SunComponent& source_comp = entity.get<SunComponent>();
+            SunComponent target_comp;
+            target_comp.colour = transform(source_comp.colour);
+            target_comp.brightness = transform(source_comp.brightness);
+            target_comp.direction = transform(source_comp.direction);
+            target_comp.shadows = transform(source_comp.shadows);
+            e.add<SunComponent>(target_comp);
+        }
+        if (entity.has<AmbienceComponent>()) {
+            const AmbienceComponent& source_comp = entity.get<AmbienceComponent>();
+            AmbienceComponent target_comp;
+            target_comp.colour = transform(source_comp.colour);
+            target_comp.brightness = transform(source_comp.brightness);
+            e.add<AmbienceComponent>(target_comp);
+        }
+        if (entity.has<ParticleComponent>()) {
+            const ParticleComponent& source_comp = entity.get<ParticleComponent>();
+            ParticleComponent target_comp;
+            target_comp.interval = transform(source_comp.interval);
+            target_comp.velocity = transform(source_comp.velocity);
+            target_comp.velocityNoise = transform(source_comp.velocityNoise);
+            target_comp.acceleration = transform(source_comp.acceleration);
+            target_comp.scale = transform(source_comp.scale);
+            target_comp.life = transform(source_comp.life);
+            target_comp.accumulator = transform(source_comp.accumulator);
+            e.add<ParticleComponent>(target_comp);
+        }
+        if (entity.has<MeshAnimationComponent>()) {
+            const MeshAnimationComponent& source_comp = entity.get<MeshAnimationComponent>();
+            MeshAnimationComponent target_comp;
+            target_comp.name = transform(source_comp.name);
+            target_comp.time = transform(source_comp.time);
+            target_comp.speed = transform(source_comp.speed);
+            e.add<MeshAnimationComponent>(target_comp);
+        }
+        if (entity.has<ParentComponent>()) {
+            const ParentComponent& source_comp = entity.get<ParentComponent>();
+            ParentComponent target_comp;
+            target_comp.parent = transform(source_comp.parent);
+            e.add<ParentComponent>(target_comp);
+        }
     }
 }
 
