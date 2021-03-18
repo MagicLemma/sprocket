@@ -110,8 +110,8 @@ public:
     // Deletes the given entity along with all of its components.
     void destroy(Entity entity);
 
-    // Returns the entity corresponding to the given GUID, which may or may not be valid.
-    Entity get(Identifier id);
+    // Returns true if the given entity is currently alive.
+    bool valid(Entity entity) const;
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.

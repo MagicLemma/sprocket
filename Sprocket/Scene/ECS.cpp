@@ -53,11 +53,7 @@ Entity& Entity::operator=(Entity other)
 
 bool Entity::valid() const
 {
-    auto [index, version] = Registry::split(d_identifier);
-    return *this != ecs::Null
-        && d_registry
-        && d_registry->d_entities.Has(index)
-        && d_registry->d_entities[index] == d_identifier;
+    return d_registry->valid(*this);
 }
 
 void Entity::destroy() 
@@ -72,7 +68,7 @@ Identifier Entity::id() const
 
 void Registry::remove(Entity entity, spkt::type_info_t type)
 {
-    assert(entity.valid());
+    assert(valid(entity));
     if (!has(entity, type)) { return; }
 
     auto& data = d_comps[type];
@@ -128,9 +124,12 @@ void Registry::destroy(Entity entity)
     d_pool.push_back(entity.id());
 }
 
-Entity Registry::get(Identifier id)
+bool Registry::valid(Entity entity) const
 {
-    return {this, id};
+    auto [index, version] = Registry::split(entity.id());
+    return entity.id() != ecs::null_id
+        && d_entities.Has(index)
+        && d_entities[index] == entity.id();
 }
 
 void Registry::clear()
