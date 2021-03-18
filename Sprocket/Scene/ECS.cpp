@@ -67,7 +67,7 @@ void Entity::destroy()
 
         // Clean up all components
         for (auto& [type, data] : d_registry->d_comps) {
-            if (has(type)) { remove(type); }
+            if (d_registry->has(*this, type)) { d_registry->remove(*this, type); }
         }
         d_registry->d_entities.Erase(index);
         d_registry->d_pool.push_back(d_identifier);
@@ -79,28 +79,28 @@ Identifier Entity::id() const
     return d_identifier;
 }
 
-void Entity::remove(spkt::type_info_t type) const
+void Registry::remove(Entity entity, spkt::type_info_t type)
 {
-    assert(valid());
-    if (!has(type)) { return; }
+    assert(entity.valid());
+    if (!has(entity, type)) { return; }
 
-    auto& data = d_registry->d_comps[type];
+    auto& data = d_comps[type];
     
-    ev::Event event = data.make_remove_event(*this);
-    d_registry->d_callback(event);
+    ev::Event event = data.make_remove_event(entity);
+    d_callback(event);
 
-    auto [index, version] = Registry::split(d_identifier);
-    if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
+    auto [index, version] = Registry::split(entity.id());
+    if (auto it = d_comps.find(type); it != d_comps.end()) {
         if (it->second.instances.Has(index)) {
             it->second.instances.Erase(index);
         }
     }
 }
 
-bool Entity::has(spkt::type_info_t type) const
+bool Registry::has(Entity entity, spkt::type_info_t type) const
 {
-    auto [index, version] = Registry::split(d_identifier);
-    if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
+    auto [index, version] = Registry::split(entity.id());
+    if (auto it = d_comps.find(type); it != d_comps.end()) {
         if (it->second.instances.Has(index)) {
             const auto& entry = it->second.instances[index];
             return entry.has_value();

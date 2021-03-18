@@ -30,9 +30,6 @@ class Entity
     Registry*  d_registry;
     Identifier d_identifier;
 
-    bool has(spkt::type_info_t type) const;
-    void remove(spkt::type_info_t type) const;
-
 public:
     // Construction of entities should not be done directly, instead they should
     // be constructed via a Registry.
@@ -43,7 +40,7 @@ public:
     void destroy();
 
     template <typename Comp, typename... Args> Comp& add(Args&&... args);
-    template <typename Comp> void remove() const;
+    template <typename Comp> void remove();
     template <typename Comp> Comp& get() const;
     template <typename Comp> bool has() const;
 
@@ -96,6 +93,9 @@ private:
     };
 
     std::unordered_map<spkt::type_info_t, ComponentData> d_comps;
+
+    bool has(Entity entity, spkt::type_info_t type) const;
+    void remove(Entity entity, spkt::type_info_t type);
 
     Registry& operator=(const Registry&) = delete;
     Registry(const Registry&) = delete;
@@ -215,10 +215,10 @@ Comp& Entity::add(Args&&... args)
 }
 
 template <typename Comp>
-void Entity::remove() const
+void Entity::remove()
 {
     assert(valid());
-    remove(spkt::type_info<Comp>);
+    d_registry->remove(*this, spkt::type_info<Comp>);
 }
 
 template <typename Comp>
@@ -234,7 +234,7 @@ template <typename Comp>
 bool Entity::has() const
 {
     assert(valid());
-    return has(spkt::type_info<Comp>);
+    return d_registry->has(*this, spkt::type_info<Comp>);
 }
 
 // We can push an entity into the Lua stack by calling the Lua equivalent of malloc
