@@ -24,7 +24,10 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), std::to_string(entity.id()).c_str());
+    ImGui::TextColored(
+        ImVec4(0.5, 0.5, 0.5, 1.0),
+        std::to_string(std::underlying_type_t<ecs::Identifier>(entity.id())).c_str()
+    );
 
     if (entity.has<TemporaryComponent>()) {
         auto& c = entity.get<TemporaryComponent>();

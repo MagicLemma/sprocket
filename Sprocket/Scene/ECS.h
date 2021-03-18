@@ -18,7 +18,8 @@
 namespace Sprocket {
 namespace ecs {
 
-using Identifier = std::uint64_t;
+enum class Identifier : std::uint64_t {};
+
 using Index = std::uint32_t;
 using Version = std::uint32_t;
 
@@ -26,12 +27,15 @@ static constexpr Identifier null_id = std::numeric_limits<Identifier>::max();
 
 inline Identifier combine(Index i, Version v)
 {
-    return ((Identifier)i << 32) + (Identifier)v;
+    using Int = std::underlying_type_t<Identifier>;
+    return static_cast<Identifier>(((Int)i << 32) + (Int)v);
 }
 
 inline std::pair<Index, Version> split(Identifier id)
 {
-    return {(Index)(id >> 32), (Version)id};
+    using Int = std::underlying_type_t<Identifier>;
+    Int id_int = static_cast<Int>(id);
+    return {(Index)(id_int >> 32), (Version)id_int};
 }
     
 class Registry;
