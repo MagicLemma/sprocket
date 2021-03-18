@@ -114,6 +114,14 @@ template <> struct Converter<ecs::Entity>
     static ecs::Entity read(lua_State* L, int& read_ptr);
 };
 
+template <> struct Converter<ecs::Identifier>
+{
+    static constexpr int dimension = 1;
+    static ecs::Identifier pop(lua_State* L);
+    static int push(lua_State* L, const ecs::Identifier& value);
+    static ecs::Identifier read(lua_State* L, int& read_ptr);
+};
+
 // Implement the pull_from for these types when we need them, otherwise we are
 // guessing the API here.
 

@@ -63,12 +63,10 @@ void Load(const std::string& file, ecs::Registry* reg)
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
     const auto transform = [&](auto&& param) {
-        if constexpr(std::is_same_v<decltype(param), ecs::Identifier>) {
+        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
             return id_remapper[param];
         }
-        else {
-            return param;
-        }
+        return param;
     };
     
     for (auto entity : entities) {

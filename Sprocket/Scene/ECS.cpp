@@ -8,7 +8,7 @@ namespace Sprocket {
 namespace ecs {
 namespace {
 
-static constexpr Identifier null_id = std::numeric_limits<Identifier>::max();
+static constexpr Identifier null_id = static_cast<Identifier>(-1);
 
 Identifier combine(Index i, Version v)
 {

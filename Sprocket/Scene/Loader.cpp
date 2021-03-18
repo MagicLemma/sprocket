@@ -170,6 +170,12 @@ void Save(const std::string& file, ecs::Registry* reg)
             out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
+        if (entity.has<ParentComponent>()) {
+            const auto& c = entity.get<ParentComponent>();
+            out << YAML::Key << "ParentComponent" << YAML::BeginMap;
+            out << YAML::Key << "parent" << YAML::Value << c.parent;
+            out << YAML::EndMap;
+        }
         out << YAML::EndMap;
     }
     out << YAML::EndSeq;
@@ -204,12 +210,10 @@ void Load(const std::string& file, ecs::Registry* reg)
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
     const auto transform = [&](auto&& param) {
-        if constexpr(std::is_same_v<decltype(param), ecs::Identifier>) {
+        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
             return id_remapper[param];
         }
-        else {
-            return param;
-        }
+        return param;
     };
 
     for (auto entity : entities) {
@@ -350,6 +354,11 @@ void Load(const std::string& file, ecs::Registry* reg)
             c.speed = transform(spec["speed"].as<float>());
             e.add<MeshAnimationComponent>(c);
         }
+        if (auto spec = entity["ParentComponent"]) {
+            ParentComponent c;
+            c.parent = transform(spec["parent"].as<ecs::Identifier>());
+            e.add<ParentComponent>(c);
+        }
     }
 }
 
@@ -412,6 +421,9 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
     }
     if (entity.has<MeshAnimationComponent>()) {
         e.add<MeshAnimationComponent>(entity.get<MeshAnimationComponent>());
+    }
+    if (entity.has<ParentComponent>()) {
+        e.add<ParentComponent>(entity.get<ParentComponent>());
     }
     return e;
 }

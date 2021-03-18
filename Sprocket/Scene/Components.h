@@ -1,6 +1,7 @@
 // GENERATED FILE
 #pragma once
 #include "Maths.h"
+#include "ECS.h"
 #include <queue>
 #include <string>
 
@@ -141,6 +142,11 @@ struct MeshAnimationComponent
     std::string name = "";
     float time = 0.0f;
     float speed = 1.0f;
+};
+
+struct ParentComponent
+{
+    ecs::Identifier parent = static_cast<ecs::Identifier>(-1);
 };
 
 

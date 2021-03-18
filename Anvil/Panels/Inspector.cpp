@@ -24,10 +24,7 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
-    ImGui::TextColored(
-        ImVec4(0.5, 0.5, 0.5, 1.0),
-        std::to_string(std::underlying_type_t<ecs::Identifier>(entity.id())).c_str()
-    );
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.id());
 
     if (entity.has<TemporaryComponent>()) {
         auto& c = entity.get<TemporaryComponent>();
@@ -279,6 +276,17 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
+    if (entity.has<ParentComponent>()) {
+        auto& c = entity.get<ParentComponent>();
+        if (ImGui::CollapsingHeader("Parent")) {
+            ImGui::PushID(count++);
+            ImGui::Text("Parent: %llu", static_cast<std::uint64_t>(c.parent));
+            
+            if (ImGui::Button("Delete")) { entity.remove<ParentComponent>(); }
+            ImGui::PopID();
+        }
+    }
+
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -361,6 +369,10 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<MeshAnimationComponent>() && ImGui::Selectable("Mesh Animation")) {
             MeshAnimationComponent c;
             entity.add<MeshAnimationComponent>(c);
+        }
+        if (!entity.has<ParentComponent>() && ImGui::Selectable("Parent")) {
+            ParentComponent c;
+            entity.add<ParentComponent>(c);
         }
         ImGui::EndMenu();
     }

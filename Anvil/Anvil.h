@@ -48,7 +48,7 @@ class Anvil
     bool d_showColliders = false;
 
     void AddEntityToList(const ecs::Entity& entity);
-    ecs::Entity d_selected;
+    ecs::Entity d_selected = ecs::Null;
 
     // Panels
     Inspector      d_inspector;

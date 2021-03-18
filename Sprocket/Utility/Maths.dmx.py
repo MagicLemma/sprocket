@@ -60,6 +60,19 @@ class Quat(Type):
         return "glm::quat"
 
 
+class EntityID(Type):
+    def __init__(self, val):
+        assert isinstance(val, int)
+        self.val = val
+
+    def __repr__(self):
+        return f'static_cast<{self.typename()}>({self.val})'
+
+    @staticmethod
+    def typename():
+        return "ecs::Identifier"
+
+
 class Mat4(Type): # TODO: Implement
     def __init__(self, val):
         pass
