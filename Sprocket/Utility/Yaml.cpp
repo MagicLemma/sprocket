@@ -117,16 +117,16 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
 Node convert<ecs::Identifier>::encode(const ecs::Identifier& rhs)
 {
     Node n;
-    n.push_back(static_cast<std::underlying_type_t<ecs::Identifier>>(rhs));
+    n = static_cast<std::underlying_type_t<ecs::Identifier>>(rhs);
     return n;
 }
 
 bool convert<ecs::Identifier>::decode(const Node& node, ecs::Identifier& rhs)
 {
-    if (!node.IsSequence() || node.size() != 1)
+    if (!node.IsScalar())
         return false;
 
-    rhs = static_cast<ecs::Identifier>(node[0].as<std::underlying_type_t<ecs::Identifier>>());
+    rhs = static_cast<ecs::Identifier>(node.as<std::underlying_type_t<ecs::Identifier>>());
     return true;
 }
 

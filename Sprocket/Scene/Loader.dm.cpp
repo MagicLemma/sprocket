@@ -57,25 +57,29 @@ void Load(const std::string& file, ecs::Registry* reg)
         return; // TODO: Error checking
     }
 
+    auto entities = data["Entities"];
+    std::unordered_map<ecs::Identifier, ecs::Identifier> id_remapper;
+
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
     const auto transform = [&](auto&& param) {
         if constexpr(std::is_same_v<decltype(param), ecs::Identifier>) {
-            return param;
+            return id_remapper[param];
         }
         else {
             return param;
         }
     };
     
-    auto entities = data["Entities"];
-
     for (auto entity : entities) {
-
+        ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
+        ecs::Identifier new_id = reg->create().id();
+        id_remapper[old_id] = new_id;
     }
 
     for (auto entity : entities) {
-        ecs::Entity e = reg->create();
+        ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
+        ecs::Entity e{reg, id_remapper[old_id]};
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
