@@ -1,6 +1,6 @@
 #pragma once
 #include "Maths.h"
-#include "GUID.h"
+#include "ECS.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -37,10 +37,10 @@ struct convert<glm::mat4>
 };
 
 template<>
-struct convert<guid::GUID>
+struct convert<ecs::Identifier>
 {
-    static Node encode(const guid::GUID& rhs);
-    static bool decode(const Node& node, guid::GUID& rhs);
+    static Node encode(const ecs::Identifier& rhs);
+    static bool decode(const Node& node, ecs::Identifier& rhs);
 };
 
 }
@@ -51,6 +51,6 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);
-YAML::Emitter& operator<<(YAML::Emitter& out, const guid::GUID& g);
+YAML::Emitter& operator<<(YAML::Emitter& out, const ecs::Identifier& i);
 
 }

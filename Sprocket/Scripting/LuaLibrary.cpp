@@ -1750,6 +1750,77 @@ void load_entity_component_functions(lua::Script& script)
     lua_register(L, "HasMeshAnimationComponent", &_has_impl<MeshAnimationComponent>);
 
 
+    // Functions for ParentComponent =====================================================
+
+    constexpr int ParentComponent_dimension = 1;
+
+    luaL_dostring(L, R"lua(
+        ParentComponent = Class(function(self, parent)
+            self.parent = parent
+        end)
+    )lua");
+
+    lua_register(L, "_GetParentComponent", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        assert(e.has<ParentComponent>());
+
+        int count = 0;
+        const auto& c = e.get<ParentComponent>();
+        count += Converter<ecs::Identifier>::push(L, c.parent);
+        assert(count == ParentComponent_dimension);
+        return count;
+    });
+
+    luaL_dostring(L, R"lua(
+        function GetParentComponent(entity)
+            x0 = _GetParentComponent(entity)
+            return ParentComponent(x0)
+        end
+    )lua");
+
+    lua_register(L, "_SetParentComponent", [](lua_State* L) {
+        if (!CheckArgCount(L, ParentComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        auto& c = e.get<ParentComponent>();
+        c.parent = Converter<ecs::Identifier>::read(L, ptr);
+        assert(ptr == ParentComponent_dimension + 2);
+        return 0;
+    });
+
+    luaL_dostring(L, R"lua(
+        function SetParentComponent(entity, c)
+            _SetParentComponent(entity, c.parent)
+        end
+    )lua");
+
+    lua_register(L, "_AddParentComponent", [](lua_State* L) {
+        if (!CheckArgCount(L, ParentComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+
+        int ptr = 1;
+        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        assert(!e.has<ParentComponent>());
+
+        ParentComponent c;
+        c.parent = Converter<ecs::Identifier>::read(L, ptr);
+        e.add<ParentComponent>(c);
+        assert(ptr == ParentComponent_dimension + 2);
+        return 0;
+    });
+
+    luaL_dostring(L, R"lua(
+        function AddParentComponent(entity, c)
+            _AddParentComponent(entity, c.parent)
+        end
+    )lua");
+
+    lua_register(L, "HasParentComponent", &_has_impl<ParentComponent>);
+
+
 }
 
 }

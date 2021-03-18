@@ -1,4 +1,5 @@
 #include "Yaml.h"
+#include "ECS.h"
 
 namespace YAML {
 
@@ -113,25 +114,19 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
     return true;
 }
 
-Node convert<guid::GUID>::encode(const guid::GUID& rhs)
+Node convert<ecs::Identifier>::encode(const ecs::Identifier& rhs)
 {
     Node n;
-    n.push_back(rhs[0]);
-    n.push_back(rhs[1]);
-    n.push_back(rhs[2]);
-    n.push_back(rhs[3]);
+    n = static_cast<std::underlying_type_t<ecs::Identifier>>(rhs);
     return n;
 }
 
-bool convert<guid::GUID>::decode(const Node& node, guid::GUID& rhs)
+bool convert<ecs::Identifier>::decode(const Node& node, ecs::Identifier& rhs)
 {
-    if (!node.IsSequence() || node.size() != 4)
+    if (!node.IsScalar())
         return false;
 
-    rhs[0] = node[0].as<u32>();
-    rhs[1] = node[1].as<u32>();
-    rhs[2] = node[2].as<u32>();
-    rhs[3] = node[3].as<u32>();
+    rhs = static_cast<ecs::Identifier>(node.as<std::underlying_type_t<ecs::Identifier>>());
     return true;
 }
 
@@ -171,10 +166,9 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const guid::GUID& g)
+YAML::Emitter& operator<<(YAML::Emitter& out, const ecs::Identifier& i)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << g[0] << g[1] << g[2] << g[3] << YAML::EndSeq;
+    out << static_cast<std::underlying_type_t<ecs::Identifier>>(i);
     return out;
 }
 

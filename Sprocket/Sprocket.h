@@ -38,7 +38,6 @@
 #include "Utility/Log.h"
 #include "Utility/Colour.h"
 #include "Utility/FileBrowser.h"
-#include "Utility/GUID.h"
 #include "Utility/Hashing.h"
 #include "Utility/InputProxy.h"
 #include "Utility/Maths.h"

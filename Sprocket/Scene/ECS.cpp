@@ -6,29 +6,33 @@
 
 namespace Sprocket {
 namespace ecs {
+namespace {
 
-Entity::Entity(Registry* r, std::size_t i, guid::GUID g)
+static constexpr Identifier null_id = static_cast<Identifier>(-1);
+
+Identifier combine(Index i, Version v)
+{
+    using Int = std::underlying_type_t<Identifier>;
+    return static_cast<Identifier>(((Int)i << 32) + (Int)v);
+}
+
+}
+
+Entity::Entity(Registry* r, Identifier i)
     : d_registry(r)
-    , d_index(i)
-    , d_guid(g)
+    , d_identifier(i)
 { 
 }
 
 Entity::Entity()
     : d_registry(nullptr)
-    , d_index(0)
-    , d_guid(guid::Zero)
+    , d_identifier(null_id)
 {
 }
 
 bool Entity::operator==(Entity other) const
 {
-    // Change this to only compare registry and guid. If both of these
-    // are equal but the index is wrong, we have badly screwed something
-    // up, OR have a guid clash. Should assert
-    return d_registry == other.d_registry
-        && d_index == other.d_index
-        && d_guid == other.d_guid;
+    return d_registry == other.d_registry && d_identifier == other.d_identifier;
 }
 
 bool Entity::operator!=(Entity other) const
@@ -39,59 +43,49 @@ bool Entity::operator!=(Entity other) const
 Entity& Entity::operator=(Entity other)
 {
     d_registry = other.d_registry;
-    d_index = other.d_index;
-    d_guid = other.d_guid;
+    d_identifier = other.d_identifier;
     return *this;
 }
 
 bool Entity::valid() const
 {
-     return *this != ecs::Null
-         && d_registry
-         && d_registry->d_entities.Has(d_index)
-         && d_registry->d_entities[d_index] == d_guid;
+    return d_registry->valid(*this);
 }
 
 void Entity::destroy() 
 {
-    if (valid()) {
-        // Clean up all components
-        for (auto& [type, data] : d_registry->d_comps) {
-            if (has(type)) { remove(type); }
-        }
-        d_registry->d_entities.Erase(d_index);
-        d_registry->d_pool.push_back(d_index);
-        d_registry->d_lookup.erase(d_guid);
-    }
+    d_registry->destroy(*this);
 }
 
-guid::GUID Entity::id() const
+Identifier Entity::id() const
 {
-    return d_guid;
+    return d_identifier;
 }
 
-void Entity::remove(spkt::type_info_t type) const
+void Registry::remove(Entity entity, spkt::type_info_t type)
 {
-    assert(valid());
-    if (!has(type)) { return; }
+    assert(valid(entity));
+    if (!has(entity, type)) { return; }
 
-    auto& data = d_registry->d_comps[type];
+    auto& data = d_comps[type];
     
-    ev::Event event = data.make_remove_event(*this);
-    d_registry->d_callback(event);
+    ev::Event event = data.make_remove_event(entity);
+    d_callback(event);
 
-    if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
-        if (it->second.instances.Has(d_index)) {
-            it->second.instances.Erase(d_index);
+    auto [index, version] = Registry::split(entity.id());
+    if (auto it = d_comps.find(type); it != d_comps.end()) {
+        if (it->second.instances.Has(index)) {
+            it->second.instances.Erase(index);
         }
     }
 }
 
-bool Entity::has(spkt::type_info_t type) const
+bool Registry::has(Entity entity, spkt::type_info_t type) const
 {
-    if (auto it = d_registry->d_comps.find(type); it != d_registry->d_comps.end()) {
-        if (it->second.instances.Has(d_index)) {
-            const auto& entry = it->second.instances[d_index];
+    auto [index, version] = Registry::split(entity.id());
+    if (auto it = d_comps.find(type); it != d_comps.end()) {
+        if (it->second.instances.Has(index)) {
+            const auto& entry = it->second.instances[index];
             return entry.has_value();
         }
     }
@@ -100,41 +94,45 @@ bool Entity::has(spkt::type_info_t type) const
 
 Entity Registry::create()
 {
-    guid::GUID guid = d_generator.New();
-    return create(guid);
-}
-
-Entity Registry::create(const guid::GUID& guid)
-{
-    assert(guid != guid::Zero);
-
-    // If there is a slot in the pool, use that, otherwise increase the
-    // the size of the entity sparse set.
-    std::size_t index = d_entities.Size();
+    Index index = d_entities.Size();
+    Version version = 0;
     if (!d_pool.empty()) {
-        index = d_pool.front();
+        std::tie(index, version) = split(d_pool.front());
         d_pool.pop_front();
+        ++version;
     }
 
-    d_entities.Insert(index, guid);
-    d_lookup.emplace(guid, index);
-    return {this, index, guid};
+    Identifier id = combine(index, version);
+    d_entities.Insert(index, id);
+    return {this, id};
 }
 
-Entity Registry::get(const guid::GUID& guid)
+void Registry::destroy(Entity entity)
 {
-    auto it = d_lookup.find(guid);
-    if (it != d_lookup.end()) {
-        return Entity{this, it->second, guid};
+    assert(entity.valid());
+    auto [index, version] = Registry::split(entity.id());
+
+    // Clean up all components
+    for (auto& [type, data] : d_comps) {
+        if (has(entity, type)) { remove(entity, type); }
     }
-    return ecs::Null;
+    d_entities.Erase(index);
+    d_pool.push_back(entity.id());
+}
+
+bool Registry::valid(Entity entity) const
+{
+    auto [index, version] = Registry::split(entity.id());
+    return entity.id() != ecs::null_id
+        && d_entities.Has(index)
+        && d_entities[index] == entity.id();
 }
 
 void Registry::clear()
 {
     // Clean up components, triggering on remove behaviour
-    for (const auto& [index, guid] : d_entities.Safe()) {
-        Entity{this, index, guid}.destroy();
+    for (const auto& [index, id] : d_entities.Safe()) {
+        Entity{this, id}.destroy();
     }
 
     // Reset all entity storage
@@ -162,16 +160,18 @@ void Registry::set_callback(const std::function<void(ev::Event&)>& callback)
     d_callback = callback;
 }
 
-void Registry::emit(ev::Event& event)
-{
-    d_callback(event);
-}
-
 cppcoro::generator<Entity> Registry::all()
 {
-    for (const auto& [index, guid] : d_entities.Fast()) {
-        co_yield {this, index, guid};
+    for (const auto& [index, id] : d_entities.Fast()) {
+        co_yield {this, id};
     }
+}
+
+std::pair<Index, Version> Registry::split(Identifier id)
+{
+    using Int = std::underlying_type_t<Identifier>;
+    Int id_int = static_cast<Int>(id);
+    return {(Index)(id_int >> 32), (Version)id_int};
 }
 
 }

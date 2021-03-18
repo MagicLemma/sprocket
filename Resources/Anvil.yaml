@@ -1,11 +1,11 @@
 Entities:
-  - "@GUID": [2098743053, 3416812330, 1103186834, 3618618308]
+  - ID#: 0
     NameComponent:
       name: Ambience
     AmbienceComponent:
       colour: [1, 1, 1]
       brightness: 0.03
-  - "@GUID": [2882949160, 441005620, 1361469739, 3924272946]
+  - ID#: 4294967296
     NameComponent:
       name: Sun
     SunComponent:
@@ -13,7 +13,7 @@ Entities:
       brightness: 1.6
       direction: [0, -0.9805147, -0.196446]
       shadows: false
-  - "@GUID": [2755667659, 2155891937, 330737945, 2194722995]
+  - ID#: 8589934592
     NameComponent:
       name: Running Character
     Transform3DComponent:
@@ -27,7 +27,7 @@ Entities:
       name: Armature|ArmatureAction
       time: 5
       speed: 1
-  - "@GUID": [3960624375, 606008909, 1011039163, 1803422958]
+  - ID#: 12884901888
     NameComponent:
       name: Bridge Thin 3
     Transform3DComponent:
@@ -52,32 +52,35 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [4226463289, 3797656095, 3543813194, 959659782]
+  - ID#: 17179869184
     NameComponent:
-      name: Bridge Thin 2
+      name: Bouncing Ball
     Transform3DComponent:
-      position: [0, 0, 9]
+      position: [10.48544, 4.043168, -6.103516e-05]
       orientation: [1, 0, 0, 0]
-      scale: [5, 0.948213, 0.2955239]
+      scale: [0.32, 0.32, 0.32]
     ModelComponent:
-      mesh: Resources/Models/Cube.obj
-      material: Resources/Materials/green.yaml
+      mesh: D:\dev\Sprocket\Resources\Models\Sphere.obj
+      material: ""
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
-      frozen: true
-      bounciness: 0
-      frictionCoefficient: 0.2
+      frozen: false
+      bounciness: 1
+      frictionCoefficient: 0.3
       rollingResistance: 0
-    BoxCollider3DComponent:
+    SphereCollider3DComponent:
       position: [0, 0, 0]
       orientation: [1, 0, 0, 0]
-      mass: 10000
-      halfExtents: [1, 1, 1]
-      applyScale: true
-    SelectComponent:
-      {}
-  - "@GUID": [848965955, 891771949, 1542866771, 1655202017]
+      mass: 1
+      radius: 0.38
+    ScriptComponent:
+      script: D:\dev\Sprocket\Resources\Scripts\LightOnBounce.lua
+      active: true
+    LightComponent:
+      colour: [1, 1, 1]
+      brightness: 100
+  - ID#: 21474836480
     NameComponent:
       name: Player
     Transform3DComponent:
@@ -108,7 +111,7 @@ Entities:
       pitch: 0
     SelectComponent:
       {}
-  - "@GUID": [451095895, 1823105897, 3414367118, 1157937184]
+  - ID#: 25769803776
     NameComponent:
       name: Bridge Thin 1
     Transform3DComponent:
@@ -133,7 +136,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [3611047982, 2539645550, 3525504869, 3727377282]
+  - ID#: 30064771072
     NameComponent:
       name: Bridge Wide
     Transform3DComponent:
@@ -158,7 +161,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [4148094168, 289763870, 1543180022, 1671557679]
+  - ID#: 34359738368
     NameComponent:
       name: Platform (Angled)
     Transform3DComponent:
@@ -183,7 +186,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [2959758376, 4185172211, 1938862379, 2820235390]
+  - ID#: 38654705664
     NameComponent:
       name: Platform (Blue)
     Transform3DComponent:
@@ -208,19 +211,19 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [3645321175, 2066596834, 1686430657, 1157327784]
+  - ID#: 42949672960
     NameComponent:
-      name: Island
+      name: Bouncing Ball Child
     Transform3DComponent:
-      position: [0, -7, -30]
+      position: [10.39823, 7.823382, 2.935791]
       orientation: [1, 0, 0, 0]
-      scale: [0.5, 0.5, 0.5]
+      scale: [1, 1, 1]
     ModelComponent:
-      mesh: Resources/Models/FloatingIsland.obj
-      material: Resources/Materials/green.yaml
-    SelectComponent:
-      {}
-  - "@GUID": [2833563556, 1951725341, 777969054, 248073185]
+      mesh: D:\dev\Sprocket\Resources\Models\Crate.obj
+      material: ""
+    ParentComponent:
+      parent: 17179869184
+  - ID#: 47244640256
     NameComponent:
       name: Platform (Red)
     Transform3DComponent:
@@ -245,7 +248,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [3560759356, 1285995013, 3350039091, 207972970]
+  - ID#: 51539607552
     NameComponent:
       name: Red Light
     Transform3DComponent:
@@ -255,7 +258,7 @@ Entities:
     LightComponent:
       colour: [1, 0, 0]
       brightness: 2
-  - "@GUID": [112956779, 1242887071, 1101861917, 1599608085]
+  - ID#: 55834574848
     NameComponent:
       name: Blue Light
     Transform3DComponent:
@@ -265,7 +268,7 @@ Entities:
     LightComponent:
       colour: [0, 0, 1]
       brightness: 2
-  - "@GUID": [1066836327, 4196104500, 2395402918, 102644619]
+  - ID#: 60129542144
     NameComponent:
       name: Green Light
     Transform3DComponent:
@@ -275,7 +278,7 @@ Entities:
     LightComponent:
       colour: [0.72, 0.6289493, 0.09920003]
       brightness: 43.9
-  - "@GUID": [3955014938, 765748342, 199588352, 3924142527]
+  - ID#: 64424509440
     NameComponent:
       name: White Light
     Transform3DComponent:
@@ -285,7 +288,7 @@ Entities:
     LightComponent:
       colour: [0.904, 0.7333333, 1]
       brightness: 260.9
-  - "@GUID": [2242608230, 3610360404, 915732313, 983750933]
+  - ID#: 68719476736
     NameComponent:
       name: Pit Wall 4
     Transform3DComponent:
@@ -310,7 +313,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [1239097723, 914497822, 1235664242, 2107190094]
+  - ID#: 73014444032
     NameComponent:
       name: Pit Wall 3
     Transform3DComponent:
@@ -335,7 +338,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [3152576460, 1577531941, 3615696840, 2312727114]
+  - ID#: 77309411328
     NameComponent:
       name: Pit Wall 2
     Transform3DComponent:
@@ -360,7 +363,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [3252159503, 1816379643, 2919823322, 1953776771]
+  - ID#: 81604378624
     NameComponent:
       name: Pit Wall 1
     Transform3DComponent:
@@ -385,7 +388,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [206529629, 2162580032, 3282596887, 1372641439]
+  - ID#: 85899345920
     NameComponent:
       name: Pit Floor
     Transform3DComponent:
@@ -410,7 +413,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [2435389644, 1884826069, 1240142687, 4026238150]
+  - ID#: 90194313216
     NameComponent:
       name: Pit Crate
     Transform3DComponent:
@@ -435,7 +438,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [2161836895, 2603884084, 1894990219, 3457224291]
+  - ID#: 94489280512
     NameComponent:
       name: Sphere (Particles)
     Transform3DComponent:
@@ -466,7 +469,7 @@ Entities:
       acceleration: [0, -9.81, 0]
       scale: [5, 5, 5]
       life: 60.5
-  - "@GUID": [1207063103, 1459122086, 1156222849, 719325119]
+  - ID#: 98784247808
     NameComponent:
       name: Sphere (No Particles)
     Transform3DComponent:
@@ -490,7 +493,7 @@ Entities:
       radius: 1
     SelectComponent:
       {}
-  - "@GUID": [3501064044, 2146490946, 1752889702, 891429356]
+  - ID#: 103079215104
     NameComponent:
       name: Tree Small
     Transform3DComponent:
@@ -513,17 +516,17 @@ Entities:
       mass: 1
       halfExtents: [0.25, 0.8, 0.25]
       applyScale: true
-  - "@GUID": [873951075, 2390887968, 775282516, 3878849926]
+  - ID#: 107374182400
     NameComponent:
       name: Tree Large
     Transform3DComponent:
-      position: [-4.764427, 0.301929, -26.94802]
+      position: [14.52876, 1.052574, -14.35607]
       orientation: [0.9677961, 0, 0.2517355, 0]
       scale: [4.208998, 4.209, 4.208998]
     ModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
-  - "@GUID": [3174958294, 4101980135, 2500876580, 2900787454]
+  - ID#: 111669149696
     NameComponent:
       name: Pistol
     Transform3DComponent:
@@ -551,7 +554,7 @@ Entities:
       active: true
     SelectComponent:
       {}
-  - "@GUID": [1688847600, 2540261644, 353620069, 3803215653]
+  - ID#: 115964116992
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -576,7 +579,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [304976439, 2998048933, 3677843270, 3478013617]
+  - ID#: 120259084288
     NameComponent:
       name: Crate Upper
     Transform3DComponent:
@@ -601,7 +604,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [935141837, 2568897680, 2649060717, 2943630025]
+  - ID#: 124554051584
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -626,7 +629,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [2368786731, 4092905050, 800548010, 3225883289]
+  - ID#: 128849018880
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -651,7 +654,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [1000833861, 1627695564, 1879243443, 3246362914]
+  - ID#: 133143986176
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -676,7 +679,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [729243428, 2839954611, 3872331985, 1959565209]
+  - ID#: 137438953472
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -701,7 +704,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [3556599469, 1370949553, 3398052856, 2839981453]
+  - ID#: 141733920768
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -726,32 +729,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [2862071365, 3574469679, 2068609744, 603804511]
-    NameComponent:
-      name: Crate Lower
-    Transform3DComponent:
-      position: [-8.850865, 3.253146, -4.062364]
-      orientation: [1, 0, 0, 0]
-      scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
-      mesh: Resources/Models/Cube.obj
-      material: Resources/Materials/space.yaml
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      bounciness: 0.046
-      frictionCoefficient: 0.158
-      rollingResistance: 0.112
-    BoxCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 1
-      halfExtents: [1, 1, 1]
-      applyScale: true
-    SelectComponent:
-      {}
-  - "@GUID": [4059741375, 2914672213, 3157033891, 3232934648]
+  - ID#: 146028888064
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -776,7 +754,32 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [2819230634, 2248032225, 1549324840, 2024806126]
+  - ID#: 150323855360
+    NameComponent:
+      name: Crate Lower
+    Transform3DComponent:
+      position: [-8.850865, 3.253146, -4.062364]
+      orientation: [1, 0, 0, 0]
+      scale: [0.5204259, 0.5204254, 0.5204259]
+    ModelComponent:
+      mesh: Resources/Models/Cube.obj
+      material: Resources/Materials/space.yaml
+    RigidBody3DComponent:
+      velocity: [0, 0, 0]
+      gravity: true
+      frozen: false
+      bounciness: 0.046
+      frictionCoefficient: 0.158
+      rollingResistance: 0.112
+    BoxCollider3DComponent:
+      position: [0, 0, 0]
+      orientation: [1, 0, 0, 0]
+      mass: 1
+      halfExtents: [1, 1, 1]
+      applyScale: true
+    SelectComponent:
+      {}
+  - ID#: 154618822656
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -801,7 +804,7 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [1996081267, 2315015170, 1978452375, 443019766]
+  - ID#: 158913789952
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -826,32 +829,3 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - "@GUID": [2975728627, 3405795138, 1061465761, 4133211187]
-  - "@GUID": [2643430735, 3537092796, 3135682508, 2745782134]
-    NameComponent:
-      name: Bouncing Ball
-    Transform3DComponent:
-      position: [10.48544, 4.043168, -6.103516e-05]
-      orientation: [1, 0, 0, 0]
-      scale: [0.32, 0.32, 0.32]
-    ModelComponent:
-      mesh: D:\dev\Sprocket\Resources\Models\Sphere.obj
-      material: ""
-    RigidBody3DComponent:
-      velocity: [0, 0, 0]
-      gravity: true
-      frozen: false
-      bounciness: 1
-      frictionCoefficient: 0.3
-      rollingResistance: 0
-    SphereCollider3DComponent:
-      position: [0, 0, 0]
-      orientation: [1, 0, 0, 0]
-      mass: 1
-      radius: 0.38
-    ScriptComponent:
-      script: D:\dev\Sprocket\Resources\Scripts\LightOnBounce.lua
-      active: true
-    LightComponent:
-      colour: [1, 1, 1]
-      brightness: 100

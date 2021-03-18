@@ -20,7 +20,7 @@ void Save(const std::string& file, ecs::Registry* reg)
     for (auto entity : reg->all()) {
         if (entity.has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
-        out << YAML::Key << "@GUID" << YAML::Value << entity.id();
+        out << YAML::Key << "ID#" << YAML::Value << entity.id();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (entity.has<{{Comp.Name}}>()) {
             const auto& c = entity.get<{{Comp.Name}}>();
@@ -58,12 +58,30 @@ void Load(const std::string& file, ecs::Registry* reg)
     }
 
     auto entities = data["Entities"];
+    std::unordered_map<ecs::Identifier, ecs::Identifier> id_remapper;
+
+    // Performs any extra transformations to values that cannot be done during
+    // yaml decoding, for example converting entity IDs to their new values.
+    const auto transform = [&](auto&& param) {
+        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
+            return id_remapper[param];
+        }
+        return param;
+    };
+    
     for (auto entity : entities) {
-        ecs::Entity e = reg->create(entity["@GUID"].as<guid::GUID>());
+        ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
+        ecs::Identifier new_id = reg->create().id();
+        id_remapper[old_id] = new_id;
+    }
+
+    for (auto entity : entities) {
+        ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
+        ecs::Entity e{reg, id_remapper[old_id]};
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
-            c.{{Attr.Name}} = spec["{{Attr.Name}}"] ? spec["{{Attr.Name}}"].as<{{Attr.Type}}>() : {{Attr.Default}};
+            c.{{Attr.Name}} = transform(spec["{{Attr.Name}}"].as<{{Attr.Type}}>());
             e.add<{{Comp.Name}}>(c);
         }
 #endif
@@ -83,8 +101,32 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
 
 void Copy(ecs::Registry* source, ecs::Registry* target)
 {
+    // First, set up new handles in the target scene and create a mapping between
+    // new and old IDs.
+    std::unordered_map<ecs::Identifier, ecs::Identifier> id_remapper;
     for (auto entity : source->all()) {
-        Copy(target, entity);
+        ecs::Identifier old_id = entity.id();
+        ecs::Identifier new_id = target->create().id();
+        id_remapper[old_id] = new_id;
+    }
+
+    const auto transform = [&](auto&& param) {
+        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
+            return id_remapper[param];
+        }
+        return param;
+    };
+
+    for (auto entity : source->all()) {
+        ecs::Entity e{target, id_remapper[entity.id()]};
+#ifdef DATAMATIC_BLOCK
+        if (entity.has<{{Comp.Name}}>()) {
+            const {{Comp.Name}}& source_comp = entity.get<{{Comp.Name}}>();
+            {{Comp.Name}} target_comp;
+            target_comp.{{Attr.Name}} = transform(source_comp.{{Attr.Name}});
+            e.add<{{Comp.Name}}>(target_comp);
+        }
+#endif
     }
 }
 

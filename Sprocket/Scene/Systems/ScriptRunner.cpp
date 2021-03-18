@@ -51,7 +51,8 @@ void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatche
 {
     d_input.on_startup(dispatcher);
 
-    dispatcher.subscribe<ecs::Added<ScriptComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<ecs::Added<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::Added<ScriptComponent>>();
         lua::Script script(data.entity.get<ScriptComponent>().script);
         lua::load_registry_functions(script, registry);
         lua::load_input_functions(script, d_input);
@@ -61,39 +62,55 @@ void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatche
         lua::load_entity_component_functions(script);
 
         script.call_function<void>("Init", data.entity);
-        script.print_globals();
         d_engines.emplace(data.entity, std::make_pair(std::move(script), true));
     });
 
-    dispatcher.subscribe<ecs::Removed<ScriptComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<ecs::Removed<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<ecs::Removed<ScriptComponent>>();
         auto it = d_engines.find(data.entity);
         if (it != d_engines.end()) {
             it->second.second = false; // alive = false
         }
     });
 
-    const auto handler = [&](ev::Event& event, const char* f, auto&&... args) {
+    dispatcher.subscribe<ev::WindowResize>([&](ev::Event& event) {
+        auto data = event.get<ev::WindowResize>();
         for (auto& script : active_scripts()) {
-            if (script.has_function(f) && script.call_function<bool>(f, std::forward<decltype(args)>(args)...)) {
+            if (script.has_function("OnWindowResizeEvent") &&
+                script.call_function<bool>("OnWindowResizeEvent", data.width, data.height)) {
                 event.consume();
             }
         }
-    };
-
-    dispatcher.subscribe<ev::WindowResize>([&](ev::Event& event, auto&& data) {
-        handler(event, "OnWindowResizeEvent", data.width, data.height);
     });
 
-    dispatcher.subscribe<ev::MouseButtonPressed>([&](ev::Event& event, auto&& data) {
-        handler(event, "OnMouseButtonPressedEvent", data.button, data.action, data.mods);
+    dispatcher.subscribe<ev::MouseButtonPressed>([&](ev::Event& event) {
+        auto data = event.get<ev::MouseButtonPressed>();
+        for (auto& script : active_scripts()) {
+            if (script.has_function("OnMouseButtonPressedEvent") &&
+                script.call_function<bool>("OnMouseButtonPressedEvent", data.button, data.action, data.mods)) {
+                event.consume();
+            }
+        }
     });
 
-    dispatcher.subscribe<ev::MouseScrolled>([&](ev::Event& event, auto&& data) {
-        handler(event, "OnMouseScrolledEvent", data.x_offset, data.y_offset);
+    dispatcher.subscribe<ev::MouseScrolled>([&](ev::Event& event) {
+        auto data = event.get<ev::MouseScrolled>();
+        for (auto& script : active_scripts()) {
+            if (script.has_function("OnMouseScrolledEvent") &&
+                script.call_function<bool>("OnMouseScrolledEvent", data.x_offset, data.y_offset)) {
+                event.consume();
+            }
+        }
     });
 
-    dispatcher.subscribe<CollisionEvent>([&](ev::Event& event, auto&& data) {
-        handler(event, "OnCollisionEvent", data.entity1, data.entity2);
+    dispatcher.subscribe<CollisionEvent>([&](ev::Event& event) {
+        auto data = event.get<CollisionEvent>();
+        for (auto& script : active_scripts()) {
+            if (script.has_function("OnCollisionEvent") &&
+                script.call_function<bool>("OnCollisionEvent", data.entity1, data.entity2)) {
+                event.consume();
+            }
+        }
     });
 }
 

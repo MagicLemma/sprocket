@@ -11,7 +11,7 @@
 
 namespace Sprocket {
 
-template <typename ValueType, typename IndexType = std::size_t>
+template <typename ValueType, typename IndexType = std::uint32_t>
 class SparseSet
 {
 public:

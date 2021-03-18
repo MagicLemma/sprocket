@@ -23,7 +23,7 @@ void Inspector::Show(Anvil& editor)
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), guid::Stringify(entity.id()).c_str());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.id());
 
 #ifdef DATAMATIC_BLOCK
     if (entity.has<{{Comp.Name}}>()) {

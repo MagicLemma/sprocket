@@ -197,6 +197,28 @@ ecs::Entity Converter<ecs::Entity>::read(lua_State* L, int& read_ptr)
 }
 
 
+ecs::Identifier Converter<ecs::Identifier>::pop(lua_State* L)
+{
+    int ptr = -dimension;
+    auto ret = read(L, ptr);
+    lua_pop(L, dimension);
+    return ret;
+}
+
+int Converter<ecs::Identifier>::push(lua_State* L, const ecs::Identifier& value)
+{
+    ecs::Identifier* handle = static_cast<ecs::Identifier*>(lua_newuserdata(L, sizeof(ecs::Identifier)));
+    *handle = value;
+    return dimension;
+}
+
+ecs::Identifier Converter<ecs::Identifier>::read(lua_State* L, int& read_ptr)
+{
+    assert(lua_isuserdata(L, read_ptr));
+    return *static_cast<ecs::Identifier*>(lua_touserdata(L, read_ptr++));
+}
+
+
 glm::vec2 Converter<glm::vec2>::pop(lua_State* L)
 {
     int ptr = -dimension;
