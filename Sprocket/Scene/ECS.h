@@ -123,10 +123,6 @@ public:
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
     Entity create();
 
-    // Creates a new entity with no components and with the given guid. No checks on the
-    // validity of the guid are made, except for that it cannot be guid::Zero.
-    Entity create(const guid::GUID& guid);
-
     // Returns the entity corresponding to the given GUID, and ecs::Null otherwise.
     Entity get(const guid::GUID& guid);
 

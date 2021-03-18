@@ -101,15 +101,6 @@ bool Entity::has(spkt::type_info_t type) const
 Entity Registry::create()
 {
     guid::GUID guid = d_generator.New();
-    return create(guid);
-}
-
-Entity Registry::create(const guid::GUID& guid)
-{
-    assert(guid != guid::Zero);
-
-    // If there is a slot in the pool, use that, otherwise increase the
-    // the size of the entity sparse set.
     std::size_t index = d_entities.Size();
     if (!d_pool.empty()) {
         index = d_pool.front();
