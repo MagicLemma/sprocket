@@ -47,8 +47,9 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
     model2.mesh = gridSquare;
 
     dispatcher.subscribe<ecs::Added<GridComponent>>([&](ev::Event& event, auto&& data) {
-        auto& transform = data.entity.get<Transform3DComponent>();
-        const auto& gc = data.entity.get<GridComponent>();
+        ecs::Entity entity = data.entity;
+        auto& transform = entity.get<Transform3DComponent>();
+        const auto& gc = entity.get<GridComponent>();
 
         assert(!d_gridEntities.contains({gc.x, gc.z}));
     

@@ -56,7 +56,8 @@ public:
 
     template <typename Comp, typename... Args> Comp& add(Args&&... args);
     template <typename Comp> void remove();
-    template <typename Comp> Comp& get() const;
+    template <typename Comp> const Comp& get() const;
+    template <typename Comp> Comp& get();
     template <typename Comp> bool has() const;
 
     Identifier id() const;
@@ -113,6 +114,12 @@ public:
     // Returns true if the given entity is currently alive.
     bool valid(Entity entity) const;
 
+    template <typename Comp, typename... Args> Comp& add(Entity entity, Args&&... args);
+    template <typename Comp> void remove(Entity entity);
+    template <typename Comp> const Comp& get(Entity entity) const;
+    template <typename Comp> Comp& get(Entity entity);
+    template <typename Comp> bool has(Entity entity) const;
+
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
     void clear();
@@ -158,6 +165,65 @@ static const Entity Null{};
 
 // REGISTRY TEMPLATES
 
+template <typename Comp, typename... Args>
+Comp& Registry::add(Entity entity, Args&&... args)
+{
+    assert(valid(entity));
+    auto [index, version] = Registry::split(entity.id());
+
+    auto& data = d_comps[spkt::type_info<Comp>];
+
+    // If this is the first instance of this component, create the make_remove_event
+    // function which will be called whenever an entity is deleted. This is needed because
+    // the type of the component is not available at deletion time.
+    if (!data.make_remove_event) {
+        data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
+            return ev::make_event<ecs::Removed<Comp>>(entity);
+        };
+    }
+
+    auto& entry = data.instances.Insert(
+        index, std::make_any<Comp&>(std::forward<Args>(args)...)
+    );
+
+    ev::Event event = ev::make_event<Added<Comp>>(entity);
+    d_callback(event);
+
+    return std::any_cast<Comp&>(entry);
+}
+
+template <typename Comp>
+void Registry::remove(Entity entity)
+{
+    assert(valid(entity));
+    remove(entity, spkt::type_info<Comp>);
+}
+
+template <typename Comp>
+const Comp& Registry::get(Entity entity) const
+{
+    assert(valid(entity));
+    auto [index, version] = Registry::split(entity.id());
+    auto& entry = d_comps.at(spkt::type_info<Comp>).instances[index];
+    return std::any_cast<Comp&>(entry);
+}
+
+template <typename Comp>
+Comp& Registry::get(Entity entity)
+{
+    assert(valid(entity));
+    auto [index, version] = Registry::split(entity.id());
+    auto& entry = d_comps.at(spkt::type_info<Comp>).instances[index];
+    return std::any_cast<Comp&>(entry);
+}
+
+template <typename Comp>
+bool Registry::has(Entity entity) const
+{
+    assert(valid(entity));
+    return has(entity, spkt::type_info<Comp>);
+}
+
 template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::view()
 {
@@ -194,51 +260,31 @@ Entity Registry::find(const EntityPredicate& pred)
 template <typename Comp, typename... Args>
 Comp& Entity::add(Args&&... args)
 {
-    assert(valid());
-    auto [index, version] = Registry::split(d_identifier);
-
-    auto& data = d_registry->d_comps[spkt::type_info<Comp>];
-
-    // If this is the first instance of this component, create the make_remove_event
-    // function which will be called whenever an entity is deleted. This is needed because
-    // the type of the component is not available at deletion time.
-    if (!data.make_remove_event) {
-        data.make_remove_event = [](ecs::Entity entity) -> ev::Event {
-            return ev::make_event<ecs::Removed<Comp>>(entity);
-        };
-    }
-
-    auto& entry = data.instances.Insert(
-        index, std::make_any<Comp&>(std::forward<Args>(args)...)
-    );
-
-    ev::Event event = ev::make_event<Added<Comp>>(*this);
-    d_registry->d_callback(event);
-
-    return std::any_cast<Comp&>(entry);
+    return d_registry->add<Comp>(*this, std::forward<Args>(args)...);
 }
 
 template <typename Comp>
 void Entity::remove()
 {
-    assert(valid());
-    d_registry->remove(*this, spkt::type_info<Comp>);
+    d_registry->remove<Comp>(*this);
 }
 
 template <typename Comp>
-Comp& Entity::get() const
+const Comp& Entity::get() const
 {
-    assert(valid());
-    auto [index, version] = Registry::split(d_identifier);
-    auto& entry = d_registry->d_comps.at(spkt::type_info<Comp>).instances[index];
-    return std::any_cast<Comp&>(entry);
+    return d_registry->get<Comp>(*this);
+}
+
+template <typename Comp>
+Comp& Entity::get()
+{
+    return d_registry->get<Comp>(*this);
 }
 
 template <typename Comp>
 bool Entity::has() const
 {
-    assert(valid());
-    return d_registry->has(*this, spkt::type_info<Comp>);
+    return d_registry->has<Comp>(*this);
 }
 
 // We can push an entity into the Lua stack by calling the Lua equivalent of malloc
