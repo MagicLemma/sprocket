@@ -62,16 +62,7 @@ bool Entity::valid() const
 
 void Entity::destroy() 
 {
-    if (valid()) {
-        auto [index, version] = Registry::split(d_identifier);
-
-        // Clean up all components
-        for (auto& [type, data] : d_registry->d_comps) {
-            if (d_registry->has(*this, type)) { d_registry->remove(*this, type); }
-        }
-        d_registry->d_entities.Erase(index);
-        d_registry->d_pool.push_back(d_identifier);
-    }
+    d_registry->destroy(*this);
 }
 
 Identifier Entity::id() const
@@ -122,6 +113,19 @@ Entity Registry::create()
     Identifier id = combine(index, version);
     d_entities.Insert(index, id);
     return {this, id};
+}
+
+void Registry::destroy(Entity entity)
+{
+    assert(entity.valid());
+    auto [index, version] = Registry::split(entity.id());
+
+    // Clean up all components
+    for (auto& [type, data] : d_comps) {
+        if (has(entity, type)) { remove(entity, type); }
+    }
+    d_entities.Erase(index);
+    d_pool.push_back(entity.id());
 }
 
 Entity Registry::get(Identifier id)

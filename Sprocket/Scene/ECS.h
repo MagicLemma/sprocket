@@ -18,12 +18,27 @@
 namespace Sprocket {
 namespace ecs {
 
+class Registry;
+class Entity;
+
 enum class Identifier : std::uint64_t {};
 
 using Index = std::uint32_t;
 using Version = std::uint32_t;
-    
-class Registry;
+
+template <typename Comp>
+struct Added
+{
+    ecs::Entity entity;
+    Added(ecs::Entity& e) : entity(e) {}
+};
+
+template <typename Comp>
+struct Removed
+{
+    ecs::Entity entity;
+    Removed(ecs::Entity& e) : entity(e) {}
+};
 
 class Entity
 {
@@ -49,20 +64,6 @@ public:
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
     Entity& operator=(Entity other);
-};
-
-template <typename Comp>
-struct Added
-{
-    ecs::Entity entity;
-    Added(ecs::Entity& e) : entity(e) {}
-};
-
-template <typename Comp>
-struct Removed
-{
-    ecs::Entity entity;
-    Removed(ecs::Entity& e) : entity(e) {}
 };
 
 class Registry
@@ -105,6 +106,9 @@ public:
 
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
     Entity create();
+
+    // Deletes the given entity along with all of its components.
+    void destroy(Entity entity);
 
     // Returns the entity corresponding to the given GUID, which may or may not be valid.
     Entity get(Identifier id);

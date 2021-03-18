@@ -189,9 +189,10 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
     });
 
     dispatcher.subscribe<ecs::Removed<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
-        data.entity.remove<BoxCollider3DComponent>();
-        data.entity.remove<SphereCollider3DComponent>();
-        data.entity.remove<CapsuleCollider3DComponent>();
+        ecs::Entity entity = data.entity;
+        entity.remove<BoxCollider3DComponent>();
+        entity.remove<SphereCollider3DComponent>();
+        entity.remove<CapsuleCollider3DComponent>();
 
         auto rigidBodyIt = d_impl->entityData.find(data.entity);
         d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
