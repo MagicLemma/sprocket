@@ -23,6 +23,8 @@ using Identifier = std::uint64_t;
 using Index = std::uint32_t;
 using Version = std::uint32_t;
 
+static constexpr Identifier null_id = std::numeric_limits<Identifier>::max();
+
 inline Identifier combine(Index i, Version v)
 {
     return ((Identifier)i << 32) + (Identifier)v;
@@ -37,9 +39,8 @@ class Registry;
 
 class Entity
 {
-    Registry*   d_registry;
-    std::size_t d_index;
-    guid::GUID  d_guid;
+    Registry*  d_registry;
+    Identifier d_identifier;
 
     bool has(spkt::type_info_t type) const;
     void remove(spkt::type_info_t type) const;
@@ -47,7 +48,7 @@ class Entity
 public:
     // Construction of entities should not be done directly, instead they should
     // be constructed via a Registry.
-    Entity(Registry* r, std::size_t i, guid::GUID g);
+    Entity(Registry* r, Identifier i);
     Entity();
 
     bool valid() const;
@@ -58,7 +59,7 @@ public:
     template <typename Comp> Comp& get() const;
     template <typename Comp> bool has() const;
 
-    guid::GUID id() const;
+    Identifier id() const;
 
     bool operator==(Entity other) const;
     bool operator!=(Entity other) const;
@@ -89,18 +90,12 @@ private:
     // Callback that is invoked whenever a component is added or removed from an entity.
     std::function<void(ev::Event&)> d_callback = [](ev::Event&) {};
 
-    // Generates GUIDs for new Entities 
-    guid::Generator d_generator;
-
     // Stores all existing active GUIDs. Allows for index -> guid lookup as well
     // as cache friendly iteration over all entities.
-    SparseSet<guid::GUID> d_entities;
-
-    // Stores a guid -> index lookup. Used for the Registry::Get function.
-    std::unordered_map<guid::GUID, std::size_t> d_lookup;
+    SparseSet<Identifier> d_entities;
 
     // When an entity is deleted, their index is added to the pool for reuse.
-    std::deque<std::size_t> d_pool;
+    std::deque<Identifier> d_pool;
 
     // Store of all components for all entities. The type of the components are erased.
     struct ComponentData
@@ -123,8 +118,8 @@ public:
     // Creates a new entity with no components. This is guaranteed to be a valid handle.
     Entity create();
 
-    // Returns the entity corresponding to the given GUID, and ecs::Null otherwise.
-    Entity get(const guid::GUID& guid);
+    // Returns the entity corresponding to the given GUID, which may or may not be valid.
+    Entity get(Identifier id);
 
     // Loops through all entities and deletes their components. This will trigger
     // the OnRemove functionality. Callbacks are not removed.
@@ -176,7 +171,7 @@ template <typename Comp, typename... Rest>
 cppcoro::generator<Entity> Registry::view()
 {
     for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.Fast()) {
-        Entity entity{this, index, d_entities[index]};
+        Entity entity{this, d_entities[index]};
         if ((entity.has<Rest>() && ...)) {
             co_yield entity;
         }
@@ -209,6 +204,7 @@ template <typename Comp, typename... Args>
 Comp& Entity::add(Args&&... args)
 {
     assert(valid());
+    auto [index, version] = split(d_identifier);
 
     auto& data = d_registry->d_comps[spkt::type_info<Comp>];
 
@@ -222,7 +218,7 @@ Comp& Entity::add(Args&&... args)
     }
 
     auto& entry = data.instances.Insert(
-        d_index, std::make_any<Comp&>(std::forward<Args>(args)...)
+        index, std::make_any<Comp&>(std::forward<Args>(args)...)
     );
 
     ev::Event event = ev::make_event<Added<Comp>>(*this);
@@ -242,7 +238,8 @@ template <typename Comp>
 Comp& Entity::get() const
 {
     assert(valid());
-    auto& entry = d_registry->d_comps.at(spkt::type_info<Comp>).instances[d_index];
+    auto [index, version] = split(d_identifier);
+    auto& entry = d_registry->d_comps.at(spkt::type_info<Comp>).instances[index];
     return std::any_cast<Comp&>(entry);
 }
 
@@ -274,7 +271,7 @@ template <> struct hash<Sprocket::ecs::Entity>
 {
     std::size_t operator()(const Sprocket::ecs::Entity& entity) const noexcept
     {
-        return std::hash<Sprocket::guid::GUID>{}(entity.id());
+        return std::hash<Sprocket::ecs::Identifier>{}(entity.id());
     };
 };
 
