@@ -1,7 +1,6 @@
 #pragma once
 #include "Types.h"
 #include "SparseSet.h"
-#include "GUID.h"
 #include "TypeInfo.h"
 #include "Events.h"
 

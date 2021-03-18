@@ -113,28 +113,6 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
     return true;
 }
 
-Node convert<guid::GUID>::encode(const guid::GUID& rhs)
-{
-    Node n;
-    n.push_back(rhs[0]);
-    n.push_back(rhs[1]);
-    n.push_back(rhs[2]);
-    n.push_back(rhs[3]);
-    return n;
-}
-
-bool convert<guid::GUID>::decode(const Node& node, guid::GUID& rhs)
-{
-    if (!node.IsSequence() || node.size() != 4)
-        return false;
-
-    rhs[0] = node[0].as<u32>();
-    rhs[1] = node[1].as<u32>();
-    rhs[2] = node[2].as<u32>();
-    rhs[3] = node[3].as<u32>();
-    return true;
-}
-
 }
 
 namespace Sprocket {
@@ -168,13 +146,6 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
                           << m[2][0] << m[2][1] << m[2][2] << m[2][3]
                           << m[3][0] << m[3][1] << m[3][2] << m[3][3]
                           << YAML::EndSeq;
-    return out;
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const guid::GUID& g)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << g[0] << g[1] << g[2] << g[3] << YAML::EndSeq;
     return out;
 }
 
