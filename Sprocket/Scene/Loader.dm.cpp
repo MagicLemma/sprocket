@@ -20,7 +20,6 @@ void Save(const std::string& file, ecs::Registry* reg)
     for (auto entity : reg->all()) {
         if (entity.has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
-        out << YAML::Key << "@GUID" << YAML::Value << entity.id();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (entity.has<{{Comp.Name}}>()) {
             const auto& c = entity.get<{{Comp.Name}}>();
@@ -59,7 +58,7 @@ void Load(const std::string& file, ecs::Registry* reg)
 
     auto entities = data["Entities"];
     for (auto entity : entities) {
-        ecs::Entity e = reg->create(entity["@GUID"].as<guid::GUID>());
+        ecs::Entity e = reg->create();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;

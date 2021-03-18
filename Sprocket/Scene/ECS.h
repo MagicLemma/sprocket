@@ -23,12 +23,12 @@ using Identifier = std::uint64_t;
 using Index = std::uint32_t;
 using Version = std::uint32_t;
 
-Identifier combine(Index i, Version v)
+inline Identifier combine(Index i, Version v)
 {
     return ((Identifier)i << 32) + (Identifier)v;
 }
 
-std::pair<Index, Version> split(Identifier id)
+inline std::pair<Index, Version> split(Identifier id)
 {
     return {(Index)(id >> 32), (Version)id};
 }
