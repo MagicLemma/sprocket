@@ -32,11 +32,7 @@ Entity::Entity()
 
 bool Entity::operator==(Entity other) const
 {
-    // Change this to only compare registry and guid. If both of these
-    // are equal but the index is wrong, we have badly screwed something
-    // up, OR have a guid clash. Should assert
-    return d_registry == other.d_registry
-        && d_identifier == other.d_identifier;
+    return d_registry == other.d_registry && d_identifier == other.d_identifier;
 }
 
 bool Entity::operator!=(Entity other) const

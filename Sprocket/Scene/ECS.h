@@ -152,8 +152,6 @@ public:
     Entity find(const EntityPredicate& pred = [](Entity){ return true; });
 
     static std::pair<Index, Version> split(Identifier id);
-
-    friend class Entity;
 };
 
 // An "empty" entity.
