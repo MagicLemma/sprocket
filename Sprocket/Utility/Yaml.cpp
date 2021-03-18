@@ -1,4 +1,5 @@
 #include "Yaml.h"
+#include "ECS.h"
 
 namespace YAML {
 
@@ -113,6 +114,22 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
     return true;
 }
 
+Node convert<ecs::Identifier>::encode(const ecs::Identifier& rhs)
+{
+    Node n;
+    n.push_back(static_cast<std::underlying_type_t<ecs::Identifier>>(rhs));
+    return n;
+}
+
+bool convert<ecs::Identifier>::decode(const Node& node, ecs::Identifier& rhs)
+{
+    if (!node.IsSequence() || node.size() != 1)
+        return false;
+
+    rhs = static_cast<ecs::Identifier>(node[0].as<std::underlying_type_t<ecs::Identifier>>());
+    return true;
+}
+
 }
 
 namespace Sprocket {
@@ -146,6 +163,12 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
                           << m[2][0] << m[2][1] << m[2][2] << m[2][3]
                           << m[3][0] << m[3][1] << m[3][2] << m[3][3]
                           << YAML::EndSeq;
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const ecs::Identifier& i)
+{
+    out << static_cast<std::underlying_type_t<ecs::Identifier>>(i);
     return out;
 }
 

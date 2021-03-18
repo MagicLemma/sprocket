@@ -20,6 +20,7 @@ void Save(const std::string& file, ecs::Registry* reg)
     for (auto entity : reg->all()) {
         if (entity.has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
+        out << YAML::Key << "ID#" << YAML::Value << entity.id();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (entity.has<{{Comp.Name}}>()) {
             const auto& c = entity.get<{{Comp.Name}}>();

@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "ECS.h"
 
 #include <yaml-cpp/yaml.h>
 
@@ -35,6 +36,13 @@ struct convert<glm::mat4>
     static bool decode(const Node& node, glm::mat4& rhs);
 };
 
+template<>
+struct convert<ecs::Identifier>
+{
+    static Node encode(const ecs::Identifier& rhs);
+    static bool decode(const Node& node, ecs::Identifier& rhs);
+};
+
 }
 
 namespace Sprocket {
@@ -43,5 +51,6 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);
+YAML::Emitter& operator<<(YAML::Emitter& out, const ecs::Identifier& i);
 
 }

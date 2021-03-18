@@ -46,8 +46,6 @@ class Entity
     Identifier d_identifier;
 
 public:
-    // Construction of entities should not be done directly, instead they should
-    // be constructed via a Registry.
     Entity(Registry* r, Identifier i);
     Entity();
 
@@ -227,7 +225,7 @@ cppcoro::generator<Entity> Registry::view()
 {
     for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.Fast()) {
         Entity entity{this, d_entities[index]};
-        if ((entity.has<Rest>() && ...)) {
+        if ((has<Rest>(entity) && ...)) {
             co_yield entity;
         }
     }
