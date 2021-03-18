@@ -280,7 +280,7 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.get<ParentComponent>();
         if (ImGui::CollapsingHeader("Parent")) {
             ImGui::PushID(count++);
-            ImGui::Text("Parent: %llu", static_cast<std::uint64_t>(c.parent));
+            ImGui::Text("Parent: %llu", c.parent);
             
             if (ImGui::Button("Delete")) { entity.remove<ParentComponent>(); }
             ImGui::PopID();

@@ -211,13 +211,16 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - ID#: 163208757248
+  - ID#: 42949672960
     NameComponent:
       name: Bouncing Ball Child
     Transform3DComponent:
-      position: [0, 0, 0]
+      position: [10.39823, 7.823382, 2.935791]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
+    ModelComponent:
+      mesh: D:\dev\Sprocket\Resources\Models\Crate.obj
+      material: ""
     ParentComponent:
       parent: 17179869184
   - ID#: 47244640256

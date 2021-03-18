@@ -44,7 +44,7 @@ class Inspector(Plugin):
         if cpp_type == "bool":
             return f'ImGui::Checkbox("{display}", &c.{name})'
         if cpp_type == "ecs::Identifier":
-            return f'ImGui::Text("{display}: %llu", static_cast<std::uint64_t>(c.{name}))'
+            return f'ImGui::Text("{display}: %llu", c.{name})'
         
         # Things like vectors and matrices and queues will get ignored for now
         return ""
