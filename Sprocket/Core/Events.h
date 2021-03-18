@@ -61,7 +61,7 @@ public:
 	template <typename T>
 	void subscribe(const EventHandlerTyped<T>& handler)
 	{
-		d_handlers[typeid(T)].push_back([&](ev::Event& event) {
+		d_handlers[typeid(T)].push_back([handler](ev::Event& event) {
 			handler(event, event.get<T>());
 		});
 	}
