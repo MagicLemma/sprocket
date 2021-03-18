@@ -57,13 +57,29 @@ void Load(const std::string& file, ecs::Registry* reg)
         return; // TODO: Error checking
     }
 
+    // Performs any extra transformations to values that cannot be done during
+    // yaml decoding, for example converting entity IDs to their new values.
+    const auto transform = [&](auto&& param) {
+        if constexpr(std::is_same_v<decltype(param), ecs::Identifier>) {
+            return param;
+        }
+        else {
+            return param;
+        }
+    };
+    
     auto entities = data["Entities"];
+
+    for (auto entity : entities) {
+
+    }
+
     for (auto entity : entities) {
         ecs::Entity e = reg->create();
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
-            c.{{Attr.Name}} = spec["{{Attr.Name}}"] ? spec["{{Attr.Name}}"].as<{{Attr.Type}}>() : {{Attr.Default}};
+            c.{{Attr.Name}} = transform(spec["{{Attr.Name}}"].as<{{Attr.Type}}>());
             e.add<{{Comp.Name}}>(c);
         }
 #endif

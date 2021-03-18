@@ -197,7 +197,24 @@ void Load(const std::string& file, ecs::Registry* reg)
     if (!data["Entities"]) {
         return; // TODO: Error checking
     }
+
+    // Performs any extra transformations to values that cannot be done during
+    // yaml decoding, for example converting entity IDs to their new values.
+    const auto transform = [&](auto&& param) {
+        if constexpr(std::is_same_v<decltype(param), ecs::Identifier>) {
+            return param;
+        }
+        else {
+            return param;
+        }
+    };
+
     auto entities = data["Entities"];
+
+    for (auto entity : entities) {
+
+    }
+
     for (auto entity : entities) {
         ecs::Entity e = reg->create();
         if (auto spec = entity["TemporaryComponent"]) {
@@ -206,75 +223,75 @@ void Load(const std::string& file, ecs::Registry* reg)
         }
         if (auto spec = entity["NameComponent"]) {
             NameComponent c;
-            c.name = spec["name"] ? spec["name"].as<std::string>() : "Entity";
+            c.name = transform(spec["name"].as<std::string>());
             e.add<NameComponent>(c);
         }
         if (auto spec = entity["Transform2DComponent"]) {
             Transform2DComponent c;
-            c.position = spec["position"] ? spec["position"].as<glm::vec2>() : glm::vec2{0.0f, 0.0f};
-            c.rotation = spec["rotation"] ? spec["rotation"].as<float>() : 0.0f;
-            c.scale = spec["scale"] ? spec["scale"].as<glm::vec2>() : glm::vec2{1.0f, 1.0f};
+            c.position = transform(spec["position"].as<glm::vec2>());
+            c.rotation = transform(spec["rotation"].as<float>());
+            c.scale = transform(spec["scale"].as<glm::vec2>());
             e.add<Transform2DComponent>(c);
         }
         if (auto spec = entity["Transform3DComponent"]) {
             Transform3DComponent c;
-            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
-            c.scale = spec["scale"] ? spec["scale"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
+            c.position = transform(spec["position"].as<glm::vec3>());
+            c.orientation = transform(spec["orientation"].as<glm::quat>());
+            c.scale = transform(spec["scale"].as<glm::vec3>());
             e.add<Transform3DComponent>(c);
         }
         if (auto spec = entity["ModelComponent"]) {
             ModelComponent c;
-            c.mesh = spec["mesh"] ? spec["mesh"].as<std::string>() : "";
-            c.material = spec["material"] ? spec["material"].as<std::string>() : "";
+            c.mesh = transform(spec["mesh"].as<std::string>());
+            c.material = transform(spec["material"].as<std::string>());
             e.add<ModelComponent>(c);
         }
         if (auto spec = entity["RigidBody3DComponent"]) {
             RigidBody3DComponent c;
-            c.velocity = spec["velocity"] ? spec["velocity"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.gravity = spec["gravity"] ? spec["gravity"].as<bool>() : true;
-            c.frozen = spec["frozen"] ? spec["frozen"].as<bool>() : false;
-            c.bounciness = spec["bounciness"] ? spec["bounciness"].as<float>() : 0.5f;
-            c.frictionCoefficient = spec["frictionCoefficient"] ? spec["frictionCoefficient"].as<float>() : 0.3f;
-            c.rollingResistance = spec["rollingResistance"] ? spec["rollingResistance"].as<float>() : 0.0f;
+            c.velocity = transform(spec["velocity"].as<glm::vec3>());
+            c.gravity = transform(spec["gravity"].as<bool>());
+            c.frozen = transform(spec["frozen"].as<bool>());
+            c.bounciness = transform(spec["bounciness"].as<float>());
+            c.frictionCoefficient = transform(spec["frictionCoefficient"].as<float>());
+            c.rollingResistance = transform(spec["rollingResistance"].as<float>());
             e.add<RigidBody3DComponent>(c);
         }
         if (auto spec = entity["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
-            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
-            c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
-            c.halfExtents = spec["halfExtents"] ? spec["halfExtents"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.applyScale = spec["applyScale"] ? spec["applyScale"].as<bool>() : true;
+            c.position = transform(spec["position"].as<glm::vec3>());
+            c.orientation = transform(spec["orientation"].as<glm::quat>());
+            c.mass = transform(spec["mass"].as<float>());
+            c.halfExtents = transform(spec["halfExtents"].as<glm::vec3>());
+            c.applyScale = transform(spec["applyScale"].as<bool>());
             e.add<BoxCollider3DComponent>(c);
         }
         if (auto spec = entity["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
-            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
-            c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
-            c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
+            c.position = transform(spec["position"].as<glm::vec3>());
+            c.orientation = transform(spec["orientation"].as<glm::quat>());
+            c.mass = transform(spec["mass"].as<float>());
+            c.radius = transform(spec["radius"].as<float>());
             e.add<SphereCollider3DComponent>(c);
         }
         if (auto spec = entity["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
-            c.position = spec["position"] ? spec["position"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.orientation = spec["orientation"] ? spec["orientation"].as<glm::quat>() : glm::quat{1.0f, 0.0f, 0.0f, 0.0f};
-            c.mass = spec["mass"] ? spec["mass"].as<float>() : 1.0f;
-            c.radius = spec["radius"] ? spec["radius"].as<float>() : 1.0f;
-            c.height = spec["height"] ? spec["height"].as<float>() : 1.0f;
+            c.position = transform(spec["position"].as<glm::vec3>());
+            c.orientation = transform(spec["orientation"].as<glm::quat>());
+            c.mass = transform(spec["mass"].as<float>());
+            c.radius = transform(spec["radius"].as<float>());
+            c.height = transform(spec["height"].as<float>());
             e.add<CapsuleCollider3DComponent>(c);
         }
         if (auto spec = entity["ScriptComponent"]) {
             ScriptComponent c;
-            c.script = spec["script"] ? spec["script"].as<std::string>() : "";
-            c.active = spec["active"] ? spec["active"].as<bool>() : true;
+            c.script = transform(spec["script"].as<std::string>());
+            c.active = transform(spec["active"].as<bool>());
             e.add<ScriptComponent>(c);
         }
         if (auto spec = entity["Camera3DComponent"]) {
             Camera3DComponent c;
-            c.fov = spec["fov"] ? spec["fov"].as<float>() : 70.0f;
-            c.pitch = spec["pitch"] ? spec["pitch"].as<float>() : 0.0f;
+            c.fov = transform(spec["fov"].as<float>());
+            c.pitch = transform(spec["pitch"].as<float>());
             e.add<Camera3DComponent>(c);
         }
         if (auto spec = entity["SelectComponent"]) {
@@ -283,50 +300,50 @@ void Load(const std::string& file, ecs::Registry* reg)
         }
         if (auto spec = entity["PathComponent"]) {
             PathComponent c;
-            c.speed = spec["speed"] ? spec["speed"].as<float>() : 0.0f;
+            c.speed = transform(spec["speed"].as<float>());
             e.add<PathComponent>(c);
         }
         if (auto spec = entity["GridComponent"]) {
             GridComponent c;
-            c.x = spec["x"] ? spec["x"].as<int>() : 0;
-            c.z = spec["z"] ? spec["z"].as<int>() : 0;
+            c.x = transform(spec["x"].as<int>());
+            c.z = transform(spec["z"].as<int>());
             e.add<GridComponent>(c);
         }
         if (auto spec = entity["LightComponent"]) {
             LightComponent c;
-            c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
-            c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
+            c.colour = transform(spec["colour"].as<glm::vec3>());
+            c.brightness = transform(spec["brightness"].as<float>());
             e.add<LightComponent>(c);
         }
         if (auto spec = entity["SunComponent"]) {
             SunComponent c;
-            c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
-            c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
-            c.direction = spec["direction"] ? spec["direction"].as<glm::vec3>() : glm::vec3{0.0f, -1.0f, 0.0f};
-            c.shadows = spec["shadows"] ? spec["shadows"].as<bool>() : false;
+            c.colour = transform(spec["colour"].as<glm::vec3>());
+            c.brightness = transform(spec["brightness"].as<float>());
+            c.direction = transform(spec["direction"].as<glm::vec3>());
+            c.shadows = transform(spec["shadows"].as<bool>());
             e.add<SunComponent>(c);
         }
         if (auto spec = entity["AmbienceComponent"]) {
             AmbienceComponent c;
-            c.colour = spec["colour"] ? spec["colour"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
-            c.brightness = spec["brightness"] ? spec["brightness"].as<float>() : 1.0f;
+            c.colour = transform(spec["colour"].as<glm::vec3>());
+            c.brightness = transform(spec["brightness"].as<float>());
             e.add<AmbienceComponent>(c);
         }
         if (auto spec = entity["ParticleComponent"]) {
             ParticleComponent c;
-            c.interval = spec["interval"] ? spec["interval"].as<float>() : 1.0f;
-            c.velocity = spec["velocity"] ? spec["velocity"].as<glm::vec3>() : glm::vec3{0.0f, 0.0f, 0.0f};
-            c.velocityNoise = spec["velocityNoise"] ? spec["velocityNoise"].as<float>() : 0.0f;
-            c.acceleration = spec["acceleration"] ? spec["acceleration"].as<glm::vec3>() : glm::vec3{0.0f, -9.81f, 0.0f};
-            c.scale = spec["scale"] ? spec["scale"].as<glm::vec3>() : glm::vec3{1.0f, 1.0f, 1.0f};
-            c.life = spec["life"] ? spec["life"].as<float>() : 1.0f;
+            c.interval = transform(spec["interval"].as<float>());
+            c.velocity = transform(spec["velocity"].as<glm::vec3>());
+            c.velocityNoise = transform(spec["velocityNoise"].as<float>());
+            c.acceleration = transform(spec["acceleration"].as<glm::vec3>());
+            c.scale = transform(spec["scale"].as<glm::vec3>());
+            c.life = transform(spec["life"].as<float>());
             e.add<ParticleComponent>(c);
         }
         if (auto spec = entity["MeshAnimationComponent"]) {
             MeshAnimationComponent c;
-            c.name = spec["name"] ? spec["name"].as<std::string>() : "";
-            c.time = spec["time"] ? spec["time"].as<float>() : 0.0f;
-            c.speed = spec["speed"] ? spec["speed"].as<float>() : 1.0f;
+            c.name = transform(spec["name"].as<std::string>());
+            c.time = transform(spec["time"].as<float>());
+            c.speed = transform(spec["speed"].as<float>());
             e.add<MeshAnimationComponent>(c);
         }
     }
