@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <random>
 
+#include <apecs.hpp>
+
 namespace Sprocket {
 namespace ecs {
 namespace {
@@ -160,7 +162,7 @@ void Registry::set_callback(const std::function<void(ev::Event&)>& callback)
     d_callback = callback;
 }
 
-cppcoro::generator<Entity> Registry::all()
+apx::generator<Entity> Registry::all()
 {
     for (const auto& [index, id] : d_entities.Fast()) {
         co_yield {this, id};

@@ -36,7 +36,7 @@ void ScriptRunner::on_update(ecs::Registry&, const ev::Dispatcher&, double dt)
     }
 }
 
-cppcoro::generator<lua::Script&> ScriptRunner::active_scripts()
+apx::generator<lua::Script&> ScriptRunner::active_scripts()
 {
      for (auto& [entity, pair] : d_engines) {
         auto& [script, alive] = pair;

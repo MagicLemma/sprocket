@@ -7,7 +7,7 @@
 #include <utility>
 #include <functional>
 
-#include <cppcoro/generator.hpp>
+#include <apecs.hpp>
 
 namespace Sprocket {
 
@@ -57,11 +57,11 @@ public:
 
     // Provides a generator that loops over the packed set, which is fast but
     // results in undefined behaviour when removing elements.
-    cppcoro::generator<std::pair<const IndexType, ValueType>&> Fast();
+    apx::generator<std::pair<const IndexType, ValueType>&> Fast();
 
     // Provides a generator that loops over the sparse set, which is slower but
     // safe for deleting the current element.
-    cppcoro::generator<std::pair<const IndexType, ValueType>&> Safe();
+    apx::generator<std::pair<const IndexType, ValueType>&> Safe();
 };
 
 
@@ -144,7 +144,7 @@ const ValueType& SparseSet<ValueType, IndexType>::operator[](IndexType index) co
 }
 
 template <typename ValueType, typename IndexType>
-cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Fast()
+apx::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Fast()
 {
     for (auto pair : d_packed) {
         co_yield pair;
@@ -152,7 +152,7 @@ cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, 
 }
 
 template <typename ValueType, typename IndexType>
-cppcoro::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Safe()
+apx::generator<std::pair<const IndexType, ValueType>&> SparseSet<ValueType, IndexType>::Safe()
 {
     for (auto index : d_sparse) {
         if (index != EMPTY) {

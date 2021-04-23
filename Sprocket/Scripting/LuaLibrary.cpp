@@ -9,6 +9,8 @@
 #include "Components.h"
 #include "Log.h"
 
+#include "apecs.hpp"
+
 #include <lua.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
@@ -91,7 +93,7 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
-    using Generator = cppcoro::generator<ecs::Entity>;
+    using Generator = apx::generator<ecs::Entity>;
     using Iterator = typename Generator::iterator;
     static_assert(std::is_trivially_destructible_v<Iterator>);
 

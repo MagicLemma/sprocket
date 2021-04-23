@@ -13,8 +13,6 @@
 #include <any>
 #include <tuple>
 
-#include <cppcoro/generator.hpp>
-
 namespace Sprocket {
 namespace ecs {
 
@@ -135,14 +133,14 @@ public:
 
     // Generates all active entities. This is fast, however adding and removing
     // entities while iterating results is undefined.
-    cppcoro::generator<Entity> all();
+    apx::generator<Entity> all();
 
     // Does a fast iteration over all entities with the given Comp. If any extra
     // component types are specified, only entities that have all of those types
     // will be yielded. This should only be used for modifying the components, not
     // adding/removing new ones.
     template <typename Comp, typename... Rest>
-    cppcoro::generator<Entity> view();
+    apx::generator<Entity> view();
 
     // Returns the first entity satisfying the given predicate, or ECS::Null if
     // none is found. Can optionally provide components to filter on.
@@ -221,7 +219,7 @@ bool Registry::has(Entity entity) const
 }
 
 template <typename Comp, typename... Rest>
-cppcoro::generator<Entity> Registry::view()
+apx::generator<Entity> Registry::view()
 {
     for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.Fast()) {
         Entity entity{this, d_entities[index]};

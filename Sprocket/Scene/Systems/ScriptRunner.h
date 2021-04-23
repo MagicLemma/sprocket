@@ -6,7 +6,7 @@
 #include "Window.h"
 
 #include <unordered_map>
-#include <cppcoro/generator.hpp>
+#include <apecs.hpp>
 
 namespace Sprocket {
 
@@ -17,7 +17,7 @@ class ScriptRunner : public EntitySystem
 
     std::unordered_map<ecs::Entity, std::pair<lua::Script, bool>> d_engines;
 
-    cppcoro::generator<lua::Script&> active_scripts();
+    apx::generator<lua::Script&> active_scripts();
 
 public:
     ScriptRunner(Window* window);
