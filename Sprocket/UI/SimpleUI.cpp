@@ -13,7 +13,6 @@
 #include <algorithm>
 
 #include <fmt/core.h>
-#include <cpp-itertools.hpp>
 
 namespace Sprocket {
 namespace {
