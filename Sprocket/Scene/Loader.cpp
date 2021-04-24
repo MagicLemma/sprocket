@@ -210,7 +210,7 @@ void Load(const std::string& file, ecs::Registry* reg)
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
     const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<std::decay_t<decltype(param)>, ecs::Identifier>) {
+        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
             return id_remapper[param];
         }
         return param;
@@ -219,9 +219,6 @@ void Load(const std::string& file, ecs::Registry* reg)
     for (auto entity : entities) {
         ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
         ecs::Identifier new_id = reg->create().id();
-        if (old_id != new_id) {
-            log::info("Remapping {} to {}", old_id, new_id);
-        }
         id_remapper[old_id] = new_id;
     }
 
@@ -439,14 +436,11 @@ void Copy(ecs::Registry* source, ecs::Registry* target)
     for (auto entity : source->all()) {
         ecs::Identifier old_id = entity.id();
         ecs::Identifier new_id = target->create().id();
-        if (old_id != new_id) {
-            log::info("Remapping {} to {}", old_id, new_id);
-        }
         id_remapper[old_id] = new_id;
     }
 
     const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<std::decay_t<decltype(param)>, ecs::Identifier>) {
+        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
             return id_remapper[param];
         }
         return param;

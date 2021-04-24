@@ -1,5 +1,7 @@
+// GENERATED FILE
 #pragma once
 #include "ECS.h"
+#include "Components.h"
 #include "EntitySystem.h"
 #include "Events.h"
 #include "TypeInfo.h"
@@ -9,8 +11,39 @@
 #include <unordered_map>
 #include <string_view>
 
+#include "apecs.hpp"
+
+namespace spkt {
+
+using registry = apx::registry<
+    Sprocket::TemporaryComponent,
+    Sprocket::NameComponent,
+    Sprocket::Transform2DComponent,
+    Sprocket::Transform3DComponent,
+    Sprocket::ModelComponent,
+    Sprocket::RigidBody3DComponent,
+    Sprocket::BoxCollider3DComponent,
+    Sprocket::SphereCollider3DComponent,
+    Sprocket::CapsuleCollider3DComponent,
+    Sprocket::ScriptComponent,
+    Sprocket::Camera3DComponent,
+    Sprocket::SelectComponent,
+    Sprocket::PathComponent,
+    Sprocket::GridComponent,
+    Sprocket::LightComponent,
+    Sprocket::SunComponent,
+    Sprocket::AmbienceComponent,
+    Sprocket::ParticleComponent,
+    Sprocket::MeshAnimationComponent,
+    Sprocket::ParentComponent
+>;
+
+using entity = typename registry::handle_type;
+
+}
+
 namespace Sprocket {
-    
+
 class Scene
 {
     std::unordered_map<spkt::type_info_t, std::size_t> d_lookup;
