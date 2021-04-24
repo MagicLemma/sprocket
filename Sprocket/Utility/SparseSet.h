@@ -7,7 +7,7 @@
 #include <utility>
 #include <functional>
 
-#include <apecs.hpp>
+#include "apecs.hpp"
 
 namespace Sprocket {
 
