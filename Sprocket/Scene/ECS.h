@@ -1,6 +1,5 @@
 #pragma once
 #include "Types.h"
-#include "SparseSet.h"
 #include "TypeInfo.h"
 #include "Events.h"
 
@@ -12,6 +11,8 @@
 #include <cassert>
 #include <any>
 #include <tuple>
+
+#include "apecs.hpp"
 
 namespace Sprocket {
 namespace ecs {
@@ -75,7 +76,7 @@ private:
 
     // Stores all existing active GUIDs. Allows for index -> guid lookup as well
     // as cache friendly iteration over all entities.
-    SparseSet<Identifier> d_entities;
+    apx::sparse_set<Identifier> d_entities;
 
     // When an entity is deleted, their index is added to the pool for reuse.
     std::deque<Identifier> d_pool;
@@ -84,7 +85,7 @@ private:
     struct ComponentData
     {
         // All instances of this component.
-        SparseSet<std::any> instances;
+        apx::sparse_set<std::any> instances;
 
         // Returns an ev::Event containing a ComponentRemoveEvent<T>.
         std::function<ev::Event(ecs::Entity)> make_remove_event;
@@ -176,8 +177,8 @@ Comp& Registry::add(Entity entity, Args&&... args)
         };
     }
 
-    auto& entry = data.instances.Insert(
-        index, std::make_any<Comp&>(std::forward<Args>(args)...)
+    auto& entry = data.instances.emplace(
+        index, std::in_place_type<Comp>, std::forward<Args>(args)...
     );
 
     ev::Event event = ev::make_event<Added<Comp>>(entity);
@@ -221,7 +222,7 @@ bool Registry::has(Entity entity) const
 template <typename Comp, typename... Rest>
 apx::generator<Entity> Registry::view()
 {
-    for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.Fast()) {
+    for (auto& [index, comp] : d_comps[spkt::type_info<Comp>].instances.fast()) {
         Entity entity{this, d_entities[index]};
         if ((has<Rest>(entity) && ...)) {
             co_yield entity;

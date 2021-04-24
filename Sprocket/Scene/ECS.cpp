@@ -76,8 +76,8 @@ void Registry::remove(Entity entity, spkt::type_info_t type)
 
     auto [index, version] = Registry::split(entity.id());
     if (auto it = d_comps.find(type); it != d_comps.end()) {
-        if (it->second.instances.Has(index)) {
-            it->second.instances.Erase(index);
+        if (it->second.instances.has(index)) {
+            it->second.instances.erase(index);
         }
     }
 }
@@ -86,7 +86,7 @@ bool Registry::has(Entity entity, spkt::type_info_t type) const
 {
     auto [index, version] = Registry::split(entity.id());
     if (auto it = d_comps.find(type); it != d_comps.end()) {
-        if (it->second.instances.Has(index)) {
+        if (it->second.instances.has(index)) {
             const auto& entry = it->second.instances[index];
             return entry.has_value();
         }
@@ -96,7 +96,7 @@ bool Registry::has(Entity entity, spkt::type_info_t type) const
 
 Entity Registry::create()
 {
-    Index index = d_entities.Size();
+    Index index = d_entities.size();
     Version version = 0;
     if (!d_pool.empty()) {
         std::tie(index, version) = split(d_pool.front());
@@ -105,7 +105,7 @@ Entity Registry::create()
     }
 
     Identifier id = combine(index, version);
-    d_entities.Insert(index, id);
+    d_entities.insert(index, id);
     return {this, id};
 }
 
@@ -118,7 +118,7 @@ void Registry::destroy(Entity entity)
     for (auto& [type, data] : d_comps) {
         if (has(entity, type)) { remove(entity, type); }
     }
-    d_entities.Erase(index);
+    d_entities.erase(index);
     d_pool.push_back(entity.id());
 }
 
@@ -126,19 +126,19 @@ bool Registry::valid(Entity entity) const
 {
     auto [index, version] = Registry::split(entity.id());
     return entity.id() != ecs::null_id
-        && d_entities.Has(index)
+        && d_entities.has(index)
         && d_entities[index] == entity.id();
 }
 
 void Registry::clear()
 {
     // Clean up components, triggering on remove behaviour
-    for (const auto& [index, id] : d_entities.Safe()) {
+    for (const auto& [index, id] : d_entities.safe()) {
         Entity{this, id}.destroy();
     }
 
     // Reset all entity storage
-    d_entities.Clear();
+    d_entities.clear();
     d_pool.clear();
 }
 
@@ -148,13 +148,13 @@ void Registry::reset()
     d_comps.clear();
 
     // Reset all entity storage
-    d_entities.Clear();
+    d_entities.clear();
     d_pool.clear();
 }
 
 std::size_t Registry::size() const
 {
-    return d_entities.Size();
+    return d_entities.size();
 }
 
 void Registry::set_callback(const std::function<void(ev::Event&)>& callback)
@@ -164,7 +164,7 @@ void Registry::set_callback(const std::function<void(ev::Event&)>& callback)
 
 apx::generator<Entity> Registry::all()
 {
-    for (const auto& [index, id] : d_entities.Fast()) {
+    for (const auto& [index, id] : d_entities.fast()) {
         co_yield {this, id};
     }
 }
