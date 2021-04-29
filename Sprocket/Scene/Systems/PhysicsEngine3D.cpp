@@ -68,7 +68,7 @@ void SetMaterial(rp3d::Collider* collider, const RigidBody3DComponent& rc)
 
 class RaycastCB : public rp3d::RaycastCallback
 {
-    ecs::Entity d_entity = ecs::Null;
+    spkt::entity d_entity = apx::handle{};
     float d_fraction = 10.0f;
 
 public:

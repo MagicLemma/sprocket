@@ -63,14 +63,14 @@ bool CheckArgCount(lua_State* L, int argc)
 template <typename T> int _has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+    spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
     lua_pushboolean(L, entity.has<T>());
     return 1;
 }
 
 }
 
-void load_registry_functions(lua::Script& script, ecs::Registry& registry)
+void load_registry_functions(lua::Script& script, spkt::registry& registry)
 {
     lua_State* L = script.native_handle();
     script.set_value("__registry__", &registry);
@@ -78,14 +78,14 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
-        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->create();
+        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+        *luaEntity = get_pointer<spkt::registry>(L, "__registry__")->create();
         return 1;
     });
 
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        auto luaEntity = static_cast<spkt::entity*>(lua_touserdata(L, 1));
         luaEntity->destroy();
         return 0;
     });
@@ -93,13 +93,13 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
-    using Generator = apx::generator<ecs::Entity>;
+    using Generator = apx::generator<spkt::entity>;
     using Iterator = typename Generator::iterator;
     static_assert(std::is_trivially_destructible_v<Iterator>);
 
     lua_register(L, "_Each_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<ecs::Registry>(L, "__registry__")->all());
+        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->all());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -139,7 +139,7 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto iterator = static_cast<Iterator*>(lua_touserdata(L, 1));
 
-        auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
+        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
         *luaEntity = **iterator;
         return 1;
     });
@@ -241,7 +241,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "_SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         float px = (float)lua_tonumber(L, 2);
         float py = (float)lua_tonumber(L, 3);
         float pz = (float)lua_tonumber(L, 4);
@@ -265,7 +265,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "RotateY", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         auto& tr = entity.get<Transform3DComponent>();
 
         float yaw = (float)lua_tonumber(L, 2);
@@ -276,7 +276,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "_GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         auto& tr = entity.get<Transform3DComponent>();
         auto o = tr.orientation;
 
@@ -298,7 +298,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "_GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
-        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
         auto& tr = entity.get<Transform3DComponent>();
         return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
@@ -313,7 +313,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
-        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
         auto& tr = entity.get<Transform3DComponent>();
         float yaw = Converter<float>::read(L, ptr);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
@@ -323,8 +323,8 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
-        ecs::Entity entity1 = Converter<ecs::Entity>::read(L, ptr);
-        ecs::Entity entity2 = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity entity1 = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity2 = Converter<spkt::entity>::read(L, ptr);
         return Converter<bool>::push(L, entity1 == entity2);
     });
 }
@@ -348,7 +348,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<NameComponent>());
 
         int count = 0;
@@ -369,7 +369,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, NameComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<NameComponent>();
         c.name = Converter<std::string>::read(L, ptr);
         assert(ptr == NameComponent_dimension + 2);
@@ -386,7 +386,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, NameComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<NameComponent>());
 
         NameComponent c;
@@ -421,7 +421,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<Transform2DComponent>());
 
         int count = 0;
@@ -444,7 +444,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Transform2DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<Transform2DComponent>();
         c.position = Converter<glm::vec2>::read(L, ptr);
         c.rotation = Converter<float>::read(L, ptr);
@@ -463,7 +463,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Transform2DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<Transform2DComponent>());
 
         Transform2DComponent c;
@@ -499,7 +499,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<Transform3DComponent>());
 
         int count = 0;
@@ -521,7 +521,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Transform3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<Transform3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.scale = Converter<glm::vec3>::read(L, ptr);
@@ -539,7 +539,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Transform3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<Transform3DComponent>());
 
         Transform3DComponent c;
@@ -574,7 +574,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<ModelComponent>());
 
         int count = 0;
@@ -596,7 +596,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ModelComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<ModelComponent>();
         c.mesh = Converter<std::string>::read(L, ptr);
         c.material = Converter<std::string>::read(L, ptr);
@@ -614,7 +614,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ModelComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<ModelComponent>());
 
         ModelComponent c;
@@ -655,7 +655,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<RigidBody3DComponent>());
 
         int count = 0;
@@ -683,7 +683,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, RigidBody3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<RigidBody3DComponent>();
         c.velocity = Converter<glm::vec3>::read(L, ptr);
         c.gravity = Converter<bool>::read(L, ptr);
@@ -707,7 +707,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, RigidBody3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<RigidBody3DComponent>());
 
         RigidBody3DComponent c;
@@ -750,7 +750,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<BoxCollider3DComponent>());
 
         int count = 0;
@@ -774,7 +774,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, BoxCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<BoxCollider3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
@@ -794,7 +794,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, BoxCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<BoxCollider3DComponent>());
 
         BoxCollider3DComponent c;
@@ -832,7 +832,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<SphereCollider3DComponent>());
 
         int count = 0;
@@ -855,7 +855,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SphereCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<SphereCollider3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
@@ -874,7 +874,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SphereCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<SphereCollider3DComponent>());
 
         SphereCollider3DComponent c;
@@ -912,7 +912,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<CapsuleCollider3DComponent>());
 
         int count = 0;
@@ -936,7 +936,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, CapsuleCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<CapsuleCollider3DComponent>();
         c.position = Converter<glm::vec3>::read(L, ptr);
         c.mass = Converter<float>::read(L, ptr);
@@ -956,7 +956,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, CapsuleCollider3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<CapsuleCollider3DComponent>());
 
         CapsuleCollider3DComponent c;
@@ -993,7 +993,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<ScriptComponent>());
 
         int count = 0;
@@ -1015,7 +1015,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ScriptComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<ScriptComponent>();
         c.script = Converter<std::string>::read(L, ptr);
         c.active = Converter<bool>::read(L, ptr);
@@ -1033,7 +1033,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ScriptComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<ScriptComponent>());
 
         ScriptComponent c;
@@ -1068,7 +1068,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<Camera3DComponent>());
 
         int count = 0;
@@ -1090,7 +1090,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Camera3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<Camera3DComponent>();
         c.fov = Converter<float>::read(L, ptr);
         c.pitch = Converter<float>::read(L, ptr);
@@ -1108,7 +1108,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, Camera3DComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<Camera3DComponent>());
 
         Camera3DComponent c;
@@ -1143,7 +1143,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<SelectComponent>());
 
         int count = 0;
@@ -1165,7 +1165,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SelectComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<SelectComponent>();
         c.selected = Converter<bool>::read(L, ptr);
         c.hovered = Converter<bool>::read(L, ptr);
@@ -1183,7 +1183,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SelectComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<SelectComponent>());
 
         SelectComponent c;
@@ -1217,7 +1217,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<PathComponent>());
 
         int count = 0;
@@ -1238,7 +1238,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, PathComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<PathComponent>();
         c.speed = Converter<float>::read(L, ptr);
         assert(ptr == PathComponent_dimension + 2);
@@ -1255,7 +1255,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, PathComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<PathComponent>());
 
         PathComponent c;
@@ -1289,7 +1289,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<GridComponent>());
 
         int count = 0;
@@ -1311,7 +1311,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, GridComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<GridComponent>();
         c.x = Converter<int>::read(L, ptr);
         c.z = Converter<int>::read(L, ptr);
@@ -1329,7 +1329,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, GridComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<GridComponent>());
 
         GridComponent c;
@@ -1364,7 +1364,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<LightComponent>());
 
         int count = 0;
@@ -1386,7 +1386,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, LightComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<LightComponent>();
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
@@ -1404,7 +1404,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, LightComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<LightComponent>());
 
         LightComponent c;
@@ -1441,7 +1441,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<SunComponent>());
 
         int count = 0;
@@ -1465,7 +1465,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SunComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<SunComponent>();
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
@@ -1485,7 +1485,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, SunComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<SunComponent>());
 
         SunComponent c;
@@ -1522,7 +1522,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<AmbienceComponent>());
 
         int count = 0;
@@ -1544,7 +1544,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, AmbienceComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<AmbienceComponent>();
         c.colour = Converter<glm::vec3>::read(L, ptr);
         c.brightness = Converter<float>::read(L, ptr);
@@ -1562,7 +1562,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, AmbienceComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<AmbienceComponent>());
 
         AmbienceComponent c;
@@ -1601,7 +1601,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<ParticleComponent>());
 
         int count = 0;
@@ -1627,7 +1627,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ParticleComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<ParticleComponent>();
         c.interval = Converter<float>::read(L, ptr);
         c.velocity = Converter<glm::vec3>::read(L, ptr);
@@ -1649,7 +1649,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, ParticleComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<ParticleComponent>());
 
         ParticleComponent c;
@@ -1689,7 +1689,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<MeshAnimationComponent>());
 
         int count = 0;
@@ -1712,7 +1712,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, MeshAnimationComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<MeshAnimationComponent>();
         c.name = Converter<std::string>::read(L, ptr);
         c.time = Converter<float>::read(L, ptr);
@@ -1731,7 +1731,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, MeshAnimationComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<MeshAnimationComponent>());
 
         MeshAnimationComponent c;
@@ -1750,77 +1750,6 @@ void load_entity_component_functions(lua::Script& script)
     )lua");
 
     lua_register(L, "HasMeshAnimationComponent", &_has_impl<MeshAnimationComponent>);
-
-
-    // Functions for ParentComponent =====================================================
-
-    constexpr int ParentComponent_dimension = 1;
-
-    luaL_dostring(L, R"lua(
-        ParentComponent = Class(function(self, parent)
-            self.parent = parent
-        end)
-    )lua");
-
-    lua_register(L, "_GetParentComponent", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-        int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(e.has<ParentComponent>());
-
-        int count = 0;
-        const auto& c = e.get<ParentComponent>();
-        count += Converter<ecs::Identifier>::push(L, c.parent);
-        assert(count == ParentComponent_dimension);
-        return count;
-    });
-
-    luaL_dostring(L, R"lua(
-        function GetParentComponent(entity)
-            x0 = _GetParentComponent(entity)
-            return ParentComponent(x0)
-        end
-    )lua");
-
-    lua_register(L, "_SetParentComponent", [](lua_State* L) {
-        if (!CheckArgCount(L, ParentComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
-
-        int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        auto& c = e.get<ParentComponent>();
-        c.parent = Converter<ecs::Identifier>::read(L, ptr);
-        assert(ptr == ParentComponent_dimension + 2);
-        return 0;
-    });
-
-    luaL_dostring(L, R"lua(
-        function SetParentComponent(entity, c)
-            _SetParentComponent(entity, c.parent)
-        end
-    )lua");
-
-    lua_register(L, "_AddParentComponent", [](lua_State* L) {
-        if (!CheckArgCount(L, ParentComponent_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
-
-        int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
-        assert(!e.has<ParentComponent>());
-
-        ParentComponent c;
-        c.parent = Converter<ecs::Identifier>::read(L, ptr);
-        e.add<ParentComponent>(c);
-        assert(ptr == ParentComponent_dimension + 2);
-        return 0;
-    });
-
-    luaL_dostring(L, R"lua(
-        function AddParentComponent(entity, c)
-            _AddParentComponent(entity, c.parent)
-        end
-    )lua");
-
-    lua_register(L, "HasParentComponent", &_has_impl<ParentComponent>);
 
 
 }

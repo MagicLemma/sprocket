@@ -276,17 +276,6 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (entity.has<ParentComponent>()) {
-        auto& c = entity.get<ParentComponent>();
-        if (ImGui::CollapsingHeader("Parent")) {
-            ImGui::PushID(count++);
-            ImGui::Text("Parent: %llu", c.parent);
-            
-            if (ImGui::Button("Delete")) { entity.remove<ParentComponent>(); }
-            ImGui::PopID();
-        }
-    }
-
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -369,10 +358,6 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<MeshAnimationComponent>() && ImGui::Selectable("Mesh Animation")) {
             MeshAnimationComponent c;
             entity.add<MeshAnimationComponent>(c);
-        }
-        if (!entity.has<ParentComponent>() && ImGui::Selectable("Parent")) {
-            ParentComponent c;
-            entity.add<ParentComponent>(c);
         }
         ImGui::EndMenu();
     }

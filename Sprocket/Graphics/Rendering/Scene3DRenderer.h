@@ -43,7 +43,7 @@ private:
 public:
     Scene3DRenderer(AssetManager* assetManager);
 
-    void Draw(const ecs::Entity& camera, Scene& scene);
+    void Draw(spkt::entity camera, Scene& scene);
     void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);
 
     void EnableShadows(const ShadowMap& shadowMap);

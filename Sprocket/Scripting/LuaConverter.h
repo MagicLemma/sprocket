@@ -106,20 +106,20 @@ template <typename T> struct Converter<T*>
     }
 };
 
-template <> struct Converter<ecs::Entity>
+template <> struct Converter<spkt::entity>
 {
     static constexpr int dimension = 1;
-    static ecs::Entity pop(lua_State* L);
-    static int push(lua_State* L, const ecs::Entity& value);
-    static ecs::Entity read(lua_State* L, int& read_ptr);
+    static spkt::entity pop(lua_State* L);
+    static int push(lua_State* L, const spkt::entity& value);
+    static spkt::entity read(lua_State* L, int& read_ptr);
 };
 
-template <> struct Converter<ecs::Identifier>
+template <> struct Converter<spkt::identifier>
 {
     static constexpr int dimension = 1;
-    static ecs::Identifier pop(lua_State* L);
-    static int push(lua_State* L, const ecs::Identifier& value);
-    static ecs::Identifier read(lua_State* L, int& read_ptr);
+    static spkt::identifier pop(lua_State* L);
+    static int push(lua_State* L, const spkt::identifier& value);
+    static spkt::identifier read(lua_State* L, int& read_ptr);
 };
 
 // Implement the pull_from for these types when we need them, otherwise we are

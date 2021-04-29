@@ -6,8 +6,16 @@ namespace Sprocket {
 
 Scene::Scene()
 {
-    d_registry.set_callback([&](ev::Event& event) {
-        OnEvent(event);
+    apx::meta::for_each(d_registry.tags, [&](auto&& tag) {
+        using T = decltype(tag.type());
+        d_registry.on_add<T>([&](apx::entity entity, const T&) {
+            ev::Event event = ev::make_event<spkt::added<T>>(spkt::entity(d_registry, entity));
+            OnEvent(event);
+        });
+        d_registry.on_remove<T>([&](apx::entity entity, const T&) {
+            ev::Event event = ev::make_event<spkt::removed<T>>(spkt::entity(d_registry, entity));
+            OnEvent(event);
+        });
     });
 }
 
@@ -35,7 +43,7 @@ std::size_t Scene::Size() const
 
 void Scene::Clear()
 {
-    d_registry.reset();
+    d_registry.clear();
     d_lookup.clear();
     d_systems.clear();
 }

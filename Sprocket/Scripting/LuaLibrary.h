@@ -1,4 +1,5 @@
 #pragma once
+#include "ECS.h"
 // Functions for loading C++ implemented Lua functions into the given
 // lua state.
 
@@ -6,7 +7,6 @@ struct lua_State;
 
 namespace Sprocket {
 
-namespace ecs { class Registry; }
 class Window;
 class InputProxy;
 
@@ -16,7 +16,7 @@ class Script;
 
 // Loads the given scene into the given lua state, and provides functions for
 // creating/deleting entities as well as iterating entities.
-void load_registry_functions(lua::Script& script, ecs::Registry& registry);
+void load_registry_functions(lua::Script& script, spkt::registry& registry);
 
 // Loads the given input proxy into the given lua state, and provides functions
 // for checking if keyboard and mouse buttons are currently pressed.

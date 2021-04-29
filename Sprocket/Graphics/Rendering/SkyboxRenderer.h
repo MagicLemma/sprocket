@@ -21,7 +21,7 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(AssetManager* assetManager);
 
-    void Draw(const CubeMap& skybox, const ecs::Entity& camera);
+    void Draw(const CubeMap& skybox, spkt::entity camera);
     void Draw(const CubeMap& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 

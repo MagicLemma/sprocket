@@ -16,7 +16,7 @@ ScriptRunner::ScriptRunner(Window* window)
 {
 }
 
-void ScriptRunner::on_update(ecs::Registry&, const ev::Dispatcher&, double dt)
+void ScriptRunner::on_update(spkt::registry&, const ev::Dispatcher&, double dt)
 {
     // We delete scripts here rather then with OnRemove otherwise we would segfault if
     // a script tries to delete its own entity, which is functionality that we want to
@@ -47,12 +47,12 @@ apx::generator<lua::Script&> ScriptRunner::active_scripts()
 }
 
 // TODO: Add more event handlers
-void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
+void ScriptRunner::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
 {
     d_input.on_startup(dispatcher);
 
-    dispatcher.subscribe<ecs::Added<ScriptComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Added<ScriptComponent>>();
+    dispatcher.subscribe<spkt::added<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<spkt::added<ScriptComponent>>();
         lua::Script script(data.entity.get<ScriptComponent>().script);
         lua::load_registry_functions(script, registry);
         lua::load_input_functions(script, d_input);
@@ -65,8 +65,8 @@ void ScriptRunner::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatche
         d_engines.emplace(data.entity, std::make_pair(std::move(script), true));
     });
 
-    dispatcher.subscribe<ecs::Removed<ScriptComponent>>([&](ev::Event& event) {
-        auto data = event.get<ecs::Removed<ScriptComponent>>();
+    dispatcher.subscribe<spkt::removed<ScriptComponent>>([&](ev::Event& event) {
+        auto data = event.get<spkt::removed<ScriptComponent>>();
         auto it = d_engines.find(data.entity);
         if (it != d_engines.end()) {
             it->second.second = false; // alive = false

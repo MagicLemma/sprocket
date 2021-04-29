@@ -5,10 +5,10 @@
 
 namespace Sprocket {
 
-void AnimationSystem::on_update(ecs::Registry& registry, const ev::Dispatcher&, double dt)
+void AnimationSystem::on_update(spkt::registry& registry, const ev::Dispatcher&, double dt)
 {
-    for (auto entity : registry.view<MeshAnimationComponent>()) {
-        auto& ac = entity.get<MeshAnimationComponent>();
+    for (auto id : registry.view<MeshAnimationComponent>()) {
+        auto& ac = registry.get<MeshAnimationComponent>(id);
         ac.time += (float)dt * ac.speed;
     }
 }

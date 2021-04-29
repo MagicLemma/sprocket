@@ -5,7 +5,7 @@
 
 namespace Sprocket {
 
-glm::mat4 MakeView(const ecs::Entity& entity)
+glm::mat4 MakeView(spkt::entity entity)
 {
     if (!entity.has<Transform3DComponent>()) {
         log::error("Camera has no transform component!");
@@ -22,7 +22,7 @@ glm::mat4 MakeView(const ecs::Entity& entity)
     return glm::inverse(Maths::Transform(tr.position, tr.orientation));   
 }
 
-glm::mat4 MakeProj(const ecs::Entity& entity)
+glm::mat4 MakeProj(spkt::entity entity)
 {
     float fov = glm::radians(70.0f);
 
