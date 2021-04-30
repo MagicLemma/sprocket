@@ -12,7 +12,7 @@ class ParticleSystem : public EntitySystem
 public:
     ParticleSystem(ParticleManager* manager);
     
-    void on_update(ecs::Registry& registry, const ev::Dispatcher& dispatcher, double dt) override;
+    void on_update(spkt::registry& registry, const ev::Dispatcher& dispatcher, double dt) override;
 };
 
 }

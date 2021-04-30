@@ -9,7 +9,7 @@
 namespace Sprocket {
 namespace {
 
-std::string Name(const ecs::Entity& entity)
+std::string Name(const spkt::entity& entity)
 {
     if (entity.has<NameComponent>()) {
         return entity.get<NameComponent>().name;
@@ -50,7 +50,7 @@ Anvil::Anvil(Window* window)
     d_scene = std::make_shared<Scene>();    
     d_scene->Load(d_sceneFile);
 
-    d_runtimeCamera = d_scene->Entities().find([](ecs::Entity entity) {
+    d_runtimeCamera = d_scene->find([](spkt::entity entity) {
         return entity.has<Camera3DComponent>();
     });
 
@@ -66,8 +66,8 @@ void Anvil::OnEvent(ev::Event& event)
                 d_activeScene = d_scene;
                 d_window->SetCursorVisibility(true);
             }
-            else if (d_selected != ecs::Null) {
-                d_selected = ecs::Null;
+            else if (d_selected != spkt::null) {
+                d_selected = spkt::null;
             }
             else if (d_window->IsFullscreen()) {
                 d_window->SetWindowed(1280, 720);
@@ -113,16 +113,10 @@ void Anvil::OnUpdate(double dt)
         d_editorCamera.OnUpdate(dt);
     }
     
-    std::vector<ecs::Entity> toDelete;
-    for (auto entity : d_activeScene->Entities().view<Transform3DComponent>()) {
-        auto& transform = entity.get<Transform3DComponent>();
-        if (transform.position.y < -50) {
-            toDelete.push_back(entity);
-        }
-    }
-    for (auto entity : toDelete) {
-        entity.destroy();
-    }
+    d_scene->Entities().erase_if<Transform3DComponent>([&](apx::entity entity) {
+        const auto& transform = d_scene->Entities().get<Transform3DComponent>(entity);
+        return transform.position.y < -50;
+    });
 }
 
 glm::mat4 Anvil::GetProjMatrix() const
@@ -210,7 +204,7 @@ void Anvil::OnRender()
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->Entities().find<Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->find<Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();
@@ -263,7 +257,8 @@ void Anvil::OnRender()
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
                 int i = 0;
-                for (auto entity : d_scene->Entities().all()) {
+                for (auto id : d_scene->Entities().all()) {
+                    spkt::entity entity{d_scene->Entities(), id};
                     if (SubstringCI(Name(entity), search)) {
                         ImGui::PushID(i);
                         if (ImGui::Selectable(Name(entity).c_str())) {

@@ -13,18 +13,18 @@ namespace Sprocket {
 
 void Inspector::Show(Anvil& editor)
 {
-    ecs::Entity entity = editor.Selected();
+    spkt::entity entity = editor.Selected();
 
     if (!editor.Selected().valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->Entities().create();
+            auto e = apx::create_from(editor.GetScene()->Entities());
             editor.SetSelected(e);
         }
         return;
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.id());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
     if (entity.has<TemporaryComponent>()) {
         auto& c = entity.get<TemporaryComponent>();
@@ -363,7 +363,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        ecs::Entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
+        spkt::entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

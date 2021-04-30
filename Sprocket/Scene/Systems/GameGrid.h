@@ -17,14 +17,14 @@ namespace Sprocket {
 class GameGrid : public EntitySystem
 {
 public:
-    using GridMap = std::unordered_map<glm::ivec2, ecs::Entity>;
+    using GridMap = std::unordered_map<glm::ivec2, spkt::entity>;
 
 private:
     Window*       d_window;
 
-    ecs::Entity d_camera;
-    ecs::Entity d_hoveredSquare;
-    ecs::Entity d_selectedSquare;
+    spkt::entity d_camera;
+    spkt::entity d_hoveredSquare;
+    spkt::entity d_selectedSquare;
 
     glm::ivec2 d_hovered; // TODO: make optional
     std::optional<glm::ivec2> d_selected;
@@ -34,15 +34,15 @@ private:
 public:
     GameGrid(Window* window);
 
-    void on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher) override;
-    void on_update(ecs::Registry& registry, const ev::Dispatcher& dispatcher, double dt) override;
+    void on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher) override;
+    void on_update(spkt::registry& registry, const ev::Dispatcher& dispatcher, double dt) override;
 
-    ecs::Entity At(const glm::ivec2& pos) const;
+    spkt::entity At(const glm::ivec2& pos) const;
 
-    void SetCamera(ecs::Entity entity) { d_camera = entity; }
+    void SetCamera(spkt::entity entity) { d_camera = entity; }
 
-    ecs::Entity Hovered() const;
-    ecs::Entity Selected() const;
+    spkt::entity Hovered() const;
+    spkt::entity Selected() const;
 
     std::optional<glm::ivec2> SelectedPosition() const { return d_selected; }
 };

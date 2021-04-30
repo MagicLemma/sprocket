@@ -19,7 +19,8 @@ class Runtime
     // Scene
     Sprocket::Scene d_scene;
     Sprocket::CubeMap d_skybox;
-    Sprocket::ecs::Entity d_runtimeCamera;
+    
+    spkt::entity d_runtimeCamera;
 
     // Console
     Sprocket::Console d_console;

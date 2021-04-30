@@ -439,7 +439,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
         if (src.has<TemporaryComponent>()) {
             const TemporaryComponent& source_comp = src.get<TemporaryComponent>();
             TemporaryComponent target_comp;
-            dst.add<TemporaryComponent>(target_comp);
+            dst.add(target_comp);
         }
         if (src.has<NameComponent>()) {
             const NameComponent& source_comp = src.get<NameComponent>();

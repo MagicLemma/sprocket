@@ -34,7 +34,7 @@ class Anvil
     std::string d_sceneFile = "Resources/Anvil.yaml";
     std::shared_ptr<Scene> d_activeScene;
     std::shared_ptr<Scene> d_scene;
-    ecs::Entity d_runtimeCamera;
+    spkt::entity d_runtimeCamera;
 
     // Additional world setup
     CubeMap d_skybox;
@@ -47,8 +47,8 @@ class Anvil
     bool d_playingGame = false;
     bool d_showColliders = false;
 
-    void AddEntityToList(const ecs::Entity& entity);
-    ecs::Entity d_selected = ecs::Null;
+    void AddEntityToList(const spkt::entity& entity);
+    spkt::entity d_selected = spkt::null;
 
     // Panels
     Inspector      d_inspector;
@@ -65,9 +65,9 @@ public:
     void OnUpdate(double dt);
     void OnRender();
 
-    ecs::Entity Selected() { return d_selected; }
-    void SetSelected(ecs::Entity e) { d_selected = e; }
-    void ClearSelected() { d_selected = ecs::Null; }
+    spkt::entity Selected() { return d_selected; }
+    void SetSelected(spkt::entity e) { d_selected = e; }
+    void ClearSelected() { d_selected = spkt::null; }
 
     bool IsGameRunning() const { return d_playingGame; }
 

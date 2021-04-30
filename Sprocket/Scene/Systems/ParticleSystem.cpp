@@ -10,11 +10,11 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 {
 }
 
-void ParticleSystem::on_update(ecs::Registry& registry, const ev::Dispatcher&, double dt)
+void ParticleSystem::on_update(spkt::registry& registry, const ev::Dispatcher&, double dt)
 {
     for (auto entity : registry.view<ParticleComponent>()) {
-        auto& tc = entity.get<Transform3DComponent>();
-        auto& pc = entity.get<ParticleComponent>();
+        auto& tc = registry.get<Transform3DComponent>(entity);
+        auto& pc = registry.get<ParticleComponent>(entity);
 
         pc.accumulator += dt;
         while (pc.accumulator > pc.interval) {

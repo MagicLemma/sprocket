@@ -32,7 +32,7 @@ Runtime::Runtime(Window* window)
     d_scene.Add<AnimationSystem>();
     d_scene.Load("Resources/Anvil.yaml");
 
-    d_runtimeCamera = d_scene.Entities().find<Camera3DComponent>();
+    d_runtimeCamera = d_scene.find<Camera3DComponent>();
 }
 
 void Runtime::OnEvent(ev::Event& event)
@@ -62,17 +62,11 @@ void Runtime::OnUpdate(double dt)
         d_scene.OnUpdate(dt);
         d_particleManager.OnUpdate(dt);
     }
-    
-    std::vector<ecs::Entity> toDelete;
-    for (auto entity : d_scene.Entities().view<Transform3DComponent>()) {
-        auto& transform = entity.get<Transform3DComponent>();
-        if (transform.position.y < -50) {
-            toDelete.push_back(entity);
-        }
-    }
-    for (auto entity : toDelete) {
-        entity.destroy();
-    }
+
+    d_scene.Entities().erase_if<Transform3DComponent>([&](apx::entity entity) {
+        const auto& transform = d_scene.Entities().get<Transform3DComponent>(entity);
+        return transform.position.y < -50;
+    });
 }
 
 void Runtime::OnRender()
