@@ -1,4 +1,3 @@
-// GENERATED FILE
 #pragma once
 #include "Components.h"
 
@@ -11,25 +10,9 @@ namespace spkt {
 // have to remove this manually after generating. If the plugin could see the whole spec
 // it would know if the current component is the last one.
 using registry = apx::registry<
-    Sprocket::TemporaryComponent,
-    Sprocket::NameComponent,
-    Sprocket::Transform2DComponent,
-    Sprocket::Transform3DComponent,
-    Sprocket::ModelComponent,
-    Sprocket::RigidBody3DComponent,
-    Sprocket::BoxCollider3DComponent,
-    Sprocket::SphereCollider3DComponent,
-    Sprocket::CapsuleCollider3DComponent,
-    Sprocket::ScriptComponent,
-    Sprocket::Camera3DComponent,
-    Sprocket::SelectComponent,
-    Sprocket::PathComponent,
-    Sprocket::GridComponent,
-    Sprocket::LightComponent,
-    Sprocket::SunComponent,
-    Sprocket::AmbienceComponent,
-    Sprocket::ParticleComponent,
-    Sprocket::MeshAnimationComponent
+#ifdef DATAMATIC_BLOCK
+    Sprocket::{{Comp.Name}},
+#endif
 >;
 
 using entity = typename registry::handle_type;

@@ -114,19 +114,19 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
     return true;
 }
 
-Node convert<ecs::Identifier>::encode(const ecs::Identifier& rhs)
+Node convert<spkt::identifier>::encode(const spkt::identifier& rhs)
 {
     Node n;
-    n = static_cast<std::underlying_type_t<ecs::Identifier>>(rhs);
+    n = static_cast<std::underlying_type_t<spkt::identifier>>(rhs);
     return n;
 }
 
-bool convert<ecs::Identifier>::decode(const Node& node, ecs::Identifier& rhs)
+bool convert<spkt::identifier>::decode(const Node& node, spkt::identifier& rhs)
 {
     if (!node.IsScalar())
         return false;
 
-    rhs = static_cast<ecs::Identifier>(node.as<std::underlying_type_t<ecs::Identifier>>());
+    rhs = static_cast<spkt::identifier>(node.as<std::underlying_type_t<spkt::identifier>>());
     return true;
 }
 
@@ -166,9 +166,9 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const ecs::Identifier& i)
+YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::identifier& i)
 {
-    out << static_cast<std::underlying_type_t<ecs::Identifier>>(i);
+    out << static_cast<std::underlying_type_t<spkt::identifier>>(i);
     return out;
 }
 

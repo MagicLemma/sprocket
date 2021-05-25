@@ -68,7 +68,7 @@ void SetMaterial(rp3d::Collider* collider, const RigidBody3DComponent& rc)
 
 class RaycastCB : public rp3d::RaycastCallback
 {
-    ecs::Entity d_entity = ecs::Null;
+    spkt::entity d_entity = spkt::null;
     float d_fraction = 10.0f;
 
 public:
@@ -76,12 +76,12 @@ public:
     {
         if (info.hitFraction < d_fraction) {  // This object is closer.
             d_fraction = info.hitFraction;
-            d_entity = *static_cast<ecs::Entity*>(info.body->getUserData());
+            d_entity = *static_cast<spkt::entity*>(info.body->getUserData());
         }
         return -1.0f;
     }
 
-    ecs::Entity GetEntity() const { return d_entity; }
+    spkt::entity GetEntity() const { return d_entity; }
     float Fraction() const { return d_fraction; }
 };
 
@@ -96,8 +96,8 @@ public:
             auto pair = data.getContactPair(p);
             auto type = pair.getEventType();
             if (type == rp3d::CollisionCallback::ContactPair::EventType::ContactStart) {
-                ecs::Entity e1 = *static_cast<ecs::Entity*>(pair.getBody1()->getUserData());
-                ecs::Entity e2 = *static_cast<ecs::Entity*>(pair.getBody2()->getUserData());
+                spkt::entity e1 = *static_cast<spkt::entity*>(pair.getBody1()->getUserData());
+                spkt::entity e2 = *static_cast<spkt::entity*>(pair.getBody2()->getUserData());
                 ev::Event event = ev::make_event<CollisionEvent>(e1, e2);
                 d_events.push_back(event);
             }
@@ -111,7 +111,7 @@ public:
 
 struct EntityData
 {
-    ecs::Entity entity;
+    spkt::entity entity;
     rp3d::RigidBody* body;
 
     // Colliders
@@ -129,7 +129,7 @@ struct PhysicsEngine3DImpl
 
     float lastFrameLength = 0;
 
-    std::unordered_map<ecs::Entity, EntityData> entityData;
+    std::unordered_map<spkt::entity, EntityData> entityData;
 
     PhysicsEngine3DImpl(const glm::vec3& gravity)
     {
@@ -151,7 +151,7 @@ struct PhysicsEngine3DImpl
 
 namespace {
 
-bool IsOnFloor(const PhysicsEngine3DImpl& impl, ecs::Entity entity)
+bool IsOnFloor(const PhysicsEngine3DImpl& impl, spkt::entity entity)
 {
     // Get the point at the bottom of the rigid body.
     auto aabb = impl.entityData.at(entity).body->getAABB();
@@ -166,7 +166,7 @@ bool IsOnFloor(const PhysicsEngine3DImpl& impl, ecs::Entity entity)
     rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
     RaycastCB cb;
     impl.world->raycast(ray, &cb);
-    return cb.GetEntity() != ecs::Null;
+    return cb.GetEntity().valid();
 }
 
 }
@@ -176,9 +176,9 @@ PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
 {
 }
 
-void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
+void PhysicsEngine3D::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
 {
-    dispatcher.subscribe<ecs::Added<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<spkt::added<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
         assert(data.entity.has<Transform3DComponent>());
         auto& tc = data.entity.get<Transform3DComponent>();
 
@@ -188,8 +188,8 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         entry.body->setUserData(static_cast<void*>(&entry.entity));
     });
 
-    dispatcher.subscribe<ecs::Removed<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
-        ecs::Entity entity = data.entity;
+    dispatcher.subscribe<spkt::removed<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
+        spkt::entity entity = data.entity;
         entity.remove<BoxCollider3DComponent>();
         entity.remove<SphereCollider3DComponent>();
         entity.remove<CapsuleCollider3DComponent>();
@@ -199,7 +199,7 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         d_impl->entityData.erase(rigidBodyIt);
     });
 
-    dispatcher.subscribe<ecs::Added<BoxCollider3DComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<spkt::added<BoxCollider3DComponent>>([&](ev::Event& event, auto&& data) {
         assert(data.entity.has<Transform3DComponent>());
         assert(data.entity.has<RigidBody3DComponent>());
 
@@ -219,12 +219,12 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         SetMaterial(entry.boxCollider, data.entity.get<RigidBody3DComponent>());
     });
 
-    dispatcher.subscribe<ecs::Removed<BoxCollider3DComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<spkt::removed<BoxCollider3DComponent>>([&](ev::Event& event, auto&& data) {
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.boxCollider);
     });
 
-    dispatcher.subscribe<ecs::Added<SphereCollider3DComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<spkt::added<SphereCollider3DComponent>>([&](ev::Event& event, auto&& data) {
         assert(data.entity.has<Transform3DComponent>());
         assert(data.entity.has<RigidBody3DComponent>());
 
@@ -239,12 +239,12 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         SetMaterial(entry.sphereCollider, data.entity.get<RigidBody3DComponent>());   
     });
 
-    dispatcher.subscribe<ecs::Removed<SphereCollider3DComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<spkt::removed<SphereCollider3DComponent>>([&](ev::Event& event, auto&& data) {
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.sphereCollider);
     });
 
-    dispatcher.subscribe<ecs::Added<CapsuleCollider3DComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<spkt::added<CapsuleCollider3DComponent>>([&](ev::Event& event, auto&& data) {
         assert(data.entity.has<Transform3DComponent>());
         assert(data.entity.has<RigidBody3DComponent>());
 
@@ -259,16 +259,17 @@ void PhysicsEngine3D::on_startup(ecs::Registry& registry, ev::Dispatcher& dispat
         SetMaterial(entry.capsuleCollider, data.entity.get<RigidBody3DComponent>()); 
     });
 
-    dispatcher.subscribe<ecs::Removed<CapsuleCollider3DComponent>>([&](ev::Event& event, auto&& data) {
+    dispatcher.subscribe<spkt::removed<CapsuleCollider3DComponent>>([&](ev::Event& event, auto&& data) {
         auto& entry = d_impl->entityData[data.entity];
         entry.body->removeCollider(entry.capsuleCollider);
     });
 }
 
-void PhysicsEngine3D::on_update(ecs::Registry& registry, const ev::Dispatcher& dispatcher, double dt)
+void PhysicsEngine3D::on_update(spkt::registry& registry, const ev::Dispatcher& dispatcher, double dt)
 {
     // Pre Update
-    for (auto entity : registry.view<RigidBody3DComponent>()) {
+    for (auto id : registry.view<RigidBody3DComponent>()) {
+        spkt::entity entity{registry, id};
         const auto& tc = entity.get<Transform3DComponent>();
         const auto& physics = entity.get<RigidBody3DComponent>();
 
@@ -313,7 +314,8 @@ void PhysicsEngine3D::on_update(ecs::Registry& registry, const ev::Dispatcher& d
     }
 
     // Post Update
-    for (auto entity : registry.view<RigidBody3DComponent>()) {
+    for (auto id : registry.view<RigidBody3DComponent>()) {
+        spkt::entity entity{registry, id};
         auto& tc = entity.get<Transform3DComponent>();
         auto& rc = entity.get<RigidBody3DComponent>();
         const rp3d::RigidBody* body = d_impl->entityData[entity].body;
@@ -333,7 +335,7 @@ void PhysicsEngine3D::on_update(ecs::Registry& registry, const ev::Dispatcher& d
     d_impl->listener.events().clear();
 }
 
-ecs::Entity PhysicsEngine3D::Raycast(const glm::vec3& base,
+spkt::entity PhysicsEngine3D::Raycast(const glm::vec3& base,
                                    const glm::vec3& direction)
 {
     glm::vec3 d = glm::normalize(direction);

@@ -6,10 +6,10 @@
 namespace Sprocket {
 namespace Audio {
 
-void SetListener(const ecs::Entity& entity)
+void SetListener(spkt::entity e)
 {
-    if (!entity.has<Transform3DComponent>()) { return; }
-    auto tr = entity.get<Transform3DComponent>();
+    if (!e.has<Transform3DComponent>()) { return; }
+    auto tr = e.get<Transform3DComponent>();
     auto pos = tr.position;
     sf::Listener::setPosition(pos.x, pos.y, pos.z);
 

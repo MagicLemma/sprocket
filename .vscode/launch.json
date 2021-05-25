@@ -29,10 +29,21 @@
             "externalConsole": false
         },
         {
-            "name": "Anvil",
+            "name": "Anvil (RelWithDebInfo)",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Anvil/RelWithDebInfo/Anvil.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false
+        },
+        {
+            "name": "Anvil (Debug)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Anvil/Debug/Anvil.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

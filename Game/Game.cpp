@@ -92,7 +92,7 @@ WorldLayer::WorldLayer(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& sun = d_scene.Entities().find<SunComponent>().get<SunComponent>();
+    auto& sun = d_scene.find<SunComponent>().get<SunComponent>();
     sun.direction = d_cycle.GetSunDir();
 
     d_postProcessor.AddEffect<GaussianVert>();
@@ -114,18 +114,18 @@ void WorldLayer::LoadScene(std::string_view file)
 
     d_sceneFile = file;
 
-    d_worker = d_scene.Entities().find<NameComponent>([](ecs::Entity entity) {
+    d_worker = d_scene.find<NameComponent>([](spkt::entity entity) {
         return entity.get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene.Entities().find<NameComponent>([](ecs::Entity entity) {
+    d_camera = d_scene.find<NameComponent>([](spkt::entity entity) {
         return entity.get<NameComponent>().name == "Camera";
     });
 
     d_scene.Get<GameGrid>().SetCamera(d_camera);
 
-    assert(d_worker != ecs::Null);
-    assert(d_camera != ecs::Null);
+    assert(d_worker != spkt::null);
+    assert(d_camera != spkt::null);
 }
 
 void WorldLayer::OnEvent(Sprocket::ev::Event& event)
@@ -184,7 +184,7 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
                         mousePos,
                         [&](const glm::ivec2& pos) {
                             auto e = d_scene.Get<GameGrid>().At(pos);
-                            return e != ecs::Null;
+                            return e != spkt::null;
                         }
                     );
                 } else {
@@ -212,7 +212,7 @@ void WorldLayer::OnUpdate(double dt)
         d_cycle.OnUpdate(dt);
     }
     
-    auto& sun = d_scene.Entities().find<SunComponent>().get<SunComponent>();
+    auto& sun = d_scene.find<SunComponent>().get<SunComponent>();
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -246,7 +246,7 @@ void WorldLayer::OnRender()
     auto& tc = d_camera.get<Transform3DComponent>();
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
     d_shadowMap.Draw(
-        d_scene.Entities().find<SunComponent>().get<SunComponent>().direction,
+        d_scene.find<SunComponent>().get<SunComponent>().direction,
         target,
         d_scene
     );
@@ -450,23 +450,23 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Entities().create();
+    auto newEntity = apx::create_from(d_scene.Entities());
 
-    auto& name = newEntity.add<NameComponent>();
+    auto& name = newEntity.emplace<NameComponent>();
     name.name = "Tree";
 
-    auto& tr = newEntity.add<Transform3DComponent>();
+    auto& tr = newEntity.emplace<Transform3DComponent>();
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
     float r = Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
-    auto& modelData = newEntity.add<ModelComponent>();
+    auto& modelData = newEntity.emplace<ModelComponent>();
     modelData.mesh = "Resources/Models/BetterTree.obj";
     modelData.material = "Resources/Materials/tree.yaml";
-    newEntity.add<SelectComponent>();
+    newEntity.emplace<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.add<GridComponent>(gc);
+    newEntity.emplace<GridComponent>(gc);
 }
 
 void WorldLayer::AddRockBase(
@@ -476,23 +476,23 @@ void WorldLayer::AddRockBase(
 {
     using namespace Sprocket;
 
-    auto newEntity = d_scene.Entities().create();
-    auto& n = newEntity.add<NameComponent>();
+    auto newEntity = apx::create_from(d_scene.Entities());
+    auto& n = newEntity.emplace<NameComponent>();
     n.name = name;
 
-    auto& tr = newEntity.add<Transform3DComponent>();
+    auto& tr = newEntity.emplace<Transform3DComponent>();
     tr.position.y -= Random(0.0f, 0.5f);
     float randomRotation = glm::half_pi<float>() * Random(0, 3);
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
     tr.scale = {1.1f, 1.1f, 1.1f};
 
-    auto& modelData = newEntity.add<ModelComponent>();
+    auto& modelData = newEntity.emplace<ModelComponent>();
     modelData.mesh = "Resources/Models/Rock.obj";
     modelData.material = material;
-    newEntity.add<SelectComponent>();
+    newEntity.emplace<SelectComponent>();
 
     GridComponent gc = {pos.x, pos.y};
-    newEntity.add<GridComponent>(gc);
+    newEntity.emplace<GridComponent>(gc);
 }
 
 void WorldLayer::AddRock(const glm::ivec2& pos)

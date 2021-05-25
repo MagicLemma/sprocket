@@ -10,7 +10,7 @@
 
 namespace Sprocket {
 
-std::string Name(const ecs::Entity& e) {
+std::string Name(const spkt::entity& e) {
     if (e.has<NameComponent>()) {
         return e.get<NameComponent>().name;
     }
@@ -24,30 +24,30 @@ GameGrid::GameGrid(Window* window)
 {
 }
 
-void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
+void GameGrid::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
-    d_hoveredSquare = registry.create();
-    auto& n1 = d_hoveredSquare.add<NameComponent>();
-    d_hoveredSquare.add<TemporaryComponent>();
+    d_hoveredSquare = apx::create_from(registry);
+    auto& n1 = d_hoveredSquare.emplace<NameComponent>();
+    d_hoveredSquare.emplace<TemporaryComponent>();
     n1.name = "Hovered Grid Highlighter";
-    auto& tr1 = d_hoveredSquare.add<Transform3DComponent>();
+    auto& tr1 = d_hoveredSquare.emplace<Transform3DComponent>();
     tr1.scale = {0.3f, 0.3f, 0.3f};
-    auto& model1 = d_hoveredSquare.add<ModelComponent>();
+    auto& model1 = d_hoveredSquare.emplace<ModelComponent>();
     model1.mesh = gridSquare;
 
-    d_selectedSquare = registry.create();
-    auto& n2 = d_selectedSquare.add<NameComponent>();
-    d_selectedSquare.add<TemporaryComponent>();
+    d_selectedSquare = apx::create_from(registry);
+    auto& n2 = d_selectedSquare.emplace<NameComponent>();
+    d_selectedSquare.emplace<TemporaryComponent>();
     n2.name = "Selected Grid Highlighter";
-    auto& tr2 = d_selectedSquare.add<Transform3DComponent>();
+    auto& tr2 = d_selectedSquare.emplace<Transform3DComponent>();
     tr2.scale = {0.5f, 0.5f, 0.5f};
-    auto& model2 = d_selectedSquare.add<ModelComponent>();
+    auto& model2 = d_selectedSquare.emplace<ModelComponent>();
     model2.mesh = gridSquare;
 
-    dispatcher.subscribe<ecs::Added<GridComponent>>([&](ev::Event& event, auto&& data) {
-        ecs::Entity entity = data.entity;
+    dispatcher.subscribe<spkt::added<GridComponent>>([&](ev::Event& event, auto&& data) {
+        spkt::entity entity = data.entity;
         auto& transform = entity.get<Transform3DComponent>();
         const auto& gc = entity.get<GridComponent>();
 
@@ -58,7 +58,7 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
         d_gridEntities[{gc.x, gc.z}] = data.entity;
     });
 
-    dispatcher.subscribe<ecs::Removed<GridComponent>>([&](ev::Event& eventm, auto&& data) {
+    dispatcher.subscribe<spkt::removed<GridComponent>>([&](ev::Event& eventm, auto&& data) {
         auto& gc = data.entity.get<GridComponent>();
 
         auto it = d_gridEntities.find({gc.x, gc.z});
@@ -79,7 +79,7 @@ void GameGrid::on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher)
     });
 }
 
-void GameGrid::on_update(ecs::Registry&, const ev::Dispatcher&, double dt)
+void GameGrid::on_update(spkt::registry&, const ev::Dispatcher&, double dt)
 {
     auto& camTr = d_camera.get<Transform3DComponent>();
 
@@ -104,26 +104,26 @@ void GameGrid::on_update(ecs::Registry&, const ev::Dispatcher&, double dt)
     }
 }
 
-ecs::Entity GameGrid::At(const glm::ivec2& pos) const
+spkt::entity GameGrid::At(const glm::ivec2& pos) const
 {
     auto it = d_gridEntities.find(pos);
     if (it != d_gridEntities.end()) {
         return it->second;
     }
-    return ecs::Null;
+    return spkt::null;
 }
 
-ecs::Entity GameGrid::Hovered() const
+spkt::entity GameGrid::Hovered() const
 {
     return At(d_hovered);
 }
 
-ecs::Entity GameGrid::Selected() const
+spkt::entity GameGrid::Selected() const
 {
     if (d_selected.has_value()) {
         return At(d_selected.value());
     }
-    return ecs::Null;
+    return spkt::null;
 }
 
 }

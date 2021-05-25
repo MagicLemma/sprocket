@@ -9,6 +9,8 @@
 #include "Types.h"
 #include "Hashing.h"
 
+#include "apecs.hpp"
+
 #include <algorithm>
 
 namespace Sprocket {
@@ -44,7 +46,7 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    if (const auto& s = scene.Entities().find<SunComponent>(); s != ecs::Null) {
+    if (auto s = scene.find<SunComponent>(); s.valid()) {
         const auto& sun = s.get<SunComponent>();
         shader.LoadVec3("u_sun_direction", sun.direction);
         shader.LoadVec3("u_sun_colour", sun.colour);
@@ -52,7 +54,7 @@ void UploadUniforms(
     }
 
     // Load ambience to shader
-    if (const auto& a = scene.Entities().find<AmbienceComponent>(); a != ecs::Null) {
+    if (auto a = scene.find<AmbienceComponent>(); a.valid()) {
         const auto& ambience = a.get<AmbienceComponent>();
         shader.LoadVec3("u_ambience_colour", ambience.colour);
         shader.LoadFloat("u_ambience_brightness", ambience.brightness);
@@ -60,8 +62,7 @@ void UploadUniforms(
     
     // Load point lights to shader
     std::size_t i = 0;
-    auto lights = scene.Entities().view<LightComponent, Transform3DComponent>();
-    for (auto entity : lights) {
+    for (auto entity : scene.view<LightComponent, Transform3DComponent>()) {
         if (i < MAX_NUM_LIGHTS) {
             auto position = entity.get<Transform3DComponent>().position;
             auto light = entity.get<LightComponent>();
@@ -162,7 +163,7 @@ void Scene3DRenderer::Draw(
     > commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.Entities().view<ModelComponent, Transform3DComponent>()) {
+    for (auto entity : scene.view<ModelComponent, Transform3DComponent>()) {
         const auto& tc = entity.get<Transform3DComponent>();
         const auto& mc = entity.get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
@@ -191,7 +192,7 @@ void Scene3DRenderer::Draw(
     }
 
     d_animatedShader.Bind();
-    for (auto entity : scene.Entities().view<ModelComponent>()) {
+    for (auto entity : scene.view<ModelComponent>()) {
         const auto& tc = entity.get<Transform3DComponent>();
         const auto& mc = entity.get<ModelComponent>();
         if (mc.mesh.empty()) { continue; }
@@ -222,7 +223,7 @@ void Scene3DRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void Scene3DRenderer::Draw(const ecs::Entity& camera, Scene& scene)
+void Scene3DRenderer::Draw(spkt::entity camera, Scene& scene)
 {
     glm::mat4 proj = MakeProj(camera);
     glm::mat4 view = MakeView(camera);

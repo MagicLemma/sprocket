@@ -20,7 +20,6 @@ find_package(lua REQUIRED)
 find_package(SFML CONFIG REQUIRED system audio)
 find_package(yaml-cpp CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
-find_package(cppcoro CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
@@ -104,7 +103,6 @@ target_link_libraries(Sprocket PUBLIC
                       sfml-system
                       sfml-audio
                       yaml-cpp
-                      cppcoro
                       ${LUA_LIBRARIES})
 
 target_link_libraries(Sprocket PRIVATE asio asio::asio)
@@ -126,6 +124,7 @@ target_include_directories(Sprocket PUBLIC
                            ./Scripting
                            ./UI
                            ./UI/Font
+                           ./Vendor/apecs
                            ${STB_INCLUDE_DIR}
                            ${LUA_INCLUDE_DIR}
                            ${SFML_INCLUDE_DIR})

@@ -175,7 +175,7 @@ void* Converter<void*>::read(lua_State* L, int& read_ptr)
 }
 
 
-ecs::Entity Converter<ecs::Entity>::pop(lua_State* L)
+spkt::entity Converter<spkt::entity>::pop(lua_State* L)
 {
     int ptr = -dimension;
     auto ret = read(L, ptr);
@@ -183,21 +183,21 @@ ecs::Entity Converter<ecs::Entity>::pop(lua_State* L)
     return ret;
 }
 
-int Converter<ecs::Entity>::push(lua_State* L, const ecs::Entity& value)
+int Converter<spkt::entity>::push(lua_State* L, const spkt::entity& value)
 {
-    ecs::Entity* handle = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
+    spkt::entity* handle = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
     *handle = value;
     return dimension;
 }
 
-ecs::Entity Converter<ecs::Entity>::read(lua_State* L, int& read_ptr)
+spkt::entity Converter<spkt::entity>::read(lua_State* L, int& read_ptr)
 {
     assert(lua_isuserdata(L, read_ptr));
-    return *static_cast<ecs::Entity*>(lua_touserdata(L, read_ptr++));
+    return *static_cast<spkt::entity*>(lua_touserdata(L, read_ptr++));
 }
 
 
-ecs::Identifier Converter<ecs::Identifier>::pop(lua_State* L)
+spkt::identifier Converter<spkt::identifier>::pop(lua_State* L)
 {
     int ptr = -dimension;
     auto ret = read(L, ptr);
@@ -205,17 +205,17 @@ ecs::Identifier Converter<ecs::Identifier>::pop(lua_State* L)
     return ret;
 }
 
-int Converter<ecs::Identifier>::push(lua_State* L, const ecs::Identifier& value)
+int Converter<spkt::identifier>::push(lua_State* L, const spkt::identifier& value)
 {
-    ecs::Identifier* handle = static_cast<ecs::Identifier*>(lua_newuserdata(L, sizeof(ecs::Identifier)));
+    spkt::identifier* handle = static_cast<spkt::identifier*>(lua_newuserdata(L, sizeof(spkt::identifier)));
     *handle = value;
     return dimension;
 }
 
-ecs::Identifier Converter<ecs::Identifier>::read(lua_State* L, int& read_ptr)
+spkt::identifier Converter<spkt::identifier>::read(lua_State* L, int& read_ptr)
 {
     assert(lua_isuserdata(L, read_ptr));
-    return *static_cast<ecs::Identifier*>(lua_touserdata(L, read_ptr++));
+    return *static_cast<spkt::identifier*>(lua_touserdata(L, read_ptr++));
 }
 
 

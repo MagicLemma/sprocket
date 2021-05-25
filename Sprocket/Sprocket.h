@@ -43,7 +43,6 @@
 #include "Utility/Maths.h"
 #include "Utility/KeyboardCodes.h"
 #include "Utility/Random.h"
-#include "Utility/SparseSet.h"
 #include "Utility/MouseCodes.h"
 #include "Utility/Stopwatch.h"
 #include "Utility/TypeInfo.h"

@@ -8,6 +8,8 @@
 #include "Components.h"
 #include "Log.h"
 
+#include "apecs.hpp"
+
 #include <lua.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
@@ -60,14 +62,14 @@ bool CheckArgCount(lua_State* L, int argc)
 template <typename T> int _has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+    spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
     lua_pushboolean(L, entity.has<T>());
     return 1;
 }
 
 }
 
-void load_registry_functions(lua::Script& script, ecs::Registry& registry)
+void load_registry_functions(lua::Script& script, spkt::registry& registry)
 {
     lua_State* L = script.native_handle();
     script.set_value("__registry__", &registry);
@@ -75,14 +77,14 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
-        *luaEntity = get_pointer<ecs::Registry>(L, "__registry__")->create();
+        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+        *luaEntity = get_pointer<spkt::registry>(L, "__registry__")->create();
         return 1;
     });
 
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        auto luaEntity = static_cast<spkt::entity*>(lua_touserdata(L, 1));
         luaEntity->destroy();
         return 0;
     });
@@ -90,13 +92,13 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
-    using Generator = cppcoro::generator<ecs::Entity>;
+    using Generator = apx::generator<spkt::entity>;
     using Iterator = typename Generator::iterator;
     static_assert(std::is_trivially_destructible_v<Iterator>);
     
     lua_register(L, "_Each_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<ecs::Registry>(L, "__registry__")->all());
+        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->all());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -136,7 +138,7 @@ void load_registry_functions(lua::Script& script, ecs::Registry& registry)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto iterator = static_cast<Iterator*>(lua_touserdata(L, 1));
 
-        auto luaEntity = static_cast<ecs::Entity*>(lua_newuserdata(L, sizeof(ecs::Entity)));
+        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
         *luaEntity = **iterator;
         return 1;
     });
@@ -238,7 +240,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "_SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         float px = (float)lua_tonumber(L, 2);
         float py = (float)lua_tonumber(L, 3);
         float pz = (float)lua_tonumber(L, 4);
@@ -262,7 +264,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "RotateY", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
 
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         auto& tr = entity.get<Transform3DComponent>();
 
         float yaw = (float)lua_tonumber(L, 2);
@@ -273,7 +275,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "_GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        ecs::Entity entity = *static_cast<ecs::Entity*>(lua_touserdata(L, 1));
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         auto& tr = entity.get<Transform3DComponent>();
         auto o = tr.orientation;
         
@@ -295,7 +297,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "_GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
-        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
         auto& tr = entity.get<Transform3DComponent>();
         return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
@@ -310,7 +312,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
-        ecs::Entity entity = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
         auto& tr = entity.get<Transform3DComponent>();
         float yaw = Converter<float>::read(L, ptr);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
@@ -320,8 +322,8 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
-        ecs::Entity entity1 = Converter<ecs::Entity>::read(L, ptr);
-        ecs::Entity entity2 = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity entity1 = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity2 = Converter<spkt::entity>::read(L, ptr);
         return Converter<bool>::push(L, entity1 == entity2);
     });
 }
@@ -346,7 +348,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(e.has<{{Comp.Name}}>());
 
         int count = 0;
@@ -364,7 +366,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<{{Comp.Name}}>();
         c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
         assert(ptr == {{Comp.Name}}_dimension + 2);
@@ -379,7 +381,7 @@ void load_entity_component_functions(lua::Script& script)
         if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
-        ecs::Entity e = Converter<ecs::Entity>::read(L, ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         assert(!e.has<{{Comp.Name}}>());
 
         {{Comp.Name}} c;

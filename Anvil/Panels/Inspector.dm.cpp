@@ -12,7 +12,7 @@ namespace Sprocket {
 
 void Inspector::Show(Anvil& editor)
 {
-    ecs::Entity entity = editor.Selected();
+    spkt::entity entity = editor.Selected();
 
     if (!editor.Selected().valid()) {
         if (ImGui::Button("New Entity")) {
@@ -55,7 +55,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        ecs::Entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
+        spkt::entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

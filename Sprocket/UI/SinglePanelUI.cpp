@@ -11,8 +11,6 @@
 #include <cassert>
 #include <algorithm>
 
-#include <cpp-itertools.hpp>
-
 namespace Sprocket {
 namespace {
 

@@ -22,5 +22,4 @@ target_link_libraries(SprocketVendor PUBLIC
 
 target_include_directories(SprocketVendor PUBLIC
                            ./imgui
-                           ./ImGuizmo
-                           ./cpp-itertools)
+                           ./ImGuizmo)

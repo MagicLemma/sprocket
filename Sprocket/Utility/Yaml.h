@@ -37,10 +37,10 @@ struct convert<glm::mat4>
 };
 
 template<>
-struct convert<ecs::Identifier>
+struct convert<spkt::identifier>
 {
-    static Node encode(const ecs::Identifier& rhs);
-    static bool decode(const Node& node, ecs::Identifier& rhs);
+    static Node encode(const spkt::identifier& rhs);
+    static bool decode(const Node& node, spkt::identifier& rhs);
 };
 
 }
@@ -51,6 +51,6 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);
-YAML::Emitter& operator<<(YAML::Emitter& out, const ecs::Identifier& i);
+YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::identifier& i);
 
 }

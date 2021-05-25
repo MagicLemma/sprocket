@@ -1,5 +1,6 @@
 #pragma once
 #include "EntitySystem.h"
+#include "ECS.h"
 
 namespace Sprocket {
 
@@ -9,7 +10,7 @@ class CameraSystem : public EntitySystem
 
 public:
     CameraSystem(float aspectRatio);
-    void on_startup(ecs::Registry& registry, ev::Dispatcher& dispatcher) override;
+    void on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher) override;
 };
 
 }

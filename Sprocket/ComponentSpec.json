@@ -552,18 +552,6 @@
                     "Default": 1.0
                 }
             ]
-        },
-        {
-            "Name": "ParentComponent",
-            "DisplayName": "Parent",
-            "Attributes": [
-                {
-                    "Name": "parent",
-                    "DisplayName": "Parent",
-                    "Type": "ecs::Identifier",
-                    "Default": -1
-                }
-            ]
         }
     ]
 }

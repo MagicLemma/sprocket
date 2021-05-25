@@ -13,18 +13,18 @@ namespace Sprocket {
 
 void Inspector::Show(Anvil& editor)
 {
-    ecs::Entity entity = editor.Selected();
+    spkt::entity entity = editor.Selected();
 
     if (!editor.Selected().valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->Entities().create();
+            auto e = apx::create_from(editor.GetScene()->Entities());
             editor.SetSelected(e);
         }
         return;
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.id());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
     if (entity.has<TemporaryComponent>()) {
         auto& c = entity.get<TemporaryComponent>();
@@ -276,17 +276,6 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (entity.has<ParentComponent>()) {
-        auto& c = entity.get<ParentComponent>();
-        if (ImGui::CollapsingHeader("Parent")) {
-            ImGui::PushID(count++);
-            ImGui::Text("Parent: %llu", c.parent);
-            
-            if (ImGui::Button("Delete")) { entity.remove<ParentComponent>(); }
-            ImGui::PopID();
-        }
-    }
-
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -370,15 +359,11 @@ void Inspector::Show(Anvil& editor)
             MeshAnimationComponent c;
             entity.add<MeshAnimationComponent>(c);
         }
-        if (!entity.has<ParentComponent>() && ImGui::Selectable("Parent")) {
-            ParentComponent c;
-            entity.add<ParentComponent>(c);
-        }
         ImGui::EndMenu();
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        ecs::Entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
+        spkt::entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
         editor.SetSelected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

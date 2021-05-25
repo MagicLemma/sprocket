@@ -1,6 +1,5 @@
 #pragma once
 #include "Maths.h"
-#include "ECS.h"
 #include <queue>
 #include <string>
 

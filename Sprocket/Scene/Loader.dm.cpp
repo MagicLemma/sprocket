@@ -12,15 +12,16 @@
 namespace Sprocket {
 namespace Loader {
 
-void Save(const std::string& file, ecs::Registry* reg)
+void Save(const std::string& file, spkt::registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : reg->all()) {
+    for (auto id : reg->all()) {
+        spkt::entity entity{*reg, id};
         if (entity.has<TemporaryComponent>()) { return; }
         out << YAML::BeginMap;
-        out << YAML::Key << "ID#" << YAML::Value << entity.id();
+        out << YAML::Key << "ID#" << YAML::Value << id;
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (entity.has<{{Comp.Name}}>()) {
             const auto& c = entity.get<{{Comp.Name}}>();
@@ -38,12 +39,13 @@ void Save(const std::string& file, ecs::Registry* reg)
     fout << out.c_str();
 }
 
-void Load(const std::string& file, ecs::Registry* reg)
+void Load(const std::string& file, spkt::registry* reg)
 {
     // Must be a clean scene
     u32 count = 0;
-    for (ecs::Entity e : reg->all()) {
-        if (!e.has<TemporaryComponent>()) ++count;
+    for (auto id : reg->all()) {
+        spkt::entity entity{*reg, id};
+        if (!entity.has<TemporaryComponent>()) ++count;
     }
     assert(count == 0);
 
@@ -58,26 +60,26 @@ void Load(const std::string& file, ecs::Registry* reg)
     }
 
     auto entities = data["Entities"];
-    std::unordered_map<ecs::Identifier, ecs::Identifier> id_remapper;
+    std::unordered_map<spkt::identifier, spkt::identifier> id_remapper;
 
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
     const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
+        if constexpr (std::is_same_v<decltype(param), spkt::identifier>) {
             return id_remapper[param];
         }
         return param;
     };
     
     for (auto entity : entities) {
-        ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
-        ecs::Identifier new_id = reg->create().id();
+        spkt::identifier old_id = entity["ID#"].as<spkt::identifier>();
+        spkt::identifier new_id = reg->create();
         id_remapper[old_id] = new_id;
     }
 
     for (auto entity : entities) {
-        ecs::Identifier old_id = entity["ID#"].as<ecs::Identifier>();
-        ecs::Entity e{reg, id_remapper[old_id]};
+        spkt::identifier old_id = entity["ID#"].as<spkt::identifier>();
+        spkt::entity e{*reg, id_remapper[old_id]};
 #ifdef DATAMATIC_BLOCK SAVABLE=true
         if (auto spec = entity["{{Comp.Name}}"]) {
             {{Comp.Name}} c;
@@ -88,9 +90,9 @@ void Load(const std::string& file, ecs::Registry* reg)
     }
 }
 
-ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
+spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
 {
-    ecs::Entity e = reg->create();
+    spkt::entity e = apx::create_from(*reg);
 #ifdef DATAMATIC_BLOCK
     if (entity.has<{{Comp.Name}}>()) {
         e.add<{{Comp.Name}}>(entity.get<{{Comp.Name}}>());
@@ -99,32 +101,32 @@ ecs::Entity Copy(ecs::Registry* reg, ecs::Entity entity)
     return e;
 }
 
-void Copy(ecs::Registry* source, ecs::Registry* target)
+void Copy(spkt::registry* source, spkt::registry* target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.
-    std::unordered_map<ecs::Identifier, ecs::Identifier> id_remapper;
-    for (auto entity : source->all()) {
-        ecs::Identifier old_id = entity.id();
-        ecs::Identifier new_id = target->create().id();
-        id_remapper[old_id] = new_id;
+    std::unordered_map<spkt::identifier, spkt::identifier> id_remapper;
+    for (auto id : source->all()) {
+        spkt::identifier new_id = target->create();
+        id_remapper[id] = new_id;
     }
 
     const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<decltype(param), ecs::Identifier>) {
+        if constexpr (std::is_same_v<decltype(param), spkt::identifier>) {
             return id_remapper[param];
         }
         return param;
     };
 
-    for (auto entity : source->all()) {
-        ecs::Entity e{target, id_remapper[entity.id()]};
+    for (auto id : source->all()) {
+        spkt::entity src{*source, id};
+        spkt::entity dst{*target, id_remapper[id]};
 #ifdef DATAMATIC_BLOCK
-        if (entity.has<{{Comp.Name}}>()) {
-            const {{Comp.Name}}& source_comp = entity.get<{{Comp.Name}}>();
+        if (src.has<{{Comp.Name}}>()) {
+            const {{Comp.Name}}& source_comp = src.get<{{Comp.Name}}>();
             {{Comp.Name}} target_comp;
             target_comp.{{Attr.Name}} = transform(source_comp.{{Attr.Name}});
-            e.add<{{Comp.Name}}>(target_comp);
+            dst.add<{{Comp.Name}}>(target_comp);
         }
 #endif
     }

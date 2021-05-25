@@ -52,6 +52,7 @@ private:
 	std::unordered_map<std::type_index, std::vector<EventHandler>> d_handlers;
 
 public:
+	
 	template <typename T>
 	void subscribe(const EventHandler& handler)
 	{
@@ -64,6 +65,11 @@ public:
 		d_handlers[typeid(T)].push_back([handler](ev::Event& event) {
 			handler(event, event.get<T>());
 		});
+	}
+
+	void desubscribe_all()
+	{
+		d_handlers.clear();
 	}
 
 	void publish(ev::Event& event) const
