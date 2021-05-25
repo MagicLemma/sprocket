@@ -4,13 +4,13 @@ from Datamatic import Types
 class Inspector(Plugin):
 
     @compmethod
-    def GuizmoSettings(comp, flags):
+    def GuizmoSettings(comp):
         if comp["Name"] == "Transform3DComponent":
             return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
     @attrmethod
-    def Display(attr, flags):
+    def Display(attr):
         name = attr["Name"]
         display = attr["DisplayName"]
         cpp_type = attr["Type"]

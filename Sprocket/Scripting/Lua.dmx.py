@@ -12,7 +12,7 @@ def from_attr(attr):
 class Lua(Plugin):
 
     @compmethod
-    def dimension(comp, flags):
+    def dimension(comp):
         count = 0
         for attr in comp['Attributes']:
             if attr["Flags"]["SCRIPTABLE"]:
@@ -20,7 +20,7 @@ class Lua(Plugin):
         return str(count)
     
     @compmethod
-    def Sig(comp, flags):
+    def Sig(comp):
         return ", ".join(attr['Name'] for attr in comp['Attributes'] if attr["Flags"]["SCRIPTABLE"])
 
     @staticmethod
@@ -45,7 +45,7 @@ class Lua(Plugin):
         return num_attrs, constructor_sig
 
     @compmethod
-    def Getter(comp, flags):
+    def Getter(comp):
         out = ""
         num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
         name = comp["Name"]
@@ -59,7 +59,7 @@ class Lua(Plugin):
         return out
 
     @compmethod
-    def Setter(comp, flags):
+    def Setter(comp):
         out = ""
         num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
         name = comp["Name"]
@@ -82,7 +82,7 @@ class Lua(Plugin):
         return out
 
     @compmethod
-    def Adder(comp, flags):
+    def Adder(comp):
         out = ""
         num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
         name = comp["Name"]
