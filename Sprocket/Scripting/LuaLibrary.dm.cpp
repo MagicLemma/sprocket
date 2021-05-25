@@ -77,8 +77,9 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
-        *luaEntity = get_pointer<spkt::registry>(L, "__registry__")->create();
+        spkt::entity* luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        *luaEntity = spkt::entity(registry, registry.create());
         return 1;
     });
 
@@ -92,7 +93,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
-    using Generator = apx::generator<spkt::entity>;
+    using Generator = apx::generator<spkt::identifier>;
     using Iterator = typename Generator::iterator;
     static_assert(std::is_trivially_destructible_v<Iterator>);
     
@@ -136,10 +137,11 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_Iter_Get", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto iterator = static_cast<Iterator*>(lua_touserdata(L, 1));
+        Iterator iterator = *static_cast<Iterator*>(lua_touserdata(L, 1));
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
 
-        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
-        *luaEntity = **iterator;
+        spkt::entity* luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+        *luaEntity = spkt::entity(registry, *iterator);
         return 1;
     });
 
