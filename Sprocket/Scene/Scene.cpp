@@ -21,9 +21,8 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-    d_dispatcher.desubscribe_all();
-    d_systems.clear();
-    d_lookup.clear();
+    // We need to clear the registry before destruction of the dispatcher and
+    // systems so that they are still valid when clearing the entities.
     d_registry.clear();
 }
 

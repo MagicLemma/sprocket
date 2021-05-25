@@ -52,6 +52,7 @@ private:
 	std::unordered_map<std::type_index, std::vector<EventHandler>> d_handlers;
 
 public:
+	
 	template <typename T>
 	void subscribe(const EventHandler& handler)
 	{
