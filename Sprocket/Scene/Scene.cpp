@@ -19,6 +19,14 @@ Scene::Scene()
     });
 }
 
+Scene::~Scene()
+{
+    d_dispatcher.desubscribe_all();
+    d_systems.clear();
+    d_lookup.clear();
+    d_registry.clear();
+}
+
 void Scene::Load(std::string_view file)
 {
     Loader::Load(std::string(file), &Entities());

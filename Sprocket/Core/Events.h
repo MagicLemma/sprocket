@@ -66,6 +66,11 @@ public:
 		});
 	}
 
+	void desubscribe_all()
+	{
+		d_handlers.clear();
+	}
+
 	void publish(ev::Event& event) const
 	{
 		if (auto it = d_handlers.find(event.type_info()); it != d_handlers.end()) {
