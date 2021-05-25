@@ -16,14 +16,14 @@ void Inspector::Show(Anvil& editor)
 
     if (!editor.Selected().valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->Entities().create();
+            auto e = apx::create_from(editor.GetScene()->Entities());
             editor.SetSelected(e);
         }
         return;
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.id());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
 #ifdef DATAMATIC_BLOCK
     if (entity.has<{{Comp.Name}}>()) {
