@@ -77,8 +77,9 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
-        *luaEntity = get_pointer<spkt::registry>(L, "__registry__")->create();
+        spkt::entity* luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        *luaEntity = spkt::entity(registry, registry.create());
         return 1;
     });
 
@@ -92,7 +93,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
-    using Generator = apx::generator<spkt::entity>;
+    using Generator = apx::generator<spkt::identifier>;
     using Iterator = typename Generator::iterator;
     static_assert(std::is_trivially_destructible_v<Iterator>);
     
@@ -136,10 +137,11 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_Iter_Get", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto iterator = static_cast<Iterator*>(lua_touserdata(L, 1));
+        Iterator iterator = *static_cast<Iterator*>(lua_touserdata(L, 1));
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
 
-        auto luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
-        *luaEntity = **iterator;
+        spkt::entity* luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+        *luaEntity = spkt::entity(registry, *iterator);
         return 1;
     });
 
@@ -334,27 +336,27 @@ void load_entity_component_functions(lua::Script& script)
     lua_State* L = script.native_handle();
 
 #ifdef DATAMATIC_BLOCK SCRIPTABLE=true
-    // Functions for {{Comp.Name}} =====================================================
+    // Functions for {{Comp.name}} =====================================================
 
-    constexpr int {{Comp.Name}}_dimension = {{Comp.Lua.dimension}};
+    constexpr int {{Comp.name}}_dimension = {{Comp.Lua.dimension}};
 
     luaL_dostring(L, R"lua(
-        {{Comp.Name}} = Class(function(self, {{Comp.Lua.Sig}})
-            self.{{Attr.Name}} = {{Attr.Name}}
+        {{Comp.name}} = Class(function(self, {{Comp.Lua.Sig}})
+            self.{{Attr.name}} = {{Attr.name}}
         end)
     )lua");
 
-    lua_register(L, "_Get{{Comp.Name}}", [](lua_State* L) {
+    lua_register(L, "_Get{{Comp.name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
         spkt::entity e = Converter<spkt::entity>::read(L, ptr);
-        assert(e.has<{{Comp.Name}}>());
+        assert(e.has<{{Comp.name}}>());
 
         int count = 0;
-        const auto& c = e.get<{{Comp.Name}}>();
-        count += Converter<{{Attr.Type}}>::push(L, c.{{Attr.Name}});
-        assert(count == {{Comp.Name}}_dimension);
+        const auto& c = e.get<{{Comp.name}}>();
+        count += Converter<{{Attr.type}}>::push(L, c.{{Attr.name}});
+        assert(count == {{Comp.name}}_dimension);
         return count;
     });
 
@@ -362,14 +364,14 @@ void load_entity_component_functions(lua::Script& script)
         {{Comp.Lua.Getter}}
     )lua");
 
-    lua_register(L, "_Set{{Comp.Name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+    lua_register(L, "_Set{{Comp.name}}", [](lua_State* L) {
+        if (!CheckArgCount(L, {{Comp.name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
         spkt::entity e = Converter<spkt::entity>::read(L, ptr);
-        auto& c = e.get<{{Comp.Name}}>();
-        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
-        assert(ptr == {{Comp.Name}}_dimension + 2);
+        auto& c = e.get<{{Comp.name}}>();
+        c.{{Attr.name}} = Converter<{{Attr.type}}>::read(L, ptr);
+        assert(ptr == {{Comp.name}}_dimension + 2);
         return 0;
     });
 
@@ -377,17 +379,17 @@ void load_entity_component_functions(lua::Script& script)
         {{Comp.Lua.Setter}}
     )lua");
 
-    lua_register(L, "_Add{{Comp.Name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp.Name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+    lua_register(L, "_Add{{Comp.name}}", [](lua_State* L) {
+        if (!CheckArgCount(L, {{Comp.name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
         spkt::entity e = Converter<spkt::entity>::read(L, ptr);
-        assert(!e.has<{{Comp.Name}}>());
+        assert(!e.has<{{Comp.name}}>());
 
-        {{Comp.Name}} c;
-        c.{{Attr.Name}} = Converter<{{Attr.Type}}>::read(L, ptr);
-        e.add<{{Comp.Name}}>(c);
-        assert(ptr == {{Comp.Name}}_dimension + 2);
+        {{Comp.name}} c;
+        c.{{Attr.name}} = Converter<{{Attr.type}}>::read(L, ptr);
+        e.add<{{Comp.name}}>(c);
+        assert(ptr == {{Comp.name}}_dimension + 2);
         return 0;
     });
 
@@ -395,7 +397,7 @@ void load_entity_component_functions(lua::Script& script)
         {{Comp.Lua.Adder}}
     )lua");
 
-    lua_register(L, "Has{{Comp.Name}}", &_has_impl<{{Comp.Name}}>);
+    lua_register(L, "Has{{Comp.name}}", &_has_impl<{{Comp.name}}>);
 
 
 #endif

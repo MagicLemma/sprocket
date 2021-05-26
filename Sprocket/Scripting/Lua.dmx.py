@@ -12,7 +12,7 @@ def from_attr(attr):
 class Lua(Plugin):
 
     @compmethod
-    def dimension(comp, flags):
+    def dimension(cls, comp):
         count = 0
         for attr in comp['Attributes']:
             if attr["Flags"]["SCRIPTABLE"]:
@@ -20,11 +20,11 @@ class Lua(Plugin):
         return str(count)
     
     @compmethod
-    def Sig(comp, flags):
+    def Sig(cls, comp):
         return ", ".join(attr['Name'] for attr in comp['Attributes'] if attr["Flags"]["SCRIPTABLE"])
 
-    @staticmethod
-    def get_attr_count_and_sig(comp):
+    @classmethod
+    def get_attr_count_and_sig(cls, comp):
         num_attrs = 0
         constructor_sig = []
         for attr in comp["Attributes"]:
@@ -45,9 +45,9 @@ class Lua(Plugin):
         return num_attrs, constructor_sig
 
     @compmethod
-    def Getter(comp, flags):
+    def Getter(cls, comp):
         out = ""
-        num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
+        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
         name = comp["Name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
@@ -59,9 +59,9 @@ class Lua(Plugin):
         return out
 
     @compmethod
-    def Setter(comp, flags):
+    def Setter(cls, comp):
         out = ""
-        num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
+        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
         name = comp["Name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
@@ -82,9 +82,9 @@ class Lua(Plugin):
         return out
 
     @compmethod
-    def Adder(comp, flags):
+    def Adder(cls, comp):
         out = ""
-        num_attrs, constructor_sig = Lua.get_attr_count_and_sig(comp)
+        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
         name = comp["Name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 

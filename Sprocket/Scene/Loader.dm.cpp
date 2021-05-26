@@ -23,10 +23,10 @@ void Save(const std::string& file, spkt::registry* reg)
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << id;
 #ifdef DATAMATIC_BLOCK SAVABLE=true
-        if (entity.has<{{Comp.Name}}>()) {
-            const auto& c = entity.get<{{Comp.Name}}>();
-            out << YAML::Key << "{{Comp.Name}}" << YAML::BeginMap;
-            out << YAML::Key << "{{Attr.Name}}" << YAML::Value << c.{{Attr.Name}};
+        if (entity.has<{{Comp.name}}>()) {
+            const auto& c = entity.get<{{Comp.name}}>();
+            out << YAML::Key << "{{Comp.name}}" << YAML::BeginMap;
+            out << YAML::Key << "{{Attr.name}}" << YAML::Value << c.{{Attr.name}};
             out << YAML::EndMap;
         }
 #endif
@@ -81,10 +81,10 @@ void Load(const std::string& file, spkt::registry* reg)
         spkt::identifier old_id = entity["ID#"].as<spkt::identifier>();
         spkt::entity e{*reg, id_remapper[old_id]};
 #ifdef DATAMATIC_BLOCK SAVABLE=true
-        if (auto spec = entity["{{Comp.Name}}"]) {
-            {{Comp.Name}} c;
-            c.{{Attr.Name}} = transform(spec["{{Attr.Name}}"].as<{{Attr.Type}}>());
-            e.add<{{Comp.Name}}>(c);
+        if (auto spec = entity["{{Comp.name}}"]) {
+            {{Comp.name}} c;
+            c.{{Attr.name}} = transform(spec["{{Attr.name}}"].as<{{Attr.type}}>());
+            e.add<{{Comp.name}}>(c);
         }
 #endif
     }
@@ -94,8 +94,8 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
 {
     spkt::entity e = apx::create_from(*reg);
 #ifdef DATAMATIC_BLOCK
-    if (entity.has<{{Comp.Name}}>()) {
-        e.add<{{Comp.Name}}>(entity.get<{{Comp.Name}}>());
+    if (entity.has<{{Comp.name}}>()) {
+        e.add<{{Comp.name}}>(entity.get<{{Comp.name}}>());
     }
 #endif
     return e;
@@ -122,11 +122,11 @@ void Copy(spkt::registry* source, spkt::registry* target)
         spkt::entity src{*source, id};
         spkt::entity dst{*target, id_remapper[id]};
 #ifdef DATAMATIC_BLOCK
-        if (src.has<{{Comp.Name}}>()) {
-            const {{Comp.Name}}& source_comp = src.get<{{Comp.Name}}>();
-            {{Comp.Name}} target_comp;
-            target_comp.{{Attr.Name}} = transform(source_comp.{{Attr.Name}});
-            dst.add<{{Comp.Name}}>(target_comp);
+        if (src.has<{{Comp.name}}>()) {
+            const {{Comp.name}}& source_comp = src.get<{{Comp.name}}>();
+            {{Comp.name}} target_comp;
+            target_comp.{{Attr.name}} = transform(source_comp.{{Attr.name}});
+            dst.add<{{Comp.name}}>(target_comp);
         }
 #endif
     }

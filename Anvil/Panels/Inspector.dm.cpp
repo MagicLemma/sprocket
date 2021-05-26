@@ -16,23 +16,23 @@ void Inspector::Show(Anvil& editor)
 
     if (!editor.Selected().valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = editor.GetScene()->Entities().create();
+            auto e = apx::create_from(editor.GetScene()->Entities());
             editor.SetSelected(e);
         }
         return;
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.id());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
 #ifdef DATAMATIC_BLOCK
-    if (entity.has<{{Comp.Name}}>()) {
-        auto& c = entity.get<{{Comp.Name}}>();
-        if (ImGui::CollapsingHeader("{{Comp.DisplayName}}")) {
+    if (entity.has<{{Comp.name}}>()) {
+        auto& c = entity.get<{{Comp.name}}>();
+        if (ImGui::CollapsingHeader("{{Comp.display_name}}")) {
             ImGui::PushID(count++);
             {{Attr.Inspector.Display}};
             {{Comp.Inspector.GuizmoSettings}}
-            if (ImGui::Button("Delete")) { entity.remove<{{Comp.Name}}>(); }
+            if (ImGui::Button("Delete")) { entity.remove<{{Comp.name}}>(); }
             ImGui::PopID();
         }
     }
@@ -46,9 +46,9 @@ void Inspector::Show(Anvil& editor)
 
     if (ImGui::BeginPopup("missing_components_list")) {
 #ifdef DATAMATIC_BLOCK
-        if (!entity.has<{{Comp.Name}}>() && ImGui::Selectable("{{Comp.DisplayName}}")) {
-            {{Comp.Name}} c;
-            entity.add<{{Comp.Name}}>(c);
+        if (!entity.has<{{Comp.name}}>() && ImGui::Selectable("{{Comp.display_name}}")) {
+            {{Comp.name}} c;
+            entity.add<{{Comp.name}}>(c);
         }
 #endif
         ImGui::EndMenu();

@@ -7,9 +7,9 @@ namespace Sprocket{
 
 // Components
 #ifdef DATAMATIC_BLOCK
-struct {{Comp.Name}}
+struct {{Comp.name}}
 {
-    {{Attr.Type}} {{Attr.Name}} = {{Attr.Default}};
+    {{Attr.type}} {{Attr.name}} = {{Attr.default}};
 };
 
 #endif
