@@ -20,13 +20,6 @@ def _(typename, obj) -> str:
 
 
 @register("glm::vec4")
-def _(typename, obj) -> str:
-    assert isinstance(obj, list)
-    assert len(obj) == 4
-    rep = ", ".join(parse("float", val) for val in obj)
-    return f"{typename}{{{rep}}}"
-
-
 @register("glm::quat")
 def _(typename, obj) -> str:
     assert isinstance(obj, list)
