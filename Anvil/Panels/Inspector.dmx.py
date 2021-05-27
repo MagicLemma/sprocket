@@ -1,21 +1,21 @@
 from Datamatic.Plugins import Plugin, compmethod, attrmethod
-from Datamatic import Types
+from Datamatic.Types import parse
 
 class Inspector(Plugin):
 
     @compmethod
     def GuizmoSettings(cls, comp):
-        if comp["Name"] == "Transform3DComponent":
+        if comp["name"] == "Transform3DComponent":
             return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
     @attrmethod
     def Display(cls, attr):
-        name = attr["Name"]
-        display = attr["DisplayName"]
-        cpp_type = attr["Type"]
+        name = attr["name"]
+        display = attr["display_name"]
+        cpp_type = attr["type"]
 
-        data = attr.get("Custom", {})
+        data = attr.get("custom", {})
         cpp_subtype = data.get("Subtype")
         limits = data.get("Limits")
 
@@ -26,7 +26,7 @@ class Inspector(Plugin):
             return f'ImGuiXtra::TextModifiable(c.{name})'
         if cpp_type == "float":
             if limits is not None:
-                a, b = [Types.Float(x) for x in limits]
+                a, b = [parse("float", x) for x in limits]
                 return f'ImGui::SliderFloat("{display}", &c.{name}, {a}, {b})'
             return f'ImGui::DragFloat("{display}", &c.{name}, 0.01f)'
         if cpp_type == "glm::vec2":

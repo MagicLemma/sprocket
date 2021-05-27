@@ -1,97 +1,44 @@
 """
 A module for loading in the Maths types to Datamatic.
 """
-from Datamatic.Types import Type, Float
+from Datamatic.Types import parse
+
+@parse.register("glm::vec2")
+def _(typename, obj) -> str:
+    assert isinstance(obj, list)
+    assert len(obj) == 2
+    rep = ", ".join(parse("float", val) for val in obj)
+    return f"{typename}{{{rep}}}"
 
 
-class Vec2(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::vec2"
+@parse.register("glm::vec3")
+def _(typename, obj) -> str:
+    assert isinstance(obj, list)
+    assert len(obj) == 3
+    rep = ", ".join(parse("float", val) for val in obj)
+    return f"{typename}{{{rep}}}"
 
 
-class Vec3(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y, self.z = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}, {self.z}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::vec3"
+@parse.register("glm::vec4")
+@parse.register("glm::quat")
+def _(typename, obj) -> str:
+    assert isinstance(obj, list)
+    assert len(obj) == 4
+    rep = ", ".join(parse("float", val) for val in obj)
+    return f"{typename}{{{rep}}}"
 
 
-class Vec4(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y, self.z, self.w = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}, {self.z}, {self.w}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::vec4"
+@parse.register("ecs::Identifier")
+def _(typename, obj) -> str:
+    assert isinstance(obj, int)
+    return f'static_cast<{typename}>({obj})'
 
 
-class Quat(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y, self.z, self.w = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}, {self.z}, {self.w}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::quat"
+@parse.register("glm::mat4") # TODO: Implement
+def _(typename, obj) -> str:
+    return f"{typename}{{1.0}}"
 
 
-class EntityID(Type):
-    def __init__(self, val):
-        assert isinstance(val, int)
-        self.val = val
-
-    def __repr__(self):
-        return f'static_cast<{self.typename()}>({self.val})'
-
-    @staticmethod
-    def typename():
-        return "ecs::Identifier"
-
-
-class Mat4(Type): # TODO: Implement
-    def __init__(self, val):
-        pass
-
-    def __repr__(self):
-        return f"{self.typename()}{{1.0}}"
-
-    @staticmethod
-    def typename():
-        return "glm::mat4"
-
-
-class QueueVec3(Type): # TODO: Implement
-    def __init__(self, val):
-        pass
-
-    def __repr__(self):
-        return f"{self.typename()}{{}}"
-
-    @staticmethod
-    def typename():
-        return "std::queue<glm::vec3>"
+@parse.register("std::queue<glm::vec3>") # TODO: Implement
+def _(typename, obj) -> str:
+    return f"{typename}{{}}"
