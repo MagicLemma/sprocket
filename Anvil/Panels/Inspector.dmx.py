@@ -1,5 +1,5 @@
 from Datamatic.Plugins import Plugin, compmethod, attrmethod
-from Datamatic import Types
+from Datamatic.Types import parse_type
 
 class Inspector(Plugin):
 
@@ -26,7 +26,7 @@ class Inspector(Plugin):
             return f'ImGuiXtra::TextModifiable(c.{name})'
         if cpp_type == "float":
             if limits is not None:
-                a, b = [Types.Float(x) for x in limits]
+                a, b = [parse_type("float", x) for x in limits]
                 return f'ImGui::SliderFloat("{display}", &c.{name}, {a}, {b})'
             return f'ImGui::DragFloat("{display}", &c.{name}, 0.01f)'
         if cpp_type == "glm::vec2":

@@ -1,97 +1,56 @@
 """
 A module for loading in the Maths types to Datamatic.
 """
-from Datamatic.Types import Type, Float
+from Datamatic.Types import register, parse_type
+
+@register("glm::vec2")
+def parse(obj) -> str:
+    [x, y] = obj
+    x_repr = parse_type("float", x)
+    y_repr = parse_type("float", y)
+    return f"glm::vec2{{{x_repr}, {y_repr}}}"
 
 
-class Vec2(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::vec2"
+@register("glm::vec3")
+def parse(obj) -> str:
+    [x, y, z] = obj
+    x_repr = parse_type("float", x)
+    y_repr = parse_type("float", y)
+    z_repr = parse_type("float", z)
+    return f"glm::vec3{{{x_repr}, {y_repr}, {z_repr}}}"
 
 
-class Vec3(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y, self.z = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}, {self.z}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::vec3"
+@register("glm::vec4")
+def parse(obj) -> str:
+    [x, y, z, w] = obj
+    x_repr = parse_type("float", x)
+    y_repr = parse_type("float", y)
+    z_repr = parse_type("float", z)
+    w_repr = parse_type("float", w)
+    return f"glm::vec4{{{x_repr}, {y_repr}, {z_repr}, {w_repr}}}"
 
 
-class Vec4(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y, self.z, self.w = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}, {self.z}, {self.w}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::vec4"
+@register("glm::quat")
+def parse(obj) -> str:
+    [x, y, z, w] = obj
+    x_repr = parse_type("float", x)
+    y_repr = parse_type("float", y)
+    z_repr = parse_type("float", z)
+    w_repr = parse_type("float", w)
+    return f"glm::quat{{{x_repr}, {y_repr}, {z_repr}, {w_repr}}}"
 
 
-class Quat(Type):
-    def __init__(self, val):
-        assert isinstance(val, list)
-        assert all([isinstance(x, float) for x in val])
-        self.x, self.y, self.z, self.w = [Float(t) for t in val]
-
-    def __repr__(self):
-        return f'{self.typename()}{{{self.x}, {self.y}, {self.z}, {self.w}}}'
-
-    @staticmethod
-    def typename():
-        return "glm::quat"
+@register("ecs::Identifier")
+def parse(obj) -> str:
+    assert isinstance(obj, int)
+    return f'static_cast<ecs::Identifier>({obj})'
 
 
-class EntityID(Type):
-    def __init__(self, val):
-        assert isinstance(val, int)
-        self.val = val
-
-    def __repr__(self):
-        return f'static_cast<{self.typename()}>({self.val})'
-
-    @staticmethod
-    def typename():
-        return "ecs::Identifier"
+@register("glm::mat4") # TODO: Implement
+def parse(obj) -> str:
+    return "glm::mat4{1.0}"
 
 
-class Mat4(Type): # TODO: Implement
-    def __init__(self, val):
-        pass
-
-    def __repr__(self):
-        return f"{self.typename()}{{1.0}}"
-
-    @staticmethod
-    def typename():
-        return "glm::mat4"
-
-
-class QueueVec3(Type): # TODO: Implement
-    def __init__(self, val):
-        pass
-
-    def __repr__(self):
-        return f"{self.typename()}{{}}"
-
-    @staticmethod
-    def typename():
-        return "std::queue<glm::vec3>"
+@register("std::queue<glm::vec3>") # TODO: Implement
+def parse(obj) -> str:
+    return "std::queue<glm::vec3>{}"
