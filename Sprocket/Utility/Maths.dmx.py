@@ -1,56 +1,51 @@
 """
 A module for loading in the Maths types to Datamatic.
 """
-from Datamatic.Types import register, parse_type
+from Datamatic.Types import register, parse
 
 @register("glm::vec2")
-def parse(typename, obj) -> str:
-    [x, y] = obj
-    x_repr = parse_type("float", x)
-    y_repr = parse_type("float", y)
-    return f"{typename}{{{x_repr}, {y_repr}}}"
+def _(typename, obj) -> str:
+    assert isinstance(obj, list)
+    assert len(obj) == 2
+    rep = ", ".join(parse("float", val) for val in obj)
+    return f"{typename}{{{rep}}}"
 
 
 @register("glm::vec3")
-def parse(typename, obj) -> str:
-    [x, y, z] = obj
-    x_repr = parse_type("float", x)
-    y_repr = parse_type("float", y)
-    z_repr = parse_type("float", z)
-    return f"{typename}{{{x_repr}, {y_repr}, {z_repr}}}"
+def _(typename, obj) -> str:
+    assert isinstance(obj, list)
+    assert len(obj) == 3
+    rep = ", ".join(parse("float", val) for val in obj)
+    return f"{typename}{{{rep}}}"
 
 
 @register("glm::vec4")
-def parse(typename, obj) -> str:
-    [x, y, z, w] = obj
-    x_repr = parse_type("float", x)
-    y_repr = parse_type("float", y)
-    z_repr = parse_type("float", z)
-    w_repr = parse_type("float", w)
-    return f"{typename}{{{x_repr}, {y_repr}, {z_repr}, {w_repr}}}"
+def _(typename, obj) -> str:
+    assert isinstance(obj, list)
+    assert len(obj) == 4
+    rep = ", ".join(parse("float", val) for val in obj)
+    return f"{typename}{{{rep}}}"
 
 
 @register("glm::quat")
-def parse(typename, obj) -> str:
-    [x, y, z, w] = obj
-    x_repr = parse_type("float", x)
-    y_repr = parse_type("float", y)
-    z_repr = parse_type("float", z)
-    w_repr = parse_type("float", w)
-    return f"{typename}{{{x_repr}, {y_repr}, {z_repr}, {w_repr}}}"
+def _(typename, obj) -> str:
+    assert isinstance(obj, list)
+    assert len(obj) == 4
+    rep = ", ".join(parse("float", val) for val in obj)
+    return f"{typename}{{{rep}}}"
 
 
 @register("ecs::Identifier")
-def parse(typename, obj) -> str:
+def _(typename, obj) -> str:
     assert isinstance(obj, int)
     return f'static_cast<{typename}>({obj})'
 
 
 @register("glm::mat4") # TODO: Implement
-def parse(typename, obj) -> str:
+def _(typename, obj) -> str:
     return f"{typename}{{1.0}}"
 
 
 @register("std::queue<glm::vec3>") # TODO: Implement
-def parse(typename, obj) -> str:
-    return "typename{}"
+def _(typename, obj) -> str:
+    return f"{typename}{{}}"

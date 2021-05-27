@@ -1,107 +1,106 @@
 {
-    "Version": 2,
-    "Flags": [
+    "flags": [
         {
-            "Name": "SCRIPTABLE",
-            "Default": true
+            "name": "SCRIPTABLE",
+            "default": true
         },
         {
-            "Name": "SAVABLE",
-            "Default": true
+            "name": "SAVABLE",
+            "default": true
         }
     ],
-    "Components": [
+    "components": [
         {
-            "Name": "TemporaryComponent",
-            "DisplayName": "Temporary",
-            "Flags": {
+            "name": "TemporaryComponent",
+            "display_name": "Temporary",
+            "flags": {
                 "SCRIPTABLE": false
             },
-            "Attributes": []
+            "attributes": []
         },
         {
-            "Name": "NameComponent",
-            "DisplayName": "Name",
-            "Attributes": [
+            "name": "NameComponent",
+            "display_name": "Name",
+            "attributes": [
                 {
-                    "Name": "name",
-                    "DisplayName": "Name",
-                    "Type": "std::string",
-                    "Default": "Entity"
+                    "name": "name",
+                    "display_name": "Name",
+                    "type": "std::string",
+                    "default": "Entity"
                 }
             ]
         },
         {
-            "Name": "Transform2DComponent",
-            "DisplayName": "Transform 2D",
-            "Attributes": [
+            "name": "Transform2DComponent",
+            "display_name": "Transform 2D",
+            "attributes": [
                 {
-                    "Name": "position",
-                    "DisplayName": "Position",
-                    "Type": "glm::vec2",
-                    "Default": [0.0, 0.0]
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec2",
+                    "default": [0.0, 0.0]
                 },
                 {
-                    "Name": "rotation",
-                    "DisplayName": "Rotation",
-                    "Type": "float",
-                    "Default": 0.0
+                    "name": "rotation",
+                    "display_name": "Rotation",
+                    "type": "float",
+                    "default": 0.0
                 },
                 {
-                    "Name": "scale",
-                    "DisplayName": "Scale",
-                    "Type": "glm::vec2",
-                    "Default": [1.0, 1.0]
+                    "name": "scale",
+                    "display_name": "Scale",
+                    "type": "glm::vec2",
+                    "default": [1.0, 1.0]
                 }
             ]
         },
         {
-            "Name": "Transform3DComponent",
-            "DisplayName": "Transform 3D",
-            "Attributes": [
+            "name": "Transform3DComponent",
+            "display_name": "Transform 3D",
+            "attributes": [
                 {
-                    "Name": "position",
-                    "DisplayName": "Position",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0]
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0]
                 },
                 {
-                    "Name": "orientation",
-                    "DisplayName": "Orientation",
-                    "Type": "glm::quat",
-                    "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Flags": {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": [1.0, 0.0, 0.0, 0.0],
+                    "flags": {
                         "SCRIPTABLE": false
                     }
                 },
                 {
-                    "Name": "scale",
-                    "DisplayName": "Scale",
-                    "Type": "glm::vec3",
-                    "Default": [1.0, 1.0, 1.0]
+                    "name": "scale",
+                    "display_name": "Scale",
+                    "type": "glm::vec3",
+                    "default": [1.0, 1.0, 1.0]
                 }
             ]
         },
         {
-            "Name": "ModelComponent",
-            "DisplayName": "Model",
-            "Attributes": [
+            "name": "ModelComponent",
+            "display_name": "Model",
+            "attributes": [
                 {
-                    "Name": "mesh",
-                    "DisplayName": "Mesh",
-                    "Type": "std::string",
-                    "Default": "",
-                    "Custom": {
+                    "name": "mesh",
+                    "display_name": "Mesh",
+                    "type": "std::string",
+                    "default": "",
+                    "custom": {
                         "Subtype": "File",
                         "Filter": "*.obj"
                     }
                 },
                 {
-                    "Name": "material",
-                    "DisplayName": "Material",
-                    "Type": "std::string",
-                    "Default": "",
-                    "Custom": {
+                    "name": "material",
+                    "display_name": "Material",
+                    "type": "std::string",
+                    "default": "",
+                    "custom": {
                         "Subtype": "File",
                         "Filter": "*.yaml"
                     }
@@ -109,420 +108,420 @@
             ] 
         },
         {
-            "Name": "RigidBody3DComponent",
-            "DisplayName": "Rigid Body 3D",
-            "Attributes": [
+            "name": "RigidBody3DComponent",
+            "display_name": "Rigid Body 3D",
+            "attributes": [
                 {
-                    "Name": "velocity",
-                    "DisplayName": "Velocity",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0]
+                    "name": "velocity",
+                    "display_name": "Velocity",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0]
                 },
                 {
-                    "Name": "gravity",
-                    "DisplayName": "Gravity",
-                    "Type": "bool",
-                    "Default": true
+                    "name": "gravity",
+                    "display_name": "Gravity",
+                    "type": "bool",
+                    "default": true
                 },
                 {
-                    "Name": "frozen",
-                    "DisplayName": "Frozen",
-                    "Type": "bool",
-                    "Default": false
+                    "name": "frozen",
+                    "display_name": "Frozen",
+                    "type": "bool",
+                    "default": false
                 },
                 {
-                    "Name": "bounciness",
-                    "DisplayName": "Bounciness",
-                    "Type": "float",
-                    "Default": 0.5,
-                    "Custom": {
+                    "name": "bounciness",
+                    "display_name": "Bounciness",
+                    "type": "float",
+                    "default": 0.5,
+                    "custom": {
                         "Limits": [0.0, 1.0]
                     }
                 },
                 {
-                    "Name": "frictionCoefficient",
-                    "DisplayName": "Friction Coefficient",
-                    "Type": "float",
-                    "Default": 0.3,
-                    "Custom": {
+                    "name": "frictionCoefficient",
+                    "display_name": "Friction Coefficient",
+                    "type": "float",
+                    "default": 0.3,
+                    "custom": {
                         "Limits": [0.0, 1.0]
                     }
                 },
                 {
-                    "Name": "rollingResistance",
-                    "DisplayName": "Rolling Resistance",
-                    "Type": "float",
-                    "Default": 0.0,
-                    "Custom": {
+                    "name": "rollingResistance",
+                    "display_name": "Rolling Resistance",
+                    "type": "float",
+                    "default": 0.0,
+                    "custom": {
                         "Limits": [0.0, 1.0]
                     }
                 },
                 {
-                    "Name": "force",
-                    "DisplayName": "Force",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0],
-                    "Flags": {
+                    "name": "force",
+                    "display_name": "Force",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0],
+                    "flags": {
                         "SAVABLE": false
                     }
                 },
                 {
-                    "Name": "onFloor",
-                    "DisplayName": "OnFloor",
-                    "Type": "bool",
-                    "Default": false,
-                    "Flags": {
+                    "name": "onFloor",
+                    "display_name": "OnFloor",
+                    "type": "bool",
+                    "default": false,
+                    "flags": {
                         "SAVABLE": false
                     }
                 }
             ]
         },
         {
-            "Name": "BoxCollider3DComponent",
-            "DisplayName": "Box Collider 3D",
-            "Attributes": [
+            "name": "BoxCollider3DComponent",
+            "display_name": "Box Collider 3D",
+            "attributes": [
                 {
-                    "Name": "position",
-                    "DisplayName": "Position",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0]
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0]
                 },
                 {
-                    "Name": "orientation",
-                    "DisplayName": "Orientation",
-                    "Type": "glm::quat",
-                    "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Flags": {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": [1.0, 0.0, 0.0, 0.0],
+                    "flags": {
                         "SCRIPTABLE": false
                     }
                 },
                 {
-                    "Name": "mass",
-                    "DisplayName": "Mass",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "mass",
+                    "display_name": "Mass",
+                    "type": "float",
+                    "default": 1.0
                 },
                 {
-                    "Name": "halfExtents",
-                    "DisplayName": "Half Extents",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0]
+                    "name": "halfExtents",
+                    "display_name": "Half Extents",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0]
                 },
                 {
-                    "Name": "applyScale",
-                    "DisplayName": "Apply Scale",
-                    "Type": "bool",
-                    "Default": true
+                    "name": "applyScale",
+                    "display_name": "Apply Scale",
+                    "type": "bool",
+                    "default": true
                 }
             ]
         },
         {
-            "Name": "SphereCollider3DComponent",
-            "DisplayName": "Sphere Collider 3D",
-            "Attributes": [
+            "name": "SphereCollider3DComponent",
+            "display_name": "Sphere Collider 3D",
+            "attributes": [
                 {
-                    "Name": "position",
-                    "DisplayName": "Position",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0]
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0]
                 },
                 {
-                    "Name": "orientation",
-                    "DisplayName": "Orientation",
-                    "Type": "glm::quat",
-                    "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Flags": {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": [1.0, 0.0, 0.0, 0.0],
+                    "flags": {
                         "SCRIPTABLE": false
                     }
                 },
                 {
-                    "Name": "mass",
-                    "DisplayName": "Mass",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "mass",
+                    "display_name": "Mass",
+                    "type": "float",
+                    "default": 1.0
                 },
                 {
-                    "Name": "radius",
-                    "DisplayName": "Radius",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "radius",
+                    "display_name": "Radius",
+                    "type": "float",
+                    "default": 1.0
                 }
             ]
         },
         {
-            "Name": "CapsuleCollider3DComponent",
-            "DisplayName": "Capsule Collider 3D",
-            "Attributes": [
+            "name": "CapsuleCollider3DComponent",
+            "display_name": "Capsule Collider 3D",
+            "attributes": [
                 {
-                    "Name": "position",
-                    "DisplayName": "Position",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0]
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0]
                 },
                 {
-                    "Name": "orientation",
-                    "DisplayName": "Orientation",
-                    "Type": "glm::quat",
-                    "Default": [1.0, 0.0, 0.0, 0.0],
-                    "Flags": {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": [1.0, 0.0, 0.0, 0.0],
+                    "flags": {
                         "SCRIPTABLE": false
                     }
                 },
                 {
-                    "Name": "mass",
-                    "DisplayName": "Mass",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "mass",
+                    "display_name": "Mass",
+                    "type": "float",
+                    "default": 1.0
                 },
                 {
-                    "Name": "radius",
-                    "DisplayName": "Radius",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "radius",
+                    "display_name": "Radius",
+                    "type": "float",
+                    "default": 1.0
                 },
                 {
-                    "Name": "height",
-                    "DisplayName": "Height",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "height",
+                    "display_name": "Height",
+                    "type": "float",
+                    "default": 1.0
                 }
             ]
         },
         {
-            "Name": "ScriptComponent",
-            "DisplayName": "Script",
-            "Attributes": [
+            "name": "ScriptComponent",
+            "display_name": "Script",
+            "attributes": [
                 {
-                    "Name": "script",
-                    "DisplayName": "Script",
-                    "Type": "std::string",
-                    "Default": "",
-                    "Custom": {
+                    "name": "script",
+                    "display_name": "Script",
+                    "type": "std::string",
+                    "default": "",
+                    "custom": {
                         "Subtype": "File",
                         "Filter": "*.lua"
                     }
                 },
                 {
-                    "Name": "active",
-                    "DisplayName": "Active",
-                    "Type": "bool",
-                    "Default": true
+                    "name": "active",
+                    "display_name": "Active",
+                    "type": "bool",
+                    "default": true
                 }
             ]
         },
         {
-            "Name": "Camera3DComponent",
-            "DisplayName": "Camera 3D",
-            "Attributes": [
+            "name": "Camera3DComponent",
+            "display_name": "Camera 3D",
+            "attributes": [
                 {
-                    "Name": "projection",
-                    "DisplayName": "Projection",
-                    "Type": "glm::mat4",
-                    "Default": null,
-                    "Flags": {
+                    "name": "projection",
+                    "display_name": "Projection",
+                    "type": "glm::mat4",
+                    "default": null,
+                    "flags": {
                         "SCRIPTABLE": false,
                         "SAVABLE": false
                     }
                 },
                 {
-                    "Name": "fov",
-                    "DisplayName": "FOV",
-                    "Type": "float",
-                    "Default": 70.0
+                    "name": "fov",
+                    "display_name": "FOV",
+                    "type": "float",
+                    "default": 70.0
                 },
                 {
-                    "Name": "pitch",
-                    "DisplayName": "Pitch",
-                    "Type": "float",
-                    "Default": 0.0
+                    "name": "pitch",
+                    "display_name": "Pitch",
+                    "type": "float",
+                    "default": 0.0
                 }
             ]
         },
         {
-            "Name": "SelectComponent",
-            "DisplayName": "Select",
-            "Attributes": [
+            "name": "SelectComponent",
+            "display_name": "Select",
+            "attributes": [
                 {
-                    "Name": "selected",
-                    "DisplayName": "Selected",
-                    "Type": "bool",
-                    "Default": false,
-                    "Flags": {
+                    "name": "selected",
+                    "display_name": "Selected",
+                    "type": "bool",
+                    "default": false,
+                    "flags": {
                         "SAVABLE": false
                     }
                 },
                 {
-                    "Name": "hovered",
-                    "DisplayName": "Hovered",
-                    "Type": "bool",
-                    "Default": false,
-                    "Flags": {
+                    "name": "hovered",
+                    "display_name": "Hovered",
+                    "type": "bool",
+                    "default": false,
+                    "flags": {
                         "SAVABLE": false
                     }
                 }
             ]
         },
         {
-            "Name": "PathComponent",
-            "DisplayName": "Path",
-            "Attributes": [
+            "name": "PathComponent",
+            "display_name": "Path",
+            "attributes": [
                 {
-                    "Name": "markers",
-                    "DisplayName": "Markers",
-                    "Type": "std::queue<glm::vec3>",
-                    "Default": [],
-                    "Flags": {
+                    "name": "markers",
+                    "display_name": "Markers",
+                    "type": "std::queue<glm::vec3>",
+                    "default": [],
+                    "flags": {
                         "SCRIPTABLE": false,
                         "SAVABLE": false
                     }
                 },
                 {
-                    "Name": "speed",
-                    "DisplayName": "Speed",
-                    "Type": "float",
-                    "Default": 0.0
+                    "name": "speed",
+                    "display_name": "Speed",
+                    "type": "float",
+                    "default": 0.0
                 }
             ]
         },
         {
-            "Name": "GridComponent",
-            "DisplayName": "Grid",
-            "Attributes": [
+            "name": "GridComponent",
+            "display_name": "Grid",
+            "attributes": [
                 {
-                    "Name": "x",
-                    "DisplayName": "X",
-                    "Type": "int",
-                    "Default": 0
+                    "name": "x",
+                    "display_name": "X",
+                    "type": "int",
+                    "default": 0
                 },
                 {
-                    "Name": "z",
-                    "DisplayName": "Z",
-                    "Type": "int",
-                    "Default": 0
+                    "name": "z",
+                    "display_name": "Z",
+                    "type": "int",
+                    "default": 0
                 }
             ]
         },
         {
-            "Name": "LightComponent",
-            "DisplayName": "Light",
-            "Attributes": [
+            "name": "LightComponent",
+            "display_name": "Light",
+            "attributes": [
                 {
-                    "Name": "colour",
-                    "DisplayName": "Colour",
-                    "Type": "glm::vec3",
-                    "Default": [1.0, 1.0, 1.0],
-                    "Custom": {
+                    "name": "colour",
+                    "display_name": "Colour",
+                    "type": "glm::vec3",
+                    "default": [1.0, 1.0, 1.0],
+                    "custom": {
                         "Subtype": "Colour"
                     }
                 },
                 {
-                    "Name": "brightness",
-                    "DisplayName": "Brightness",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "brightness",
+                    "display_name": "Brightness",
+                    "type": "float",
+                    "default": 1.0
                 }
             ]
         },
         {
-            "Name": "SunComponent",
-            "DisplayName": "Sun",
-            "Attributes": [
+            "name": "SunComponent",
+            "display_name": "Sun",
+            "attributes": [
                 {
-                    "Name": "colour",
-                    "DisplayName": "Colour",
-                    "Type": "glm::vec3",
-                    "Default": [1.0, 1.0, 1.0],
-                    "Custom": {
+                    "name": "colour",
+                    "display_name": "Colour",
+                    "type": "glm::vec3",
+                    "default": [1.0, 1.0, 1.0],
+                    "custom": {
                         "Subtype": "Colour"
                     }
                 },
                 {
-                    "Name": "brightness",
-                    "DisplayName": "Brightness",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "brightness",
+                    "display_name": "Brightness",
+                    "type": "float",
+                    "default": 1.0
                 },
                 {
-                    "Name": "direction",
-                    "DisplayName": "Direction",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, -1.0, 0.0]
+                    "name": "direction",
+                    "display_name": "Direction",
+                    "type": "glm::vec3",
+                    "default": [0.0, -1.0, 0.0]
                 },
                 {
-                    "Name": "shadows",
-                    "DisplayName": "Shadows",
-                    "Type": "bool",
-                    "Default": false
+                    "name": "shadows",
+                    "display_name": "Shadows",
+                    "type": "bool",
+                    "default": false
                 }
             ]
         },
         {
-            "Name": "AmbienceComponent",
-            "DisplayName": "Ambience",
-            "Attributes": [
+            "name": "AmbienceComponent",
+            "display_name": "Ambience",
+            "attributes": [
                 {
-                    "Name": "colour",
-                    "DisplayName": "Colour",
-                    "Type": "glm::vec3",
-                    "Default": [1.0, 1.0, 1.0],
-                    "Custom": {
+                    "name": "colour",
+                    "display_name": "Colour",
+                    "type": "glm::vec3",
+                    "default": [1.0, 1.0, 1.0],
+                    "custom": {
                         "Subtype": "Colour"
                     }
                 },
                 {
-                    "Name": "brightness",
-                    "DisplayName": "Brightness",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "brightness",
+                    "display_name": "Brightness",
+                    "type": "float",
+                    "default": 1.0
                 }
             ]
         },
         {
-            "Name": "ParticleComponent",
-            "DisplayName": "Particle",
-            "Attributes": [
+            "name": "ParticleComponent",
+            "display_name": "Particle",
+            "attributes": [
                 {
-                    "Name": "interval",
-                    "DisplayName": "Interval",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "interval",
+                    "display_name": "Interval",
+                    "type": "float",
+                    "default": 1.0
                 },
                 {
-                    "Name": "velocity",
-                    "DisplayName": "Velocity",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, 0.0, 0.0]
+                    "name": "velocity",
+                    "display_name": "Velocity",
+                    "type": "glm::vec3",
+                    "default": [0.0, 0.0, 0.0]
                 },
                 {
-                    "Name": "velocityNoise",
-                    "DisplayName": "Velocity Noise",
-                    "Type": "float",
-                    "Default": 0.0
+                    "name": "velocityNoise",
+                    "display_name": "Velocity Noise",
+                    "type": "float",
+                    "default": 0.0
                 },
                 {
-                    "Name": "acceleration",
-                    "DisplayName": "Acceleration",
-                    "Type": "glm::vec3",
-                    "Default": [0.0, -9.81, 0.0]
+                    "name": "acceleration",
+                    "display_name": "Acceleration",
+                    "type": "glm::vec3",
+                    "default": [0.0, -9.81, 0.0]
                 },
                 {
-                    "Name": "scale",
-                    "DisplayName": "Scale",
-                    "Type": "glm::vec3",
-                    "Default": [1.0, 1.0, 1.0]
+                    "name": "scale",
+                    "display_name": "Scale",
+                    "type": "glm::vec3",
+                    "default": [1.0, 1.0, 1.0]
                 },
                 {
-                    "Name": "life",
-                    "DisplayName": "Life",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "life",
+                    "display_name": "Life",
+                    "type": "float",
+                    "default": 1.0
                 },
                 {
-                    "Name": "accumulator",
-                    "DisplayName": "Accumulator",
-                    "Type": "float",
-                    "Default": 0.0,
-                    "Flags": {
+                    "name": "accumulator",
+                    "display_name": "Accumulator",
+                    "type": "float",
+                    "default": 0.0,
+                    "flags": {
                         "SCRIPTABLE": false,
                         "SAVABLE": false
                     }
@@ -530,26 +529,26 @@
             ]
         },
         {
-            "Name": "MeshAnimationComponent",
-            "DisplayName": "Mesh Animation",
-            "Attributes": [
+            "name": "MeshAnimationComponent",
+            "display_name": "Mesh Animation",
+            "attributes": [
                 {
-                    "Name": "name",
-                    "DisplayName": "Name",
-                    "Type": "std::string",
-                    "Default": ""
+                    "name": "name",
+                    "display_name": "name",
+                    "type": "std::string",
+                    "default": ""
                 },
                 {
-                    "Name": "time",
-                    "DisplayName": "Time",
-                    "Type": "float",
-                    "Default": 0.0
+                    "name": "time",
+                    "display_name": "Time",
+                    "type": "float",
+                    "default": 0.0
                 },
                 {
-                    "Name": "speed",
-                    "DisplayName": "Speed",
-                    "Type": "float",
-                    "Default": 1.0
+                    "name": "speed",
+                    "display_name": "Speed",
+                    "type": "float",
+                    "default": 1.0
                 }
             ]
         }
