@@ -1,7 +1,7 @@
 #include "Console.h"
 #include <Sprocket.h>
 #include <filesystem>
-#include <fmt/core.h>
+#include <format>
 
 namespace Sprocket {
 
@@ -76,19 +76,19 @@ void Console::HandleCommand(std::string_view command)
     }
     else if (command.substr(0, 5) == "echo ") {
         d_consoleLines.push_front({
-            fmt::format(" > {}", command.substr(5)),
+            std::format(" > {}", command.substr(5)),
             glm::vec4{0.7, 0.7, 0.7, 1.0}
         });
     }
     else if (command.substr(0, 4) == "run ") {
         if (command.size() > 4) {  // Script name is at least a single character
             auto name = command.substr(4);
-            auto script_file = fmt::format("Resources/Scripts/{}", name);
+            auto script_file = std::format("Resources/Scripts/{}", name);
             if (std::filesystem::exists(script_file)) {
                 lua::Script script(script_file);
             } else {
                 d_consoleLines.push_front({
-                    fmt::format(" > Could not find script '{}'", name),
+                    std::format(" > Could not find script '{}'", name),
                     glm::vec4{1.0, 0.0, 0.0, 1.0}
                 });
             }

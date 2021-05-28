@@ -7,9 +7,9 @@
 #include "BufferLayout.h"
 
 #include <functional>
-#include <sstream>
 #include <cassert>
 #include <algorithm>
+#include <format>
 
 namespace Sprocket {
 namespace {
@@ -122,7 +122,7 @@ void SinglePanelUI::Slider(std::string_view name,
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(leftColour, {x, y, ratio * width, height});
     cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    cmd.AddText(fmt::format("{}: {:.0f}", name, *value), info.quad, tp);
+    cmd.AddText(std::format("{}: {:.0f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         auto mouse = d_window->GetMousePos();

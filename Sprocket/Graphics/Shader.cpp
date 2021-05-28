@@ -6,10 +6,10 @@
 #include <fstream>
 #include <string>
 #include <filesystem>
+#include <format>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
-#include <fmt/core.h>
 
 namespace Sprocket {
 
@@ -141,7 +141,7 @@ void Shader::LoadMat4(const std::string& name, const glm::mat4& matrix, int coun
 
 std::string ArrayName(std::string_view uniformName, std::size_t index)
 {
-	return fmt::format("{}[{}]", uniformName, index);
+	return std::format("{}[{}]", uniformName, index);
 }
 
 bool Shader::Reload()

@@ -7,10 +7,10 @@
 #include "BufferLayout.h"
 
 #include <functional>
-#include <sstream>
 #include <cassert>
 #include <string_view>
 #include <algorithm>
+#include <format>
 
 #include <fmt/core.h>
 
@@ -246,7 +246,7 @@ void SimpleUI::Slider(std::string_view name,
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(leftColour, {x, y, ratio * width, height});
     cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    cmd.AddText(fmt::format("{}: {:.0f}", name, *value), info.quad, tp);
+    cmd.AddText(std::format("{}: {:.0f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         auto mouse = d_window->GetMousePos();
@@ -269,7 +269,7 @@ void SimpleUI::Dragger(std::string_view name,
 
     auto& cmd = d_engine.GetDrawCommand();
     cmd.AddQuad(colour, info.quad);
-    cmd.AddText(fmt::format("{}:{:.2f}", name, *value), info.quad, tp);
+    cmd.AddText(std::format("{}:{:.2f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
         *value += d_window->GetMouseOffset().x * speed;

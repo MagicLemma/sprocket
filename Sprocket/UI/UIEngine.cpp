@@ -7,12 +7,12 @@
 #include "BufferLayout.h"
 
 #include <functional>
-#include <sstream>
 #include <cassert>
 #include <algorithm>
+#include <ranges>
+#include <format>
 
 #include <glad/glad.h>
-#include <fmt/core.h>
 
 namespace Sprocket {
 namespace {
@@ -154,7 +154,7 @@ WidgetInfo UIEngine::Register(std::string_view name, const glm::vec4& region)
     WidgetInfo info;
     info.quad = ApplyOffset(region);
     
-    std::string prefixedName = fmt::format("{}##{}", d_currentPanel->name, name);
+    std::string prefixedName = std::format("{}##{}", d_currentPanel->name, name);
     std::size_t hash = std::hash<std::string>{}(prefixedName);
     d_currentPanel->widgetRegions.push_back({hash, info.quad});
 
@@ -263,16 +263,13 @@ void UIEngine::MouseClick()
 
     std::size_t moveToFront = 0;
 
-    for (auto iter = d_panelOrder.rbegin(); iter != d_panelOrder.rend(); ++iter) {
-        const auto& panelHash = *iter;
+    for (auto panelHash : std::views::reverse(d_panelOrder)) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (auto iter2 = panel.widgetRegions.rbegin(); iter2 != panel.widgetRegions.rend(); ++iter2) {
-            const auto& quad = *iter2;
-            std::size_t hash = quad.hash;
-            auto clicked = InRegion(mouse, quad.region);
+        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+            auto clicked = InRegion(mouse, region);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
@@ -300,7 +297,7 @@ void UIEngine::MouseClick()
     }
 
     if (moveToFront > 0) {
-        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
+        auto toMove = std::ranges::find(d_panelOrder, moveToFront);
         d_panelOrder.erase(toMove);
         d_panelOrder.push_back(moveToFront);
     }
@@ -311,16 +308,13 @@ void UIEngine::MouseHover()
     bool foundHovered = false;
     glm::vec2 mouse = d_window->GetMousePos();
 
-    for (auto iter = d_panelOrder.rbegin(); iter != d_panelOrder.rend(); ++iter) {
-        const auto& panelHash = *iter;
+    for (auto panelHash : std::views::reverse(d_panelOrder)) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (auto iter2 = panel.widgetRegions.rbegin(); iter2 != panel.widgetRegions.rend(); ++iter2) {
-            const auto& quad = *iter2;
-            std::size_t hash = quad.hash;
-            auto hovered = InRegion(mouse, quad.region);
+        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+            auto hovered = InRegion(mouse, region);
             
             if (!foundHovered && hovered) {
                 foundHovered = true;
@@ -387,8 +381,7 @@ void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType ty
     assert(!d_currentPanel);
     std::size_t hash = std::hash<std::string_view>{}(name);
 
-    auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
-    if (it == d_panelOrder.end()) {
+    if (std::ranges::find(d_panelOrder, hash) == d_panelOrder.end()) {
         d_panelOrder.push_back(hash);
     }
     

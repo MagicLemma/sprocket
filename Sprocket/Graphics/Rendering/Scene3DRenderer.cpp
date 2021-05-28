@@ -12,13 +12,14 @@
 #include "apecs.hpp"
 
 #include <algorithm>
+#include <ranges>
 
 namespace Sprocket {
 namespace {
 
 std::array<glm::mat4, Scene3DRenderer::MAX_BONES> DefaultBoneTransforms() {
     std::array<glm::mat4, Scene3DRenderer::MAX_BONES> arr;
-    std::fill(arr.begin(), arr.end(), glm::mat4(1.0));
+    std::ranges::fill(arr, glm::mat4(1.0));
     return arr;
 };
 
