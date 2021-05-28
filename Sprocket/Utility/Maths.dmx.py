@@ -23,8 +23,3 @@ def _(typename, obj) -> str:
 @parse.register("glm::mat4") # TODO: Implement
 def _(typename, obj) -> str:
     return f"{typename}{{1.0}}"
-
-
-@parse.register("std::queue<glm::vec3>") # TODO: Implement
-def _(typename, obj) -> str:
-    return f"{typename}{{}}"
