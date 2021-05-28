@@ -10,6 +10,7 @@
 #include <sstream>
 #include <cassert>
 #include <algorithm>
+#include <ranges>
 
 #include <glad/glad.h>
 #include <fmt/core.h>
@@ -263,16 +264,13 @@ void UIEngine::MouseClick()
 
     std::size_t moveToFront = 0;
 
-    for (auto iter = d_panelOrder.rbegin(); iter != d_panelOrder.rend(); ++iter) {
-        const auto& panelHash = *iter;
+    for (auto panelHash : std::views::reverse(d_panelOrder)) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (auto iter2 = panel.widgetRegions.rbegin(); iter2 != panel.widgetRegions.rend(); ++iter2) {
-            const auto& quad = *iter2;
-            std::size_t hash = quad.hash;
-            auto clicked = InRegion(mouse, quad.region);
+        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+            auto clicked = InRegion(mouse, region);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
@@ -311,16 +309,13 @@ void UIEngine::MouseHover()
     bool foundHovered = false;
     glm::vec2 mouse = d_window->GetMousePos();
 
-    for (auto iter = d_panelOrder.rbegin(); iter != d_panelOrder.rend(); ++iter) {
-        const auto& panelHash = *iter;
+    for (auto panelHash : std::views::reverse(d_panelOrder)) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (auto iter2 = panel.widgetRegions.rbegin(); iter2 != panel.widgetRegions.rend(); ++iter2) {
-            const auto& quad = *iter2;
-            std::size_t hash = quad.hash;
-            auto hovered = InRegion(mouse, quad.region);
+        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+            auto hovered = InRegion(mouse, region);
             
             if (!foundHovered && hovered) {
                 foundHovered = true;
