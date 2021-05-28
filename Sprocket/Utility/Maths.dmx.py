@@ -28,6 +28,3 @@ def _(typename, obj) -> str:
 @parse.register("std::queue<glm::vec3>") # TODO: Implement
 def _(typename, obj) -> str:
     return f"{typename}{{}}"
-
-@parse.template_register("std::queue<{}>")
-def _(typename, template_typename, obj):
