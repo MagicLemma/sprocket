@@ -3,6 +3,7 @@ A module for loading in the Maths types to Datamatic.
 """
 from Datamatic.Types import parse
 
+
 @parse.register("glm::vec2", length=2)
 @parse.register("glm::vec3", length=3)
 @parse.register("glm::vec4", length=4)
