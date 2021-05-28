@@ -3,8 +3,8 @@
 #include "FileBrowser.h"
 #include "ImGuiXtra.cpp"
 
-#include <fmt/core.h>
 #include <string_view>
+#include <ranges>
 
 namespace Sprocket {
 namespace {
@@ -94,7 +94,7 @@ void Anvil::OnEvent(ev::Event& event)
 void Anvil::OnUpdate(double dt)
 {
     d_ui.OnUpdate(dt);
-    //d_window->SetWindowName(fmt::format("Anvil: {}", d_sceneFile));
+    //d_window->SetWindowName(std::format("Anvil: {}", d_sceneFile));
 
     // Create the Shadow Map
     //float lambda = 5.0f; // TODO: Calculate the floor intersection point

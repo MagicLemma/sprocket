@@ -7,13 +7,12 @@
 #include "BufferLayout.h"
 
 #include <functional>
-#include <sstream>
 #include <cassert>
 #include <algorithm>
 #include <ranges>
+#include <format>
 
 #include <glad/glad.h>
-#include <fmt/core.h>
 
 namespace Sprocket {
 namespace {
@@ -155,7 +154,7 @@ WidgetInfo UIEngine::Register(std::string_view name, const glm::vec4& region)
     WidgetInfo info;
     info.quad = ApplyOffset(region);
     
-    std::string prefixedName = fmt::format("{}##{}", d_currentPanel->name, name);
+    std::string prefixedName = std::format("{}##{}", d_currentPanel->name, name);
     std::size_t hash = std::hash<std::string>{}(prefixedName);
     d_currentPanel->widgetRegions.push_back({hash, info.quad});
 
@@ -298,7 +297,7 @@ void UIEngine::MouseClick()
     }
 
     if (moveToFront > 0) {
-        auto toMove = std::find(d_panelOrder.begin(), d_panelOrder.end(), moveToFront);
+        auto toMove = std::ranges::find(d_panelOrder, moveToFront);
         d_panelOrder.erase(toMove);
         d_panelOrder.push_back(moveToFront);
     }
@@ -382,8 +381,7 @@ void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType ty
     assert(!d_currentPanel);
     std::size_t hash = std::hash<std::string_view>{}(name);
 
-    auto it = std::find(d_panelOrder.begin(), d_panelOrder.end(), hash);
-    if (it == d_panelOrder.end()) {
+    if (std::ranges::find(d_panelOrder, hash) == d_panelOrder.end()) {
         d_panelOrder.push_back(hash);
     }
     
