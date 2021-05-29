@@ -1,5 +1,4 @@
-from Datamatic.Plugins import Plugin, compmethod, attrmethod
-from Datamatic.Types import parse
+from datamatic import Plugin, compmethod, attrmethod, parse
 
 class Inspector(Plugin):
 

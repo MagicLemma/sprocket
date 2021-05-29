@@ -12,12 +12,12 @@ namespace Sprocket {
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::entity entity = editor.Selected();
+    spkt::entity entity = editor.selected();
 
-    if (!editor.Selected().valid()) {
+    if (!entity.valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = apx::create_from(editor.GetScene()->Entities());
-            editor.SetSelected(e);
+            auto e = apx::create_from(editor.active_scene()->Entities());
+            editor.set_selected(e);
         }
         return;
     }
@@ -56,11 +56,11 @@ void Inspector::Show(Anvil& editor)
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
         spkt::entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
-        editor.SetSelected(copy);
+        editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
         entity.destroy();
-        editor.ClearSelected();
+        editor.clear_selected();
     }
 }
     

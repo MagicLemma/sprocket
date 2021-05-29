@@ -1,7 +1,7 @@
 """
 A module for loading in the Maths types to Datamatic.
 """
-from Datamatic.Types import parse
+from datamatic import parse
 
 
 @parse.register("glm::vec2", length=2)

@@ -1,4 +1,4 @@
-from Datamatic.Plugins import Plugin, compmethod
+from datamatic import Plugin, compmethod
 
 class Lua(Plugin):
 
