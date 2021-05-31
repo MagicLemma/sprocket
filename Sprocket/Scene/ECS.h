@@ -7,7 +7,7 @@
 namespace spkt {
 
 // TODO: Allow for plugins to access the entire spec, so that we can have a
-// {{Comp.Util.comma}} plugin which does not put the comma on the end. We currently
+// {{Comp::Util.comma}} plugin which does not put the comma on the end. We currently
 // have to remove this manually after generating. If the plugin could see the whole spec
 // it would know if the current component is the last one.
 using registry = apx::registry<

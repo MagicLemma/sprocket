@@ -1,9 +1,31 @@
-from datamatic import Plugin, compmethod
+"""
+Plugin for generating Lua code.
+"""
 
-class Lua(Plugin):
+def get_attr_count_and_sig(comp):
+    num_attrs = 0
+    constructor_sig = []
+    for attr in comp["attributes"]:
+        if not attr["flags"]["SCRIPTABLE"]:
+            continue
+        if attr["type"]  == "glm::vec4":
+            constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
+            num_attrs += 4
+        elif attr["type"] == "glm::vec3":
+            constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
+            num_attrs += 3
+        elif attr["type"] == "glm::vec2":
+            constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
+            num_attrs += 2
+        else:
+            constructor_sig.append(f"x{num_attrs}")
+            num_attrs += 1
+    return num_attrs, constructor_sig
 
-    @compmethod
-    def dimension(cls, comp):
+def main(context):
+
+    @context.compmethod("Lua.dimension")
+    def _(comp):
         count = 0
         for attr in comp['attributes']:
             if attr["flags"]["SCRIPTABLE"]:
@@ -14,35 +36,14 @@ class Lua(Plugin):
                     count += 1
         return str(count)
     
-    @compmethod
-    def Sig(cls, comp):
+    @context.compmethod("Lua.Sig")
+    def _(comp):
         return ", ".join(attr['name'] for attr in comp['attributes'] if attr["flags"]["SCRIPTABLE"])
 
-    @classmethod
-    def get_attr_count_and_sig(cls, comp):
-        num_attrs = 0
-        constructor_sig = []
-        for attr in comp["attributes"]:
-            if not attr["flags"]["SCRIPTABLE"]:
-                continue
-            if attr["type"]  == "glm::vec4":
-                constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
-                num_attrs += 4
-            elif attr["type"] == "glm::vec3":
-                constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
-                num_attrs += 3
-            elif attr["type"] == "glm::vec2":
-                constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
-                num_attrs += 2
-            else:
-                constructor_sig.append(f"x{num_attrs}")
-                num_attrs += 1
-        return num_attrs, constructor_sig
-
-    @compmethod
-    def Getter(cls, comp):
+    @context.compmethod("Lua.Getter")
+    def _(comp):
         out = ""
-        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
+        num_attrs, constructor_sig = get_attr_count_and_sig(comp)
         name = comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
@@ -53,10 +54,10 @@ class Lua(Plugin):
         out += indent + "end"
         return out
 
-    @compmethod
-    def Setter(cls, comp):
+    @context.compmethod("Lua.Setter")
+    def _(comp):
         out = ""
-        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
+        num_attrs, constructor_sig = get_attr_count_and_sig(comp)
         name = comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
@@ -76,10 +77,10 @@ class Lua(Plugin):
         out += indent + "end"
         return out
 
-    @compmethod
-    def Adder(cls, comp):
+    @context.compmethod("Lua.Adder")
+    def _(comp):
         out = ""
-        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
+        num_attrs, constructor_sig = get_attr_count_and_sig(comp)
         name = comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 

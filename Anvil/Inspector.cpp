@@ -77,8 +77,8 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.get<ModelComponent>();
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Mesh", editor.GetWindow(), &c.mesh, "*.obj");
-            ImGuiXtra::File("Material", editor.GetWindow(), &c.material, "*.yaml");
+            ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
+            ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
             
             if (ImGui::Button("Delete")) { entity.remove<ModelComponent>(); }
             ImGui::PopID();
@@ -151,7 +151,7 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.get<ScriptComponent>();
         if (ImGui::CollapsingHeader("Script")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Script", editor.GetWindow(), &c.script, "*.lua");
+            ImGuiXtra::File("Script", editor.window(), &c.script, "*.lua");
             ImGui::Checkbox("Active", &c.active);
             
             if (ImGui::Button("Delete")) { entity.remove<ScriptComponent>(); }
@@ -363,7 +363,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        spkt::entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
+        spkt::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

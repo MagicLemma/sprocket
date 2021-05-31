@@ -26,13 +26,13 @@ void Inspector::Show(Anvil& editor)
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
 #ifdef DATAMATIC_BLOCK
-    if (entity.has<{{Comp.name}}>()) {
-        auto& c = entity.get<{{Comp.name}}>();
-        if (ImGui::CollapsingHeader("{{Comp.display_name}}")) {
+    if (entity.has<{{Comp::name}}>()) {
+        auto& c = entity.get<{{Comp::name}}>();
+        if (ImGui::CollapsingHeader("{{Comp::display_name}}")) {
             ImGui::PushID(count++);
-            {{Attr.Inspector.Display}};
-            {{Comp.Inspector.GuizmoSettings}}
-            if (ImGui::Button("Delete")) { entity.remove<{{Comp.name}}>(); }
+            {{Attr::Inspector.Display}};
+            {{Comp::Inspector.GuizmoSettings}}
+            if (ImGui::Button("Delete")) { entity.remove<{{Comp::name}}>(); }
             ImGui::PopID();
         }
     }
@@ -46,16 +46,16 @@ void Inspector::Show(Anvil& editor)
 
     if (ImGui::BeginPopup("missing_components_list")) {
 #ifdef DATAMATIC_BLOCK
-        if (!entity.has<{{Comp.name}}>() && ImGui::Selectable("{{Comp.display_name}}")) {
-            {{Comp.name}} c;
-            entity.add<{{Comp.name}}>(c);
+        if (!entity.has<{{Comp::name}}>() && ImGui::Selectable("{{Comp::display_name}}")) {
+            {{Comp::name}} c;
+            entity.add<{{Comp::name}}>(c);
         }
 #endif
         ImGui::EndMenu();
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        spkt::entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
+        spkt::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
