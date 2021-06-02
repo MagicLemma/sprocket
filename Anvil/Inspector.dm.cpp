@@ -25,7 +25,7 @@ void Inspector::Show(Anvil& editor)
 
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
-DATAMATIC_BLOCK_START
+DATAMATIC_BEGIN
     if (entity.has<{{Comp::name}}>()) {
         auto& c = entity.get<{{Comp::name}}>();
         if (ImGui::CollapsingHeader("{{Comp::display_name}}")) {
@@ -37,7 +37,7 @@ DATAMATIC_BLOCK_START
         }
     }
 
-DATAMATIC_BLOCK_END
+DATAMATIC_END
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -45,12 +45,12 @@ DATAMATIC_BLOCK_END
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-DATAMATIC_BLOCK_START
+DATAMATIC_BEGIN
         if (!entity.has<{{Comp::name}}>() && ImGui::Selectable("{{Comp::display_name}}")) {
             {{Comp::name}} c;
             entity.add<{{Comp::name}}>(c);
         }
-DATAMATIC_BLOCK_END
+DATAMATIC_END
         ImGui::EndMenu();
     }
     ImGui::Separator();

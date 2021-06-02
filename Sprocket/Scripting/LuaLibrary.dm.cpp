@@ -335,7 +335,7 @@ void load_entity_component_functions(lua::Script& script)
 {
     lua_State* L = script.native_handle();
 
-DATAMATIC_BLOCK_START SCRIPTABLE=true
+DATAMATIC_BEGIN SCRIPTABLE=true
     // Functions for {{Comp::name}} =====================================================
 
     constexpr int {{Comp::name}}_dimension = {{Comp::Lua.dimension}};
@@ -400,7 +400,7 @@ DATAMATIC_BLOCK_START SCRIPTABLE=true
     lua_register(L, "Has{{Comp::name}}", &_has_impl<{{Comp::name}}>);
 
 
-DATAMATIC_BLOCK_END
+DATAMATIC_END
 }
 
 }
