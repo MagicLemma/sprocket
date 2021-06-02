@@ -10,9 +10,9 @@ namespace spkt {
 // have to remove this manually after generating. If the plugin could see the whole spec
 // it would know if the current component is the last one.
 using registry = apx::registry<
-#ifdef DATAMATIC_BLOCK
-    Sprocket::{{Comp::name}}{{Comp::if_not_last|,}}
-#endif
+DATAMATIC_BLOCK_START
+    Sprocket::{{Comp::name}}{{Comp::if_not_last(,)}}
+DATAMATIC_BLOCK_END
 >;
 
 using entity = typename registry::handle_type;
