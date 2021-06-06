@@ -2,15 +2,15 @@
 Plugin for the Inspector
 """
 
-def main(context):
-    @context.compmethod("Inspector.GuizmoSettings")
-    def _(comp):
+def main(reg):
+    @reg.compmethod("Inspector.GuizmoSettings")
+    def _(spec, comp):
         if comp["name"] == "Transform3DComponent":
             return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
-    @context.attrmethod("Inspector.Display")
-    def _(attr):
+    @reg.attrmethod("Inspector.Display")
+    def _(spec, attr):
         name = attr["name"]
         display = attr["display_name"]
         cpp_type = attr["type"]
@@ -25,8 +25,8 @@ def main(context):
                 return f'ImGuiXtra::File("{display}", editor.window(), &c.{name}, "{filt}")'
             return f'ImGuiXtra::TextModifiable(c.{name})'
         if cpp_type == "float":
-            if limits is not None:
-                a, b = [context.types.parse("float", x) for x in limits]
+            if limits := data.get("Limits"):
+                a, b = limits
                 return f'ImGui::SliderFloat("{display}", &c.{name}, {a}, {b})'
             return f'ImGui::DragFloat("{display}", &c.{name}, 0.01f)'
         if cpp_type == "glm::vec2":
