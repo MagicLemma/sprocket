@@ -23,16 +23,16 @@ def get_attr_count_and_sig(comp):
 def main(reg):
 
     @reg.compmethod("Lua.dimension")
-    def _(spec, comp):
+    def _(_, comp):
         num_attrs, _ = get_attr_count_and_sig(comp)
         return str(num_attrs)
     
     @reg.compmethod("Lua.Sig")
-    def _(spec, comp):
+    def _(_, comp):
         return ", ".join(attr['name'] for attr in comp['attributes'])
 
     @reg.compmethod("Lua.Getter")
-    def _(spec, comp):
+    def _(_, comp):
         out = ""
         num_attrs, constructor_sig = get_attr_count_and_sig(comp)
         name = comp["name"]
@@ -46,9 +46,8 @@ def main(reg):
         return out
 
     @reg.compmethod("Lua.Setter")
-    def _(spec, comp):
+    def _(_, comp):
         out = ""
-        num_attrs, constructor_sig = get_attr_count_and_sig(comp)
         name = comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
@@ -67,9 +66,8 @@ def main(reg):
         return out
 
     @reg.compmethod("Lua.Adder")
-    def _(spec, comp):
+    def _(_, comp):
         out = ""
-        num_attrs, constructor_sig = get_attr_count_and_sig(comp)
         name = comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
