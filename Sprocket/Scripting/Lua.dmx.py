@@ -2,30 +2,47 @@
 Plugin for generating Lua code.
 """
 
-def get_attr_count_and_sig(comp):
+DIMENSION = {
+    "glm::vec2": 2,
+    "glm::vec3": 3,
+    "glm::vec4": 4,
+    "glm::quat": 4,
+    "int": 1,
+    "float": 1,
+    "double": 1,
+    "bool": 1,
+    "std::string": 1
+}
+
+
+def signature(comp):
     num_attrs = 0
     constructor_sig = []
     for attr in comp["attributes"]:
         if attr["type"]  == "glm::vec4":
             constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
-            num_attrs += 4
         elif attr["type"] == "glm::vec3":
             constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
-            num_attrs += 3
         elif attr["type"] == "glm::vec2":
             constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
-            num_attrs += 2
         else:
             constructor_sig.append(f"x{num_attrs}")
-            num_attrs += 1
-    return num_attrs, constructor_sig
+        num_attrs += DIMENSION[attr["type"]]
+    return constructor_sig
+
+
+def dimension(comp):
+    count = 0
+    for attr in comp["attributes"]:
+        count += DIMENSION[attr["type"]]
+    return count
+
 
 def main(reg):
 
     @reg.compmethod("Lua.dimension")
     def _(_, comp):
-        num_attrs, _ = get_attr_count_and_sig(comp)
-        return str(num_attrs)
+        return str(dimension(comp))
     
     @reg.compmethod("Lua.Sig")
     def _(_, comp):
@@ -34,14 +51,13 @@ def main(reg):
     @reg.compmethod("Lua.Getter")
     def _(_, comp):
         out = ""
-        num_attrs, constructor_sig = get_attr_count_and_sig(comp)
         name = comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Get{name}(entity)\n'
-        pack = indent + "    " + ", ".join([f'x{i}' for i in range(num_attrs)])
+        pack = indent + "    " + ", ".join([f'x{i}' for i in range(dimension(comp))])
         out += pack + f" = _Get{name}(entity)\n"
-        out += indent + f'    return {name}({", ".join(constructor_sig)})\n'
+        out += indent + f'    return {name}({", ".join(signature(comp))})\n'
         out += indent + "end"
         return out
 
