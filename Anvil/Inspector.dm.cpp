@@ -30,8 +30,8 @@ DATAMATIC_BEGIN
         auto& c = entity.get<{{Comp::name}}>();
         if (ImGui::CollapsingHeader("{{Comp::display_name}}")) {
             ImGui::PushID(count++);
-            {{Attr::Inspector.Display}};
-            {{Comp::Inspector.GuizmoSettings}}
+            {{Attr::inspector_display}};
+            {{Comp::inspector_guizmo_settings}}
             if (ImGui::Button("Delete")) { entity.remove<{{Comp::name}}>(); }
             ImGui::PopID();
         }

@@ -3,14 +3,15 @@ Plugin for the Inspector
 """
 
 def main(reg):
-    @reg.compmethod("Inspector.GuizmoSettings")
-    def _(spec, comp):
-        if comp["name"] == "Transform3DComponent":
+    @reg.compmethod
+    def inspector_guizmo_settings(ctx):
+        if ctx.comp["name"] == "Transform3DComponent":
             return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
-    @reg.attrmethod("Inspector.Display")
-    def _(spec, attr):
+    @reg.attrmethod
+    def inspector_display(ctx):
+        attr = ctx.attr
         name = attr["name"]
         display = attr["display_name"]
         cpp_type = attr["type"]

@@ -338,10 +338,10 @@ void load_entity_component_functions(lua::Script& script)
 DATAMATIC_BEGIN SCRIPTABLE=true
     // Functions for {{Comp::name}} =====================================================
 
-    constexpr int {{Comp::name}}_dimension = {{Comp::Lua.dimension}};
+    constexpr int {{Comp::name}}_dimension = {{Comp::lua_dimension}};
 
     luaL_dostring(L, R"lua(
-        {{Comp::name}} = Class(function(self, {{Comp::Lua.Sig}})
+        {{Comp::name}} = Class(function(self, {{Comp::lua_sig}})
             self.{{Attr::name}} = {{Attr::name}}
         end)
     )lua");
@@ -361,7 +361,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::Lua.Getter}}
+        {{Comp::lua_getter}}
     )lua");
 
     lua_register(L, "_Set{{Comp::name}}", [](lua_State* L) {
@@ -376,7 +376,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::Lua.Setter}}
+        {{Comp::lua_setter}}
     )lua");
 
     lua_register(L, "_Add{{Comp::name}}", [](lua_State* L) {
@@ -394,7 +394,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::Lua.Adder}}
+        {{Comp::lua_adder}}
     )lua");
 
     lua_register(L, "Has{{Comp::name}}", &_has_impl<{{Comp::name}}>);
