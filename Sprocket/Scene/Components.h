@@ -1,10 +1,9 @@
-// GENERATED FILE
 #pragma once
 #include "Maths.h"
 #include <queue>
 #include <string>
 
-namespace Sprocket{
+namespace Sprocket {
 
 // Components
 struct TemporaryComponent

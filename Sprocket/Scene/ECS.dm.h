@@ -11,7 +11,7 @@ namespace spkt {
 // it would know if the current component is the last one.
 using registry = apx::registry<
 DATAMATIC_BEGIN
-    Sprocket::{{Comp::name}}{{Comp::if_not_last(,)}}
+    Sprocket::{{Comp::name}}{{Comp::if_not_last(",")}}
 DATAMATIC_END
 >;
 

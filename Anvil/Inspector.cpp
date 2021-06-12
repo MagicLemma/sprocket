@@ -1,4 +1,3 @@
-// GENERATED FILE
 #include "Inspector.h"
 #include "Anvil.h"
 #include "ImGuiXtra.h"

@@ -1,4 +1,3 @@
-// GENERATED FILE
 #pragma once
 #include "Components.h"
 

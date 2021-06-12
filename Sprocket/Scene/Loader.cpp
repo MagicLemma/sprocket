@@ -1,4 +1,3 @@
-// GENERATED FILE
 #include "Loader.h"
 #include "Log.h"
 #include "Components.h"

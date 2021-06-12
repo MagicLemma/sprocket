@@ -3,7 +3,7 @@
 #include <queue>
 #include <string>
 
-namespace Sprocket{
+namespace Sprocket {
 
 // Components
 DATAMATIC_BEGIN
