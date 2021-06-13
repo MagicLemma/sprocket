@@ -355,7 +355,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     luaL_dostring(L, R"lua(
         function Set{{Comp::name}}(entity, c)
-            _Set{{Comp::name}}(entity, {{Comp::lua_unpack("c")}})
+            _Set{{Comp::name}}(entity, {{Comp::attr_list("name", ", ", "c.{}")}})
         end
     )lua");
 
@@ -375,7 +375,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     luaL_dostring(L, R"lua(
         function Add{{Comp::name}}(entity, c)
-            _Add{{Comp::name}}(entity, {{Comp::lua_unpack("c")}})
+            _Add{{Comp::name}}(entity, {{Comp::attr_list("name", ", ", "c.{}")}})
         end
     )lua");
 
