@@ -242,10 +242,9 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_register(L, "SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
-        int ptr = 1;
-        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
-        glm::vec3 p = Converter<glm::vec3>::read(L, ptr);
-        glm::vec3 t = Converter<glm::vec3>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
+        glm::vec3 p = Converter<glm::vec3>::read(L, 2);
+        glm::vec3 t = Converter<glm::vec3>::read(L, 3);
 
         auto& tr = entity.get<Transform3DComponent>();
         tr.position = p;
@@ -281,27 +280,24 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 1;
-        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
         auto& tr = entity.get<Transform3DComponent>();
         return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
 
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 1;
-        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
         auto& tr = entity.get<Transform3DComponent>();
-        float yaw = Converter<float>::read(L, ptr);
+        float yaw = Converter<float>::read(L, 2);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
     });
 
     lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 1;
-        spkt::entity entity1 = Converter<spkt::entity>::read(L, ptr);
-        spkt::entity entity2 = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity1 = Converter<spkt::entity>::read(L, 1);
+        spkt::entity entity2 = Converter<spkt::entity>::read(L, 2);
         return Converter<bool>::push(L, entity1 == entity2);
     });
 }

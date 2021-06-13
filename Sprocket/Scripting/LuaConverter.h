@@ -108,9 +108,6 @@ template <> struct Converter<spkt::identifier>
     static spkt::identifier read(lua_State* L, int index);
 };
 
-// Implement the pull_from for these types when we need them, otherwise we are
-// guessing the API here.
-
 template <> struct Converter<glm::vec2>
 {
     static glm::vec2 pop(lua_State* L);
