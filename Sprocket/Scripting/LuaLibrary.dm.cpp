@@ -317,7 +317,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     constexpr int {{Comp::name}}_dimension = {{Comp::attr_count}};
 
     luaL_dostring(L, R"lua(
-        {{Comp::name}} = Class(function(self, {{Comp::signature}})
+        {{Comp::name}} = Class(function(self, {{Comp::attr_list("name", ", ")}})
             self.{{Attr::name}} = {{Attr::name}}
         end)
     )lua");
@@ -338,8 +338,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     luaL_dostring(L, R"lua(
         function Get{{Comp::name}}(entity)
-            {{Comp::signature}} = _Get{{Comp::name}}(entity)
-            return {{Comp::name}}({{Comp::signature}})
+            return {{Comp::name}}(unpack(_Get{{Comp::name}}(entity)))
         end
     )lua");
 
@@ -356,10 +355,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     luaL_dostring(L, R"lua(
         function Set{{Comp::name}}(entity, c)
-            _Set{{Comp::name}}(
-                entity,
-                c.{{Attr::name}}{{Attr::if_not_last(",")}}
-            )
+            _Set{{Comp::name}}(entity, {{Comp::lua_unpack("c")}})
         end
     )lua");
 
@@ -379,10 +375,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     luaL_dostring(L, R"lua(
         function Add{{Comp::name}}(entity, c)
-            _Add{{Comp::name}}(
-                entity,
-                c.{{Attr::name}}{{Attr::if_not_last(",")}}
-            )
+            _Add{{Comp::name}}(entity, {{Comp::lua_unpack("c")}})
         end
     )lua");
 

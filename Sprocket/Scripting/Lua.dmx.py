@@ -1,9 +1,6 @@
-"""
-Plugin for generating Lua code.
-"""
+""" Plugin for generating Lua code. """
 
 def main(reg):
-    
     @reg.compmethod
-    def signature(ctx):
-        return ", ".join(attr["name"] for attr in ctx.comp['attributes'])
+    def lua_unpack(ctx, objname):
+        return ", ".join(f"{objname}.{attr['name']}" for attr in ctx.comp["attributes"])
