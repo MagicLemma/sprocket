@@ -827,9 +827,3 @@ Entities:
       applyScale: true
     SelectComponent:
       {}
-  - ID#: 163208757248
-    NameComponent:
-      name: VEC3 LUA TEST
-    ScriptComponent:
-      script: D:\dev\Sprocket\Resources\Scripts\vec3_test.lua
-      active: true

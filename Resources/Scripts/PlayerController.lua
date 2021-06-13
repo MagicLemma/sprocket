@@ -81,7 +81,6 @@ function OnMouseButtonPressedEvent(button, action, mods)
     --)
     --AddModelComponent(newEntity, mc)
 
-    -- TODO: Repalce with proper arithmetic
     local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.3, 1, vec3.new(0, 0, 0), false)
     AddRigidBody3DComponent(newEntity, rbc)
 
