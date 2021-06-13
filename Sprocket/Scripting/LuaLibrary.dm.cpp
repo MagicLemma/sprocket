@@ -314,10 +314,10 @@ void load_entity_component_functions(lua::Script& script)
 DATAMATIC_BEGIN SCRIPTABLE=true
     // Functions for {{Comp::name}} =====================================================
 
-    constexpr int {{Comp::name}}_dimension = {{Comp::lua_dimension}};
+    constexpr int {{Comp::name}}_dimension = {{Comp::attr_count}};
 
     luaL_dostring(L, R"lua(
-        {{Comp::name}} = Class(function(self, {{Comp::lua_sig}})
+        {{Comp::name}} = Class(function(self, {{Comp::signature}})
             self.{{Attr::name}} = {{Attr::name}}
         end)
     )lua");
@@ -338,8 +338,8 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     luaL_dostring(L, R"lua(
         function Get{{Comp::name}}(entity)
-            {{Comp::lua_arglist}} = _Get{{Comp::name}}(entity)
-            return {{Comp::name}}({{Comp::lua_arglist}})
+            {{Comp::signature}} = _Get{{Comp::name}}(entity)
+            return {{Comp::name}}({{Comp::signature}})
         end
     )lua");
 
