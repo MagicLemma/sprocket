@@ -6,6 +6,19 @@
 
 namespace Sprocket {
 namespace lua {
+namespace {
+
+glm::vec3* vec3_new(lua_State* L, float x, float y, float z)
+{
+    glm::vec3* vec = (glm::vec3*)lua_newuserdata(L, sizeof(glm::vec3));
+    vec->x = x;
+    vec->y = y;
+    vec->z = z;
+    luaL_setmetatable(L, "vec3");
+    return vec;
+}
+
+}
 
 int Converter<int>::pop(lua_State* L)
 {
@@ -252,18 +265,13 @@ glm::vec3 Converter<glm::vec3>::pop(lua_State* L)
 
 int Converter<glm::vec3>::push(lua_State* L, const glm::vec3& value)
 {
-    Converter<float>::push(L, value.x);
-    Converter<float>::push(L, value.y);
-    Converter<float>::push(L, value.z);
+    vec3_new(L, value.x, value.y, value.z);
     return dimension;
 }
 
 glm::vec3 Converter<glm::vec3>::read(lua_State* L, int& read_ptr)
 {
-    float x = Converter<float>::read(L, read_ptr);
-    float y = Converter<float>::read(L, read_ptr);
-    float z = Converter<float>::read(L, read_ptr);
-    return {x, y, z};
+    return *(glm::vec3*)luaL_checkudata(L, read_ptr, "vec3");
 }
 
 

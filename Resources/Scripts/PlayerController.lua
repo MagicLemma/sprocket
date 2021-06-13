@@ -1,5 +1,6 @@
 function Init(entity)
     local f = GetForwardsDir(entity)
+    print(type(f))
     YAW = -math.asin(f.x)
 
     TIME = 0.0

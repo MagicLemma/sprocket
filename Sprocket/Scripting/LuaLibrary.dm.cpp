@@ -67,6 +67,69 @@ template <typename T> int _has_impl(lua_State* L)
     return 1;
 }
 
+glm::vec3* vec3_new(lua_State* L, float x, float y, float z)
+{
+    glm::vec3* vec = (glm::vec3*)lua_newuserdata(L, sizeof(glm::vec3));
+    vec->x = x;
+    vec->y = y;
+    vec->z = z;
+    luaL_setmetatable(L, "vec3");
+    return vec;
+}
+
+
+}
+
+void load_vec3_functions(lua::Script& script)
+{
+    lua_State* L = script.native_handle();
+
+    luaL_newmetatable(L, "vec3");
+    lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+        std::string_view k = luaL_checkstring(L, 2);
+        if (k == "x") {
+            lua_pushnumber(L, vec->x);
+        }
+        else if (k == "y") {
+            lua_pushnumber(L, vec->y);
+        }
+        else if (k == "z") {
+            lua_pushnumber(L, vec->z);
+        }
+        else {
+            lua_pushnil(L);
+        }
+        return 1;
+    });
+    lua_setfield(L, -2, "__index");
+    lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+        std::string_view k = luaL_checkstring(L, 2);
+        if (k == "x") {
+            vec->x = luaL_checknumber(L, 3);
+            return 0;
+        }
+        else if (k == "y") {
+            vec->y = luaL_checknumber(L, 3);
+            return 0;
+        }
+        else if (k == "z") {
+            vec->z = luaL_checknumber(L, 3);
+            return 0;
+        }
+        return luaL_argerror(L, 2, lua_pushfstring(L, "Invalid option '%s'", k));
+    });
+    lua_setfield(L, -2, "__newindex");
+    lua_pushcfunction(L, [](lua_State* L) {
+        float x = luaL_checknumber(L, 1);
+        float y = luaL_checknumber(L, 2);
+        float z = luaL_checknumber(L, 3);
+        vec3_new(L, x, y, z);
+        return 1;
+    });
+    lua_setfield(L, -2, "new");
+    lua_setglobal(L, "vec3");
 }
 
 void load_registry_functions(lua::Script& script, spkt::registry& registry)
@@ -361,7 +424,10 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::lua_getter}}
+        function Get{{Comp::name}}(entity)
+            {{Comp::lua_arglist}} = _Get{{Comp::name}}(entity)
+            return {{Comp::name}}({{Comp::lua_arglist}})
+        end
     )lua");
 
     lua_register(L, "_Set{{Comp::name}}", [](lua_State* L) {
@@ -376,7 +442,12 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::lua_setter}}
+        function Set{{Comp::name}}(entity, c)
+            _Set{{Comp::name}}(
+                entity
+                c.{{Attr::name}}{{Attr::if_not_last(",")}}
+            )
+        end
     )lua");
 
     lua_register(L, "_Add{{Comp::name}}", [](lua_State* L) {
@@ -394,7 +465,12 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::lua_adder}}
+        function Add{{Comp::name}}(entity, c)
+            _Add{{Comp::name}}(
+                entity
+                c.{{Attr::name}}{{Attr::if_not_last(",")}}
+            )
+        end
     )lua");
 
     lua_register(L, "Has{{Comp::name}}", &_has_impl<{{Comp::name}}>);

@@ -67,6 +67,69 @@ template <typename T> int _has_impl(lua_State* L)
     return 1;
 }
 
+glm::vec3* vec3_new(lua_State* L, float x, float y, float z)
+{
+    glm::vec3* vec = (glm::vec3*)lua_newuserdata(L, sizeof(glm::vec3));
+    vec->x = x;
+    vec->y = y;
+    vec->z = z;
+    luaL_setmetatable(L, "vec3");
+    return vec;
+}
+
+
+}
+
+void load_vec3_functions(lua::Script& script)
+{
+    lua_State* L = script.native_handle();
+
+    luaL_newmetatable(L, "vec3");
+    lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+        std::string_view k = luaL_checkstring(L, 2);
+        if (k == "x") {
+            lua_pushnumber(L, vec->x);
+        }
+        else if (k == "y") {
+            lua_pushnumber(L, vec->y);
+        }
+        else if (k == "z") {
+            lua_pushnumber(L, vec->z);
+        }
+        else {
+            lua_pushnil(L);
+        }
+        return 1;
+    });
+    lua_setfield(L, -2, "__index");
+    lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+        std::string_view k = luaL_checkstring(L, 2);
+        if (k == "x") {
+            vec->x = luaL_checknumber(L, 3);
+            return 0;
+        }
+        else if (k == "y") {
+            vec->y = luaL_checknumber(L, 3);
+            return 0;
+        }
+        else if (k == "z") {
+            vec->z = luaL_checknumber(L, 3);
+            return 0;
+        }
+        return luaL_argerror(L, 2, lua_pushfstring(L, "Invalid option '%s'", k));
+    });
+    lua_setfield(L, -2, "__newindex");
+    lua_pushcfunction(L, [](lua_State* L) {
+        float x = luaL_checknumber(L, 1);
+        float y = luaL_checknumber(L, 2);
+        float z = luaL_checknumber(L, 3);
+        vec3_new(L, x, y, z);
+        return 1;
+    });
+    lua_setfield(L, -2, "new");
+    lua_setglobal(L, "vec3");
 }
 
 void load_registry_functions(lua::Script& script, spkt::registry& registry)
@@ -274,7 +337,7 @@ void load_entity_transformation_functions(lua::Script& script)
         return 0;
     });
 
-    lua_register(L, "_GetForwardsDir", [](lua_State* L) {
+    lua_register(L, "GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
@@ -288,13 +351,6 @@ void load_entity_transformation_functions(lua::Script& script)
 
         return Converter<glm::vec3>::push(L, Maths::Forwards(o));
     });
-
-    luaL_dostring(L, R"lua(
-        function GetForwardsDir(entity)
-            local x, y, z = _GetForwardsDir(entity)
-            return Vec3(x, y, z)
-        end
-    )lua");
 
     lua_register(L, "_GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
@@ -379,7 +435,10 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetNameComponent(entity, c)
-            _SetNameComponent(entity, c.name)
+            _SetNameComponent(
+                entity
+                c.name
+            )
         end
     )lua");
 
@@ -399,7 +458,10 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddNameComponent(entity, c)
-            _AddNameComponent(entity, c.name)
+            _AddNameComponent(
+                entity
+                c.name
+            )
         end
     )lua");
 
@@ -436,8 +498,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetTransform2DComponent(entity)
-            x0, x1, x2, x3, x4 = _GetTransform2DComponent(entity)
-            return Transform2DComponent(Vec3(x0, x1), x2, Vec3(x3, x4))
+            x0, x1, x2 = _GetTransform2DComponent(entity)
+            return Transform2DComponent(x0, x1, x2)
         end
     )lua");
 
@@ -456,7 +518,12 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetTransform2DComponent(entity, c)
-            _SetTransform2DComponent(entity, c.position, c.rotation, c.scale)
+            _SetTransform2DComponent(
+                entity
+                c.position,
+                c.rotation,
+                c.scale
+            )
         end
     )lua");
 
@@ -478,7 +545,12 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddTransform2DComponent(entity, c)
-            _AddTransform2DComponent(entity, c.position, c.rotation, c.scale)
+            _AddTransform2DComponent(
+                entity
+                c.position,
+                c.rotation,
+                c.scale
+            )
         end
     )lua");
 
@@ -513,8 +585,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetTransform3DComponent(entity)
-            x0, x1, x2, x3, x4, x5 = _GetTransform3DComponent(entity)
-            return Transform3DComponent(Vec3(x0, x1, x2), Vec3(x3, x4, x5))
+            x0, x1 = _GetTransform3DComponent(entity)
+            return Transform3DComponent(x0, x1)
         end
     )lua");
 
@@ -532,7 +604,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetTransform3DComponent(entity, c)
-            _SetTransform3DComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
+            _SetTransform3DComponent(
+                entity
+                c.position,
+                c.scale
+            )
         end
     )lua");
 
@@ -553,7 +629,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddTransform3DComponent(entity, c)
-            _AddTransform3DComponent(entity, c.position.x, c.position.y, c.position.z, c.scale.x, c.scale.y, c.scale.z)
+            _AddTransform3DComponent(
+                entity
+                c.position,
+                c.scale
+            )
         end
     )lua");
 
@@ -607,7 +687,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetModelComponent(entity, c)
-            _SetModelComponent(entity, c.mesh, c.material)
+            _SetModelComponent(
+                entity
+                c.mesh,
+                c.material
+            )
         end
     )lua");
 
@@ -628,7 +712,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddModelComponent(entity, c)
-            _AddModelComponent(entity, c.mesh, c.material)
+            _AddModelComponent(
+                entity
+                c.mesh,
+                c.material
+            )
         end
     )lua");
 
@@ -675,8 +763,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetRigidBody3DComponent(entity)
-            x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = _GetRigidBody3DComponent(entity)
-            return RigidBody3DComponent(Vec3(x0, x1, x2), x3, x4, x5, x6, x7, Vec3(x8, x9, x10), x11)
+            x0, x1, x2, x3, x4, x5, x6, x7 = _GetRigidBody3DComponent(entity)
+            return RigidBody3DComponent(x0, x1, x2, x3, x4, x5, x6, x7)
         end
     )lua");
 
@@ -700,7 +788,17 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetRigidBody3DComponent(entity, c)
-            _SetRigidBody3DComponent(entity, c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
+            _SetRigidBody3DComponent(
+                entity
+                c.velocity,
+                c.gravity,
+                c.frozen,
+                c.bounciness,
+                c.frictionCoefficient,
+                c.rollingResistance,
+                c.force,
+                c.onFloor
+            )
         end
     )lua");
 
@@ -727,7 +825,17 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddRigidBody3DComponent(entity, c)
-            _AddRigidBody3DComponent(entity, c.velocity.x, c.velocity.y, c.velocity.z, c.gravity, c.frozen, c.bounciness, c.frictionCoefficient, c.rollingResistance, c.force.x, c.force.y, c.force.z, c.onFloor)
+            _AddRigidBody3DComponent(
+                entity
+                c.velocity,
+                c.gravity,
+                c.frozen,
+                c.bounciness,
+                c.frictionCoefficient,
+                c.rollingResistance,
+                c.force,
+                c.onFloor
+            )
         end
     )lua");
 
@@ -766,8 +874,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetBoxCollider3DComponent(entity)
-            x0, x1, x2, x3, x4, x5, x6, x7 = _GetBoxCollider3DComponent(entity)
-            return BoxCollider3DComponent(Vec3(x0, x1, x2), x3, Vec3(x4, x5, x6), x7)
+            x0, x1, x2, x3 = _GetBoxCollider3DComponent(entity)
+            return BoxCollider3DComponent(x0, x1, x2, x3)
         end
     )lua");
 
@@ -787,7 +895,13 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetBoxCollider3DComponent(entity, c)
-            _SetBoxCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.halfExtents.x, c.halfExtents.y, c.halfExtents.z, c.applyScale)
+            _SetBoxCollider3DComponent(
+                entity
+                c.position,
+                c.mass,
+                c.halfExtents,
+                c.applyScale
+            )
         end
     )lua");
 
@@ -810,7 +924,13 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddBoxCollider3DComponent(entity, c)
-            _AddBoxCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.halfExtents.x, c.halfExtents.y, c.halfExtents.z, c.applyScale)
+            _AddBoxCollider3DComponent(
+                entity
+                c.position,
+                c.mass,
+                c.halfExtents,
+                c.applyScale
+            )
         end
     )lua");
 
@@ -847,8 +967,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetSphereCollider3DComponent(entity)
-            x0, x1, x2, x3, x4 = _GetSphereCollider3DComponent(entity)
-            return SphereCollider3DComponent(Vec3(x0, x1, x2), x3, x4)
+            x0, x1, x2 = _GetSphereCollider3DComponent(entity)
+            return SphereCollider3DComponent(x0, x1, x2)
         end
     )lua");
 
@@ -867,7 +987,12 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetSphereCollider3DComponent(entity, c)
-            _SetSphereCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius)
+            _SetSphereCollider3DComponent(
+                entity
+                c.position,
+                c.mass,
+                c.radius
+            )
         end
     )lua");
 
@@ -889,7 +1014,12 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddSphereCollider3DComponent(entity, c)
-            _AddSphereCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius)
+            _AddSphereCollider3DComponent(
+                entity
+                c.position,
+                c.mass,
+                c.radius
+            )
         end
     )lua");
 
@@ -928,8 +1058,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetCapsuleCollider3DComponent(entity)
-            x0, x1, x2, x3, x4, x5 = _GetCapsuleCollider3DComponent(entity)
-            return CapsuleCollider3DComponent(Vec3(x0, x1, x2), x3, x4, x5)
+            x0, x1, x2, x3 = _GetCapsuleCollider3DComponent(entity)
+            return CapsuleCollider3DComponent(x0, x1, x2, x3)
         end
     )lua");
 
@@ -949,7 +1079,13 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetCapsuleCollider3DComponent(entity, c)
-            _SetCapsuleCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius, c.height)
+            _SetCapsuleCollider3DComponent(
+                entity
+                c.position,
+                c.mass,
+                c.radius,
+                c.height
+            )
         end
     )lua");
 
@@ -972,7 +1108,13 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddCapsuleCollider3DComponent(entity, c)
-            _AddCapsuleCollider3DComponent(entity, c.position.x, c.position.y, c.position.z, c.mass, c.radius, c.height)
+            _AddCapsuleCollider3DComponent(
+                entity
+                c.position,
+                c.mass,
+                c.radius,
+                c.height
+            )
         end
     )lua");
 
@@ -1026,7 +1168,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetScriptComponent(entity, c)
-            _SetScriptComponent(entity, c.script, c.active)
+            _SetScriptComponent(
+                entity
+                c.script,
+                c.active
+            )
         end
     )lua");
 
@@ -1047,7 +1193,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddScriptComponent(entity, c)
-            _AddScriptComponent(entity, c.script, c.active)
+            _AddScriptComponent(
+                entity
+                c.script,
+                c.active
+            )
         end
     )lua");
 
@@ -1101,7 +1251,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetCamera3DComponent(entity, c)
-            _SetCamera3DComponent(entity, c.fov, c.pitch)
+            _SetCamera3DComponent(
+                entity
+                c.fov,
+                c.pitch
+            )
         end
     )lua");
 
@@ -1122,7 +1276,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddCamera3DComponent(entity, c)
-            _AddCamera3DComponent(entity, c.fov, c.pitch)
+            _AddCamera3DComponent(
+                entity
+                c.fov,
+                c.pitch
+            )
         end
     )lua");
 
@@ -1176,7 +1334,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetSelectComponent(entity, c)
-            _SetSelectComponent(entity, c.selected, c.hovered)
+            _SetSelectComponent(
+                entity
+                c.selected,
+                c.hovered
+            )
         end
     )lua");
 
@@ -1197,7 +1359,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddSelectComponent(entity, c)
-            _AddSelectComponent(entity, c.selected, c.hovered)
+            _AddSelectComponent(
+                entity
+                c.selected,
+                c.hovered
+            )
         end
     )lua");
 
@@ -1248,7 +1414,10 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetPathComponent(entity, c)
-            _SetPathComponent(entity, c.speed)
+            _SetPathComponent(
+                entity
+                c.speed
+            )
         end
     )lua");
 
@@ -1268,7 +1437,10 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddPathComponent(entity, c)
-            _AddPathComponent(entity, c.speed)
+            _AddPathComponent(
+                entity
+                c.speed
+            )
         end
     )lua");
 
@@ -1322,7 +1494,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetGridComponent(entity, c)
-            _SetGridComponent(entity, c.x, c.z)
+            _SetGridComponent(
+                entity
+                c.x,
+                c.z
+            )
         end
     )lua");
 
@@ -1343,7 +1519,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddGridComponent(entity, c)
-            _AddGridComponent(entity, c.x, c.z)
+            _AddGridComponent(
+                entity
+                c.x,
+                c.z
+            )
         end
     )lua");
 
@@ -1378,8 +1558,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetLightComponent(entity)
-            x0, x1, x2, x3 = _GetLightComponent(entity)
-            return LightComponent(Vec3(x0, x1, x2), x3)
+            x0, x1 = _GetLightComponent(entity)
+            return LightComponent(x0, x1)
         end
     )lua");
 
@@ -1397,7 +1577,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetLightComponent(entity, c)
-            _SetLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+            _SetLightComponent(
+                entity
+                c.colour,
+                c.brightness
+            )
         end
     )lua");
 
@@ -1418,7 +1602,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddLightComponent(entity, c)
-            _AddLightComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+            _AddLightComponent(
+                entity
+                c.colour,
+                c.brightness
+            )
         end
     )lua");
 
@@ -1457,8 +1645,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetSunComponent(entity)
-            x0, x1, x2, x3, x4, x5, x6, x7 = _GetSunComponent(entity)
-            return SunComponent(Vec3(x0, x1, x2), x3, Vec3(x4, x5, x6), x7)
+            x0, x1, x2, x3 = _GetSunComponent(entity)
+            return SunComponent(x0, x1, x2, x3)
         end
     )lua");
 
@@ -1478,7 +1666,13 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetSunComponent(entity, c)
-            _SetSunComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness, c.direction.x, c.direction.y, c.direction.z, c.shadows)
+            _SetSunComponent(
+                entity
+                c.colour,
+                c.brightness,
+                c.direction,
+                c.shadows
+            )
         end
     )lua");
 
@@ -1501,7 +1695,13 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddSunComponent(entity, c)
-            _AddSunComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness, c.direction.x, c.direction.y, c.direction.z, c.shadows)
+            _AddSunComponent(
+                entity
+                c.colour,
+                c.brightness,
+                c.direction,
+                c.shadows
+            )
         end
     )lua");
 
@@ -1536,8 +1736,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetAmbienceComponent(entity)
-            x0, x1, x2, x3 = _GetAmbienceComponent(entity)
-            return AmbienceComponent(Vec3(x0, x1, x2), x3)
+            x0, x1 = _GetAmbienceComponent(entity)
+            return AmbienceComponent(x0, x1)
         end
     )lua");
 
@@ -1555,7 +1755,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetAmbienceComponent(entity, c)
-            _SetAmbienceComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+            _SetAmbienceComponent(
+                entity
+                c.colour,
+                c.brightness
+            )
         end
     )lua");
 
@@ -1576,7 +1780,11 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddAmbienceComponent(entity, c)
-            _AddAmbienceComponent(entity, c.colour.x, c.colour.y, c.colour.z, c.brightness)
+            _AddAmbienceComponent(
+                entity
+                c.colour,
+                c.brightness
+            )
         end
     )lua");
 
@@ -1619,8 +1827,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetParticleComponent(entity)
-            x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11 = _GetParticleComponent(entity)
-            return ParticleComponent(x0, Vec3(x1, x2, x3), x4, Vec3(x5, x6, x7), Vec3(x8, x9, x10), x11)
+            x0, x1, x2, x3, x4, x5 = _GetParticleComponent(entity)
+            return ParticleComponent(x0, x1, x2, x3, x4, x5)
         end
     )lua");
 
@@ -1642,7 +1850,15 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetParticleComponent(entity, c)
-            _SetParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
+            _SetParticleComponent(
+                entity
+                c.interval,
+                c.velocity,
+                c.velocityNoise,
+                c.acceleration,
+                c.scale,
+                c.life
+            )
         end
     )lua");
 
@@ -1667,7 +1883,15 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddParticleComponent(entity, c)
-            _AddParticleComponent(entity, c.interval, c.velocity.x, c.velocity.y, c.velocity.z, c.velocityNoise, c.acceleration.x, c.acceleration.y, c.acceleration.z, c.scale.x, c.scale.y, c.scale.z, c.life)
+            _AddParticleComponent(
+                entity
+                c.interval,
+                c.velocity,
+                c.velocityNoise,
+                c.acceleration,
+                c.scale,
+                c.life
+            )
         end
     )lua");
 
@@ -1724,7 +1948,12 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetMeshAnimationComponent(entity, c)
-            _SetMeshAnimationComponent(entity, c.name, c.time, c.speed)
+            _SetMeshAnimationComponent(
+                entity
+                c.name,
+                c.time,
+                c.speed
+            )
         end
     )lua");
 
@@ -1746,7 +1975,12 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddMeshAnimationComponent(entity, c)
-            _AddMeshAnimationComponent(entity, c.name, c.time, c.speed)
+            _AddMeshAnimationComponent(
+                entity
+                c.name,
+                c.time,
+                c.speed
+            )
         end
     )lua");
 
