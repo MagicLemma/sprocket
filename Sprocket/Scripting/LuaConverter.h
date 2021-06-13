@@ -127,7 +127,7 @@ template <> struct Converter<spkt::identifier>
 
 template <> struct Converter<glm::vec2>
 {
-    static constexpr int dimension = 2;
+    static constexpr int dimension = 1;
     static glm::vec2 pop(lua_State* L);
     static int push(lua_State* L, const glm::vec2& value);
     static glm::vec2 read(lua_State* L, int& read_ptr);

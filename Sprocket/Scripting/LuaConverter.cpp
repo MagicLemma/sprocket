@@ -18,6 +18,15 @@ glm::vec3* vec3_new(lua_State* L, float x, float y, float z)
     return vec;
 }
 
+glm::vec2* vec2_new(lua_State* L, float x, float y)
+{
+    glm::vec2* vec = (glm::vec2*)lua_newuserdata(L, sizeof(glm::vec2));
+    vec->x = x;
+    vec->y = y;
+    luaL_setmetatable(L, "vec2");
+    return vec;
+}
+
 }
 
 int Converter<int>::pop(lua_State* L)
@@ -242,16 +251,13 @@ glm::vec2 Converter<glm::vec2>::pop(lua_State* L)
 
 int Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)
 {
-    Converter<float>::push(L, value.x);
-    Converter<float>::push(L, value.y);
+    vec2_new(L, value.x, value.y);
     return dimension;
 }
 
 glm::vec2 Converter<glm::vec2>::read(lua_State* L, int& read_ptr)
 {
-    float x = Converter<float>::read(L, read_ptr);
-    float y = Converter<float>::read(L, read_ptr);
-    return {x, y};
+    return *(glm::vec2*)luaL_checkudata(L, read_ptr++, "vec2");
 }
 
 

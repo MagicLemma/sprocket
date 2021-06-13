@@ -56,6 +56,7 @@ void ScriptRunner::on_startup(spkt::registry& registry, ev::Dispatcher& dispatch
         auto data = event.get<spkt::added<ScriptComponent>>();
         lua::Script script(data.entity.get<ScriptComponent>().script);
         lua::load_vec3_functions(script);
+        lua::load_vec2_functions(script);
         lua::load_registry_functions(script, registry);
         lua::load_input_functions(script, d_input);
         lua::load_window_functions(script, *d_window);
