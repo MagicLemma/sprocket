@@ -1,72 +1,77 @@
-from Datamatic.Plugins import Plugin, compmethod
+"""
+Plugin for generating Lua code.
+"""
 
-class Lua(Plugin):
+DIMENSION = {
+    "glm::vec2": 2,
+    "glm::vec3": 3,
+    "glm::vec4": 4,
+    "glm::quat": 4,
+    "int": 1,
+    "float": 1,
+    "double": 1,
+    "bool": 1,
+    "std::string": 1
+}
 
-    @compmethod
-    def dimension(cls, comp):
-        count = 0
-        for attr in comp['attributes']:
-            if attr["flags"]["SCRIPTABLE"]:
-                default_val = attr["default"]
-                if isinstance(default_val, list):
-                    count += len(default_val)
-                else:
-                    count += 1
-        return str(count)
+
+def signature(comp):
+    num_attrs = 0
+    constructor_sig = []
+    for attr in comp["attributes"]:
+        if attr["type"]  == "glm::vec4":
+            constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
+        elif attr["type"] == "glm::vec3":
+            constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
+        elif attr["type"] == "glm::vec2":
+            constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
+        else:
+            constructor_sig.append(f"x{num_attrs}")
+        num_attrs += DIMENSION[attr["type"]]
+    return constructor_sig
+
+
+def dimension(comp):
+    count = 0
+    for attr in comp["attributes"]:
+        count += DIMENSION[attr["type"]]
+    return count
+
+
+def main(reg):
+
+    @reg.compmethod
+    def lua_dimension(ctx):
+        return str(dimension(ctx.comp))
     
-    @compmethod
-    def Sig(cls, comp):
-        return ", ".join(attr['name'] for attr in comp['attributes'] if attr["flags"]["SCRIPTABLE"])
+    @reg.compmethod
+    def lua_sig(ctx):
+        return ", ".join(attr['name'] for attr in ctx.comp['attributes'])
 
-    @classmethod
-    def get_attr_count_and_sig(cls, comp):
-        num_attrs = 0
-        constructor_sig = []
-        for attr in comp["attributes"]:
-            if not attr["flags"]["SCRIPTABLE"]:
-                continue
-            if attr["type"]  == "glm::vec4":
-                constructor_sig.append(f"Vec4(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2}, x{num_attrs+3})")
-                num_attrs += 4
-            elif attr["type"] == "glm::vec3":
-                constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1}, x{num_attrs+2})")
-                num_attrs += 3
-            elif attr["type"] == "glm::vec2":
-                constructor_sig.append(f"Vec3(x{num_attrs}, x{num_attrs+1})")
-                num_attrs += 2
-            else:
-                constructor_sig.append(f"x{num_attrs}")
-                num_attrs += 1
-        return num_attrs, constructor_sig
-
-    @compmethod
-    def Getter(cls, comp):
+    @reg.compmethod
+    def lua_getter(ctx):
         out = ""
-        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
-        name = comp["name"]
+        name = ctx.comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Get{name}(entity)\n'
-        pack = indent + "    " + ", ".join([f'x{i}' for i in range(num_attrs)])
+        pack = indent + "    " + ", ".join([f'x{i}' for i in range(dimension(ctx.comp))])
         out += pack + f" = _Get{name}(entity)\n"
-        out += indent + f'    return {name}({", ".join(constructor_sig)})\n'
+        out += indent + f'    return {name}({", ".join(signature(ctx.comp))})\n'
         out += indent + "end"
         return out
 
-    @compmethod
-    def Setter(cls, comp):
+    @reg.compmethod
+    def lua_setter(ctx):
         out = ""
-        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
-        name = comp["name"]
+        name = ctx.comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Set{name}(entity, c)\n'
         out += indent + f'    _Set{name}(entity, '
         args = []
-        for attr in comp["attributes"]:
+        for attr in ctx.comp["attributes"]:
             n = attr["name"]
-            if not attr["flags"]["SCRIPTABLE"]:
-                continue
             if attr["type"] == "glm::vec3":
                 args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
             else:
@@ -76,20 +81,17 @@ class Lua(Plugin):
         out += indent + "end"
         return out
 
-    @compmethod
-    def Adder(cls, comp):
+    @reg.compmethod
+    def lua_adder(ctx):
         out = ""
-        num_attrs, constructor_sig = cls.get_attr_count_and_sig(comp)
-        name = comp["name"]
+        name = ctx.comp["name"]
         indent = " " * 8 # We indent extra to make the generated C++ file look nicer
 
         out += f'function Add{name}(entity, c)\n'
         out += indent + f'    _Add{name}(entity, '
         args = []
-        for attr in comp["attributes"]:
+        for attr in ctx.comp["attributes"]:
             n = attr["name"]
-            if not attr["flags"]["SCRIPTABLE"]:
-                continue
             if attr["type"] == "glm::vec3":
                 args.extend([f'c.{n}.x', f'c.{n}.y', f'c.{n}.z'])
             else:

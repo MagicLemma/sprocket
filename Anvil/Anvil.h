@@ -12,23 +12,23 @@ namespace Sprocket {
 class Anvil
 {
     Window*      d_window;
-    AssetManager d_assetManager;
+    AssetManager d_asset_manager;
     
-    Camera d_editorCamera;
+    Camera d_editor_camera;
 
     // Rendering
-    Scene3DRenderer d_entityRenderer;
-    SkyboxRenderer d_skyboxRenderer;
-    ColliderRenderer d_colliderRenderer;
+    Scene3DRenderer d_entity_renderer;
+    SkyboxRenderer d_skybox_renderer;
+    ColliderRenderer d_collider_renderer;
 
-    ParticleManager d_particleManager;
+    ParticleManager d_particle_manager;
 
     FrameBuffer d_viewport;
-    glm::ivec2 d_viewportSize;
+    glm::ivec2 d_viewport_size;
 
     DevUI d_ui;
-    bool d_isViewportHovered = false;
-    bool d_isViewportFocused = false;
+    bool d_is_viewport_hovered = false;
+    bool d_is_viewport_focused = false;
 
     // Scene
     std::string d_sceneFile = "Resources/Anvil.yaml";
@@ -47,34 +47,39 @@ class Anvil
     bool d_playingGame = false;
     bool d_showColliders = false;
 
-    void AddEntityToList(const spkt::entity& entity);
+    void add_entity_to_list(const spkt::entity& entity);
     spkt::entity d_selected = spkt::null;
 
     // Panels
     Inspector      d_inspector;
 
-    void MaterialUI(std::string& texture);
+    void material_ui(std::string& texture);
 
-    glm::mat4 GetViewMatrix() const;
-    glm::mat4 GetProjMatrix() const;
+    glm::mat4 get_view_matrix() const;
+    glm::mat4 get_proj_matrix() const;
 
 public:
     Anvil(Window* window);
 
-    void OnEvent(ev::Event& event);
-    void OnUpdate(double dt);
-    void OnRender();
+    void on_event(ev::Event& event);
+    void on_update(double dt);
+    void on_render();
 
-    spkt::entity Selected() { return d_selected; }
-    void SetSelected(spkt::entity e) { d_selected = e; }
-    void ClearSelected() { d_selected = spkt::null; }
+    // Remove these
+    void OnEvent(ev::Event& event) { on_event(event); }
+    void OnUpdate(double dt) { on_update(dt); }
+    void OnRender() { on_render(); }
 
-    bool IsGameRunning() const { return d_playingGame; }
+    spkt::entity selected() { return d_selected; }
+    void set_selected(spkt::entity e) { d_selected = e; }
+    void clear_selected() { d_selected = spkt::null; }
 
-    Camera& GetEditorCamera() { return d_editorCamera; }
-    Window* GetWindow() { return d_window; }
+    bool is_game_running() const { return d_playingGame; }
 
-    std::shared_ptr<Scene> GetScene() { return d_activeScene; }
+    Camera& editor_camera() { return d_editor_camera; }
+    Window* window() { return d_window; }
+
+    std::shared_ptr<Scene> active_scene() { return d_activeScene; }
 };
 
 }

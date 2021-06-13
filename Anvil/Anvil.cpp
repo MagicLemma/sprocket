@@ -30,9 +30,9 @@ bool SubstringCI(std::string_view string, std::string_view substr) {
 
 Anvil::Anvil(Window* window) 
     : d_window(window)
-    , d_assetManager()
-    , d_entityRenderer(&d_assetManager)
-    , d_skyboxRenderer(&d_assetManager)
+    , d_asset_manager()
+    , d_entity_renderer(&d_asset_manager)
+    , d_skybox_renderer(&d_asset_manager)
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
         "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -41,7 +41,7 @@ Anvil::Anvil(Window* window)
         "Resources/Textures/Skybox/Skybox_Z_Pos.png",
         "Resources/Textures/Skybox/Skybox_Z_Neg.png"
     })
-    , d_editorCamera(d_window, {0.0, 0.0, 0.0})
+    , d_editor_camera(d_window, {0.0, 0.0, 0.0})
     , d_viewport(1280, 720)
     , d_ui(d_window)
 {
@@ -57,7 +57,7 @@ Anvil::Anvil(Window* window)
     d_activeScene = d_scene;
 }
 
-void Anvil::OnEvent(ev::Event& event)
+void Anvil::on_event(ev::Event& event)
 {
     if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
         if (data->key == Keyboard::ESC) {
@@ -87,11 +87,11 @@ void Anvil::OnEvent(ev::Event& event)
     d_ui.OnEvent(event);
     d_activeScene->OnEvent(event);
     if (!d_playingGame) {
-        d_editorCamera.OnEvent(event);
+        d_editor_camera.OnEvent(event);
     }
 }
 
-void Anvil::OnUpdate(double dt)
+void Anvil::on_update(double dt)
 {
     d_ui.OnUpdate(dt);
     //d_window->SetWindowName(std::format("Anvil: {}", d_sceneFile));
@@ -107,10 +107,10 @@ void Anvil::OnUpdate(double dt)
     }
 
     d_activeScene->OnUpdate(dt);
-    d_particleManager.OnUpdate(dt);
+    d_particle_manager.OnUpdate(dt);
 
-    if (d_isViewportFocused && !d_playingGame) {
-        d_editorCamera.OnUpdate(dt);
+    if (d_is_viewport_focused && !d_playingGame) {
+        d_editor_camera.OnUpdate(dt);
     }
     
     d_scene->Entities().erase_if<Transform3DComponent>([&](apx::entity entity) {
@@ -119,34 +119,34 @@ void Anvil::OnUpdate(double dt)
     });
 }
 
-glm::mat4 Anvil::GetProjMatrix() const
+glm::mat4 Anvil::get_proj_matrix() const
 {
-    return d_playingGame ? MakeProj(d_runtimeCamera) : d_editorCamera.Proj();
+    return d_playingGame ? MakeProj(d_runtimeCamera) : d_editor_camera.Proj();
 }
 
-glm::mat4 Anvil::GetViewMatrix() const
+glm::mat4 Anvil::get_view_matrix() const
 {
-    return d_playingGame ? MakeView(d_runtimeCamera) : d_editorCamera.View();
+    return d_playingGame ? MakeView(d_runtimeCamera) : d_editor_camera.View();
 }
 
-void Anvil::OnRender()
+void Anvil::on_render()
 {
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
-    if (d_viewportSize != d_viewport.Size() && d_viewportSize.x > 0 && d_viewportSize.y > 0) {
-        d_viewport.SetScreenSize(d_viewportSize.x, d_viewportSize.y);
+    if (d_viewport_size != d_viewport.Size() && d_viewport_size.x > 0 && d_viewport_size.y > 0) {
+        d_viewport.SetScreenSize(d_viewport_size.x, d_viewport_size.y);
     }
 
-    d_entityRenderer.EnableParticles(&d_particleManager);
+    d_entity_renderer.EnableParticles(&d_particle_manager);
     d_viewport.Bind();
 
-    glm::mat4 proj = GetProjMatrix();
-    glm::mat4 view = GetViewMatrix();
+    glm::mat4 proj = get_proj_matrix();
+    glm::mat4 view = get_view_matrix();
 
-    d_entityRenderer.Draw(proj, view, *d_activeScene);
-    d_skyboxRenderer.Draw(d_skybox, proj, view);
+    d_entity_renderer.Draw(proj, view, *d_activeScene);
+    d_skybox_renderer.Draw(d_skybox, proj, view);
     if (d_showColliders) {
-        d_colliderRenderer.Draw(proj, view, *d_activeScene);
+        d_collider_renderer.Draw(proj, view, *d_activeScene);
     }
 
     d_viewport.Unbind();
@@ -199,7 +199,7 @@ void Anvil::OnRender()
                 d_activeScene->Add<PhysicsEngine3D>();
                 d_activeScene->Add<CameraSystem>(d_window->AspectRatio());
                 d_activeScene->Add<ScriptRunner>(d_window);
-                d_activeScene->Add<ParticleSystem>(&d_particleManager);
+                d_activeScene->Add<ParticleSystem>(&d_particle_manager);
                 d_activeScene->Add<AnimationSystem>();
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
@@ -215,18 +215,18 @@ void Anvil::OnRender()
     // VIEWPORT
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
     if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
-        d_isViewportHovered = ImGui::IsWindowHovered();
-        d_isViewportFocused = ImGui::IsWindowFocused();
-        d_ui.BlockEvents(!d_isViewportFocused || !d_isViewportHovered);
+        d_is_viewport_hovered = ImGui::IsWindowHovered();
+        d_is_viewport_focused = ImGui::IsWindowFocused();
+        d_ui.BlockEvents(!d_is_viewport_focused || !d_is_viewport_hovered);
 
         ImVec2 size = ImGui::GetContentRegionAvail();
-        d_viewportSize = glm::ivec2{size.x, size.y};
+        d_viewport_size = glm::ivec2{size.x, size.y};
 
         //auto viewportMouse = ImGuiXtra::GetMousePosWindowCoords();
 
         ImGuiXtra::Image(d_viewport.GetTexture());
 
-        if (!IsGameRunning() && d_selected.valid() && d_selected.has<Transform3DComponent>()) {
+        if (!is_game_running() && d_selected.valid() && d_selected.has<Transform3DComponent>()) {
             auto& c = d_selected.get<Transform3DComponent>();
             auto tr = Maths::Transform(c.position, c.orientation, c.scale);
             ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
@@ -275,7 +275,7 @@ void Anvil::OnRender()
             std::hash<std::string> hasher;
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_assetManager.Materials()) {
+                for (auto& [file, material] : d_asset_manager.Materials()) {
                     ImGui::PushID(hasher(material->file));
                     if (ImGui::CollapsingHeader(material->name.c_str())) {
                         ImGui::Text(file.c_str());
@@ -285,7 +285,7 @@ void Anvil::OnRender()
                         ImGui::Text("Albedo");
                         ImGui::Checkbox("Use Map", &material->useAlbedoMap);
                         if (material->useAlbedoMap) {
-                            MaterialUI(material->albedoMap);
+                            material_ui(material->albedoMap);
                         } else {
                             ImGui::ColorEdit3("##Albedo", &material->albedo.x);
                         }
@@ -296,7 +296,7 @@ void Anvil::OnRender()
                         ImGui::Text("Normal");
                         ImGui::Checkbox("Use Map", &material->useNormalMap);
                         if (material->useNormalMap) {
-                            MaterialUI(material->normalMap);
+                            material_ui(material->normalMap);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
@@ -305,7 +305,7 @@ void Anvil::OnRender()
                         ImGui::Text("Metallic");
                         ImGui::Checkbox("Use Map", &material->useMetallicMap);
                         if (material->useMetallicMap) {
-                            MaterialUI(material->metallicMap);
+                            material_ui(material->metallicMap);
                         } else {
                             ImGui::DragFloat("##Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
                         }
@@ -316,7 +316,7 @@ void Anvil::OnRender()
                         ImGui::Text("Roughness");
                         ImGui::Checkbox("Use Map", &material->useRoughnessMap);
                         if (material->useRoughnessMap) {
-                            MaterialUI(material->roughnessMap);
+                            material_ui(material->roughnessMap);
                         } else {
                             ImGui::DragFloat("##Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
                         }
@@ -346,7 +346,7 @@ void Anvil::OnRender()
     d_ui.EndFrame();    
 }
 
-void Anvil::MaterialUI(std::string& texture)
+void Anvil::material_ui(std::string& texture)
 {
     if (ImGui::Button("X")) {
         texture = "";

@@ -1,4 +1,3 @@
-// GENERATED FILE
 #include "LuaLibrary.h"
 #include "LuaScript.h"
 #include "LuaConverter.h"

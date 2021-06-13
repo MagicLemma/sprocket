@@ -1,16 +1,17 @@
-from Datamatic.Plugins import Plugin, compmethod, attrmethod
-from Datamatic.Types import parse
+"""
+Plugin for the Inspector
+"""
 
-class Inspector(Plugin):
-
-    @compmethod
-    def GuizmoSettings(cls, comp):
-        if comp["name"] == "Transform3DComponent":
+def main(reg):
+    @reg.compmethod
+    def inspector_guizmo_settings(ctx):
+        if ctx.comp["name"] == "Transform3DComponent":
             return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
-    @attrmethod
-    def Display(cls, attr):
+    @reg.attrmethod
+    def inspector_display(ctx):
+        attr = ctx.attr
         name = attr["name"]
         display = attr["display_name"]
         cpp_type = attr["type"]
@@ -22,11 +23,11 @@ class Inspector(Plugin):
         if cpp_type == "std::string":
             if cpp_subtype == "File":
                 filt = data.get("Filter")
-                return f'ImGuiXtra::File("{display}", editor.GetWindow(), &c.{name}, "{filt}")'
+                return f'ImGuiXtra::File("{display}", editor.window(), &c.{name}, "{filt}")'
             return f'ImGuiXtra::TextModifiable(c.{name})'
         if cpp_type == "float":
-            if limits is not None:
-                a, b = [parse("float", x) for x in limits]
+            if limits := data.get("Limits"):
+                a, b = limits
                 return f'ImGui::SliderFloat("{display}", &c.{name}, {a}, {b})'
             return f'ImGui::DragFloat("{display}", &c.{name}, 0.01f)'
         if cpp_type == "glm::vec2":

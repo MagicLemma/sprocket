@@ -1,4 +1,3 @@
-// GENERATED FILE
 #include "Inspector.h"
 #include "Anvil.h"
 #include "ImGuiXtra.h"
@@ -13,12 +12,12 @@ namespace Sprocket {
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::entity entity = editor.Selected();
+    spkt::entity entity = editor.selected();
 
-    if (!editor.Selected().valid()) {
+    if (!entity.valid()) {
         if (ImGui::Button("New Entity")) {
-            auto e = apx::create_from(editor.GetScene()->Entities());
-            editor.SetSelected(e);
+            auto e = apx::create_from(editor.active_scene()->Entities());
+            editor.set_selected(e);
         }
         return;
     }
@@ -77,8 +76,8 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.get<ModelComponent>();
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Mesh", editor.GetWindow(), &c.mesh, "*.obj");
-            ImGuiXtra::File("Material", editor.GetWindow(), &c.material, "*.yaml");
+            ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
+            ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
             
             if (ImGui::Button("Delete")) { entity.remove<ModelComponent>(); }
             ImGui::PopID();
@@ -151,7 +150,7 @@ void Inspector::Show(Anvil& editor)
         auto& c = entity.get<ScriptComponent>();
         if (ImGui::CollapsingHeader("Script")) {
             ImGui::PushID(count++);
-            ImGuiXtra::File("Script", editor.GetWindow(), &c.script, "*.lua");
+            ImGuiXtra::File("Script", editor.window(), &c.script, "*.lua");
             ImGui::Checkbox("Active", &c.active);
             
             if (ImGui::Button("Delete")) { entity.remove<ScriptComponent>(); }
@@ -363,12 +362,12 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        spkt::entity copy = Loader::Copy(&editor.GetScene()->Entities(), entity);
-        editor.SetSelected(copy);
+        spkt::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
+        editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
         entity.destroy();
-        editor.ClearSelected();
+        editor.clear_selected();
     }
 }
 
