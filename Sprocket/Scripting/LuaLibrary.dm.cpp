@@ -314,8 +314,6 @@ void load_entity_component_functions(lua::Script& script)
 DATAMATIC_BEGIN SCRIPTABLE=true
     // Functions for {{Comp::name}} =====================================================
 
-    constexpr int {{Comp::name}}_dimension = {{Comp::attr_count}};
-
     luaL_dostring(L, R"lua(
         {{Comp::name}} = Class(function(self, {{Comp::attr_list("name", ", ")}})
             self.{{Attr::name}} = {{Attr::name}}
@@ -332,7 +330,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
         int count = 0;
         const auto& c = e.get<{{Comp::name}}>();
         count += Converter<{{Attr::type}}>::push(L, c.{{Attr::name}});
-        assert(count == {{Comp::name}}_dimension);
+        assert(count == {{Comp::attr_count}};
         return count;
     });
 
@@ -343,13 +341,13 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     )lua");
 
     lua_register(L, "_Set{{Comp::name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp::name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
         spkt::entity e = Converter<spkt::entity>::read(L, ptr);
         auto& c = e.get<{{Comp::name}}>();
         c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ptr);
-        assert(ptr == {{Comp::name}}_dimension + 2);
+        assert(ptr == {{Comp::attr_count}} + 2);
         return 0;
     });
 
@@ -360,7 +358,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     )lua");
 
     lua_register(L, "_Add{{Comp::name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp::name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
 
         int ptr = 1;
         spkt::entity e = Converter<spkt::entity>::read(L, ptr);
@@ -369,7 +367,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
         {{Comp::name}} c;
         c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ptr);
         e.add<{{Comp::name}}>(c);
-        assert(ptr == {{Comp::name}}_dimension + 2);
+        assert(ptr == {{Comp::attr_count}} + 2);
         return 0;
     });
 
