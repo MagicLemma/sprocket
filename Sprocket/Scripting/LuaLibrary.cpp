@@ -145,18 +145,18 @@ void load_vec3_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         if (lua_isnumber(L, 1)) {
             float scalar = (float)luaL_checknumber(L, 1);
-            glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
-            vec3_new(L, scalar * vec.x, scalar * vec.y, scalar * vec.z);
+            glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
+            vec3_new(L, scalar * vec->x, scalar * vec->y, scalar * vec->z);
         }
         else if (lua_isnumber(L, 2)) {
-            glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
+            glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
             float scalar = (float)luaL_checknumber(L, 2);
-            vec3_new(L, scalar * vec.x, scalar * vec.y, scalar * vec.z);
+            vec3_new(L, scalar * vec->x, scalar * vec->y, scalar * vec->z);
         }
         else {
-            glm::vec3 self = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
-            glm::vec3 other = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
-            vec3_new(L, self.x + other.x, self.y + other.y, self.z + other.z);
+            glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+            glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
+            vec3_new(L, self->x * other->x, self->y * other->y, self->z * other->z);
         }
         return 1;
     });

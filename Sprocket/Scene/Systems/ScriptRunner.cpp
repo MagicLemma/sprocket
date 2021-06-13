@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "LuaScript.h"
 #include "LuaLibrary.h"
+#include "LuaMaths.h"
 #include "Components.h"
 #include "PhysicsEngine3D.h"
 

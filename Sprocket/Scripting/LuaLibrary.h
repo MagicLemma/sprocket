@@ -14,8 +14,6 @@ namespace lua {
 
 class Script;
 
-void load_vec3_functions(lua::Script& script);
-
 // Loads the given scene into the given lua state, and provides functions for
 // creating/deleting entities as well as iterating entities.
 void load_registry_functions(lua::Script& script, spkt::registry& registry);
