@@ -16,16 +16,6 @@ void do_file(lua_State* L, const char* file)
     }
 }
 
-glm::vec3* vec3_new(lua_State* L, float x, float y, float z)
-{
-    glm::vec3* vec = (glm::vec3*)lua_newuserdata(L, sizeof(glm::vec3));
-    luaL_setmetatable(L, "vec3");
-    vec->x = x;
-    vec->y = y;
-    vec->z = z;
-    return vec;
-}
-
 }
 
 Script::Script(const std::string& file)
