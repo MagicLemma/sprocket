@@ -11,10 +11,10 @@ function OnUpdate(entity, dt)
     if EXPLODE == false and TIME > 1 then
         local pc = GetParticleComponent(entity)
         pc.interval = 0.0001
-        pc.scale = Vec3(5, 5, 5)
+        pc.scale = vec3.new(5, 5, 5)
         pc.velocity = GetRigidBody3DComponent(entity).velocity
         pc.velocityNoise = 3
-        pc.acceleration = Vec3(0, -9.81, 0)
+        pc.acceleration = vec3.new(0, -9.81, 0)
         SetParticleComponent(entity, pc)
 
         EXPLODE = true

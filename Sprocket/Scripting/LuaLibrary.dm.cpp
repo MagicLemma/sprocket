@@ -85,6 +85,7 @@ void load_vec3_functions(lua::Script& script)
     lua_State* L = script.native_handle();
 
     luaL_newmetatable(L, "vec3");
+
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         std::string_view k = luaL_checkstring(L, 2);
@@ -103,6 +104,7 @@ void load_vec3_functions(lua::Script& script)
         return 1;
     });
     lua_setfield(L, -2, "__index");
+
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         std::string_view k = luaL_checkstring(L, 2);
@@ -121,6 +123,45 @@ void load_vec3_functions(lua::Script& script)
         return luaL_argerror(L, 2, lua_pushfstring(L, "Invalid option '%s'", k));
     });
     lua_setfield(L, -2, "__newindex");
+
+    lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+        glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
+        glm::vec3* result = vec3_new(L, 0, 0, 0);
+        *result = *self + *other;
+        return 1;
+    });
+    lua_setfield(L, -2, "__add");
+
+    lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+        glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
+        glm::vec3* result = vec3_new(L, 0, 0, 0);
+        *result = *self - *other;
+        return 1;
+    });
+    lua_setfield(L, -2, "__sub");
+
+    lua_pushcfunction(L, [](lua_State* L) {
+        if (lua_isnumber(L, 1)) {
+            float scalar = (float)luaL_checknumber(L, 1);
+            glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
+            vec3_new(L, scalar * vec.x, scalar * vec.y, scalar * vec.z);
+        }
+        else if (lua_isnumber(L, 2)) {
+            glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
+            float scalar = (float)luaL_checknumber(L, 2);
+            vec3_new(L, scalar * vec.x, scalar * vec.y, scalar * vec.z);
+        }
+        else {
+            glm::vec3 self = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
+            glm::vec3 other = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
+            vec3_new(L, self.x * other.x, self.y * other.y, self.z * other.z);
+        }
+        return 1;
+    });
+    lua_setfield(L, -2, "__mul");
+
     lua_pushcfunction(L, [](lua_State* L) {
         float x = luaL_checknumber(L, 1);
         float y = luaL_checknumber(L, 2);
@@ -129,6 +170,7 @@ void load_vec3_functions(lua::Script& script)
         return 1;
     });
     lua_setfield(L, -2, "new");
+
     lua_setglobal(L, "vec3");
 }
 
@@ -302,29 +344,19 @@ void load_entity_transformation_functions(lua::Script& script)
 {
     lua_State* L = script.native_handle();
 
-    lua_register(L, "_SetLookAt", [](lua_State* L) {
+    lua_register(L, "SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
-        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
-        float px = (float)lua_tonumber(L, 2);
-        float py = (float)lua_tonumber(L, 3);
-        float pz = (float)lua_tonumber(L, 4);
-
-        float tx = (float)lua_tonumber(L, 5);
-        float ty = (float)lua_tonumber(L, 6);
-        float tz = (float)lua_tonumber(L, 7);
+        int ptr = 1;
+        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
+        glm::vec3 p = Converter<glm::vec3>::read(L, ptr);
+        glm::vec3 t = Converter<glm::vec3>::read(L, ptr);
 
         auto& tr = entity.get<Transform3DComponent>();
-        tr.position = glm::vec3(px, py, pz);
-        tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, {tx, ty, tz}, {0.0, 1.0, 0.0})));
+        tr.position = p;
+        tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, t, {0.0, 1.0, 0.0})));
         return 0;
     });
-
-    luaL_dostring(L, R"lua(
-        function SetLookAt(entity, pos, target)
-            _SetLookAt(entity, pos.x, pos.y, pos.z, target.x, target.y, target.z)
-        end
-    )lua");
 
     lua_register(L, "RotateY", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
@@ -337,7 +369,7 @@ void load_entity_transformation_functions(lua::Script& script)
         return 0;
     });
 
-    lua_register(L, "_GetForwardsDir", [](lua_State* L) {
+    lua_register(L, "GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
@@ -352,27 +384,13 @@ void load_entity_transformation_functions(lua::Script& script)
         return Converter<glm::vec3>::push(L, Maths::Forwards(o));
     });
 
-    luaL_dostring(L, R"lua(
-        function GetForwardsDir(entity)
-            local x, y, z = _GetForwardsDir(entity)
-            return Vec3(x, y, z)
-        end
-    )lua");
-
-    lua_register(L, "_GetRightDir", [](lua_State* L) {
+    lua_register(L, "GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         int ptr = 1;
         spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
         auto& tr = entity.get<Transform3DComponent>();
         return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
-
-    luaL_dostring(L, R"lua(
-        function GetRightDir(entity)
-            local x, y, z = _GetRightDir(entity)
-            return Vec3(x, y, z)
-        end
-    )lua");
 
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
@@ -444,7 +462,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     luaL_dostring(L, R"lua(
         function Set{{Comp::name}}(entity, c)
             _Set{{Comp::name}}(
-                entity
+                entity,
                 c.{{Attr::name}}{{Attr::if_not_last(",")}}
             )
         end
@@ -467,7 +485,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     luaL_dostring(L, R"lua(
         function Add{{Comp::name}}(entity, c)
             _Add{{Comp::name}}(
-                entity
+                entity,
                 c.{{Attr::name}}{{Attr::if_not_last(",")}}
             )
         end

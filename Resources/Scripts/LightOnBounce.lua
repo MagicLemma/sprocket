@@ -8,9 +8,9 @@ function OnUpdate(entity, dt) end
 function ToggleLight(entity)
     local light = GetLightComponent(entity)
     if FLIP then
-        light.colour = Vec3(0, 1, 0)
+        light.colour = vec3.new(0, 1, 0)
     else
-        light.colour = Vec3(1, 0, 0)
+        light.colour = vec3.new(1, 0, 0)
     end
     FLIP = not FLIP
     SetLightComponent(entity, light)

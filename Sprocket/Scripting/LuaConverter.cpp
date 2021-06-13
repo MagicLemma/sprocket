@@ -271,7 +271,7 @@ int Converter<glm::vec3>::push(lua_State* L, const glm::vec3& value)
 
 glm::vec3 Converter<glm::vec3>::read(lua_State* L, int& read_ptr)
 {
-    return *(glm::vec3*)luaL_checkudata(L, read_ptr, "vec3");
+    return *(glm::vec3*)luaL_checkudata(L, read_ptr++, "vec3");
 }
 
 
