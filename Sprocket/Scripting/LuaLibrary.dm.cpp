@@ -323,31 +323,29 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     lua_register(L, "_Get{{Comp::name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int ptr = 1;
-        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
+        int ptr = 0;
+        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         assert(e.has<{{Comp::name}}>());
 
-        int count = 0;
         const auto& c = e.get<{{Comp::name}}>();
-        count += Converter<{{Attr::type}}>::push(L, c.{{Attr::name}});
-        assert(count == {{Comp::attr_count}};
-        return count;
+        Converter<{{Attr::type}}>::push(L, c.{{Attr::name}});
+        return {{Comp::attr_count}};
     });
 
     luaL_dostring(L, R"lua(
         function Get{{Comp::name}}(entity)
-            return {{Comp::name}}(unpack(_Get{{Comp::name}}(entity)))
+            {{Comp::attr_list("name", ", ")}} = _Get{{Comp::name}}(entity)
+            return {{Comp::name}}({{Comp::attr_list("name", ", ")}})
         end
     )lua");
 
     lua_register(L, "_Set{{Comp::name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int ptr = 1;
-        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
+        int ptr = 0;
+        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         auto& c = e.get<{{Comp::name}}>();
-        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ptr);
-        assert(ptr == {{Comp::attr_count}} + 2);
+        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
         return 0;
     });
 
@@ -360,14 +358,13 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     lua_register(L, "_Add{{Comp::name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int ptr = 1;
-        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
+        int ptr = 0;
+        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         assert(!e.has<{{Comp::name}}>());
 
         {{Comp::name}} c;
-        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ptr);
+        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
         e.add<{{Comp::name}}>(c);
-        assert(ptr == {{Comp::attr_count}} + 2);
         return 0;
     });
 
