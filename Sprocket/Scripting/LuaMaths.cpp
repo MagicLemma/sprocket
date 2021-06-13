@@ -1,6 +1,7 @@
 #include "LuaScript.h"
 
 #include <lua.hpp>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
@@ -8,13 +9,26 @@ namespace Sprocket {
 namespace lua {
 namespace {
 
-glm::vec3* vec3_new(lua_State* L, float x, float y, float z)
+glm::vec3* vec3_new(lua_State* L)
 {
     glm::vec3* vec = (glm::vec3*)lua_newuserdata(L, sizeof(glm::vec3));
+    luaL_setmetatable(L, "vec3");
+    return vec;
+}
+
+glm::vec3* vec3_new(lua_State* L, float x, float y, float z)
+{
+    glm::vec3* vec = vec3_new(L);
     vec->x = x;
     vec->y = y;
     vec->z = z;
-    luaL_setmetatable(L, "vec3");
+    return vec;
+}
+
+glm::vec3* vec3_new(lua_State* L, const glm::vec3& value)
+{
+    glm::vec3* vec = vec3_new(L);
+    *vec = value;
     return vec;
 }
 
@@ -67,8 +81,7 @@ void load_vec3_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
-        glm::vec3* result = vec3_new(L, 0, 0, 0);
-        *result = *self + *other;
+        glm::vec3* result = vec3_new(L, *self + *other);
         return 1;
     });
     lua_setfield(L, -2, "__add");
@@ -76,8 +89,7 @@ void load_vec3_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
-        glm::vec3* result = vec3_new(L, 0, 0, 0);
-        *result = *self - *other;
+        glm::vec3* result = vec3_new(L, *self - *other);
         return 1;
     });
     lua_setfield(L, -2, "__sub");
