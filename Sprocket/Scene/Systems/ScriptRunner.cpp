@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "LuaScript.h"
 #include "LuaLibrary.h"
+#include "LuaMaths.h"
 #include "Components.h"
 #include "PhysicsEngine3D.h"
 
@@ -54,6 +55,8 @@ void ScriptRunner::on_startup(spkt::registry& registry, ev::Dispatcher& dispatch
     dispatcher.subscribe<spkt::added<ScriptComponent>>([&](ev::Event& event) {
         auto data = event.get<spkt::added<ScriptComponent>>();
         lua::Script script(data.entity.get<ScriptComponent>().script);
+        lua::load_vec3_functions(script);
+        lua::load_vec2_functions(script);
         lua::load_registry_functions(script, registry);
         lua::load_input_functions(script, d_input);
         lua::load_window_functions(script, *d_window);

@@ -221,8 +221,6 @@ Entities:
     ModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\Crate.obj
       material: ""
-    ParentComponent:
-      parent: 17179869184
   - ID#: 47244640256
     NameComponent:
       name: Platform (Red)

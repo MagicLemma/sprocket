@@ -239,29 +239,18 @@ void load_entity_transformation_functions(lua::Script& script)
 {
     lua_State* L = script.native_handle();
 
-    lua_register(L, "_SetLookAt", [](lua_State* L) {
+    lua_register(L, "SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
 
-        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
-        float px = (float)lua_tonumber(L, 2);
-        float py = (float)lua_tonumber(L, 3);
-        float pz = (float)lua_tonumber(L, 4);
-
-        float tx = (float)lua_tonumber(L, 5);
-        float ty = (float)lua_tonumber(L, 6);
-        float tz = (float)lua_tonumber(L, 7);
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
+        glm::vec3 p = Converter<glm::vec3>::read(L, 2);
+        glm::vec3 t = Converter<glm::vec3>::read(L, 3);
 
         auto& tr = entity.get<Transform3DComponent>();
-        tr.position = glm::vec3(px, py, pz);
-        tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, {tx, ty, tz}, {0.0, 1.0, 0.0})));
+        tr.position = p;
+        tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, t, {0.0, 1.0, 0.0})));
         return 0;
     });
-
-    luaL_dostring(L, R"lua(
-        function SetLookAt(entity, pos, target)
-            _SetLookAt(entity, pos.x, pos.y, pos.z, target.x, target.y, target.z)
-        end
-    )lua");
 
     lua_register(L, "RotateY", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
@@ -274,7 +263,7 @@ void load_entity_transformation_functions(lua::Script& script)
         return 0;
     });
 
-    lua_register(L, "_GetForwardsDir", [](lua_State* L) {
+    lua_register(L, "GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
         spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
@@ -289,43 +278,26 @@ void load_entity_transformation_functions(lua::Script& script)
         return Converter<glm::vec3>::push(L, Maths::Forwards(o));
     });
 
-    luaL_dostring(L, R"lua(
-        function GetForwardsDir(entity)
-            local x, y, z = _GetForwardsDir(entity)
-            return Vec3(x, y, z)
-        end
-    )lua");
-
-    lua_register(L, "_GetRightDir", [](lua_State* L) {
+    lua_register(L, "GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 1;
-        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
         auto& tr = entity.get<Transform3DComponent>();
         return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
     });
 
-    luaL_dostring(L, R"lua(
-        function GetRightDir(entity)
-            local x, y, z = _GetRightDir(entity)
-            return Vec3(x, y, z)
-        end
-    )lua");
-
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 1;
-        spkt::entity entity = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
         auto& tr = entity.get<Transform3DComponent>();
-        float yaw = Converter<float>::read(L, ptr);
+        float yaw = Converter<float>::read(L, 2);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
     });
 
     lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 1;
-        spkt::entity entity1 = Converter<spkt::entity>::read(L, ptr);
-        spkt::entity entity2 = Converter<spkt::entity>::read(L, ptr);
+        spkt::entity entity1 = Converter<spkt::entity>::read(L, 1);
+        spkt::entity entity2 = Converter<spkt::entity>::read(L, 2);
         return Converter<bool>::push(L, entity1 == entity2);
     });
 }
@@ -338,10 +310,8 @@ void load_entity_component_functions(lua::Script& script)
 DATAMATIC_BEGIN SCRIPTABLE=true
     // Functions for {{Comp::name}} =====================================================
 
-    constexpr int {{Comp::name}}_dimension = {{Comp::lua_dimension}};
-
     luaL_dostring(L, R"lua(
-        {{Comp::name}} = Class(function(self, {{Comp::lua_sig}})
+        {{Comp::name}} = Class(function(self, {{Comp::attr_list("name", ", ")}})
             self.{{Attr::name}} = {{Attr::name}}
         end)
     )lua");
@@ -349,52 +319,55 @@ DATAMATIC_BEGIN SCRIPTABLE=true
     lua_register(L, "_Get{{Comp::name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int ptr = 1;
-        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
+        int ptr = 0;
+        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         assert(e.has<{{Comp::name}}>());
 
-        int count = 0;
         const auto& c = e.get<{{Comp::name}}>();
-        count += Converter<{{Attr::type}}>::push(L, c.{{Attr::name}});
-        assert(count == {{Comp::name}}_dimension);
-        return count;
+        Converter<{{Attr::type}}>::push(L, c.{{Attr::name}});
+        return {{Comp::attr_count}};
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::lua_getter}}
+        function Get{{Comp::name}}(entity)
+            {{Comp::attr_list("name", ", ")}} = _Get{{Comp::name}}(entity)
+            return {{Comp::name}}({{Comp::attr_list("name", ", ")}})
+        end
     )lua");
 
     lua_register(L, "_Set{{Comp::name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp::name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int ptr = 1;
-        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
+        int ptr = 0;
+        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         auto& c = e.get<{{Comp::name}}>();
-        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ptr);
-        assert(ptr == {{Comp::name}}_dimension + 2);
+        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
         return 0;
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::lua_setter}}
+        function Set{{Comp::name}}(entity, c)
+            _Set{{Comp::name}}(entity, {{Comp::attr_list("name", ", ", "c.{}")}})
+        end
     )lua");
 
     lua_register(L, "_Add{{Comp::name}}", [](lua_State* L) {
-        if (!CheckArgCount(L, {{Comp::name}}_dimension + 1)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
 
-        int ptr = 1;
-        spkt::entity e = Converter<spkt::entity>::read(L, ptr);
+        int ptr = 0;
+        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         assert(!e.has<{{Comp::name}}>());
 
         {{Comp::name}} c;
-        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ptr);
+        c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
         e.add<{{Comp::name}}>(c);
-        assert(ptr == {{Comp::name}}_dimension + 2);
         return 0;
     });
 
     luaL_dostring(L, R"lua(
-        {{Comp::lua_adder}}
+        function Add{{Comp::name}}(entity, c)
+            _Add{{Comp::name}}(entity, {{Comp::attr_list("name", ", ", "c.{}")}})
+        end
     )lua");
 
     lua_register(L, "Has{{Comp::name}}", &_has_impl<{{Comp::name}}>);

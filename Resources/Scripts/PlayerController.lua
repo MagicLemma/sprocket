@@ -4,7 +4,7 @@ function Init(entity)
 
     TIME = 0.0
 
-    SPAWN_POINT = Vec3(-11, 2, 3)
+    SPAWN_POINT = vec3.new(-11, 2, 3)
     ENTITY = entity
 end
 
@@ -30,10 +30,10 @@ function OnUpdate(entity, dt)
     local cosYaw = math.cos(YAW)
     local sinYaw = math.sin(YAW)
     
-    local forwards = Vec3(-sinYaw, 0, -cosYaw)
-    local right = Vec3(cosYaw, 0, -sinYaw)
+    local forwards = vec3.new(-sinYaw, 0, -cosYaw)
+    local right = vec3.new(cosYaw, 0, -sinYaw)
 
-    local dir = Vec3(0, 0, 0)
+    local dir = vec3.new(0, 0, 0)
     if IsKeyDown(Keyboard.W) then dir = dir + forwards end
     if IsKeyDown(Keyboard.S) then dir = dir - forwards end
     if IsKeyDown(Keyboard.D) then dir = dir + right end
@@ -41,7 +41,7 @@ function OnUpdate(entity, dt)
     dir = Normalised(dir)
 
     local physics = GetRigidBody3DComponent(entity)
-    local dv = Vec3(0, 0, 0)
+    local dv = vec3.new(0, 0, 0)
 
     if Mag(dir) > 0 or physics.onFloor then
         dv = dv + 6 * dir - physics.velocity
@@ -71,7 +71,7 @@ function OnMouseButtonPressedEvent(button, action, mods)
     local pos = GetTransform3DComponent(ENTITY).position
     local vel = GetRigidBody3DComponent(ENTITY).velocity
     
-    local tc = Transform3DComponent(pos + dir, Vec3(0.1, 0.1, 0.1))
+    local tc = Transform3DComponent(pos + dir, vec3.new(0.1, 0.1, 0.1))
     AddTransform3DComponent(newEntity, tc)
 
     --local mc = ModelComponent(
@@ -80,19 +80,19 @@ function OnMouseButtonPressedEvent(button, action, mods)
     --)
     --AddModelComponent(newEntity, mc)
 
-    local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.3, 1, Vec3(0, 0, 0), false)
+    local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.3, 1, vec3.new(0, 0, 0), false)
     AddRigidBody3DComponent(newEntity, rbc)
 
-    local sc = SphereCollider3DComponent(Vec3(0, 0, 0), 20, 0.1)
+    local sc = SphereCollider3DComponent(vec3.new(0, 0, 0), 20, 0.1)
     AddSphereCollider3DComponent(newEntity, sc)
 
-    local lc = LightComponent(Vec3(1, 1, 1), 20)
+    local lc = LightComponent(vec3.new(1, 1, 1), 20)
     AddLightComponent(newEntity, lc)
 
     local sc = ScriptComponent("Resources/Scripts/Grenade.lua", true)
     AddScriptComponent(newEntity, sc)
 
-    local pc = ParticleComponent(0.01, Vec3(0, 0, 0), 1, Vec3(0, 0, 0), Vec3(1, 1, 1), 1)
+    local pc = ParticleComponent(0.01, vec3.new(0, 0, 0), 1, vec3.new(0, 0, 0), vec3.new(1, 1, 1), 1)
     AddParticleComponent(newEntity, pc)
 
     return true

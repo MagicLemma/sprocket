@@ -8,7 +8,7 @@ function Init(entity)
     ABS_VERT_HIGH = 10
 
     -- Target
-    TARGET = Vec3(0, 0, 0)
+    TARGET = vec3.new(0, 0, 0)
 
     HORIZ = 0 -- Parametrized yaw
 end
@@ -21,14 +21,14 @@ function OnUpdate(entity, dt)
     local horizSpeed = ROTATION_SPEED * dt
     local moveSpeed = MOVEMENT_SPEED * dt
 
-    -- forwards Vec3
+    -- forwards vec3.new
     local f = TARGET - pos
 
     f.y = 0
     f = Normalised(f)
 
-    -- right Vec3
-    local up = Vec3(0, 1, 0)
+    -- right vec3.new
+    local up = vec3.new(0, 1, 0)
     local r = Cross(f, up)
 
     if IsKeyDown(Keyboard.W) then
