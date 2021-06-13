@@ -9,8 +9,7 @@ namespace lua {
 
 int Converter<int>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -30,8 +29,7 @@ int Converter<int>::read(lua_State* L, int index)
 
 u32 Converter<u32>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -51,8 +49,7 @@ u32 Converter<u32>::read(lua_State* L, int index)
 
 bool Converter<bool>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -72,8 +69,7 @@ bool Converter<bool>::read(lua_State* L, int index)
 
 float Converter<float>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -93,8 +89,7 @@ float Converter<float>::read(lua_State* L, int index)
 
 double Converter<double>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -114,8 +109,7 @@ double Converter<double>::read(lua_State* L, int index)
 
 const char* Converter<const char*>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -135,8 +129,7 @@ const char* Converter<const char*>::read(lua_State* L, int index)
 
 std::string Converter<std::string>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -156,8 +149,7 @@ std::string Converter<std::string>::read(lua_State* L, int index)
 
 void* Converter<void*>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -177,8 +169,7 @@ void* Converter<void*>::read(lua_State* L, int index)
 
 spkt::entity Converter<spkt::entity>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -199,8 +190,7 @@ spkt::entity Converter<spkt::entity>::read(lua_State* L, int index)
 
 spkt::identifier Converter<spkt::identifier>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -221,8 +211,7 @@ spkt::identifier Converter<spkt::identifier>::read(lua_State* L, int index)
 
 glm::vec2 Converter<glm::vec2>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }
@@ -243,8 +232,7 @@ glm::vec2 Converter<glm::vec2>::read(lua_State* L, int index)
 
 glm::vec3 Converter<glm::vec3>::pop(lua_State* L)
 {
-    int ptr = -1;
-    auto ret = read(L, ptr);
+    auto ret = read(L, -1);
     lua_pop(L, 1);
     return ret;
 }

@@ -44,7 +44,7 @@ function OnUpdate(entity, dt)
     local dv = vec3.new(0, 0, 0)
 
     if Mag(dir) > 0 or physics.onFloor then
-        dv = dv + (6 * dir) - physics.velocity
+        dv = dv + 6 * dir - physics.velocity
         dv.y = 0
     end
 
@@ -71,8 +71,7 @@ function OnMouseButtonPressedEvent(button, action, mods)
     local pos = GetTransform3DComponent(ENTITY).position
     local vel = GetRigidBody3DComponent(ENTITY).velocity
     
-    local new_pos = vec3.new(pos.x + dir.x, pos.y + dir.y, pos.z + dir.z)
-    local tc = Transform3DComponent(new_pos, vec3.new(0.1, 0.1, 0.1))
+    local tc = Transform3DComponent(pos + dir, vec3.new(0.1, 0.1, 0.1))
     AddTransform3DComponent(newEntity, tc)
 
     --local mc = ModelComponent(
