@@ -55,7 +55,9 @@ Return Script::call_function(const std::string& function, Args&&... args)
         if (rc != LUA_OK) {
             return {};
         }
-        return lua::Converter<Return>::pop(L);
+        Return ret_val = lua::Converter<Return>::read(L, -1);
+        lua_pop(L, 1);
+        return ret_val;
     }
 }
 

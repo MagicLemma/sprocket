@@ -241,11 +241,9 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "SetLookAt", [](lua_State* L) {
         if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
-
         spkt::entity entity = Converter<spkt::entity>::read(L, 1);
         glm::vec3 p = Converter<glm::vec3>::read(L, 2);
         glm::vec3 t = Converter<glm::vec3>::read(L, 3);
-
         auto& tr = entity.get<Transform3DComponent>();
         tr.position = p;
         tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, t, {0.0, 1.0, 0.0})));
@@ -254,10 +252,8 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "RotateY", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
-
         spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         auto& tr = entity.get<Transform3DComponent>();
-
         float yaw = (float)lua_tonumber(L, 2);
         tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
         return 0;
@@ -265,7 +261,6 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "GetForwardsDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
         spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
         auto& tr = entity.get<Transform3DComponent>();
         auto o = tr.orientation;
@@ -275,14 +270,16 @@ void load_entity_transformation_functions(lua::Script& script)
             o = glm::rotate(o, pitch, {1, 0, 0});
         }
 
-        return Converter<glm::vec3>::push(L, Maths::Forwards(o));
+        Converter<glm::vec3>::push(L, Maths::Forwards(o));
+        return 1;
     });
 
     lua_register(L, "GetRightDir", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::entity entity = Converter<spkt::entity>::read(L, 1);
         auto& tr = entity.get<Transform3DComponent>();
-        return Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
+        Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
+        return 1;
     });
 
     lua_register(L, "MakeUpright", [](lua_State* L) {
@@ -298,7 +295,8 @@ void load_entity_transformation_functions(lua::Script& script)
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
         spkt::entity entity1 = Converter<spkt::entity>::read(L, 1);
         spkt::entity entity2 = Converter<spkt::entity>::read(L, 2);
-        return Converter<bool>::push(L, entity1 == entity2);
+        Converter<bool>::push(L, entity1 == entity2);
+        return 1;
     });
 }
 
@@ -318,11 +316,8 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     lua_register(L, "_Get{{Comp::name}}", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-        int ptr = 0;
-        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
+        spkt::entity e = Converter<spkt::entity>::read(L, 1);
         assert(e.has<{{Comp::name}}>());
-
         const auto& c = e.get<{{Comp::name}}>();
         Converter<{{Attr::type}}>::push(L, c.{{Attr::name}});
         return {{Comp::attr_count}};
@@ -337,7 +332,6 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     lua_register(L, "_Set{{Comp::name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
-
         int ptr = 0;
         spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         auto& c = e.get<{{Comp::name}}>();
@@ -353,11 +347,9 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 
     lua_register(L, "_Add{{Comp::name}}", [](lua_State* L) {
         if (!CheckArgCount(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
-
         int ptr = 0;
         spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
         assert(!e.has<{{Comp::name}}>());
-
         {{Comp::name}} c;
         c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
         e.add<{{Comp::name}}>(c);
