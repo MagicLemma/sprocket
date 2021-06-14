@@ -62,8 +62,8 @@ bool CheckArgCount(lua_State* L, int argc)
 template <typename T> int _has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
-    lua_pushboolean(L, entity.has<T>());
+    auto entity = Converter<spkt::entity>::read(L, 1);
+    Converter<bool>::push(L, entity.has<T>());
     return 1;
 }
 
@@ -77,9 +77,9 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity* luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        *luaEntity = spkt::entity(registry, registry.create());
+        auto new_entity = spkt::entity(registry, registry.create());
+        Converter<spkt::entity>::push(L, new_entity);
         return 1;
     });
 
