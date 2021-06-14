@@ -13,16 +13,15 @@ function OnUpdate(entity, dt)
 
     local rotateSpeed = 0.001
 
-    local dx = 0
-    local dy = 0
+    local offset = vec2.new(0, 0)
     if TIME > 0.2 then
-        dx, dy = GetMouseOffset()
+        offset = GetMouseOffset()
     end
     
-    YAW = YAW - dx * rotateSpeed
+    YAW = YAW - offset.x * rotateSpeed
 
     local camera = GetCamera3DComponent(entity)
-    camera.pitch = Clamp(camera.pitch - rotateSpeed * dy, math.rad(-89), math.rad(89))
+    camera.pitch = Clamp(camera.pitch - rotateSpeed * offset.y, math.rad(-89), math.rad(89))
     SetCamera3DComponent(entity, camera)
 
     MakeUpright(entity, YAW)

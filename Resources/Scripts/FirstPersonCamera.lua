@@ -19,10 +19,10 @@ function OnUpdate(entity, dt)
     transform.position = new_pos
     SetTransform3DComponent(entity, transform)
 
-    local dx, dy = GetMouseOffset()
-    RotateY(entity, 10 * dx)
+    local mouse = GetMouseOffset()
+    RotateY(entity, 10 * mouse.x)
 
     local camera = GetCameraComponent(entity)
-    camera.pitch = Clamp(camera.pitch - 0.15 * dy, -89, 89)
+    camera.pitch = Clamp(camera.pitch - 0.15 * mouse.y, -89, 89)
     SetCameraComponent(entity, camera)
 end
