@@ -62,8 +62,8 @@ bool CheckArgCount(lua_State* L, int argc)
 template <typename T> int _has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
-    lua_pushboolean(L, entity.has<T>());
+    auto entity = Converter<spkt::entity>::read(L, 1);
+    Converter<bool>::push(L, entity.has<T>());
     return 1;
 }
 
@@ -77,9 +77,9 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity* luaEntity = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        *luaEntity = spkt::entity(registry, registry.create());
+        auto new_entity = spkt::entity(registry, registry.create());
+        Converter<spkt::entity>::push(L, new_entity);
         return 1;
     });
 
@@ -174,29 +174,17 @@ void load_input_functions(lua::Script& script, InputProxy& input)
 
     lua_register(L, "IsKeyDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-        if (auto ip = get_pointer<InputProxy>(L, "__input__"); ip) {
-            int x = (int)lua_tointeger(L, 1);
-            lua_pushboolean(L, ip->is_keyboard_down(x));
-        }
-        else {
-            lua_pushboolean(L, false);
-        }
-
+        auto ip = get_pointer<InputProxy>(L, "__input__");
+        bool keyboard_down = ip ? ip->is_keyboard_down((int)lua_tointeger(L, 1)) : false;
+        Converter<bool>::push(L, keyboard_down);
         return 1;
     });
 
     lua_register(L, "IsMouseDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-
-        if (auto ip = get_pointer<InputProxy>(L, "__input__"); ip) {
-            int x = (int)lua_tointeger(L, 1);
-            lua_pushboolean(L, ip->is_mouse_down(x));
-        }
-        else {
-            lua_pushboolean(L, false);
-        }
-
+        auto ip = get_pointer<InputProxy>(L, "__input__");
+        bool mouse_down = ip ? ip->is_mouse_down((int)lua_tointeger(L, 1)) : false;
+        Converter<bool>::push(L, mouse_down);
         return 1;
     });
 }
@@ -208,30 +196,18 @@ void load_window_functions(lua::Script& script, Window& window)
 
     lua_register(L, "GetMousePos", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-
-        if (auto w = get_pointer<Window>(L, "__window__"); w) {
-            auto offset = w->GetMousePos();
-            lua_pushnumber(L, offset.x);
-            lua_pushnumber(L, offset.y);
-        } else {
-            lua_pushnumber(L, 0);
-            lua_pushnumber(L, 0);
-        }
-        return 2;
+        auto w = get_pointer<Window>(L, "__window__");
+        glm::vec2 mouse_pos = w ? w->GetMousePos() : glm::vec2(0.0, 0.0);
+        Converter<glm::vec2>::push(L, mouse_pos);
+        return 1;
     });
 
     lua_register(L, "GetMouseOffset", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-
-        if (auto w = get_pointer<Window>(L, "__window__"); w) {
-            auto offset = w->GetMouseOffset();
-            lua_pushnumber(L, offset.x);
-            lua_pushnumber(L, offset.y);
-        } else {
-            lua_pushnumber(L, 0);
-            lua_pushnumber(L, 0);
-        }
-        return 2;
+        auto w = get_pointer<Window>(L, "__window__");
+        glm::vec2 mouse_offset = w ? w->GetMouseOffset() : glm::vec2(0.0, 0.0);
+        Converter<glm::vec2>::push(L, mouse_offset);
+        return 1;
     });
 }
 
