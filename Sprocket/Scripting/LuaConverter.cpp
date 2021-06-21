@@ -143,6 +143,5 @@ glm::vec3 Converter<glm::vec3>::read(lua_State* L, int index)
     return *(glm::vec3*)luaL_checkudata(L, index, "vec3");
 }
 
-
 }
 }
