@@ -34,9 +34,9 @@ private:
 public:
     GameGrid(Window* window);
 
-    void on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher) override;
+    void on_startup(spkt::registry& registry) override;
     void on_event(spkt::registry& registry, ev::Event& event) override;
-    void on_update(spkt::registry& registry, const ev::Dispatcher& dispatcher, double dt) override;
+    void on_update(spkt::registry& registry, double dt) override;
 
     spkt::entity At(const glm::ivec2& pos) const;
 

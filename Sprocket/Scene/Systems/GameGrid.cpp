@@ -24,7 +24,7 @@ GameGrid::GameGrid(Window* window)
 {
 }
 
-void GameGrid::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
+void GameGrid::on_startup(spkt::registry& registry)
 {
     std::string gridSquare = "Resources/Models/Square.obj";
 
@@ -79,7 +79,7 @@ void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
     }
 }
 
-void GameGrid::on_update(spkt::registry&, const ev::Dispatcher&, double dt)
+void GameGrid::on_update(spkt::registry&, double dt)
 {
     auto& camTr = d_camera.get<Transform3DComponent>();
 

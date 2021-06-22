@@ -17,7 +17,7 @@ ScriptRunner::ScriptRunner(Window* window)
 {
 }
 
-void ScriptRunner::on_update(spkt::registry&, const ev::Dispatcher&, double dt)
+void ScriptRunner::on_update(spkt::registry&, double dt)
 {
     // We delete scripts here rather then with OnRemove otherwise we would segfault if
     // a script tries to delete its own entity, which is functionality that we want to
@@ -47,14 +47,10 @@ apx::generator<lua::Script&> ScriptRunner::active_scripts()
     }
 }
 
-// TODO: Add more event handlers
-void ScriptRunner::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
-{
-    d_input.on_startup(dispatcher);
-}
-
 void ScriptRunner::on_event(spkt::registry& registry, ev::Event& event)
 {
+    d_input.on_event(event);
+
     if (auto e = event.get_if<spkt::added<ScriptComponent>>()) {
         lua::Script script(e->entity.get<ScriptComponent>().script);
         lua::load_vec3_functions(script);

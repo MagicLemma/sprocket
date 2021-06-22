@@ -255,7 +255,7 @@ void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
     }
 }
 
-void PhysicsEngine3D::on_update(spkt::registry& registry, const ev::Dispatcher& dispatcher, double dt)
+void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
 {
     // Pre Update
     for (auto id : registry.view<RigidBody3DComponent>()) {
@@ -319,9 +319,9 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, const ev::Dispatcher& 
     }
 
     // Publish all generated events
-    for (auto& event : d_impl->listener.events()) {
-        dispatcher.publish(event);
-    }
+    //for (auto& event : d_impl->listener.events()) {
+    //    dispatcher.publish(event);
+    //}
     d_impl->listener.events().clear();
 }
 

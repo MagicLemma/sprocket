@@ -34,7 +34,7 @@ void Scene::Load(std::string_view file)
 void Scene::OnUpdate(double dt)
 {
     for (auto& system : d_systems) {
-        system->on_update(d_registry, d_dispatcher, dt);
+        system->on_update(d_registry, dt);
     }
 }
 
