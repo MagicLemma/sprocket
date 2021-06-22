@@ -216,7 +216,7 @@ void load_entity_transformation_functions(lua::Script& script)
     lua_State* L = script.native_handle();
 
     lua_register(L, "SetLookAt", [](lua_State* L) {
-        if (!CheckArgCount(L, 7)) { return luaL_error(L, "Bad number of args"); }
+        if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
         spkt::entity entity = Converter<spkt::entity>::read(L, 1);
         glm::vec3 p = Converter<glm::vec3>::read(L, 2);
         glm::vec3 t = Converter<glm::vec3>::read(L, 3);
