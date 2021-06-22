@@ -1483,61 +1483,6 @@ void load_entity_component_functions(lua::Script& script)
     lua_register(L, "HasMeshAnimationComponent", &_has_impl<MeshAnimationComponent>);
 
 
-    // Functions for Singleton =====================================================
-
-    luaL_dostring(L, R"lua(
-        Singleton = Class(function(self, )
-        end)
-    )lua");
-
-    lua_register(L, "_GetSingleton", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity e = Converter<spkt::entity>::read(L, 1);
-        assert(e.has<Singleton>());
-        const auto& c = e.get<Singleton>();
-        return 0;
-    });
-
-    luaL_dostring(L, R"lua(
-        function GetSingleton(entity)
-             = _GetSingleton(entity)
-            return Singleton()
-        end
-    )lua");
-
-    lua_register(L, "_SetSingleton", [](lua_State* L) {
-        if (!CheckArgCount(L, 0 + 1)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 0;
-        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-        auto& c = e.get<Singleton>();
-        return 0;
-    });
-
-    luaL_dostring(L, R"lua(
-        function SetSingleton(entity, c)
-            _SetSingleton(entity, )
-        end
-    )lua");
-
-    lua_register(L, "_AddSingleton", [](lua_State* L) {
-        if (!CheckArgCount(L, 0 + 1)) { return luaL_error(L, "Bad number of args"); }
-        int ptr = 0;
-        spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-        assert(!e.has<Singleton>());
-        Singleton c;
-        e.add<Singleton>(c);
-        return 0;
-    });
-
-    luaL_dostring(L, R"lua(
-        function AddSingleton(entity, c)
-            _AddSingleton(entity, )
-        end
-    )lua");
-
-    lua_register(L, "HasSingleton", &_has_impl<Singleton>);
-
-
 }
 
 }

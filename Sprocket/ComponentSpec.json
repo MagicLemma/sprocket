@@ -549,6 +549,9 @@
         {
             "name": "Singleton",
             "display_name": "Singleton",
+            "flags": {
+                "SCRIPTABLE": false
+            },
             "attributes": []
         }
     ]
