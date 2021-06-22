@@ -170,6 +170,11 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
+        if (entity.has<Singleton>()) {
+            const auto& c = entity.get<Singleton>();
+            out << YAML::Key << "Singleton" << YAML::BeginMap;
+            out << YAML::EndMap;
+        }
         out << YAML::EndMap;
     }
     out << YAML::EndSeq;
@@ -349,6 +354,10 @@ void Load(const std::string& file, spkt::registry* reg)
             c.speed = transform(spec["speed"].as<float>());
             e.add<MeshAnimationComponent>(c);
         }
+        if (auto spec = entity["Singleton"]) {
+            Singleton c;
+            e.add<Singleton>(c);
+        }
     }
 }
 
@@ -411,6 +420,9 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     }
     if (entity.has<MeshAnimationComponent>()) {
         e.add<MeshAnimationComponent>(entity.get<MeshAnimationComponent>());
+    }
+    if (entity.has<Singleton>()) {
+        e.add<Singleton>(entity.get<Singleton>());
     }
     return e;
 }
@@ -589,6 +601,11 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.time = transform(source_comp.time);
             target_comp.speed = transform(source_comp.speed);
             dst.add<MeshAnimationComponent>(target_comp);
+        }
+        if (src.has<Singleton>()) {
+            const Singleton& source_comp = src.get<Singleton>();
+            Singleton target_comp;
+            dst.add<Singleton>(target_comp);
         }
     }
 }

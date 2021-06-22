@@ -28,7 +28,8 @@ using registry = apx::registry<
     Sprocket::SunComponent,
     Sprocket::AmbienceComponent,
     Sprocket::ParticleComponent,
-    Sprocket::MeshAnimationComponent
+    Sprocket::MeshAnimationComponent,
+    Sprocket::Singleton
 >;
 
 using entity = typename registry::handle_type;
