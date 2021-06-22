@@ -19,10 +19,6 @@ Scene::Scene()
     });
 }
 
-Scene::~Scene()
-{
-}
-
 void Scene::Load(std::string_view file)
 {
     Loader::Load(std::string(file), &Entities());

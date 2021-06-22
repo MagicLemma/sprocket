@@ -21,7 +21,6 @@ class Scene
 
 public:
     Scene();
-    ~Scene();
 
     spkt::registry& Entities() { return d_registry; }
 
