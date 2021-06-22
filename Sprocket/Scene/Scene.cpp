@@ -40,7 +40,9 @@ void Scene::OnUpdate(double dt)
 
 void Scene::OnEvent(ev::Event& event)
 {
-    d_dispatcher.publish(event);
+    for (auto& system : d_systems) {
+        system->on_event(d_registry, event);
+    }
 }
 
 std::size_t Scene::Size() const

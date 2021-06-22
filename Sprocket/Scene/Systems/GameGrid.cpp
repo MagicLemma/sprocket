@@ -45,9 +45,12 @@ void GameGrid::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
     tr2.scale = {0.5f, 0.5f, 0.5f};
     auto& model2 = d_selectedSquare.emplace<ModelComponent>();
     model2.mesh = gridSquare;
+}
 
-    dispatcher.subscribe<spkt::added<GridComponent>>([&](ev::Event& event, auto&& data) {
-        spkt::entity entity = data.entity;
+void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
+{
+    if (auto e = event.get_if<spkt::added<GridComponent>>()) {
+        spkt::entity entity = e->entity;
         auto& transform = entity.get<Transform3DComponent>();
         const auto& gc = entity.get<GridComponent>();
 
@@ -55,12 +58,10 @@ void GameGrid::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
     
         transform.position.x = gc.x + 0.5f;
         transform.position.z = gc.z + 0.5f;
-        d_gridEntities[{gc.x, gc.z}] = data.entity;
-    });
-
-    dispatcher.subscribe<spkt::removed<GridComponent>>([&](ev::Event& eventm, auto&& data) {
-        auto& gc = data.entity.get<GridComponent>();
-
+        d_gridEntities[{gc.x, gc.z}] = entity;
+    }
+    else if (auto e = event.get_if<spkt::removed<GridComponent>>()) {
+        auto& gc = e->entity.get<GridComponent>();
         auto it = d_gridEntities.find({gc.x, gc.z});
         if (it == d_gridEntities.end()) {
             log::warn("No entity exists at this coord!");
@@ -68,15 +69,14 @@ void GameGrid::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
         else {
             d_gridEntities.erase(it);
         }
-    });
-
-    dispatcher.subscribe<ev::MouseButtonPressed>([&](ev::Event& event, auto&& data) {
-        if (data.button == Mouse::LEFT) {
+    }
+    else if (auto e = event.get_if<ev::MouseButtonPressed>()) {
+        if (e->button == Mouse::LEFT) {
             d_selected = d_hovered;
         } else {
             d_selected = std::nullopt;
         }
-    });
+    }
 }
 
 void GameGrid::on_update(spkt::registry&, const ev::Dispatcher&, double dt)

@@ -176,39 +176,34 @@ PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
 {
 }
 
-void PhysicsEngine3D::on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher)
+void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
 {
-    dispatcher.subscribe<spkt::added<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
-        assert(data.entity.has<Transform3DComponent>());
-        auto& tc = data.entity.get<Transform3DComponent>();
+    if (auto e = event.get_if<spkt::added<RigidBody3DComponent>>()) {
+        assert(e->entity.has<Transform3DComponent>());
+        auto& tc = e->entity.get<Transform3DComponent>();
 
-        auto& entry = d_impl->entityData[data.entity];
-        entry.entity = data.entity;
+        auto& entry = d_impl->entityData[e->entity];
+        entry.entity = e->entity;
         entry.body = d_impl->world->createRigidBody(Convert(tc));
         entry.body->setUserData(static_cast<void*>(&entry.entity));
-    });
-
-    dispatcher.subscribe<spkt::removed<RigidBody3DComponent>>([&](ev::Event& event, auto&& data) {
-        spkt::entity entity = data.entity;
+    }
+    else if (auto e = event.get_if<spkt::removed<RigidBody3DComponent>>()) {
+        spkt::entity entity = e->entity;
         entity.remove<BoxCollider3DComponent>();
         entity.remove<SphereCollider3DComponent>();
         entity.remove<CapsuleCollider3DComponent>();
 
-        auto rigidBodyIt = d_impl->entityData.find(data.entity);
+        auto rigidBodyIt = d_impl->entityData.find(entity);
         d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
         d_impl->entityData.erase(rigidBodyIt);
-    });
+    }
+    else if (auto e = event.get_if<spkt::added<BoxCollider3DComponent>>()) {
+        assert(e->entity.has<Transform3DComponent>());
+        assert(e->entity.has<RigidBody3DComponent>());
 
-    dispatcher.subscribe<spkt::added<BoxCollider3DComponent>>([&](ev::Event& event, auto&& data) {
-        assert(data.entity.has<Transform3DComponent>());
-        assert(data.entity.has<RigidBody3DComponent>());
-
-        auto& tc = data.entity.get<Transform3DComponent>();
-        auto& bc = data.entity.get<BoxCollider3DComponent>();
-
-        auto it = d_impl->entityData.find(data.entity);
-        assert(it != d_impl->entityData.end());
-        auto& entry = it->second;
+        auto& tc = e->entity.get<Transform3DComponent>();
+        auto& bc = e->entity.get<BoxCollider3DComponent>();
+        auto& entry = d_impl->entityData[e->entity];
 
         glm::vec3 dimensions = bc.halfExtents;
         if (bc.applyScale) { dimensions *= tc.scale; }
@@ -216,53 +211,48 @@ void PhysicsEngine3D::on_startup(spkt::registry& registry, ev::Dispatcher& dispa
         rp3d::Transform transform = Convert(bc.position, bc.orientation);
 
         entry.boxCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.boxCollider, data.entity.get<RigidBody3DComponent>());
-    });
-
-    dispatcher.subscribe<spkt::removed<BoxCollider3DComponent>>([&](ev::Event& event, auto&& data) {
-        auto& entry = d_impl->entityData[data.entity];
+        SetMaterial(entry.boxCollider, e->entity.get<RigidBody3DComponent>());
+    }
+    else if (auto e = event.get_if<spkt::removed<BoxCollider3DComponent>>()) {
+        auto& entry = d_impl->entityData[e->entity];
         entry.body->removeCollider(entry.boxCollider);
-    });
+    }
+    else if (auto e = event.get_if<spkt::added<SphereCollider3DComponent>>()) {
+        assert(e->entity.has<Transform3DComponent>());
+        assert(e->entity.has<RigidBody3DComponent>());
 
-    dispatcher.subscribe<spkt::added<SphereCollider3DComponent>>([&](ev::Event& event, auto&& data) {
-        assert(data.entity.has<Transform3DComponent>());
-        assert(data.entity.has<RigidBody3DComponent>());
-
-        auto& tc = data.entity.get<Transform3DComponent>();
-        auto& sc = data.entity.get<SphereCollider3DComponent>();
-        auto& entry = d_impl->entityData[data.entity];
+        auto& tc = e->entity.get<Transform3DComponent>();
+        auto& sc = e->entity.get<SphereCollider3DComponent>();
+        auto& entry = d_impl->entityData[e->entity];
         
         rp3d::SphereShape* shape = d_impl->pc.createSphereShape(sc.radius);
         rp3d::Transform transform = Convert(sc.position, sc.orientation);
 
         entry.sphereCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.sphereCollider, data.entity.get<RigidBody3DComponent>());   
-    });
-
-    dispatcher.subscribe<spkt::removed<SphereCollider3DComponent>>([&](ev::Event& event, auto&& data) {
-        auto& entry = d_impl->entityData[data.entity];
+        SetMaterial(entry.sphereCollider, e->entity.get<RigidBody3DComponent>());   
+    }
+    else if (auto e = event.get_if<spkt::removed<SphereCollider3DComponent>>()) {
+        auto& entry = d_impl->entityData[e->entity];
         entry.body->removeCollider(entry.sphereCollider);
-    });
+    }
+    else if (auto e = event.get_if<spkt::added<CapsuleCollider3DComponent>>()) {
+        assert(e->entity.has<Transform3DComponent>());
+        assert(e->entity.has<RigidBody3DComponent>());
 
-    dispatcher.subscribe<spkt::added<CapsuleCollider3DComponent>>([&](ev::Event& event, auto&& data) {
-        assert(data.entity.has<Transform3DComponent>());
-        assert(data.entity.has<RigidBody3DComponent>());
-
-        auto& tc = data.entity.get<Transform3DComponent>();
-        auto& cc = data.entity.get<CapsuleCollider3DComponent>();
-        auto& entry = d_impl->entityData[data.entity];
+        auto& tc = e->entity.get<Transform3DComponent>();
+        auto& cc = e->entity.get<CapsuleCollider3DComponent>();
+        auto& entry = d_impl->entityData[e->entity];
         
         rp3d::CapsuleShape* shape = d_impl->pc.createCapsuleShape(cc.radius, cc.height);
         rp3d::Transform transform = Convert(cc.position, cc.orientation);
 
         entry.capsuleCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.capsuleCollider, data.entity.get<RigidBody3DComponent>()); 
-    });
-
-    dispatcher.subscribe<spkt::removed<CapsuleCollider3DComponent>>([&](ev::Event& event, auto&& data) {
-        auto& entry = d_impl->entityData[data.entity];
+        SetMaterial(entry.capsuleCollider, e->entity.get<RigidBody3DComponent>()); 
+    }
+    else if (auto e = event.get_if<spkt::removed<SphereCollider3DComponent>>()) {
+        auto& entry = d_impl->entityData[e->entity];
         entry.body->removeCollider(entry.capsuleCollider);
-    });
+    }
 }
 
 void PhysicsEngine3D::on_update(spkt::registry& registry, const ev::Dispatcher& dispatcher, double dt)
