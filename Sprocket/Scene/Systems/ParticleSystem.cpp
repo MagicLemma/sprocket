@@ -10,7 +10,7 @@ ParticleSystem::ParticleSystem(ParticleManager* manager)
 {
 }
 
-void ParticleSystem::on_update(spkt::registry& registry, const ev::Dispatcher&, double dt)
+void ParticleSystem::on_update(spkt::registry& registry, double dt)
 {
     for (auto entity : registry.view<ParticleComponent>()) {
         auto& tc = registry.get<Transform3DComponent>(entity);

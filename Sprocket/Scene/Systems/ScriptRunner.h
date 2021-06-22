@@ -22,8 +22,8 @@ class ScriptRunner : public EntitySystem
 public:
     ScriptRunner(Window* window);
 
-    void on_startup(spkt::registry& registry, ev::Dispatcher& dispatcher) override;
-    void on_update(spkt::registry& registry, const ev::Dispatcher& dispatcher, double dt) override;
+    void on_event(spkt::registry& registry, ev::Event& event) override;
+    void on_update(spkt::registry& registry, double dt) override;
 };
 
 }

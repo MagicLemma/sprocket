@@ -19,8 +19,6 @@ class Scene
 
     spkt::registry d_registry;
 
-    ev::Dispatcher d_dispatcher;
-
 public:
     Scene();
     ~Scene();
@@ -56,7 +54,7 @@ T& Scene::Add(Args&&... args)
     assert(d_lookup.find(spkt::type_info<T>) == d_lookup.end());
     d_lookup[spkt::type_info<T>] = d_systems.size();
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
-    d_systems.back()->on_startup(d_registry, d_dispatcher);
+    d_systems.back()->on_startup(d_registry);
     return *static_cast<T*>(d_systems.back().get());
 }
 

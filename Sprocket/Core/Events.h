@@ -40,48 +40,6 @@ Event make_event(Args&&... args)
 	return Event(std::in_place_type<T>, std::forward<Args>(args)...);
 }
 
-class Dispatcher
-{
-public:
-	using EventHandler = std::function<void(ev::Event&)>;
-
-	template <typename T>
-	using EventHandlerTyped = std::function<void(ev::Event&, const T&)>;
-
-private:
-	std::unordered_map<std::type_index, std::vector<EventHandler>> d_handlers;
-
-public:
-	
-	template <typename T>
-	void subscribe(const EventHandler& handler)
-	{
-		d_handlers[typeid(T)].push_back(handler);
-	}
-
-	template <typename T>
-	void subscribe(const EventHandlerTyped<T>& handler)
-	{
-		d_handlers[typeid(T)].push_back([handler](ev::Event& event) {
-			handler(event, event.get<T>());
-		});
-	}
-
-	void desubscribe_all()
-	{
-		d_handlers.clear();
-	}
-
-	void publish(ev::Event& event) const
-	{
-		if (auto it = d_handlers.find(event.type_info()); it != d_handlers.end()) {
-			for (auto& handler : it->second) {
-				handler(event);
-			}
-		}
-	}
-};
-
 // KEYBOARD EVENTS 
 struct KeyboardButtonPressed {
 	int key;

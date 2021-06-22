@@ -199,7 +199,9 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
         }
     }
 
-    d_scene.OnEvent(event);
+    if (!event.is_consumed()) {
+        d_scene.OnEvent(event);
+    }
 }
 
 void WorldLayer::OnUpdate(double dt)
@@ -283,32 +285,32 @@ void WorldLayer::OnRender()
                 
             auto pos = grid.SelectedPosition().value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                selected.destroy();
+                if (selected.valid()) { selected.destroy(); }
                 AddTree(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                selected.destroy();
+                if (selected.valid()) { selected.destroy(); }
                 AddRock(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                selected.destroy();
+                if (selected.valid()) { selected.destroy(); }
                 AddIron(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                selected.destroy();
+                if (selected.valid()) { selected.destroy(); }
                 AddTin(pos);
             }
 
             if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                selected.destroy();
+                if (selected.valid()) { selected.destroy(); }
                 AddMithril(pos);
             }
 
             if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                selected.destroy();
+                if (selected.valid()) { selected.destroy(); }
             }
 
             d_hoveredEntityUI.EndPanel();
