@@ -142,5 +142,9 @@ struct MeshAnimationComponent
     float speed = 1.0f;
 };
 
+struct Singleton
+{
+};
+
 
 }

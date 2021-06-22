@@ -88,6 +88,15 @@ DATAMATIC_BEGIN SAVABLE=true
         }
 DATAMATIC_END
     }
+
+    // Add the singleton entity if the scene does not have one.
+    auto singleton = reg->find<Singleton>();
+    if (!reg->valid(singleton)) {
+        log::info("Adding a singleton entity to the loaded scene");
+        singleton = reg->create();
+        reg->emplace<Singleton>(singleton);
+        reg->emplace<NameComponent>(singleton, "::Singleton");
+    }
 }
 
 spkt::entity Copy(spkt::registry* reg, spkt::entity entity)

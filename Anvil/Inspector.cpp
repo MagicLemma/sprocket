@@ -275,6 +275,16 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
+    if (entity.has<Singleton>()) {
+        auto& c = entity.get<Singleton>();
+        if (ImGui::CollapsingHeader("Singleton")) {
+            ImGui::PushID(count++);
+            
+            if (ImGui::Button("Delete")) { entity.remove<Singleton>(); }
+            ImGui::PopID();
+        }
+    }
+
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -357,6 +367,10 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<MeshAnimationComponent>() && ImGui::Selectable("Mesh Animation")) {
             MeshAnimationComponent c;
             entity.add<MeshAnimationComponent>(c);
+        }
+        if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
+            Singleton c;
+            entity.add<Singleton>(c);
         }
         ImGui::EndMenu();
     }

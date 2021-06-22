@@ -65,11 +65,6 @@ public:
     void on_update(double dt);
     void on_render();
 
-    // Remove these
-    void OnEvent(ev::Event& event) { on_event(event); }
-    void OnUpdate(double dt) { on_update(dt); }
-    void OnRender() { on_render(); }
-
     spkt::entity selected() { return d_selected; }
     void set_selected(spkt::entity e) { d_selected = e; }
     void clear_selected() { d_selected = spkt::null; }

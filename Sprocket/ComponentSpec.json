@@ -545,6 +545,14 @@
                     "default": "1.0f"
                 }
             ]
+        },
+        {
+            "name": "Singleton",
+            "display_name": "Singleton",
+            "flags": {
+                "SCRIPTABLE": false
+            },
+            "attributes": []
         }
     ]
 }
