@@ -49,7 +49,6 @@ public:
 template <typename T, typename... Args>
 T& Scene::Add(Args&&... args)
 {
-    assert(d_registry.size() == 0);
     assert(d_lookup.find(spkt::type_info<T>) == d_lookup.end());
     d_lookup[spkt::type_info<T>] = d_systems.size();
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));

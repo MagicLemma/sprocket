@@ -85,9 +85,17 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<spkt::entity*>(lua_touserdata(L, 1));
-        luaEntity->destroy();
+        auto entity = Converter<spkt::entity>::read(L, 1);
+        entity.destroy();
         return 0;
+    });
+
+    lua_register(L, "entity_from_id", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        auto id = Converter<spkt::identifier>::read(L, 1);
+        Converter<spkt::entity>::push(L, {registry, id});
+        return 1;
     });
 
     // Add functions for iterating over all entities in __scene__. The C++ functions

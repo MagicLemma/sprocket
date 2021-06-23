@@ -27,6 +27,7 @@ public:
     PhysicsEngine3D(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
     ~PhysicsEngine3D() = default;
 
+    void on_startup(spkt::registry& registry) override;
     void on_event(spkt::registry& registry, ev::Event& event) override;
     void on_update(spkt::registry& registry, double dt) override;
 

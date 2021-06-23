@@ -285,6 +285,17 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
+    if (entity.has<CollisionSingleton>()) {
+        auto& c = entity.get<CollisionSingleton>();
+        if (ImGui::CollapsingHeader("Collision Singleton")) {
+            ImGui::PushID(count++);
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.remove<CollisionSingleton>(); }
+            ImGui::PopID();
+        }
+    }
+
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -371,6 +382,10 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
             Singleton c;
             entity.add<Singleton>(c);
+        }
+        if (!entity.has<CollisionSingleton>() && ImGui::Selectable("Collision Singleton")) {
+            CollisionSingleton c;
+            entity.add<CollisionSingleton>(c);
         }
         ImGui::EndMenu();
     }

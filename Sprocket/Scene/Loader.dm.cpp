@@ -41,14 +41,6 @@ DATAMATIC_END
 
 void Load(const std::string& file, spkt::registry* reg)
 {
-    // Must be a clean scene
-    u32 count = 0;
-    for (auto id : reg->all()) {
-        spkt::entity entity{*reg, id};
-        if (!entity.has<TemporaryComponent>()) ++count;
-    }
-    assert(count == 0);
-
     std::ifstream stream(file);
     std::stringstream sstream;
     sstream << stream.rdbuf();

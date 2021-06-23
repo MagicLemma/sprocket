@@ -17,6 +17,11 @@ Scene::Scene()
             OnEvent(event);
         });
     });
+
+    auto singleton = d_registry.create();
+    d_registry.emplace<Singleton>(singleton);
+    d_registry.emplace<TemporaryComponent>(singleton);
+    d_registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
 }
 
 void Scene::Load(std::string_view file)

@@ -170,11 +170,6 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
-        if (entity.has<Singleton>()) {
-            const auto& c = entity.get<Singleton>();
-            out << YAML::Key << "Singleton" << YAML::BeginMap;
-            out << YAML::EndMap;
-        }
         out << YAML::EndMap;
     }
     out << YAML::EndSeq;
@@ -186,14 +181,6 @@ void Save(const std::string& file, spkt::registry* reg)
 
 void Load(const std::string& file, spkt::registry* reg)
 {
-    // Must be a clean scene
-    u32 count = 0;
-    for (auto id : reg->all()) {
-        spkt::entity entity{*reg, id};
-        if (!entity.has<TemporaryComponent>()) ++count;
-    }
-    assert(count == 0);
-
     std::ifstream stream(file);
     std::stringstream sstream;
     sstream << stream.rdbuf();
@@ -354,10 +341,6 @@ void Load(const std::string& file, spkt::registry* reg)
             c.speed = transform(spec["speed"].as<float>());
             e.add<MeshAnimationComponent>(c);
         }
-        if (auto spec = entity["Singleton"]) {
-            Singleton c;
-            e.add<Singleton>(c);
-        }
     }
 
     // Add the singleton entity if the scene does not have one.
@@ -432,6 +415,9 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     }
     if (entity.has<Singleton>()) {
         e.add<Singleton>(entity.get<Singleton>());
+    }
+    if (entity.has<CollisionSingleton>()) {
+        e.add<CollisionSingleton>(entity.get<CollisionSingleton>());
     }
     return e;
 }
@@ -615,6 +601,12 @@ void Copy(spkt::registry* source, spkt::registry* target)
             const Singleton& source_comp = src.get<Singleton>();
             Singleton target_comp;
             dst.add<Singleton>(target_comp);
+        }
+        if (src.has<CollisionSingleton>()) {
+            const CollisionSingleton& source_comp = src.get<CollisionSingleton>();
+            CollisionSingleton target_comp;
+            target_comp.collisions = transform(source_comp.collisions);
+            dst.add<CollisionSingleton>(target_comp);
         }
     }
 }

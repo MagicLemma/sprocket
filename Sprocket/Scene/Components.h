@@ -2,6 +2,9 @@
 #include "Maths.h"
 #include <queue>
 #include <string>
+#include <utility>
+
+#include "apecs.hpp"
 
 namespace Sprocket {
 
@@ -144,6 +147,11 @@ struct MeshAnimationComponent
 
 struct Singleton
 {
+};
+
+struct CollisionSingleton
+{
+    std::vector<std::pair<apx::entity, apx::entity>> collisions = {};
 };
 
 
