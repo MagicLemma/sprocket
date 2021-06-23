@@ -3,7 +3,17 @@ function Init(entity)
     FLIP = true
 end
 
-function OnUpdate(entity, dt) end
+function OnUpdate(entity, dt)
+    local singleton = entity_singleton()
+    local cs = GetCollisionSingleton(singleton)
+    for k, collision in pairs(cs.collisions) do
+        local left = collision[1]
+        local right = collision[2]
+        if OnCollisionEvent(entity_from_id(left), entity_from_id(right)) then
+            ToggleLight(ENTITY)
+        end
+    end
+end
 
 function ToggleLight(entity)
     local light = GetLightComponent(entity)

@@ -559,7 +559,6 @@
             "name": "CollisionSingleton",
             "display_name": "Collision Singleton",
             "flags": {
-                "SCRIPTABLE": false,
                 "SAVABLE": false
             },
             "attributes": [

@@ -118,7 +118,7 @@ template <typename T, typename... Rest> struct Converter<std::vector<T, Rest...>
         int index = 1;
         for (const auto& elem : value) {
             Converter<value_type>::push(L, elem);
-            lua_rawseti(L, -1, index++);
+            lua_rawseti(L, -2, index++);
         }
     }
 
@@ -143,9 +143,9 @@ template <typename Left, typename Right> struct Converter<std::pair<Left, Right>
     {
         lua_newtable(L);
         Converter<Left>::push(L, value.first);
-        lua_rawseti(L, -1, 1);
+        lua_rawseti(L, -2, 1);
         Converter<Right>::push(L, value.second);
-        lua_rawseti(L, -1, 2);
+        lua_rawseti(L, -2, 2);
     }
 
     static pair_t read(lua_State* L, int index)
