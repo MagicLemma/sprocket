@@ -550,9 +550,25 @@
             "name": "Singleton",
             "display_name": "Singleton",
             "flags": {
-                "SCRIPTABLE": false
+                "SCRIPTABLE": false,
+                "SAVABLE": false
             },
             "attributes": []
+        },
+        {
+            "name": "CollisionSingleton",
+            "display_name": "Collision Singleton",
+            "flags": {
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "collisions",
+                    "display_name": "Collisions",
+                    "type": "std::vector<std::pair<apx::entity, apx::entity>>",
+                    "default": "{}"
+                }
+            ]
         }
     ]
 }

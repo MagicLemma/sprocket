@@ -3,9 +3,19 @@ function Init(entity)
     FLIP = true
 end
 
-function OnUpdate(entity, dt) end
+function OnUpdate(entity, dt)
+    local singleton = entity_singleton()
+    local cs = GetCollisionSingleton(singleton)
+    for k, collision in pairs(cs.collisions) do
+        local left = entity_from_id(collision[1])
+        local right = entity_from_id(collision[2])
+        if AreEntitiesEqual(ENTITY, left) or AreEntitiesEqual(ENTITY, right) then
+            toggle_light(ENTITY)
+        end
+    end
+end
 
-function ToggleLight(entity)
+function toggle_light(entity)
     local light = GetLightComponent(entity)
     if FLIP then
         light.colour = vec3.new(0, 1, 0)
@@ -14,13 +24,4 @@ function ToggleLight(entity)
     end
     FLIP = not FLIP
     SetLightComponent(entity, light)
-end
-
-
-function OnCollisionEvent(entity1, entity2)
-    if AreEntitiesEqual(ENTITY, entity1) or AreEntitiesEqual(ENTITY, entity2) then
-        ToggleLight(ENTITY)
-        return true
-    end
-    return false
 end

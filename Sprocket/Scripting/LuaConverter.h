@@ -4,8 +4,12 @@
 #include "ECS.h"
 #include <cstddef>
 #include <string>
+#include <vector>
+#include <utility>
+#include <cassert>
 
 #include <glm/glm.hpp>
+#include <lua.hpp>
 
 struct lua_State;
 
@@ -101,6 +105,70 @@ template <> struct Converter<glm::vec3>
 {
     static void push(lua_State* L, const glm::vec3& value);
     static glm::vec3 read(lua_State* L, int index);
+};
+
+template <typename T, typename... Rest> struct Converter<std::vector<T, Rest...>>
+{
+    using vector_t = std::vector<T, Rest...>;
+    using value_type = typename vector_t::value_type;
+
+    static void push(lua_State* L, const vector_t& value)
+    {
+        lua_newtable(L);
+        int index = 1;
+        for (const auto& elem : value) {
+            Converter<value_type>::push(L, elem);
+            lua_rawseti(L, -2, index++);
+        }
+    }
+
+    static vector_t read(lua_State* L, int index)
+    {
+        vector_t value;
+        assert(lua_istable(L, index));
+        lua_pushnil(L);
+        while (0 != lua_next(L, index)) {
+            value.push_back(Converter<value_type>::read(L, index + 2));
+            lua_pop(L, 1);
+        }
+        return value;
+    }
+};
+
+template <typename Left, typename Right> struct Converter<std::pair<Left, Right>>
+{
+    using pair_t = std::pair<Left, Right>;
+    
+    static void push(lua_State* L, const pair_t& value)
+    {
+        lua_newtable(L);
+        Converter<Left>::push(L, value.first);
+        lua_rawseti(L, -2, 1);
+        Converter<Right>::push(L, value.second);
+        lua_rawseti(L, -2, 2);
+    }
+
+    static pair_t read(lua_State* L, int index)
+    {
+        pair_t value;
+        assert(lua_istable(L, index));
+        lua_pushnil(L);
+
+        int rc = lua_next(L, index);
+        assert(rc != 0);
+        value.first = Converter<Left>::read(L, index + 2);
+        lua_pop(L, 1);
+
+        rc = lua_next(L, index);
+        assert(rc != 0);
+        value.second = Converter<Right>::read(L, index + 2);
+        lua_pop(L, 1);
+
+        rc = lua_next(L, index);
+        assert(rc == 0);
+
+        return value;
+    }
 };
 
 }

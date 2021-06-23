@@ -87,7 +87,7 @@ public:
 
 class EventListener : public rp3d::EventListener
 {
-    std::vector<ev::Event> d_events;
+    std::vector<std::pair<apx::entity, apx::entity>> d_collisions;
 
 public:
     void onContact(const rp3d::CollisionCallback::CallbackData& data) override
@@ -98,13 +98,12 @@ public:
             if (type == rp3d::CollisionCallback::ContactPair::EventType::ContactStart) {
                 spkt::entity e1 = *static_cast<spkt::entity*>(pair.getBody1()->getUserData());
                 spkt::entity e2 = *static_cast<spkt::entity*>(pair.getBody2()->getUserData());
-                ev::Event event = ev::make_event<CollisionEvent>(e1, e2);
-                d_events.push_back(event);
+                d_collisions.push_back(std::make_pair(e1.entity(), e2.entity()));
             }
         }
     }
 
-    std::vector<ev::Event>& events() { return d_events; }
+    std::vector<std::pair<apx::entity, apx::entity>>& collisions() { return d_collisions; }
 };
 
 }
@@ -174,6 +173,12 @@ bool IsOnFloor(const PhysicsEngine3DImpl& impl, spkt::entity entity)
 PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
     : d_impl(std::make_unique<PhysicsEngine3DImpl>(gravity))
 {
+}
+
+void PhysicsEngine3D::on_startup(spkt::registry& registry)
+{
+    auto singleton = registry.find<Singleton>();
+    registry.emplace<CollisionSingleton>(singleton);
 }
 
 void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
@@ -318,11 +323,11 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
         rc.onFloor = IsOnFloor(*d_impl, entity);
     }
 
-    // Publish all generated events
-    //for (auto& event : d_impl->listener.events()) {
-    //    dispatcher.publish(event);
-    //}
-    d_impl->listener.events().clear();
+    // Update the CollisionSingleton
+    auto singleton = registry.find<Singleton>();
+    auto& cs = registry.get<CollisionSingleton>(singleton);
+    cs.collisions = d_impl->listener.collisions();
+    d_impl->listener.collisions().clear();
 }
 
 spkt::entity PhysicsEngine3D::Raycast(const glm::vec3& base,
