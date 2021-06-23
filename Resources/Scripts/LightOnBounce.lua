@@ -9,9 +9,7 @@ function OnUpdate(entity, dt)
     for k, collision in pairs(cs.collisions) do
         local left = collision[1]
         local right = collision[2]
-        if OnCollisionEvent(entity_from_id(left), entity_from_id(right)) then
-            ToggleLight(ENTITY)
-        end
+        OnCollisionEvent(entity_from_id(left), entity_from_id(right))
     end
 end
 
