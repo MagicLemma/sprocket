@@ -3,7 +3,6 @@
 #include "LuaConverter.h"
 #include "ECS.h"
 #include "Scene.h"
-#include "InputProxy.h"
 #include "Window.h"
 #include "Components.h"
 #include "Log.h"
