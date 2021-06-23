@@ -3,6 +3,7 @@
 #include <queue>
 #include <string>
 #include <utility>
+#include <array>
 
 #include "apecs.hpp"
 
@@ -152,6 +153,12 @@ struct Singleton
 struct CollisionSingleton
 {
     std::vector<std::pair<apx::entity, apx::entity>> collisions = {};
+};
+
+struct InputSingleton
+{
+    std::array<bool, 512> keyboard = {};
+    std::array<bool, 5> mouse = {};
 };
 
 

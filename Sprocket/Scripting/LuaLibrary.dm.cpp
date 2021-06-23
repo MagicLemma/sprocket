@@ -3,7 +3,6 @@
 #include "LuaConverter.h"
 #include "ECS.h"
 #include "Scene.h"
-#include "InputProxy.h"
 #include "Window.h"
 #include "Components.h"
 #include "Log.h"
@@ -109,6 +108,25 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         return 1;
     });
 
+    // Input access via the singleton component.
+    lua_register(L, "IsKeyDown", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        auto singleton = registry.find<Singleton>();
+        auto& input = registry.get<InputSingleton>(singleton);
+        Converter<bool>::push(L, input.keyboard[(int)lua_tointeger(L, 1)]);
+        return 1;
+    });
+
+    lua_register(L, "IsMouseDown", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        auto singleton = registry.find<Singleton>();
+        auto& input = registry.get<InputSingleton>(singleton);
+        Converter<bool>::push(L, input.mouse[(int)lua_tointeger(L, 1)]);
+        return 1;
+    });
+
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
@@ -184,28 +202,6 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
             end
         end
     )lua");
-}
-
-void load_input_functions(lua::Script& script, InputProxy& input)
-{
-    lua_State* L = script.native_handle();
-    script.set_value("__input__", &input);
-
-    lua_register(L, "IsKeyDown", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto ip = get_pointer<InputProxy>(L, "__input__");
-        bool keyboard_down = ip ? ip->is_keyboard_down((int)lua_tointeger(L, 1)) : false;
-        Converter<bool>::push(L, keyboard_down);
-        return 1;
-    });
-
-    lua_register(L, "IsMouseDown", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto ip = get_pointer<InputProxy>(L, "__input__");
-        bool mouse_down = ip ? ip->is_mouse_down((int)lua_tointeger(L, 1)) : false;
-        Converter<bool>::push(L, mouse_down);
-        return 1;
-    });
 }
 
 void load_window_functions(lua::Script& script, Window& window)
