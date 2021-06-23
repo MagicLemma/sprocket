@@ -48,14 +48,11 @@ apx::generator<lua::Script&> ScriptRunner::active_scripts()
 
 void ScriptRunner::on_event(spkt::registry& registry, ev::Event& event)
 {
-    d_input.on_event(event);
-
     if (auto e = event.get_if<spkt::added<ScriptComponent>>()) {
         lua::Script script(e->entity.get<ScriptComponent>().script);
         lua::load_vec3_functions(script);
         lua::load_vec2_functions(script);
         lua::load_registry_functions(script, registry);
-        lua::load_input_functions(script, d_input);
         lua::load_window_functions(script, *d_window);
 
         lua::load_entity_transformation_functions(script);

@@ -2,7 +2,6 @@
 #include "LuaScript.h"
 #include "ECS.h"
 #include "EntitySystem.h"
-#include "InputProxy.h"
 #include "Window.h"
 
 #include <unordered_map>
@@ -13,7 +12,6 @@ namespace Sprocket {
 class ScriptRunner : public EntitySystem
 {
     Window*    d_window;
-    InputProxy d_input;
 
     std::unordered_map<spkt::entity, std::pair<lua::Script, bool>> d_engines;
 
