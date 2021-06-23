@@ -75,14 +75,6 @@ void ScriptRunner::on_event(spkt::registry& registry, ev::Event& event)
             }
         }
     }
-    else if (auto e = event.get_if<ev::MouseButtonPressed>()) {
-        for (auto& script : active_scripts()) {
-            if (script.has_function("OnMouseButtonPressedEvent") &&
-                script.call_function<bool>("OnMouseButtonPressedEvent", e->button, e->action, e->mods)) {
-                event.consume();
-            }
-        }
-    }
     else if (auto e = event.get_if<ev::MouseScrolled>()) {
         for (auto& script : active_scripts()) {
             if (script.has_function("OnMouseScrolledEvent") &&
