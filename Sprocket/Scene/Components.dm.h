@@ -3,6 +3,7 @@
 #include <queue>
 #include <string>
 #include <utility>
+#include <array>
 
 #include "apecs.hpp"
 

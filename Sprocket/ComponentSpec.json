@@ -569,6 +569,34 @@
                     "default": "{}"
                 }
             ]
+        },
+        {
+            "name": "InputSingleton",
+            "display_name": "Input Singleton",
+            "flags": {
+                "SAVABLE": false,
+                "SCRIPTABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "keyboard",
+                    "display_name": "Keyboard",
+                    "type": "std::array<bool, 512>",
+                    "default": "{}",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
+                },
+                {
+                    "name": "mouse",
+                    "display_name": "Mouse",
+                    "type": "std::array<bool, 5>",
+                    "default": "{}",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
+                }
+            ]
         }
     ]
 }

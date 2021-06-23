@@ -419,6 +419,9 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     if (entity.has<CollisionSingleton>()) {
         e.add<CollisionSingleton>(entity.get<CollisionSingleton>());
     }
+    if (entity.has<InputSingleton>()) {
+        e.add<InputSingleton>(entity.get<InputSingleton>());
+    }
     return e;
 }
 
@@ -607,6 +610,13 @@ void Copy(spkt::registry* source, spkt::registry* target)
             CollisionSingleton target_comp;
             target_comp.collisions = transform(source_comp.collisions);
             dst.add<CollisionSingleton>(target_comp);
+        }
+        if (src.has<InputSingleton>()) {
+            const InputSingleton& source_comp = src.get<InputSingleton>();
+            InputSingleton target_comp;
+            target_comp.keyboard = transform(source_comp.keyboard);
+            target_comp.mouse = transform(source_comp.mouse);
+            dst.add<InputSingleton>(target_comp);
         }
     }
 }
