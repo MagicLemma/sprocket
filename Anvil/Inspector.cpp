@@ -302,6 +302,8 @@ void Inspector::Show(Anvil& editor)
             ImGui::PushID(count++);
             ;
             ;
+            ;
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<InputSingleton>(); }
             ImGui::PopID();

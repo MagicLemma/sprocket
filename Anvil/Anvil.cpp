@@ -117,6 +117,8 @@ void Anvil::on_update(double dt)
         const auto& transform = d_scene->Entities().get<Transform3DComponent>(entity);
         return transform.position.y < -50;
     });
+
+    d_activeScene->post_update();
 }
 
 glm::mat4 Anvil::get_proj_matrix() const

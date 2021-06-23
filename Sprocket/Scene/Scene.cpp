@@ -54,15 +54,27 @@ void Scene::OnEvent(ev::Event& event)
         else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
             if (!event.is_consumed()) { 
                 input.mouse[data->button] = true;
+                input.mouse_click[data->button] = true;
             }
         }
         else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
             input.mouse[data->button] = false;
+            input.mouse_unclick[data->button] = true;
         }
     }
 
     for (auto& system : d_systems) {
         system->on_event(d_registry, event);
+    }
+}
+
+void Scene::post_update()
+{
+    auto singleton = d_registry.find<Singleton>();
+    if (d_registry.valid(singleton)) {
+        auto& input = d_registry.get<InputSingleton>(singleton);
+        input.mouse_click.fill(false);
+        input.mouse_unclick.fill(false);
     }
 }
 

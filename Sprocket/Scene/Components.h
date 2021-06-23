@@ -159,6 +159,8 @@ struct InputSingleton
 {
     std::array<bool, 512> keyboard = {};
     std::array<bool, 5> mouse = {};
+    std::array<bool, 5> mouse_click = {};
+    std::array<bool, 5> mouse_unclick = {};
 };
 
 

@@ -616,6 +616,8 @@ void Copy(spkt::registry* source, spkt::registry* target)
             InputSingleton target_comp;
             target_comp.keyboard = transform(source_comp.keyboard);
             target_comp.mouse = transform(source_comp.mouse);
+            target_comp.mouse_click = transform(source_comp.mouse_click);
+            target_comp.mouse_unclick = transform(source_comp.mouse_unclick);
             dst.add<InputSingleton>(target_comp);
         }
     }

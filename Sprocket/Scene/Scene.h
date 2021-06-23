@@ -35,6 +35,8 @@ public:
     void OnUpdate(double dt);
     void OnEvent(ev::Event& event);
 
+    void post_update();
+
     std::size_t Size() const;
 
     void Clear();

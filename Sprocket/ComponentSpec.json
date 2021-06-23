@@ -595,6 +595,24 @@
                     "flags": {
                         "SCRIPTABLE": false
                     }
+                },
+                {
+                    "name": "mouse_click",
+                    "display_name": "Mouse Click",
+                    "type": "std::array<bool, 5>",
+                    "default": "{}",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
+                },
+                {
+                    "name": "mouse_unclick",
+                    "display_name": "Mouse Unclick",
+                    "type": "std::array<bool, 5>",
+                    "default": "{}",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         }
