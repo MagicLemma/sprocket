@@ -254,7 +254,7 @@ void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
         entry.capsuleCollider = entry.body->addCollider(shape, transform);
         SetMaterial(entry.capsuleCollider, e->entity.get<RigidBody3DComponent>()); 
     }
-    else if (auto e = event.get_if<spkt::removed<SphereCollider3DComponent>>()) {
+    else if (auto e = event.get_if<spkt::removed<CapsuleCollider3DComponent>>()) {
         auto& entry = d_impl->entityData[e->entity];
         entry.body->removeCollider(entry.capsuleCollider);
     }
