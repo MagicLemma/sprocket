@@ -10,13 +10,6 @@ namespace Sprocket {
 
 struct PhysicsEngine3DImpl;
 
-struct CollisionEvent
-{
-    spkt::entity entity1;
-    spkt::entity entity2;
-    CollisionEvent(spkt::entity e1, spkt::entity e2) : entity1(e1), entity2(e2) {}
-};
-
 class PhysicsEngine3D : public EntitySystem
 {
     static constexpr float TIME_STEP = 1.0f / 120.0f;

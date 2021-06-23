@@ -6,7 +6,6 @@
 #include "LuaLibrary.h"
 #include "LuaMaths.h"
 #include "Components.h"
-#include "PhysicsEngine3D.h"
 
 #include <utility>
 
@@ -91,14 +90,6 @@ void ScriptRunner::on_event(spkt::registry& registry, ev::Event& event)
         for (auto& script : active_scripts()) {
             if (script.has_function("OnMouseScrolledEvent") &&
                 script.call_function<bool>("OnMouseScrolledEvent", e->x_offset, e->y_offset)) {
-                event.consume();
-            }
-        }
-    }
-    else if (auto e = event.get_if<CollisionEvent>()) {
-        for (auto& script : active_scripts()) {
-            if (script.has_function("OnCollisionEvent") &&
-                script.call_function<bool>("OnCollisionEvent", e->entity1, e->entity2)) {
                 event.consume();
             }
         }
