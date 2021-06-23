@@ -118,6 +118,24 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         return 1;
     });
 
+    lua_register(L, "IsMouseClicked", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        auto singleton = registry.find<Singleton>();
+        auto& input = registry.get<InputSingleton>(singleton);
+        Converter<bool>::push(L, input.mouse_click[(int)lua_tointeger(L, 1)]);
+        return 1;
+    });
+
+    lua_register(L, "IsMouseUnclicked", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        auto singleton = registry.find<Singleton>();
+        auto& input = registry.get<InputSingleton>(singleton);
+        Converter<bool>::push(L, input.mouse_unclick[(int)lua_tointeger(L, 1)]);
+        return 1;
+    });
+
     lua_register(L, "IsMouseDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
