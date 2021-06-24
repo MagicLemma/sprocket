@@ -618,6 +618,11 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.mouse = transform(source_comp.mouse);
             target_comp.mouse_click = transform(source_comp.mouse_click);
             target_comp.mouse_unclick = transform(source_comp.mouse_unclick);
+            target_comp.mouse_pos = transform(source_comp.mouse_pos);
+            target_comp.mouse_offset = transform(source_comp.mouse_offset);
+            target_comp.mouse_scrolled = transform(source_comp.mouse_scrolled);
+            target_comp.window_width = transform(source_comp.window_width);
+            target_comp.window_height = transform(source_comp.window_height);
             dst.add<InputSingleton>(target_comp);
         }
     }

@@ -304,6 +304,11 @@ void Inspector::Show(Anvil& editor)
             ;
             ;
             ;
+            ImGui::DragFloat2("Mouse Position", &c.mouse_pos.x, 0.1f);
+            ImGui::DragFloat2("Mouse Offset", &c.mouse_offset.x, 0.1f);
+            ImGui::DragFloat2("Mouse Scrolled", &c.mouse_scrolled.x, 0.1f);
+            ImGui::DragFloat("Window Width", &c.window_width, 0.01f);
+            ImGui::DragFloat("Window Height", &c.window_height, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.remove<InputSingleton>(); }
             ImGui::PopID();
