@@ -105,7 +105,6 @@ void WorldLayer::LoadScene(std::string_view file)
 {
     using namespace Sprocket;
 
-    d_scene.Clear();
     d_scene.Add<ScriptRunner>(d_window);
     d_scene.Add<CameraSystem>(d_window->AspectRatio());
     d_scene.Add<PathFollower>();
