@@ -165,7 +165,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_scene->Clear();
+                    d_activeScene = d_scene = std::make_shared<Scene>(d_window);
                     log::info("...done!");
                 }
             }
@@ -174,7 +174,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_scene->Clear();
+                    d_activeScene = d_scene = std::make_shared<Scene>(d_window);
                     Loader::Load(file, &d_scene->Entities());
                     log::info("...done!");
                 }

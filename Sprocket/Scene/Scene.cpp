@@ -84,11 +84,4 @@ std::size_t Scene::Size() const
     return d_registry.size();
 }
 
-void Scene::Clear()
-{
-    d_registry.clear();
-    d_lookup.clear();
-    d_systems.clear();
-}
-
 }

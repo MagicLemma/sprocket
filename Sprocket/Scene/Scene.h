@@ -31,7 +31,6 @@ public:
     template <typename T, typename... Args>
     T& Add(Args&&... args);
 
-    template <typename T> bool Has();
     template <typename T> T& Get();
 
     void Load(std::string_view file);
@@ -42,8 +41,6 @@ public:
     void post_update();
 
     std::size_t Size() const;
-
-    void Clear();
 
     template <typename... Comps>
     spkt::entity find(const std::function<bool(spkt::entity)>& function = [](spkt::entity) { return true; });
@@ -60,11 +57,6 @@ T& Scene::Add(Args&&... args)
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
     d_systems.back()->on_startup(d_registry);
     return *static_cast<T*>(d_systems.back().get());
-}
-
-template <typename T> bool Scene::Has()
-{
-    return d_lookup.find(spkt::type_info<T>) != d_lookup.end();
 }
 
 template <typename T> T& Scene::Get()
