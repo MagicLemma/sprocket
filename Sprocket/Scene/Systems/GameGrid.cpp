@@ -69,19 +69,18 @@ void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
             d_gridEntities.erase(it);
         }
     }
-    else if (auto e = event.get_if<ev::MouseButtonPressed>()) {
-        if (e->button == Mouse::LEFT) {
-            d_selected = d_hovered;
-        } else {
-            d_selected = std::nullopt;
-        }
-    }
 }
 
 void GameGrid::on_update(spkt::registry& registry, double dt)
 {
     auto singleton = registry.find<Singleton>();
     const auto& input = registry.get<InputSingleton>(singleton);
+
+    if (input.mouse_click[Mouse::LEFT]) {
+        d_selected = d_hovered;
+    } else if (input.mouse_click[Mouse::RIGHT]) {
+        d_selected = std::nullopt;
+    }
 
     auto& camTr = d_camera.get<Transform3DComponent>();
 

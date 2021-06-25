@@ -13,6 +13,16 @@
 
 namespace Sprocket {
 
+template <typename Comp>
+Comp& get_singleton(spkt::registry& registry)
+{
+    auto singleton = registry.find<Singleton>();
+    assert(registry.valid(singleton));
+    assert(registry.has<Comp>(singleton));
+    return registry.get<Comp>(singleton);
+} 
+
+
 class Scene
 {
     // Temporary, will be removed when then the InputSingleton gets updated via a system.
@@ -31,7 +41,8 @@ public:
     template <typename T, typename... Args>
     T& Add(Args&&... args);
 
-    template <typename T> T& Get();
+    template <typename T>
+    T& Get();
 
     void Load(std::string_view file);
 
@@ -59,11 +70,10 @@ T& Scene::Add(Args&&... args)
     return *static_cast<T*>(d_systems.back().get());
 }
 
-template <typename T> T& Scene::Get()
+template <typename T>
+T& Scene::Get()
 {
-    auto it = d_lookup.find(spkt::type_info<T>);
-    assert(it != d_lookup.end());
-    return *static_cast<T*>(d_systems[it->second].get());
+    return *static_cast<T*>(d_systems[d_lookup[spkt::type_info<T>]].get());
 }
 
 template <typename... Comps>
@@ -78,7 +88,7 @@ spkt::entity Scene::find(const std::function<bool(spkt::entity)>& function)
 template <typename... Comps>
 apx::generator<spkt::entity> Scene::view()
 {
-    if (sizeof...(Comps) > 0) {
+    if constexpr (sizeof...(Comps) > 0) {
         for (auto id : d_registry.view<Comps...>()) {
             co_yield {d_registry, id};
         }

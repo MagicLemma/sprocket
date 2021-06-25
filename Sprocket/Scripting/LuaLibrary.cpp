@@ -145,6 +145,24 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         return 1;
     });
 
+    lua_register(L, "GetMousePos", [](lua_State* L) {
+        if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        auto singleton = registry.find<Singleton>();
+        const auto& input = registry.get<InputSingleton>(singleton);
+        Converter<glm::vec2>::push(L, input.mouse_pos);
+        return 1;
+    });
+
+    lua_register(L, "GetMouseOffset", [](lua_State* L) {
+        if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        auto singleton = registry.find<Singleton>();
+        const auto& input = registry.get<InputSingleton>(singleton);
+        Converter<glm::vec2>::push(L, input.mouse_offset);
+        return 1;
+    });
+
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
@@ -220,28 +238,6 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
             end
         end
     )lua");
-}
-
-void load_window_functions(lua::Script& script, Window& window)
-{
-    lua_State* L = script.native_handle();
-    script.set_value("__window__", &window);
-
-    lua_register(L, "GetMousePos", [](lua_State* L) {
-        if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto w = get_pointer<Window>(L, "__window__");
-        glm::vec2 mouse_pos = w ? w->GetMousePos() : glm::vec2(0.0, 0.0);
-        Converter<glm::vec2>::push(L, mouse_pos);
-        return 1;
-    });
-
-    lua_register(L, "GetMouseOffset", [](lua_State* L) {
-        if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto w = get_pointer<Window>(L, "__window__");
-        glm::vec2 mouse_offset = w ? w->GetMouseOffset() : glm::vec2(0.0, 0.0);
-        Converter<glm::vec2>::push(L, mouse_offset);
-        return 1;
-    });
 }
 
 void load_entity_transformation_functions(lua::Script& script)

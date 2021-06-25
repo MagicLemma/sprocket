@@ -7,20 +7,15 @@ struct lua_State;
 
 namespace Sprocket {
 
-class Window;
-
 namespace lua {
 
 class Script;
 
 // Loads the given scene into the given lua state, and provides functions for
 // creating/deleting entities as well as iterating entities. Also provides functions
-// for access the singleton entity.
+// for access the singleton entity, which in turn gives access to the keyboard, mouse
+// and window via the InputSingleton.
 void load_registry_functions(lua::Script& script, spkt::registry& registry);
-
-// Loads the given window into the given lua state, and provides functions for
-// checking the current mouse position and the mouse offset from the previous frame.
-void load_window_functions(lua::Script& script, Window& window);
 
 // Loads a bunch of helper functions to ease entity manipulation.
 void load_entity_transformation_functions(lua::Script& script);

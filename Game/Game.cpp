@@ -105,10 +105,10 @@ void WorldLayer::LoadScene(std::string_view file)
 {
     using namespace Sprocket;
 
-    d_scene.Add<ScriptRunner>(d_window);
+    d_scene.Add<ScriptRunner>();
     d_scene.Add<CameraSystem>();
     d_scene.Add<PathFollower>();
-    d_scene.Add<GameGrid>();
+    auto& game_grid = d_scene.Add<GameGrid>();
     d_scene.Load(file);
     d_paused = false;
 
@@ -122,7 +122,7 @@ void WorldLayer::LoadScene(std::string_view file)
         return entity.get<NameComponent>().name == "Camera";
     });
 
-    d_scene.Get<GameGrid>().SetCamera(d_camera);
+    game_grid.SetCamera(d_camera);
 
     assert(d_worker != spkt::null);
     assert(d_camera != spkt::null);
@@ -236,6 +236,8 @@ void WorldLayer::OnUpdate(double dt)
 
     d_devUI.OnUpdate(dt);
     d_escapeMenu.OnUpdate(dt);
+
+    d_scene.post_update();
 }
 
 void WorldLayer::OnRender()
