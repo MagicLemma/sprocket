@@ -69,6 +69,7 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
 
 WorldLayer::WorldLayer(Window* window) 
     : d_window(window)
+    , d_scene(window)
     , d_assetManager()
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(&d_assetManager)

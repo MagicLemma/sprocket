@@ -9,6 +9,7 @@ const auto SPACE_DARK  = Sprocket::FromHex(0x2C3A47);
 
 Runtime::Runtime(Window* window) 
     : d_window(window)
+    , d_scene(window)
     , d_assetManager()
     , d_entityRenderer(&d_assetManager)
     , d_skyboxRenderer(&d_assetManager)

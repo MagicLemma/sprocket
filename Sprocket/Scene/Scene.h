@@ -4,6 +4,7 @@
 #include "EntitySystem.h"
 #include "Events.h"
 #include "TypeInfo.h"
+#include "Window.h"
 
 #include <memory>
 #include <vector>
@@ -14,13 +15,16 @@ namespace Sprocket {
 
 class Scene
 {
+    // Temporary, will be removed when then the InputSingleton gets updated via a system.
+    Window* d_window;
+
     std::unordered_map<::spkt::type_info_t, std::size_t> d_lookup;
     std::vector<std::unique_ptr<EntitySystem>> d_systems;
 
     spkt::registry d_registry;
 
 public:
-    Scene();
+    Scene(Window* window);
 
     spkt::registry& Entities() { return d_registry; }
 

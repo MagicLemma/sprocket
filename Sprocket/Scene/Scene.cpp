@@ -4,7 +4,8 @@
 
 namespace Sprocket {
 
-Scene::Scene()
+Scene::Scene(Window* window)
+    : d_window(window)
 {
     auto singleton = d_registry.create();
     d_registry.emplace<Singleton>(singleton);

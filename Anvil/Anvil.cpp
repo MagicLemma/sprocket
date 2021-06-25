@@ -47,7 +47,7 @@ Anvil::Anvil(Window* window)
 {
     d_window->SetCursorVisibility(true);
 
-    d_scene = std::make_shared<Scene>();    
+    d_scene = std::make_shared<Scene>(window);    
     d_scene->Load(d_sceneFile);
 
     d_runtimeCamera = d_scene->find([](spkt::entity entity) {
@@ -197,7 +197,7 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<Scene>(); 
+                d_activeScene = std::make_shared<Scene>(d_window); 
                 d_activeScene->Add<PhysicsEngine3D>();
                 d_activeScene->Add<CameraSystem>(d_window->AspectRatio());
                 d_activeScene->Add<ScriptRunner>(d_window);
