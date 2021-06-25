@@ -108,7 +108,7 @@ void WorldLayer::LoadScene(std::string_view file)
     d_scene.Add<ScriptRunner>(d_window);
     d_scene.Add<CameraSystem>();
     d_scene.Add<PathFollower>();
-    d_scene.Add<GameGrid>(d_window);
+    d_scene.Add<GameGrid>();
     d_scene.Load(file);
     d_paused = false;
 

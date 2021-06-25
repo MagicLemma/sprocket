@@ -62,6 +62,19 @@ void Scene::OnEvent(ev::Event& event)
             input.mouse[data->button] = false;
             input.mouse_unclick[data->button] = true;
         }
+        else if (auto data = event.get_if<ev::MouseScrolled>()) {
+            input.mouse_offset.x += data->x_offset;
+            input.mouse_offset.y += data->y_offset;
+        }
+        else if (auto data = event.get_if<ev::WindowResize>()) {
+            input.window_resized = true;
+        }
+
+        input.mouse_pos = d_window->GetMousePos();
+        input.mouse_offset = d_window->GetMouseOffset();
+
+        input.window_width = (float)d_window->Width();
+        input.window_height = (float)d_window->Height();
     }
 
     for (auto& system : d_systems) {

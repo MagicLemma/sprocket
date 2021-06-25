@@ -17,9 +17,8 @@ std::string Name(const spkt::entity& e) {
     return "Entity";
 }
 
-GameGrid::GameGrid(Window* window)
-    : d_window(window)
-    , d_hovered({0.0, 0.0})
+GameGrid::GameGrid()
+    : d_hovered({0.0, 0.0})
     , d_selected({})
 {
 }
@@ -79,15 +78,18 @@ void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
     }
 }
 
-void GameGrid::on_update(spkt::registry&, double dt)
+void GameGrid::on_update(spkt::registry& registry, double dt)
 {
+    auto singleton = registry.find<Singleton>();
+    const auto& input = registry.get<InputSingleton>(singleton);
+
     auto& camTr = d_camera.get<Transform3DComponent>();
 
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
-        d_window->GetMousePos(),
-        d_window->Width(),
-        d_window->Height(),
+        input.mouse_pos,
+        input.window_width,
+        input.window_height,
         MakeView(d_camera),
         MakeProj(d_camera)
     );
