@@ -623,6 +623,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.mouse_scrolled = transform(source_comp.mouse_scrolled);
             target_comp.window_width = transform(source_comp.window_width);
             target_comp.window_height = transform(source_comp.window_height);
+            target_comp.window_resized = transform(source_comp.window_resized);
             dst.add<InputSingleton>(target_comp);
         }
     }

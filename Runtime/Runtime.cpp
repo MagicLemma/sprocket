@@ -28,7 +28,7 @@ Runtime::Runtime(Window* window)
 
     d_scene.Add<PhysicsEngine3D>();
     d_scene.Add<ScriptRunner>(d_window);
-    d_scene.Add<CameraSystem>(d_window->AspectRatio());
+    d_scene.Add<CameraSystem>();
     d_scene.Add<ParticleSystem>(&d_particleManager);
     d_scene.Add<AnimationSystem>();
     d_scene.Load("Resources/Anvil.yaml");

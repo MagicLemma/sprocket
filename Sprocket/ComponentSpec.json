@@ -624,13 +624,19 @@
                     "name": "window_width",
                     "display_name": "Window Width",
                     "type": "float",
-                    "default": "0.0f"
+                    "default": "1280.0f"
                 },
                 {
                     "name": "window_height",
                     "display_name": "Window Height",
                     "type": "float",
-                    "default": "0.0f"
+                    "default": "720.0f"
+                },
+                {
+                    "name": "window_resized",
+                    "display_name": "Window Resized",
+                    "type": "bool",
+                    "default": "false"
                 }
             ]
         }

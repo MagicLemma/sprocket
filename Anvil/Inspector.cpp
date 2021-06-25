@@ -309,6 +309,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat2("Mouse Scrolled", &c.mouse_scrolled.x, 0.1f);
             ImGui::DragFloat("Window Width", &c.window_width, 0.01f);
             ImGui::DragFloat("Window Height", &c.window_height, 0.01f);
+            ImGui::Checkbox("Window Resized", &c.window_resized);
             
             if (ImGui::Button("Delete")) { entity.remove<InputSingleton>(); }
             ImGui::PopID();
