@@ -111,6 +111,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Mass", &c.mass, 0.01f);
             ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.1f);
             ImGui::Checkbox("Apply Scale", &c.applyScale);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<BoxCollider3DComponent>(); }
             ImGui::PopID();

@@ -9,6 +9,21 @@
 namespace Sprocket {
 namespace {
 
+struct delete_below_50 : public EntitySystem
+{
+    void on_update(spkt::registry& registry, double)
+    {
+        std::vector<apx::entity> to_delete;
+        for (auto entity : registry.view<Transform3DComponent>()) {
+            auto& t = registry.get<Transform3DComponent>(entity);
+            if (t.position.y < -50.0f) { to_delete.push_back(entity); }
+        }
+        for (auto entity : to_delete) {
+            registry.destroy(entity);
+        }
+    }
+};
+
 std::string Name(const spkt::entity& entity)
 {
     if (entity.has<NameComponent>()) {
@@ -203,6 +218,7 @@ void Anvil::on_render()
                 d_activeScene->Add<ScriptRunner>();
                 d_activeScene->Add<ParticleSystem>(&d_particle_manager);
                 d_activeScene->Add<AnimationSystem>();
+                d_activeScene->Add<delete_below_50>();
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
                 d_playingGame = true;

@@ -15,6 +15,7 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+class collider_runtime;
 
 // Components
 struct TemporaryComponent
@@ -65,6 +66,7 @@ struct BoxCollider3DComponent
     float mass = 1.0f;
     glm::vec3 halfExtents = {0.0f, 0.0f, 0.0f};
     bool applyScale = true;
+    std::shared_ptr<collider_runtime> runtime = nullptr;
 };
 
 struct SphereCollider3DComponent

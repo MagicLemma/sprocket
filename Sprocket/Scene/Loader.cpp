@@ -497,6 +497,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.mass = transform(source_comp.mass);
             target_comp.halfExtents = transform(source_comp.halfExtents);
             target_comp.applyScale = transform(source_comp.applyScale);
+            target_comp.runtime = transform(source_comp.runtime);
             dst.add<BoxCollider3DComponent>(target_comp);
         }
         if (src.has<SphereCollider3DComponent>()) {

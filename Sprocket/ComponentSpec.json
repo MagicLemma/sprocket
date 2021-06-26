@@ -206,6 +206,16 @@
                     "display_name": "Apply Scale",
                     "type": "bool",
                     "default": "true"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         },

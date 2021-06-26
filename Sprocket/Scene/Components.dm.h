@@ -15,6 +15,7 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+class collider_runtime;
 
 // Components
 DATAMATIC_BEGIN

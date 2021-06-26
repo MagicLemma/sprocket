@@ -8,6 +8,8 @@
 
 namespace Sprocket {
 
+struct collider_runtime;
+
 struct PhysicsEngine3DImpl;
 
 class PhysicsEngine3D : public EntitySystem
