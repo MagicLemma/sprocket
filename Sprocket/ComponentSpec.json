@@ -249,6 +249,16 @@
                     "display_name": "Radius",
                     "type": "float",
                     "default": "1.0f"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         },

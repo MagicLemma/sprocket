@@ -75,6 +75,7 @@ struct SphereCollider3DComponent
     glm::quat orientation = {0.0f, 0.0f, 0.0f, 1.0f};
     float mass = 1.0f;
     float radius = 1.0f;
+    std::shared_ptr<collider_runtime> runtime = nullptr;
 };
 
 struct CapsuleCollider3DComponent

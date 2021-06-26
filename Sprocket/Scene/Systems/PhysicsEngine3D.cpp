@@ -154,6 +154,24 @@ std::shared_ptr<collider_runtime> make_box_collider(
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
 
+std::shared_ptr<collider_runtime> make_sphere_collider(
+    rp3d::PhysicsCommon* pc,
+    spkt::registry& registry,
+    apx::entity entity,
+    rp3d::RigidBody* rigid_body
+) {
+    auto& tc = registry.get<Transform3DComponent>(entity);
+    auto& sc = registry.get<SphereCollider3DComponent>(entity);
+    
+    rp3d::SphereShape* shape = pc->createSphereShape(sc.radius);
+    rp3d::Transform transform = Convert(sc.position, sc.orientation);
+
+    rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
+    SetMaterial(collider, registry.get<RigidBody3DComponent>(entity));
+
+    return std::make_shared<collider_runtime>(rigid_body, collider);
+}
+
 
 struct PhysicsEngine3DImpl
 {
@@ -238,24 +256,6 @@ void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
         d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
         d_impl->entityData.erase(rigidBodyIt);
     }
-    else if (auto e = event.get_if<spkt::added<SphereCollider3DComponent>>()) {
-        assert(e->entity.has<Transform3DComponent>());
-        assert(e->entity.has<RigidBody3DComponent>());
-
-        auto& tc = e->entity.get<Transform3DComponent>();
-        auto& sc = e->entity.get<SphereCollider3DComponent>();
-        auto& entry = d_impl->entityData[e->entity];
-        
-        rp3d::SphereShape* shape = d_impl->pc.createSphereShape(sc.radius);
-        rp3d::Transform transform = Convert(sc.position, sc.orientation);
-
-        entry.sphereCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.sphereCollider, e->entity.get<RigidBody3DComponent>());   
-    }
-    else if (auto e = event.get_if<spkt::removed<SphereCollider3DComponent>>()) {
-        auto& entry = d_impl->entityData[e->entity];
-        entry.body->removeCollider(entry.sphereCollider);
-    }
     else if (auto e = event.get_if<spkt::added<CapsuleCollider3DComponent>>()) {
         assert(e->entity.has<Transform3DComponent>());
         assert(e->entity.has<RigidBody3DComponent>());
@@ -291,6 +291,12 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
             auto& box = entity.get<BoxCollider3DComponent>();
             if (!box.runtime) {
                 box.runtime = make_box_collider(&d_impl->pc, registry, id, body);
+            }
+        }
+        if (entity.has<SphereCollider3DComponent>()) {
+            auto& sphere = entity.get<SphereCollider3DComponent>();
+            if (!sphere.runtime) {
+                sphere.runtime = make_sphere_collider(&d_impl->pc, registry, id, body);
             }
         }
 

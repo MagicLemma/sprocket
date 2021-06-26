@@ -507,6 +507,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.orientation = transform(source_comp.orientation);
             target_comp.mass = transform(source_comp.mass);
             target_comp.radius = transform(source_comp.radius);
+            target_comp.runtime = transform(source_comp.runtime);
             dst.add<SphereCollider3DComponent>(target_comp);
         }
         if (src.has<CapsuleCollider3DComponent>()) {

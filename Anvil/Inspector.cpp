@@ -126,6 +126,7 @@ void Inspector::Show(Anvil& editor)
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat("Mass", &c.mass, 0.01f);
             ImGui::DragFloat("Radius", &c.radius, 0.01f);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<SphereCollider3DComponent>(); }
             ImGui::PopID();
