@@ -66,7 +66,7 @@ void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
     }
 }
 
-void GameGrid::on_update(spkt::registry& registry, double dt)
+void GameGrid::on_update(spkt::registry& registry, double)
 {
     const auto& input = get_singleton<InputSingleton>(registry);
     const auto& cam = get_singleton<CameraSingleton>(registry);
