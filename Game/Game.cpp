@@ -180,12 +180,13 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
                 std::queue<glm::vec3>().swap(path.markers);
                 auto pos = d_worker.get<Transform3DComponent>().position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
+                    auto& registry = d_scene.Entities();
+                    const auto& grid = get_singleton<GameGridSingleton>(registry);
                     path.markers = GenerateAStarPath(
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            auto e = d_scene.Get<GameGrid>().At(d_scene.Entities(), pos);
-                            return e.valid();
+                            return registry.valid(grid.game_grid.at(pos));
                         }
                     );
                 } else {

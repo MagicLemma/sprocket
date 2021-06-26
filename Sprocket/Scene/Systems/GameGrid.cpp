@@ -117,31 +117,4 @@ void GameGrid::on_update(spkt::registry& registry, double dt)
     }
 }
 
-spkt::entity GameGrid::At(spkt::registry& registry, const glm::ivec2& pos) const
-{
-    const auto& grid = get_singleton<GameGridSingleton>(registry);
-
-    auto it = grid.game_grid.find(pos);
-    if (it != grid.game_grid.end()) {
-        return {registry, it->second};
-    }
-    return spkt::null;
-}
-
-spkt::entity GameGrid::Hovered(spkt::registry& registry) const
-{
-    const auto& grid = get_singleton<GameGridSingleton>(registry);
-    return At(registry, grid.hovered_square);
-}
-
-spkt::entity GameGrid::Selected(spkt::registry& registry) const
-{
-    const auto& grid = get_singleton<GameGridSingleton>(registry);
-
-    if (grid.clicked_square.has_value()) {
-        return At(registry, grid.clicked_square.value());
-    }
-    return spkt::null;
-}
-
 }
