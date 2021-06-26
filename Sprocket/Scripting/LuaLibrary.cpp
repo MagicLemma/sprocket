@@ -156,7 +156,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         Converter<glm::vec2>::push(L, input.mouse_offset);
         return 1;
     });
-
+  
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.

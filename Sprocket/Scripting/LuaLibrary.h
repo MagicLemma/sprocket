@@ -6,7 +6,6 @@
 struct lua_State;
 
 namespace Sprocket {
-
 namespace lua {
 
 class Script;
