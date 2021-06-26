@@ -103,11 +103,11 @@ void Copy(spkt::registry* source, spkt::registry* target)
         id_remapper[id] = new_id;
     }
 
-    const auto transform = [&](auto&& param) {
+    const auto transform = [&] <typename T> (T&& param) {
         if constexpr (std::is_same_v<decltype(param), spkt::identifier>) {
             return id_remapper[param];
         }
-        return param;
+        return std::forward<T>(param);
     };
 
     for (auto id : source->all()) {

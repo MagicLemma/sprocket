@@ -300,6 +300,26 @@
                     "display_name": "Active",
                     "type": "bool",
                     "default": "true"
+                },
+                {
+                    "name": "script_runtime",
+                    "display_name": "Script Runtime",
+                    "type": "std::shared_ptr<lua::Script>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
+                },
+                {
+                    "name": "requested_deletion",
+                    "display_name": "Requested Deletion",
+                    "type": "bool",
+                    "default": "false",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false  
+                    }
                 }
             ]
         },

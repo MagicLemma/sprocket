@@ -69,6 +69,13 @@ template <typename T> int _has_impl(lua_State* L)
     return 1;
 }
 
+void add_command(lua_State* L, const std::function<void()>& command)
+{
+    using command_list_t = std::vector<std::function<void()>>;
+    command_list_t& command_list = *get_pointer<command_list_t>(L, "__command_list__");
+    command_list.push_back(command);
+}
+
 }
 
 void load_registry_functions(lua::Script& script, spkt::registry& registry)
@@ -87,8 +94,8 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto luaEntity = static_cast<spkt::entity*>(lua_touserdata(L, 1));
-        luaEntity->destroy();
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
+        add_command(L, [=]() mutable { entity.destroy(); });
         return 0;
     });
 
@@ -336,7 +343,8 @@ int _Add{{Comp::name}}(lua_State* L) {
     assert(!e.has<{{Comp::name}}>());
     {{Comp::name}} c;
     c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
-    e.add<{{Comp::name}}>(c);
+    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+    add_command(L, [e, c]() mutable { e.add<{{Comp::name}}>(c); });
     return 0;
 }
 

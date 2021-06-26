@@ -6,6 +6,7 @@
 #include <array>
 #include <unordered_map>
 #include <optional>
+#include <memory>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
@@ -13,6 +14,7 @@
 #include "apecs.hpp"
 
 namespace Sprocket {
+namespace lua { class Script; }
 
 // Components
 DATAMATIC_BEGIN

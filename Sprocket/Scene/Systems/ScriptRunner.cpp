@@ -8,48 +8,47 @@
 #include "Components.h"
 
 #include <utility>
+#include <vector>
+#include <functional>
 
 namespace Sprocket {
 
-void ScriptRunner::on_update(spkt::registry&, double dt)
+void ScriptRunner::on_update(spkt::registry& registry, double dt)
 {
-    // We delete scripts here rather then with OnRemove otherwise we would segfault if
-    // a script tries to delete its own entity, which is functionality that we want to
-    // support.
-    for (auto it = d_engines.begin(); it != d_engines.end();) {
-        auto& entity = it->first;
-        auto& [script, alive] = it->second;
+    std::vector<std::function<void()>> commands;
 
-        if (alive) {
-            if (entity.get<ScriptComponent>().active) {
-                script.call_function<void>("OnUpdate", entity, dt);
-            }
-            ++it;
-        } else {
-            it = d_engines.erase(it);
+    registry.erase_if<ScriptComponent>([&](apx::entity entity) {
+        auto& sc = registry.get<ScriptComponent>(entity);
+        if (sc.requested_deletion) {
+            return true;
         }
+        else if (!sc.script_runtime) {
+            sc.script_runtime = std::make_shared<lua::Script>(sc.script);
+            lua::Script& script = *sc.script_runtime;
+            lua::load_vec3_functions(script);
+            lua::load_vec2_functions(script);
+            lua::load_registry_functions(script, registry);
+            lua::load_entity_transformation_functions(script);
+            lua::load_entity_component_functions(script);
+            script.set_value("__command_list__", &commands);
+            script.call_function<void>("Init", spkt::entity{registry, entity});
+        }
+        else {
+            lua::Script& script = *sc.script_runtime;
+            script.set_value("__command_list__", &commands);
+            script.call_function<void>("OnUpdate", spkt::entity{registry, entity}, dt);
+        }
+        
+        return false;
+    });
+
+    for (auto& command : commands) {
+        command();
     }
 }
 
 void ScriptRunner::on_event(spkt::registry& registry, ev::Event& event)
 {
-    if (auto e = event.get_if<spkt::added<ScriptComponent>>()) {
-        lua::Script script(e->entity.get<ScriptComponent>().script);
-        lua::load_vec3_functions(script);
-        lua::load_vec2_functions(script);
-        lua::load_registry_functions(script, registry);
-        lua::load_entity_transformation_functions(script);
-        lua::load_entity_component_functions(script);
-
-        script.call_function<void>("Init", e->entity);
-        d_engines.emplace(e->entity, std::make_pair(std::move(script), true));
-    }
-    else if (auto e = event.get_if<spkt::removed<ScriptComponent>>()) {
-        auto it = d_engines.find(e->entity);
-        if (it != d_engines.end()) {
-            it->second.second = false; // alive = false
-        }
-    }
 }
 
 }
