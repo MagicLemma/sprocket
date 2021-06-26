@@ -310,16 +310,6 @@
                         "SCRIPTABLE": false,
                         "SAVABLE": false
                     }
-                },
-                {
-                    "name": "requested_deletion",
-                    "display_name": "Requested Deletion",
-                    "type": "bool",
-                    "default": "false",
-                    "flags": {
-                        "SCRIPTABLE": false,
-                        "SAVABLE": false  
-                    }
                 }
             ]
         },

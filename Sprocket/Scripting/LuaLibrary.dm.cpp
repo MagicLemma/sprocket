@@ -95,7 +95,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
-        add_command(L, [=]() mutable { entity.destroy(); });
+        add_command(L, [entity]() mutable { entity.destroy(); });
         return 0;
     });
 
