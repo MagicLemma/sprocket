@@ -41,41 +41,43 @@ void Scene::OnUpdate(double dt)
 void Scene::OnEvent(ev::Event& event)
 {
     auto singleton = d_registry.find<Singleton>();
-    if (d_registry.valid(singleton)) {
-        auto& input = d_registry.get<InputSingleton>(singleton);
-
-        if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
-            if (!event.is_consumed()) {
-                input.keyboard[data->key] = true;
-            }
-        }
-        else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
-            input.keyboard[data->key] = false;
-        }
-        else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
-            if (!event.is_consumed()) { 
-                input.mouse[data->button] = true;
-                input.mouse_click[data->button] = true;
-            }
-        }
-        else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
-            input.mouse[data->button] = false;
-            input.mouse_unclick[data->button] = true;
-        }
-        else if (auto data = event.get_if<ev::MouseScrolled>()) {
-            input.mouse_offset.x += data->x_offset;
-            input.mouse_offset.y += data->y_offset;
-        }
-        else if (auto data = event.get_if<ev::WindowResize>()) {
-            input.window_resized = true;
-        }
-
-        input.mouse_pos = d_window->GetMousePos();
-        input.mouse_offset = d_window->GetMouseOffset();
-
-        input.window_width = (float)d_window->Width();
-        input.window_height = (float)d_window->Height();
+    if (!d_registry.valid(singleton)) {
+        return;
     }
+
+    auto& input = d_registry.get<InputSingleton>(singleton);
+
+    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+        if (!event.is_consumed()) {
+            input.keyboard[data->key] = true;
+        }
+    }
+    else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
+        input.keyboard[data->key] = false;
+    }
+    else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
+        if (!event.is_consumed()) { 
+            input.mouse[data->button] = true;
+            input.mouse_click[data->button] = true;
+        }
+    }
+    else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
+        input.mouse[data->button] = false;
+        input.mouse_unclick[data->button] = true;
+    }
+    else if (auto data = event.get_if<ev::MouseScrolled>()) {
+        input.mouse_offset.x += data->x_offset;
+        input.mouse_offset.y += data->y_offset;
+    }
+    else if (auto data = event.get_if<ev::WindowResize>()) {
+        input.window_resized = true;
+    }
+
+    input.mouse_pos = d_window->GetMousePos();
+    input.mouse_offset = d_window->GetMouseOffset();
+
+    input.window_width = (float)d_window->Width();
+    input.window_height = (float)d_window->Height();
 
     for (auto& system : d_systems) {
         system->on_event(d_registry, event);

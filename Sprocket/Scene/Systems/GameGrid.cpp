@@ -73,8 +73,7 @@ void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
 
 void GameGrid::on_update(spkt::registry& registry, double dt)
 {
-    auto singleton = registry.find<Singleton>();
-    const auto& input = registry.get<InputSingleton>(singleton);
+    const auto& input = get_singleton<InputSingleton>(registry);
 
     if (input.mouse_click[Mouse::LEFT]) {
         d_selected = d_hovered;

@@ -112,8 +112,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "IsKeyDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto singleton = registry.find<Singleton>();
-        auto& input = registry.get<InputSingleton>(singleton);
+        const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.keyboard[(int)lua_tointeger(L, 1)]);
         return 1;
     });
@@ -121,8 +120,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "IsMouseClicked", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto singleton = registry.find<Singleton>();
-        auto& input = registry.get<InputSingleton>(singleton);
+        const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.mouse_click[(int)lua_tointeger(L, 1)]);
         return 1;
     });
@@ -130,8 +128,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "IsMouseUnclicked", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto singleton = registry.find<Singleton>();
-        auto& input = registry.get<InputSingleton>(singleton);
+        const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.mouse_unclick[(int)lua_tointeger(L, 1)]);
         return 1;
     });
@@ -139,8 +136,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "IsMouseDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto singleton = registry.find<Singleton>();
-        auto& input = registry.get<InputSingleton>(singleton);
+        const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.mouse[(int)lua_tointeger(L, 1)]);
         return 1;
     });
@@ -148,8 +144,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "GetMousePos", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto singleton = registry.find<Singleton>();
-        const auto& input = registry.get<InputSingleton>(singleton);
+        const auto& input = get_singleton<InputSingleton>(registry);
         Converter<glm::vec2>::push(L, input.mouse_pos);
         return 1;
     });
@@ -157,8 +152,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "GetMouseOffset", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto singleton = registry.find<Singleton>();
-        const auto& input = registry.get<InputSingleton>(singleton);
+        const auto& input = get_singleton<InputSingleton>(registry);
         Converter<glm::vec2>::push(L, input.mouse_offset);
         return 1;
     });
