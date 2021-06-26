@@ -5,17 +5,9 @@
 #include "MouseCodes.h"
 #include "Log.h"
 
-#include <random>
 #include <cassert>
 
 namespace Sprocket {
-
-std::string Name(const spkt::entity& e) {
-    if (e.has<NameComponent>()) {
-        return e.get<NameComponent>().name;
-    }
-    return "Entity";
-}
 
 void GameGrid::on_startup(spkt::registry& registry)
 {
