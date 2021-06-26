@@ -342,7 +342,6 @@ int _AddNameComponent(lua_State* L) {
     assert(!e.has<NameComponent>());
     NameComponent c;
     c.name = Converter<std::string>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<NameComponent>(c); });
     return 0;
 }
@@ -380,7 +379,6 @@ int _AddTransform2DComponent(lua_State* L) {
     c.position = Converter<glm::vec2>::read(L, ++ptr);
     c.rotation = Converter<float>::read(L, ++ptr);
     c.scale = Converter<glm::vec2>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<Transform2DComponent>(c); });
     return 0;
 }
@@ -415,7 +413,6 @@ int _AddTransform3DComponent(lua_State* L) {
     Transform3DComponent c;
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.scale = Converter<glm::vec3>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<Transform3DComponent>(c); });
     return 0;
 }
@@ -450,7 +447,6 @@ int _AddModelComponent(lua_State* L) {
     ModelComponent c;
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<ModelComponent>(c); });
     return 0;
 }
@@ -503,7 +499,6 @@ int _AddRigidBody3DComponent(lua_State* L) {
     c.rollingResistance = Converter<float>::read(L, ++ptr);
     c.force = Converter<glm::vec3>::read(L, ++ptr);
     c.onFloor = Converter<bool>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<RigidBody3DComponent>(c); });
     return 0;
 }
@@ -544,7 +539,6 @@ int _AddBoxCollider3DComponent(lua_State* L) {
     c.mass = Converter<float>::read(L, ++ptr);
     c.halfExtents = Converter<glm::vec3>::read(L, ++ptr);
     c.applyScale = Converter<bool>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<BoxCollider3DComponent>(c); });
     return 0;
 }
@@ -582,7 +576,6 @@ int _AddSphereCollider3DComponent(lua_State* L) {
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<SphereCollider3DComponent>(c); });
     return 0;
 }
@@ -623,7 +616,6 @@ int _AddCapsuleCollider3DComponent(lua_State* L) {
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
     c.height = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<CapsuleCollider3DComponent>(c); });
     return 0;
 }
@@ -658,7 +650,6 @@ int _AddScriptComponent(lua_State* L) {
     ScriptComponent c;
     c.script = Converter<std::string>::read(L, ++ptr);
     c.active = Converter<bool>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<ScriptComponent>(c); });
     return 0;
 }
@@ -693,7 +684,6 @@ int _AddCamera3DComponent(lua_State* L) {
     Camera3DComponent c;
     c.fov = Converter<float>::read(L, ++ptr);
     c.pitch = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<Camera3DComponent>(c); });
     return 0;
 }
@@ -728,7 +718,6 @@ int _AddSelectComponent(lua_State* L) {
     SelectComponent c;
     c.selected = Converter<bool>::read(L, ++ptr);
     c.hovered = Converter<bool>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<SelectComponent>(c); });
     return 0;
 }
@@ -760,7 +749,6 @@ int _AddPathComponent(lua_State* L) {
     assert(!e.has<PathComponent>());
     PathComponent c;
     c.speed = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<PathComponent>(c); });
     return 0;
 }
@@ -795,7 +783,6 @@ int _AddGridComponent(lua_State* L) {
     GridComponent c;
     c.x = Converter<int>::read(L, ++ptr);
     c.z = Converter<int>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<GridComponent>(c); });
     return 0;
 }
@@ -830,7 +817,6 @@ int _AddLightComponent(lua_State* L) {
     LightComponent c;
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<LightComponent>(c); });
     return 0;
 }
@@ -871,7 +857,6 @@ int _AddSunComponent(lua_State* L) {
     c.brightness = Converter<float>::read(L, ++ptr);
     c.direction = Converter<glm::vec3>::read(L, ++ptr);
     c.shadows = Converter<bool>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<SunComponent>(c); });
     return 0;
 }
@@ -906,7 +891,6 @@ int _AddAmbienceComponent(lua_State* L) {
     AmbienceComponent c;
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<AmbienceComponent>(c); });
     return 0;
 }
@@ -953,7 +937,6 @@ int _AddParticleComponent(lua_State* L) {
     c.acceleration = Converter<glm::vec3>::read(L, ++ptr);
     c.scale = Converter<glm::vec3>::read(L, ++ptr);
     c.life = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<ParticleComponent>(c); });
     return 0;
 }
@@ -991,7 +974,6 @@ int _AddMeshAnimationComponent(lua_State* L) {
     c.name = Converter<std::string>::read(L, ++ptr);
     c.time = Converter<float>::read(L, ++ptr);
     c.speed = Converter<float>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<MeshAnimationComponent>(c); });
     return 0;
 }
@@ -1023,7 +1005,6 @@ int _AddCollisionSingleton(lua_State* L) {
     assert(!e.has<CollisionSingleton>());
     CollisionSingleton c;
     c.collisions = Converter<std::vector<std::pair<apx::entity, apx::entity>>>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<CollisionSingleton>(c); });
     return 0;
 }

@@ -343,7 +343,6 @@ int _Add{{Comp::name}}(lua_State* L) {
     assert(!e.has<{{Comp::name}}>());
     {{Comp::name}} c;
     c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
     add_command(L, [e, c]() mutable { e.add<{{Comp::name}}>(c); });
     return 0;
 }
