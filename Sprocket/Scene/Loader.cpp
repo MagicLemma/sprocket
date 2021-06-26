@@ -432,11 +432,11 @@ void Copy(spkt::registry* source, spkt::registry* target)
         id_remapper[id] = new_id;
     }
 
-    const auto transform = [&](auto&& param) {
+    const auto transform = [&] <typename T> (T&& param) {
         if constexpr (std::is_same_v<decltype(param), spkt::identifier>) {
             return id_remapper[param];
         }
-        return param;
+        return std::forward<T>(param);
     };
 
     for (auto id : source->all()) {
@@ -523,6 +523,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             ScriptComponent target_comp;
             target_comp.script = transform(source_comp.script);
             target_comp.active = transform(source_comp.active);
+            target_comp.script_runtime = transform(source_comp.script_runtime);
             dst.add<ScriptComponent>(target_comp);
         }
         if (src.has<Camera3DComponent>()) {

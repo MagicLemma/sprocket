@@ -152,6 +152,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::PushID(count++);
             ImGuiXtra::File("Script", editor.window(), &c.script, "*.lua");
             ImGui::Checkbox("Active", &c.active);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<ScriptComponent>(); }
             ImGui::PopID();

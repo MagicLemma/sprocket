@@ -300,6 +300,16 @@
                     "display_name": "Active",
                     "type": "bool",
                     "default": "true"
+                },
+                {
+                    "name": "script_runtime",
+                    "display_name": "Script Runtime",
+                    "type": "std::shared_ptr<lua::Script>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
                 }
             ]
         },
