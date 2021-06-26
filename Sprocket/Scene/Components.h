@@ -4,6 +4,11 @@
 #include <string>
 #include <utility>
 #include <array>
+#include <unordered_map>
+#include <optional>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
 
 #include "apecs.hpp"
 
@@ -167,6 +172,20 @@ struct InputSingleton
     float window_width = 1280.0f;
     float window_height = 720.0f;
     bool window_resized = false;
+};
+
+struct GameGridSingleton
+{
+    apx::entity hovered_square_entity = apx::null;
+    apx::entity clicked_square_entity = apx::null;
+    glm::ivec2 hovered_square = {0, 0};
+    std::optional<glm::ivec2> clicked_square = std::nullopt;
+    std::unordered_map<glm::ivec2, apx::entity> game_grid = {};
+};
+
+struct CameraSingleton
+{
+    apx::entity camera_entity = apx::null;
 };
 
 

@@ -60,12 +60,9 @@ function OnUpdate(entity, dt)
     end
 
     SetLookAt(entity, pos, TARGET)
-end
 
-function OnMouseScrolledEvent(xOffset, yOffset)
-    if ABS_VERT == nil then return false end
-        -- If we receive an event before update, just ignore it
-
-    ABS_VERT = Clamp(ABS_VERT - yOffset, ABS_VERT_LOW, ABS_VERT_HIGH)
-    return true
+    local offset = GetMouseScrolled()
+    if offset.y ~= 0 and ABS_VERT ~= nil then
+        ABS_VERT = Clamp(ABS_VERT - offset.y, ABS_VERT_LOW, ABS_VERT_HIGH)
+    end
 end

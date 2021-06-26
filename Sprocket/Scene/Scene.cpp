@@ -66,8 +66,8 @@ void Scene::OnEvent(ev::Event& event)
         input.mouse_unclick[data->button] = true;
     }
     else if (auto data = event.get_if<ev::MouseScrolled>()) {
-        input.mouse_offset.x += data->x_offset;
-        input.mouse_offset.y += data->y_offset;
+        input.mouse_scrolled.x += data->x_offset;
+        input.mouse_scrolled.y += data->y_offset;
     }
     else if (auto data = event.get_if<ev::WindowResize>()) {
         input.window_resized = true;
@@ -91,6 +91,8 @@ void Scene::post_update()
         auto& input = d_registry.get<InputSingleton>(singleton);
         input.mouse_click.fill(false);
         input.mouse_unclick.fill(false);
+        input.mouse_offset = {0.0, 0.0};
+        input.mouse_scrolled = {0.0, 0.0};
     }
 }
 

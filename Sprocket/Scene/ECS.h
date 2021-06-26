@@ -31,7 +31,9 @@ using registry = apx::registry<
     Sprocket::MeshAnimationComponent,
     Sprocket::Singleton,
     Sprocket::CollisionSingleton,
-    Sprocket::InputSingleton
+    Sprocket::InputSingleton,
+    Sprocket::GameGridSingleton,
+    Sprocket::CameraSingleton
 >;
 
 using entity = typename registry::handle_type;
