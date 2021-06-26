@@ -89,7 +89,6 @@ struct ScriptComponent
     std::string script = "";
     bool active = true;
     std::shared_ptr<lua::Script> script_runtime = nullptr;
-    bool requested_deletion = false;
 };
 
 struct Camera3DComponent

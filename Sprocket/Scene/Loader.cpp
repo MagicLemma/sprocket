@@ -524,7 +524,6 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.script = transform(source_comp.script);
             target_comp.active = transform(source_comp.active);
             target_comp.script_runtime = transform(source_comp.script_runtime);
-            target_comp.requested_deletion = transform(source_comp.requested_deletion);
             dst.add<ScriptComponent>(target_comp);
         }
         if (src.has<Camera3DComponent>()) {
