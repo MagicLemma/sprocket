@@ -60,10 +60,13 @@ function OnUpdate(entity, dt)
         SetTransform3DComponent(entity, transform)
     end
 
+    if IsMouseClicked(0) then
+        Fire()
+    end
+
 end
 
-
-function OnMouseButtonPressedEvent(button, action, mods)
+function Fire()
     local newEntity = NewEntity()
 
     local dir = GetForwardsDir(ENTITY)
@@ -72,12 +75,6 @@ function OnMouseButtonPressedEvent(button, action, mods)
     
     local tc = Transform3DComponent(pos + dir, vec3.new(0.1, 0.1, 0.1))
     AddTransform3DComponent(newEntity, tc)
-
-    --local mc = ModelComponent(
-    --    "Resources/Models/Sphere.obj", 
-    --    "Resources/Materials/grey.yaml"
-    --)
-    --AddModelComponent(newEntity, mc)
 
     local rbc = RigidBody3DComponent(10 * dir + vel, true, false, 0.65, 0.3, 1, vec3.new(0, 0, 0), false)
     AddRigidBody3DComponent(newEntity, rbc)

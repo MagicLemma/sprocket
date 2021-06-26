@@ -47,7 +47,7 @@ Anvil::Anvil(Window* window)
 {
     d_window->SetCursorVisibility(true);
 
-    d_scene = std::make_shared<Scene>();    
+    d_scene = std::make_shared<Scene>(window);    
     d_scene->Load(d_sceneFile);
 
     d_runtimeCamera = d_scene->find([](spkt::entity entity) {
@@ -117,6 +117,8 @@ void Anvil::on_update(double dt)
         const auto& transform = d_scene->Entities().get<Transform3DComponent>(entity);
         return transform.position.y < -50;
     });
+
+    d_activeScene->post_update();
 }
 
 glm::mat4 Anvil::get_proj_matrix() const
@@ -163,7 +165,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_scene->Clear();
+                    d_activeScene = d_scene = std::make_shared<Scene>(d_window);
                     log::info("...done!");
                 }
             }
@@ -172,7 +174,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_scene->Clear();
+                    d_activeScene = d_scene = std::make_shared<Scene>(d_window);
                     Loader::Load(file, &d_scene->Entities());
                     log::info("...done!");
                 }
@@ -195,10 +197,10 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<Scene>(); 
+                d_activeScene = std::make_shared<Scene>(d_window); 
                 d_activeScene->Add<PhysicsEngine3D>();
-                d_activeScene->Add<CameraSystem>(d_window->AspectRatio());
-                d_activeScene->Add<ScriptRunner>(d_window);
+                d_activeScene->Add<CameraSystem>();
+                d_activeScene->Add<ScriptRunner>();
                 d_activeScene->Add<ParticleSystem>(&d_particle_manager);
                 d_activeScene->Add<AnimationSystem>();
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());

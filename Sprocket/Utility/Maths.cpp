@@ -67,7 +67,7 @@ glm::mat4 NoScale(const glm::mat4& matrix)
     return Maths::Transform(pos, ori);
 }
 
-glm::vec3 GetMouseRay(const glm::vec2& mousePos, u32 w, u32 h, const glm::mat4& view, const glm::mat4& proj)
+glm::vec3 GetMouseRay(const glm::vec2& mousePos, float w, float h, const glm::mat4& view, const glm::mat4& proj)
 {
     // Homogeneous Clip Space
     glm::vec4 ray = {(2.0f * mousePos.x) / w - 1, -((2.0f * mousePos.y) / h - 1), -1.0f, 1.0f};

@@ -70,7 +70,7 @@ int Run(App& app, Window& window, const RunOptions& options = {})
 
     while (window.Running()) {
         window.Clear();
-        
+
         double dt = watch.OnUpdate();
         app.on_update(dt);
         app.on_render();

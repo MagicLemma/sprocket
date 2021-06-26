@@ -9,6 +9,7 @@ const auto SPACE_DARK  = Sprocket::FromHex(0x2C3A47);
 
 Runtime::Runtime(Window* window) 
     : d_window(window)
+    , d_scene(window)
     , d_assetManager()
     , d_entityRenderer(&d_assetManager)
     , d_skyboxRenderer(&d_assetManager)
@@ -26,8 +27,8 @@ Runtime::Runtime(Window* window)
     d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_scene.Add<PhysicsEngine3D>();
-    d_scene.Add<ScriptRunner>(d_window);
-    d_scene.Add<CameraSystem>(d_window->AspectRatio());
+    d_scene.Add<ScriptRunner>();
+    d_scene.Add<CameraSystem>();
     d_scene.Add<ParticleSystem>(&d_particleManager);
     d_scene.Add<AnimationSystem>();
     d_scene.Load("Resources/Anvil.yaml");
@@ -67,6 +68,8 @@ void Runtime::OnUpdate(double dt)
         const auto& transform = d_scene.Entities().get<Transform3DComponent>(entity);
         return transform.position.y < -50;
     });
+
+    d_scene.post_update();
 }
 
 void Runtime::OnRender()

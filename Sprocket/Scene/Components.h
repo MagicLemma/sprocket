@@ -159,6 +159,14 @@ struct InputSingleton
 {
     std::array<bool, 512> keyboard = {};
     std::array<bool, 5> mouse = {};
+    std::array<bool, 5> mouse_click = {};
+    std::array<bool, 5> mouse_unclick = {};
+    glm::vec2 mouse_pos = {0.0, 0.0};
+    glm::vec2 mouse_offset = {0.0, 0.0};
+    glm::vec2 mouse_scrolled = {0.0, 0.0};
+    float window_width = 1280.0f;
+    float window_height = 720.0f;
+    bool window_resized = false;
 };
 
 

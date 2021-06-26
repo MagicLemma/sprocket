@@ -17,9 +17,8 @@ std::string Name(const spkt::entity& e) {
     return "Entity";
 }
 
-GameGrid::GameGrid(Window* window)
-    : d_window(window)
-    , d_hovered({0.0, 0.0})
+GameGrid::GameGrid()
+    : d_hovered({0.0, 0.0})
     , d_selected({})
 {
 }
@@ -70,24 +69,25 @@ void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
             d_gridEntities.erase(it);
         }
     }
-    else if (auto e = event.get_if<ev::MouseButtonPressed>()) {
-        if (e->button == Mouse::LEFT) {
-            d_selected = d_hovered;
-        } else {
-            d_selected = std::nullopt;
-        }
-    }
 }
 
-void GameGrid::on_update(spkt::registry&, double dt)
+void GameGrid::on_update(spkt::registry& registry, double dt)
 {
+    const auto& input = get_singleton<InputSingleton>(registry);
+
+    if (input.mouse_click[Mouse::LEFT]) {
+        d_selected = d_hovered;
+    } else if (input.mouse_click[Mouse::RIGHT]) {
+        d_selected = std::nullopt;
+    }
+
     auto& camTr = d_camera.get<Transform3DComponent>();
 
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
-        d_window->GetMousePos(),
-        d_window->Width(),
-        d_window->Height(),
+        input.mouse_pos,
+        input.window_width,
+        input.window_height,
         MakeView(d_camera),
         MakeProj(d_camera)
     );

@@ -324,8 +324,7 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
     }
 
     // Update the CollisionSingleton
-    auto singleton = registry.find<Singleton>();
-    auto& cs = registry.get<CollisionSingleton>(singleton);
+    auto& cs = get_singleton<CollisionSingleton>(registry);
     cs.collisions = d_impl->listener.collisions();
     d_impl->listener.collisions().clear();
 }

@@ -50,6 +50,7 @@ public:
     void OnEvent(Sprocket::ev::Event& event);
     void OnUpdate(double dt);
     void OnRender();
+    void PostUpdate() {}
 
     void LoadScene(std::string_view file);
 

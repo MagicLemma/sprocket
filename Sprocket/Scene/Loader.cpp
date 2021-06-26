@@ -342,15 +342,6 @@ void Load(const std::string& file, spkt::registry* reg)
             e.add<MeshAnimationComponent>(c);
         }
     }
-
-    // Add the singleton entity if the scene does not have one.
-    auto singleton = reg->find<Singleton>();
-    if (!reg->valid(singleton)) {
-        log::info("Adding a singleton entity to the loaded scene");
-        singleton = reg->create();
-        reg->emplace<Singleton>(singleton);
-        reg->emplace<NameComponent>(singleton, "::Singleton");
-    }
 }
 
 spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
@@ -616,6 +607,14 @@ void Copy(spkt::registry* source, spkt::registry* target)
             InputSingleton target_comp;
             target_comp.keyboard = transform(source_comp.keyboard);
             target_comp.mouse = transform(source_comp.mouse);
+            target_comp.mouse_click = transform(source_comp.mouse_click);
+            target_comp.mouse_unclick = transform(source_comp.mouse_unclick);
+            target_comp.mouse_pos = transform(source_comp.mouse_pos);
+            target_comp.mouse_offset = transform(source_comp.mouse_offset);
+            target_comp.mouse_scrolled = transform(source_comp.mouse_scrolled);
+            target_comp.window_width = transform(source_comp.window_width);
+            target_comp.window_height = transform(source_comp.window_height);
+            target_comp.window_resized = transform(source_comp.window_resized);
             dst.add<InputSingleton>(target_comp);
         }
     }

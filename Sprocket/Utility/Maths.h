@@ -18,7 +18,7 @@ void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientat
 glm::vec3 GetTranslation(const glm::mat4& m);
 float Modulo(float val, float high);
 glm::mat4 NoScale(const glm::mat4& matrix);
-glm::vec3 GetMouseRay(const glm::vec2& mousePos, u32 w, u32 h, const glm::mat4& view, const glm::mat4& proj);
+glm::vec3 GetMouseRay(const glm::vec2& mousePos, float w, float h, const glm::mat4& view, const glm::mat4& proj);
 glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v);
 
 }

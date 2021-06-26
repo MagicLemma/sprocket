@@ -582,19 +582,61 @@
                     "name": "keyboard",
                     "display_name": "Keyboard",
                     "type": "std::array<bool, 512>",
-                    "default": "{}",
-                    "flags": {
-                        "SCRIPTABLE": false
-                    }
+                    "default": "{}"
                 },
                 {
                     "name": "mouse",
                     "display_name": "Mouse",
                     "type": "std::array<bool, 5>",
-                    "default": "{}",
-                    "flags": {
-                        "SCRIPTABLE": false
-                    }
+                    "default": "{}"
+                },
+                {
+                    "name": "mouse_click",
+                    "display_name": "Mouse Click",
+                    "type": "std::array<bool, 5>",
+                    "default": "{}"
+                },
+                {
+                    "name": "mouse_unclick",
+                    "display_name": "Mouse Unclick",
+                    "type": "std::array<bool, 5>",
+                    "default": "{}"
+                },
+                {
+                    "name": "mouse_pos",
+                    "display_name": "Mouse Position",
+                    "type": "glm::vec2",
+                    "default": "{0.0, 0.0}"
+                },
+                {
+                    "name": "mouse_offset",
+                    "display_name": "Mouse Offset",
+                    "type": "glm::vec2",
+                    "default": "{0.0, 0.0}"
+                },
+                {
+                    "name": "mouse_scrolled",
+                    "display_name": "Mouse Scrolled",
+                    "type": "glm::vec2",
+                    "default": "{0.0, 0.0}"
+                },
+                {
+                    "name": "window_width",
+                    "display_name": "Window Width",
+                    "type": "float",
+                    "default": "1280.0f"
+                },
+                {
+                    "name": "window_height",
+                    "display_name": "Window Height",
+                    "type": "float",
+                    "default": "720.0f"
+                },
+                {
+                    "name": "window_resized",
+                    "display_name": "Window Resized",
+                    "type": "bool",
+                    "default": "false"
                 }
             ]
         }

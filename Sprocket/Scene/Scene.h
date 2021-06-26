@@ -4,6 +4,7 @@
 #include "EntitySystem.h"
 #include "Events.h"
 #include "TypeInfo.h"
+#include "Window.h"
 
 #include <memory>
 #include <vector>
@@ -12,32 +13,45 @@
 
 namespace Sprocket {
 
+template <typename Comp>
+Comp& get_singleton(spkt::registry& registry)
+{
+    auto singleton = registry.find<Singleton>();
+    assert(registry.valid(singleton));
+    assert(registry.has<Comp>(singleton));
+    return registry.get<Comp>(singleton);
+} 
+
+
 class Scene
 {
+    // Temporary, will be removed when then the InputSingleton gets updated via a system.
+    Window* d_window;
+
     std::unordered_map<::spkt::type_info_t, std::size_t> d_lookup;
     std::vector<std::unique_ptr<EntitySystem>> d_systems;
 
     spkt::registry d_registry;
 
 public:
-    Scene();
+    Scene(Window* window);
 
     spkt::registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>
     T& Add(Args&&... args);
 
-    template <typename T> bool Has();
-    template <typename T> T& Get();
+    template <typename T>
+    T& Get();
 
     void Load(std::string_view file);
 
     void OnUpdate(double dt);
     void OnEvent(ev::Event& event);
 
-    std::size_t Size() const;
+    void post_update();
 
-    void Clear();
+    std::size_t Size() const;
 
     template <typename... Comps>
     spkt::entity find(const std::function<bool(spkt::entity)>& function = [](spkt::entity) { return true; });
@@ -56,16 +70,10 @@ T& Scene::Add(Args&&... args)
     return *static_cast<T*>(d_systems.back().get());
 }
 
-template <typename T> bool Scene::Has()
+template <typename T>
+T& Scene::Get()
 {
-    return d_lookup.find(spkt::type_info<T>) != d_lookup.end();
-}
-
-template <typename T> T& Scene::Get()
-{
-    auto it = d_lookup.find(spkt::type_info<T>);
-    assert(it != d_lookup.end());
-    return *static_cast<T*>(d_systems[it->second].get());
+    return *static_cast<T*>(d_systems[d_lookup[spkt::type_info<T>]].get());
 }
 
 template <typename... Comps>
@@ -80,7 +88,7 @@ spkt::entity Scene::find(const std::function<bool(spkt::entity)>& function)
 template <typename... Comps>
 apx::generator<spkt::entity> Scene::view()
 {
-    if (sizeof...(Comps) > 0) {
+    if constexpr (sizeof...(Comps) > 0) {
         for (auto id : d_registry.view<Comps...>()) {
             co_yield {d_registry, id};
         }

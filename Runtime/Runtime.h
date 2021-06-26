@@ -32,4 +32,5 @@ public:
     void OnEvent(Sprocket::ev::Event& event);
     void OnUpdate(double dt);
     void OnRender();
+    void PostUpdate() {}
 };

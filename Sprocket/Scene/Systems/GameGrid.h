@@ -2,7 +2,6 @@
 #include "ECS.h"
 #include "EntitySystem.h"
 #include "Hashing.h"
-#include "Window.h"
 #include "Maths.h"
 
 #include <memory>
@@ -20,8 +19,6 @@ public:
     using GridMap = std::unordered_map<glm::ivec2, spkt::entity>;
 
 private:
-    Window*       d_window;
-
     spkt::entity d_camera;
     spkt::entity d_hoveredSquare;
     spkt::entity d_selectedSquare;
@@ -32,7 +29,7 @@ private:
     GridMap d_gridEntities; 
 
 public:
-    GameGrid(Window* window);
+    GameGrid();
 
     void on_startup(spkt::registry& registry) override;
     void on_event(spkt::registry& registry, ev::Event& event) override;
