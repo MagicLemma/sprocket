@@ -7,7 +7,6 @@
 #include <exception>
 #include <format>
 #include <utility>
-#include <GLFW/glfw3.h>
 
 namespace Sprocket {
 
