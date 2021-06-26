@@ -17,12 +17,6 @@ std::string Name(const spkt::entity& e) {
     return "Entity";
 }
 
-GameGrid::GameGrid()
-    : d_hovered({0.0, 0.0})
-    , d_selected({})
-{
-}
-
 void GameGrid::on_startup(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();

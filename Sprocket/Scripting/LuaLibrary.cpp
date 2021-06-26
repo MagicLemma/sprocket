@@ -157,6 +157,14 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         return 1;
     });
 
+    lua_register(L, "GetMouseScrolled", [](lua_State* L) {
+        if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
+        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(registry);
+        Converter<glm::vec2>::push(L, input.mouse_scrolled);
+        return 1;
+    });
+
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
