@@ -35,12 +35,12 @@ public:
     void on_event(spkt::registry& registry, ev::Event& event) override;
     void on_update(spkt::registry& registry, double dt) override;
 
-    spkt::entity At(const glm::ivec2& pos) const;
+    spkt::entity At(spkt::registry& registry, const glm::ivec2& pos) const;
 
     void SetCamera(spkt::entity entity) { d_camera = entity; }
 
-    spkt::entity Hovered() const;
-    spkt::entity Selected() const;
+    spkt::entity Hovered(spkt::registry& registry) const;
+    spkt::entity Selected(spkt::registry& registry) const;
 
     std::optional<glm::ivec2> SelectedPosition() const { return d_selected; }
 };

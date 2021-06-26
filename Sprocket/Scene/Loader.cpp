@@ -413,6 +413,12 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     if (entity.has<InputSingleton>()) {
         e.add<InputSingleton>(entity.get<InputSingleton>());
     }
+    if (entity.has<GameGridSingleton>()) {
+        e.add<GameGridSingleton>(entity.get<GameGridSingleton>());
+    }
+    if (entity.has<CameraSingleton>()) {
+        e.add<CameraSingleton>(entity.get<CameraSingleton>());
+    }
     return e;
 }
 
@@ -616,6 +622,22 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.window_height = transform(source_comp.window_height);
             target_comp.window_resized = transform(source_comp.window_resized);
             dst.add<InputSingleton>(target_comp);
+        }
+        if (src.has<GameGridSingleton>()) {
+            const GameGridSingleton& source_comp = src.get<GameGridSingleton>();
+            GameGridSingleton target_comp;
+            target_comp.hovered_square_entity = transform(source_comp.hovered_square_entity);
+            target_comp.clicked_square_entity = transform(source_comp.clicked_square_entity);
+            target_comp.hovered_square = transform(source_comp.hovered_square);
+            target_comp.clicked_square = transform(source_comp.clicked_square);
+            target_comp.game_grid = transform(source_comp.game_grid);
+            dst.add<GameGridSingleton>(target_comp);
+        }
+        if (src.has<CameraSingleton>()) {
+            const CameraSingleton& source_comp = src.get<CameraSingleton>();
+            CameraSingleton target_comp;
+            target_comp.camera_entity = transform(source_comp.camera_entity);
+            dst.add<CameraSingleton>(target_comp);
         }
     }
 }

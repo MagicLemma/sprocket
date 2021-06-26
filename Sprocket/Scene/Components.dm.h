@@ -4,6 +4,11 @@
 #include <string>
 #include <utility>
 #include <array>
+#include <unordered_map>
+#include <optional>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
 
 #include "apecs.hpp"
 

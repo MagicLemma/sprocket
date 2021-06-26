@@ -108,7 +108,7 @@ void WorldLayer::LoadScene(std::string_view file)
     d_scene.Add<ScriptRunner>();
     d_scene.Add<CameraSystem>();
     d_scene.Add<PathFollower>();
-    auto& game_grid = d_scene.Add<GameGrid>();
+    d_scene.Add<GameGrid>();
     d_scene.Load(file);
     d_paused = false;
 
@@ -122,7 +122,8 @@ void WorldLayer::LoadScene(std::string_view file)
         return entity.get<NameComponent>().name == "Camera";
     });
 
-    game_grid.SetCamera(d_camera);
+    auto& cam = get_singleton<CameraSingleton>(d_scene.Entities());
+    cam.camera_entity = d_camera.entity();
 
     assert(d_worker != spkt::null);
     assert(d_camera != spkt::null);
@@ -183,8 +184,8 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            auto e = d_scene.Get<GameGrid>().At(pos);
-                            return e != spkt::null;
+                            auto e = d_scene.Get<GameGrid>().At(d_scene.Entities(), pos);
+                            return e.valid();
                         }
                     );
                 } else {
@@ -243,7 +244,8 @@ void WorldLayer::OnUpdate(double dt)
 void WorldLayer::OnRender()
 {
     using namespace Sprocket;
-    auto& grid = d_scene.Get<GameGrid>();
+    const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.Entities());
+    auto& registry = d_scene.Entities();
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
@@ -274,8 +276,10 @@ void WorldLayer::OnRender()
         float w = (float)d_window->Width();
         float h = (float)d_window->Height();
 
-        if (grid.SelectedPosition().has_value()) {
-            auto selected = grid.Selected();
+        if (game_grid.clicked_square.has_value()) {
+            auto it = game_grid.game_grid.find(game_grid.clicked_square.value());
+            apx::entity e = (it != game_grid.game_grid.end()) ? it->second : apx::null;
+            spkt::entity selected{registry, e};
 
             float width = 0.15f * w;
             float height = 0.6f * h;
@@ -285,7 +289,7 @@ void WorldLayer::OnRender()
             glm::vec4 region{x, y, width, height};
             d_hoveredEntityUI.StartPanel("Selected", &region, PanelType::UNCLICKABLE);
                 
-            auto pos = grid.SelectedPosition().value();
+            auto pos = game_grid.clicked_square.value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
                 AddTree(pos);
@@ -318,8 +322,9 @@ void WorldLayer::OnRender()
             d_hoveredEntityUI.EndPanel();
         }
 
-
-        auto hovered = grid.Hovered();
+        auto it = game_grid.game_grid.find(game_grid.hovered_square);
+        apx::entity e = (it != game_grid.game_grid.end()) ? it->second : apx::null;
+        spkt::entity hovered{registry, e};
         if (hovered.valid()) {
             float width = 200;
             float height = 50;

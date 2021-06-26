@@ -639,6 +639,62 @@
                     "default": "false"
                 }
             ]
+        },
+        {
+            "name": "GameGridSingleton",
+            "display_name": "Game Grid Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "hovered_square_entity",
+                    "display_name": "Hovered Square Entity",
+                    "type": "apx::entity",
+                    "default": "apx::null"
+                },
+                {
+                    "name": "clicked_square_entity",
+                    "display_name": "Clicked Square Entity",
+                    "type": "apx::entity",
+                    "default": "apx::null"
+                },
+                {
+                    "name": "hovered_square",
+                    "display_name": "Hovered Square",
+                    "type": "glm::ivec2",
+                    "default": "{0, 0}"
+                },
+                {
+                    "name": "clicked_square",
+                    "display_name": "Clicked Square",
+                    "type": "std::optional<glm::ivec2>",
+                    "default": "std::nullopt"
+                },
+                {
+                    "name": "game_grid",
+                    "display_name": "Game Grid",
+                    "type": "std::unordered_map<glm::ivec2, apx::entity>",
+                    "default": "{}"
+                }
+            ]
+        },
+        {
+            "name": "CameraSingleton",
+            "display_name": "Camera Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "camera_entity",
+                    "display_name": "Camera Entity",
+                    "type": "apx::entity",
+                    "default": "apx::null"
+                }
+            ]
         }
     ]
 }

@@ -316,6 +316,32 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
+    if (entity.has<GameGridSingleton>()) {
+        auto& c = entity.get<GameGridSingleton>();
+        if (ImGui::CollapsingHeader("Game Grid Singleton")) {
+            ImGui::PushID(count++);
+            ;
+            ;
+            ;
+            ;
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.remove<GameGridSingleton>(); }
+            ImGui::PopID();
+        }
+    }
+
+    if (entity.has<CameraSingleton>()) {
+        auto& c = entity.get<CameraSingleton>();
+        if (ImGui::CollapsingHeader("Camera Singleton")) {
+            ImGui::PushID(count++);
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.remove<CameraSingleton>(); }
+            ImGui::PopID();
+        }
+    }
+
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -410,6 +436,14 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<InputSingleton>() && ImGui::Selectable("Input Singleton")) {
             InputSingleton c;
             entity.add<InputSingleton>(c);
+        }
+        if (!entity.has<GameGridSingleton>() && ImGui::Selectable("Game Grid Singleton")) {
+            GameGridSingleton c;
+            entity.add<GameGridSingleton>(c);
+        }
+        if (!entity.has<CameraSingleton>() && ImGui::Selectable("Camera Singleton")) {
+            CameraSingleton c;
+            entity.add<CameraSingleton>(c);
         }
         ImGui::EndMenu();
     }
