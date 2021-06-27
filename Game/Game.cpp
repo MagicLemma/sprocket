@@ -186,7 +186,9 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            return registry.valid(grid.game_grid.at(pos));
+                            auto it = grid.game_grid.find(pos);
+                            apx::entity entity = it != grid.game_grid.end() ? it->second : apx::null;
+                            return registry.valid(entity);
                         }
                     );
                 } else {
