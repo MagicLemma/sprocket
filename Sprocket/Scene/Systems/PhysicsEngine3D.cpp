@@ -271,10 +271,6 @@ void PhysicsEngine3D::on_startup(spkt::registry& registry)
     registry.emplace<CollisionSingleton>(singleton);
 }
 
-void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
-{
-}
-
 void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
 {
     // Pre Update
