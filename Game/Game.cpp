@@ -489,6 +489,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     name.name = "Tree";
 
     auto& tr = newEntity.emplace<Transform3DComponent>();
+    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
     float r = Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
@@ -498,8 +499,12 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     modelData.material = "Resources/Materials/tree.yaml";
     newEntity.emplace<SelectComponent>();
 
-    GridComponent gc = {pos.x, pos.y};
-    newEntity.emplace<GridComponent>(gc);
+    // Add the new entity to the grid.
+    auto& registry = d_scene.Entities();
+    auto tile_map = registry.find<TileMapSingleton>();
+    assert(registry.valid(tile_map));
+    auto& tms = registry.get<TileMapSingleton>(tile_map);
+    tms.tiles[pos] = newEntity.entity();
 }
 
 void WorldLayer::AddRockBase(
@@ -514,6 +519,7 @@ void WorldLayer::AddRockBase(
     n.name = name;
 
     auto& tr = newEntity.emplace<Transform3DComponent>();
+    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
     tr.position.y -= Random(0.0f, 0.5f);
     float randomRotation = glm::half_pi<float>() * Random(0, 3);
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
@@ -524,8 +530,12 @@ void WorldLayer::AddRockBase(
     modelData.material = material;
     newEntity.emplace<SelectComponent>();
 
-    GridComponent gc = {pos.x, pos.y};
-    newEntity.emplace<GridComponent>(gc);
+    // Add the new entity to the grid.
+    auto& registry = d_scene.Entities();
+    auto tile_map = registry.find<TileMapSingleton>();
+    assert(registry.valid(tile_map));
+    auto& tms = registry.get<TileMapSingleton>(tile_map);
+    tms.tiles[pos] = newEntity.entity();
 }
 
 void WorldLayer::AddRock(const glm::ivec2& pos)

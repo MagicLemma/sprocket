@@ -14,8 +14,8 @@ Entities:
       scale: [1, 1, 1]
     SunComponent:
       colour: [1, 0.945, 0.789]
-      brightness: 1.999984
-      direction: [-0.003956872, -0.9999922, -0.0003956872]
+      brightness: 1.999999
+      direction: [-0.0007732788, -0.9999997, -7.732788e-05]
       shadows: true
   - ID#: 21474836480
     NameComponent:
@@ -1041,7 +1041,7 @@ Entities:
     NameComponent:
       name: Worker
     Transform3DComponent:
-      position: [7.640841, 0.5, -3.894935]
+      position: [-2.149857, 0.5, -7.815848]
       orientation: [1, 0, 0, 0]
       scale: [0.5, 0.5, 0.5]
     ModelComponent:
@@ -1055,8 +1055,8 @@ Entities:
     NameComponent:
       name: Camera
     Transform3DComponent:
-      position: [-28.63946, 9.99995, -27.83229]
-      orientation: [0.5393238, -0.2592116, -0.7221345, -0.3470747]
+      position: [8, 10, 0]
+      orientation: [0.6373177, -0.3063107, 0.6373177, 0.3063107]
       scale: [1, 1, 1]
     ScriptComponent:
       script: Resources/Scripts/ThirdPersonCamera.lua
@@ -1073,7 +1073,7 @@ Entities:
       material: Resources/Materials/green.yaml
     SelectComponent:
       {}
-  - ID#: 4440996184064
+  - ID#: 326417514496
     NameComponent:
       name: Rock
     Transform3DComponent:
@@ -1088,7 +1088,7 @@ Entities:
     GridComponent:
       x: -6
       z: -13
-  - ID#: 4436701216768
+  - ID#: 330712481792
     NameComponent:
       name: Rock
     Transform3DComponent:
@@ -1859,7 +1859,6 @@ Entities:
         [-3, 22]: 2254857830400
         [-5, 19]: 128849018880
         [-25, -19]: 352187318272
-        [-3, -16]: 4458176053248
         [-11, -22]: 1795296329728
         [-10, 11]: 64424509440
         [-17, -21]: 1331439861760
@@ -1874,11 +1873,11 @@ Entities:
         [16, -24]: 3225520439296
         [5, 7]: 292057776128
         [-12, 15]: 90194313216
-        [-7, 18]: 201863462912
         [-4, 15]: 1821066133504
+        [-7, 18]: 201863462912
         [19, 4]: 3453153705984
-        [-23, 6]: 858993459200
         [10, 14]: 4239132721152
+        [-23, 6]: 858993459200
         [5, -6]: 2770253905920
         [-18, 5]: 1275605286912
         [-14, 18]: 94489280512
@@ -2105,7 +2104,6 @@ Entities:
         [-12, -24]: 1722281885696
         [-24, -9]: 609885356032
         [1, -1]: 2469606195200
-        [-3, -15]: 4449586118656
         [-24, -8]: 614180323328
         [-9, 2]: 1906965479424
         [-12, -14]: 1739461754880
@@ -2324,8 +2322,8 @@ Entities:
         [19, 23]: 3466038607872
         [-17, -7]: 1335734829056
         [-17, -5]: 1344324763648
-        [24, -3]: 4063039062016
         [-17, -4]: 1348619730944
+        [24, -3]: 4063039062016
         [-17, -3]: 1352914698240
         [-17, -2]: 1357209665536
         [-8, 1]: 1971389988864
@@ -2358,7 +2356,6 @@ Entities:
         [21, -22]: 3517578215424
         [17, -25]: 3289944948736
         [-16, -7]: 1443109011456
-        [-4, -15]: 4453881085952
         [-16, -4]: 1455993913344
         [-8, -21]: 1954210119680
         [23, -6]: 3843995729920
@@ -2370,6 +2367,7 @@ Entities:
         [-16, 5]: 1481763717120
         [-16, 23]: 1490353651712
         [22, -17]: 3637837299712
+        [-5, -8]: 4436701216768
         [-15, -25]: 1498943586304
         [1, -24]: 2448131358720
         [14, -25]: 3143916060672
@@ -2658,7 +2656,6 @@ Entities:
         [8, 22]: 2993592205312
         [23, -9]: 3831110828032
         [22, 22]: 3749506449408
-        [-6, -13]: 4440996184064
         [8, 23]: 2997887172608
         [8, 24]: 3002182139904
         [9, -25]: 3006477107200
@@ -2842,10 +2839,7 @@ Entities:
         [-5, -12]: 4423816314880
         [-5, -13]: 4428111282176
         [-4, -14]: 4432406249472
-        [-5, -14]: 4436701216768
-        [-4, -12]: 4445291151360
-        [-5, -11]: 4462471020544
-        [-4, 7]: 4466765987840
+        [-5, -9]: 4440996184064
   - ID#: 541165879296
     NameComponent:
       name: Rock
@@ -14096,7 +14090,7 @@ Entities:
     GridComponent:
       x: 22
       z: 24
-  - ID#: 4445291151360
+  - ID#: 3762391351296
     NameComponent:
       name: Rock
     Transform3DComponent:
@@ -14801,7 +14795,7 @@ Entities:
     GridComponent:
       x: 23
       z: 23
-  - ID#: 4458176053248
+  - ID#: 3964254814208
     NameComponent:
       name: Tree
     Transform3DComponent:
@@ -14816,7 +14810,7 @@ Entities:
     GridComponent:
       x: -3
       z: -16
-  - ID#: 4453881085952
+  - ID#: 3968549781504
     NameComponent:
       name: Rock
     Transform3DComponent:
@@ -14831,7 +14825,7 @@ Entities:
     GridComponent:
       x: -4
       z: -15
-  - ID#: 4449586118656
+  - ID#: 3972844748800
     NameComponent:
       name: Rock
     Transform3DComponent:
@@ -15551,7 +15545,7 @@ Entities:
     GridComponent:
       x: 24
       z: 23
-  - ID#: 4462471020544
+  - ID#: 4179003179008
     NameComponent:
       name: Tree
     Transform3DComponent:
@@ -16451,3 +16445,27 @@ Entities:
     GridComponent:
       x: -4
       z: -14
+  - ID#: 4436701216768
+    NameComponent:
+      name: Rock
+    Transform3DComponent:
+      position: [-4.5, -0.4073618, -7.5]
+      orientation: [1, 0, 0, 0]
+      scale: [1.1, 1.1, 1.1]
+    ModelComponent:
+      mesh: Resources/Models/Rock.obj
+      material: Resources/Materials/rock.yaml
+    SelectComponent:
+      {}
+  - ID#: 4440996184064
+    NameComponent:
+      name: Rock
+    Transform3DComponent:
+      position: [-4.5, -0.0677385, -8.5]
+      orientation: [-4.371139e-08, 0, 1, 0]
+      scale: [1.1, 1.1, 1.1]
+    ModelComponent:
+      mesh: Resources/Models/Rock.obj
+      material: Resources/Materials/rock.yaml
+    SelectComponent:
+      {}
