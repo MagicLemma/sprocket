@@ -33,6 +33,7 @@
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/PathFollower.h"
 #include "Scene/Systems/ScriptRunner.h"
+#include "Scene/Systems/LambdaSystem.h"
 
 // UTILITY
 #include "Utility/Log.h"

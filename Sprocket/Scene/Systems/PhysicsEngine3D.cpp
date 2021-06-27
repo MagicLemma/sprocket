@@ -112,11 +112,7 @@ struct rigid_body_runtime
 {
     rp3d::PhysicsWorld* world;
     rp3d::RigidBody*    body;
-
-    spkt::registry* registry;
-    apx::entity     entity;
-
-    spkt::entity handle; // TODO: Remove
+    spkt::entity handle;
 
     rigid_body_runtime(
         spkt::registry& registry_,
@@ -125,20 +121,18 @@ struct rigid_body_runtime
     )
         : world(world_)
         , body(nullptr)
-        , registry(&registry_)
-        , entity(entity_)
         , handle({registry_, entity_})
     {
-        auto& tc = registry->get<Transform3DComponent>(entity);
+        auto& tc = handle.get<Transform3DComponent>();
         body = world->createRigidBody(Convert(tc));
         body->setUserData(static_cast<void*>(&handle));
     }
 
     ~rigid_body_runtime()
     {
-        registry->remove<BoxCollider3DComponent>(entity);
-        registry->remove<SphereCollider3DComponent>(entity);
-        registry->remove<CapsuleCollider3DComponent>(entity);
+        handle.remove<BoxCollider3DComponent>();
+        handle.remove<SphereCollider3DComponent>();
+        handle.remove<CapsuleCollider3DComponent>();
         world->destroyRigidBody(body);
     }
 };
@@ -364,6 +358,7 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
     d_impl->listener.collisions().clear();
 }
 
+#if 0
 spkt::entity PhysicsEngine3D::Raycast(const glm::vec3& base,
                                    const glm::vec3& direction)
 {
@@ -378,5 +373,6 @@ spkt::entity PhysicsEngine3D::Raycast(const glm::vec3& base,
     d_impl->world->raycast(ray, &cb);
     return cb.GetEntity();
 }
+#endif
 
 }
