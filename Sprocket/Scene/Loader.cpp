@@ -19,7 +19,7 @@ void Save(const std::string& file, spkt::registry* reg)
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto id : reg->all()) {
         spkt::entity entity{*reg, id};
-        if (entity.has<TemporaryComponent>()) { return; }
+        if (entity.has<TemporaryComponent>()) { continue; }
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << id;
         if (entity.has<TemporaryComponent>()) {
@@ -168,6 +168,12 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "name" << YAML::Value << c.name;
             out << YAML::Key << "time" << YAML::Value << c.time;
             out << YAML::Key << "speed" << YAML::Value << c.speed;
+            out << YAML::EndMap;
+        }
+        if (entity.has<TileMapSingleton>()) {
+            const auto& c = entity.get<TileMapSingleton>();
+            out << YAML::Key << "TileMapSingleton" << YAML::BeginMap;
+            out << YAML::Key << "tiles" << YAML::Value << c.tiles;
             out << YAML::EndMap;
         }
         out << YAML::EndMap;
@@ -341,6 +347,11 @@ void Load(const std::string& file, spkt::registry* reg)
             c.speed = transform(spec["speed"].as<float>());
             e.add<MeshAnimationComponent>(c);
         }
+        if (auto spec = entity["TileMapSingleton"]) {
+            TileMapSingleton c;
+            c.tiles = transform(spec["tiles"].as<std::unordered_map<glm::ivec2, apx::entity>>());
+            e.add<TileMapSingleton>(c);
+        }
     }
 }
 
@@ -415,6 +426,9 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     }
     if (entity.has<GameGridSingleton>()) {
         e.add<GameGridSingleton>(entity.get<GameGridSingleton>());
+    }
+    if (entity.has<TileMapSingleton>()) {
+        e.add<TileMapSingleton>(entity.get<TileMapSingleton>());
     }
     if (entity.has<CameraSingleton>()) {
         e.add<CameraSingleton>(entity.get<CameraSingleton>());
@@ -637,6 +651,12 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.clicked_square = transform(source_comp.clicked_square);
             target_comp.game_grid = transform(source_comp.game_grid);
             dst.add<GameGridSingleton>(target_comp);
+        }
+        if (src.has<TileMapSingleton>()) {
+            const TileMapSingleton& source_comp = src.get<TileMapSingleton>();
+            TileMapSingleton target_comp;
+            target_comp.tiles = transform(source_comp.tiles);
+            dst.add<TileMapSingleton>(target_comp);
         }
         if (src.has<CameraSingleton>()) {
             const CameraSingleton& source_comp = src.get<CameraSingleton>();

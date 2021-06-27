@@ -336,6 +336,17 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
+    if (entity.has<TileMapSingleton>()) {
+        auto& c = entity.get<TileMapSingleton>();
+        if (ImGui::CollapsingHeader("Tile Map Singleton")) {
+            ImGui::PushID(count++);
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.remove<TileMapSingleton>(); }
+            ImGui::PopID();
+        }
+    }
+
     if (entity.has<CameraSingleton>()) {
         auto& c = entity.get<CameraSingleton>();
         if (ImGui::CollapsingHeader("Camera Singleton")) {
@@ -445,6 +456,10 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<GameGridSingleton>() && ImGui::Selectable("Game Grid Singleton")) {
             GameGridSingleton c;
             entity.add<GameGridSingleton>(c);
+        }
+        if (!entity.has<TileMapSingleton>() && ImGui::Selectable("Tile Map Singleton")) {
+            TileMapSingleton c;
+            entity.add<TileMapSingleton>(c);
         }
         if (!entity.has<CameraSingleton>() && ImGui::Selectable("Camera Singleton")) {
             CameraSingleton c;

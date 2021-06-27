@@ -127,6 +127,17 @@ void WorldLayer::LoadScene(std::string_view file)
 
     assert(d_worker != spkt::null);
     assert(d_camera != spkt::null);
+
+    apx::entity entity = spkt::identifier{3131031158784};
+    const auto& gg = d_scene.Entities().get<GridComponent>(entity);
+    log::info("At position {} {}", gg.x, gg.z);
+}
+
+void WorldLayer::SaveScene(std::string_view file)
+{
+    log::info("Saving...");
+    Loader::Save(std::string(file), &d_scene.Entities());
+    log::info("Done!");
 }
 
 void WorldLayer::OnEvent(Sprocket::ev::Event& event)
@@ -409,6 +420,13 @@ void WorldLayer::OnRender()
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Reload", buttonRegion)) {
         LoadScene(d_sceneFile);
+    }
+
+    buttonRegion.y += 60;
+    if (d_escapeMenu.Button("Save", buttonRegion)) {
+        log::info("Saving to {}", d_sceneFile);
+        Loader::Save(d_sceneFile, &d_scene.Entities());
+        log::info("Done!");
     }
     
     d_escapeMenu.EndPanel();

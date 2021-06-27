@@ -33,6 +33,7 @@ using registry = apx::registry<
     Sprocket::CollisionSingleton,
     Sprocket::InputSingleton,
     Sprocket::GameGridSingleton,
+    Sprocket::TileMapSingleton,
     Sprocket::CameraSingleton
 >;
 

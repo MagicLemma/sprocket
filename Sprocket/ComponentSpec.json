@@ -731,6 +731,21 @@
             ]
         },
         {
+            "name": "TileMapSingleton",
+            "display_name": "Tile Map Singleton",
+            "flags": {
+                "SCRIPTABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "tiles",
+                    "display_name": "Tiles",
+                    "type": "std::unordered_map<glm::ivec2, apx::entity>",
+                    "default": "{}"
+                }
+            ]
+        },
+        {
             "name": "CameraSingleton",
             "display_name": "Camera Singleton",
             "flags": {
