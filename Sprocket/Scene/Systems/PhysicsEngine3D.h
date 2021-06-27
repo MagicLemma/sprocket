@@ -26,7 +26,7 @@ public:
     void on_startup(spkt::registry& registry) override;
     void on_update(spkt::registry& registry, double dt) override;
 
-    spkt::entity Raycast(const glm::vec3& base, const glm::vec3& direction);
+    //spkt::entity Raycast(const glm::vec3& base, const glm::vec3& direction);
         // Given a position in the world and a direction from that point,
         // return a pointer to the entity that it hits, or null if it
         // does not.
