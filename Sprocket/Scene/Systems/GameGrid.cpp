@@ -8,14 +8,16 @@
 #include <cassert>
 
 namespace Sprocket {
+namespace {
+
+constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
+
+}
 
 void GameGrid::on_startup(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
-    auto& grid = registry.emplace<GameGridSingleton>(singleton);
-    registry.emplace<CameraSingleton>(singleton);
-
-    std::string gridSquare = "Resources/Models/Square.obj";
+    auto& grid = get_singleton<GameGridSingleton>(registry);
 
     grid.hovered_square_entity = registry.create();
     registry.emplace<NameComponent>(grid.hovered_square_entity, "Hovered Grid Highlighter");
@@ -23,7 +25,7 @@ void GameGrid::on_startup(spkt::registry& registry)
     auto& tr1 = registry.emplace<Transform3DComponent>(grid.hovered_square_entity);
     tr1.scale = {0.3f, 0.3f, 0.3f};
     auto& model1 = registry.emplace<ModelComponent>(grid.hovered_square_entity);
-    model1.mesh = gridSquare;
+    model1.mesh = GRID_SQUARE;
 
     grid.clicked_square_entity = registry.create();
     registry.emplace<NameComponent>(grid.clicked_square_entity, "Clicked Grid Highlighter");
@@ -31,11 +33,16 @@ void GameGrid::on_startup(spkt::registry& registry)
     auto& tr2 = registry.emplace<Transform3DComponent>(grid.clicked_square_entity);
     tr2.scale = {0.5f, 0.5f, 0.5f};
     auto& model2 = registry.emplace<ModelComponent>(grid.clicked_square_entity);
-    model2.mesh = gridSquare;
+    model2.mesh = GRID_SQUARE;
 }
 
 void GameGrid::on_update(spkt::registry& registry, double)
 {
+    auto singleton = registry.find<Singleton>();
+    if (!registry.valid(singleton)) {
+        return;
+    }
+
     const auto& input = get_singleton<InputSingleton>(registry);
     const auto& cam = get_singleton<CameraSingleton>(registry);
     auto& grid = get_singleton<GameGridSingleton>(registry);

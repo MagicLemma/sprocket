@@ -29,7 +29,7 @@ using registry = apx::registry<
     Sprocket::ParticleComponent,
     Sprocket::MeshAnimationComponent,
     Sprocket::Singleton,
-    Sprocket::CollisionSingleton,
+    Sprocket::PhysicsSingleton,
     Sprocket::InputSingleton,
     Sprocket::GameGridSingleton,
     Sprocket::TileMapSingleton,

@@ -16,6 +16,7 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
 
@@ -159,8 +160,9 @@ struct Singleton
 {
 };
 
-struct CollisionSingleton
+struct PhysicsSingleton
 {
+    std::shared_ptr<physics_runtime> physics_runtime = nullptr;
     std::vector<std::pair<apx::entity, apx::entity>> collisions = {};
 };
 

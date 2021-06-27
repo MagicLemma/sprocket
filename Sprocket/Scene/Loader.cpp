@@ -402,8 +402,8 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     if (entity.has<Singleton>()) {
         e.add<Singleton>(entity.get<Singleton>());
     }
-    if (entity.has<CollisionSingleton>()) {
-        e.add<CollisionSingleton>(entity.get<CollisionSingleton>());
+    if (entity.has<PhysicsSingleton>()) {
+        e.add<PhysicsSingleton>(entity.get<PhysicsSingleton>());
     }
     if (entity.has<InputSingleton>()) {
         e.add<InputSingleton>(entity.get<InputSingleton>());
@@ -598,11 +598,12 @@ void Copy(spkt::registry* source, spkt::registry* target)
             Singleton target_comp;
             dst.add<Singleton>(target_comp);
         }
-        if (src.has<CollisionSingleton>()) {
-            const CollisionSingleton& source_comp = src.get<CollisionSingleton>();
-            CollisionSingleton target_comp;
+        if (src.has<PhysicsSingleton>()) {
+            const PhysicsSingleton& source_comp = src.get<PhysicsSingleton>();
+            PhysicsSingleton target_comp;
+            target_comp.physics_runtime = transform(source_comp.physics_runtime);
             target_comp.collisions = transform(source_comp.collisions);
-            dst.add<CollisionSingleton>(target_comp);
+            dst.add<PhysicsSingleton>(target_comp);
         }
         if (src.has<InputSingleton>()) {
             const InputSingleton& source_comp = src.get<InputSingleton>();
