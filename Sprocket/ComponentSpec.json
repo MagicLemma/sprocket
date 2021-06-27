@@ -167,6 +167,16 @@
                     "flags": {
                         "SAVABLE": false
                     }
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<rigid_body_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         },

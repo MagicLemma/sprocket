@@ -8,6 +8,7 @@
 
 namespace Sprocket {
 
+struct rigid_body_runtime;
 struct collider_runtime;
 
 struct PhysicsEngine3DImpl;

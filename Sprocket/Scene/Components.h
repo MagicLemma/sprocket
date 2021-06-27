@@ -15,6 +15,7 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+class rigid_body_runtime;
 class collider_runtime;
 
 // Components
@@ -57,6 +58,7 @@ struct RigidBody3DComponent
     float rollingResistance = 0.0f;
     glm::vec3 force = {0.0f, 0.0f, 0.0f};
     bool onFloor = false;
+    std::shared_ptr<rigid_body_runtime> runtime = nullptr;
 };
 
 struct BoxCollider3DComponent

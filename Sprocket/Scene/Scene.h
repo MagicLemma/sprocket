@@ -35,6 +35,7 @@ class Scene
 
 public:
     Scene(Window* window);
+    ~Scene();
 
     spkt::registry& Entities() { return d_registry; }
 

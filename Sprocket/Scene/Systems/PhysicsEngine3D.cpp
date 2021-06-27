@@ -108,15 +108,39 @@ public:
 
 }
 
-struct EntityData
+struct rigid_body_runtime
 {
-    spkt::entity entity;
-    rp3d::RigidBody* body;
+    rp3d::PhysicsWorld* world;
+    rp3d::RigidBody*    body;
 
-    // Colliders
-    rp3d::Collider* boxCollider = nullptr;
-    rp3d::Collider* sphereCollider = nullptr;
-    rp3d::Collider* capsuleCollider = nullptr;
+    spkt::registry* registry;
+    apx::entity     entity;
+
+    spkt::entity handle; // TODO: Remove
+
+    rigid_body_runtime(
+        spkt::registry& registry_,
+        apx::entity entity_,
+        rp3d::PhysicsWorld* world_
+    )
+        : world(world_)
+        , body(nullptr)
+        , registry(&registry_)
+        , entity(entity_)
+        , handle({registry_, entity_})
+    {
+        auto& tc = registry->get<Transform3DComponent>(entity);
+        body = world->createRigidBody(Convert(tc));
+        body->setUserData(static_cast<void*>(&handle));
+    }
+
+    ~rigid_body_runtime()
+    {
+        registry->remove<BoxCollider3DComponent>(entity);
+        registry->remove<SphereCollider3DComponent>(entity);
+        registry->remove<CapsuleCollider3DComponent>(entity);
+        world->destroyRigidBody(body);
+    }
 };
 
 struct collider_runtime
@@ -199,8 +223,6 @@ struct PhysicsEngine3DImpl
 
     float lastFrameLength = 0;
 
-    std::unordered_map<spkt::entity, EntityData> entityData;
-
     PhysicsEngine3DImpl(const glm::vec3& gravity)
     {
         rp3d::PhysicsWorld::WorldSettings settings;
@@ -212,19 +234,16 @@ struct PhysicsEngine3DImpl
 
     ~PhysicsEngine3DImpl()
     {
-        for (auto& [entity, data] : entityData) {
-            world->destroyRigidBody(data.body);
-        }
         pc.destroyPhysicsWorld(world);
     }
 };
 
 namespace {
 
-bool IsOnFloor(const PhysicsEngine3DImpl& impl, spkt::entity entity)
+bool IsOnFloor(const PhysicsEngine3DImpl& impl, const rp3d::RigidBody* body)
 {
     // Get the point at the bottom of the rigid body.
-    auto aabb = impl.entityData.at(entity).body->getAABB();
+    auto aabb = body->getAABB();
     rp3d::Vector3 playerBase = aabb.getCenter();
     playerBase.y = aabb.getMin().y;
 
@@ -254,25 +273,6 @@ void PhysicsEngine3D::on_startup(spkt::registry& registry)
 
 void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
 {
-    if (auto e = event.get_if<spkt::added<RigidBody3DComponent>>()) {
-        assert(e->entity.has<Transform3DComponent>());
-        auto& tc = e->entity.get<Transform3DComponent>();
-
-        auto& entry = d_impl->entityData[e->entity];
-        entry.entity = e->entity;
-        entry.body = d_impl->world->createRigidBody(Convert(tc));
-        entry.body->setUserData(static_cast<void*>(&entry.entity));
-    }
-    else if (auto e = event.get_if<spkt::removed<RigidBody3DComponent>>()) {
-        spkt::entity entity = e->entity;
-        entity.remove<BoxCollider3DComponent>();
-        entity.remove<SphereCollider3DComponent>();
-        entity.remove<CapsuleCollider3DComponent>();
-
-        auto rigidBodyIt = d_impl->entityData.find(entity);
-        d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
-        d_impl->entityData.erase(rigidBodyIt);
-    }
 }
 
 void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
@@ -281,10 +281,15 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
     for (auto id : registry.view<RigidBody3DComponent>()) {
         spkt::entity entity{registry, id};
         const auto& tc = entity.get<Transform3DComponent>();
-        const auto& physics = entity.get<RigidBody3DComponent>();
+        auto& physics = entity.get<RigidBody3DComponent>();
 
-        auto& entry = d_impl->entityData[entity];
-        rp3d::RigidBody* body = entry.body;
+        if (!physics.runtime) {
+            physics.runtime = std::make_shared<rigid_body_runtime>(
+                registry, id, d_impl->world
+            );
+        }
+
+        rp3d::RigidBody* body = physics.runtime->body;
 
         if (entity.has<BoxCollider3DComponent>()) {
             auto& cc = entity.get<BoxCollider3DComponent>();
@@ -347,14 +352,14 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
         spkt::entity entity{registry, id};
         auto& tc = entity.get<Transform3DComponent>();
         auto& rc = entity.get<RigidBody3DComponent>();
-        const rp3d::RigidBody* body = d_impl->entityData[entity].body;
+        const rp3d::RigidBody* body = rc.runtime->body;
 
         tc.position = Convert(body->getTransform().getPosition());
         tc.orientation = Convert(body->getTransform().getOrientation());
         rc.velocity = Convert(body->getLinearVelocity());
 
         rc.force = {0.0, 0.0, 0.0};
-        rc.onFloor = IsOnFloor(*d_impl, entity);
+        rc.onFloor = IsOnFloor(*d_impl, body);
     }
 
     // Update the CollisionSingleton

@@ -15,6 +15,7 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+class rigid_body_runtime;
 class collider_runtime;
 
 // Components

@@ -487,6 +487,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.rollingResistance = transform(source_comp.rollingResistance);
             target_comp.force = transform(source_comp.force);
             target_comp.onFloor = transform(source_comp.onFloor);
+            target_comp.runtime = transform(source_comp.runtime);
             dst.add<RigidBody3DComponent>(target_comp);
         }
         if (src.has<BoxCollider3DComponent>()) {

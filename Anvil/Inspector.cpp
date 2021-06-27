@@ -96,6 +96,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::SliderFloat("Rolling Resistance", &c.rollingResistance, 0.0f, 1.0f);
             ImGui::DragFloat3("Force", &c.force.x, 0.1f);
             ImGui::Checkbox("OnFloor", &c.onFloor);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<RigidBody3DComponent>(); }
             ImGui::PopID();
