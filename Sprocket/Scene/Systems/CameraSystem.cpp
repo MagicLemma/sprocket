@@ -17,20 +17,6 @@ float aspect_ratio(const InputSingleton& input)
 
 }
 
-void CameraSystem::on_event(spkt::registry& registry, ev::Event& event)
-{
-    if (auto e = event.get_if<spkt::added<Camera3DComponent>>()) {
-        auto singleton = registry.find<Singleton>();
-        const auto& input = registry.get<InputSingleton>(singleton);
-
-        spkt::entity entity = e->entity;
-        auto& camera = entity.get<Camera3DComponent>();
-        camera.projection = glm::perspective(
-            camera.fov, aspect_ratio(input), 0.1f, 1000.0f
-        );
-    }
-}
-
 void CameraSystem::on_update(spkt::registry& registry, double dt)
 {
     auto singleton = registry.find<Singleton>();

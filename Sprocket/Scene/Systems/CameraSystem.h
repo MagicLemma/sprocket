@@ -6,7 +6,6 @@ namespace Sprocket {
 
 struct CameraSystem : public EntitySystem
 {
-    void on_event(spkt::registry& registry, ev::Event& event) override;
     void on_update(spkt::registry& registry, double dt) override;
 };
 

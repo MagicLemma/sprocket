@@ -83,10 +83,6 @@ void Scene::OnEvent(ev::Event& event)
 
     input.window_width = (float)d_window->Width();
     input.window_height = (float)d_window->Height();
-
-    for (auto& system : d_systems) {
-        system->on_event(d_registry, event);
-    }
 }
 
 void Scene::post_update()
