@@ -129,6 +129,13 @@ void WorldLayer::LoadScene(std::string_view file)
     assert(d_camera != spkt::null);
 }
 
+void WorldLayer::SaveScene(std::string_view file)
+{
+    log::info("Saving...");
+    Loader::Save(std::string(file), &d_scene.Entities());
+    log::info("Done!");
+}
+
 void WorldLayer::OnEvent(Sprocket::ev::Event& event)
 {
     using namespace Sprocket;
@@ -140,6 +147,10 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
             event.consume();
         }
     }
+
+    auto& registry = d_scene.Entities();
+    auto tile_entity = registry.find<TileMapSingleton>();
+    const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
 
     if (d_paused) {
         d_escapeMenu.OnEvent(event);
@@ -180,13 +191,14 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
                 std::queue<glm::vec3>().swap(path.markers);
                 auto pos = d_worker.get<Transform3DComponent>().position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
-                    auto& registry = d_scene.Entities();
                     const auto& grid = get_singleton<GameGridSingleton>(registry);
                     path.markers = GenerateAStarPath(
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            return registry.valid(grid.game_grid.at(pos));
+                            auto it = tiles.find(pos);
+                            apx::entity entity = it != tiles.end() ? it->second : apx::null;
+                            return registry.valid(entity);
                         }
                     );
                 } else {
@@ -271,6 +283,10 @@ void WorldLayer::OnRender()
     }
 
     if (!d_paused) {
+        auto& registry = d_scene.Entities();
+        auto tile_entity = registry.find<TileMapSingleton>();
+        const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
+
         d_hoveredEntityUI.StartFrame();
 
         auto mouse = d_window->GetMousePos();
@@ -278,8 +294,8 @@ void WorldLayer::OnRender()
         float h = (float)d_window->Height();
 
         if (game_grid.clicked_square.has_value()) {
-            auto it = game_grid.game_grid.find(game_grid.clicked_square.value());
-            apx::entity e = (it != game_grid.game_grid.end()) ? it->second : apx::null;
+            auto it = tiles.find(game_grid.clicked_square.value());
+            apx::entity e = (it != tiles.end()) ? it->second : apx::null;
             spkt::entity selected{registry, e};
 
             float width = 0.15f * w;
@@ -323,8 +339,8 @@ void WorldLayer::OnRender()
             d_hoveredEntityUI.EndPanel();
         }
 
-        auto it = game_grid.game_grid.find(game_grid.hovered_square);
-        apx::entity e = (it != game_grid.game_grid.end()) ? it->second : apx::null;
+        auto it = tiles.find(game_grid.hovered_square);
+        apx::entity e = (it != tiles.end()) ? it->second : apx::null;
         spkt::entity hovered{registry, e};
         if (hovered.valid()) {
             float width = 200;
@@ -408,6 +424,13 @@ void WorldLayer::OnRender()
     if (d_escapeMenu.Button("Reload", buttonRegion)) {
         LoadScene(d_sceneFile);
     }
+
+    buttonRegion.y += 60;
+    if (d_escapeMenu.Button("Save", buttonRegion)) {
+        log::info("Saving to {}", d_sceneFile);
+        Loader::Save(d_sceneFile, &d_scene.Entities());
+        log::info("Done!");
+    }
     
     d_escapeMenu.EndPanel();
     
@@ -466,6 +489,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     name.name = "Tree";
 
     auto& tr = newEntity.emplace<Transform3DComponent>();
+    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
     float r = Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
@@ -475,8 +499,12 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     modelData.material = "Resources/Materials/tree.yaml";
     newEntity.emplace<SelectComponent>();
 
-    GridComponent gc = {pos.x, pos.y};
-    newEntity.emplace<GridComponent>(gc);
+    // Add the new entity to the grid.
+    auto& registry = d_scene.Entities();
+    auto tile_map = registry.find<TileMapSingleton>();
+    assert(registry.valid(tile_map));
+    auto& tms = registry.get<TileMapSingleton>(tile_map);
+    tms.tiles[pos] = newEntity.entity();
 }
 
 void WorldLayer::AddRockBase(
@@ -491,6 +519,7 @@ void WorldLayer::AddRockBase(
     n.name = name;
 
     auto& tr = newEntity.emplace<Transform3DComponent>();
+    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
     tr.position.y -= Random(0.0f, 0.5f);
     float randomRotation = glm::half_pi<float>() * Random(0, 3);
     tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
@@ -501,8 +530,12 @@ void WorldLayer::AddRockBase(
     modelData.material = material;
     newEntity.emplace<SelectComponent>();
 
-    GridComponent gc = {pos.x, pos.y};
-    newEntity.emplace<GridComponent>(gc);
+    // Add the new entity to the grid.
+    auto& registry = d_scene.Entities();
+    auto tile_map = registry.find<TileMapSingleton>();
+    assert(registry.valid(tile_map));
+    auto& tms = registry.get<TileMapSingleton>(tile_map);
+    tms.tiles[pos] = newEntity.entity();
 }
 
 void WorldLayer::AddRock(const glm::ivec2& pos)

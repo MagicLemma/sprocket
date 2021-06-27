@@ -34,43 +34,22 @@ void GameGrid::on_startup(spkt::registry& registry)
     model2.mesh = gridSquare;
 }
 
-void GameGrid::on_event(spkt::registry& registry, ev::Event& event)
-{
-    auto singleton = registry.find<Singleton>();
-    if (!registry.valid(singleton)) {
-        return;
-    }
-
-    auto& grid = registry.get<GameGridSingleton>(singleton);
-
-    if (auto e = event.get_if<spkt::added<GridComponent>>()) {
-        spkt::entity entity = e->entity;
-        auto& transform = entity.get<Transform3DComponent>();
-        const auto& gc = entity.get<GridComponent>();
-
-        assert(!grid.game_grid.contains({gc.x, gc.z}));
-    
-        transform.position.x = gc.x + 0.5f;
-        transform.position.z = gc.z + 0.5f;
-        grid.game_grid[{gc.x, gc.z}] = entity.entity();
-    }
-    else if (auto e = event.get_if<spkt::removed<GridComponent>>()) {
-        auto& gc = e->entity.get<GridComponent>();
-        auto it = grid.game_grid.find({gc.x, gc.z});
-        if (it == grid.game_grid.end()) {
-            log::warn("No entity exists at this coord!");
-        }
-        else {
-            grid.game_grid.erase(it);
-        }
-    }
-}
-
 void GameGrid::on_update(spkt::registry& registry, double)
 {
     const auto& input = get_singleton<InputSingleton>(registry);
     const auto& cam = get_singleton<CameraSingleton>(registry);
     auto& grid = get_singleton<GameGridSingleton>(registry);
+
+    auto tile_map = registry.find<TileMapSingleton>();
+    assert(registry.valid(tile_map));
+
+    auto& tms = registry.get<TileMapSingleton>(tile_map);
+
+    // Clean out any invalid entities.
+    std::erase_if(tms.tiles, [&](const auto& elem) {
+        const auto& [pos, entity] = elem;
+        return !registry.valid(entity);
+    });
 
     if (input.mouse_click[Mouse::LEFT]) {
         grid.clicked_square = grid.hovered_square;

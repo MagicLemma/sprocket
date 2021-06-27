@@ -19,7 +19,7 @@ void Save(const std::string& file, spkt::registry* reg)
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto id : reg->all()) {
         spkt::entity entity{*reg, id};
-        if (entity.has<TemporaryComponent>()) { return; }
+        if (entity.has<TemporaryComponent>()) { continue; }
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << id;
 DATAMATIC_BEGIN SAVABLE=true

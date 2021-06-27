@@ -200,18 +200,6 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (entity.has<GridComponent>()) {
-        auto& c = entity.get<GridComponent>();
-        if (ImGui::CollapsingHeader("Grid")) {
-            ImGui::PushID(count++);
-            ;
-            ;
-            
-            if (ImGui::Button("Delete")) { entity.remove<GridComponent>(); }
-            ImGui::PopID();
-        }
-    }
-
     if (entity.has<LightComponent>()) {
         auto& c = entity.get<LightComponent>();
         if (ImGui::CollapsingHeader("Light")) {
@@ -329,9 +317,19 @@ void Inspector::Show(Anvil& editor)
             ;
             ;
             ;
-            ;
             
             if (ImGui::Button("Delete")) { entity.remove<GameGridSingleton>(); }
+            ImGui::PopID();
+        }
+    }
+
+    if (entity.has<TileMapSingleton>()) {
+        auto& c = entity.get<TileMapSingleton>();
+        if (ImGui::CollapsingHeader("Tile Map Singleton")) {
+            ImGui::PushID(count++);
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.remove<TileMapSingleton>(); }
             ImGui::PopID();
         }
     }
@@ -406,10 +404,6 @@ void Inspector::Show(Anvil& editor)
             PathComponent c;
             entity.add<PathComponent>(c);
         }
-        if (!entity.has<GridComponent>() && ImGui::Selectable("Grid")) {
-            GridComponent c;
-            entity.add<GridComponent>(c);
-        }
         if (!entity.has<LightComponent>() && ImGui::Selectable("Light")) {
             LightComponent c;
             entity.add<LightComponent>(c);
@@ -445,6 +439,10 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<GameGridSingleton>() && ImGui::Selectable("Game Grid Singleton")) {
             GameGridSingleton c;
             entity.add<GameGridSingleton>(c);
+        }
+        if (!entity.has<TileMapSingleton>() && ImGui::Selectable("Tile Map Singleton")) {
+            TileMapSingleton c;
+            entity.add<TileMapSingleton>(c);
         }
         if (!entity.has<CameraSingleton>() && ImGui::Selectable("Camera Singleton")) {
             CameraSingleton c;

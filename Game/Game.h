@@ -52,6 +52,7 @@ public:
     void OnRender();
     void PostUpdate() {}
 
+    void SaveScene(std::string_view file);
     void LoadScene(std::string_view file);
 
     void AddTree(const glm::ivec2& pos);

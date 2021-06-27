@@ -23,6 +23,24 @@ bool convert<glm::vec2>::decode(const Node& node, glm::vec2& rhs)
     return true;
 }
 
+Node convert<glm::ivec2>::encode(const glm::ivec2& rhs)
+{
+    Node n;
+    n.push_back(rhs.x);
+    n.push_back(rhs.y);
+    return n;
+}
+
+bool convert<glm::ivec2>::decode(const Node& node, glm::ivec2& rhs)
+{
+    if (!node.IsSequence() || node.size() != 2)
+        return false;
+
+    rhs.x = node[0].as<int>();
+    rhs.y = node[1].as<int>();
+    return true;
+}
+
 Node convert<glm::vec3>::encode(const glm::vec3& rhs)
 {
     Node n;
@@ -135,6 +153,13 @@ bool convert<spkt::identifier>::decode(const Node& node, spkt::identifier& rhs)
 namespace Sprocket {
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
+{
+    out << YAML::Flow;
+    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+    return out;
+}
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const glm::ivec2& v)
 {
     out << YAML::Flow;
     out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;

@@ -5,6 +5,7 @@
 #include <utility>
 #include <array>
 #include <unordered_map>
+#include <map>
 #include <optional>
 #include <memory>
 
@@ -116,12 +117,6 @@ struct PathComponent
     float speed = 0.0f;
 };
 
-struct GridComponent
-{
-    int x = 0;
-    int z = 0;
-};
-
 struct LightComponent
 {
     glm::vec3 colour = {1.0f, 1.0f, 1.0f};
@@ -189,7 +184,11 @@ struct GameGridSingleton
     apx::entity clicked_square_entity = apx::null;
     glm::ivec2 hovered_square = {0, 0};
     std::optional<glm::ivec2> clicked_square = std::nullopt;
-    std::unordered_map<glm::ivec2, apx::entity> game_grid = {};
+};
+
+struct TileMapSingleton
+{
+    std::unordered_map<glm::ivec2, apx::entity> tiles = {};
 };
 
 struct CameraSingleton

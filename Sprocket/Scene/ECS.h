@@ -23,7 +23,6 @@ using registry = apx::registry<
     Sprocket::Camera3DComponent,
     Sprocket::SelectComponent,
     Sprocket::PathComponent,
-    Sprocket::GridComponent,
     Sprocket::LightComponent,
     Sprocket::SunComponent,
     Sprocket::AmbienceComponent,
@@ -33,6 +32,7 @@ using registry = apx::registry<
     Sprocket::CollisionSingleton,
     Sprocket::InputSingleton,
     Sprocket::GameGridSingleton,
+    Sprocket::TileMapSingleton,
     Sprocket::CameraSingleton
 >;
 
