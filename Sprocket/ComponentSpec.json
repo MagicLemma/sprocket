@@ -721,12 +721,6 @@
                     "display_name": "Clicked Square",
                     "type": "std::optional<glm::ivec2>",
                     "default": "std::nullopt"
-                },
-                {
-                    "name": "game_grid",
-                    "display_name": "Game Grid",
-                    "type": "std::unordered_map<glm::ivec2, apx::entity>",
-                    "default": "{}"
                 }
             ]
         },

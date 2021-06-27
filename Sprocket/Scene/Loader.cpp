@@ -649,7 +649,6 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.clicked_square_entity = transform(source_comp.clicked_square_entity);
             target_comp.hovered_square = transform(source_comp.hovered_square);
             target_comp.clicked_square = transform(source_comp.clicked_square);
-            target_comp.game_grid = transform(source_comp.game_grid);
             dst.add<GameGridSingleton>(target_comp);
         }
         if (src.has<TileMapSingleton>()) {

@@ -190,7 +190,6 @@ struct GameGridSingleton
     apx::entity clicked_square_entity = apx::null;
     glm::ivec2 hovered_square = {0, 0};
     std::optional<glm::ivec2> clicked_square = std::nullopt;
-    std::unordered_map<glm::ivec2, apx::entity> game_grid = {};
 };
 
 struct TileMapSingleton

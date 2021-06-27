@@ -329,7 +329,6 @@ void Inspector::Show(Anvil& editor)
             ;
             ;
             ;
-            ;
             
             if (ImGui::Button("Delete")) { entity.remove<GameGridSingleton>(); }
             ImGui::PopID();
