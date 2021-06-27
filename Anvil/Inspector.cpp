@@ -142,6 +142,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Mass", &c.mass, 0.01f);
             ImGui::DragFloat("Radius", &c.radius, 0.01f);
             ImGui::DragFloat("Height", &c.height, 0.01f);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<CapsuleCollider3DComponent>(); }
             ImGui::PopID();

@@ -85,6 +85,7 @@ struct CapsuleCollider3DComponent
     float mass = 1.0f;
     float radius = 1.0f;
     float height = 1.0f;
+    std::shared_ptr<collider_runtime> runtime = nullptr;
 };
 
 struct ScriptComponent

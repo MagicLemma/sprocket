@@ -172,6 +172,23 @@ std::shared_ptr<collider_runtime> make_sphere_collider(
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
 
+std::shared_ptr<collider_runtime> make_capsule_collider(
+    rp3d::PhysicsCommon* pc,
+    spkt::registry& registry,
+    apx::entity entity,
+    rp3d::RigidBody* rigid_body
+) {
+    auto& tc = registry.get<Transform3DComponent>(entity);
+    auto& cc = registry.get<CapsuleCollider3DComponent>(entity);
+    
+    rp3d::CapsuleShape* shape = pc->createCapsuleShape(cc.radius, cc.height);
+    rp3d::Transform transform = Convert(cc.position, cc.orientation);
+
+    rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
+    SetMaterial(collider, registry.get<RigidBody3DComponent>(entity));
+
+    return std::make_shared<collider_runtime>(rigid_body, collider);
+}
 
 struct PhysicsEngine3DImpl
 {
@@ -256,24 +273,6 @@ void PhysicsEngine3D::on_event(spkt::registry& registry, ev::Event& event)
         d_impl->world->destroyRigidBody(rigidBodyIt->second.body);
         d_impl->entityData.erase(rigidBodyIt);
     }
-    else if (auto e = event.get_if<spkt::added<CapsuleCollider3DComponent>>()) {
-        assert(e->entity.has<Transform3DComponent>());
-        assert(e->entity.has<RigidBody3DComponent>());
-
-        auto& tc = e->entity.get<Transform3DComponent>();
-        auto& cc = e->entity.get<CapsuleCollider3DComponent>();
-        auto& entry = d_impl->entityData[e->entity];
-        
-        rp3d::CapsuleShape* shape = d_impl->pc.createCapsuleShape(cc.radius, cc.height);
-        rp3d::Transform transform = Convert(cc.position, cc.orientation);
-
-        entry.capsuleCollider = entry.body->addCollider(shape, transform);
-        SetMaterial(entry.capsuleCollider, e->entity.get<RigidBody3DComponent>()); 
-    }
-    else if (auto e = event.get_if<spkt::removed<CapsuleCollider3DComponent>>()) {
-        auto& entry = d_impl->entityData[e->entity];
-        entry.body->removeCollider(entry.capsuleCollider);
-    }
 }
 
 void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
@@ -288,15 +287,21 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
         rp3d::RigidBody* body = entry.body;
 
         if (entity.has<BoxCollider3DComponent>()) {
-            auto& box = entity.get<BoxCollider3DComponent>();
-            if (!box.runtime) {
-                box.runtime = make_box_collider(&d_impl->pc, registry, id, body);
+            auto& cc = entity.get<BoxCollider3DComponent>();
+            if (!cc.runtime) {
+                cc.runtime = make_box_collider(&d_impl->pc, registry, id, body);
             }
         }
         if (entity.has<SphereCollider3DComponent>()) {
-            auto& sphere = entity.get<SphereCollider3DComponent>();
-            if (!sphere.runtime) {
-                sphere.runtime = make_sphere_collider(&d_impl->pc, registry, id, body);
+            auto& cc = entity.get<SphereCollider3DComponent>();
+            if (!cc.runtime) {
+                cc.runtime = make_sphere_collider(&d_impl->pc, registry, id, body);
+            }
+        }
+        if (entity.has<CapsuleCollider3DComponent>()) {
+            auto& cc = entity.get<CapsuleCollider3DComponent>();
+            if (!cc.runtime) {
+                cc.runtime = make_capsule_collider(&d_impl->pc, registry, id, body);
             }
         }
 
