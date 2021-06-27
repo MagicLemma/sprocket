@@ -167,6 +167,16 @@
                     "flags": {
                         "SAVABLE": false
                     }
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<rigid_body_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         },
@@ -206,6 +216,16 @@
                     "display_name": "Apply Scale",
                     "type": "bool",
                     "default": "true"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         },
@@ -239,6 +259,16 @@
                     "display_name": "Radius",
                     "type": "float",
                     "default": "1.0f"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         },
@@ -278,6 +308,16 @@
                     "display_name": "Height",
                     "type": "float",
                     "default": "1.0f"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
                 }
             ]
         },

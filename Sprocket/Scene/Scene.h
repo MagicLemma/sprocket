@@ -20,7 +20,7 @@ Comp& get_singleton(spkt::registry& registry)
     assert(registry.valid(singleton));
     assert(registry.has<Comp>(singleton));
     return registry.get<Comp>(singleton);
-} 
+}
 
 
 class Scene
@@ -35,14 +35,12 @@ class Scene
 
 public:
     Scene(Window* window);
+    ~Scene();
 
     spkt::registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>
     T& Add(Args&&... args);
-
-    template <typename T>
-    T& Get();
 
     void Load(std::string_view file);
 
@@ -68,12 +66,6 @@ T& Scene::Add(Args&&... args)
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
     d_systems.back()->on_startup(d_registry);
     return *static_cast<T*>(d_systems.back().get());
-}
-
-template <typename T>
-T& Scene::Get()
-{
-    return *static_cast<T*>(d_systems[d_lookup[spkt::type_info<T>]].get());
 }
 
 template <typename... Comps>

@@ -487,6 +487,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.rollingResistance = transform(source_comp.rollingResistance);
             target_comp.force = transform(source_comp.force);
             target_comp.onFloor = transform(source_comp.onFloor);
+            target_comp.runtime = transform(source_comp.runtime);
             dst.add<RigidBody3DComponent>(target_comp);
         }
         if (src.has<BoxCollider3DComponent>()) {
@@ -497,6 +498,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.mass = transform(source_comp.mass);
             target_comp.halfExtents = transform(source_comp.halfExtents);
             target_comp.applyScale = transform(source_comp.applyScale);
+            target_comp.runtime = transform(source_comp.runtime);
             dst.add<BoxCollider3DComponent>(target_comp);
         }
         if (src.has<SphereCollider3DComponent>()) {
@@ -506,6 +508,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.orientation = transform(source_comp.orientation);
             target_comp.mass = transform(source_comp.mass);
             target_comp.radius = transform(source_comp.radius);
+            target_comp.runtime = transform(source_comp.runtime);
             dst.add<SphereCollider3DComponent>(target_comp);
         }
         if (src.has<CapsuleCollider3DComponent>()) {
@@ -516,6 +519,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.mass = transform(source_comp.mass);
             target_comp.radius = transform(source_comp.radius);
             target_comp.height = transform(source_comp.height);
+            target_comp.runtime = transform(source_comp.runtime);
             dst.add<CapsuleCollider3DComponent>(target_comp);
         }
         if (src.has<ScriptComponent>()) {

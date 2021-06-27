@@ -15,6 +15,8 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+struct rigid_body_runtime;
+struct collider_runtime;
 
 // Components
 struct TemporaryComponent
@@ -56,6 +58,7 @@ struct RigidBody3DComponent
     float rollingResistance = 0.0f;
     glm::vec3 force = {0.0f, 0.0f, 0.0f};
     bool onFloor = false;
+    std::shared_ptr<rigid_body_runtime> runtime = nullptr;
 };
 
 struct BoxCollider3DComponent
@@ -65,6 +68,7 @@ struct BoxCollider3DComponent
     float mass = 1.0f;
     glm::vec3 halfExtents = {0.0f, 0.0f, 0.0f};
     bool applyScale = true;
+    std::shared_ptr<collider_runtime> runtime = nullptr;
 };
 
 struct SphereCollider3DComponent
@@ -73,6 +77,7 @@ struct SphereCollider3DComponent
     glm::quat orientation = {0.0f, 0.0f, 0.0f, 1.0f};
     float mass = 1.0f;
     float radius = 1.0f;
+    std::shared_ptr<collider_runtime> runtime = nullptr;
 };
 
 struct CapsuleCollider3DComponent
@@ -82,6 +87,7 @@ struct CapsuleCollider3DComponent
     float mass = 1.0f;
     float radius = 1.0f;
     float height = 1.0f;
+    std::shared_ptr<collider_runtime> runtime = nullptr;
 };
 
 struct ScriptComponent

@@ -15,6 +15,8 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+struct rigid_body_runtime;
+struct collider_runtime;
 
 // Components
 DATAMATIC_BEGIN

@@ -26,6 +26,11 @@ Scene::Scene(Window* window)
     });
 }
 
+Scene::~Scene()
+{
+    d_registry.clear();
+}
+
 void Scene::Load(std::string_view file)
 {
     Loader::Load(std::string(file), &Entities());

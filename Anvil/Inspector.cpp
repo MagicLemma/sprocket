@@ -96,6 +96,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::SliderFloat("Rolling Resistance", &c.rollingResistance, 0.0f, 1.0f);
             ImGui::DragFloat3("Force", &c.force.x, 0.1f);
             ImGui::Checkbox("OnFloor", &c.onFloor);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<RigidBody3DComponent>(); }
             ImGui::PopID();
@@ -111,6 +112,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Mass", &c.mass, 0.01f);
             ImGui::DragFloat3("Half Extents", &c.halfExtents.x, 0.1f);
             ImGui::Checkbox("Apply Scale", &c.applyScale);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<BoxCollider3DComponent>(); }
             ImGui::PopID();
@@ -125,6 +127,7 @@ void Inspector::Show(Anvil& editor)
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat("Mass", &c.mass, 0.01f);
             ImGui::DragFloat("Radius", &c.radius, 0.01f);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<SphereCollider3DComponent>(); }
             ImGui::PopID();
@@ -140,6 +143,7 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Mass", &c.mass, 0.01f);
             ImGui::DragFloat("Radius", &c.radius, 0.01f);
             ImGui::DragFloat("Height", &c.height, 0.01f);
+            ;
             
             if (ImGui::Button("Delete")) { entity.remove<CapsuleCollider3DComponent>(); }
             ImGui::PopID();
