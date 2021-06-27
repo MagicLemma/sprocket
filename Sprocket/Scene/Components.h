@@ -117,12 +117,6 @@ struct PathComponent
     float speed = 0.0f;
 };
 
-struct GridComponent
-{
-    int x = 0;
-    int z = 0;
-};
-
 struct LightComponent
 {
     glm::vec3 colour = {1.0f, 1.0f, 1.0f};

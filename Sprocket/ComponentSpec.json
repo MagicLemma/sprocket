@@ -428,24 +428,6 @@
             ]
         },
         {
-            "name": "GridComponent",
-            "display_name": "Grid",
-            "attributes": [
-                {
-                    "name": "x",
-                    "display_name": "X",
-                    "type": "int",
-                    "default": "0"
-                },
-                {
-                    "name": "z",
-                    "display_name": "Z",
-                    "type": "int",
-                    "default": "0"
-                }
-            ]
-        },
-        {
             "name": "LightComponent",
             "display_name": "Light",
             "attributes": [

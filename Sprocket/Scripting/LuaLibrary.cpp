@@ -753,40 +753,6 @@ int _AddPathComponent(lua_State* L) {
     return 0;
 }
 
-// C++ Functions for GridComponent =====================================================
-
-int _GetGridComponent(lua_State* L) {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::entity e = Converter<spkt::entity>::read(L, 1);
-    assert(e.has<GridComponent>());
-    const auto& c = e.get<GridComponent>();
-    Converter<int>::push(L, c.x);
-    Converter<int>::push(L, c.z);
-    return 2;
-}
-
-int _SetGridComponent(lua_State* L) {
-    if (!CheckArgCount(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-    auto& c = e.get<GridComponent>();
-    c.x = Converter<int>::read(L, ++ptr);
-    c.z = Converter<int>::read(L, ++ptr);
-    return 0;
-}
-
-int _AddGridComponent(lua_State* L) {
-    if (!CheckArgCount(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-    assert(!e.has<GridComponent>());
-    GridComponent c;
-    c.x = Converter<int>::read(L, ++ptr);
-    c.z = Converter<int>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<GridComponent>(c); });
-    return 0;
-}
-
 // C++ Functions for LightComponent =====================================================
 
 int _GetLightComponent(lua_State* L) {
@@ -1466,43 +1432,6 @@ void load_entity_component_functions(lua::Script& script)
     )lua");
 
     lua_register(L, "HasPathComponent", &_has_impl<PathComponent>);
-
-
-    // Lua functions for GridComponent =====================================================
-
-    luaL_dostring(L, R"lua(
-        GridComponent = Class(function(self, x, z)
-            self.x = x
-            self.z = z
-        end)
-    )lua");
-
-    lua_register(L, "_GetGridComponent", &_GetGridComponent);
-
-    luaL_dostring(L, R"lua(
-        function GetGridComponent(entity)
-            x, z = _GetGridComponent(entity)
-            return GridComponent(x, z)
-        end
-    )lua");
-
-    lua_register(L, "_SetGridComponent", &_SetGridComponent);
-
-    luaL_dostring(L, R"lua(
-        function SetGridComponent(entity, c)
-            _SetGridComponent(entity, c.x, c.z)
-        end
-    )lua");
-
-    lua_register(L, "_AddGridComponent", &_AddGridComponent);
-
-    luaL_dostring(L, R"lua(
-        function AddGridComponent(entity, c)
-            _AddGridComponent(entity, c.x, c.z)
-        end
-    )lua");
-
-    lua_register(L, "HasGridComponent", &_has_impl<GridComponent>);
 
 
     // Lua functions for LightComponent =====================================================

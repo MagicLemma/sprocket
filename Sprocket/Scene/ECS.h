@@ -23,7 +23,6 @@ using registry = apx::registry<
     Sprocket::Camera3DComponent,
     Sprocket::SelectComponent,
     Sprocket::PathComponent,
-    Sprocket::GridComponent,
     Sprocket::LightComponent,
     Sprocket::SunComponent,
     Sprocket::AmbienceComponent,

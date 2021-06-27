@@ -121,13 +121,6 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
-        if (entity.has<GridComponent>()) {
-            const auto& c = entity.get<GridComponent>();
-            out << YAML::Key << "GridComponent" << YAML::BeginMap;
-            out << YAML::Key << "x" << YAML::Value << c.x;
-            out << YAML::Key << "z" << YAML::Value << c.z;
-            out << YAML::EndMap;
-        }
         if (entity.has<LightComponent>()) {
             const auto& c = entity.get<LightComponent>();
             out << YAML::Key << "LightComponent" << YAML::BeginMap;
@@ -304,12 +297,6 @@ void Load(const std::string& file, spkt::registry* reg)
             c.speed = transform(spec["speed"].as<float>());
             e.add<PathComponent>(c);
         }
-        if (auto spec = entity["GridComponent"]) {
-            GridComponent c;
-            c.x = transform(spec["x"].as<int>());
-            c.z = transform(spec["z"].as<int>());
-            e.add<GridComponent>(c);
-        }
         if (auto spec = entity["LightComponent"]) {
             LightComponent c;
             c.colour = transform(spec["colour"].as<glm::vec3>());
@@ -396,9 +383,6 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     }
     if (entity.has<PathComponent>()) {
         e.add<PathComponent>(entity.get<PathComponent>());
-    }
-    if (entity.has<GridComponent>()) {
-        e.add<GridComponent>(entity.get<GridComponent>());
     }
     if (entity.has<LightComponent>()) {
         e.add<LightComponent>(entity.get<LightComponent>());
@@ -565,13 +549,6 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.markers = transform(source_comp.markers);
             target_comp.speed = transform(source_comp.speed);
             dst.add<PathComponent>(target_comp);
-        }
-        if (src.has<GridComponent>()) {
-            const GridComponent& source_comp = src.get<GridComponent>();
-            GridComponent target_comp;
-            target_comp.x = transform(source_comp.x);
-            target_comp.z = transform(source_comp.z);
-            dst.add<GridComponent>(target_comp);
         }
         if (src.has<LightComponent>()) {
             const LightComponent& source_comp = src.get<LightComponent>();

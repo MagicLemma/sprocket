@@ -200,18 +200,6 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (entity.has<GridComponent>()) {
-        auto& c = entity.get<GridComponent>();
-        if (ImGui::CollapsingHeader("Grid")) {
-            ImGui::PushID(count++);
-            ;
-            ;
-            
-            if (ImGui::Button("Delete")) { entity.remove<GridComponent>(); }
-            ImGui::PopID();
-        }
-    }
-
     if (entity.has<LightComponent>()) {
         auto& c = entity.get<LightComponent>();
         if (ImGui::CollapsingHeader("Light")) {
@@ -415,10 +403,6 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<PathComponent>() && ImGui::Selectable("Path")) {
             PathComponent c;
             entity.add<PathComponent>(c);
-        }
-        if (!entity.has<GridComponent>() && ImGui::Selectable("Grid")) {
-            GridComponent c;
-            entity.add<GridComponent>(c);
         }
         if (!entity.has<LightComponent>() && ImGui::Selectable("Light")) {
             LightComponent c;
