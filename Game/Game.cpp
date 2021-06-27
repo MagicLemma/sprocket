@@ -127,10 +127,6 @@ void WorldLayer::LoadScene(std::string_view file)
 
     assert(d_worker != spkt::null);
     assert(d_camera != spkt::null);
-
-    apx::entity entity = spkt::identifier{3131031158784};
-    const auto& gg = d_scene.Entities().get<GridComponent>(entity);
-    log::info("At position {} {}", gg.x, gg.z);
 }
 
 void WorldLayer::SaveScene(std::string_view file)
@@ -151,6 +147,10 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
             event.consume();
         }
     }
+
+    auto& registry = d_scene.Entities();
+    auto tile_entity = registry.find<TileMapSingleton>();
+    const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
 
     if (d_paused) {
         d_escapeMenu.OnEvent(event);
@@ -191,14 +191,13 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
                 std::queue<glm::vec3>().swap(path.markers);
                 auto pos = d_worker.get<Transform3DComponent>().position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
-                    auto& registry = d_scene.Entities();
                     const auto& grid = get_singleton<GameGridSingleton>(registry);
                     path.markers = GenerateAStarPath(
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
-                            auto it = grid.game_grid.find(pos);
-                            apx::entity entity = it != grid.game_grid.end() ? it->second : apx::null;
+                            auto it = tiles.find(pos);
+                            apx::entity entity = it != tiles.end() ? it->second : apx::null;
                             return registry.valid(entity);
                         }
                     );
@@ -284,6 +283,10 @@ void WorldLayer::OnRender()
     }
 
     if (!d_paused) {
+        auto& registry = d_scene.Entities();
+        auto tile_entity = registry.find<TileMapSingleton>();
+        const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
+
         d_hoveredEntityUI.StartFrame();
 
         auto mouse = d_window->GetMousePos();
@@ -291,8 +294,8 @@ void WorldLayer::OnRender()
         float h = (float)d_window->Height();
 
         if (game_grid.clicked_square.has_value()) {
-            auto it = game_grid.game_grid.find(game_grid.clicked_square.value());
-            apx::entity e = (it != game_grid.game_grid.end()) ? it->second : apx::null;
+            auto it = tiles.find(game_grid.clicked_square.value());
+            apx::entity e = (it != tiles.end()) ? it->second : apx::null;
             spkt::entity selected{registry, e};
 
             float width = 0.15f * w;
@@ -336,8 +339,8 @@ void WorldLayer::OnRender()
             d_hoveredEntityUI.EndPanel();
         }
 
-        auto it = game_grid.game_grid.find(game_grid.hovered_square);
-        apx::entity e = (it != game_grid.game_grid.end()) ? it->second : apx::null;
+        auto it = tiles.find(game_grid.hovered_square);
+        apx::entity e = (it != tiles.end()) ? it->second : apx::null;
         spkt::entity hovered{registry, e};
         if (hovered.valid()) {
             float width = 200;

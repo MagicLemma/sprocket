@@ -72,6 +72,17 @@ void GameGrid::on_update(spkt::registry& registry, double)
     const auto& cam = get_singleton<CameraSingleton>(registry);
     auto& grid = get_singleton<GameGridSingleton>(registry);
 
+    auto tile_map = registry.find<TileMapSingleton>();
+    assert(registry.valid(tile_map));
+
+    auto& tms = registry.get<TileMapSingleton>(tile_map);
+
+    // Clean out any invalid entities.
+    std::erase_if(tms.tiles, [&](const auto& elem) {
+        const auto& [pos, entity] = elem;
+        return !registry.valid(entity);
+    });
+
     if (input.mouse_click[Mouse::LEFT]) {
         grid.clicked_square = grid.hovered_square;
     } else if (input.mouse_click[Mouse::RIGHT]) {
