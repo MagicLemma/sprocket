@@ -12,18 +12,6 @@ Scene::Scene(Window* window)
     d_registry.emplace<TemporaryComponent>(singleton);
     d_registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
     d_registry.emplace<InputSingleton>(singleton);
-
-    apx::meta::for_each(d_registry.tags, [&](auto&& tag) {
-        using T = decltype(tag.type());
-        d_registry.on_add<T>([&](apx::entity entity, const T&) {
-            ev::Event event = ev::make_event<spkt::added<T>>(spkt::entity(d_registry, entity));
-            OnEvent(event);
-        });
-        d_registry.on_remove<T>([&](apx::entity entity, const T&) {
-            ev::Event event = ev::make_event<spkt::removed<T>>(spkt::entity(d_registry, entity));
-            OnEvent(event);
-        });
-    });
 }
 
 Scene::~Scene()
