@@ -1,48 +1,47 @@
 #include "grid_helpers.h"
+#include <string>
+#include <glm/glm.hpp>
 
 namespace {
 
 void add_rock_base(
     spkt::registry& registry,
     glm::ivec2 pos,
-    std::string_view material,
-    std::string_view name)
+    const std::string& material,
+    const std::string& name)
 {
-    using namespace spkt;
+    auto entity = registry.create();
+    registry.emplace<spkt::NameComponent>(entity, name);
 
-    auto newEntity = apx::create_from(registry);
-    auto& n = newEntity.emplace<NameComponent>();
-    n.name = name;
-
-    auto& tr = newEntity.emplace<Transform3DComponent>();
+    auto& tr = registry.emplace<spkt::Transform3DComponent>(entity);
     tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
-    tr.position.y -= Random(0.0f, 0.5f);
-    float randomRotation = glm::half_pi<float>() * Random(0, 3);
-    tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
+    tr.position.y -= spkt::Random(0.0f, 0.5f);
+    tr.orientation = glm::rotate(
+        glm::identity<glm::quat>(),
+        glm::half_pi<float>() * spkt::Random(0, 3),
+        {0.0, 1.0, 0.0}
+    );
     tr.scale = {1.1f, 1.1f, 1.1f};
 
-    auto& modelData = newEntity.emplace<ModelComponent>();
+    auto& modelData = registry.emplace<spkt::ModelComponent>(entity);
     modelData.mesh = "Resources/Models/Rock.obj";
     modelData.material = material;
-    newEntity.emplace<SelectComponent>();
 
     // Add the new entity to the grid.
-    auto tile_map = registry.find<TileMapSingleton>();
+    auto tile_map = registry.find<spkt::TileMapSingleton>();
     assert(registry.valid(tile_map));
-    auto& tms = registry.get<TileMapSingleton>(tile_map);
-    tms.tiles[pos] = newEntity.entity();
+    auto& tms = registry.get<spkt::TileMapSingleton>(tile_map);
+    tms.tiles[pos] = entity;
 }
 
 }
 
 void add_tree(spkt::registry& registry, glm::ivec2 position)
 {
-    auto newEntity = apx::create_from(registry);
+    auto entity = registry.create();
+    registry.emplace<spkt::NameComponent>(entity, "Tree");
 
-    auto& name = newEntity.emplace<spkt::NameComponent>();
-    name.name = "Tree";
-
-    auto& tr = newEntity.emplace<spkt::Transform3DComponent>();
+    auto& tr = registry.emplace<spkt::Transform3DComponent>(entity);
     tr.position = {position.x + 0.5f, 0.0f, position.y + 0.5f};
     tr.orientation = glm::rotate(
         glm::identity<glm::quat>(),
@@ -52,16 +51,15 @@ void add_tree(spkt::registry& registry, glm::ivec2 position)
     float r = spkt::Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
-    auto& modelData = newEntity.emplace<spkt::ModelComponent>();
+    auto& modelData = registry.emplace<spkt::ModelComponent>(entity);
     modelData.mesh = "Resources/Models/BetterTree.obj";
     modelData.material = "Resources/Materials/tree.yaml";
-    newEntity.emplace<spkt::SelectComponent>();
 
     // Add the new entity to the grid.
     auto tile_map = registry.find<spkt::TileMapSingleton>();
     assert(registry.valid(tile_map));
     auto& tms = registry.get<spkt::TileMapSingleton>(tile_map);
-    tms.tiles[position] = newEntity.entity();
+    tms.tiles[position] = entity;
 }
 
 void add_rock(spkt::registry& registry, glm::ivec2 position)
