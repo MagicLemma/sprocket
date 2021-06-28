@@ -2,10 +2,10 @@
 
 using namespace spkt;
 
-const auto LIGHT_BLUE  = spkt::FromHex(0x25CCF7);
-const auto CLEAR_BLUE  = spkt::FromHex(0x1B9CFC);
-const auto GARDEN      = spkt::FromHex(0x55E6C1);
-const auto SPACE_DARK  = spkt::FromHex(0x2C3A47);
+const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
+const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
+const auto GARDEN      = spkt::from_hex(0x55E6C1);
+const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
 Runtime::Runtime(Window* window) 
     : d_window(window)

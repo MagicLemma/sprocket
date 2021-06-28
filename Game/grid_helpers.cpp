@@ -23,9 +23,9 @@ void add_rock_base(
     );
     tr.scale = {1.1f, 1.1f, 1.1f};
 
-    auto& modelData = registry.emplace<spkt::ModelComponent>(entity);
-    modelData.mesh = "Resources/Models/Rock.obj";
-    modelData.material = material;
+    auto& mc = registry.emplace<spkt::ModelComponent>(entity);
+    mc.mesh = "Resources/Models/Rock.obj";
+    mc.material = material;
 
     // Add the new entity to the grid.
     auto tile_map = registry.find<spkt::TileMapSingleton>();
@@ -51,9 +51,9 @@ void add_tree(spkt::registry& registry, glm::ivec2 position)
     float r = spkt::Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
-    auto& modelData = registry.emplace<spkt::ModelComponent>(entity);
-    modelData.mesh = "Resources/Models/BetterTree.obj";
-    modelData.material = "Resources/Materials/tree.yaml";
+    auto& mc = registry.emplace<spkt::ModelComponent>(entity);
+    mc.mesh = "Resources/Models/BetterTree.obj";
+    mc.material = "Resources/Materials/tree.yaml";
 
     // Add the new entity to the grid.
     auto tile_map = registry.find<spkt::TileMapSingleton>();

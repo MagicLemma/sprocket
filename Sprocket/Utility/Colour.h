@@ -3,6 +3,6 @@
 
 namespace spkt {
 
-glm::vec4 FromHex(int hex);
+glm::vec4 from_hex(int hex);
 
 }
