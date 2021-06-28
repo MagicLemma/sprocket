@@ -17,7 +17,6 @@ using registry = apx::registry<
     spkt::CapsuleCollider3DComponent,
     spkt::ScriptComponent,
     spkt::Camera3DComponent,
-    spkt::SelectComponent,
     spkt::PathComponent,
     spkt::LightComponent,
     spkt::SunComponent,

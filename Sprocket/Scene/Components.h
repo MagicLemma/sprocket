@@ -106,12 +106,6 @@ struct Camera3DComponent
     float pitch = 0.0f;
 };
 
-struct SelectComponent
-{
-    bool selected = false;
-    bool hovered = false;
-};
-
 struct PathComponent
 {
     std::queue<glm::vec3> markers = {};
