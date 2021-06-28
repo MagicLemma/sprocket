@@ -191,25 +191,25 @@ void Load(const std::string& file, spkt::registry* reg)
     }
 
     auto entities = data["Entities"];
-    std::unordered_map<spkt::identifier, spkt::identifier> id_remapper;
+    std::unordered_map<apx::entity, apx::entity> id_remapper;
 
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
     const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<decltype(param), spkt::identifier>) {
+        if constexpr (std::is_same_v<decltype(param), apx::entity>) {
             return id_remapper[param];
         }
         return param;
     };
 
     for (auto entity : entities) {
-        spkt::identifier old_id = entity["ID#"].as<spkt::identifier>();
-        spkt::identifier new_id = reg->create();
+        apx::entity old_id = entity["ID#"].as<apx::entity>();
+        apx::entity new_id = reg->create();
         id_remapper[old_id] = new_id;
     }
 
     for (auto entity : entities) {
-        spkt::identifier old_id = entity["ID#"].as<spkt::identifier>();
+        apx::entity old_id = entity["ID#"].as<apx::entity>();
         spkt::entity e{*reg, id_remapper[old_id]};
         if (auto spec = entity["TemporaryComponent"]) {
             TemporaryComponent c;
@@ -424,14 +424,14 @@ void Copy(spkt::registry* source, spkt::registry* target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.
-    std::unordered_map<spkt::identifier, spkt::identifier> id_remapper;
+    std::unordered_map<apx::entity, apx::entity> id_remapper;
     for (auto id : source->all()) {
-        spkt::identifier new_id = target->create();
+        apx::entity new_id = target->create();
         id_remapper[id] = new_id;
     }
 
     const auto transform = [&] <typename T> (T&& param) {
-        if constexpr (std::is_same_v<decltype(param), spkt::identifier>) {
+        if constexpr (std::is_same_v<decltype(param), apx::entity>) {
             return id_remapper[param];
         }
         return std::forward<T>(param);

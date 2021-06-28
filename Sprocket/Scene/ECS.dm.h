@@ -12,7 +12,6 @@ DATAMATIC_END
 >;
 
 using entity = typename registry::handle_type;
-using identifier = apx::entity;
 
 inline constexpr entity null;
 
