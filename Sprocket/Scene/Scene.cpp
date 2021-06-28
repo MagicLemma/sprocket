@@ -29,6 +29,15 @@ void Scene::OnUpdate(double dt)
     for (auto& system : d_systems) {
         system->on_update(d_registry, dt);
     }
+
+    auto singleton = d_registry.find<Singleton>();
+    if (d_registry.valid(singleton)) {
+        auto& input = d_registry.get<InputSingleton>(singleton);
+        input.mouse_click.fill(false);
+        input.mouse_unclick.fill(false);
+        input.mouse_offset = {0.0, 0.0};
+        input.mouse_scrolled = {0.0, 0.0};
+    }
 }
 
 void Scene::OnEvent(ev::Event& event)
@@ -71,18 +80,6 @@ void Scene::OnEvent(ev::Event& event)
 
     input.window_width = (float)d_window->Width();
     input.window_height = (float)d_window->Height();
-}
-
-void Scene::post_update()
-{
-    auto singleton = d_registry.find<Singleton>();
-    if (d_registry.valid(singleton)) {
-        auto& input = d_registry.get<InputSingleton>(singleton);
-        input.mouse_click.fill(false);
-        input.mouse_unclick.fill(false);
-        input.mouse_offset = {0.0, 0.0};
-        input.mouse_scrolled = {0.0, 0.0};
-    }
 }
 
 std::size_t Scene::Size() const

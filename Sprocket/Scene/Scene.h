@@ -3,12 +3,10 @@
 #include "Components.h"
 #include "EntitySystem.h"
 #include "Events.h"
-#include "TypeInfo.h"
 #include "Window.h"
 
 #include <memory>
 #include <vector>
-#include <unordered_map>
 #include <string_view>
 
 namespace spkt {
@@ -22,13 +20,11 @@ Comp& get_singleton(spkt::registry& registry)
     return registry.get<Comp>(singleton);
 }
 
-
 class Scene
 {
     // Temporary, will be removed when then the InputSingleton gets updated via a system.
     Window* d_window;
 
-    std::unordered_map<::spkt::type_info_t, std::size_t> d_lookup;
     std::vector<std::unique_ptr<EntitySystem>> d_systems;
 
     spkt::registry d_registry;
@@ -47,8 +43,6 @@ public:
     void OnUpdate(double dt);
     void OnEvent(ev::Event& event);
 
-    void post_update();
-
     std::size_t Size() const;
 
     template <typename... Comps>
@@ -61,8 +55,6 @@ public:
 template <typename T, typename... Args>
 T& Scene::Add(Args&&... args)
 {
-    assert(d_lookup.find(spkt::type_info<T>) == d_lookup.end());
-    d_lookup[spkt::type_info<T>] = d_systems.size();
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
     d_systems.back()->on_startup(d_registry);
     return *static_cast<T*>(d_systems.back().get());

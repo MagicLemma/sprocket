@@ -245,8 +245,6 @@ void Game::on_update(double dt)
 
     d_devUI.OnUpdate(dt);
     d_escapeMenu.OnUpdate(dt);
-
-    d_scene.post_update();
 }
 
 void Game::on_render()

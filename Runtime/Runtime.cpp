@@ -68,8 +68,6 @@ void Runtime::on_update(double dt)
         const auto& transform = d_scene.Entities().get<Transform3DComponent>(entity);
         return transform.position.y < -50;
     });
-
-    d_scene.post_update();
 }
 
 void Runtime::on_render()
