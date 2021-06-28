@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 
 VertexArray::VertexArray()
     : d_vao(0)

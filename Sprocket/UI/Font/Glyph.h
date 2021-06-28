@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-namespace Sprocket {
+namespace spkt {
 
 struct Glyph
 {

@@ -12,7 +12,7 @@
 #error "Sprocket currently only supports Windows"
 #endif
 
-namespace Sprocket {
+namespace spkt {
 
 using EventCallback = std::function<void(ev::Event&)>;
 

@@ -2,7 +2,7 @@
 #include "ECS.h"
 #include "Maths.h"
 
-namespace Sprocket {
+namespace spkt {
 
 // Returns the view matrix from the entity's position.
 // If the entity has a CameraComponent, the pitch is also

@@ -2,7 +2,7 @@
 
 #include <glm/trigonometric.hpp>
 
-namespace Sprocket {
+namespace spkt {
 
 Camera::Camera(Window* window, const glm::vec3& target)
     : d_window(window)

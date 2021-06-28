@@ -11,7 +11,7 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Sprocket {
+namespace spkt {
 
 namespace {
 

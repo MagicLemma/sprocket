@@ -2,7 +2,7 @@
 #include "Components.h"
 #include "Loader.h"
 
-namespace Sprocket {
+namespace spkt {
 
 Scene::Scene(Window* window)
     : d_window(window)

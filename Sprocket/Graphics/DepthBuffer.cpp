@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 
 DepthBuffer::DepthBuffer(int width, int height)
     : d_depth(std::make_unique<Texture>(width, height, Texture::Channels::DEPTH))

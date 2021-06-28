@@ -8,7 +8,7 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 
-namespace Sprocket {
+namespace spkt {
 
 class DevUI
 // A class that wraps the setup and rendering of ImGui.

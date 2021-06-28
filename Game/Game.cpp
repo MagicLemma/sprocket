@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-using namespace Sprocket;
+using namespace spkt;
 
 namespace {
 
@@ -79,7 +79,7 @@ WorldLayer::WorldLayer(Window* window)
     , d_devUI(window)
     , d_escapeMenu(window)
 {
-    using namespace Sprocket;
+    using namespace spkt;
 
     LoadScene("Resources/Scene.yaml");
 
@@ -103,7 +103,7 @@ WorldLayer::WorldLayer(Window* window)
 
 void WorldLayer::LoadScene(std::string_view file)
 {
-    using namespace Sprocket;
+    using namespace spkt;
 
     d_scene.Add<ScriptRunner>();
     d_scene.Add<CameraSystem>();
@@ -136,9 +136,9 @@ void WorldLayer::SaveScene(std::string_view file)
     log::info("Done!");
 }
 
-void WorldLayer::on_event(Sprocket::ev::Event& event)
+void WorldLayer::on_event(spkt::ev::Event& event)
 {
-    using namespace Sprocket;
+    using namespace spkt;
 
     // Escape Menu event handling
     if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
@@ -220,7 +220,7 @@ void WorldLayer::on_event(Sprocket::ev::Event& event)
 
 void WorldLayer::on_update(double dt)
 {
-    using namespace Sprocket;
+    using namespace spkt;
     Audio::SetListener(d_camera);
 
     d_hoveredEntityUI.OnUpdate(dt);
@@ -256,7 +256,7 @@ void WorldLayer::on_update(double dt)
 
 void WorldLayer::on_render()
 {
-    using namespace Sprocket;
+    using namespace spkt;
     const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.Entities());
     auto& registry = d_scene.Entities();
 
@@ -439,9 +439,9 @@ void WorldLayer::on_render()
         d_escapeMenu.StartPanel("VolumePanel", &shape, PanelType::DRAGGABLE);
         d_escapeMenu.Text("Volume", 48.0f, {0, 0, 400, 100});
 
-        float volume = Sprocket::Audio::GetMasterVolume();
+        float volume = spkt::Audio::GetMasterVolume();
         d_escapeMenu.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
-        Sprocket::Audio::SetMasterVolume(volume);
+        spkt::Audio::SetMasterVolume(volume);
         
         d_escapeMenu.EndPanel();
     }
@@ -481,7 +481,7 @@ void WorldLayer::on_render()
 
 void WorldLayer::AddTree(const glm::ivec2& pos)
 {
-    using namespace Sprocket;
+    using namespace spkt;
 
     auto newEntity = apx::create_from(d_scene.Entities());
 
@@ -512,7 +512,7 @@ void WorldLayer::AddRockBase(
     std::string_view material,
     std::string_view name)
 {
-    using namespace Sprocket;
+    using namespace spkt;
 
     auto newEntity = apx::create_from(d_scene.Entities());
     auto& n = newEntity.emplace<NameComponent>();

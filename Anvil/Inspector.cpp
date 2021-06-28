@@ -8,7 +8,7 @@
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Sprocket {
+namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include "Effect.h"
 
-namespace Sprocket {
+namespace spkt {
 
 class GaussianVert : public Effect
 {

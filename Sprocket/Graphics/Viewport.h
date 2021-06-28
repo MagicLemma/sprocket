@@ -3,10 +3,10 @@
 
 #include <glm/glm.hpp>
 
-namespace Sprocket {
+namespace spkt {
 
 // When OpenGL renders to any target, it assumes the target is of the dimensions specified
-// by its internal "viewport". Sprocket::Window guarantees that this is updated whenever the
+// by its internal "viewport". spkt::Window guarantees that this is updated whenever the
 // window is resized so that the viewport matches the screen. However, when binding a
 // framebuffer or other render target, we probably want to the viewport to match the dimensions
 // of the framebuffer. This class acts as an RAII wrapper for setting the viewport to a

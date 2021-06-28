@@ -3,7 +3,7 @@
 #include "ECS.h"
 #include "Random.h"
 
-namespace Sprocket {
+namespace spkt {
 
 ParticleSystem::ParticleSystem(ParticleManager* manager)
     : d_manager(manager)

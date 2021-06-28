@@ -4,7 +4,7 @@
 #include <vector>
 #include <utility>
 
-namespace Sprocket {
+namespace spkt {
 
 enum class DataType { FLOAT, INT, UBYTE };
 enum class DataRate { VERTEX, INSTANCE };

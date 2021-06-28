@@ -3,7 +3,7 @@
 
 #include <chrono>
 
-namespace Sprocket {
+namespace spkt {
 
 class Stopwatch
 {

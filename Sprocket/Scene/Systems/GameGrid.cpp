@@ -7,7 +7,7 @@
 
 #include <cassert>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";

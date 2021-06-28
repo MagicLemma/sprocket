@@ -7,7 +7,7 @@
 
 #include "Types.h"
 
-namespace Sprocket {
+namespace spkt {
 namespace ev {
 
 class Event

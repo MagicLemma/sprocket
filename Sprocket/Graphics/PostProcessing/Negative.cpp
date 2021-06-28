@@ -1,6 +1,6 @@
 #include "Negative.h"
 
-namespace Sprocket {
+namespace spkt {
 
 Negative::Negative(int width, int height)
     : Effect(width, height,

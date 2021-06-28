@@ -2,7 +2,7 @@
 #include "EntitySystem.h"
 #include "Scene.h"
 
-namespace Sprocket {
+namespace spkt {
 
 struct PathFollower : public EntitySystem
 {

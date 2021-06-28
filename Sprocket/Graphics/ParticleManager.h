@@ -6,7 +6,7 @@
 #include <array>
 #include <vector>
 
-namespace Sprocket {
+namespace spkt {
 
 struct Particle
 {

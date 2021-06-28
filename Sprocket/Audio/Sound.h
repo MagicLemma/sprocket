@@ -4,7 +4,7 @@
 
 #include "Maths.h"
 
-namespace Sprocket {
+namespace spkt {
 namespace Audio {
 
 struct SoundImpl;

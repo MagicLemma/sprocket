@@ -1,6 +1,6 @@
 #include "Stopwatch.h"
 
-namespace Sprocket {
+namespace spkt {
 
 Stopwatch::Stopwatch()
     : d_clock()

@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <string_view>
 
-namespace Sprocket {
+namespace spkt {
 
 template <typename Comp>
 Comp& get_singleton(spkt::registry& registry)

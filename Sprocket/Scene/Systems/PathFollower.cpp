@@ -3,7 +3,7 @@
 #include "Maths.h"
 #include "ECS.h"
 
-namespace Sprocket {
+namespace spkt {
 
 void PathFollower::on_update(spkt::registry& registry, double dt)
 {

@@ -6,7 +6,7 @@
 #include <string_view>
 #include <ranges>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 void delete_below_50(spkt::registry& registry, double)

@@ -4,7 +4,7 @@
 
 #include <cassert>
 
-namespace Sprocket {
+namespace spkt {
 namespace lua {
 
 void Converter<int>::push(lua_State* L, const int& value)

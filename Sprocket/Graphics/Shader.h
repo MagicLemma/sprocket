@@ -6,7 +6,7 @@
 #include <string_view>
 #include <vector>
 
-namespace Sprocket {
+namespace spkt {
 
 class Shader
 {

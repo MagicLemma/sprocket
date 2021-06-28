@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-namespace Sprocket {
+namespace spkt {
 
 InputProxy::InputProxy()
 {

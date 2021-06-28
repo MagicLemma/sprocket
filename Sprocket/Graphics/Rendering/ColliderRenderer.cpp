@@ -8,7 +8,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 
 ColliderRenderer::ColliderRenderer()
     : d_vao(std::make_unique<VertexArray>())

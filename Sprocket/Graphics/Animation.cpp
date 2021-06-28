@@ -1,7 +1,7 @@
 #include "Animation.h"
 #include "Types.h"
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 glm::vec3 GetPosition(const BoneKeyFrames& bkf, float time)

@@ -3,7 +3,7 @@
 #include "ECS.h"
 #include "Scene.h"
 
-namespace Sprocket {
+namespace spkt {
 
 void AnimationSystem::on_update(spkt::registry& registry, double dt)
 {

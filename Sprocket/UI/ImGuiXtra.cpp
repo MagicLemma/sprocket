@@ -7,7 +7,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace ImGuiXtra {
 namespace {
 

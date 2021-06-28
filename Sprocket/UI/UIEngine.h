@@ -13,7 +13,7 @@
 #include <string_view>
 #include <deque>
 
-namespace Sprocket {
+namespace spkt {
 
 enum class Alignment
 {

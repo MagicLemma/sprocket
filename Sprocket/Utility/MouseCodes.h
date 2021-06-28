@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Sprocket {
+namespace spkt {
     
 enum Mouse {
     LEFT = 0,

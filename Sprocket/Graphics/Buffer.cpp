@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 int GetUsage(BufferUsage usage)

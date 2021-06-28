@@ -7,7 +7,7 @@
 #include <memory>
 #include <random>
 
-namespace Sprocket {
+namespace spkt {
 
 class Anvil
 {
@@ -51,7 +51,7 @@ class Anvil
     spkt::entity d_selected = spkt::null;
 
     // Panels
-    Inspector      d_inspector;
+    Inspector d_inspector;
 
     void material_ui(std::string& texture);
 

@@ -9,7 +9,7 @@
 #include <fstream>
 #include <memory>
 
-namespace Sprocket {
+namespace spkt {
 namespace Loader {
 
 void Save(const std::string& file, spkt::registry* reg)

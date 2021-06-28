@@ -9,7 +9,7 @@
 #include <imgui.h>
 #include <ImGuizmo.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace ImGuiXtra {
 
 // Create a text box for displaying file paths and a button that

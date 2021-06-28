@@ -3,7 +3,7 @@
 #include <fmt/core.h>
 #include <fmt/color.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace log {
 
 void _prefixed_log(std::string_view prefix, std::string_view message);

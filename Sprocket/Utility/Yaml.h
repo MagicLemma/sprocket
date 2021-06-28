@@ -6,7 +6,7 @@
 
 namespace YAML {
 
-using namespace Sprocket;
+using namespace spkt;
 
 template<>
 struct convert<glm::vec2>
@@ -79,7 +79,7 @@ struct convert<std::unordered_map<K, V, Rest...>>
 
 }
 
-namespace Sprocket {
+namespace spkt {
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::ivec2& v);

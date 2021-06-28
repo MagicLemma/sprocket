@@ -2,7 +2,7 @@
 #include "ECS.h"
 #include "EntitySystem.h"
 
-namespace Sprocket {
+namespace spkt {
 
 struct ScriptRunner : public EntitySystem
 {

@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <ranges>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 std::array<glm::mat4, Scene3DRenderer::MAX_BONES> DefaultBoneTransforms() {

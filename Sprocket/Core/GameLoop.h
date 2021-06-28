@@ -8,7 +8,7 @@
 #include <format>
 #include <utility>
 
-namespace Sprocket {
+namespace spkt {
 
 struct RunOptions
 {

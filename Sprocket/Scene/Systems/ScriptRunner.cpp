@@ -11,7 +11,7 @@
 #include <vector>
 #include <functional>
 
-namespace Sprocket {
+namespace spkt {
 
 void ScriptRunner::on_update(spkt::registry& registry, double dt)
 {

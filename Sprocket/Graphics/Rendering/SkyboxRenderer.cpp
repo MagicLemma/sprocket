@@ -1,7 +1,7 @@
 #include "SkyboxRenderer.h"
 #include "Camera.h"
 
-namespace Sprocket {
+namespace spkt {
     
 SkyboxRenderer::SkyboxRenderer(AssetManager* assetManager)
     : d_assetManager(assetManager)

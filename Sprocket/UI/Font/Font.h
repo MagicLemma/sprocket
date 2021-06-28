@@ -12,7 +12,7 @@
 #include <utility>
 #include <unordered_map>
 
-namespace Sprocket {
+namespace spkt {
 
 using KerningMap = std::unordered_map<std::pair<u32, u32>, float, spkt::hash_pair>;
 using GlyphMap = std::unordered_map<u32, Glyph>;

@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-namespace Sprocket {
+namespace spkt {
 
 struct Material
 {

@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace Maths {
 
 // Constructs a transformation matrix with the given parameters.

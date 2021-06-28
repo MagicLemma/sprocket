@@ -3,7 +3,7 @@
 #include "ECS.h"
 #include "EntitySystem.h"
 
-namespace Sprocket {
+namespace spkt {
 
 struct GameGrid : public EntitySystem
 {

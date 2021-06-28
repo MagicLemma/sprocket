@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 
 Effect::Effect(int width, int height,
                const std::string& vertShader,

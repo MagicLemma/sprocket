@@ -7,7 +7,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/trigonometric.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace Maths {
 
 // Matrix Constructors

@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include "ParticleManager.h"
 
-namespace Sprocket {
+namespace spkt {
 
 class ParticleSystem : public EntitySystem
 {

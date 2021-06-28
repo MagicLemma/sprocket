@@ -3,7 +3,7 @@
 #include "Components.h"
 #include "Viewport.h"
 
-namespace Sprocket {
+namespace spkt {
 
 glm::mat4 MakeView(spkt::entity entity)
 {

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace Sprocket {
+namespace spkt {
 
 class StreamBuffer 
 // A class to be used with the intention of streaming data to VBOs.

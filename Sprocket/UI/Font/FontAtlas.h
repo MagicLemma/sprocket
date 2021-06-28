@@ -5,7 +5,7 @@
 #include "Maths.h"
 #include "Texture.h"
 
-namespace Sprocket {
+namespace spkt {
 
 class FontAtlas
 {

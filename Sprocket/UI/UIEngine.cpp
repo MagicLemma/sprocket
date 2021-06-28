@@ -14,7 +14,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 bool InRegion(const glm::vec2& pos, const glm::vec4& quad)
@@ -349,7 +349,7 @@ void UIEngine::EndFrame()
 
     d_keyPresses.clear();
 
-    Sprocket::RenderContext rc;
+    spkt::RenderContext rc;
     rc.AlphaBlending(true);
     rc.FaceCulling(false);
     rc.DepthTesting(false);

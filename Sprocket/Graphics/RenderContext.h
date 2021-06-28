@@ -4,7 +4,7 @@
 
 #include <optional>
 
-namespace Sprocket {
+namespace spkt {
 
 class RenderContext
 // A wrapper class that stores the current context and restores it upon

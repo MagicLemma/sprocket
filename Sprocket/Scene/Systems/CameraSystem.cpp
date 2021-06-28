@@ -6,7 +6,7 @@
 
 #include <cassert>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 float aspect_ratio(const InputSingleton& input)

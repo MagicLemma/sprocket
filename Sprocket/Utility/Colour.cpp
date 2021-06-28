@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 constexpr float Normalize(int x)

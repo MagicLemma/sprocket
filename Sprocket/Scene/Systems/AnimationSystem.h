@@ -2,7 +2,7 @@
 #include "EntitySystem.h"
 #include "ECS.h"
 
-namespace Sprocket {
+namespace spkt {
 
 struct AnimationSystem : public EntitySystem
 {

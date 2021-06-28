@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace Sprocket {
+namespace spkt {
 
 class Effect
 {

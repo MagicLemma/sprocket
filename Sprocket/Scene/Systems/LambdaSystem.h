@@ -4,7 +4,7 @@
 
 #include <functional>
 
-namespace Sprocket {
+namespace spkt {
 
 class LambdaSystem : public EntitySystem
 {

@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-namespace Sprocket {
+namespace spkt {
     
 CubeMap::CubeMap(const std::array<std::string, 6>& faceFiles)
 {

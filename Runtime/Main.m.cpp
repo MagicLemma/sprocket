@@ -3,9 +3,9 @@
 
 int main()
 {
-    Sprocket::Window window("Runtime");
+    spkt::Window window("Runtime");
     Runtime runtime(&window);
-    Sprocket::RunOptions options;
+    spkt::RunOptions options;
     options.showFramerate = true;
-    return Sprocket::Run(runtime, window, options);
+    return spkt::Run(runtime, window, options);
 }
