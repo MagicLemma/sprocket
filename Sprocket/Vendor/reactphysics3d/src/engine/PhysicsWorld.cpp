@@ -131,7 +131,6 @@ PhysicsWorld::~PhysicsWorld() {
 #endif
 
     assert(mCollisionBodies.size() == 0);
-    
     assert(mCollisionBodyComponents.getNbComponents() == 0);
     assert(mTransformComponents.getNbComponents() == 0);
     assert(mCollidersComponents.getNbComponents() == 0);
