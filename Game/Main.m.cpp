@@ -6,7 +6,7 @@ using namespace spkt;
 int main()
 {
     spkt::Window window("Game");
-    WorldLayer game(&window);
+    Game game(&window);
     spkt::RunOptions options;
     options.showFramerate = true;
     return spkt::Run(game, window, options);

@@ -11,7 +11,7 @@
 
 enum class Mode { PLAYER, EDITOR };
 
-class WorldLayer
+class Game
 {
     spkt::Window*      d_window;
     spkt::AssetManager d_assetManager;
@@ -45,7 +45,7 @@ class WorldLayer
     spkt::SimpleUI d_escapeMenu;
 
 public:
-    WorldLayer(spkt::Window* window);
+    Game(spkt::Window* window);
 
     void on_event(spkt::ev::Event& event);
     void on_update(double dt);

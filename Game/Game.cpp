@@ -67,7 +67,7 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
 
 }
 
-WorldLayer::WorldLayer(Window* window) 
+Game::Game(Window* window) 
     : d_window(window)
     , d_scene(window)
     , d_assetManager()
@@ -101,7 +101,7 @@ WorldLayer::WorldLayer(Window* window)
 
 }
 
-void WorldLayer::LoadScene(std::string_view file)
+void Game::LoadScene(std::string_view file)
 {
     using namespace spkt;
 
@@ -129,14 +129,14 @@ void WorldLayer::LoadScene(std::string_view file)
     assert(d_camera != spkt::null);
 }
 
-void WorldLayer::SaveScene(std::string_view file)
+void Game::SaveScene(std::string_view file)
 {
     log::info("Saving...");
     Loader::Save(std::string(file), &d_scene.Entities());
     log::info("Done!");
 }
 
-void WorldLayer::on_event(spkt::ev::Event& event)
+void Game::on_event(spkt::ev::Event& event)
 {
     using namespace spkt;
 
@@ -218,7 +218,7 @@ void WorldLayer::on_event(spkt::ev::Event& event)
     }
 }
 
-void WorldLayer::on_update(double dt)
+void Game::on_update(double dt)
 {
     using namespace spkt;
     Audio::SetListener(d_camera);
@@ -254,7 +254,7 @@ void WorldLayer::on_update(double dt)
     d_scene.post_update();
 }
 
-void WorldLayer::on_render()
+void Game::on_render()
 {
     using namespace spkt;
     const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.Entities());
@@ -479,7 +479,7 @@ void WorldLayer::on_render()
     d_escapeMenu.EndFrame();
 }
 
-void WorldLayer::AddTree(const glm::ivec2& pos)
+void Game::AddTree(const glm::ivec2& pos)
 {
     using namespace spkt;
 
@@ -507,7 +507,7 @@ void WorldLayer::AddTree(const glm::ivec2& pos)
     tms.tiles[pos] = newEntity.entity();
 }
 
-void WorldLayer::AddRockBase(
+void Game::AddRockBase(
     const glm::ivec2& pos,
     std::string_view material,
     std::string_view name)
@@ -538,22 +538,22 @@ void WorldLayer::AddRockBase(
     tms.tiles[pos] = newEntity.entity();
 }
 
-void WorldLayer::AddRock(const glm::ivec2& pos)
+void Game::AddRock(const glm::ivec2& pos)
 {
     AddRockBase(pos, "Resources/Materials/rock.yaml", "Rock");
 }
 
-void WorldLayer::AddIron(const glm::ivec2& pos)
+void Game::AddIron(const glm::ivec2& pos)
 {
     AddRockBase(pos, "Resources/Materials/iron.yaml", "Iron");
 }
 
-void WorldLayer::AddTin(const glm::ivec2& pos)
+void Game::AddTin(const glm::ivec2& pos)
 {
     AddRockBase(pos, "Resources/Materials/tin.yaml", "Tin");
 }
 
-void WorldLayer::AddMithril(const glm::ivec2& pos)
+void Game::AddMithril(const glm::ivec2& pos)
 {
     AddRockBase(pos, "Resources/Materials/mithril.yaml", "Mithril");
 }
