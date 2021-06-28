@@ -210,13 +210,13 @@ void Anvil::on_render()
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(d_window); 
+                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
                 d_activeScene->Add<PhysicsEngine3D>();
                 d_activeScene->Add<CameraSystem>();
                 d_activeScene->Add<ScriptRunner>();
                 d_activeScene->Add<ParticleSystem>(&d_particle_manager);
                 d_activeScene->Add<AnimationSystem>();
                 d_activeScene->Add<LambdaSystem>(delete_below_50);
-                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
                 d_playingGame = true;
                 d_runtimeCamera = d_activeScene->find<Camera3DComponent>();
