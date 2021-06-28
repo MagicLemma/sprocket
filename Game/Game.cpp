@@ -309,22 +309,22 @@ void Game::on_render()
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddRock(pos);
+                add_rock(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddIron(pos);
+                add_iron(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddTin(pos);
+                add_tin(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddMithril(pos);
+                add_mithril(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
@@ -472,55 +472,4 @@ void Game::on_render()
 
     d_escapeMenu.EndPanel();
     d_escapeMenu.EndFrame();
-}
-
-void Game::AddRockBase(
-    const glm::ivec2& pos,
-    std::string_view material,
-    std::string_view name)
-{
-    using namespace spkt;
-
-    auto newEntity = apx::create_from(d_scene.Entities());
-    auto& n = newEntity.emplace<NameComponent>();
-    n.name = name;
-
-    auto& tr = newEntity.emplace<Transform3DComponent>();
-    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
-    tr.position.y -= Random(0.0f, 0.5f);
-    float randomRotation = glm::half_pi<float>() * Random(0, 3);
-    tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
-    tr.scale = {1.1f, 1.1f, 1.1f};
-
-    auto& modelData = newEntity.emplace<ModelComponent>();
-    modelData.mesh = "Resources/Models/Rock.obj";
-    modelData.material = material;
-    newEntity.emplace<SelectComponent>();
-
-    // Add the new entity to the grid.
-    auto& registry = d_scene.Entities();
-    auto tile_map = registry.find<TileMapSingleton>();
-    assert(registry.valid(tile_map));
-    auto& tms = registry.get<TileMapSingleton>(tile_map);
-    tms.tiles[pos] = newEntity.entity();
-}
-
-void Game::AddRock(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/rock.yaml", "Rock");
-}
-
-void Game::AddIron(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/iron.yaml", "Iron");
-}
-
-void Game::AddTin(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/tin.yaml", "Tin");
-}
-
-void Game::AddMithril(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/mithril.yaml", "Mithril");
 }

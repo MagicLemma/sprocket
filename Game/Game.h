@@ -52,13 +52,4 @@ public:
     void on_render();
 
     void load_scene(std::string_view file);
-
-    void AddRockBase(const glm::ivec2& pos,
-                     std::string_view tex,
-                     std::string_view name);
-    
-    void AddRock(const glm::ivec2& pos);
-    void AddIron(const glm::ivec2& pos);
-    void AddTin(const glm::ivec2& pos);
-    void AddMithril(const glm::ivec2& pos);
 };
