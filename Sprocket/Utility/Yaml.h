@@ -44,10 +44,10 @@ struct convert<glm::mat4>
 };
 
 template<>
-struct convert<spkt::identifier>
+struct convert<apx::entity>
 {
-    static Node encode(const spkt::identifier& rhs);
-    static bool decode(const Node& node, spkt::identifier& rhs);
+    static Node encode(const apx::entity& rhs);
+    static bool decode(const Node& node, apx::entity& rhs);
 };
 
 template <typename K, typename V, typename... Rest>
@@ -86,7 +86,7 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::ivec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);
-YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::identifier& i);
+YAML::Emitter& operator<<(YAML::Emitter& out, const apx::entity& i);
 
 template <typename K, typename V, typename... Rest>
 YAML::Emitter& operator<<(YAML::Emitter& out, const std::unordered_map<K, V, Rest...>& m)

@@ -16,6 +16,7 @@
 
 namespace Sprocket {
 namespace lua { class Script; }
+struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
 

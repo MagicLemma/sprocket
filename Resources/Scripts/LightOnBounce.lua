@@ -5,7 +5,7 @@ end
 
 function OnUpdate(entity, dt)
     local singleton = entity_singleton()
-    local cs = GetCollisionSingleton(singleton)
+    local cs = GetPhysicsSingleton(singleton)
     for k, collision in pairs(cs.collisions) do
         local left = entity_from_id(collision[1])
         local right = entity_from_id(collision[2])

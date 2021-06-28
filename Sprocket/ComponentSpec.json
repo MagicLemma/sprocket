@@ -588,12 +588,22 @@
             "attributes": []
         },
         {
-            "name": "CollisionSingleton",
-            "display_name": "Collision Singleton",
+            "name": "PhysicsSingleton",
+            "display_name": "Physics Singleton",
             "flags": {
                 "SAVABLE": false
             },
             "attributes": [
+                {
+                    "name": "physics_runtime",
+                    "display_name": "Physics Runtime",
+                    "type": "std::shared_ptr<physics_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
+                },
                 {
                     "name": "collisions",
                     "display_name": "Collisions",

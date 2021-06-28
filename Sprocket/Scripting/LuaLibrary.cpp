@@ -102,7 +102,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "entity_from_id", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto id = Converter<spkt::identifier>::read(L, 1);
+        auto id = Converter<apx::entity>::read(L, 1);
         Converter<spkt::entity>::push(L, {registry, id});
         return 1;
     });
@@ -175,7 +175,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
-    using Generator = apx::generator<spkt::identifier>;
+    using Generator = apx::generator<apx::entity>;
     using Iterator = typename Generator::iterator;
     static_assert(std::is_trivially_destructible_v<Iterator>);
 
@@ -944,34 +944,34 @@ int _AddMeshAnimationComponent(lua_State* L) {
     return 0;
 }
 
-// C++ Functions for CollisionSingleton =====================================================
+// C++ Functions for PhysicsSingleton =====================================================
 
-int _GetCollisionSingleton(lua_State* L) {
+int _GetPhysicsSingleton(lua_State* L) {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     spkt::entity e = Converter<spkt::entity>::read(L, 1);
-    assert(e.has<CollisionSingleton>());
-    const auto& c = e.get<CollisionSingleton>();
+    assert(e.has<PhysicsSingleton>());
+    const auto& c = e.get<PhysicsSingleton>();
     Converter<std::vector<std::pair<apx::entity, apx::entity>>>::push(L, c.collisions);
     return 1;
 }
 
-int _SetCollisionSingleton(lua_State* L) {
+int _SetPhysicsSingleton(lua_State* L) {
     if (!CheckArgCount(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-    auto& c = e.get<CollisionSingleton>();
+    auto& c = e.get<PhysicsSingleton>();
     c.collisions = Converter<std::vector<std::pair<apx::entity, apx::entity>>>::read(L, ++ptr);
     return 0;
 }
 
-int _AddCollisionSingleton(lua_State* L) {
+int _AddPhysicsSingleton(lua_State* L) {
     if (!CheckArgCount(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-    assert(!e.has<CollisionSingleton>());
-    CollisionSingleton c;
+    assert(!e.has<PhysicsSingleton>());
+    PhysicsSingleton c;
     c.collisions = Converter<std::vector<std::pair<apx::entity, apx::entity>>>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<CollisionSingleton>(c); });
+    add_command(L, [e, c]() mutable { e.add<PhysicsSingleton>(c); });
     return 0;
 }
 
@@ -1626,40 +1626,40 @@ void load_entity_component_functions(lua::Script& script)
     lua_register(L, "HasMeshAnimationComponent", &_has_impl<MeshAnimationComponent>);
 
 
-    // Lua functions for CollisionSingleton =====================================================
+    // Lua functions for PhysicsSingleton =====================================================
 
     luaL_dostring(L, R"lua(
-        CollisionSingleton = Class(function(self, collisions)
+        PhysicsSingleton = Class(function(self, collisions)
             self.collisions = collisions
         end)
     )lua");
 
-    lua_register(L, "_GetCollisionSingleton", &_GetCollisionSingleton);
+    lua_register(L, "_GetPhysicsSingleton", &_GetPhysicsSingleton);
 
     luaL_dostring(L, R"lua(
-        function GetCollisionSingleton(entity)
-            collisions = _GetCollisionSingleton(entity)
-            return CollisionSingleton(collisions)
+        function GetPhysicsSingleton(entity)
+            collisions = _GetPhysicsSingleton(entity)
+            return PhysicsSingleton(collisions)
         end
     )lua");
 
-    lua_register(L, "_SetCollisionSingleton", &_SetCollisionSingleton);
+    lua_register(L, "_SetPhysicsSingleton", &_SetPhysicsSingleton);
 
     luaL_dostring(L, R"lua(
-        function SetCollisionSingleton(entity, c)
-            _SetCollisionSingleton(entity, c.collisions)
+        function SetPhysicsSingleton(entity, c)
+            _SetPhysicsSingleton(entity, c.collisions)
         end
     )lua");
 
-    lua_register(L, "_AddCollisionSingleton", &_AddCollisionSingleton);
+    lua_register(L, "_AddPhysicsSingleton", &_AddPhysicsSingleton);
 
     luaL_dostring(L, R"lua(
-        function AddCollisionSingleton(entity, c)
-            _AddCollisionSingleton(entity, c.collisions)
+        function AddPhysicsSingleton(entity, c)
+            _AddPhysicsSingleton(entity, c.collisions)
         end
     )lua");
 
-    lua_register(L, "HasCollisionSingleton", &_has_impl<CollisionSingleton>);
+    lua_register(L, "HasPhysicsSingleton", &_has_impl<PhysicsSingleton>);
 
 
 }

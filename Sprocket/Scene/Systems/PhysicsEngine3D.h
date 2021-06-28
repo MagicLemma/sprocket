@@ -8,20 +8,13 @@
 
 namespace Sprocket {
 
+struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
 
-struct PhysicsEngine3DImpl;
-
 class PhysicsEngine3D : public EntitySystem
 {
-    static constexpr float TIME_STEP = 1.0f / 120.0f;
-
-    std::unique_ptr<PhysicsEngine3DImpl> d_impl;
-
-public:
-    PhysicsEngine3D(const glm::vec3& gravity = {0.0f, -9.81f, 0.0f});
-    ~PhysicsEngine3D() = default;
+    static constexpr float TIME_STEP = 1.0f / 60.0f;
 
     void on_startup(spkt::registry& registry) override;
     void on_update(spkt::registry& registry, double dt) override;

@@ -108,11 +108,42 @@ public:
 
 }
 
+struct physics_runtime
+{
+    spkt::registry* registry;
+
+    rp3d::PhysicsCommon pc;
+    rp3d::PhysicsWorld* world;
+
+    EventListener listener;
+
+    float lastFrameLength = 0;
+
+    physics_runtime(spkt::registry& registry_)
+        : registry(&registry_)
+    {
+        rp3d::PhysicsWorld::WorldSettings settings;
+        settings.gravity ;
+
+        world = pc.createPhysicsWorld(settings);
+        world->setEventListener(&listener);
+    }
+
+    ~physics_runtime()
+    {
+        // Clean up all rigid bodies before destroying the physics world.
+        for (auto entity : registry->view<RigidBody3DComponent>()) {
+            registry->get<RigidBody3DComponent>(entity).runtime.reset();
+        }
+        pc.destroyPhysicsWorld(world);
+    }
+};
+
 struct rigid_body_runtime
 {
     rp3d::PhysicsWorld* world;
     rp3d::RigidBody*    body;
-    spkt::entity handle;
+    spkt::entity        handle;
 
     rigid_body_runtime(
         spkt::registry& registry_,
@@ -130,9 +161,18 @@ struct rigid_body_runtime
 
     ~rigid_body_runtime()
     {
-        handle.remove<BoxCollider3DComponent>();
-        handle.remove<SphereCollider3DComponent>();
-        handle.remove<CapsuleCollider3DComponent>();
+        // Reset any collider runtimes for this entity before deleting the
+        // rigid body. This will invoke the collider runtime destructors to
+        // clean them up in the physics world.
+        if (auto c = handle.get_if<BoxCollider3DComponent>()) {
+            c->runtime.reset();
+        }
+        if (auto c = handle.get_if<SphereCollider3DComponent>()) {
+            c->runtime.reset();
+        }
+        if (auto c = handle.get_if<CapsuleCollider3DComponent>()) {
+            c->runtime.reset();
+        }
         world->destroyRigidBody(body);
     }
 };
@@ -208,33 +248,9 @@ std::shared_ptr<collider_runtime> make_capsule_collider(
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
 
-struct PhysicsEngine3DImpl
-{
-    rp3d::PhysicsCommon pc;
-    rp3d::PhysicsWorld* world;
-
-    EventListener listener;
-
-    float lastFrameLength = 0;
-
-    PhysicsEngine3DImpl(const glm::vec3& gravity)
-    {
-        rp3d::PhysicsWorld::WorldSettings settings;
-        settings.gravity = Convert(gravity);
-
-        world = pc.createPhysicsWorld(settings);
-        world->setEventListener(&listener);
-    }
-
-    ~PhysicsEngine3DImpl()
-    {
-        pc.destroyPhysicsWorld(world);
-    }
-};
-
 namespace {
 
-bool IsOnFloor(const PhysicsEngine3DImpl& impl, const rp3d::RigidBody* body)
+bool is_on_floor(const rp3d::PhysicsWorld* const world, const rp3d::RigidBody* const body)
 {
     // Get the point at the bottom of the rigid body.
     auto aabb = body->getAABB();
@@ -248,25 +264,30 @@ bool IsOnFloor(const PhysicsEngine3DImpl& impl, const rp3d::RigidBody* body)
     float delta = 0.1f;
     rp3d::Ray ray(playerBase + delta * up, playerBase - 2 * delta * up);
     RaycastCB cb;
-    impl.world->raycast(ray, &cb);
+    world->raycast(ray, &cb);
     return cb.GetEntity().valid();
 }
 
 }
 
-PhysicsEngine3D::PhysicsEngine3D(const glm::vec3& gravity)
-    : d_impl(std::make_unique<PhysicsEngine3DImpl>(gravity))
-{
-}
-
 void PhysicsEngine3D::on_startup(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
-    registry.emplace<CollisionSingleton>(singleton);
+    registry.emplace<CameraSingleton>(singleton);
+    auto& ps = registry.emplace<PhysicsSingleton>(singleton);
+    ps.physics_runtime = std::make_shared<physics_runtime>(registry);
 }
 
 void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
 {
+    auto singleton = registry.find<Singleton>();
+    if (!registry.valid(singleton)) {
+        return;
+    }
+
+    auto& ps = get_singleton<PhysicsSingleton>(registry);
+    auto& runtime = *ps.physics_runtime;
+
     // Pre Update
     for (auto id : registry.view<RigidBody3DComponent>()) {
         spkt::entity entity{registry, id};
@@ -275,7 +296,7 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
 
         if (!physics.runtime) {
             physics.runtime = std::make_shared<rigid_body_runtime>(
-                registry, id, d_impl->world
+                registry, id, runtime.world
             );
         }
 
@@ -284,19 +305,19 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
         if (entity.has<BoxCollider3DComponent>()) {
             auto& cc = entity.get<BoxCollider3DComponent>();
             if (!cc.runtime) {
-                cc.runtime = make_box_collider(&d_impl->pc, registry, id, body);
+                cc.runtime = make_box_collider(&runtime.pc, registry, id, body);
             }
         }
         if (entity.has<SphereCollider3DComponent>()) {
             auto& cc = entity.get<SphereCollider3DComponent>();
             if (!cc.runtime) {
-                cc.runtime = make_sphere_collider(&d_impl->pc, registry, id, body);
+                cc.runtime = make_sphere_collider(&runtime.pc, registry, id, body);
             }
         }
         if (entity.has<CapsuleCollider3DComponent>()) {
             auto& cc = entity.get<CapsuleCollider3DComponent>();
             if (!cc.runtime) {
-                cc.runtime = make_capsule_collider(&d_impl->pc, registry, id, body);
+                cc.runtime = make_capsule_collider(&runtime.pc, registry, id, body);
             }
         }
 
@@ -318,30 +339,29 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
             body->setMass(mass);
         }
 
-        if (d_impl->lastFrameLength > 0) {
-            auto f = physics.force / d_impl->lastFrameLength;
+        if (runtime.lastFrameLength > 0) {
+            auto f = physics.force / runtime.lastFrameLength;
             body->applyForceToCenterOfMass(Convert(f));
         }
     }
     
     // Update System
-    d_impl->lastFrameLength = 0;
+    runtime.lastFrameLength = 0;
 
     static float accumulator = 0.0f;
     accumulator += static_cast<float>(dt);
 
     // First update the Physics World.
     while (accumulator >= TIME_STEP) {
-        d_impl->world->update(TIME_STEP);
+        runtime.world->update(TIME_STEP);
         accumulator -= TIME_STEP;
-        d_impl->lastFrameLength += TIME_STEP;
+        runtime.lastFrameLength += TIME_STEP;
     }
 
     // Post Update
-    for (auto id : registry.view<RigidBody3DComponent>()) {
-        spkt::entity entity{registry, id};
-        auto& tc = entity.get<Transform3DComponent>();
-        auto& rc = entity.get<RigidBody3DComponent>();
+    for (auto entity : registry.view<RigidBody3DComponent>()) {
+        auto& tc = registry.get<Transform3DComponent>(entity);
+        auto& rc = registry.get<RigidBody3DComponent>(entity);
         const rp3d::RigidBody* body = rc.runtime->body;
 
         tc.position = Convert(body->getTransform().getPosition());
@@ -349,13 +369,12 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
         rc.velocity = Convert(body->getLinearVelocity());
 
         rc.force = {0.0, 0.0, 0.0};
-        rc.onFloor = IsOnFloor(*d_impl, body);
+        rc.onFloor = is_on_floor(runtime.world, body);
     }
 
-    // Update the CollisionSingleton
-    auto& cs = get_singleton<CollisionSingleton>(registry);
-    cs.collisions = d_impl->listener.collisions();
-    d_impl->listener.collisions().clear();
+    // Update the PhysicsSingleton
+    ps.collisions = runtime.listener.collisions();
+    runtime.listener.collisions().clear();
 }
 
 #if 0

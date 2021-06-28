@@ -89,10 +89,10 @@ template <> struct Converter<spkt::entity>
     static spkt::entity read(lua_State* L, int index);
 };
 
-template <> struct Converter<spkt::identifier>
+template <> struct Converter<apx::entity>
 {
-    static void push(lua_State* L, const spkt::identifier& value);
-    static spkt::identifier read(lua_State* L, int index);
+    static void push(lua_State* L, const apx::entity& value);
+    static apx::entity read(lua_State* L, int index);
 };
 
 template <> struct Converter<glm::vec2>

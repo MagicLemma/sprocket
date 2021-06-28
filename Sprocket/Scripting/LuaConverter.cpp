@@ -107,16 +107,16 @@ spkt::entity Converter<spkt::entity>::read(lua_State* L, int index)
     return *static_cast<spkt::entity*>(lua_touserdata(L, index));
 }
 
-void Converter<spkt::identifier>::push(lua_State* L, const spkt::identifier& value)
+void Converter<apx::entity>::push(lua_State* L, const apx::entity& value)
 {
-    spkt::identifier* handle = static_cast<spkt::identifier*>(lua_newuserdata(L, sizeof(spkt::identifier)));
+    apx::entity* handle = static_cast<apx::entity*>(lua_newuserdata(L, sizeof(apx::entity)));
     *handle = value;
 }
 
-spkt::identifier Converter<spkt::identifier>::read(lua_State* L, int index)
+apx::entity Converter<apx::entity>::read(lua_State* L, int index)
 {
     assert(lua_isuserdata(L, index));
-    return *static_cast<spkt::identifier*>(lua_touserdata(L, index));
+    return *static_cast<apx::entity*>(lua_touserdata(L, index));
 }
 
 void Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)
