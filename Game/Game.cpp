@@ -136,7 +136,7 @@ void WorldLayer::SaveScene(std::string_view file)
     log::info("Done!");
 }
 
-void WorldLayer::OnEvent(Sprocket::ev::Event& event)
+void WorldLayer::on_event(Sprocket::ev::Event& event)
 {
     using namespace Sprocket;
 
@@ -218,7 +218,7 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
     }
 }
 
-void WorldLayer::OnUpdate(double dt)
+void WorldLayer::on_update(double dt)
 {
     using namespace Sprocket;
     Audio::SetListener(d_camera);
@@ -254,7 +254,7 @@ void WorldLayer::OnUpdate(double dt)
     d_scene.post_update();
 }
 
-void WorldLayer::OnRender()
+void WorldLayer::on_render()
 {
     using namespace Sprocket;
     const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.Entities());

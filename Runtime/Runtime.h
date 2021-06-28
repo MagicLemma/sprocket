@@ -29,8 +29,7 @@ class Runtime
 public:
     Runtime(Sprocket::Window* window);
 
-    void OnEvent(Sprocket::ev::Event& event);
-    void OnUpdate(double dt);
-    void OnRender();
-    void PostUpdate() {}
+    void on_event(Sprocket::ev::Event& event);
+    void on_update(double dt);
+    void on_render();
 };

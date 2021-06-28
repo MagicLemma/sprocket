@@ -47,10 +47,9 @@ class WorldLayer
 public:
     WorldLayer(Sprocket::Window* window);
 
-    void OnEvent(Sprocket::ev::Event& event);
-    void OnUpdate(double dt);
-    void OnRender();
-    void PostUpdate() {}
+    void on_event(Sprocket::ev::Event& event);
+    void on_update(double dt);
+    void on_render();
 
     void SaveScene(std::string_view file);
     void LoadScene(std::string_view file);

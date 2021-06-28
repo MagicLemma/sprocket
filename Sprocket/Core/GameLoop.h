@@ -16,47 +16,12 @@ struct RunOptions
 };
 
 template <typename T>
-concept legacy_runnable = requires(T t, ev::Event& event, double dt)
-{
-    { t.OnEvent(event) } -> std::same_as<void>;
-    { t.OnUpdate(dt) } -> std::same_as<void>;
-    { t.OnRender() } -> std::same_as<void>;
-};
-
-template <typename T>
 concept runnable = requires(T t, ev::Event& event, double dt)
 {
     { t.on_event(event) } -> std::same_as<void>;
     { t.on_update(dt) } -> std::same_as<void>;
     { t.on_render() } -> std::same_as<void>;
 };
-
-template <legacy_runnable App>
-int Run(App& app, Window& window, const RunOptions& options = {})
-{
-    std::string name = window.GetWindowName();
-    Stopwatch watch;
-
-    window.SetCallback([&app](ev::Event& event) {
-        app.OnEvent(event);
-    });
-
-    while (window.Running()) {
-        window.Clear();
-        
-        double dt = watch.OnUpdate();
-        app.OnUpdate(dt);
-        app.OnRender();
-
-        if (options.showFramerate) {
-            window.SetWindowName(std::format("{} [FPS: {}]", name, watch.Framerate()));
-        }
-
-        window.OnUpdate();
-    }
-
-    return 0;
-}
 
 template <runnable App>
 int Run(App& app, Window& window, const RunOptions& options = {})

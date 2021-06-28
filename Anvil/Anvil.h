@@ -64,7 +64,6 @@ public:
     void on_event(ev::Event& event);
     void on_update(double dt);
     void on_render();
-    void post_update();
 
     spkt::entity selected() { return d_selected; }
     void set_selected(spkt::entity e) { d_selected = e; }

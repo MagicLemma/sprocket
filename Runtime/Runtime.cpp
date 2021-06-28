@@ -36,7 +36,7 @@ Runtime::Runtime(Window* window)
     d_runtimeCamera = d_scene.find<Camera3DComponent>();
 }
 
-void Runtime::OnEvent(ev::Event& event)
+void Runtime::on_event(ev::Event& event)
 {
     if (auto data = event.get_if<ev::KeyboardTyped>()) {
         if (data->key == Keyboard::BACK_TICK) {
@@ -53,7 +53,7 @@ void Runtime::OnEvent(ev::Event& event)
     d_scene.OnEvent(event);
 }
 
-void Runtime::OnUpdate(double dt)
+void Runtime::on_update(double dt)
 {
     d_window->SetCursorVisibility(d_consoleActive);
 
@@ -72,7 +72,7 @@ void Runtime::OnUpdate(double dt)
     d_scene.post_update();
 }
 
-void Runtime::OnRender()
+void Runtime::on_render()
 {
     d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     d_entityRenderer.Draw(d_runtimeCamera, d_scene);
