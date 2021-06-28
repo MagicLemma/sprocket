@@ -51,10 +51,7 @@ public:
     void on_update(double dt);
     void on_render();
 
-    void SaveScene(std::string_view file);
-    void LoadScene(std::string_view file);
-
-    void AddTree(const glm::ivec2& pos);
+    void load_scene(std::string_view file);
 
     void AddRockBase(const glm::ivec2& pos,
                      std::string_view tex,

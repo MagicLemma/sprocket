@@ -17,7 +17,8 @@ constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
 void GameGrid::on_startup(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
-    auto& grid = get_singleton<GameGridSingleton>(registry);
+    registry.emplace<CameraSingleton>(singleton);
+    auto& grid = registry.emplace<GameGridSingleton>(singleton);
 
     grid.hovered_square_entity = registry.create();
     registry.emplace<NameComponent>(grid.hovered_square_entity, "Hovered Grid Highlighter");

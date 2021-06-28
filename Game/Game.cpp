@@ -4,6 +4,8 @@
 #include "PathCalculator.h"
 #include "Window.h"
 
+#include "grid_helpers.h"
+
 #include <cmath>
 
 using namespace spkt;
@@ -81,7 +83,7 @@ Game::Game(Window* window)
 {
     using namespace spkt;
 
-    LoadScene("Resources/Scene.yaml");
+    load_scene("Resources/Scene.yaml");
 
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
@@ -101,7 +103,7 @@ Game::Game(Window* window)
 
 }
 
-void Game::LoadScene(std::string_view file)
+void Game::load_scene(std::string_view file)
 {
     using namespace spkt;
 
@@ -127,13 +129,6 @@ void Game::LoadScene(std::string_view file)
 
     assert(d_worker != spkt::null);
     assert(d_camera != spkt::null);
-}
-
-void Game::SaveScene(std::string_view file)
-{
-    log::info("Saving...");
-    Loader::Save(std::string(file), &d_scene.Entities());
-    log::info("Done!");
 }
 
 void Game::on_event(spkt::ev::Event& event)
@@ -309,7 +304,7 @@ void Game::on_render()
             auto pos = game_grid.clicked_square.value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddTree(pos);
+                add_tree(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
@@ -422,7 +417,7 @@ void Game::on_render()
 
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Reload", buttonRegion)) {
-        LoadScene(d_sceneFile);
+        load_scene(d_sceneFile);
     }
 
     buttonRegion.y += 60;
@@ -477,34 +472,6 @@ void Game::on_render()
 
     d_escapeMenu.EndPanel();
     d_escapeMenu.EndFrame();
-}
-
-void Game::AddTree(const glm::ivec2& pos)
-{
-    using namespace spkt;
-
-    auto newEntity = apx::create_from(d_scene.Entities());
-
-    auto& name = newEntity.emplace<NameComponent>();
-    name.name = "Tree";
-
-    auto& tr = newEntity.emplace<Transform3DComponent>();
-    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
-    tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
-    float r = Random(1.0f, 1.3f);
-    tr.scale = {r, r, r};
-
-    auto& modelData = newEntity.emplace<ModelComponent>();
-    modelData.mesh = "Resources/Models/BetterTree.obj";
-    modelData.material = "Resources/Materials/tree.yaml";
-    newEntity.emplace<SelectComponent>();
-
-    // Add the new entity to the grid.
-    auto& registry = d_scene.Entities();
-    auto tile_map = registry.find<TileMapSingleton>();
-    assert(registry.valid(tile_map));
-    auto& tms = registry.get<TileMapSingleton>(tile_map);
-    tms.tiles[pos] = newEntity.entity();
 }
 
 void Game::AddRockBase(
