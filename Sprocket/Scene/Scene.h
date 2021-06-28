@@ -15,14 +15,10 @@ namespace Sprocket {
 
 template <typename Comp>
 Comp& get_singleton(spkt::registry& registry)
-// Fetches the specified singleton component, creating it if it does not exist.
 {
     auto singleton = registry.find<Singleton>();
     assert(registry.valid(singleton));
     assert(registry.has<Comp>(singleton));
-    //if (!registry.has<Comp>(singleton)) {
-    //    registry.emplace<Comp>(singleton);
-    //}
     return registry.get<Comp>(singleton);
 }
 
