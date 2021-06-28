@@ -50,8 +50,6 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 17179869184
     NameComponent:
       name: Bouncing Ball
@@ -109,8 +107,6 @@ Entities:
     Camera3DComponent:
       fov: 70
       pitch: 0
-    SelectComponent:
-      {}
   - ID#: 25769803776
     NameComponent:
       name: Bridge Thin 1
@@ -134,8 +130,6 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 30064771072
     NameComponent:
       name: Bridge Wide
@@ -159,8 +153,6 @@ Entities:
       mass: 1000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 34359738368
     NameComponent:
       name: Platform (Angled)
@@ -184,8 +176,6 @@ Entities:
       mass: 1
       halfExtents: [6.224951, 0.293629, 16.39011]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 38654705664
     NameComponent:
       name: Platform (Blue)
@@ -209,8 +199,6 @@ Entities:
       mass: 1
       halfExtents: [6.224951, 0.293629, 16.39011]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 42949672960
     NameComponent:
       name: Bouncing Ball Child
@@ -244,8 +232,6 @@ Entities:
       mass: 1
       halfExtents: [6.224951, 0.293629, 16.39011]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 51539607552
     NameComponent:
       name: Red Light
@@ -309,8 +295,6 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 73014444032
     NameComponent:
       name: Pit Wall 3
@@ -334,8 +318,6 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 77309411328
     NameComponent:
       name: Pit Wall 2
@@ -359,8 +341,6 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 81604378624
     NameComponent:
       name: Pit Wall 1
@@ -384,8 +364,6 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 85899345920
     NameComponent:
       name: Pit Floor
@@ -409,8 +387,6 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 90194313216
     NameComponent:
       name: Pit Crate
@@ -434,8 +410,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 94489280512
     NameComponent:
       name: Sphere (Particles)
@@ -458,8 +432,6 @@ Entities:
       orientation: [1, 0, 0, 0]
       mass: 20
       radius: 1
-    SelectComponent:
-      {}
     ParticleComponent:
       interval: 0.001
       velocity: [0, 22.8, 0]
@@ -489,8 +461,6 @@ Entities:
       orientation: [1, 0, 0, 0]
       mass: 20
       radius: 1
-    SelectComponent:
-      {}
   - ID#: 103079215104
     NameComponent:
       name: Tree Small
@@ -550,8 +520,6 @@ Entities:
     ScriptComponent:
       script: D:\dev\Sprocket\Resources\Scripts\Bob.lua
       active: true
-    SelectComponent:
-      {}
   - ID#: 115964116992
     NameComponent:
       name: Crate Lower
@@ -575,8 +543,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 120259084288
     NameComponent:
       name: Crate Upper
@@ -600,8 +566,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 124554051584
     NameComponent:
       name: Crate Lower
@@ -625,8 +589,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 128849018880
     NameComponent:
       name: Crate Lower
@@ -650,8 +612,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 133143986176
     NameComponent:
       name: Crate Lower
@@ -675,8 +635,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 137438953472
     NameComponent:
       name: Crate Lower
@@ -700,8 +658,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 141733920768
     NameComponent:
       name: Crate Lower
@@ -725,8 +681,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 146028888064
     NameComponent:
       name: Crate Lower
@@ -750,8 +704,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 150323855360
     NameComponent:
       name: Crate Lower
@@ -775,8 +727,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 154618822656
     NameComponent:
       name: Crate Lower
@@ -800,8 +750,6 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
   - ID#: 158913789952
     NameComponent:
       name: Crate Lower
@@ -825,5 +773,3 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-    SelectComponent:
-      {}
