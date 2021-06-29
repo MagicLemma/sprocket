@@ -1,6 +1,5 @@
 #include "Game.h"
 #include "Palette.h"
-#include "PathFollower.h"
 #include "PathCalculator.h"
 #include "Window.h"
 
@@ -107,10 +106,10 @@ void Game::load_scene(std::string_view file)
 {
     using namespace spkt;
 
-    d_scene.Add<ScriptRunner>();
-    d_scene.Add<CameraSystem>();
-    d_scene.Add<PathFollower>();
-    d_scene.Add<GameGrid>();
+    d_scene.add<ScriptRunner>();
+    d_scene.add<GameGrid>();
+    d_scene.add(spkt::camera_system);
+    d_scene.add(spkt::path_follower_system);
     d_scene.Load(file);
     d_paused = false;
 

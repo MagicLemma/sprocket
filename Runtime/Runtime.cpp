@@ -38,11 +38,11 @@ Runtime::Runtime(Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
-    d_scene.Add<PhysicsEngine3D>();
-    d_scene.Add<ScriptRunner>();
-    d_scene.Add<CameraSystem>();
-    d_scene.Add<ParticleSystem>(&d_particleManager);
-    d_scene.Add<AnimationSystem>();
+    d_scene.add<PhysicsEngine3D>();
+    d_scene.add<ScriptRunner>();
+    d_scene.add(spkt::camera_system);
+    d_scene.add<ParticleSystem>(&d_particleManager);
+    d_scene.add(spkt::animation_system);
     d_scene.add(delete_below_50);
     d_scene.Load("Resources/Anvil.yaml");
 

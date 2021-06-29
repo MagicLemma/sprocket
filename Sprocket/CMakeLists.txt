@@ -44,13 +44,11 @@ add_library(Sprocket STATIC
             Scene/Scene.cpp
             Scene/Loader.cpp
 
-            Scene/Systems/AnimationSystem.cpp
-            Scene/Systems/CameraSystem.cpp
             Scene/Systems/ParticleSystem.cpp
             Scene/Systems/PhysicsEngine3D.cpp
             Scene/Systems/ScriptRunner.cpp
             Scene/Systems/GameGrid.cpp
-            Scene/Systems/PathFollower.cpp
+            Scene/Systems/basic_systems.cpp
 
             Graphics/AssetManager.cpp
             Graphics/Animation.cpp

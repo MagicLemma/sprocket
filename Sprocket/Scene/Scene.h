@@ -36,7 +36,7 @@ public:
     spkt::registry& Entities() { return d_registry; }
 
     template <typename T, typename... Args>
-    T& Add(Args&&... args);
+    T& add(Args&&... args);
 
     void add(const std::function<void(spkt::registry&, double)>& system);
 
@@ -55,7 +55,7 @@ public:
 };
 
 template <typename T, typename... Args>
-T& Scene::Add(Args&&... args)
+T& Scene::add(Args&&... args)
 {
     d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
     d_systems.back()->on_startup(d_registry);

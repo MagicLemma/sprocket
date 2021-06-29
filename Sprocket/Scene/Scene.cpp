@@ -22,7 +22,7 @@ Scene::~Scene()
 
 void Scene::add(const std::function<void(spkt::registry&, double)>& system)
 {
-    Add<LambdaSystem>(system);
+    add<LambdaSystem>(system);
 }
 
 void Scene::Load(std::string_view file)
@@ -84,8 +84,8 @@ void Scene::OnEvent(ev::Event& event)
     input.mouse_pos = d_window->GetMousePos();
     input.mouse_offset = d_window->GetMouseOffset();
 
-    input.window_width = (float)d_window->Width();
-    input.window_height = (float)d_window->Height();
+    input.window_width = d_window->Width() > 0 ? (float)d_window->Width() : 1.0f;;
+    input.window_height = d_window->Height() > 0 ? (float)d_window->Height() : 1.0f;;
 }
 
 std::size_t Scene::Size() const
