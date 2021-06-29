@@ -1,5 +1,3 @@
-function init(entity) end
-
 function on_update(entity, dt)
     local f = GetForwardsDir(entity)
     f.y = 0

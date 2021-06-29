@@ -10,6 +10,12 @@
 #include <functional>
 
 namespace spkt {
+namespace {
+
+static constexpr const char* INIT_FUNCTION = "init";
+static constexpr const char* UPDATE_FUNCTION = "on_update";
+
+}
 
 void script_system(spkt::registry& registry, double dt)
 {
@@ -27,13 +33,15 @@ void script_system(spkt::registry& registry, double dt)
             lua::load_registry_functions(script, registry);
             lua::load_entity_transformation_functions(script);
             lua::load_entity_component_functions(script);
-            script.set_value("__command_list__", &commands);
-            script.call_function<void>("init", spkt::entity{registry, entity});
+            if (script.has_function(INIT_FUNCTION)) {
+                script.set_value("__command_list__", &commands);
+                script.call_function<void>(INIT_FUNCTION, spkt::entity{registry, entity});
+            }
         }
         else {
             lua::Script& script = *sc.script_runtime;
             script.set_value("__command_list__", &commands);
-            script.call_function<void>("on_update", spkt::entity{registry, entity}, dt);
+            script.call_function<void>(UPDATE_FUNCTION, spkt::entity{registry, entity}, dt);
         }
     }
 
