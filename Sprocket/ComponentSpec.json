@@ -5,10 +5,29 @@
     },
     "components": [
         {
-            "name": "TemporaryComponent",
-            "display_name": "Temporary",
+            "name": "Runtime",
+            "display_name": "Runtime",
             "flags": {
-                "SCRIPTABLE": false
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": []
+        },
+        {
+            "name": "Singleton",
+            "display_name": "Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": []
+        },
+        {
+            "name": "Event",
+            "display_name": "Event",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
             },
             "attributes": []
         },
@@ -555,13 +574,25 @@
             ]
         },
         {
-            "name": "Singleton",
-            "display_name": "Singleton",
+            "name": "CollisionEvent",
+            "display_name": "Collision Event",
             "flags": {
-                "SCRIPTABLE": false,
                 "SAVABLE": false
             },
-            "attributes": []
+            "attributes": [
+                {
+                    "name": "entity_a",
+                    "display_name": "Entity A",
+                    "type": "apx::entity",
+                    "default": "{}"
+                },
+                {
+                    "name": "entity_b",
+                    "display_name": "Entity B",
+                    "type": "apx::entity",
+                    "default": "{}"
+                }
+            ]
         },
         {
             "name": "PhysicsSingleton",
@@ -579,12 +610,6 @@
                         "SCRIPTABLE": false,
                         "SAVABLE": false
                     }
-                },
-                {
-                    "name": "collisions",
-                    "display_name": "Collisions",
-                    "type": "std::vector<std::pair<apx::entity, apx::entity>>",
-                    "default": "{}"
                 }
             ]
         },

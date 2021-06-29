@@ -1,4 +1,4 @@
-function Init(entity)
+function init(entity)
     DISTANCE = 8
     MOVEMENT_SPEED = 10
     ROTATION_SPEED = 90
@@ -13,7 +13,7 @@ function Init(entity)
     HORIZ = 0 -- Parametrized yaw
 end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     local pos = GetTransform3DComponent(entity).position
 
     if ABS_VERT == nil then ABS_VERT = pos.y end

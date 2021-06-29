@@ -1,13 +1,11 @@
-function Init(entity)
+function init(entity)
     TIME = 0.0
     EXPLODE = false
 end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     TIME = TIME + dt
 
-    local scene = Scene()
-    
     if EXPLODE == false and TIME > 1 then
         local pc = GetParticleComponent(entity)
         pc.interval = 0.0001
@@ -23,18 +21,16 @@ function OnUpdate(entity, dt)
     end
     
     if EXPLODE == true then
-        for e in scene:Each() do
+        for e in RigidBody3DComponentView() do
             local pos = GetTransform3DComponent(entity).position
-            if HasRigidBody3DComponent(e) then
-                local rbc = GetRigidBody3DComponent(e)
-                if rbc.frozen == false then
-                    local e_pos = GetTransform3DComponent(e).position
-                    if Mag(e_pos - pos) < 10 then
-                        rbc.velocity = rbc.velocity + 10 * (e_pos - pos)
-                    end
+            local rbc = GetRigidBody3DComponent(e)
+            if rbc.frozen == false then
+                local e_pos = GetTransform3DComponent(e).position
+                if Mag(e_pos - pos) < 10 then
+                    rbc.velocity = rbc.velocity + 10 * (e_pos - pos)
                 end
-                SetRigidBody3DComponent(e, rbc)
             end
+            SetRigidBody3DComponent(e, rbc)
         end
         DeleteEntity(entity)
     end

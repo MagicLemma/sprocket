@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <utility>
+#include <format>
 
 #include <lua.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -76,6 +77,90 @@ void add_command(lua_State* L, const std::function<void()>& command)
     command_list.push_back(command);
 }
 
+std::string view_function_source(std::string_view name, std::string_view suffix)
+{
+    return std::format(R"lua(
+        function {0}{1}()
+            local generator = _Each_{0}_New()
+            local iter = _Each_Iter_Start(generator)
+            return function()
+                if _Each_Iter_Valid(generator, iter) then
+                    local entity = _Each_Iter_Get(iter)
+                    _Each_Iter_Next(iter)
+                    return entity
+                else
+                    _Each_Delete(generator)
+                end
+            end
+        end
+    )lua", name, suffix);
+}
+
+}
+
+void load_entity_transformation_functions(lua::Script& script)
+{
+    lua_State* L = script.native_handle();
+
+    lua_register(L, "SetLookAt", [](lua_State* L) {
+        if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
+        glm::vec3 p = Converter<glm::vec3>::read(L, 2);
+        glm::vec3 t = Converter<glm::vec3>::read(L, 3);
+        auto& tr = entity.get<Transform3DComponent>();
+        tr.position = p;
+        tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, t, {0.0, 1.0, 0.0})));
+        return 0;
+    });
+
+    lua_register(L, "RotateY", [](lua_State* L) {
+        if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
+        auto& tr = entity.get<Transform3DComponent>();
+        float yaw = (float)lua_tonumber(L, 2);
+        tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
+        return 0;
+    });
+
+    lua_register(L, "GetForwardsDir", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
+        auto& tr = entity.get<Transform3DComponent>();
+        auto o = tr.orientation;
+        
+        if (entity.has<Camera3DComponent>()) {
+            auto pitch = entity.get<Camera3DComponent>().pitch;
+            o = glm::rotate(o, pitch, {1, 0, 0});
+        }
+
+        Converter<glm::vec3>::push(L, Maths::Forwards(o));
+        return 1;
+    });
+
+    lua_register(L, "GetRightDir", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
+        auto& tr = entity.get<Transform3DComponent>();
+        Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
+        return 1;
+    });
+
+    lua_register(L, "MakeUpright", [](lua_State* L) {
+        if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
+        auto& tr = entity.get<Transform3DComponent>();
+        float yaw = Converter<float>::read(L, 2);
+        tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
+        return 0;
+    });
+
+    lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
+        if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+        spkt::entity entity1 = Converter<spkt::entity>::read(L, 1);
+        spkt::entity entity2 = Converter<spkt::entity>::read(L, 2);
+        Converter<bool>::push(L, entity1 == entity2);
+        return 1;
+    });
 }
 
 void load_registry_functions(lua::Script& script, spkt::registry& registry)
@@ -179,7 +264,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     using Iterator = typename Generator::iterator;
     static_assert(std::is_trivially_destructible_v<Iterator>);
     
-    lua_register(L, "_Each_New", [](lua_State* L) {
+    lua_register(L, "_Each_All_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
         auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->all());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
@@ -228,90 +313,20 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     });
 
     // Hook all of the above functions into a single generator function.
-    luaL_dostring(L, R"lua(
-        Scene = Class(function(self)
-        end)
+    luaL_dostring(L, view_function_source("All", "").c_str());
 
-        function Scene:Each()
-            local generator = _Each_New()
-            local iter = _Each_Iter_Start(generator)
-
-            return function()
-                if _Each_Iter_Valid(generator, iter) then
-                    local entity = _Each_Iter_Get(iter)
-                    _Each_Iter_Next(iter)
-                    return entity
-                else
-                    _Each_Delete(generator)
-                end
-            end
-        end
-    )lua");
-}
-
-void load_entity_transformation_functions(lua::Script& script)
-{
-    lua_State* L = script.native_handle();
-
-    lua_register(L, "SetLookAt", [](lua_State* L) {
-        if (!CheckArgCount(L, 3)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
-        glm::vec3 p = Converter<glm::vec3>::read(L, 2);
-        glm::vec3 t = Converter<glm::vec3>::read(L, 3);
-        auto& tr = entity.get<Transform3DComponent>();
-        tr.position = p;
-        tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, t, {0.0, 1.0, 0.0})));
-        return 0;
-    });
-
-    lua_register(L, "RotateY", [](lua_State* L) {
-        if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); };
-        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
-        auto& tr = entity.get<Transform3DComponent>();
-        float yaw = (float)lua_tonumber(L, 2);
-        tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
-        return 0;
-    });
-
-    lua_register(L, "GetForwardsDir", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity entity = *static_cast<spkt::entity*>(lua_touserdata(L, 1));
-        auto& tr = entity.get<Transform3DComponent>();
-        auto o = tr.orientation;
-        
-        if (entity.has<Camera3DComponent>()) {
-            auto pitch = entity.get<Camera3DComponent>().pitch;
-            o = glm::rotate(o, pitch, {1, 0, 0});
-        }
-
-        Converter<glm::vec3>::push(L, Maths::Forwards(o));
+// VIEW FUNCTIONS - GENERATED BY DATAMATIC
+DATAMATIC_BEGIN SCRIPTABLE=true
+    lua_register(L, "_Each_{{Comp::name}}_New", [](lua_State* L) {
+        if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
+        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<{{Comp::name}}>());
+        lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
 
-    lua_register(L, "GetRightDir", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
-        auto& tr = entity.get<Transform3DComponent>();
-        Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
-        return 1;
-    });
+    luaL_dostring(L, view_function_source("{{Comp::name}}", "View").c_str());
 
-    lua_register(L, "MakeUpright", [](lua_State* L) {
-        if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity entity = Converter<spkt::entity>::read(L, 1);
-        auto& tr = entity.get<Transform3DComponent>();
-        float yaw = Converter<float>::read(L, 2);
-        tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
-        return 0;
-    });
-
-    lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
-        if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        spkt::entity entity1 = Converter<spkt::entity>::read(L, 1);
-        spkt::entity entity2 = Converter<spkt::entity>::read(L, 2);
-        Converter<bool>::push(L, entity1 == entity2);
-        return 1;
-    });
+DATAMATIC_END
 }
 
 // COMPONENT RELATED CODE - GENERATED BY DATAMATIC

@@ -57,12 +57,11 @@ void Script::print_errors(int rc) const
 
 bool Script::has_function(const std::string& function)
 {
-    lua_getglobal(d_L.get(), function.c_str());
-    if (!lua_isfunction(d_L.get(), -1)) {
-        lua_pop(d_L.get(), -1);
-        return false;
-    }
-    return true;
+    lua_State* L = d_L.get();
+    lua_getglobal(L, function.c_str());
+    bool is_function = lua_isfunction(L, -1);
+    lua_pop(L, 1);
+    return is_function;
 }
 
 void Script::print_globals()

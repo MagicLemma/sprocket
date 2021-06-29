@@ -25,12 +25,32 @@ void Inspector::Show(Anvil& editor)
 
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
-    if (entity.has<TemporaryComponent>()) {
-        auto& c = entity.get<TemporaryComponent>();
-        if (ImGui::CollapsingHeader("Temporary")) {
+    if (entity.has<Runtime>()) {
+        auto& c = entity.get<Runtime>();
+        if (ImGui::CollapsingHeader("Runtime")) {
             ImGui::PushID(count++);
             
-            if (ImGui::Button("Delete")) { entity.remove<TemporaryComponent>(); }
+            if (ImGui::Button("Delete")) { entity.remove<Runtime>(); }
+            ImGui::PopID();
+        }
+    }
+
+    if (entity.has<Singleton>()) {
+        auto& c = entity.get<Singleton>();
+        if (ImGui::CollapsingHeader("Singleton")) {
+            ImGui::PushID(count++);
+            
+            if (ImGui::Button("Delete")) { entity.remove<Singleton>(); }
+            ImGui::PopID();
+        }
+    }
+
+    if (entity.has<Event>()) {
+        auto& c = entity.get<Event>();
+        if (ImGui::CollapsingHeader("Event")) {
+            ImGui::PushID(count++);
+            
+            if (ImGui::Button("Delete")) { entity.remove<Event>(); }
             ImGui::PopID();
         }
     }
@@ -256,12 +276,14 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (entity.has<Singleton>()) {
-        auto& c = entity.get<Singleton>();
-        if (ImGui::CollapsingHeader("Singleton")) {
+    if (entity.has<CollisionEvent>()) {
+        auto& c = entity.get<CollisionEvent>();
+        if (ImGui::CollapsingHeader("Collision Event")) {
             ImGui::PushID(count++);
+            ;
+            ;
             
-            if (ImGui::Button("Delete")) { entity.remove<Singleton>(); }
+            if (ImGui::Button("Delete")) { entity.remove<CollisionEvent>(); }
             ImGui::PopID();
         }
     }
@@ -341,9 +363,17 @@ void Inspector::Show(Anvil& editor)
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-        if (!entity.has<TemporaryComponent>() && ImGui::Selectable("Temporary")) {
-            TemporaryComponent c;
-            entity.add<TemporaryComponent>(c);
+        if (!entity.has<Runtime>() && ImGui::Selectable("Runtime")) {
+            Runtime c;
+            entity.add<Runtime>(c);
+        }
+        if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
+            Singleton c;
+            entity.add<Singleton>(c);
+        }
+        if (!entity.has<Event>() && ImGui::Selectable("Event")) {
+            Event c;
+            entity.add<Event>(c);
         }
         if (!entity.has<NameComponent>() && ImGui::Selectable("Name")) {
             NameComponent c;
@@ -409,9 +439,9 @@ void Inspector::Show(Anvil& editor)
             MeshAnimationComponent c;
             entity.add<MeshAnimationComponent>(c);
         }
-        if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
-            Singleton c;
-            entity.add<Singleton>(c);
+        if (!entity.has<CollisionEvent>() && ImGui::Selectable("Collision Event")) {
+            CollisionEvent c;
+            entity.add<CollisionEvent>(c);
         }
         if (!entity.has<PhysicsSingleton>() && ImGui::Selectable("Physics Singleton")) {
             PhysicsSingleton c;

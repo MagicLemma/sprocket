@@ -9,8 +9,8 @@ Scene::Scene(Window* window)
     : d_window(window)
 {
     auto singleton = d_registry.create();
+    d_registry.emplace<Runtime>(singleton);
     d_registry.emplace<Singleton>(singleton);
-    d_registry.emplace<TemporaryComponent>(singleton);
     d_registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
     d_registry.emplace<InputSingleton>(singleton);
 }

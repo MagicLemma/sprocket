@@ -6,7 +6,9 @@
 namespace spkt {
 
 using registry = apx::registry<
-    spkt::TemporaryComponent,
+    spkt::Runtime,
+    spkt::Singleton,
+    spkt::Event,
     spkt::NameComponent,
     spkt::Transform2DComponent,
     spkt::Transform3DComponent,
@@ -23,7 +25,7 @@ using registry = apx::registry<
     spkt::AmbienceComponent,
     spkt::ParticleComponent,
     spkt::MeshAnimationComponent,
-    spkt::Singleton,
+    spkt::CollisionEvent,
     spkt::PhysicsSingleton,
     spkt::InputSingleton,
     spkt::GameGridSingleton,

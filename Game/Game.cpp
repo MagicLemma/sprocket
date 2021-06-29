@@ -110,6 +110,7 @@ void Game::load_scene(std::string_view file)
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::path_follower_system);
+    d_scene.add(spkt::clear_events_system);
     d_scene.Load(file);
     d_paused = false;
 

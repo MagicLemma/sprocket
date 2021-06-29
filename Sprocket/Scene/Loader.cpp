@@ -19,14 +19,12 @@ void Save(const std::string& file, spkt::registry* reg)
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto id : reg->all()) {
         spkt::entity entity{*reg, id};
-        if (entity.has<TemporaryComponent>()) { continue; }
+
+        // Don't save runtime entities
+        if (entity.has<Runtime>()) { continue; }
+
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << id;
-        if (entity.has<TemporaryComponent>()) {
-            const auto& c = entity.get<TemporaryComponent>();
-            out << YAML::Key << "TemporaryComponent" << YAML::BeginMap;
-            out << YAML::EndMap;
-        }
         if (entity.has<NameComponent>()) {
             const auto& c = entity.get<NameComponent>();
             out << YAML::Key << "NameComponent" << YAML::BeginMap;
@@ -206,10 +204,6 @@ void Load(const std::string& file, spkt::registry* reg)
     for (auto entity : entities) {
         apx::entity old_id = entity["ID#"].as<apx::entity>();
         spkt::entity e{*reg, id_remapper[old_id]};
-        if (auto spec = entity["TemporaryComponent"]) {
-            TemporaryComponent c;
-            e.add<TemporaryComponent>(c);
-        }
         if (auto spec = entity["NameComponent"]) {
             NameComponent c;
             c.name = transform(spec["name"].as<std::string>());
@@ -336,8 +330,14 @@ void Load(const std::string& file, spkt::registry* reg)
 spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
 {
     spkt::entity e = apx::create_from(*reg);
-    if (entity.has<TemporaryComponent>()) {
-        e.add<TemporaryComponent>(entity.get<TemporaryComponent>());
+    if (entity.has<Runtime>()) {
+        e.add<Runtime>(entity.get<Runtime>());
+    }
+    if (entity.has<Singleton>()) {
+        e.add<Singleton>(entity.get<Singleton>());
+    }
+    if (entity.has<Event>()) {
+        e.add<Event>(entity.get<Event>());
     }
     if (entity.has<NameComponent>()) {
         e.add<NameComponent>(entity.get<NameComponent>());
@@ -387,8 +387,8 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     if (entity.has<MeshAnimationComponent>()) {
         e.add<MeshAnimationComponent>(entity.get<MeshAnimationComponent>());
     }
-    if (entity.has<Singleton>()) {
-        e.add<Singleton>(entity.get<Singleton>());
+    if (entity.has<CollisionEvent>()) {
+        e.add<CollisionEvent>(entity.get<CollisionEvent>());
     }
     if (entity.has<PhysicsSingleton>()) {
         e.add<PhysicsSingleton>(entity.get<PhysicsSingleton>());
@@ -428,10 +428,20 @@ void Copy(spkt::registry* source, spkt::registry* target)
     for (auto id : source->all()) {
         spkt::entity src{*source, id};
         spkt::entity dst{*target, id_remapper[id]};
-        if (src.has<TemporaryComponent>()) {
-            const TemporaryComponent& source_comp = src.get<TemporaryComponent>();
-            TemporaryComponent target_comp;
-            dst.add<TemporaryComponent>(target_comp);
+        if (src.has<Runtime>()) {
+            const Runtime& source_comp = src.get<Runtime>();
+            Runtime target_comp;
+            dst.add<Runtime>(target_comp);
+        }
+        if (src.has<Singleton>()) {
+            const Singleton& source_comp = src.get<Singleton>();
+            Singleton target_comp;
+            dst.add<Singleton>(target_comp);
+        }
+        if (src.has<Event>()) {
+            const Event& source_comp = src.get<Event>();
+            Event target_comp;
+            dst.add<Event>(target_comp);
         }
         if (src.has<NameComponent>()) {
             const NameComponent& source_comp = src.get<NameComponent>();
@@ -574,10 +584,12 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.speed = transform(source_comp.speed);
             dst.add<MeshAnimationComponent>(target_comp);
         }
-        if (src.has<Singleton>()) {
-            const Singleton& source_comp = src.get<Singleton>();
-            Singleton target_comp;
-            dst.add<Singleton>(target_comp);
+        if (src.has<CollisionEvent>()) {
+            const CollisionEvent& source_comp = src.get<CollisionEvent>();
+            CollisionEvent target_comp;
+            target_comp.entity_a = transform(source_comp.entity_a);
+            target_comp.entity_b = transform(source_comp.entity_b);
+            dst.add<CollisionEvent>(target_comp);
         }
         if (src.has<PhysicsSingleton>()) {
             const PhysicsSingleton& source_comp = src.get<PhysicsSingleton>();

@@ -21,7 +21,15 @@ struct rigid_body_runtime;
 struct collider_runtime;
 
 // Components
-struct TemporaryComponent
+struct Runtime
+{
+};
+
+struct Singleton
+{
+};
+
+struct Event
 {
 };
 
@@ -150,8 +158,10 @@ struct MeshAnimationComponent
     float speed = 1.0f;
 };
 
-struct Singleton
+struct CollisionEvent
 {
+    apx::entity entity_a = {};
+    apx::entity entity_b = {};
 };
 
 struct PhysicsSingleton
