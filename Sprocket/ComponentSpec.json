@@ -610,12 +610,6 @@
                         "SCRIPTABLE": false,
                         "SAVABLE": false
                     }
-                },
-                {
-                    "name": "collisions",
-                    "display_name": "Collisions",
-                    "type": "std::vector<std::pair<apx::entity, apx::entity>>",
-                    "default": "{}"
                 }
             ]
         },

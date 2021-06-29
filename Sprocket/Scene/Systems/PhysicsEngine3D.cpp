@@ -372,15 +372,13 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
         rc.onFloor = is_on_floor(runtime.world, body);
     }
 
-    // Update the PhysicsSingleton
-    ps.collisions = runtime.listener.collisions();
-
+    // Publish all collision events
     for (const auto& [a, b] : runtime.listener.collisions()) {
         auto event = registry.create();
+        registry.emplace<Runtime>(event);
         registry.emplace<Event>(event);
         registry.emplace<CollisionEvent>(event, a, b);
     }
-
     runtime.listener.collisions().clear();
 }
 
