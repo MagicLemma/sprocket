@@ -206,9 +206,9 @@ void Anvil::on_render()
                 d_activeScene = std::make_shared<Scene>(d_window); 
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
                 d_activeScene->add<PhysicsEngine3D>();
-                d_activeScene->add(spkt::camera_system);
-                d_activeScene->add<ScriptRunner>();
                 d_activeScene->add<ParticleSystem>(&d_particle_manager);
+                d_activeScene->add(spkt::camera_system);
+                d_activeScene->add(spkt::script_system);
                 d_activeScene->add(spkt::animation_system);
                 d_activeScene->add(delete_below_50);
 

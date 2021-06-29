@@ -106,8 +106,8 @@ void Game::load_scene(std::string_view file)
 {
     using namespace spkt;
 
-    d_scene.add<ScriptRunner>();
     d_scene.add<GameGrid>();
+    d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::path_follower_system);
     d_scene.Load(file);

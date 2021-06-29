@@ -39,9 +39,9 @@ Runtime::Runtime(Window* window)
     d_entityRenderer.EnableParticles(&d_particleManager);
 
     d_scene.add<PhysicsEngine3D>();
-    d_scene.add<ScriptRunner>();
-    d_scene.add(spkt::camera_system);
     d_scene.add<ParticleSystem>(&d_particleManager);
+    d_scene.add(spkt::script_system);
+    d_scene.add(spkt::camera_system);
     d_scene.add(spkt::animation_system);
     d_scene.add(delete_below_50);
     d_scene.Load("Resources/Anvil.yaml");
