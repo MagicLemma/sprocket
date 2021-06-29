@@ -11,14 +11,10 @@ namespace {
 
 void delete_below_50(spkt::registry& registry, double)
 {
-    std::vector<apx::entity> to_delete;
-    for (auto entity : registry.view<Transform3DComponent>()) {
-        auto& t = registry.get<Transform3DComponent>(entity);
-        if (t.position.y < -50.0f) { to_delete.push_back(entity); }
-    }
-    for (auto entity : to_delete) {
-        registry.destroy(entity);
-    }
+    registry.erase_if<Transform3DComponent>([&](apx::entity entity) {
+        const auto& t = registry.get<Transform3DComponent>(entity);
+        return t.position.y < -50.0f;
+    });
 }
 
 std::string Name(const spkt::entity& entity)

@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Components.h"
 #include "Loader.h"
+#include "LambdaSystem.h"
 
 namespace spkt {
 
@@ -17,6 +18,11 @@ Scene::Scene(Window* window)
 Scene::~Scene()
 {
     d_registry.clear();
+}
+
+void Scene::add(const std::function<void(spkt::registry&, double)>& system)
+{
+    Add<LambdaSystem>(system);
 }
 
 void Scene::Load(std::string_view file)

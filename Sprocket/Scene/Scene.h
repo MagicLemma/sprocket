@@ -38,6 +38,8 @@ public:
     template <typename T, typename... Args>
     T& Add(Args&&... args);
 
+    void add(const std::function<void(spkt::registry&, double)>& system);
+
     void Load(std::string_view file);
 
     void OnUpdate(double dt);
