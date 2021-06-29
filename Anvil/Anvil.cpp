@@ -9,14 +9,6 @@
 namespace spkt {
 namespace {
 
-void delete_below_50(spkt::registry& registry, double)
-{
-    registry.erase_if<Transform3DComponent>([&](apx::entity entity) {
-        const auto& t = registry.get<Transform3DComponent>(entity);
-        return t.position.y < -50.0f;
-    });
-}
-
 std::string Name(const spkt::entity& entity)
 {
     if (entity.has<NameComponent>()) {
@@ -210,7 +202,7 @@ void Anvil::on_render()
                 d_activeScene->add(spkt::camera_system);
                 d_activeScene->add(spkt::script_system);
                 d_activeScene->add(spkt::animation_system);
-                d_activeScene->add(delete_below_50);
+                d_activeScene->add(spkt::delete_below_50_system);
 
                 d_playingGame = true;
                 d_runtimeCamera = d_activeScene->find<Camera3DComponent>();

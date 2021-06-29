@@ -88,4 +88,12 @@ void path_follower_system(spkt::registry& registry, double dt)
     }
 }
 
+void delete_below_50_system(spkt::registry& registry, double)
+{
+    registry.erase_if<Transform3DComponent>([&](apx::entity entity) {
+        const auto& t = registry.get<Transform3DComponent>(entity);
+        return t.position.y < -50.0f;
+    });
+}
+
 }
