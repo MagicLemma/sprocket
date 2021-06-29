@@ -1,8 +1,8 @@
-function Init(entity)
+function init(entity)
     FLIP = true
 end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     for event in CollisionEventView() do
         local collision = GetCollisionEvent(event)
         local a = entity_from_id(collision.entity_a)

@@ -1,6 +1,6 @@
-function Init(entity) end
+function init(entity) end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     local f = GetForwardsDir(entity)
     f.y = 0
     f = Normalised(f)

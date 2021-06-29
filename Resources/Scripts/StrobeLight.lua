@@ -1,8 +1,8 @@
-function Init(entity)
+function init(entity)
     TIME = 0.0
 end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     TIME = TIME + dt
 
     light = GetLightComponent(entity)

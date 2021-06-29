@@ -1,8 +1,8 @@
-function Init(entity)
+function init(entity)
     TIMER = 0
 end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     TIMER = TIMER + dt
     local pos = GetTransform3DComponent(entity)
     pos.position.y = 2 + math.sin(TIMER)

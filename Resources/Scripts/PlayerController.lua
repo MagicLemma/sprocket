@@ -1,4 +1,4 @@
-function Init(entity)
+function init(entity)
     local f = GetForwardsDir(entity)
     YAW = -math.asin(f.x)
 
@@ -8,7 +8,7 @@ function Init(entity)
     ENTITY = entity
 end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     TIME = TIME + dt
 
     local rotateSpeed = 0.001

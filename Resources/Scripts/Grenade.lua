@@ -1,9 +1,9 @@
-function Init(entity)
+function init(entity)
     TIME = 0.0
     EXPLODE = false
 end
 
-function OnUpdate(entity, dt)
+function on_update(entity, dt)
     TIME = TIME + dt
 
     if EXPLODE == false and TIME > 1 then
