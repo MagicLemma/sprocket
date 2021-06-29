@@ -387,6 +387,9 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     if (entity.has<MeshAnimationComponent>()) {
         e.add<MeshAnimationComponent>(entity.get<MeshAnimationComponent>());
     }
+    if (entity.has<CollisionEvent>()) {
+        e.add<CollisionEvent>(entity.get<CollisionEvent>());
+    }
     if (entity.has<PhysicsSingleton>()) {
         e.add<PhysicsSingleton>(entity.get<PhysicsSingleton>());
     }
@@ -580,6 +583,13 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.time = transform(source_comp.time);
             target_comp.speed = transform(source_comp.speed);
             dst.add<MeshAnimationComponent>(target_comp);
+        }
+        if (src.has<CollisionEvent>()) {
+            const CollisionEvent& source_comp = src.get<CollisionEvent>();
+            CollisionEvent target_comp;
+            target_comp.entity_a = transform(source_comp.entity_a);
+            target_comp.entity_b = transform(source_comp.entity_b);
+            dst.add<CollisionEvent>(target_comp);
         }
         if (src.has<PhysicsSingleton>()) {
             const PhysicsSingleton& source_comp = src.get<PhysicsSingleton>();

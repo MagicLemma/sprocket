@@ -25,6 +25,7 @@ using registry = apx::registry<
     spkt::AmbienceComponent,
     spkt::ParticleComponent,
     spkt::MeshAnimationComponent,
+    spkt::CollisionEvent,
     spkt::PhysicsSingleton,
     spkt::InputSingleton,
     spkt::GameGridSingleton,

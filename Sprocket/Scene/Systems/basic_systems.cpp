@@ -96,4 +96,9 @@ void delete_below_50_system(spkt::registry& registry, double)
     });
 }
 
+void clear_events_system(spkt::registry& registry, double dt)
+{
+    registry.erase_if<Event>([](apx::entity) { return true; });
+}
+
 }

@@ -574,6 +574,27 @@
             ]
         },
         {
+            "name": "CollisionEvent",
+            "display_name": "Collision Event",
+            "flags": {
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "entity_a",
+                    "display_name": "Entity A",
+                    "type": "apx::entity",
+                    "default": "{}"
+                },
+                {
+                    "name": "entity_b",
+                    "display_name": "Entity B",
+                    "type": "apx::entity",
+                    "default": "{}"
+                }
+            ]
+        },
+        {
             "name": "PhysicsSingleton",
             "display_name": "Physics Singleton",
             "flags": {

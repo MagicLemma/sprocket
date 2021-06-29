@@ -158,6 +158,12 @@ struct MeshAnimationComponent
     float speed = 1.0f;
 };
 
+struct CollisionEvent
+{
+    apx::entity entity_a = {};
+    apx::entity entity_b = {};
+};
+
 struct PhysicsSingleton
 {
     std::shared_ptr<physics_runtime> physics_runtime = nullptr;

@@ -276,6 +276,18 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
+    if (entity.has<CollisionEvent>()) {
+        auto& c = entity.get<CollisionEvent>();
+        if (ImGui::CollapsingHeader("Collision Event")) {
+            ImGui::PushID(count++);
+            ;
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.remove<CollisionEvent>(); }
+            ImGui::PopID();
+        }
+    }
+
     if (entity.has<PhysicsSingleton>()) {
         auto& c = entity.get<PhysicsSingleton>();
         if (ImGui::CollapsingHeader("Physics Singleton")) {
@@ -426,6 +438,10 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<MeshAnimationComponent>() && ImGui::Selectable("Mesh Animation")) {
             MeshAnimationComponent c;
             entity.add<MeshAnimationComponent>(c);
+        }
+        if (!entity.has<CollisionEvent>() && ImGui::Selectable("Collision Event")) {
+            CollisionEvent c;
+            entity.add<CollisionEvent>(c);
         }
         if (!entity.has<PhysicsSingleton>() && ImGui::Selectable("Physics Singleton")) {
             PhysicsSingleton c;
