@@ -72,8 +72,8 @@ void GameGrid::on_update(spkt::registry& registry, double)
         input.mouse_pos,
         input.window_width,
         input.window_height,
-        MakeView({registry, cam.camera_entity}),
-        MakeProj({registry, cam.camera_entity})
+        spkt::make_view({registry, cam.camera_entity}),
+        spkt::make_proj({registry, cam.camera_entity})
     );
 
     float lambda = -cameraPos.y / direction.y;

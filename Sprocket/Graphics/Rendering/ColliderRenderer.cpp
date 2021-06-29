@@ -102,8 +102,8 @@ void ColliderRenderer::Draw(
 
 void ColliderRenderer::Draw(spkt::entity camera, Scene& scene)
 {
-    glm::mat4 proj = MakeProj(camera);
-    glm::mat4 view = MakeView(camera);
+    glm::mat4 proj = spkt::make_proj(camera);
+    glm::mat4 view = spkt::make_view(camera);
     Draw(proj, view, scene);
 }
 

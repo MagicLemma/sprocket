@@ -129,12 +129,12 @@ void Anvil::on_update(double dt)
 
 glm::mat4 Anvil::get_proj_matrix() const
 {
-    return d_playingGame ? MakeProj(d_runtimeCamera) : d_editor_camera.Proj();
+    return d_playingGame ? spkt::make_proj(d_runtimeCamera) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
-    return d_playingGame ? MakeView(d_runtimeCamera) : d_editor_camera.View();
+    return d_playingGame ? spkt::make_view(d_runtimeCamera) : d_editor_camera.View();
 }
 
 void Anvil::on_render()

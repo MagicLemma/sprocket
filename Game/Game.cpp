@@ -171,8 +171,8 @@ void Game::on_event(spkt::ev::Event& event)
                 d_window->GetMousePos(),
                 d_window->Width(),
                 d_window->Height(),
-                MakeView(d_camera),
-                MakeProj(d_camera)
+                spkt::make_view(d_camera),
+                spkt::make_proj(d_camera)
             );
 
             float lambda = -cameraPos.y / direction.y;
@@ -356,8 +356,8 @@ void Game::on_render()
     if (d_mode == Mode::EDITOR) {
         d_devUI.StartFrame();
 
-        glm::mat4 view = MakeView(d_camera);
-        glm::mat4 proj = MakeProj(d_camera);
+        glm::mat4 view = spkt::make_view(d_camera);
+        glm::mat4 proj = spkt::make_proj(d_camera);
 
         SunInfoPanel(d_devUI, d_cycle);
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
