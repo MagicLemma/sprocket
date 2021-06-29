@@ -7,18 +7,6 @@ const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
 const auto GARDEN      = spkt::from_hex(0x55E6C1);
 const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
-namespace {
-
-void delete_below_50(spkt::registry& registry, double)
-{
-    registry.erase_if<Transform3DComponent>([&](apx::entity entity) {
-        const auto& t = registry.get<Transform3DComponent>(entity);
-        return t.position.y < -50.0f;
-    });
-}
-
-}
-
 Runtime::Runtime(Window* window) 
     : d_window(window)
     , d_scene(window)
@@ -43,7 +31,7 @@ Runtime::Runtime(Window* window)
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::animation_system);
-    d_scene.add(delete_below_50);
+    d_scene.add(spkt::delete_below_50_system);
     d_scene.Load("Resources/Anvil.yaml");
 
     d_runtimeCamera = d_scene.find<Camera3DComponent>();
