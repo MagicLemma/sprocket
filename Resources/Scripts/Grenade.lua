@@ -6,8 +6,6 @@ end
 function OnUpdate(entity, dt)
     TIME = TIME + dt
 
-    local scene = Scene()
-    
     if EXPLODE == false and TIME > 1 then
         local pc = GetParticleComponent(entity)
         pc.interval = 0.0001
@@ -23,7 +21,7 @@ function OnUpdate(entity, dt)
     end
     
     if EXPLODE == true then
-        for e in scene:RigidBody3DComponentView() do
+        for e in RigidBody3DComponentView() do
             local pos = GetTransform3DComponent(entity).position
             local rbc = GetRigidBody3DComponent(e)
             if rbc.frozen == false then
