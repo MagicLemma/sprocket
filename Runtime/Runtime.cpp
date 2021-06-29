@@ -30,6 +30,7 @@ Runtime::Runtime(spkt::Window* window)
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::animation_system);
     d_scene.add(spkt::delete_below_50_system);
+    d_scene.add(spkt::clear_events_system);
     d_scene.Load("Resources/Anvil.yaml");
 
     d_runtimeCamera = d_scene.find<spkt::Camera3DComponent>();

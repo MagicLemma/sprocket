@@ -374,6 +374,13 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
 
     // Update the PhysicsSingleton
     ps.collisions = runtime.listener.collisions();
+
+    for (const auto& [a, b] : runtime.listener.collisions()) {
+        auto event = registry.create();
+        registry.emplace<Event>(event);
+        registry.emplace<CollisionEvent>(event, a, b);
+    }
+
     runtime.listener.collisions().clear();
 }
 

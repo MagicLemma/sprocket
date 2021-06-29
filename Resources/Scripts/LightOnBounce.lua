@@ -1,16 +1,14 @@
 function Init(entity)
-    ENTITY = entity
     FLIP = true
 end
 
 function OnUpdate(entity, dt)
-    local singleton = entity_singleton()
-    local cs = GetPhysicsSingleton(singleton)
-    for k, collision in pairs(cs.collisions) do
-        local left = entity_from_id(collision[1])
-        local right = entity_from_id(collision[2])
-        if AreEntitiesEqual(ENTITY, left) or AreEntitiesEqual(ENTITY, right) then
-            toggle_light(ENTITY)
+    for event in CollisionEventView() do
+        local collision = GetCollisionEvent(event)
+        local a = entity_from_id(collision.entity_a)
+        local b = entity_from_id(collision.entity_b)
+        if AreEntitiesEqual(entity, a) or AreEntitiesEqual(entity, b) then
+            toggle_light(entity)
         end
     end
 end

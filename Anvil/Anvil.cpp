@@ -203,6 +203,7 @@ void Anvil::on_render()
                 d_activeScene->add(spkt::script_system);
                 d_activeScene->add(spkt::animation_system);
                 d_activeScene->add(spkt::delete_below_50_system);
+                d_activeScene->add(spkt::clear_events_system);
 
                 d_playingGame = true;
                 d_runtimeCamera = d_activeScene->find<Camera3DComponent>();
