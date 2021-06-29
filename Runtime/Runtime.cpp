@@ -1,13 +1,11 @@
 #include "Runtime.h"
 
-using namespace spkt;
-
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
 const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
 const auto GARDEN      = spkt::from_hex(0x55E6C1);
 const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
-Runtime::Runtime(Window* window) 
+Runtime::Runtime(spkt::Window* window) 
     : d_window(window)
     , d_scene(window)
     , d_assetManager()
@@ -26,21 +24,21 @@ Runtime::Runtime(Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
-    d_scene.add<PhysicsEngine3D>();
-    d_scene.add<ParticleSystem>(&d_particleManager);
+    d_scene.add<spkt::PhysicsEngine3D>();
+    d_scene.add<spkt::ParticleSystem>(&d_particleManager);
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::animation_system);
     d_scene.add(spkt::delete_below_50_system);
     d_scene.Load("Resources/Anvil.yaml");
 
-    d_runtimeCamera = d_scene.find<Camera3DComponent>();
+    d_runtimeCamera = d_scene.find<spkt::Camera3DComponent>();
 }
 
-void Runtime::on_event(ev::Event& event)
+void Runtime::on_event(spkt::ev::Event& event)
 {
-    if (auto data = event.get_if<ev::KeyboardTyped>()) {
-        if (data->key == Keyboard::BACK_TICK) {
+    if (auto data = event.get_if<spkt::ev::KeyboardTyped>()) {
+        if (data->key == spkt::Keyboard::BACK_TICK) {
             d_consoleActive = !d_consoleActive;
             event.consume();
         }

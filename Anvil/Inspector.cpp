@@ -25,12 +25,12 @@ void Inspector::Show(Anvil& editor)
 
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
 
-    if (entity.has<TemporaryComponent>()) {
-        auto& c = entity.get<TemporaryComponent>();
-        if (ImGui::CollapsingHeader("Temporary")) {
+    if (entity.has<Runtime>()) {
+        auto& c = entity.get<Runtime>();
+        if (ImGui::CollapsingHeader("Runtime")) {
             ImGui::PushID(count++);
             
-            if (ImGui::Button("Delete")) { entity.remove<TemporaryComponent>(); }
+            if (ImGui::Button("Delete")) { entity.remove<Runtime>(); }
             ImGui::PopID();
         }
     }
@@ -351,9 +351,9 @@ void Inspector::Show(Anvil& editor)
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-        if (!entity.has<TemporaryComponent>() && ImGui::Selectable("Temporary")) {
-            TemporaryComponent c;
-            entity.add<TemporaryComponent>(c);
+        if (!entity.has<Runtime>() && ImGui::Selectable("Runtime")) {
+            Runtime c;
+            entity.add<Runtime>(c);
         }
         if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
             Singleton c;

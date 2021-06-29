@@ -21,7 +21,7 @@ struct rigid_body_runtime;
 struct collider_runtime;
 
 // Components
-struct TemporaryComponent
+struct Runtime
 {
 };
 

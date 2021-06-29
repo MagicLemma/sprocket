@@ -5,8 +5,8 @@
     },
     "components": [
         {
-            "name": "TemporaryComponent",
-            "display_name": "Temporary",
+            "name": "Runtime",
+            "display_name": "Runtime",
             "flags": {
                 "SCRIPTABLE": false,
                 "SAVABLE": false

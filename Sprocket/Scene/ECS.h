@@ -6,7 +6,7 @@
 namespace spkt {
 
 using registry = apx::registry<
-    spkt::TemporaryComponent,
+    spkt::Runtime,
     spkt::Singleton,
     spkt::Event,
     spkt::NameComponent,

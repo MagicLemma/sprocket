@@ -19,7 +19,10 @@ void Save(const std::string& file, spkt::registry* reg)
     out << YAML::Key << "Entities" << YAML::BeginSeq;
     for (auto id : reg->all()) {
         spkt::entity entity{*reg, id};
-        if (entity.has<TemporaryComponent>()) { continue; }
+
+        // Don't save runtime entities
+        if (entity.has<Runtime>()) { continue; }
+
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << id;
         if (entity.has<NameComponent>()) {
@@ -327,8 +330,8 @@ void Load(const std::string& file, spkt::registry* reg)
 spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
 {
     spkt::entity e = apx::create_from(*reg);
-    if (entity.has<TemporaryComponent>()) {
-        e.add<TemporaryComponent>(entity.get<TemporaryComponent>());
+    if (entity.has<Runtime>()) {
+        e.add<Runtime>(entity.get<Runtime>());
     }
     if (entity.has<Singleton>()) {
         e.add<Singleton>(entity.get<Singleton>());
@@ -422,10 +425,10 @@ void Copy(spkt::registry* source, spkt::registry* target)
     for (auto id : source->all()) {
         spkt::entity src{*source, id};
         spkt::entity dst{*target, id_remapper[id]};
-        if (src.has<TemporaryComponent>()) {
-            const TemporaryComponent& source_comp = src.get<TemporaryComponent>();
-            TemporaryComponent target_comp;
-            dst.add<TemporaryComponent>(target_comp);
+        if (src.has<Runtime>()) {
+            const Runtime& source_comp = src.get<Runtime>();
+            Runtime target_comp;
+            dst.add<Runtime>(target_comp);
         }
         if (src.has<Singleton>()) {
             const Singleton& source_comp = src.get<Singleton>();
