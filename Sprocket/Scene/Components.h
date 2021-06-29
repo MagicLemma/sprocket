@@ -25,6 +25,14 @@ struct TemporaryComponent
 {
 };
 
+struct Singleton
+{
+};
+
+struct Event
+{
+};
+
 struct NameComponent
 {
     std::string name = "Entity";
@@ -148,10 +156,6 @@ struct MeshAnimationComponent
     std::string name = "";
     float time = 0.0f;
     float speed = 1.0f;
-};
-
-struct Singleton
-{
 };
 
 struct PhysicsSingleton

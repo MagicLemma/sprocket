@@ -8,7 +8,26 @@
             "name": "TemporaryComponent",
             "display_name": "Temporary",
             "flags": {
-                "SCRIPTABLE": false
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": []
+        },
+        {
+            "name": "Singleton",
+            "display_name": "Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": []
+        },
+        {
+            "name": "Event",
+            "display_name": "Event",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
             },
             "attributes": []
         },
@@ -553,15 +572,6 @@
                     "default": "1.0f"
                 }
             ]
-        },
-        {
-            "name": "Singleton",
-            "display_name": "Singleton",
-            "flags": {
-                "SCRIPTABLE": false,
-                "SAVABLE": false
-            },
-            "attributes": []
         },
         {
             "name": "PhysicsSingleton",

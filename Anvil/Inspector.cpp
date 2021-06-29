@@ -35,6 +35,26 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
+    if (entity.has<Singleton>()) {
+        auto& c = entity.get<Singleton>();
+        if (ImGui::CollapsingHeader("Singleton")) {
+            ImGui::PushID(count++);
+            
+            if (ImGui::Button("Delete")) { entity.remove<Singleton>(); }
+            ImGui::PopID();
+        }
+    }
+
+    if (entity.has<Event>()) {
+        auto& c = entity.get<Event>();
+        if (ImGui::CollapsingHeader("Event")) {
+            ImGui::PushID(count++);
+            
+            if (ImGui::Button("Delete")) { entity.remove<Event>(); }
+            ImGui::PopID();
+        }
+    }
+
     if (entity.has<NameComponent>()) {
         auto& c = entity.get<NameComponent>();
         if (ImGui::CollapsingHeader("Name")) {
@@ -256,16 +276,6 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (entity.has<Singleton>()) {
-        auto& c = entity.get<Singleton>();
-        if (ImGui::CollapsingHeader("Singleton")) {
-            ImGui::PushID(count++);
-            
-            if (ImGui::Button("Delete")) { entity.remove<Singleton>(); }
-            ImGui::PopID();
-        }
-    }
-
     if (entity.has<PhysicsSingleton>()) {
         auto& c = entity.get<PhysicsSingleton>();
         if (ImGui::CollapsingHeader("Physics Singleton")) {
@@ -345,6 +355,14 @@ void Inspector::Show(Anvil& editor)
             TemporaryComponent c;
             entity.add<TemporaryComponent>(c);
         }
+        if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
+            Singleton c;
+            entity.add<Singleton>(c);
+        }
+        if (!entity.has<Event>() && ImGui::Selectable("Event")) {
+            Event c;
+            entity.add<Event>(c);
+        }
         if (!entity.has<NameComponent>() && ImGui::Selectable("Name")) {
             NameComponent c;
             entity.add<NameComponent>(c);
@@ -408,10 +426,6 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<MeshAnimationComponent>() && ImGui::Selectable("Mesh Animation")) {
             MeshAnimationComponent c;
             entity.add<MeshAnimationComponent>(c);
-        }
-        if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
-            Singleton c;
-            entity.add<Singleton>(c);
         }
         if (!entity.has<PhysicsSingleton>() && ImGui::Selectable("Physics Singleton")) {
             PhysicsSingleton c;
