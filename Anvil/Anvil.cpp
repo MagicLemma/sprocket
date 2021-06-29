@@ -6,20 +6,8 @@
 #include <string_view>
 #include <ranges>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
-
-void delete_below_50(spkt::registry& registry, double)
-{
-    std::vector<apx::entity> to_delete;
-    for (auto entity : registry.view<Transform3DComponent>()) {
-        auto& t = registry.get<Transform3DComponent>(entity);
-        if (t.position.y < -50.0f) { to_delete.push_back(entity); }
-    }
-    for (auto entity : to_delete) {
-        registry.destroy(entity);
-    }
-}
 
 std::string Name(const spkt::entity& entity)
 {
@@ -129,18 +117,16 @@ void Anvil::on_update(double dt)
         const auto& transform = d_scene->Entities().get<Transform3DComponent>(entity);
         return transform.position.y < -50;
     });
-
-    d_activeScene->post_update();
 }
 
 glm::mat4 Anvil::get_proj_matrix() const
 {
-    return d_playingGame ? MakeProj(d_runtimeCamera) : d_editor_camera.Proj();
+    return d_playingGame ? spkt::make_proj(d_runtimeCamera) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
-    return d_playingGame ? MakeView(d_runtimeCamera) : d_editor_camera.View();
+    return d_playingGame ? spkt::make_view(d_runtimeCamera) : d_editor_camera.View();
 }
 
 void Anvil::on_render()
@@ -211,12 +197,12 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(d_window); 
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
-                d_activeScene->Add<PhysicsEngine3D>();
-                d_activeScene->Add<CameraSystem>();
-                d_activeScene->Add<ScriptRunner>();
-                d_activeScene->Add<ParticleSystem>(&d_particle_manager);
-                d_activeScene->Add<AnimationSystem>();
-                d_activeScene->Add<LambdaSystem>(delete_below_50);
+                d_activeScene->add<PhysicsEngine3D>();
+                d_activeScene->add<ParticleSystem>(&d_particle_manager);
+                d_activeScene->add(spkt::camera_system);
+                d_activeScene->add(spkt::script_system);
+                d_activeScene->add(spkt::animation_system);
+                d_activeScene->add(spkt::delete_below_50_system);
 
                 d_playingGame = true;
                 d_runtimeCamera = d_activeScene->find<Camera3DComponent>();

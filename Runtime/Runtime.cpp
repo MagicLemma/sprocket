@@ -1,11 +1,11 @@
 #include "Runtime.h"
 
-using namespace Sprocket;
+using namespace spkt;
 
-const auto LIGHT_BLUE  = Sprocket::FromHex(0x25CCF7);
-const auto CLEAR_BLUE  = Sprocket::FromHex(0x1B9CFC);
-const auto GARDEN      = Sprocket::FromHex(0x55E6C1);
-const auto SPACE_DARK  = Sprocket::FromHex(0x2C3A47);
+const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
+const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
+const auto GARDEN      = spkt::from_hex(0x55E6C1);
+const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
 Runtime::Runtime(Window* window) 
     : d_window(window)
@@ -26,17 +26,18 @@ Runtime::Runtime(Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
-    d_scene.Add<PhysicsEngine3D>();
-    d_scene.Add<ScriptRunner>();
-    d_scene.Add<CameraSystem>();
-    d_scene.Add<ParticleSystem>(&d_particleManager);
-    d_scene.Add<AnimationSystem>();
+    d_scene.add<PhysicsEngine3D>();
+    d_scene.add<ParticleSystem>(&d_particleManager);
+    d_scene.add(spkt::script_system);
+    d_scene.add(spkt::camera_system);
+    d_scene.add(spkt::animation_system);
+    d_scene.add(spkt::delete_below_50_system);
     d_scene.Load("Resources/Anvil.yaml");
 
     d_runtimeCamera = d_scene.find<Camera3DComponent>();
 }
 
-void Runtime::OnEvent(ev::Event& event)
+void Runtime::on_event(ev::Event& event)
 {
     if (auto data = event.get_if<ev::KeyboardTyped>()) {
         if (data->key == Keyboard::BACK_TICK) {
@@ -53,26 +54,19 @@ void Runtime::OnEvent(ev::Event& event)
     d_scene.OnEvent(event);
 }
 
-void Runtime::OnUpdate(double dt)
+void Runtime::on_update(double dt)
 {
-    d_window->SetCursorVisibility(d_consoleActive);
-
     if (d_consoleActive) {
+        d_window->SetCursorVisibility(true);
         d_console.OnUpdate(dt);
     } else {
-        d_scene.OnUpdate(dt);
+        d_window->SetCursorVisibility(false);
         d_particleManager.OnUpdate(dt);
+        d_scene.OnUpdate(dt);
     }
-
-    d_scene.Entities().erase_if<Transform3DComponent>([&](apx::entity entity) {
-        const auto& transform = d_scene.Entities().get<Transform3DComponent>(entity);
-        return transform.position.y < -50;
-    });
-
-    d_scene.post_update();
 }
 
-void Runtime::OnRender()
+void Runtime::on_render()
 {
     d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
     d_entityRenderer.Draw(d_runtimeCamera, d_scene);

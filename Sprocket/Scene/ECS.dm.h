@@ -7,7 +7,7 @@ namespace spkt {
 
 using registry = apx::registry<
 DATAMATIC_BEGIN
-    Sprocket::{{Comp::name}}{{Comp::if_not_last(",")}}
+    spkt::{{Comp::name}}{{Comp::if_not_last(",")}}
 DATAMATIC_END
 >;
 

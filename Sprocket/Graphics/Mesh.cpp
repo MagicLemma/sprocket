@@ -9,7 +9,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 glm::mat4 Convert(const aiMatrix4x4& matrix)

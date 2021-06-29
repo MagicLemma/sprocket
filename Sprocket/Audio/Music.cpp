@@ -2,7 +2,7 @@
 
 #include <SFML/Audio.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace Audio {
 
 struct MusicImpl

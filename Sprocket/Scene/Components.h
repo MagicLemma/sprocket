@@ -14,7 +14,7 @@
 
 #include "apecs.hpp"
 
-namespace Sprocket {
+namespace spkt {
 namespace lua { class Script; }
 struct physics_runtime;
 struct rigid_body_runtime;
@@ -104,12 +104,6 @@ struct Camera3DComponent
     glm::mat4 projection = {};
     float fov = 70.0f;
     float pitch = 0.0f;
-};
-
-struct SelectComponent
-{
-    bool selected = false;
-    bool hovered = false;
 };
 
 struct PathComponent

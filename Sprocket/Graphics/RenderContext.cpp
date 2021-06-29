@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 
 RenderContext::RenderContext()
     : d_cullFace(glIsEnabled(GL_CULL_FACE))

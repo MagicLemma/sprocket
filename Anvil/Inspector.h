@@ -3,7 +3,7 @@
 
 #include <ImGuizmo.h>
 
-namespace Sprocket {
+namespace spkt {
 
 class Anvil;
 

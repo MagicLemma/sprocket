@@ -5,7 +5,7 @@
 
 #include <optional>
 
-namespace Sprocket {
+namespace spkt {
 
 class FrameBuffer
 {

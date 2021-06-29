@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace Sprocket {
+namespace spkt {
 
 struct Bone
 {

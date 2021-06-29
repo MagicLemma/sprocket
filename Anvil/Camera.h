@@ -1,7 +1,7 @@
 #pragma once
 #include <Sprocket.h>
 
-namespace Sprocket {
+namespace spkt {
 
 class Camera
 {

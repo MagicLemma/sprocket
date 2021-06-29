@@ -4,7 +4,7 @@
 #include <glm/trigonometric.hpp>
 #include <format>
 
-namespace Sprocket {
+namespace spkt {
 
 CircadianCycle::CircadianCycle()
     : d_seconds(0.0f)

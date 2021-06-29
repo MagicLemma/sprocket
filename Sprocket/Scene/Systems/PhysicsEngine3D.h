@@ -6,7 +6,7 @@
 
 #include <glm/glm.hpp>
 
-namespace Sprocket {
+namespace spkt {
 
 struct physics_runtime;
 struct rigid_body_runtime;

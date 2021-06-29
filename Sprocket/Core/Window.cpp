@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <cstdlib>
 
-namespace Sprocket {
+namespace spkt {
 
 struct WindowImpl
 {

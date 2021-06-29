@@ -9,7 +9,7 @@
 #include <fstream>
 #include <memory>
 
-namespace Sprocket {
+namespace spkt {
 namespace Loader {
 
 void Save(const std::string& file, spkt::registry* reg)
@@ -108,11 +108,6 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "Camera3DComponent" << YAML::BeginMap;
             out << YAML::Key << "fov" << YAML::Value << c.fov;
             out << YAML::Key << "pitch" << YAML::Value << c.pitch;
-            out << YAML::EndMap;
-        }
-        if (entity.has<SelectComponent>()) {
-            const auto& c = entity.get<SelectComponent>();
-            out << YAML::Key << "SelectComponent" << YAML::BeginMap;
             out << YAML::EndMap;
         }
         if (entity.has<PathComponent>()) {
@@ -288,10 +283,6 @@ void Load(const std::string& file, spkt::registry* reg)
             c.pitch = transform(spec["pitch"].as<float>());
             e.add<Camera3DComponent>(c);
         }
-        if (auto spec = entity["SelectComponent"]) {
-            SelectComponent c;
-            e.add<SelectComponent>(c);
-        }
         if (auto spec = entity["PathComponent"]) {
             PathComponent c;
             c.speed = transform(spec["speed"].as<float>());
@@ -377,9 +368,6 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     }
     if (entity.has<Camera3DComponent>()) {
         e.add<Camera3DComponent>(entity.get<Camera3DComponent>());
-    }
-    if (entity.has<SelectComponent>()) {
-        e.add<SelectComponent>(entity.get<SelectComponent>());
     }
     if (entity.has<PathComponent>()) {
         e.add<PathComponent>(entity.get<PathComponent>());
@@ -535,13 +523,6 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.fov = transform(source_comp.fov);
             target_comp.pitch = transform(source_comp.pitch);
             dst.add<Camera3DComponent>(target_comp);
-        }
-        if (src.has<SelectComponent>()) {
-            const SelectComponent& source_comp = src.get<SelectComponent>();
-            SelectComponent target_comp;
-            target_comp.selected = transform(source_comp.selected);
-            target_comp.hovered = transform(source_comp.hovered);
-            dst.add<SelectComponent>(target_comp);
         }
         if (src.has<PathComponent>()) {
             const PathComponent& source_comp = src.get<PathComponent>();

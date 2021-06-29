@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-namespace Sprocket {
+namespace spkt {
 
 AssetManager::AssetManager()
     : d_defaultMesh(std::make_unique<Mesh>())

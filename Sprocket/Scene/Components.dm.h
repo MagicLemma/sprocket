@@ -14,7 +14,7 @@
 
 #include "apecs.hpp"
 
-namespace Sprocket {
+namespace spkt {
 namespace lua { class Script; }
 struct physics_runtime;
 struct rigid_body_runtime;

@@ -13,7 +13,7 @@
 
 struct lua_State;
 
-namespace Sprocket {
+namespace spkt {
 namespace lua {
 
 template <typename T> struct Converter

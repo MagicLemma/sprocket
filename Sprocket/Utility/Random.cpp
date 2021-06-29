@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace Sprocket {
+namespace spkt {
 
 float RandomFloat(float min, float max)
 {

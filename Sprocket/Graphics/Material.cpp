@@ -5,7 +5,7 @@
 #include <fstream>
 #include <filesystem>
 
-namespace Sprocket {
+namespace spkt {
 
 std::unique_ptr<Material> Material::FromFile(const std::string& file)
 {

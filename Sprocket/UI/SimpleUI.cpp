@@ -14,7 +14,7 @@
 
 #include <fmt/core.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 template <typename T> T Interpolate(

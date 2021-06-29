@@ -1,8 +1,9 @@
 #include "Scene.h"
 #include "Components.h"
 #include "Loader.h"
+#include "LambdaSystem.h"
 
-namespace Sprocket {
+namespace spkt {
 
 Scene::Scene(Window* window)
     : d_window(window)
@@ -19,6 +20,11 @@ Scene::~Scene()
     d_registry.clear();
 }
 
+void Scene::add(const std::function<void(spkt::registry&, double)>& system)
+{
+    add<LambdaSystem>(system);
+}
+
 void Scene::Load(std::string_view file)
 {
     Loader::Load(std::string(file), &Entities());
@@ -28,6 +34,15 @@ void Scene::OnUpdate(double dt)
 {
     for (auto& system : d_systems) {
         system->on_update(d_registry, dt);
+    }
+
+    auto singleton = d_registry.find<Singleton>();
+    if (d_registry.valid(singleton)) {
+        auto& input = d_registry.get<InputSingleton>(singleton);
+        input.mouse_click.fill(false);
+        input.mouse_unclick.fill(false);
+        input.mouse_offset = {0.0, 0.0};
+        input.mouse_scrolled = {0.0, 0.0};
     }
 }
 
@@ -69,20 +84,8 @@ void Scene::OnEvent(ev::Event& event)
     input.mouse_pos = d_window->GetMousePos();
     input.mouse_offset = d_window->GetMouseOffset();
 
-    input.window_width = (float)d_window->Width();
-    input.window_height = (float)d_window->Height();
-}
-
-void Scene::post_update()
-{
-    auto singleton = d_registry.find<Singleton>();
-    if (d_registry.valid(singleton)) {
-        auto& input = d_registry.get<InputSingleton>(singleton);
-        input.mouse_click.fill(false);
-        input.mouse_unclick.fill(false);
-        input.mouse_offset = {0.0, 0.0};
-        input.mouse_scrolled = {0.0, 0.0};
-    }
+    input.window_width = d_window->Width() > 0 ? (float)d_window->Width() : 1.0f;;
+    input.window_height = d_window->Height() > 0 ? (float)d_window->Height() : 1.0f;;
 }
 
 std::size_t Scene::Size() const

@@ -5,7 +5,7 @@
 
 #include <cstdlib>
 
-namespace Sprocket {
+namespace spkt {
 
 StreamBuffer::StreamBuffer()
     : d_vao(0)

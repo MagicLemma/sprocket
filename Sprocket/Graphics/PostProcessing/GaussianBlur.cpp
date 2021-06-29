@@ -1,6 +1,6 @@
 #include "GaussianBlur.h"
 
-namespace Sprocket {
+namespace spkt {
 
 void GaussianVert::SetUniforms() const
 {

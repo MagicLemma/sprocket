@@ -382,30 +382,6 @@
             ]
         },
         {
-            "name": "SelectComponent",
-            "display_name": "Select",
-            "attributes": [
-                {
-                    "name": "selected",
-                    "display_name": "Selected",
-                    "type": "bool",
-                    "default": "false",
-                    "flags": {
-                        "SAVABLE": false
-                    }
-                },
-                {
-                    "name": "hovered",
-                    "display_name": "Hovered",
-                    "type": "bool",
-                    "default": "false",
-                    "flags": {
-                        "SAVABLE": false
-                    }
-                }
-            ]
-        },
-        {
             "name": "PathComponent",
             "display_name": "Path",
             "attributes": [

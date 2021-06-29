@@ -8,7 +8,7 @@
 #include "ShadowMap.h"
 #include "ParticleManager.h"
 
-namespace Sprocket {
+namespace spkt {
 
 class Scene3DRenderer
 // Renders a scene as a 3D Scene. This makes use of components such as

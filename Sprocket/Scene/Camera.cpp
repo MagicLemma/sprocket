@@ -3,9 +3,9 @@
 #include "Components.h"
 #include "Viewport.h"
 
-namespace Sprocket {
+namespace spkt {
 
-glm::mat4 MakeView(spkt::entity entity)
+glm::mat4 spkt::make_view(spkt::entity entity)
 {
     if (!entity.has<Transform3DComponent>()) {
         log::error("Camera has no transform component!");
@@ -22,7 +22,7 @@ glm::mat4 MakeView(spkt::entity entity)
     return glm::inverse(Maths::Transform(tr.position, tr.orientation));   
 }
 
-glm::mat4 MakeProj(spkt::entity entity)
+glm::mat4 make_proj(spkt::entity entity)
 {
     float fov = glm::radians(70.0f);
 

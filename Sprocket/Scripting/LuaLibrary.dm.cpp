@@ -16,7 +16,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace lua {
 namespace {
 

@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 
 Viewport::Viewport(int x, int y, int width, int height)
 {

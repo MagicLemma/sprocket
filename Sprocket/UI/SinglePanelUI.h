@@ -13,7 +13,7 @@
 #include <deque>
 #include <string_view>
 
-namespace Sprocket {
+namespace spkt {
 
 struct SinglePanelUITheme
 {

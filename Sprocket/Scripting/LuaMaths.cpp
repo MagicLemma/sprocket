@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace lua {
 
 void load_vec3_functions(lua::Script& script)

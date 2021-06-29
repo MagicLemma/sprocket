@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace Sprocket {
+namespace spkt {
 
 class CircadianCycle
 {

@@ -1,13 +1,13 @@
 #include <Sprocket.h>
 #include "Game.h"
 
-using namespace Sprocket;
+using namespace spkt;
 
 int main()
 {
-    Sprocket::Window window("Game");
-    WorldLayer game(&window);
-    Sprocket::RunOptions options;
+    spkt::Window window("Game");
+    Game game(&window);
+    spkt::RunOptions options;
     options.showFramerate = true;
-    return Sprocket::Run(game, window, options);
+    return spkt::Run(game, window, options);
 }

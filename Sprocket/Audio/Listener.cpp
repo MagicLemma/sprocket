@@ -3,7 +3,7 @@
 
 #include <SFML/Audio.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace Audio {
 
 void SetListener(spkt::entity e)

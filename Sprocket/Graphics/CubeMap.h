@@ -5,7 +5,7 @@
 #include <string>
 #include <cstdint>
 
-namespace Sprocket {
+namespace spkt {
 
 class CubeMap
 {

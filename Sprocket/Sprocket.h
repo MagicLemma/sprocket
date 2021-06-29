@@ -26,13 +26,10 @@
 #include "Scene/Loader.h"
 #include "Scene/EntitySystem.h"
 
-#include "Scene/Systems/AnimationSystem.h"
-#include "Scene/Systems/CameraSystem.h"
+#include "Scene/Systems/basic_systems.h"
 #include "Scene/Systems/ParticleSystem.h"
 #include "Scene/Systems/PhysicsEngine3D.h"
 #include "Scene/Systems/GameGrid.h"
-#include "Scene/Systems/PathFollower.h"
-#include "Scene/Systems/ScriptRunner.h"
 #include "Scene/Systems/LambdaSystem.h"
 
 // UTILITY

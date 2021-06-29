@@ -5,7 +5,7 @@
 
 #include <lua.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace lua {
 namespace {
 

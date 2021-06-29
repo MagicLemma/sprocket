@@ -3,9 +3,9 @@
 
 int main()
 {
-    Sprocket::Window window("Anvil");
-    Sprocket::Anvil editor(&window);
-    Sprocket::RunOptions options;
+    spkt::Window window("Anvil");
+    spkt::Anvil editor(&window);
+    spkt::RunOptions options;
     options.showFramerate = true;
-    return Sprocket::Run(editor, window, options);
+    return spkt::Run(editor, window, options);
 }

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace Sprocket {
+namespace spkt {
 
 using EffectPipeline = std::vector<std::unique_ptr<Effect>>;
 

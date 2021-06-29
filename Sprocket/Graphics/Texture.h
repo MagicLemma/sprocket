@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-namespace Sprocket {
+namespace spkt {
 
 struct TextureData
 {

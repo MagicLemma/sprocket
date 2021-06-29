@@ -9,7 +9,7 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 rp3d::Vector3 Convert(const glm::vec3& v)

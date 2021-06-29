@@ -9,7 +9,7 @@
 #include <string_view>
 #include <future>
 
-namespace Sprocket {
+namespace spkt {
 
 class AssetManager
 {

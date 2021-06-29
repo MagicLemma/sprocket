@@ -4,7 +4,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 constexpr int getType(DataType type)

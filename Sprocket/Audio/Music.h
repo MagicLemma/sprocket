@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 
-namespace Sprocket {
+namespace spkt {
 namespace Audio {
 
 struct MusicImpl;

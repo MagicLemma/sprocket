@@ -10,7 +10,7 @@
 #include <optional>
 #include <variant>
 
-namespace Sprocket {
+namespace spkt {
 
 struct Vertex
 {

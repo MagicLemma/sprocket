@@ -8,7 +8,7 @@
 #include <lua.hpp>
 #include <cassert>
 
-namespace Sprocket {
+namespace spkt {
 namespace lua {
 
 class Script

@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
 
-namespace Sprocket {
+namespace spkt {
 namespace ev { class Event; }
 
 class InputProxy

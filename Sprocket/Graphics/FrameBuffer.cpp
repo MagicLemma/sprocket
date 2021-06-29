@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 
 FrameBuffer::FrameBuffer(int width, int height)
     : d_colour(std::make_unique<Texture>(width, height, Texture::Channels::RGBA))

@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "Viewport.h"
 
-namespace Sprocket {
+namespace spkt {
 
 class DepthBuffer
 // TODO: Merge with FrameBuffer class, as this is just an FBO.

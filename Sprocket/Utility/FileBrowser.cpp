@@ -7,7 +7,7 @@
 #include <GLFW/glfw3native.h>
 #include <Windows.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 void SetOFN(OPENFILENAMEA* ofn, Window* window, const char* filter)

@@ -1,7 +1,7 @@
 #pragma once
 #include "ECS.h"
 
-namespace Sprocket {
+namespace spkt {
 namespace Audio {
     
 void SetListener(spkt::entity e);

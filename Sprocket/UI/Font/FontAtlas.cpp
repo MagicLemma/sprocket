@@ -7,7 +7,7 @@
 
 #include "Maths.h"
 
-namespace Sprocket {
+namespace spkt {
 
 FontAtlas::FontAtlas(int width, int height)
     : d_texture(std::make_unique<Texture>(width, height, Texture::Channels::RED))

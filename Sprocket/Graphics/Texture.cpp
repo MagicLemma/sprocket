@@ -7,7 +7,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 void SetTextureParameters(u32 id)

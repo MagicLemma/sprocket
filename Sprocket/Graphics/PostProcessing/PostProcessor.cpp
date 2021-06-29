@@ -1,6 +1,6 @@
 #include "PostProcessor.h"
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 StaticMeshData GetMeshData()

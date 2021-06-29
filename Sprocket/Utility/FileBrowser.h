@@ -7,7 +7,7 @@
 #include "Window.h"
 #include <string>
 
-namespace Sprocket {
+namespace spkt {
 
 std::string OpenFile(Window* window, const char* filter);
 std::string SaveFile(Window* window, const char* filter);

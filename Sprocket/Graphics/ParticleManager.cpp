@@ -4,7 +4,7 @@
 #include "Random.h"
 #include "Camera.h"
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 std::unique_ptr<Buffer> GetInstanceBuffer()

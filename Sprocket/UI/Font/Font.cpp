@@ -8,7 +8,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-namespace Sprocket {
+namespace spkt {
 
 static constexpr int HRES = 64;
 static constexpr float HRESf = 64.0f;

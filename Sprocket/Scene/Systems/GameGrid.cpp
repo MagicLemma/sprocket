@@ -7,7 +7,7 @@
 
 #include <cassert>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
@@ -17,7 +17,8 @@ constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
 void GameGrid::on_startup(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
-    auto& grid = get_singleton<GameGridSingleton>(registry);
+    registry.emplace<CameraSingleton>(singleton);
+    auto& grid = registry.emplace<GameGridSingleton>(singleton);
 
     grid.hovered_square_entity = registry.create();
     registry.emplace<NameComponent>(grid.hovered_square_entity, "Hovered Grid Highlighter");
@@ -71,8 +72,8 @@ void GameGrid::on_update(spkt::registry& registry, double)
         input.mouse_pos,
         input.window_width,
         input.window_height,
-        MakeView({registry, cam.camera_entity}),
-        MakeProj({registry, cam.camera_entity})
+        spkt::make_view({registry, cam.camera_entity}),
+        spkt::make_proj({registry, cam.camera_entity})
     );
 
     float lambda = -cameraPos.y / direction.y;

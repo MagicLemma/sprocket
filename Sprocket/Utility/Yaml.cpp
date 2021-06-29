@@ -3,7 +3,7 @@
 
 namespace YAML {
 
-using namespace Sprocket;
+using namespace spkt;
 
 Node convert<glm::vec2>::encode(const glm::vec2& rhs)
 {
@@ -150,7 +150,7 @@ bool convert<apx::entity>::decode(const Node& node, apx::entity& rhs)
 
 }
 
-namespace Sprocket {
+namespace spkt {
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
 {

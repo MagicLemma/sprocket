@@ -9,7 +9,7 @@
 
 #include <memory>
 
-namespace Sprocket {
+namespace spkt {
 
 class ShadowMap
 {

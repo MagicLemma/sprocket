@@ -8,7 +8,7 @@
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Sprocket {
+namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
@@ -172,18 +172,6 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Pitch", &c.pitch, 0.01f);
             
             if (ImGui::Button("Delete")) { entity.remove<Camera3DComponent>(); }
-            ImGui::PopID();
-        }
-    }
-
-    if (entity.has<SelectComponent>()) {
-        auto& c = entity.get<SelectComponent>();
-        if (ImGui::CollapsingHeader("Select")) {
-            ImGui::PushID(count++);
-            ImGui::Checkbox("Selected", &c.selected);
-            ImGui::Checkbox("Hovered", &c.hovered);
-            
-            if (ImGui::Button("Delete")) { entity.remove<SelectComponent>(); }
             ImGui::PopID();
         }
     }
@@ -396,10 +384,6 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<Camera3DComponent>() && ImGui::Selectable("Camera 3D")) {
             Camera3DComponent c;
             entity.add<Camera3DComponent>(c);
-        }
-        if (!entity.has<SelectComponent>() && ImGui::Selectable("Select")) {
-            SelectComponent c;
-            entity.add<SelectComponent>(c);
         }
         if (!entity.has<PathComponent>() && ImGui::Selectable("Path")) {
             PathComponent c;

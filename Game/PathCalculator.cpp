@@ -4,7 +4,7 @@
 #include <queue>
 #include <memory>
 
-using namespace Sprocket;
+using namespace spkt;
 
 std::queue<glm::vec3> GenerateAStarPath(
     const glm::vec3& start,

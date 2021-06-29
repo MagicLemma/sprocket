@@ -4,7 +4,7 @@
 #include "ECS.h"
 #include "Scene.h"
 
-namespace Sprocket {
+namespace spkt {
 
 class ColliderRenderer
 {

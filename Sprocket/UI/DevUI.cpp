@@ -10,7 +10,7 @@
 #include <ImGuizmo.h>
 #include <glad/glad.h>
 
-namespace Sprocket {
+namespace spkt {
 namespace {
 
 void SetDarkTheme()
@@ -84,12 +84,12 @@ void SetClipboardCallbacks(Window* window)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
-        Sprocket::Window* w = static_cast<Sprocket::Window*>(user_data);
+        spkt::Window* w = static_cast<spkt::Window*>(user_data);
         w->SetClipboardData(text);
     };
 
     io.GetClipboardTextFn = [](void* user_data) {
-        Sprocket::Window* w = static_cast<Sprocket::Window*>(user_data);
+        spkt::Window* w = static_cast<spkt::Window*>(user_data);
         return w->GetClipboardData();
     };
 
@@ -245,7 +245,7 @@ void DevUI::EndFrame()
 {
     ImGui::Render();
 
-    Sprocket::RenderContext rc;  
+    spkt::RenderContext rc;  
     rc.AlphaBlending(true);
     rc.FaceCulling(false);
     rc.ScissorTesting(true);

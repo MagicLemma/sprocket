@@ -10,7 +10,7 @@
 #include "Windows.h"
 #endif
 
-namespace Sprocket {
+namespace spkt {
 namespace log {
 namespace {
 

@@ -16,7 +16,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
-namespace Sprocket {
+namespace spkt {
 namespace lua {
 namespace {
 
@@ -688,40 +688,6 @@ int _AddCamera3DComponent(lua_State* L) {
     return 0;
 }
 
-// C++ Functions for SelectComponent =====================================================
-
-int _GetSelectComponent(lua_State* L) {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::entity e = Converter<spkt::entity>::read(L, 1);
-    assert(e.has<SelectComponent>());
-    const auto& c = e.get<SelectComponent>();
-    Converter<bool>::push(L, c.selected);
-    Converter<bool>::push(L, c.hovered);
-    return 2;
-}
-
-int _SetSelectComponent(lua_State* L) {
-    if (!CheckArgCount(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-    auto& c = e.get<SelectComponent>();
-    c.selected = Converter<bool>::read(L, ++ptr);
-    c.hovered = Converter<bool>::read(L, ++ptr);
-    return 0;
-}
-
-int _AddSelectComponent(lua_State* L) {
-    if (!CheckArgCount(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
-    assert(!e.has<SelectComponent>());
-    SelectComponent c;
-    c.selected = Converter<bool>::read(L, ++ptr);
-    c.hovered = Converter<bool>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<SelectComponent>(c); });
-    return 0;
-}
-
 // C++ Functions for PathComponent =====================================================
 
 int _GetPathComponent(lua_State* L) {
@@ -1359,43 +1325,6 @@ void load_entity_component_functions(lua::Script& script)
     )lua");
 
     lua_register(L, "HasCamera3DComponent", &_has_impl<Camera3DComponent>);
-
-
-    // Lua functions for SelectComponent =====================================================
-
-    luaL_dostring(L, R"lua(
-        SelectComponent = Class(function(self, selected, hovered)
-            self.selected = selected
-            self.hovered = hovered
-        end)
-    )lua");
-
-    lua_register(L, "_GetSelectComponent", &_GetSelectComponent);
-
-    luaL_dostring(L, R"lua(
-        function GetSelectComponent(entity)
-            selected, hovered = _GetSelectComponent(entity)
-            return SelectComponent(selected, hovered)
-        end
-    )lua");
-
-    lua_register(L, "_SetSelectComponent", &_SetSelectComponent);
-
-    luaL_dostring(L, R"lua(
-        function SetSelectComponent(entity, c)
-            _SetSelectComponent(entity, c.selected, c.hovered)
-        end
-    )lua");
-
-    lua_register(L, "_AddSelectComponent", &_AddSelectComponent);
-
-    luaL_dostring(L, R"lua(
-        function AddSelectComponent(entity, c)
-            _AddSelectComponent(entity, c.selected, c.hovered)
-        end
-    )lua");
-
-    lua_register(L, "HasSelectComponent", &_has_impl<SelectComponent>);
 
 
     // Lua functions for PathComponent =====================================================

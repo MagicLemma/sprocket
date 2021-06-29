@@ -1,7 +1,7 @@
 #pragma once
 #include "ECS.h"
 
-namespace Sprocket {
+namespace spkt {
 namespace ev { class Event; }
 
 class EntitySystem

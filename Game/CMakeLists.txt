@@ -11,7 +11,9 @@ add_executable(Game
                Game.cpp
         
                CircadianCycle.cpp
-               PathCalculator.cpp)
+               PathCalculator.cpp
+               
+               grid_helpers.cpp)
 
 target_link_libraries(Game PRIVATE Sprocket)
 

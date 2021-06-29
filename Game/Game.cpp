@@ -1,12 +1,13 @@
 #include "Game.h"
 #include "Palette.h"
-#include "PathFollower.h"
 #include "PathCalculator.h"
 #include "Window.h"
 
+#include "grid_helpers.h"
+
 #include <cmath>
 
-using namespace Sprocket;
+using namespace spkt;
 
 namespace {
 
@@ -67,7 +68,7 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
 
 }
 
-WorldLayer::WorldLayer(Window* window) 
+Game::Game(Window* window) 
     : d_window(window)
     , d_scene(window)
     , d_assetManager()
@@ -79,9 +80,9 @@ WorldLayer::WorldLayer(Window* window)
     , d_devUI(window)
     , d_escapeMenu(window)
 {
-    using namespace Sprocket;
+    using namespace spkt;
 
-    LoadScene("Resources/Scene.yaml");
+    load_scene("Resources/Scene.yaml");
 
     SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;
@@ -101,14 +102,14 @@ WorldLayer::WorldLayer(Window* window)
 
 }
 
-void WorldLayer::LoadScene(std::string_view file)
+void Game::load_scene(std::string_view file)
 {
-    using namespace Sprocket;
+    using namespace spkt;
 
-    d_scene.Add<ScriptRunner>();
-    d_scene.Add<CameraSystem>();
-    d_scene.Add<PathFollower>();
-    d_scene.Add<GameGrid>();
+    d_scene.add<GameGrid>();
+    d_scene.add(spkt::script_system);
+    d_scene.add(spkt::camera_system);
+    d_scene.add(spkt::path_follower_system);
     d_scene.Load(file);
     d_paused = false;
 
@@ -129,16 +130,9 @@ void WorldLayer::LoadScene(std::string_view file)
     assert(d_camera != spkt::null);
 }
 
-void WorldLayer::SaveScene(std::string_view file)
+void Game::on_event(spkt::ev::Event& event)
 {
-    log::info("Saving...");
-    Loader::Save(std::string(file), &d_scene.Entities());
-    log::info("Done!");
-}
-
-void WorldLayer::OnEvent(Sprocket::ev::Event& event)
-{
-    using namespace Sprocket;
+    using namespace spkt;
 
     // Escape Menu event handling
     if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
@@ -177,8 +171,8 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
                 d_window->GetMousePos(),
                 d_window->Width(),
                 d_window->Height(),
-                MakeView(d_camera),
-                MakeProj(d_camera)
+                spkt::make_view(d_camera),
+                spkt::make_proj(d_camera)
             );
 
             float lambda = -cameraPos.y / direction.y;
@@ -218,9 +212,9 @@ void WorldLayer::OnEvent(Sprocket::ev::Event& event)
     }
 }
 
-void WorldLayer::OnUpdate(double dt)
+void Game::on_update(double dt)
 {
-    using namespace Sprocket;
+    using namespace spkt;
     Audio::SetListener(d_camera);
 
     d_hoveredEntityUI.OnUpdate(dt);
@@ -250,13 +244,11 @@ void WorldLayer::OnUpdate(double dt)
 
     d_devUI.OnUpdate(dt);
     d_escapeMenu.OnUpdate(dt);
-
-    d_scene.post_update();
 }
 
-void WorldLayer::OnRender()
+void Game::on_render()
 {
-    using namespace Sprocket;
+    using namespace spkt;
     const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.Entities());
     auto& registry = d_scene.Entities();
 
@@ -309,27 +301,27 @@ void WorldLayer::OnRender()
             auto pos = game_grid.clicked_square.value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddTree(pos);
+                add_tree(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddRock(pos);
+                add_rock(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddIron(pos);
+                add_iron(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddTin(pos);
+                add_tin(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
                 if (selected.valid()) { selected.destroy(); }
-                AddMithril(pos);
+                add_mithril(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
@@ -364,8 +356,8 @@ void WorldLayer::OnRender()
     if (d_mode == Mode::EDITOR) {
         d_devUI.StartFrame();
 
-        glm::mat4 view = MakeView(d_camera);
-        glm::mat4 proj = MakeProj(d_camera);
+        glm::mat4 view = spkt::make_view(d_camera);
+        glm::mat4 proj = spkt::make_proj(d_camera);
 
         SunInfoPanel(d_devUI, d_cycle);
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
@@ -422,7 +414,7 @@ void WorldLayer::OnRender()
 
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Reload", buttonRegion)) {
-        LoadScene(d_sceneFile);
+        load_scene(d_sceneFile);
     }
 
     buttonRegion.y += 60;
@@ -439,9 +431,9 @@ void WorldLayer::OnRender()
         d_escapeMenu.StartPanel("VolumePanel", &shape, PanelType::DRAGGABLE);
         d_escapeMenu.Text("Volume", 48.0f, {0, 0, 400, 100});
 
-        float volume = Sprocket::Audio::GetMasterVolume();
+        float volume = spkt::Audio::GetMasterVolume();
         d_escapeMenu.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
-        Sprocket::Audio::SetMasterVolume(volume);
+        spkt::Audio::SetMasterVolume(volume);
         
         d_escapeMenu.EndPanel();
     }
@@ -477,83 +469,4 @@ void WorldLayer::OnRender()
 
     d_escapeMenu.EndPanel();
     d_escapeMenu.EndFrame();
-}
-
-void WorldLayer::AddTree(const glm::ivec2& pos)
-{
-    using namespace Sprocket;
-
-    auto newEntity = apx::create_from(d_scene.Entities());
-
-    auto& name = newEntity.emplace<NameComponent>();
-    name.name = "Tree";
-
-    auto& tr = newEntity.emplace<Transform3DComponent>();
-    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
-    tr.orientation = glm::rotate(glm::identity<glm::quat>(), Random(0.0f, 360.0f), {0, 1, 0});
-    float r = Random(1.0f, 1.3f);
-    tr.scale = {r, r, r};
-
-    auto& modelData = newEntity.emplace<ModelComponent>();
-    modelData.mesh = "Resources/Models/BetterTree.obj";
-    modelData.material = "Resources/Materials/tree.yaml";
-    newEntity.emplace<SelectComponent>();
-
-    // Add the new entity to the grid.
-    auto& registry = d_scene.Entities();
-    auto tile_map = registry.find<TileMapSingleton>();
-    assert(registry.valid(tile_map));
-    auto& tms = registry.get<TileMapSingleton>(tile_map);
-    tms.tiles[pos] = newEntity.entity();
-}
-
-void WorldLayer::AddRockBase(
-    const glm::ivec2& pos,
-    std::string_view material,
-    std::string_view name)
-{
-    using namespace Sprocket;
-
-    auto newEntity = apx::create_from(d_scene.Entities());
-    auto& n = newEntity.emplace<NameComponent>();
-    n.name = name;
-
-    auto& tr = newEntity.emplace<Transform3DComponent>();
-    tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
-    tr.position.y -= Random(0.0f, 0.5f);
-    float randomRotation = glm::half_pi<float>() * Random(0, 3);
-    tr.orientation = glm::rotate(glm::identity<glm::quat>(), randomRotation, {0.0, 1.0, 0.0});
-    tr.scale = {1.1f, 1.1f, 1.1f};
-
-    auto& modelData = newEntity.emplace<ModelComponent>();
-    modelData.mesh = "Resources/Models/Rock.obj";
-    modelData.material = material;
-    newEntity.emplace<SelectComponent>();
-
-    // Add the new entity to the grid.
-    auto& registry = d_scene.Entities();
-    auto tile_map = registry.find<TileMapSingleton>();
-    assert(registry.valid(tile_map));
-    auto& tms = registry.get<TileMapSingleton>(tile_map);
-    tms.tiles[pos] = newEntity.entity();
-}
-
-void WorldLayer::AddRock(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/rock.yaml", "Rock");
-}
-
-void WorldLayer::AddIron(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/iron.yaml", "Iron");
-}
-
-void WorldLayer::AddTin(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/tin.yaml", "Tin");
-}
-
-void WorldLayer::AddMithril(const glm::ivec2& pos)
-{
-    AddRockBase(pos, "Resources/Materials/mithril.yaml", "Mithril");
 }
