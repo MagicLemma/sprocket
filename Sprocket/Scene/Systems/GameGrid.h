@@ -5,10 +5,7 @@
 
 namespace spkt {
 
-struct GameGrid : public EntitySystem
-{
-    void on_startup(spkt::registry& registry) override;
-    void on_update(spkt::registry& registry, double dt) override;
-};
+void game_grid_system_init(spkt::registry& registry);
+void game_grid_system(spkt::registry& registry, double dt);
 
 }

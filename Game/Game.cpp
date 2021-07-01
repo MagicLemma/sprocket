@@ -105,13 +105,16 @@ Game::Game(Window* window)
 void Game::load_scene(std::string_view file)
 {
     using namespace spkt;
+    d_scene.Load(file);
 
-    d_scene.add<GameGrid>();
+    d_scene.add(spkt::game_grid_system);
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::path_follower_system);
     d_scene.add(spkt::clear_events_system);
-    d_scene.Load(file);
+
+    spkt::game_grid_system_init(d_scene.Entities());
+
     d_paused = false;
 
     d_sceneFile = file;
