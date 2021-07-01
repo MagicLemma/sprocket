@@ -30,7 +30,6 @@
 #include "Scene/Systems/ParticleSystem.h"
 #include "Scene/Systems/PhysicsEngine3D.h"
 #include "Scene/Systems/GameGrid.h"
-#include "Scene/Systems/LambdaSystem.h"
 
 // UTILITY
 #include "Utility/Log.h"
