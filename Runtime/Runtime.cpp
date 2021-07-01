@@ -24,7 +24,6 @@ Runtime::Runtime(spkt::Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
-    spkt::physics_system_init(d_scene.Entities());
     spkt::particle_system_init(d_scene.Entities(), &d_particleManager);
 
     d_scene.Load("Resources/Anvil.yaml");

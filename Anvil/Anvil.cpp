@@ -186,7 +186,6 @@ void Anvil::on_render()
                 d_activeScene = std::make_shared<Scene>(d_window);
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
 
-                spkt::physics_system_init(d_activeScene->Entities());
                 spkt::particle_system_init(d_activeScene->Entities(), &d_particle_manager);
 
                 d_activeScene->add(spkt::physics_system);

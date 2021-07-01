@@ -272,15 +272,14 @@ bool is_on_floor(const rp3d::PhysicsWorld* const world, const rp3d::RigidBody* c
 
 }
 
-void physics_system_init(spkt::registry& registry)
-{
-    auto singleton = registry.find<Singleton>();
-    auto& ps = registry.emplace<PhysicsSingleton>(singleton);
-    ps.physics_runtime = std::make_shared<physics_runtime>(registry);
-}
-
 void physics_system(spkt::registry& registry, double dt)
 {
+    auto singleton = registry.find<Singleton>();
+    if (!registry.has<PhysicsSingleton>(singleton)) [[unlikely]] {
+        auto& ps = registry.emplace<PhysicsSingleton>(singleton);
+        ps.physics_runtime = std::make_shared<physics_runtime>(registry);
+    }
+
     auto& ps = get_singleton<PhysicsSingleton>(registry);
     auto& runtime = *ps.physics_runtime;
 
