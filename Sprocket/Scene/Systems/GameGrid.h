@@ -1,7 +1,5 @@
 #pragma once
-#include "Events.h"
 #include "ECS.h"
-#include "EntitySystem.h"
 
 namespace spkt {
 

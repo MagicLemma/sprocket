@@ -6,7 +6,9 @@
 
 #include <variant>
 #include <unordered_map>
+#include <memory>
 
+#include <glm/glm.hpp>
 #include <reactphysics3d/reactphysics3d.h>
 
 namespace spkt {

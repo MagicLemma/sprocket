@@ -1,10 +1,5 @@
 #pragma once
 #include "ECS.h"
-#include "EntitySystem.h"
-
-#include <memory>
-
-#include <glm/glm.hpp>
 
 namespace spkt {
 
