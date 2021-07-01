@@ -747,6 +747,22 @@
                     "default": "apx::null"
                 }
             ]
+        },
+        {
+            "name": "ParticleSingleton",
+            "display_name": "Particle Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "particle_manager",
+                    "display_name": "Particle Manager",
+                    "type": "ParticleManager*",
+                    "default": "nullptr"
+                }
+            ]
         }
     ]
 }

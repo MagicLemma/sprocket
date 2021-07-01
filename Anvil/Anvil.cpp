@@ -185,16 +185,17 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(d_window);
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
-                
+
+                spkt::physics_system_init(d_activeScene->Entities());
+                spkt::particle_system_init(d_activeScene->Entities(), &d_particle_manager);
+
                 d_activeScene->add(spkt::physics_system);
-                d_activeScene->add<ParticleSystem>(&d_particle_manager);
+                d_activeScene->add(spkt::particle_system);
                 d_activeScene->add(spkt::camera_system);
                 d_activeScene->add(spkt::script_system);
                 d_activeScene->add(spkt::animation_system);
                 d_activeScene->add(spkt::delete_below_50_system);
                 d_activeScene->add(spkt::clear_events_system);
-
-                spkt::physics_system_init(d_activeScene->Entities());
 
                 d_playingGame = true;
                 d_runtimeCamera = d_activeScene->find<Camera3DComponent>();

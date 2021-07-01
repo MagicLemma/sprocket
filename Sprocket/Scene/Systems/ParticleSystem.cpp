@@ -2,16 +2,22 @@
 #include "Components.h"
 #include "ECS.h"
 #include "Random.h"
+#include "Scene.h"
+#include "ParticleManager.h"
 
 namespace spkt {
 
-ParticleSystem::ParticleSystem(ParticleManager* manager)
-    : d_manager(manager)
+void particle_system_init(spkt::registry& registry, ParticleManager* particle_manager)
 {
+    auto singleton = registry.find<Singleton>();
+    auto& ps = registry.emplace<ParticleSingleton>(singleton);
+    ps.particle_manager = particle_manager;
 }
 
-void ParticleSystem::on_update(spkt::registry& registry, double dt)
+void particle_system(spkt::registry& registry, double dt)
 {
+    auto& ps = get_singleton<ParticleSingleton>(registry);
+
     for (auto entity : registry.view<ParticleComponent>()) {
         auto& tc = registry.get<Transform3DComponent>(entity);
         auto& pc = registry.get<ParticleComponent>(entity);
@@ -31,7 +37,7 @@ void ParticleSystem::on_update(spkt::registry& registry, double dt)
             p.acceleration = pc.acceleration;
             p.life = pc.life;
             p.scale = pc.scale;
-            d_manager->Emit(p);
+            ps.particle_manager->Emit(p);
 
             pc.accumulator -= pc.interval;
         }

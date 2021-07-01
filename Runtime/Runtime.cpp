@@ -24,15 +24,17 @@ Runtime::Runtime(spkt::Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
+    spkt::physics_system_init(d_scene.Entities());
+    spkt::particle_system_init(d_scene.Entities(), &d_particleManager);
+
     d_scene.Load("Resources/Anvil.yaml");
     d_scene.add(spkt::physics_system);
-    d_scene.add<spkt::ParticleSystem>(&d_particleManager);
+    d_scene.add(spkt::particle_system);
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::animation_system);
     d_scene.add(spkt::delete_below_50_system);
     d_scene.add(spkt::clear_events_system);
-    spkt::physics_system_init(d_scene.Entities());
 
     d_runtimeCamera = d_scene.find<spkt::Camera3DComponent>();
 }

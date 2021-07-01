@@ -293,7 +293,6 @@ void Inspector::Show(Anvil& editor)
         if (ImGui::CollapsingHeader("Physics Singleton")) {
             ImGui::PushID(count++);
             ;
-            ;
             
             if (ImGui::Button("Delete")) { entity.remove<PhysicsSingleton>(); }
             ImGui::PopID();
@@ -352,6 +351,17 @@ void Inspector::Show(Anvil& editor)
             ;
             
             if (ImGui::Button("Delete")) { entity.remove<CameraSingleton>(); }
+            ImGui::PopID();
+        }
+    }
+
+    if (entity.has<ParticleSingleton>()) {
+        auto& c = entity.get<ParticleSingleton>();
+        if (ImGui::CollapsingHeader("Particle Singleton")) {
+            ImGui::PushID(count++);
+            ;
+            
+            if (ImGui::Button("Delete")) { entity.remove<ParticleSingleton>(); }
             ImGui::PopID();
         }
     }
@@ -462,6 +472,10 @@ void Inspector::Show(Anvil& editor)
         if (!entity.has<CameraSingleton>() && ImGui::Selectable("Camera Singleton")) {
             CameraSingleton c;
             entity.add<CameraSingleton>(c);
+        }
+        if (!entity.has<ParticleSingleton>() && ImGui::Selectable("Particle Singleton")) {
+            ParticleSingleton c;
+            entity.add<ParticleSingleton>(c);
         }
         ImGui::EndMenu();
     }

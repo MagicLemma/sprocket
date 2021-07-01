@@ -405,6 +405,9 @@ spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
     if (entity.has<CameraSingleton>()) {
         e.add<CameraSingleton>(entity.get<CameraSingleton>());
     }
+    if (entity.has<ParticleSingleton>()) {
+        e.add<ParticleSingleton>(entity.get<ParticleSingleton>());
+    }
     return e;
 }
 
@@ -595,7 +598,6 @@ void Copy(spkt::registry* source, spkt::registry* target)
             const PhysicsSingleton& source_comp = src.get<PhysicsSingleton>();
             PhysicsSingleton target_comp;
             target_comp.physics_runtime = transform(source_comp.physics_runtime);
-            target_comp.collisions = transform(source_comp.collisions);
             dst.add<PhysicsSingleton>(target_comp);
         }
         if (src.has<InputSingleton>()) {
@@ -633,6 +635,12 @@ void Copy(spkt::registry* source, spkt::registry* target)
             CameraSingleton target_comp;
             target_comp.camera_entity = transform(source_comp.camera_entity);
             dst.add<CameraSingleton>(target_comp);
+        }
+        if (src.has<ParticleSingleton>()) {
+            const ParticleSingleton& source_comp = src.get<ParticleSingleton>();
+            ParticleSingleton target_comp;
+            target_comp.particle_manager = transform(source_comp.particle_manager);
+            dst.add<ParticleSingleton>(target_comp);
         }
     }
 }

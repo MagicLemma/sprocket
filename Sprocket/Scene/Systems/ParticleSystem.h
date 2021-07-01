@@ -1,18 +1,11 @@
 #pragma once
-#include "EntitySystem.h"
-#include "Scene.h"
+#include "ECS.h"
 #include "ParticleManager.h"
 
 namespace spkt {
 
-class ParticleSystem : public EntitySystem
-{
-    ParticleManager* d_manager;
-
-public:
-    ParticleSystem(ParticleManager* manager);
-    
-    void on_update(spkt::registry& registry, double dt) override;
-};
+// TODO: Integrate particles better with the ECS.
+void particle_system_init(spkt::registry& registry, ParticleManager* particle_manager);
+void particle_system(spkt::registry& registry, double dt);
 
 }

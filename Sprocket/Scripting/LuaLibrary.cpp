@@ -1117,26 +1117,23 @@ int _GetPhysicsSingleton(lua_State* L) {
     spkt::entity e = Converter<spkt::entity>::read(L, 1);
     assert(e.has<PhysicsSingleton>());
     const auto& c = e.get<PhysicsSingleton>();
-    Converter<std::vector<std::pair<apx::entity, apx::entity>>>::push(L, c.collisions);
-    return 1;
+    return 0;
 }
 
 int _SetPhysicsSingleton(lua_State* L) {
-    if (!CheckArgCount(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 0 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
     auto& c = e.get<PhysicsSingleton>();
-    c.collisions = Converter<std::vector<std::pair<apx::entity, apx::entity>>>::read(L, ++ptr);
     return 0;
 }
 
 int _AddPhysicsSingleton(lua_State* L) {
-    if (!CheckArgCount(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 0 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::entity e = Converter<spkt::entity>::read(L, ++ptr);
     assert(!e.has<PhysicsSingleton>());
     PhysicsSingleton c;
-    c.collisions = Converter<std::vector<std::pair<apx::entity, apx::entity>>>::read(L, ++ptr);
     add_command(L, [e, c]() mutable { e.add<PhysicsSingleton>(c); });
     return 0;
 }
@@ -1795,8 +1792,7 @@ void load_entity_component_functions(lua::Script& script)
     // Lua functions for PhysicsSingleton =====================================================
 
     luaL_dostring(L, R"lua(
-        PhysicsSingleton = Class(function(self, collisions)
-            self.collisions = collisions
+        PhysicsSingleton = Class(function(self, )
         end)
     )lua");
 
@@ -1804,8 +1800,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetPhysicsSingleton(entity)
-            collisions = _GetPhysicsSingleton(entity)
-            return PhysicsSingleton(collisions)
+             = _GetPhysicsSingleton(entity)
+            return PhysicsSingleton()
         end
     )lua");
 
@@ -1813,7 +1809,7 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetPhysicsSingleton(entity, c)
-            _SetPhysicsSingleton(entity, c.collisions)
+            _SetPhysicsSingleton(entity, )
         end
     )lua");
 
@@ -1821,7 +1817,7 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddPhysicsSingleton(entity, c)
-            _AddPhysicsSingleton(entity, c.collisions)
+            _AddPhysicsSingleton(entity, )
         end
     )lua");
 

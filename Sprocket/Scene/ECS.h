@@ -30,7 +30,8 @@ using registry = apx::registry<
     spkt::InputSingleton,
     spkt::GameGridSingleton,
     spkt::TileMapSingleton,
-    spkt::CameraSingleton
+    spkt::CameraSingleton,
+    spkt::ParticleSingleton
 >;
 
 using entity = typename registry::handle_type;
