@@ -1,7 +1,8 @@
 #include "Scene.h"
 #include "Components.h"
 #include "Loader.h"
-#include "LambdaSystem.h"
+
+#include <ranges>
 
 namespace spkt {
 
@@ -20,9 +21,9 @@ Scene::~Scene()
     d_registry.clear();
 }
 
-void Scene::add(const std::function<void(spkt::registry&, double)>& system)
+void Scene::add(const system_t& system)
 {
-    add<LambdaSystem>(system);
+    d_systems.push_back(system);
 }
 
 void Scene::Load(std::string_view file)
@@ -32,9 +33,7 @@ void Scene::Load(std::string_view file)
 
 void Scene::on_update(double dt)
 {
-    for (auto& system : d_systems) {
-        system->on_update(d_registry, dt);
-    }
+    std::ranges::for_each(d_systems, [&](auto&& system) { system(d_registry, dt); });
 
     auto singleton = d_registry.find<Singleton>();
     if (d_registry.valid(singleton)) {

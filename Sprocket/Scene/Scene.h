@@ -1,13 +1,13 @@
 #pragma once
 #include "ECS.h"
 #include "Components.h"
-#include "EntitySystem.h"
 #include "Events.h"
 #include "Window.h"
 
 #include <memory>
 #include <vector>
 #include <string_view>
+#include <functional>
 
 namespace spkt {
 
@@ -22,12 +22,15 @@ Comp& get_singleton(spkt::registry& registry)
 
 class Scene
 {
+public:
+    using system_t = std::function<void(spkt::registry&, double)>;
+
+private:
     // Temporary, will be removed when then the InputSingleton gets updated via a system.
     Window* d_window;
 
-    std::vector<std::unique_ptr<EntitySystem>> d_systems;
-
     spkt::registry d_registry;
+    std::vector<system_t> d_systems;
 
 public:
     Scene(Window* window);
@@ -35,10 +38,7 @@ public:
 
     spkt::registry& Entities() { return d_registry; }
 
-    template <typename T, typename... Args>
-    T& add(Args&&... args);
-
-    void add(const std::function<void(spkt::registry&, double)>& system);
+    void add(const system_t& system);
 
     void Load(std::string_view file);
 
@@ -53,14 +53,6 @@ public:
     template <typename... Comps>
     apx::generator<spkt::entity> view();
 };
-
-template <typename T, typename... Args>
-T& Scene::add(Args&&... args)
-{
-    d_systems.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
-    d_systems.back()->on_startup(d_registry);
-    return *static_cast<T*>(d_systems.back().get());
-}
 
 template <typename... Comps>
 spkt::entity Scene::find(const std::function<bool(spkt::entity)>& function)
