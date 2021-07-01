@@ -51,7 +51,7 @@ public:
 	Window(const std::string& name = "Window", u32 width = 1280, u32 height = 720);
 	~Window();
 
-	void OnUpdate();
+	void on_update();
 	void Clear();
 
 	void SetClearColour(const glm::vec3& colour);

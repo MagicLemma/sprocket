@@ -54,14 +54,14 @@ SimpleUI::SimpleUI(Window* window)
 {
 }
 
-void SimpleUI::OnEvent(ev::Event& event)
+void SimpleUI::on_event(ev::Event& event)
 {
-    d_engine.OnEvent(event);
+    d_engine.on_event(event);
 }
 
-void SimpleUI::OnUpdate(double dt)
+void SimpleUI::on_update(double dt)
 {
-    d_engine.OnUpdate(dt);
+    d_engine.on_update(dt);
 }
 
 void SimpleUI::StartFrame()

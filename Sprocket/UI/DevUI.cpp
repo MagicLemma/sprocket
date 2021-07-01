@@ -169,7 +169,7 @@ DevUI::DevUI(Window* window)
     
 }
 
-void DevUI::OnEvent(ev::Event& event)
+void DevUI::on_event(ev::Event& event)
 {
     ImGuiIO& io = ImGui::GetIO();
 
@@ -227,7 +227,7 @@ void DevUI::OnEvent(ev::Event& event)
     }
 }
 
-void DevUI::OnUpdate(double dt)
+void DevUI::on_update(double dt)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;

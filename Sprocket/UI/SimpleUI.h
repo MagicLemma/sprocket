@@ -40,8 +40,8 @@ public:
 
     Font* GetFont() { return &d_font; }
     
-    void OnEvent(ev::Event& event);
-    void OnUpdate(double dt);
+    void on_event(ev::Event& event);
+    void on_update(double dt);
 
     void StartFrame();
     void EndFrame();

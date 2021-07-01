@@ -42,8 +42,8 @@ public:
 
     void Load(std::string_view file);
 
-    void OnUpdate(double dt);
-    void OnEvent(ev::Event& event);
+    void on_update(double dt);
+    void on_event(ev::Event& event);
 
     std::size_t Size() const;
 

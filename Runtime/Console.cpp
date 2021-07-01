@@ -23,12 +23,12 @@ Console::Console(Window* window)
     d_ui.SetTheme(theme);
 }
 
-void Console::OnUpdate(double dt)
+void Console::on_update(double dt)
 {
-    d_ui.OnUpdate(dt);
+    d_ui.on_update(dt);
 }
 
-void Console::OnEvent(ev::Event& event)
+void Console::on_event(ev::Event& event)
 {
     auto data = event.get_if<ev::KeyboardButtonPressed>();
     if (data && data->key == Keyboard::ENTER) {
@@ -37,7 +37,7 @@ void Console::OnEvent(ev::Event& event)
         d_commandLine = "";
         event.consume();
     } else {
-        d_ui.OnEvent(event);
+        d_ui.on_event(event);
     }
 }
 

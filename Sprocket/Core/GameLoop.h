@@ -36,7 +36,7 @@ int Run(App& app, Window& window, const RunOptions& options = {})
     while (window.Running()) {
         window.Clear();
 
-        double dt = watch.OnUpdate();
+        double dt = watch.on_update();
         app.on_update(dt);
         app.on_render();
 
@@ -44,7 +44,7 @@ int Run(App& app, Window& window, const RunOptions& options = {})
             window.SetWindowName(std::format("{} [FPS: {}]", name, watch.Framerate()));
         }
 
-        window.OnUpdate();
+        window.on_update();
     }
 
     return 0;

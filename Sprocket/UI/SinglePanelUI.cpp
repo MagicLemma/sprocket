@@ -51,14 +51,14 @@ SinglePanelUI::SinglePanelUI(Window* window)
 {
 }
 
-void SinglePanelUI::OnEvent(ev::Event& event)
+void SinglePanelUI::on_event(ev::Event& event)
 {
-    d_engine.OnEvent(event);
+    d_engine.on_event(event);
 }
 
-void SinglePanelUI::OnUpdate(double dt)
+void SinglePanelUI::on_update(double dt)
 {
-    d_engine.OnUpdate(dt);
+    d_engine.on_update(dt);
 }
 
 void SinglePanelUI::StartFrame()

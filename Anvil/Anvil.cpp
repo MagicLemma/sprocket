@@ -84,39 +84,27 @@ void Anvil::on_event(ev::Event& event)
         }
     }
 
-    d_ui.OnEvent(event);
-    d_activeScene->OnEvent(event);
+    d_ui.on_event(event);
+    d_activeScene->on_event(event);
     if (!d_playingGame) {
-        d_editor_camera.OnEvent(event);
+        d_editor_camera.on_event(event);
     }
 }
 
 void Anvil::on_update(double dt)
 {
-    d_ui.OnUpdate(dt);
-    //d_window->SetWindowName(std::format("Anvil: {}", d_sceneFile));
-
-    // Create the Shadow Map
-    //float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    //glm::vec3 target = d_camera.Get<TransformComponent>().position + lambda * Maths::Forwards(d_camera.Get<TransformComponent>().orientation);
-    //d_shadowMap.Draw(sun, target, *d_scene);
-    //d_entityRenderer.EnableShadows(d_shadowMap);
+    d_ui.on_update(dt);
 
     if (d_paused) {
         return;
     }
 
-    d_activeScene->OnUpdate(dt);
-    d_particle_manager.OnUpdate(dt);
+    d_activeScene->on_update(dt);
+    d_particle_manager.on_update(dt);
 
     if (d_is_viewport_focused && !d_playingGame) {
-        d_editor_camera.OnUpdate(dt);
+        d_editor_camera.on_update(dt);
     }
-    
-    d_scene->Entities().erase_if<Transform3DComponent>([&](apx::entity entity) {
-        const auto& transform = d_scene->Entities().get<Transform3DComponent>(entity);
-        return transform.position.y < -50;
-    });
 }
 
 glm::mat4 Anvil::get_proj_matrix() const

@@ -30,7 +30,7 @@ void Scene::Load(std::string_view file)
     Loader::Load(std::string(file), &Entities());
 }
 
-void Scene::OnUpdate(double dt)
+void Scene::on_update(double dt)
 {
     for (auto& system : d_systems) {
         system->on_update(d_registry, dt);
@@ -46,7 +46,7 @@ void Scene::OnUpdate(double dt)
     }
 }
 
-void Scene::OnEvent(ev::Event& event)
+void Scene::on_event(ev::Event& event)
 {
     auto singleton = d_registry.find<Singleton>();
     if (!d_registry.valid(singleton)) {

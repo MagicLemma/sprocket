@@ -23,8 +23,8 @@ class Console
 public:
     Console(Window* window);
 
-    void OnUpdate(double dt);
-    void OnEvent(ev::Event& event);
+    void on_update(double dt);
+    void on_event(ev::Event& event);
     void Draw();
 };
 

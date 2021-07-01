@@ -199,8 +199,8 @@ public:
     // Submits an extra draw command for the current panel. Asserts if there is no current panel.
     void SubmitDrawCommand(const DrawCommand& cmd);
 
-    void OnEvent(ev::Event& event);
-    void OnUpdate(double dt);
+    void on_event(ev::Event& event);
+    void on_update(double dt);
 
     void StartFrame();
     void EndFrame();
