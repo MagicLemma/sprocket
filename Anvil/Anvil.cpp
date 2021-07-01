@@ -185,7 +185,8 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(d_window); 
                 Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
-                d_activeScene->add<PhysicsEngine3D>();
+                spkt::physics_system_init(d_activeScene->Entities());
+                d_activeScene->add(spkt::physics_system);
                 d_activeScene->add<ParticleSystem>(&d_particle_manager);
                 d_activeScene->add(spkt::camera_system);
                 d_activeScene->add(spkt::script_system);

@@ -270,14 +270,14 @@ bool is_on_floor(const rp3d::PhysicsWorld* const world, const rp3d::RigidBody* c
 
 }
 
-void PhysicsEngine3D::on_startup(spkt::registry& registry)
+void physics_system_init(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
     auto& ps = registry.emplace<PhysicsSingleton>(singleton);
     ps.physics_runtime = std::make_shared<physics_runtime>(registry);
 }
 
-void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
+void physics_system(spkt::registry& registry, double dt)
 {
     auto& ps = get_singleton<PhysicsSingleton>(registry);
     auto& runtime = *ps.physics_runtime;
@@ -346,10 +346,10 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
     accumulator += static_cast<float>(dt);
 
     // First update the Physics World.
-    while (accumulator >= TIME_STEP) {
-        runtime.world->update(TIME_STEP);
-        accumulator -= TIME_STEP;
-        runtime.lastFrameLength += TIME_STEP;
+    while (accumulator >= PHYSICS_TIME_STEP) {
+        runtime.world->update(PHYSICS_TIME_STEP);
+        accumulator -= PHYSICS_TIME_STEP;
+        runtime.lastFrameLength += PHYSICS_TIME_STEP;
     }
 
     // Post Update
