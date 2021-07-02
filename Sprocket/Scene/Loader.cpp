@@ -11,6 +11,32 @@
 
 namespace spkt {
 namespace Loader {
+namespace {
+
+// When loading entities from disk, their IDs may already be in use, so we assigned them
+// new IDs when they are loaded. Because some components may store entity handles, we have
+// to also map those to the new values. This current soluton is not that scalable, because
+// if we ever use another container templatised on apx::entity, another branch has to be
+// added here.
+
+using remapper_t = std::unordered_map<apx::entity, apx::entity>;
+
+template <typename T>
+T transform_entity(const remapper_t& remapper, T param) {
+    using U = std::decay_t<T>;
+    if constexpr (std::is_same_v<U, apx::entity>) {
+        return remapper.at(param);
+    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, apx::entity>>) {
+        for (auto& entry : param) {
+            entry.second = remapper.at(entry.second);
+        }
+        return param;
+    } else {
+        static_assert(false);
+    }
+};
+
+}
 
 void Save(const std::string& file, spkt::registry* reg)
 {
@@ -184,21 +210,6 @@ void Load(const std::string& file, spkt::registry* reg)
     auto entities = data["Entities"];
     std::unordered_map<apx::entity, apx::entity> id_remapper;
 
-    // Performs any extra transformations to values that cannot be done during
-    // yaml decoding, for example converting entity IDs to their new values.
-    const auto transform = [&] <typename T> (T&& param) {
-        if constexpr (std::is_same_v<T, apx::entity>) {
-            return id_remapper[param];
-        } else if constexpr (std::is_same_v<T, std::unordered_map<glm::ivec2, apx::entity>>) {
-            for (auto& entry : param) {
-                entry.second = id_remapper[entry.second];
-            }
-            return param;
-        } else {
-            static_assert(false);
-        }
-    };
-
     for (auto yaml_entity : entities) {
         apx::entity old_id = yaml_entity["ID#"].as<apx::entity>();
         apx::entity new_id = reg->create();
@@ -324,7 +335,7 @@ void Load(const std::string& file, spkt::registry* reg)
         }
         if (auto spec = yaml_entity["TileMapSingleton"]) {
             TileMapSingleton c;
-            c.tiles = transform(spec["tiles"].as<std::unordered_map<glm::ivec2, apx::entity>>());
+            c.tiles = transform_entity(id_remapper, spec["tiles"].as<std::unordered_map<glm::ivec2, apx::entity>>());
             reg->add<TileMapSingleton>(entity, c);
         }
     }
@@ -424,13 +435,6 @@ void Copy(spkt::registry* source, spkt::registry* target)
         id_remapper[id] = new_id;
     }
 
-    const auto transform = [&] <typename T> (T&& param) {
-        if constexpr (std::is_same_v<decltype(param), apx::entity>) {
-            return id_remapper[param];
-        }
-        return std::forward<T>(param);
-    };
-
     for (auto id : source->all()) {
         spkt::entity src{*source, id};
         spkt::entity dst{*target, id_remapper[id]};
@@ -452,197 +456,197 @@ void Copy(spkt::registry* source, spkt::registry* target)
         if (src.has<NameComponent>()) {
             const NameComponent& source_comp = src.get<NameComponent>();
             NameComponent target_comp;
-            target_comp.name = transform(source_comp.name);
+            target_comp.name = source_comp.name;
             dst.add<NameComponent>(target_comp);
         }
         if (src.has<Transform2DComponent>()) {
             const Transform2DComponent& source_comp = src.get<Transform2DComponent>();
             Transform2DComponent target_comp;
-            target_comp.position = transform(source_comp.position);
-            target_comp.rotation = transform(source_comp.rotation);
-            target_comp.scale = transform(source_comp.scale);
+            target_comp.position = source_comp.position;
+            target_comp.rotation = source_comp.rotation;
+            target_comp.scale = source_comp.scale;
             dst.add<Transform2DComponent>(target_comp);
         }
         if (src.has<Transform3DComponent>()) {
             const Transform3DComponent& source_comp = src.get<Transform3DComponent>();
             Transform3DComponent target_comp;
-            target_comp.position = transform(source_comp.position);
-            target_comp.orientation = transform(source_comp.orientation);
-            target_comp.scale = transform(source_comp.scale);
+            target_comp.position = source_comp.position;
+            target_comp.orientation = source_comp.orientation;
+            target_comp.scale = source_comp.scale;
             dst.add<Transform3DComponent>(target_comp);
         }
         if (src.has<ModelComponent>()) {
             const ModelComponent& source_comp = src.get<ModelComponent>();
             ModelComponent target_comp;
-            target_comp.mesh = transform(source_comp.mesh);
-            target_comp.material = transform(source_comp.material);
+            target_comp.mesh = source_comp.mesh;
+            target_comp.material = source_comp.material;
             dst.add<ModelComponent>(target_comp);
         }
         if (src.has<RigidBody3DComponent>()) {
             const RigidBody3DComponent& source_comp = src.get<RigidBody3DComponent>();
             RigidBody3DComponent target_comp;
-            target_comp.velocity = transform(source_comp.velocity);
-            target_comp.gravity = transform(source_comp.gravity);
-            target_comp.frozen = transform(source_comp.frozen);
-            target_comp.bounciness = transform(source_comp.bounciness);
-            target_comp.frictionCoefficient = transform(source_comp.frictionCoefficient);
-            target_comp.rollingResistance = transform(source_comp.rollingResistance);
-            target_comp.force = transform(source_comp.force);
-            target_comp.onFloor = transform(source_comp.onFloor);
-            target_comp.runtime = transform(source_comp.runtime);
+            target_comp.velocity = source_comp.velocity;
+            target_comp.gravity = source_comp.gravity;
+            target_comp.frozen = source_comp.frozen;
+            target_comp.bounciness = source_comp.bounciness;
+            target_comp.frictionCoefficient = source_comp.frictionCoefficient;
+            target_comp.rollingResistance = source_comp.rollingResistance;
+            target_comp.force = source_comp.force;
+            target_comp.onFloor = source_comp.onFloor;
+            target_comp.runtime = source_comp.runtime;
             dst.add<RigidBody3DComponent>(target_comp);
         }
         if (src.has<BoxCollider3DComponent>()) {
             const BoxCollider3DComponent& source_comp = src.get<BoxCollider3DComponent>();
             BoxCollider3DComponent target_comp;
-            target_comp.position = transform(source_comp.position);
-            target_comp.orientation = transform(source_comp.orientation);
-            target_comp.mass = transform(source_comp.mass);
-            target_comp.halfExtents = transform(source_comp.halfExtents);
-            target_comp.applyScale = transform(source_comp.applyScale);
-            target_comp.runtime = transform(source_comp.runtime);
+            target_comp.position = source_comp.position;
+            target_comp.orientation = source_comp.orientation;
+            target_comp.mass = source_comp.mass;
+            target_comp.halfExtents = source_comp.halfExtents;
+            target_comp.applyScale = source_comp.applyScale;
+            target_comp.runtime = source_comp.runtime;
             dst.add<BoxCollider3DComponent>(target_comp);
         }
         if (src.has<SphereCollider3DComponent>()) {
             const SphereCollider3DComponent& source_comp = src.get<SphereCollider3DComponent>();
             SphereCollider3DComponent target_comp;
-            target_comp.position = transform(source_comp.position);
-            target_comp.orientation = transform(source_comp.orientation);
-            target_comp.mass = transform(source_comp.mass);
-            target_comp.radius = transform(source_comp.radius);
-            target_comp.runtime = transform(source_comp.runtime);
+            target_comp.position = source_comp.position;
+            target_comp.orientation = source_comp.orientation;
+            target_comp.mass = source_comp.mass;
+            target_comp.radius = source_comp.radius;
+            target_comp.runtime = source_comp.runtime;
             dst.add<SphereCollider3DComponent>(target_comp);
         }
         if (src.has<CapsuleCollider3DComponent>()) {
             const CapsuleCollider3DComponent& source_comp = src.get<CapsuleCollider3DComponent>();
             CapsuleCollider3DComponent target_comp;
-            target_comp.position = transform(source_comp.position);
-            target_comp.orientation = transform(source_comp.orientation);
-            target_comp.mass = transform(source_comp.mass);
-            target_comp.radius = transform(source_comp.radius);
-            target_comp.height = transform(source_comp.height);
-            target_comp.runtime = transform(source_comp.runtime);
+            target_comp.position = source_comp.position;
+            target_comp.orientation = source_comp.orientation;
+            target_comp.mass = source_comp.mass;
+            target_comp.radius = source_comp.radius;
+            target_comp.height = source_comp.height;
+            target_comp.runtime = source_comp.runtime;
             dst.add<CapsuleCollider3DComponent>(target_comp);
         }
         if (src.has<ScriptComponent>()) {
             const ScriptComponent& source_comp = src.get<ScriptComponent>();
             ScriptComponent target_comp;
-            target_comp.script = transform(source_comp.script);
-            target_comp.active = transform(source_comp.active);
-            target_comp.script_runtime = transform(source_comp.script_runtime);
+            target_comp.script = source_comp.script;
+            target_comp.active = source_comp.active;
+            target_comp.script_runtime = source_comp.script_runtime;
             dst.add<ScriptComponent>(target_comp);
         }
         if (src.has<Camera3DComponent>()) {
             const Camera3DComponent& source_comp = src.get<Camera3DComponent>();
             Camera3DComponent target_comp;
-            target_comp.projection = transform(source_comp.projection);
-            target_comp.fov = transform(source_comp.fov);
-            target_comp.pitch = transform(source_comp.pitch);
+            target_comp.projection = source_comp.projection;
+            target_comp.fov = source_comp.fov;
+            target_comp.pitch = source_comp.pitch;
             dst.add<Camera3DComponent>(target_comp);
         }
         if (src.has<PathComponent>()) {
             const PathComponent& source_comp = src.get<PathComponent>();
             PathComponent target_comp;
-            target_comp.markers = transform(source_comp.markers);
-            target_comp.speed = transform(source_comp.speed);
+            target_comp.markers = source_comp.markers;
+            target_comp.speed = source_comp.speed;
             dst.add<PathComponent>(target_comp);
         }
         if (src.has<LightComponent>()) {
             const LightComponent& source_comp = src.get<LightComponent>();
             LightComponent target_comp;
-            target_comp.colour = transform(source_comp.colour);
-            target_comp.brightness = transform(source_comp.brightness);
+            target_comp.colour = source_comp.colour;
+            target_comp.brightness = source_comp.brightness;
             dst.add<LightComponent>(target_comp);
         }
         if (src.has<SunComponent>()) {
             const SunComponent& source_comp = src.get<SunComponent>();
             SunComponent target_comp;
-            target_comp.colour = transform(source_comp.colour);
-            target_comp.brightness = transform(source_comp.brightness);
-            target_comp.direction = transform(source_comp.direction);
-            target_comp.shadows = transform(source_comp.shadows);
+            target_comp.colour = source_comp.colour;
+            target_comp.brightness = source_comp.brightness;
+            target_comp.direction = source_comp.direction;
+            target_comp.shadows = source_comp.shadows;
             dst.add<SunComponent>(target_comp);
         }
         if (src.has<AmbienceComponent>()) {
             const AmbienceComponent& source_comp = src.get<AmbienceComponent>();
             AmbienceComponent target_comp;
-            target_comp.colour = transform(source_comp.colour);
-            target_comp.brightness = transform(source_comp.brightness);
+            target_comp.colour = source_comp.colour;
+            target_comp.brightness = source_comp.brightness;
             dst.add<AmbienceComponent>(target_comp);
         }
         if (src.has<ParticleComponent>()) {
             const ParticleComponent& source_comp = src.get<ParticleComponent>();
             ParticleComponent target_comp;
-            target_comp.interval = transform(source_comp.interval);
-            target_comp.velocity = transform(source_comp.velocity);
-            target_comp.velocityNoise = transform(source_comp.velocityNoise);
-            target_comp.acceleration = transform(source_comp.acceleration);
-            target_comp.scale = transform(source_comp.scale);
-            target_comp.life = transform(source_comp.life);
-            target_comp.accumulator = transform(source_comp.accumulator);
+            target_comp.interval = source_comp.interval;
+            target_comp.velocity = source_comp.velocity;
+            target_comp.velocityNoise = source_comp.velocityNoise;
+            target_comp.acceleration = source_comp.acceleration;
+            target_comp.scale = source_comp.scale;
+            target_comp.life = source_comp.life;
+            target_comp.accumulator = source_comp.accumulator;
             dst.add<ParticleComponent>(target_comp);
         }
         if (src.has<MeshAnimationComponent>()) {
             const MeshAnimationComponent& source_comp = src.get<MeshAnimationComponent>();
             MeshAnimationComponent target_comp;
-            target_comp.name = transform(source_comp.name);
-            target_comp.time = transform(source_comp.time);
-            target_comp.speed = transform(source_comp.speed);
+            target_comp.name = source_comp.name;
+            target_comp.time = source_comp.time;
+            target_comp.speed = source_comp.speed;
             dst.add<MeshAnimationComponent>(target_comp);
         }
         if (src.has<CollisionEvent>()) {
             const CollisionEvent& source_comp = src.get<CollisionEvent>();
             CollisionEvent target_comp;
-            target_comp.entity_a = transform(source_comp.entity_a);
-            target_comp.entity_b = transform(source_comp.entity_b);
+            target_comp.entity_a = transform_entity(id_remapper, source_comp.entity_a);
+            target_comp.entity_b = transform_entity(id_remapper, source_comp.entity_b);
             dst.add<CollisionEvent>(target_comp);
         }
         if (src.has<PhysicsSingleton>()) {
             const PhysicsSingleton& source_comp = src.get<PhysicsSingleton>();
             PhysicsSingleton target_comp;
-            target_comp.physics_runtime = transform(source_comp.physics_runtime);
+            target_comp.physics_runtime = source_comp.physics_runtime;
             dst.add<PhysicsSingleton>(target_comp);
         }
         if (src.has<InputSingleton>()) {
             const InputSingleton& source_comp = src.get<InputSingleton>();
             InputSingleton target_comp;
-            target_comp.keyboard = transform(source_comp.keyboard);
-            target_comp.mouse = transform(source_comp.mouse);
-            target_comp.mouse_click = transform(source_comp.mouse_click);
-            target_comp.mouse_unclick = transform(source_comp.mouse_unclick);
-            target_comp.mouse_pos = transform(source_comp.mouse_pos);
-            target_comp.mouse_offset = transform(source_comp.mouse_offset);
-            target_comp.mouse_scrolled = transform(source_comp.mouse_scrolled);
-            target_comp.window_width = transform(source_comp.window_width);
-            target_comp.window_height = transform(source_comp.window_height);
-            target_comp.window_resized = transform(source_comp.window_resized);
+            target_comp.keyboard = source_comp.keyboard;
+            target_comp.mouse = source_comp.mouse;
+            target_comp.mouse_click = source_comp.mouse_click;
+            target_comp.mouse_unclick = source_comp.mouse_unclick;
+            target_comp.mouse_pos = source_comp.mouse_pos;
+            target_comp.mouse_offset = source_comp.mouse_offset;
+            target_comp.mouse_scrolled = source_comp.mouse_scrolled;
+            target_comp.window_width = source_comp.window_width;
+            target_comp.window_height = source_comp.window_height;
+            target_comp.window_resized = source_comp.window_resized;
             dst.add<InputSingleton>(target_comp);
         }
         if (src.has<GameGridSingleton>()) {
             const GameGridSingleton& source_comp = src.get<GameGridSingleton>();
             GameGridSingleton target_comp;
-            target_comp.hovered_square_entity = transform(source_comp.hovered_square_entity);
-            target_comp.clicked_square_entity = transform(source_comp.clicked_square_entity);
-            target_comp.hovered_square = transform(source_comp.hovered_square);
-            target_comp.clicked_square = transform(source_comp.clicked_square);
+            target_comp.hovered_square_entity = transform_entity(id_remapper, source_comp.hovered_square_entity);
+            target_comp.clicked_square_entity = transform_entity(id_remapper, source_comp.clicked_square_entity);
+            target_comp.hovered_square = source_comp.hovered_square;
+            target_comp.clicked_square = source_comp.clicked_square;
             dst.add<GameGridSingleton>(target_comp);
         }
         if (src.has<TileMapSingleton>()) {
             const TileMapSingleton& source_comp = src.get<TileMapSingleton>();
             TileMapSingleton target_comp;
-            target_comp.tiles = transform(source_comp.tiles);
+            target_comp.tiles = transform_entity(id_remapper, source_comp.tiles);
             dst.add<TileMapSingleton>(target_comp);
         }
         if (src.has<CameraSingleton>()) {
             const CameraSingleton& source_comp = src.get<CameraSingleton>();
             CameraSingleton target_comp;
-            target_comp.camera_entity = transform(source_comp.camera_entity);
+            target_comp.camera_entity = transform_entity(id_remapper, source_comp.camera_entity);
             dst.add<CameraSingleton>(target_comp);
         }
         if (src.has<ParticleSingleton>()) {
             const ParticleSingleton& source_comp = src.get<ParticleSingleton>();
             ParticleSingleton target_comp;
-            target_comp.particle_manager = transform(source_comp.particle_manager);
+            target_comp.particle_manager = source_comp.particle_manager;
             dst.add<ParticleSingleton>(target_comp);
         }
     }

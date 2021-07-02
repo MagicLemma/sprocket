@@ -11,6 +11,32 @@
 
 namespace spkt {
 namespace Loader {
+namespace {
+
+// When loading entities from disk, their IDs may already be in use, so we assigned them
+// new IDs when they are loaded. Because some components may store entity handles, we have
+// to also map those to the new values. This current soluton is not that scalable, because
+// if we ever use another container templatised on apx::entity, another branch has to be
+// added here.
+
+using remapper_t = std::unordered_map<apx::entity, apx::entity>;
+
+template <typename T>
+T transform_entity(const remapper_t& remapper, T param) {
+    using U = std::decay_t<T>;
+    if constexpr (std::is_same_v<U, apx::entity>) {
+        return remapper.at(param);
+    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, apx::entity>>) {
+        for (auto& entry : param) {
+            entry.second = remapper.at(entry.second);
+        }
+        return param;
+    } else {
+        static_assert(false);
+    }
+};
+
+}
 
 void Save(const std::string& file, spkt::registry* reg)
 {
@@ -54,15 +80,6 @@ void Load(const std::string& file, spkt::registry* reg)
 
     auto entities = data["Entities"];
     std::unordered_map<apx::entity, apx::entity> id_remapper;
-
-    // Performs any extra transformations to values that cannot be done during
-    // yaml decoding, for example converting entity IDs to their new values.
-    const auto transform = [&] <typename T> (T&& param) {
-        if constexpr (std::is_same_v<T, apx::entity>) {
-            return id_remapper[param];
-        }
-        return param;
-    };
     
     for (auto yaml_entity : entities) {
         apx::entity old_id = yaml_entity["ID#"].as<apx::entity>();
@@ -75,7 +92,7 @@ void Load(const std::string& file, spkt::registry* reg)
 DATAMATIC_BEGIN SAVABLE=true
         if (auto spec = yaml_entity["{{Comp::name}}"]) {
             {{Comp::name}} c;
-            c.{{Attr::name}} = {{Attr::parse_value}};
+            c.{{Attr::name}} = {{Attr::parse_value_from_spec}};
             reg->add<{{Comp::name}}>(entity, c);
         }
 DATAMATIC_END
@@ -103,13 +120,6 @@ void Copy(spkt::registry* source, spkt::registry* target)
         id_remapper[id] = new_id;
     }
 
-    const auto transform = [&] <typename T> (T&& param) {
-        if constexpr (std::is_same_v<decltype(param), apx::entity>) {
-            return id_remapper[param];
-        }
-        return std::forward<T>(param);
-    };
-
     for (auto id : source->all()) {
         spkt::entity src{*source, id};
         spkt::entity dst{*target, id_remapper[id]};
@@ -117,7 +127,7 @@ DATAMATIC_BEGIN
         if (src.has<{{Comp::name}}>()) {
             const {{Comp::name}}& source_comp = src.get<{{Comp::name}}>();
             {{Comp::name}} target_comp;
-            target_comp.{{Attr::name}} = transform(source_comp.{{Attr::name}});
+            target_comp.{{Attr::name}} = {{Attr::parse_value_copy}};
             dst.add<{{Comp::name}}>(target_comp);
         }
 DATAMATIC_END
