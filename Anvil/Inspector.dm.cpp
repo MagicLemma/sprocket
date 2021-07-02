@@ -12,12 +12,13 @@ namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::entity entity = editor.selected();
+    apx::entity e = editor.selected();
+    spkt::entity entity{editor.active_scene()->Entities(), e};
 
     if (!entity.valid()) {
         if (ImGui::Button("New Entity")) {
             auto e = apx::create_from(editor.active_scene()->Entities());
-            editor.set_selected(e);
+            editor.set_selected(e.entity());
         }
         return;
     }
@@ -56,7 +57,7 @@ DATAMATIC_END
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
         spkt::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
-        editor.set_selected(copy);
+        editor.set_selected(copy.entity());
     }
     if (ImGui::Button("Delete Entity")) {
         entity.destroy();
