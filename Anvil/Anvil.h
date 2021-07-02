@@ -34,7 +34,7 @@ class Anvil
     std::string d_sceneFile = "Resources/Anvil.yaml";
     std::shared_ptr<Scene> d_activeScene;
     std::shared_ptr<Scene> d_scene;
-    spkt::entity d_runtimeCamera;
+    apx::entity d_runtimeCamera;
 
     // Additional world setup
     CubeMap d_skybox;

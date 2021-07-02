@@ -49,11 +49,6 @@ Anvil::Anvil(Window* window)
 
     d_scene = std::make_shared<Scene>(window);    
     d_scene->Load(d_sceneFile);
-
-    d_runtimeCamera = d_scene->find([](spkt::entity entity) {
-        return entity.has<Camera3DComponent>();
-    });
-
     d_activeScene = d_scene;
 }
 
@@ -109,17 +104,19 @@ void Anvil::on_update(double dt)
 
 glm::mat4 Anvil::get_proj_matrix() const
 {
-    return d_playingGame ? spkt::make_proj(d_runtimeCamera) : d_editor_camera.Proj();
+    auto& registry = d_activeScene->Entities();
+    return d_playingGame ? spkt::make_proj({registry, d_runtimeCamera}) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
-    return d_playingGame ? spkt::make_view(d_runtimeCamera) : d_editor_camera.View();
+    auto& registry = d_activeScene->Entities();
+    return d_playingGame ? spkt::make_view({registry, d_runtimeCamera}) : d_editor_camera.View();
 }
 
 void Anvil::on_render()
 {
-    auto& registry = d_scene->Entities();
+    auto& registry = d_activeScene->Entities();
 
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
@@ -199,7 +196,7 @@ void Anvil::on_render()
                 d_activeScene->add(spkt::clear_events_system);
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->find<Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->Entities().find<Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();
