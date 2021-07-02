@@ -85,12 +85,12 @@ DATAMATIC_END
     }
 }
 
-spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
+apx::entity Copy(spkt::registry* reg, apx::entity entity)
 {
-    spkt::entity e = apx::create_from(*reg);
+    apx::entity e = reg->create();
 DATAMATIC_BEGIN
-    if (entity.has<{{Comp::name}}>()) {
-        e.add<{{Comp::name}}>(entity.get<{{Comp::name}}>());
+    if (reg->has<{{Comp::name}}>(entity)) {
+        reg->add<{{Comp::name}}>(e, reg->get<{{Comp::name}}>(entity));
     }
 DATAMATIC_END
     return e;

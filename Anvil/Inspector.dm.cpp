@@ -12,28 +12,28 @@ namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
-    apx::entity e = editor.selected();
-    spkt::entity entity{editor.active_scene()->Entities(), e};
+    spkt::registry& registry = editor.active_scene()->Entities();
+    apx::entity entity = editor.selected();
 
-    if (!entity.valid()) {
+    if (!registry.valid(entity)) {
         if (ImGui::Button("New Entity")) {
-            auto e = apx::create_from(editor.active_scene()->Entities());
-            editor.set_selected(e.entity());
+            entity = registry.create();
+            editor.set_selected(entity);
         }
         return;
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity);
 
 DATAMATIC_BEGIN
-    if (entity.has<{{Comp::name}}>()) {
-        auto& c = entity.get<{{Comp::name}}>();
+    if (registry.has<{{Comp::name}}>(entity)) {
+        auto& c = registry.get<{{Comp::name}}>(entity);
         if (ImGui::CollapsingHeader("{{Comp::display_name}}")) {
             ImGui::PushID(count++);
             {{Attr::inspector_display}};
             {{Comp::inspector_guizmo_settings}}
-            if (ImGui::Button("Delete")) { entity.remove<{{Comp::name}}>(); }
+            if (ImGui::Button("Delete")) { registry.remove<{{Comp::name}}>(entity); }
             ImGui::PopID();
         }
     }
@@ -47,20 +47,20 @@ DATAMATIC_END
 
     if (ImGui::BeginPopup("missing_components_list")) {
 DATAMATIC_BEGIN
-        if (!entity.has<{{Comp::name}}>() && ImGui::Selectable("{{Comp::display_name}}")) {
+        if (!registry.has<{{Comp::name}}>(entity) && ImGui::Selectable("{{Comp::display_name}}")) {
             {{Comp::name}} c;
-            entity.add<{{Comp::name}}>(c);
+            registry.add<{{Comp::name}}>(entity, c);
         }
 DATAMATIC_END
         ImGui::EndMenu();
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        spkt::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
-        editor.set_selected(copy.entity());
+        apx::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
+        editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
-        entity.destroy();
+        registry.destroy(entity);
         editor.clear_selected();
     }
 }

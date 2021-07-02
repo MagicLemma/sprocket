@@ -327,86 +327,86 @@ void Load(const std::string& file, spkt::registry* reg)
     }
 }
 
-spkt::entity Copy(spkt::registry* reg, spkt::entity entity)
+apx::entity Copy(spkt::registry* reg, apx::entity entity)
 {
-    spkt::entity e = apx::create_from(*reg);
-    if (entity.has<Runtime>()) {
-        e.add<Runtime>(entity.get<Runtime>());
+    apx::entity e = reg->create();
+    if (reg->has<Runtime>(entity)) {
+        reg->add<Runtime>(e, reg->get<Runtime>(entity));
     }
-    if (entity.has<Singleton>()) {
-        e.add<Singleton>(entity.get<Singleton>());
+    if (reg->has<Singleton>(entity)) {
+        reg->add<Singleton>(e, reg->get<Singleton>(entity));
     }
-    if (entity.has<Event>()) {
-        e.add<Event>(entity.get<Event>());
+    if (reg->has<Event>(entity)) {
+        reg->add<Event>(e, reg->get<Event>(entity));
     }
-    if (entity.has<NameComponent>()) {
-        e.add<NameComponent>(entity.get<NameComponent>());
+    if (reg->has<NameComponent>(entity)) {
+        reg->add<NameComponent>(e, reg->get<NameComponent>(entity));
     }
-    if (entity.has<Transform2DComponent>()) {
-        e.add<Transform2DComponent>(entity.get<Transform2DComponent>());
+    if (reg->has<Transform2DComponent>(entity)) {
+        reg->add<Transform2DComponent>(e, reg->get<Transform2DComponent>(entity));
     }
-    if (entity.has<Transform3DComponent>()) {
-        e.add<Transform3DComponent>(entity.get<Transform3DComponent>());
+    if (reg->has<Transform3DComponent>(entity)) {
+        reg->add<Transform3DComponent>(e, reg->get<Transform3DComponent>(entity));
     }
-    if (entity.has<ModelComponent>()) {
-        e.add<ModelComponent>(entity.get<ModelComponent>());
+    if (reg->has<ModelComponent>(entity)) {
+        reg->add<ModelComponent>(e, reg->get<ModelComponent>(entity));
     }
-    if (entity.has<RigidBody3DComponent>()) {
-        e.add<RigidBody3DComponent>(entity.get<RigidBody3DComponent>());
+    if (reg->has<RigidBody3DComponent>(entity)) {
+        reg->add<RigidBody3DComponent>(e, reg->get<RigidBody3DComponent>(entity));
     }
-    if (entity.has<BoxCollider3DComponent>()) {
-        e.add<BoxCollider3DComponent>(entity.get<BoxCollider3DComponent>());
+    if (reg->has<BoxCollider3DComponent>(entity)) {
+        reg->add<BoxCollider3DComponent>(e, reg->get<BoxCollider3DComponent>(entity));
     }
-    if (entity.has<SphereCollider3DComponent>()) {
-        e.add<SphereCollider3DComponent>(entity.get<SphereCollider3DComponent>());
+    if (reg->has<SphereCollider3DComponent>(entity)) {
+        reg->add<SphereCollider3DComponent>(e, reg->get<SphereCollider3DComponent>(entity));
     }
-    if (entity.has<CapsuleCollider3DComponent>()) {
-        e.add<CapsuleCollider3DComponent>(entity.get<CapsuleCollider3DComponent>());
+    if (reg->has<CapsuleCollider3DComponent>(entity)) {
+        reg->add<CapsuleCollider3DComponent>(e, reg->get<CapsuleCollider3DComponent>(entity));
     }
-    if (entity.has<ScriptComponent>()) {
-        e.add<ScriptComponent>(entity.get<ScriptComponent>());
+    if (reg->has<ScriptComponent>(entity)) {
+        reg->add<ScriptComponent>(e, reg->get<ScriptComponent>(entity));
     }
-    if (entity.has<Camera3DComponent>()) {
-        e.add<Camera3DComponent>(entity.get<Camera3DComponent>());
+    if (reg->has<Camera3DComponent>(entity)) {
+        reg->add<Camera3DComponent>(e, reg->get<Camera3DComponent>(entity));
     }
-    if (entity.has<PathComponent>()) {
-        e.add<PathComponent>(entity.get<PathComponent>());
+    if (reg->has<PathComponent>(entity)) {
+        reg->add<PathComponent>(e, reg->get<PathComponent>(entity));
     }
-    if (entity.has<LightComponent>()) {
-        e.add<LightComponent>(entity.get<LightComponent>());
+    if (reg->has<LightComponent>(entity)) {
+        reg->add<LightComponent>(e, reg->get<LightComponent>(entity));
     }
-    if (entity.has<SunComponent>()) {
-        e.add<SunComponent>(entity.get<SunComponent>());
+    if (reg->has<SunComponent>(entity)) {
+        reg->add<SunComponent>(e, reg->get<SunComponent>(entity));
     }
-    if (entity.has<AmbienceComponent>()) {
-        e.add<AmbienceComponent>(entity.get<AmbienceComponent>());
+    if (reg->has<AmbienceComponent>(entity)) {
+        reg->add<AmbienceComponent>(e, reg->get<AmbienceComponent>(entity));
     }
-    if (entity.has<ParticleComponent>()) {
-        e.add<ParticleComponent>(entity.get<ParticleComponent>());
+    if (reg->has<ParticleComponent>(entity)) {
+        reg->add<ParticleComponent>(e, reg->get<ParticleComponent>(entity));
     }
-    if (entity.has<MeshAnimationComponent>()) {
-        e.add<MeshAnimationComponent>(entity.get<MeshAnimationComponent>());
+    if (reg->has<MeshAnimationComponent>(entity)) {
+        reg->add<MeshAnimationComponent>(e, reg->get<MeshAnimationComponent>(entity));
     }
-    if (entity.has<CollisionEvent>()) {
-        e.add<CollisionEvent>(entity.get<CollisionEvent>());
+    if (reg->has<CollisionEvent>(entity)) {
+        reg->add<CollisionEvent>(e, reg->get<CollisionEvent>(entity));
     }
-    if (entity.has<PhysicsSingleton>()) {
-        e.add<PhysicsSingleton>(entity.get<PhysicsSingleton>());
+    if (reg->has<PhysicsSingleton>(entity)) {
+        reg->add<PhysicsSingleton>(e, reg->get<PhysicsSingleton>(entity));
     }
-    if (entity.has<InputSingleton>()) {
-        e.add<InputSingleton>(entity.get<InputSingleton>());
+    if (reg->has<InputSingleton>(entity)) {
+        reg->add<InputSingleton>(e, reg->get<InputSingleton>(entity));
     }
-    if (entity.has<GameGridSingleton>()) {
-        e.add<GameGridSingleton>(entity.get<GameGridSingleton>());
+    if (reg->has<GameGridSingleton>(entity)) {
+        reg->add<GameGridSingleton>(e, reg->get<GameGridSingleton>(entity));
     }
-    if (entity.has<TileMapSingleton>()) {
-        e.add<TileMapSingleton>(entity.get<TileMapSingleton>());
+    if (reg->has<TileMapSingleton>(entity)) {
+        reg->add<TileMapSingleton>(e, reg->get<TileMapSingleton>(entity));
     }
-    if (entity.has<CameraSingleton>()) {
-        e.add<CameraSingleton>(entity.get<CameraSingleton>());
+    if (reg->has<CameraSingleton>(entity)) {
+        reg->add<CameraSingleton>(e, reg->get<CameraSingleton>(entity));
     }
-    if (entity.has<ParticleSingleton>()) {
-        e.add<ParticleSingleton>(entity.get<ParticleSingleton>());
+    if (reg->has<ParticleSingleton>(entity)) {
+        reg->add<ParticleSingleton>(e, reg->get<ParticleSingleton>(entity));
     }
     return e;
 }
