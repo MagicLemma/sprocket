@@ -291,35 +291,34 @@ void physics_system(spkt::registry& registry, double dt)
     auto& runtime = *ps.physics_runtime;
 
     // Pre Update
-    for (auto id : registry.view<RigidBody3DComponent>()) {
-        spkt::entity entity{registry, id};
-        const auto& tc = entity.get<Transform3DComponent>();
-        auto& physics = entity.get<RigidBody3DComponent>();
+    for (apx::entity entity : registry.view<RigidBody3DComponent>()) {
+        const auto& tc = registry.get<Transform3DComponent>(entity);
+        auto& physics = registry.get<RigidBody3DComponent>(entity);
 
         if (!physics.runtime) [[unlikely]] {
             physics.runtime = std::make_shared<rigid_body_runtime>(
-                registry, id, runtime.world
+                registry, entity, runtime.world
             );
         }
 
         rp3d::RigidBody* body = physics.runtime->body;
 
-        if (entity.has<BoxCollider3DComponent>()) {
-            auto& cc = entity.get<BoxCollider3DComponent>();
+        if (registry.has<BoxCollider3DComponent>(entity)) {
+            auto& cc = registry.get<BoxCollider3DComponent>(entity);
             if (!cc.runtime) [[unlikely]] {
-                cc.runtime = make_box_collider(&runtime.pc, registry, id, body);
+                cc.runtime = make_box_collider(&runtime.pc, registry, entity, body);
             }
         }
-        if (entity.has<SphereCollider3DComponent>()) {
-            auto& cc = entity.get<SphereCollider3DComponent>();
+        if (registry.has<SphereCollider3DComponent>(entity)) {
+            auto& cc = registry.get<SphereCollider3DComponent>(entity);
             if (!cc.runtime) [[unlikely]] {
-                cc.runtime = make_sphere_collider(&runtime.pc, registry, id, body);
+                cc.runtime = make_sphere_collider(&runtime.pc, registry, entity, body);
             }
         }
-        if (entity.has<CapsuleCollider3DComponent>()) {
-            auto& cc = entity.get<CapsuleCollider3DComponent>();
+        if (registry.has<CapsuleCollider3DComponent>(entity)) {
+            auto& cc = registry.get<CapsuleCollider3DComponent>(entity);
             if (!cc.runtime) [[unlikely]] {
-                cc.runtime = make_capsule_collider(&runtime.pc, registry, id, body);
+                cc.runtime = make_capsule_collider(&runtime.pc, registry, entity, body);
             }
         }
 
@@ -335,9 +334,9 @@ void physics_system(spkt::registry& registry, double dt)
 
             // TODO: Move to RigidBody3DComponent
             float mass = 0;
-            if (entity.has<BoxCollider3DComponent>()) { mass += entity.get<BoxCollider3DComponent>().mass; }
-            if (entity.has<SphereCollider3DComponent>()) { mass += entity.get<SphereCollider3DComponent>().mass; }
-            if (entity.has<CapsuleCollider3DComponent>()) { mass += entity.get<CapsuleCollider3DComponent>().mass; }
+            if (registry.has<BoxCollider3DComponent>(entity)) { mass += registry.get<BoxCollider3DComponent>(entity).mass; }
+            if (registry.has<SphereCollider3DComponent>(entity)) { mass += registry.get<SphereCollider3DComponent>(entity).mass; }
+            if (registry.has<CapsuleCollider3DComponent>(entity)) { mass += registry.get<CapsuleCollider3DComponent>(entity).mass; }
             body->setMass(mass);
         }
 
