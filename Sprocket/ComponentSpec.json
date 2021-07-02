@@ -598,7 +598,8 @@
             "name": "PhysicsSingleton",
             "display_name": "Physics Singleton",
             "flags": {
-                "SAVABLE": false
+                "SAVABLE": false,
+                "SCRIPTABLE": false
             },
             "attributes": [
                 {
