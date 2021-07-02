@@ -343,86 +343,13 @@ void Load(const std::string& file, spkt::registry* reg)
 
 apx::entity Copy(spkt::registry* reg, apx::entity entity)
 {
-    apx::entity e = reg->create();
-    if (reg->has<Runtime>(entity)) {
-        reg->add<Runtime>(e, reg->get<Runtime>(entity));
-    }
-    if (reg->has<Singleton>(entity)) {
-        reg->add<Singleton>(e, reg->get<Singleton>(entity));
-    }
-    if (reg->has<Event>(entity)) {
-        reg->add<Event>(e, reg->get<Event>(entity));
-    }
-    if (reg->has<NameComponent>(entity)) {
-        reg->add<NameComponent>(e, reg->get<NameComponent>(entity));
-    }
-    if (reg->has<Transform2DComponent>(entity)) {
-        reg->add<Transform2DComponent>(e, reg->get<Transform2DComponent>(entity));
-    }
-    if (reg->has<Transform3DComponent>(entity)) {
-        reg->add<Transform3DComponent>(e, reg->get<Transform3DComponent>(entity));
-    }
-    if (reg->has<ModelComponent>(entity)) {
-        reg->add<ModelComponent>(e, reg->get<ModelComponent>(entity));
-    }
-    if (reg->has<RigidBody3DComponent>(entity)) {
-        reg->add<RigidBody3DComponent>(e, reg->get<RigidBody3DComponent>(entity));
-    }
-    if (reg->has<BoxCollider3DComponent>(entity)) {
-        reg->add<BoxCollider3DComponent>(e, reg->get<BoxCollider3DComponent>(entity));
-    }
-    if (reg->has<SphereCollider3DComponent>(entity)) {
-        reg->add<SphereCollider3DComponent>(e, reg->get<SphereCollider3DComponent>(entity));
-    }
-    if (reg->has<CapsuleCollider3DComponent>(entity)) {
-        reg->add<CapsuleCollider3DComponent>(e, reg->get<CapsuleCollider3DComponent>(entity));
-    }
-    if (reg->has<ScriptComponent>(entity)) {
-        reg->add<ScriptComponent>(e, reg->get<ScriptComponent>(entity));
-    }
-    if (reg->has<Camera3DComponent>(entity)) {
-        reg->add<Camera3DComponent>(e, reg->get<Camera3DComponent>(entity));
-    }
-    if (reg->has<PathComponent>(entity)) {
-        reg->add<PathComponent>(e, reg->get<PathComponent>(entity));
-    }
-    if (reg->has<LightComponent>(entity)) {
-        reg->add<LightComponent>(e, reg->get<LightComponent>(entity));
-    }
-    if (reg->has<SunComponent>(entity)) {
-        reg->add<SunComponent>(e, reg->get<SunComponent>(entity));
-    }
-    if (reg->has<AmbienceComponent>(entity)) {
-        reg->add<AmbienceComponent>(e, reg->get<AmbienceComponent>(entity));
-    }
-    if (reg->has<ParticleComponent>(entity)) {
-        reg->add<ParticleComponent>(e, reg->get<ParticleComponent>(entity));
-    }
-    if (reg->has<MeshAnimationComponent>(entity)) {
-        reg->add<MeshAnimationComponent>(e, reg->get<MeshAnimationComponent>(entity));
-    }
-    if (reg->has<CollisionEvent>(entity)) {
-        reg->add<CollisionEvent>(e, reg->get<CollisionEvent>(entity));
-    }
-    if (reg->has<PhysicsSingleton>(entity)) {
-        reg->add<PhysicsSingleton>(e, reg->get<PhysicsSingleton>(entity));
-    }
-    if (reg->has<InputSingleton>(entity)) {
-        reg->add<InputSingleton>(e, reg->get<InputSingleton>(entity));
-    }
-    if (reg->has<GameGridSingleton>(entity)) {
-        reg->add<GameGridSingleton>(e, reg->get<GameGridSingleton>(entity));
-    }
-    if (reg->has<TileMapSingleton>(entity)) {
-        reg->add<TileMapSingleton>(e, reg->get<TileMapSingleton>(entity));
-    }
-    if (reg->has<CameraSingleton>(entity)) {
-        reg->add<CameraSingleton>(e, reg->get<CameraSingleton>(entity));
-    }
-    if (reg->has<ParticleSingleton>(entity)) {
-        reg->add<ParticleSingleton>(e, reg->get<ParticleSingleton>(entity));
-    }
-    return e;
+    apx::entity new_entity = reg->create();
+    apx::meta::for_each(reg->tags, [&] <typename T> (apx::meta::tag<T> tag) {
+        if (reg->has<T>(entity)) {
+            reg->add<T>(new_entity, reg->get<T>(entity));
+        }
+    });
+    return new_entity;
 }
 
 void Copy(spkt::registry* source, spkt::registry* target)
@@ -431,59 +358,57 @@ void Copy(spkt::registry* source, spkt::registry* target)
     // new and old IDs.
     std::unordered_map<apx::entity, apx::entity> id_remapper;
     for (auto id : source->all()) {
-        apx::entity new_id = target->create();
-        id_remapper[id] = new_id;
+        id_remapper[id] = target->create();;
     }
 
-    for (auto id : source->all()) {
-        spkt::entity src{*source, id};
-        spkt::entity dst{*target, id_remapper[id]};
-        if (src.has<Runtime>()) {
-            const Runtime& source_comp = src.get<Runtime>();
+    for (auto old_entity : source->all()) {
+        apx::entity new_entity = id_remapper.at(old_entity);
+        if (source->has<Runtime>(old_entity)) {
+            const Runtime& source_comp = source->get<Runtime>(old_entity);
             Runtime target_comp;
-            dst.add<Runtime>(target_comp);
+            target->add<Runtime>(new_entity, target_comp);
         }
-        if (src.has<Singleton>()) {
-            const Singleton& source_comp = src.get<Singleton>();
+        if (source->has<Singleton>(old_entity)) {
+            const Singleton& source_comp = source->get<Singleton>(old_entity);
             Singleton target_comp;
-            dst.add<Singleton>(target_comp);
+            target->add<Singleton>(new_entity, target_comp);
         }
-        if (src.has<Event>()) {
-            const Event& source_comp = src.get<Event>();
+        if (source->has<Event>(old_entity)) {
+            const Event& source_comp = source->get<Event>(old_entity);
             Event target_comp;
-            dst.add<Event>(target_comp);
+            target->add<Event>(new_entity, target_comp);
         }
-        if (src.has<NameComponent>()) {
-            const NameComponent& source_comp = src.get<NameComponent>();
+        if (source->has<NameComponent>(old_entity)) {
+            const NameComponent& source_comp = source->get<NameComponent>(old_entity);
             NameComponent target_comp;
             target_comp.name = source_comp.name;
-            dst.add<NameComponent>(target_comp);
+            target->add<NameComponent>(new_entity, target_comp);
         }
-        if (src.has<Transform2DComponent>()) {
-            const Transform2DComponent& source_comp = src.get<Transform2DComponent>();
+        if (source->has<Transform2DComponent>(old_entity)) {
+            const Transform2DComponent& source_comp = source->get<Transform2DComponent>(old_entity);
             Transform2DComponent target_comp;
             target_comp.position = source_comp.position;
             target_comp.rotation = source_comp.rotation;
             target_comp.scale = source_comp.scale;
-            dst.add<Transform2DComponent>(target_comp);
+            target->add<Transform2DComponent>(new_entity, target_comp);
         }
-        if (src.has<Transform3DComponent>()) {
-            const Transform3DComponent& source_comp = src.get<Transform3DComponent>();
+        if (source->has<Transform3DComponent>(old_entity)) {
+            const Transform3DComponent& source_comp = source->get<Transform3DComponent>(old_entity);
             Transform3DComponent target_comp;
             target_comp.position = source_comp.position;
             target_comp.orientation = source_comp.orientation;
             target_comp.scale = source_comp.scale;
-            dst.add<Transform3DComponent>(target_comp);
+            target->add<Transform3DComponent>(new_entity, target_comp);
         }
-        if (src.has<ModelComponent>()) {
-            const ModelComponent& source_comp = src.get<ModelComponent>();
+        if (source->has<ModelComponent>(old_entity)) {
+            const ModelComponent& source_comp = source->get<ModelComponent>(old_entity);
             ModelComponent target_comp;
             target_comp.mesh = source_comp.mesh;
             target_comp.material = source_comp.material;
-            dst.add<ModelComponent>(target_comp);
+            target->add<ModelComponent>(new_entity, target_comp);
         }
-        if (src.has<RigidBody3DComponent>()) {
-            const RigidBody3DComponent& source_comp = src.get<RigidBody3DComponent>();
+        if (source->has<RigidBody3DComponent>(old_entity)) {
+            const RigidBody3DComponent& source_comp = source->get<RigidBody3DComponent>(old_entity);
             RigidBody3DComponent target_comp;
             target_comp.velocity = source_comp.velocity;
             target_comp.gravity = source_comp.gravity;
@@ -494,10 +419,10 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.force = source_comp.force;
             target_comp.onFloor = source_comp.onFloor;
             target_comp.runtime = source_comp.runtime;
-            dst.add<RigidBody3DComponent>(target_comp);
+            target->add<RigidBody3DComponent>(new_entity, target_comp);
         }
-        if (src.has<BoxCollider3DComponent>()) {
-            const BoxCollider3DComponent& source_comp = src.get<BoxCollider3DComponent>();
+        if (source->has<BoxCollider3DComponent>(old_entity)) {
+            const BoxCollider3DComponent& source_comp = source->get<BoxCollider3DComponent>(old_entity);
             BoxCollider3DComponent target_comp;
             target_comp.position = source_comp.position;
             target_comp.orientation = source_comp.orientation;
@@ -505,20 +430,20 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.halfExtents = source_comp.halfExtents;
             target_comp.applyScale = source_comp.applyScale;
             target_comp.runtime = source_comp.runtime;
-            dst.add<BoxCollider3DComponent>(target_comp);
+            target->add<BoxCollider3DComponent>(new_entity, target_comp);
         }
-        if (src.has<SphereCollider3DComponent>()) {
-            const SphereCollider3DComponent& source_comp = src.get<SphereCollider3DComponent>();
+        if (source->has<SphereCollider3DComponent>(old_entity)) {
+            const SphereCollider3DComponent& source_comp = source->get<SphereCollider3DComponent>(old_entity);
             SphereCollider3DComponent target_comp;
             target_comp.position = source_comp.position;
             target_comp.orientation = source_comp.orientation;
             target_comp.mass = source_comp.mass;
             target_comp.radius = source_comp.radius;
             target_comp.runtime = source_comp.runtime;
-            dst.add<SphereCollider3DComponent>(target_comp);
+            target->add<SphereCollider3DComponent>(new_entity, target_comp);
         }
-        if (src.has<CapsuleCollider3DComponent>()) {
-            const CapsuleCollider3DComponent& source_comp = src.get<CapsuleCollider3DComponent>();
+        if (source->has<CapsuleCollider3DComponent>(old_entity)) {
+            const CapsuleCollider3DComponent& source_comp = source->get<CapsuleCollider3DComponent>(old_entity);
             CapsuleCollider3DComponent target_comp;
             target_comp.position = source_comp.position;
             target_comp.orientation = source_comp.orientation;
@@ -526,56 +451,56 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.radius = source_comp.radius;
             target_comp.height = source_comp.height;
             target_comp.runtime = source_comp.runtime;
-            dst.add<CapsuleCollider3DComponent>(target_comp);
+            target->add<CapsuleCollider3DComponent>(new_entity, target_comp);
         }
-        if (src.has<ScriptComponent>()) {
-            const ScriptComponent& source_comp = src.get<ScriptComponent>();
+        if (source->has<ScriptComponent>(old_entity)) {
+            const ScriptComponent& source_comp = source->get<ScriptComponent>(old_entity);
             ScriptComponent target_comp;
             target_comp.script = source_comp.script;
             target_comp.active = source_comp.active;
             target_comp.script_runtime = source_comp.script_runtime;
-            dst.add<ScriptComponent>(target_comp);
+            target->add<ScriptComponent>(new_entity, target_comp);
         }
-        if (src.has<Camera3DComponent>()) {
-            const Camera3DComponent& source_comp = src.get<Camera3DComponent>();
+        if (source->has<Camera3DComponent>(old_entity)) {
+            const Camera3DComponent& source_comp = source->get<Camera3DComponent>(old_entity);
             Camera3DComponent target_comp;
             target_comp.projection = source_comp.projection;
             target_comp.fov = source_comp.fov;
             target_comp.pitch = source_comp.pitch;
-            dst.add<Camera3DComponent>(target_comp);
+            target->add<Camera3DComponent>(new_entity, target_comp);
         }
-        if (src.has<PathComponent>()) {
-            const PathComponent& source_comp = src.get<PathComponent>();
+        if (source->has<PathComponent>(old_entity)) {
+            const PathComponent& source_comp = source->get<PathComponent>(old_entity);
             PathComponent target_comp;
             target_comp.markers = source_comp.markers;
             target_comp.speed = source_comp.speed;
-            dst.add<PathComponent>(target_comp);
+            target->add<PathComponent>(new_entity, target_comp);
         }
-        if (src.has<LightComponent>()) {
-            const LightComponent& source_comp = src.get<LightComponent>();
+        if (source->has<LightComponent>(old_entity)) {
+            const LightComponent& source_comp = source->get<LightComponent>(old_entity);
             LightComponent target_comp;
             target_comp.colour = source_comp.colour;
             target_comp.brightness = source_comp.brightness;
-            dst.add<LightComponent>(target_comp);
+            target->add<LightComponent>(new_entity, target_comp);
         }
-        if (src.has<SunComponent>()) {
-            const SunComponent& source_comp = src.get<SunComponent>();
+        if (source->has<SunComponent>(old_entity)) {
+            const SunComponent& source_comp = source->get<SunComponent>(old_entity);
             SunComponent target_comp;
             target_comp.colour = source_comp.colour;
             target_comp.brightness = source_comp.brightness;
             target_comp.direction = source_comp.direction;
             target_comp.shadows = source_comp.shadows;
-            dst.add<SunComponent>(target_comp);
+            target->add<SunComponent>(new_entity, target_comp);
         }
-        if (src.has<AmbienceComponent>()) {
-            const AmbienceComponent& source_comp = src.get<AmbienceComponent>();
+        if (source->has<AmbienceComponent>(old_entity)) {
+            const AmbienceComponent& source_comp = source->get<AmbienceComponent>(old_entity);
             AmbienceComponent target_comp;
             target_comp.colour = source_comp.colour;
             target_comp.brightness = source_comp.brightness;
-            dst.add<AmbienceComponent>(target_comp);
+            target->add<AmbienceComponent>(new_entity, target_comp);
         }
-        if (src.has<ParticleComponent>()) {
-            const ParticleComponent& source_comp = src.get<ParticleComponent>();
+        if (source->has<ParticleComponent>(old_entity)) {
+            const ParticleComponent& source_comp = source->get<ParticleComponent>(old_entity);
             ParticleComponent target_comp;
             target_comp.interval = source_comp.interval;
             target_comp.velocity = source_comp.velocity;
@@ -584,31 +509,31 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.scale = source_comp.scale;
             target_comp.life = source_comp.life;
             target_comp.accumulator = source_comp.accumulator;
-            dst.add<ParticleComponent>(target_comp);
+            target->add<ParticleComponent>(new_entity, target_comp);
         }
-        if (src.has<MeshAnimationComponent>()) {
-            const MeshAnimationComponent& source_comp = src.get<MeshAnimationComponent>();
+        if (source->has<MeshAnimationComponent>(old_entity)) {
+            const MeshAnimationComponent& source_comp = source->get<MeshAnimationComponent>(old_entity);
             MeshAnimationComponent target_comp;
             target_comp.name = source_comp.name;
             target_comp.time = source_comp.time;
             target_comp.speed = source_comp.speed;
-            dst.add<MeshAnimationComponent>(target_comp);
+            target->add<MeshAnimationComponent>(new_entity, target_comp);
         }
-        if (src.has<CollisionEvent>()) {
-            const CollisionEvent& source_comp = src.get<CollisionEvent>();
+        if (source->has<CollisionEvent>(old_entity)) {
+            const CollisionEvent& source_comp = source->get<CollisionEvent>(old_entity);
             CollisionEvent target_comp;
             target_comp.entity_a = transform_entity(id_remapper, source_comp.entity_a);
             target_comp.entity_b = transform_entity(id_remapper, source_comp.entity_b);
-            dst.add<CollisionEvent>(target_comp);
+            target->add<CollisionEvent>(new_entity, target_comp);
         }
-        if (src.has<PhysicsSingleton>()) {
-            const PhysicsSingleton& source_comp = src.get<PhysicsSingleton>();
+        if (source->has<PhysicsSingleton>(old_entity)) {
+            const PhysicsSingleton& source_comp = source->get<PhysicsSingleton>(old_entity);
             PhysicsSingleton target_comp;
             target_comp.physics_runtime = source_comp.physics_runtime;
-            dst.add<PhysicsSingleton>(target_comp);
+            target->add<PhysicsSingleton>(new_entity, target_comp);
         }
-        if (src.has<InputSingleton>()) {
-            const InputSingleton& source_comp = src.get<InputSingleton>();
+        if (source->has<InputSingleton>(old_entity)) {
+            const InputSingleton& source_comp = source->get<InputSingleton>(old_entity);
             InputSingleton target_comp;
             target_comp.keyboard = source_comp.keyboard;
             target_comp.mouse = source_comp.mouse;
@@ -620,34 +545,34 @@ void Copy(spkt::registry* source, spkt::registry* target)
             target_comp.window_width = source_comp.window_width;
             target_comp.window_height = source_comp.window_height;
             target_comp.window_resized = source_comp.window_resized;
-            dst.add<InputSingleton>(target_comp);
+            target->add<InputSingleton>(new_entity, target_comp);
         }
-        if (src.has<GameGridSingleton>()) {
-            const GameGridSingleton& source_comp = src.get<GameGridSingleton>();
+        if (source->has<GameGridSingleton>(old_entity)) {
+            const GameGridSingleton& source_comp = source->get<GameGridSingleton>(old_entity);
             GameGridSingleton target_comp;
             target_comp.hovered_square_entity = transform_entity(id_remapper, source_comp.hovered_square_entity);
             target_comp.clicked_square_entity = transform_entity(id_remapper, source_comp.clicked_square_entity);
             target_comp.hovered_square = source_comp.hovered_square;
             target_comp.clicked_square = source_comp.clicked_square;
-            dst.add<GameGridSingleton>(target_comp);
+            target->add<GameGridSingleton>(new_entity, target_comp);
         }
-        if (src.has<TileMapSingleton>()) {
-            const TileMapSingleton& source_comp = src.get<TileMapSingleton>();
+        if (source->has<TileMapSingleton>(old_entity)) {
+            const TileMapSingleton& source_comp = source->get<TileMapSingleton>(old_entity);
             TileMapSingleton target_comp;
             target_comp.tiles = transform_entity(id_remapper, source_comp.tiles);
-            dst.add<TileMapSingleton>(target_comp);
+            target->add<TileMapSingleton>(new_entity, target_comp);
         }
-        if (src.has<CameraSingleton>()) {
-            const CameraSingleton& source_comp = src.get<CameraSingleton>();
+        if (source->has<CameraSingleton>(old_entity)) {
+            const CameraSingleton& source_comp = source->get<CameraSingleton>(old_entity);
             CameraSingleton target_comp;
             target_comp.camera_entity = transform_entity(id_remapper, source_comp.camera_entity);
-            dst.add<CameraSingleton>(target_comp);
+            target->add<CameraSingleton>(new_entity, target_comp);
         }
-        if (src.has<ParticleSingleton>()) {
-            const ParticleSingleton& source_comp = src.get<ParticleSingleton>();
+        if (source->has<ParticleSingleton>(old_entity)) {
+            const ParticleSingleton& source_comp = source->get<ParticleSingleton>(old_entity);
             ParticleSingleton target_comp;
             target_comp.particle_manager = source_comp.particle_manager;
-            dst.add<ParticleSingleton>(target_comp);
+            target->add<ParticleSingleton>(new_entity, target_comp);
         }
     }
 }

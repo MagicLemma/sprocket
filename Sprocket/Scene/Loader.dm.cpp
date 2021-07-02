@@ -101,13 +101,13 @@ DATAMATIC_END
 
 apx::entity Copy(spkt::registry* reg, apx::entity entity)
 {
-    apx::entity e = reg->create();
-DATAMATIC_BEGIN
-    if (reg->has<{{Comp::name}}>(entity)) {
-        reg->add<{{Comp::name}}>(e, reg->get<{{Comp::name}}>(entity));
-    }
-DATAMATIC_END
-    return e;
+    apx::entity new_entity = reg->create();
+    apx::meta::for_each(reg->tags, [&] <typename T> (apx::meta::tag<T> tag) {
+        if (reg->has<T>(entity)) {
+            reg->add<T>(new_entity, reg->get<T>(entity));
+        }
+    });
+    return new_entity;
 }
 
 void Copy(spkt::registry* source, spkt::registry* target)
@@ -116,19 +116,17 @@ void Copy(spkt::registry* source, spkt::registry* target)
     // new and old IDs.
     std::unordered_map<apx::entity, apx::entity> id_remapper;
     for (auto id : source->all()) {
-        apx::entity new_id = target->create();
-        id_remapper[id] = new_id;
+        id_remapper[id] = target->create();;
     }
 
-    for (auto id : source->all()) {
-        spkt::entity src{*source, id};
-        spkt::entity dst{*target, id_remapper[id]};
+    for (auto old_entity : source->all()) {
+        apx::entity new_entity = id_remapper.at(old_entity);
 DATAMATIC_BEGIN
-        if (src.has<{{Comp::name}}>()) {
-            const {{Comp::name}}& source_comp = src.get<{{Comp::name}}>();
+        if (source->has<{{Comp::name}}>(old_entity)) {
+            const {{Comp::name}}& source_comp = source->get<{{Comp::name}}>(old_entity);
             {{Comp::name}} target_comp;
             target_comp.{{Attr::name}} = {{Attr::parse_value_copy}};
-            dst.add<{{Comp::name}}>(target_comp);
+            target->add<{{Comp::name}}>(new_entity, target_comp);
         }
 DATAMATIC_END
     }
