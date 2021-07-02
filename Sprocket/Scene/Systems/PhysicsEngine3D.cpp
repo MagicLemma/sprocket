@@ -270,14 +270,24 @@ bool is_on_floor(const rp3d::PhysicsWorld* const world, const rp3d::RigidBody* c
     return cb.GetEntity().valid();
 }
 
+PhysicsSingleton& get_physics_runtime(spkt::registry& registry)
+{
+    auto entity = registry.find<PhysicsSingleton>();
+    if (!registry.valid(entity)) [[unlikely]] {
+        entity = registry.create();
+        registry.emplace<Runtime>(entity);
+        registry.emplace<NameComponent>(entity, "::PhysicsRuntimeSingleton");
+        auto& ps = registry.emplace<PhysicsSingleton>(entity);
+        ps.physics_runtime = std::make_shared<physics_runtime>(registry);
+    }
+    return registry.get<PhysicsSingleton>(entity);
+}
+
 }
 
 void physics_system(spkt::registry& registry, double dt)
 {
-    auto& ps = get_singleton<PhysicsSingleton>(registry);
-    if (!ps.physics_runtime) [[unlikely]] {
-        ps.physics_runtime = std::make_shared<physics_runtime>(registry);
-    }
+    auto& ps = get_physics_runtime(registry);
     auto& runtime = *ps.physics_runtime;
 
     // Pre Update
