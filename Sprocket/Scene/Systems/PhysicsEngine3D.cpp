@@ -274,13 +274,10 @@ bool is_on_floor(const rp3d::PhysicsWorld* const world, const rp3d::RigidBody* c
 
 void physics_system(spkt::registry& registry, double dt)
 {
-    auto singleton = registry.find<Singleton>();
-    if (!registry.has<PhysicsSingleton>(singleton)) [[unlikely]] {
-        auto& ps = registry.emplace<PhysicsSingleton>(singleton);
+    auto& ps = get_singleton<PhysicsSingleton>(registry);
+    if (!ps.physics_runtime) [[unlikely]] {
         ps.physics_runtime = std::make_shared<physics_runtime>(registry);
     }
-
-    auto& ps = get_singleton<PhysicsSingleton>(registry);
     auto& runtime = *ps.physics_runtime;
 
     // Pre Update
@@ -289,7 +286,7 @@ void physics_system(spkt::registry& registry, double dt)
         const auto& tc = entity.get<Transform3DComponent>();
         auto& physics = entity.get<RigidBody3DComponent>();
 
-        if (!physics.runtime) {
+        if (!physics.runtime) [[unlikely]] {
             physics.runtime = std::make_shared<rigid_body_runtime>(
                 registry, id, runtime.world
             );
@@ -299,19 +296,19 @@ void physics_system(spkt::registry& registry, double dt)
 
         if (entity.has<BoxCollider3DComponent>()) {
             auto& cc = entity.get<BoxCollider3DComponent>();
-            if (!cc.runtime) {
+            if (!cc.runtime) [[unlikely]] {
                 cc.runtime = make_box_collider(&runtime.pc, registry, id, body);
             }
         }
         if (entity.has<SphereCollider3DComponent>()) {
             auto& cc = entity.get<SphereCollider3DComponent>();
-            if (!cc.runtime) {
+            if (!cc.runtime) [[unlikely]] {
                 cc.runtime = make_sphere_collider(&runtime.pc, registry, id, body);
             }
         }
         if (entity.has<CapsuleCollider3DComponent>()) {
             auto& cc = entity.get<CapsuleCollider3DComponent>();
-            if (!cc.runtime) {
+            if (!cc.runtime) [[unlikely]] {
                 cc.runtime = make_capsule_collider(&runtime.pc, registry, id, body);
             }
         }
