@@ -17,17 +17,16 @@ void Save(const std::string& file, spkt::registry* reg)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto id : reg->all()) {
-        spkt::entity entity{*reg, id};
+    for (auto entity : reg->all()) {
 
         // Don't save runtime entities
-        if (entity.has<Runtime>()) { continue; }
+        if (reg->has<Runtime>(entity)) { continue; }
 
         out << YAML::BeginMap;
-        out << YAML::Key << "ID#" << YAML::Value << id;
+        out << YAML::Key << "ID#" << YAML::Value << entity;
 DATAMATIC_BEGIN SAVABLE=true
-        if (entity.has<{{Comp::name}}>()) {
-            const auto& c = entity.get<{{Comp::name}}>();
+        if (reg->has<{{Comp::name}}>(entity)) {
+            const auto& c = reg->get<{{Comp::name}}>(entity);
             out << YAML::Key << "{{Comp::name}}" << YAML::BeginMap;
             out << YAML::Key << "{{Attr::name}}" << YAML::Value << c.{{Attr::name}};
             out << YAML::EndMap;
@@ -38,8 +37,7 @@ DATAMATIC_END
     out << YAML::EndSeq;
     out << YAML::EndMap;
 
-    std::ofstream fout(file);
-    fout << out.c_str();
+    std::ofstream(file) << out.c_str();
 }
 
 void Load(const std::string& file, spkt::registry* reg)
@@ -59,27 +57,26 @@ void Load(const std::string& file, spkt::registry* reg)
 
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
-    const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<decltype(param), apx::entity>) {
+    const auto transform = [&] <typename T> (T&& param) {
+        if constexpr (std::is_same_v<T, apx::entity>) {
             return id_remapper[param];
         }
         return param;
     };
     
-    for (auto entity : entities) {
-        apx::entity old_id = entity["ID#"].as<apx::entity>();
+    for (auto yaml_entity : entities) {
+        apx::entity old_id = yaml_entity["ID#"].as<apx::entity>();
         apx::entity new_id = reg->create();
         id_remapper[old_id] = new_id;
     }
 
-    for (auto entity : entities) {
-        apx::entity old_id = entity["ID#"].as<apx::entity>();
-        spkt::entity e{*reg, id_remapper[old_id]};
+    for (auto yaml_entity : entities) {
+        apx::entity entity = id_remapper[yaml_entity["ID#"].as<apx::entity>()];
 DATAMATIC_BEGIN SAVABLE=true
-        if (auto spec = entity["{{Comp::name}}"]) {
+        if (auto spec = yaml_entity["{{Comp::name}}"]) {
             {{Comp::name}} c;
-            c.{{Attr::name}} = transform(spec["{{Attr::name}}"].as<{{Attr::type}}>());
-            e.add<{{Comp::name}}>(c);
+            c.{{Attr::name}} = {{Attr::parse_value}};
+            reg->add<{{Comp::name}}>(entity, c);
         }
 DATAMATIC_END
     }

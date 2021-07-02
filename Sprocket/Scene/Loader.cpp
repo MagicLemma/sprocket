@@ -17,45 +17,44 @@ void Save(const std::string& file, spkt::registry* reg)
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto id : reg->all()) {
-        spkt::entity entity{*reg, id};
+    for (auto entity : reg->all()) {
 
         // Don't save runtime entities
-        if (entity.has<Runtime>()) { continue; }
+        if (reg->has<Runtime>(entity)) { continue; }
 
         out << YAML::BeginMap;
-        out << YAML::Key << "ID#" << YAML::Value << id;
-        if (entity.has<NameComponent>()) {
-            const auto& c = entity.get<NameComponent>();
+        out << YAML::Key << "ID#" << YAML::Value << entity;
+        if (reg->has<NameComponent>(entity)) {
+            const auto& c = reg->get<NameComponent>(entity);
             out << YAML::Key << "NameComponent" << YAML::BeginMap;
             out << YAML::Key << "name" << YAML::Value << c.name;
             out << YAML::EndMap;
         }
-        if (entity.has<Transform2DComponent>()) {
-            const auto& c = entity.get<Transform2DComponent>();
+        if (reg->has<Transform2DComponent>(entity)) {
+            const auto& c = reg->get<Transform2DComponent>(entity);
             out << YAML::Key << "Transform2DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
             out << YAML::Key << "rotation" << YAML::Value << c.rotation;
             out << YAML::Key << "scale" << YAML::Value << c.scale;
             out << YAML::EndMap;
         }
-        if (entity.has<Transform3DComponent>()) {
-            const auto& c = entity.get<Transform3DComponent>();
+        if (reg->has<Transform3DComponent>(entity)) {
+            const auto& c = reg->get<Transform3DComponent>(entity);
             out << YAML::Key << "Transform3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
             out << YAML::Key << "orientation" << YAML::Value << c.orientation;
             out << YAML::Key << "scale" << YAML::Value << c.scale;
             out << YAML::EndMap;
         }
-        if (entity.has<ModelComponent>()) {
-            const auto& c = entity.get<ModelComponent>();
+        if (reg->has<ModelComponent>(entity)) {
+            const auto& c = reg->get<ModelComponent>(entity);
             out << YAML::Key << "ModelComponent" << YAML::BeginMap;
             out << YAML::Key << "mesh" << YAML::Value << c.mesh;
             out << YAML::Key << "material" << YAML::Value << c.material;
             out << YAML::EndMap;
         }
-        if (entity.has<RigidBody3DComponent>()) {
-            const auto& c = entity.get<RigidBody3DComponent>();
+        if (reg->has<RigidBody3DComponent>(entity)) {
+            const auto& c = reg->get<RigidBody3DComponent>(entity);
             out << YAML::Key << "RigidBody3DComponent" << YAML::BeginMap;
             out << YAML::Key << "velocity" << YAML::Value << c.velocity;
             out << YAML::Key << "gravity" << YAML::Value << c.gravity;
@@ -65,8 +64,8 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "rollingResistance" << YAML::Value << c.rollingResistance;
             out << YAML::EndMap;
         }
-        if (entity.has<BoxCollider3DComponent>()) {
-            const auto& c = entity.get<BoxCollider3DComponent>();
+        if (reg->has<BoxCollider3DComponent>(entity)) {
+            const auto& c = reg->get<BoxCollider3DComponent>(entity);
             out << YAML::Key << "BoxCollider3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
             out << YAML::Key << "orientation" << YAML::Value << c.orientation;
@@ -75,8 +74,8 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "applyScale" << YAML::Value << c.applyScale;
             out << YAML::EndMap;
         }
-        if (entity.has<SphereCollider3DComponent>()) {
-            const auto& c = entity.get<SphereCollider3DComponent>();
+        if (reg->has<SphereCollider3DComponent>(entity)) {
+            const auto& c = reg->get<SphereCollider3DComponent>(entity);
             out << YAML::Key << "SphereCollider3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
             out << YAML::Key << "orientation" << YAML::Value << c.orientation;
@@ -84,8 +83,8 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "radius" << YAML::Value << c.radius;
             out << YAML::EndMap;
         }
-        if (entity.has<CapsuleCollider3DComponent>()) {
-            const auto& c = entity.get<CapsuleCollider3DComponent>();
+        if (reg->has<CapsuleCollider3DComponent>(entity)) {
+            const auto& c = reg->get<CapsuleCollider3DComponent>(entity);
             out << YAML::Key << "CapsuleCollider3DComponent" << YAML::BeginMap;
             out << YAML::Key << "position" << YAML::Value << c.position;
             out << YAML::Key << "orientation" << YAML::Value << c.orientation;
@@ -94,35 +93,35 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "height" << YAML::Value << c.height;
             out << YAML::EndMap;
         }
-        if (entity.has<ScriptComponent>()) {
-            const auto& c = entity.get<ScriptComponent>();
+        if (reg->has<ScriptComponent>(entity)) {
+            const auto& c = reg->get<ScriptComponent>(entity);
             out << YAML::Key << "ScriptComponent" << YAML::BeginMap;
             out << YAML::Key << "script" << YAML::Value << c.script;
             out << YAML::Key << "active" << YAML::Value << c.active;
             out << YAML::EndMap;
         }
-        if (entity.has<Camera3DComponent>()) {
-            const auto& c = entity.get<Camera3DComponent>();
+        if (reg->has<Camera3DComponent>(entity)) {
+            const auto& c = reg->get<Camera3DComponent>(entity);
             out << YAML::Key << "Camera3DComponent" << YAML::BeginMap;
             out << YAML::Key << "fov" << YAML::Value << c.fov;
             out << YAML::Key << "pitch" << YAML::Value << c.pitch;
             out << YAML::EndMap;
         }
-        if (entity.has<PathComponent>()) {
-            const auto& c = entity.get<PathComponent>();
+        if (reg->has<PathComponent>(entity)) {
+            const auto& c = reg->get<PathComponent>(entity);
             out << YAML::Key << "PathComponent" << YAML::BeginMap;
             out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
-        if (entity.has<LightComponent>()) {
-            const auto& c = entity.get<LightComponent>();
+        if (reg->has<LightComponent>(entity)) {
+            const auto& c = reg->get<LightComponent>(entity);
             out << YAML::Key << "LightComponent" << YAML::BeginMap;
             out << YAML::Key << "colour" << YAML::Value << c.colour;
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
             out << YAML::EndMap;
         }
-        if (entity.has<SunComponent>()) {
-            const auto& c = entity.get<SunComponent>();
+        if (reg->has<SunComponent>(entity)) {
+            const auto& c = reg->get<SunComponent>(entity);
             out << YAML::Key << "SunComponent" << YAML::BeginMap;
             out << YAML::Key << "colour" << YAML::Value << c.colour;
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
@@ -130,15 +129,15 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "shadows" << YAML::Value << c.shadows;
             out << YAML::EndMap;
         }
-        if (entity.has<AmbienceComponent>()) {
-            const auto& c = entity.get<AmbienceComponent>();
+        if (reg->has<AmbienceComponent>(entity)) {
+            const auto& c = reg->get<AmbienceComponent>(entity);
             out << YAML::Key << "AmbienceComponent" << YAML::BeginMap;
             out << YAML::Key << "colour" << YAML::Value << c.colour;
             out << YAML::Key << "brightness" << YAML::Value << c.brightness;
             out << YAML::EndMap;
         }
-        if (entity.has<ParticleComponent>()) {
-            const auto& c = entity.get<ParticleComponent>();
+        if (reg->has<ParticleComponent>(entity)) {
+            const auto& c = reg->get<ParticleComponent>(entity);
             out << YAML::Key << "ParticleComponent" << YAML::BeginMap;
             out << YAML::Key << "interval" << YAML::Value << c.interval;
             out << YAML::Key << "velocity" << YAML::Value << c.velocity;
@@ -148,16 +147,16 @@ void Save(const std::string& file, spkt::registry* reg)
             out << YAML::Key << "life" << YAML::Value << c.life;
             out << YAML::EndMap;
         }
-        if (entity.has<MeshAnimationComponent>()) {
-            const auto& c = entity.get<MeshAnimationComponent>();
+        if (reg->has<MeshAnimationComponent>(entity)) {
+            const auto& c = reg->get<MeshAnimationComponent>(entity);
             out << YAML::Key << "MeshAnimationComponent" << YAML::BeginMap;
             out << YAML::Key << "name" << YAML::Value << c.name;
             out << YAML::Key << "time" << YAML::Value << c.time;
             out << YAML::Key << "speed" << YAML::Value << c.speed;
             out << YAML::EndMap;
         }
-        if (entity.has<TileMapSingleton>()) {
-            const auto& c = entity.get<TileMapSingleton>();
+        if (reg->has<TileMapSingleton>(entity)) {
+            const auto& c = reg->get<TileMapSingleton>(entity);
             out << YAML::Key << "TileMapSingleton" << YAML::BeginMap;
             out << YAML::Key << "tiles" << YAML::Value << c.tiles;
             out << YAML::EndMap;
@@ -167,8 +166,7 @@ void Save(const std::string& file, spkt::registry* reg)
     out << YAML::EndSeq;
     out << YAML::EndMap;
 
-    std::ofstream fout(file);
-    fout << out.c_str();
+    std::ofstream(file) << out.c_str();
 }
 
 void Load(const std::string& file, spkt::registry* reg)
@@ -188,141 +186,146 @@ void Load(const std::string& file, spkt::registry* reg)
 
     // Performs any extra transformations to values that cannot be done during
     // yaml decoding, for example converting entity IDs to their new values.
-    const auto transform = [&](auto&& param) {
-        if constexpr (std::is_same_v<decltype(param), apx::entity>) {
+    const auto transform = [&] <typename T> (T&& param) {
+        if constexpr (std::is_same_v<T, apx::entity>) {
             return id_remapper[param];
+        } else if constexpr (std::is_same_v<T, std::unordered_map<glm::ivec2, apx::entity>>) {
+            for (auto& entry : param) {
+                entry.second = id_remapper[entry.second];
+            }
+            return param;
+        } else {
+            static_assert(false);
         }
-        return param;
     };
 
-    for (auto entity : entities) {
-        apx::entity old_id = entity["ID#"].as<apx::entity>();
+    for (auto yaml_entity : entities) {
+        apx::entity old_id = yaml_entity["ID#"].as<apx::entity>();
         apx::entity new_id = reg->create();
         id_remapper[old_id] = new_id;
     }
 
-    for (auto entity : entities) {
-        apx::entity old_id = entity["ID#"].as<apx::entity>();
-        spkt::entity e{*reg, id_remapper[old_id]};
-        if (auto spec = entity["NameComponent"]) {
+    for (auto yaml_entity : entities) {
+        apx::entity entity = id_remapper[yaml_entity["ID#"].as<apx::entity>()];
+        if (auto spec = yaml_entity["NameComponent"]) {
             NameComponent c;
-            c.name = transform(spec["name"].as<std::string>());
-            e.add<NameComponent>(c);
+            c.name = spec["name"].as<std::string>();
+            reg->add<NameComponent>(entity, c);
         }
-        if (auto spec = entity["Transform2DComponent"]) {
+        if (auto spec = yaml_entity["Transform2DComponent"]) {
             Transform2DComponent c;
-            c.position = transform(spec["position"].as<glm::vec2>());
-            c.rotation = transform(spec["rotation"].as<float>());
-            c.scale = transform(spec["scale"].as<glm::vec2>());
-            e.add<Transform2DComponent>(c);
+            c.position = spec["position"].as<glm::vec2>();
+            c.rotation = spec["rotation"].as<float>();
+            c.scale = spec["scale"].as<glm::vec2>();
+            reg->add<Transform2DComponent>(entity, c);
         }
-        if (auto spec = entity["Transform3DComponent"]) {
+        if (auto spec = yaml_entity["Transform3DComponent"]) {
             Transform3DComponent c;
-            c.position = transform(spec["position"].as<glm::vec3>());
-            c.orientation = transform(spec["orientation"].as<glm::quat>());
-            c.scale = transform(spec["scale"].as<glm::vec3>());
-            e.add<Transform3DComponent>(c);
+            c.position = spec["position"].as<glm::vec3>();
+            c.orientation = spec["orientation"].as<glm::quat>();
+            c.scale = spec["scale"].as<glm::vec3>();
+            reg->add<Transform3DComponent>(entity, c);
         }
-        if (auto spec = entity["ModelComponent"]) {
+        if (auto spec = yaml_entity["ModelComponent"]) {
             ModelComponent c;
-            c.mesh = transform(spec["mesh"].as<std::string>());
-            c.material = transform(spec["material"].as<std::string>());
-            e.add<ModelComponent>(c);
+            c.mesh = spec["mesh"].as<std::string>();
+            c.material = spec["material"].as<std::string>();
+            reg->add<ModelComponent>(entity, c);
         }
-        if (auto spec = entity["RigidBody3DComponent"]) {
+        if (auto spec = yaml_entity["RigidBody3DComponent"]) {
             RigidBody3DComponent c;
-            c.velocity = transform(spec["velocity"].as<glm::vec3>());
-            c.gravity = transform(spec["gravity"].as<bool>());
-            c.frozen = transform(spec["frozen"].as<bool>());
-            c.bounciness = transform(spec["bounciness"].as<float>());
-            c.frictionCoefficient = transform(spec["frictionCoefficient"].as<float>());
-            c.rollingResistance = transform(spec["rollingResistance"].as<float>());
-            e.add<RigidBody3DComponent>(c);
+            c.velocity = spec["velocity"].as<glm::vec3>();
+            c.gravity = spec["gravity"].as<bool>();
+            c.frozen = spec["frozen"].as<bool>();
+            c.bounciness = spec["bounciness"].as<float>();
+            c.frictionCoefficient = spec["frictionCoefficient"].as<float>();
+            c.rollingResistance = spec["rollingResistance"].as<float>();
+            reg->add<RigidBody3DComponent>(entity, c);
         }
-        if (auto spec = entity["BoxCollider3DComponent"]) {
+        if (auto spec = yaml_entity["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
-            c.position = transform(spec["position"].as<glm::vec3>());
-            c.orientation = transform(spec["orientation"].as<glm::quat>());
-            c.mass = transform(spec["mass"].as<float>());
-            c.halfExtents = transform(spec["halfExtents"].as<glm::vec3>());
-            c.applyScale = transform(spec["applyScale"].as<bool>());
-            e.add<BoxCollider3DComponent>(c);
+            c.position = spec["position"].as<glm::vec3>();
+            c.orientation = spec["orientation"].as<glm::quat>();
+            c.mass = spec["mass"].as<float>();
+            c.halfExtents = spec["halfExtents"].as<glm::vec3>();
+            c.applyScale = spec["applyScale"].as<bool>();
+            reg->add<BoxCollider3DComponent>(entity, c);
         }
-        if (auto spec = entity["SphereCollider3DComponent"]) {
+        if (auto spec = yaml_entity["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
-            c.position = transform(spec["position"].as<glm::vec3>());
-            c.orientation = transform(spec["orientation"].as<glm::quat>());
-            c.mass = transform(spec["mass"].as<float>());
-            c.radius = transform(spec["radius"].as<float>());
-            e.add<SphereCollider3DComponent>(c);
+            c.position = spec["position"].as<glm::vec3>();
+            c.orientation = spec["orientation"].as<glm::quat>();
+            c.mass = spec["mass"].as<float>();
+            c.radius = spec["radius"].as<float>();
+            reg->add<SphereCollider3DComponent>(entity, c);
         }
-        if (auto spec = entity["CapsuleCollider3DComponent"]) {
+        if (auto spec = yaml_entity["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
-            c.position = transform(spec["position"].as<glm::vec3>());
-            c.orientation = transform(spec["orientation"].as<glm::quat>());
-            c.mass = transform(spec["mass"].as<float>());
-            c.radius = transform(spec["radius"].as<float>());
-            c.height = transform(spec["height"].as<float>());
-            e.add<CapsuleCollider3DComponent>(c);
+            c.position = spec["position"].as<glm::vec3>();
+            c.orientation = spec["orientation"].as<glm::quat>();
+            c.mass = spec["mass"].as<float>();
+            c.radius = spec["radius"].as<float>();
+            c.height = spec["height"].as<float>();
+            reg->add<CapsuleCollider3DComponent>(entity, c);
         }
-        if (auto spec = entity["ScriptComponent"]) {
+        if (auto spec = yaml_entity["ScriptComponent"]) {
             ScriptComponent c;
-            c.script = transform(spec["script"].as<std::string>());
-            c.active = transform(spec["active"].as<bool>());
-            e.add<ScriptComponent>(c);
+            c.script = spec["script"].as<std::string>();
+            c.active = spec["active"].as<bool>();
+            reg->add<ScriptComponent>(entity, c);
         }
-        if (auto spec = entity["Camera3DComponent"]) {
+        if (auto spec = yaml_entity["Camera3DComponent"]) {
             Camera3DComponent c;
-            c.fov = transform(spec["fov"].as<float>());
-            c.pitch = transform(spec["pitch"].as<float>());
-            e.add<Camera3DComponent>(c);
+            c.fov = spec["fov"].as<float>();
+            c.pitch = spec["pitch"].as<float>();
+            reg->add<Camera3DComponent>(entity, c);
         }
-        if (auto spec = entity["PathComponent"]) {
+        if (auto spec = yaml_entity["PathComponent"]) {
             PathComponent c;
-            c.speed = transform(spec["speed"].as<float>());
-            e.add<PathComponent>(c);
+            c.speed = spec["speed"].as<float>();
+            reg->add<PathComponent>(entity, c);
         }
-        if (auto spec = entity["LightComponent"]) {
+        if (auto spec = yaml_entity["LightComponent"]) {
             LightComponent c;
-            c.colour = transform(spec["colour"].as<glm::vec3>());
-            c.brightness = transform(spec["brightness"].as<float>());
-            e.add<LightComponent>(c);
+            c.colour = spec["colour"].as<glm::vec3>();
+            c.brightness = spec["brightness"].as<float>();
+            reg->add<LightComponent>(entity, c);
         }
-        if (auto spec = entity["SunComponent"]) {
+        if (auto spec = yaml_entity["SunComponent"]) {
             SunComponent c;
-            c.colour = transform(spec["colour"].as<glm::vec3>());
-            c.brightness = transform(spec["brightness"].as<float>());
-            c.direction = transform(spec["direction"].as<glm::vec3>());
-            c.shadows = transform(spec["shadows"].as<bool>());
-            e.add<SunComponent>(c);
+            c.colour = spec["colour"].as<glm::vec3>();
+            c.brightness = spec["brightness"].as<float>();
+            c.direction = spec["direction"].as<glm::vec3>();
+            c.shadows = spec["shadows"].as<bool>();
+            reg->add<SunComponent>(entity, c);
         }
-        if (auto spec = entity["AmbienceComponent"]) {
+        if (auto spec = yaml_entity["AmbienceComponent"]) {
             AmbienceComponent c;
-            c.colour = transform(spec["colour"].as<glm::vec3>());
-            c.brightness = transform(spec["brightness"].as<float>());
-            e.add<AmbienceComponent>(c);
+            c.colour = spec["colour"].as<glm::vec3>();
+            c.brightness = spec["brightness"].as<float>();
+            reg->add<AmbienceComponent>(entity, c);
         }
-        if (auto spec = entity["ParticleComponent"]) {
+        if (auto spec = yaml_entity["ParticleComponent"]) {
             ParticleComponent c;
-            c.interval = transform(spec["interval"].as<float>());
-            c.velocity = transform(spec["velocity"].as<glm::vec3>());
-            c.velocityNoise = transform(spec["velocityNoise"].as<float>());
-            c.acceleration = transform(spec["acceleration"].as<glm::vec3>());
-            c.scale = transform(spec["scale"].as<glm::vec3>());
-            c.life = transform(spec["life"].as<float>());
-            e.add<ParticleComponent>(c);
+            c.interval = spec["interval"].as<float>();
+            c.velocity = spec["velocity"].as<glm::vec3>();
+            c.velocityNoise = spec["velocityNoise"].as<float>();
+            c.acceleration = spec["acceleration"].as<glm::vec3>();
+            c.scale = spec["scale"].as<glm::vec3>();
+            c.life = spec["life"].as<float>();
+            reg->add<ParticleComponent>(entity, c);
         }
-        if (auto spec = entity["MeshAnimationComponent"]) {
+        if (auto spec = yaml_entity["MeshAnimationComponent"]) {
             MeshAnimationComponent c;
-            c.name = transform(spec["name"].as<std::string>());
-            c.time = transform(spec["time"].as<float>());
-            c.speed = transform(spec["speed"].as<float>());
-            e.add<MeshAnimationComponent>(c);
+            c.name = spec["name"].as<std::string>();
+            c.time = spec["time"].as<float>();
+            c.speed = spec["speed"].as<float>();
+            reg->add<MeshAnimationComponent>(entity, c);
         }
-        if (auto spec = entity["TileMapSingleton"]) {
+        if (auto spec = yaml_entity["TileMapSingleton"]) {
             TileMapSingleton c;
             c.tiles = transform(spec["tiles"].as<std::unordered_map<glm::ivec2, apx::entity>>());
-            e.add<TileMapSingleton>(c);
+            reg->add<TileMapSingleton>(entity, c);
         }
     }
 }
