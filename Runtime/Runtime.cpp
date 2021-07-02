@@ -24,14 +24,16 @@ Runtime::Runtime(spkt::Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
-    d_scene.add<spkt::PhysicsEngine3D>();
-    d_scene.add<spkt::ParticleSystem>(&d_particleManager);
+    spkt::particle_system_init(d_scene.Entities(), &d_particleManager);
+
+    d_scene.Load("Resources/Anvil.yaml");
+    d_scene.add(spkt::physics_system);
+    d_scene.add(spkt::particle_system);
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::animation_system);
     d_scene.add(spkt::delete_below_50_system);
     d_scene.add(spkt::clear_events_system);
-    d_scene.Load("Resources/Anvil.yaml");
 
     d_runtimeCamera = d_scene.find<spkt::Camera3DComponent>();
 }
@@ -46,22 +48,22 @@ void Runtime::on_event(spkt::ev::Event& event)
     }
 
     if (d_consoleActive) {
-        d_console.OnEvent(event);
+        d_console.on_event(event);
         event.consume();
     }
 
-    d_scene.OnEvent(event);
+    d_scene.on_event(event);
 }
 
 void Runtime::on_update(double dt)
 {
     if (d_consoleActive) {
         d_window->SetCursorVisibility(true);
-        d_console.OnUpdate(dt);
+        d_console.on_update(dt);
     } else {
         d_window->SetCursorVisibility(false);
-        d_particleManager.OnUpdate(dt);
-        d_scene.OnUpdate(dt);
+        d_particleManager.on_update(dt);
+        d_scene.on_update(dt);
     }
 }
 

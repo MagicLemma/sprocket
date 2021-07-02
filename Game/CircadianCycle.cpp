@@ -13,7 +13,7 @@ CircadianCycle::CircadianCycle()
 {   
 }
 
-void CircadianCycle::OnUpdate(double dt)
+void CircadianCycle::on_update(double dt)
 {
     if (d_running) {
         d_seconds += d_speed * dt;

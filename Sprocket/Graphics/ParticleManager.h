@@ -37,7 +37,7 @@ public:
 
     void Emit(const Particle& particle);
 
-    void OnUpdate(double dt);
+    void on_update(double dt);
 
     Buffer* GetInstances() const { return d_instances.get(); }
 

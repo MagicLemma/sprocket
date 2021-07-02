@@ -36,7 +36,7 @@ void ParticleManager::Emit(const Particle& particle)
     d_index = --d_index % NUM_PARTICLES;
 }
 
-void ParticleManager::OnUpdate(double dt)
+void ParticleManager::on_update(double dt)
 {
     d_instanceData.clear();
     for (auto& particle : d_particles) {

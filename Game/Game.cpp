@@ -105,13 +105,16 @@ Game::Game(Window* window)
 void Game::load_scene(std::string_view file)
 {
     using namespace spkt;
+    d_scene.Load(file);
 
-    d_scene.add<GameGrid>();
+    d_scene.add(spkt::game_grid_system);
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::path_follower_system);
     d_scene.add(spkt::clear_events_system);
-    d_scene.Load(file);
+
+    spkt::game_grid_system_init(d_scene.Entities());
+
     d_paused = false;
 
     d_sceneFile = file;
@@ -148,17 +151,17 @@ void Game::on_event(spkt::ev::Event& event)
     const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
 
     if (d_paused) {
-        d_escapeMenu.OnEvent(event);
+        d_escapeMenu.on_event(event);
         event.consume();
     }
 
     // Editor UI event handling
     if (d_mode == Mode::EDITOR) {
-        d_devUI.OnEvent(event);
+        d_devUI.on_event(event);
     }
 
     // Game World event handling
-    d_hoveredEntityUI.OnEvent(event);
+    d_hoveredEntityUI.on_event(event);
 
     if (auto data = event.get_if<ev::WindowResize>()) {
         d_postProcessor.SetScreenSize(data->width, data->height);
@@ -209,7 +212,7 @@ void Game::on_event(spkt::ev::Event& event)
     }
 
     if (!event.is_consumed()) {
-        d_scene.OnEvent(event);
+        d_scene.on_event(event);
     }
 }
 
@@ -218,9 +221,9 @@ void Game::on_update(double dt)
     using namespace spkt;
     Audio::SetListener(d_camera);
 
-    d_hoveredEntityUI.OnUpdate(dt);
+    d_hoveredEntityUI.on_update(dt);
     if (!d_paused) {
-        d_cycle.OnUpdate(dt);
+        d_cycle.on_update(dt);
     }
     
     auto& sun = d_scene.find<SunComponent>().get<SunComponent>();
@@ -240,11 +243,11 @@ void Game::on_update(double dt)
     sun.direction = glm::normalize(sun.direction);
 
     if (!d_paused) {
-        d_scene.OnUpdate(dt);
+        d_scene.on_update(dt);
     }
 
-    d_devUI.OnUpdate(dt);
-    d_escapeMenu.OnUpdate(dt);
+    d_devUI.on_update(dt);
+    d_escapeMenu.on_update(dt);
 }
 
 void Game::on_render()

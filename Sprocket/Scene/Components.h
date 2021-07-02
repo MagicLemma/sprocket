@@ -19,6 +19,7 @@ namespace lua { class Script; }
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
+struct ParticleManager;
 
 // Components
 struct Runtime
@@ -167,7 +168,6 @@ struct CollisionEvent
 struct PhysicsSingleton
 {
     std::shared_ptr<physics_runtime> physics_runtime = nullptr;
-    std::vector<std::pair<apx::entity, apx::entity>> collisions = {};
 };
 
 struct InputSingleton
@@ -200,6 +200,11 @@ struct TileMapSingleton
 struct CameraSingleton
 {
     apx::entity camera_entity = apx::null;
+};
+
+struct ParticleSingleton
+{
+    ParticleManager* particle_manager = nullptr;
 };
 
 

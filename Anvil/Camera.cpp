@@ -18,7 +18,7 @@ Camera::Camera(Window* window, const glm::vec3& target)
 {
 }
 
-void Camera::OnUpdate(double dt)
+void Camera::on_update(double dt)
 {
     float horizSpeed = d_rotateSpeed * dt;
     float moveSpeed = d_moveSpeed * dt;
@@ -74,7 +74,7 @@ void Camera::OnUpdate(double dt)
     }
 }
 
-void Camera::OnEvent(ev::Event& event)
+void Camera::on_event(ev::Event& event)
 {
     d_input.on_event(event);
 

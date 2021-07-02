@@ -210,7 +210,7 @@ DrawCommand& UIEngine::GetDrawCommand()
     return d_currentPanel->mainCommand;
 }
 
-void UIEngine::OnEvent(ev::Event& event)
+void UIEngine::on_event(ev::Event& event)
 {
     if (d_focused != 0 && !event.is_consumed()) {
         if (auto data = event.get_if<ev::KeyboardTyped>()) {
@@ -245,7 +245,7 @@ void UIEngine::OnEvent(ev::Event& event)
     }
 }
 
-void UIEngine::OnUpdate(double dt)
+void UIEngine::on_update(double dt)
 {
     d_time += dt;
 }

@@ -180,7 +180,7 @@ Window::~Window()
 	glfwTerminate();
 }
 
-void Window::OnUpdate()
+void Window::on_update()
 {
 	glfwSwapBuffers(d_impl->window);
 	glfwPollEvents();

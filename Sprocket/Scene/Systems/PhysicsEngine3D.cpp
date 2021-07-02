@@ -6,7 +6,9 @@
 
 #include <variant>
 #include <unordered_map>
+#include <memory>
 
+#include <glm/glm.hpp>
 #include <reactphysics3d/reactphysics3d.h>
 
 namespace spkt {
@@ -268,56 +270,55 @@ bool is_on_floor(const rp3d::PhysicsWorld* const world, const rp3d::RigidBody* c
     return cb.GetEntity().valid();
 }
 
-}
-
-void PhysicsEngine3D::on_startup(spkt::registry& registry)
+PhysicsSingleton& get_physics_runtime(spkt::registry& registry)
 {
-    auto singleton = registry.find<Singleton>();
-    registry.emplace<CameraSingleton>(singleton);
-    auto& ps = registry.emplace<PhysicsSingleton>(singleton);
-    ps.physics_runtime = std::make_shared<physics_runtime>(registry);
-}
-
-void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
-{
-    auto singleton = registry.find<Singleton>();
-    if (!registry.valid(singleton)) {
-        return;
+    auto entity = registry.find<PhysicsSingleton>();
+    if (!registry.valid(entity)) [[unlikely]] {
+        entity = registry.create();
+        registry.emplace<Runtime>(entity);
+        registry.emplace<NameComponent>(entity, "::PhysicsRuntimeSingleton");
+        auto& ps = registry.emplace<PhysicsSingleton>(entity);
+        ps.physics_runtime = std::make_shared<physics_runtime>(registry);
     }
+    return registry.get<PhysicsSingleton>(entity);
+}
 
-    auto& ps = get_singleton<PhysicsSingleton>(registry);
+}
+
+void physics_system(spkt::registry& registry, double dt)
+{
+    auto& ps = get_physics_runtime(registry);
     auto& runtime = *ps.physics_runtime;
 
     // Pre Update
-    for (auto id : registry.view<RigidBody3DComponent>()) {
-        spkt::entity entity{registry, id};
-        const auto& tc = entity.get<Transform3DComponent>();
-        auto& physics = entity.get<RigidBody3DComponent>();
+    for (apx::entity entity : registry.view<RigidBody3DComponent>()) {
+        const auto& tc = registry.get<Transform3DComponent>(entity);
+        auto& physics = registry.get<RigidBody3DComponent>(entity);
 
-        if (!physics.runtime) {
+        if (!physics.runtime) [[unlikely]] {
             physics.runtime = std::make_shared<rigid_body_runtime>(
-                registry, id, runtime.world
+                registry, entity, runtime.world
             );
         }
 
         rp3d::RigidBody* body = physics.runtime->body;
 
-        if (entity.has<BoxCollider3DComponent>()) {
-            auto& cc = entity.get<BoxCollider3DComponent>();
-            if (!cc.runtime) {
-                cc.runtime = make_box_collider(&runtime.pc, registry, id, body);
+        if (registry.has<BoxCollider3DComponent>(entity)) {
+            auto& cc = registry.get<BoxCollider3DComponent>(entity);
+            if (!cc.runtime) [[unlikely]] {
+                cc.runtime = make_box_collider(&runtime.pc, registry, entity, body);
             }
         }
-        if (entity.has<SphereCollider3DComponent>()) {
-            auto& cc = entity.get<SphereCollider3DComponent>();
-            if (!cc.runtime) {
-                cc.runtime = make_sphere_collider(&runtime.pc, registry, id, body);
+        if (registry.has<SphereCollider3DComponent>(entity)) {
+            auto& cc = registry.get<SphereCollider3DComponent>(entity);
+            if (!cc.runtime) [[unlikely]] {
+                cc.runtime = make_sphere_collider(&runtime.pc, registry, entity, body);
             }
         }
-        if (entity.has<CapsuleCollider3DComponent>()) {
-            auto& cc = entity.get<CapsuleCollider3DComponent>();
-            if (!cc.runtime) {
-                cc.runtime = make_capsule_collider(&runtime.pc, registry, id, body);
+        if (registry.has<CapsuleCollider3DComponent>(entity)) {
+            auto& cc = registry.get<CapsuleCollider3DComponent>(entity);
+            if (!cc.runtime) [[unlikely]] {
+                cc.runtime = make_capsule_collider(&runtime.pc, registry, entity, body);
             }
         }
 
@@ -333,9 +334,9 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
 
             // TODO: Move to RigidBody3DComponent
             float mass = 0;
-            if (entity.has<BoxCollider3DComponent>()) { mass += entity.get<BoxCollider3DComponent>().mass; }
-            if (entity.has<SphereCollider3DComponent>()) { mass += entity.get<SphereCollider3DComponent>().mass; }
-            if (entity.has<CapsuleCollider3DComponent>()) { mass += entity.get<CapsuleCollider3DComponent>().mass; }
+            if (registry.has<BoxCollider3DComponent>(entity)) { mass += registry.get<BoxCollider3DComponent>(entity).mass; }
+            if (registry.has<SphereCollider3DComponent>(entity)) { mass += registry.get<SphereCollider3DComponent>(entity).mass; }
+            if (registry.has<CapsuleCollider3DComponent>(entity)) { mass += registry.get<CapsuleCollider3DComponent>(entity).mass; }
             body->setMass(mass);
         }
 
@@ -352,10 +353,10 @@ void PhysicsEngine3D::on_update(spkt::registry& registry, double dt)
     accumulator += static_cast<float>(dt);
 
     // First update the Physics World.
-    while (accumulator >= TIME_STEP) {
-        runtime.world->update(TIME_STEP);
-        accumulator -= TIME_STEP;
-        runtime.lastFrameLength += TIME_STEP;
+    while (accumulator >= PHYSICS_TIME_STEP) {
+        runtime.world->update(PHYSICS_TIME_STEP);
+        accumulator -= PHYSICS_TIME_STEP;
+        runtime.lastFrameLength += PHYSICS_TIME_STEP;
     }
 
     // Post Update

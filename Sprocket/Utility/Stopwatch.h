@@ -19,7 +19,7 @@ class Stopwatch
 
 public:
     Stopwatch();
-    double OnUpdate();
+    double on_update();
     u32 Framerate() const { return d_frameRate; }
 };
 

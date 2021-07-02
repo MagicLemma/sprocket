@@ -25,7 +25,7 @@ class CircadianCycle
 public:
     CircadianCycle();
 
-    void OnUpdate(double dt);
+    void on_update(double dt);
     void Start();
     void Stop();
     bool IsRunning() const { return d_running; }

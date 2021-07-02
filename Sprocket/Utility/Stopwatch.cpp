@@ -10,7 +10,7 @@ Stopwatch::Stopwatch()
     , d_frameCount(0)
 {}
 
-double Stopwatch::OnUpdate()
+double Stopwatch::on_update()
 {
     d_previousTime = d_currentTime;
     d_currentTime = d_clock.now();

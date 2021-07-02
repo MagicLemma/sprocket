@@ -25,8 +25,8 @@ class DevUI
 public:
     DevUI(Window* window);
 
-    void OnEvent(ev::Event& event);
-    void OnUpdate(double dt);
+    void on_event(ev::Event& event);
+    void on_update(double dt);
 
     void BlockEvents(bool val) { d_blockEvents = val; }
 
