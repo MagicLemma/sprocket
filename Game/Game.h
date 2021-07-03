@@ -12,7 +12,7 @@ enum class Mode { PLAYER, EDITOR };
 
 class Game
 {
-    spkt::Window*      d_window;
+    spkt::Window* d_window;
     spkt::AssetManager d_assetManager;
     
     Mode d_mode;
@@ -23,8 +23,8 @@ class Game
     spkt::entity d_worker;
     
     // RENDERING
-    spkt::Scene3DRenderer  d_entityRenderer;
-    spkt::PostProcessor   d_postProcessor;
+    spkt::Scene3DRenderer d_entityRenderer;
+    spkt::PostProcessor d_postProcessor;
 
     // Additional world setup
     spkt::CircadianCycle d_cycle;

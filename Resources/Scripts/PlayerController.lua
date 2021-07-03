@@ -5,7 +5,6 @@ function init(entity)
     TIME = 0.0
 
     SPAWN_POINT = vec3.new(-11, 2, 3)
-    ENTITY = entity
 end
 
 function on_update(entity, dt)
@@ -61,17 +60,17 @@ function on_update(entity, dt)
     end
 
     if IsMouseClicked(0) then
-        Fire()
+        Fire(entity)
     end
 
 end
 
-function Fire()
+function Fire(entity)
     local newEntity = NewEntity()
 
-    local dir = GetForwardsDir(ENTITY)
-    local pos = GetTransform3DComponent(ENTITY).position
-    local vel = GetRigidBody3DComponent(ENTITY).velocity
+    local dir = GetForwardsDir(entity)
+    local pos = GetTransform3DComponent(entity).position
+    local vel = GetRigidBody3DComponent(entity).velocity
     
     local tc = Transform3DComponent(pos + dir, vec3.new(0.1, 0.1, 0.1))
     AddTransform3DComponent(newEntity, tc)

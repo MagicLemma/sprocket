@@ -9,10 +9,10 @@
 namespace spkt {
 namespace {
 
-std::string Name(const spkt::entity& entity)
+std::string entiy_name(spkt::registry& registry, apx::entity entity)
 {
-    if (entity.has<NameComponent>()) {
-        return entity.get<NameComponent>().name;
+    if (registry.has<NameComponent>(entity)) {
+        return registry.get<NameComponent>(entity).name;
     }
     return "Entity";
 }
@@ -49,11 +49,6 @@ Anvil::Anvil(Window* window)
 
     d_scene = std::make_shared<Scene>(window);    
     d_scene->Load(d_sceneFile);
-
-    d_runtimeCamera = d_scene->find([](spkt::entity entity) {
-        return entity.has<Camera3DComponent>();
-    });
-
     d_activeScene = d_scene;
 }
 
@@ -66,8 +61,8 @@ void Anvil::on_event(ev::Event& event)
                 d_activeScene = d_scene;
                 d_window->SetCursorVisibility(true);
             }
-            else if (d_selected != spkt::null) {
-                d_selected = spkt::null;
+            else if (d_selected != apx::null) {
+                d_selected = apx::null;
             }
             else if (d_window->IsFullscreen()) {
                 d_window->SetWindowed(1280, 720);
@@ -109,16 +104,20 @@ void Anvil::on_update(double dt)
 
 glm::mat4 Anvil::get_proj_matrix() const
 {
-    return d_playingGame ? spkt::make_proj(d_runtimeCamera) : d_editor_camera.Proj();
+    auto& registry = d_activeScene->Entities();
+    return d_playingGame ? spkt::make_proj({registry, d_runtimeCamera}) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
-    return d_playingGame ? spkt::make_view(d_runtimeCamera) : d_editor_camera.View();
+    auto& registry = d_activeScene->Entities();
+    return d_playingGame ? spkt::make_view({registry, d_runtimeCamera}) : d_editor_camera.View();
 }
 
 void Anvil::on_render()
 {
+    auto& registry = d_activeScene->Entities();
+
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
     if (d_viewport_size != d_viewport.Size() && d_viewport_size.x > 0 && d_viewport_size.y > 0) {
@@ -197,7 +196,7 @@ void Anvil::on_render()
                 d_activeScene->add(spkt::clear_events_system);
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->find<Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->Entities().find<Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();
@@ -219,8 +218,8 @@ void Anvil::on_render()
 
         ImGuiXtra::Image(d_viewport.GetTexture());
 
-        if (!is_game_running() && d_selected.valid() && d_selected.has<Transform3DComponent>()) {
-            auto& c = d_selected.get<Transform3DComponent>();
+        if (!is_game_running() && registry.valid(d_selected) && registry.has<Transform3DComponent>(d_selected)) {
+            auto& c = registry.get<Transform3DComponent>(d_selected);
             auto tr = Maths::Transform(c.position, c.orientation, c.scale);
             ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
             Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
@@ -250,11 +249,10 @@ void Anvil::on_render()
             if (ImGui::BeginTabItem("Entities")) {
                 ImGui::BeginChild("Entity List");
                 int i = 0;
-                for (auto id : d_scene->Entities().all()) {
-                    spkt::entity entity{d_scene->Entities(), id};
-                    if (SubstringCI(Name(entity), search)) {
+                for (auto entity : registry.all()) {
+                    if (SubstringCI(entiy_name(registry, entity), search)) {
                         ImGui::PushID(i);
-                        if (ImGui::Selectable(Name(entity).c_str())) {
+                        if (ImGui::Selectable(entiy_name(registry, entity).c_str())) {
                             d_selected = entity;
                         }
                         ImGui::PopID();

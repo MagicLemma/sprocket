@@ -12,100 +12,101 @@ namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::entity entity = editor.selected();
+    spkt::registry& registry = editor.active_scene()->Entities();
+    apx::entity entity = editor.selected();
 
-    if (!entity.valid()) {
+    if (!registry.valid(entity)) {
         if (ImGui::Button("New Entity")) {
-            auto e = apx::create_from(editor.active_scene()->Entities());
-            editor.set_selected(e);
+            entity = registry.create();
+            editor.set_selected(entity);
         }
         return;
     }
     int count = 0;
 
-    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity.entity());
+    ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity);
 
-    if (entity.has<Runtime>()) {
-        auto& c = entity.get<Runtime>();
+    if (registry.has<Runtime>(entity)) {
+        auto& c = registry.get<Runtime>(entity);
         if (ImGui::CollapsingHeader("Runtime")) {
             ImGui::PushID(count++);
             
-            if (ImGui::Button("Delete")) { entity.remove<Runtime>(); }
+            if (ImGui::Button("Delete")) { registry.remove<Runtime>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<Singleton>()) {
-        auto& c = entity.get<Singleton>();
+    if (registry.has<Singleton>(entity)) {
+        auto& c = registry.get<Singleton>(entity);
         if (ImGui::CollapsingHeader("Singleton")) {
             ImGui::PushID(count++);
             
-            if (ImGui::Button("Delete")) { entity.remove<Singleton>(); }
+            if (ImGui::Button("Delete")) { registry.remove<Singleton>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<Event>()) {
-        auto& c = entity.get<Event>();
+    if (registry.has<Event>(entity)) {
+        auto& c = registry.get<Event>(entity);
         if (ImGui::CollapsingHeader("Event")) {
             ImGui::PushID(count++);
             
-            if (ImGui::Button("Delete")) { entity.remove<Event>(); }
+            if (ImGui::Button("Delete")) { registry.remove<Event>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<NameComponent>()) {
-        auto& c = entity.get<NameComponent>();
+    if (registry.has<NameComponent>(entity)) {
+        auto& c = registry.get<NameComponent>(entity);
         if (ImGui::CollapsingHeader("Name")) {
             ImGui::PushID(count++);
             ImGuiXtra::TextModifiable(c.name);
             
-            if (ImGui::Button("Delete")) { entity.remove<NameComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<NameComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<Transform2DComponent>()) {
-        auto& c = entity.get<Transform2DComponent>();
+    if (registry.has<Transform2DComponent>(entity)) {
+        auto& c = registry.get<Transform2DComponent>(entity);
         if (ImGui::CollapsingHeader("Transform 2D")) {
             ImGui::PushID(count++);
             ImGui::DragFloat2("Position", &c.position.x, 0.1f);
             ImGui::DragFloat("Rotation", &c.rotation, 0.01f);
             ImGui::DragFloat2("Scale", &c.scale.x, 0.1f);
             
-            if (ImGui::Button("Delete")) { entity.remove<Transform2DComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<Transform2DComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<Transform3DComponent>()) {
-        auto& c = entity.get<Transform3DComponent>();
+    if (registry.has<Transform3DComponent>(entity)) {
+        auto& c = registry.get<Transform3DComponent>(entity);
         if (ImGui::CollapsingHeader("Transform 3D")) {
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
             ImGuiXtra::Euler("Orientation", &c.orientation);
             ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
             ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
-            if (ImGui::Button("Delete")) { entity.remove<Transform3DComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<Transform3DComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<ModelComponent>()) {
-        auto& c = entity.get<ModelComponent>();
+    if (registry.has<ModelComponent>(entity)) {
+        auto& c = registry.get<ModelComponent>(entity);
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
             ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
             ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
             
-            if (ImGui::Button("Delete")) { entity.remove<ModelComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<ModelComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<RigidBody3DComponent>()) {
-        auto& c = entity.get<RigidBody3DComponent>();
+    if (registry.has<RigidBody3DComponent>(entity)) {
+        auto& c = registry.get<RigidBody3DComponent>(entity);
         if (ImGui::CollapsingHeader("Rigid Body 3D")) {
             ImGui::PushID(count++);
             ImGui::DragFloat3("Velocity", &c.velocity.x, 0.1f);
@@ -118,13 +119,13 @@ void Inspector::Show(Anvil& editor)
             ImGui::Checkbox("OnFloor", &c.onFloor);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<RigidBody3DComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<RigidBody3DComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<BoxCollider3DComponent>()) {
-        auto& c = entity.get<BoxCollider3DComponent>();
+    if (registry.has<BoxCollider3DComponent>(entity)) {
+        auto& c = registry.get<BoxCollider3DComponent>(entity);
         if (ImGui::CollapsingHeader("Box Collider 3D")) {
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
@@ -134,13 +135,13 @@ void Inspector::Show(Anvil& editor)
             ImGui::Checkbox("Apply Scale", &c.applyScale);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<BoxCollider3DComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<BoxCollider3DComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<SphereCollider3DComponent>()) {
-        auto& c = entity.get<SphereCollider3DComponent>();
+    if (registry.has<SphereCollider3DComponent>(entity)) {
+        auto& c = registry.get<SphereCollider3DComponent>(entity);
         if (ImGui::CollapsingHeader("Sphere Collider 3D")) {
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
@@ -149,13 +150,13 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Radius", &c.radius, 0.01f);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<SphereCollider3DComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<SphereCollider3DComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<CapsuleCollider3DComponent>()) {
-        auto& c = entity.get<CapsuleCollider3DComponent>();
+    if (registry.has<CapsuleCollider3DComponent>(entity)) {
+        auto& c = registry.get<CapsuleCollider3DComponent>(entity);
         if (ImGui::CollapsingHeader("Capsule Collider 3D")) {
             ImGui::PushID(count++);
             ImGui::DragFloat3("Position", &c.position.x, 0.1f);
@@ -165,63 +166,63 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Height", &c.height, 0.01f);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<CapsuleCollider3DComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<CapsuleCollider3DComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<ScriptComponent>()) {
-        auto& c = entity.get<ScriptComponent>();
+    if (registry.has<ScriptComponent>(entity)) {
+        auto& c = registry.get<ScriptComponent>(entity);
         if (ImGui::CollapsingHeader("Script")) {
             ImGui::PushID(count++);
             ImGuiXtra::File("Script", editor.window(), &c.script, "*.lua");
             ImGui::Checkbox("Active", &c.active);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<ScriptComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<ScriptComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<Camera3DComponent>()) {
-        auto& c = entity.get<Camera3DComponent>();
+    if (registry.has<Camera3DComponent>(entity)) {
+        auto& c = registry.get<Camera3DComponent>(entity);
         if (ImGui::CollapsingHeader("Camera 3D")) {
             ImGui::PushID(count++);
             ;
             ImGui::DragFloat("FOV", &c.fov, 0.01f);
             ImGui::DragFloat("Pitch", &c.pitch, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.remove<Camera3DComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<Camera3DComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<PathComponent>()) {
-        auto& c = entity.get<PathComponent>();
+    if (registry.has<PathComponent>(entity)) {
+        auto& c = registry.get<PathComponent>(entity);
         if (ImGui::CollapsingHeader("Path")) {
             ImGui::PushID(count++);
             ;
             ImGui::DragFloat("Speed", &c.speed, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.remove<PathComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<PathComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<LightComponent>()) {
-        auto& c = entity.get<LightComponent>();
+    if (registry.has<LightComponent>(entity)) {
+        auto& c = registry.get<LightComponent>(entity);
         if (ImGui::CollapsingHeader("Light")) {
             ImGui::PushID(count++);
             ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.remove<LightComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<LightComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<SunComponent>()) {
-        auto& c = entity.get<SunComponent>();
+    if (registry.has<SunComponent>(entity)) {
+        auto& c = registry.get<SunComponent>(entity);
         if (ImGui::CollapsingHeader("Sun")) {
             ImGui::PushID(count++);
             ImGui::ColorEdit3("Colour", &c.colour.r);
@@ -229,25 +230,25 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat3("Direction", &c.direction.x, 0.1f);
             ImGui::Checkbox("Shadows", &c.shadows);
             
-            if (ImGui::Button("Delete")) { entity.remove<SunComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<SunComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<AmbienceComponent>()) {
-        auto& c = entity.get<AmbienceComponent>();
+    if (registry.has<AmbienceComponent>(entity)) {
+        auto& c = registry.get<AmbienceComponent>(entity);
         if (ImGui::CollapsingHeader("Ambience")) {
             ImGui::PushID(count++);
             ImGui::ColorEdit3("Colour", &c.colour.r);
             ImGui::DragFloat("Brightness", &c.brightness, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.remove<AmbienceComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<AmbienceComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<ParticleComponent>()) {
-        auto& c = entity.get<ParticleComponent>();
+    if (registry.has<ParticleComponent>(entity)) {
+        auto& c = registry.get<ParticleComponent>(entity);
         if (ImGui::CollapsingHeader("Particle")) {
             ImGui::PushID(count++);
             ImGui::DragFloat("Interval", &c.interval, 0.01f);
@@ -258,49 +259,49 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Life", &c.life, 0.01f);
             ImGui::DragFloat("Accumulator", &c.accumulator, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.remove<ParticleComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<ParticleComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<MeshAnimationComponent>()) {
-        auto& c = entity.get<MeshAnimationComponent>();
+    if (registry.has<MeshAnimationComponent>(entity)) {
+        auto& c = registry.get<MeshAnimationComponent>(entity);
         if (ImGui::CollapsingHeader("Mesh Animation")) {
             ImGui::PushID(count++);
             ImGuiXtra::TextModifiable(c.name);
             ImGui::DragFloat("Time", &c.time, 0.01f);
             ImGui::DragFloat("Speed", &c.speed, 0.01f);
             
-            if (ImGui::Button("Delete")) { entity.remove<MeshAnimationComponent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<MeshAnimationComponent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<CollisionEvent>()) {
-        auto& c = entity.get<CollisionEvent>();
+    if (registry.has<CollisionEvent>(entity)) {
+        auto& c = registry.get<CollisionEvent>(entity);
         if (ImGui::CollapsingHeader("Collision Event")) {
             ImGui::PushID(count++);
             ;
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<CollisionEvent>(); }
+            if (ImGui::Button("Delete")) { registry.remove<CollisionEvent>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<PhysicsSingleton>()) {
-        auto& c = entity.get<PhysicsSingleton>();
+    if (registry.has<PhysicsSingleton>(entity)) {
+        auto& c = registry.get<PhysicsSingleton>(entity);
         if (ImGui::CollapsingHeader("Physics Singleton")) {
             ImGui::PushID(count++);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<PhysicsSingleton>(); }
+            if (ImGui::Button("Delete")) { registry.remove<PhysicsSingleton>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<InputSingleton>()) {
-        auto& c = entity.get<InputSingleton>();
+    if (registry.has<InputSingleton>(entity)) {
+        auto& c = registry.get<InputSingleton>(entity);
         if (ImGui::CollapsingHeader("Input Singleton")) {
             ImGui::PushID(count++);
             ;
@@ -314,13 +315,13 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Window Height", &c.window_height, 0.01f);
             ImGui::Checkbox("Window Resized", &c.window_resized);
             
-            if (ImGui::Button("Delete")) { entity.remove<InputSingleton>(); }
+            if (ImGui::Button("Delete")) { registry.remove<InputSingleton>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<GameGridSingleton>()) {
-        auto& c = entity.get<GameGridSingleton>();
+    if (registry.has<GameGridSingleton>(entity)) {
+        auto& c = registry.get<GameGridSingleton>(entity);
         if (ImGui::CollapsingHeader("Game Grid Singleton")) {
             ImGui::PushID(count++);
             ;
@@ -328,40 +329,40 @@ void Inspector::Show(Anvil& editor)
             ;
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<GameGridSingleton>(); }
+            if (ImGui::Button("Delete")) { registry.remove<GameGridSingleton>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<TileMapSingleton>()) {
-        auto& c = entity.get<TileMapSingleton>();
+    if (registry.has<TileMapSingleton>(entity)) {
+        auto& c = registry.get<TileMapSingleton>(entity);
         if (ImGui::CollapsingHeader("Tile Map Singleton")) {
             ImGui::PushID(count++);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<TileMapSingleton>(); }
+            if (ImGui::Button("Delete")) { registry.remove<TileMapSingleton>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<CameraSingleton>()) {
-        auto& c = entity.get<CameraSingleton>();
+    if (registry.has<CameraSingleton>(entity)) {
+        auto& c = registry.get<CameraSingleton>(entity);
         if (ImGui::CollapsingHeader("Camera Singleton")) {
             ImGui::PushID(count++);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<CameraSingleton>(); }
+            if (ImGui::Button("Delete")) { registry.remove<CameraSingleton>(entity); }
             ImGui::PopID();
         }
     }
 
-    if (entity.has<ParticleSingleton>()) {
-        auto& c = entity.get<ParticleSingleton>();
+    if (registry.has<ParticleSingleton>(entity)) {
+        auto& c = registry.get<ParticleSingleton>(entity);
         if (ImGui::CollapsingHeader("Particle Singleton")) {
             ImGui::PushID(count++);
             ;
             
-            if (ImGui::Button("Delete")) { entity.remove<ParticleSingleton>(); }
+            if (ImGui::Button("Delete")) { registry.remove<ParticleSingleton>(entity); }
             ImGui::PopID();
         }
     }
@@ -373,119 +374,119 @@ void Inspector::Show(Anvil& editor)
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-        if (!entity.has<Runtime>() && ImGui::Selectable("Runtime")) {
+        if (!registry.has<Runtime>(entity) && ImGui::Selectable("Runtime")) {
             Runtime c;
-            entity.add<Runtime>(c);
+            registry.add<Runtime>(entity, c);
         }
-        if (!entity.has<Singleton>() && ImGui::Selectable("Singleton")) {
+        if (!registry.has<Singleton>(entity) && ImGui::Selectable("Singleton")) {
             Singleton c;
-            entity.add<Singleton>(c);
+            registry.add<Singleton>(entity, c);
         }
-        if (!entity.has<Event>() && ImGui::Selectable("Event")) {
+        if (!registry.has<Event>(entity) && ImGui::Selectable("Event")) {
             Event c;
-            entity.add<Event>(c);
+            registry.add<Event>(entity, c);
         }
-        if (!entity.has<NameComponent>() && ImGui::Selectable("Name")) {
+        if (!registry.has<NameComponent>(entity) && ImGui::Selectable("Name")) {
             NameComponent c;
-            entity.add<NameComponent>(c);
+            registry.add<NameComponent>(entity, c);
         }
-        if (!entity.has<Transform2DComponent>() && ImGui::Selectable("Transform 2D")) {
+        if (!registry.has<Transform2DComponent>(entity) && ImGui::Selectable("Transform 2D")) {
             Transform2DComponent c;
-            entity.add<Transform2DComponent>(c);
+            registry.add<Transform2DComponent>(entity, c);
         }
-        if (!entity.has<Transform3DComponent>() && ImGui::Selectable("Transform 3D")) {
+        if (!registry.has<Transform3DComponent>(entity) && ImGui::Selectable("Transform 3D")) {
             Transform3DComponent c;
-            entity.add<Transform3DComponent>(c);
+            registry.add<Transform3DComponent>(entity, c);
         }
-        if (!entity.has<ModelComponent>() && ImGui::Selectable("Model")) {
+        if (!registry.has<ModelComponent>(entity) && ImGui::Selectable("Model")) {
             ModelComponent c;
-            entity.add<ModelComponent>(c);
+            registry.add<ModelComponent>(entity, c);
         }
-        if (!entity.has<RigidBody3DComponent>() && ImGui::Selectable("Rigid Body 3D")) {
+        if (!registry.has<RigidBody3DComponent>(entity) && ImGui::Selectable("Rigid Body 3D")) {
             RigidBody3DComponent c;
-            entity.add<RigidBody3DComponent>(c);
+            registry.add<RigidBody3DComponent>(entity, c);
         }
-        if (!entity.has<BoxCollider3DComponent>() && ImGui::Selectable("Box Collider 3D")) {
+        if (!registry.has<BoxCollider3DComponent>(entity) && ImGui::Selectable("Box Collider 3D")) {
             BoxCollider3DComponent c;
-            entity.add<BoxCollider3DComponent>(c);
+            registry.add<BoxCollider3DComponent>(entity, c);
         }
-        if (!entity.has<SphereCollider3DComponent>() && ImGui::Selectable("Sphere Collider 3D")) {
+        if (!registry.has<SphereCollider3DComponent>(entity) && ImGui::Selectable("Sphere Collider 3D")) {
             SphereCollider3DComponent c;
-            entity.add<SphereCollider3DComponent>(c);
+            registry.add<SphereCollider3DComponent>(entity, c);
         }
-        if (!entity.has<CapsuleCollider3DComponent>() && ImGui::Selectable("Capsule Collider 3D")) {
+        if (!registry.has<CapsuleCollider3DComponent>(entity) && ImGui::Selectable("Capsule Collider 3D")) {
             CapsuleCollider3DComponent c;
-            entity.add<CapsuleCollider3DComponent>(c);
+            registry.add<CapsuleCollider3DComponent>(entity, c);
         }
-        if (!entity.has<ScriptComponent>() && ImGui::Selectable("Script")) {
+        if (!registry.has<ScriptComponent>(entity) && ImGui::Selectable("Script")) {
             ScriptComponent c;
-            entity.add<ScriptComponent>(c);
+            registry.add<ScriptComponent>(entity, c);
         }
-        if (!entity.has<Camera3DComponent>() && ImGui::Selectable("Camera 3D")) {
+        if (!registry.has<Camera3DComponent>(entity) && ImGui::Selectable("Camera 3D")) {
             Camera3DComponent c;
-            entity.add<Camera3DComponent>(c);
+            registry.add<Camera3DComponent>(entity, c);
         }
-        if (!entity.has<PathComponent>() && ImGui::Selectable("Path")) {
+        if (!registry.has<PathComponent>(entity) && ImGui::Selectable("Path")) {
             PathComponent c;
-            entity.add<PathComponent>(c);
+            registry.add<PathComponent>(entity, c);
         }
-        if (!entity.has<LightComponent>() && ImGui::Selectable("Light")) {
+        if (!registry.has<LightComponent>(entity) && ImGui::Selectable("Light")) {
             LightComponent c;
-            entity.add<LightComponent>(c);
+            registry.add<LightComponent>(entity, c);
         }
-        if (!entity.has<SunComponent>() && ImGui::Selectable("Sun")) {
+        if (!registry.has<SunComponent>(entity) && ImGui::Selectable("Sun")) {
             SunComponent c;
-            entity.add<SunComponent>(c);
+            registry.add<SunComponent>(entity, c);
         }
-        if (!entity.has<AmbienceComponent>() && ImGui::Selectable("Ambience")) {
+        if (!registry.has<AmbienceComponent>(entity) && ImGui::Selectable("Ambience")) {
             AmbienceComponent c;
-            entity.add<AmbienceComponent>(c);
+            registry.add<AmbienceComponent>(entity, c);
         }
-        if (!entity.has<ParticleComponent>() && ImGui::Selectable("Particle")) {
+        if (!registry.has<ParticleComponent>(entity) && ImGui::Selectable("Particle")) {
             ParticleComponent c;
-            entity.add<ParticleComponent>(c);
+            registry.add<ParticleComponent>(entity, c);
         }
-        if (!entity.has<MeshAnimationComponent>() && ImGui::Selectable("Mesh Animation")) {
+        if (!registry.has<MeshAnimationComponent>(entity) && ImGui::Selectable("Mesh Animation")) {
             MeshAnimationComponent c;
-            entity.add<MeshAnimationComponent>(c);
+            registry.add<MeshAnimationComponent>(entity, c);
         }
-        if (!entity.has<CollisionEvent>() && ImGui::Selectable("Collision Event")) {
+        if (!registry.has<CollisionEvent>(entity) && ImGui::Selectable("Collision Event")) {
             CollisionEvent c;
-            entity.add<CollisionEvent>(c);
+            registry.add<CollisionEvent>(entity, c);
         }
-        if (!entity.has<PhysicsSingleton>() && ImGui::Selectable("Physics Singleton")) {
+        if (!registry.has<PhysicsSingleton>(entity) && ImGui::Selectable("Physics Singleton")) {
             PhysicsSingleton c;
-            entity.add<PhysicsSingleton>(c);
+            registry.add<PhysicsSingleton>(entity, c);
         }
-        if (!entity.has<InputSingleton>() && ImGui::Selectable("Input Singleton")) {
+        if (!registry.has<InputSingleton>(entity) && ImGui::Selectable("Input Singleton")) {
             InputSingleton c;
-            entity.add<InputSingleton>(c);
+            registry.add<InputSingleton>(entity, c);
         }
-        if (!entity.has<GameGridSingleton>() && ImGui::Selectable("Game Grid Singleton")) {
+        if (!registry.has<GameGridSingleton>(entity) && ImGui::Selectable("Game Grid Singleton")) {
             GameGridSingleton c;
-            entity.add<GameGridSingleton>(c);
+            registry.add<GameGridSingleton>(entity, c);
         }
-        if (!entity.has<TileMapSingleton>() && ImGui::Selectable("Tile Map Singleton")) {
+        if (!registry.has<TileMapSingleton>(entity) && ImGui::Selectable("Tile Map Singleton")) {
             TileMapSingleton c;
-            entity.add<TileMapSingleton>(c);
+            registry.add<TileMapSingleton>(entity, c);
         }
-        if (!entity.has<CameraSingleton>() && ImGui::Selectable("Camera Singleton")) {
+        if (!registry.has<CameraSingleton>(entity) && ImGui::Selectable("Camera Singleton")) {
             CameraSingleton c;
-            entity.add<CameraSingleton>(c);
+            registry.add<CameraSingleton>(entity, c);
         }
-        if (!entity.has<ParticleSingleton>() && ImGui::Selectable("Particle Singleton")) {
+        if (!registry.has<ParticleSingleton>(entity) && ImGui::Selectable("Particle Singleton")) {
             ParticleSingleton c;
-            entity.add<ParticleSingleton>(c);
+            registry.add<ParticleSingleton>(entity, c);
         }
         ImGui::EndMenu();
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        spkt::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
+        apx::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {
-        entity.destroy();
+        registry.destroy(entity);
         editor.clear_selected();
     }
 }
