@@ -47,7 +47,6 @@ class Anvil
     bool d_playingGame = false;
     bool d_showColliders = false;
 
-    void add_entity_to_list(const spkt::entity& entity);
     apx::entity d_selected = apx::null;
 
     // Panels
