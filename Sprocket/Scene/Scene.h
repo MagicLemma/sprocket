@@ -44,8 +44,6 @@ public:
 
     void on_update(double dt);
     void on_event(ev::Event& event);
-
-    std::size_t Size() const;
 };
 
 }

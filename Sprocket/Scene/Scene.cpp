@@ -87,9 +87,4 @@ void Scene::on_event(ev::Event& event)
     input.window_height = d_window->Height() > 0 ? (float)d_window->Height() : 1.0f;;
 }
 
-std::size_t Scene::Size() const
-{
-    return d_registry.size();
-}
-
 }
