@@ -20,7 +20,7 @@ class Game
     spkt::Scene d_scene;
 
     apx::handle d_camera;
-    apx::handle d_worker;
+    apx::entity d_worker;
     
     // RENDERING
     spkt::Scene3DRenderer d_entityRenderer;

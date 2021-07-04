@@ -116,11 +116,12 @@ void Game::load_scene(std::string_view file)
     spkt::game_grid_system_init(d_scene.Entities());
 
     d_paused = false;
-
     d_sceneFile = file;
 
-    d_worker = d_scene.find<NameComponent>([](apx::handle entity) {
-        return entity.get<NameComponent>().name == "Worker";
+    auto& registry = d_scene.Entities();
+
+    d_worker = registry.find<NameComponent>([&](apx::entity entity) {
+        return registry.get<NameComponent>(entity).name == "Worker";
     });
 
     d_camera = d_scene.find<NameComponent>([](apx::handle entity) {
@@ -130,7 +131,7 @@ void Game::load_scene(std::string_view file)
     auto& cam = get_singleton<CameraSingleton>(d_scene.Entities());
     cam.camera_entity = d_camera.entity();
 
-    assert(d_worker.valid());
+    assert(registry.valid(d_worker));
     assert(d_camera.valid());
 }
 
@@ -183,11 +184,11 @@ void Game::on_event(spkt::ev::Event& event)
             glm::vec3 mousePos = cameraPos + lambda * direction;
             mousePos.y = 0.5f;
             
-            auto& path = d_worker.get<PathComponent>();
+            auto& path = registry.get<PathComponent>(d_worker);
 
             if (data->button == Mouse::LEFT) {
                 std::queue<glm::vec3>().swap(path.markers);
-                auto pos = d_worker.get<Transform3DComponent>().position;
+                auto pos = registry.get<Transform3DComponent>(d_worker).position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
                     const auto& grid = get_singleton<GameGridSingleton>(registry);
                     path.markers = GenerateAStarPath(
