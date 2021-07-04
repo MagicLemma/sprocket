@@ -100,7 +100,7 @@ void ColliderRenderer::Draw(
     d_shader.Unbind();
 }
 
-void ColliderRenderer::Draw(spkt::entity camera, Scene& scene)
+void ColliderRenderer::Draw(apx::handle camera, Scene& scene)
 {
     glm::mat4 proj = spkt::make_proj(camera);
     glm::mat4 view = spkt::make_view(camera);

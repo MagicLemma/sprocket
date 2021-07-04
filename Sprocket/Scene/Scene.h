@@ -48,23 +48,23 @@ public:
     std::size_t Size() const;
 
     template <typename... Comps>
-    spkt::entity find(const std::function<bool(spkt::entity)>& function = [](spkt::entity) { return true; });
+    apx::handle find(const std::function<bool(apx::handle)>& function = [](apx::handle) { return true; });
 
     template <typename... Comps>
-    apx::generator<spkt::entity> view();
+    apx::generator<apx::handle> view();
 };
 
 template <typename... Comps>
-spkt::entity Scene::find(const std::function<bool(spkt::entity)>& function)
+apx::handle Scene::find(const std::function<bool(apx::handle)>& function)
 {
     for (auto entity : view<Comps...>()) {
         if (function(entity)) { return entity; }
     }
-    return spkt::null;
+    return apx::null_handle;
 }
 
 template <typename... Comps>
-apx::generator<spkt::entity> Scene::view()
+apx::generator<apx::handle> Scene::view()
 {
     if constexpr (sizeof...(Comps) > 0) {
         for (auto id : d_registry.view<Comps...>()) {

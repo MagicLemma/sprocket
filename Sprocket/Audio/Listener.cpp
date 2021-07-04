@@ -6,7 +6,7 @@
 namespace spkt {
 namespace Audio {
 
-void SetListener(spkt::entity e)
+void SetListener(apx::handle e)
 {
     if (!e.has<Transform3DComponent>()) { return; }
     auto tr = e.get<Transform3DComponent>();

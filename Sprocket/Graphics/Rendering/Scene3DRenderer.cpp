@@ -224,7 +224,7 @@ void Scene3DRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void Scene3DRenderer::Draw(spkt::entity camera, Scene& scene)
+void Scene3DRenderer::Draw(apx::handle camera, Scene& scene)
 {
     glm::mat4 proj = spkt::make_proj(camera);
     glm::mat4 view = spkt::make_view(camera);

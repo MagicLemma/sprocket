@@ -35,13 +35,13 @@ void script_system(spkt::registry& registry, double dt)
             lua::load_entity_component_functions(script);
             if (script.has_function(INIT_FUNCTION)) {
                 script.set_value("__command_list__", &commands);
-                script.call_function<void>(INIT_FUNCTION, spkt::entity{registry, entity});
+                script.call_function<void>(INIT_FUNCTION, apx::handle{registry, entity});
             }
         }
         else {
             lua::Script& script = *sc.script_runtime;
             script.set_value("__command_list__", &commands);
-            script.call_function<void>(UPDATE_FUNCTION, spkt::entity{registry, entity}, dt);
+            script.call_function<void>(UPDATE_FUNCTION, apx::handle{registry, entity}, dt);
         }
     }
 

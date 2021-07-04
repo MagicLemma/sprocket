@@ -119,19 +119,19 @@ void Game::load_scene(std::string_view file)
 
     d_sceneFile = file;
 
-    d_worker = d_scene.find<NameComponent>([](spkt::entity entity) {
+    d_worker = d_scene.find<NameComponent>([](apx::handle entity) {
         return entity.get<NameComponent>().name == "Worker";
     });
 
-    d_camera = d_scene.find<NameComponent>([](spkt::entity entity) {
+    d_camera = d_scene.find<NameComponent>([](apx::handle entity) {
         return entity.get<NameComponent>().name == "Camera";
     });
 
     auto& cam = get_singleton<CameraSingleton>(d_scene.Entities());
     cam.camera_entity = d_camera.entity();
 
-    assert(d_worker != spkt::null);
-    assert(d_camera != spkt::null);
+    assert(d_worker.valid());
+    assert(d_camera.valid());
 }
 
 void Game::on_event(spkt::ev::Event& event)
@@ -292,7 +292,7 @@ void Game::on_render()
         if (game_grid.clicked_square.has_value()) {
             auto it = tiles.find(game_grid.clicked_square.value());
             apx::entity e = (it != tiles.end()) ? it->second : apx::null;
-            spkt::entity selected{registry, e};
+            apx::handle selected{registry, e};
 
             float width = 0.15f * w;
             float height = 0.6f * h;
@@ -337,7 +337,7 @@ void Game::on_render()
 
         auto it = tiles.find(game_grid.hovered_square);
         apx::entity e = (it != tiles.end()) ? it->second : apx::null;
-        spkt::entity hovered{registry, e};
+        apx::handle hovered{registry, e};
         if (hovered.valid()) {
             float width = 200;
             float height = 50;

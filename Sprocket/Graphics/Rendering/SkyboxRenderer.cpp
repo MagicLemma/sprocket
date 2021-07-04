@@ -26,7 +26,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_vao->Draw();
 }
 
-void SkyboxRenderer::Draw(const CubeMap& skybox, spkt::entity camera)
+void SkyboxRenderer::Draw(const CubeMap& skybox, apx::handle camera)
 {
     Draw(skybox, spkt::make_proj(camera), spkt::make_view(camera));
 }

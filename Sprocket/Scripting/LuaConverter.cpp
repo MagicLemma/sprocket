@@ -95,16 +95,16 @@ void* Converter<void*>::read(lua_State* L, int index)
     return lua_touserdata(L, index);
 }
 
-void Converter<spkt::entity>::push(lua_State* L, const spkt::entity& value)
+void Converter<apx::handle>::push(lua_State* L, const apx::handle& value)
 {
-    spkt::entity* handle = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+    apx::handle* handle = static_cast<apx::handle*>(lua_newuserdata(L, sizeof(apx::handle)));
     *handle = value;
 }
 
-spkt::entity Converter<spkt::entity>::read(lua_State* L, int index)
+apx::handle Converter<apx::handle>::read(lua_State* L, int index)
 {
     assert(lua_isuserdata(L, index));
-    return *static_cast<spkt::entity*>(lua_touserdata(L, index));
+    return *static_cast<apx::handle*>(lua_touserdata(L, index));
 }
 
 void Converter<apx::entity>::push(lua_State* L, const apx::entity& value)

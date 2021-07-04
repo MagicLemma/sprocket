@@ -4,7 +4,7 @@
 namespace spkt {
 namespace Audio {
     
-void SetListener(spkt::entity e);
+void SetListener(apx::handle e);
 
 float GetMasterVolume();
 void SetMasterVolume(float volume);
