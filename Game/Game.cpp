@@ -124,15 +124,15 @@ void Game::load_scene(std::string_view file)
         return registry.get<NameComponent>(entity).name == "Worker";
     });
 
-    d_camera = d_scene.find<NameComponent>([](apx::handle entity) {
-        return entity.get<NameComponent>().name == "Camera";
+    d_camera = registry.find<NameComponent>([&](apx::entity entity) {
+        return registry.get<NameComponent>(entity).name == "Camera";
     });
 
     auto& cam = get_singleton<CameraSingleton>(d_scene.Entities());
-    cam.camera_entity = d_camera.entity();
+    cam.camera_entity = d_camera;
 
     assert(registry.valid(d_worker));
-    assert(d_camera.valid());
+    assert(registry.valid(d_camera));
 }
 
 void Game::on_event(spkt::ev::Event& event)
@@ -169,15 +169,15 @@ void Game::on_event(spkt::ev::Event& event)
     }
 
     if (auto data = event.get_if<ev::MouseButtonPressed>()) {
-        auto& tr = d_camera.get<Transform3DComponent>();
+        auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
                 d_window->GetMousePos(),
                 d_window->Width(),
                 d_window->Height(),
-                spkt::make_view(d_camera),
-                spkt::make_proj(d_camera)
+                spkt::make_view({registry, d_camera}),
+                spkt::make_proj({registry, d_camera})
             );
 
             float lambda = -cameraPos.y / direction.y;
@@ -220,7 +220,9 @@ void Game::on_event(spkt::ev::Event& event)
 void Game::on_update(double dt)
 {
     using namespace spkt;
-    Audio::SetListener(d_camera);
+    auto& registry = d_scene.Entities();
+
+    Audio::SetListener({registry, d_camera});
 
     d_hoveredEntityUI.on_update(dt);
     if (!d_paused) {
@@ -259,7 +261,7 @@ void Game::on_render()
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    auto& tc = d_camera.get<Transform3DComponent>();
+    auto& tc = registry.get<Transform3DComponent>(d_camera);
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
     d_shadowMap.Draw(
         d_scene.find<SunComponent>().get<SunComponent>().direction,
@@ -272,7 +274,7 @@ void Game::on_render()
     }
 
     d_entityRenderer.EnableShadows(d_shadowMap);
-    d_entityRenderer.Draw(d_camera, d_scene);
+    d_entityRenderer.Draw({registry, d_camera}, d_scene);
 
     if (d_paused) {
         d_postProcessor.Unbind();
@@ -359,8 +361,8 @@ void Game::on_render()
     if (d_mode == Mode::EDITOR) {
         d_devUI.StartFrame();
 
-        glm::mat4 view = spkt::make_view(d_camera);
-        glm::mat4 proj = spkt::make_proj(d_camera);
+        glm::mat4 view = spkt::make_view({registry, d_camera});
+        glm::mat4 proj = spkt::make_proj({registry, d_camera});
 
         SunInfoPanel(d_devUI, d_cycle);
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
