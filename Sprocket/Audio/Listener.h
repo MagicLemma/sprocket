@@ -2,12 +2,10 @@
 #include "apecs.hpp"
 
 namespace spkt {
-namespace Audio {
     
-void SetListener(apx::handle e);
+void set_listener(apx::registry& registry, apx::entity entity);
 
-float GetMasterVolume();
-void SetMasterVolume(float volume);
+float get_master_volume();
+void set_master_volume(float volume);
 
-}
 }

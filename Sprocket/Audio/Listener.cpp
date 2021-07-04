@@ -4,12 +4,11 @@
 #include <SFML/Audio.hpp>
 
 namespace spkt {
-namespace Audio {
 
-void SetListener(apx::handle e)
+void set_listener(apx::registry& registry, apx::entity entity)
 {
-    if (!e.has<Transform3DComponent>()) { return; }
-    auto tr = e.get<Transform3DComponent>();
+    if (!registry.has<Transform3DComponent>(entity)) { return; }
+    auto tr = registry.get<Transform3DComponent>(entity);
     auto pos = tr.position;
     sf::Listener::setPosition(pos.x, pos.y, pos.z);
 
@@ -17,15 +16,14 @@ void SetListener(apx::handle e)
     sf::Listener::setDirection(dir.x, dir.y, dir.z);
 }
 
-float GetMasterVolume()
+float get_master_volume()
 {
     return sf::Listener::getGlobalVolume();
 }
 
-void SetMasterVolume(float volume)
+void set_master_volume(float volume)
 {
     sf::Listener::setGlobalVolume(volume);
 }
 
-}
 }

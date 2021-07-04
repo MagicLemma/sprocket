@@ -222,7 +222,7 @@ void Game::on_update(double dt)
     using namespace spkt;
     auto& registry = d_scene.Entities();
 
-    Audio::SetListener({registry, d_camera});
+    spkt::set_listener(registry, d_camera);
 
     d_hoveredEntityUI.on_update(dt);
     if (!d_paused) {
@@ -436,9 +436,9 @@ void Game::on_render()
         d_escapeMenu.StartPanel("VolumePanel", &shape, PanelType::DRAGGABLE);
         d_escapeMenu.Text("Volume", 48.0f, {0, 0, 400, 100});
 
-        float volume = spkt::Audio::GetMasterVolume();
+        float volume = spkt::get_master_volume();
         d_escapeMenu.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
-        spkt::Audio::SetMasterVolume(volume);
+        spkt::set_master_volume(volume);
         
         d_escapeMenu.EndPanel();
     }
