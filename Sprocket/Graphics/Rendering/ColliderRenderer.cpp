@@ -17,9 +17,9 @@ ColliderRenderer::ColliderRenderer()
 }
 
 void ColliderRenderer::Draw(
+    apx::registry& registry,
     const glm::mat4& proj,
-    const glm::mat4& view,
-    Scene& scene)
+    const glm::mat4& view)
 {
     RenderContext rc;
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -32,9 +32,9 @@ void ColliderRenderer::Draw(
     
     static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube.get());
-    for (auto entity : scene.view<BoxCollider3DComponent>()) {
-        const auto& c = entity.get<BoxCollider3DComponent>();
-        auto tr = entity.get<Transform3DComponent>();
+    for (auto entity : registry.view<BoxCollider3DComponent>()) {
+        const auto& c = registry.get<BoxCollider3DComponent>(entity);
+        auto tr = registry.get<Transform3DComponent>(entity);
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, c.halfExtents);
@@ -47,9 +47,9 @@ void ColliderRenderer::Draw(
 
     static auto s_sphere = Mesh::FromFile("Resources/Models/LowPolySphere.obj");
     d_vao->SetModel(s_sphere.get());
-    for (auto entity : scene.view<SphereCollider3DComponent>()) {
-        const auto& c = entity.get<SphereCollider3DComponent>();
-        auto tr = entity.get<Transform3DComponent>();
+    for (auto entity : registry.view<SphereCollider3DComponent>()) {
+        const auto& c = registry.get<SphereCollider3DComponent>(entity);
+        auto tr = registry.get<Transform3DComponent>(entity);
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, {c.radius, c.radius, c.radius});
@@ -60,11 +60,11 @@ void ColliderRenderer::Draw(
     static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
 
-    for (auto entity : scene.view<CapsuleCollider3DComponent>()) {
-        const auto& c = entity.get<CapsuleCollider3DComponent>();
+    for (auto entity : registry.view<CapsuleCollider3DComponent>()) {
+        const auto& c = registry.get<CapsuleCollider3DComponent>(entity);
 
         {  // Top Hemisphere
-            auto tr = entity.get<Transform3DComponent>();
+            auto tr = registry.get<Transform3DComponent>(entity);
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, c.height/2, 0.0});
@@ -75,7 +75,7 @@ void ColliderRenderer::Draw(
         }
 
         {  // Middle Cylinder
-            auto tr = entity.get<Transform3DComponent>();
+            auto tr = registry.get<Transform3DComponent>(entity);
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::scale(transform, {c.radius, c.height, c.radius});
@@ -85,7 +85,7 @@ void ColliderRenderer::Draw(
         }
 
         {  // Bottom Hemisphere
-            auto tr = entity.get<Transform3DComponent>();
+            auto tr = registry.get<Transform3DComponent>(entity);
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, -c.height/2, 0.0});
@@ -100,11 +100,11 @@ void ColliderRenderer::Draw(
     d_shader.Unbind();
 }
 
-void ColliderRenderer::Draw(apx::handle camera, Scene& scene)
+void ColliderRenderer::Draw(apx::registry& registry, apx::entity camera)
 {
-    glm::mat4 proj = spkt::make_proj(camera);
-    glm::mat4 view = spkt::make_view(camera);
-    Draw(proj, view, scene);
+    glm::mat4 proj = spkt::make_proj(registry, camera);
+    glm::mat4 view = spkt::make_view(registry, camera);
+    Draw(registry, proj, view);
 }
 
 }

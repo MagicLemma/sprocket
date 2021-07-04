@@ -105,13 +105,13 @@ void Anvil::on_update(double dt)
 glm::mat4 Anvil::get_proj_matrix() const
 {
     auto& registry = d_activeScene->Entities();
-    return d_playingGame ? spkt::make_proj({registry, d_runtimeCamera}) : d_editor_camera.Proj();
+    return d_playingGame ? spkt::make_proj(registry, d_runtimeCamera) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
     auto& registry = d_activeScene->Entities();
-    return d_playingGame ? spkt::make_view({registry, d_runtimeCamera}) : d_editor_camera.View();
+    return d_playingGame ? spkt::make_view(registry, d_runtimeCamera) : d_editor_camera.View();
 }
 
 void Anvil::on_render()
@@ -130,10 +130,10 @@ void Anvil::on_render()
     glm::mat4 proj = get_proj_matrix();
     glm::mat4 view = get_view_matrix();
 
-    d_entity_renderer.Draw(proj, view, *d_activeScene);
+    d_entity_renderer.Draw(registry, proj, view);
     d_skybox_renderer.Draw(d_skybox, proj, view);
     if (d_showColliders) {
-        d_collider_renderer.Draw(proj, view, *d_activeScene);
+        d_collider_renderer.Draw(registry, proj, view);
     }
 
     d_viewport.Unbind();

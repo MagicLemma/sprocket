@@ -22,7 +22,7 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(AssetManager* assetManager);
 
-    void Draw(const CubeMap& skybox, apx::handle camera);
+    void Draw(const CubeMap& skybox, apx::registry& registry, apx::entity camera);
     void Draw(const CubeMap& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 

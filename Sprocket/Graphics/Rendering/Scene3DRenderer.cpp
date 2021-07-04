@@ -36,9 +36,9 @@ std::unique_ptr<Buffer> GetInstanceBuffer()
 
 void UploadUniforms(
     const Shader& shader,
+    apx::registry& registry,
     const glm::mat4& proj,
-    const glm::mat4& view,
-    Scene& scene
+    const glm::mat4& view
 )
 {
     u32 MAX_NUM_LIGHTS = 5;
@@ -47,26 +47,26 @@ void UploadUniforms(
     shader.LoadMat4("u_view_matrix", view);
 
     // Load sun to shader
-    if (auto s = scene.find<SunComponent>(); s.valid()) {
-        const auto& sun = s.get<SunComponent>();
+    if (auto s = registry.find<SunComponent>(); registry.valid(s)) {
+        const auto& sun = registry.get<SunComponent>(s);
         shader.LoadVec3("u_sun_direction", sun.direction);
         shader.LoadVec3("u_sun_colour", sun.colour);
         shader.LoadFloat("u_sun_brightness", sun.brightness);
     }
 
     // Load ambience to shader
-    if (auto a = scene.find<AmbienceComponent>(); a.valid()) {
-        const auto& ambience = a.get<AmbienceComponent>();
+    if (auto a = registry.find<AmbienceComponent>(); registry.valid(a)) {
+        const auto& ambience = registry.get<AmbienceComponent>(a);
         shader.LoadVec3("u_ambience_colour", ambience.colour);
         shader.LoadFloat("u_ambience_brightness", ambience.brightness);
     }
     
     // Load point lights to shader
     std::size_t i = 0;
-    for (auto entity : scene.view<LightComponent, Transform3DComponent>()) {
+    for (auto entity : registry.view<LightComponent, Transform3DComponent>()) {
         if (i < MAX_NUM_LIGHTS) {
-            auto position = entity.get<Transform3DComponent>().position;
-            auto light = entity.get<LightComponent>();
+            auto position = registry.get<Transform3DComponent>(entity).position;
+            auto light = registry.get<LightComponent>(entity);
             shader.LoadVec3(ArrayName("u_light_pos", i), position);
             shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
             shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
@@ -146,16 +146,16 @@ void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 }
 
 void Scene3DRenderer::Draw(
+    apx::registry& registry,
     const glm::mat4& proj,
-    const glm::mat4& view,
-    Scene& scene)
+    const glm::mat4& view)
 {
     RenderContext rc;
     rc.FaceCulling(true);
     rc.DepthTesting(true);
 
-    UploadUniforms(d_staticShader, proj, view, scene);
-    UploadUniforms(d_animatedShader, proj, view, scene);
+    UploadUniforms(d_staticShader, registry, proj, view);
+    UploadUniforms(d_animatedShader, registry, proj, view);
 
     std::unordered_map<
         std::pair<std::string, std::string>,
@@ -164,9 +164,9 @@ void Scene3DRenderer::Draw(
     > commands;
 
     d_staticShader.Bind();
-    for (auto entity : scene.view<ModelComponent, Transform3DComponent>()) {
-        const auto& tc = entity.get<Transform3DComponent>();
-        const auto& mc = entity.get<ModelComponent>();
+    for (auto entity : registry.view<ModelComponent, Transform3DComponent>()) {
+        const auto& tc = registry.get<Transform3DComponent>(entity);
+        const auto& mc = registry.get<ModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
         if (mesh->IsAnimated()) { continue; }
@@ -193,9 +193,9 @@ void Scene3DRenderer::Draw(
     }
 
     d_animatedShader.Bind();
-    for (auto entity : scene.view<ModelComponent>()) {
-        const auto& tc = entity.get<Transform3DComponent>();
-        const auto& mc = entity.get<ModelComponent>();
+    for (auto entity : registry.view<ModelComponent>()) {
+        const auto& tc = registry.get<Transform3DComponent>(entity);
+        const auto& mc = registry.get<ModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
         if (!mesh->IsAnimated()) { continue; }
@@ -205,8 +205,8 @@ void Scene3DRenderer::Draw(
 
         d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        if (entity.has<MeshAnimationComponent>()) {
-            const auto& ac = entity.get<MeshAnimationComponent>();
+        if (registry.has<MeshAnimationComponent>(entity)) {
+            const auto& ac = registry.get<MeshAnimationComponent>(entity);
             auto poses = mesh->GetPose(ac.name, ac.time);
             
             int numBones = std::min(MAX_BONES, (int)poses.size());
@@ -224,11 +224,11 @@ void Scene3DRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void Scene3DRenderer::Draw(apx::handle camera, Scene& scene)
+void Scene3DRenderer::Draw(apx::registry& registry, apx::entity camera)
 {
-    glm::mat4 proj = spkt::make_proj(camera);
-    glm::mat4 view = spkt::make_view(camera);
-    Draw(proj, view, scene);
+    glm::mat4 proj = spkt::make_proj(registry, camera);
+    glm::mat4 view = spkt::make_view(registry, camera);
+    Draw(registry, proj, view);
 }
 
 void Scene3DRenderer::EnableParticles(ParticleManager* particleManager)

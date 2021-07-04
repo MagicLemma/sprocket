@@ -1,8 +1,8 @@
 #pragma once
 #include "Shader.h"
 #include "VertexArray.h"
+
 #include "apecs.hpp"
-#include "Scene.h"
 
 namespace spkt {
 
@@ -15,8 +15,8 @@ class ColliderRenderer
 public:
     ColliderRenderer();
 
-    void Draw(apx::handle camera, Scene& scene);
-    void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);
+    void Draw(apx::registry& registry, apx::entity camera);
+    void Draw(apx::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
     Shader& GetShader() { return d_shader; }
 };

@@ -176,8 +176,8 @@ void Game::on_event(spkt::ev::Event& event)
                 d_window->GetMousePos(),
                 d_window->Width(),
                 d_window->Height(),
-                spkt::make_view({registry, d_camera}),
-                spkt::make_proj({registry, d_camera})
+                spkt::make_view(registry, d_camera),
+                spkt::make_proj(registry, d_camera)
             );
 
             float lambda = -cameraPos.y / direction.y;
@@ -274,7 +274,7 @@ void Game::on_render()
     }
 
     d_entityRenderer.EnableShadows(d_shadowMap);
-    d_entityRenderer.Draw({registry, d_camera}, d_scene);
+    d_entityRenderer.Draw(registry, d_camera);
 
     if (d_paused) {
         d_postProcessor.Unbind();
@@ -361,8 +361,8 @@ void Game::on_render()
     if (d_mode == Mode::EDITOR) {
         d_devUI.StartFrame();
 
-        glm::mat4 view = spkt::make_view({registry, d_camera});
-        glm::mat4 proj = spkt::make_proj({registry, d_camera});
+        glm::mat4 view = spkt::make_view(registry, d_camera);
+        glm::mat4 proj = spkt::make_proj(registry, d_camera);
 
         SunInfoPanel(d_devUI, d_cycle);
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());

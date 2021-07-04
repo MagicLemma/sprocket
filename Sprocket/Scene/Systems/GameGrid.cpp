@@ -72,8 +72,8 @@ void game_grid_system(apx::registry& registry, double)
         input.mouse_pos,
         input.window_width,
         input.window_height,
-        spkt::make_view({registry, cam.camera_entity}),
-        spkt::make_proj({registry, cam.camera_entity})
+        spkt::make_view(registry, cam.camera_entity),
+        spkt::make_proj(registry, cam.camera_entity)
     );
 
     float lambda = -cameraPos.y / direction.y;
