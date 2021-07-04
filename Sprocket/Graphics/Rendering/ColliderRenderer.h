@@ -1,7 +1,7 @@
 #pragma once
 #include "Shader.h"
 #include "VertexArray.h"
-#include "ECS.h"
+#include "apecs.hpp"
 #include "Scene.h"
 
 namespace spkt {

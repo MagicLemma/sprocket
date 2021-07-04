@@ -38,7 +38,7 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 }
 
-void Save(const std::string& file, spkt::registry* reg)
+void Save(const std::string& file, apx::registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -66,7 +66,7 @@ DATAMATIC_END
     std::ofstream(file) << out.c_str();
 }
 
-void Load(const std::string& file, spkt::registry* reg)
+void Load(const std::string& file, apx::registry* reg)
 {
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -99,7 +99,7 @@ DATAMATIC_END
     }
 }
 
-apx::entity Copy(spkt::registry* reg, apx::entity entity)
+apx::entity Copy(apx::registry* reg, apx::entity entity)
 {
     apx::entity new_entity = reg->create();
 DATAMATIC_BEGIN SAVABLE=true
@@ -110,7 +110,7 @@ DATAMATIC_END
     return new_entity;
 }
 
-void Copy(spkt::registry* source, spkt::registry* target)
+void Copy(apx::registry* source, apx::registry* target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.

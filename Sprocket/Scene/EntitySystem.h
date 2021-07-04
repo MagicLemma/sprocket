@@ -1,5 +1,5 @@
 #pragma once
-#include "ECS.h"
+#include "apecs.hpp"
 
 namespace spkt {
 namespace ev { class Event; }
@@ -10,11 +10,11 @@ public:
     EntitySystem() = default;
     virtual ~EntitySystem() {};
 
-    virtual void on_startup(spkt::registry& registry) {};
+    virtual void on_startup(apx::registry& registry) {};
         // Called once when starting the scene. There may be
         // entities in the scene by this point.
     
-    virtual void on_update(spkt::registry& registry, double dt) {};
+    virtual void on_update(apx::registry& registry, double dt) {};
         // Called every tick of the game loop.
 
 private:

@@ -19,7 +19,6 @@
 #include "UI/ImGuiXtra.h"
 
 // SCENE
-#include "Scene/ECS.h"
 #include "Scene/Camera.h"
 #include "Scene/Components.h"
 #include "Scene/Scene.h"

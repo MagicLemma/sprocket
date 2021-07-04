@@ -1,9 +1,10 @@
 #pragma once
 #include "CubeMap.h"
 #include "AssetManager.h"
-#include "ECS.h"
 #include "Shader.h"
 #include "VertexArray.h"
+
+#include "apecs.hpp"
 
 #include <memory>
 

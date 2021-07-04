@@ -9,7 +9,7 @@
 namespace spkt {
 namespace {
 
-std::string entiy_name(spkt::registry& registry, apx::entity entity)
+std::string entiy_name(apx::registry& registry, apx::entity entity)
 {
     if (registry.has<NameComponent>(entity)) {
         return registry.get<NameComponent>(entity).name;

@@ -17,7 +17,7 @@ static constexpr const char* UPDATE_FUNCTION = "on_update";
 
 }
 
-void script_system(spkt::registry& registry, double dt)
+void script_system(apx::registry& registry, double dt)
 {
     std::vector<std::function<void()>> commands;
 
@@ -50,7 +50,7 @@ void script_system(spkt::registry& registry, double dt)
     }
 }
 
-void animation_system(spkt::registry& registry, double dt)
+void animation_system(apx::registry& registry, double dt)
 {
     for (auto id : registry.view<MeshAnimationComponent>()) {
         auto& ac = registry.get<MeshAnimationComponent>(id);
@@ -58,7 +58,7 @@ void animation_system(spkt::registry& registry, double dt)
     }
 }
 
-void camera_system(spkt::registry& registry, double dt)
+void camera_system(apx::registry& registry, double dt)
 {
     auto singleton = registry.find<Singleton>();
     if (!registry.valid(singleton)) {
@@ -76,7 +76,7 @@ void camera_system(spkt::registry& registry, double dt)
     }
 }
 
-void path_follower_system(spkt::registry& registry, double dt)
+void path_follower_system(apx::registry& registry, double dt)
 {
     for (auto entity : registry.view<PathComponent>()) {
         auto& transform = registry.get<Transform3DComponent>(entity);
@@ -96,7 +96,7 @@ void path_follower_system(spkt::registry& registry, double dt)
     }
 }
 
-void delete_below_50_system(spkt::registry& registry, double)
+void delete_below_50_system(apx::registry& registry, double)
 {
     registry.erase_if<Transform3DComponent>([&](apx::entity entity) {
         const auto& t = registry.get<Transform3DComponent>(entity);
@@ -104,7 +104,7 @@ void delete_below_50_system(spkt::registry& registry, double)
     });
 }
 
-void clear_events_system(spkt::registry& registry, double dt)
+void clear_events_system(apx::registry& registry, double dt)
 {
     registry.erase_if<Event>([](apx::entity) { return true; });
 }

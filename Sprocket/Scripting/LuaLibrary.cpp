@@ -1,7 +1,7 @@
 #include "LuaLibrary.h"
 #include "LuaScript.h"
 #include "LuaConverter.h"
-#include "ECS.h"
+#include "apecs.hpp"
 #include "Scene.h"
 #include "Window.h"
 #include "Components.h"
@@ -163,7 +163,7 @@ void load_entity_transformation_functions(lua::Script& script)
     });
 }
 
-void load_registry_functions(lua::Script& script, spkt::registry& registry)
+void load_registry_functions(lua::Script& script, apx::registry& registry)
 {
     lua_State* L = script.native_handle();
     script.set_value("__registry__", &registry);
@@ -171,7 +171,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         auto new_entity = apx::handle(registry, registry.create());
         Converter<apx::handle>::push(L, new_entity);
         return 1;
@@ -186,7 +186,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "entity_from_id", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         auto id = Converter<apx::entity>::read(L, 1);
         Converter<apx::handle>::push(L, {registry, id});
         return 1;
@@ -194,7 +194,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "entity_singleton", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         auto singleton = registry.find<Singleton>();
         Converter<apx::handle>::push(L, {registry, singleton});
         return 1;
@@ -203,7 +203,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Input access via the singleton component.
     lua_register(L, "IsKeyDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.keyboard[(int)lua_tointeger(L, 1)]);
         return 1;
@@ -211,7 +211,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "IsMouseClicked", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.mouse_click[(int)lua_tointeger(L, 1)]);
         return 1;
@@ -219,7 +219,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "IsMouseUnclicked", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.mouse_unclick[(int)lua_tointeger(L, 1)]);
         return 1;
@@ -227,7 +227,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "IsMouseDown", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         const auto& input = get_singleton<InputSingleton>(registry);
         Converter<bool>::push(L, input.mouse[(int)lua_tointeger(L, 1)]);
         return 1;
@@ -235,7 +235,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "GetMousePos", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         const auto& input = get_singleton<InputSingleton>(registry);
         Converter<glm::vec2>::push(L, input.mouse_pos);
         return 1;
@@ -243,7 +243,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "GetMouseOffset", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         const auto& input = get_singleton<InputSingleton>(registry);
         Converter<glm::vec2>::push(L, input.mouse_offset);
         return 1;
@@ -251,7 +251,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "GetMouseScrolled", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
         const auto& input = get_singleton<InputSingleton>(registry);
         Converter<glm::vec2>::push(L, input.mouse_scrolled);
         return 1;
@@ -266,7 +266,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_All_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->all());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->all());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -305,7 +305,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "_Each_Iter_Get", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
         Iterator iterator = *static_cast<Iterator*>(lua_touserdata(L, 1));
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
+        apx::registry& registry = *get_pointer<apx::registry>(L, "__registry__");
 
         apx::handle* luaEntity = static_cast<apx::handle*>(lua_newuserdata(L, sizeof(apx::handle)));
         *luaEntity = apx::handle(registry, *iterator);
@@ -318,7 +318,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 // VIEW FUNCTIONS - GENERATED BY DATAMATIC
     lua_register(L, "_Each_NameComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<NameComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<NameComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -327,7 +327,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_Transform2DComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<Transform2DComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<Transform2DComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -336,7 +336,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_Transform3DComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<Transform3DComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<Transform3DComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -345,7 +345,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_ModelComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<ModelComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<ModelComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -354,7 +354,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_RigidBody3DComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<RigidBody3DComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<RigidBody3DComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -363,7 +363,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_BoxCollider3DComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<BoxCollider3DComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<BoxCollider3DComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -372,7 +372,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_SphereCollider3DComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<SphereCollider3DComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<SphereCollider3DComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -381,7 +381,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_CapsuleCollider3DComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<CapsuleCollider3DComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<CapsuleCollider3DComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -390,7 +390,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_ScriptComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<ScriptComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<ScriptComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -399,7 +399,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_Camera3DComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<Camera3DComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<Camera3DComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -408,7 +408,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_PathComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<PathComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<PathComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -417,7 +417,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_LightComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<LightComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<LightComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -426,7 +426,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_SunComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<SunComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<SunComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -435,7 +435,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_AmbienceComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<AmbienceComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<AmbienceComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -444,7 +444,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_ParticleComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<ParticleComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<ParticleComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -453,7 +453,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_MeshAnimationComponent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<MeshAnimationComponent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<MeshAnimationComponent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
@@ -462,7 +462,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     lua_register(L, "_Each_CollisionEvent_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->view<CollisionEvent>());
+        auto gen = new Generator(get_pointer<apx::registry>(L, "__registry__")->view<CollisionEvent>());
         lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });

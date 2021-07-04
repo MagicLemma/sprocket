@@ -12,7 +12,7 @@ namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::registry& registry = editor.active_scene()->Entities();
+    apx::registry& registry = editor.active_scene()->Entities();
     apx::entity entity = editor.selected();
 
     if (!registry.valid(entity)) {

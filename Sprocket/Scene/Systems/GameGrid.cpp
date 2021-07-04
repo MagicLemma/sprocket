@@ -14,7 +14,7 @@ constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
 
 }
 
-void game_grid_system_init(spkt::registry& registry)
+void game_grid_system_init(apx::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
     registry.emplace<CameraSingleton>(singleton);
@@ -37,7 +37,7 @@ void game_grid_system_init(spkt::registry& registry)
     model2.mesh = GRID_SQUARE;
 }
 
-void game_grid_system(spkt::registry& registry, double)
+void game_grid_system(apx::registry& registry, double)
 {
     auto singleton = registry.find<Singleton>();
     if (!registry.valid(singleton)) {
