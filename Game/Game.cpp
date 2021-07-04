@@ -94,7 +94,9 @@ Game::Game(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& sun = d_scene.find<SunComponent>().get<SunComponent>();
+    auto& registry = d_scene.Entities();
+    auto sun_entity = registry.find<SunComponent>();
+    auto& sun = registry.get<SunComponent>(sun_entity);
     sun.direction = d_cycle.GetSunDir();
 
     d_postProcessor.AddEffect<GaussianVert>();
@@ -229,7 +231,8 @@ void Game::on_update(double dt)
         d_cycle.on_update(dt);
     }
     
-    auto& sun = d_scene.find<SunComponent>().get<SunComponent>();
+    auto sun_entity = registry.find<SunComponent>();
+    auto& sun = registry.get<SunComponent>(sun_entity);
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -263,10 +266,11 @@ void Game::on_render()
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     auto& tc = registry.get<Transform3DComponent>(d_camera);
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
+    auto sun = registry.find<SunComponent>();
     d_shadowMap.Draw(
-        d_scene.find<SunComponent>().get<SunComponent>().direction,
-        target,
-        d_scene
+        registry,
+        registry.get<SunComponent>(sun).direction,
+        target
     );
 
     if (d_paused) {

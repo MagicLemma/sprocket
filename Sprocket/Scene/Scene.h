@@ -46,35 +46,6 @@ public:
     void on_event(ev::Event& event);
 
     std::size_t Size() const;
-
-    template <typename... Comps>
-    apx::handle find(const std::function<bool(apx::handle)>& function = [](apx::handle) { return true; });
-
-    template <typename... Comps>
-    apx::generator<apx::handle> view();
 };
-
-template <typename... Comps>
-apx::handle Scene::find(const std::function<bool(apx::handle)>& function)
-{
-    for (auto entity : view<Comps...>()) {
-        if (function(entity)) { return entity; }
-    }
-    return apx::null_handle;
-}
-
-template <typename... Comps>
-apx::generator<apx::handle> Scene::view()
-{
-    if constexpr (sizeof...(Comps) > 0) {
-        for (auto id : d_registry.view<Comps...>()) {
-            co_yield {d_registry, id};
-        }
-    } else {
-        for (auto id : d_registry.all()) {
-            co_yield {d_registry, id};
-        }
-    }
-}
 
 }
