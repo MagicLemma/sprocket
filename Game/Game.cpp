@@ -292,7 +292,6 @@ void Game::on_render()
         if (game_grid.clicked_square.has_value()) {
             auto it = tiles.find(game_grid.clicked_square.value());
             apx::entity e = (it != tiles.end()) ? it->second : apx::null;
-            apx::handle selected{registry, e};
 
             float width = 0.15f * w;
             float height = 0.6f * h;
@@ -304,32 +303,32 @@ void Game::on_render()
                 
             auto pos = game_grid.clicked_square.value();
             if (d_hoveredEntityUI.Button("+Tree", {0, 0, width, 50})) {
-                if (selected.valid()) { selected.destroy(); }
+                if (registry.valid(e)) { registry.destroy(e); }
                 add_tree(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Rock", {0, 60, width, 50})) {
-                if (selected.valid()) { selected.destroy(); }
+                if (registry.valid(e)) { registry.destroy(e); }
                 add_rock(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Iron", {0, 120, width, 50})) {
-                if (selected.valid()) { selected.destroy(); }
+                if (registry.valid(e)) { registry.destroy(e); }
                 add_iron(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Tin", {0, 180, width, 50})) {
-                if (selected.valid()) { selected.destroy(); }
+                if (registry.valid(e)) { registry.destroy(e); }
                 add_tin(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("+Mithril", {0, 240, width, 50})) {
-                if (selected.valid()) { selected.destroy(); }
+                if (registry.valid(e)) { registry.destroy(e); }
                 add_mithril(registry, pos);
             }
 
             if (d_hoveredEntityUI.Button("Clear", {0, 300, width, 50})) {
-                if (selected.valid()) { selected.destroy(); }
+                if (registry.valid(e)) { registry.destroy(e); }
             }
 
             d_hoveredEntityUI.EndPanel();
@@ -337,8 +336,7 @@ void Game::on_render()
 
         auto it = tiles.find(game_grid.hovered_square);
         apx::entity e = (it != tiles.end()) ? it->second : apx::null;
-        apx::handle hovered{registry, e};
-        if (hovered.valid()) {
+        if (registry.valid(e)) {
             float width = 200;
             float height = 50;
             float x = std::min(mouse.x - 5, w - width - 10);
@@ -347,8 +345,8 @@ void Game::on_render()
             glm::vec4 region{x, y, width, height};
             d_hoveredEntityUI.StartPanel("Hovered", &region, PanelType::UNCLICKABLE);
             std::string name = "Unnamed";
-            if (hovered.has<NameComponent>()) {
-                name = hovered.get<NameComponent>().name;
+            if (registry.has<NameComponent>(e)) {
+                name = registry.get<NameComponent>(e).name;
             }
             d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
             d_hoveredEntityUI.EndPanel();
