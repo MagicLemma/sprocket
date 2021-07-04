@@ -102,11 +102,11 @@ DATAMATIC_END
 apx::entity Copy(spkt::registry* reg, apx::entity entity)
 {
     apx::entity new_entity = reg->create();
-    apx::meta::for_each(reg->tags, [&] <typename T> (apx::meta::tag<T> tag) {
-        if (reg->has<T>(entity)) {
-            reg->add<T>(new_entity, reg->get<T>(entity));
-        }
-    });
+DATAMATIC_BEGIN SAVABLE=true
+    if (reg->has<{{Comp::name}}>(entity)) {
+        reg->add<{{Comp::name}}>(new_entity, reg->get<{{Comp::name}}>(entity));
+    }
+DATAMATIC_END
     return new_entity;
 }
 
@@ -121,7 +121,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
 
     for (auto old_entity : source->all()) {
         apx::entity new_entity = id_remapper.at(old_entity);
-DATAMATIC_BEGIN
+DATAMATIC_BEGIN SAVABLE=true
         if (source->has<{{Comp::name}}>(old_entity)) {
             const {{Comp::name}}& source_comp = source->get<{{Comp::name}}>(old_entity);
             {{Comp::name}} target_comp;
