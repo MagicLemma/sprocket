@@ -16,11 +16,10 @@ void emit_particle(ParticleSingleton& ps, const particle& p)
 
 }
 
-void particle_system_init(apx::registry& registry, ParticleManager* particle_manager)
+void particle_system_init(apx::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
-    auto& ps = registry.emplace<ParticleSingleton>(singleton);
-    ps.particle_manager = particle_manager;
+    registry.emplace<ParticleSingleton>(singleton);
 }
 
 void particle_system(apx::registry& registry, double dt)
