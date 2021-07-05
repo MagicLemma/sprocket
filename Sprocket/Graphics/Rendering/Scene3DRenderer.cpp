@@ -184,9 +184,9 @@ void Scene3DRenderer::Draw(
         d_vao->Draw();
     }
 
-    auto singleton = registry.find<ParticleSingleton>();
-    if (registry.valid(singleton)) {
-        auto& ps = registry.get<ParticleSingleton>(singleton);
+    // If the scene has a ParticleSingleton, then render the particles that it contains.
+    for (auto entity : registry.view<ParticleSingleton>()) {
+        const auto& ps = registry.get<ParticleSingleton>(entity);
         std::vector<InstanceData> instance_data(NUM_PARTICLES);
         for (const auto& particle : *ps.particles) {
             if (particle.life > 0.0) {
