@@ -1,5 +1,5 @@
 #include "PhysicsEngine3D.h"
-#include "ECS.h"
+#include "apecs.hpp"
 #include "Log.h"
 #include "Scene.h"
 #include "Components.h"
@@ -108,7 +108,7 @@ public:
 
 struct physics_runtime
 {
-    spkt::registry* registry;
+    apx::registry* registry;
 
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
@@ -117,7 +117,7 @@ struct physics_runtime
 
     float lastFrameLength = 0;
 
-    physics_runtime(spkt::registry& registry_)
+    physics_runtime(apx::registry& registry_)
         : registry(&registry_)
     {
         rp3d::PhysicsWorld::WorldSettings settings;
@@ -139,13 +139,13 @@ struct physics_runtime
 
 struct rigid_body_runtime
 {
-    spkt::registry*     registry;
+    apx::registry*     registry;
     apx::entity         entity;
     rp3d::PhysicsWorld* world;
     rp3d::RigidBody*    body;
 
     rigid_body_runtime(
-        spkt::registry* registry_,
+        apx::registry* registry_,
         apx::entity entity_,
         rp3d::PhysicsWorld* world_
     )
@@ -194,7 +194,7 @@ struct collider_runtime
 
 std::shared_ptr<collider_runtime> make_box_collider(
     rp3d::PhysicsCommon* pc,
-    spkt::registry& registry,
+    apx::registry& registry,
     apx::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
@@ -214,7 +214,7 @@ std::shared_ptr<collider_runtime> make_box_collider(
 
 std::shared_ptr<collider_runtime> make_sphere_collider(
     rp3d::PhysicsCommon* pc,
-    spkt::registry& registry,
+    apx::registry& registry,
     apx::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
@@ -232,7 +232,7 @@ std::shared_ptr<collider_runtime> make_sphere_collider(
 
 std::shared_ptr<collider_runtime> make_capsule_collider(
     rp3d::PhysicsCommon* pc,
-    spkt::registry& registry,
+    apx::registry& registry,
     apx::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
@@ -250,7 +250,7 @@ std::shared_ptr<collider_runtime> make_capsule_collider(
 
 namespace {
 
-bool is_on_floor(spkt::registry& registry, rp3d::PhysicsWorld* const world, const rp3d::RigidBody* const body)
+bool is_on_floor(apx::registry& registry, rp3d::PhysicsWorld* const world, const rp3d::RigidBody* const body)
 {
     // Get the point at the bottom of the rigid body.
     auto aabb = body->getAABB();
@@ -268,7 +268,7 @@ bool is_on_floor(spkt::registry& registry, rp3d::PhysicsWorld* const world, cons
     return registry.valid(cb.entity);
 }
 
-PhysicsSingleton& get_physics_runtime(spkt::registry& registry)
+PhysicsSingleton& get_physics_runtime(apx::registry& registry)
 {
     auto entity = registry.find<PhysicsSingleton>();
     if (!registry.valid(entity)) [[unlikely]] {
@@ -283,7 +283,7 @@ PhysicsSingleton& get_physics_runtime(spkt::registry& registry)
 
 }
 
-void physics_system(spkt::registry& registry, double dt)
+void physics_system(apx::registry& registry, double dt)
 {
     auto& ps = get_physics_runtime(registry);
     auto& runtime = *ps.physics_runtime;

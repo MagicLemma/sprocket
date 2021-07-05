@@ -1,11 +1,11 @@
 #pragma once
 #include "Shader.h"
-
-#include "ECS.h"
 #include "DepthBuffer.h"
 #include "AssetManager.h"
 #include "Scene.h"
 #include "VertexArray.h"
+
+#include "apecs.hpp"
 
 #include <memory>
 
@@ -30,7 +30,7 @@ class ShadowMap
 public:
     ShadowMap(AssetManager* assetManager);
 
-    void Draw(const glm::vec3& sunDirection, const glm::vec3& centre, Scene& scene);
+    void Draw(apx::registry& registry, const glm::vec3& sunDirection, const glm::vec3& centre);
 
     glm::mat4 GetLightProjViewMatrix() const;
     Texture*  GetShadowMap() const;

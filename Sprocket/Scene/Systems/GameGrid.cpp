@@ -14,7 +14,7 @@ constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
 
 }
 
-void game_grid_system_init(spkt::registry& registry)
+void game_grid_system_init(apx::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
     registry.emplace<CameraSingleton>(singleton);
@@ -37,7 +37,7 @@ void game_grid_system_init(spkt::registry& registry)
     model2.mesh = GRID_SQUARE;
 }
 
-void game_grid_system(spkt::registry& registry, double)
+void game_grid_system(apx::registry& registry, double)
 {
     auto singleton = registry.find<Singleton>();
     if (!registry.valid(singleton)) {
@@ -72,8 +72,8 @@ void game_grid_system(spkt::registry& registry, double)
         input.mouse_pos,
         input.window_width,
         input.window_height,
-        spkt::make_view({registry, cam.camera_entity}),
-        spkt::make_proj({registry, cam.camera_entity})
+        spkt::make_view(registry, cam.camera_entity),
+        spkt::make_proj(registry, cam.camera_entity)
     );
 
     float lambda = -cameraPos.y / direction.y;

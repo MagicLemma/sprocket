@@ -26,7 +26,7 @@ Runtime::Runtime(spkt::Window* window)
 
     spkt::particle_system_init(d_scene.Entities(), &d_particleManager);
 
-    d_scene.Load("Resources/Anvil.yaml");
+    spkt::load_registry_from_file("Resources/Anvil.yaml", &d_scene.Entities());
     d_scene.add(spkt::physics_system);
     d_scene.add(spkt::particle_system);
     d_scene.add(spkt::script_system);
@@ -35,7 +35,7 @@ Runtime::Runtime(spkt::Window* window)
     d_scene.add(spkt::delete_below_50_system);
     d_scene.add(spkt::clear_events_system);
 
-    d_runtimeCamera = d_scene.find<spkt::Camera3DComponent>();
+    d_runtimeCamera = d_scene.Entities().find<spkt::Camera3DComponent>();
 }
 
 void Runtime::on_event(spkt::ev::Event& event)
@@ -69,8 +69,9 @@ void Runtime::on_update(double dt)
 
 void Runtime::on_render()
 {
-    d_skyboxRenderer.Draw(d_skybox, d_runtimeCamera);
-    d_entityRenderer.Draw(d_runtimeCamera, d_scene);
+    auto& registry = d_scene.Entities();
+    d_skyboxRenderer.Draw(d_skybox, registry, d_runtimeCamera);
+    d_entityRenderer.Draw(registry, d_runtimeCamera);
 
     if (d_consoleActive) {
         d_console.Draw();

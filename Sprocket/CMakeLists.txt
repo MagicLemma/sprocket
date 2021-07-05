@@ -39,7 +39,6 @@ add_library(Sprocket STATIC
             UI/DevUI.cpp
             UI/ImGuiXtra.cpp
 
-            Scene/ECS.cpp
             Scene/Camera.cpp
             Scene/Scene.cpp
             Scene/Loader.cpp

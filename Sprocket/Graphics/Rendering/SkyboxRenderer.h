@@ -1,9 +1,10 @@
 #pragma once
 #include "CubeMap.h"
 #include "AssetManager.h"
-#include "ECS.h"
 #include "Shader.h"
 #include "VertexArray.h"
+
+#include "apecs.hpp"
 
 #include <memory>
 
@@ -21,7 +22,7 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(AssetManager* assetManager);
 
-    void Draw(const CubeMap& skybox, spkt::entity camera);
+    void Draw(const CubeMap& skybox, apx::registry& registry, apx::entity camera);
     void Draw(const CubeMap& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 

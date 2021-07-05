@@ -9,7 +9,7 @@
 namespace spkt {
 namespace {
 
-std::string entiy_name(spkt::registry& registry, apx::entity entity)
+std::string entiy_name(apx::registry& registry, apx::entity entity)
 {
     if (registry.has<NameComponent>(entity)) {
         return registry.get<NameComponent>(entity).name;
@@ -48,7 +48,7 @@ Anvil::Anvil(Window* window)
     d_window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<Scene>(window);    
-    d_scene->Load(d_sceneFile);
+    spkt::load_registry_from_file(d_sceneFile, &d_scene->Entities());
     d_activeScene = d_scene;
 }
 
@@ -105,13 +105,13 @@ void Anvil::on_update(double dt)
 glm::mat4 Anvil::get_proj_matrix() const
 {
     auto& registry = d_activeScene->Entities();
-    return d_playingGame ? spkt::make_proj({registry, d_runtimeCamera}) : d_editor_camera.Proj();
+    return d_playingGame ? spkt::make_proj(registry, d_runtimeCamera) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
     auto& registry = d_activeScene->Entities();
-    return d_playingGame ? spkt::make_view({registry, d_runtimeCamera}) : d_editor_camera.View();
+    return d_playingGame ? spkt::make_view(registry, d_runtimeCamera) : d_editor_camera.View();
 }
 
 void Anvil::on_render()
@@ -130,10 +130,10 @@ void Anvil::on_render()
     glm::mat4 proj = get_proj_matrix();
     glm::mat4 view = get_view_matrix();
 
-    d_entity_renderer.Draw(proj, view, *d_activeScene);
+    d_entity_renderer.Draw(registry, proj, view);
     d_skybox_renderer.Draw(d_skybox, proj, view);
     if (d_showColliders) {
-        d_collider_renderer.Draw(proj, view, *d_activeScene);
+        d_collider_renderer.Draw(registry, proj, view);
     }
 
     d_viewport.Unbind();
@@ -160,13 +160,13 @@ void Anvil::on_render()
                     log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
                     d_activeScene = d_scene = std::make_shared<Scene>(d_window);
-                    Loader::Load(file, &d_scene->Entities());
+                    spkt::load_registry_from_file(file, &d_scene->Entities());
                     log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 log::info("Saving {}...", d_sceneFile);
-                Loader::Save(d_sceneFile, &d_scene->Entities());
+                spkt::save_registry_to_file(d_sceneFile, &d_scene->Entities());
                 log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -174,7 +174,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Saving as {}...", file);
                     d_sceneFile = file;
-                    Loader::Save(file, &d_scene->Entities());
+                    spkt::save_registry_to_file(file, &d_scene->Entities());
                     log::info("...done!");
                 }
             }
@@ -183,7 +183,7 @@ void Anvil::on_render()
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(d_window);
-                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
+                spkt::copy_registry(&d_scene->Entities(), &d_activeScene->Entities());
 
                 spkt::particle_system_init(d_activeScene->Entities(), &d_particle_manager);
 

@@ -10,7 +10,6 @@
 #include <memory>
 
 namespace spkt {
-namespace Loader {
 namespace {
 
 // When loading entities from disk, their IDs may already be in use, so we assigned them
@@ -38,7 +37,7 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 }
 
-void Save(const std::string& file, spkt::registry* reg)
+void save_registry_to_file(const std::string& file, apx::registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -66,7 +65,7 @@ DATAMATIC_END
     std::ofstream(file) << out.c_str();
 }
 
-void Load(const std::string& file, spkt::registry* reg)
+void load_registry_from_file(const std::string& file, apx::registry* reg)
 {
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -99,18 +98,18 @@ DATAMATIC_END
     }
 }
 
-apx::entity Copy(spkt::registry* reg, apx::entity entity)
+apx::entity copy_entity(apx::registry* reg, apx::entity entity)
 {
     apx::entity new_entity = reg->create();
-    apx::meta::for_each(reg->tags, [&] <typename T> (apx::meta::tag<T> tag) {
-        if (reg->has<T>(entity)) {
-            reg->add<T>(new_entity, reg->get<T>(entity));
-        }
-    });
+DATAMATIC_BEGIN SAVABLE=true
+    if (reg->has<{{Comp::name}}>(entity)) {
+        reg->add<{{Comp::name}}>(new_entity, reg->get<{{Comp::name}}>(entity));
+    }
+DATAMATIC_END
     return new_entity;
 }
 
-void Copy(spkt::registry* source, spkt::registry* target)
+void copy_registry(apx::registry* source, apx::registry* target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.
@@ -121,7 +120,7 @@ void Copy(spkt::registry* source, spkt::registry* target)
 
     for (auto old_entity : source->all()) {
         apx::entity new_entity = id_remapper.at(old_entity);
-DATAMATIC_BEGIN
+DATAMATIC_BEGIN SAVABLE=true
         if (source->has<{{Comp::name}}>(old_entity)) {
             const {{Comp::name}}& source_comp = source->get<{{Comp::name}}>(old_entity);
             {{Comp::name}} target_comp;
@@ -132,5 +131,4 @@ DATAMATIC_END
     }
 }
 
-}
 }

@@ -12,7 +12,7 @@ namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::registry& registry = editor.active_scene()->Entities();
+    apx::registry& registry = editor.active_scene()->Entities();
     apx::entity entity = editor.selected();
 
     if (!registry.valid(entity)) {
@@ -56,7 +56,7 @@ DATAMATIC_END
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        apx::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
+        apx::entity copy = spkt::copy_entity(&editor.active_scene()->Entities(), entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

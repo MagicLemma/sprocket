@@ -1,5 +1,4 @@
 #pragma once
-#include "ECS.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "AssetManager.h"
@@ -7,6 +6,8 @@
 #include "VertexArray.h"
 #include "ShadowMap.h"
 #include "ParticleManager.h"
+
+#include "apecs.hpp"
 
 namespace spkt {
 
@@ -43,8 +44,8 @@ private:
 public:
     Scene3DRenderer(AssetManager* assetManager);
 
-    void Draw(spkt::entity camera, Scene& scene);
-    void Draw(const glm::mat4& proj, const glm::mat4& view, Scene& scene);
+    void Draw(apx::registry& registry, apx::entity camera);
+    void Draw(apx::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
     void EnableShadows(const ShadowMap& shadowMap);
     void EnableParticles(ParticleManager* particleManager);

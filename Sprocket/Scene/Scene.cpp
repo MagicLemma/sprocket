@@ -26,11 +26,6 @@ void Scene::add(const system_t& system)
     d_systems.push_back(system);
 }
 
-void Scene::Load(std::string_view file)
-{
-    Loader::Load(std::string(file), &Entities());
-}
-
 void Scene::on_update(double dt)
 {
     std::ranges::for_each(d_systems, [&](auto&& system) { system(d_registry, dt); });
@@ -85,11 +80,6 @@ void Scene::on_event(ev::Event& event)
 
     input.window_width = d_window->Width() > 0 ? (float)d_window->Width() : 1.0f;;
     input.window_height = d_window->Height() > 0 ? (float)d_window->Height() : 1.0f;;
-}
-
-std::size_t Scene::Size() const
-{
-    return d_registry.size();
 }
 
 }

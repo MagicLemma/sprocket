@@ -1,7 +1,7 @@
 #pragma once
 #include "Types.h"
 
-#include "ECS.h"
+#include "apecs.hpp"
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -83,10 +83,10 @@ template <typename T> struct Converter<T*>
     }
 };
 
-template <> struct Converter<spkt::entity>
+template <> struct Converter<apx::handle>
 {
-    static void push(lua_State* L, const spkt::entity& value);
-    static spkt::entity read(lua_State* L, int index);
+    static void push(lua_State* L, const apx::handle& value);
+    static apx::handle read(lua_State* L, int index);
 };
 
 template <> struct Converter<apx::entity>

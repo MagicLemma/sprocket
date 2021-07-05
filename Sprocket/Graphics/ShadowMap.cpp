@@ -32,9 +32,9 @@ ShadowMap::ShadowMap(AssetManager* assetManager)
 }
 
 void ShadowMap::Draw(
+    apx::registry& registry,
     const glm::vec3& sunDirection,
-    const glm::vec3& centre,
-    Scene& scene)
+    const glm::vec3& centre)
 {
     RenderContext rc;
     rc.DepthTesting(true);
@@ -52,10 +52,9 @@ void ShadowMap::Draw(
     glCullFace(GL_FRONT);
 
     std::unordered_map<std::string, std::vector<InstanceData>> commands;
-    for (auto id : scene.Entities().view<ModelComponent>()) {
-        spkt::entity entity{scene.Entities(), id};
-        const auto& tc = entity.get<Transform3DComponent>();
-        const auto& mc = entity.get<ModelComponent>();
+    for (auto entity : registry.view<ModelComponent>()) {
+        const auto& tc = registry.get<Transform3DComponent>(entity);
+        const auto& mc = registry.get<ModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
         commands[mc.mesh].push_back({ tc.position, tc.orientation, tc.scale });
     }

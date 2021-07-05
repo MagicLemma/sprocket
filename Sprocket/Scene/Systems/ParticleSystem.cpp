@@ -1,20 +1,20 @@
 #include "ParticleSystem.h"
 #include "Components.h"
-#include "ECS.h"
+#include "apecs.hpp"
 #include "Random.h"
 #include "Scene.h"
 #include "ParticleManager.h"
 
 namespace spkt {
 
-void particle_system_init(spkt::registry& registry, ParticleManager* particle_manager)
+void particle_system_init(apx::registry& registry, ParticleManager* particle_manager)
 {
     auto singleton = registry.find<Singleton>();
     auto& ps = registry.emplace<ParticleSingleton>(singleton);
     ps.particle_manager = particle_manager;
 }
 
-void particle_system(spkt::registry& registry, double dt)
+void particle_system(apx::registry& registry, double dt)
 {
     auto& ps = get_singleton<ParticleSingleton>(registry);
 
