@@ -31,13 +31,12 @@ public:
 private:
     AssetManager*    d_assetManager;
 
-    Shader  d_staticShader;
-    Shader  d_animatedShader;
+    Shader d_staticShader;
+    Shader d_animatedShader;
 
     std::unique_ptr<VertexArray> d_vao;
     
     std::unique_ptr<Buffer> d_instanceBuffer;
-    std::vector<InstanceData> d_instanceData;
 
 public:
     Scene3DRenderer(AssetManager* assetManager);
