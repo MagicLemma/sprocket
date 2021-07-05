@@ -89,6 +89,8 @@ void Anvil::on_event(ev::Event& event)
 
 void Anvil::on_update(double dt)
 {
+    auto& registry = d_activeScene->Entities();
+
     d_ui.on_update(dt);
 
     if (d_paused) {
@@ -96,7 +98,6 @@ void Anvil::on_update(double dt)
     }
 
     d_activeScene->on_update(dt);
-    d_particle_manager.on_update(dt);
 
     if (d_is_viewport_focused && !d_playingGame) {
         d_editor_camera.on_update(dt);
@@ -125,7 +126,6 @@ void Anvil::on_render()
         d_viewport.SetScreenSize(d_viewport_size.x, d_viewport_size.y);
     }
 
-    d_entity_renderer.EnableParticles(&d_particle_manager);
     d_viewport.Bind();
 
     glm::mat4 proj = get_proj_matrix();
@@ -187,7 +187,6 @@ void Anvil::on_render()
 
                 spkt::add_singleton(d_activeScene->Entities());
                 spkt::copy_registry(&d_scene->Entities(), &d_activeScene->Entities());
-                spkt::particle_system_init(d_activeScene->Entities(), &d_particle_manager);
 
                 d_activeScene->add(spkt::physics_system);
                 d_activeScene->add(spkt::particle_system);

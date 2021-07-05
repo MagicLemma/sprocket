@@ -110,7 +110,6 @@ void UploadMaterial(
 Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     : d_vao(std::make_unique<VertexArray>())
     , d_assetManager(assetManager)
-    , d_particleManager(nullptr)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer(GetInstanceBuffer())
@@ -185,10 +184,24 @@ void Scene3DRenderer::Draw(
         d_vao->Draw();
     }
 
-    if (d_particleManager != nullptr) {
+    // If the scene has a ParticleSingleton, then render the particles that it contains.
+    for (auto entity : registry.view<ParticleSingleton>()) {
+        const auto& ps = registry.get<ParticleSingleton>(entity);
+        std::vector<InstanceData> instance_data(NUM_PARTICLES);
+        for (const auto& particle : *ps.particles) {
+            if (particle.life > 0.0) {
+                instance_data.push_back({
+                    particle.position,
+                    {0.0, 0.0, 0.0, 1.0},
+                    particle.scale
+                });
+            }
+        }
+        d_instanceBuffer->SetData(instance_data);
+
         // TODO: Un-hardcode this, do when cleaning up the rendering.
         d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Particle.obj"));
-        d_vao->SetInstances(d_particleManager->GetInstances());
+        d_vao->SetInstances(d_instanceBuffer.get());
         d_vao->Draw();
     }
 
@@ -229,11 +242,6 @@ void Scene3DRenderer::Draw(apx::registry& registry, apx::entity camera)
     glm::mat4 proj = spkt::make_proj(registry, camera);
     glm::mat4 view = spkt::make_view(registry, camera);
     Draw(registry, proj, view);
-}
-
-void Scene3DRenderer::EnableParticles(ParticleManager* particleManager)
-{
-    d_particleManager = particleManager;
 }
 
 }

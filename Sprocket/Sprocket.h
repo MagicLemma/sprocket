@@ -59,7 +59,6 @@
 #include "Graphics/CubeMap.h"
 #include "Graphics/FrameBuffer.h"
 #include "Graphics/ShadowMap.h"
-#include "Graphics/ParticleManager.h"
 #include "Graphics/StreamBuffer.h"
 #include "Graphics/VertexArray.h"
 #include "Graphics/Viewport.h"

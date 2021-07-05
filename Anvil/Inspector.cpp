@@ -362,6 +362,7 @@ void Inspector::Show(Anvil& editor)
         if (ImGui::CollapsingHeader("Particle Singleton")) {
             ImGui::PushID(count++);
             ;
+            ;
             
             if (ImGui::Button("Delete")) { registry.remove<ParticleSingleton>(entity); }
             ImGui::PopID();

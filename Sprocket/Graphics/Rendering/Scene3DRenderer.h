@@ -5,7 +5,6 @@
 #include "Components.h"
 #include "VertexArray.h"
 #include "ShadowMap.h"
-#include "ParticleManager.h"
 
 #include "apecs.hpp"
 
@@ -31,15 +30,13 @@ public:
 
 private:
     AssetManager*    d_assetManager;
-    ParticleManager* d_particleManager;
 
-    Shader  d_staticShader;
-    Shader  d_animatedShader;
+    Shader d_staticShader;
+    Shader d_animatedShader;
 
     std::unique_ptr<VertexArray> d_vao;
     
     std::unique_ptr<Buffer> d_instanceBuffer;
-    std::vector<InstanceData> d_instanceData;
 
 public:
     Scene3DRenderer(AssetManager* assetManager);
@@ -48,7 +45,6 @@ public:
     void Draw(apx::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
     void EnableShadows(const ShadowMap& shadowMap);
-    void EnableParticles(ParticleManager* particleManager);
 
     Shader& GetShader() { return d_staticShader; }
 };

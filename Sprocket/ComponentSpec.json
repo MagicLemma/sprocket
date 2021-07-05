@@ -764,10 +764,16 @@
             },
             "attributes": [
                 {
-                    "name": "particle_manager",
-                    "display_name": "Particle Manager",
-                    "type": "ParticleManager*",
+                    "name": "particles",
+                    "display_name": "Particles",
+                    "type": "std::shared_ptr<std::array<particle, NUM_PARTICLES>>",
                     "default": "nullptr"
+                },
+                {
+                    "name": "next_slot",
+                    "display_name": "Next Slot",
+                    "type": "std::size_t",
+                    "default": "NUM_PARTICLES - 1"
                 }
             ]
         }

@@ -21,8 +21,6 @@ class Anvil
     SkyboxRenderer d_skybox_renderer;
     ColliderRenderer d_collider_renderer;
 
-    ParticleManager d_particle_manager;
-
     FrameBuffer d_viewport;
     glm::ivec2 d_viewport_size;
 
