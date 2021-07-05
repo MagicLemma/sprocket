@@ -10,7 +10,6 @@
 #include <memory>
 
 namespace spkt {
-namespace Loader {
 namespace {
 
 // When loading entities from disk, their IDs may already be in use, so we assigned them
@@ -38,7 +37,7 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 }
 
-void Save(const std::string& file, apx::registry* reg)
+void save_registry_to_file(const std::string& file, apx::registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -66,7 +65,7 @@ DATAMATIC_END
     std::ofstream(file) << out.c_str();
 }
 
-void Load(const std::string& file, apx::registry* reg)
+void load_registry_from_file(const std::string& file, apx::registry* reg)
 {
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -99,7 +98,7 @@ DATAMATIC_END
     }
 }
 
-apx::entity Copy(apx::registry* reg, apx::entity entity)
+apx::entity copy_entity(apx::registry* reg, apx::entity entity)
 {
     apx::entity new_entity = reg->create();
 DATAMATIC_BEGIN SAVABLE=true
@@ -110,7 +109,7 @@ DATAMATIC_END
     return new_entity;
 }
 
-void Copy(apx::registry* source, apx::registry* target)
+void copy_registry(apx::registry* source, apx::registry* target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.
@@ -132,5 +131,4 @@ DATAMATIC_END
     }
 }
 
-}
 }

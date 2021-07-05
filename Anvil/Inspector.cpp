@@ -482,7 +482,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        apx::entity copy = Loader::Copy(&editor.active_scene()->Entities(), entity);
+        apx::entity copy = spkt::copy_entity(&editor.active_scene()->Entities(), entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

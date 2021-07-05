@@ -48,7 +48,7 @@ Anvil::Anvil(Window* window)
     d_window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<Scene>(window);    
-    d_scene->Load(d_sceneFile);
+    spkt::load_registry_from_file(d_sceneFile, &d_scene->Entities());
     d_activeScene = d_scene;
 }
 
@@ -160,13 +160,13 @@ void Anvil::on_render()
                     log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
                     d_activeScene = d_scene = std::make_shared<Scene>(d_window);
-                    Loader::Load(file, &d_scene->Entities());
+                    spkt::load_registry_from_file(file, &d_scene->Entities());
                     log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 log::info("Saving {}...", d_sceneFile);
-                Loader::Save(d_sceneFile, &d_scene->Entities());
+                spkt::save_registry_to_file(d_sceneFile, &d_scene->Entities());
                 log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -174,7 +174,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Saving as {}...", file);
                     d_sceneFile = file;
-                    Loader::Save(file, &d_scene->Entities());
+                    spkt::save_registry_to_file(file, &d_scene->Entities());
                     log::info("...done!");
                 }
             }
@@ -183,7 +183,7 @@ void Anvil::on_render()
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<Scene>(d_window);
-                Loader::Copy(&d_scene->Entities(), &d_activeScene->Entities());
+                spkt::copy_registry(&d_scene->Entities(), &d_activeScene->Entities());
 
                 spkt::particle_system_init(d_activeScene->Entities(), &d_particle_manager);
 

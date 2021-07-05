@@ -39,9 +39,6 @@ public:
     apx::registry& Entities() { return d_registry; }
 
     void add(const system_t& system);
-
-    void Load(std::string_view file);
-
     void on_update(double dt);
     void on_event(ev::Event& event);
 };

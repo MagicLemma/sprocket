@@ -107,7 +107,8 @@ Game::Game(Window* window)
 void Game::load_scene(std::string_view file)
 {
     using namespace spkt;
-    d_scene.Load(file);
+    
+    spkt::load_registry_from_file(std::string(file), &d_scene.Entities());
 
     d_scene.add(spkt::game_grid_system);
     d_scene.add(spkt::script_system);
@@ -429,7 +430,7 @@ void Game::on_render()
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Save", buttonRegion)) {
         log::info("Saving to {}", d_sceneFile);
-        Loader::Save(d_sceneFile, &d_scene.Entities());
+        spkt::save_registry_to_file(d_sceneFile, &d_scene.Entities());
         log::info("Done!");
     }
     

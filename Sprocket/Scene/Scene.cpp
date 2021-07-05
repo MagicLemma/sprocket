@@ -26,11 +26,6 @@ void Scene::add(const system_t& system)
     d_systems.push_back(system);
 }
 
-void Scene::Load(std::string_view file)
-{
-    Loader::Load(std::string(file), &Entities());
-}
-
 void Scene::on_update(double dt)
 {
     std::ranges::for_each(d_systems, [&](auto&& system) { system(d_registry, dt); });
