@@ -768,6 +768,18 @@
                     "display_name": "Particle Manager",
                     "type": "ParticleManager*",
                     "default": "nullptr"
+                },
+                {
+                    "name": "particles",
+                    "display_name": "Particles",
+                    "type": "std::array<particle, NUM_PARTICLES>",
+                    "default": "{}"
+                },
+                {
+                    "name": "next_slot",
+                    "display_name": "Next Slot",
+                    "type": "std::size_t",
+                    "default": "NUM_PARTICLES - 1"
                 }
             ]
         }
