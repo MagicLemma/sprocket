@@ -47,6 +47,7 @@ add_library(Sprocket STATIC
             Scene/Systems/PhysicsEngine3D.cpp
             Scene/Systems/GameGrid.cpp
             Scene/Systems/basic_systems.cpp
+            Scene/Systems/input_system.cpp
 
             Graphics/AssetManager.cpp
             Graphics/Animation.cpp

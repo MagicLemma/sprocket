@@ -7,7 +7,7 @@ const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
 Runtime::Runtime(spkt::Window* window) 
     : d_window(window)
-    , d_scene(window)
+    , d_scene()
     , d_assetManager()
     , d_entityRenderer(&d_assetManager)
     , d_skyboxRenderer(&d_assetManager)
@@ -24,9 +24,10 @@ Runtime::Runtime(spkt::Window* window)
     d_window->SetCursorVisibility(false);
     d_entityRenderer.EnableParticles(&d_particleManager);
 
+    spkt::add_singleton(d_scene.Entities());
     spkt::particle_system_init(d_scene.Entities(), &d_particleManager);
-
     spkt::load_registry_from_file("Resources/Anvil.yaml", &d_scene.Entities());
+    
     d_scene.add(spkt::physics_system);
     d_scene.add(spkt::particle_system);
     d_scene.add(spkt::script_system);

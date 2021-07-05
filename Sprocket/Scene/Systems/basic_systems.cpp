@@ -3,6 +3,7 @@
 #include "LuaScript.h"
 #include "LuaLibrary.h"
 #include "LuaMaths.h"
+#include "Scene.h"
 
 #include <glm/gtx/norm.hpp>
 #include <utility>
@@ -60,12 +61,7 @@ void animation_system(apx::registry& registry, double dt)
 
 void camera_system(apx::registry& registry, double dt)
 {
-    auto singleton = registry.find<Singleton>();
-    if (!registry.valid(singleton)) {
-        return;
-    }
-
-    const auto& input = registry.get<InputSingleton>(singleton);
+    const auto& input = get_singleton<InputSingleton>(registry);
     float aspect_ratio = input.window_width / input.window_height;
 
     for (auto entity : registry.view<Camera3DComponent>()) {

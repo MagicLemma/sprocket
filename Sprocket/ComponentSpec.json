@@ -653,6 +653,12 @@
                     "default": "{0.0, 0.0}"
                 },
                 {
+                    "name": "mouse_pos_last_frame",
+                    "display_name": "Mouse Position Last Frame",
+                    "type": "glm::vec2",
+                    "default": "{0.0, 0.0}"
+                },
+                {
                     "name": "mouse_offset",
                     "display_name": "Mouse Offset",
                     "type": "glm::vec2",

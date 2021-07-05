@@ -1,19 +1,19 @@
 #include "Scene.h"
 #include "Components.h"
 #include "Loader.h"
+#include "input_system.h"
 
 #include <ranges>
 
 namespace spkt {
 
-Scene::Scene(Window* window)
-    : d_window(window)
+void add_singleton(apx::registry& registry)
 {
-    auto singleton = d_registry.create();
-    d_registry.emplace<Runtime>(singleton);
-    d_registry.emplace<Singleton>(singleton);
-    d_registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
-    d_registry.emplace<InputSingleton>(singleton);
+    auto singleton = registry.create();
+    registry.emplace<Runtime>(singleton);
+    registry.emplace<Singleton>(singleton);
+    registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
+    registry.emplace<InputSingleton>(singleton);
 }
 
 Scene::~Scene()
@@ -28,58 +28,14 @@ void Scene::add(const system_t& system)
 
 void Scene::on_update(double dt)
 {
+    spkt::input_system_begin(d_registry, dt);
     std::ranges::for_each(d_systems, [&](auto&& system) { system(d_registry, dt); });
-
-    auto singleton = d_registry.find<Singleton>();
-    if (d_registry.valid(singleton)) {
-        auto& input = d_registry.get<InputSingleton>(singleton);
-        input.mouse_click.fill(false);
-        input.mouse_unclick.fill(false);
-        input.mouse_offset = {0.0, 0.0};
-        input.mouse_scrolled = {0.0, 0.0};
-    }
+    spkt::input_system_end(d_registry, dt);
 }
 
 void Scene::on_event(ev::Event& event)
 {
-    auto singleton = d_registry.find<Singleton>();
-    if (!d_registry.valid(singleton)) {
-        return;
-    }
-
-    auto& input = d_registry.get<InputSingleton>(singleton);
-
-    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
-        if (!event.is_consumed()) {
-            input.keyboard[data->key] = true;
-        }
-    }
-    else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
-        input.keyboard[data->key] = false;
-    }
-    else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
-        if (!event.is_consumed()) { 
-            input.mouse[data->button] = true;
-            input.mouse_click[data->button] = true;
-        }
-    }
-    else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
-        input.mouse[data->button] = false;
-        input.mouse_unclick[data->button] = true;
-    }
-    else if (auto data = event.get_if<ev::MouseScrolled>()) {
-        input.mouse_scrolled.x += data->x_offset;
-        input.mouse_scrolled.y += data->y_offset;
-    }
-    else if (auto data = event.get_if<ev::WindowResize>()) {
-        input.window_resized = true;
-    }
-
-    input.mouse_pos = d_window->GetMousePos();
-    input.mouse_offset = d_window->GetMouseOffset();
-
-    input.window_width = d_window->Width() > 0 ? (float)d_window->Width() : 1.0f;;
-    input.window_height = d_window->Height() > 0 ? (float)d_window->Height() : 1.0f;;
+    spkt::input_system_on_event(d_registry, event);
 }
 
 }

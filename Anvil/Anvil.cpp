@@ -47,7 +47,8 @@ Anvil::Anvil(Window* window)
 {
     d_window->SetCursorVisibility(true);
 
-    d_scene = std::make_shared<Scene>(window);    
+    d_scene = std::make_shared<Scene>(); 
+    spkt::add_singleton(d_scene->Entities());   
     spkt::load_registry_from_file(d_sceneFile, &d_scene->Entities());
     d_activeScene = d_scene;
 }
@@ -150,7 +151,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<Scene>(d_window);
+                    d_activeScene = d_scene = std::make_shared<Scene>();
                     log::info("...done!");
                 }
             }
@@ -159,7 +160,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<Scene>(d_window);
+                    d_activeScene = d_scene = std::make_shared<Scene>();
                     spkt::load_registry_from_file(file, &d_scene->Entities());
                     log::info("...done!");
                 }
@@ -182,9 +183,10 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<Scene>(d_window);
-                spkt::copy_registry(&d_scene->Entities(), &d_activeScene->Entities());
+                d_activeScene = std::make_shared<Scene>();
 
+                spkt::add_singleton(d_activeScene->Entities());
+                spkt::copy_registry(&d_scene->Entities(), &d_activeScene->Entities());
                 spkt::particle_system_init(d_activeScene->Entities(), &d_particle_manager);
 
                 d_activeScene->add(spkt::physics_system);
