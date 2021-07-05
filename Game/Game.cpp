@@ -108,6 +108,7 @@ void Game::load_scene(std::string_view file)
 {
     using namespace spkt;
     
+    spkt::add_singleton(d_scene.Entities());
     spkt::load_registry_from_file(std::string(file), &d_scene.Entities());
 
     d_scene.add(spkt::game_grid_system);

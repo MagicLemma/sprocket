@@ -11,6 +11,8 @@
 
 namespace spkt {
 
+void add_singleton(apx::registry& registry);
+
 template <typename Comp>
 Comp& get_singleton(apx::registry& registry)
 {
@@ -30,7 +32,6 @@ private:
     std::vector<system_t> d_systems;
 
 public:
-    Scene();
     ~Scene();
 
     apx::registry& Entities() { return d_registry; }
