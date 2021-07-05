@@ -217,7 +217,7 @@ struct CameraSingleton
 struct ParticleSingleton
 {
     ParticleManager* particle_manager = nullptr;
-    std::shared_ptr<std::array<particle, NUM_PARTICLES>> particles = std::make_shared<std::array<particle, NUM_PARTICLES>>();
+    std::shared_ptr<std::array<particle, NUM_PARTICLES>> particles = nullptr;
     std::size_t next_slot = NUM_PARTICLES - 1;
 };
 

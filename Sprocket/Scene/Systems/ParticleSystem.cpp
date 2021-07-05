@@ -18,7 +18,8 @@ void emit_particle(ParticleSingleton& ps, const particle& p)
 void particle_system_init(apx::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
-    registry.emplace<ParticleSingleton>(singleton);
+    auto& ps = registry.emplace<ParticleSingleton>(singleton);
+    ps.particles = std::make_shared<std::array<spkt::particle, NUM_PARTICLES>>();
 }
 
 void particle_system(apx::registry& registry, double dt)

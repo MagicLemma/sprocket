@@ -773,7 +773,7 @@
                     "name": "particles",
                     "display_name": "Particles",
                     "type": "std::shared_ptr<std::array<particle, NUM_PARTICLES>>",
-                    "default": "std::make_shared<std::array<particle, NUM_PARTICLES>>()"
+                    "default": "nullptr"
                 },
                 {
                     "name": "next_slot",
