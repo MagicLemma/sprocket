@@ -3,7 +3,6 @@
 #include "apecs.hpp"
 #include "Random.h"
 #include "Scene.h"
-#include "ParticleManager.h"
 
 namespace spkt {
 namespace {

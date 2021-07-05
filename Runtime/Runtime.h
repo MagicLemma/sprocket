@@ -14,8 +14,6 @@ class Runtime
     spkt::Scene3DRenderer d_entityRenderer;
     spkt::SkyboxRenderer d_skyboxRenderer;
 
-    spkt::ParticleManager d_particleManager;
-
     // Scene
     spkt::Scene d_scene;
     spkt::CubeMap d_skybox;
