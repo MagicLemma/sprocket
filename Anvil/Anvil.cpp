@@ -51,7 +51,6 @@ Anvil::Anvil(Window* window)
     spkt::add_singleton(d_scene->Entities());   
     spkt::load_registry_from_file(d_sceneFile, &d_scene->Entities());
     d_activeScene = d_scene;
-    //d_activeScene->add(spkt::particle_system);
 }
 
 void Anvil::on_event(ev::Event& event)
