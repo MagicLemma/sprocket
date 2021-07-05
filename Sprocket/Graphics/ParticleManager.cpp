@@ -27,12 +27,7 @@ ParticleManager::ParticleManager()
 
 void ParticleManager::Emit(const Particle& particle)
 {
-    auto& p = d_particles[d_index];
-    p.position = particle.position;
-    p.velocity = particle.velocity;
-    p.acceleration = particle.acceleration;
-    p.scale = particle.scale;
-    p.life = particle.life;
+    d_particles[d_index] = particle;
     d_index = --d_index % NUM_PARTICLES;
 }
 
