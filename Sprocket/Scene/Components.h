@@ -19,7 +19,6 @@ namespace lua { class Script; }
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
-class ParticleManager;
 
 struct particle
 {
@@ -216,7 +215,6 @@ struct CameraSingleton
 
 struct ParticleSingleton
 {
-    ParticleManager* particle_manager = nullptr;
     std::shared_ptr<std::array<particle, NUM_PARTICLES>> particles = nullptr;
     std::size_t next_slot = NUM_PARTICLES - 1;
 };

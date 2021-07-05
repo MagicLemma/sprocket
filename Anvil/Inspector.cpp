@@ -363,7 +363,6 @@ void Inspector::Show(Anvil& editor)
             ImGui::PushID(count++);
             ;
             ;
-            ;
             
             if (ImGui::Button("Delete")) { registry.remove<ParticleSingleton>(entity); }
             ImGui::PopID();

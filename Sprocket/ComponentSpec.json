@@ -764,12 +764,6 @@
             },
             "attributes": [
                 {
-                    "name": "particle_manager",
-                    "display_name": "Particle Manager",
-                    "type": "ParticleManager*",
-                    "default": "nullptr"
-                },
-                {
                     "name": "particles",
                     "display_name": "Particles",
                     "type": "std::shared_ptr<std::array<particle, NUM_PARTICLES>>",

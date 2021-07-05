@@ -19,7 +19,6 @@ namespace lua { class Script; }
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
-class ParticleManager;
 
 struct particle
 {
