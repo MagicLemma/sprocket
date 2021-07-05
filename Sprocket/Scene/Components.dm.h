@@ -30,7 +30,7 @@ struct particle
     double life = -1.0;
 };
 
-static constexpr std::size_t NUM_PARTICLES = 100;
+static constexpr std::size_t NUM_PARTICLES = 10000;
 
 // Components
 DATAMATIC_BEGIN

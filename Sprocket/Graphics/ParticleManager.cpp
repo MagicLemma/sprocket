@@ -3,6 +3,7 @@
 #include "Components.h"
 #include "Random.h"
 #include "Camera.h"
+#include "Scene.h"
 
 namespace spkt {
 namespace {
@@ -25,19 +26,16 @@ ParticleManager::ParticleManager()
 {
 }
 
-void ParticleManager::Emit(const Particle& particle)
-{
-    d_particles[d_index] = particle;
-    d_index = --d_index % NUM_PARTICLES;
-}
-
 void ParticleManager::on_update(apx::registry& registry, double dt)
 {
+    auto singleton = registry.find<Singleton>();
+    if (!registry.valid(singleton)) {
+        return;
+    }
+    auto& ps = get_singleton<ParticleSingleton>(registry);
+
     d_instanceData.clear();
-    for (auto& particle : d_particles) {
-        particle.life -= dt;
-        particle.position += particle.velocity * (float)dt;
-        particle.velocity += particle.acceleration * (float)dt;
+    for (auto& particle : *ps.particles) {
         if (particle.life > 0.0) {
             d_instanceData.push_back({
                 particle.position,

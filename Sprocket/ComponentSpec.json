@@ -772,8 +772,8 @@
                 {
                     "name": "particles",
                     "display_name": "Particles",
-                    "type": "std::array<particle, NUM_PARTICLES>",
-                    "default": "{}"
+                    "type": "std::shared_ptr<std::array<particle, NUM_PARTICLES>>",
+                    "default": "std::make_shared<std::array<particle, NUM_PARTICLES>>()"
                 },
                 {
                     "name": "next_slot",

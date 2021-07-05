@@ -10,7 +10,7 @@ namespace {
 
 void emit_particle(ParticleSingleton& ps, const particle& p)
 {
-    ps.particles[ps.next_slot] = p;
+    (*ps.particles)[ps.next_slot] = p;
     ps.next_slot = --ps.next_slot % NUM_PARTICLES;
 }
 
@@ -27,6 +27,12 @@ void particle_system(apx::registry& registry, double dt)
 {
     auto& ps = get_singleton<ParticleSingleton>(registry);
 
+    for (auto& particle : *ps.particles) {
+        particle.life -= dt;
+        particle.position += particle.velocity * (float)dt;
+        particle.velocity += particle.acceleration * (float)dt;
+    }
+
     for (auto entity : registry.view<ParticleComponent>()) {
         auto& tc = registry.get<Transform3DComponent>(entity);
         auto& pc = registry.get<ParticleComponent>(entity);
@@ -39,14 +45,6 @@ void particle_system(apx::registry& registry, double dt)
             float phi = Random<float>(0, 3.142);
             float theta = Random<float>(0, 6.284);
             glm::vec3 noise = {r * std::sin(theta) * std::cos(phi), r * std::sin(theta) * std::sin(phi), r * std::cos(theta)};
-            
-            Particle p;
-            p.position = tc.position;
-            p.velocity = pc.velocity + noise;
-            p.acceleration = pc.acceleration;
-            p.life = pc.life;
-            p.scale = pc.scale;
-            ps.particle_manager->Emit(p);
 
             spkt::particle p2;
             p2.position = tc.position;

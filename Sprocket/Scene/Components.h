@@ -30,7 +30,7 @@ struct particle
     double life = -1.0;
 };
 
-static constexpr std::size_t NUM_PARTICLES = 100;
+static constexpr std::size_t NUM_PARTICLES = 10000;
 
 // Components
 struct Runtime
@@ -217,7 +217,7 @@ struct CameraSingleton
 struct ParticleSingleton
 {
     ParticleManager* particle_manager = nullptr;
-    std::array<particle, NUM_PARTICLES> particles = {};
+    std::shared_ptr<std::array<particle, NUM_PARTICLES>> particles = std::make_shared<std::array<particle, NUM_PARTICLES>>();
     std::size_t next_slot = NUM_PARTICLES - 1;
 };
 
