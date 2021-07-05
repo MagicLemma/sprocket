@@ -70,7 +70,7 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
 
 Game::Game(Window* window) 
     : d_window(window)
-    , d_scene(window)
+    , d_scene()
     , d_assetManager()
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(&d_assetManager)

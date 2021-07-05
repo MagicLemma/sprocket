@@ -26,14 +26,11 @@ public:
     using system_t = std::function<void(apx::registry&, double)>;
 
 private:
-    // Temporary, will be removed when then the InputSingleton gets updated via a system.
-    Window* d_window;
-
     apx::registry d_registry;
     std::vector<system_t> d_systems;
 
 public:
-    Scene(Window* window);
+    Scene();
     ~Scene();
 
     apx::registry& Entities() { return d_registry; }

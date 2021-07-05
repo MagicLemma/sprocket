@@ -7,8 +7,7 @@
 
 namespace spkt {
 
-Scene::Scene(Window* window)
-    : d_window(window)
+Scene::Scene()
 {
     auto singleton = d_registry.create();
     d_registry.emplace<Runtime>(singleton);

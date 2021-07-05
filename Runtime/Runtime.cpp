@@ -7,7 +7,7 @@ const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
 Runtime::Runtime(spkt::Window* window) 
     : d_window(window)
-    , d_scene(window)
+    , d_scene()
     , d_assetManager()
     , d_entityRenderer(&d_assetManager)
     , d_skyboxRenderer(&d_assetManager)

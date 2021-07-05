@@ -97,6 +97,10 @@
         "stop_token": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp",
-        "coroutine": "cpp"
+        "coroutine": "cpp",
+        "charconv": "cpp",
+        "format": "cpp",
+        "span": "cpp",
+        "sstream": "cpp"
     }
 }
