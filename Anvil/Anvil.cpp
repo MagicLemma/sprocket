@@ -50,7 +50,6 @@ Anvil::Anvil(Window* window)
     d_scene = std::make_shared<Scene>(); 
     spkt::add_singleton(d_scene->Entities());   
     spkt::load_registry_from_file(d_sceneFile, &d_scene->Entities());
-    spkt::particle_system_init(d_scene->Entities());
     d_activeScene = d_scene;
 }
 
@@ -188,7 +187,6 @@ void Anvil::on_render()
 
                 spkt::add_singleton(d_activeScene->Entities());
                 spkt::copy_registry(&d_scene->Entities(), &d_activeScene->Entities());
-                spkt::particle_system_init(d_activeScene->Entities());
 
                 d_activeScene->add(spkt::physics_system);
                 d_activeScene->add(spkt::particle_system);

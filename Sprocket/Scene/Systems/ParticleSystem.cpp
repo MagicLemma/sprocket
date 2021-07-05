@@ -13,18 +13,24 @@ void emit_particle(ParticleSingleton& ps, const particle& p)
     ps.next_slot = --ps.next_slot % NUM_PARTICLES;
 }
 
+ParticleSingleton& get_particle_runtime(apx::registry& registry)
+{
+    auto entity = registry.find<ParticleSingleton>();
+    if (!registry.valid(entity)) [[unlikely]] {
+        entity = registry.create();
+        registry.emplace<Runtime>(entity);
+        registry.emplace<NameComponent>(entity, "::ParticleRuntimeSingleton");
+        auto& ps = registry.emplace<ParticleSingleton>(entity);
+        ps.particles = std::make_shared<std::array<spkt::particle, NUM_PARTICLES>>();
+    }
+    return registry.get<ParticleSingleton>(entity);
 }
 
-void particle_system_init(apx::registry& registry)
-{
-    auto singleton = registry.find<Singleton>();
-    auto& ps = registry.emplace<ParticleSingleton>(singleton);
-    ps.particles = std::make_shared<std::array<spkt::particle, NUM_PARTICLES>>();
 }
 
 void particle_system(apx::registry& registry, double dt)
 {
-    auto& ps = get_singleton<ParticleSingleton>(registry);
+    auto& ps = get_particle_runtime(registry);
 
     for (auto& particle : *ps.particles) {
         particle.life -= dt;
@@ -36,13 +42,13 @@ void particle_system(apx::registry& registry, double dt)
         auto& tc = registry.get<Transform3DComponent>(entity);
         auto& pc = registry.get<ParticleComponent>(entity);
 
-        pc.accumulator += dt;
+        pc.accumulator += (float)dt;
         while (pc.accumulator > pc.interval) {
             float n = pc.velocityNoise;
 
             float r = Random<float>(0, pc.velocityNoise);
-            float phi = Random<float>(0, 3.142);
-            float theta = Random<float>(0, 6.284);
+            float phi = Random<float>(0, 3.142f);
+            float theta = Random<float>(0, 6.284f);
             glm::vec3 noise = {r * std::sin(theta) * std::cos(phi), r * std::sin(theta) * std::sin(phi), r * std::cos(theta)};
 
             spkt::particle p2;

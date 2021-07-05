@@ -25,7 +25,6 @@ Runtime::Runtime(spkt::Window* window)
 
     spkt::add_singleton(d_scene.Entities());
     spkt::load_registry_from_file("Resources/Anvil.yaml", &d_scene.Entities());
-    spkt::particle_system_init(d_scene.Entities());
     
     d_scene.add(spkt::physics_system);
     d_scene.add(spkt::particle_system);
