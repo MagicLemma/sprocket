@@ -65,10 +65,8 @@ void camera_system(apx::registry& registry, double dt)
     float aspect_ratio = input.window_width / input.window_height;
 
     for (auto entity : registry.view<Camera3DComponent>()) {
-        auto& camera = registry.get<Camera3DComponent>(entity);
-        camera.projection = glm::perspective(
-            camera.fov, aspect_ratio, 0.1f, 1000.0f
-        );
+        auto& cam = registry.get<Camera3DComponent>(entity);
+        cam.projection = glm::perspective(cam.fov, aspect_ratio, 0.1f, 1000.0f);
     }
 }
 
@@ -79,13 +77,13 @@ void path_follower_system(apx::registry& registry, double dt)
         auto& path = registry.get<PathComponent>(entity);
         if (path.markers.empty()) { return; }
         
-        glm::vec3 direction = glm::normalize(path.markers.front() - transform.position);
+        glm::vec3 to_dest = path.markers.front() - transform.position;
+        glm::vec3 direction = glm::normalize(to_dest);
         glm::vec3 advance = path.speed * (float)dt * direction;
 
-        if (glm::length2(advance) < glm::length2(path.markers.front() - transform.position)) {
+        if (glm::length2(advance) < glm::length2(to_dest)) {
             transform.position += advance;
-        }
-        else {
+        } else {
             transform.position = path.markers.front();
             path.markers.pop();
         }
