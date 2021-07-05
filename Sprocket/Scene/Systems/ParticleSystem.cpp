@@ -6,6 +6,15 @@
 #include "ParticleManager.h"
 
 namespace spkt {
+namespace {
+
+void emit_particle(ParticleSingleton& ps, const particle& p)
+{
+    ps.particles[ps.next_slot] = p;
+    ps.next_slot = --ps.next_slot % NUM_PARTICLES;
+}
+
+}
 
 void particle_system_init(apx::registry& registry, ParticleManager* particle_manager)
 {
@@ -38,6 +47,14 @@ void particle_system(apx::registry& registry, double dt)
             p.life = pc.life;
             p.scale = pc.scale;
             ps.particle_manager->Emit(p);
+
+            spkt::particle p2;
+            p2.position = tc.position;
+            p2.velocity = pc.velocity + noise;
+            p2.acceleration = pc.acceleration;
+            p2.life = pc.life;
+            p2.scale = pc.scale;
+            emit_particle(ps, p2);
 
             pc.accumulator -= pc.interval;
         }
