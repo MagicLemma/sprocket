@@ -14,8 +14,6 @@ class ParticleManager
 {
     std::unique_ptr<Buffer> d_instances;
 
-    std::vector<InstanceData> d_instanceData;
-
 public:
     ParticleManager();
 

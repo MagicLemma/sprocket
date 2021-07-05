@@ -34,17 +34,17 @@ void ParticleManager::on_update(apx::registry& registry, double dt)
     }
     auto& ps = get_singleton<ParticleSingleton>(registry);
 
-    d_instanceData.clear();
+    std::vector<InstanceData> instance_data(NUM_PARTICLES);
     for (auto& particle : *ps.particles) {
         if (particle.life > 0.0) {
-            d_instanceData.push_back({
+            instance_data.push_back({
                 particle.position,
                 {0.0, 0.0, 0.0, 1.0},
                 particle.scale
             });
         }
     }
-    d_instances->SetData(d_instanceData);
+    d_instances->SetData(instance_data);
 }
 
 }
