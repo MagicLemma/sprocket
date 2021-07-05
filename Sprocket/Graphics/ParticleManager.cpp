@@ -28,14 +28,10 @@ ParticleManager::ParticleManager()
 
 void ParticleManager::on_update(apx::registry& registry, double dt)
 {
-    auto singleton = registry.find<Singleton>();
-    if (!registry.valid(singleton)) {
-        return;
-    }
     auto& ps = get_singleton<ParticleSingleton>(registry);
 
     std::vector<InstanceData> instance_data(NUM_PARTICLES);
-    for (auto& particle : *ps.particles) {
+    for (const auto& particle : *ps.particles) {
         if (particle.life > 0.0) {
             instance_data.push_back({
                 particle.position,
