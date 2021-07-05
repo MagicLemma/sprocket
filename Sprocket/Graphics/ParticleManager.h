@@ -2,6 +2,8 @@
 #include "Maths.h"
 #include "Buffer.h"
 
+#include "apecs.hpp"
+
 #include <memory>
 #include <array>
 #include <vector>
@@ -37,7 +39,7 @@ public:
 
     void Emit(const Particle& particle);
 
-    void on_update(double dt);
+    void on_update(apx::registry& registry, double dt);
 
     Buffer* GetInstances() const { return d_instances.get(); }
 

@@ -63,7 +63,7 @@ void Runtime::on_update(double dt)
         d_console.on_update(dt);
     } else {
         d_window->SetCursorVisibility(false);
-        d_particleManager.on_update(dt);
+        d_particleManager.on_update(d_scene.Entities(), dt);
         d_scene.on_update(dt);
     }
 }

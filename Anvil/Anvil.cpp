@@ -89,6 +89,8 @@ void Anvil::on_event(ev::Event& event)
 
 void Anvil::on_update(double dt)
 {
+    auto& registry = d_activeScene->Entities();
+
     d_ui.on_update(dt);
 
     if (d_paused) {
@@ -96,7 +98,7 @@ void Anvil::on_update(double dt)
     }
 
     d_activeScene->on_update(dt);
-    d_particle_manager.on_update(dt);
+    d_particle_manager.on_update(registry, dt);
 
     if (d_is_viewport_focused && !d_playingGame) {
         d_editor_camera.on_update(dt);
