@@ -11,7 +11,7 @@
 
 namespace spkt {
 
-void add_singleton(apx::registry& registry);
+apx::entity add_singleton(apx::registry& registry);
 
 template <typename Comp>
 Comp& get_singleton(apx::registry& registry)

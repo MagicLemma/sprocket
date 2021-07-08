@@ -25,25 +25,20 @@ void game_grid_system_init(apx::registry& registry)
     registry.emplace<NameComponent>(grid.hovered_square_entity, "Hovered Grid Highlighter");
     auto& tr1 = registry.emplace<Transform3DComponent>(grid.hovered_square_entity);
     tr1.scale = {0.3f, 0.3f, 0.3f};
-    auto& model1 = registry.emplace<ModelComponent>(grid.hovered_square_entity);
-    model1.mesh = GRID_SQUARE;
+    auto& model1 = registry.emplace<ModelComponent>(grid.hovered_square_entity, GRID_SQUARE);
+    //model1.mesh = GRID_SQUARE;
 
     grid.clicked_square_entity = registry.create();
     registry.emplace<Runtime>(grid.clicked_square_entity);
     registry.emplace<NameComponent>(grid.clicked_square_entity, "Clicked Grid Highlighter");
     auto& tr2 = registry.emplace<Transform3DComponent>(grid.clicked_square_entity);
     tr2.scale = {0.5f, 0.5f, 0.5f};
-    auto& model2 = registry.emplace<ModelComponent>(grid.clicked_square_entity);
-    model2.mesh = GRID_SQUARE;
+    auto& model2 = registry.emplace<ModelComponent>(grid.clicked_square_entity, GRID_SQUARE);
+    //model2.mesh = GRID_SQUARE;
 }
 
 void game_grid_system(apx::registry& registry, double)
 {
-    auto singleton = registry.find<Singleton>();
-    if (!registry.valid(singleton)) {
-        return;
-    }
-
     const auto& input = get_singleton<InputSingleton>(registry);
     const auto& cam = get_singleton<CameraSingleton>(registry);
     auto& grid = get_singleton<GameGridSingleton>(registry);

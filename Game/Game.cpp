@@ -2,6 +2,7 @@
 #include "Palette.h"
 #include "PathCalculator.h"
 #include "Window.h"
+#include "Scene.h"
 
 #include "grid_helpers.h"
 
@@ -106,33 +107,30 @@ Game::Game(Window* window)
 
 void Game::load_scene(std::string_view file)
 {
-    using namespace spkt;
+    auto& registry = d_scene.Entities();
     
-    spkt::add_singleton(d_scene.Entities());
-    spkt::load_registry_from_file(std::string(file), &d_scene.Entities());
-
+    spkt::add_singleton(registry);
+    spkt::game_grid_system_init(registry);
+    spkt::load_registry_from_file(std::string(file), &registry);
+    
     d_scene.add(spkt::game_grid_system);
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::path_follower_system);
     d_scene.add(spkt::clear_events_system);
 
-    spkt::game_grid_system_init(d_scene.Entities());
-
     d_paused = false;
     d_sceneFile = file;
 
-    auto& registry = d_scene.Entities();
-
-    d_worker = registry.find<NameComponent>([&](apx::entity entity) {
-        return registry.get<NameComponent>(entity).name == "Worker";
+    d_worker = registry.find<spkt::NameComponent>([&](apx::entity entity) {
+        return registry.get<spkt::NameComponent>(entity).name == "Worker";
     });
 
-    d_camera = registry.find<NameComponent>([&](apx::entity entity) {
-        return registry.get<NameComponent>(entity).name == "Camera";
+    d_camera = registry.find<spkt::NameComponent>([&](apx::entity entity) {
+        return registry.get<spkt::NameComponent>(entity).name == "Camera";
     });
 
-    auto& cam = get_singleton<CameraSingleton>(d_scene.Entities());
+    auto& cam = get_singleton<spkt::CameraSingleton>(registry);
     cam.camera_entity = d_camera;
 
     assert(registry.valid(d_worker));

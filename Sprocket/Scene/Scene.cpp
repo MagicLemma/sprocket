@@ -7,13 +7,14 @@
 
 namespace spkt {
 
-void add_singleton(apx::registry& registry)
+apx::entity add_singleton(apx::registry& registry)
 {
     auto singleton = registry.create();
     registry.emplace<Runtime>(singleton);
     registry.emplace<Singleton>(singleton);
     registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
     registry.emplace<InputSingleton>(singleton);
+    return singleton;
 }
 
 Scene::~Scene()
