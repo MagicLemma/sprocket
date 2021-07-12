@@ -13,9 +13,9 @@ namespace spkt {
 
 class ShadowMap
 {
-    AssetManager*   d_assetManager;
+    AssetManager* d_assetManager;
 
-    Shader  d_shader;
+    Shader d_shader;
 
     glm::mat4 d_lightViewMatrix;
     glm::mat4 d_lightProjMatrix;

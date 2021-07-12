@@ -43,8 +43,8 @@ add_library(Sprocket STATIC
             Scene/Scene.cpp
             Scene/Loader.cpp
 
-            Scene/Systems/ParticleSystem.cpp
-            Scene/Systems/PhysicsEngine3D.cpp
+            Scene/Systems/particle_system.cpp
+            Scene/Systems/physics_system.cpp
             Scene/Systems/GameGrid.cpp
             Scene/Systems/basic_systems.cpp
             Scene/Systems/input_system.cpp

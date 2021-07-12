@@ -1,4 +1,4 @@
-#include "ParticleSystem.h"
+#include "particle_system.h"
 #include "Components.h"
 #include "apecs.hpp"
 #include "Random.h"

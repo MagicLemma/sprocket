@@ -25,8 +25,8 @@
 #include "Scene/Loader.h"
 
 #include "Scene/Systems/basic_systems.h"
-#include "Scene/Systems/ParticleSystem.h"
-#include "Scene/Systems/PhysicsEngine3D.h"
+#include "Scene/Systems/particle_system.h"
+#include "Scene/Systems/physics_system.h"
 #include "Scene/Systems/GameGrid.h"
 #include "Scene/Systems/input_system.h"
 
