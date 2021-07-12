@@ -18,7 +18,7 @@ class Runtime
     spkt::Scene d_scene;
     spkt::CubeMap d_skybox;
     
-    apx::entity d_runtimeCamera;
+    spkt::entity d_runtimeCamera;
 
     // Console
     spkt::Console d_console;

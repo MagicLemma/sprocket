@@ -1,6 +1,6 @@
 #include "GameGrid.h"
 #include "Camera.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Scene.h"
 #include "MouseCodes.h"
 #include "Log.h"
@@ -14,7 +14,7 @@ constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
 
 }
 
-void game_grid_system_init(apx::registry& registry)
+void game_grid_system_init(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
     registry.emplace<CameraSingleton>(singleton);
@@ -35,7 +35,7 @@ void game_grid_system_init(apx::registry& registry)
     tr2.scale = {0.5f, 0.5f, 0.5f};
 }
 
-void game_grid_system(apx::registry& registry, double)
+void game_grid_system(spkt::registry& registry, double)
 {
     const auto& input = get_singleton<InputSingleton>(registry);
     const auto& cam = get_singleton<CameraSingleton>(registry);

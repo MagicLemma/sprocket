@@ -20,7 +20,7 @@
 
 // SCENE
 #include "Scene/Camera.h"
-#include "Scene/Components.h"
+#include "Scene/ecs.h"
 #include "Scene/Scene.h"
 #include "Scene/Loader.h"
 

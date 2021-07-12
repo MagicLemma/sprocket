@@ -1,5 +1,5 @@
 #include "ShadowMap.h"
-#include "Components.h"
+#include "ecs.h"
 #include "RenderContext.h"
 
 #include <glad/glad.h>
@@ -32,7 +32,7 @@ ShadowMap::ShadowMap(AssetManager* assetManager)
 }
 
 void ShadowMap::Draw(
-    apx::registry& registry,
+    spkt::registry& registry,
     const glm::vec3& sunDirection,
     const glm::vec3& centre)
 {

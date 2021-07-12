@@ -1,6 +1,6 @@
 #include "Loader.h"
 #include "Log.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Maths.h"
 #include "Yaml.h"
 #include "Scene.h"
@@ -15,17 +15,17 @@ namespace {
 // When loading entities from disk, their IDs may already be in use, so we assigned them
 // new IDs when they are loaded. Because some components may store entity handles, we have
 // to also map those to the new values. This current soluton is not that scalable, because
-// if we ever use another container templatised on apx::entity, another branch has to be
+// if we ever use another container templatised on spkt::entity, another branch has to be
 // added here.
 
-using remapper_t = std::unordered_map<apx::entity, apx::entity>;
+using remapper_t = std::unordered_map<spkt::entity, spkt::entity>;
 
 template <typename T>
 T transform_entity(const remapper_t& remapper, T param) {
     using U = std::decay_t<T>;
-    if constexpr (std::is_same_v<U, apx::entity>) {
+    if constexpr (std::is_same_v<U, spkt::entity>) {
         return remapper.at(param);
-    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, apx::entity>>) {
+    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, spkt::entity>>) {
         for (auto& entry : param) {
             entry.second = remapper.at(entry.second);
         }
@@ -37,7 +37,7 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 }
 
-void save_registry_to_file(const std::string& file, apx::registry* reg)
+void save_registry_to_file(const std::string& file, spkt::registry* reg)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -65,7 +65,7 @@ DATAMATIC_END
     std::ofstream(file) << out.c_str();
 }
 
-void load_registry_from_file(const std::string& file, apx::registry* reg)
+void load_registry_from_file(const std::string& file, spkt::registry* reg)
 {
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -78,16 +78,16 @@ void load_registry_from_file(const std::string& file, apx::registry* reg)
     }
 
     auto entities = data["Entities"];
-    std::unordered_map<apx::entity, apx::entity> id_remapper;
+    std::unordered_map<spkt::entity, spkt::entity> id_remapper;
     
     for (auto yaml_entity : entities) {
-        apx::entity old_id = yaml_entity["ID#"].as<apx::entity>();
-        apx::entity new_id = reg->create();
+        spkt::entity old_id = yaml_entity["ID#"].as<spkt::entity>();
+        spkt::entity new_id = reg->create();
         id_remapper[old_id] = new_id;
     }
 
     for (auto yaml_entity : entities) {
-        apx::entity entity = id_remapper[yaml_entity["ID#"].as<apx::entity>()];
+        spkt::entity entity = id_remapper[yaml_entity["ID#"].as<spkt::entity>()];
 DATAMATIC_BEGIN SAVABLE=true
         if (auto spec = yaml_entity["{{Comp::name}}"]) {
             {{Comp::name}} c;
@@ -98,9 +98,9 @@ DATAMATIC_END
     }
 }
 
-apx::entity copy_entity(apx::registry* reg, apx::entity entity)
+spkt::entity copy_entity(spkt::registry* reg, spkt::entity entity)
 {
-    apx::entity new_entity = reg->create();
+    spkt::entity new_entity = reg->create();
 DATAMATIC_BEGIN SAVABLE=true
     if (reg->has<{{Comp::name}}>(entity)) {
         reg->add<{{Comp::name}}>(new_entity, reg->get<{{Comp::name}}>(entity));
@@ -109,17 +109,17 @@ DATAMATIC_END
     return new_entity;
 }
 
-void copy_registry(apx::registry* source, apx::registry* target)
+void copy_registry(spkt::registry* source, spkt::registry* target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.
-    std::unordered_map<apx::entity, apx::entity> id_remapper;
+    std::unordered_map<spkt::entity, spkt::entity> id_remapper;
     for (auto id : source->all()) {
         id_remapper[id] = target->create();;
     }
 
     for (auto old_entity : source->all()) {
-        apx::entity new_entity = id_remapper.at(old_entity);
+        spkt::entity new_entity = id_remapper.at(old_entity);
 DATAMATIC_BEGIN SAVABLE=true
         if (source->has<{{Comp::name}}>(old_entity)) {
             const {{Comp::name}}& source_comp = source->get<{{Comp::name}}>(old_entity);

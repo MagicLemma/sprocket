@@ -122,11 +122,11 @@ void Game::load_scene(std::string_view file)
     d_paused = false;
     d_sceneFile = file;
 
-    d_worker = registry.find<spkt::NameComponent>([&](apx::entity entity) {
+    d_worker = registry.find<spkt::NameComponent>([&](spkt::entity entity) {
         return registry.get<spkt::NameComponent>(entity).name == "Worker";
     });
 
-    d_camera = registry.find<spkt::NameComponent>([&](apx::entity entity) {
+    d_camera = registry.find<spkt::NameComponent>([&](spkt::entity entity) {
         return registry.get<spkt::NameComponent>(entity).name == "Camera";
     });
 
@@ -192,7 +192,7 @@ void Game::on_event(spkt::ev::Event& event)
                         mousePos,
                         [&](const glm::ivec2& pos) {
                             auto it = tiles.find(pos);
-                            apx::entity entity = it != tiles.end() ? it->second : apx::null;
+                            spkt::entity entity = it != tiles.end() ? it->second : spkt::null;
                             return registry.valid(entity);
                         }
                     );
@@ -292,7 +292,7 @@ void Game::on_render()
 
         if (game_grid.clicked_square.has_value()) {
             auto it = tiles.find(game_grid.clicked_square.value());
-            apx::entity e = (it != tiles.end()) ? it->second : apx::null;
+            spkt::entity e = (it != tiles.end()) ? it->second : spkt::null;
 
             float width = 0.15f * w;
             float height = 0.6f * h;
@@ -336,7 +336,7 @@ void Game::on_render()
         }
 
         auto it = tiles.find(game_grid.hovered_square);
-        apx::entity e = (it != tiles.end()) ? it->second : apx::null;
+        spkt::entity e = (it != tiles.end()) ? it->second : spkt::null;
         if (registry.valid(e)) {
             float width = 200;
             float height = 50;

@@ -1,5 +1,5 @@
 #include "Scene.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Loader.h"
 #include "input_system.h"
 
@@ -7,7 +7,7 @@
 
 namespace spkt {
 
-apx::entity add_singleton(apx::registry& registry)
+spkt::entity add_singleton(spkt::registry& registry)
 {
     auto singleton = registry.create();
     registry.emplace<Runtime>(singleton);

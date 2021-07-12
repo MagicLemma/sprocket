@@ -1,8 +1,8 @@
 #pragma once
-#include "apecs.hpp"
+#include "ecs.h"
 
 namespace spkt {
 
-void particle_system(apx::registry& registry, double dt);
+void particle_system(spkt::registry& registry, double dt);
 
 }

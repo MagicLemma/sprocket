@@ -1,5 +1,5 @@
 def wrap(cpp_type, expression):
-    if "apx::entity" in cpp_type:
+    if "spkt::entity" in cpp_type:
         return f"transform_entity(id_remapper, {expression})"
     return expression
 

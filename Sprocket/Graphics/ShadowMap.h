@@ -5,7 +5,7 @@
 #include "Scene.h"
 #include "VertexArray.h"
 
-#include "apecs.hpp"
+#include "ecs.h"
 
 #include <memory>
 
@@ -30,7 +30,7 @@ class ShadowMap
 public:
     ShadowMap(AssetManager* assetManager);
 
-    void Draw(apx::registry& registry, const glm::vec3& sunDirection, const glm::vec3& centre);
+    void Draw(spkt::registry& registry, const glm::vec3& sunDirection, const glm::vec3& centre);
 
     glm::mat4 GetLightProjViewMatrix() const;
     Texture*  GetShadowMap() const;

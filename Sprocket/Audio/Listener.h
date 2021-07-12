@@ -1,9 +1,9 @@
 #pragma once
-#include "apecs.hpp"
+#include "ecs.h"
 
 namespace spkt {
     
-void set_listener(apx::registry& registry, apx::entity entity);
+void set_listener(spkt::registry& registry, spkt::entity entity);
 
 float get_master_volume();
 void set_master_volume(float volume);

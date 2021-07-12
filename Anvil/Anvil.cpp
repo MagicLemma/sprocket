@@ -9,7 +9,7 @@
 namespace spkt {
 namespace {
 
-std::string entiy_name(apx::registry& registry, apx::entity entity)
+std::string entiy_name(spkt::registry& registry, spkt::entity entity)
 {
     if (registry.has<NameComponent>(entity)) {
         return registry.get<NameComponent>(entity).name;
@@ -62,8 +62,8 @@ void Anvil::on_event(ev::Event& event)
                 d_activeScene = d_scene;
                 d_window->SetCursorVisibility(true);
             }
-            else if (d_selected != apx::null) {
-                d_selected = apx::null;
+            else if (d_selected != spkt::null) {
+                d_selected = spkt::null;
             }
             else if (d_window->IsFullscreen()) {
                 d_window->SetWindowed(1280, 720);

@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "Camera.h"
 
-#include <apecs.hpp>
+#include "ecs.h"
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -90,7 +90,7 @@ glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)
     return {v2.x, v2.y, v2.z};
 }
 
-glm::vec3 mouse_world_direction(spkt::Window* window, const apx::registry& registry, apx::entity camera)
+glm::vec3 mouse_world_direction(spkt::Window* window, const spkt::registry& registry, spkt::entity camera)
 {
     return GetMouseRay(
         window->GetMousePos(),

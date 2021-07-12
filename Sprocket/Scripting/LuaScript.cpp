@@ -1,7 +1,7 @@
 #include "LuaScript.h"
 #include "Log.h"
-#include "apecs.hpp"
-#include "Components.h"
+#include "ecs.h"
+#include "ecs.h"
 
 #include <lua.hpp>
 

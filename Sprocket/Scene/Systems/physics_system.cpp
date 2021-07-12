@@ -1,8 +1,8 @@
 #include "physics_system.h"
-#include "apecs.hpp"
+#include "ecs.h"
 #include "Log.h"
 #include "Scene.h"
-#include "Components.h"
+#include "ecs.h"
 
 #include <variant>
 #include <unordered_map>
@@ -70,14 +70,14 @@ void set_material(rp3d::Collider* collider, const RigidBody3DComponent& rc)
 
 struct raycast_callback : public rp3d::RaycastCallback
 {
-    apx::entity entity = apx::null;
+    spkt::entity entity = spkt::null;
     float fraction = 10.0f;
 
     rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) override 
     {
         if (info.hitFraction < fraction) {  // This object is closer.
             fraction = info.hitFraction;
-            entity = *static_cast<apx::entity*>(info.body->getUserData());
+            entity = *static_cast<spkt::entity*>(info.body->getUserData());
         }
         return -1.0f;
     }
@@ -85,7 +85,7 @@ struct raycast_callback : public rp3d::RaycastCallback
 
 class event_listener : public rp3d::EventListener
 {
-    using collision_vector = std::vector<std::pair<apx::entity, apx::entity>>;
+    using collision_vector = std::vector<std::pair<spkt::entity, spkt::entity>>;
 
     collision_vector d_collisions;
 
@@ -96,8 +96,8 @@ public:
             auto pair = data.getContactPair(p);
             auto type = pair.getEventType();
             if (type == rp3d::CollisionCallback::ContactPair::EventType::ContactStart) {
-                apx::entity e1 = *static_cast<apx::entity*>(pair.getBody1()->getUserData());
-                apx::entity e2 = *static_cast<apx::entity*>(pair.getBody2()->getUserData());
+                spkt::entity e1 = *static_cast<spkt::entity*>(pair.getBody1()->getUserData());
+                spkt::entity e2 = *static_cast<spkt::entity*>(pair.getBody2()->getUserData());
                 d_collisions.push_back({e1, e2});
             }
         }
@@ -110,7 +110,7 @@ public:
 
 struct physics_runtime
 {
-    apx::registry* registry;
+    spkt::registry* registry;
 
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
@@ -119,7 +119,7 @@ struct physics_runtime
 
     float lastFrameLength = 0;
 
-    physics_runtime(apx::registry& registry_)
+    physics_runtime(spkt::registry& registry_)
         : registry(&registry_)
     {
         rp3d::PhysicsWorld::WorldSettings settings;
@@ -141,14 +141,14 @@ struct physics_runtime
 
 struct rigid_body_runtime
 {
-    apx::registry*     registry;
-    apx::entity         entity;
+    spkt::registry*     registry;
+    spkt::entity         entity;
     rp3d::PhysicsWorld* world;
     rp3d::RigidBody*    body;
 
     rigid_body_runtime(
-        apx::registry* registry_,
-        apx::entity entity_,
+        spkt::registry* registry_,
+        spkt::entity entity_,
         rp3d::PhysicsWorld* world_
     )
         : registry(registry_)
@@ -196,8 +196,8 @@ struct collider_runtime
 
 std::shared_ptr<collider_runtime> make_box_collider(
     rp3d::PhysicsCommon* pc,
-    apx::registry& registry,
-    apx::entity entity,
+    spkt::registry& registry,
+    spkt::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
     auto& tc = registry.get<Transform3DComponent>(entity);
@@ -216,8 +216,8 @@ std::shared_ptr<collider_runtime> make_box_collider(
 
 std::shared_ptr<collider_runtime> make_sphere_collider(
     rp3d::PhysicsCommon* pc,
-    apx::registry& registry,
-    apx::entity entity,
+    spkt::registry& registry,
+    spkt::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
     auto& tc = registry.get<Transform3DComponent>(entity);
@@ -234,8 +234,8 @@ std::shared_ptr<collider_runtime> make_sphere_collider(
 
 std::shared_ptr<collider_runtime> make_capsule_collider(
     rp3d::PhysicsCommon* pc,
-    apx::registry& registry,
-    apx::entity entity,
+    spkt::registry& registry,
+    spkt::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
     auto& tc = registry.get<Transform3DComponent>(entity);
@@ -252,7 +252,7 @@ std::shared_ptr<collider_runtime> make_capsule_collider(
 
 namespace {
 
-bool is_on_floor(apx::registry& registry, rp3d::PhysicsWorld* const world, const rp3d::RigidBody* const body)
+bool is_on_floor(spkt::registry& registry, rp3d::PhysicsWorld* const world, const rp3d::RigidBody* const body)
 {
     // Get the point at the bottom of the rigid body.
     auto aabb = body->getAABB();
@@ -270,7 +270,7 @@ bool is_on_floor(apx::registry& registry, rp3d::PhysicsWorld* const world, const
     return registry.valid(cb.entity);
 }
 
-PhysicsSingleton& get_physics_runtime(apx::registry& registry)
+PhysicsSingleton& get_physics_runtime(spkt::registry& registry)
 {
     auto entity = registry.find<PhysicsSingleton>();
     if (!registry.valid(entity)) [[unlikely]] {
@@ -285,13 +285,13 @@ PhysicsSingleton& get_physics_runtime(apx::registry& registry)
 
 }
 
-void physics_system(apx::registry& registry, double dt)
+void physics_system(spkt::registry& registry, double dt)
 {
     auto& ps = get_physics_runtime(registry);
     auto& runtime = *ps.physics_runtime;
 
     // Pre Update
-    for (apx::entity entity : registry.view<RigidBody3DComponent>()) {
+    for (spkt::entity entity : registry.view<RigidBody3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         auto& physics = registry.get<RigidBody3DComponent>(entity);
 

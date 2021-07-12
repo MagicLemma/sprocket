@@ -1,13 +1,13 @@
 #include "particle_system.h"
-#include "Components.h"
-#include "apecs.hpp"
+#include "ecs.h"
+#include "ecs.h"
 #include "Random.h"
 #include "Scene.h"
 
 namespace spkt {
 namespace {
 
-ParticleSingleton& get_particle_runtime(apx::registry& registry)
+ParticleSingleton& get_particle_runtime(spkt::registry& registry)
 {
     auto entity = registry.find<ParticleSingleton>();
     if (!registry.valid(entity)) [[unlikely]] {
@@ -35,7 +35,7 @@ glm::vec3 random_noise(float R)
 
 }
 
-void particle_system(apx::registry& registry, double dt)
+void particle_system(spkt::registry& registry, double dt)
 {
     auto& ps = get_particle_runtime(registry);
 

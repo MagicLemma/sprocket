@@ -3,13 +3,13 @@
 #include "AssetManager.h"
 #include "RenderContext.h"
 #include "Camera.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Scene.h"
 #include "ShadowMap.h"
 #include "Types.h"
 #include "Hashing.h"
 
-#include "apecs.hpp"
+#include "ecs.h"
 
 #include <algorithm>
 #include <ranges>
@@ -36,7 +36,7 @@ std::unique_ptr<Buffer> GetInstanceBuffer()
 
 void UploadUniforms(
     const Shader& shader,
-    apx::registry& registry,
+    spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view
 )
@@ -145,7 +145,7 @@ void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 }
 
 void Scene3DRenderer::Draw(
-    apx::registry& registry,
+    spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
 {
@@ -237,7 +237,7 @@ void Scene3DRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void Scene3DRenderer::Draw(apx::registry& registry, apx::entity camera)
+void Scene3DRenderer::Draw(spkt::registry& registry, spkt::entity camera)
 {
     glm::mat4 proj = spkt::make_proj(registry, camera);
     glm::mat4 view = spkt::make_view(registry, camera);

@@ -1,5 +1,4 @@
 #pragma once
-#include "Maths.h"
 #include <queue>
 #include <string>
 #include <utility>
@@ -12,7 +11,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
-#include "apecs.hpp"
+#include <apecs.hpp>
 
 namespace spkt {
 namespace lua { class Script; }
