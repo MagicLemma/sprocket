@@ -334,7 +334,7 @@ void load_registry_from_file(const std::string& file, apx::registry* reg)
         }
         if (auto spec = yaml_entity["TileMapSingleton"]) {
             TileMapSingleton c;
-            c.tiles = transform_entity(id_remapper, spec["tiles"].as<std::unordered_map<glm::ivec2, apx::entity>>());
+            c.tiles = spec["tiles"].as<std::unordered_map<glm::ivec2, spkt::entity>>();
             reg->add<TileMapSingleton>(entity, c);
         }
     }
@@ -542,7 +542,7 @@ void copy_registry(apx::registry* source, apx::registry* target)
         if (source->has<TileMapSingleton>(old_entity)) {
             const TileMapSingleton& source_comp = source->get<TileMapSingleton>(old_entity);
             TileMapSingleton target_comp;
-            target_comp.tiles = transform_entity(id_remapper, source_comp.tiles);
+            target_comp.tiles = source_comp.tiles;
             target->add<TileMapSingleton>(new_entity, target_comp);
         }
     }

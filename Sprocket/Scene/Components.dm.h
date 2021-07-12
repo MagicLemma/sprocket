@@ -16,6 +16,10 @@
 
 namespace spkt {
 namespace lua { class Script; }
+
+using entity = apx::entity;
+const auto null = apx::null;
+
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
@@ -39,5 +43,12 @@ struct {{Comp::name}}
 };
 
 DATAMATIC_END
+using registry = apx::fixed_registry<
+DATAMATIC_BEGIN
+    {{Comp::name}}{{Comp::if_not_last(",")}}
+DATAMATIC_END
+>;
+
+using handle = typename registry::handle_type;
 
 }

@@ -583,13 +583,13 @@
                 {
                     "name": "entity_a",
                     "display_name": "Entity A",
-                    "type": "apx::entity",
+                    "type": "spkt::entity",
                     "default": "{}"
                 },
                 {
                     "name": "entity_b",
                     "display_name": "Entity B",
-                    "type": "apx::entity",
+                    "type": "spkt::entity",
                     "default": "{}"
                 }
             ]
@@ -701,14 +701,14 @@
                 {
                     "name": "hovered_square_entity",
                     "display_name": "Hovered Square Entity",
-                    "type": "apx::entity",
-                    "default": "apx::null"
+                    "type": "spkt::entity",
+                    "default": "spkt::null"
                 },
                 {
                     "name": "clicked_square_entity",
                     "display_name": "Clicked Square Entity",
-                    "type": "apx::entity",
-                    "default": "apx::null"
+                    "type": "spkt::entity",
+                    "default": "spkt::null"
                 },
                 {
                     "name": "hovered_square",
@@ -734,7 +734,7 @@
                 {
                     "name": "tiles",
                     "display_name": "Tiles",
-                    "type": "std::unordered_map<glm::ivec2, apx::entity>",
+                    "type": "std::unordered_map<glm::ivec2, spkt::entity>",
                     "default": "{}"
                 }
             ]
@@ -750,8 +750,8 @@
                 {
                     "name": "camera_entity",
                     "display_name": "Camera Entity",
-                    "type": "apx::entity",
-                    "default": "apx::null"
+                    "type": "spkt::entity",
+                    "default": "spkt::null"
                 }
             ]
         },

@@ -16,6 +16,10 @@
 
 namespace spkt {
 namespace lua { class Script; }
+
+using entity = apx::entity;
+const auto null = apx::null;
+
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
@@ -171,8 +175,8 @@ struct MeshAnimationComponent
 
 struct CollisionEvent
 {
-    apx::entity entity_a = {};
-    apx::entity entity_b = {};
+    spkt::entity entity_a = {};
+    spkt::entity entity_b = {};
 };
 
 struct PhysicsSingleton
@@ -197,20 +201,20 @@ struct InputSingleton
 
 struct GameGridSingleton
 {
-    apx::entity hovered_square_entity = apx::null;
-    apx::entity clicked_square_entity = apx::null;
+    spkt::entity hovered_square_entity = spkt::null;
+    spkt::entity clicked_square_entity = spkt::null;
     glm::ivec2 hovered_square = {0, 0};
     std::optional<glm::ivec2> clicked_square = std::nullopt;
 };
 
 struct TileMapSingleton
 {
-    std::unordered_map<glm::ivec2, apx::entity> tiles = {};
+    std::unordered_map<glm::ivec2, spkt::entity> tiles = {};
 };
 
 struct CameraSingleton
 {
-    apx::entity camera_entity = apx::null;
+    spkt::entity camera_entity = spkt::null;
 };
 
 struct ParticleSingleton
@@ -219,5 +223,35 @@ struct ParticleSingleton
     std::size_t next_slot = NUM_PARTICLES - 1;
 };
 
+using registry = apx::fixed_registry<
+    Runtime,
+    Singleton,
+    Event,
+    NameComponent,
+    Transform2DComponent,
+    Transform3DComponent,
+    ModelComponent,
+    RigidBody3DComponent,
+    BoxCollider3DComponent,
+    SphereCollider3DComponent,
+    CapsuleCollider3DComponent,
+    ScriptComponent,
+    Camera3DComponent,
+    PathComponent,
+    LightComponent,
+    SunComponent,
+    AmbienceComponent,
+    ParticleComponent,
+    MeshAnimationComponent,
+    CollisionEvent,
+    PhysicsSingleton,
+    InputSingleton,
+    GameGridSingleton,
+    TileMapSingleton,
+    CameraSingleton,
+    ParticleSingleton
+>;
+
+using handle = typename registry::handle_type;
 
 }

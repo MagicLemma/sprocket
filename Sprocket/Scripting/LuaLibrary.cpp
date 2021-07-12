@@ -1074,8 +1074,8 @@ int _GetCollisionEvent(lua_State* L) {
     apx::handle e = Converter<apx::handle>::read(L, 1);
     assert(e.has<CollisionEvent>());
     const auto& c = e.get<CollisionEvent>();
-    Converter<apx::entity>::push(L, c.entity_a);
-    Converter<apx::entity>::push(L, c.entity_b);
+    Converter<spkt::entity>::push(L, c.entity_a);
+    Converter<spkt::entity>::push(L, c.entity_b);
     return 2;
 }
 
@@ -1084,8 +1084,8 @@ int _SetCollisionEvent(lua_State* L) {
     int ptr = 0;
     apx::handle e = Converter<apx::handle>::read(L, ++ptr);
     auto& c = e.get<CollisionEvent>();
-    c.entity_a = Converter<apx::entity>::read(L, ++ptr);
-    c.entity_b = Converter<apx::entity>::read(L, ++ptr);
+    c.entity_a = Converter<spkt::entity>::read(L, ++ptr);
+    c.entity_b = Converter<spkt::entity>::read(L, ++ptr);
     return 0;
 }
 
@@ -1095,8 +1095,8 @@ int _AddCollisionEvent(lua_State* L) {
     apx::handle e = Converter<apx::handle>::read(L, ++ptr);
     assert(!e.has<CollisionEvent>());
     CollisionEvent c;
-    c.entity_a = Converter<apx::entity>::read(L, ++ptr);
-    c.entity_b = Converter<apx::entity>::read(L, ++ptr);
+    c.entity_a = Converter<spkt::entity>::read(L, ++ptr);
+    c.entity_b = Converter<spkt::entity>::read(L, ++ptr);
     add_command(L, [e, c]() mutable { e.add<CollisionEvent>(c); });
     return 0;
 }
