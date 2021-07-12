@@ -14,53 +14,53 @@
 namespace spkt {
 namespace {
 
-rp3d::Vector3 Convert(const glm::vec3& v)
+rp3d::Vector3 convert(const glm::vec3& v)
 {
     return rp3d::Vector3(v.x, v.y, v.z);
 }
 
-rp3d::Vector2 Convert(const glm::vec2& v)
+rp3d::Vector2 convert(const glm::vec2& v)
 {
     return rp3d::Vector2(v.x, v.y);
 }
 
-glm::vec3 Convert(const rp3d::Vector3& v)
+glm::vec3 convert(const rp3d::Vector3& v)
 {
     return glm::vec3(v.x, v.y, v.z);
 }
 
-glm::vec2 Convert(const rp3d::Vector2& v)
+glm::vec2 convert(const rp3d::Vector2& v)
 {
     return glm::vec2(v.x, v.y);
 }
 
-glm::quat Convert(const rp3d::Quaternion& q)
+glm::quat convert(const rp3d::Quaternion& q)
 {
     return glm::quat(q.w, q.x, q.y, q.z);
 }
 
-rp3d::Quaternion Convert(const glm::quat& q)
+rp3d::Quaternion convert(const glm::quat& q)
 {
     return rp3d::Quaternion(q.x, q.y, q.z, q.w);
 }
 
-rp3d::Transform Convert(const glm::vec3& position, const glm::quat& orientation)
+rp3d::Transform convert(const glm::vec3& position, const glm::quat& orientation)
 {
     rp3d::Transform t;
-    t.setPosition(Convert(position));
+    t.setPosition(convert(position));
 
-    rp3d::Quaternion ori = Convert(orientation);
+    rp3d::Quaternion ori = convert(orientation);
     ori.normalize();
     t.setOrientation(ori);
     return t;
 }
 
-rp3d::Transform Convert(const Transform3DComponent& transform)
+rp3d::Transform convert(const Transform3DComponent& transform)
 {
-    return Convert(transform.position, transform.orientation);
+    return convert(transform.position, transform.orientation);
 }
 
-void SetMaterial(rp3d::Collider* collider, const RigidBody3DComponent& rc)
+void set_material(rp3d::Collider* collider, const RigidBody3DComponent& rc)
 {
     rp3d::Material& material = collider->getMaterial();
     material.setFrictionCoefficient(rc.frictionCoefficient);
@@ -83,7 +83,7 @@ struct raycast_callback : public rp3d::RaycastCallback
     }
 };
 
-class EventListener : public rp3d::EventListener
+class event_listener : public rp3d::EventListener
 {
     std::vector<std::pair<apx::entity, apx::entity>> d_collisions;
 
@@ -113,7 +113,7 @@ struct physics_runtime
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
 
-    EventListener listener;
+    spkt::event_listener listener;
 
     float lastFrameLength = 0;
 
@@ -155,7 +155,7 @@ struct rigid_body_runtime
         , body(nullptr)
     {
         auto& tc = registry->get<Transform3DComponent>(entity);
-        body = world->createRigidBody(Convert(tc));
+        body = world->createRigidBody(convert(tc));
         body->setUserData(static_cast<void*>(&entity));
     }
 
@@ -203,11 +203,11 @@ std::shared_ptr<collider_runtime> make_box_collider(
 
     glm::vec3 dimensions = bc.halfExtents;
     if (bc.applyScale) { dimensions *= tc.scale; }
-    rp3d::BoxShape* shape = pc->createBoxShape(Convert(dimensions));
-    rp3d::Transform transform = Convert(bc.position, bc.orientation);
+    rp3d::BoxShape* shape = pc->createBoxShape(convert(dimensions));
+    rp3d::Transform transform = convert(bc.position, bc.orientation);
 
     rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
-    SetMaterial(collider, registry.get<RigidBody3DComponent>(entity));
+    set_material(collider, registry.get<RigidBody3DComponent>(entity));
 
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
@@ -222,10 +222,10 @@ std::shared_ptr<collider_runtime> make_sphere_collider(
     auto& sc = registry.get<SphereCollider3DComponent>(entity);
     
     rp3d::SphereShape* shape = pc->createSphereShape(sc.radius);
-    rp3d::Transform transform = Convert(sc.position, sc.orientation);
+    rp3d::Transform transform = convert(sc.position, sc.orientation);
 
     rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
-    SetMaterial(collider, registry.get<RigidBody3DComponent>(entity));
+    set_material(collider, registry.get<RigidBody3DComponent>(entity));
 
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
@@ -240,10 +240,10 @@ std::shared_ptr<collider_runtime> make_capsule_collider(
     auto& cc = registry.get<CapsuleCollider3DComponent>(entity);
     
     rp3d::CapsuleShape* shape = pc->createCapsuleShape(cc.radius, cc.height);
-    rp3d::Transform transform = Convert(cc.position, cc.orientation);
+    rp3d::Transform transform = convert(cc.position, cc.orientation);
 
     rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
-    SetMaterial(collider, registry.get<RigidBody3DComponent>(entity));
+    set_material(collider, registry.get<RigidBody3DComponent>(entity));
 
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
@@ -320,8 +320,8 @@ void physics_system(apx::registry& registry, double dt)
             }
         }
 
-        body->setTransform(Convert(tc));
-        body->setLinearVelocity(Convert(physics.velocity));
+        body->setTransform(convert(tc));
+        body->setLinearVelocity(convert(physics.velocity));
         body->enableGravity(physics.gravity);    
 
         if (physics.frozen) {
@@ -340,7 +340,7 @@ void physics_system(apx::registry& registry, double dt)
 
         if (runtime.lastFrameLength > 0) {
             auto f = physics.force / runtime.lastFrameLength;
-            body->applyForceToCenterOfMass(Convert(f));
+            body->applyForceToCenterOfMass(convert(f));
         }
     }
     
@@ -363,9 +363,9 @@ void physics_system(apx::registry& registry, double dt)
         auto& rc = registry.get<RigidBody3DComponent>(entity);
         const rp3d::RigidBody* body = rc.runtime->body;
 
-        tc.position = Convert(body->getTransform().getPosition());
-        tc.orientation = Convert(body->getTransform().getOrientation());
-        rc.velocity = Convert(body->getLinearVelocity());
+        tc.position = convert(body->getTransform().getPosition());
+        tc.orientation = convert(body->getTransform().getOrientation());
+        rc.velocity = convert(body->getLinearVelocity());
 
         rc.force = {0.0, 0.0, 0.0};
         rc.onFloor = is_on_floor(registry, runtime.world, body);
