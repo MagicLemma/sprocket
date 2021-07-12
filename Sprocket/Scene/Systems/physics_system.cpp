@@ -85,7 +85,9 @@ struct raycast_callback : public rp3d::RaycastCallback
 
 class event_listener : public rp3d::EventListener
 {
-    std::vector<std::pair<apx::entity, apx::entity>> d_collisions;
+    using collision_vector = std::vector<std::pair<apx::entity, apx::entity>>;
+
+    collision_vector d_collisions;
 
 public:
     void onContact(const rp3d::CollisionCallback::CallbackData& data) override
@@ -101,7 +103,7 @@ public:
         }
     }
 
-    std::vector<std::pair<apx::entity, apx::entity>>& collisions() { return d_collisions; }
+    collision_vector& collisions() { return d_collisions; }
 };
 
 }

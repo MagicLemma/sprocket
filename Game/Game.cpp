@@ -176,8 +176,8 @@ void Game::on_event(spkt::ev::Event& event)
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
                 d_window->GetMousePos(),
-                d_window->Width(),
-                d_window->Height(),
+                (float)d_window->Width(),
+                (float)d_window->Height(),
                 spkt::make_view(registry, d_camera),
                 spkt::make_proj(registry, d_camera)
             );

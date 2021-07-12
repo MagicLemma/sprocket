@@ -1,10 +1,14 @@
 #pragma once
 #include "Types.h"
 
+#include <apecs.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
 namespace spkt {
+
+class Window;
+
 namespace Maths {
 
 // Constructs a transformation matrix with the given parameters.
@@ -18,8 +22,10 @@ void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientat
 glm::vec3 GetTranslation(const glm::mat4& m);
 float Modulo(float val, float high);
 glm::mat4 NoScale(const glm::mat4& matrix);
-glm::vec3 GetMouseRay(const glm::vec2& mousePos, float w, float h, const glm::mat4& view, const glm::mat4& proj);
 glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v);
+
+glm::vec3 GetMouseRay(const glm::vec2& mousePos, float w, float h, const glm::mat4& view, const glm::mat4& proj);
+glm::vec3 mouse_world_direction(spkt::Window* window, const apx::registry& registry, apx::entity camera);
 
 }
 }

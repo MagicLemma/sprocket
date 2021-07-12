@@ -13,14 +13,13 @@ constexpr float Normalize(int x)
 
 }
 
-glm::vec4 from_hex(int hexCode)
+glm::vec4 from_hex(int hex)
 {
-    int copy = hexCode;
-    float blue = Normalize(copy & 0xff);
-    copy /= 0x100;
-    float green = Normalize(copy & 0xff);
-    copy /= 0x100;
-    float red = Normalize(copy & 0xff);
+    float blue = Normalize(hex & 0xff);
+    hex /= 0x100;
+    float green = Normalize(hex & 0xff);
+    hex /= 0x100;
+    float red = Normalize(hex & 0xff);
     return glm::vec4{red, green, blue, 1.0f};
 }
     
