@@ -1,5 +1,5 @@
 #include "Yaml.h"
-#include "apecs.hpp"
+#include "ecs.h"
 
 namespace YAML {
 
@@ -132,19 +132,19 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
     return true;
 }
 
-Node convert<apx::entity>::encode(const apx::entity& rhs)
+Node convert<spkt::entity>::encode(const spkt::entity& rhs)
 {
     Node n;
-    n = static_cast<std::underlying_type_t<apx::entity>>(rhs);
+    n = static_cast<std::underlying_type_t<spkt::entity>>(rhs);
     return n;
 }
 
-bool convert<apx::entity>::decode(const Node& node, apx::entity& rhs)
+bool convert<spkt::entity>::decode(const Node& node, spkt::entity& rhs)
 {
     if (!node.IsScalar())
         return false;
 
-    rhs = static_cast<apx::entity>(node.as<std::underlying_type_t<apx::entity>>());
+    rhs = static_cast<spkt::entity>(node.as<std::underlying_type_t<spkt::entity>>());
     return true;
 }
 
@@ -191,9 +191,9 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
     return out;
 }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const apx::entity& i)
+YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::entity& i)
 {
-    out << static_cast<std::underlying_type_t<apx::entity>>(i);
+    out << static_cast<std::underlying_type_t<spkt::entity>>(i);
     return out;
 }
 

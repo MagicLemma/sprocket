@@ -1,5 +1,5 @@
 #include "ShadowMap.h"
-#include "Components.h"
+#include "ecs.h"
 #include "RenderContext.h"
 
 #include <glad/glad.h>
@@ -24,7 +24,7 @@ ShadowMap::ShadowMap(AssetManager* assetManager)
     : d_assetManager(assetManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.
-    , d_lightProjMatrix(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -20.0f, 20.0f))
+    , d_lightProjMatrix(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -50.0f, 50.0f))
     , d_shadowMap(8192, 8192)
     , d_vao(std::make_unique<VertexArray>())
     , d_instanceBuffer(GetInstanceBuffer())
@@ -32,7 +32,7 @@ ShadowMap::ShadowMap(AssetManager* assetManager)
 }
 
 void ShadowMap::Draw(
-    apx::registry& registry,
+    spkt::registry& registry,
     const glm::vec3& sunDirection,
     const glm::vec3& centre)
 {
@@ -49,10 +49,13 @@ void ShadowMap::Draw(
     d_shadowMap.Bind();
     glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
+
+    // Reduces "peter panning", also stops "flat" objects that dont have a back from
+    // casting shadows.
     glCullFace(GL_FRONT);
 
     std::unordered_map<std::string, std::vector<InstanceData>> commands;
-    for (auto entity : registry.view<ModelComponent>()) {
+    for (auto entity : registry.view<ModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<ModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }

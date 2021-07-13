@@ -1,5 +1,5 @@
 #include "Scene.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Loader.h"
 #include "input_system.h"
 
@@ -7,13 +7,14 @@
 
 namespace spkt {
 
-void add_singleton(apx::registry& registry)
+spkt::entity add_singleton(spkt::registry& registry)
 {
     auto singleton = registry.create();
     registry.emplace<Runtime>(singleton);
     registry.emplace<Singleton>(singleton);
     registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
     registry.emplace<InputSingleton>(singleton);
+    return singleton;
 }
 
 Scene::~Scene()

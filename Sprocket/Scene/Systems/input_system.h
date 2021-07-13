@@ -1,6 +1,6 @@
 #pragma once
 #include "Events.h"
-#include "apecs.hpp"
+#include "ecs.h"
 
 namespace spkt {
 
@@ -10,14 +10,14 @@ namespace spkt {
 // such as mouse offsets, this requires two "system" functions, a begin and end.
 
 // Processes events to build up the InputSingleton for the current frame.
-void input_system_on_event(apx::registry& registry, ev::Event& event);
+void input_system_on_event(spkt::registry& registry, ev::Event& event);
 
 // Sets any per-frame information. Currently, this is just the mouse offset. This should be
 // the first system added to any scene.
-void input_system_begin(apx::registry& registry, double dt);
+void input_system_begin(spkt::registry& registry, double dt);
 
 // Resets are per-frame information such as how much the mouse was scrolled or which
 // button were pressed this frame. This should be the last system added to any scene.
-void input_system_end(apx::registry& registry, double dt);
+void input_system_end(spkt::registry& registry, double dt);
 
 }

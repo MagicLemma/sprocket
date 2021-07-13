@@ -1,6 +1,9 @@
 #include "Maths.h"
 #include "Types.h"
+#include "Window.h"
+#include "Camera.h"
 
+#include "ecs.h"
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -85,6 +88,17 @@ glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)
 {
     glm::vec4 v2 = matrix * glm::vec4{v.x, v.y, v.z, 1.0f};
     return {v2.x, v2.y, v2.z};
+}
+
+glm::vec3 mouse_world_direction(spkt::Window* window, const spkt::registry& registry, spkt::entity camera)
+{
+    return GetMouseRay(
+        window->GetMousePos(),
+        (float)window->Width(),
+        (float)window->Height(),
+        spkt::make_view(registry, camera),
+        spkt::make_proj(registry, camera)
+    );
 }
 
 }

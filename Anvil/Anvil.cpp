@@ -9,7 +9,7 @@
 namespace spkt {
 namespace {
 
-std::string entiy_name(apx::registry& registry, apx::entity entity)
+std::string entiy_name(spkt::registry& registry, spkt::entity entity)
 {
     if (registry.has<NameComponent>(entity)) {
         return registry.get<NameComponent>(entity).name;
@@ -49,7 +49,7 @@ Anvil::Anvil(Window* window)
 
     d_scene = std::make_shared<Scene>(); 
     spkt::add_singleton(d_scene->Entities());   
-    spkt::load_registry_from_file(d_sceneFile, &d_scene->Entities());
+    spkt::load_registry_from_file(d_sceneFile, d_scene->Entities());
     d_activeScene = d_scene;
 }
 
@@ -62,8 +62,8 @@ void Anvil::on_event(ev::Event& event)
                 d_activeScene = d_scene;
                 d_window->SetCursorVisibility(true);
             }
-            else if (d_selected != apx::null) {
-                d_selected = apx::null;
+            else if (d_selected != spkt::null) {
+                d_selected = spkt::null;
             }
             else if (d_window->IsFullscreen()) {
                 d_window->SetWindowed(1280, 720);
@@ -161,13 +161,13 @@ void Anvil::on_render()
                     log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
                     d_activeScene = d_scene = std::make_shared<Scene>();
-                    spkt::load_registry_from_file(file, &d_scene->Entities());
+                    spkt::load_registry_from_file(file, d_scene->Entities());
                     log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 log::info("Saving {}...", d_sceneFile);
-                spkt::save_registry_to_file(d_sceneFile, &d_scene->Entities());
+                spkt::save_registry_to_file(d_sceneFile, d_scene->Entities());
                 log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -175,7 +175,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     log::info("Saving as {}...", file);
                     d_sceneFile = file;
-                    spkt::save_registry_to_file(file, &d_scene->Entities());
+                    spkt::save_registry_to_file(file, d_scene->Entities());
                     log::info("...done!");
                 }
             }
@@ -186,7 +186,7 @@ void Anvil::on_render()
                 d_activeScene = std::make_shared<Scene>();
 
                 spkt::add_singleton(d_activeScene->Entities());
-                spkt::copy_registry(&d_scene->Entities(), &d_activeScene->Entities());
+                spkt::copy_registry(d_scene->Entities(), d_activeScene->Entities());
 
                 d_activeScene->add(spkt::physics_system);
                 d_activeScene->add(spkt::particle_system);

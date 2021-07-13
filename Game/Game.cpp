@@ -2,6 +2,7 @@
 #include "Palette.h"
 #include "PathCalculator.h"
 #include "Window.h"
+#include "Scene.h"
 
 #include "grid_helpers.h"
 
@@ -106,33 +107,30 @@ Game::Game(Window* window)
 
 void Game::load_scene(std::string_view file)
 {
-    using namespace spkt;
+    auto& registry = d_scene.Entities();
     
-    spkt::add_singleton(d_scene.Entities());
-    spkt::load_registry_from_file(std::string(file), &d_scene.Entities());
-
+    spkt::add_singleton(registry);
+    spkt::game_grid_system_init(registry);
+    spkt::load_registry_from_file(std::string(file), registry);
+    
     d_scene.add(spkt::game_grid_system);
     d_scene.add(spkt::script_system);
     d_scene.add(spkt::camera_system);
     d_scene.add(spkt::path_follower_system);
     d_scene.add(spkt::clear_events_system);
 
-    spkt::game_grid_system_init(d_scene.Entities());
-
     d_paused = false;
     d_sceneFile = file;
 
-    auto& registry = d_scene.Entities();
-
-    d_worker = registry.find<NameComponent>([&](apx::entity entity) {
-        return registry.get<NameComponent>(entity).name == "Worker";
+    d_worker = registry.find<spkt::NameComponent>([&](spkt::entity entity) {
+        return registry.get<spkt::NameComponent>(entity).name == "Worker";
     });
 
-    d_camera = registry.find<NameComponent>([&](apx::entity entity) {
-        return registry.get<NameComponent>(entity).name == "Camera";
+    d_camera = registry.find<spkt::NameComponent>([&](spkt::entity entity) {
+        return registry.get<spkt::NameComponent>(entity).name == "Camera";
     });
 
-    auto& cam = get_singleton<CameraSingleton>(d_scene.Entities());
+    auto& cam = get_singleton<spkt::CameraSingleton>(registry);
     cam.camera_entity = d_camera;
 
     assert(registry.valid(d_worker));
@@ -176,13 +174,7 @@ void Game::on_event(spkt::ev::Event& event)
         auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
-            glm::vec3 direction = Maths::GetMouseRay(
-                d_window->GetMousePos(),
-                d_window->Width(),
-                d_window->Height(),
-                spkt::make_view(registry, d_camera),
-                spkt::make_proj(registry, d_camera)
-            );
+            glm::vec3 direction = Maths::mouse_world_direction(d_window, registry, d_camera);
 
             float lambda = -cameraPos.y / direction.y;
             glm::vec3 mousePos = cameraPos + lambda * direction;
@@ -200,7 +192,7 @@ void Game::on_event(spkt::ev::Event& event)
                         mousePos,
                         [&](const glm::ivec2& pos) {
                             auto it = tiles.find(pos);
-                            apx::entity entity = it != tiles.end() ? it->second : apx::null;
+                            spkt::entity entity = it != tiles.end() ? it->second : spkt::null;
                             return registry.valid(entity);
                         }
                     );
@@ -300,7 +292,7 @@ void Game::on_render()
 
         if (game_grid.clicked_square.has_value()) {
             auto it = tiles.find(game_grid.clicked_square.value());
-            apx::entity e = (it != tiles.end()) ? it->second : apx::null;
+            spkt::entity e = (it != tiles.end()) ? it->second : spkt::null;
 
             float width = 0.15f * w;
             float height = 0.6f * h;
@@ -344,7 +336,7 @@ void Game::on_render()
         }
 
         auto it = tiles.find(game_grid.hovered_square);
-        apx::entity e = (it != tiles.end()) ? it->second : apx::null;
+        spkt::entity e = (it != tiles.end()) ? it->second : spkt::null;
         if (registry.valid(e)) {
             float width = 200;
             float height = 50;
@@ -431,7 +423,7 @@ void Game::on_render()
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Save", buttonRegion)) {
         log::info("Saving to {}", d_sceneFile);
-        spkt::save_registry_to_file(d_sceneFile, &d_scene.Entities());
+        spkt::save_registry_to_file(d_sceneFile, d_scene.Entities());
         log::info("Done!");
     }
     

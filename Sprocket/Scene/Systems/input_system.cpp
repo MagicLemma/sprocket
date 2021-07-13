@@ -1,10 +1,10 @@
 #include "input_system.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Scene.h"
 
 namespace spkt {
 
-void input_system_on_event(apx::registry& registry, ev::Event& event)
+void input_system_on_event(spkt::registry& registry, ev::Event& event)
 {
     auto& input = get_singleton<InputSingleton>(registry);
     if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
@@ -39,13 +39,13 @@ void input_system_on_event(apx::registry& registry, ev::Event& event)
     }
 }
 
-void input_system_begin(apx::registry& registry, double dt)
+void input_system_begin(spkt::registry& registry, double dt)
 {
     auto& input = get_singleton<InputSingleton>(registry);
     input.mouse_offset = input.mouse_pos - input.mouse_pos_last_frame;
 }
 
-void input_system_end(apx::registry& registry, double dt)
+void input_system_end(spkt::registry& registry, double dt)
 {
     auto& input = get_singleton<InputSingleton>(registry);
     input.mouse_click.fill(false);

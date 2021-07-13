@@ -1,11 +1,11 @@
 #include "Camera.h"
 #include "Log.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Viewport.h"
 
 namespace spkt {
 
-glm::mat4 spkt::make_view(apx::registry& registry, apx::entity entity)
+glm::mat4 spkt::make_view(const spkt::registry& registry, spkt::entity entity)
 {
     if (!registry.has<Transform3DComponent>(entity)) {
         log::error("Camera has no transform component!");
@@ -22,7 +22,7 @@ glm::mat4 spkt::make_view(apx::registry& registry, apx::entity entity)
     return glm::inverse(Maths::Transform(tr.position, tr.orientation));   
 }
 
-glm::mat4 make_proj(apx::registry& registry, apx::entity entity)
+glm::mat4 make_proj(const spkt::registry& registry, spkt::entity entity)
 {
     float fov = glm::radians(70.0f);
 

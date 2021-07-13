@@ -5,7 +5,7 @@
 namespace {
 
 void add_rock_base(
-    apx::registry& registry,
+    spkt::registry& registry,
     glm::ivec2 pos,
     const std::string& material,
     const std::string& name)
@@ -36,7 +36,7 @@ void add_rock_base(
 
 }
 
-void add_tree(apx::registry& registry, glm::ivec2 position)
+void add_tree(spkt::registry& registry, glm::ivec2 position)
 {
     auto entity = registry.create();
     registry.emplace<spkt::NameComponent>(entity, "Tree");
@@ -62,22 +62,22 @@ void add_tree(apx::registry& registry, glm::ivec2 position)
     tms.tiles[position] = entity;
 }
 
-void add_rock(apx::registry& registry, glm::ivec2 position)
+void add_rock(spkt::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/rock.yaml", "Rock");
 }
 
-void add_iron(apx::registry& registry, glm::ivec2 position)
+void add_iron(spkt::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/iron.yaml", "Iron");
 }
 
-void add_tin(apx::registry& registry, glm::ivec2 position)
+void add_tin(spkt::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/tin.yaml", "Tin");
 }
 
-void add_mithril(apx::registry& registry, glm::ivec2 position)
+void add_mithril(spkt::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/mithril.yaml", "Mithril");
 }

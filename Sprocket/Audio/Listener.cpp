@@ -1,11 +1,12 @@
 #include "Listener.h"
-#include "Components.h"
+#include "Maths.h"
+#include "ecs.h"
 
 #include <SFML/Audio.hpp>
 
 namespace spkt {
 
-void set_listener(apx::registry& registry, apx::entity entity)
+void set_listener(const spkt::registry& registry, spkt::entity entity)
 {
     if (!registry.has<Transform3DComponent>(entity)) { return; }
     auto tr = registry.get<Transform3DComponent>(entity);

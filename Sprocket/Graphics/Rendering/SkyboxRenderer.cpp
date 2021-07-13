@@ -26,7 +26,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_vao->Draw();
 }
 
-void SkyboxRenderer::Draw(const CubeMap& skybox, apx::registry& registry, apx::entity camera)
+void SkyboxRenderer::Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera)
 {
     Draw(
         skybox,

@@ -2,11 +2,11 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "AssetManager.h"
-#include "Components.h"
+#include "ecs.h"
 #include "VertexArray.h"
 #include "ShadowMap.h"
 
-#include "apecs.hpp"
+#include "ecs.h"
 
 namespace spkt {
 
@@ -41,8 +41,8 @@ private:
 public:
     Scene3DRenderer(AssetManager* assetManager);
 
-    void Draw(apx::registry& registry, apx::entity camera);
-    void Draw(apx::registry& registry, const glm::mat4& proj, const glm::mat4& view);
+    void Draw(const spkt::registry& registry, spkt::entity camera);
+    void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
     void EnableShadows(const ShadowMap& shadowMap);
 

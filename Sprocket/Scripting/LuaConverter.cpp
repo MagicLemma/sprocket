@@ -95,28 +95,28 @@ void* Converter<void*>::read(lua_State* L, int index)
     return lua_touserdata(L, index);
 }
 
-void Converter<apx::handle>::push(lua_State* L, const apx::handle& value)
+void Converter<spkt::handle>::push(lua_State* L, const spkt::handle& value)
 {
-    apx::handle* handle = static_cast<apx::handle*>(lua_newuserdata(L, sizeof(apx::handle)));
+    spkt::handle* handle = static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
     *handle = value;
 }
 
-apx::handle Converter<apx::handle>::read(lua_State* L, int index)
+spkt::handle Converter<spkt::handle>::read(lua_State* L, int index)
 {
     assert(lua_isuserdata(L, index));
-    return *static_cast<apx::handle*>(lua_touserdata(L, index));
+    return *static_cast<spkt::handle*>(lua_touserdata(L, index));
 }
 
-void Converter<apx::entity>::push(lua_State* L, const apx::entity& value)
+void Converter<spkt::entity>::push(lua_State* L, const spkt::entity& value)
 {
-    apx::entity* handle = static_cast<apx::entity*>(lua_newuserdata(L, sizeof(apx::entity)));
+    spkt::entity* handle = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
     *handle = value;
 }
 
-apx::entity Converter<apx::entity>::read(lua_State* L, int index)
+spkt::entity Converter<spkt::entity>::read(lua_State* L, int index)
 {
     assert(lua_isuserdata(L, index));
-    return *static_cast<apx::entity*>(lua_touserdata(L, index));
+    return *static_cast<spkt::entity*>(lua_touserdata(L, index));
 }
 
 void Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)

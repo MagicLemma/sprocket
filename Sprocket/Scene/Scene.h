@@ -1,6 +1,6 @@
 #pragma once
-#include "apecs.hpp"
-#include "Components.h"
+#include "ecs.h"
+#include "ecs.h"
 #include "Events.h"
 #include "Window.h"
 
@@ -11,10 +11,10 @@
 
 namespace spkt {
 
-void add_singleton(apx::registry& registry);
+spkt::entity add_singleton(spkt::registry& registry);
 
 template <typename Comp>
-Comp& get_singleton(apx::registry& registry)
+Comp& get_singleton(spkt::registry& registry)
 {
     auto singleton = registry.find<Singleton>();
     assert(registry.valid(singleton));
@@ -25,16 +25,16 @@ Comp& get_singleton(apx::registry& registry)
 class Scene
 {
 public:
-    using system_t = std::function<void(apx::registry&, double)>;
+    using system_t = std::function<void(spkt::registry&, double)>;
 
 private:
-    apx::registry d_registry;
+    spkt::registry d_registry;
     std::vector<system_t> d_systems;
 
 public:
     ~Scene();
 
-    apx::registry& Entities() { return d_registry; }
+    spkt::registry& Entities() { return d_registry; }
 
     void add(const system_t& system);
     void on_update(double dt);

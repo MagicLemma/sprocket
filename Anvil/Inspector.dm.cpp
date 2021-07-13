@@ -2,7 +2,7 @@
 #include "Anvil.h"
 #include "ImGuiXtra.h"
 #include "Maths.h"
-#include "Components.h"
+#include "ecs.h"
 #include "DevUI.h"
 
 #include <imgui.h>
@@ -12,8 +12,8 @@ namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
-    apx::registry& registry = editor.active_scene()->Entities();
-    apx::entity entity = editor.selected();
+    spkt::registry& registry = editor.active_scene()->Entities();
+    spkt::entity entity = editor.selected();
 
     if (!registry.valid(entity)) {
         if (ImGui::Button("New Entity")) {
@@ -56,7 +56,7 @@ DATAMATIC_END
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        apx::entity copy = spkt::copy_entity(&editor.active_scene()->Entities(), entity);
+        spkt::entity copy = spkt::copy_entity(editor.active_scene()->Entities(), entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

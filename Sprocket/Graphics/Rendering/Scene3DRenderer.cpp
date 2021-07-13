@@ -3,13 +3,13 @@
 #include "AssetManager.h"
 #include "RenderContext.h"
 #include "Camera.h"
-#include "Components.h"
+#include "ecs.h"
 #include "Scene.h"
 #include "ShadowMap.h"
 #include "Types.h"
 #include "Hashing.h"
 
-#include "apecs.hpp"
+#include "ecs.h"
 
 #include <algorithm>
 #include <ranges>
@@ -34,9 +34,9 @@ std::unique_ptr<Buffer> GetInstanceBuffer()
     return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
 }
 
-void UploadUniforms(
+void upload_uniforms(
     const Shader& shader,
-    apx::registry& registry,
+    const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view
 )
@@ -145,7 +145,7 @@ void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 }
 
 void Scene3DRenderer::Draw(
-    apx::registry& registry,
+    const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
 {
@@ -153,8 +153,8 @@ void Scene3DRenderer::Draw(
     rc.FaceCulling(true);
     rc.DepthTesting(true);
 
-    UploadUniforms(d_staticShader, registry, proj, view);
-    UploadUniforms(d_animatedShader, registry, proj, view);
+    upload_uniforms(d_staticShader, registry, proj, view);
+    upload_uniforms(d_animatedShader, registry, proj, view);
 
     std::unordered_map<
         std::pair<std::string, std::string>,
@@ -175,7 +175,6 @@ void Scene3DRenderer::Draw(
     for (const auto& [key, data] : commands) {
         auto mesh = d_assetManager->GetMesh(key.first);
         auto material = d_assetManager->GetMaterial(key.second);
-        if (!mesh || !material) { continue; }
 
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_vao->SetModel(mesh);
@@ -237,7 +236,7 @@ void Scene3DRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void Scene3DRenderer::Draw(apx::registry& registry, apx::entity camera)
+void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
 {
     glm::mat4 proj = spkt::make_proj(registry, camera);
     glm::mat4 view = spkt::make_view(registry, camera);

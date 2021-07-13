@@ -1,5 +1,4 @@
 #pragma once
-#include "Maths.h"
 #include <queue>
 #include <string>
 #include <utility>
@@ -12,10 +11,14 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
-#include "apecs.hpp"
+#include <apecs.hpp>
 
 namespace spkt {
 namespace lua { class Script; }
+
+using entity = apx::entity;
+const auto null = apx::null;
+
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
@@ -39,5 +42,12 @@ struct {{Comp::name}}
 };
 
 DATAMATIC_END
+using registry = apx::registry<
+DATAMATIC_BEGIN
+    {{Comp::name}}{{Comp::if_not_last(",")}}
+DATAMATIC_END
+>;
+
+using handle = typename registry::handle_type;
 
 }
