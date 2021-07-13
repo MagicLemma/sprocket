@@ -34,9 +34,9 @@ std::unique_ptr<Buffer> GetInstanceBuffer()
     return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
 }
 
-void UploadUniforms(
+void upload_uniforms(
     const Shader& shader,
-    spkt::registry& registry,
+    const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view
 )
@@ -145,7 +145,7 @@ void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 }
 
 void Scene3DRenderer::Draw(
-    spkt::registry& registry,
+    const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
 {
@@ -153,8 +153,8 @@ void Scene3DRenderer::Draw(
     rc.FaceCulling(true);
     rc.DepthTesting(true);
 
-    UploadUniforms(d_staticShader, registry, proj, view);
-    UploadUniforms(d_animatedShader, registry, proj, view);
+    upload_uniforms(d_staticShader, registry, proj, view);
+    upload_uniforms(d_animatedShader, registry, proj, view);
 
     std::unordered_map<
         std::pair<std::string, std::string>,
@@ -236,7 +236,7 @@ void Scene3DRenderer::Draw(
     d_animatedShader.Unbind();
 }
 
-void Scene3DRenderer::Draw(spkt::registry& registry, spkt::entity camera)
+void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
 {
     glm::mat4 proj = spkt::make_proj(registry, camera);
     glm::mat4 view = spkt::make_view(registry, camera);

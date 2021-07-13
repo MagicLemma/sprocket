@@ -15,8 +15,8 @@ class ColliderRenderer
 public:
     ColliderRenderer();
 
-    void Draw(spkt::registry& registry, spkt::entity camera);
-    void Draw(spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
+    void Draw(const spkt::registry& registry, spkt::entity camera);
+    void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
     Shader& GetShader() { return d_shader; }
 };
