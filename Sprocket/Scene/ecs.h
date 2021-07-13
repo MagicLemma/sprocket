@@ -62,7 +62,7 @@ struct Transform2DComponent
 struct Transform3DComponent
 {
     glm::vec3 position = {0.0f, 0.0f, 0.0f};
-    glm::quat orientation = {0.0f, 0.0f, 0.0f, 1.0f};
+    glm::quat orientation = glm::identity<glm::quat>();
     glm::vec3 scale = {1.0f, 1.0f, 1.0f};
 };
 
@@ -88,7 +88,7 @@ struct RigidBody3DComponent
 struct BoxCollider3DComponent
 {
     glm::vec3 position = {0.0f, 0.0f, 0.0f};
-    glm::quat orientation = {0.0f, 0.0f, 0.0f, 1.0f};
+    glm::quat orientation = glm::identity<glm::quat>();
     float mass = 1.0f;
     glm::vec3 halfExtents = {0.0f, 0.0f, 0.0f};
     bool applyScale = true;
@@ -98,7 +98,7 @@ struct BoxCollider3DComponent
 struct SphereCollider3DComponent
 {
     glm::vec3 position = {0.0f, 0.0f, 0.0f};
-    glm::quat orientation = {0.0f, 0.0f, 0.0f, 1.0f};
+    glm::quat orientation = glm::identity<glm::quat>();
     float mass = 1.0f;
     float radius = 1.0f;
     std::shared_ptr<collider_runtime> runtime = nullptr;
@@ -107,7 +107,7 @@ struct SphereCollider3DComponent
 struct CapsuleCollider3DComponent
 {
     glm::vec3 position = {0.0f, 0.0f, 0.0f};
-    glm::quat orientation = {0.0f, 0.0f, 0.0f, 1.0f};
+    glm::quat orientation = glm::identity<glm::quat>();
     float mass = 1.0f;
     float radius = 1.0f;
     float height = 1.0f;

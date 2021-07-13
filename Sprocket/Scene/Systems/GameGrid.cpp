@@ -6,6 +6,8 @@
 #include "Log.h"
 
 #include <cassert>
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 namespace spkt {
 namespace {

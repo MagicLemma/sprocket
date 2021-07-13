@@ -1,13 +1,9 @@
 #include "LuaLibrary.h"
 #include "LuaScript.h"
 #include "LuaConverter.h"
-#include "ecs.h"
 #include "Scene.h"
 #include "Window.h"
-#include "ecs.h"
 #include "Log.h"
-
-#include "ecs.h"
 
 #include <vector>
 #include <utility>

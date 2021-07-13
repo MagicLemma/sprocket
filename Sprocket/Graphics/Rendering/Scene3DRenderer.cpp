@@ -175,7 +175,6 @@ void Scene3DRenderer::Draw(
     for (const auto& [key, data] : commands) {
         auto mesh = d_assetManager->GetMesh(key.first);
         auto material = d_assetManager->GetMaterial(key.second);
-        if (!mesh || !material) { continue; }
 
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_vao->SetModel(mesh);

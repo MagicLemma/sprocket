@@ -81,7 +81,7 @@
                     "name": "orientation",
                     "display_name": "Orientation",
                     "type": "glm::quat",
-                    "default": "{0.0f, 0.0f, 0.0f, 1.0f}",
+                    "default": "glm::identity<glm::quat>()",
                     "flags": {
                         "SCRIPTABLE": false
                     }
@@ -213,7 +213,7 @@
                     "name": "orientation",
                     "display_name": "Orientation",
                     "type": "glm::quat",
-                    "default": "{0.0f, 0.0f, 0.0f, 1.0f}",
+                    "default": "glm::identity<glm::quat>()",
                     "flags": {
                         "SCRIPTABLE": false
                     }
@@ -262,7 +262,7 @@
                     "name": "orientation",
                     "display_name": "Orientation",
                     "type": "glm::quat",
-                    "default": "{0.0f, 0.0f, 0.0f, 1.0f}",
+                    "default": "glm::identity<glm::quat>()",
                     "flags": {
                         "SCRIPTABLE": false
                     }
@@ -305,7 +305,7 @@
                     "name": "orientation",
                     "display_name": "Orientation",
                     "type": "glm::quat",
-                    "default": "{0.0f, 0.0f, 0.0f, 1.0f}",
+                    "default": "glm::identity<glm::quat>()",
                     "flags": {
                         "SCRIPTABLE": false
                     }
