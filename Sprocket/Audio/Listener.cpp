@@ -6,7 +6,7 @@
 
 namespace spkt {
 
-void set_listener(spkt::registry& registry, spkt::entity entity)
+void set_listener(const spkt::registry& registry, spkt::entity entity)
 {
     if (!registry.has<Transform3DComponent>(entity)) { return; }
     auto tr = registry.get<Transform3DComponent>(entity);
