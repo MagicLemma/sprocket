@@ -17,7 +17,7 @@ ColliderRenderer::ColliderRenderer()
 }
 
 void ColliderRenderer::Draw(
-    spkt::registry& registry,
+    const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
 {
@@ -100,7 +100,7 @@ void ColliderRenderer::Draw(
     d_shader.Unbind();
 }
 
-void ColliderRenderer::Draw(spkt::registry& registry, spkt::entity camera)
+void ColliderRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
 {
     glm::mat4 proj = spkt::make_proj(registry, camera);
     glm::mat4 view = spkt::make_view(registry, camera);
