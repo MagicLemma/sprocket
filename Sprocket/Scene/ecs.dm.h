@@ -42,7 +42,7 @@ struct {{Comp::name}}
 };
 
 DATAMATIC_END
-using registry = apx::fixed_registry<
+using registry = apx::registry<
 DATAMATIC_BEGIN
     {{Comp::name}}{{Comp::if_not_last(",")}}
 DATAMATIC_END

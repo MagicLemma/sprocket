@@ -222,7 +222,7 @@ struct ParticleSingleton
     std::size_t next_slot = NUM_PARTICLES - 1;
 };
 
-using registry = apx::fixed_registry<
+using registry = apx::registry<
     Runtime,
     Singleton,
     Event,

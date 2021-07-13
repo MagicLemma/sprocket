@@ -74,13 +74,13 @@ void game_grid_system(spkt::registry& registry, double)
     grid.hovered_square = {(int)std::floor(mousePos.x), (int)std::floor(mousePos.z)};
 
     registry.get<Transform3DComponent>(grid.hovered_square_entity).position = {
-        grid.hovered_square.x + 0.5f, 0.05f, grid.hovered_square.y + 0.5f
+        grid.hovered_square.x + 0.5f, 0.1f, grid.hovered_square.y + 0.5f
     };
 
     if (grid.clicked_square.has_value()) {
         auto square = grid.clicked_square.value();
         registry.get<Transform3DComponent>(grid.clicked_square_entity).position = {
-            square.x + 0.5f, 0.05f, square.y + 0.5f
+            square.x + 0.5f, 0.1f, square.y + 0.5f
         };
     } else {
         registry.get<Transform3DComponent>(grid.clicked_square_entity).position = {
