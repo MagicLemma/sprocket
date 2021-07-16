@@ -1,10 +1,10 @@
 #include "PathCalculator.h"
-
+#include <Sprocket/Utility/Log.h>
 #include <deque>
 #include <queue>
 #include <memory>
 
-using namespace spkt;
+#include <glm/glm.hpp>
 
 std::queue<glm::vec3> GenerateAStarPath(
     const glm::vec3& start,
@@ -74,7 +74,7 @@ std::queue<glm::vec3> GenerateAStarPath(
     std::queue<glm::vec3> path;
 
     if (current->position != p2) {
-        log::info("No path found!");
+        spkt::log::info("No path found!");
         return path;
     }
 
@@ -116,5 +116,5 @@ PathNodePtr FindNode(
 float Heuristic(PathNodePtr node, const glm::ivec2& target)
 {
     auto delta = target - node->position;
-    return 10 * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));
+    return 10.0f * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));
 };

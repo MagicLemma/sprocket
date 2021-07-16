@@ -1,41 +1,51 @@
 #pragma once
-#include <Sprocket.h>
-#include "Camera.h"
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Graphics/FrameBuffer.h>
+#include <Sprocket/Graphics/Rendering/ColliderRenderer.h>
+#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/UI/DevUI.h>
+
+#include "Anvil/Camera.h"
 
 #include "Inspector.h"
 
 #include <memory>
 #include <random>
-
-namespace spkt {
+#include <memory>
 
 class Anvil
 {
-    Window*      d_window;
-    AssetManager d_asset_manager;
+    spkt::Window*      d_window;
+    spkt::AssetManager d_asset_manager;
     
     Camera d_editor_camera;
 
     // Rendering
-    Scene3DRenderer d_entity_renderer;
-    SkyboxRenderer d_skybox_renderer;
-    ColliderRenderer d_collider_renderer;
+    spkt::Scene3DRenderer d_entity_renderer;
+    spkt::SkyboxRenderer d_skybox_renderer;
+    spkt::ColliderRenderer d_collider_renderer;
 
-    FrameBuffer d_viewport;
+    spkt::FrameBuffer d_viewport;
     glm::ivec2 d_viewport_size;
 
-    DevUI d_ui;
+    spkt::DevUI d_ui;
     bool d_is_viewport_hovered = false;
     bool d_is_viewport_focused = false;
 
     // Scene
     std::string d_sceneFile = "Resources/Anvil.yaml";
-    std::shared_ptr<Scene> d_activeScene;
-    std::shared_ptr<Scene> d_scene;
+    std::shared_ptr<spkt::Scene> d_activeScene;
+    std::shared_ptr<spkt::Scene> d_scene;
     spkt::entity d_runtimeCamera;
 
     // Additional world setup
-    CubeMap d_skybox;
+    spkt::CubeMap d_skybox;
     float  d_sunAngle = 45.0f;
     
     // LAYER DATA
@@ -56,9 +66,9 @@ class Anvil
     glm::mat4 get_proj_matrix() const;
 
 public:
-    Anvil(Window* window);
+    Anvil(spkt::Window* window);
 
-    void on_event(ev::Event& event);
+    void on_event(spkt::ev::Event& event);
     void on_update(double dt);
     void on_render();
 
@@ -69,9 +79,7 @@ public:
     bool is_game_running() const { return d_playingGame; }
 
     Camera& editor_camera() { return d_editor_camera; }
-    Window* window() { return d_window; }
+    spkt::Window* window() { return d_window; }
 
-    std::shared_ptr<Scene> active_scene() { return d_activeScene; }
+    std::shared_ptr<spkt::Scene> active_scene() { return d_activeScene; }
 };
-
-}

@@ -1,9 +1,6 @@
 #pragma once
-#include "DevUI.h"
-
-#include <ImGuizmo.h>
-
-namespace spkt {
+#include <glm/glm.hpp>
+#include <Sprocket/Vendor/ImGuizmo/ImGuizmo.h>
 
 class Anvil;
 
@@ -22,5 +19,3 @@ public:
     ImGuizmo::OPERATION Operation() const { return d_operation; }
     const float* Snap() const { return d_useSnap ? &d_snap.x : nullptr; }
 };
-
-}

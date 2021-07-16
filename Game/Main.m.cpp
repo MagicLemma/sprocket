@@ -1,4 +1,5 @@
-#include <Sprocket.h>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/GameLoop.h>
 #include "Game.h"
 
 using namespace spkt;

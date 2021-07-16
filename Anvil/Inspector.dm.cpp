@@ -1,14 +1,14 @@
 #include "Inspector.h"
 #include "Anvil.h"
-#include "ImGuiXtra.h"
-#include "Maths.h"
-#include "ecs.h"
-#include "DevUI.h"
+
+#include <Sprocket/UI/ImGuiXtra.h>
+#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/UI/DevUI.h>
+#include <Sprocket/Scene/Loader.h>
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
-
-namespace spkt {
 
 void Inspector::Show(Anvil& editor)
 {
@@ -27,13 +27,13 @@ void Inspector::Show(Anvil& editor)
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity);
 
 DATAMATIC_BEGIN
-    if (registry.has<{{Comp::name}}>(entity)) {
-        auto& c = registry.get<{{Comp::name}}>(entity);
+    if (registry.has<spkt::{{Comp::name}}>(entity)) {
+        auto& c = registry.get<spkt::{{Comp::name}}>(entity);
         if (ImGui::CollapsingHeader("{{Comp::display_name}}")) {
             ImGui::PushID(count++);
             {{Attr::inspector_display}};
             {{Comp::inspector_guizmo_settings}}
-            if (ImGui::Button("Delete")) { registry.remove<{{Comp::name}}>(entity); }
+            if (ImGui::Button("Delete")) { registry.remove<spkt::{{Comp::name}}>(entity); }
             ImGui::PopID();
         }
     }
@@ -47,9 +47,9 @@ DATAMATIC_END
 
     if (ImGui::BeginPopup("missing_components_list")) {
 DATAMATIC_BEGIN
-        if (!registry.has<{{Comp::name}}>(entity) && ImGui::Selectable("{{Comp::display_name}}")) {
-            {{Comp::name}} c;
-            registry.add<{{Comp::name}}>(entity, c);
+        if (!registry.has<spkt::{{Comp::name}}>(entity) && ImGui::Selectable("{{Comp::display_name}}")) {
+            spkt::{{Comp::name}} c;
+            registry.add<spkt::{{Comp::name}}>(entity, c);
         }
 DATAMATIC_END
         ImGui::EndMenu();
@@ -63,6 +63,4 @@ DATAMATIC_END
         registry.destroy(entity);
         editor.clear_selected();
     }
-}
-    
 }

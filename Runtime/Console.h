@@ -1,8 +1,10 @@
-#include <Sprocket.h>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/UI/SimpleUI.h>
+
+#include <glm/glm.hpp>
+
 #include <deque>
 #include <string_view>
-
-namespace spkt {
 
 struct ConsoleLine
 {
@@ -12,8 +14,8 @@ struct ConsoleLine
 
 class Console
 {
-    Window*  d_window;
-    SimpleUI d_ui;
+    spkt::Window*  d_window;
+    spkt::SimpleUI d_ui;
 
     std::string             d_commandLine;
     std::deque<ConsoleLine> d_consoleLines;
@@ -21,11 +23,9 @@ class Console
     void HandleCommand(std::string_view command);
 
 public:
-    Console(Window* window);
+    Console(spkt::Window* window);
 
     void on_update(double dt);
-    void on_event(ev::Event& event);
+    void on_event(spkt::ev::Event& event);
     void Draw();
 };
-
-}

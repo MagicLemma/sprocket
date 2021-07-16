@@ -1,5 +1,7 @@
-#include <Sprocket.h>
 #include "Runtime.h"
+
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/GameLoop.h>
 
 int main()
 {

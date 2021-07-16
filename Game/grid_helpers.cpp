@@ -2,6 +2,8 @@
 #include <string>
 #include <glm/glm.hpp>
 
+#include <Sprocket/Utility/Random.h>
+
 namespace {
 
 void add_rock_base(

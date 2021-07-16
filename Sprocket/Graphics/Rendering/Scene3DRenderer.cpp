@@ -42,7 +42,8 @@ void upload_uniforms(
 )
 {
     u32 MAX_NUM_LIGHTS = 5;
-    shader.Bind();
+      shader.Bind();
+
     shader.LoadMat4("u_proj_matrix", proj);
     shader.LoadMat4("u_view_matrix", view);
 

@@ -8,6 +8,19 @@
 
 #include <cmath>
 
+#include <Sprocket/Audio/Listener.h>
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Graphics/PostProcessing/GaussianBlur.h>
+#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Loader.h>
+#include <Sprocket/Scene/Systems/basic_systems.h>
+#include <Sprocket/Scene/Systems/GameGrid.h>
+#include <Sprocket/UI/ImGuiXtra.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Utility/MouseCodes.h>
+
 using namespace spkt;
 
 namespace {
@@ -422,9 +435,9 @@ void Game::on_render()
 
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Save", buttonRegion)) {
-        log::info("Saving to {}", d_sceneFile);
+        spkt::log::info("Saving to {}", d_sceneFile);
         spkt::save_registry_to_file(d_sceneFile, d_scene.Entities());
-        log::info("Done!");
+        spkt::log::info("Done!");
     }
     
     d_escapeMenu.EndPanel();
@@ -446,10 +459,10 @@ void Game::on_render()
     d_escapeMenu.Text("Buttons", 36.0f, {0, 0, 400, 100});
     glm::vec4 buttonQuad{10, 100, 400 - 20, 50};
     if (d_escapeMenu.Button("Button 1", buttonQuad)) {
-        log::warn("Warn");
-        log::info("Info");
-        log::error("Error");
-        log::fatal("Fatal");
+        spkt::log::warn("Warn");
+        spkt::log::info("Info");
+        spkt::log::error("Error");
+        spkt::log::fatal("Fatal");
     }
     buttonQuad.y += 60;
     d_escapeMenu.Button("Button 2", buttonQuad);
