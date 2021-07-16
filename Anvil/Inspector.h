@@ -1,5 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
+
+#include <imgui.h>
 #include <Sprocket/Vendor/ImGuizmo/ImGuizmo.h>
 
 class Anvil;
