@@ -1,18 +1,16 @@
 #include "SimpleUI.h"
-#include "MouseCodes.h"
-#include "KeyboardCodes.h"
-#include "Log.h"
-#include "Maths.h"
-#include "RenderContext.h"
-#include "BufferLayout.h"
 
-#include <functional>
-#include <cassert>
-#include <string_view>
-#include <algorithm>
-#include <format>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
 
 #include <fmt/core.h>
+
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <format>
+#include <functional>
+#include <string_view>
 
 namespace spkt {
 namespace {

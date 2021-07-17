@@ -1,11 +1,11 @@
 #include "FontAtlas.h"
 
+#include <glm/glm.hpp>
+
 #include <algorithm>
 #include <cstdlib>
 #include <cassert>
 #include <limits>
-
-#include "Maths.h"
 
 namespace spkt {
 

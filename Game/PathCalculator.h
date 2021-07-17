@@ -1,9 +1,10 @@
 #pragma once
-#include <Sprocket.h>
+#include <glm/glm.hpp>
 
-#include <queue>
-#include <memory>
 #include <functional>
+#include <memory>
+#include <queue>
+#include <vector>
 
 using GridFunction = std::function<bool(const glm::ivec2&)>;
     // A function used to query the grid. Accepts coordinates and returns

@@ -1,6 +1,6 @@
 #include "FileBrowser.h"
 
-#ifdef _WIN32
+#include <Sprocket/Core/Window.h>
 
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -52,4 +52,3 @@ std::string SaveFile(Window* window, const char* filter)
 }
 
 }
-#endif

@@ -1,8 +1,15 @@
 #pragma once
-#include "GameGrid.h"
-#include "CircadianCycle.h"
+#include <Game/CircadianCycle.h>
 
-#include <Sprocket.h>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/PostProcessing/PostProcessor.h>
+#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/ShadowMap.h>
+#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/Systems/GameGrid.h>
+#include <Sprocket/UI/DevUI.h>
+#include <Sprocket/UI/SimpleUI.h>
 
 #include <memory>
 #include <random>

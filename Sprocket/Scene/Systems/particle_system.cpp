@@ -1,8 +1,12 @@
 #include "particle_system.h"
-#include "ecs.h"
-#include "ecs.h"
-#include "Random.h"
-#include "Scene.h"
+
+#include <Sprocket/Utility/Random.h>
+#include <Sprocket/Scene/ecs.h>
+
+#include <glm/glm.hpp>
+
+#include <array>
+#include <memory>
 
 namespace spkt {
 namespace {

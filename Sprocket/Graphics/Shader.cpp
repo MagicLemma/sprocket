@@ -1,15 +1,14 @@
 #include "Shader.h"
-#include "Log.h"
-#include "Maths.h"
-#include "Types.h"
 
-#include <fstream>
-#include <string>
-#include <filesystem>
-#include <format>
+#include <Sprocket/Utility/Log.h>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <string>
 
 namespace spkt {
 
@@ -35,8 +34,8 @@ Shader::Shader(const std::string& vertShaderFile,
 	std::string vertShader = ParseShader(vertShaderFile);
 	std::string fragShader = ParseShader(fragShaderFile);
 	
-	this->d_vertexSource = vertShader;
-	this->d_fragSource = fragShader;
+	d_vertexSource = vertShader;
+	d_fragSource = fragShader;
 	
 	CreateShader(vertShader, fragShader);
 }
@@ -65,9 +64,9 @@ void Shader::CreateShader(const std::string& vertShader,
 	glValidateProgram(d_programId);
 }
 
-u32 Shader::CompileShader(u32 type, const std::string& source)
+std::uint32_t Shader::CompileShader(std::uint32_t type, const std::string& source)
 {
-	u32 id = glCreateShader(type);
+	std::uint32_t id = glCreateShader(type);
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, nullptr);
 	glCompileShader(id);
@@ -94,7 +93,7 @@ void Shader::Unbind() const
     glUseProgram(0);
 }
 
-u32 Shader::GetUniformLocation(const std::string& name) const
+std::uint32_t Shader::GetUniformLocation(const std::string& name) const
 {
 	return glGetUniformLocation(d_programId, name.c_str());
 }
@@ -146,15 +145,15 @@ std::string ArrayName(std::string_view uniformName, std::size_t index)
 
 bool Shader::Reload()
 {
-	u32 programId = glCreateProgram();
+	std::uint32_t programId = glCreateProgram();
 
-	u32 vertShaderId = CompileShader(GL_VERTEX_SHADER, d_vertexSource);
+	std::uint32_t vertShaderId = CompileShader(GL_VERTEX_SHADER, d_vertexSource);
 	if(vertShaderId == 0) {
 		glDeleteProgram(programId);
 		return false;
 	}
 
-	u32 fragShaderId = CompileShader(GL_FRAGMENT_SHADER, d_fragSource);
+	std::uint32_t fragShaderId = CompileShader(GL_FRAGMENT_SHADER, d_fragSource);
 	if(fragShaderId == 0) {
 		glDeleteShader(vertShaderId);
 		glDeleteProgram(programId);

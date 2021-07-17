@@ -1,7 +1,11 @@
 #include "DepthBuffer.h"
-#include "Log.h"
+
+#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Graphics/Texture.h>
 
 #include <glad/glad.h>
+
+#include <memory>
 
 namespace spkt {
 

@@ -11,4 +11,4 @@ add_executable(Anvil
                Inspector.cpp)
 
 target_link_libraries(Anvil PRIVATE Sprocket)
-target_include_directories(Anvil PUBLIC .)
+target_include_directories(Anvil PUBLIC . ..)

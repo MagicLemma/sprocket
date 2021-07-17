@@ -1,5 +1,11 @@
 #include "SkyboxRenderer.h"
-#include "Camera.h"
+
+#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Scene/Camera.h>
+
+#include <glm/glm.hpp>
+
+#include <memory>
 
 namespace spkt {
     

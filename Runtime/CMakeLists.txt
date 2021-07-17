@@ -11,5 +11,6 @@ add_executable(Runtime
 
 target_link_libraries(Runtime PRIVATE Sprocket)
 target_include_directories(Runtime PUBLIC
+                           ..
                            .
                            ./Panels)

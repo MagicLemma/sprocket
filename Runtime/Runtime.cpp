@@ -1,5 +1,12 @@
 #include "Runtime.h"
 
+#include <Sprocket/Scene/Loader.h>
+#include <Sprocket/Scene/Systems/basic_systems.h>
+#include <Sprocket/Scene/Systems/particle_system.h>
+#include <Sprocket/Scene/Systems/physics_system.h>
+#include <Sprocket/Utility/Colour.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
+
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
 const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
 const auto GARDEN      = spkt::from_hex(0x55E6C1);

@@ -6,7 +6,7 @@ def main(reg):
     @reg.compmethod
     def inspector_guizmo_settings(ctx):
         if ctx.comp["name"] == "Transform3DComponent":
-            return "ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
+            return "spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
         return ""
 
     @reg.attrmethod
@@ -23,8 +23,8 @@ def main(reg):
         if cpp_type == "std::string":
             if cpp_subtype == "File":
                 filt = data.get("Filter")
-                return f'ImGuiXtra::File("{display}", editor.window(), &c.{name}, "{filt}")'
-            return f'ImGuiXtra::TextModifiable(c.{name})'
+                return f'spkt::ImGuiXtra::File("{display}", editor.window(), &c.{name}, "{filt}")'
+            return f'spkt::ImGuiXtra::TextModifiable(c.{name})'
         if cpp_type == "float":
             if limits := data.get("Limits"):
                 a, b = limits
@@ -41,7 +41,7 @@ def main(reg):
                 return f'ImGui::ColorEdit4("{display}", &c.{name}.r)'
             return f'ImGui::DragFloat4("{display}", &c.{name}.x, 0.1f)'
         if cpp_type == "glm::quat":
-            return f'ImGuiXtra::Euler("{display}", &c.{name})'
+            return f'spkt::ImGuiXtra::Euler("{display}", &c.{name})'
         if cpp_type == "bool":
             return f'ImGui::Checkbox("{display}", &c.{name})'
         if cpp_type == "ecs::Identifier":

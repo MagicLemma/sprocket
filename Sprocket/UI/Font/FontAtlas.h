@@ -1,9 +1,12 @@
 #pragma once
-#include <cstdlib>
-#include <vector>
+#include <Sprocket/Graphics/Texture.h>
+#include <Sprocket/Utility/Maths.h>
 
-#include "Maths.h"
-#include "Texture.h"
+#include <glm/glm.hpp>
+
+#include <cstdlib>
+#include <memory>
+#include <vector>
 
 namespace spkt {
 

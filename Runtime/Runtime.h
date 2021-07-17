@@ -1,6 +1,13 @@
 #pragma once
-#include <Sprocket.h>
 #include "Console.h"
+
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
+#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Scene/ecs.h>
 
 #include <memory>
 #include <random>
@@ -21,7 +28,7 @@ class Runtime
     spkt::entity d_runtimeCamera;
 
     // Console
-    spkt::Console d_console;
+    Console d_console;
     bool d_consoleActive = false;
 
 public:

@@ -1,11 +1,10 @@
 #pragma once
 #include <any>
-#include <string>
-#include <typeinfo> // TODO: Replace with own version
-#include <typeindex>
+#include <cstddef>
 #include <functional>
-
-#include "Types.h"
+#include <string>
+#include <typeindex>
+#include <typeinfo> // TODO: Replace with own version
 
 namespace spkt {
 namespace ev {
@@ -63,8 +62,8 @@ struct KeyboardButtonHeld {
 };
 
 struct KeyboardTyped {
-	u32 key;
-	KeyboardTyped(u32 k) : key(k) {}
+	std::uint32_t key;
+	KeyboardTyped(std::uint32_t k) : key(k) {}
 };
 
 // MOUSE EVENTS

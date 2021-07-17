@@ -1,5 +1,6 @@
 #include "LuaScript.h"
-#include "LuaConverter.h"
+
+#include <Sprocket/Scripting/LuaConverter.h>
 
 #include <lua.hpp>
 #include <glm/glm.hpp>

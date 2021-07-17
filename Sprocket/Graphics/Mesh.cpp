@@ -1,13 +1,13 @@
 #include "Mesh.h"
-#include "Types.h"
-#include "Maths.h"
 
-#include <cassert>
-#include <glad/glad.h>
+#include <Sprocket/Utility/Maths.h>
 
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
+#include <glad/glad.h>
+
+#include <cassert>
 
 namespace spkt {
 namespace {
@@ -78,9 +78,9 @@ int GetAssimpFlags()
          | aiProcess_ValidateDataStructure;
 }
 
-void AddBoneData(AnimVertex& vertex, u32 index, f32 weight)
+void AddBoneData(AnimVertex& vertex, std::uint32_t index, float weight)
 {
-    for (u32 i = 0; i != 4; ++i) {
+    for (std::uint32_t i = 0; i != 4; ++i) {
         if (vertex.boneIndices[i] == -1) {
             vertex.boneIndices[i] = index;
             vertex.boneWeights[i] = weight;
@@ -90,7 +90,7 @@ void AddBoneData(AnimVertex& vertex, u32 index, f32 weight)
     
     // Already got four acting bones, so check if any are less influential
     // than this one and replace it if so.
-    for (u32 i = 0; i != 4; ++i) {
+    for (std::uint32_t i = 0; i != 4; ++i) {
         if (vertex.boneWeights[i] < weight) {
             vertex.boneIndices[i] = index;
             vertex.boneWeights[i] = weight;
@@ -101,7 +101,7 @@ void AddBoneData(AnimVertex& vertex, u32 index, f32 weight)
 
 aiNodeAnim* GetNodeAnim(aiAnimation* animation, const std::string& name)
 {
-    for (u32 i = 0; i != animation->mNumChannels; ++i) {
+    for (std::uint32_t i = 0; i != animation->mNumChannels; ++i) {
         aiNodeAnim* node = animation->mChannels[i];
         if (name == std::string(node->mNodeName.data)) {
             return node;
@@ -137,9 +137,9 @@ bool IsBone(const Skeleton& skeleton, const aiNode* node)
 void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene, const glm::mat4& transform)
 {
     assert(bone);
-    for (u32 i = 0; i != scene->mNumAnimations; ++i) {
+    for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
         aiAnimation* animationData = scene->mAnimations[i];
-        f32 ticksPerSec = animationData->mTicksPerSecond;
+        float ticksPerSec = animationData->mTicksPerSecond;
         if (ticksPerSec == 0.0f) { ticksPerSec = 25.0f; } // If unknown
 
         const aiNodeAnim* keyFrames = GetNodeAnim(animationData, bone->name);
@@ -148,7 +148,7 @@ void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene, const 
         Animation& animation = skeleton.animations[name];
         animation.duration = animationData->mDuration / ticksPerSec;
         BoneKeyFrames& keyFrameData = animation.keyFrames[bone->index];
-        for (u32 i = 0; i != keyFrames->mNumPositionKeys; ++i) {
+        for (std::uint32_t i = 0; i != keyFrames->mNumPositionKeys; ++i) {
             auto& x = keyFrames->mPositionKeys[i];
             keyFrameData.keyPostitions.push_back({
                 (float)x.mTime / ticksPerSec,
@@ -156,7 +156,7 @@ void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene, const 
             });
         }
 
-        for (u32 i = 0; i != keyFrames->mNumRotationKeys; ++i) {
+        for (std::uint32_t i = 0; i != keyFrames->mNumRotationKeys; ++i) {
             auto& x = keyFrames->mRotationKeys[i];
             keyFrameData.keyOrientations.push_back({
                 (float)x.mTime / ticksPerSec,
@@ -164,7 +164,7 @@ void LoadAnimations(Skeleton& skeleton, Bone* bone, const aiScene* scene, const 
             });
         }
 
-        for (u32 i = 0; i != keyFrames->mNumScalingKeys; ++i) {
+        for (std::uint32_t i = 0; i != keyFrames->mNumScalingKeys; ++i) {
             auto& x = keyFrames->mScalingKeys[i];
             keyFrameData.keyScales.push_back({
                 (float)x.mTime/ticksPerSec,
@@ -203,7 +203,7 @@ void LoadSkeleton(
     }
 
     Bone* currentBone = GetBone(skeleton, lastBoneNode);
-    for (u32 i = 0; i != currentNode->mNumChildren; ++i) {
+    for (std::uint32_t i = 0; i != currentNode->mNumChildren; ++i) {
         aiNode* childNode = currentNode->mChildren[i];
 
         Bone* childBone = GetBone(skeleton, childNode);
@@ -219,11 +219,11 @@ StaticMeshData LoadStaticMesh(const aiScene* scene)
 {    
     StaticMeshData data;
 
-    for (u32 idx = 0; idx != scene->mNumMeshes; ++idx) {
+    for (std::uint32_t idx = 0; idx != scene->mNumMeshes; ++idx) {
         aiMesh* mesh = scene->mMeshes[idx];
 
         // Vertices
-        for (u32 i = 0; i != mesh->mNumVertices; ++i) {
+        for (std::uint32_t i = 0; i != mesh->mNumVertices; ++i) {
             Vertex vertex;
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
@@ -234,9 +234,9 @@ StaticMeshData LoadStaticMesh(const aiScene* scene)
         }
 
         // Indices
-        for (u32 i = 0; i != mesh->mNumFaces; ++i) {
+        for (std::uint32_t i = 0; i != mesh->mNumFaces; ++i) {
             aiFace face = mesh->mFaces[i];
-            for (u32 j = 0; j != face.mNumIndices; ++j) {
+            for (std::uint32_t j = 0; j != face.mNumIndices; ++j) {
                 data.indices.push_back(face.mIndices[j]);
             }
         }
@@ -249,12 +249,12 @@ AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
 {    
     AnimatedMeshData data;
 
-    u32 vertexCount = 0;
-    for (u32 idx = 0; idx != scene->mNumMeshes; ++idx) {
+    std::uint32_t vertexCount = 0;
+    for (std::uint32_t idx = 0; idx != scene->mNumMeshes; ++idx) {
         aiMesh* mesh = scene->mMeshes[idx];
 
         // Vertices
-        for (u32 i = 0; i != mesh->mNumVertices; ++i) {
+        for (std::uint32_t i = 0; i != mesh->mNumVertices; ++i) {
             AnimVertex vertex;
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
@@ -265,21 +265,21 @@ AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
         }
 
         // Indices
-        for (u32 i = 0; i != mesh->mNumFaces; ++i) {
+        for (std::uint32_t i = 0; i != mesh->mNumFaces; ++i) {
             aiFace face = mesh->mFaces[i];
-            for (u32 j = 0; j != face.mNumIndices; ++j) {
+            for (std::uint32_t j = 0; j != face.mNumIndices; ++j) {
                 data.indices.push_back(vertexCount + face.mIndices[j]);
             }
         }
 
         // Bones
-        for (u32 i = 0; i != mesh->mNumBones; ++i) {
+        for (std::uint32_t i = 0; i != mesh->mNumBones; ++i) {
             aiBone* bone = mesh->mBones[i];
             std::string boneName(bone->mName.data);
 
             // We have to do this lookup as a bone be shared by multiple
             // submeshes, so we may have already encountered this bone.
-            u32 boneIndex = 0;
+            std::uint32_t boneIndex = 0;
             auto it = data.skeleton.boneMap.find(boneName);
             if (it != data.skeleton.boneMap.end()) {
                 boneIndex = data.skeleton.boneMap[boneName];
@@ -295,7 +295,7 @@ AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
             }
 
             // Update Vertices
-            for (u32 j = 0; j != bone->mNumWeights; ++j) {
+            for (std::uint32_t j = 0; j != bone->mNumWeights; ++j) {
                 auto& vertex = data.vertices[vertexCount + bone->mWeights[j].mVertexId];
                 float weight = bone->mWeights[j].mWeight;
                 AddBoneData(vertex, boneIndex, weight);
@@ -313,7 +313,7 @@ AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
     }
 
     // Initialise animation structures
-    for (u32 i = 0; i != scene->mNumAnimations; ++i) {
+    for (std::uint32_t i = 0; i != scene->mNumAnimations; ++i) {
         aiAnimation* animData = scene->mAnimations[i];
         std::string name(animData->mName.data);
 
@@ -355,7 +355,7 @@ Mesh::Mesh(const StaticMeshData& data)
     glNamedBufferData(d_vertexBuffer, sizeof(Vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_indexBuffer);
-    glNamedBufferData(d_indexBuffer, sizeof(u32) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_indexBuffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -376,7 +376,7 @@ Mesh::Mesh(const AnimatedMeshData& data)
     glNamedBufferData(d_vertexBuffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_indexBuffer);
-    glNamedBufferData(d_indexBuffer, sizeof(u32) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_indexBuffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
 
     d_layout.AddAttribute(DataType::FLOAT, 3);
     d_layout.AddAttribute(DataType::FLOAT, 2);
@@ -443,7 +443,7 @@ BufferLayout Mesh::GetLayout() const
     return d_layout;
 }
 
-std::vector<glm::mat4> Mesh::GetPose(const std::string& name, f32 time) const
+std::vector<glm::mat4> Mesh::GetPose(const std::string& name, float time) const
 {
     if (d_skeleton.has_value()) {
         return d_skeleton.value().GetPose(name, time);

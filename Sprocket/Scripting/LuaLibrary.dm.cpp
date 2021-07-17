@@ -1,17 +1,20 @@
 #include "LuaLibrary.h"
-#include "LuaScript.h"
-#include "LuaConverter.h"
-#include "Scene.h"
-#include "Window.h"
-#include "Log.h"
 
-#include <vector>
-#include <utility>
-#include <format>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scripting/LuaConverter.h>
+#include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Utility/Maths.h>
 
 #include <lua.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
+
+#include <format>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace spkt {
 namespace lua {

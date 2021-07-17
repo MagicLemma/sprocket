@@ -1,5 +1,7 @@
 #include "StreamBuffer.h"
-#include "Log.h"
+
+#include <Sprocket/Graphics/BufferLayout.h>
+#include <Sprocket/Utility/Log.h>
 
 #include <glad/glad.h>
 

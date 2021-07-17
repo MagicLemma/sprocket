@@ -1,6 +1,8 @@
 #include "input_system.h"
-#include "ecs.h"
-#include "Scene.h"
+
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Scene.h>
 
 namespace spkt {
 

@@ -1,14 +1,15 @@
 #pragma once
-#include "Maths.h"
-#include "Types.h"
-#include "BufferLayout.h"
-#include "Animation.h"
+#include <Sprocket/Graphics/BufferLayout.h>
+#include <Sprocket/Graphics/Animation.h>
 
-#include <vector>
-#include <string>
+#include <glm/glm.hpp>
+
+#include <cstddef>
 #include <memory>
 #include <optional>
+#include <string>
 #include <variant>
+#include <vector>
 
 namespace spkt {
 
@@ -37,14 +38,14 @@ struct AnimVertex
 
 struct StaticMeshData
 {
-    std::vector<Vertex> vertices;
-    std::vector<u32>    indices;
+    std::vector<Vertex>        vertices;
+    std::vector<std::uint32_t> indices;
 };
 
 struct AnimatedMeshData
 {
-    std::vector<AnimVertex> vertices;
-    std::vector<u32>        indices;
+    std::vector<AnimVertex>    vertices;
+    std::vector<std::uint32_t> indices;
 
     Skeleton skeleton;
 };
@@ -61,9 +62,9 @@ struct MeshData
 
 class Mesh
 {
-    u32 d_vertexBuffer;
-    u32 d_indexBuffer;
-    u64 d_vertexCount;
+    std::uint32_t d_vertexBuffer;
+    std::uint32_t d_indexBuffer;
+    std::uint64_t d_vertexCount;
 
     BufferLayout d_layout;
 
@@ -91,7 +92,7 @@ public:
 
     // Returns the transforms to be uploaded to the shader. The transform
     // at position i corresponds to the bone with ID i.
-    std::vector<glm::mat4> GetPose(const std::string& name, f32 time) const;
+    std::vector<glm::mat4> GetPose(const std::string& name, float time) const;
 
     // Returns a list of names of all possible animations in this mesh.
     std::vector<std::string> GetAnimationNames() const;

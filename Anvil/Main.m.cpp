@@ -1,10 +1,12 @@
-#include <Sprocket.h>
-#include "Anvil.h"
+#include <Anvil/Anvil.h>
+
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/GameLoop.h>
 
 int main()
 {
     spkt::Window window("Anvil");
-    spkt::Anvil editor(&window);
+    Anvil editor(&window);
     spkt::RunOptions options;
     options.showFramerate = true;
     return spkt::Run(editor, window, options);

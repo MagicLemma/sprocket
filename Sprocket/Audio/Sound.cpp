@@ -1,5 +1,6 @@
 #include "Sound.h"
 
+#include <glm/glm.hpp>
 #include <SFML/Audio.hpp>
 
 namespace spkt {

@@ -1,15 +1,16 @@
 #include "physics_system.h"
-#include "ecs.h"
-#include "Log.h"
-#include "Scene.h"
-#include "ecs.h"
 
-#include <variant>
-#include <unordered_map>
-#include <memory>
+#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <reactphysics3d/reactphysics3d.h>
+
+#include <cstddef>
+#include <memory>
+#include <unordered_map>
+#include <variant>
 
 namespace spkt {
 namespace {
@@ -92,7 +93,7 @@ class event_listener : public rp3d::EventListener
 public:
     void onContact(const rp3d::CollisionCallback::CallbackData& data) override
     {
-        for (u32 p = 0; p != data.getNbContactPairs(); ++p) {
+        for (std::uint32_t p = 0; p != data.getNbContactPairs(); ++p) {
             auto pair = data.getContactPair(p);
             auto type = pair.getEventType();
             if (type == rp3d::CollisionCallback::ContactPair::EventType::ContactStart) {

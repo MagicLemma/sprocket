@@ -1,12 +1,14 @@
 #pragma once
-#include <Sprocket.h>
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Utility/InputProxy.h>
 
-namespace spkt {
+#include <glm/glm.hpp>
 
 class Camera
 {
-    Window*    d_window;
-    InputProxy d_input;
+    spkt::Window*    d_window;
+    spkt::InputProxy d_input;
 
     glm::vec3 d_position;
     glm::vec3 d_target;
@@ -22,13 +24,11 @@ class Camera
     float d_absMax;
 
 public:
-    Camera(Window* window, const glm::vec3& target);
+    Camera(spkt::Window* window, const glm::vec3& target);
 
     void on_update(double dt);
-    void on_event(ev::Event& event);
+    void on_event(spkt::ev::Event& event);
 
     glm::mat4 Proj() const;
     glm::mat4 View() const;
 };
-
-}

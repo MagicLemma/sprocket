@@ -1,7 +1,6 @@
 #include "Colour.h"
-#include "Log.h"
 
-#include <vector>
+#include <glm/glm.hpp>
 
 namespace spkt {
 namespace {

@@ -1,19 +1,19 @@
 #pragma once
-#include "Maths.h"
-#include "BufferLayout.h"
-
+#include <cstddef>
 #include <vector>
 
 namespace spkt {
+
+class BufferLayout;
 
 class StreamBuffer 
 // A class to be used with the intention of streaming data to VBOs.
 // By default, the VBO has 3 attribute pointers enabled, but nothing
 // is defined; that is up to the user.
 {
-    u32 d_vao;
-    u32 d_vertexBuffer;
-    u32 d_indexBuffer;
+    std::uint32_t d_vao;
+    std::uint32_t d_vertexBuffer;
+    std::uint32_t d_indexBuffer;
 
     StreamBuffer(const StreamBuffer&) = delete;
     StreamBuffer& operator=(const StreamBuffer&) = delete;

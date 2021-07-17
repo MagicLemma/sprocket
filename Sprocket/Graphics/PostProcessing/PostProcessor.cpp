@@ -1,5 +1,8 @@
 #include "PostProcessor.h"
 
+#include <Sprocket/Graphics/Mesh.h>
+#include <Sprocket/Graphics/PostProcessing/Effect.h>
+
 namespace spkt {
 namespace {
 

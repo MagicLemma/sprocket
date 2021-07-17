@@ -1,7 +1,8 @@
 #pragma once
-#include "Effect.h"
-#include "Mesh.h"
+#include <Sprocket/Graphics/Mesh.h>
+#include <Sprocket/Graphics/PostProcessing/Effect.h>
 
+#include <memory>
 #include <vector>
 
 namespace spkt {

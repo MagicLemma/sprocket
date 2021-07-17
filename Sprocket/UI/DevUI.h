@@ -1,14 +1,17 @@
 #pragma once
-#include "Window.h"
-#include "Shader.h"
-#include "Events.h"
-#include "Texture.h"
-#include "StreamBuffer.h"
+#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/StreamBuffer.h>
+#include <Sprocket/Graphics/Texture.h>
 
 #include <imgui.h>
 #include <ImGuizmo.h>
 
+#include <memory>
+
 namespace spkt {
+
+class Window;
+namespace ev { class Event; }
 
 class DevUI
 // A class that wraps the setup and rendering of ImGui.

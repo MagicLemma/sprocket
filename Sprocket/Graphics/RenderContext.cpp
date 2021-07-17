@@ -1,5 +1,7 @@
 #include "RenderContext.h"
 
+#include <Sprocket/Core/Window.h>
+
 #include <glad/glad.h>
 
 namespace spkt {

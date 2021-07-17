@@ -1,10 +1,8 @@
 #include "ColliderRenderer.h"
-#include "Maths.h"
-#include "RenderContext.h"
-#include "Camera.h"
-#include "ecs.h"
-#include "Texture.h"
-#include "Types.h"
+
+#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Utility/Maths.h>
 
 #include <glad/glad.h>
 
@@ -24,7 +22,7 @@ void ColliderRenderer::Draw(
     RenderContext rc;
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    u32 MAX_NUM_LIGHTS = 5;
+    std::uint32_t MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
     d_shader.LoadMat4("u_proj_matrix", proj);

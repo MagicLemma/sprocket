@@ -1,9 +1,10 @@
 #include "Window.h"
-#include "Log.h"
-#include "Types.h"
+
+#include <Sprocket/Utility/Log.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <cstdlib>
 
 namespace spkt {
@@ -13,7 +14,7 @@ struct WindowImpl
 	GLFWwindow* window;	
 };
 
-Window::Window(const std::string& name, u32 width, u32 height)
+Window::Window(const std::string& name, std::uint32_t width, std::uint32_t height)
 	: d_impl(std::make_unique<WindowImpl>())
 	, d_data({name, width, height})
 	, d_clearColour({1.0, 1.0, 1.0})
@@ -166,7 +167,7 @@ Window::Window(const std::string& name, u32 width, u32 height)
 		}
 	});
 
-	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, u32 key) {
+	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, std::uint32_t key) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		auto event = ev::make_event<ev::KeyboardTyped>(key);

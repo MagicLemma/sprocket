@@ -1,8 +1,8 @@
 #include "BufferLayout.h"
-#include "Log.h"
-#include "Types.h"
 
 #include <glad/glad.h>
+
+#include <cstddef>
 
 namespace spkt {
 namespace {
@@ -25,7 +25,7 @@ constexpr int getNormalised(DataType type)
     }
 }
 
-constexpr u32 getSize(DataType type)
+constexpr std::uint32_t getSize(DataType type)
 {
     switch (type) {
         case DataType::FLOAT: return sizeof(float);
@@ -36,14 +36,14 @@ constexpr u32 getSize(DataType type)
 
 }
 
-BufferLayout::BufferLayout(u32 vertexSize, u32 startingIndex)
+BufferLayout::BufferLayout(std::uint32_t vertexSize, std::uint32_t startingIndex)
     : d_vertexSize(vertexSize)
     , d_startingIndex(startingIndex)
     , d_currentSize(0)
 {   
 }
 
-void BufferLayout::AddAttribute(DataType type, u32 count, DataRate rate)
+void BufferLayout::AddAttribute(DataType type, std::uint32_t count, DataRate rate)
 {
     d_attributes.push_back({type, count, rate});
     d_currentSize += count * getSize(type);
@@ -56,8 +56,8 @@ bool BufferLayout::Validate() const
 
 void BufferLayout::SetAttributes() const
 {
-    u32 offset = 0;
-    u32 index = d_startingIndex;
+    std::uint32_t offset = 0;
+    std::uint32_t index = d_startingIndex;
     for (const auto& data : d_attributes) {
         glEnableVertexAttribArray(index);
         if (data.type == DataType::INT) {

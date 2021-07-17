@@ -1,15 +1,17 @@
 #pragma once
-#include "Window.h"
-#include "Texture.h"
-#include "DevUI.h"
-#include "Maths.h"
-
-#include <string>
-
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <imgui.h>
 #include <ImGuizmo.h>
 
+#include <string_view>
+#include <string>
+
 namespace spkt {
+
+class Window;
+class Texture;
+
 namespace ImGuiXtra {
 
 // Create a text box for displaying file paths and a button that

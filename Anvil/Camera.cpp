@@ -1,10 +1,17 @@
 #include "Camera.h"
 
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Graphics/Viewport.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 
-namespace spkt {
+#include <algorithm>
 
-Camera::Camera(Window* window, const glm::vec3& target)
+Camera::Camera(spkt::Window* window, const glm::vec3& target)
     : d_window(window)
     , d_position()
     , d_target(target)
@@ -20,6 +27,8 @@ Camera::Camera(Window* window, const glm::vec3& target)
 
 void Camera::on_update(double dt)
 {
+    using namespace spkt;
+
     float horizSpeed = d_rotateSpeed * dt;
     float moveSpeed = d_moveSpeed * dt;
 
@@ -74,11 +83,11 @@ void Camera::on_update(double dt)
     }
 }
 
-void Camera::on_event(ev::Event& event)
+void Camera::on_event(spkt::ev::Event& event)
 {
     d_input.on_event(event);
 
-    if (auto data = event.get_if<ev::MouseScrolled>()) {
+    if (auto data = event.get_if<spkt::ev::MouseScrolled>()) {
         if (event.is_consumed()) { return; }
         d_absVert -= data->y_offset;
         d_absVert = std::clamp(d_absVert, d_absMin, d_absMax);
@@ -88,13 +97,11 @@ void Camera::on_event(ev::Event& event)
 
 glm::mat4 Camera::Proj() const
 {
-    float aspectRatio = Viewport::CurrentAspectRatio();
+    float aspectRatio = spkt::Viewport::CurrentAspectRatio();
     return glm::perspective(70.0f, aspectRatio, 0.1f, 1000.0f);
 }
 
 glm::mat4 Camera::View() const
 {
     return glm::lookAt(d_position, d_target, {0.0, 1.0, 0.0});
-}
-
 }

@@ -1,11 +1,12 @@
 #pragma once
-#include "Window.h"
-#include "Stopwatch.h"
-#include "Log.h"
-#include "Events.h"
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Utility/Stopwatch.h>
 
 #include <exception>
 #include <format>
+#include <type_traits>
 #include <utility>
 
 namespace spkt {

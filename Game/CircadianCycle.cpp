@@ -1,7 +1,8 @@
 #include "CircadianCycle.h"
-#include "Log.h"
 
+#include <glm/gtc/constants.hpp>
 #include <glm/trigonometric.hpp>
+
 #include <format>
 
 namespace spkt {

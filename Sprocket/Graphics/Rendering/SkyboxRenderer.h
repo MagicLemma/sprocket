@@ -1,14 +1,16 @@
 #pragma once
-#include "CubeMap.h"
-#include "AssetManager.h"
-#include "Shader.h"
-#include "VertexArray.h"
+#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Graphics/VertexArray.h>
 
-#include "ecs.h"
+#include <glm/glm.hpp>
 
 #include <memory>
 
 namespace spkt {
+
+class AssetManager;
 
 class SkyboxRenderer
 {

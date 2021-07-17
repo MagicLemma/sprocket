@@ -1,11 +1,11 @@
 #include "ImGuiXtra.h"
-#include "Log.h"
-#include "FileBrowser.h"
 
-#include <imgui.h>
-#include <ImGuizmo.h>
+#include <Sprocket/Graphics/Texture.h>
+#include <Sprocket/Utility/FileBrowser.h>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <imgui.h>
+#include <ImGuizmo.h>
 
 namespace spkt {
 namespace ImGuiXtra {

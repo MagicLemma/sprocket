@@ -1,15 +1,13 @@
 #pragma once
-#include "Types.h"
-
 #include <array>
 #include <string>
-#include <cstdint>
+#include <cstddef>
 
 namespace spkt {
 
 class CubeMap
 {
-    u32 d_id;
+    std::uint32_t d_id;
 
     int d_width;
     int d_height;

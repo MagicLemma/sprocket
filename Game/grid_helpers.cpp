@@ -1,6 +1,10 @@
 #include "grid_helpers.h"
-#include <string>
+
+#include <Sprocket/Utility/Random.h>
+
 #include <glm/glm.hpp>
+
+#include <string>
 
 namespace {
 

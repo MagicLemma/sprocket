@@ -1,7 +1,7 @@
 #pragma once
-#include "Mesh.h"
-#include "Texture.h"
-#include "Material.h"
+#include <Sprocket/Graphics/Material.h>
+#include <Sprocket/Graphics/Mesh.h>
+#include <Sprocket/Graphics/Texture.h>
 
 #include <unordered_map>
 #include <memory>

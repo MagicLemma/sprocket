@@ -1,6 +1,7 @@
 #include "Listener.h"
-#include "Maths.h"
-#include "ecs.h"
+
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Utility/Maths.h>
 
 #include <SFML/Audio.hpp>
 

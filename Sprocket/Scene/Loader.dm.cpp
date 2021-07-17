@@ -1,9 +1,9 @@
 #include "Loader.h"
-#include "Log.h"
-#include "ecs.h"
-#include "Maths.h"
-#include "Yaml.h"
-#include "Scene.h"
+
+#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Utility/Yaml.h>
+#include <Sprocket/Scene/Scene.h>
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>

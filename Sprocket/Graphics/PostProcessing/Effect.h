@@ -1,8 +1,8 @@
 #pragma once
-#include "Effect.h"
-#include "Shader.h"
-#include "FrameBuffer.h"
+#include <Sprocket/Graphics/FrameBuffer.h>
+#include <Sprocket/Graphics/Shader.h>
 
+#include <string>
 #include <vector>
 
 namespace spkt {
