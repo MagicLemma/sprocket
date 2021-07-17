@@ -1,12 +1,10 @@
 #pragma once
-#include <Sprocket/Core/Events.h>
-
 #include <glm/glm.hpp>
 
-#include <string>
+#include <cstddef>
 #include <functional>
 #include <memory>
-#include <map>
+#include <string>
 
 #ifndef _WIN32
 #error "Sprocket currently only supports Windows"
@@ -14,7 +12,9 @@
 
 namespace spkt {
 
-using EventCallback = std::function<void(ev::Event&)>;
+class event;
+
+using EventCallback = std::function<void(spkt::event&)>;
 
 struct WindowImpl;
 
@@ -28,7 +28,7 @@ struct WindowData
 	bool running = true;
 	bool focused = true;
 
-	EventCallback callback = [](ev::Event&) {};
+	EventCallback callback = [](spkt::event&) {};
 };
 
 class Window

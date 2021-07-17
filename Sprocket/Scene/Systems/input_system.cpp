@@ -6,37 +6,37 @@
 
 namespace spkt {
 
-void input_system_on_event(spkt::registry& registry, ev::Event& event)
+void input_system_on_event(spkt::registry& registry, spkt::event& event)
 {
     auto& input = get_singleton<InputSingleton>(registry);
-    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<KeyboardButtonPressed>()) {
         if (!event.is_consumed()) {
             input.keyboard[data->key] = true;
         }
     }
-    else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
+    else if (auto data = event.get_if<KeyboardButtonReleased>()) {
         input.keyboard[data->key] = false;
     }
-    else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
+    else if (auto data = event.get_if<MouseButtonPressed>()) {
         if (!event.is_consumed()) { 
             input.mouse[data->button] = true;
             input.mouse_click[data->button] = true;
         }
     }
-    else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
+    else if (auto data = event.get_if<MouseButtonReleased>()) {
         input.mouse[data->button] = false;
         input.mouse_unclick[data->button] = true;
     }
-    else if (auto data = event.get_if<ev::MouseScrolled>()) {
+    else if (auto data = event.get_if<MouseScrolled>()) {
         input.mouse_scrolled.x += data->x_offset;
         input.mouse_scrolled.y += data->y_offset;
     }
-    else if (auto data = event.get_if<ev::WindowResize>()) {
+    else if (auto data = event.get_if<WindowResize>()) {
         input.window_resized = true;
         input.window_width = (float)data->width;
         input.window_height = (float)data->height;
     }
-    else if (auto data = event.get_if<ev::MouseMoved>()) {
+    else if (auto data = event.get_if<MouseMoved>()) {
         input.mouse_pos = {data->x_pos, data->y_pos};
     }
 }

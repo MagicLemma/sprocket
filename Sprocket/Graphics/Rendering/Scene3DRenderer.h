@@ -1,14 +1,15 @@
 #pragma once
-#include <Sprocket/Graphics/AssetManager.h>
-#include <Sprocket/Graphics/Buffer.h>
 #include <Sprocket/Graphics/Shader.h>
 #include <Sprocket/Graphics/ShadowMap.h>
-#include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <memory>
 
 namespace spkt {
+
+class AssetManager;
+class Buffer;
+class VertexArray;
 
 class Scene3DRenderer
 // Renders a scene as a 3D Scene. This makes use of components such as

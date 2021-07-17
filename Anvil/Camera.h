@@ -1,9 +1,12 @@
 #pragma once
-#include <Sprocket/Core/Events.h>
-#include <Sprocket/Core/Window.h>
 #include <Sprocket/Utility/InputProxy.h>
 
 #include <glm/glm.hpp>
+
+namespace spkt {
+    class Window;
+    class event;
+}
 
 class Camera
 {
@@ -27,7 +30,7 @@ public:
     Camera(spkt::Window* window, const glm::vec3& target);
 
     void on_update(double dt);
-    void on_event(spkt::ev::Event& event);
+    void on_event(spkt::event& event);
 
     glm::mat4 Proj() const;
     glm::mat4 View() const;

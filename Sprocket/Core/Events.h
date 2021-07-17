@@ -7,16 +7,15 @@
 #include <typeinfo> // TODO: Replace with own version
 
 namespace spkt {
-namespace ev {
 
-class Event
+class event
 {
 	std::any d_event;
 	bool     d_consumed = false;
 
 public:
 	template <typename T, typename... Args>
-	explicit Event(std::in_place_type_t<T>, Args&&... args)
+	explicit event(std::in_place_type_t<T>, Args&&... args)
 		: d_event(std::in_place_type<T>, std::forward<Args>(args)...)
 	{}
 
@@ -34,9 +33,9 @@ public:
 };
 
 template <typename T, typename... Args>
-Event make_event(Args&&... args)
+event make_event(Args&&... args)
 {
-	return Event(std::in_place_type<T>, std::forward<Args>(args)...);
+	return event(std::in_place_type<T>, std::forward<Args>(args)...);
 }
 
 // KEYBOARD EVENTS 
@@ -105,7 +104,5 @@ struct WindowGotFocus {};
 struct WindowLostFocus {};
 struct WindowMaximize {};
 struct WindowMinimize {};
-
-}
 
 }

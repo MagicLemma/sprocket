@@ -1,5 +1,7 @@
 #include "Runtime.h"
 
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
@@ -30,8 +32,8 @@ Runtime::Runtime(spkt::Window* window)
 {
     d_window->SetCursorVisibility(false);
 
-    spkt::add_singleton(d_scene.Entities());
-    spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.Entities());
+    spkt::add_singleton(d_scene.registry());
+    spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry());
     
     d_scene.add(spkt::physics_system);
     d_scene.add(spkt::particle_system);
@@ -41,12 +43,12 @@ Runtime::Runtime(spkt::Window* window)
     d_scene.add(spkt::delete_below_50_system);
     d_scene.add(spkt::clear_events_system);
 
-    d_runtimeCamera = d_scene.Entities().find<spkt::Camera3DComponent>();
+    d_runtimeCamera = d_scene.registry().find<spkt::Camera3DComponent>();
 }
 
-void Runtime::on_event(spkt::ev::Event& event)
+void Runtime::on_event(spkt::event& event)
 {
-    if (auto data = event.get_if<spkt::ev::KeyboardTyped>()) {
+    if (auto data = event.get_if<spkt::KeyboardTyped>()) {
         if (data->key == spkt::Keyboard::BACK_TICK) {
             d_consoleActive = !d_consoleActive;
             event.consume();
@@ -74,7 +76,8 @@ void Runtime::on_update(double dt)
 
 void Runtime::on_render()
 {
-    auto& registry = d_scene.Entities();
+    auto& registry = d_scene.registry();
+
     d_skyboxRenderer.Draw(d_skybox, registry, d_runtimeCamera);
     d_entityRenderer.Draw(registry, d_runtimeCamera);
 

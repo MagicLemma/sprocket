@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 #include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/Viewport.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 
@@ -83,11 +84,11 @@ void Camera::on_update(double dt)
     }
 }
 
-void Camera::on_event(spkt::ev::Event& event)
+void Camera::on_event(spkt::event& event)
 {
     d_input.on_event(event);
 
-    if (auto data = event.get_if<spkt::ev::MouseScrolled>()) {
+    if (auto data = event.get_if<spkt::MouseScrolled>()) {
         if (event.is_consumed()) { return; }
         d_absVert -= data->y_offset;
         d_absVert = std::clamp(d_absVert, d_absMin, d_absMax);

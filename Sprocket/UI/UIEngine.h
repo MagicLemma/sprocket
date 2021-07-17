@@ -15,9 +15,8 @@
 namespace spkt {
 
 class Window;
-
 class Font;
-namespace ev { class Event; }
+class event;
 
 enum class Alignment
 {
@@ -203,7 +202,7 @@ public:
     // Submits an extra draw command for the current panel. Asserts if there is no current panel.
     void SubmitDrawCommand(const DrawCommand& cmd);
 
-    void on_event(ev::Event& event);
+    void on_event(spkt::event& event);
     void on_update(double dt);
 
     void StartFrame();

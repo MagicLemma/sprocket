@@ -3,7 +3,7 @@
 
 namespace spkt {
 
-namespace ev { class Event; }
+class event;
 
 // This is a special system which is designed to get input information (keyboard,
 // mouse and window) into the ECS for systems to make use of. As such, it requires
@@ -11,7 +11,7 @@ namespace ev { class Event; }
 // such as mouse offsets, this requires two "system" functions, a begin and end.
 
 // Processes events to build up the InputSingleton for the current frame.
-void input_system_on_event(spkt::registry& registry, ev::Event& event);
+void input_system_on_event(spkt::registry& registry, spkt::event& event);
 
 // Sets any per-frame information. Currently, this is just the mouse offset. This should be
 // the first system added to any scene.

@@ -17,7 +17,7 @@ struct RunOptions
 };
 
 template <typename T>
-concept runnable = requires(T t, ev::Event& event, double dt)
+concept runnable = requires(T t, event& event, double dt)
 {
     { t.on_event(event) } -> std::same_as<void>;
     { t.on_update(dt) } -> std::same_as<void>;
@@ -30,7 +30,7 @@ int Run(App& app, Window& window, const RunOptions& options = {})
     std::string name = window.GetWindowName();
     Stopwatch watch;
 
-    window.SetCallback([&app](ev::Event& event) {
+    window.SetCallback([&app](event& event) {
         app.on_event(event);
     });
 

@@ -1,10 +1,11 @@
 #include "Console.h"
 
-#include <Sprocket/Utility/Colour.h>
 #include <Sprocket/Core/Events.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
-#include <Sprocket/UI/SimpleUI.h>
+#include <Sprocket/Core/Window.h>
 #include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/UI/SimpleUI.h>
+#include <Sprocket/Utility/Colour.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
 
 #include <filesystem>
 #include <format>
@@ -32,9 +33,9 @@ void Console::on_update(double dt)
     d_ui.on_update(dt);
 }
 
-void Console::on_event(spkt::ev::Event& event)
+void Console::on_event(spkt::event& event)
 {
-    auto data = event.get_if<spkt::ev::KeyboardButtonPressed>();
+    auto data = event.get_if<spkt::KeyboardButtonPressed>();
     if (data && data->key == spkt::Keyboard::ENTER) {
         d_consoleLines.push_front({d_commandLine, glm::vec4{1.0, 1.0, 1.0, 1.0}});
         HandleCommand(d_commandLine);

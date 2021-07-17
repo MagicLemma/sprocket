@@ -12,20 +12,20 @@ InputProxy::InputProxy()
     d_mouse.fill(false);
 }
   
-void InputProxy::on_event(ev::Event& event)
+void InputProxy::on_event(spkt::event& event)
 {
-    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<KeyboardButtonPressed>()) {
         if (event.is_consumed()) { return; }
         d_keyboard[data->key] = true;
     }
-    else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
+    else if (auto data = event.get_if<KeyboardButtonReleased>()) {
         d_keyboard[data->key] = false;
     }
-    else if (auto data = event.get_if<ev::MouseButtonPressed>()) {
+    else if (auto data = event.get_if<MouseButtonPressed>()) {
         if (event.is_consumed()) { return; }
         d_mouse[data->button] = true;
     }
-    else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
+    else if (auto data = event.get_if<MouseButtonReleased>()) {
         d_mouse[data->button] = false;
     }
 }

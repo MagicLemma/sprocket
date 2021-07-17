@@ -1,10 +1,14 @@
-#include <Sprocket/Core/Window.h>
 #include <Sprocket/UI/SimpleUI.h>
 
 #include <glm/glm.hpp>
 
 #include <deque>
 #include <string_view>
+
+namespace spkt {
+    class Window;
+    class event;
+}
 
 struct ConsoleLine
 {
@@ -26,6 +30,6 @@ public:
     Console(spkt::Window* window);
 
     void on_update(double dt);
-    void on_event(spkt::ev::Event& event);
+    void on_event(spkt::event& event);
     void Draw();
 };
