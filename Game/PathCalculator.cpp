@@ -8,13 +8,57 @@
 #include <queue>
 #include <memory>
 
-std::queue<glm::vec3> GenerateAStarPath(
-    const glm::vec3& start,
-    const glm::vec3& end,
-    GridFunction gridFunction)
+namespace {
+
+struct path_node
 {
-    auto p1 = ClosestGridSquare(start);
-    auto p2 = ClosestGridSquare(end);
+    glm::ivec2 position;
+    float g;
+    float h;
+    std::shared_ptr<path_node> parent = nullptr;
+};
+
+using PathNodePtr = std::shared_ptr<path_node>;
+
+glm::ivec2 closest_square(const glm::vec3& position)
+{
+    int gridX = (int)std::round(position.x - 0.5f);
+    int gridZ = (int)std::round(position.z - 0.5f);
+    return {gridX, gridZ};
+}
+
+PathNodePtr FindNode(
+    const std::vector<PathNodePtr>& nodes,
+    const glm::ivec2& coords)
+{
+    for (auto& node : nodes) {
+        if (node->position == coords) {
+            return node;
+        }
+    }
+    return nullptr;
+};
+
+float Heuristic(PathNodePtr node, const glm::ivec2& target)
+{
+    auto delta = target - node->position;
+    return 10.0f * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));
+};
+
+float score(path_node& node)
+{
+    return node.g + node.h;
+}
+
+}
+
+std::queue<glm::vec3> make_astar_path(
+    glm::vec3 start,
+    glm::vec3 end,
+    const grid_function& gridFunction)
+{
+    auto p1 = closest_square(start);
+    auto p2 = closest_square(end);
 
     glm::ivec2 directions[8] = {
         {0, 1}, {1, 0}, {0, -1}, {-1, 0},
@@ -26,7 +70,7 @@ std::queue<glm::vec3> GenerateAStarPath(
 
     PathNodePtr current = nullptr;
 
-    auto firstNode = std::make_shared<PathNode>();
+    auto firstNode = std::make_shared<path_node>();
     firstNode->position = p1;
     firstNode->g = 0;
     firstNode->h = Heuristic(firstNode, p2); // Give this a proper value;
@@ -36,7 +80,7 @@ std::queue<glm::vec3> GenerateAStarPath(
         auto currentIt = openList.begin();
         
         for (auto it = openList.begin(); it != openList.end(); ++it) {
-            if ((*it)->Score() <= (*currentIt)->Score()) {
+            if (score(**it) <= score(**currentIt)) {
                 currentIt = it;
             }
         }
@@ -59,7 +103,7 @@ std::queue<glm::vec3> GenerateAStarPath(
 
             auto successor = FindNode(openList, newPos);
             if (successor == nullptr) {
-                successor = std::make_shared<PathNode>();
+                successor = std::make_shared<path_node>();
                 successor->position = newPos;
                 successor->g = totalCost;
                 successor->h = Heuristic(successor, p2); // Give this a proper value;
@@ -95,28 +139,3 @@ std::queue<glm::vec3> GenerateAStarPath(
     path.push(end);
     return path;
 }
-
-glm::ivec2 ClosestGridSquare(const glm::vec3& position)
-{
-    int gridX = (int)std::round(position.x - 0.5f);
-    int gridZ = (int)std::round(position.z - 0.5f);
-    return {gridX, gridZ};
-}
-
-PathNodePtr FindNode(
-    const std::vector<PathNodePtr>& nodes,
-    const glm::ivec2& coords)
-{
-    for (auto& node : nodes) {
-        if (node->position == coords) {
-            return node;
-        }
-    }
-    return nullptr;
-};
-
-float Heuristic(PathNodePtr node, const glm::ivec2& target)
-{
-    auto delta = target - node->position;
-    return 10.0f * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));
-};

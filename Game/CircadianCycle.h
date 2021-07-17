@@ -13,7 +13,7 @@ class CircadianCycle
     static constexpr float SIX_PM = 3 * SIX_HOURS;
     static constexpr float SECONDS_IN_DAY = 4 * SIX_HOURS;
 
-    double d_seconds;
+    float d_seconds;
     bool   d_running;
     float  d_speed;
 
@@ -34,15 +34,15 @@ public:
     float GetSpeed() const;
 
     void SetTime(int hours, int mins, int secs);
-    void AddSeconds(double seconds);
+    void AddSeconds(float seconds);
 
-    double GetSeconds() const;
-    void SetSeconds(double secs);
+    float GetSeconds() const;
+    void SetSeconds(float secs);
         // Access the value of the circadian cycle by treating it as
         // the number of seconds past midnight.
 
-    double GetAngle() const;
-    void SetAngle(double angle);
+    float GetAngle() const;
+    void SetAngle(float angle);
         // Access the value of the circadian cycle by treating it as
         // an angle. 0.0f is midnight and 180.0f is noon.
 
