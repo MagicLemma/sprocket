@@ -11,6 +11,10 @@
 
 namespace spkt {
 
+using mesh_ptr = std::unique_ptr<Mesh>;
+using texture_ptr = std::unique_ptr<Texture>;
+using material_ptr = std::unique_ptr<Material>;
+
 class AssetManager
 {
     // Background Loaders
@@ -18,16 +22,16 @@ class AssetManager
     std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
 
     // Primitives
-    std::unordered_map<std::string, const std::unique_ptr<Mesh>>    d_meshes;
-    std::unordered_map<std::string, const std::unique_ptr<Texture>> d_textures;
+    std::unordered_map<std::string, const spkt::mesh_ptr>    d_meshes;
+    std::unordered_map<std::string, const spkt::texture_ptr> d_textures;
     
     // Composites
-    std::unordered_map<std::string, const std::unique_ptr<Material>> d_materials;
+    std::unordered_map<std::string, const spkt::material_ptr> d_materials;
 
     // Defaults
-    std::unique_ptr<Mesh>     d_defaultMesh;
-    std::unique_ptr<Texture>  d_defaultTexture;
-    std::unique_ptr<Material> d_defaultMaterial;
+    spkt::mesh_ptr     d_defaultMesh;
+    spkt::texture_ptr  d_defaultTexture;
+    spkt::material_ptr d_defaultMaterial;
 
 public:
     template <typename T>
