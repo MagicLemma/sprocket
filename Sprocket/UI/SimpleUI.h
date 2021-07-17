@@ -1,8 +1,8 @@
 #pragma once
-#include <glm/glm.hpp>
-
 #include <Sprocket/UI/Font/Font.h>
 #include <Sprocket/UI/UIEngine.h>
+
+#include <glm/glm.hpp>
 
 #include <string>
 #include <string_view>
@@ -10,7 +10,7 @@
 namespace spkt {
 
 class Window;
-namespace ev { class Event; }
+class event;
 
 struct SimpleUITheme
 {
@@ -37,7 +37,7 @@ public:
 
     Font* GetFont() { return &d_font; }
     
-    void on_event(ev::Event& event);
+    void on_event(event& event);
     void on_update(double dt);
 
     void StartFrame();

@@ -1,6 +1,7 @@
 #include "SimpleUI.h"
 
 #include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/Events.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 
 #include <fmt/core.h>
@@ -52,7 +53,7 @@ SimpleUI::SimpleUI(Window* window)
 {
 }
 
-void SimpleUI::on_event(ev::Event& event)
+void SimpleUI::on_event(event& event)
 {
     d_engine.on_event(event);
 }

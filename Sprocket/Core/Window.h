@@ -14,7 +14,7 @@
 
 namespace spkt {
 
-using EventCallback = std::function<void(ev::Event&)>;
+using EventCallback = std::function<void(event&)>;
 
 struct WindowImpl;
 
@@ -28,7 +28,7 @@ struct WindowData
 	bool running = true;
 	bool focused = true;
 
-	EventCallback callback = [](ev::Event&) {};
+	EventCallback callback = [](event&) {};
 };
 
 class Window

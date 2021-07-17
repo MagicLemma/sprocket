@@ -148,12 +148,12 @@ void Game::load_scene(std::string_view file)
     assert(registry.valid(d_camera));
 }
 
-void Game::on_event(spkt::ev::Event& event)
+void Game::on_event(spkt::event& event)
 {
     using namespace spkt;
 
     // Escape Menu event handling
-    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<KeyboardButtonPressed>()) {
         if (!event.is_consumed() && data->key == Keyboard::ESC) {
             d_paused = !d_paused;
             event.consume();
@@ -177,11 +177,11 @@ void Game::on_event(spkt::ev::Event& event)
     // Game World event handling
     d_hoveredEntityUI.on_event(event);
 
-    if (auto data = event.get_if<ev::WindowResize>()) {
+    if (auto data = event.get_if<WindowResize>()) {
         d_postProcessor.SetScreenSize(data->width, data->height);
     }
 
-    if (auto data = event.get_if<ev::MouseButtonPressed>()) {
+    if (auto data = event.get_if<MouseButtonPressed>()) {
         auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;

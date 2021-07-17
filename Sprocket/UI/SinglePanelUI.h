@@ -9,7 +9,7 @@
 namespace spkt {
 
 class Window;
-namespace ev { class Event; }
+class event;
 
 struct SinglePanelUITheme
 {
@@ -36,7 +36,7 @@ public:
 
     Font* GetFont() { return &d_font; }
 
-    void on_event(ev::Event& event);
+    void on_event(event& event);
     void on_update(double dt);
 
     void StartFrame();

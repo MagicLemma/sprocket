@@ -53,7 +53,7 @@ class Game
 public:
     Game(spkt::Window* window);
 
-    void on_event(spkt::ev::Event& event);
+    void on_event(spkt::event& event);
     void on_update(double dt);
     void on_render();
 

@@ -47,7 +47,7 @@ SinglePanelUI::SinglePanelUI(Window* window)
 {
 }
 
-void SinglePanelUI::on_event(ev::Event& event)
+void SinglePanelUI::on_event(event& event)
 {
     d_engine.on_event(event);
 }

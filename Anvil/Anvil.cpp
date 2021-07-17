@@ -65,11 +65,11 @@ Anvil::Anvil(spkt::Window* window)
     d_activeScene = d_scene;
 }
 
-void Anvil::on_event(spkt::ev::Event& event)
+void Anvil::on_event(spkt::event& event)
 {
     using namespace spkt;
 
-    if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<KeyboardButtonPressed>()) {
         if (data->key == Keyboard::ESC) {
             if (d_playingGame) {
                 d_playingGame = false;

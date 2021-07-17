@@ -171,38 +171,38 @@ DevUI::DevUI(Window* window)
     
 }
 
-void DevUI::on_event(ev::Event& event)
+void DevUI::on_event(event& event)
 {
     ImGuiIO& io = ImGui::GetIO();
-
-    if (auto data = event.get_if<ev::MouseButtonPressed>()) {    
+    
+    if (auto data = event.get_if<MouseButtonPressed>()) {    
         if (event.is_consumed()) { return; }
         io.MouseDown[data->button] = true;
         if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
     }
     
-    else if (auto data = event.get_if<ev::MouseButtonReleased>()) {
+    else if (auto data = event.get_if<MouseButtonReleased>()) {
         io.MouseDown[data->button] = false;
     }
 
-    else if (auto data = event.get_if<ev::MouseMoved>()) {
+    else if (auto data = event.get_if<MouseMoved>()) {
         io.MousePos = ImVec2(data->x_pos, data->y_pos);
         if (ImGui::IsAnyItemHovered()) { event.consume(); }
         if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
     }
 
-    else if (auto data = event.get_if<ev::MouseScrolled>()) {
+    else if (auto data = event.get_if<MouseScrolled>()) {
         io.MouseWheel += data->y_offset;
         io.MouseWheelH += data->x_offset;
         if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
     }
 
-    else if (auto data = event.get_if<ev::WindowResize>()) {
+    else if (auto data = event.get_if<WindowResize>()) {
         io.DisplaySize = ImVec2((float)data->width, (float)data->height);
         io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
     }
 
-    else if (auto data = event.get_if<ev::KeyboardButtonPressed>()) {
+    else if (auto data = event.get_if<KeyboardButtonPressed>()) {
         if (event.is_consumed()) { return; }
         io.KeysDown[data->key] = true;
         io.KeyCtrl  = data->mods & KeyModifier::CTRL;
@@ -212,7 +212,7 @@ void DevUI::on_event(ev::Event& event)
         if (d_blockEvents && io.WantCaptureKeyboard) { event.consume(); }
     }
 
-    else if (auto data = event.get_if<ev::KeyboardButtonReleased>()) {
+    else if (auto data = event.get_if<KeyboardButtonReleased>()) {
         io.KeysDown[data->key] = false;
         io.KeyCtrl  = data->mods & KeyModifier::CTRL;
         io.KeyShift = data->mods & KeyModifier::SHIFT;
@@ -220,7 +220,7 @@ void DevUI::on_event(ev::Event& event)
         io.KeySuper = data->mods & KeyModifier::SUPER;
     }
 
-    else if (auto data = event.get_if<ev::KeyboardTyped>()) {
+    else if (auto data = event.get_if<KeyboardTyped>()) {
         if (event.is_consumed()) { return; }
         if (data->key > 0 && data->key < 0x10000) {
             io.AddInputCharacter((unsigned short)data->key);

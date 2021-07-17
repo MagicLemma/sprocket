@@ -26,6 +26,6 @@ public:
     Console(spkt::Window* window);
 
     void on_update(double dt);
-    void on_event(spkt::ev::Event& event);
+    void on_event(spkt::event& event);
     void Draw();
 };

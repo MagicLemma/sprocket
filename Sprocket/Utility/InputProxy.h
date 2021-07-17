@@ -2,7 +2,8 @@
 #include <array>
 
 namespace spkt {
-namespace ev { class Event; }
+
+class event;
 
 class InputProxy
 {
@@ -16,7 +17,7 @@ private:
 public:
     InputProxy();
 
-    void on_event(ev::Event& event);
+    void on_event(spkt::event& event);
 
     bool is_mouse_down(int button) const;
     bool is_keyboard_down(int key) const;

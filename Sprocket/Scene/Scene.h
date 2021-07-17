@@ -7,7 +7,7 @@
 
 namespace spkt {
 
-namespace ev { class Event; }
+class event;
 
 spkt::entity add_singleton(spkt::registry& registry);
 
@@ -36,7 +36,7 @@ public:
 
     void add(const system_t& system);
     void on_update(double dt);
-    void on_event(ev::Event& event);
+    void on_event(spkt::event& event);
 };
 
 }

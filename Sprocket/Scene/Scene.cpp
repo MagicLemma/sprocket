@@ -35,7 +35,7 @@ void Scene::on_update(double dt)
     spkt::input_system_end(d_registry, dt);
 }
 
-void Scene::on_event(ev::Event& event)
+void Scene::on_event(spkt::event& event)
 {
     spkt::input_system_on_event(d_registry, event);
 }

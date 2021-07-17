@@ -11,7 +11,7 @@
 namespace spkt {
 
 class Window;
-namespace ev { class Event; }
+class event;
 
 class DevUI
 // A class that wraps the setup and rendering of ImGui.
@@ -28,7 +28,7 @@ class DevUI
 public:
     DevUI(Window* window);
 
-    void on_event(ev::Event& event);
+    void on_event(event& event);
     void on_update(double dt);
 
     void BlockEvents(bool val) { d_blockEvents = val; }
