@@ -1,8 +1,6 @@
 #pragma once
-#include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/Shader.h>
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Graphics/VertexArray.h>
 
 #include <glm/glm.hpp>
 
@@ -11,6 +9,8 @@
 namespace spkt {
 
 class AssetManager;
+class CubeMap;
+class VertexArray;
 
 class SkyboxRenderer
 {

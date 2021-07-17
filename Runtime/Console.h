@@ -1,10 +1,14 @@
-#include <Sprocket/Core/Window.h>
 #include <Sprocket/UI/SimpleUI.h>
 
 #include <glm/glm.hpp>
 
 #include <deque>
 #include <string_view>
+
+namespace spkt {
+    class Window;
+    class event;
+}
 
 struct ConsoleLine
 {

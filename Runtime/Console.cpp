@@ -1,10 +1,11 @@
 #include "Console.h"
 
-#include <Sprocket/Utility/Colour.h>
 #include <Sprocket/Core/Events.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
-#include <Sprocket/UI/SimpleUI.h>
+#include <Sprocket/Core/Window.h>
 #include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/UI/SimpleUI.h>
+#include <Sprocket/Utility/Colour.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
 
 #include <filesystem>
 #include <format>

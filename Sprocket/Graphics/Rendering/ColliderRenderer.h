@@ -1,6 +1,5 @@
 #pragma once
 #include <Sprocket/Graphics/Shader.h>
-#include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
@@ -8,6 +7,8 @@
 #include <memory>
 
 namespace spkt {
+
+class VertexArray;
 
 class ColliderRenderer
 {

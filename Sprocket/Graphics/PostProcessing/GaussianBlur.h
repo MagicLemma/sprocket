@@ -1,5 +1,5 @@
 #pragma once
-#include "Effect.h"
+#include <Sprocket/Graphics/PostProcessing/Effect.h>
 
 namespace spkt {
 

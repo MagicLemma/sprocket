@@ -6,6 +6,7 @@
 
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/PostProcessing/GaussianBlur.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/ecs.h>

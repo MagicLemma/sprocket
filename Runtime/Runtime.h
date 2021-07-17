@@ -1,7 +1,6 @@
 #pragma once
 #include "Console.h"
 
-#include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
@@ -11,6 +10,10 @@
 
 #include <memory>
 #include <random>
+
+namespace spkt {
+    class Window;
+}
 
 class Runtime
 {
