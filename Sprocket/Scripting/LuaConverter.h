@@ -1,15 +1,14 @@
 #pragma once
-#include "Types.h"
+#include <Sprocket/Scene/ecs.h>
 
-#include "ecs.h"
+#include <glm/glm.hpp>
+#include <lua.hpp>
+
 #include <cstddef>
 #include <string>
 #include <vector>
 #include <utility>
 #include <cassert>
-
-#include <glm/glm.hpp>
-#include <lua.hpp>
 
 struct lua_State;
 
@@ -31,10 +30,10 @@ template <> struct Converter<int>
     static int read(lua_State* L, int index);
 };
 
-template <> struct Converter<u32>
+template <> struct Converter<std::uint32_t>
 {
-    static void push(lua_State* L, const u32& value);
-    static u32 read(lua_State* L, int index);
+    static void push(lua_State* L, const std::uint32_t& value);
+    static std::uint32_t read(lua_State* L, int index);
 };
 
 template <> struct Converter<bool>

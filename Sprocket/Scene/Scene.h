@@ -1,15 +1,13 @@
 #pragma once
-#include "ecs.h"
-#include "ecs.h"
-#include "Events.h"
-#include "Window.h"
+#include <Sprocket/Scene/ecs.h>
 
 #include <memory>
 #include <vector>
-#include <string_view>
 #include <functional>
 
 namespace spkt {
+
+namespace ev { class Event; }
 
 spkt::entity add_singleton(spkt::registry& registry);
 

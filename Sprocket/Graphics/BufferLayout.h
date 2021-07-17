@@ -1,8 +1,7 @@
 #pragma once
-#include "Types.h"
-
-#include <vector>
+#include <cstddef>
 #include <utility>
+#include <vector>
 
 namespace spkt {
 
@@ -11,24 +10,24 @@ enum class DataRate { VERTEX, INSTANCE };
 
 struct LayoutAttribute
 {
-    DataType type;
-    u32      count;
-    DataRate rate;
+    DataType      type;
+    std::uint32_t count;
+    DataRate      rate;
 };
 
 class BufferLayout
 {
-    u32 d_vertexSize;                       
-    u32 d_startingIndex;
-    u32 d_currentSize;
+    std::uint32_t d_vertexSize;                       
+    std::uint32_t d_startingIndex;
+    std::uint32_t d_currentSize;
 
     std::vector<LayoutAttribute> d_attributes;
 
 public:
-    BufferLayout(u32 vertexSize, u32 startingIndex = 0);
+    BufferLayout(std::uint32_t vertexSize, std::uint32_t startingIndex = 0);
 
     // Append an attribute to the end of the layout.
-    void AddAttribute(DataType type, u32 count, DataRate rate = DataRate::VERTEX);
+    void AddAttribute(DataType type, std::uint32_t count, DataRate rate = DataRate::VERTEX);
 
     // Returns true if the sum of the attributes equals the
     // vertex size and false otherwise.
@@ -39,7 +38,7 @@ public:
     void SetAttributes() const;
 
     // Returns the starting index of this buffer layout.
-    u32 GetStartingIndex() const;
+    std::uint32_t GetStartingIndex() const;
 
     // Returns the vector describing this layout.
     std::vector<LayoutAttribute> GetLayout() const;

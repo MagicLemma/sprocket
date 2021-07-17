@@ -1,7 +1,9 @@
 #include "Material.h"
-#include "Yaml.h"
+
+#include <Sprocket/Utility/Yaml.h>
 
 #include <yaml-cpp/yaml.h>
+
 #include <fstream>
 #include <filesystem>
 

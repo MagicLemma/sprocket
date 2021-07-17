@@ -1,7 +1,7 @@
 #pragma once
-#include "Maths.h"
-#include "ecs.h"
+#include <Sprocket/Scene/ecs.h>
 
+#include <glm/glm.hpp>
 #include <yaml-cpp/yaml.h>
 
 namespace YAML {

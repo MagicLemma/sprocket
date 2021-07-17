@@ -1,7 +1,15 @@
 #include "Camera.h"
-#include <Sprocket/Utility/KeyboardCodes.h>
+
+#include <Sprocket/Core/Events.h>
 #include <Sprocket/Graphics/Viewport.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
+
+#include <algorithm>
 
 Camera::Camera(spkt::Window* window, const glm::vec3& target)
     : d_window(window)

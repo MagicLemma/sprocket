@@ -1,14 +1,16 @@
 #include "basic_systems.h"
-#include "ecs.h"
-#include "LuaScript.h"
-#include "LuaLibrary.h"
-#include "LuaMaths.h"
-#include "Scene.h"
+
+#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scripting/LuaLibrary.h>
+#include <Sprocket/Scripting/LuaMaths.h>
+#include <Sprocket/Scripting/LuaScript.h>
 
 #include <glm/gtx/norm.hpp>
+
+#include <functional>
+#include <memory>
 #include <utility>
 #include <vector>
-#include <functional>
 
 namespace spkt {
 namespace {

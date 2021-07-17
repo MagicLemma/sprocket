@@ -10,6 +10,7 @@
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/Log.h>
+#include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Vendor/imgui/imgui.h>
 
 #include <glm/glm.hpp>

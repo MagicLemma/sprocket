@@ -1,15 +1,19 @@
 #pragma once
-#include "Shader.h"
-#include "DepthBuffer.h"
-#include "AssetManager.h"
-#include "Scene.h"
-#include "VertexArray.h"
+#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/Buffer.h>
+#include <Sprocket/Graphics/DepthBuffer.h>
+#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/VertexArray.h>
+#include <Sprocket/Scene/ecs.h>
 
-#include "ecs.h"
+#include <glm/glm.hpp>
 
 #include <memory>
+#include <vector>
 
 namespace spkt {
+
+class Texture;
 
 class ShadowMap
 {

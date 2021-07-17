@@ -1,10 +1,11 @@
 #pragma once
-#include "Maths.h"
-#include "Window.h"
+#include <glm/glm.hpp>
 
 #include <optional>
 
 namespace spkt {
+
+class Window;
 
 class RenderContext
 // A wrapper class that stores the current context and restores it upon

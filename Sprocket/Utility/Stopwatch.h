@@ -1,7 +1,6 @@
 #pragma once
-#include "Types.h"
-
 #include <chrono>
+#include <cstddef>
 
 namespace spkt {
 
@@ -14,13 +13,13 @@ class Stopwatch
     Clock::time_point d_currentTime;
     Clock::time_point d_lastTimePrinted;
     
-    u32 d_frameCount;
-    u32 d_frameRate = 0;
+    std::uint32_t d_frameCount;
+    std::uint32_t d_frameRate = 0;
 
 public:
     Stopwatch();
     double on_update();
-    u32 Framerate() const { return d_frameRate; }
+    std::uint32_t Framerate() const { return d_frameRate; }
 };
 
 }

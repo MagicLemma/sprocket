@@ -1,18 +1,22 @@
 #include "SimpleUI.h"
-#include "MouseCodes.h"
-#include "KeyboardCodes.h"
-#include "Log.h"
-#include "Maths.h"
-#include "RenderContext.h"
-#include "BufferLayout.h"
 
-#include <functional>
-#include <cassert>
-#include <algorithm>
-#include <ranges>
-#include <format>
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/Window.h>
+#include <Sprocket/Graphics/BufferLayout.h>
+#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Utility/MouseCodes.h>
+#include <Sprocket/Utility/Log.h>
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+
+#include <algorithm>
+#include <cassert>
+#include <format>
+#include <functional>
+#include <ranges>
+#include <vector>
 
 namespace spkt {
 namespace {
@@ -108,7 +112,7 @@ void DrawCommand::AddText(std::string_view text,
 
         pen += glyph.advance;
 
-        u32 index = textVertices.size();
+        std::uint32_t index = textVertices.size();
         textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
         textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
         textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});

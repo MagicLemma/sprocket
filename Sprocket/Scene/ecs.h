@@ -1,17 +1,16 @@
 #pragma once
-#include <queue>
-#include <string>
-#include <utility>
-#include <array>
-#include <unordered_map>
-#include <map>
-#include <optional>
-#include <memory>
-
+#include <apecs.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
 
-#include <apecs.hpp>
+#include <array>
+#include <map>
+#include <optional>
+#include <queue>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <memory>
 
 namespace spkt {
 namespace lua { class Script; }

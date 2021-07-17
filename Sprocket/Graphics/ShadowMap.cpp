@@ -1,6 +1,7 @@
 #include "ShadowMap.h"
-#include "ecs.h"
-#include "RenderContext.h"
+
+#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Scene/ecs.h>
 
 #include <glad/glad.h>
 
@@ -36,7 +37,7 @@ void ShadowMap::Draw(
     const glm::vec3& sunDirection,
     const glm::vec3& centre)
 {
-    RenderContext rc;
+    spkt::RenderContext rc;
     rc.DepthTesting(true);
     rc.FaceCulling(true);
 

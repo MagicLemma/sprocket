@@ -1,16 +1,15 @@
 #include "Texture.h"
-#include "Log.h"
-#include "Maths.h"
-
-#include <glad/glad.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#include <glad/glad.h>
+
+#include <memory>
 
 namespace spkt {
 namespace {
 
-void SetTextureParameters(u32 id)
+void SetTextureParameters(std::uint32_t id)
 {
     glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -108,7 +107,7 @@ void Texture::Bind(int slot) const
     glBindTextureUnit(slot, d_id);
 }
 
-u32 Texture::Id() const
+std::uint32_t Texture::Id() const
 {
     return d_id;
 }

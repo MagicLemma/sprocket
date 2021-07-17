@@ -1,17 +1,18 @@
 #pragma once
-#include "Mesh.h"
-#include "Buffer.h"
+#include <Sprocket/Graphics/Mesh.h>
+#include <Sprocket/Graphics/Buffer.h>
 
+#include <cstddef>
 #include <memory>
 
 namespace spkt {
 
 class VertexArray
 {
-    u32 d_vao;
+    std::uint32_t d_vao;
 
-    Mesh* d_model;
-    Buffer* d_instances;
+    spkt::Mesh* d_model;
+    spkt::Buffer* d_instances;
 
     VertexArray(const VertexArray&) = delete;
     VertexArray& operator=(const VertexArray&) = delete;
@@ -20,8 +21,8 @@ public:
     VertexArray();
     ~VertexArray();
 
-    void SetModel(Mesh* model);
-    void SetInstances(Buffer* instanceData);
+    void SetModel(spkt::Mesh* model);
+    void SetInstances(spkt::Buffer* instanceData);
 
     void Draw() const;
 };

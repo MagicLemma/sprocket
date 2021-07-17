@@ -1,7 +1,10 @@
 #include "Camera.h"
-#include "Log.h"
-#include "ecs.h"
-#include "Viewport.h"
+
+#include <Sprocket/Graphics/Viewport.h>
+#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Utility/Maths.h>
+
+#include <glm/glm.hpp>
 
 namespace spkt {
 

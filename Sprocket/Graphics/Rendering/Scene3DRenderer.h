@@ -1,12 +1,12 @@
 #pragma once
-#include "Shader.h"
-#include "Texture.h"
-#include "AssetManager.h"
-#include "ecs.h"
-#include "VertexArray.h"
-#include "ShadowMap.h"
+#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/Buffer.h>
+#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/ShadowMap.h>
+#include <Sprocket/Graphics/VertexArray.h>
+#include <Sprocket/Scene/ecs.h>
 
-#include "ecs.h"
+#include <memory>
 
 namespace spkt {
 

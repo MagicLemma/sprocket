@@ -1,7 +1,7 @@
 #pragma once
-#include "Events.h"
-#include "Maths.h"
-#include "Types.h"
+#include <Sprocket/Core/Events.h>
+
+#include <glm/glm.hpp>
 
 #include <string>
 #include <functional>
@@ -21,8 +21,8 @@ struct WindowImpl;
 struct WindowData
 {
 	std::string name;
-	u32 width;
-	u32 height;
+	std::uint32_t width;
+	std::uint32_t height;
 
 	bool fullscreen = false;
 	bool running = true;
@@ -48,7 +48,7 @@ private:
 	Window& operator=(const Window&) = delete;
 
 public:
-	Window(const std::string& name = "Window", u32 width = 1280, u32 height = 720);
+	Window(const std::string& name = "Window", std::uint32_t width = 1280, std::uint32_t height = 720);
 	~Window();
 
 	void on_update();
@@ -57,8 +57,8 @@ public:
 	void SetClearColour(const glm::vec3& colour);
 
 	// Getters
-	u32 Height() const { return d_data.height; }
-	u32 Width() const { return d_data.width; }
+	std::uint32_t Height() const { return d_data.height; }
+	std::uint32_t Width() const { return d_data.width; }
 	float AspectRatio() const { return (float)d_data.width / (float)d_data.height; }
 	bool Running() const { return d_data.running; }
 	bool Focused() const { return d_data.focused; }

@@ -1,21 +1,20 @@
 #pragma once
-#include "FontAtlas.h"
-#include "Maths.h"
-#include "Hashing.h"
-#include "Glyph.h"
-#include "Types.h"
+#include <Sprocket/UI/Font/FontAtlas.h>
+#include <Sprocket/UI/Font/Glyph.h>
+#include <Sprocket/Utility/Hashing.h>
 
 #include <cstddef>
 #include <memory>
-#include <vector>
 #include <string>
-#include <utility>
 #include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace spkt {
 
-using KerningMap = std::unordered_map<std::pair<u32, u32>, float, spkt::hash_pair>;
-using GlyphMap = std::unordered_map<u32, Glyph>;
+using codepoint_t = std::uint32_t;
+using KerningMap = std::unordered_map<std::pair<codepoint_t, codepoint_t>, float, spkt::hash_pair>;
+using GlyphMap = std::unordered_map<codepoint_t, Glyph>;
 
 struct SizedFontData
 {

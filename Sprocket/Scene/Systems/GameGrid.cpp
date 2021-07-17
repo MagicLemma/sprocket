@@ -1,13 +1,15 @@
 #include "GameGrid.h"
-#include "Camera.h"
-#include "ecs.h"
-#include "Scene.h"
-#include "MouseCodes.h"
-#include "Log.h"
 
-#include <cassert>
+#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/MouseCodes.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+
+#include <cassert>
 
 namespace spkt {
 namespace {

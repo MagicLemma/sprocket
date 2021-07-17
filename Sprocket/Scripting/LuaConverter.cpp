@@ -3,6 +3,7 @@
 #include <lua.hpp>
 
 #include <cassert>
+#include <cstddef>
 
 namespace spkt {
 namespace lua {
@@ -18,15 +19,15 @@ int Converter<int>::read(lua_State* L, int index)
     return static_cast<int>(lua_tointeger(L, index));
 }
 
-void Converter<u32>::push(lua_State* L, const u32& value)
+void Converter<std::uint32_t>::push(lua_State* L, const std::uint32_t& value)
 {
     lua_pushinteger(L, value);
 }
 
-u32 Converter<u32>::read(lua_State* L, int index)
+std::uint32_t Converter<std::uint32_t>::read(lua_State* L, int index)
 {
     assert(lua_isinteger(L, index));
-    return static_cast<u32>(lua_tointeger(L, index));
+    return static_cast<std::uint32_t>(lua_tointeger(L, index));
 }
 
 void Converter<bool>::push(lua_State* L, const bool& value)

@@ -1,8 +1,10 @@
 #pragma once
-#include "Maths.h"
-#include "Types.h"
-#include "BufferLayout.h"
+#include <Sprocket/Graphics/BufferLayout.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+
+#include <cstddef>
 #include <vector>
 
 namespace spkt {
@@ -18,9 +20,9 @@ enum class BufferUsage { STATIC, DYNAMIC };
 
 class Buffer
 {
-    u32 d_vbo;
+    std::uint32_t d_vbo;
 
-    BufferLayout d_layout;
+    spkt::BufferLayout d_layout;
     BufferUsage  d_usage;
     
     std::size_t d_instanceCount;

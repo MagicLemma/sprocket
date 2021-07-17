@@ -1,11 +1,10 @@
 #pragma once
-#include "LuaConverter.h"
-#include "Log.h"
+#include <Sprocket/Scripting/LuaConverter.h>
+
+#include <lua.hpp>
 
 #include <string>
 #include <memory>
-
-#include <lua.hpp>
 #include <cassert>
 
 namespace spkt {

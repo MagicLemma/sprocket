@@ -1,8 +1,9 @@
 #pragma once
-#include "Events.h"
-#include "ecs.h"
+#include <Sprocket/Scene/ecs.h>
 
 namespace spkt {
+
+namespace ev { class Event; }
 
 // This is a special system which is designed to get input information (keyboard,
 // mouse and window) into the ECS for systems to make use of. As such, it requires

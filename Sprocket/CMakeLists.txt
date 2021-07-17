@@ -105,22 +105,7 @@ target_link_libraries(Sprocket PUBLIC
 target_link_libraries(Sprocket PRIVATE asio asio::asio)
 
 target_include_directories(Sprocket PUBLIC
-                           .
-                           ./Audio
-                           ./Core
-                           ./Scene
-                           ./Scene/Systems
-                           ./Events
-                           ./Graphics
-                           ./Graphics/Rendering
-                           ./Graphics/Shadows
-                           ./Graphics/PostProcessing
-                           ./Objects
-                           ./Objects/Lenses
-                           ./Utility
-                           ./Scripting
-                           ./UI
-                           ./UI/Font
+                           ..
                            ./Vendor/apecs
                            ${STB_INCLUDE_DIR}
                            ${LUA_INCLUDE_DIR}

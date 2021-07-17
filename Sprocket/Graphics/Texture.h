@@ -1,6 +1,5 @@
 #pragma once
-#include "Maths.h"
-#include "Types.h"
+#include <glm/glm.hpp>
 
 #include <memory>
 #include <string>
@@ -27,7 +26,7 @@ public:
     enum class Channels { RGBA, RED, DEPTH };
 
 private:
-    u32 d_id;
+    std::uint32_t d_id;
 
     int d_width;
     int d_height;
@@ -48,7 +47,7 @@ public:
 
     void Bind(int slot) const;
 
-    u32 Id() const;
+    std::uint32_t Id() const;
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }

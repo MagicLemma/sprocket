@@ -1,18 +1,18 @@
 #include "Scene3DRenderer.h"
-#include "Maths.h"
-#include "AssetManager.h"
-#include "RenderContext.h"
-#include "Camera.h"
-#include "ecs.h"
-#include "Scene.h"
-#include "ShadowMap.h"
-#include "Types.h"
-#include "Hashing.h"
 
-#include "ecs.h"
+#include <Sprocket/Graphics/BufferLayout.h>
+#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Utility/Hashing.h>
+#include <Sprocket/Utility/Maths.h>
 
 #include <algorithm>
+#include <array>
+#include <cstddef>
 #include <ranges>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace spkt {
 namespace {
@@ -41,7 +41,7 @@ void upload_uniforms(
     const glm::mat4& view
 )
 {
-    u32 MAX_NUM_LIGHTS = 5;
+    std::uint32_t MAX_NUM_LIGHTS = 5;
       shader.Bind();
 
     shader.LoadMat4("u_proj_matrix", proj);

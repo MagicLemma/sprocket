@@ -1,15 +1,17 @@
 #pragma once
-#include "Types.h"
-#include "Texture.h"
-#include "Viewport.h"
+#include <Sprocket/Graphics/Viewport.h>
 
+#include <cstddef>
+#include <memory>
 #include <optional>
 
 namespace spkt {
 
+class Texture;
+
 class FrameBuffer
 {
-    u32 d_fbo;
+    std::uint32_t d_fbo;
 
     std::unique_ptr<Texture> d_colour;
     std::unique_ptr<Texture> d_depth;

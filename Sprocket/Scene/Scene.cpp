@@ -1,7 +1,8 @@
 #include "Scene.h"
-#include "ecs.h"
-#include "Loader.h"
-#include "input_system.h"
+
+#include <Sprocket/Core/Events.h>
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Systems/input_system.h>
 
 #include <ranges>
 

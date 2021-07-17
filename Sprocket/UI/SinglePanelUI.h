@@ -1,19 +1,15 @@
 #pragma once
-#include "Window.h"
-#include "Shader.h"
-#include "Events.h"
-#include "StreamBuffer.h"
-#include "Font.h"
-#include "UIEngine.h"
+#include <Sprocket/UI/Font/Font.h>
+#include <Sprocket/UI/UIEngine.h>
 
-#include <vector>
-#include <unordered_map>
-#include <optional>
-#include <chrono>
-#include <deque>
+#include <glm/glm.hpp>
+
 #include <string_view>
 
 namespace spkt {
+
+class Window;
+namespace ev { class Event; }
 
 struct SinglePanelUITheme
 {
@@ -29,8 +25,8 @@ class SinglePanelUI
 
     SinglePanelUITheme d_theme;
 
-    UIEngine d_engine;
-    Font d_font;
+    spkt::UIEngine d_engine;
+    spkt::Font d_font;
 
 public:
     SinglePanelUI(Window* window);

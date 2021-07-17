@@ -1,9 +1,10 @@
 #include "LuaScript.h"
-#include "Log.h"
-#include "ecs.h"
-#include "ecs.h"
+
+#include <Sprocket/Utility/Log.h>
 
 #include <lua.hpp>
+
+#include <string>
 
 namespace spkt {
 namespace lua {

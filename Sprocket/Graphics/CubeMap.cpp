@@ -1,8 +1,11 @@
 #include "CubeMap.h"
-#include "Types.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>
+
+#include <array>
+#include <cstddef>
+#include <string>
 
 namespace spkt {
     
@@ -11,7 +14,7 @@ CubeMap::CubeMap(const std::array<std::string, 6>& faceFiles)
     glGenTextures(1, &d_id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, d_id);
 
-    for (u32 i = 0; i != faceFiles.size(); ++i) {
+    for (std::uint32_t i = 0; i != faceFiles.size(); ++i) {
         int bpp;
         unsigned char* data = stbi_load(faceFiles[i].c_str(),
             &d_width, &d_height, &bpp, 0);

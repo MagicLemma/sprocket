@@ -1,19 +1,23 @@
 #pragma once
-#include "Window.h"
-#include "Shader.h"
-#include "Events.h"
-#include "StreamBuffer.h"
-#include "Font.h"
-#include "Types.h"
+#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/StreamBuffer.h>
+#include <Sprocket/Graphics/Texture.h>
 
-#include <vector>
-#include <unordered_map>
-#include <optional>
+#include <glm/glm.hpp>
+
 #include <chrono>
-#include <string_view>
 #include <deque>
+#include <optional>
+#include <string_view>
+#include <unordered_map>
+#include <vector>
 
 namespace spkt {
+
+class Window;
+
+class Font;
+namespace ev { class Event; }
 
 enum class Alignment
 {
@@ -38,13 +42,13 @@ struct BufferVertex
 
 struct DrawCommand
 {
-    const Texture*            texture = nullptr;
-    std::vector<BufferVertex> vertices;
-    std::vector<u32>          indices;
+    const Texture*             texture = nullptr;
+    std::vector<BufferVertex>  vertices;
+    std::vector<std::uint32_t> indices;
 
-    Font*                     font = nullptr;
-    std::vector<BufferVertex> textVertices;
-    std::vector<u32>          textIndices;
+    Font*                      font = nullptr;
+    std::vector<BufferVertex>  textVertices;
+    std::vector<std::uint32_t> textIndices;
 
     // If specified, we scissor test this region so nothing outside the region is rendered.
     std::optional<glm::vec4> region = {};
@@ -136,13 +140,13 @@ struct WidgetInfo
 
 class UIEngine
 {
-    Window* d_window;
+    spkt::Window* d_window;
 
-    Texture d_white;
+    spkt::Texture d_white;
 
     // Rendering code    
-    Shader d_shader;
-    StreamBuffer d_buffer;
+    spkt::Shader d_shader;
+    spkt::StreamBuffer d_buffer;
     
     // Panel info 
     std::unordered_map<std::size_t, Panel> d_panels;
@@ -181,7 +185,7 @@ class UIEngine
     void ExecuteCommand(const DrawCommand& cmd);
 
 public:
-    UIEngine(Window* window);
+    UIEngine(spkt::Window* window);
 
     // Registers a region that can respond to hovers and clicks. The (x, y)
     // position of the region is with respect to the position of the active panel.

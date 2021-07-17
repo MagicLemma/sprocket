@@ -1,12 +1,12 @@
 #include "Font.h"
-#include "Maths.h"
-#include "Log.h"
 
-#include <cassert>
-#include <algorithm>
+#include <Sprocket/Utility/Log.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+#include <cassert>
+#include <algorithm>
 
 namespace spkt {
 
@@ -169,7 +169,7 @@ bool Font::LoadGlyph(char c, float size)
     FT_Bitmap bitmap  = slot->bitmap;
     auto region = d_atlas.GetRegion(bitmap.width, bitmap.rows);
     if (region.x < 0) {
-        log::error("Texture atlas is full!");
+        spkt::log::error("Texture atlas is full!");
         FT_Done_Face(face);
         FT_Done_FreeType(library);
         return false;

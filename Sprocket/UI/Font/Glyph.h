@@ -1,5 +1,5 @@
 #pragma once
-#include "Maths.h"
+#include <glm/glm.hpp>
 
 #include <cstddef>
 
@@ -7,7 +7,7 @@ namespace spkt {
 
 struct Glyph
 {
-    uint32_t codepoint = -1;
+    std::uint32_t codepoint = -1;
 
     std::size_t width  = 0;
     std::size_t height = 0;

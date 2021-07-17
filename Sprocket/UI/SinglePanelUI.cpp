@@ -1,10 +1,6 @@
 #include "SinglePanelUI.h"
-#include "MouseCodes.h"
-#include "KeyboardCodes.h"
-#include "Log.h"
-#include "Maths.h"
-#include "RenderContext.h"
-#include "BufferLayout.h"
+
+#include <Sprocket/Core/Window.h>
 
 #include <functional>
 #include <cassert>

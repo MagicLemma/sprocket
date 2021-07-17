@@ -1,5 +1,5 @@
 #pragma once
-#include "Maths.h"
+#include <glm/glm.hpp>
 
 #include <string>
 
@@ -7,11 +7,11 @@ namespace spkt {
 
 class CircadianCycle
 {
-    const float SIX_HOURS = 21600;
-    const float SIX_AM = SIX_HOURS;
-    const float NOON = 2 * SIX_HOURS;
-    const float SIX_PM = 3 * SIX_HOURS;
-    const float SECONDS_IN_DAY = 4 * SIX_HOURS;
+    static constexpr float SIX_HOURS = 21600;
+    static constexpr float SIX_AM = SIX_HOURS;
+    static constexpr float NOON = 2 * SIX_HOURS;
+    static constexpr float SIX_PM = 3 * SIX_HOURS;
+    static constexpr float SECONDS_IN_DAY = 4 * SIX_HOURS;
 
     double d_seconds;
     bool   d_running;

@@ -1,6 +1,5 @@
 #pragma once
-#include "Maths.h"
-#include "Types.h"
+#include <glm/glm.hpp>
 
 #include <string>
 #include <string_view>
@@ -11,9 +10,9 @@ namespace spkt {
 class Shader
 {
     // Shader IDs
-    u32 d_programId;
-    u32 d_vertShaderId;
-    u32 d_fragShaderId;
+    std::uint32_t d_programId;
+    std::uint32_t d_vertShaderId;
+    std::uint32_t d_fragShaderId;
 
     std::string d_vertexSource;
     std::string d_fragSource;
@@ -22,10 +21,10 @@ class Shader
     void CreateShader(const std::string& vertShader,
                       const std::string& fragShader);
 
-    u32 CompileShader(u32 type, const std::string& source);
+    std::uint32_t CompileShader(std::uint32_t type, const std::string& source);
 
     // Shader Uniform Getter
-    u32 GetUniformLocation(const std::string& name) const;
+    std::uint32_t GetUniformLocation(const std::string& name) const;
 
 public:
     Shader(const std::string& vertShaderFile,
@@ -38,7 +37,7 @@ public:
     std::string& VertexShaderSource() { return d_vertexSource; }
     std::string& FragShaderSource() { return d_fragSource; }
 
-    u32 Id() const { return d_programId; }
+    std::uint32_t Id() const { return d_programId; }
 
     void Bind() const;
     void Unbind() const;

@@ -1,5 +1,5 @@
 #pragma once
-#include "ecs.h"
+#include <Sprocket/Scene/ecs.h>
 // Functions for loading C++ implemented Lua functions into the given
 // lua state.
 

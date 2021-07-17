@@ -1,6 +1,5 @@
 #pragma once
-#include "ecs.h"
-#include "Maths.h"
+#include <Sprocket/Scene/ecs.h>
 
 namespace spkt {
 

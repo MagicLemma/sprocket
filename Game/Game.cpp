@@ -1,12 +1,8 @@
 #include "Game.h"
-#include "Palette.h"
-#include "PathCalculator.h"
-#include "Window.h"
-#include "Scene.h"
 
-#include "grid_helpers.h"
-
-#include <cmath>
+#include <Game/grid_helpers.h>
+#include <Game/Palette.h>
+#include <Game/PathCalculator.h>
 
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/Events.h>
@@ -20,6 +16,8 @@
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/Log.h>
 #include <Sprocket/Utility/MouseCodes.h>
+
+#include <cmath>
 
 using namespace spkt;
 
@@ -187,7 +185,13 @@ void Game::on_event(spkt::ev::Event& event)
         auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
-            glm::vec3 direction = Maths::mouse_world_direction(d_window, registry, d_camera);
+            glm::vec3 direction = Maths::GetMouseRay(
+                d_window->GetMousePos(),
+                (float)d_window->Width(),
+                (float)d_window->Height(),
+                spkt::make_view(registry, d_camera),
+                spkt::make_proj(registry, d_camera)
+            );
 
             float lambda = -cameraPos.y / direction.y;
             glm::vec3 mousePos = cameraPos + lambda * direction;
