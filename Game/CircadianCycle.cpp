@@ -2,6 +2,7 @@
 
 #include <glm/gtc/constants.hpp>
 #include <glm/trigonometric.hpp>
+
 #include <format>
 
 namespace spkt {

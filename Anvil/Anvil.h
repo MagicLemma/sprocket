@@ -1,4 +1,7 @@
 #pragma once
+#include <Anvil/Camera.h>
+#include <Anvil/Inspector.h>
+
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/AssetManager.h>
@@ -10,10 +13,6 @@
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/Scene.h>
 #include <Sprocket/UI/DevUI.h>
-
-#include "Anvil/Camera.h"
-
-#include "Inspector.h"
 
 #include <memory>
 #include <random>

@@ -1,7 +1,8 @@
 #pragma once
-#include <string>
 #include <fmt/core.h>
 #include <fmt/color.h>
+
+#include <string>
 
 namespace spkt {
 namespace log {

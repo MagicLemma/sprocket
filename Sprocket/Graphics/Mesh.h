@@ -1,8 +1,8 @@
 #pragma once
-#include <glm/glm.hpp>
-
 #include <Sprocket/Graphics/BufferLayout.h>
 #include <Sprocket/Graphics/Animation.h>
+
+#include <glm/glm.hpp>
 
 #include <cstddef>
 #include <memory>

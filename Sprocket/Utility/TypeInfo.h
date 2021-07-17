@@ -1,7 +1,7 @@
 #pragma once
-#include <string_view>
 #include <cstddef>
 #include <memory>
+#include <string_view>
 
 namespace spkt {
 

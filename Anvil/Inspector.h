@@ -1,8 +1,8 @@
 #pragma once
-#include <glm/glm.hpp>
-
-#include <imgui.h>
+#include <imgui.h> // Must be included before ImGuizmo
 #include <Sprocket/Vendor/ImGuizmo/ImGuizmo.h>
+
+#include <glm/glm.hpp>
 
 class Anvil;
 

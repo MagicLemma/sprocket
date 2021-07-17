@@ -1,5 +1,6 @@
 #pragma once
 #include <Sprocket/Scene/ecs.h>
+
 #include <glm/glm.hpp>
 
 void add_tree(spkt::registry& registry, glm::ivec2 position);

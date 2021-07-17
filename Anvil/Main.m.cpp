@@ -1,6 +1,7 @@
+#include <Anvil/Anvil.h>
+
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Core/GameLoop.h>
-#include "Anvil.h"
 
 int main()
 {

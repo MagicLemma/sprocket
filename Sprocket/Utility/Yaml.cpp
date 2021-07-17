@@ -1,4 +1,5 @@
 #include "Yaml.h"
+
 #include <Sprocket/Scene/ecs.h>
 
 namespace YAML {

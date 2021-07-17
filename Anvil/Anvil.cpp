@@ -1,5 +1,6 @@
 #include "Anvil.h"
-#include "Inspector.h"
+
+#include <Anvil/Inspector.h>
 
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/Loader.h>

@@ -1,6 +1,7 @@
 #pragma once
-#include <type_traits>
 #include <glm/glm.hpp>
+
+#include <type_traits>
 
 namespace spkt {
 

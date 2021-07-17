@@ -8,7 +8,6 @@
 #include <Sprocket/Scene/Scene.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Scene/ecs.h>
-#
 
 #include <memory>
 #include <random>

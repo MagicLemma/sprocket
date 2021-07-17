@@ -1,10 +1,12 @@
 #include "PathCalculator.h"
+
 #include <Sprocket/Utility/Log.h>
+
+#include <glm/glm.hpp>
+
 #include <deque>
 #include <queue>
 #include <memory>
-
-#include <glm/glm.hpp>
 
 std::queue<glm::vec3> GenerateAStarPath(
     const glm::vec3& start,

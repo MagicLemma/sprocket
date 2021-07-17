@@ -5,10 +5,10 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <fstream>
-#include <string>
 #include <filesystem>
 #include <format>
+#include <fstream>
+#include <string>
 
 namespace spkt {
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "CircadianCycle.h"
+#include <Game/CircadianCycle.h>
 
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/AssetManager.h>

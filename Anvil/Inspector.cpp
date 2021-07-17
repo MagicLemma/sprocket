@@ -1,5 +1,6 @@
 #include "Inspector.h"
-#include "Anvil.h"
+
+#include <Anvil/Anvil.h>
 
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/Maths.h>
