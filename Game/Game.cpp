@@ -106,7 +106,7 @@ Game::Game(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& registry = d_scene.Entities();
+    auto& registry = d_scene.registry();
     auto sun_entity = registry.find<SunComponent>();
     auto& sun = registry.get<SunComponent>(sun_entity);
     sun.direction = d_cycle.GetSunDir();
@@ -118,7 +118,7 @@ Game::Game(Window* window)
 
 void Game::load_scene(std::string_view file)
 {
-    auto& registry = d_scene.Entities();
+    auto& registry = d_scene.registry();
     
     spkt::add_singleton(registry);
     spkt::game_grid_system_init(registry);
@@ -160,7 +160,7 @@ void Game::on_event(spkt::ev::Event& event)
         }
     }
 
-    auto& registry = d_scene.Entities();
+    auto& registry = d_scene.registry();
     auto tile_entity = registry.find<TileMapSingleton>();
     const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
 
@@ -233,7 +233,7 @@ void Game::on_event(spkt::ev::Event& event)
 void Game::on_update(double dt)
 {
     using namespace spkt;
-    auto& registry = d_scene.Entities();
+    auto& registry = d_scene.registry();
 
     spkt::set_listener(registry, d_camera);
 
@@ -270,8 +270,8 @@ void Game::on_update(double dt)
 void Game::on_render()
 {
     using namespace spkt;
-    const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.Entities());
-    auto& registry = d_scene.Entities();
+    const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.registry());
+    auto& registry = d_scene.registry();
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
@@ -297,7 +297,7 @@ void Game::on_render()
     }
 
     if (!d_paused) {
-        auto& registry = d_scene.Entities();
+        auto& registry = d_scene.registry();
         auto tile_entity = registry.find<TileMapSingleton>();
         const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
 
@@ -440,7 +440,7 @@ void Game::on_render()
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Save", buttonRegion)) {
         spkt::log::info("Saving to {}", d_sceneFile);
-        spkt::save_registry_to_file(d_sceneFile, d_scene.Entities());
+        spkt::save_registry_to_file(d_sceneFile, d_scene.registry());
         spkt::log::info("Done!");
     }
     

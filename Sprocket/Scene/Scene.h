@@ -32,7 +32,7 @@ private:
 public:
     ~Scene();
 
-    spkt::registry& Entities() { return d_registry; }
+    spkt::registry& registry() { return d_registry; }
 
     void add(const system_t& system);
     void on_update(double dt);

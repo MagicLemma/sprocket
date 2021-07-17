@@ -13,7 +13,7 @@
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::registry& registry = editor.active_scene()->Entities();
+    spkt::registry& registry = editor.active_scene()->registry();
     spkt::entity entity = editor.selected();
 
     if (!registry.valid(entity)) {
@@ -485,7 +485,7 @@ void Inspector::Show(Anvil& editor)
     }
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        spkt::entity copy = spkt::copy_entity(editor.active_scene()->Entities(), entity);
+        spkt::entity copy = spkt::copy_entity(editor.active_scene()->registry(), entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

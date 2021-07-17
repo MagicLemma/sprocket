@@ -60,8 +60,8 @@ Anvil::Anvil(spkt::Window* window)
     d_window->SetCursorVisibility(true);
 
     d_scene = std::make_shared<spkt::Scene>(); 
-    spkt::add_singleton(d_scene->Entities());   
-    spkt::load_registry_from_file(d_sceneFile, d_scene->Entities());
+    spkt::add_singleton(d_scene->registry());   
+    spkt::load_registry_from_file(d_sceneFile, d_scene->registry());
     d_activeScene = d_scene;
 }
 
@@ -103,7 +103,7 @@ void Anvil::on_event(spkt::ev::Event& event)
 
 void Anvil::on_update(double dt)
 {
-    auto& registry = d_activeScene->Entities();
+    auto& registry = d_activeScene->registry();
 
     d_ui.on_update(dt);
 
@@ -120,19 +120,19 @@ void Anvil::on_update(double dt)
 
 glm::mat4 Anvil::get_proj_matrix() const
 {
-    auto& registry = d_activeScene->Entities();
+    auto& registry = d_activeScene->registry();
     return d_playingGame ? spkt::make_proj(registry, d_runtimeCamera) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
-    auto& registry = d_activeScene->Entities();
+    auto& registry = d_activeScene->registry();
     return d_playingGame ? spkt::make_view(registry, d_runtimeCamera) : d_editor_camera.View();
 }
 
 void Anvil::on_render()
 {
-    auto& registry = d_activeScene->Entities();
+    auto& registry = d_activeScene->registry();
 
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
@@ -175,13 +175,13 @@ void Anvil::on_render()
                     spkt::log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
                     d_activeScene = d_scene = std::make_shared<spkt::Scene>();
-                    spkt::load_registry_from_file(file, d_scene->Entities());
+                    spkt::load_registry_from_file(file, d_scene->registry());
                     spkt::log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 spkt::log::info("Saving {}...", d_sceneFile);
-                spkt::save_registry_to_file(d_sceneFile, d_scene->Entities());
+                spkt::save_registry_to_file(d_sceneFile, d_scene->registry());
                 spkt::log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -189,7 +189,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Saving as {}...", file);
                     d_sceneFile = file;
-                    spkt::save_registry_to_file(file, d_scene->Entities());
+                    spkt::save_registry_to_file(file, d_scene->registry());
                     spkt::log::info("...done!");
                 }
             }
@@ -199,8 +199,8 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<spkt::Scene>();
 
-                spkt::add_singleton(d_activeScene->Entities());
-                spkt::copy_registry(d_scene->Entities(), d_activeScene->Entities());
+                spkt::add_singleton(d_activeScene->registry());
+                spkt::copy_registry(d_scene->registry(), d_activeScene->registry());
 
                 d_activeScene->add(spkt::physics_system);
                 d_activeScene->add(spkt::particle_system);
@@ -211,7 +211,7 @@ void Anvil::on_render()
                 d_activeScene->add(spkt::clear_events_system);
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->Entities().find<spkt::Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->registry().find<spkt::Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();
