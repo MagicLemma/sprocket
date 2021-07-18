@@ -90,8 +90,7 @@ std::queue<glm::vec3> make_astar_path(
     openList.push_back(firstNode);
 
     PathNodePtr current = nullptr;
-    while (!openList.empty()) {
-        current = pop_node_lowest_score(openList);
+    while (current = pop_node_lowest_score(openList)) {
         if (current->position == p2) { break; }
 
         for (const auto& dir : directions) {
@@ -102,7 +101,7 @@ std::queue<glm::vec3> make_astar_path(
             }
 
             float dirLength = glm::length(glm::vec2(dir));
-            int totalCost = current->g + (int)(10 * dirLength);
+            float totalCost = current->g + (10.0f * dirLength);
 
             auto successor = find_node(openList, newPos);
             if (successor == nullptr) {
