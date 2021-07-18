@@ -60,9 +60,9 @@ PathNodePtr pop_node_lowest_score(std::vector<PathNodePtr>& nodes)
     return node;
 }
 
-float heuristic(PathNodePtr node, const glm::ivec2& target)
+float heuristic(glm::ivec2 pos, glm::ivec2 target)
 {
-    auto delta = target - node->position;
+    auto delta = target - pos;
     return 10.0f * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));
 };
 
@@ -86,7 +86,7 @@ std::queue<glm::vec3> make_astar_path(
     auto firstNode = std::make_shared<path_node>();
     firstNode->position = p1;
     firstNode->g = 0;
-    firstNode->h = heuristic(firstNode, p2); // Give this a proper value;
+    firstNode->h = heuristic(p1, p2); // Give this a proper value;
     openList.push_back(firstNode);
 
     PathNodePtr current = nullptr;
@@ -108,7 +108,7 @@ std::queue<glm::vec3> make_astar_path(
                 successor = std::make_shared<path_node>();
                 successor->position = newPos;
                 successor->g = totalCost;
-                successor->h = heuristic(successor, p2); // Give this a proper value;
+                successor->h = heuristic(newPos, p2); // Give this a proper value;
                 successor->parent = current;
                 openList.push_back(successor);
             }
