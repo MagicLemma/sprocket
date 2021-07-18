@@ -27,13 +27,13 @@ glm::ivec2 closest_square(const glm::vec3& position)
     return {gridX, gridZ};
 }
 
-PathNodePtr find_node(
+path_node* find_node(
     const std::vector<PathNodePtr>& nodes,
     const glm::ivec2& coords)
 {
     for (auto& node : nodes) {
         if (node->position == coords) {
-            return node;
+            return node.get();
         }
     }
     return nullptr;
@@ -105,12 +105,12 @@ std::queue<glm::vec3> make_astar_path(
 
             auto successor = find_node(openList, newPos);
             if (successor == nullptr) {
-                successor = std::make_shared<path_node>();
-                successor->position = newPos;
-                successor->g = totalCost;
-                successor->h = heuristic(newPos, p2); // Give this a proper value;
-                successor->parent = current;
-                openList.push_back(successor);
+                auto new_node = std::make_shared<path_node>();
+                new_node->position = newPos;
+                new_node->g = totalCost;
+                new_node->h = heuristic(newPos, p2); // Give this a proper value;
+                new_node->parent = current;
+                openList.push_back(new_node);
             }
             else if (totalCost < successor->g) {
                 successor->g = totalCost;
