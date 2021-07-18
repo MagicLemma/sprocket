@@ -82,7 +82,6 @@ std::queue<glm::vec3> make_astar_path(
     std::vector<PathNodePtr> openList;
     std::vector<PathNodePtr> closedList;
 
-
     auto firstNode = std::make_shared<path_node>();
     firstNode->position = p1;
     firstNode->g = 0;
