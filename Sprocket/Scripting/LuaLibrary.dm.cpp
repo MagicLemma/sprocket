@@ -133,14 +133,14 @@ std::string view_function_source(std::string_view name, std::string_view suffix)
     return std::format(R"lua(
         function {0}{1}()
             local generator = _Each_{0}_New()
-            local iter = _Each_Iter_Start(generator)
+            local iter = _Each_{0}_Iter_Start(generator)
             return function()
-                if _Each_Iter_Valid(generator, iter) then
-                    local entity = _Each_Iter_Get(iter)
-                    _Each_Iter_Next(iter)
+                if _Each_{0}_Iter_Valid(generator, iter) then
+                    local entity = _Each_{0}_Iter_Get(iter)
+                    _Each_{0}_Iter_Next(iter)
                     return entity
                 else
-                    _Each_Delete(generator)
+                    _Each_{0}_Delete(generator)
                 end
             end
         end
