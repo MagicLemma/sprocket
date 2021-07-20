@@ -85,9 +85,11 @@ void add_command(lua_State* L, const std::function<void()>& command)
 template <typename Comp>
 int _Each_New(lua_State* L) {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    auto *view = new view_t<Comp>(get_pointer<spkt::registry>(L, "__registry__")->view<Comp>());
+    auto view = new view_t<Comp>(get_pointer<spkt::registry>(L, "__registry__")->view<Comp>());
+    auto iter = new iterator_t<Comp>(view->begin());
     lua_pushlightuserdata(L, static_cast<void*>(view));
-    return 1;
+    lua_pushlightuserdata(L, static_cast<void*>(iter));
+    return 2;
 }
 
 template <typename Comp>
@@ -97,15 +99,6 @@ int _Each_Delete(lua_State* L) {
     auto* iterator = static_cast<iterator_t<Comp>*>(lua_touserdata(L, 2));
     delete iterator;
     delete view;
-    return 1;
-}
-
-template <typename Comp>
-int _Each_Iter_Start(lua_State*L) {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    auto* view = static_cast<view_t<Comp>*>(lua_touserdata(L, 1));
-    auto iterator = new iterator_t<Comp>(view->begin());
-    lua_pushlightuserdata(L, static_cast<void*>(iterator));
     return 1;
 }
 
@@ -142,15 +135,14 @@ std::string view_function_source(std::string_view name, std::string_view suffix)
 {
     return std::format(R"lua(
         function {0}{1}()
-            local generator = _Each_{0}_New()
-            local iter = _Each_{0}_Iter_Start(generator)
+            local view, iter = _Each_{0}_New()
             return function()
-                if _Each_{0}_Iter_Valid(generator, iter) then
+                if _Each_{0}_Iter_Valid(view, iter) then
                     local entity = _Each_{0}_Iter_Get(iter)
                     _Each_{0}_Iter_Next(iter)
                     return entity
                 else
-                    _Each_{0}_Delete(generator, iter)
+                    _Each_{0}_Delete(view, iter)
                 end
             end
         end
@@ -381,7 +373,6 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 DATAMATIC_BEGIN SCRIPTABLE=true
     lua_register(L, "_Each_{{Comp::name}}_New", _Each_New<{{Comp::name}}>);
     lua_register(L, "_Each_{{Comp::name}}_Delete", _Each_Delete<{{Comp::name}}>);
-    lua_register(L, "_Each_{{Comp::name}}_Iter_Start", _Each_Iter_Start<{{Comp::name}}>);
     lua_register(L, "_Each_{{Comp::name}}_Iter_Valid", _Each_Iter_Valid<{{Comp::name}}>);
     lua_register(L, "_Each_{{Comp::name}}_Iter_Get", _Each_Iter_Get<{{Comp::name}}>);
     lua_register(L, "_Each_{{Comp::name}}_Iter_Next", _Each_Iter_Next<{{Comp::name}}>);
