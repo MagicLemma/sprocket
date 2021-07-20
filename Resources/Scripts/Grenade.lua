@@ -21,7 +21,7 @@ function on_update(entity, dt)
     end
     
     if EXPLODE == true then
-        for e in RigidBody3DComponentView() do
+        for e in view_RigidBody3DComponent() do
             local pos = GetTransform3DComponent(entity).position
             local rbc = GetRigidBody3DComponent(e)
             if rbc.frozen == false then

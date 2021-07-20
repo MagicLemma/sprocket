@@ -20,11 +20,11 @@ namespace spkt {
 namespace lua {
 namespace {
 
-template <typename T>
-using view_t = typename spkt::registry::view_t<T>;
+template <typename... Ts>
+using view_t = typename spkt::registry::view_t<Ts...>;
 
-template <typename T>
-using iterator_t = typename view_t<T>::view_iterator;
+template <typename... Ts>
+using iterator_t = typename view_t<Ts...>::view_iterator;
 
 void do_file(lua_State* L, const char* file)
 {
@@ -82,71 +82,44 @@ void add_command(lua_State* L, const std::function<void()>& command)
     command_list.push_back(command);
 }
 
-template <typename Comp>
-int _Each_New(lua_State* L) {
+template <typename... Comps>
+int view_init(lua_State* L) {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    auto view = new view_t<Comp>(get_pointer<spkt::registry>(L, "__registry__")->view<Comp>());
-    auto iter = new iterator_t<Comp>(view->begin());
+    auto view = new view_t<Comps...>(get_pointer<spkt::registry>(L, "__registry__")->view<Comps...>());
+    auto iter = new iterator_t<Comps...>(view->begin());
     lua_pushlightuserdata(L, static_cast<void*>(view));
     lua_pushlightuserdata(L, static_cast<void*>(iter));
     return 2;
 }
 
-template <typename Comp>
-int _Each_Delete(lua_State* L) {
+template <typename... Comps>
+int view_next(lua_State* L) {
     if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-    auto* view = static_cast<view_t<Comp>*>(lua_touserdata(L, 1));
-    auto* iterator = static_cast<iterator_t<Comp>*>(lua_touserdata(L, 2));
-    delete iterator;
-    delete view;
-    return 1;
-}
-
-template <typename Comp>
-int _Each_Iter_Valid(lua_State* L) {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-    auto gen = static_cast<view_t<Comp>*>(lua_touserdata(L, 1));
-    auto iter = static_cast<iterator_t<Comp>*>(lua_touserdata(L, 2));
-
-    lua_pushboolean(L, *iter != gen->end());
-    return 1;
-}
-
-template <typename Comp>
-int _Each_Iter_Next(lua_State* L) {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    auto iter = static_cast<iterator_t<Comp>*>(lua_touserdata(L, 1));
-    ++(*iter);
-    return 0;
-}
-
-template <typename Comp>
-int _Each_Iter_Get(lua_State* L) {
-    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    iterator_t<Comp> iterator = *static_cast<iterator_t<Comp>*>(lua_touserdata(L, 1));
     spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-
-    spkt::handle* luaEntity = static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
-    *luaEntity = spkt::handle(registry, *iterator);
+    auto& view = *static_cast<view_t<Comps...>*>(lua_touserdata(L, 1));
+    auto& iter = *static_cast<iterator_t<Comps...>*>(lua_touserdata(L, 2));
+    if (iter.valid()) {
+        auto& entity = *static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
+        entity = spkt::handle(registry, *iter);
+        ++iter;
+    } else {
+        delete &iter;
+        delete &view;
+        lua_pushnil(L);
+    }
     return 1;
 }
 
-std::string view_function_source(std::string_view name, std::string_view suffix)
+std::string view_source_code(std::string_view name)
 {
     return std::format(R"lua(
-        function {0}{1}()
-            local view, iter = _Each_{0}_New()
+        function view_{0}()
+            local view, iter = _view_{0}_init()
             return function()
-                if _Each_{0}_Iter_Valid(view, iter) then
-                    local entity = _Each_{0}_Iter_Get(iter)
-                    _Each_{0}_Iter_Next(iter)
-                    return entity
-                else
-                    _Each_{0}_Delete(view, iter)
-                end
+                return _view_{0}_next(view, iter)
             end
         end
-    )lua", name, suffix);
+    )lua", name);
 }
 
 }
@@ -314,69 +287,16 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
-    // function implemented last in Lua.
-    using Generator = typename spkt::registry::view_t<>;
-    using Iterator = typename Generator::view_iterator;
-    
-    lua_register(L, "_Each_All_New", [](lua_State* L) {
-        if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->all());
-        lua_pushlightuserdata(L, static_cast<void*>(gen));
-        return 1;
-    });
-
-    lua_register(L, "_Each_Delete", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        delete static_cast<Generator*>(lua_touserdata(L, 1));
-        return 0;
-    });
-
-    lua_register(L, "_Each_Iter_Start", [](lua_State*L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = static_cast<Generator*>(lua_touserdata(L, 1));
-
-        auto iter = static_cast<Iterator*>(lua_newuserdata(L, sizeof(Iterator)));
-        *iter = gen->begin();
-        return 1;
-    });
-
-    lua_register(L, "_Each_Iter_Valid", [](lua_State* L) {
-        if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = static_cast<Generator*>(lua_touserdata(L, 1));
-        auto iter = static_cast<Iterator*>(lua_touserdata(L, 2));
-
-        lua_pushboolean(L, *iter != gen->end());
-        return 1;
-    });
-
-    lua_register(L, "_Each_Iter_Next", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto iter = static_cast<Iterator*>(lua_touserdata(L, 1));
-        ++(*iter);
-        return 0;   
-    });
-
-    lua_register(L, "_Each_Iter_Get", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        Iterator iterator = *static_cast<Iterator*>(lua_touserdata(L, 1));
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-
-        spkt::handle* luaEntity = static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
-        *luaEntity = spkt::handle(registry, *iterator);
-        return 1;
-    });
-
-    // Hook all of the above functions into a single generator function.
-    luaL_dostring(L, view_function_source("All", "").c_str());
+    // function implemented last in Lua.    
+    lua_register(L, "_view_All_init", view_init<>);
+    lua_register(L, "_view_All_next", view_next<>);
+    luaL_dostring(L, view_source_code("All").c_str());
 
 // VIEW FUNCTIONS - GENERATED BY DATAMATIC
 DATAMATIC_BEGIN SCRIPTABLE=true
-    lua_register(L, "_Each_{{Comp::name}}_New", _Each_New<{{Comp::name}}>);
-    lua_register(L, "_Each_{{Comp::name}}_Delete", _Each_Delete<{{Comp::name}}>);
-    lua_register(L, "_Each_{{Comp::name}}_Iter_Valid", _Each_Iter_Valid<{{Comp::name}}>);
-    lua_register(L, "_Each_{{Comp::name}}_Iter_Get", _Each_Iter_Get<{{Comp::name}}>);
-    lua_register(L, "_Each_{{Comp::name}}_Iter_Next", _Each_Iter_Next<{{Comp::name}}>);
-    luaL_dostring(L, view_function_source("{{Comp::name}}", "View").c_str());
+    lua_register(L, "_view_{{Comp::name}}_init", view_init<{{Comp::name}}>);
+    lua_register(L, "_view_{{Comp::name}}_next", view_next<{{Comp::name}}>);
+    luaL_dostring(L, view_source_code("{{Comp::name}}").c_str());
 
 DATAMATIC_END
 }
