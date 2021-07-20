@@ -15,7 +15,7 @@ struct path_node
     glm::ivec2 position;
     float g;
     float h;
-    std::shared_ptr<path_node> parent = nullptr;
+    path_node* parent = nullptr;
 };
 
 glm::ivec2 closest_square(const glm::vec3& position)
@@ -106,14 +106,16 @@ std::queue<glm::vec3> make_astar_path(
                 new_node->position = newPos;
                 new_node->g = totalCost;
                 new_node->h = heuristic(newPos, p2); // Give this a proper value;
-                new_node->parent = current;
+                new_node->parent = current.get();
                 openList.push_back(new_node);
             }
             else if (totalCost < successor->g) {
                 successor->g = totalCost;
-                successor->parent = current;
+                successor->parent = current.get();
             }
         }
+
+        closedList.push_back(current);
     }
 
     std::queue<glm::vec3> path;
@@ -125,10 +127,11 @@ std::queue<glm::vec3> make_astar_path(
 
     std::vector<glm::vec3> aStarPath;
 
-    while (current != nullptr) {
-        auto p = current->position;
+    path_node* curr = current.get();
+    while (curr != nullptr) {
+        auto p = curr->position;
         aStarPath.push_back({p.x + 0.5f, end.y, p.y + 0.5f});
-        current = current->parent;
+        curr = curr->parent;
     }
 
     for (auto it = aStarPath.rbegin(); it != aStarPath.rend(); ++it) {
