@@ -18,8 +18,6 @@ struct path_node
     std::shared_ptr<path_node> parent = nullptr;
 };
 
-using PathNodePtr = std::shared_ptr<path_node>;
-
 glm::ivec2 closest_square(const glm::vec3& position)
 {
     int gridX = (int)std::round(position.x - 0.5f);
@@ -28,7 +26,7 @@ glm::ivec2 closest_square(const glm::vec3& position)
 }
 
 path_node* find_node(
-    const std::vector<PathNodePtr>& nodes,
+    const std::vector<std::shared_ptr<path_node>>& nodes,
     const glm::ivec2& coords)
 {
     for (auto& node : nodes) {
@@ -44,7 +42,7 @@ float score(path_node& node)
     return node.g + node.h;
 }
 
-PathNodePtr pop_node_lowest_score(std::vector<PathNodePtr>& nodes)
+std::shared_ptr<path_node> pop_node_lowest_score(std::vector<std::shared_ptr<path_node>>& nodes)
 {
     if (nodes.empty()) { return nullptr; }
 
@@ -55,7 +53,7 @@ PathNodePtr pop_node_lowest_score(std::vector<PathNodePtr>& nodes)
         }
     }
 
-    PathNodePtr node = *current;
+    std::shared_ptr<path_node> node = *current;
     nodes.erase(current);
     return node;
 }
@@ -79,8 +77,8 @@ std::queue<glm::vec3> make_astar_path(
         {-1, -1}, {1, 1}, {-1, 1}, {1, -1}
     };
 
-    std::vector<PathNodePtr> openList;
-    std::vector<PathNodePtr> closedList;
+    std::vector<std::shared_ptr<path_node>> openList;
+    std::vector<std::shared_ptr<path_node>> closedList;
 
     auto firstNode = std::make_shared<path_node>();
     firstNode->position = p1;
@@ -88,7 +86,7 @@ std::queue<glm::vec3> make_astar_path(
     firstNode->h = heuristic(p1, p2); // Give this a proper value;
     openList.push_back(firstNode);
 
-    PathNodePtr current = nullptr;
+    std::shared_ptr<path_node> current = nullptr;
     while (current = pop_node_lowest_score(openList)) {
         if (current->position == p2) { break; }
 
