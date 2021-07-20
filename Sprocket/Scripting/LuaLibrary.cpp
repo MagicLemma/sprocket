@@ -85,8 +85,18 @@ void add_command(lua_State* L, const std::function<void()>& command)
 template <typename Comp>
 int _Each_New(lua_State* L) {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    auto* view = static_cast<view_t<Comp>*>(lua_newuserdata(L, sizeof(view_t<Comp>)));
-    *view = get_pointer<spkt::registry>(L, "__registry__")->view<Comp>();
+    auto *view = new view_t<Comp>(get_pointer<spkt::registry>(L, "__registry__")->view<Comp>());
+    lua_pushlightuserdata(L, static_cast<void*>(view));
+    return 1;
+}
+
+template <typename Comp>
+int _Each_Delete(lua_State* L) {
+    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    auto* view = static_cast<view_t<Comp>*>(lua_touserdata(L, 1));
+    auto* iterator = static_cast<iterator_t<Comp>*>(lua_touserdata(L, 2));
+    delete iterator;
+    delete view;
     return 1;
 }
 
@@ -94,8 +104,8 @@ template <typename Comp>
 int _Each_Iter_Start(lua_State*L) {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     auto* view = static_cast<view_t<Comp>*>(lua_touserdata(L, 1));
-    auto* iter = static_cast<iterator_t<Comp>*>(lua_newuserdata(L, sizeof(iterator_t<Comp>)));
-    *iter = view->begin();
+    auto iterator = new iterator_t<Comp>(view->begin());
+    lua_pushlightuserdata(L, static_cast<void*>(iterator));
     return 1;
 }
 
@@ -140,7 +150,7 @@ std::string view_function_source(std::string_view name, std::string_view suffix)
                     _Each_{0}_Iter_Next(iter)
                     return entity
                 else
-                    _Each_{0}_Delete(generator)
+                    _Each_{0}_Delete(generator, iter)
                 end
             end
         end
@@ -313,35 +323,50 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for iterating over all entities in __scene__. The C++ functions
     // should not be used directly, instead they should be used via the Scene:Each
     // function implemented last in Lua.
-    using all_t = typename spkt::registry::view_t<>;
-    using all_iterator_t = typename all_t::view_iterator;
+    using Generator = typename spkt::registry::view_t<>;
+    using Iterator = typename Generator::view_iterator;
 
     lua_register(L, "_Each_All_New", [](lua_State* L) {
         if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        auto* view = static_cast<all_t*>(lua_newuserdata(L, sizeof(all_t)));
-        *view = get_pointer<spkt::registry>(L, "__registry__")->all();
+        auto gen = new Generator(get_pointer<spkt::registry>(L, "__registry__")->all());
+        lua_pushlightuserdata(L, static_cast<void*>(gen));
         return 1;
     });
 
-   lua_register(L, "_Each_All_Iter_Start", [](lua_State*L) {
+    lua_register(L, "_Each_Delete", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto* view = static_cast<all_t*>(lua_touserdata(L, 1));
-        auto* iter = static_cast<all_iterator_t*>(lua_newuserdata(L, sizeof(all_iterator_t)));
-        *iter = view->begin();
+        delete static_cast<Generator*>(lua_touserdata(L, 1));
+        return 0;
+    });
+
+    lua_register(L, "_Each_Iter_Start", [](lua_State*L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        auto gen = static_cast<Generator*>(lua_touserdata(L, 1));
+
+        auto iter = static_cast<Iterator*>(lua_newuserdata(L, sizeof(Iterator)));
+        *iter = gen->begin();
         return 1;
     });
 
-    lua_register(L, "_Each_All_Iter_Valid", [](lua_State* L) {
+    lua_register(L, "_Each_Iter_Valid", [](lua_State* L) {
         if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        auto gen = static_cast<all_t*>(lua_touserdata(L, 1));
-        auto iter = static_cast<all_iterator_t*>(lua_touserdata(L, 2));
+        auto gen = static_cast<Generator*>(lua_touserdata(L, 1));
+        auto iter = static_cast<Iterator*>(lua_touserdata(L, 2));
+
         lua_pushboolean(L, *iter != gen->end());
         return 1;
     });
 
-    lua_register(L, "_Each_All_Iter_Get", [](lua_State* L) {
+    lua_register(L, "_Each_Iter_Next", [](lua_State* L) {
         if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        all_iterator_t iterator = *static_cast<all_iterator_t*>(lua_touserdata(L, 1));
+        auto iter = static_cast<Iterator*>(lua_touserdata(L, 1));
+        ++(*iter);
+        return 0;
+    });
+
+    lua_register(L, "_Each_Iter_Get", [](lua_State* L) {
+        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+        Iterator iterator = *static_cast<Iterator*>(lua_touserdata(L, 1));
         spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
 
         spkt::handle* luaEntity = static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
@@ -349,17 +374,12 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         return 1;
     });
 
-    lua_register(L, "_Each_All_Iter_Next", [](lua_State* L) {
-        if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        auto iter = static_cast<all_iterator_t*>(lua_touserdata(L, 1));
-        ++(*iter);
-        return 0;
-    });
-
+    // Hook all of the above functions into a single generator function.
     luaL_dostring(L, view_function_source("All", "").c_str());
 
 // VIEW FUNCTIONS - GENERATED BY DATAMATIC
     lua_register(L, "_Each_NameComponent_New", _Each_New<NameComponent>);
+    lua_register(L, "_Each_NameComponent_Delete", _Each_Delete<NameComponent>);
     lua_register(L, "_Each_NameComponent_Iter_Start", _Each_Iter_Start<NameComponent>);
     lua_register(L, "_Each_NameComponent_Iter_Valid", _Each_Iter_Valid<NameComponent>);
     lua_register(L, "_Each_NameComponent_Iter_Get", _Each_Iter_Get<NameComponent>);
@@ -367,6 +387,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("NameComponent", "View").c_str());
 
     lua_register(L, "_Each_Transform2DComponent_New", _Each_New<Transform2DComponent>);
+    lua_register(L, "_Each_Transform2DComponent_Delete", _Each_Delete<Transform2DComponent>);
     lua_register(L, "_Each_Transform2DComponent_Iter_Start", _Each_Iter_Start<Transform2DComponent>);
     lua_register(L, "_Each_Transform2DComponent_Iter_Valid", _Each_Iter_Valid<Transform2DComponent>);
     lua_register(L, "_Each_Transform2DComponent_Iter_Get", _Each_Iter_Get<Transform2DComponent>);
@@ -374,6 +395,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("Transform2DComponent", "View").c_str());
 
     lua_register(L, "_Each_Transform3DComponent_New", _Each_New<Transform3DComponent>);
+    lua_register(L, "_Each_Transform3DComponent_Delete", _Each_Delete<Transform3DComponent>);
     lua_register(L, "_Each_Transform3DComponent_Iter_Start", _Each_Iter_Start<Transform3DComponent>);
     lua_register(L, "_Each_Transform3DComponent_Iter_Valid", _Each_Iter_Valid<Transform3DComponent>);
     lua_register(L, "_Each_Transform3DComponent_Iter_Get", _Each_Iter_Get<Transform3DComponent>);
@@ -381,6 +403,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("Transform3DComponent", "View").c_str());
 
     lua_register(L, "_Each_ModelComponent_New", _Each_New<ModelComponent>);
+    lua_register(L, "_Each_ModelComponent_Delete", _Each_Delete<ModelComponent>);
     lua_register(L, "_Each_ModelComponent_Iter_Start", _Each_Iter_Start<ModelComponent>);
     lua_register(L, "_Each_ModelComponent_Iter_Valid", _Each_Iter_Valid<ModelComponent>);
     lua_register(L, "_Each_ModelComponent_Iter_Get", _Each_Iter_Get<ModelComponent>);
@@ -388,6 +411,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("ModelComponent", "View").c_str());
 
     lua_register(L, "_Each_RigidBody3DComponent_New", _Each_New<RigidBody3DComponent>);
+    lua_register(L, "_Each_RigidBody3DComponent_Delete", _Each_Delete<RigidBody3DComponent>);
     lua_register(L, "_Each_RigidBody3DComponent_Iter_Start", _Each_Iter_Start<RigidBody3DComponent>);
     lua_register(L, "_Each_RigidBody3DComponent_Iter_Valid", _Each_Iter_Valid<RigidBody3DComponent>);
     lua_register(L, "_Each_RigidBody3DComponent_Iter_Get", _Each_Iter_Get<RigidBody3DComponent>);
@@ -395,6 +419,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("RigidBody3DComponent", "View").c_str());
 
     lua_register(L, "_Each_BoxCollider3DComponent_New", _Each_New<BoxCollider3DComponent>);
+    lua_register(L, "_Each_BoxCollider3DComponent_Delete", _Each_Delete<BoxCollider3DComponent>);
     lua_register(L, "_Each_BoxCollider3DComponent_Iter_Start", _Each_Iter_Start<BoxCollider3DComponent>);
     lua_register(L, "_Each_BoxCollider3DComponent_Iter_Valid", _Each_Iter_Valid<BoxCollider3DComponent>);
     lua_register(L, "_Each_BoxCollider3DComponent_Iter_Get", _Each_Iter_Get<BoxCollider3DComponent>);
@@ -402,6 +427,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("BoxCollider3DComponent", "View").c_str());
 
     lua_register(L, "_Each_SphereCollider3DComponent_New", _Each_New<SphereCollider3DComponent>);
+    lua_register(L, "_Each_SphereCollider3DComponent_Delete", _Each_Delete<SphereCollider3DComponent>);
     lua_register(L, "_Each_SphereCollider3DComponent_Iter_Start", _Each_Iter_Start<SphereCollider3DComponent>);
     lua_register(L, "_Each_SphereCollider3DComponent_Iter_Valid", _Each_Iter_Valid<SphereCollider3DComponent>);
     lua_register(L, "_Each_SphereCollider3DComponent_Iter_Get", _Each_Iter_Get<SphereCollider3DComponent>);
@@ -409,6 +435,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("SphereCollider3DComponent", "View").c_str());
 
     lua_register(L, "_Each_CapsuleCollider3DComponent_New", _Each_New<CapsuleCollider3DComponent>);
+    lua_register(L, "_Each_CapsuleCollider3DComponent_Delete", _Each_Delete<CapsuleCollider3DComponent>);
     lua_register(L, "_Each_CapsuleCollider3DComponent_Iter_Start", _Each_Iter_Start<CapsuleCollider3DComponent>);
     lua_register(L, "_Each_CapsuleCollider3DComponent_Iter_Valid", _Each_Iter_Valid<CapsuleCollider3DComponent>);
     lua_register(L, "_Each_CapsuleCollider3DComponent_Iter_Get", _Each_Iter_Get<CapsuleCollider3DComponent>);
@@ -416,6 +443,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("CapsuleCollider3DComponent", "View").c_str());
 
     lua_register(L, "_Each_ScriptComponent_New", _Each_New<ScriptComponent>);
+    lua_register(L, "_Each_ScriptComponent_Delete", _Each_Delete<ScriptComponent>);
     lua_register(L, "_Each_ScriptComponent_Iter_Start", _Each_Iter_Start<ScriptComponent>);
     lua_register(L, "_Each_ScriptComponent_Iter_Valid", _Each_Iter_Valid<ScriptComponent>);
     lua_register(L, "_Each_ScriptComponent_Iter_Get", _Each_Iter_Get<ScriptComponent>);
@@ -423,6 +451,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("ScriptComponent", "View").c_str());
 
     lua_register(L, "_Each_Camera3DComponent_New", _Each_New<Camera3DComponent>);
+    lua_register(L, "_Each_Camera3DComponent_Delete", _Each_Delete<Camera3DComponent>);
     lua_register(L, "_Each_Camera3DComponent_Iter_Start", _Each_Iter_Start<Camera3DComponent>);
     lua_register(L, "_Each_Camera3DComponent_Iter_Valid", _Each_Iter_Valid<Camera3DComponent>);
     lua_register(L, "_Each_Camera3DComponent_Iter_Get", _Each_Iter_Get<Camera3DComponent>);
@@ -430,6 +459,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("Camera3DComponent", "View").c_str());
 
     lua_register(L, "_Each_PathComponent_New", _Each_New<PathComponent>);
+    lua_register(L, "_Each_PathComponent_Delete", _Each_Delete<PathComponent>);
     lua_register(L, "_Each_PathComponent_Iter_Start", _Each_Iter_Start<PathComponent>);
     lua_register(L, "_Each_PathComponent_Iter_Valid", _Each_Iter_Valid<PathComponent>);
     lua_register(L, "_Each_PathComponent_Iter_Get", _Each_Iter_Get<PathComponent>);
@@ -437,6 +467,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("PathComponent", "View").c_str());
 
     lua_register(L, "_Each_LightComponent_New", _Each_New<LightComponent>);
+    lua_register(L, "_Each_LightComponent_Delete", _Each_Delete<LightComponent>);
     lua_register(L, "_Each_LightComponent_Iter_Start", _Each_Iter_Start<LightComponent>);
     lua_register(L, "_Each_LightComponent_Iter_Valid", _Each_Iter_Valid<LightComponent>);
     lua_register(L, "_Each_LightComponent_Iter_Get", _Each_Iter_Get<LightComponent>);
@@ -444,6 +475,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("LightComponent", "View").c_str());
 
     lua_register(L, "_Each_SunComponent_New", _Each_New<SunComponent>);
+    lua_register(L, "_Each_SunComponent_Delete", _Each_Delete<SunComponent>);
     lua_register(L, "_Each_SunComponent_Iter_Start", _Each_Iter_Start<SunComponent>);
     lua_register(L, "_Each_SunComponent_Iter_Valid", _Each_Iter_Valid<SunComponent>);
     lua_register(L, "_Each_SunComponent_Iter_Get", _Each_Iter_Get<SunComponent>);
@@ -451,6 +483,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("SunComponent", "View").c_str());
 
     lua_register(L, "_Each_AmbienceComponent_New", _Each_New<AmbienceComponent>);
+    lua_register(L, "_Each_AmbienceComponent_Delete", _Each_Delete<AmbienceComponent>);
     lua_register(L, "_Each_AmbienceComponent_Iter_Start", _Each_Iter_Start<AmbienceComponent>);
     lua_register(L, "_Each_AmbienceComponent_Iter_Valid", _Each_Iter_Valid<AmbienceComponent>);
     lua_register(L, "_Each_AmbienceComponent_Iter_Get", _Each_Iter_Get<AmbienceComponent>);
@@ -458,6 +491,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("AmbienceComponent", "View").c_str());
 
     lua_register(L, "_Each_ParticleComponent_New", _Each_New<ParticleComponent>);
+    lua_register(L, "_Each_ParticleComponent_Delete", _Each_Delete<ParticleComponent>);
     lua_register(L, "_Each_ParticleComponent_Iter_Start", _Each_Iter_Start<ParticleComponent>);
     lua_register(L, "_Each_ParticleComponent_Iter_Valid", _Each_Iter_Valid<ParticleComponent>);
     lua_register(L, "_Each_ParticleComponent_Iter_Get", _Each_Iter_Get<ParticleComponent>);
@@ -465,6 +499,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("ParticleComponent", "View").c_str());
 
     lua_register(L, "_Each_MeshAnimationComponent_New", _Each_New<MeshAnimationComponent>);
+    lua_register(L, "_Each_MeshAnimationComponent_Delete", _Each_Delete<MeshAnimationComponent>);
     lua_register(L, "_Each_MeshAnimationComponent_Iter_Start", _Each_Iter_Start<MeshAnimationComponent>);
     lua_register(L, "_Each_MeshAnimationComponent_Iter_Valid", _Each_Iter_Valid<MeshAnimationComponent>);
     lua_register(L, "_Each_MeshAnimationComponent_Iter_Get", _Each_Iter_Get<MeshAnimationComponent>);
@@ -472,6 +507,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     luaL_dostring(L, view_function_source("MeshAnimationComponent", "View").c_str());
 
     lua_register(L, "_Each_CollisionEvent_New", _Each_New<CollisionEvent>);
+    lua_register(L, "_Each_CollisionEvent_Delete", _Each_Delete<CollisionEvent>);
     lua_register(L, "_Each_CollisionEvent_Iter_Start", _Each_Iter_Start<CollisionEvent>);
     lua_register(L, "_Each_CollisionEvent_Iter_Valid", _Each_Iter_Valid<CollisionEvent>);
     lua_register(L, "_Each_CollisionEvent_Iter_Get", _Each_Iter_Get<CollisionEvent>);
