@@ -26,7 +26,7 @@ glm::ivec2 closest_square(const glm::vec3& position)
 }
 
 path_node* find_node(
-    const std::vector<std::shared_ptr<path_node>>& nodes,
+    const std::vector<std::unique_ptr<path_node>>& nodes,
     const glm::ivec2& coords)
 {
     for (auto& node : nodes) {
@@ -42,9 +42,11 @@ float score(path_node& node)
     return node.g + node.h;
 }
 
-std::shared_ptr<path_node> pop_node_lowest_score(std::vector<std::shared_ptr<path_node>>& nodes)
+std::unique_ptr<path_node> pop_node_lowest_score(std::vector<std::unique_ptr<path_node>>& nodes)
 {
-    if (nodes.empty()) { return nullptr; }
+    std::unique_ptr<path_node> ret_val = nullptr;
+
+    if (nodes.empty()) { return ret_val; }
 
     auto current = nodes.begin();
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
@@ -53,15 +55,15 @@ std::shared_ptr<path_node> pop_node_lowest_score(std::vector<std::shared_ptr<pat
         }
     }
 
-    std::shared_ptr<path_node> node = *current;
+    ret_val = std::move(*current);
     nodes.erase(current);
-    return node;
+    return ret_val;
 }
 
 float heuristic(glm::ivec2 pos, glm::ivec2 target)
 {
     auto delta = target - pos;
-    return 10.0f * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));
+    return 10.0f * std::sqrtf(std::powf(delta.x, 2) + std::powf(delta.y, 2));
 };
 
 }
@@ -77,17 +79,19 @@ std::queue<glm::vec3> make_astar_path(
         {-1, -1}, {1, 1}, {-1, 1}, {1, -1}
     };
 
-    std::vector<std::shared_ptr<path_node>> openList;
-    std::vector<std::shared_ptr<path_node>> closedList;
+    std::vector<std::unique_ptr<path_node>> openList;
+    std::vector<std::unique_ptr<path_node>> closedList;
 
-    auto firstNode = std::make_shared<path_node>();
+    auto firstNode = std::make_unique<path_node>();
     firstNode->position = p1;
     firstNode->g = 0;
     firstNode->h = heuristic(p1, p2); // Give this a proper value;
-    openList.push_back(firstNode);
+    openList.push_back(std::move(firstNode));
 
-    std::shared_ptr<path_node> current = nullptr;
+    std::unique_ptr<path_node> current = nullptr;
+    path_node* curr = nullptr;
     while (current = pop_node_lowest_score(openList)) {
+        curr = current.get();
         if (current->position == p2) { break; }
 
         for (const auto& dir : directions) {
@@ -102,12 +106,12 @@ std::queue<glm::vec3> make_astar_path(
 
             auto successor = find_node(openList, newPos);
             if (successor == nullptr) {
-                auto new_node = std::make_shared<path_node>();
+                auto new_node = std::make_unique<path_node>();
                 new_node->position = newPos;
                 new_node->g = totalCost;
                 new_node->h = heuristic(newPos, p2); // Give this a proper value;
                 new_node->parent = current.get();
-                openList.push_back(new_node);
+                openList.push_back(std::move(new_node));
             }
             else if (totalCost < successor->g) {
                 successor->g = totalCost;
@@ -115,7 +119,7 @@ std::queue<glm::vec3> make_astar_path(
             }
         }
 
-        closedList.push_back(current);
+        closedList.push_back(std::move(current));
     }
 
     std::queue<glm::vec3> path;
@@ -127,7 +131,6 @@ std::queue<glm::vec3> make_astar_path(
 
     std::vector<glm::vec3> aStarPath;
 
-    path_node* curr = current.get();
     while (curr != nullptr) {
         auto p = curr->position;
         aStarPath.push_back({p.x + 0.5f, end.y, p.y + 0.5f});
