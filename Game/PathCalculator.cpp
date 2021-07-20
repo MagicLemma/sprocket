@@ -77,7 +77,7 @@ std::unique_ptr<path_node> make_path_node(glm::ivec2 pos, glm::ivec2 dest, float
 }
 
 std::deque<glm::vec3> make_astar_path(
-    glm::vec3 start, glm::vec3 end, const grid_function& gridFunction
+    glm::vec3 start, glm::vec3 end, const grid_function_t& grid_function
 ) {
     auto p1 = closest_square(start);
     auto p2 = closest_square(end);
@@ -99,21 +99,20 @@ std::deque<glm::vec3> make_astar_path(
         if (curr->position == p2) { break; }
 
         for (const auto& dir : directions) {
-            glm::ivec2 newPos = curr->position + dir;
+            glm::ivec2 new_pos = curr->position + dir;
 
-            if (find_node(closed_list, newPos) || gridFunction(newPos)) {
+            if (find_node(closed_list, new_pos) || grid_function(new_pos)) {
                 continue;
             }
 
-            float dirLength = glm::length(glm::vec2(dir));
-            float totalCost = curr->g + (10.0f * dirLength);
+            float cost = curr->g + 10.0f * glm::length(glm::vec2(dir));
 
-            auto successor = find_node(open_list, newPos);
+            auto successor = find_node(open_list, new_pos);
             if (successor == nullptr) {
-                open_list.push_back(make_path_node(newPos, p2, totalCost, curr));
+                open_list.push_back(make_path_node(new_pos, p2, cost, curr));
             }
-            else if (totalCost < successor->g) {
-                successor->g = totalCost;
+            else if (cost < successor->g) {
+                successor->g = cost;
                 successor->parent = curr;
             }
         }
