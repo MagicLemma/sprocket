@@ -407,7 +407,7 @@
                 {
                     "name": "markers",
                     "display_name": "Markers",
-                    "type": "std::queue<glm::vec3>",
+                    "type": "std::deque<glm::vec3>",
                     "default": "{}",
                     "flags": {
                         "SCRIPTABLE": false,

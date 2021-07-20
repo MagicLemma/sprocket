@@ -5,7 +5,6 @@
 #include <glm/glm.hpp>
 
 #include <deque>
-#include <queue>
 #include <memory>
 
 namespace {
@@ -15,10 +14,8 @@ struct path_node
     glm::ivec2 position;
     float g;
     float h;
-    std::shared_ptr<path_node> parent = nullptr;
+    path_node* parent = nullptr;
 };
-
-using PathNodePtr = std::shared_ptr<path_node>;
 
 glm::ivec2 closest_square(const glm::vec3& position)
 {
@@ -28,7 +25,7 @@ glm::ivec2 closest_square(const glm::vec3& position)
 }
 
 path_node* find_node(
-    const std::vector<PathNodePtr>& nodes,
+    const std::vector<std::unique_ptr<path_node>>& nodes,
     const glm::ivec2& coords)
 {
     for (auto& node : nodes) {
@@ -44,9 +41,11 @@ float score(path_node& node)
     return node.g + node.h;
 }
 
-PathNodePtr pop_node_lowest_score(std::vector<PathNodePtr>& nodes)
+std::unique_ptr<path_node> pop_node_lowest_score(std::vector<std::unique_ptr<path_node>>& nodes)
 {
-    if (nodes.empty()) { return nullptr; }
+    std::unique_ptr<path_node> ret_val = nullptr;
+
+    if (nodes.empty()) { return ret_val; }
 
     auto current = nodes.begin();
     for (auto it = nodes.begin(); it != nodes.end(); ++it) {
@@ -55,21 +54,30 @@ PathNodePtr pop_node_lowest_score(std::vector<PathNodePtr>& nodes)
         }
     }
 
-    PathNodePtr node = *current;
+    ret_val = std::move(*current);
     nodes.erase(current);
-    return node;
+    return ret_val;
 }
 
-float heuristic(glm::ivec2 pos, glm::ivec2 target)
+float heuristic(glm::vec2 pos, glm::vec2 target)
 {
-    auto delta = target - pos;
-    return 10.0f * std::sqrt(std::pow(delta.x, 2) + std::pow(delta.y, 2));
+    return 10.0f * glm::distance(pos, target);
 };
 
+std::unique_ptr<path_node> make_path_node(glm::ivec2 pos, glm::ivec2 dest, float cost, path_node* parent = nullptr)
+{
+    auto new_node = std::make_unique<path_node>();
+    new_node->position = pos;
+    new_node->g = cost;
+    new_node->h = heuristic(pos, dest);
+    new_node->parent = parent;
+    return new_node;
 }
 
-std::queue<glm::vec3> make_astar_path(
-    glm::vec3 start, glm::vec3 end, const grid_function& gridFunction
+}
+
+std::deque<glm::vec3> make_astar_path(
+    glm::vec3 start, glm::vec3 end, const grid_function_t& grid_function
 ) {
     auto p1 = closest_square(start);
     auto p2 = closest_square(end);
@@ -79,64 +87,52 @@ std::queue<glm::vec3> make_astar_path(
         {-1, -1}, {1, 1}, {-1, 1}, {1, -1}
     };
 
-    std::vector<PathNodePtr> openList;
-    std::vector<PathNodePtr> closedList;
+    std::vector<std::unique_ptr<path_node>> open_list;
+    std::vector<std::unique_ptr<path_node>> closed_list;
 
-    auto firstNode = std::make_shared<path_node>();
-    firstNode->position = p1;
-    firstNode->g = 0;
-    firstNode->h = heuristic(p1, p2); // Give this a proper value;
-    openList.push_back(firstNode);
+    open_list.push_back(make_path_node(p1, p2, 0));
 
-    PathNodePtr current = nullptr;
-    while (current = pop_node_lowest_score(openList)) {
-        if (current->position == p2) { break; }
+    std::unique_ptr<path_node> current = nullptr;
+    path_node* curr = nullptr;
+    while (current = pop_node_lowest_score(open_list)) {
+        curr = current.get();
+        if (curr->position == p2) { break; }
 
         for (const auto& dir : directions) {
-            glm::ivec2 newPos = current->position + dir;
+            glm::ivec2 new_pos = curr->position + dir;
 
-            if (find_node(closedList, newPos) || gridFunction(newPos)) {
+            if (find_node(closed_list, new_pos) || grid_function(new_pos)) {
                 continue;
             }
 
-            float dirLength = glm::length(glm::vec2(dir));
-            float totalCost = current->g + (10.0f * dirLength);
+            float cost = curr->g + 10.0f * glm::length(glm::vec2(dir));
 
-            auto successor = find_node(openList, newPos);
+            auto successor = find_node(open_list, new_pos);
             if (successor == nullptr) {
-                auto new_node = std::make_shared<path_node>();
-                new_node->position = newPos;
-                new_node->g = totalCost;
-                new_node->h = heuristic(newPos, p2); // Give this a proper value;
-                new_node->parent = current;
-                openList.push_back(new_node);
+                open_list.push_back(make_path_node(new_pos, p2, cost, curr));
             }
-            else if (totalCost < successor->g) {
-                successor->g = totalCost;
-                successor->parent = current;
+            else if (cost < successor->g) {
+                successor->g = cost;
+                successor->parent = curr;
             }
         }
+
+        closed_list.push_back(std::move(current));
     }
 
-    std::queue<glm::vec3> path;
+    std::deque<glm::vec3> path;
 
-    if (current->position != p2) {
+    if (curr->position != p2) {
         spkt::log::info("No path found!");
         return path;
     }
 
-    std::vector<glm::vec3> aStarPath;
-
-    while (current != nullptr) {
-        auto p = current->position;
-        aStarPath.push_back({p.x + 0.5f, end.y, p.y + 0.5f});
-        current = current->parent;
+    path.push_back(end);
+    while (curr != nullptr) {
+        auto p = curr->position;
+        path.push_front({p.x + 0.5f, end.y, p.y + 0.5f});
+        curr = curr->parent;
     }
 
-    for (auto it = aStarPath.rbegin(); it != aStarPath.rend(); ++it) {
-        path.push(*it);
-    }
-
-    path.push(end);
     return path;
 }

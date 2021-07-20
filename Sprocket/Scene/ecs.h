@@ -129,7 +129,7 @@ struct Camera3DComponent
 
 struct PathComponent
 {
-    std::queue<glm::vec3> markers = {};
+    std::deque<glm::vec3> markers = {};
     float speed = 0.0f;
 };
 

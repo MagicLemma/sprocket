@@ -201,7 +201,7 @@ void Game::on_event(spkt::event& event)
             auto& path = registry.get<PathComponent>(d_worker);
 
             if (data->button == Mouse::LEFT) {
-                std::queue<glm::vec3>().swap(path.markers);
+                path.markers.clear();
                 auto pos = registry.get<Transform3DComponent>(d_worker).position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
                     const auto& grid = get_singleton<GameGridSingleton>(registry);
@@ -215,12 +215,12 @@ void Game::on_event(spkt::event& event)
                         }
                     );
                 } else {
-                    path.markers.push(mousePos);
+                    path.markers.push_back(mousePos);
                 }
                 event.consume();
             }
             else if (data->button == Mouse::RIGHT) {
-                std::queue<glm::vec3>().swap(path.markers);
+                path.markers.clear();
                 event.consume();
             }
         }
