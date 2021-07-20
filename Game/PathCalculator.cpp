@@ -5,7 +5,6 @@
 #include <glm/glm.hpp>
 
 #include <deque>
-#include <queue>
 #include <memory>
 
 namespace {
@@ -68,7 +67,7 @@ float heuristic(glm::ivec2 pos, glm::ivec2 target)
 
 }
 
-std::queue<glm::vec3> make_astar_path(
+std::deque<glm::vec3> make_astar_path(
     glm::vec3 start, glm::vec3 end, const grid_function& gridFunction
 ) {
     auto p1 = closest_square(start);
@@ -122,25 +121,19 @@ std::queue<glm::vec3> make_astar_path(
         closedList.push_back(std::move(current));
     }
 
-    std::queue<glm::vec3> path;
+    std::deque<glm::vec3> path;
 
     if (current->position != p2) {
         spkt::log::info("No path found!");
         return path;
     }
 
-    std::vector<glm::vec3> aStarPath;
-
+    path.push_back(end);
     while (curr != nullptr) {
         auto p = curr->position;
-        aStarPath.push_back({p.x + 0.5f, end.y, p.y + 0.5f});
+        path.push_front({p.x + 0.5f, end.y, p.y + 0.5f});
         curr = curr->parent;
     }
 
-    for (auto it = aStarPath.rbegin(); it != aStarPath.rend(); ++it) {
-        path.push(*it);
-    }
-
-    path.push(end);
     return path;
 }

@@ -87,7 +87,7 @@ void path_follower_system(spkt::registry& registry, double dt)
             transform.position += advance;
         } else {
             transform.position = path.markers.front();
-            path.markers.pop();
+            path.markers.pop_front();
         }
     }
 }
