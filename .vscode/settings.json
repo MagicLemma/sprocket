@@ -101,6 +101,7 @@
         "charconv": "cpp",
         "format": "cpp",
         "span": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "source_location": "cpp"
     }
 }

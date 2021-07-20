@@ -48,31 +48,31 @@ void CircadianCycle::SetTime(int hours, int mins, int secs)
     Modulo();
 }
 
-void CircadianCycle::AddSeconds(double seconds)
+void CircadianCycle::AddSeconds(float seconds)
 {
     d_seconds += seconds;
     Modulo();
 }
 
-double CircadianCycle::GetSeconds() const
+float CircadianCycle::GetSeconds() const
 {
     return d_seconds; 
 }
 
-void CircadianCycle::SetSeconds(double seconds)
+void CircadianCycle::SetSeconds(float seconds)
 {
     d_seconds = seconds;
     Modulo();
 }
 
-double CircadianCycle::GetAngle() const
+float CircadianCycle::GetAngle() const
 { 
-    return glm::two_pi<double>() * d_seconds / SECONDS_IN_DAY;
+    return glm::two_pi<float>() * d_seconds / SECONDS_IN_DAY;
 }
 
-void CircadianCycle::SetAngle(double angle)
+void CircadianCycle::SetAngle(float angle)
 {
-    d_seconds = (angle / glm::two_pi<double>()) * SECONDS_IN_DAY;
+    d_seconds = (angle / glm::two_pi<float>()) * SECONDS_IN_DAY;
     Modulo();
 }
 
@@ -113,7 +113,7 @@ std::string CircadianCycle::ToString(bool twelveHour) const
 {
     int hours = 0;
     int mins = 0;
-    double seconds = d_seconds;
+    float seconds = d_seconds;
     while (seconds > 3600.0f) { ++hours; seconds -= 3600.0f; }
     while (seconds > 60.0f) { ++mins; seconds -= 60.0f; }
 

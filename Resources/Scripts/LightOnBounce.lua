@@ -3,7 +3,7 @@ function init(entity)
 end
 
 function on_update(entity, dt)
-    for event in CollisionEventView() do
+    for event in view_CollisionEvent() do
         local collision = GetCollisionEvent(event)
         local a = entity_from_id(collision.entity_a)
         local b = entity_from_id(collision.entity_b)

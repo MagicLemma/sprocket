@@ -278,7 +278,10 @@ void Anvil::on_render()
                 ImGui::EndTabItem();
             }
 
-            std::hash<std::string> hasher;
+            const auto hasher = [](const std::string& str) {
+                return static_cast<int>(std::hash<std::string>{}(str));
+            };
+
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
                 for (auto& [file, material] : d_asset_manager.Materials()) {

@@ -205,7 +205,7 @@ void Game::on_event(spkt::event& event)
                 auto pos = registry.get<Transform3DComponent>(d_worker).position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
                     const auto& grid = get_singleton<GameGridSingleton>(registry);
-                    path.markers = GenerateAStarPath(
+                    path.markers = make_astar_path(
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
