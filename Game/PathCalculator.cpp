@@ -123,7 +123,7 @@ std::deque<glm::vec3> make_astar_path(
 
     std::deque<glm::vec3> path;
 
-    if (current->position != p2) {
+    if (curr->position != p2) {
         spkt::log::info("No path found!");
         return path;
     }
