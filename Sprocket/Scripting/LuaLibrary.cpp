@@ -64,12 +64,20 @@ bool CheckArgCount(lua_State* L, int argc)
     return true;
 }
 
-template <typename T> int _has_impl(lua_State* L)
+template <typename T> int has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     auto entity = Converter<spkt::handle>::read(L, 1);
     Converter<bool>::push(L, entity.has<T>());
     return 1;
+}
+
+template <typename T> int remove_impl(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    auto entity = Converter<spkt::handle>::read(L, 1);
+    add_command(L, [entity]() mutable { entity.remove<T>(); });
+    return 0;
 }
 
 void add_command(lua_State* L, const std::function<void()>& command)
@@ -108,9 +116,7 @@ std::string view_source_code(std::string_view name)
     return std::format(R"lua(
         function view_{0}()
             local view = _view_{0}_init()
-            return function()
-                return _view_{0}_next(view)
-            end
+            return function() return _view_{0}_next(view) end
         end
     )lua", name);
 }
@@ -1024,7 +1030,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasNameComponent", &_has_impl<NameComponent>);
+    lua_register(L, "HasNameComponent", &has_impl<NameComponent>);
+    lua_register(L, "RemoveNameComponent", &remove_impl<NameComponent>);
 
 
     // Lua functions for Transform2DComponent =====================================================
@@ -1062,7 +1069,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasTransform2DComponent", &_has_impl<Transform2DComponent>);
+    lua_register(L, "HasTransform2DComponent", &has_impl<Transform2DComponent>);
+    lua_register(L, "RemoveTransform2DComponent", &remove_impl<Transform2DComponent>);
 
 
     // Lua functions for Transform3DComponent =====================================================
@@ -1099,7 +1107,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasTransform3DComponent", &_has_impl<Transform3DComponent>);
+    lua_register(L, "HasTransform3DComponent", &has_impl<Transform3DComponent>);
+    lua_register(L, "RemoveTransform3DComponent", &remove_impl<Transform3DComponent>);
 
 
     // Lua functions for ModelComponent =====================================================
@@ -1136,7 +1145,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasModelComponent", &_has_impl<ModelComponent>);
+    lua_register(L, "HasModelComponent", &has_impl<ModelComponent>);
+    lua_register(L, "RemoveModelComponent", &remove_impl<ModelComponent>);
 
 
     // Lua functions for RigidBody3DComponent =====================================================
@@ -1179,7 +1189,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasRigidBody3DComponent", &_has_impl<RigidBody3DComponent>);
+    lua_register(L, "HasRigidBody3DComponent", &has_impl<RigidBody3DComponent>);
+    lua_register(L, "RemoveRigidBody3DComponent", &remove_impl<RigidBody3DComponent>);
 
 
     // Lua functions for BoxCollider3DComponent =====================================================
@@ -1218,7 +1229,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasBoxCollider3DComponent", &_has_impl<BoxCollider3DComponent>);
+    lua_register(L, "HasBoxCollider3DComponent", &has_impl<BoxCollider3DComponent>);
+    lua_register(L, "RemoveBoxCollider3DComponent", &remove_impl<BoxCollider3DComponent>);
 
 
     // Lua functions for SphereCollider3DComponent =====================================================
@@ -1256,7 +1268,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasSphereCollider3DComponent", &_has_impl<SphereCollider3DComponent>);
+    lua_register(L, "HasSphereCollider3DComponent", &has_impl<SphereCollider3DComponent>);
+    lua_register(L, "RemoveSphereCollider3DComponent", &remove_impl<SphereCollider3DComponent>);
 
 
     // Lua functions for CapsuleCollider3DComponent =====================================================
@@ -1295,7 +1308,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasCapsuleCollider3DComponent", &_has_impl<CapsuleCollider3DComponent>);
+    lua_register(L, "HasCapsuleCollider3DComponent", &has_impl<CapsuleCollider3DComponent>);
+    lua_register(L, "RemoveCapsuleCollider3DComponent", &remove_impl<CapsuleCollider3DComponent>);
 
 
     // Lua functions for ScriptComponent =====================================================
@@ -1332,7 +1346,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasScriptComponent", &_has_impl<ScriptComponent>);
+    lua_register(L, "HasScriptComponent", &has_impl<ScriptComponent>);
+    lua_register(L, "RemoveScriptComponent", &remove_impl<ScriptComponent>);
 
 
     // Lua functions for Camera3DComponent =====================================================
@@ -1369,7 +1384,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasCamera3DComponent", &_has_impl<Camera3DComponent>);
+    lua_register(L, "HasCamera3DComponent", &has_impl<Camera3DComponent>);
+    lua_register(L, "RemoveCamera3DComponent", &remove_impl<Camera3DComponent>);
 
 
     // Lua functions for PathComponent =====================================================
@@ -1405,7 +1421,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasPathComponent", &_has_impl<PathComponent>);
+    lua_register(L, "HasPathComponent", &has_impl<PathComponent>);
+    lua_register(L, "RemovePathComponent", &remove_impl<PathComponent>);
 
 
     // Lua functions for LightComponent =====================================================
@@ -1442,7 +1459,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasLightComponent", &_has_impl<LightComponent>);
+    lua_register(L, "HasLightComponent", &has_impl<LightComponent>);
+    lua_register(L, "RemoveLightComponent", &remove_impl<LightComponent>);
 
 
     // Lua functions for SunComponent =====================================================
@@ -1481,7 +1499,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasSunComponent", &_has_impl<SunComponent>);
+    lua_register(L, "HasSunComponent", &has_impl<SunComponent>);
+    lua_register(L, "RemoveSunComponent", &remove_impl<SunComponent>);
 
 
     // Lua functions for AmbienceComponent =====================================================
@@ -1518,7 +1537,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasAmbienceComponent", &_has_impl<AmbienceComponent>);
+    lua_register(L, "HasAmbienceComponent", &has_impl<AmbienceComponent>);
+    lua_register(L, "RemoveAmbienceComponent", &remove_impl<AmbienceComponent>);
 
 
     // Lua functions for ParticleComponent =====================================================
@@ -1559,7 +1579,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasParticleComponent", &_has_impl<ParticleComponent>);
+    lua_register(L, "HasParticleComponent", &has_impl<ParticleComponent>);
+    lua_register(L, "RemoveParticleComponent", &remove_impl<ParticleComponent>);
 
 
     // Lua functions for MeshAnimationComponent =====================================================
@@ -1597,7 +1618,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasMeshAnimationComponent", &_has_impl<MeshAnimationComponent>);
+    lua_register(L, "HasMeshAnimationComponent", &has_impl<MeshAnimationComponent>);
+    lua_register(L, "RemoveMeshAnimationComponent", &remove_impl<MeshAnimationComponent>);
 
 
     // Lua functions for CollisionEvent =====================================================
@@ -1634,7 +1656,8 @@ void load_entity_component_functions(lua::Script& script)
         end
     )lua");
 
-    lua_register(L, "HasCollisionEvent", &_has_impl<CollisionEvent>);
+    lua_register(L, "HasCollisionEvent", &has_impl<CollisionEvent>);
+    lua_register(L, "RemoveCollisionEvent", &remove_impl<CollisionEvent>);
 
 
 }

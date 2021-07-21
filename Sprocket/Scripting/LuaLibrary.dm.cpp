@@ -64,12 +64,20 @@ bool CheckArgCount(lua_State* L, int argc)
     return true;
 }
 
-template <typename T> int _has_impl(lua_State* L)
+template <typename T> int has_impl(lua_State* L)
 {
     if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     auto entity = Converter<spkt::handle>::read(L, 1);
     Converter<bool>::push(L, entity.has<T>());
     return 1;
+}
+
+template <typename T> int remove_impl(lua_State* L)
+{
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    auto entity = Converter<spkt::handle>::read(L, 1);
+    add_command(L, [entity]() mutable { entity.remove<T>(); });
+    return 0;
 }
 
 void add_command(lua_State* L, const std::function<void()>& command)
@@ -365,7 +373,8 @@ DATAMATIC_BEGIN SCRIPTABLE=true
         end
     )lua");
 
-    lua_register(L, "Has{{Comp::name}}", &_has_impl<{{Comp::name}}>);
+    lua_register(L, "Has{{Comp::name}}", &has_impl<{{Comp::name}}>);
+    lua_register(L, "Remove{{Comp::name}}", &remove_impl<{{Comp::name}}>);
 
 
 DATAMATIC_END
