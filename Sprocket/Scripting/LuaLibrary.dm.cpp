@@ -21,10 +21,7 @@ namespace lua {
 namespace {
 
 template <typename... Ts>
-using view_t = typename spkt::registry::view_t<Ts...>;
-
-template <typename... Ts>
-using iterator_t = typename view_t<Ts...>::view_iterator;
+using view_iterator = typename spkt::registry::iterator<Ts...>;
 
 void do_file(lua_State* L, const char* file)
 {
@@ -85,25 +82,21 @@ void add_command(lua_State* L, const std::function<void()>& command)
 template <typename... Comps>
 int view_init(lua_State* L) {
     if (!CheckArgCount(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    auto view = new view_t<Comps...>(get_pointer<spkt::registry>(L, "__registry__")->view<Comps...>());
-    auto iter = new iterator_t<Comps...>(view->begin());
+    auto view = new view_iterator<Comps...>(get_pointer<spkt::registry>(L, "__registry__")->view<Comps...>());
     lua_pushlightuserdata(L, static_cast<void*>(view));
-    lua_pushlightuserdata(L, static_cast<void*>(iter));
-    return 2;
+    return 1;
 }
 
 template <typename... Comps>
 int view_next(lua_State* L) {
-    if (!CheckArgCount(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    if (!CheckArgCount(L, 1)) { return luaL_error(L, "Bad number of args"); }
     spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-    auto& view = *static_cast<view_t<Comps...>*>(lua_touserdata(L, 1));
-    auto& iter = *static_cast<iterator_t<Comps...>*>(lua_touserdata(L, 2));
-    if (iter.valid()) {
+    auto& view = *static_cast<view_iterator<Comps...>*>(lua_touserdata(L, 1));
+    if (view.valid()) {
         auto& entity = *static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
-        entity = spkt::handle(registry, *iter);
-        ++iter;
+        entity = spkt::handle(registry, *view);
+        ++view;
     } else {
-        delete &iter;
         delete &view;
         lua_pushnil(L);
     }
@@ -114,10 +107,8 @@ std::string view_source_code(std::string_view name)
 {
     return std::format(R"lua(
         function view_{0}()
-            local view, iter = _view_{0}_init()
-            return function()
-                return _view_{0}_next(view, iter)
-            end
+            local view = _view_{0}_init()
+            return function() return _view_{0}_next(view) end
         end
     )lua", name);
 }
