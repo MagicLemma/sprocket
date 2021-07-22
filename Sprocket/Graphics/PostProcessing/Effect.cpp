@@ -28,8 +28,8 @@ void Effect::BindForRead() const
 {
     d_shader.Bind();
     d_frameBuffer.BindTexture();
-    d_shader.LoadFloat("targetWidth", (float)Width());
-    d_shader.LoadFloat("targetHeight", (float)Height());
+    d_shader.LoadFloat("targetWidth", (float)d_frameBuffer.Width());
+    d_shader.LoadFloat("targetHeight", (float)d_frameBuffer.Height());
 }
 
 void Effect::UnbindForRead() const
@@ -50,6 +50,36 @@ void Effect::Draw(Effect* target)
 void Effect::SetScreenSize(int width, int height)
 {
     d_frameBuffer.SetScreenSize(width, height);
+}
+
+std::unique_ptr<Effect> make_gaussian_horiz_effect(int width, int height)
+{
+    return std::make_unique<Effect>(
+        width,
+        height,
+        "Resources/Shaders/GaussH.vert",
+        "Resources/Shaders/Gauss.frag"
+    );
+}
+
+std::unique_ptr<Effect> make_gaussian_vert_effect(int width, int height)
+{
+    return std::make_unique<Effect>(
+        width,
+        height,
+        "Resources/Shaders/GaussV.vert",
+        "Resources/Shaders/Gauss.frag"
+    );
+}
+
+std::unique_ptr<Effect> make_negative_effect(int width, int height)
+{
+    return std::make_unique<Effect>(
+        width,
+        height,
+        "Resources/Shaders/Negative.vert",
+        "Resources/Shaders/Negative.frag"
+    );
 }
     
 }

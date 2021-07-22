@@ -36,6 +36,11 @@ public:
     void AddEffect(Args&&... args) {
         d_effects.push_back(std::make_unique<T>(d_width, d_height, args...));
     }
+
+    void add_effect(std::unique_ptr<Effect>&& effect)
+    {
+        d_effects.push_back(std::move(effect));
+    }
 };
 
 }

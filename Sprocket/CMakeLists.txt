@@ -71,8 +71,6 @@ add_library(Sprocket STATIC
             Graphics/Rendering/SkyboxRenderer.cpp
 
             Graphics/PostProcessing/Effect.cpp
-            Graphics/PostProcessing/Negative.cpp
-            Graphics/PostProcessing/GaussianBlur.cpp
             Graphics/PostProcessing/PostProcessor.cpp
             
             Utility/Log.cpp

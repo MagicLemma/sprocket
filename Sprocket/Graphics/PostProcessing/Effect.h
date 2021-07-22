@@ -10,7 +10,7 @@ namespace spkt {
 class Effect
 {
     FrameBuffer d_frameBuffer;
-    Shader       d_shader;
+    Shader      d_shader;
 
 public:
     Effect(int width, int height,
@@ -37,9 +37,10 @@ public:
 
     void SetScreenSize(int width, int height);
         // Resized the internal textures to match the new screen size.
-
-    int Width() const { return d_frameBuffer.Width(); }
-    int Height() const { return d_frameBuffer.Height(); }
 };
+
+std::unique_ptr<Effect> make_gaussian_horiz_effect(int width, int height);
+std::unique_ptr<Effect> make_gaussian_vert_effect(int width, int height);
+std::unique_ptr<Effect> make_negative_effect(int width, int height);
 
 }

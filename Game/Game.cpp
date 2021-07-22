@@ -7,8 +7,6 @@
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Graphics/PostProcessing/GaussianBlur.h>
-#include <Sprocket/Graphics/PostProcessing/Negative.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/Loader.h>
@@ -113,9 +111,13 @@ Game::Game(Window* window)
     auto& sun = registry.get<SunComponent>(sun_entity);
     sun.direction = d_cycle.GetSunDir();
 
-    d_postProcessor.AddEffect<GaussianVert>();
-    d_postProcessor.AddEffect<GaussianHoriz>();
-    d_postProcessor.AddEffect<Negative>();
+    int w = d_window->Width();
+    int h = d_window->Height();
+    
+    d_postProcessor.add_effect(spkt::make_gaussian_horiz_effect(w, h));
+    d_postProcessor.add_effect(spkt::make_gaussian_vert_effect(w, h));
+    d_postProcessor.add_effect(spkt::make_negative_effect(w, h));
+
 
 }
 
