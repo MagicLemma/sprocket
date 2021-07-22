@@ -61,6 +61,7 @@ add_library(Sprocket STATIC
             Graphics/Texture.cpp
             Graphics/CubeMap.cpp
             Graphics/FrameBuffer.cpp
+            Graphics/PostProcessor.cpp
             Graphics/ShadowMap.cpp
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp
@@ -69,9 +70,6 @@ add_library(Sprocket STATIC
             Graphics/Rendering/ColliderRenderer.cpp
             Graphics/Rendering/Scene3DRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
-
-            Graphics/PostProcessing/Effect.cpp
-            Graphics/PostProcessing/PostProcessor.cpp
             
             Utility/Log.cpp
             Utility/Colour.cpp

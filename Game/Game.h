@@ -2,7 +2,7 @@
 #include <Game/CircadianCycle.h>
 
 #include <Sprocket/Graphics/AssetManager.h>
-#include <Sprocket/Graphics/PostProcessing/PostProcessor.h>
+#include <Sprocket/Graphics/PostProcessor.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/ShadowMap.h>
 #include <Sprocket/Scene/Scene.h>
