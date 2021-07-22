@@ -28,7 +28,8 @@ void Effect::BindForRead() const
 {
     d_shader.Bind();
     d_frameBuffer.BindTexture();
-    SetUniforms();
+    d_shader.LoadFloat("targetWidth", (float)Width());
+    d_shader.LoadFloat("targetHeight", (float)Height());
 }
 
 void Effect::UnbindForRead() const
@@ -44,11 +45,6 @@ void Effect::Draw(Effect* target)
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     UnbindForRead();
     if (target) { target->UnbindForWrite(); }
-}
-
-void Effect::SetUniforms() const
-{
-    // Override this function to set up uniforms.
 }
 
 void Effect::SetScreenSize(int width, int height)

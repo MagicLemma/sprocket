@@ -8,6 +8,7 @@
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/PostProcessing/GaussianBlur.h>
+#include <Sprocket/Graphics/PostProcessing/Negative.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/Loader.h>
@@ -114,6 +115,7 @@ Game::Game(Window* window)
 
     d_postProcessor.AddEffect<GaussianVert>();
     d_postProcessor.AddEffect<GaussianHoriz>();
+    d_postProcessor.AddEffect<Negative>();
 
 }
 

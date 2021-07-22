@@ -10,13 +10,7 @@ namespace spkt {
 class Effect
 {
     FrameBuffer d_frameBuffer;
-
-protected:
-
     Shader       d_shader;
-
-    virtual void SetUniforms() const;
-        // Override this function to set any uniforms in the shader.
 
 public:
     Effect(int width, int height,
