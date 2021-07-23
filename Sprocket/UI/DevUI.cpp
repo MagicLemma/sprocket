@@ -257,7 +257,7 @@ void DevUI::EndFrame()
 
     auto proj = glm::ortho(0.0f, drawData->DisplaySize.x, drawData->DisplaySize.y, 0.0f);
 
-    d_shader.Bind();
+    d_shader.bind();
     d_shader.load("Texture", 0);
     d_shader.load("ProjMtx", proj);
 

@@ -144,7 +144,7 @@ class UIEngine
     spkt::Texture d_white;
 
     // Rendering code    
-    spkt::Shader d_shader;
+    spkt::shader d_shader;
     spkt::StreamBuffer d_buffer;
     
     // Panel info 

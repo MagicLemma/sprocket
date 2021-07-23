@@ -47,98 +47,98 @@ std::uint32_t compile_shader_source(std::uint32_t type, const std::string& sourc
 
 }
 
-Shader::Shader(
-	std::string_view vertShaderFile,
-	std::string_view fragShaderFile
+shader::shader(
+	std::string_view vert_shader_file,
+	std::string_view frag_shader_file
 )
-	: d_vertexSource(parse_shader_source(vertShaderFile))
-	, d_fragSource(parse_shader_source(fragShaderFile))
-	, d_programId(glCreateProgram())
-	, d_vertShaderId(compile_shader_source(GL_VERTEX_SHADER, d_vertexSource))
-	, d_fragShaderId(compile_shader_source(GL_FRAGMENT_SHADER, d_fragSource))
+	: d_vert_source(parse_shader_source(vert_shader_file))
+	, d_frag_source(parse_shader_source(frag_shader_file))
+	, d_program_id(glCreateProgram())
+	, d_vert_shader_id(compile_shader_source(GL_VERTEX_SHADER, d_vert_source))
+	, d_frag_shader_id(compile_shader_source(GL_FRAGMENT_SHADER, d_frag_source))
 {
-	glAttachShader(d_programId, d_vertShaderId);
-	glAttachShader(d_programId, d_fragShaderId);
-	glLinkProgram(d_programId);
-	glValidateProgram(d_programId);
+	glAttachShader(d_program_id, d_vert_shader_id);
+	glAttachShader(d_program_id, d_frag_shader_id);
+	glLinkProgram(d_program_id);
+	glValidateProgram(d_program_id);
 }
 
-Shader::~Shader()
+shader::~shader()
 {
-    Unbind();
-    glDetachShader(d_programId, d_vertShaderId);
-    glDetachShader(d_programId, d_fragShaderId);
-    glDeleteShader(d_vertShaderId);
-    glDeleteShader(d_fragShaderId);
-    glDeleteProgram(d_programId);
+    unbind();
+    glDetachShader(d_program_id, d_vert_shader_id);
+    glDetachShader(d_program_id, d_frag_shader_id);
+    glDeleteShader(d_vert_shader_id);
+    glDeleteShader(d_frag_shader_id);
+    glDeleteProgram(d_program_id);
 }
 
-void Shader::Bind() const
+void shader::bind() const
 {
-    glUseProgram(d_programId);
+    glUseProgram(d_program_id);
 }
 
-void Shader::Unbind() const
+void shader::unbind() const
 {
     glUseProgram(0);
 }
 
-std::uint32_t Shader::uniform_location(const std::string& name) const
+std::uint32_t shader::uniform_location(const std::string& name) const
 {
-	return glGetUniformLocation(d_programId, name.c_str());
+	return glGetUniformLocation(d_program_id, name.c_str());
 }
 
-void Shader::load(const std::string& name, int value) const
+void shader::load(const std::string& name, int value) const
 {
-	glProgramUniform1i(d_programId, uniform_location(name), value);
+	glProgramUniform1i(d_program_id, uniform_location(name), value);
 }
 
-void Shader::load(const std::string& name, float value) const
+void shader::load(const std::string& name, float value) const
 {
 	glUniform1f(uniform_location(name), value);
 }
 
-void Shader::load(const std::string& name, const glm::vec2& vector) const
+void shader::load(const std::string& name, const glm::vec2& vector) const
 {
 	glUniform2f(uniform_location(name), vector.x, vector.y);
 }
 
-void Shader::load(const std::string& name, const glm::vec3& vector) const
+void shader::load(const std::string& name, const glm::vec3& vector) const
 {
 	glUniform3f(uniform_location(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::load(const std::string& name, const glm::vec4& vector) const
+void shader::load(const std::string& name, const glm::vec4& vector) const
 {
 	glUniform4f(uniform_location(name), vector.x, vector.y, vector.z, vector.w);
 }
 
-void Shader::load(const std::string& name, const glm::quat& quat) const
+void shader::load(const std::string& name, const glm::quat& quat) const
 {
 	glUniform4f(uniform_location(name), quat.x, quat.y, quat.z, quat.w);
 }
 
-void Shader::load(const std::string& name, const glm::mat4& matrix, int count) const
+void shader::load(const std::string& name, const glm::mat4& matrix, int count) const
 {
 	glUniformMatrix4fv(uniform_location(name), count, GL_FALSE, glm::value_ptr(matrix));
 }
 
-std::string ArrayName(std::string_view uniformName, std::size_t index)
+std::string array_name(std::string_view uniformName, std::size_t index)
 {
 	return std::format("{}[{}]", uniformName, index);
 }
 
-bool Shader::Reload()
+bool shader::reload()
 {
 	std::uint32_t programId = glCreateProgram();
 
-	std::uint32_t vertShaderId = compile_shader_source(GL_VERTEX_SHADER, d_vertexSource);
+	std::uint32_t vertShaderId = compile_shader_source(GL_VERTEX_SHADER, d_vert_source);
 	if(vertShaderId == 0) {
 		glDeleteProgram(programId);
 		return false;
 	}
 
-	std::uint32_t fragShaderId = compile_shader_source(GL_FRAGMENT_SHADER, d_fragSource);
+	std::uint32_t fragShaderId = compile_shader_source(GL_FRAGMENT_SHADER, d_frag_source);
 	if(fragShaderId == 0) {
 		glDeleteShader(vertShaderId);
 		glDeleteProgram(programId);
@@ -160,13 +160,13 @@ bool Shader::Reload()
 		return false;
 	}
 
-	glDeleteShader(d_vertShaderId);
-	glDeleteShader(d_fragShaderId);
-	glDeleteProgram(d_programId);
+	glDeleteShader(d_vert_shader_id);
+	glDeleteShader(d_frag_shader_id);
+	glDeleteProgram(d_program_id);
 
-	d_programId = programId;
-	d_vertShaderId = vertShaderId;
-	d_fragShaderId = fragShaderId;
+	d_program_id = programId;
+	d_vert_shader_id = vertShaderId;
+	d_frag_shader_id = fragShaderId;
 
 	return true;
 }

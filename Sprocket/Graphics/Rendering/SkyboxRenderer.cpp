@@ -23,7 +23,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
                           const glm::mat4& proj,
                           const glm::mat4& view)
 {
-    d_shader.Bind();
+    d_shader.bind();
     d_shader.load("projectionMatrix", proj);
 
     // Remove the translation so the camera never escapes the skybox.

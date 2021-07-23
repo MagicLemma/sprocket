@@ -16,7 +16,7 @@ class SkyboxRenderer
 {
     AssetManager* d_assetManager;
 
-    Shader d_shader;
+    shader d_shader;
         // Shader used to draw entities.
 
     std::unique_ptr<VertexArray> d_vao;

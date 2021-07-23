@@ -48,13 +48,13 @@ void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
     ImGui::End();
 }
 
-void ShaderInfoPanel(DevUI& ui, Shader& shader)
+void ShaderInfoPanel(DevUI& ui, shader& shader)
 {
     static std::string compileStatus;
 
     ImGui::Begin("Shader");
     if(ImGui::Button("Recompile")) {
-        bool result = shader.Reload();
+        bool result = shader.reload();
         compileStatus ="Shader compile:";
         compileStatus += (result? " SUCCESS": " FAILURE");
     }

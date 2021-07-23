@@ -17,7 +17,7 @@ class DevUI
 // A class that wraps the setup and rendering of ImGui.
 {
     Window* d_window;
-    Shader  d_shader;
+    shader  d_shader;
     std::unique_ptr<Texture> d_fontAtlas;
 
     StreamBuffer d_buffer;

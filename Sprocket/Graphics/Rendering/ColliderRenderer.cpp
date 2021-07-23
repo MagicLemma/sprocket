@@ -25,7 +25,7 @@ void ColliderRenderer::Draw(
 
     std::uint32_t MAX_NUM_LIGHTS = 5;
 
-    d_shader.Bind();
+    d_shader.bind();
     d_shader.load("u_proj_matrix", proj);
     d_shader.load("u_view_matrix", view);
     
@@ -96,7 +96,7 @@ void ColliderRenderer::Draw(
         }
     }
 
-    d_shader.Unbind();
+    d_shader.unbind();
 }
 
 void ColliderRenderer::Draw(const spkt::registry& registry, spkt::entity camera)

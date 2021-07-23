@@ -39,7 +39,7 @@ void post_processor::add_effect(
         d_effects.push_back(std::move(d_last_effect));
     }
 
-    d_last_effect = std::make_unique<Shader>(vertex_shader, fragment_shader);
+    d_last_effect = std::make_unique<shader>(vertex_shader, fragment_shader);
 }
 
 void post_processor::start_frame()
@@ -60,7 +60,7 @@ void post_processor::end_frame()
     // Apply all effects except for the last.
     for (auto& effect : d_effects) {
         // Set up the shader. TODO: make uniform uploading more general. 
-        effect->Bind();
+        effect->bind();
         effect->load("target_width", d_front_buffer->Width());
         effect->load("target_height", d_front_buffer->Height());
 
@@ -72,7 +72,7 @@ void post_processor::end_frame()
     }
 
     // Finally, apply the last effect to render to the screen
-    d_last_effect->Bind();
+    d_last_effect->bind();
     d_last_effect->load("target_width", d_front_buffer->Width());
     d_last_effect->load("target_height", d_front_buffer->Height());
     

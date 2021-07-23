@@ -38,14 +38,14 @@ std::unique_ptr<Buffer> GetInstanceBuffer()
 }
 
 void upload_uniforms(
-    const Shader& shader,
+    const shader& shader,
     const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view
 )
 {
     std::uint32_t MAX_NUM_LIGHTS = 5;
-      shader.Bind();
+      shader.bind();
 
     shader.load("u_proj_matrix", proj);
     shader.load("u_view_matrix", view);
@@ -71,9 +71,9 @@ void upload_uniforms(
         if (i < MAX_NUM_LIGHTS) {
             auto position = registry.get<Transform3DComponent>(entity).position;
             auto light = registry.get<LightComponent>(entity);
-            shader.load(ArrayName("u_light_pos", i), position);
-            shader.load(ArrayName("u_light_colour", i), light.colour);
-            shader.load(ArrayName("u_light_brightness", i), light.brightness);
+            shader.load(array_name("u_light_pos", i), position);
+            shader.load(array_name("u_light_colour", i), light.colour);
+            shader.load(array_name("u_light_brightness", i), light.brightness);
             ++i;
         }
         else {
@@ -81,15 +81,15 @@ void upload_uniforms(
         }
     }
     while (i < MAX_NUM_LIGHTS) {
-        shader.load(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-        shader.load(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        shader.load(ArrayName("u_light_brightness", i), 0.0f);
+        shader.load(array_name("u_light_pos", i), {0.0f, 0.0f, 0.0f});
+        shader.load(array_name("u_light_colour", i), {0.0f, 0.0f, 0.0f});
+        shader.load(array_name("u_light_brightness", i), 0.0f);
         ++i;
     }
 }
 
 void UploadMaterial(
-    const Shader& shader,
+    const shader& shader,
     Material* material,
     AssetManager* assetManager
 )
@@ -118,32 +118,32 @@ Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer(GetInstanceBuffer())
 {
-    d_staticShader.Bind();
+    d_staticShader.bind();
     d_staticShader.load("u_albedo_map", ALBEDO_SLOT);
     d_staticShader.load("u_normal_map", NORMAL_SLOT);
     d_staticShader.load("u_metallic_map", METALLIC_SLOT);
     d_staticShader.load("u_roughness_map", ROUGHNESS_SLOT);
-    d_staticShader.Unbind();
+    d_staticShader.unbind();
 
-    d_animatedShader.Bind();
+    d_animatedShader.bind();
     d_animatedShader.load("u_albedo_map", ALBEDO_SLOT);
     d_animatedShader.load("u_normal_map", NORMAL_SLOT);
     d_animatedShader.load("u_metallic_map", METALLIC_SLOT);
     d_animatedShader.load("u_roughness_map", ROUGHNESS_SLOT);
-    d_animatedShader.Unbind();
+    d_animatedShader.unbind();
 }
 
 void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
-    d_staticShader.Bind();
+    d_staticShader.bind();
     d_staticShader.load("shadow_map", SHADOW_MAP_SLOT);
     d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_staticShader.Unbind();
+    d_staticShader.unbind();
 
-    d_animatedShader.Bind();
+    d_animatedShader.bind();
     d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
     d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_animatedShader.Unbind();
+    d_animatedShader.unbind();
  
     shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
 }
@@ -166,7 +166,7 @@ void Scene3DRenderer::Draw(
         spkt::hash_pair
     > commands;
 
-    d_staticShader.Bind();
+    d_staticShader.bind();
     for (auto entity : registry.view<ModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<ModelComponent>(entity);
@@ -208,7 +208,7 @@ void Scene3DRenderer::Draw(
         d_vao->Draw();
     }
 
-    d_animatedShader.Bind();
+    d_animatedShader.bind();
     for (auto entity : registry.view<ModelComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<ModelComponent>(entity);
@@ -237,7 +237,7 @@ void Scene3DRenderer::Draw(
         d_vao->SetInstances(nullptr);
         d_vao->Draw();
     }
-    d_animatedShader.Unbind();
+    d_animatedShader.unbind();
 }
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)

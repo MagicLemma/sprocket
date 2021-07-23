@@ -32,8 +32,8 @@ public:
 private:
     AssetManager*    d_assetManager;
 
-    Shader d_staticShader;
-    Shader d_animatedShader;
+    shader d_staticShader;
+    shader d_animatedShader;
 
     std::unique_ptr<VertexArray> d_vao;
     
@@ -47,7 +47,7 @@ public:
 
     void EnableShadows(const ShadowMap& shadowMap);
 
-    Shader& GetShader() { return d_staticShader; }
+    shader& GetShader() { return d_staticShader; }
 };
 
 }

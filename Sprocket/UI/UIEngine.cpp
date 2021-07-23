@@ -365,7 +365,7 @@ void UIEngine::EndFrame()
     // right be (width, height). It flips the y-axis since OpenGL treats the bottom
     // left as (0, 0).
     auto proj = glm::ortho(0.0f, w, h, 0.0f);
-    d_shader.Bind();
+    d_shader.bind();
     d_shader.load("u_proj_matrix", proj);
 
     d_buffer.Bind();

@@ -43,7 +43,7 @@ void ShadowMap::Draw(
 
     d_lightViewMatrix = glm::lookAt(centre - sunDirection, centre, {0.0, 1.0, 0.0});
 
-    d_shader.Bind();
+    d_shader.bind();
     d_shader.load("u_proj_matrix", d_lightProjMatrix);
     d_shader.load("u_view_matrix", d_lightViewMatrix);
 
@@ -75,7 +75,7 @@ void ShadowMap::Draw(
 
     glCullFace(GL_BACK);
     d_shadowMap.Unbind();
-    d_shader.Unbind();
+    d_shader.unbind();
 }
 
 glm::mat4 ShadowMap::GetLightProjViewMatrix() const
