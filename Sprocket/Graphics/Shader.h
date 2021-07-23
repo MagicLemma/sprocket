@@ -25,17 +25,13 @@ class Shader
     Shader& operator=(const Shader&) = delete;
 
 public:
-    Shader(std::string_view vertShaderFile,
-           std::string_view fragShaderFile);
-
+    Shader(std::string_view vertShaderFile, std::string_view fragShaderFile);
     ~Shader();
 
     bool Reload();
     
-    std::string& VertexShaderSource() { return d_vertexSource; }
-    std::string& FragShaderSource() { return d_fragSource; }
-
-    std::uint32_t Id() const { return d_programId; }
+    std::string& vertex_source() { return d_vertexSource; }
+    std::string& fragment_source() { return d_fragSource; }
 
     void Bind() const;
     void Unbind() const;

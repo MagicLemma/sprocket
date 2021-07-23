@@ -64,11 +64,11 @@ void ShaderInfoPanel(DevUI& ui, Shader& shader)
     bool closed = true;
     if (ImGui::CollapsingHeader("Vertex")) {
         closed = false;
-        ImGuiXtra::MultilineTextModifiable("", &shader.VertexShaderSource());
+        ImGuiXtra::MultilineTextModifiable("", &shader.vertex_source());
     }
     if (ImGui::CollapsingHeader("Frag")) {
         closed = false;
-        ImGuiXtra::MultilineTextModifiable("", &shader.FragShaderSource());
+        ImGuiXtra::MultilineTextModifiable("", &shader.fragment_source());
     }
     
     if(closed) {
