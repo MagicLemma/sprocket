@@ -1,4 +1,4 @@
-#include "PostProcessor.h"
+#include "post_processor.h"
 
 #include <Sprocket/Graphics/Mesh.h>
 
