@@ -9,37 +9,23 @@
 namespace spkt {
 namespace {
 
-StaticMeshData GetMeshData()
+StaticMeshData quad_mesh_data()
 {
-    StaticMeshData data;
-
-    Vertex bottomLeft;
-    bottomLeft.position = {-1.0f, -1.0f, 0.0f};
-    bottomLeft.textureCoords = {0.0f, 0.0f};
-
-    Vertex bottomRight;
-    bottomRight.position = {1.0f, -1.0f, 0.0f};
-    bottomRight.textureCoords = {1.0f, 0.0f};
-
-    Vertex topRight;
-    topRight.position = {1.0f, 1.0f, 0.0f};
-    topRight.textureCoords = {1.0f, 1.0f};
-
-    Vertex topLeft;
-    topLeft.position = {-1.0f, 1.0f, 0.0f};
-    topLeft.textureCoords = {0.0f, 1.0f};
-
-    data.vertices = {bottomLeft, bottomRight, topRight, topLeft};
-    data.indices = {0, 1, 2, 0, 2, 3};
-    return data;
+    return {
+        .vertices = {
+            { .position = {-1.0f, -1.0f, 0.0f}, .textureCoords = {0.0f, 0.0f} },
+            { .position = { 1.0f, -1.0f, 0.0f}, .textureCoords = {1.0f, 0.0f} },
+            { .position = { 1.0f,  1.0f, 0.0f}, .textureCoords = {1.0f, 1.0f} },
+            { .position = {-1.0f,  1.0f, 0.0f}, .textureCoords = {0.0f, 1.0f} }
+        },
+        .indices = {0, 1, 2, 0, 2, 3}
+    };
 }
 
 }
 
 post_processor::post_processor(int width, int height)
-    : d_width(width)
-    , d_height(height)
-    , d_quad(std::make_unique<Mesh>(GetMeshData()))
+    : d_quad(std::make_unique<Mesh>(quad_mesh_data()))
     , d_front_buffer(std::make_unique<FrameBuffer>(width, height))
     , d_back_buffer(std::make_unique<FrameBuffer>(width, height))
     , d_effects()
@@ -53,10 +39,7 @@ void post_processor::add_effect(
         d_effects.push_back(std::move(d_last_effect));
     }
 
-    d_last_effect = std::make_unique<Shader>(
-        std::string(vertex_shader),
-        std::string(fragment_shader)
-    );
+    d_last_effect = std::make_unique<Shader>(vertex_shader, fragment_shader);
 }
 
 void post_processor::start_frame()
@@ -66,8 +49,6 @@ void post_processor::start_frame()
 
 void post_processor::set_screen_size(int width, int height)
 {
-    d_width = width;
-    d_height = height;
     d_front_buffer->SetScreenSize(width, height);
     d_back_buffer->SetScreenSize(width, height);
 }
@@ -80,8 +61,8 @@ void post_processor::end_frame()
     for (auto& effect : d_effects) {
         // Set up the shader. TODO: make uniform uploading more general. 
         effect->Bind();
-        effect->LoadFloat("targetWidth", (float)d_width);
-        effect->LoadFloat("targetHeight", (float)d_height);
+        effect->LoadFloat("target_width", d_front_buffer->Width());
+        effect->LoadFloat("target_height", d_front_buffer->Width());
 
         // Swap buffers, so the front is always the target we render to.
         std::swap(d_front_buffer, d_back_buffer);
@@ -92,8 +73,8 @@ void post_processor::end_frame()
 
     // Finally, apply the last effect to render to the screen
     d_last_effect->Bind();
-    d_last_effect->LoadFloat("targetWidth", (float)d_width);
-    d_last_effect->LoadFloat("targetHeight", (float)d_height);
+    d_last_effect->LoadFloat("target_width", d_front_buffer->Width());
+    d_last_effect->LoadFloat("target_height", d_front_buffer->Width());
     
     d_front_buffer->BindTexture();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

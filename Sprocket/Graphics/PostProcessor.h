@@ -10,9 +10,6 @@ namespace spkt {
 
 class post_processor
 {
-    int d_width;
-    int d_height;
-
     // The quad that is written to the frame buffer when applying the affect,
     // should mostly always match the size of the screen.
     std::unique_ptr<Mesh> d_quad;
@@ -20,9 +17,12 @@ class post_processor
     // Post-processing uses two frame buffers, when applying an effect
     // we use one are the source and one as the destination, switching
     // each time.
-    std::unique_ptr<FrameBuffer> d_front_buffer;
-    std::unique_ptr<FrameBuffer> d_back_buffer;
+    spkt::frame_buffer_ptr d_front_buffer;
+    spkt::frame_buffer_ptr d_back_buffer;
 
+    // All of the effects that will be applied to the scene image. The last effect
+    // is kept separate as it is used to do the final render to the scene rather
+    // than to a frame buffer.
     std::vector<spkt::shader_ptr> d_effects;
     spkt::shader_ptr d_last_effect;
 

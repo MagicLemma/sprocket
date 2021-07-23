@@ -10,29 +10,23 @@ namespace spkt {
 
 class Shader
 {
+    std::string d_vertexSource;
+    std::string d_fragSource;
+
     // Shader IDs
     std::uint32_t d_programId;
     std::uint32_t d_vertShaderId;
     std::uint32_t d_fragShaderId;
 
-    std::string d_vertexSource;
-    std::string d_fragSource;
-
-    // Shader Creation
-    void CreateShader(const std::string& vertShader,
-                      const std::string& fragShader);
-
-    std::uint32_t CompileShader(std::uint32_t type, const std::string& source);
-
     // Shader Uniform Getter
-    std::uint32_t GetUniformLocation(const std::string& name) const;
+    std::uint32_t uniform_location(const std::string& name) const;
 
     Shader(const Shader&) = delete;
     Shader& operator=(const Shader&) = delete;
 
 public:
-    Shader(const std::string& vertShaderFile,
-           const std::string& fragShaderFile);
+    Shader(std::string_view vertShaderFile,
+           std::string_view fragShaderFile);
 
     ~Shader();
 
