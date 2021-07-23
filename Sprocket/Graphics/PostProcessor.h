@@ -24,6 +24,7 @@ class post_processor
     std::unique_ptr<FrameBuffer> d_back_buffer;
 
     std::vector<spkt::shader_ptr> d_effects;
+    spkt::shader_ptr d_last_effect;
 
 public:
     post_processor(int width, int height);

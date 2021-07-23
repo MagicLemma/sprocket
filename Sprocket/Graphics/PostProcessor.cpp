@@ -49,10 +49,14 @@ void post_processor::add_effect(
     std::string_view vertex_shader,
     std::string_view fragment_shader)
 {
-    d_effects.push_back(std::make_unique<Shader>(
+    if (d_last_effect) {
+        d_effects.push_back(std::move(d_last_effect));
+    }
+
+    d_last_effect = std::make_unique<Shader>(
         std::string(vertex_shader),
         std::string(fragment_shader)
-    ));
+    );
 }
 
 void post_processor::start_frame()
@@ -71,6 +75,8 @@ void post_processor::set_screen_size(int width, int height)
 void post_processor::end_frame()
 {
     d_quad->Bind();
+
+    // Apply all effects except for the last.
     for (auto& effect : d_effects) {
         // Set up the shader. TODO: make uniform uploading more general. 
         effect->Bind();
@@ -84,9 +90,10 @@ void post_processor::end_frame()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     }
 
-    // Finally, render to the screen
-    d_back_buffer->Unbind();
+    // Finally, apply the last effect to render to the screen
+    d_last_effect->Bind();
     d_front_buffer->BindTexture();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
