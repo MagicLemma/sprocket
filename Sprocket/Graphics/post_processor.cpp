@@ -5,9 +5,15 @@
 #include <glad/glad.h>
 
 #include <string>
+#include <ranges>
 
 namespace spkt {
 namespace {
+
+auto ignore_last(int n)
+{
+    return std::views::reverse | std::views::drop(n) | std::views::reverse;
+}
 
 StaticMeshData quad_mesh_data()
 {
@@ -35,11 +41,7 @@ void post_processor::add_effect(
     std::string_view vertex_shader,
     std::string_view fragment_shader)
 {
-    if (d_last_effect) {
-        d_effects.push_back(std::move(d_last_effect));
-    }
-
-    d_last_effect = std::make_unique<shader>(vertex_shader, fragment_shader);
+    d_effects.push_back(std::make_unique<shader>(vertex_shader, fragment_shader));
 }
 
 void post_processor::start_frame()
@@ -49,16 +51,19 @@ void post_processor::start_frame()
 
 void post_processor::set_screen_size(int width, int height)
 {
+    assert(d_effects.size() > 0);
     d_front_buffer->SetScreenSize(width, height);
     d_back_buffer->SetScreenSize(width, height);
 }
 
 void post_processor::end_frame()
 {
+    assert(d_effects.size() > 0);
+
     d_quad->Bind();
 
     // Apply all effects except for the last.
-    for (auto& effect : d_effects) {
+    for (auto& effect : d_effects | spkt::ignore_last(1)) {
         // Set up the shader. TODO: make uniform uploading more general. 
         effect->bind();
         effect->load("target_width", d_front_buffer->Width());
@@ -72,9 +77,9 @@ void post_processor::end_frame()
     }
 
     // Finally, apply the last effect to render to the screen
-    d_last_effect->bind();
-    d_last_effect->load("target_width", d_front_buffer->Width());
-    d_last_effect->load("target_height", d_front_buffer->Height());
+    d_effects.back()->bind();
+    d_effects.back()->load("target_width", d_front_buffer->Width());
+    d_effects.back()->load("target_height", d_front_buffer->Height());
     
     d_front_buffer->BindTexture();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

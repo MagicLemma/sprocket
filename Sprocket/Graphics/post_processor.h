@@ -20,25 +20,20 @@ class post_processor
     spkt::frame_buffer_ptr d_front_buffer;
     spkt::frame_buffer_ptr d_back_buffer;
 
-    // All of the effects that will be applied to the scene image. The last effect
-    // is kept separate as it is used to do the final render to the scene rather
-    // than to a frame buffer.
     std::vector<spkt::shader_ptr> d_effects;
-    spkt::shader_ptr d_last_effect;
 
 public:
     post_processor(int width, int height);
 
+    // Appends a post process effect to the end of the process pipeline.
     void add_effect(std::string_view vertex_shader, std::string_view fragment_shader);
 
-    // Should be called before rendering the scene. Anything rendered between this
-    // and end_frame will be written the post processor rather than the screen.
+    // All rendering that the effects should be applied to should be done between these
+    // two function calls. end_frame will then render the result to the screen.
     void start_frame();
-
-    // Ends the frame, applies all affects and prints to the screen. Anything rendered
-    // after this will be rendered to the screen.
     void end_frame();
 
+    // Resize the internal frame buffers.
     void set_screen_size(int width, int height);
 };
 
