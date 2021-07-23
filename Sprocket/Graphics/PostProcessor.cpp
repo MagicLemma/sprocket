@@ -61,8 +61,8 @@ void post_processor::end_frame()
     for (auto& effect : d_effects) {
         // Set up the shader. TODO: make uniform uploading more general. 
         effect->Bind();
-        effect->LoadInt("target_width", d_front_buffer->Width());
-        effect->LoadInt("target_height", d_front_buffer->Height());
+        effect->load("target_width", d_front_buffer->Width());
+        effect->load("target_height", d_front_buffer->Height());
 
         // Swap buffers, so the front is always the target we render to.
         std::swap(d_front_buffer, d_back_buffer);
@@ -73,8 +73,8 @@ void post_processor::end_frame()
 
     // Finally, apply the last effect to render to the screen
     d_last_effect->Bind();
-    d_last_effect->LoadInt("target_width", d_front_buffer->Width());
-    d_last_effect->LoadInt("target_height", d_front_buffer->Height());
+    d_last_effect->load("target_width", d_front_buffer->Width());
+    d_last_effect->load("target_height", d_front_buffer->Height());
     
     d_front_buffer->BindTexture();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

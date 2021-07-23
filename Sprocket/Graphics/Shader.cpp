@@ -88,42 +88,37 @@ std::uint32_t Shader::uniform_location(const std::string& name) const
 	return glGetUniformLocation(d_programId, name.c_str());
 }
 
-void Shader::LoadFloat(const std::string& name, float value) const
-{
-	glUniform1f(uniform_location(name), value);
-}
-
-void Shader::LoadSampler(const std::string& name, int value) const
+void Shader::load(const std::string& name, int value) const
 {
 	glProgramUniform1i(d_programId, uniform_location(name), value);
 }
 
-void Shader::LoadInt(const std::string& name, int value) const
+void Shader::load(const std::string& name, float value) const
 {
-	glUniform1i(uniform_location(name), value);
+	glUniform1f(uniform_location(name), value);
 }
 
-void Shader::LoadVec2(const std::string& name, const glm::vec2& vector) const
+void Shader::load(const std::string& name, const glm::vec2& vector) const
 {
 	glUniform2f(uniform_location(name), vector.x, vector.y);
 }
 
-void Shader::LoadVec3(const std::string& name, const glm::vec3& vector) const
+void Shader::load(const std::string& name, const glm::vec3& vector) const
 {
 	glUniform3f(uniform_location(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::LoadVec4(const std::string& name, const glm::vec4& vector) const
+void Shader::load(const std::string& name, const glm::vec4& vector) const
 {
 	glUniform4f(uniform_location(name), vector.x, vector.y, vector.z, vector.w);
 }
 
-void Shader::LoadQuat(const std::string& name, const glm::quat& quat) const
+void Shader::load(const std::string& name, const glm::quat& quat) const
 {
 	glUniform4f(uniform_location(name), quat.x, quat.y, quat.z, quat.w);
 }
 
-void Shader::LoadMat4(const std::string& name, const glm::mat4& matrix, int count) const
+void Shader::load(const std::string& name, const glm::mat4& matrix, int count) const
 {
 	glUniformMatrix4fv(uniform_location(name), count, GL_FALSE, glm::value_ptr(matrix));
 }

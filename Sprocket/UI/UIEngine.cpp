@@ -366,7 +366,7 @@ void UIEngine::EndFrame()
     // left as (0, 0).
     auto proj = glm::ortho(0.0f, w, h, 0.0f);
     d_shader.Bind();
-    d_shader.LoadMat4("u_proj_matrix", proj);
+    d_shader.load("u_proj_matrix", proj);
 
     d_buffer.Bind();
     for (const auto& panelHash : d_panelOrder) {
@@ -430,7 +430,7 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     
     if (cmd.font) {
         cmd.font->Bind(0);
-        d_shader.LoadInt("texture_channels", 1);
+        d_shader.load("texture_channels", 1);
         d_buffer.Draw(cmd.textVertices, cmd.textIndices);
     }
 }

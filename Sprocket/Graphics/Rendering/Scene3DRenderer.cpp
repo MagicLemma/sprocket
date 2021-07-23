@@ -47,22 +47,22 @@ void upload_uniforms(
     std::uint32_t MAX_NUM_LIGHTS = 5;
       shader.Bind();
 
-    shader.LoadMat4("u_proj_matrix", proj);
-    shader.LoadMat4("u_view_matrix", view);
+    shader.load("u_proj_matrix", proj);
+    shader.load("u_view_matrix", view);
 
     // Load sun to shader
     if (auto s = registry.find<SunComponent>(); registry.valid(s)) {
         const auto& sun = registry.get<SunComponent>(s);
-        shader.LoadVec3("u_sun_direction", sun.direction);
-        shader.LoadVec3("u_sun_colour", sun.colour);
-        shader.LoadFloat("u_sun_brightness", sun.brightness);
+        shader.load("u_sun_direction", sun.direction);
+        shader.load("u_sun_colour", sun.colour);
+        shader.load("u_sun_brightness", sun.brightness);
     }
 
     // Load ambience to shader
     if (auto a = registry.find<AmbienceComponent>(); registry.valid(a)) {
         const auto& ambience = registry.get<AmbienceComponent>(a);
-        shader.LoadVec3("u_ambience_colour", ambience.colour);
-        shader.LoadFloat("u_ambience_brightness", ambience.brightness);
+        shader.load("u_ambience_colour", ambience.colour);
+        shader.load("u_ambience_brightness", ambience.brightness);
     }
     
     // Load point lights to shader
@@ -71,9 +71,9 @@ void upload_uniforms(
         if (i < MAX_NUM_LIGHTS) {
             auto position = registry.get<Transform3DComponent>(entity).position;
             auto light = registry.get<LightComponent>(entity);
-            shader.LoadVec3(ArrayName("u_light_pos", i), position);
-            shader.LoadVec3(ArrayName("u_light_colour", i), light.colour);
-            shader.LoadFloat(ArrayName("u_light_brightness", i), light.brightness);
+            shader.load(ArrayName("u_light_pos", i), position);
+            shader.load(ArrayName("u_light_colour", i), light.colour);
+            shader.load(ArrayName("u_light_brightness", i), light.brightness);
             ++i;
         }
         else {
@@ -81,9 +81,9 @@ void upload_uniforms(
         }
     }
     while (i < MAX_NUM_LIGHTS) {
-        shader.LoadVec3(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-        shader.LoadVec3(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        shader.LoadFloat(ArrayName("u_light_brightness", i), 0.0f);
+        shader.load(ArrayName("u_light_pos", i), {0.0f, 0.0f, 0.0f});
+        shader.load(ArrayName("u_light_colour", i), {0.0f, 0.0f, 0.0f});
+        shader.load(ArrayName("u_light_brightness", i), 0.0f);
         ++i;
     }
 }
@@ -99,14 +99,14 @@ void UploadMaterial(
     assetManager->GetTexture(material->metallicMap)->Bind(Scene3DRenderer::METALLIC_SLOT);
     assetManager->GetTexture(material->roughnessMap)->Bind(Scene3DRenderer::ROUGHNESS_SLOT);
 
-    shader.LoadFloat("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
-    shader.LoadFloat("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
-    shader.LoadFloat("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
-    shader.LoadFloat("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
+    shader.load("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
+    shader.load("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
+    shader.load("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
+    shader.load("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
 
-    shader.LoadVec3("u_albedo", material->albedo);
-    shader.LoadFloat("u_roughness", material->roughness);
-    shader.LoadFloat("u_metallic", material->metallic);
+    shader.load("u_albedo", material->albedo);
+    shader.load("u_roughness", material->roughness);
+    shader.load("u_metallic", material->metallic);
 }
 
 }
@@ -119,30 +119,30 @@ Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     , d_instanceBuffer(GetInstanceBuffer())
 {
     d_staticShader.Bind();
-    d_staticShader.LoadSampler("u_albedo_map", ALBEDO_SLOT);
-    d_staticShader.LoadSampler("u_normal_map", NORMAL_SLOT);
-    d_staticShader.LoadSampler("u_metallic_map", METALLIC_SLOT);
-    d_staticShader.LoadSampler("u_roughness_map", ROUGHNESS_SLOT);
+    d_staticShader.load("u_albedo_map", ALBEDO_SLOT);
+    d_staticShader.load("u_normal_map", NORMAL_SLOT);
+    d_staticShader.load("u_metallic_map", METALLIC_SLOT);
+    d_staticShader.load("u_roughness_map", ROUGHNESS_SLOT);
     d_staticShader.Unbind();
 
     d_animatedShader.Bind();
-    d_animatedShader.LoadSampler("u_albedo_map", ALBEDO_SLOT);
-    d_animatedShader.LoadSampler("u_normal_map", NORMAL_SLOT);
-    d_animatedShader.LoadSampler("u_metallic_map", METALLIC_SLOT);
-    d_animatedShader.LoadSampler("u_roughness_map", ROUGHNESS_SLOT);
+    d_animatedShader.load("u_albedo_map", ALBEDO_SLOT);
+    d_animatedShader.load("u_normal_map", NORMAL_SLOT);
+    d_animatedShader.load("u_metallic_map", METALLIC_SLOT);
+    d_animatedShader.load("u_roughness_map", ROUGHNESS_SLOT);
     d_animatedShader.Unbind();
 }
 
 void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     d_staticShader.Bind();
-    d_staticShader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
-    d_staticShader.LoadMat4("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
+    d_staticShader.load("shadow_map", SHADOW_MAP_SLOT);
+    d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     d_staticShader.Unbind();
 
     d_animatedShader.Bind();
-    d_animatedShader.LoadSampler("shadow_map", SHADOW_MAP_SLOT);
-    d_animatedShader.LoadMat4("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
+    d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
+    d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     d_animatedShader.Unbind();
  
     shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
@@ -219,18 +219,18 @@ void Scene3DRenderer::Draw(
         auto material = d_assetManager->GetMaterial(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
 
-        d_animatedShader.LoadMat4("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
+        d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
         if (registry.has<MeshAnimationComponent>(entity)) {
             const auto& ac = registry.get<MeshAnimationComponent>(entity);
             auto poses = mesh->GetPose(ac.name, ac.time);
             
             int numBones = std::min(MAX_BONES, (int)poses.size());
-            d_animatedShader.LoadMat4("u_bone_transforms", poses[0], numBones);
+            d_animatedShader.load("u_bone_transforms", poses[0], numBones);
         }
         else {
             static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
-            d_animatedShader.LoadMat4("u_bone_transforms", clear[0], MAX_BONES);
+            d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
         }
 
         d_vao->SetModel(mesh);

@@ -26,8 +26,8 @@ void ColliderRenderer::Draw(
     std::uint32_t MAX_NUM_LIGHTS = 5;
 
     d_shader.Bind();
-    d_shader.LoadMat4("u_proj_matrix", proj);
-    d_shader.LoadMat4("u_view_matrix", view);
+    d_shader.load("u_proj_matrix", proj);
+    d_shader.load("u_view_matrix", view);
     
     static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube.get());
@@ -40,7 +40,7 @@ void ColliderRenderer::Draw(
         if (c.applyScale) {
             transform = glm::scale(transform, tr.scale);
         }
-        d_shader.LoadMat4("u_model_matrix", transform);
+        d_shader.load("u_model_matrix", transform);
         d_vao->Draw();
     }
 
@@ -52,7 +52,7 @@ void ColliderRenderer::Draw(
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, {c.radius, c.radius, c.radius});
-        d_shader.LoadMat4("u_model_matrix", transform);
+        d_shader.load("u_model_matrix", transform);
         d_vao->Draw();
     }
 
@@ -68,7 +68,7 @@ void ColliderRenderer::Draw(
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::translate(transform, {0.0, c.height/2, 0.0});
             transform = glm::scale(transform, {c.radius, c.radius, c.radius});
-            d_shader.LoadMat4("u_model_matrix", transform);
+            d_shader.load("u_model_matrix", transform);
             d_vao->SetModel(s_hemisphere.get());
             d_vao->Draw();
         }
@@ -78,7 +78,7 @@ void ColliderRenderer::Draw(
             glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::scale(transform, {c.radius, c.height, c.radius});
-            d_shader.LoadMat4("u_model_matrix", transform);
+            d_shader.load("u_model_matrix", transform);
             d_vao->SetModel(s_cylinder.get());
             d_vao->Draw();
         }
@@ -90,7 +90,7 @@ void ColliderRenderer::Draw(
             transform = glm::translate(transform, {0.0, -c.height/2, 0.0});
             transform = glm::rotate(transform, glm::pi<float>(), {1, 0, 0});
             transform = glm::scale(transform, {c.radius, c.radius, c.radius});
-            d_shader.LoadMat4("u_model_matrix", transform);
+            d_shader.load("u_model_matrix", transform);
             d_vao->SetModel(s_hemisphere.get());
             d_vao->Draw();
         }
