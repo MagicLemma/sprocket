@@ -60,6 +60,14 @@ void post_processor::start_frame()
     d_front_buffer->Bind();
 }
 
+void post_processor::set_screen_size(int width, int height)
+{
+    d_width = width;
+    d_height = height;
+    d_front_buffer->SetScreenSize(width, height);
+    d_back_buffer->SetScreenSize(width, height);
+}
+
 void post_processor::end_frame()
 {
     d_quad->Bind();

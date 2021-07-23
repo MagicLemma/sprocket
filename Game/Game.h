@@ -35,7 +35,7 @@ class Game
     
     // RENDERING
     spkt::Scene3DRenderer d_entityRenderer;
-    spkt::PostProcessor d_postProcessor;
+    spkt::post_processor d_post_processor;
 
     // Additional world setup
     spkt::CircadianCycle d_cycle;

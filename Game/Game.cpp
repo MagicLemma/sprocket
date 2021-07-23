@@ -86,7 +86,7 @@ Game::Game(Window* window)
     , d_assetManager()
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(&d_assetManager)
-    , d_postProcessor(d_window->Width(), d_window->Height())
+    , d_post_processor(d_window->Width(), d_window->Height())
     , d_shadowMap(&d_assetManager)
     , d_hoveredEntityUI(d_window)
     , d_devUI(window)
@@ -111,14 +111,18 @@ Game::Game(Window* window)
     auto& sun = registry.get<SunComponent>(sun_entity);
     sun.direction = d_cycle.GetSunDir();
 
-    int w = d_window->Width();
-    int h = d_window->Height();
-    
-    d_postProcessor.add_effect(spkt::make_gaussian_horiz_effect(w, h));
-    d_postProcessor.add_effect(spkt::make_gaussian_vert_effect(w, h));
-    d_postProcessor.add_effect(spkt::make_negative_effect(w, h));
-
-
+    d_post_processor.add_effect(
+        "Resources/Shaders/GaussH.vert",
+        "Resources/Shaders/Gauss.frag"
+    );
+    d_post_processor.add_effect(
+        "Resources/Shaders/GaussV.vert",
+        "Resources/Shaders/Gauss.frag"
+    );
+    d_post_processor.add_effect(
+        "Resources/Shaders/Negative.vert",
+        "Resources/Shaders/Negative.frag"
+    );
 }
 
 void Game::load_scene(std::string_view file)
@@ -183,7 +187,7 @@ void Game::on_event(spkt::event& event)
     d_hoveredEntityUI.on_event(event);
 
     if (auto data = event.get_if<WindowResize>()) {
-        d_postProcessor.SetScreenSize(data->width, data->height);
+        d_post_processor.set_screen_size(data->width, data->height);
     }
 
     if (auto data = event.get_if<MouseButtonPressed>()) {
@@ -290,15 +294,14 @@ void Game::on_render()
     );
 
     if (d_paused) {
-        d_postProcessor.Bind();
+        d_post_processor.start_frame();
     }
 
     d_entityRenderer.EnableShadows(d_shadowMap);
     d_entityRenderer.Draw(registry, d_camera);
 
     if (d_paused) {
-        d_postProcessor.Unbind();
-        d_postProcessor.Draw();
+        d_post_processor.end_frame();
     }
 
     if (!d_paused) {
