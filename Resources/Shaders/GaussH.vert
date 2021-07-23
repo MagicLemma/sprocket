@@ -3,7 +3,7 @@ layout (location = 0) in vec3 position;
 
 out vec2 blueTextureCoords[11];
 
-uniform float target_width;
+uniform int target_width;
 
 void main(void){
 	gl_Position = vec4(position, 1.0);
