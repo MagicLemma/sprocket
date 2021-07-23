@@ -54,7 +54,7 @@ add_library(Sprocket STATIC
             Graphics/Buffer.cpp
             Graphics/BufferLayout.cpp
             Graphics/RenderContext.cpp
-            Graphics/Shader.cpp
+            Graphics/shader.cpp
             Graphics/DepthBuffer.cpp
             Graphics/Material.cpp
             Graphics/Mesh.cpp

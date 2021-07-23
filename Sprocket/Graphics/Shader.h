@@ -44,11 +44,9 @@ public:
     void load(const std::string& name, const glm::mat4& matrix, int count = 1) const;
 };
 
-using shader_ptr = std::unique_ptr<shader>;
+using shader_ptr = std::unique_ptr<spkt::shader>;
 
-// HELPER FUNCTIONS
-std::string array_name(std::string_view uniformName, std::size_t index);
-    // Give a name for a uniform that is an array, return the accessor
-    // name for the given index.
+// Formats an OpenGL array indexed name 
+std::string array_name(std::string_view uniform_name, std::size_t index);
 
 }

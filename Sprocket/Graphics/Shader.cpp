@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "shader.h"
 
 #include <Sprocket/Utility/Log.h>
 
@@ -130,44 +130,42 @@ std::string array_name(std::string_view uniformName, std::size_t index)
 
 bool shader::reload()
 {
-	std::uint32_t programId = glCreateProgram();
+	std::uint32_t program_id = glCreateProgram();
 
-	std::uint32_t vertShaderId = compile_shader_source(GL_VERTEX_SHADER, d_vert_source);
-	if(vertShaderId == 0) {
-		glDeleteProgram(programId);
+	std::uint32_t vert_shader_id = compile_shader_source(GL_VERTEX_SHADER, d_vert_source);
+	if(vert_shader_id == 0) {
+		glDeleteProgram(program_id);
 		return false;
 	}
 
-	std::uint32_t fragShaderId = compile_shader_source(GL_FRAGMENT_SHADER, d_frag_source);
-	if(fragShaderId == 0) {
-		glDeleteShader(vertShaderId);
-		glDeleteProgram(programId);
+	std::uint32_t frag_shader_id = compile_shader_source(GL_FRAGMENT_SHADER, d_frag_source);
+	if(frag_shader_id == 0) {
+		glDeleteShader(vert_shader_id);
+		glDeleteProgram(program_id);
 		return false;
 	}
 
-	glAttachShader(programId, vertShaderId);
-	glAttachShader(programId, fragShaderId);
-	glLinkProgram(programId);
-	glValidateProgram(programId);
+	glAttachShader(program_id, vert_shader_id);
+	glAttachShader(program_id, frag_shader_id);
+	glLinkProgram(program_id);
+	glValidateProgram(program_id);
 
-	GLint validateStatus = GL_FALSE;
-	glGetProgramiv(programId, GL_VALIDATE_STATUS, &validateStatus);
+	GLint validate_status = GL_FALSE;
+	glGetProgramiv(program_id, GL_VALIDATE_STATUS, &validate_status);
 
-	if(validateStatus != GL_TRUE) {
-		glDeleteShader(fragShaderId);
-		glDeleteShader(vertShaderId);
-		glDeleteProgram(programId);
+	if(validate_status != GL_TRUE) {
+		glDeleteShader(frag_shader_id);
+		glDeleteShader(vert_shader_id);
+		glDeleteProgram(program_id);
 		return false;
 	}
 
 	glDeleteShader(d_vert_shader_id);
 	glDeleteShader(d_frag_shader_id);
 	glDeleteProgram(d_program_id);
-
-	d_program_id = programId;
-	d_vert_shader_id = vertShaderId;
-	d_frag_shader_id = fragShaderId;
-
+	d_program_id = program_id;
+	d_vert_shader_id = vert_shader_id;
+	d_frag_shader_id = frag_shader_id;
 	return true;
 }
 

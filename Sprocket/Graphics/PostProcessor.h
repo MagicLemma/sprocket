@@ -1,7 +1,7 @@
 #pragma once
 #include <Sprocket/Graphics/FrameBuffer.h>
 #include <Sprocket/Graphics/Mesh.h>
-#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/shader.h>
 
 #include <memory>
 #include <vector>
