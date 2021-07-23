@@ -36,6 +36,52 @@ StaticMeshData GetMeshData()
 
 }
 
+post_processor::post_processor(int width, int height)
+    : d_width(width)
+    , d_height(height)
+    , d_quad(std::make_unique<Mesh>(GetMeshData()))
+    , d_front_buffer(std::make_unique<FrameBuffer>(width, height))
+    , d_back_buffer(std::make_unique<FrameBuffer>(width, height))
+    , d_effects()
+{}
+
+void post_processor::add_effect(
+    std::string_view vertex_shader,
+    std::string_view fragment_shader)
+{
+    d_effects.push_back(std::make_unique<Shader>(
+        std::string(vertex_shader),
+        std::string(fragment_shader)
+    ));
+}
+
+void post_processor::start_frame()
+{
+    d_front_buffer->Bind();
+}
+
+void post_processor::end_frame()
+{
+    d_quad->Bind();
+    for (auto& effect : d_effects) {
+        // Set up the shader. TODO: make uniform uploading more general. 
+        effect->Bind();
+        effect->LoadFloat("targetWidth", (float)d_width);
+        effect->LoadFloat("targetHeight", (float)d_height);
+
+        // Swap buffers, so the front is always the target we render to.
+        std::swap(d_front_buffer, d_back_buffer);
+        d_back_buffer->BindTexture();
+        d_front_buffer->Bind();
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    }
+
+    // Finally, render to the screen
+    d_back_buffer->Unbind();
+    d_front_buffer->BindTexture();
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
 Effect::Effect(int width, int height,
                const std::string& vertShader,
                const std::string& fragShader)
@@ -68,13 +114,13 @@ void Effect::UnbindForRead() const
     d_shader.Unbind();
 }
 
-void Effect::Draw(Effect* target)
+void Effect::Draw(Effect* next)
 {
-    if (target) { target->BindForWrite(); }
+    if (next) { next->BindForWrite(); }
     BindForRead();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     UnbindForRead();
-    if (target) { target->UnbindForWrite(); }
+    if (next) { next->UnbindForWrite(); }
 }
 
 void Effect::SetScreenSize(int width, int height)

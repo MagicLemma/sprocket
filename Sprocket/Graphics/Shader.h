@@ -1,8 +1,9 @@
 #pragma once
 #include <glm/glm.hpp>
 
-#include <string>
+#include <memory>
 #include <string_view>
+#include <string>
 #include <vector>
 
 namespace spkt {
@@ -25,6 +26,9 @@ class Shader
 
     // Shader Uniform Getter
     std::uint32_t GetUniformLocation(const std::string& name) const;
+
+    Shader(const Shader&) = delete;
+    Shader& operator=(const Shader&) = delete;
 
 public:
     Shader(const std::string& vertShaderFile,
@@ -52,6 +56,8 @@ public:
     void LoadQuat(const std::string& name, const glm::quat& quat) const;
     void LoadMat4(const std::string& name, const glm::mat4& matrix, int count = 1) const;
 };
+
+using shader_ptr = std::unique_ptr<Shader>;
 
 // HELPER FUNCTIONS
 std::string ArrayName(std::string_view uniformName, std::size_t index);

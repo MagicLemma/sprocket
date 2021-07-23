@@ -8,6 +8,39 @@
 
 namespace spkt {
 
+class post_processor
+{
+    int d_width;
+    int d_height;
+
+    // The quad that is written to the frame buffer when applying the affect,
+    // should mostly always match the size of the screen.
+    std::unique_ptr<Mesh> d_quad;
+
+    // Post-processing uses two frame buffers, when applying an effect
+    // we use one are the source and one as the destination, switching
+    // each time.
+    std::unique_ptr<FrameBuffer> d_front_buffer;
+    std::unique_ptr<FrameBuffer> d_back_buffer;
+
+    std::vector<spkt::shader_ptr> d_effects;
+
+public:
+    post_processor(int width, int height);
+
+    void add_effect(std::string_view vertex_shader, std::string_view fragment_shader);
+
+    // Should be called before rendering the scene. Anything rendered between this
+    // and end_frame will be written the post processor rather than the screen.
+    void start_frame();
+
+    // Ends the frame, applies all affects and prints to the screen. Anything rendered
+    // after this will be rendered to the screen.
+    void end_frame();
+
+    void set_screen_size(int width, int height);
+};
+
 class Effect
 {
     FrameBuffer d_frameBuffer;
@@ -20,24 +53,24 @@ public:
 
     virtual ~Effect() {}
 
+    // Bind/unbind for writing. Any render calls while this is
+    // bound for writing will cause objects to be rendered onto
+    // this objects texture.
     void BindForWrite();
     void UnbindForWrite();
-        // Bind/unbind for writing. Any render calls while this is
-        // bound for writing will cause objects to be rendered onto
-        // this objects texture.
 
+    // Bind/unbind for reading. Any render calls while this is
+    // bound for reading will receive this objects texture which
+    // can be sampled in shaders.
     void BindForRead() const;
     void UnbindForRead() const;
-        // Bind/unbind for reading. Any render calls while this is
-        // bound for reading will receive this objects texture which
-        // can be sampled in shaders.
 
-    void Draw(Effect* = nullptr);
-        // Draws to the texture of the target PostProcess. If this is
-        // a nullptr, it is rendered to the screen.
+    // Draws to the texture of the target PostProcess. If this is
+    // a nullptr, it is rendered to the screen.
+    void Draw(Effect* next = nullptr);
 
+    // Resized the internal textures to match the new screen size.
     void SetScreenSize(int width, int height);
-        // Resized the internal textures to match the new screen size.
 };
 
 std::unique_ptr<Effect> make_gaussian_horiz_effect(int width, int height);

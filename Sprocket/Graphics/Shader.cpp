@@ -17,10 +17,10 @@ namespace {
 // Parses a shader source code into a string ready to be compiled.
 std::string ParseShader(const std::string& filepath)
 {
-	if (!std::filesystem::exists(filepath)) {
+	std::ifstream stream(filepath);
+	if (!stream) {
 		log::fatal("Shader file '{}' does not exist!", filepath);
 	}
-	std::ifstream stream(filepath);
 	std::string shader((std::istreambuf_iterator<char>(stream)),
 		                std::istreambuf_iterator<char>());
 	return shader;

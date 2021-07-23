@@ -51,4 +51,6 @@ public:
     glm::ivec2 Size() const { return {Width(), Height()}; }
 };
 
+using frame_buffer_ptr = std::unique_ptr<FrameBuffer>;
+
 }
