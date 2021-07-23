@@ -112,16 +112,13 @@ Game::Game(Window* window)
     sun.direction = d_cycle.GetSunDir();
 
     d_post_processor.add_effect(
-        "Resources/Shaders/GaussH.vert",
-        "Resources/Shaders/Gauss.frag"
+        "Resources/Shaders/GaussH.vert", "Resources/Shaders/Gauss.frag"
     );
     d_post_processor.add_effect(
-        "Resources/Shaders/GaussV.vert",
-        "Resources/Shaders/Gauss.frag"
+        "Resources/Shaders/GaussV.vert", "Resources/Shaders/Gauss.frag"
     );
     d_post_processor.add_effect(
-        "Resources/Shaders/Negative.vert",
-        "Resources/Shaders/Negative.frag"
+        "Resources/Shaders/Negative.vert", "Resources/Shaders/Negative.frag"
     );
 }
 
