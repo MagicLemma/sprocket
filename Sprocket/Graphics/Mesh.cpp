@@ -216,8 +216,13 @@ void LoadSkeleton(
     }
 }
 
-StaticMeshData LoadStaticMesh(const aiScene* scene)
-{    
+}
+
+StaticMeshData StaticMeshData::load(const std::string& file)
+{
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
+    assert(IsSceneValid(scene));
     StaticMeshData data;
 
     for (std::uint32_t idx = 0; idx != scene->mNumMeshes; ++idx) {
@@ -246,8 +251,11 @@ StaticMeshData LoadStaticMesh(const aiScene* scene)
     return data;
 }
 
-AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
-{    
+AnimatedMeshData AnimatedMeshData::load(const std::string& file)
+{
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
+    assert(IsSceneValid(scene));
     AnimatedMeshData data;
 
     std::uint32_t vertexCount = 0;
@@ -330,24 +338,6 @@ AnimatedMeshData LoadAnimatedMesh(const aiScene* scene)
     return data;
 }
 
-}
-
-std::unique_ptr<StaticMeshData> StaticMeshData::load(const std::string& file)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
-    assert(IsSceneValid(scene));
-    return std::make_unique<StaticMeshData>(LoadStaticMesh(scene));
-}
-
-std::unique_ptr<AnimatedMeshData> AnimatedMeshData::load(const std::string& file)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
-    assert(IsSceneValid(scene));
-    return std::make_unique<AnimatedMeshData>(LoadAnimatedMesh(scene));
-}
-
 static_mesh::static_mesh(const StaticMeshData& data)
     : d_vertex_buffer(0)
     , d_index_buffer(0)
@@ -373,10 +363,7 @@ std::unique_ptr<static_mesh> static_mesh::from_data(const StaticMeshData& data)
 
 std::unique_ptr<static_mesh> static_mesh::from_file(const std::string& file)
 {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
-    assert(IsSceneValid(scene));
-    return static_mesh::from_data(LoadStaticMesh(scene));
+    return static_mesh::from_data(StaticMeshData::load(file));
 }
 
 void static_mesh::bind() const
@@ -425,10 +412,7 @@ std::unique_ptr<animated_mesh> animated_mesh::from_data(const AnimatedMeshData& 
 
 std::unique_ptr<animated_mesh> animated_mesh::from_file(const std::string& file)
 {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
-    assert(IsSceneValid(scene));
-    return animated_mesh::from_data(LoadAnimatedMesh(scene));
+    return animated_mesh::from_data(AnimatedMeshData::load(file));
 }
 
 void animated_mesh::bind() const

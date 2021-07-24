@@ -31,7 +31,7 @@ static_mesh* AssetManager::get_static_mesh(std::string_view file)
         }
     } else {
         d_loading_static_meshes[filepath] = std::async(std::launch::async, [filepath]() {
-            return StaticMeshData::load(filepath);
+            return std::make_unique<StaticMeshData>(StaticMeshData::load(filepath));
         });
     }
 
@@ -57,7 +57,7 @@ animated_mesh* AssetManager::get_animated_mesh(std::string_view file)
         }
     } else {
         d_loading_animated_meshes[filepath] = std::async(std::launch::async, [filepath]() {
-            return AnimatedMeshData::load(filepath);
+            return std::make_unique<AnimatedMeshData>(AnimatedMeshData::load(filepath));
         });
     }
 

@@ -40,7 +40,7 @@ struct StaticMeshData
     std::vector<Vertex>        vertices;
     std::vector<std::uint32_t> indices;
 
-    static std::unique_ptr<StaticMeshData> load(const std::string& file);
+    static StaticMeshData load(const std::string& file);
 };
 
 struct AnimatedMeshData
@@ -49,7 +49,7 @@ struct AnimatedMeshData
     std::vector<std::uint32_t> indices;
     Skeleton skeleton;
 
-    static std::unique_ptr<AnimatedMeshData> load(const std::string& file);
+    static AnimatedMeshData load(const std::string& file);
 };
 
 class static_mesh
