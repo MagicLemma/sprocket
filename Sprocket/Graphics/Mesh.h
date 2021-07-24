@@ -49,7 +49,7 @@ struct AnimatedMeshData
     std::vector<AnimVertex>    vertices;
     std::vector<std::uint32_t> indices;
     Skeleton skeleton;
-    
+
     static std::unique_ptr<AnimatedMeshData> load(const std::string& file);
 };
 
@@ -160,5 +160,7 @@ public:
     // Returns a list of names of all possible animations in this mesh.
     std::vector<std::string> get_animation_names() const;
 };
+
+using animated_mesh_ptr = std::unique_ptr<animated_mesh>;
 
 }

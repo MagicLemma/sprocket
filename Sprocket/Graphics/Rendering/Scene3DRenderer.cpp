@@ -175,6 +175,14 @@ void Scene3DRenderer::Draw(
         if (mesh->IsAnimated()) { continue; }
         commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
     }
+    for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
+        const auto& tc = registry.get<Transform3DComponent>(entity);
+        const auto& mc = registry.get<StaticModelComponent>(entity);
+        if (mc.mesh.empty()) { continue; }
+        auto mesh = d_assetManager->GetMesh(mc.mesh);
+        if (mesh->IsAnimated()) { continue; }
+        commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
+    }
 
     for (const auto& [key, data] : commands) {
         auto mesh = d_assetManager->GetMesh(key.first);
@@ -212,6 +220,34 @@ void Scene3DRenderer::Draw(
     for (auto entity : registry.view<ModelComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<ModelComponent>(entity);
+        if (mc.mesh.empty()) { continue; }
+        auto mesh = d_assetManager->GetMesh(mc.mesh);
+        if (!mesh->IsAnimated()) { continue; }
+
+        auto material = d_assetManager->GetMaterial(mc.material);
+        UploadMaterial(d_animatedShader, material, d_assetManager);
+
+        d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
+        
+        if (registry.has<MeshAnimationComponent>(entity)) {
+            const auto& ac = registry.get<MeshAnimationComponent>(entity);
+            auto poses = mesh->GetPose(ac.name, ac.time);
+            
+            int numBones = std::min(MAX_BONES, (int)poses.size());
+            d_animatedShader.load("u_bone_transforms", poses[0], numBones);
+        }
+        else {
+            static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
+            d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
+        }
+
+        d_vao->SetModel(mesh);
+        d_vao->SetInstances(nullptr);
+        d_vao->Draw();
+    }
+    for (auto entity : registry.view<AnimatedModelComponent>()) {
+        const auto& tc = registry.get<Transform3DComponent>(entity);
+        const auto& mc = registry.get<AnimatedModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->GetMesh(mc.mesh);
         if (!mesh->IsAnimated()) { continue; }

@@ -24,7 +24,8 @@ class AssetManager
 
     // Primitives
     std::unordered_map<std::string, const spkt::mesh_ptr>    d_meshes;
-    std::unordered_map<std::string, const spkt::static_mesh_ptr>    d_static_meshes;
+    std::unordered_map<std::string, const spkt::static_mesh_ptr> d_static_meshes;
+    std::unordered_map<std::string, const spkt::animated_mesh_ptr> d_animated_meshes;
     std::unordered_map<std::string, const spkt::texture_ptr> d_textures;
     
     // Composites
@@ -33,6 +34,7 @@ class AssetManager
     // Defaults
     spkt::mesh_ptr     d_defaultMesh;
     spkt::static_mesh_ptr d_default_static_mesh;
+    spkt::animated_mesh_ptr d_default_animated_mesh;
     spkt::texture_ptr  d_defaultTexture;
     spkt::material_ptr d_defaultMaterial;
 
@@ -54,14 +56,19 @@ public:
 
     Mesh* GetMesh(std::string_view file);
     static_mesh* get_static_mesh(std::string_view file);
+    animated_mesh* get_animated_mesh(std::string_view file);
     Texture* GetTexture(std::string_view file);
     Material* GetMaterial(std::string_view file);
 
-    auto Meshes()    { return Iterator(&d_meshes); }
-    auto Textures()  { return Iterator(&d_textures); }
-    auto Materials() { return Iterator(&d_materials); }
+    auto Meshes()          { return Iterator(&d_meshes); }
+    auto static_meshes()   { return Iterator(&d_static_meshes); }
+    auto animated_meshes() { return Iterator(&d_animated_meshes); }
+    auto Textures()        { return Iterator(&d_textures); }
+    auto Materials()       { return Iterator(&d_materials); }
 
     bool IsLoadingMeshes() const;
+    bool is_loading_static_meshes() const;
+    bool is_loading_animated_meshes() const;
     bool IsLoadingTextures() const;
     bool IsLoadingAnything() const;
 };
