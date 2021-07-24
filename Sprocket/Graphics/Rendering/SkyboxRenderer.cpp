@@ -30,7 +30,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_shader.load("viewMatrix", glm::mat4(glm::mat3(view)));
 
     skybox.Bind();
-    d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Skybox.obj"));
+    d_vao->SetModel(d_assetManager->get_static_mesh("Resources/Models/Skybox.obj"));
     d_vao->Draw();
 }
 

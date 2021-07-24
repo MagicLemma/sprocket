@@ -171,12 +171,11 @@ void Scene3DRenderer::Draw(
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<StaticModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
-        auto mesh = d_assetManager->GetMesh(mc.mesh);
         commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
     for (const auto& [key, data] : commands) {
-        auto mesh = d_assetManager->GetMesh(key.first);
+        auto mesh = d_assetManager->get_static_mesh(key.first);
         auto material = d_assetManager->GetMaterial(key.second);
 
         UploadMaterial(d_staticShader, material, d_assetManager);
@@ -202,7 +201,7 @@ void Scene3DRenderer::Draw(
         d_instanceBuffer->SetData(instance_data);
 
         // TODO: Un-hardcode this, do when cleaning up the rendering.
-        d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Particle.obj"));
+        d_vao->SetModel(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"));
         d_vao->SetInstances(d_instanceBuffer.get());
         d_vao->Draw();
     }
@@ -212,7 +211,7 @@ void Scene3DRenderer::Draw(
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<AnimatedModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
-        auto mesh = d_assetManager->GetMesh(mc.mesh);
+        auto mesh = d_assetManager->get_animated_mesh(mc.mesh);
 
         auto material = d_assetManager->GetMaterial(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
@@ -222,7 +221,7 @@ void Scene3DRenderer::Draw(
         static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
         if (registry.has<MeshAnimationComponent>(entity)) {
             const auto& ac = registry.get<MeshAnimationComponent>(entity);
-            auto poses = mesh->GetPose(ac.name, ac.time);
+            auto poses = mesh->get_pose(ac.name, ac.time);
             
             if (poses.size() > 0) {
                 int numBones = std::min(MAX_BONES, (int)poses.size());

@@ -10,8 +10,8 @@ namespace spkt {
 class VertexArray
 {
     std::uint32_t d_vao;
+    std::size_t d_vertex_count;
 
-    spkt::Mesh* d_model;
     spkt::Buffer* d_instances;
 
     VertexArray(const VertexArray&) = delete;
@@ -21,7 +21,8 @@ public:
     VertexArray();
     ~VertexArray();
 
-    void SetModel(spkt::Mesh* model);
+    void SetModel(spkt::static_mesh* model);
+    void SetModel(spkt::animated_mesh* model);
     void SetInstances(spkt::Buffer* instanceData);
 
     void Draw() const;
