@@ -8,7 +8,7 @@
 #include <glad/glad.h>
 
 #include <cassert>
-#include <span>
+#include <ranges>
 
 namespace spkt {
 namespace {
@@ -352,40 +352,24 @@ static_mesh::static_mesh(const StaticMeshData& data)
     : d_vertex_buffer(0)
     , d_index_buffer(0)
     , d_vertex_count(data.indices.size())
-    , d_layout(sizeof(Vertex), 0)
 {
     glCreateBuffers(1, &d_vertex_buffer);
     glNamedBufferData(d_vertex_buffer, sizeof(Vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_index_buffer);
     glNamedBufferData(d_index_buffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
-
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 2);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    assert(d_layout.Validate());
 }
 
 static_mesh::static_mesh()
     : d_vertex_buffer(0)
     , d_index_buffer(0)
     , d_vertex_count(0)
-    , d_layout(sizeof(Vertex), 0)
 {
     glCreateBuffers(1, &d_vertex_buffer);
     glNamedBufferData(d_vertex_buffer, 0, nullptr, GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_index_buffer);
     glNamedBufferData(d_index_buffer, 0, nullptr, GL_STATIC_DRAW);
-
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 2);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    assert(d_layout.Validate());
 }
 
 static_mesh::~static_mesh()
@@ -411,7 +395,14 @@ void static_mesh::bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, d_vertex_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_index_buffer);
-    d_layout.SetAttributes();
+
+    for (int index : std::views::iota(0, 5)) { glEnableVertexAttribArray(index); } 
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textureCoords));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
+    
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

@@ -59,8 +59,6 @@ class static_mesh
     std::uint32_t d_index_buffer;
     std::uint64_t d_vertex_count;
 
-    BufferLayout d_layout;
-
     static_mesh(const static_mesh&) = delete;
     static_mesh& operator=(const static_mesh&) = delete;
 
