@@ -3,7 +3,7 @@
 #include <Sprocket/Graphics/Mesh.h>
 #include <Sprocket/Graphics/shader.h>
 
-#include <memory>
+#include <string_view>
 #include <vector>
 
 namespace spkt {

@@ -49,12 +49,6 @@ void post_processor::start_frame()
     d_target->Bind();
 }
 
-void post_processor::set_screen_size(int width, int height)
-{
-    d_target->SetScreenSize(width, height);
-    d_source->SetScreenSize(width, height);
-}
-
 void post_processor::end_frame()
 {
     assert(d_effects.size() > 0);
@@ -80,6 +74,12 @@ void post_processor::end_frame()
     d_target->BindTexture();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+}
+
+void post_processor::set_screen_size(int width, int height)
+{
+    d_target->SetScreenSize(width, height);
+    d_source->SetScreenSize(width, height);
 }
     
 }
