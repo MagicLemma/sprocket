@@ -48,7 +48,9 @@ public:
 
     int Width() const { return d_width; }
     int Height() const { return d_height; }
-    glm::ivec2 Size() const { return {Width(), Height()}; }
+    glm::ivec2 Size() const { return { Width(), Height() }; }
 };
+
+using frame_buffer_ptr = std::unique_ptr<FrameBuffer>;
 
 }

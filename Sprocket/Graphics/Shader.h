@@ -1,61 +1,52 @@
 #pragma once
 #include <glm/glm.hpp>
 
-#include <string>
+#include <memory>
 #include <string_view>
+#include <string>
 #include <vector>
 
 namespace spkt {
 
-class Shader
+class shader
 {
-    // Shader IDs
-    std::uint32_t d_programId;
-    std::uint32_t d_vertShaderId;
-    std::uint32_t d_fragShaderId;
+    std::string d_vert_source;
+    std::string d_frag_source;
 
-    std::string d_vertexSource;
-    std::string d_fragSource;
+    std::uint32_t d_program_id;
+    std::uint32_t d_vert_shader_id;
+    std::uint32_t d_frag_shader_id;
 
-    // Shader Creation
-    void CreateShader(const std::string& vertShader,
-                      const std::string& fragShader);
+    std::uint32_t uniform_location(const std::string& name) const;
 
-    std::uint32_t CompileShader(std::uint32_t type, const std::string& source);
-
-    // Shader Uniform Getter
-    std::uint32_t GetUniformLocation(const std::string& name) const;
+    shader(const shader&) = delete;
+    shader& operator=(const shader&) = delete;
 
 public:
-    Shader(const std::string& vertShaderFile,
-           const std::string& fragShaderFile);
+    shader(std::string_view vert_shader_file, std::string_view frag_shader_file);
+    ~shader();
 
-    ~Shader();
-
-    bool Reload();
+    bool reload();
     
-    std::string& VertexShaderSource() { return d_vertexSource; }
-    std::string& FragShaderSource() { return d_fragSource; }
+    std::string& vertex_source() { return d_vert_source; }
+    std::string& fragment_source() { return d_frag_source; }
 
-    std::uint32_t Id() const { return d_programId; }
-
-    void Bind() const;
-    void Unbind() const;
+    void bind() const;
+    void unbind() const;
 
     // Shader Uniform Setters
-    void LoadSampler(const std::string& name, int value) const;
-    void LoadInt(const std::string& name, int value) const;
-    void LoadFloat(const std::string& name, float value) const;
-    void LoadVec2(const std::string& name, const glm::vec2& vector) const;
-    void LoadVec3(const std::string& name, const glm::vec3& vector) const;
-    void LoadVec4(const std::string& name, const glm::vec4& vector) const;
-    void LoadQuat(const std::string& name, const glm::quat& quat) const;
-    void LoadMat4(const std::string& name, const glm::mat4& matrix, int count = 1) const;
+    void load(const std::string& name, int value) const;
+    void load(const std::string& name, float value) const;
+    void load(const std::string& name, const glm::vec2& vector) const;
+    void load(const std::string& name, const glm::vec3& vector) const;
+    void load(const std::string& name, const glm::vec4& vector) const;
+    void load(const std::string& name, const glm::quat& quat) const;
+    void load(const std::string& name, const glm::mat4& matrix, int count = 1) const;
 };
 
-// HELPER FUNCTIONS
-std::string ArrayName(std::string_view uniformName, std::size_t index);
-    // Give a name for a uniform that is an array, return the accessor
-    // name for the given index.
+using shader_ptr = std::unique_ptr<spkt::shader>;
+
+// Formats an OpenGL array indexed name 
+std::string array_name(std::string_view uniform_name, std::size_t index);
 
 }

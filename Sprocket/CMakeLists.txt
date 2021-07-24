@@ -54,13 +54,14 @@ add_library(Sprocket STATIC
             Graphics/Buffer.cpp
             Graphics/BufferLayout.cpp
             Graphics/RenderContext.cpp
-            Graphics/Shader.cpp
+            Graphics/shader.cpp
             Graphics/DepthBuffer.cpp
             Graphics/Material.cpp
             Graphics/Mesh.cpp
             Graphics/Texture.cpp
             Graphics/CubeMap.cpp
             Graphics/FrameBuffer.cpp
+            Graphics/post_processor.cpp
             Graphics/ShadowMap.cpp
             Graphics/StreamBuffer.cpp
             Graphics/VertexArray.cpp
@@ -69,11 +70,6 @@ add_library(Sprocket STATIC
             Graphics/Rendering/ColliderRenderer.cpp
             Graphics/Rendering/Scene3DRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
-
-            Graphics/PostProcessing/Effect.cpp
-            Graphics/PostProcessing/Negative.cpp
-            Graphics/PostProcessing/GaussianBlur.cpp
-            Graphics/PostProcessing/PostProcessor.cpp
             
             Utility/Log.cpp
             Utility/Colour.cpp

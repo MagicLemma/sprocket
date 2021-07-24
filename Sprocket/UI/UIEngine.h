@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/StreamBuffer.h>
 #include <Sprocket/Graphics/Texture.h>
 
@@ -144,7 +144,7 @@ class UIEngine
     spkt::Texture d_white;
 
     // Rendering code    
-    spkt::Shader d_shader;
+    spkt::shader d_shader;
     spkt::StreamBuffer d_buffer;
     
     // Panel info 

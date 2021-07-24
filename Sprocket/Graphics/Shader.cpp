@@ -1,4 +1,4 @@
-#include "Shader.h"
+#include "shader.h"
 
 #include <Sprocket/Utility/Log.h>
 
@@ -15,63 +15,25 @@ namespace spkt {
 namespace {
 
 // Parses a shader source code into a string ready to be compiled.
-std::string ParseShader(const std::string& filepath)
+std::string parse_shader_source(std::string_view filepath)
 {
-	if (!std::filesystem::exists(filepath)) {
+	std::ifstream stream(std::string{filepath});
+	if (!stream) {
 		log::fatal("Shader file '{}' does not exist!", filepath);
 	}
-	std::ifstream stream(filepath);
 	std::string shader((std::istreambuf_iterator<char>(stream)),
 		                std::istreambuf_iterator<char>());
 	return shader;
 }
 
-}
-
-Shader::Shader(const std::string& vertShaderFile,
-               const std::string& fragShaderFile)
-{
-	std::string vertShader = ParseShader(vertShaderFile);
-	std::string fragShader = ParseShader(fragShaderFile);
-	
-	d_vertexSource = vertShader;
-	d_fragSource = fragShader;
-	
-	CreateShader(vertShader, fragShader);
-}
-
-Shader::~Shader()
-{
-    Unbind();
-    glDetachShader(d_programId, d_vertShaderId);
-    glDetachShader(d_programId, d_fragShaderId);
-    glDeleteShader(d_vertShaderId);
-    glDeleteShader(d_fragShaderId);
-    glDeleteProgram(d_programId);
-}
-
-void Shader::CreateShader(const std::string& vertShader,
-                          const std::string& fragShader)
-{
-	d_programId = glCreateProgram();
-
-	d_vertShaderId = CompileShader(GL_VERTEX_SHADER, vertShader);
-	d_fragShaderId = CompileShader(GL_FRAGMENT_SHADER, fragShader);
-
-	glAttachShader(d_programId, d_vertShaderId);
-	glAttachShader(d_programId, d_fragShaderId);
-	glLinkProgram(d_programId);
-	glValidateProgram(d_programId);
-}
-
-std::uint32_t Shader::CompileShader(std::uint32_t type, const std::string& source)
+std::uint32_t compile_shader_source(std::uint32_t type, const std::string& source)
 {
 	std::uint32_t id = glCreateShader(type);
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, nullptr);
 	glCompileShader(id);
 
-	int result;
+	int result = 0;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 
 	if (result == GL_FALSE) {
@@ -83,106 +45,127 @@ std::uint32_t Shader::CompileShader(std::uint32_t type, const std::string& sourc
 	return id;
 }
 
-void Shader::Bind() const
-{
-    glUseProgram(d_programId);
 }
 
-void Shader::Unbind() const
+shader::shader(
+	std::string_view vert_shader_file,
+	std::string_view frag_shader_file
+)
+	: d_vert_source(parse_shader_source(vert_shader_file))
+	, d_frag_source(parse_shader_source(frag_shader_file))
+	, d_program_id(glCreateProgram())
+	, d_vert_shader_id(compile_shader_source(GL_VERTEX_SHADER, d_vert_source))
+	, d_frag_shader_id(compile_shader_source(GL_FRAGMENT_SHADER, d_frag_source))
+{
+	glAttachShader(d_program_id, d_vert_shader_id);
+	glAttachShader(d_program_id, d_frag_shader_id);
+	glLinkProgram(d_program_id);
+	glValidateProgram(d_program_id);
+}
+
+shader::~shader()
+{
+    unbind();
+    glDetachShader(d_program_id, d_vert_shader_id);
+    glDetachShader(d_program_id, d_frag_shader_id);
+    glDeleteShader(d_vert_shader_id);
+    glDeleteShader(d_frag_shader_id);
+    glDeleteProgram(d_program_id);
+}
+
+void shader::bind() const
+{
+    glUseProgram(d_program_id);
+}
+
+void shader::unbind() const
 {
     glUseProgram(0);
 }
 
-std::uint32_t Shader::GetUniformLocation(const std::string& name) const
+std::uint32_t shader::uniform_location(const std::string& name) const
 {
-	return glGetUniformLocation(d_programId, name.c_str());
+	return glGetUniformLocation(d_program_id, name.c_str());
 }
 
-void Shader::LoadFloat(const std::string& name, float value) const
+void shader::load(const std::string& name, int value) const
 {
-	glUniform1f(GetUniformLocation(name), value);
+	glProgramUniform1i(d_program_id, uniform_location(name), value);
 }
 
-void Shader::LoadSampler(const std::string& name, int value) const
+void shader::load(const std::string& name, float value) const
 {
-	glProgramUniform1i(d_programId, GetUniformLocation(name), value);
+	glUniform1f(uniform_location(name), value);
 }
 
-void Shader::LoadInt(const std::string& name, int value) const
+void shader::load(const std::string& name, const glm::vec2& vector) const
 {
-	glUniform1i(GetUniformLocation(name), value);
+	glUniform2f(uniform_location(name), vector.x, vector.y);
 }
 
-void Shader::LoadVec2(const std::string& name, const glm::vec2& vector) const
+void shader::load(const std::string& name, const glm::vec3& vector) const
 {
-	glUniform2f(GetUniformLocation(name), vector.x, vector.y);
+	glUniform3f(uniform_location(name), vector.x, vector.y, vector.z);
 }
 
-void Shader::LoadVec3(const std::string& name, const glm::vec3& vector) const
+void shader::load(const std::string& name, const glm::vec4& vector) const
 {
-	glUniform3f(GetUniformLocation(name), vector.x, vector.y, vector.z);
+	glUniform4f(uniform_location(name), vector.x, vector.y, vector.z, vector.w);
 }
 
-void Shader::LoadVec4(const std::string& name, const glm::vec4& vector) const
+void shader::load(const std::string& name, const glm::quat& quat) const
 {
-	glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
+	glUniform4f(uniform_location(name), quat.x, quat.y, quat.z, quat.w);
 }
 
-void Shader::LoadQuat(const std::string& name, const glm::quat& quat) const
+void shader::load(const std::string& name, const glm::mat4& matrix, int count) const
 {
-	glUniform4f(GetUniformLocation(name), quat.x, quat.y, quat.z, quat.w);
+	glUniformMatrix4fv(uniform_location(name), count, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void Shader::LoadMat4(const std::string& name, const glm::mat4& matrix, int count) const
-{
-	glUniformMatrix4fv(GetUniformLocation(name), count, GL_FALSE, glm::value_ptr(matrix));
-}
-
-std::string ArrayName(std::string_view uniformName, std::size_t index)
+std::string array_name(std::string_view uniformName, std::size_t index)
 {
 	return std::format("{}[{}]", uniformName, index);
 }
 
-bool Shader::Reload()
+bool shader::reload()
 {
-	std::uint32_t programId = glCreateProgram();
+	std::uint32_t program_id = glCreateProgram();
 
-	std::uint32_t vertShaderId = CompileShader(GL_VERTEX_SHADER, d_vertexSource);
-	if(vertShaderId == 0) {
-		glDeleteProgram(programId);
+	std::uint32_t vert_shader_id = compile_shader_source(GL_VERTEX_SHADER, d_vert_source);
+	if(vert_shader_id == 0) {
+		glDeleteProgram(program_id);
 		return false;
 	}
 
-	std::uint32_t fragShaderId = CompileShader(GL_FRAGMENT_SHADER, d_fragSource);
-	if(fragShaderId == 0) {
-		glDeleteShader(vertShaderId);
-		glDeleteProgram(programId);
+	std::uint32_t frag_shader_id = compile_shader_source(GL_FRAGMENT_SHADER, d_frag_source);
+	if(frag_shader_id == 0) {
+		glDeleteShader(vert_shader_id);
+		glDeleteProgram(program_id);
 		return false;
 	}
 
-	glAttachShader(programId, vertShaderId);
-	glAttachShader(programId, fragShaderId);
-	glLinkProgram(programId);
-	glValidateProgram(programId);
+	glAttachShader(program_id, vert_shader_id);
+	glAttachShader(program_id, frag_shader_id);
+	glLinkProgram(program_id);
+	glValidateProgram(program_id);
 
-	GLint validateStatus = GL_FALSE;
-	glGetProgramiv(programId, GL_VALIDATE_STATUS, &validateStatus);
+	GLint validate_status = GL_FALSE;
+	glGetProgramiv(program_id, GL_VALIDATE_STATUS, &validate_status);
 
-	if(validateStatus != GL_TRUE) {
-		glDeleteShader(fragShaderId);
-		glDeleteShader(vertShaderId);
-		glDeleteProgram(programId);
+	if(validate_status != GL_TRUE) {
+		glDeleteShader(frag_shader_id);
+		glDeleteShader(vert_shader_id);
+		glDeleteProgram(program_id);
 		return false;
 	}
 
-	glDeleteShader(d_vertShaderId);
-	glDeleteShader(d_fragShaderId);
-	glDeleteProgram(d_programId);
-
-	d_programId = programId;
-	d_vertShaderId = vertShaderId;
-	d_fragShaderId = fragShaderId;
-
+	glDeleteShader(d_vert_shader_id);
+	glDeleteShader(d_frag_shader_id);
+	glDeleteProgram(d_program_id);
+	d_program_id = program_id;
+	d_vert_shader_id = vert_shader_id;
+	d_frag_shader_id = frag_shader_id;
 	return true;
 }
 

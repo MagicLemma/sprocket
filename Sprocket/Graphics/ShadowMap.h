@@ -2,7 +2,7 @@
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/Buffer.h>
 #include <Sprocket/Graphics/DepthBuffer.h>
-#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Scene/ecs.h>
 
@@ -19,7 +19,7 @@ class ShadowMap
 {
     AssetManager* d_assetManager;
 
-    Shader d_shader;
+    shader d_shader;
 
     glm::mat4 d_lightViewMatrix;
     glm::mat4 d_lightProjMatrix;

@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Graphics/Shader.h>
+#include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
@@ -12,7 +12,7 @@ class VertexArray;
 
 class ColliderRenderer
 {
-    Shader  d_shader;
+    shader  d_shader;
 
     std::unique_ptr<VertexArray> d_vao;
 
@@ -22,7 +22,7 @@ public:
     void Draw(const spkt::registry& registry, spkt::entity camera);
     void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
-    Shader& GetShader() { return d_shader; }
+    shader& GetShader() { return d_shader; }
 };
 
 }
