@@ -6,6 +6,7 @@ namespace spkt {
 
 AssetManager::AssetManager()
     : d_defaultMesh(std::make_unique<Mesh>())
+    , d_default_static_mesh(std::make_unique<static_mesh>())
     , d_defaultTexture(std::make_unique<Texture>())
     , d_defaultMaterial(std::make_unique<Material>())
 {
@@ -35,6 +36,32 @@ Mesh* AssetManager::GetMesh(std::string_view file)
     }
 
     return d_defaultMesh.get();
+}
+
+static_mesh* AssetManager::get_static_mesh(std::string_view file)
+{
+    if (file == "") { return d_default_static_mesh.get(); }
+    std::string filepath = std::filesystem::absolute(file).string();
+
+    if (auto it = d_static_meshes.find(filepath); it != d_static_meshes.end()) {
+        return it->second.get();
+    }
+
+    if (auto it = d_loading_static_meshes.find(filepath); it != d_loading_static_meshes.end()) {
+        if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+            auto mesh = static_mesh::from_data(*(it->second.get()));
+            auto* ret = mesh.get();
+            d_loading_static_meshes.erase(it);
+            d_static_meshes.emplace(filepath, std::move(mesh));
+            return ret;
+        }
+    } else {
+        d_loading_static_meshes[filepath] = std::async(std::launch::async, [filepath]() {
+            return StaticMeshData::load(filepath);
+        });
+    }
+
+    return d_default_static_mesh.get();
 }
 
 Texture* AssetManager::GetTexture(std::string_view file)

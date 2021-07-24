@@ -346,6 +346,22 @@ MeshData::MeshData(const std::string& file)
     }
 }
 
+std::unique_ptr<StaticMeshData> StaticMeshData::load(const std::string& file)
+{
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
+    assert(IsSceneValid(scene));
+    return std::make_unique<StaticMeshData>(LoadStaticMesh(scene));
+}
+
+std::unique_ptr<AnimatedMeshData> AnimatedMeshData::load(const std::string& file)
+{
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
+    assert(IsSceneValid(scene));
+    return std::make_unique<AnimatedMeshData>(LoadAnimatedMesh(scene));
+}
+
 Mesh::Mesh(const StaticMeshData& data)
     : d_vertexBuffer(0)
     , d_indexBuffer(0)

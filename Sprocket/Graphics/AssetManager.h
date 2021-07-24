@@ -11,18 +11,20 @@
 
 namespace spkt {
 
-using mesh_ptr = std::unique_ptr<Mesh>;
 using texture_ptr = std::unique_ptr<Texture>;
 using material_ptr = std::unique_ptr<Material>;
 
 class AssetManager
 {
     // Background Loaders
-    std::unordered_map<std::string, std::future<std::unique_ptr<MeshData>>>    d_loadingMeshes;
+    std::unordered_map<std::string, std::future<std::unique_ptr<MeshData>>> d_loadingMeshes;
+    std::unordered_map<std::string, std::future<std::unique_ptr<StaticMeshData>>> d_loading_static_meshes;
+    std::unordered_map<std::string, std::future<std::unique_ptr<AnimatedMeshData>>> d_loading_animated_meshes;
     std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
 
     // Primitives
     std::unordered_map<std::string, const spkt::mesh_ptr>    d_meshes;
+    std::unordered_map<std::string, const spkt::static_mesh_ptr>    d_static_meshes;
     std::unordered_map<std::string, const spkt::texture_ptr> d_textures;
     
     // Composites
@@ -30,6 +32,7 @@ class AssetManager
 
     // Defaults
     spkt::mesh_ptr     d_defaultMesh;
+    spkt::static_mesh_ptr d_default_static_mesh;
     spkt::texture_ptr  d_defaultTexture;
     spkt::material_ptr d_defaultMaterial;
 
@@ -50,6 +53,7 @@ public:
     AssetManager();
 
     Mesh* GetMesh(std::string_view file);
+    static_mesh* get_static_mesh(std::string_view file);
     Texture* GetTexture(std::string_view file);
     Material* GetMaterial(std::string_view file);
 
