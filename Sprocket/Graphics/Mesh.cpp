@@ -360,18 +360,6 @@ static_mesh::static_mesh(const StaticMeshData& data)
     glNamedBufferData(d_index_buffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
 }
 
-static_mesh::static_mesh()
-    : d_vertex_buffer(0)
-    , d_index_buffer(0)
-    , d_vertex_count(0)
-{
-    glCreateBuffers(1, &d_vertex_buffer);
-    glNamedBufferData(d_vertex_buffer, 0, nullptr, GL_STATIC_DRAW);
-
-    glCreateBuffers(1, &d_index_buffer);
-    glNamedBufferData(d_index_buffer, 0, nullptr, GL_STATIC_DRAW);
-}
-
 static_mesh::~static_mesh()
 {
     glDeleteBuffers(1, &d_vertex_buffer);
@@ -422,19 +410,6 @@ animated_mesh::animated_mesh(const AnimatedMeshData& data)
 
     glCreateBuffers(1, &d_index_buffer);
     glNamedBufferData(d_index_buffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
-}
-
-animated_mesh::animated_mesh()
-    : d_vertex_buffer(0)
-    , d_index_buffer(0)
-    , d_vertex_count(0)
-    , d_skeleton()
-{
-    glCreateBuffers(1, &d_vertex_buffer);
-    glNamedBufferData(d_vertex_buffer, 0, nullptr, GL_STATIC_DRAW);
-
-    glCreateBuffers(1, &d_index_buffer);
-    glNamedBufferData(d_index_buffer, 0, nullptr, GL_STATIC_DRAW);
 }
 
 animated_mesh::~animated_mesh()

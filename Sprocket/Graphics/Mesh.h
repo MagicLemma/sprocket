@@ -62,8 +62,7 @@ class static_mesh
     static_mesh& operator=(const static_mesh&) = delete;
 
 public:
-    static_mesh(const StaticMeshData& data);
-    static_mesh(); // Empty model
+    static_mesh(const StaticMeshData& data = {});
     ~static_mesh();
 
     static std::unique_ptr<static_mesh> from_data(const StaticMeshData& data);
@@ -88,8 +87,7 @@ class animated_mesh
     animated_mesh& operator=(const animated_mesh&) = delete;
 
 public:
-    animated_mesh(const AnimatedMeshData& data);
-    animated_mesh(); // Empty model
+    animated_mesh(const AnimatedMeshData& data = {});
     ~animated_mesh();
 
     static std::unique_ptr<animated_mesh> from_data(const AnimatedMeshData& data);
