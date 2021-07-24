@@ -121,6 +121,58 @@
             ] 
         },
         {
+            "name": "StaticModelComponent",
+            "display_name": "Model",
+            "attributes": [
+                {
+                    "name": "mesh",
+                    "display_name": "Mesh",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "custom": {
+                        "Subtype": "File",
+                        "Filter": "*.obj"
+                    }
+                },
+                {
+                    "name": "material",
+                    "display_name": "Material",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "custom": {
+                        "Subtype": "File",
+                        "Filter": "*.yaml"
+                    }
+                }
+            ] 
+        },
+        {
+            "name": "AnimatedModelComponent",
+            "display_name": "Model",
+            "attributes": [
+                {
+                    "name": "mesh",
+                    "display_name": "Mesh",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "custom": {
+                        "Subtype": "File",
+                        "Filter": "*.obj"
+                    }
+                },
+                {
+                    "name": "material",
+                    "display_name": "Material",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "custom": {
+                        "Subtype": "File",
+                        "Filter": "*.yaml"
+                    }
+                }
+            ] 
+        },
+        {
             "name": "RigidBody3DComponent",
             "display_name": "Rigid Body 3D",
             "attributes": [

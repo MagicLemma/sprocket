@@ -71,6 +71,18 @@ struct ModelComponent
     std::string material = "";
 };
 
+struct StaticModelComponent
+{
+    std::string mesh = "";
+    std::string material = "";
+};
+
+struct AnimatedModelComponent
+{
+    std::string mesh = "";
+    std::string material = "";
+};
+
 struct RigidBody3DComponent
 {
     glm::vec3 velocity = {0.0f, 0.0f, 0.0f};
@@ -229,6 +241,8 @@ using registry = apx::registry<
     Transform2DComponent,
     Transform3DComponent,
     ModelComponent,
+    StaticModelComponent,
+    AnimatedModelComponent,
     RigidBody3DComponent,
     BoxCollider3DComponent,
     SphereCollider3DComponent,
