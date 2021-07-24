@@ -20,7 +20,7 @@ Entities:
       position: [-12.34701, 0.2741509, -6.543652]
       orientation: [1, 1.159412e-09, 0, 0]
       scale: [0.2210628, 0.2210639, 0.2210466]
-    ModelComponent:
+    AnimatedModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\RunningCharacter\RunningCharacter.fbx
       material: D:\dev\Sprocket\Resources\Materials\RunningCharacter.yaml
     MeshAnimationComponent:
@@ -34,7 +34,7 @@ Entities:
       position: [0, 0, 10]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -57,7 +57,7 @@ Entities:
       position: [10.48544, 4.043168, -6.103516e-05]
       orientation: [1, 0, 0, 0]
       scale: [0.32, 0.32, 0.32]
-    ModelComponent:
+    StaticModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\Sphere.obj
       material: ""
     RigidBody3DComponent:
@@ -85,7 +85,7 @@ Entities:
       position: [-14.72964, 1.646085, -0.107402]
       orientation: [0.7213101, 0, -0.6926123, 0]
       scale: [0.2999891, 0.3, 0.2999891]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/grey.yaml
     RigidBody3DComponent:
@@ -114,7 +114,7 @@ Entities:
       position: [0, 0, 8]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -137,7 +137,7 @@ Entities:
       position: [-0.1458986, 0.02311094, -8.724297]
       orientation: [0.7933534, 0, 0.6087613, 0]
       scale: [1.494947, 0.6160595, 6.666203]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -160,7 +160,7 @@ Entities:
       position: [0.001507398, 2.274611, 21.75628]
       orientation: [0.6945286, -0.1323189, 0.6947241, -0.1322128]
       scale: [0.9999771, 0.9998871, 1]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Platform.obj
       material: D:\dev\Sprocket\Resources\Materials\mithril.yaml
     RigidBody3DComponent:
@@ -183,7 +183,7 @@ Entities:
       position: [-10, 0, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Platform.obj
       material: D:\dev\Sprocket\Resources\Materials\mithril.yaml
     RigidBody3DComponent:
@@ -206,7 +206,7 @@ Entities:
       position: [10.39823, 7.823382, 2.935791]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
-    ModelComponent:
+    StaticModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\Crate.obj
       material: ""
   - ID#: 47244640256
@@ -216,7 +216,7 @@ Entities:
       position: [10, 0, 0]
       orientation: [1, 0, 0, 0]
       scale: [1, 0.9999998, 0.9999998]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Platform.obj
       material: D:\dev\Sprocket\Resources\Materials\rock.yaml
     RigidBody3DComponent:
@@ -279,7 +279,7 @@ Entities:
       position: [-22.48153, -0.7553417, 11.35812]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -302,7 +302,7 @@ Entities:
       position: [-22.48153, -0.7553417, 1.987747]
       orientation: [1, 0, 0, 0]
       scale: [5, 0.948213, 0.2955239]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -325,7 +325,7 @@ Entities:
       position: [-17.76336, -0.7553418, 6.675583]
       orientation: [0.7069848, -1.843149e-11, 0.7072288, -1.843147e-11]
       scale: [4.99997, 0.948213, 0.2955132]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -348,7 +348,7 @@ Entities:
       position: [-27.19478, -0.7553418, 6.675583]
       orientation: [0.7069848, -1.843149e-11, 0.7072288, -1.843147e-11]
       scale: [4.99997, 0.948213, 0.2955132]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -371,7 +371,7 @@ Entities:
       position: [-22.48153, -1.756183, 6.635912]
       orientation: [1, 0, 0, 0]
       scale: [4.8, 0.3, 4.8]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/green.yaml
     RigidBody3DComponent:
@@ -394,7 +394,7 @@ Entities:
       position: [-18.92559, -1.5, 10.18482]
       orientation: [0.9999999, 0, -0.0002423458, 0]
       scale: [1.107292, 1.107288, 1.107292]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -417,7 +417,7 @@ Entities:
       position: [-8.223997, 3.113689, 13.42588]
       orientation: [0.830207, -0.4590113, 0.2768358, 0.1530587]
       scale: [0.9999998, 0.9999994, 0.9999995]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Sphere.obj
       material: Resources/Materials/grey.yaml
     RigidBody3DComponent:
@@ -446,7 +446,7 @@ Entities:
       position: [-12.44487, 2.686496, 12.44196]
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Sphere.obj
       material: D:\dev\Sprocket\Resources\Materials\metal018.yaml
     RigidBody3DComponent:
@@ -468,7 +468,7 @@ Entities:
       position: [-14.01267, 0.3019291, -13.35674]
       orientation: [0.9726272, 0, 0.2323713, 0]
       scale: [3.049998, 3.05, 3.049998]
-    ModelComponent:
+    StaticModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
     RigidBody3DComponent:
@@ -491,7 +491,7 @@ Entities:
       position: [14.52876, 1.052574, -14.35607]
       orientation: [0.9677961, 0, 0.2517355, 0]
       scale: [4.208998, 4.209, 4.208998]
-    ModelComponent:
+    StaticModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
   - ID#: 111669149696
@@ -501,7 +501,7 @@ Entities:
       position: [7.777368, 2.526275, -10.93738]
       orientation: [0.6755896, -0.7372779, 0, 0]
       scale: [0.02989681, 0.02989674, 0.02989682]
-    ModelComponent:
+    StaticModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\Cerberus_LP.FBX
       material: D:\dev\Sprocket\Resources\Materials\grey.yaml
     RigidBody3DComponent:
@@ -527,7 +527,7 @@ Entities:
       position: [-22.08163, 1.329976, -4.062364]
       orientation: [0.9973543, 0, -0.07269317, 0]
       scale: [1.107289, 1.107288, 1.107289]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -550,7 +550,7 @@ Entities:
       position: [-24.50688, 2.658418, -6.193301]
       orientation: [0.9678881, 0, -0.2513813, 0]
       scale: [1.107289, 1.107288, 1.107289]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: D:\dev\Sprocket\Resources\Materials\space.yaml
     RigidBody3DComponent:
@@ -573,7 +573,7 @@ Entities:
       position: [-7.520597, 3.294004, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -596,7 +596,7 @@ Entities:
       position: [-7.520597, 4.494779, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -619,7 +619,7 @@ Entities:
       position: [-7.648428, 5.646762, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -642,7 +642,7 @@ Entities:
       position: [-8.850865, 5.689884, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -665,7 +665,7 @@ Entities:
       position: [-8.850865, 4.496203, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -688,7 +688,7 @@ Entities:
       position: [-10.13275, 3.253146, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -711,7 +711,7 @@ Entities:
       position: [-8.850865, 3.253146, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -734,7 +734,7 @@ Entities:
       position: [-10.13275, 4.474674, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
@@ -757,7 +757,7 @@ Entities:
       position: [-9.982604, 5.576144, -4.062364]
       orientation: [1, 0, 0, 0]
       scale: [0.5204259, 0.5204254, 0.5204259]
-    ModelComponent:
+    StaticModelComponent:
       mesh: Resources/Models/Cube.obj
       material: Resources/Materials/space.yaml
     RigidBody3DComponent:
