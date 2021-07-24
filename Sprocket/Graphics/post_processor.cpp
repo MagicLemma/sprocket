@@ -61,8 +61,7 @@ void post_processor::end_frame()
     d_quad->Bind();
 
     // Apply all effects except for the last.
-    for (auto& effect : d_effects | spkt::ignore_last(1)) {
-        // Set up the shader. TODO: make uniform uploading more general. 
+    for (auto& effect : d_effects | ignore_last(1)) {
         effect->bind();
         effect->load("target_width", d_target->Width());
         effect->load("target_height", d_target->Height());
