@@ -396,7 +396,11 @@ void static_mesh::bind() const
     glBindBuffer(GL_ARRAY_BUFFER, d_vertex_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_index_buffer);
 
-    for (int index : std::views::iota(0, 5)) { glEnableVertexAttribArray(index); } 
+    for (int index : std::views::iota(0, 5)) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribDivisor(index, 0);
+    } 
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textureCoords));
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
@@ -457,7 +461,11 @@ void animated_mesh::bind() const
     glBindBuffer(GL_ARRAY_BUFFER, d_vertex_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_index_buffer);
     
-    for (int index : std::views::iota(0, 7)) { glEnableVertexAttribArray(index); } 
+    for (int index : std::views::iota(0, 7)) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribDivisor(index, 0);
+    }
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, position));
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, textureCoords));
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, normal));
