@@ -98,4 +98,6 @@ public:
     std::vector<std::string> GetAnimationNames() const;
 };
 
+using mesh_ptr = std::unique_ptr<Mesh>;
+
 }

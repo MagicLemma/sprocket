@@ -32,8 +32,8 @@ StaticMeshData quad_mesh_data()
 
 post_processor::post_processor(int width, int height)
     : d_quad(std::make_unique<Mesh>(quad_mesh_data()))
-    , d_front_buffer(std::make_unique<FrameBuffer>(width, height))
-    , d_back_buffer(std::make_unique<FrameBuffer>(width, height))
+    , d_target(std::make_unique<FrameBuffer>(width, height))
+    , d_source(std::make_unique<FrameBuffer>(width, height))
     , d_effects()
 {}
 
@@ -46,42 +46,39 @@ void post_processor::add_effect(
 
 void post_processor::start_frame()
 {
-    d_front_buffer->Bind();
+    d_target->Bind();
 }
 
 void post_processor::set_screen_size(int width, int height)
 {
-    assert(d_effects.size() > 0);
-    d_front_buffer->SetScreenSize(width, height);
-    d_back_buffer->SetScreenSize(width, height);
+    d_target->SetScreenSize(width, height);
+    d_source->SetScreenSize(width, height);
 }
 
 void post_processor::end_frame()
 {
     assert(d_effects.size() > 0);
-
     d_quad->Bind();
 
     // Apply all effects except for the last.
     for (auto& effect : d_effects | spkt::ignore_last(1)) {
         // Set up the shader. TODO: make uniform uploading more general. 
         effect->bind();
-        effect->load("target_width", d_front_buffer->Width());
-        effect->load("target_height", d_front_buffer->Height());
+        effect->load("target_width", d_target->Width());
+        effect->load("target_height", d_target->Height());
 
-        // Swap buffers, so the front is always the target we render to.
-        std::swap(d_front_buffer, d_back_buffer);
-        d_back_buffer->BindTexture();
-        d_front_buffer->Bind();
+        std::swap(d_target, d_source); // Previous render becomes the source
+        d_source->BindTexture();
+        d_target->Bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     }
 
     // Finally, apply the last effect to render to the screen
     d_effects.back()->bind();
-    d_effects.back()->load("target_width", d_front_buffer->Width());
-    d_effects.back()->load("target_height", d_front_buffer->Height());
+    d_effects.back()->load("target_width", d_target->Width());
+    d_effects.back()->load("target_height", d_target->Height());
     
-    d_front_buffer->BindTexture();
+    d_target->BindTexture();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
