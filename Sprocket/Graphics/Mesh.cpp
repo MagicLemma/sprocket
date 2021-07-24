@@ -411,7 +411,6 @@ animated_mesh::animated_mesh(const AnimatedMeshData& data)
     : d_vertex_buffer(0)
     , d_index_buffer(0)
     , d_vertex_count(data.indices.size())
-    , d_layout(sizeof(AnimVertex), 0)
     , d_skeleton(data.skeleton)
 {
     glCreateBuffers(1, &d_vertex_buffer);
@@ -419,22 +418,12 @@ animated_mesh::animated_mesh(const AnimatedMeshData& data)
 
     glCreateBuffers(1, &d_index_buffer);
     glNamedBufferData(d_index_buffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
-
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 2);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::INT,   4);
-    d_layout.AddAttribute(DataType::FLOAT, 4);
-    assert(d_layout.Validate());
 }
 
 animated_mesh::animated_mesh()
     : d_vertex_buffer(0)
     , d_index_buffer(0)
     , d_vertex_count(0)
-    , d_layout(sizeof(AnimVertex), 0)
     , d_skeleton()
 {
     glCreateBuffers(1, &d_vertex_buffer);
@@ -442,15 +431,6 @@ animated_mesh::animated_mesh()
 
     glCreateBuffers(1, &d_index_buffer);
     glNamedBufferData(d_index_buffer, 0, nullptr, GL_STATIC_DRAW);
-
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 2);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::FLOAT, 3);
-    d_layout.AddAttribute(DataType::INT,   4);
-    d_layout.AddAttribute(DataType::FLOAT, 4);
-    assert(d_layout.Validate());
 }
 
 animated_mesh::~animated_mesh()
@@ -476,7 +456,16 @@ void animated_mesh::bind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER, d_vertex_buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_index_buffer);
-    d_layout.SetAttributes();
+    
+    for (int index : std::views::iota(0, 7)) { glEnableVertexAttribArray(index); } 
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, position));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, textureCoords));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, normal));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, tangent));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, bitangent));
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(AnimVertex), (void*)offsetof(AnimVertex, boneIndices));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, boneWeights));
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

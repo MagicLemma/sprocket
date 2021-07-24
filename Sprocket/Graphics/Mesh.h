@@ -1,5 +1,4 @@
 #pragma once
-#include <Sprocket/Graphics/BufferLayout.h>
 #include <Sprocket/Graphics/Animation.h>
 
 #include <glm/glm.hpp>
@@ -82,8 +81,6 @@ class animated_mesh
     std::uint32_t d_vertex_buffer;
     std::uint32_t d_index_buffer;
     std::uint64_t d_vertex_count;
-
-    BufferLayout d_layout;
 
     Skeleton d_skeleton;
 
