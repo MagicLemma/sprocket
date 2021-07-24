@@ -95,32 +95,6 @@
             ]
         },
         {
-            "name": "ModelComponent",
-            "display_name": "Model",
-            "attributes": [
-                {
-                    "name": "mesh",
-                    "display_name": "Mesh",
-                    "type": "std::string",
-                    "default": "\"\"",
-                    "custom": {
-                        "Subtype": "File",
-                        "Filter": "*.obj"
-                    }
-                },
-                {
-                    "name": "material",
-                    "display_name": "Material",
-                    "type": "std::string",
-                    "default": "\"\"",
-                    "custom": {
-                        "Subtype": "File",
-                        "Filter": "*.yaml"
-                    }
-                }
-            ] 
-        },
-        {
             "name": "StaticModelComponent",
             "display_name": "Model",
             "attributes": [

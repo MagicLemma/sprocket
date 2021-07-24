@@ -65,12 +65,6 @@ struct Transform3DComponent
     glm::vec3 scale = {1.0f, 1.0f, 1.0f};
 };
 
-struct ModelComponent
-{
-    std::string mesh = "";
-    std::string material = "";
-};
-
 struct StaticModelComponent
 {
     std::string mesh = "";
@@ -240,7 +234,6 @@ using registry = apx::registry<
     NameComponent,
     Transform2DComponent,
     Transform3DComponent,
-    ModelComponent,
     StaticModelComponent,
     AnimatedModelComponent,
     RigidBody3DComponent,

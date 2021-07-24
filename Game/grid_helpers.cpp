@@ -27,7 +27,7 @@ void add_rock_base(
     );
     tr.scale = {1.1f, 1.1f, 1.1f};
 
-    auto& mc = registry.emplace<spkt::ModelComponent>(entity);
+    auto& mc = registry.emplace<spkt::StaticModelComponent>(entity);
     mc.mesh = "Resources/Models/Rock.obj";
     mc.material = material;
 
@@ -55,7 +55,7 @@ void add_tree(spkt::registry& registry, glm::ivec2 position)
     float r = spkt::Random(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
-    auto& mc = registry.emplace<spkt::ModelComponent>(entity);
+    auto& mc = registry.emplace<spkt::StaticModelComponent>(entity);
     mc.mesh = "Resources/Models/BetterTree.obj";
     mc.material = "Resources/Materials/tree.yaml";
 

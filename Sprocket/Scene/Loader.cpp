@@ -71,13 +71,6 @@ void save_registry_to_file(const std::string& file, const spkt::registry& reg)
             out << YAML::Key << "scale" << YAML::Value << c.scale;
             out << YAML::EndMap;
         }
-        if (reg.has<ModelComponent>(entity)) {
-            const auto& c = reg.get<ModelComponent>(entity);
-            out << YAML::Key << "ModelComponent" << YAML::BeginMap;
-            out << YAML::Key << "mesh" << YAML::Value << c.mesh;
-            out << YAML::Key << "material" << YAML::Value << c.material;
-            out << YAML::EndMap;
-        }
         if (reg.has<StaticModelComponent>(entity)) {
             const auto& c = reg.get<StaticModelComponent>(entity);
             out << YAML::Key << "StaticModelComponent" << YAML::BeginMap;
@@ -250,12 +243,6 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.scale = spec["scale"].as<glm::vec3>();
             reg.add<Transform3DComponent>(entity, c);
         }
-        if (auto spec = yaml_entity["ModelComponent"]) {
-            ModelComponent c;
-            c.mesh = spec["mesh"].as<std::string>();
-            c.material = spec["material"].as<std::string>();
-            reg.add<ModelComponent>(entity, c);
-        }
         if (auto spec = yaml_entity["StaticModelComponent"]) {
             StaticModelComponent c;
             c.mesh = spec["mesh"].as<std::string>();
@@ -378,9 +365,6 @@ spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
     if (reg.has<Transform3DComponent>(entity)) {
         reg.add<Transform3DComponent>(new_entity, reg.get<Transform3DComponent>(entity));
     }
-    if (reg.has<ModelComponent>(entity)) {
-        reg.add<ModelComponent>(new_entity, reg.get<ModelComponent>(entity));
-    }
     if (reg.has<StaticModelComponent>(entity)) {
         reg.add<StaticModelComponent>(new_entity, reg.get<StaticModelComponent>(entity));
     }
@@ -461,13 +445,6 @@ void copy_registry(const spkt::registry& source, spkt::registry& target)
             target_comp.orientation = source_comp.orientation;
             target_comp.scale = source_comp.scale;
             target.add<Transform3DComponent>(new_entity, target_comp);
-        }
-        if (source.has<ModelComponent>(old_entity)) {
-            const ModelComponent& source_comp = source.get<ModelComponent>(old_entity);
-            ModelComponent target_comp;
-            target_comp.mesh = source_comp.mesh;
-            target_comp.material = source_comp.material;
-            target.add<ModelComponent>(new_entity, target_comp);
         }
         if (source.has<StaticModelComponent>(old_entity)) {
             const StaticModelComponent& source_comp = source.get<StaticModelComponent>(old_entity);

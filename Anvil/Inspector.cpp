@@ -94,18 +94,6 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (registry.has<spkt::ModelComponent>(entity)) {
-        auto& c = registry.get<spkt::ModelComponent>(entity);
-        if (ImGui::CollapsingHeader("Model")) {
-            ImGui::PushID(count++);
-            spkt::ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
-            spkt::ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
-            
-            if (ImGui::Button("Delete")) { registry.remove<spkt::ModelComponent>(entity); }
-            ImGui::PopID();
-        }
-    }
-
     if (registry.has<spkt::StaticModelComponent>(entity)) {
         auto& c = registry.get<spkt::StaticModelComponent>(entity);
         if (ImGui::CollapsingHeader("Model")) {
@@ -424,10 +412,6 @@ void Inspector::Show(Anvil& editor)
         if (!registry.has<spkt::Transform3DComponent>(entity) && ImGui::Selectable("Transform 3D")) {
             spkt::Transform3DComponent c;
             registry.add<spkt::Transform3DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::ModelComponent>(entity) && ImGui::Selectable("Model")) {
-            spkt::ModelComponent c;
-            registry.add<spkt::ModelComponent>(entity, c);
         }
         if (!registry.has<spkt::StaticModelComponent>(entity) && ImGui::Selectable("Model")) {
             spkt::StaticModelComponent c;

@@ -56,9 +56,9 @@ void ShadowMap::Draw(
     glCullFace(GL_FRONT);
 
     std::unordered_map<std::string, std::vector<InstanceData>> commands;
-    for (auto entity : registry.view<ModelComponent, Transform3DComponent>()) {
+    for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
-        const auto& mc = registry.get<ModelComponent>(entity);
+        const auto& mc = registry.get<StaticModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
         commands[mc.mesh].push_back({ tc.position, tc.orientation, tc.scale });
     }

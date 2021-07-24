@@ -12,7 +12,7 @@ class post_processor
 {
     // The quad that is written to the frame buffer when applying the affect,
     // should mostly always match the size of the screen.
-    spkt::mesh_ptr d_quad;
+    spkt::static_mesh_ptr d_quad;
 
     // Post-processing uses two frame buffers. When applying an effect, we write
     // the texture from the source to the target frame buffer via the effect shader.

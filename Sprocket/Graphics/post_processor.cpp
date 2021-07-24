@@ -31,7 +31,7 @@ StaticMeshData quad_mesh_data()
 }
 
 post_processor::post_processor(int width, int height)
-    : d_quad(std::make_unique<Mesh>(quad_mesh_data()))
+    : d_quad(std::make_unique<static_mesh>(quad_mesh_data()))
     , d_target(std::make_unique<FrameBuffer>(width, height))
     , d_source(std::make_unique<FrameBuffer>(width, height))
     , d_effects()
@@ -52,7 +52,7 @@ void post_processor::start_frame()
 void post_processor::end_frame()
 {
     assert(d_effects.size() > 0);
-    d_quad->Bind();
+    d_quad->bind();
 
     // Apply all effects except for the last.
     for (auto& effect : d_effects | ignore_last(1)) {
