@@ -12,7 +12,7 @@
 
 namespace spkt {
 
-struct Vertex
+struct static_vertex
 {
     glm::vec3 position;
     glm::vec2 textureCoords;
@@ -22,7 +22,7 @@ struct Vertex
     glm::vec3 bitangent;
 };
 
-struct AnimVertex
+struct animated_vertex
 {
     glm::vec3 position;
     glm::vec2 textureCoords;
@@ -35,21 +35,21 @@ struct AnimVertex
     glm::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
 };
 
-struct StaticMeshData
+struct static_mesh_data
 {
-    std::vector<Vertex>        vertices;
+    std::vector<static_vertex> vertices;
     std::vector<std::uint32_t> indices;
 
-    static StaticMeshData load(const std::string& file);
+    static static_mesh_data load(const std::string& file);
 };
 
-struct AnimatedMeshData
+struct animated_mesh_data
 {
-    std::vector<AnimVertex>    vertices;
-    std::vector<std::uint32_t> indices;
+    std::vector<animated_vertex> vertices;
+    std::vector<std::uint32_t>   indices;
     Skeleton skeleton;
 
-    static AnimatedMeshData load(const std::string& file);
+    static animated_mesh_data load(const std::string& file);
 };
 
 class static_mesh
@@ -62,10 +62,10 @@ class static_mesh
     static_mesh& operator=(const static_mesh&) = delete;
 
 public:
-    static_mesh(const StaticMeshData& data = {});
+    static_mesh(const static_mesh_data& data = {});
     ~static_mesh();
 
-    static std::unique_ptr<static_mesh> from_data(const StaticMeshData& data);
+    static std::unique_ptr<static_mesh> from_data(const static_mesh_data& data);
     static std::unique_ptr<static_mesh> from_file(const std::string& file);
 
     std::size_t vertex_count() const { return d_vertex_count; }
@@ -87,10 +87,10 @@ class animated_mesh
     animated_mesh& operator=(const animated_mesh&) = delete;
 
 public:
-    animated_mesh(const AnimatedMeshData& data = {});
+    animated_mesh(const animated_mesh_data& data = {});
     ~animated_mesh();
 
-    static std::unique_ptr<animated_mesh> from_data(const AnimatedMeshData& data);
+    static std::unique_ptr<animated_mesh> from_data(const animated_mesh_data& data);
     static std::unique_ptr<animated_mesh> from_file(const std::string& file);
 
     std::size_t vertex_count() const { return d_vertex_count; }

@@ -15,7 +15,7 @@ auto ignore_last(int n)
     return std::views::reverse | std::views::drop(n) | std::views::reverse;
 }
 
-StaticMeshData quad_mesh_data()
+static_mesh_data quad_mesh_data()
 {
     return {
         .vertices = {

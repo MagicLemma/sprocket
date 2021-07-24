@@ -79,7 +79,7 @@ int GetAssimpFlags()
          | aiProcess_ValidateDataStructure;
 }
 
-void AddBoneData(AnimVertex& vertex, std::uint32_t index, float weight)
+void AddBoneData(animated_vertex& vertex, std::uint32_t index, float weight)
 {
     for (std::uint32_t i = 0; i != 4; ++i) {
         if (vertex.boneIndices[i] == -1) {
@@ -218,19 +218,19 @@ void LoadSkeleton(
 
 }
 
-StaticMeshData StaticMeshData::load(const std::string& file)
+static_mesh_data static_mesh_data::load(const std::string& file)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
     assert(IsSceneValid(scene));
-    StaticMeshData data;
+    static_mesh_data data;
 
     for (std::uint32_t idx = 0; idx != scene->mNumMeshes; ++idx) {
         aiMesh* mesh = scene->mMeshes[idx];
 
         // Vertices
         for (std::uint32_t i = 0; i != mesh->mNumVertices; ++i) {
-            Vertex vertex;
+            static_vertex vertex;
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
             vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
@@ -251,12 +251,12 @@ StaticMeshData StaticMeshData::load(const std::string& file)
     return data;
 }
 
-AnimatedMeshData AnimatedMeshData::load(const std::string& file)
+animated_mesh_data animated_mesh_data::load(const std::string& file)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
     assert(IsSceneValid(scene));
-    AnimatedMeshData data;
+    animated_mesh_data data;
 
     std::uint32_t vertexCount = 0;
     for (std::uint32_t idx = 0; idx != scene->mNumMeshes; ++idx) {
@@ -264,7 +264,7 @@ AnimatedMeshData AnimatedMeshData::load(const std::string& file)
 
         // Vertices
         for (std::uint32_t i = 0; i != mesh->mNumVertices; ++i) {
-            AnimVertex vertex;
+            animated_vertex vertex;
             vertex.position = Convert(mesh->mVertices[i]);
             vertex.normal = Convert(mesh->mNormals[i]);
             vertex.textureCoords = Convert(mesh->mTextureCoords[0][i]);
@@ -338,13 +338,13 @@ AnimatedMeshData AnimatedMeshData::load(const std::string& file)
     return data;
 }
 
-static_mesh::static_mesh(const StaticMeshData& data)
+static_mesh::static_mesh(const static_mesh_data& data)
     : d_vertex_buffer(0)
     , d_index_buffer(0)
     , d_vertex_count(data.indices.size())
 {
     glCreateBuffers(1, &d_vertex_buffer);
-    glNamedBufferData(d_vertex_buffer, sizeof(Vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_vertex_buffer, sizeof(static_vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_index_buffer);
     glNamedBufferData(d_index_buffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
@@ -356,14 +356,14 @@ static_mesh::~static_mesh()
     glDeleteBuffers(1, &d_index_buffer);
 }
 
-std::unique_ptr<static_mesh> static_mesh::from_data(const StaticMeshData& data)
+std::unique_ptr<static_mesh> static_mesh::from_data(const static_mesh_data& data)
 {
     return std::make_unique<static_mesh>(data);
 }
 
 std::unique_ptr<static_mesh> static_mesh::from_file(const std::string& file)
 {
-    return static_mesh::from_data(StaticMeshData::load(file));
+    return static_mesh::from_data(static_mesh_data::load(file));
 }
 
 void static_mesh::bind() const
@@ -376,24 +376,24 @@ void static_mesh::bind() const
         glVertexAttribDivisor(index, 0);
     } 
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, textureCoords));
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tangent));
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, bitangent));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, position));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, textureCoords));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, normal));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, tangent));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, bitangent));
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
-animated_mesh::animated_mesh(const AnimatedMeshData& data)
+animated_mesh::animated_mesh(const animated_mesh_data& data)
     : d_vertex_buffer(0)
     , d_index_buffer(0)
     , d_vertex_count(data.indices.size())
     , d_skeleton(data.skeleton)
 {
     glCreateBuffers(1, &d_vertex_buffer);
-    glNamedBufferData(d_vertex_buffer, sizeof(AnimVertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
+    glNamedBufferData(d_vertex_buffer, sizeof(animated_vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
 
     glCreateBuffers(1, &d_index_buffer);
     glNamedBufferData(d_index_buffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
@@ -405,14 +405,14 @@ animated_mesh::~animated_mesh()
     glDeleteBuffers(1, &d_index_buffer);
 }
 
-std::unique_ptr<animated_mesh> animated_mesh::from_data(const AnimatedMeshData& data)
+std::unique_ptr<animated_mesh> animated_mesh::from_data(const animated_mesh_data& data)
 {
     return std::make_unique<animated_mesh>(data);
 }
 
 std::unique_ptr<animated_mesh> animated_mesh::from_file(const std::string& file)
 {
-    return animated_mesh::from_data(AnimatedMeshData::load(file));
+    return animated_mesh::from_data(animated_mesh_data::load(file));
 }
 
 void animated_mesh::bind() const
@@ -425,13 +425,13 @@ void animated_mesh::bind() const
         glVertexAttribDivisor(index, 0);
     }
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, position));
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, textureCoords));
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, normal));
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, tangent));
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, bitangent));
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(AnimVertex), (void*)offsetof(AnimVertex, boneIndices));
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(AnimVertex), (void*)offsetof(AnimVertex, boneWeights));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(animated_vertex), (void*)offsetof(animated_vertex, position));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(animated_vertex), (void*)offsetof(animated_vertex, textureCoords));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(animated_vertex), (void*)offsetof(animated_vertex, normal));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(animated_vertex), (void*)offsetof(animated_vertex, tangent));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(animated_vertex), (void*)offsetof(animated_vertex, bitangent));
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(animated_vertex), (void*)offsetof(animated_vertex, boneIndices));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(animated_vertex), (void*)offsetof(animated_vertex, boneWeights));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
