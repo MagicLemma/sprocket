@@ -218,6 +218,20 @@ void LoadSkeleton(
 
 }
 
+void static_vertex::set_buffer_attributes()
+{
+    for (int index : std::views::iota(0, 5)) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribDivisor(index, 0);
+    } 
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, position));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, textureCoords));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, normal));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, tangent));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, bitangent));
+}
+
 static_mesh_data static_mesh_data::load(const std::string& file)
 {
     Assimp::Importer importer;
@@ -339,21 +353,11 @@ animated_mesh_data animated_mesh_data::load(const std::string& file)
 }
 
 static_mesh::static_mesh(const static_mesh_data& data)
-    : d_vertex_buffer(0)
-    , d_index_buffer(0)
-    , d_vertex_count(data.indices.size())
+    : d_vertices()
+    , d_indices()
 {
-    glCreateBuffers(1, &d_vertex_buffer);
-    glNamedBufferData(d_vertex_buffer, sizeof(static_vertex) * data.vertices.size(), data.vertices.data(), GL_STATIC_DRAW);
-
-    glCreateBuffers(1, &d_index_buffer);
-    glNamedBufferData(d_index_buffer, sizeof(std::uint32_t) * data.indices.size(), data.indices.data(), GL_STATIC_DRAW);
-}
-
-static_mesh::~static_mesh()
-{
-    glDeleteBuffers(1, &d_vertex_buffer);
-    glDeleteBuffers(1, &d_index_buffer);
+    d_vertices.set_data(data.vertices);
+    d_indices.set_data(data.indices);
 }
 
 std::unique_ptr<static_mesh> static_mesh::from_data(const static_mesh_data& data)
@@ -368,21 +372,8 @@ std::unique_ptr<static_mesh> static_mesh::from_file(const std::string& file)
 
 void static_mesh::bind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertex_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_index_buffer);
-
-    for (int index : std::views::iota(0, 5)) {
-        glEnableVertexAttribArray(index);
-        glVertexAttribDivisor(index, 0);
-    } 
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, position));
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, textureCoords));
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, normal));
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, tangent));
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(static_vertex), (void*)offsetof(static_vertex, bitangent));
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    d_vertices.bind();
+    d_indices.bind();
 }
 
 

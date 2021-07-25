@@ -33,7 +33,7 @@ namespace detail {
 std::uint32_t new_vbo();
 void delete_vbo(std::uint32_t vbo);
 void bind_vbo(std::uint32_t vbo);
-void unbind_vbo(std::uint32_t vbo);
+void unbind_vbo();
 void set_data(std::uint32_t vbo, std::size_t size, const void* data, buffer_usage usage);
 
 }
@@ -55,7 +55,7 @@ public:
     {
         detail::bind_vbo(d_vbo);
         T::set_buffer_attributes();
-        detail::unbind_vbo(d_vbo);
+        detail::unbind_vbo();
     }
 
     void set_data(std::span<const T> data)
@@ -63,6 +63,24 @@ public:
         d_size = data.size();
         detail::set_data(d_vbo, data.size_bytes(), data.data(), Usage);
     }
+
+    std::size_t size() const { return d_size; }
+};
+
+class index_buffer
+{
+    std::uint32_t d_vbo;
+    std::size_t   d_size;
+
+    index_buffer(const index_buffer&) = delete;
+    index_buffer& operator=(const index_buffer&) = delete;
+
+public:
+    index_buffer();
+    ~index_buffer();
+
+    void bind() const;
+    void set_data(std::span<const std::uint32_t> data);
 
     std::size_t size() const { return d_size; }
 };

@@ -271,12 +271,12 @@ void UIEngine::MouseClick()
 
     std::size_t moveToFront = 0;
 
-    for (auto panelHash : std::views::reverse(d_panelOrder)) {
+    for (auto panelHash : d_panelOrder | std::views::reverse) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+        for (const auto& [hash, region] : panel.widgetRegions | std::views::reverse) {
             auto clicked = InRegion(mouse, region);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
@@ -316,12 +316,12 @@ void UIEngine::MouseHover()
     bool foundHovered = false;
     glm::vec2 mouse = d_window->GetMousePos();
 
-    for (auto panelHash : std::views::reverse(d_panelOrder)) {
+    for (auto panelHash : d_panelOrder | std::views::reverse) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+        for (const auto& [hash, region] : panel.widgetRegions | std::views::reverse) {
             auto hovered = InRegion(mouse, region);
             
             if (!foundHovered && hovered) {
