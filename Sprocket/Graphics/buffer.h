@@ -1,4 +1,6 @@
 #pragma once
+#include <Sprocket/Graphics/buffer_element_types.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
@@ -6,21 +8,6 @@
 #include <span>
 
 namespace spkt {
-
-struct model_instance
-{
-    glm::vec3 position;
-    glm::quat orientation;
-    glm::vec3 scale;
-
-    static void set_buffer_attributes();
-};
-
-template <typename T>
-concept buffer_element = requires
-{
-    { T::set_buffer_attributes() } -> std::same_as<void>;
-};
 
 enum class buffer_usage
 {
@@ -38,7 +25,7 @@ void set_data(std::uint32_t vbo, std::size_t size, const void* data, buffer_usag
 
 }
 
-template <buffer_element T, buffer_usage Usage = buffer_usage::STATIC>
+template <spkt::buffer_element T, buffer_usage Usage = buffer_usage::STATIC>
 class buffer
 {
     std::uint32_t d_vbo;

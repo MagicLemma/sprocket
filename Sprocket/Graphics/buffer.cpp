@@ -17,18 +17,6 @@ int get_usage(buffer_usage usage)
 
 }
 
-void model_instance::set_buffer_attributes()
-{
-    for (int index : std::views::iota(5, 8)) {
-        glEnableVertexAttribArray(index);
-        glVertexAttribDivisor(index, 1);
-    } 
-
-    glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, sizeof(model_instance), (void*)offsetof(model_instance, position));
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(model_instance), (void*)offsetof(model_instance, orientation));
-    glVertexAttribPointer(7, 3, GL_FLOAT, GL_FALSE, sizeof(model_instance), (void*)offsetof(model_instance, scale));
-}
-
 namespace detail {
 
 std::uint32_t new_vbo()

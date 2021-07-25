@@ -52,6 +52,7 @@ add_library(Sprocket STATIC
             Graphics/AssetManager.cpp
             Graphics/Animation.cpp
             Graphics/buffer.cpp
+            Graphics/buffer_element_types.cpp
             Graphics/RenderContext.cpp
             Graphics/shader.cpp
             Graphics/DepthBuffer.cpp
