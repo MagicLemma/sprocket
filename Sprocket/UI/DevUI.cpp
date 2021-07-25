@@ -147,6 +147,9 @@ DevUI::DevUI(Window* window)
     , d_shader("Resources/Shaders/DevGUI.vert",
                "Resources/Shaders/DevGUI.frag")
     , d_fontAtlas(nullptr)
+    , d_vao(0)
+    , d_vertexBuffer(0)
+    , d_indexBuffer(0)
     , d_blockEvents(true)
 {
     ImGui::CreateContext();
@@ -163,7 +166,15 @@ DevUI::DevUI(Window* window)
     // attempting to move the entity just moved the window.
     ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
-    d_buffer.Bind();
+    glGenVertexArrays(1, &d_vao);
+    glGenBuffers(1, &d_vertexBuffer);
+    glGenBuffers(1, &d_indexBuffer);
+
+    // Set the index buffer pointer in the vertex buffer.
+    glBindVertexArray(d_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer);
+
     for (int index : std::views::iota(0, 3)) {
         glEnableVertexAttribArray(index);
         glVertexAttribDivisor(index, 0);
@@ -172,7 +183,9 @@ DevUI::DevUI(Window* window)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, pos));
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, uv));
     glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, col));
-    d_buffer.Unbind();
+    
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void DevUI::on_event(event& event)
@@ -265,7 +278,8 @@ void DevUI::EndFrame()
     d_shader.load("Texture", 0);
     d_shader.load("ProjMtx", proj);
 
-    d_buffer.Bind();
+    glBindVertexArray(d_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
     d_fontAtlas->Bind(0);
 
     // Render command lists
@@ -276,13 +290,17 @@ void DevUI::EndFrame()
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
         // Upload vertex/index buffers
-        d_buffer.SetVertexData(
+        glBufferData(
+            GL_ARRAY_BUFFER,
             cmd_list->VtxBuffer.Size * sizeof(ImDrawVert),
-            cmd_list->VtxBuffer.Data
+            cmd_list->VtxBuffer.Data,
+            GL_DYNAMIC_DRAW
         );
-        d_buffer.SetIndexData(
+        glBufferData(
+            GL_ELEMENT_ARRAY_BUFFER,
             cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx),
-            cmd_list->IdxBuffer.Data            
+            cmd_list->IdxBuffer.Data,
+            GL_DYNAMIC_DRAW
         );
 
         for (int i = 0; i < cmd_list->CmdBuffer.Size; ++i) {

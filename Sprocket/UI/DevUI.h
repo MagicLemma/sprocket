@@ -20,10 +20,14 @@ class DevUI
     shader  d_shader;
     std::unique_ptr<Texture> d_fontAtlas;
 
-    StreamBuffer d_buffer;
-        // Used to draw the render data created by ImGui.
+    std::uint32_t d_vao;
+    std::uint32_t d_vertexBuffer;
+    std::uint32_t d_indexBuffer;
 
     bool d_blockEvents;
+
+    DevUI(const DevUI&) = delete;
+    DevUI& operator=(const DevUI&) = delete;
 
 public:
     DevUI(Window* window);
