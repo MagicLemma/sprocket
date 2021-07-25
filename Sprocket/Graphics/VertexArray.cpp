@@ -7,6 +7,7 @@ namespace spkt {
 VertexArray::VertexArray()
     : d_vao(0)
     , d_vertex_count(0)
+    , d_instance_count(0)
 {
     glGenVertexArrays(1, &d_vao);
 }
