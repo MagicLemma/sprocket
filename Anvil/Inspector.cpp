@@ -94,14 +94,26 @@ void Inspector::Show(Anvil& editor)
         }
     }
 
-    if (registry.has<spkt::ModelComponent>(entity)) {
-        auto& c = registry.get<spkt::ModelComponent>(entity);
+    if (registry.has<spkt::StaticModelComponent>(entity)) {
+        auto& c = registry.get<spkt::StaticModelComponent>(entity);
         if (ImGui::CollapsingHeader("Model")) {
             ImGui::PushID(count++);
             spkt::ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
             spkt::ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
             
-            if (ImGui::Button("Delete")) { registry.remove<spkt::ModelComponent>(entity); }
+            if (ImGui::Button("Delete")) { registry.remove<spkt::StaticModelComponent>(entity); }
+            ImGui::PopID();
+        }
+    }
+
+    if (registry.has<spkt::AnimatedModelComponent>(entity)) {
+        auto& c = registry.get<spkt::AnimatedModelComponent>(entity);
+        if (ImGui::CollapsingHeader("Model")) {
+            ImGui::PushID(count++);
+            spkt::ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
+            spkt::ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
+            
+            if (ImGui::Button("Delete")) { registry.remove<spkt::AnimatedModelComponent>(entity); }
             ImGui::PopID();
         }
     }
@@ -401,9 +413,13 @@ void Inspector::Show(Anvil& editor)
             spkt::Transform3DComponent c;
             registry.add<spkt::Transform3DComponent>(entity, c);
         }
-        if (!registry.has<spkt::ModelComponent>(entity) && ImGui::Selectable("Model")) {
-            spkt::ModelComponent c;
-            registry.add<spkt::ModelComponent>(entity, c);
+        if (!registry.has<spkt::StaticModelComponent>(entity) && ImGui::Selectable("Model")) {
+            spkt::StaticModelComponent c;
+            registry.add<spkt::StaticModelComponent>(entity, c);
+        }
+        if (!registry.has<spkt::AnimatedModelComponent>(entity) && ImGui::Selectable("Model")) {
+            spkt::AnimatedModelComponent c;
+            registry.add<spkt::AnimatedModelComponent>(entity, c);
         }
         if (!registry.has<spkt::RigidBody3DComponent>(entity) && ImGui::Selectable("Rigid Body 3D")) {
             spkt::RigidBody3DComponent c;

@@ -27,14 +27,14 @@ void game_grid_system_init(spkt::registry& registry)
     grid.hovered_square_entity = registry.create();
     registry.emplace<Runtime>(grid.hovered_square_entity);
     registry.emplace<NameComponent>(grid.hovered_square_entity, "Hovered Grid Highlighter");
-    registry.emplace<ModelComponent>(grid.hovered_square_entity, GRID_SQUARE);
+    registry.emplace<StaticModelComponent>(grid.hovered_square_entity, GRID_SQUARE);
     auto& tr1 = registry.emplace<Transform3DComponent>(grid.hovered_square_entity);
     tr1.scale = {0.3f, 0.3f, 0.3f};
 
     grid.clicked_square_entity = registry.create();
     registry.emplace<Runtime>(grid.clicked_square_entity);
     registry.emplace<NameComponent>(grid.clicked_square_entity, "Clicked Grid Highlighter");
-    registry.emplace<ModelComponent>(grid.clicked_square_entity, GRID_SQUARE);
+    registry.emplace<StaticModelComponent>(grid.clicked_square_entity, GRID_SQUARE);
     auto& tr2 = registry.emplace<Transform3DComponent>(grid.clicked_square_entity);
     tr2.scale = {0.5f, 0.5f, 0.5f};
 }

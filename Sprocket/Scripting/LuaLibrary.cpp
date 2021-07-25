@@ -294,9 +294,13 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "_view_Transform3DComponent_next", view_next<Transform3DComponent>);
     luaL_dostring(L, view_source_code("Transform3DComponent").c_str());
 
-    lua_register(L, "_view_ModelComponent_init", view_init<ModelComponent>);
-    lua_register(L, "_view_ModelComponent_next", view_next<ModelComponent>);
-    luaL_dostring(L, view_source_code("ModelComponent").c_str());
+    lua_register(L, "_view_StaticModelComponent_init", view_init<StaticModelComponent>);
+    lua_register(L, "_view_StaticModelComponent_next", view_next<StaticModelComponent>);
+    luaL_dostring(L, view_source_code("StaticModelComponent").c_str());
+
+    lua_register(L, "_view_AnimatedModelComponent_init", view_init<AnimatedModelComponent>);
+    lua_register(L, "_view_AnimatedModelComponent_next", view_next<AnimatedModelComponent>);
+    luaL_dostring(L, view_source_code("AnimatedModelComponent").c_str());
 
     lua_register(L, "_view_RigidBody3DComponent_init", view_init<RigidBody3DComponent>);
     lua_register(L, "_view_RigidBody3DComponent_next", view_next<RigidBody3DComponent>);
@@ -455,37 +459,71 @@ int _AddTransform3DComponent(lua_State* L) {
     return 0;
 }
 
-// C++ Functions for ModelComponent =====================================================
+// C++ Functions for StaticModelComponent =====================================================
 
-int _GetModelComponent(lua_State* L) {
+int _GetStaticModelComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
     spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<ModelComponent>());
-    const auto& c = e.get<ModelComponent>();
+    assert(e.has<StaticModelComponent>());
+    const auto& c = e.get<StaticModelComponent>();
     Converter<std::string>::push(L, c.mesh);
     Converter<std::string>::push(L, c.material);
     return 2;
 }
 
-int _SetModelComponent(lua_State* L) {
+int _SetStaticModelComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<ModelComponent>();
+    auto& c = e.get<StaticModelComponent>();
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
     return 0;
 }
 
-int _AddModelComponent(lua_State* L) {
+int _AddStaticModelComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<ModelComponent>());
-    ModelComponent c;
+    assert(!e.has<StaticModelComponent>());
+    StaticModelComponent c;
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<ModelComponent>(c); });
+    add_command(L, [e, c]() mutable { e.add<StaticModelComponent>(c); });
+    return 0;
+}
+
+// C++ Functions for AnimatedModelComponent =====================================================
+
+int _GetAnimatedModelComponent(lua_State* L) {
+    if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
+    spkt::handle e = Converter<spkt::handle>::read(L, 1);
+    assert(e.has<AnimatedModelComponent>());
+    const auto& c = e.get<AnimatedModelComponent>();
+    Converter<std::string>::push(L, c.mesh);
+    Converter<std::string>::push(L, c.material);
+    return 2;
+}
+
+int _SetAnimatedModelComponent(lua_State* L) {
+    if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
+    int ptr = 0;
+    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
+    auto& c = e.get<AnimatedModelComponent>();
+    c.mesh = Converter<std::string>::read(L, ++ptr);
+    c.material = Converter<std::string>::read(L, ++ptr);
+    return 0;
+}
+
+int _AddAnimatedModelComponent(lua_State* L) {
+    if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
+    int ptr = 0;
+    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
+    assert(!e.has<AnimatedModelComponent>());
+    AnimatedModelComponent c;
+    c.mesh = Converter<std::string>::read(L, ++ptr);
+    c.material = Converter<std::string>::read(L, ++ptr);
+    add_command(L, [e, c]() mutable { e.add<AnimatedModelComponent>(c); });
     return 0;
 }
 
@@ -1101,42 +1139,80 @@ void load_entity_component_functions(lua::Script& script)
     lua_register(L, "RemoveTransform3DComponent", &remove_impl<Transform3DComponent>);
 
 
-    // Lua functions for ModelComponent =====================================================
+    // Lua functions for StaticModelComponent =====================================================
 
     luaL_dostring(L, R"lua(
-        ModelComponent = Class(function(self, mesh, material)
+        StaticModelComponent = Class(function(self, mesh, material)
             self.mesh = mesh
             self.material = material
         end)
     )lua");
 
-    lua_register(L, "_GetModelComponent", &_GetModelComponent);
+    lua_register(L, "_GetStaticModelComponent", &_GetStaticModelComponent);
 
     luaL_dostring(L, R"lua(
-        function GetModelComponent(entity)
-            mesh, material = _GetModelComponent(entity)
-            return ModelComponent(mesh, material)
+        function GetStaticModelComponent(entity)
+            mesh, material = _GetStaticModelComponent(entity)
+            return StaticModelComponent(mesh, material)
         end
     )lua");
 
-    lua_register(L, "_SetModelComponent", &_SetModelComponent);
+    lua_register(L, "_SetStaticModelComponent", &_SetStaticModelComponent);
 
     luaL_dostring(L, R"lua(
-        function SetModelComponent(entity, c)
-            _SetModelComponent(entity, c.mesh, c.material)
+        function SetStaticModelComponent(entity, c)
+            _SetStaticModelComponent(entity, c.mesh, c.material)
         end
     )lua");
 
-    lua_register(L, "_AddModelComponent", &_AddModelComponent);
+    lua_register(L, "_AddStaticModelComponent", &_AddStaticModelComponent);
 
     luaL_dostring(L, R"lua(
-        function AddModelComponent(entity, c)
-            _AddModelComponent(entity, c.mesh, c.material)
+        function AddStaticModelComponent(entity, c)
+            _AddStaticModelComponent(entity, c.mesh, c.material)
         end
     )lua");
 
-    lua_register(L, "HasModelComponent", &has_impl<ModelComponent>);
-    lua_register(L, "RemoveModelComponent", &remove_impl<ModelComponent>);
+    lua_register(L, "HasStaticModelComponent", &has_impl<StaticModelComponent>);
+    lua_register(L, "RemoveStaticModelComponent", &remove_impl<StaticModelComponent>);
+
+
+    // Lua functions for AnimatedModelComponent =====================================================
+
+    luaL_dostring(L, R"lua(
+        AnimatedModelComponent = Class(function(self, mesh, material)
+            self.mesh = mesh
+            self.material = material
+        end)
+    )lua");
+
+    lua_register(L, "_GetAnimatedModelComponent", &_GetAnimatedModelComponent);
+
+    luaL_dostring(L, R"lua(
+        function GetAnimatedModelComponent(entity)
+            mesh, material = _GetAnimatedModelComponent(entity)
+            return AnimatedModelComponent(mesh, material)
+        end
+    )lua");
+
+    lua_register(L, "_SetAnimatedModelComponent", &_SetAnimatedModelComponent);
+
+    luaL_dostring(L, R"lua(
+        function SetAnimatedModelComponent(entity, c)
+            _SetAnimatedModelComponent(entity, c.mesh, c.material)
+        end
+    )lua");
+
+    lua_register(L, "_AddAnimatedModelComponent", &_AddAnimatedModelComponent);
+
+    luaL_dostring(L, R"lua(
+        function AddAnimatedModelComponent(entity, c)
+            _AddAnimatedModelComponent(entity, c.mesh, c.material)
+        end
+    )lua");
+
+    lua_register(L, "HasAnimatedModelComponent", &has_impl<AnimatedModelComponent>);
+    lua_register(L, "RemoveAnimatedModelComponent", &remove_impl<AnimatedModelComponent>);
 
 
     // Lua functions for RigidBody3DComponent =====================================================

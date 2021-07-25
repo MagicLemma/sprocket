@@ -29,7 +29,7 @@ void ColliderRenderer::Draw(
     d_shader.load("u_proj_matrix", proj);
     d_shader.load("u_view_matrix", view);
     
-    static auto s_cube = Mesh::FromFile("Resources/Models/Cube.obj");
+    static auto s_cube = static_mesh::from_file("Resources/Models/Cube.obj");
     d_vao->SetModel(s_cube.get());
     for (auto entity : registry.view<BoxCollider3DComponent>()) {
         const auto& c = registry.get<BoxCollider3DComponent>(entity);
@@ -44,7 +44,7 @@ void ColliderRenderer::Draw(
         d_vao->Draw();
     }
 
-    static auto s_sphere = Mesh::FromFile("Resources/Models/LowPolySphere.obj");
+    static auto s_sphere = static_mesh::from_file("Resources/Models/LowPolySphere.obj");
     d_vao->SetModel(s_sphere.get());
     for (auto entity : registry.view<SphereCollider3DComponent>()) {
         const auto& c = registry.get<SphereCollider3DComponent>(entity);
@@ -56,8 +56,8 @@ void ColliderRenderer::Draw(
         d_vao->Draw();
     }
 
-    static auto s_hemisphere = Mesh::FromFile("Resources/Models/Hemisphere.obj");
-    static auto s_cylinder = Mesh::FromFile("Resources/Models/Cylinder.obj");
+    static auto s_hemisphere = static_mesh::from_file("Resources/Models/Hemisphere.obj");
+    static auto s_cylinder = static_mesh::from_file("Resources/Models/Cylinder.obj");
 
     for (auto entity : registry.view<CapsuleCollider3DComponent>()) {
         const auto& c = registry.get<CapsuleCollider3DComponent>(entity);

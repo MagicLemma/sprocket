@@ -1,6 +1,6 @@
 #pragma once
 #include <Sprocket/Graphics/AssetManager.h>
-#include <Sprocket/Graphics/Buffer.h>
+#include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/DepthBuffer.h>
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/VertexArray.h>
@@ -27,9 +27,8 @@ class ShadowMap
     DepthBuffer d_shadowMap;
 
     std::unique_ptr<VertexArray> d_vao;
-    std::unique_ptr<Buffer> d_instanceBuffer;
 
-    std::vector<InstanceData> d_instanceData;
+    spkt::buffer<model_instance> d_instance_buffer;
 
 public:
     ShadowMap(AssetManager* assetManager);

@@ -1,6 +1,5 @@
 #include "StreamBuffer.h"
 
-#include <Sprocket/Graphics/BufferLayout.h>
 #include <Sprocket/Utility/Log.h>
 
 #include <glad/glad.h>
@@ -43,18 +42,6 @@ void StreamBuffer::Unbind() const
 {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void StreamBuffer::SetBufferLayout(const BufferLayout& layout) const
-{
-    if (layout.Validate()) {
-        Bind();
-        layout.SetAttributes();
-        Unbind();
-    }
-    else {
-        log::error("Buffer layout is not complete!");
-    }
 }
 
 void StreamBuffer::SetVertexData(std::size_t size, const void* data)

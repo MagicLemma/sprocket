@@ -1,6 +1,7 @@
 #pragma once
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/ShadowMap.h>
+#include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <memory>
@@ -8,7 +9,6 @@
 namespace spkt {
 
 class AssetManager;
-class Buffer;
 class VertexArray;
 
 class Scene3DRenderer
@@ -37,7 +37,10 @@ private:
 
     std::unique_ptr<VertexArray> d_vao;
     
-    std::unique_ptr<Buffer> d_instanceBuffer;
+    buffer<model_instance> d_instanceBuffer;
+
+    Scene3DRenderer(const Scene3DRenderer&) = delete;
+    Scene3DRenderer& operator=(const Scene3DRenderer&) = delete;
 
 public:
     Scene3DRenderer(AssetManager* assetManager);

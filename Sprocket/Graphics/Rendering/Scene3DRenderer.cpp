@@ -1,8 +1,7 @@
 #include "Scene3DRenderer.h"
 
 #include <Sprocket/Graphics/AssetManager.h>
-#include <Sprocket/Graphics/Buffer.h>
-#include <Sprocket/Graphics/BufferLayout.h>
+#include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/RenderContext.h>
 #include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Scene/Camera.h>
@@ -25,17 +24,6 @@ std::array<glm::mat4, Scene3DRenderer::MAX_BONES> DefaultBoneTransforms() {
     std::ranges::fill(arr, glm::mat4(1.0));
     return arr;
 };
-
-std::unique_ptr<Buffer> GetInstanceBuffer()
-{
-    BufferLayout layout(sizeof(InstanceData), 5);
-    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    assert(layout.Validate());
-
-    return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
-}
 
 void upload_uniforms(
     const shader& shader,
@@ -116,7 +104,7 @@ Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     , d_assetManager(assetManager)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
-    , d_instanceBuffer(GetInstanceBuffer())
+    , d_instanceBuffer()
 {
     d_staticShader.bind();
     d_staticShader.load("u_albedo_map", ALBEDO_SLOT);
@@ -162,35 +150,33 @@ void Scene3DRenderer::Draw(
 
     std::unordered_map<
         std::pair<std::string, std::string>,
-        std::vector<InstanceData>,
+        std::vector<model_instance>,
         spkt::hash_pair
     > commands;
 
     d_staticShader.bind();
-    for (auto entity : registry.view<ModelComponent, Transform3DComponent>()) {
+    for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
-        const auto& mc = registry.get<ModelComponent>(entity);
+        const auto& mc = registry.get<StaticModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
-        auto mesh = d_assetManager->GetMesh(mc.mesh);
-        if (mesh->IsAnimated()) { continue; }
         commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
     for (const auto& [key, data] : commands) {
-        auto mesh = d_assetManager->GetMesh(key.first);
+        auto mesh = d_assetManager->get_static_mesh(key.first);
         auto material = d_assetManager->GetMaterial(key.second);
 
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_vao->SetModel(mesh);
-        d_instanceBuffer->SetData(data);
-        d_vao->SetInstances(d_instanceBuffer.get());
+        d_instanceBuffer.set_data(data);
+        d_vao->SetInstances(&d_instanceBuffer);
         d_vao->Draw();
     }
 
     // If the scene has a ParticleSingleton, then render the particles that it contains.
     for (auto entity : registry.view<ParticleSingleton>()) {
         const auto& ps = registry.get<ParticleSingleton>(entity);
-        std::vector<InstanceData> instance_data(NUM_PARTICLES);
+        std::vector<model_instance> instance_data(NUM_PARTICLES);
         for (const auto& particle : *ps.particles) {
             if (particle.life > 0.0) {
                 instance_data.push_back({
@@ -200,36 +186,39 @@ void Scene3DRenderer::Draw(
                 });
             }
         }
-        d_instanceBuffer->SetData(instance_data);
+        d_instanceBuffer.set_data(instance_data);
 
         // TODO: Un-hardcode this, do when cleaning up the rendering.
-        d_vao->SetModel(d_assetManager->GetMesh("Resources/Models/Particle.obj"));
-        d_vao->SetInstances(d_instanceBuffer.get());
+        d_vao->SetModel(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"));
+        d_vao->SetInstances(&d_instanceBuffer);
         d_vao->Draw();
     }
 
     d_animatedShader.bind();
-    for (auto entity : registry.view<ModelComponent>()) {
+    for (auto entity : registry.view<AnimatedModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
-        const auto& mc = registry.get<ModelComponent>(entity);
+        const auto& mc = registry.get<AnimatedModelComponent>(entity);
         if (mc.mesh.empty()) { continue; }
-        auto mesh = d_assetManager->GetMesh(mc.mesh);
-        if (!mesh->IsAnimated()) { continue; }
+        auto mesh = d_assetManager->get_animated_mesh(mc.mesh);
 
         auto material = d_assetManager->GetMaterial(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
+        static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
         if (registry.has<MeshAnimationComponent>(entity)) {
             const auto& ac = registry.get<MeshAnimationComponent>(entity);
-            auto poses = mesh->GetPose(ac.name, ac.time);
+            auto poses = mesh->get_pose(ac.name, ac.time);
             
-            int numBones = std::min(MAX_BONES, (int)poses.size());
-            d_animatedShader.load("u_bone_transforms", poses[0], numBones);
+            if (poses.size() > 0) {
+                int numBones = std::min(MAX_BONES, (int)poses.size());
+                d_animatedShader.load("u_bone_transforms", poses[0], numBones);
+            } else {
+                d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
+            }
         }
         else {
-            static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
             d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
         }
 
