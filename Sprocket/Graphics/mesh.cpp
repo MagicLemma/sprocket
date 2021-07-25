@@ -338,21 +338,14 @@ animated_mesh_data animated_mesh_data::load(const std::string& file)
 }
 
 static_mesh::static_mesh(const static_mesh_data& data)
-    : d_vertices()
-    , d_indices()
+    : d_vertices(data.vertices)
+    , d_indices(data.indices)
 {
-    d_vertices.set_data(data.vertices);
-    d_indices.set_data(data.indices);
-}
-
-std::unique_ptr<static_mesh> static_mesh::from_data(const static_mesh_data& data)
-{
-    return std::make_unique<static_mesh>(data);
 }
 
 std::unique_ptr<static_mesh> static_mesh::from_file(const std::string& file)
 {
-    return static_mesh::from_data(static_mesh_data::load(file));
+    return std::make_unique<static_mesh>(static_mesh_data::load(file));
 }
 
 void static_mesh::bind() const
@@ -363,22 +356,15 @@ void static_mesh::bind() const
 
 
 animated_mesh::animated_mesh(const animated_mesh_data& data)
-    : d_vertices()
-    , d_indices()
+    : d_vertices(data.vertices)
+    , d_indices(data.indices)
     , d_skeleton(data.skeleton)
 {
-    d_vertices.set_data(data.vertices);
-    d_indices.set_data(data.indices);
-}
-
-std::unique_ptr<animated_mesh> animated_mesh::from_data(const animated_mesh_data& data)
-{
-    return std::make_unique<animated_mesh>(data);
 }
 
 std::unique_ptr<animated_mesh> animated_mesh::from_file(const std::string& file)
 {
-    return animated_mesh::from_data(animated_mesh_data::load(file));
+    return std::make_unique<animated_mesh>(animated_mesh_data::load(file));
 }
 
 void animated_mesh::bind() const

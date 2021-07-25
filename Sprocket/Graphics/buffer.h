@@ -35,6 +35,7 @@ class buffer
     buffer& operator=(const buffer&) = delete;
 
 public:
+    buffer(std::span<const T> data) : buffer() { set_data(data); }
     buffer() : d_vbo(detail::new_vbo()), d_size(0) {}
     ~buffer() { detail::delete_vbo(d_vbo); }
 
@@ -63,6 +64,7 @@ class index_buffer
     index_buffer& operator=(const index_buffer&) = delete;
 
 public:
+    index_buffer(std::span<const std::uint32_t> data) : index_buffer() { set_data(data); }
     index_buffer();
     ~index_buffer();
 

@@ -23,7 +23,7 @@ static_mesh* AssetManager::get_static_mesh(std::string_view file)
 
     if (auto it = d_loading_static_meshes.find(filepath); it != d_loading_static_meshes.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto mesh = static_mesh::from_data(*(it->second.get()));
+            auto mesh = std::make_unique<static_mesh>(*(it->second.get()));
             auto* ret = mesh.get();
             d_loading_static_meshes.erase(it);
             d_static_meshes.emplace(filepath, std::move(mesh));
@@ -49,7 +49,7 @@ animated_mesh* AssetManager::get_animated_mesh(std::string_view file)
 
     if (auto it = d_loading_animated_meshes.find(filepath); it != d_loading_animated_meshes.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto mesh = animated_mesh::from_data(*(it->second.get()));
+            auto mesh = std::make_unique<animated_mesh>(*(it->second.get()));
             auto* ret = mesh.get();
             d_loading_animated_meshes.erase(it);
             d_animated_meshes.emplace(filepath, std::move(mesh));

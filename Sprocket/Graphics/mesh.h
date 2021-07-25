@@ -42,7 +42,6 @@ class static_mesh
 public:
     static_mesh(const static_mesh_data& data = {});
 
-    static std::unique_ptr<static_mesh> from_data(const static_mesh_data& data);
     static std::unique_ptr<static_mesh> from_file(const std::string& file);
 
     std::size_t vertex_count() const { return d_indices.size(); }
@@ -64,7 +63,6 @@ class animated_mesh
 public:
     animated_mesh(const animated_mesh_data& data = {});
 
-    static std::unique_ptr<animated_mesh> from_data(const animated_mesh_data& data);
     static std::unique_ptr<animated_mesh> from_file(const std::string& file);
 
     std::size_t vertex_count() const { return d_indices.size(); }
