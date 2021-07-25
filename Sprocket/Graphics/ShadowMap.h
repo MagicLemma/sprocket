@@ -28,7 +28,7 @@ class ShadowMap
 
     std::unique_ptr<VertexArray> d_vao;
 
-    spkt::buffer<InstanceData> d_instance_buffer;
+    spkt::buffer<model_instance> d_instance_buffer;
 
 public:
     ShadowMap(AssetManager* assetManager);

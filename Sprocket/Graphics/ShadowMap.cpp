@@ -40,7 +40,7 @@ void ShadowMap::Draw(
     // casting shadows.
     glCullFace(GL_FRONT);
 
-    std::unordered_map<std::string, std::vector<InstanceData>> commands;
+    std::unordered_map<std::string, std::vector<model_instance>> commands;
     for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<StaticModelComponent>(entity);

@@ -10,7 +10,7 @@
 
 namespace spkt {
 
-struct InstanceData
+struct model_instance
 {
     glm::vec3 position;
     glm::quat orientation;
@@ -19,38 +19,17 @@ struct InstanceData
     static void set_buffer_attributes();
 };
 
-enum class BufferUsage { STATIC, DYNAMIC };
-
-class Buffer
+template <typename T>
+concept buffer_element = requires
 {
-    std::uint32_t d_vbo;
-
-    spkt::BufferLayout d_layout;
-    BufferUsage  d_usage;
-    
-    std::size_t d_instanceCount;
-    std::size_t d_instanceSize;
-
-    void SetData(std::size_t count, std::size_t size, const void* data);
-    
-    Buffer(const Buffer&) = delete;
-    Buffer& operator=(const Buffer&) = delete;
-
-public:
-    Buffer(const BufferLayout& layout, const BufferUsage& usage);
-    // TODO Add destructor to clean up GL resources
-
-    void Bind() const;
-    std::size_t Size() const { return d_instanceCount; }
-
-    template <typename T> void SetData(const std::vector<T>& data);
+    { T::set_buffer_attributes() } -> std::same_as<void>;
 };
 
-template <typename T>
-void Buffer::SetData(const std::vector<T>& data)
+enum class buffer_usage
 {
-    SetData(data.size(), sizeof(T), data.data());
-}
+    STATIC,
+    DYNAMIC
+};
 
 namespace detail {
 
@@ -58,17 +37,11 @@ std::uint32_t new_vbo();
 void delete_vbo(std::uint32_t vbo);
 void bind_vbo(std::uint32_t vbo);
 void unbind_vbo(std::uint32_t vbo);
-void set_data(std::uint32_t vbo, std::size_t size, const void* data, BufferUsage usage);
+void set_data(std::uint32_t vbo, std::size_t size, const void* data, buffer_usage usage);
 
 }
 
-template <typename T>
-concept buffer_element = requires
-{
-    { T::set_buffer_attributes() } -> std::same_as<void>;
-};
-
-template <buffer_element T, BufferUsage Usage = BufferUsage::STATIC>
+template <buffer_element T, buffer_usage Usage = buffer_usage::STATIC>
 class buffer
 {
     std::uint32_t d_vbo;

@@ -37,7 +37,7 @@ private:
 
     std::unique_ptr<VertexArray> d_vao;
     
-    buffer<InstanceData> d_instanceBuffer;
+    buffer<model_instance> d_instanceBuffer;
 
     Scene3DRenderer(const Scene3DRenderer&) = delete;
     Scene3DRenderer& operator=(const Scene3DRenderer&) = delete;

@@ -37,7 +37,7 @@ void VertexArray::SetModel(animated_mesh* model)
     glBindVertexArray(0);
 }
 
-void VertexArray::SetInstances(spkt::buffer<InstanceData>* instanceData)
+void VertexArray::SetInstances(spkt::buffer<model_instance>* instanceData)
 {
     if (!instanceData) {
         d_instance_count = 0;

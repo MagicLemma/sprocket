@@ -22,7 +22,7 @@ public:
 
     void SetModel(spkt::static_mesh* model);
     void SetModel(spkt::animated_mesh* model);
-    void SetInstances(spkt::buffer<InstanceData>* instanceData);
+    void SetInstances(spkt::buffer<model_instance>* instanceData);
 
     void Draw() const;
 };
