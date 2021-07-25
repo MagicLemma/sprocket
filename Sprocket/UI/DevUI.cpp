@@ -2,7 +2,6 @@
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Graphics/BufferLayout.h>
 #include <Sprocket/Graphics/RenderContext.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 
@@ -11,6 +10,8 @@
 #include <imgui_internal.h>
 #include <imgui.h>
 #include <ImGuizmo.h>
+
+#include <ranges>
 
 namespace spkt {
 namespace {
@@ -162,12 +163,6 @@ DevUI::DevUI(Window* window)
     // attempting to move the entity just moved the window.
     ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
-    BufferLayout bufferLayout(sizeof(ImDrawVert));
-    bufferLayout.AddAttribute(DataType::FLOAT, 2);
-    bufferLayout.AddAttribute(DataType::FLOAT, 2);
-    bufferLayout.AddAttribute(DataType::UBYTE, 4);
-    d_buffer.SetBufferLayout(bufferLayout);
-
     
 }
 
@@ -262,6 +257,16 @@ void DevUI::EndFrame()
     d_shader.load("ProjMtx", proj);
 
     d_buffer.Bind();
+
+    for (int index : std::views::iota(0, 3)) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribDivisor(index, 0);
+    } 
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, pos));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, uv));
+    glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, col));
+
     d_fontAtlas->Bind(0);
 
     // Render command lists

@@ -1,8 +1,7 @@
 #include "Scene3DRenderer.h"
 
 #include <Sprocket/Graphics/AssetManager.h>
-#include <Sprocket/Graphics/Buffer.h>
-#include <Sprocket/Graphics/BufferLayout.h>
+#include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/RenderContext.h>
 #include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Scene/Camera.h>

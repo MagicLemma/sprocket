@@ -2,7 +2,6 @@
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Graphics/BufferLayout.h>
 #include <Sprocket/Graphics/RenderContext.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/MouseCodes.h>
@@ -133,11 +132,6 @@ UIEngine::UIEngine(Window* window)
                "Resources/Shaders/SimpleUI.frag")
     , d_white(1, 1, GetWhiteData().data())
 {
-    BufferLayout layout(sizeof(BufferVertex));
-    layout.AddAttribute(DataType::FLOAT, 2);
-    layout.AddAttribute(DataType::FLOAT, 4);
-    layout.AddAttribute(DataType::FLOAT, 2);
-    d_buffer.SetBufferLayout(layout);
 }
 
 glm::vec4 UIEngine::ApplyOffset(const glm::vec4& region)
@@ -369,6 +363,16 @@ void UIEngine::EndFrame()
     d_shader.load("u_proj_matrix", proj);
 
     d_buffer.Bind();
+    
+    for (int index : std::views::iota(0, 3)) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribDivisor(index, 0);
+    } 
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, position));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, colour));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, textureCoords));
+
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
 

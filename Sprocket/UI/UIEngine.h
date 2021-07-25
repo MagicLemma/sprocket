@@ -27,8 +27,8 @@ enum class Alignment
 
 struct TextProperties
 {
-    float       size      = 24.0f;
-    Alignment   alignment = Alignment::CENTRE;
+    float     size      = 24.0f;
+    Alignment alignment = Alignment::CENTRE;
     glm::vec4 colour    = {1.0, 1.0, 1.0, 1.0};
 };
 

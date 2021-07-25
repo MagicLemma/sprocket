@@ -1,12 +1,9 @@
 #pragma once
-#include <Sprocket/Graphics/BufferLayout.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 #include <cstddef>
 #include <span>
-#include <vector>
 
 namespace spkt {
 
