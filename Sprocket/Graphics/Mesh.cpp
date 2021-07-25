@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "mesh.h"
 
 #include <Sprocket/Utility/Maths.h>
 

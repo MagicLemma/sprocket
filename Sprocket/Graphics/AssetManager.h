@@ -1,6 +1,6 @@
 #pragma once
 #include <Sprocket/Graphics/Material.h>
-#include <Sprocket/Graphics/Mesh.h>
+#include <Sprocket/Graphics/mesh.h>
 #include <Sprocket/Graphics/Texture.h>
 
 #include <unordered_map>

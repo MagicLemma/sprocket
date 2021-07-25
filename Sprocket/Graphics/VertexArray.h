@@ -1,6 +1,6 @@
 #pragma once
-#include <Sprocket/Graphics/Mesh.h>
-#include <Sprocket/Graphics/Buffer.h>
+#include <Sprocket/Graphics/mesh.h>
+#include <Sprocket/Graphics/buffer.h>
 
 #include <cstddef>
 #include <memory>
@@ -11,8 +11,7 @@ class VertexArray
 {
     std::uint32_t d_vao;
     std::size_t d_vertex_count;
-
-    spkt::Buffer* d_instances;
+    std::size_t d_instance_count;
 
     VertexArray(const VertexArray&) = delete;
     VertexArray& operator=(const VertexArray&) = delete;
@@ -23,7 +22,7 @@ public:
 
     void SetModel(spkt::static_mesh* model);
     void SetModel(spkt::animated_mesh* model);
-    void SetInstances(spkt::Buffer* instanceData);
+    void SetInstances(spkt::buffer<InstanceData>* instanceData);
 
     void Draw() const;
 };

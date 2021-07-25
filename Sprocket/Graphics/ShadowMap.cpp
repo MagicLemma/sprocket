@@ -6,20 +6,6 @@
 #include <glad/glad.h>
 
 namespace spkt {
-namespace {
-
-std::unique_ptr<Buffer> GetInstanceBuffer()
-{
-    BufferLayout layout(sizeof(InstanceData), 5);
-    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    assert(layout.Validate());
-
-    return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
-}
-
-}
 
 ShadowMap::ShadowMap(AssetManager* assetManager)
     : d_assetManager(assetManager)
@@ -28,7 +14,6 @@ ShadowMap::ShadowMap(AssetManager* assetManager)
     , d_lightProjMatrix(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -50.0f, 50.0f))
     , d_shadowMap(8192, 8192)
     , d_vao(std::make_unique<VertexArray>())
-    , d_instanceBuffer(GetInstanceBuffer())
 {
 }
 
@@ -68,8 +53,8 @@ void ShadowMap::Draw(
         if (!mesh) { continue; }
 
         d_vao->SetModel(mesh);
-        d_instanceBuffer->SetData(data);
-        d_vao->SetInstances(d_instanceBuffer.get());
+        d_instance_buffer.set_data(data);
+        d_vao->SetInstances(&d_instance_buffer);
         d_vao->Draw();
     }
 

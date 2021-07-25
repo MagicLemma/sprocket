@@ -26,17 +26,6 @@ std::array<glm::mat4, Scene3DRenderer::MAX_BONES> DefaultBoneTransforms() {
     return arr;
 };
 
-std::unique_ptr<Buffer> GetInstanceBuffer()
-{
-    BufferLayout layout(sizeof(InstanceData), 5);
-    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 4, DataRate::INSTANCE);
-    layout.AddAttribute(DataType::FLOAT, 3, DataRate::INSTANCE);
-    assert(layout.Validate());
-
-    return std::make_unique<Buffer>(layout, BufferUsage::DYNAMIC);
-}
-
 void upload_uniforms(
     const shader& shader,
     const spkt::registry& registry,
@@ -116,7 +105,7 @@ Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     , d_assetManager(assetManager)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
-    , d_instanceBuffer(GetInstanceBuffer())
+    , d_instanceBuffer()
 {
     d_staticShader.bind();
     d_staticShader.load("u_albedo_map", ALBEDO_SLOT);
@@ -180,8 +169,8 @@ void Scene3DRenderer::Draw(
 
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_vao->SetModel(mesh);
-        d_instanceBuffer->SetData(data);
-        d_vao->SetInstances(d_instanceBuffer.get());
+        d_instanceBuffer.set_data(data);
+        d_vao->SetInstances(&d_instanceBuffer);
         d_vao->Draw();
     }
 
@@ -198,11 +187,11 @@ void Scene3DRenderer::Draw(
                 });
             }
         }
-        d_instanceBuffer->SetData(instance_data);
+        d_instanceBuffer.set_data(instance_data);
 
         // TODO: Un-hardcode this, do when cleaning up the rendering.
         d_vao->SetModel(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"));
-        d_vao->SetInstances(d_instanceBuffer.get());
+        d_vao->SetInstances(&d_instanceBuffer);
         d_vao->Draw();
     }
 

@@ -1,6 +1,6 @@
 #include "post_processor.h"
 
-#include <Sprocket/Graphics/Mesh.h>
+#include <Sprocket/Graphics/mesh.h>
 
 #include <glad/glad.h>
 

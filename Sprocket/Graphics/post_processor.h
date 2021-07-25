@@ -1,6 +1,6 @@
 #pragma once
 #include <Sprocket/Graphics/FrameBuffer.h>
-#include <Sprocket/Graphics/Mesh.h>
+#include <Sprocket/Graphics/mesh.h>
 #include <Sprocket/Graphics/shader.h>
 
 #include <string_view>
