@@ -24,6 +24,9 @@ public:
     void SetModel(spkt::animated_mesh* model);
     void SetInstances(spkt::buffer<model_instance>* instanceData);
 
+    void bind() const;
+    void unbind() const;
+
     void Draw() const;
 };
 

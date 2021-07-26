@@ -1,5 +1,8 @@
 #pragma once
 #include <Sprocket/Graphics/shader.h>
+#include <Sprocket/Graphics/buffer.h>
+#include <Sprocket/Graphics/buffer_element_types.h>
+#include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Graphics/StreamBuffer.h>
 #include <Sprocket/Graphics/Texture.h>
 
@@ -32,21 +35,14 @@ struct TextProperties
     glm::vec4 colour    = {1.0, 1.0, 1.0, 1.0};
 };
 
-struct BufferVertex
-{
-    glm::vec2 position;
-    glm::vec4 colour;
-    glm::vec2 textureCoords = {0.0, 0.0};
-};
-
 struct DrawCommand
 {
     const Texture*             texture = nullptr;
-    std::vector<BufferVertex>  vertices;
+    std::vector<ui_vertex>  vertices;
     std::vector<std::uint32_t> indices;
 
     Font*                      font = nullptr;
-    std::vector<BufferVertex>  textVertices;
+    std::vector<ui_vertex>  textVertices;
     std::vector<std::uint32_t> textIndices;
 
     // If specified, we scissor test this region so nothing outside the region is rendered.
@@ -145,7 +141,10 @@ class UIEngine
 
     // Rendering code    
     spkt::shader d_shader;
-    spkt::StreamBuffer d_buffer;
+    
+    spkt::VertexArray       d_vao;
+    spkt::buffer<ui_vertex> d_vertices;
+    spkt::index_buffer      d_indices;
     
     // Panel info 
     std::unordered_map<std::size_t, Panel> d_panels;

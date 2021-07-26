@@ -64,4 +64,14 @@ void VertexArray::Draw() const
     glBindVertexArray(0);
 }
 
+    void VertexArray::bind() const
+    {
+        glBindVertexArray(d_vao);
+    }
+
+    void VertexArray::unbind() const
+    {
+        glBindVertexArray(0);
+    }
+
 }

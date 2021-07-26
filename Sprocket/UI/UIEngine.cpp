@@ -132,16 +132,6 @@ UIEngine::UIEngine(Window* window)
                "Resources/Shaders/SimpleUI.frag")
     , d_white(1, 1, GetWhiteData().data())
 {
-    d_buffer.Bind();
-    for (int index : std::views::iota(0, 3)) {
-        glEnableVertexAttribArray(index);
-        glVertexAttribDivisor(index, 0);
-    } 
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, position));
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, colour));
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, textureCoords));
-    d_buffer.Unbind();
 }
 
 glm::vec4 UIEngine::ApplyOffset(const glm::vec4& region)
@@ -372,7 +362,6 @@ void UIEngine::EndFrame()
     d_shader.bind();
     d_shader.load("u_proj_matrix", proj);
 
-    d_buffer.Bind();
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
 
@@ -381,7 +370,6 @@ void UIEngine::EndFrame()
             ExecuteCommand(cmd);
         }
     }
-    d_buffer.Unbind();
 }
 
 void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType type)
@@ -430,13 +418,24 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     } else {
         d_white.Bind(0);
     }
-    d_buffer.Draw(cmd.vertices, cmd.indices);
+    d_vao.bind();
+
+    d_vertices.set_data(cmd.vertices);
+    d_vertices.bind();
+    d_indices.set_data(cmd.indices);
+    d_indices.bind();
+    glDrawElementsInstanced(GL_TRIANGLES, (int)d_vertices.size(), GL_UNSIGNED_INT, nullptr, (int)d_indices.size());
     
     if (cmd.font) {
         cmd.font->Bind(0);
         d_shader.load("texture_channels", 1);
-        d_buffer.Draw(cmd.textVertices, cmd.textIndices);
+        d_vertices.set_data(cmd.textVertices);
+        d_vertices.bind();
+        d_indices.set_data(cmd.textIndices);
+        d_indices.bind();
+        glDrawElementsInstanced(GL_TRIANGLES, (int)d_vertices.size(), GL_UNSIGNED_INT, nullptr, (int)d_indices.size());
     }
+    d_vao.unbind();
 }
 
 }

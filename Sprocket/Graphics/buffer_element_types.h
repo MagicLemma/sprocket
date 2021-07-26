@@ -37,6 +37,15 @@ struct animated_vertex
     static void set_buffer_attributes();
 };
 
+struct ui_vertex
+{
+    glm::vec2 position;
+    glm::vec4 colour;
+    glm::vec2 textureCoords = {0.0, 0.0};
+
+    static void set_buffer_attributes();
+};
+
 struct model_instance
 {
     glm::vec3 position;

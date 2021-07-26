@@ -36,6 +36,18 @@ void animated_vertex::set_buffer_attributes()
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(animated_vertex), (void*)offsetof(animated_vertex, boneWeights));
 }
 
+void ui_vertex::set_buffer_attributes()
+{
+    for (int index : std::views::iota(0, 3)) {
+        glEnableVertexAttribArray(index);
+        glVertexAttribDivisor(index, 0);
+    } 
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ui_vertex), (void*)offsetof(ui_vertex, position));
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(ui_vertex), (void*)offsetof(ui_vertex, colour));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ui_vertex), (void*)offsetof(ui_vertex, textureCoords));
+}
+
 void model_instance::set_buffer_attributes()
 {
     for (int index : std::views::iota(5, 8)) {
