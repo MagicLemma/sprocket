@@ -1,6 +1,6 @@
 #include "RenderContext.h"
 
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Graphics/Viewport.h>
 
 #include <glad/glad.h>
 
@@ -77,21 +77,11 @@ void RenderContext::ScissorTesting(bool enabled) const
     }
 }
 
-ScissorContext::ScissorContext(Window* window, const std::optional<glm::vec4>& region)
-    : d_region(region)
+void RenderContext::set_scissor_window(const glm::vec4& region) const
 {
-    if (d_region.has_value()) {
-        glEnable(GL_SCISSOR_TEST);
-        const auto& val = d_region.value();
-        glScissor(val.x,  window->Height() - val.y - val.w, val.z, val.w);
-    }
-}
-
-ScissorContext::~ScissorContext()
-{
-    if (d_region.has_value()) {
-        glDisable(GL_SCISSOR_TEST);
-    }   
+    glEnable(GL_SCISSOR_TEST);
+    float height = spkt::Viewport::Current().a;
+    glScissor(region.x, height - region.y - region.w, region.z, region.w);
 }
 
 }

@@ -412,7 +412,11 @@ void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
 
 void UIEngine::ExecuteCommand(const DrawCommand& cmd)
 {
-    auto scissor = ScissorContext(d_window, cmd.region);
+    spkt::RenderContext rc;
+    if (cmd.region.has_value()) {
+        rc.set_scissor_window(*cmd.region);
+    }
+
     if (cmd.texture) {
         cmd.texture->Bind(0);
     } else {
