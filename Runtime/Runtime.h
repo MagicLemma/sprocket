@@ -21,7 +21,6 @@ class Runtime
     spkt::AssetManager d_assetManager;
 
     // Rendering
-    spkt::VertexArray d_vao;
     spkt::Scene3DRenderer d_entityRenderer;
     spkt::SkyboxRenderer d_skyboxRenderer;
 
@@ -37,7 +36,6 @@ class Runtime
 
 public:
     Runtime(spkt::Window* window);
-    ~Runtime();
 
     void on_event(spkt::event& event);
     void on_update(double dt);

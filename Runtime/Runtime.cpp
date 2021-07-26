@@ -44,12 +44,6 @@ Runtime::Runtime(spkt::Window* window)
     d_scene.add(spkt::clear_events_system);
 
     d_runtimeCamera = d_scene.registry().find<spkt::Camera3DComponent>();
-    d_vao.bind();
-}
-
-Runtime::~Runtime()
-{
-    d_vao.unbind();
 }
 
 void Runtime::on_event(spkt::event& event)

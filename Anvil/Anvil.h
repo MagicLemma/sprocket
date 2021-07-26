@@ -26,7 +26,6 @@ class Anvil
     Camera d_editor_camera;
 
     // Rendering
-    spkt::VertexArray d_vao;
     spkt::Scene3DRenderer d_entity_renderer;
     spkt::SkyboxRenderer d_skybox_renderer;
     spkt::ColliderRenderer d_collider_renderer;
@@ -67,7 +66,6 @@ class Anvil
 
 public:
     Anvil(spkt::Window* window);
-    ~Anvil();
 
     void on_event(spkt::event& event);
     void on_update(double dt);

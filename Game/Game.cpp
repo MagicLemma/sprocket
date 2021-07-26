@@ -120,13 +120,6 @@ Game::Game(Window* window)
     d_post_processor.add_effect(
         "Resources/Shaders/Negative.vert", "Resources/Shaders/Negative.frag"
     );
-
-    d_vao.bind();
-}
-
-Game::~Game()
-{
-    d_vao.unbind();
 }
 
 void Game::load_scene(std::string_view file)

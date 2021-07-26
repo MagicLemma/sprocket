@@ -34,7 +34,6 @@ class Game
     spkt::entity d_worker;
     
     // RENDERING
-    spkt::VertexArray d_vao;
     spkt::Scene3DRenderer d_entityRenderer;
     spkt::post_processor d_post_processor;
 
@@ -57,7 +56,6 @@ class Game
 
 public:
     Game(spkt::Window* window);
-    ~Game();
 
     void on_event(spkt::event& event);
     void on_update(double dt);

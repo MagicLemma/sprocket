@@ -63,12 +63,6 @@ Anvil::Anvil(spkt::Window* window)
     spkt::add_singleton(d_scene->registry());   
     spkt::load_registry_from_file(d_sceneFile, d_scene->registry());
     d_activeScene = d_scene;
-    d_vao.bind();
-}
-
-Anvil::~Anvil()
-{
-    d_vao.unbind();
 }
 
 void Anvil::on_event(spkt::event& event)
