@@ -2,8 +2,8 @@
 
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/buffer.h>
+#include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Graphics/RenderContext.h>
-#include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Utility/Hashing.h>
 #include <Sprocket/Utility/Maths.h>
