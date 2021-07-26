@@ -3,7 +3,6 @@
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/buffer_element_types.h>
 #include <Sprocket/Graphics/VertexArray.h>
-#include <Sprocket/Graphics/StreamBuffer.h>
 #include <Sprocket/Graphics/Texture.h>
 
 #include <glm/glm.hpp>
