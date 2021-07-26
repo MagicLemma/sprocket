@@ -294,8 +294,10 @@ void Game::on_render()
         d_post_processor.start_frame();
     }
 
+    d_vao.bind();
     d_entityRenderer.EnableShadows(d_shadowMap);
     d_entityRenderer.Draw(registry, d_camera);
+    d_vao.unbind();
 
     if (d_paused) {
         d_post_processor.end_frame();

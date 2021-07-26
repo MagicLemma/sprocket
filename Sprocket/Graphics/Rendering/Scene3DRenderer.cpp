@@ -141,11 +141,11 @@ void Scene3DRenderer::Draw(
     const glm::mat4& proj,
     const glm::mat4& view)
 {
+    //d_vao->bind();
+
     RenderContext rc;
     rc.FaceCulling(true);
     rc.DepthTesting(true);
-
-    d_vao->bind();
 
     upload_uniforms(d_staticShader, registry, proj, view);
     upload_uniforms(d_animatedShader, registry, proj, view);
@@ -230,7 +230,7 @@ void Scene3DRenderer::Draw(
     }
     d_animatedShader.unbind();
 
-    d_vao->unbind();
+    //d_vao->unbind();
 }
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)

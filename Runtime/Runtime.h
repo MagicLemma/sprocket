@@ -21,6 +21,7 @@ class Runtime
     spkt::AssetManager d_assetManager;
 
     // Rendering
+    spkt::VertexArray d_vao;
     spkt::Scene3DRenderer d_entityRenderer;
     spkt::SkyboxRenderer d_skyboxRenderer;
 

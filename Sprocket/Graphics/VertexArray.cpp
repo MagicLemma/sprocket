@@ -113,4 +113,26 @@ void VertexArray::unbind() const
     glBindVertexArray(0);
 }
 
+void draw(spkt::static_mesh* mesh, spkt::buffer<model_instance>* instances)
+{
+    mesh->bind();
+    if (instances) {
+        instances->bind();
+        glDrawElementsInstanced(GL_TRIANGLES, (int)mesh->vertex_count(), GL_UNSIGNED_INT, nullptr, instances->size());
+    } else {
+        glDrawElements(GL_TRIANGLES, (int)mesh->vertex_count(), GL_UNSIGNED_INT, nullptr);
+    }
+}
+
+void draw(spkt::animated_mesh* mesh, spkt::buffer<model_instance>* instances)
+{
+    mesh->bind();
+    if (instances) {
+        instances->bind();
+        glDrawElementsInstanced(GL_TRIANGLES, (int)mesh->vertex_count(), GL_UNSIGNED_INT, nullptr, instances->size());
+    } else {
+        glDrawElements(GL_TRIANGLES, (int)mesh->vertex_count(), GL_UNSIGNED_INT, nullptr);
+    }
+}
+
 }

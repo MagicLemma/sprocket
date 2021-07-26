@@ -23,6 +23,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
                           const glm::mat4& proj,
                           const glm::mat4& view)
 {
+    //d_vao->bind();
     d_shader.bind();
     d_shader.load("projectionMatrix", proj);
 
@@ -30,8 +31,9 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_shader.load("viewMatrix", glm::mat4(glm::mat3(view)));
 
     skybox.Bind();
-    d_vao->SetModel(d_assetManager->get_static_mesh("Resources/Models/Skybox.obj"));
-    d_vao->Draw();
+    d_vao->set_model(d_assetManager->get_static_mesh("Resources/Models/Skybox.obj"));
+    d_vao->draw();
+    //d_vao->unbind();
 }
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera)

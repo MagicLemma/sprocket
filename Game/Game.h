@@ -34,6 +34,7 @@ class Game
     spkt::entity d_worker;
     
     // RENDERING
+    spkt::VertexArray d_vao;
     spkt::Scene3DRenderer d_entityRenderer;
     spkt::post_processor d_post_processor;
 

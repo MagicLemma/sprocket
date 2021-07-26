@@ -30,7 +30,6 @@ void ColliderRenderer::Draw(
     d_shader.load("u_view_matrix", view);
     
     static auto s_cube = static_mesh::from_file("Resources/Models/Cube.obj");
-    d_vao->SetModel(s_cube.get());
     for (auto entity : registry.view<BoxCollider3DComponent>()) {
         const auto& c = registry.get<BoxCollider3DComponent>(entity);
         auto tr = registry.get<Transform3DComponent>(entity);
@@ -41,11 +40,10 @@ void ColliderRenderer::Draw(
             transform = glm::scale(transform, tr.scale);
         }
         d_shader.load("u_model_matrix", transform);
-        d_vao->Draw();
+        spkt::draw(s_cube.get());
     }
 
     static auto s_sphere = static_mesh::from_file("Resources/Models/LowPolySphere.obj");
-    d_vao->SetModel(s_sphere.get());
     for (auto entity : registry.view<SphereCollider3DComponent>()) {
         const auto& c = registry.get<SphereCollider3DComponent>(entity);
         auto tr = registry.get<Transform3DComponent>(entity);
@@ -53,7 +51,7 @@ void ColliderRenderer::Draw(
         transform *= Maths::Transform(c.position, c.orientation);
         transform = glm::scale(transform, {c.radius, c.radius, c.radius});
         d_shader.load("u_model_matrix", transform);
-        d_vao->Draw();
+        spkt::draw(s_sphere.get());
     }
 
     static auto s_hemisphere = static_mesh::from_file("Resources/Models/Hemisphere.obj");
@@ -69,8 +67,7 @@ void ColliderRenderer::Draw(
             transform = glm::translate(transform, {0.0, c.height/2, 0.0});
             transform = glm::scale(transform, {c.radius, c.radius, c.radius});
             d_shader.load("u_model_matrix", transform);
-            d_vao->SetModel(s_hemisphere.get());
-            d_vao->Draw();
+            spkt::draw(s_hemisphere.get());
         }
 
         {  // Middle Cylinder
@@ -79,8 +76,7 @@ void ColliderRenderer::Draw(
             transform *= Maths::Transform(c.position, c.orientation);
             transform = glm::scale(transform, {c.radius, c.height, c.radius});
             d_shader.load("u_model_matrix", transform);
-            d_vao->SetModel(s_cylinder.get());
-            d_vao->Draw();
+            spkt::draw(s_cylinder.get());
         }
 
         {  // Bottom Hemisphere
@@ -91,8 +87,7 @@ void ColliderRenderer::Draw(
             transform = glm::rotate(transform, glm::pi<float>(), {1, 0, 0});
             transform = glm::scale(transform, {c.radius, c.radius, c.radius});
             d_shader.load("u_model_matrix", transform);
-            d_vao->SetModel(s_hemisphere.get());
-            d_vao->Draw();
+            spkt::draw(s_hemisphere.get());
         }
     }
 
