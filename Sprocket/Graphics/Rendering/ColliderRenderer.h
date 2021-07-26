@@ -14,8 +14,6 @@ class ColliderRenderer
 {
     shader  d_shader;
 
-    std::unique_ptr<VertexArray> d_vao;
-
 public:
     ColliderRenderer();
 

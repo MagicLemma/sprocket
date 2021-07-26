@@ -100,8 +100,7 @@ void UploadMaterial(
 }
 
 Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
-    : d_vao(std::make_unique<VertexArray>())
-    , d_assetManager(assetManager)
+    : d_assetManager(assetManager)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer()
@@ -141,8 +140,6 @@ void Scene3DRenderer::Draw(
     const glm::mat4& proj,
     const glm::mat4& view)
 {
-    //d_vao->bind();
-
     RenderContext rc;
     rc.FaceCulling(true);
     rc.DepthTesting(true);
@@ -169,10 +166,8 @@ void Scene3DRenderer::Draw(
         auto material = d_assetManager->GetMaterial(key.second);
 
         UploadMaterial(d_staticShader, material, d_assetManager);
-        d_vao->set_model(mesh);
         d_instanceBuffer.set_data(data);
-        d_vao->set_instances(&d_instanceBuffer);
-        d_vao->draw();
+        spkt::draw(mesh, &d_instanceBuffer);
     }
 
     // If the scene has a ParticleSingleton, then render the particles that it contains.
@@ -190,10 +185,8 @@ void Scene3DRenderer::Draw(
         }
         d_instanceBuffer.set_data(instance_data);
 
-        // TODO: Un-hardcode this, do when cleaning up the rendering.
-        d_vao->set_model(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"));
-        d_vao->set_instances(&d_instanceBuffer);
-        d_vao->draw();
+        // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
+        spkt::draw(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"), &d_instanceBuffer);
     }
 
     d_animatedShader.bind();
@@ -224,13 +217,10 @@ void Scene3DRenderer::Draw(
             d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
         }
 
-        d_vao->set_model(mesh);
-        d_vao->set_instances(nullptr);
-        d_vao->draw();
+        spkt::draw(mesh);
+        
     }
     d_animatedShader.unbind();
-
-    //d_vao->unbind();
 }
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)

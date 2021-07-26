@@ -10,8 +10,7 @@
 namespace spkt {
 
 ColliderRenderer::ColliderRenderer()
-    : d_vao(std::make_unique<VertexArray>())
-    , d_shader("Resources/Shaders/Collider.vert", "Resources/Shaders/Collider.frag")
+    : d_shader("Resources/Shaders/Collider.vert", "Resources/Shaders/Collider.frag")
 {
 }
 
