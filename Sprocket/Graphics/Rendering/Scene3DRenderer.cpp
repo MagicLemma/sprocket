@@ -145,6 +145,8 @@ void Scene3DRenderer::Draw(
     rc.FaceCulling(true);
     rc.DepthTesting(true);
 
+    d_vao->bind();
+
     upload_uniforms(d_staticShader, registry, proj, view);
     upload_uniforms(d_animatedShader, registry, proj, view);
 
@@ -167,10 +169,10 @@ void Scene3DRenderer::Draw(
         auto material = d_assetManager->GetMaterial(key.second);
 
         UploadMaterial(d_staticShader, material, d_assetManager);
-        d_vao->SetModel(mesh);
+        d_vao->set_model(mesh);
         d_instanceBuffer.set_data(data);
-        d_vao->SetInstances(&d_instanceBuffer);
-        d_vao->Draw();
+        d_vao->set_instances(&d_instanceBuffer);
+        d_vao->draw();
     }
 
     // If the scene has a ParticleSingleton, then render the particles that it contains.
@@ -189,9 +191,9 @@ void Scene3DRenderer::Draw(
         d_instanceBuffer.set_data(instance_data);
 
         // TODO: Un-hardcode this, do when cleaning up the rendering.
-        d_vao->SetModel(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"));
-        d_vao->SetInstances(&d_instanceBuffer);
-        d_vao->Draw();
+        d_vao->set_model(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"));
+        d_vao->set_instances(&d_instanceBuffer);
+        d_vao->draw();
     }
 
     d_animatedShader.bind();
@@ -222,11 +224,13 @@ void Scene3DRenderer::Draw(
             d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
         }
 
-        d_vao->SetModel(mesh);
-        d_vao->SetInstances(nullptr);
-        d_vao->Draw();
+        d_vao->set_model(mesh);
+        d_vao->set_instances(nullptr);
+        d_vao->draw();
     }
     d_animatedShader.unbind();
+
+    d_vao->unbind();
 }
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
