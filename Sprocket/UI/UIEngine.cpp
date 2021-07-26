@@ -424,8 +424,8 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     d_vertices.bind();
     d_indices.set_data(cmd.indices);
     d_indices.bind();
-    glDrawElementsInstanced(GL_TRIANGLES, (int)d_vertices.size(), GL_UNSIGNED_INT, nullptr, (int)d_indices.size());
-    
+    glDrawElements(GL_TRIANGLES,  (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
+
     if (cmd.font) {
         cmd.font->Bind(0);
         d_shader.load("texture_channels", 1);
@@ -433,7 +433,7 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
         d_vertices.bind();
         d_indices.set_data(cmd.textIndices);
         d_indices.bind();
-        glDrawElementsInstanced(GL_TRIANGLES, (int)d_vertices.size(), GL_UNSIGNED_INT, nullptr, (int)d_indices.size());
+        glDrawElements(GL_TRIANGLES,  (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
     }
     d_vao.unbind();
 }
