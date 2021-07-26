@@ -57,6 +57,7 @@ class Game
 
 public:
     Game(spkt::Window* window);
+    ~Game();
 
     void on_event(spkt::event& event);
     void on_update(double dt);

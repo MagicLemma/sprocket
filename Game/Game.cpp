@@ -120,6 +120,13 @@ Game::Game(Window* window)
     d_post_processor.add_effect(
         "Resources/Shaders/Negative.vert", "Resources/Shaders/Negative.frag"
     );
+
+    d_vao.bind();
+}
+
+Game::~Game()
+{
+    d_vao.unbind();
 }
 
 void Game::load_scene(std::string_view file)
@@ -276,7 +283,6 @@ void Game::on_update(double dt)
 void Game::on_render()
 {
     using namespace spkt;
-    d_vao.bind();
     
     const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.registry());
     auto& registry = d_scene.registry();
@@ -302,7 +308,6 @@ void Game::on_render()
     if (d_paused) {
         d_post_processor.end_frame();
     }
-    d_vao.unbind();
 
     if (!d_paused) {
         auto& registry = d_scene.registry();

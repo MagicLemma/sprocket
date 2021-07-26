@@ -19,7 +19,6 @@ class DevUI
     shader  d_shader;
     std::unique_ptr<Texture> d_fontAtlas;
 
-    std::uint32_t d_vao;
     std::uint32_t d_vertexBuffer;
     std::uint32_t d_indexBuffer;
 
