@@ -37,6 +37,7 @@ class Runtime
 
 public:
     Runtime(spkt::Window* window);
+    ~Runtime();
 
     void on_event(spkt::event& event);
     void on_update(double dt);

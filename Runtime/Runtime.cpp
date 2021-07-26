@@ -44,6 +44,12 @@ Runtime::Runtime(spkt::Window* window)
     d_scene.add(spkt::clear_events_system);
 
     d_runtimeCamera = d_scene.registry().find<spkt::Camera3DComponent>();
+    d_vao.bind();
+}
+
+Runtime::~Runtime()
+{
+    d_vao.unbind();
 }
 
 void Runtime::on_event(spkt::event& event)
@@ -78,10 +84,8 @@ void Runtime::on_render()
 {
     auto& registry = d_scene.registry();
 
-    d_vao.bind();
     d_skyboxRenderer.Draw(d_skybox, registry, d_runtimeCamera);
     d_entityRenderer.Draw(registry, d_runtimeCamera);
-    d_vao.unbind();
 
     if (d_consoleActive) {
         d_console.Draw();
