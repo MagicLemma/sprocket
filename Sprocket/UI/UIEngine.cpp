@@ -418,7 +418,6 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     } else {
         d_white.Bind(0);
     }
-    d_vao.bind();
 
     d_vertices.set_data(cmd.vertices);
     d_vertices.bind();
@@ -435,7 +434,6 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
         d_indices.bind();
         glDrawElements(GL_TRIANGLES,  (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
     }
-    d_vao.unbind();
 }
 
 }

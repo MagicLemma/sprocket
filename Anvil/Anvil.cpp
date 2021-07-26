@@ -132,6 +132,7 @@ glm::mat4 Anvil::get_view_matrix() const
 
 void Anvil::on_render()
 {
+    d_vao.bind();
     auto& registry = d_activeScene->registry();
 
     // If the size of the viewport has changed since the previous frame, recreate
@@ -145,13 +146,11 @@ void Anvil::on_render()
     glm::mat4 proj = get_proj_matrix();
     glm::mat4 view = get_view_matrix();
 
-    d_vao.bind();
     d_entity_renderer.Draw(registry, proj, view);
     d_skybox_renderer.Draw(d_skybox, proj, view);
     if (d_showColliders) {
         d_collider_renderer.Draw(registry, proj, view);
     }
-    d_vao.unbind();
 
     d_viewport.Unbind();
 
@@ -354,7 +353,8 @@ void Anvil::on_render()
         ImGui::End();
     }
 
-    d_ui.EndFrame();    
+    d_ui.EndFrame();
+    d_vao.unbind(); 
 }
 
 void Anvil::material_ui(std::string& texture)

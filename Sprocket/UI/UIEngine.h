@@ -2,7 +2,6 @@
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/buffer_element_types.h>
-#include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Graphics/Texture.h>
 
 #include <glm/glm.hpp>
@@ -141,7 +140,6 @@ class UIEngine
     // Rendering code    
     spkt::shader d_shader;
     
-    spkt::VertexArray       d_vao;
     spkt::buffer<ui_vertex> d_vertices;
     spkt::index_buffer      d_indices;
     
