@@ -26,8 +26,6 @@ class ShadowMap
 
     DepthBuffer d_shadowMap;
 
-    std::unique_ptr<VertexArray> d_vao;
-
     spkt::buffer<model_instance> d_instance_buffer;
 
 public:

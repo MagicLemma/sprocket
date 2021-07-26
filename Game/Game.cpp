@@ -276,6 +276,8 @@ void Game::on_update(double dt)
 void Game::on_render()
 {
     using namespace spkt;
+    d_vao.bind();
+    
     const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.registry());
     auto& registry = d_scene.registry();
 
@@ -294,14 +296,13 @@ void Game::on_render()
         d_post_processor.start_frame();
     }
 
-    d_vao.bind();
     d_entityRenderer.EnableShadows(d_shadowMap);
     d_entityRenderer.Draw(registry, d_camera);
-    d_vao.unbind();
 
     if (d_paused) {
         d_post_processor.end_frame();
     }
+    d_vao.unbind();
 
     if (!d_paused) {
         auto& registry = d_scene.registry();

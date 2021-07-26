@@ -13,7 +13,6 @@ ShadowMap::ShadowMap(AssetManager* assetManager)
     , d_lightViewMatrix() // Will be populated after starting a scene.
     , d_lightProjMatrix(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -50.0f, 50.0f))
     , d_shadowMap(8192, 8192)
-    , d_vao(std::make_unique<VertexArray>())
 {
 }
 
@@ -52,10 +51,8 @@ void ShadowMap::Draw(
         auto mesh = d_assetManager->get_static_mesh(key);
         if (!mesh) { continue; }
 
-        d_vao->SetModel(mesh);
         d_instance_buffer.set_data(data);
-        d_vao->SetInstances(&d_instance_buffer);
-        d_vao->Draw();
+        spkt::draw(mesh, &d_instance_buffer);
     }
 
     glCullFace(GL_BACK);
