@@ -67,6 +67,7 @@ class Anvil
 
 public:
     Anvil(spkt::Window* window);
+    ~Anvil();
 
     void on_event(spkt::event& event);
     void on_update(double dt);

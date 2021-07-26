@@ -63,6 +63,12 @@ Anvil::Anvil(spkt::Window* window)
     spkt::add_singleton(d_scene->registry());   
     spkt::load_registry_from_file(d_sceneFile, d_scene->registry());
     d_activeScene = d_scene;
+    d_vao.bind();
+}
+
+Anvil::~Anvil()
+{
+    d_vao.unbind();
 }
 
 void Anvil::on_event(spkt::event& event)
@@ -132,7 +138,6 @@ glm::mat4 Anvil::get_view_matrix() const
 
 void Anvil::on_render()
 {
-    d_vao.bind();
     auto& registry = d_activeScene->registry();
 
     // If the size of the viewport has changed since the previous frame, recreate
@@ -354,7 +359,6 @@ void Anvil::on_render()
     }
 
     d_ui.EndFrame();
-    d_vao.unbind(); 
 }
 
 void Anvil::material_ui(std::string& texture)
