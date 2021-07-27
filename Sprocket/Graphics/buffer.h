@@ -45,7 +45,7 @@ public:
     void set_data(std::span<const T> data)
     {
         d_size = data.size();
-        detail::set_data(d_vbo, data.size() * sizeof(T), data.data(), Usage);
+        detail::set_data(d_vbo, data.size_bytes(), data.data(), Usage);
     }
 
     std::size_t size() const { return d_size; }

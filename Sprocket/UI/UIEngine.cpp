@@ -257,7 +257,7 @@ void UIEngine::StartFrame()
 void UIEngine::MouseClick()
 {
     bool foundClicked = false;
-    glm::vec2 mouse = d_window->GetMousePos();
+    const glm::vec2 mouse = d_window->GetMousePos();
 
     std::size_t moveToFront = 0;
 
@@ -304,7 +304,7 @@ void UIEngine::MouseClick()
 void UIEngine::MouseHover()
 {
     bool foundHovered = false;
-    glm::vec2 mouse = d_window->GetMousePos();
+    const glm::vec2 mouse = d_window->GetMousePos();
 
     for (auto panelHash : d_panelOrder | std::views::reverse) {
         auto it = d_panels.find(panelHash);
@@ -352,13 +352,13 @@ void UIEngine::EndFrame()
     rc.face_culling(false);
     rc.depth_testing(false);
 
-    float w = (float)d_window->Width();
-    float h = (float)d_window->Height();
+    const float w = (float)d_window->Width();
+    const float h = (float)d_window->Height();
 
     // This transformation makes the top left of the screen (0, 0) and the bottom
     // right be (width, height). It flips the y-axis since OpenGL treats the bottom
     // left as (0, 0).
-    auto proj = glm::ortho(0.0f, w, h, 0.0f);
+    const auto proj = glm::ortho(0.0f, w, h, 0.0f);
     d_shader.bind();
     d_shader.load("u_proj_matrix", proj);
 
@@ -375,7 +375,7 @@ void UIEngine::EndFrame()
 void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType type)
 {
     assert(!d_currentPanel);
-    std::size_t hash = std::hash<std::string_view>{}(name);
+    const std::size_t hash = std::hash<std::string_view>{}(name);
 
     if (std::ranges::find(d_panelOrder, hash) == d_panelOrder.end()) {
         d_panelOrder.push_back(hash);
