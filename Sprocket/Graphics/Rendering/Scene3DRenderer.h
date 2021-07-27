@@ -35,7 +35,7 @@ private:
     shader d_staticShader;
     shader d_animatedShader;
     
-    buffer<model_instance> d_instanceBuffer;
+    spkt::vertex_buffer<spkt::model_instance> d_instanceBuffer;
 
     Scene3DRenderer(const Scene3DRenderer&) = delete;
     Scene3DRenderer& operator=(const Scene3DRenderer&) = delete;

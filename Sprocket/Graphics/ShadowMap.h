@@ -26,7 +26,7 @@ class ShadowMap
 
     DepthBuffer d_shadowMap;
 
-    spkt::buffer<model_instance> d_instance_buffer;
+    spkt::vertex_buffer<spkt::model_instance> d_instance_buffer;
 
 public:
     ShadowMap(AssetManager* assetManager);

@@ -51,11 +51,9 @@ public:
 };
 
 template <spkt::buffer_element T, buffer_usage Usage = buffer_usage::STATIC>
-using buffer = basic_buffer<T, Usage, T::set_buffer_attributes>;
+using vertex_buffer = basic_buffer<T, Usage, T::set_buffer_attributes>;
 
 template <std::unsigned_integral T, buffer_usage Usage = buffer_usage::STATIC>
-using ibuffer = basic_buffer<T, Usage, detail::bind_index_buffer>;
-
-using index_buffer = ibuffer<std::uint32_t>;
+using index_buffer = basic_buffer<T, Usage, detail::bind_index_buffer>;
 
 }

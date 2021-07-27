@@ -15,7 +15,7 @@ concept bindable = requires(T t)
 };
 
 template <bindable T>
-void draw_impl(T* mesh, spkt::buffer<model_instance>* instances)
+void draw_impl(T* mesh, spkt::vertex_buffer<model_instance>* instances)
 {
     mesh->bind();
     if (instances) {
@@ -28,12 +28,12 @@ void draw_impl(T* mesh, spkt::buffer<model_instance>* instances)
 
 }
 
-void draw(spkt::static_mesh* mesh, spkt::buffer<model_instance>* instances)
+void draw(spkt::static_mesh* mesh, spkt::vertex_buffer<model_instance>* instances)
 {
     draw_impl(mesh, instances);
 }
 
-void draw(spkt::animated_mesh* mesh, spkt::buffer<model_instance>* instances)
+void draw(spkt::animated_mesh* mesh, spkt::vertex_buffer<model_instance>* instances)
 {
     draw_impl(mesh, instances);
 }
