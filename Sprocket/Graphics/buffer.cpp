@@ -12,6 +12,7 @@ int get_usage(buffer_usage usage)
     switch (usage) {
         case buffer_usage::STATIC: return GL_STATIC_DRAW;
         case buffer_usage::DYNAMIC: return GL_DYNAMIC_DRAW;
+        case buffer_usage::STREAM: return GL_STREAM_DRAW;
     }
 }
 
@@ -29,16 +30,6 @@ std::uint32_t new_vbo()
 void delete_vbo(std::uint32_t vbo)
 {
     glDeleteBuffers(1, &vbo);
-}
-
-void bind_vbo(std::uint32_t vbo)
-{
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-}
-
-void unbind_vbo()
-{
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void bind_index_buffer(std::uint32_t vbo)

@@ -140,8 +140,11 @@ std::unique_ptr<Texture> SetFont(std::string_view font, float size)
     return texture;
 }
 
-void bind_attributes()
+}
+
+void bind_imgui_vbo(std::uint32_t vbo)
 {
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     for (int index : std::views::iota(0, 3)) {
         glEnableVertexAttribArray(index);
         glVertexAttribDivisor(index, 0);
@@ -150,8 +153,8 @@ void bind_attributes()
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, pos));
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, uv));
     glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(ImDrawVert), (void*)offsetof(ImDrawVert, col));
-}
 
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 DevUI::DevUI(Window* window)
@@ -159,8 +162,8 @@ DevUI::DevUI(Window* window)
     , d_shader("Resources/Shaders/DevGUI.vert",
                "Resources/Shaders/DevGUI.frag")
     , d_fontAtlas(nullptr)
-    , d_vertexBuffer(0)
-    , d_indexBuffer(0)
+    , d_vertex_buffer()
+    , d_index_buffer()
     , d_blockEvents(true)
 {
     ImGui::CreateContext();
@@ -176,9 +179,6 @@ DevUI::DevUI(Window* window)
     // Reason: when the viewport isn't docked and we have a selected entity,
     // attempting to move the entity just moved the window.
     ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
-
-    glGenBuffers(1, &d_vertexBuffer);
-    glGenBuffers(1, &d_indexBuffer);
 }
 
 void DevUI::on_event(event& event)
@@ -271,45 +271,35 @@ void DevUI::EndFrame()
     d_shader.load("Texture", 0);
     d_shader.load("ProjMtx", proj);
 
-    glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
     d_fontAtlas->Bind(0);
 
     // Render command lists
     int width = (int)drawData->DisplaySize.x;
     int height = (int)drawData->DisplaySize.y;
 
+    d_vertex_buffer.bind();
+    d_index_buffer.bind();
     for (int n = 0; n < drawData->CmdListsCount; ++n) {
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
         // Upload vertex/index buffers
-        glBindBuffer(GL_ARRAY_BUFFER, d_vertexBuffer);
-        glBufferData(
-            GL_ARRAY_BUFFER,
-            cmd_list->VtxBuffer.Size * sizeof(ImDrawVert),
-            cmd_list->VtxBuffer.Data,
-            GL_DYNAMIC_DRAW
-        );
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d_indexBuffer);
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx),
-            cmd_list->IdxBuffer.Data,
-            GL_DYNAMIC_DRAW
-        );
-        bind_attributes();
+        d_vertex_buffer.set_data({
+            cmd_list->VtxBuffer.Data, (std::size_t)cmd_list->VtxBuffer.Size
+        });
+        d_index_buffer.set_data({
+            cmd_list->IdxBuffer.Data, (std::size_t)cmd_list->IdxBuffer.Size
+        });
 
         for (int i = 0; i < cmd_list->CmdBuffer.Size; ++i) {
             const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[i];
             const ImVec4& rect = pcmd->ClipRect;
 
-            if (rect.x < width && rect.y < height && rect.z >= 0 && rect.w >= 0) {
+            auto [x1, y1, x2, y2] = rect;
+            if (x1 < width && y1 < height && x2 >= 0 && y2 >= 0) {
 
                 glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
 
-                glScissor((int)rect.x,
-                          (int)(height - rect.w),
-                          (int)(rect.z - rect.x),
-                          (int)(rect.w - rect.y));
+                rc.set_scissor_window({x1, y1, x2 - x1, y2 - y1});
 
                 glDrawElements(
                     GL_TRIANGLES,
