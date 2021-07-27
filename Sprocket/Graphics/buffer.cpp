@@ -41,6 +41,11 @@ void unbind_vbo()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void bind_index_buffer(std::uint32_t vbo)
+{
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
+}
+
 void set_data(std::uint32_t vbo, std::size_t size, const void* data, buffer_usage usage)
 {
     glNamedBufferData(vbo, size, data, get_usage(usage));
