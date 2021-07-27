@@ -21,9 +21,9 @@ void ShadowMap::Draw(
     const glm::vec3& sunDirection,
     const glm::vec3& centre)
 {
-    spkt::RenderContext rc;
-    rc.DepthTesting(true);
-    rc.FaceCulling(true);
+    spkt::render_context rc;
+    rc.depth_testing(true);
+    rc.face_culling(true);
 
     d_lightViewMatrix = glm::lookAt(centre - sunDirection, centre, {0.0, 1.0, 0.0});
 

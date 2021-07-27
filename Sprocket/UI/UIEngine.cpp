@@ -2,7 +2,7 @@
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/MouseCodes.h>
 #include <Sprocket/Utility/Log.h>
@@ -347,10 +347,10 @@ void UIEngine::EndFrame()
 
     d_keyPresses.clear();
 
-    spkt::RenderContext rc;
-    rc.AlphaBlending(true);
-    rc.FaceCulling(false);
-    rc.DepthTesting(false);
+    spkt::render_context rc;
+    rc.alpha_blending(true);
+    rc.face_culling(false);
+    rc.depth_testing(false);
 
     float w = (float)d_window->Width();
     float h = (float)d_window->Height();
@@ -412,7 +412,7 @@ void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
 
 void UIEngine::ExecuteCommand(const DrawCommand& cmd)
 {
-    spkt::RenderContext rc;
+    spkt::render_context rc;
     if (cmd.region.has_value()) {
         rc.set_scissor_window(*cmd.region);
     }

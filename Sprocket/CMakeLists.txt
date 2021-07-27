@@ -60,7 +60,7 @@ add_library(Sprocket STATIC
             Graphics/mesh.cpp
             Graphics/open_gl.cpp
             Graphics/post_processor.cpp
-            Graphics/RenderContext.cpp
+            Graphics/render_context.cpp
             Graphics/shader.cpp
             Graphics/ShadowMap.cpp
             Graphics/Texture.cpp

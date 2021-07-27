@@ -1,6 +1,6 @@
 #include "ColliderRenderer.h"
 
-#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Utility/Maths.h>
@@ -19,8 +19,8 @@ void ColliderRenderer::Draw(
     const glm::mat4& proj,
     const glm::mat4& view)
 {
-    RenderContext rc;
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    spkt::render_context rc;
+    rc.polygon_mode(GL_LINE);
 
     std::uint32_t MAX_NUM_LIGHTS = 5;
 

@@ -3,7 +3,7 @@
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/open_gl.h>
-#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Utility/Hashing.h>
 #include <Sprocket/Utility/Maths.h>
@@ -140,9 +140,9 @@ void Scene3DRenderer::Draw(
     const glm::mat4& proj,
     const glm::mat4& view)
 {
-    RenderContext rc;
-    rc.FaceCulling(true);
-    rc.DepthTesting(true);
+    spkt::render_context rc;
+    rc.face_culling(true);
+    rc.depth_testing(true);
 
     upload_uniforms(d_staticShader, registry, proj, view);
     upload_uniforms(d_animatedShader, registry, proj, view);

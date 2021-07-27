@@ -2,7 +2,7 @@
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 
 #include <glad/glad.h>
@@ -257,11 +257,11 @@ void DevUI::EndFrame()
 {
     ImGui::Render();
 
-    spkt::RenderContext rc;  
-    rc.AlphaBlending(true);
-    rc.FaceCulling(false);
-    rc.ScissorTesting(true);
-    rc.DepthTesting(false);
+    spkt::render_context rc;  
+    rc.alpha_blending(true);
+    rc.face_culling(false);
+    rc.scissor_testing(true);
+    rc.depth_testing(false);
 
     ImDrawData* drawData = ImGui::GetDrawData();
 
