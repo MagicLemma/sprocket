@@ -34,8 +34,6 @@ private:
 
     shader d_staticShader;
     shader d_animatedShader;
-
-    std::unique_ptr<VertexArray> d_vao;
     
     buffer<model_instance> d_instanceBuffer;
 

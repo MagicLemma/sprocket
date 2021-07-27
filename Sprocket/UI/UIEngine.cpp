@@ -2,7 +2,7 @@
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/MouseCodes.h>
 #include <Sprocket/Utility/Log.h>
@@ -132,16 +132,6 @@ UIEngine::UIEngine(Window* window)
                "Resources/Shaders/SimpleUI.frag")
     , d_white(1, 1, GetWhiteData().data())
 {
-    d_buffer.Bind();
-    for (int index : std::views::iota(0, 3)) {
-        glEnableVertexAttribArray(index);
-        glVertexAttribDivisor(index, 0);
-    } 
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, position));
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, colour));
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(BufferVertex), (void*)offsetof(BufferVertex, textureCoords));
-    d_buffer.Unbind();
 }
 
 glm::vec4 UIEngine::ApplyOffset(const glm::vec4& region)
@@ -271,12 +261,12 @@ void UIEngine::MouseClick()
 
     std::size_t moveToFront = 0;
 
-    for (auto panelHash : std::views::reverse(d_panelOrder)) {
+    for (auto panelHash : d_panelOrder | std::views::reverse) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+        for (const auto& [hash, region] : panel.widgetRegions | std::views::reverse) {
             auto clicked = InRegion(mouse, region);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
@@ -316,12 +306,12 @@ void UIEngine::MouseHover()
     bool foundHovered = false;
     glm::vec2 mouse = d_window->GetMousePos();
 
-    for (auto panelHash : std::views::reverse(d_panelOrder)) {
+    for (auto panelHash : d_panelOrder | std::views::reverse) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (const auto& [hash, region] : std::views::reverse(panel.widgetRegions)) {
+        for (const auto& [hash, region] : panel.widgetRegions | std::views::reverse) {
             auto hovered = InRegion(mouse, region);
             
             if (!foundHovered && hovered) {
@@ -357,10 +347,10 @@ void UIEngine::EndFrame()
 
     d_keyPresses.clear();
 
-    spkt::RenderContext rc;
-    rc.AlphaBlending(true);
-    rc.FaceCulling(false);
-    rc.DepthTesting(false);
+    spkt::render_context rc;
+    rc.alpha_blending(true);
+    rc.face_culling(false);
+    rc.depth_testing(false);
 
     float w = (float)d_window->Width();
     float h = (float)d_window->Height();
@@ -372,7 +362,6 @@ void UIEngine::EndFrame()
     d_shader.bind();
     d_shader.load("u_proj_matrix", proj);
 
-    d_buffer.Bind();
     for (const auto& panelHash : d_panelOrder) {
         const auto& panel = d_panels[panelHash];
 
@@ -381,7 +370,6 @@ void UIEngine::EndFrame()
             ExecuteCommand(cmd);
         }
     }
-    d_buffer.Unbind();
 }
 
 void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType type)
@@ -424,18 +412,31 @@ void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
 
 void UIEngine::ExecuteCommand(const DrawCommand& cmd)
 {
-    auto scissor = ScissorContext(d_window, cmd.region);
+    spkt::render_context rc;
+    if (cmd.region.has_value()) {
+        rc.set_scissor_window(*cmd.region);
+    }
+
     if (cmd.texture) {
         cmd.texture->Bind(0);
     } else {
         d_white.Bind(0);
     }
-    d_buffer.Draw(cmd.vertices, cmd.indices);
-    
+
+    d_vertices.set_data(cmd.vertices);
+    d_vertices.bind();
+    d_indices.set_data(cmd.indices);
+    d_indices.bind();
+    glDrawElements(GL_TRIANGLES,  (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
+
     if (cmd.font) {
         cmd.font->Bind(0);
         d_shader.load("texture_channels", 1);
-        d_buffer.Draw(cmd.textVertices, cmd.textIndices);
+        d_vertices.set_data(cmd.textVertices);
+        d_vertices.bind();
+        d_indices.set_data(cmd.textIndices);
+        d_indices.bind();
+        glDrawElements(GL_TRIANGLES,  (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
     }
 }
 

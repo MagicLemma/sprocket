@@ -352,7 +352,7 @@ void Anvil::on_render()
         ImGui::End();
     }
 
-    d_ui.EndFrame();    
+    d_ui.EndFrame();
 }
 
 void Anvil::material_ui(std::string& texture)

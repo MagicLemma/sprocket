@@ -13,6 +13,7 @@ namespace spkt {
 struct WindowImpl
 {
 	GLFWwindow* window;	
+	std::uint32_t vao;
 };
 
 Window::Window(const std::string& name, std::uint32_t width, std::uint32_t height)
@@ -174,10 +175,16 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 		auto event = spkt::make_event<KeyboardTyped>(key);
 		data->callback(event);
 	});
+
+	glGenVertexArrays(1, &d_impl->vao);
+	glBindVertexArray(d_impl->vao);
 }
 
 Window::~Window()
 {
+	glBindVertexArray(0);
+	glDeleteVertexArrays(1, &d_impl->vao);
+	
 	glfwDestroyWindow(d_impl->window);
 	glfwTerminate();
 }

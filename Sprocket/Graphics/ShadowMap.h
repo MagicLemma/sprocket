@@ -2,8 +2,8 @@
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/DepthBuffer.h>
+#include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Graphics/shader.h>
-#include <Sprocket/Graphics/VertexArray.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
@@ -25,8 +25,6 @@ class ShadowMap
     glm::mat4 d_lightProjMatrix;
 
     DepthBuffer d_shadowMap;
-
-    std::unique_ptr<VertexArray> d_vao;
 
     spkt::buffer<model_instance> d_instance_buffer;
 

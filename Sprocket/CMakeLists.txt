@@ -49,21 +49,21 @@ add_library(Sprocket STATIC
             Scene/Systems/basic_systems.cpp
             Scene/Systems/input_system.cpp
 
-            Graphics/AssetManager.cpp
             Graphics/Animation.cpp
+            Graphics/AssetManager.cpp
+            Graphics/buffer_element_types.cpp
             Graphics/buffer.cpp
-            Graphics/RenderContext.cpp
-            Graphics/shader.cpp
+            Graphics/CubeMap.cpp
             Graphics/DepthBuffer.cpp
+            Graphics/FrameBuffer.cpp
             Graphics/Material.cpp
             Graphics/mesh.cpp
-            Graphics/Texture.cpp
-            Graphics/CubeMap.cpp
-            Graphics/FrameBuffer.cpp
+            Graphics/open_gl.cpp
             Graphics/post_processor.cpp
+            Graphics/render_context.cpp
+            Graphics/shader.cpp
             Graphics/ShadowMap.cpp
-            Graphics/StreamBuffer.cpp
-            Graphics/VertexArray.cpp
+            Graphics/Texture.cpp
             Graphics/Viewport.cpp
 
             Graphics/Rendering/ColliderRenderer.cpp

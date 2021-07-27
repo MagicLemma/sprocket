@@ -2,7 +2,7 @@
 
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/CubeMap.h>
-#include <Sprocket/Graphics/VertexArray.h>
+#include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Scene/Camera.h>
 
 #include <glm/glm.hpp>
@@ -15,7 +15,6 @@ SkyboxRenderer::SkyboxRenderer(AssetManager* assetManager)
     : d_assetManager(assetManager)
     , d_shader("Resources/Shaders/Skybox.vert",
                "Resources/Shaders/Skybox.frag")
-    , d_vao(std::make_unique<VertexArray>())
 {
 }
 
@@ -30,8 +29,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_shader.load("viewMatrix", glm::mat4(glm::mat3(view)));
 
     skybox.Bind();
-    d_vao->SetModel(d_assetManager->get_static_mesh("Resources/Models/Skybox.obj"));
-    d_vao->Draw();
+    spkt::draw(d_assetManager->get_static_mesh("Resources/Models/Skybox.obj"));
 }
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera)

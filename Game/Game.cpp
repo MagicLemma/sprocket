@@ -276,6 +276,7 @@ void Game::on_update(double dt)
 void Game::on_render()
 {
     using namespace spkt;
+    
     const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.registry());
     auto& registry = d_scene.registry();
 
