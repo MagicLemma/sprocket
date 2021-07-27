@@ -7,7 +7,7 @@ namespace spkt {
 template <typename T>
 concept buffer_element = requires
 {
-    { T::set_buffer_attributes() } -> std::same_as<void>;
+    { T::set_buffer_attributes(std::uint32_t{}) } -> std::same_as<void>;
 };
 
 struct static_vertex
@@ -19,7 +19,7 @@ struct static_vertex
     glm::vec3 tangent;
     glm::vec3 bitangent;
 
-    static void set_buffer_attributes();
+    static void set_buffer_attributes(std::uint32_t vbo);
 };
 
 struct animated_vertex
@@ -34,7 +34,7 @@ struct animated_vertex
     glm::ivec4 boneIndices = {-1, -1, -1, -1};
     glm::vec4  boneWeights = {0.0, 0.0, 0.0, 0.0};
 
-    static void set_buffer_attributes();
+    static void set_buffer_attributes(std::uint32_t vbo);
 };
 
 struct ui_vertex
@@ -43,7 +43,7 @@ struct ui_vertex
     glm::vec4 colour;
     glm::vec2 textureCoords = {0.0, 0.0};
 
-    static void set_buffer_attributes();
+    static void set_buffer_attributes(std::uint32_t vbo);
 };
 
 struct model_instance
@@ -52,7 +52,7 @@ struct model_instance
     glm::quat orientation;
     glm::vec3 scale;
 
-    static void set_buffer_attributes();
+    static void set_buffer_attributes(std::uint32_t vbo);
 };
 
 }
