@@ -21,12 +21,11 @@ using imgui_index_buffer = spkt::index_buffer<ImDrawIdx, buffer_usage::STREAM>;
 class DevUI
 // A class that wraps the setup and rendering of ImGui.
 {
-    Window* d_window;
     shader  d_shader;
     std::unique_ptr<Texture> d_fontAtlas;
 
-    spkt::imgui_vertex_buffer d_vertex_buffer;
-    spkt::imgui_index_buffer  d_index_buffer;
+    spkt::imgui_vertex_buffer d_vtx_buffer;
+    spkt::imgui_index_buffer  d_idx_buffer;
 
     bool d_blockEvents;
 

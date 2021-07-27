@@ -158,12 +158,11 @@ void bind_imgui_vbo(std::uint32_t vbo)
 }
 
 DevUI::DevUI(Window* window)
-    : d_window(window)
-    , d_shader("Resources/Shaders/DevGUI.vert",
+    : d_shader("Resources/Shaders/DevGUI.vert",
                "Resources/Shaders/DevGUI.frag")
     , d_fontAtlas(nullptr)
-    , d_vertex_buffer()
-    , d_index_buffer()
+    , d_vtx_buffer()
+    , d_idx_buffer()
     , d_blockEvents(true)
 {
     ImGui::CreateContext();
@@ -176,9 +175,12 @@ DevUI::DevUI(Window* window)
 
     d_fontAtlas = SetFont("Resources/Fonts/Calibri.ttf", 15.0f);
 
+    ImGuiIO& io = ImGui::GetIO();
+    io.DisplaySize = ImVec2((float)window->Width(), (float)window->Height());
+
     // Reason: when the viewport isn't docked and we have a selected entity,
     // attempting to move the entity just moved the window.
-    ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
 }
 
 void DevUI::on_event(event& event)
@@ -237,14 +239,17 @@ void DevUI::on_event(event& event)
         }
         if (d_blockEvents && io.WantCaptureKeyboard) { event.consume(); }
     }
+
+    else if (auto data = event.get_if<WindowResize>()) {
+        io.DisplaySize = ImVec2((float)data->width, (float)data->height);
+        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+    }
 }
 
 void DevUI::on_update(double dt)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;
-    io.DisplaySize = ImVec2((float)d_window->Width(), (float)d_window->Height());
-    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 }
 
 void DevUI::StartFrame()
@@ -277,24 +282,19 @@ void DevUI::EndFrame()
     int width = (int)drawData->DisplaySize.x;
     int height = (int)drawData->DisplaySize.y;
 
-    d_vertex_buffer.bind();
-    d_index_buffer.bind();
+    d_vtx_buffer.bind();
+    d_idx_buffer.bind();
     for (int n = 0; n < drawData->CmdListsCount; ++n) {
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
-        // Upload vertex/index buffers
-        d_vertex_buffer.set_data({
-            cmd_list->VtxBuffer.Data, (std::size_t)cmd_list->VtxBuffer.Size
-        });
-        d_index_buffer.set_data({
-            cmd_list->IdxBuffer.Data, (std::size_t)cmd_list->IdxBuffer.Size
-        });
+        d_vtx_buffer.set_data({cmd_list->VtxBuffer.begin(), cmd_list->VtxBuffer.end()});
+        d_idx_buffer.set_data({cmd_list->IdxBuffer.begin(), cmd_list->IdxBuffer.end()});
 
         for (int i = 0; i < cmd_list->CmdBuffer.Size; ++i) {
             const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[i];
             const ImVec4& rect = pcmd->ClipRect;
 
-            auto [x1, y1, x2, y2] = rect;
+            const auto& [x1, y1, x2, y2] = rect;
             if (x1 < width && y1 < height && x2 >= 0 && y2 >= 0) {
 
                 glBindTexture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
