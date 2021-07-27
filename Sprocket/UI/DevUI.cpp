@@ -268,9 +268,9 @@ void DevUI::EndFrame()
     rc.scissor_testing(true);
     rc.depth_testing(false);
 
-    ImDrawData* drawData = ImGui::GetDrawData();
+    const ImDrawData* drawData = ImGui::GetDrawData();
 
-    auto proj = glm::ortho(0.0f, drawData->DisplaySize.x, drawData->DisplaySize.y, 0.0f);
+    const auto proj = glm::ortho(0.0f, drawData->DisplaySize.x, drawData->DisplaySize.y, 0.0f);
 
     d_shader.bind();
     d_shader.load("Texture", 0);
@@ -279,16 +279,16 @@ void DevUI::EndFrame()
     d_fontAtlas->Bind(0);
 
     // Render command lists
-    int width = (int)drawData->DisplaySize.x;
-    int height = (int)drawData->DisplaySize.y;
+    const int width = (int)drawData->DisplaySize.x;
+    const int height = (int)drawData->DisplaySize.y;
 
     d_vtx_buffer.bind();
     d_idx_buffer.bind();
     for (int n = 0; n < drawData->CmdListsCount; ++n) {
         const ImDrawList* cmd_list = drawData->CmdLists[n];
 
-        d_vtx_buffer.set_data({cmd_list->VtxBuffer.begin(), cmd_list->VtxBuffer.end()});
-        d_idx_buffer.set_data({cmd_list->IdxBuffer.begin(), cmd_list->IdxBuffer.end()});
+        d_vtx_buffer.set_data(cmd_list->VtxBuffer);
+        d_idx_buffer.set_data(cmd_list->IdxBuffer);
 
         for (int i = 0; i < cmd_list->CmdBuffer.Size; ++i) {
             const ImDrawCmd* pcmd = &cmd_list->CmdBuffer[i];
