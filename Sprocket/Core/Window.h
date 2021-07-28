@@ -81,8 +81,8 @@ public:
 	glm::vec2 GetMouseOffset() const;
 
 	// Clipboard Utilities
-	const char* GetClipboardData();
-	void SetClipboardData(const std::string& text);
+	const char* GetClipboardData() const;
+	void SetClipboardData(const std::string& text) const;
 
 	// Low level Utilities
 	void* NativeWindow() const;

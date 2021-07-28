@@ -1,5 +1,6 @@
 #pragma once
 #include <Sprocket/Graphics/shader.h>
+#include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/Texture.h>
 
 #include <imgui.h>
@@ -12,15 +13,19 @@ namespace spkt {
 class Window;
 class event;
 
+void bind_imgui_vbo(std::uint32_t vbo);
+
+using imgui_vertex_buffer = spkt::basic_buffer<ImDrawVert, buffer_usage::STREAM, bind_imgui_vbo>;
+using imgui_index_buffer = spkt::index_buffer<ImDrawIdx, buffer_usage::STREAM>;
+
 class DevUI
 // A class that wraps the setup and rendering of ImGui.
 {
-    Window* d_window;
     shader  d_shader;
     std::unique_ptr<Texture> d_fontAtlas;
 
-    std::uint32_t d_vertexBuffer;
-    std::uint32_t d_indexBuffer;
+    spkt::imgui_vertex_buffer d_vtx_buffer;
+    spkt::imgui_index_buffer  d_idx_buffer;
 
     bool d_blockEvents;
 

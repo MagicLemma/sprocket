@@ -149,7 +149,7 @@ void Scene3DRenderer::Draw(
 
     std::unordered_map<
         std::pair<std::string, std::string>,
-        std::vector<model_instance>,
+        std::vector<spkt::model_instance>,
         spkt::hash_pair
     > commands;
 
@@ -173,7 +173,7 @@ void Scene3DRenderer::Draw(
     // If the scene has a ParticleSingleton, then render the particles that it contains.
     for (auto entity : registry.view<ParticleSingleton>()) {
         const auto& ps = registry.get<ParticleSingleton>(entity);
-        std::vector<model_instance> instance_data(NUM_PARTICLES);
+        std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
         for (const auto& particle : *ps.particles) {
             if (particle.life > 0.0) {
                 instance_data.push_back({

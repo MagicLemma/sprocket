@@ -1,6 +1,6 @@
 #include "ShadowMap.h"
 
-#include <Sprocket/Graphics/RenderContext.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <glad/glad.h>

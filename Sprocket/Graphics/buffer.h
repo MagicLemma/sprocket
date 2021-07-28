@@ -5,6 +5,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 #include <cstddef>
+#include <functional>
 #include <span>
 
 namespace spkt {
@@ -12,39 +13,34 @@ namespace spkt {
 enum class buffer_usage
 {
     STATIC,
-    DYNAMIC
+    DYNAMIC,
+    STREAM
 };
 
 namespace detail {
 
 std::uint32_t new_vbo();
 void delete_vbo(std::uint32_t vbo);
-void bind_vbo(std::uint32_t vbo);
-void unbind_vbo();
+void bind_index_buffer(std::uint32_t vbo);
 void set_data(std::uint32_t vbo, std::size_t size, const void* data, buffer_usage usage);
 
 }
 
-template <spkt::buffer_element T, buffer_usage Usage = buffer_usage::STATIC>
-class buffer
+template <typename T, buffer_usage Usage, void(*BindFunc)(std::uint32_t)> 
+class basic_buffer
 {
     std::uint32_t d_vbo;
     std::size_t   d_size;
 
-    buffer(const buffer&) = delete;
-    buffer& operator=(const buffer&) = delete;
+    basic_buffer(const basic_buffer&) = delete;
+    basic_buffer& operator=(const basic_buffer&) = delete;
 
 public:
-    buffer(std::span<const T> data) : buffer() { set_data(data); }
-    buffer() : d_vbo(detail::new_vbo()), d_size(0) {}
-    ~buffer() { detail::delete_vbo(d_vbo); }
+    basic_buffer(std::span<const T> data) : basic_buffer() { set_data(data); }
+    basic_buffer() : d_vbo(detail::new_vbo()), d_size(0) {}
+    ~basic_buffer() { detail::delete_vbo(d_vbo); }
 
-    void bind() const
-    {
-        detail::bind_vbo(d_vbo);
-        T::set_buffer_attributes();
-        detail::unbind_vbo();
-    }
+    void bind() const { BindFunc(d_vbo); }
 
     void set_data(std::span<const T> data)
     {
@@ -55,23 +51,10 @@ public:
     std::size_t size() const { return d_size; }
 };
 
-class index_buffer
-{
-    std::uint32_t d_vbo;
-    std::size_t   d_size;
+template <spkt::buffer_element T, buffer_usage Usage = buffer_usage::STATIC>
+using vertex_buffer = basic_buffer<T, Usage, T::set_buffer_attributes>;
 
-    index_buffer(const index_buffer&) = delete;
-    index_buffer& operator=(const index_buffer&) = delete;
-
-public:
-    index_buffer(std::span<const std::uint32_t> data) : index_buffer() { set_data(data); }
-    index_buffer();
-    ~index_buffer();
-
-    void bind() const;
-    void set_data(std::span<const std::uint32_t> data);
-
-    std::size_t size() const { return d_size; }
-};
+template <std::unsigned_integral T, buffer_usage Usage = buffer_usage::STATIC>
+using index_buffer = basic_buffer<T, Usage, detail::bind_index_buffer>;
 
 }

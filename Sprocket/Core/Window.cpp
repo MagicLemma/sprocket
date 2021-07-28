@@ -271,12 +271,12 @@ void Window::SetCallback(EventCallback cb)
 	d_data.callback = cb;
 }
 
-const char* Window::GetClipboardData()
+const char* Window::GetClipboardData() const
 {
 	return glfwGetClipboardString(d_impl->window);
 }
 
-void Window::SetClipboardData(const std::string& text)
+void Window::SetClipboardData(const std::string& text) const
 {
 	glfwSetClipboardString(d_impl->window, text.c_str());
 }

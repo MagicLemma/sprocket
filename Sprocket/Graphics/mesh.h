@@ -33,8 +33,8 @@ struct animated_mesh_data
 
 class static_mesh
 {
-    spkt::buffer<spkt::static_vertex> d_vertices;
-    spkt::index_buffer                d_indices;
+    spkt::vertex_buffer<spkt::static_vertex> d_vertices;
+    spkt::index_buffer<std::uint32_t>        d_indices;
 
     static_mesh(const static_mesh&) = delete;
     static_mesh& operator=(const static_mesh&) = delete;
@@ -53,9 +53,9 @@ using static_mesh_ptr = std::unique_ptr<static_mesh>;
 
 class animated_mesh
 {
-    spkt::buffer<spkt::animated_vertex> d_vertices;
-    spkt::index_buffer                  d_indices;
-    spkt::Skeleton                      d_skeleton;
+    spkt::vertex_buffer<spkt::animated_vertex> d_vertices;
+    spkt::index_buffer<std::uint32_t>          d_indices;
+    spkt::Skeleton                             d_skeleton;
 
     animated_mesh(const animated_mesh&) = delete;
     animated_mesh& operator=(const animated_mesh&) = delete;

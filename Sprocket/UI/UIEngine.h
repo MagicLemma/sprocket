@@ -140,8 +140,8 @@ class UIEngine
     // Rendering code    
     spkt::shader d_shader;
     
-    spkt::buffer<ui_vertex> d_vertices;
-    spkt::index_buffer      d_indices;
+    spkt::vertex_buffer<spkt::ui_vertex> d_vertices;
+    spkt::index_buffer<std::uint32_t>    d_indices;
     
     // Panel info 
     std::unordered_map<std::size_t, Panel> d_panels;
