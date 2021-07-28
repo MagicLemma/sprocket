@@ -112,6 +112,9 @@ void Inspector::Show(Anvil& editor)
             ImGui::PushID(count++);
             spkt::ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
             spkt::ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
+            spkt::ImGuiXtra::TextModifiable(c.animation_name);
+            ImGui::DragFloat("Animation Time", &c.animation_time, 0.01f);
+            ImGui::DragFloat("Animation Speed", &c.animation_speed, 0.01f);
             
             if (ImGui::Button("Delete")) { registry.remove<spkt::AnimatedModelComponent>(entity); }
             ImGui::PopID();
@@ -273,19 +276,6 @@ void Inspector::Show(Anvil& editor)
             ImGui::DragFloat("Accumulator", &c.accumulator, 0.01f);
             
             if (ImGui::Button("Delete")) { registry.remove<spkt::ParticleComponent>(entity); }
-            ImGui::PopID();
-        }
-    }
-
-    if (registry.has<spkt::MeshAnimationComponent>(entity)) {
-        auto& c = registry.get<spkt::MeshAnimationComponent>(entity);
-        if (ImGui::CollapsingHeader("Mesh Animation")) {
-            ImGui::PushID(count++);
-            spkt::ImGuiXtra::TextModifiable(c.name);
-            ImGui::DragFloat("Time", &c.time, 0.01f);
-            ImGui::DragFloat("Speed", &c.speed, 0.01f);
-            
-            if (ImGui::Button("Delete")) { registry.remove<spkt::MeshAnimationComponent>(entity); }
             ImGui::PopID();
         }
     }
@@ -464,10 +454,6 @@ void Inspector::Show(Anvil& editor)
         if (!registry.has<spkt::ParticleComponent>(entity) && ImGui::Selectable("Particle")) {
             spkt::ParticleComponent c;
             registry.add<spkt::ParticleComponent>(entity, c);
-        }
-        if (!registry.has<spkt::MeshAnimationComponent>(entity) && ImGui::Selectable("Mesh Animation")) {
-            spkt::MeshAnimationComponent c;
-            registry.add<spkt::MeshAnimationComponent>(entity, c);
         }
         if (!registry.has<spkt::CollisionEvent>(entity) && ImGui::Selectable("Collision Event")) {
             spkt::CollisionEvent c;

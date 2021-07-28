@@ -23,10 +23,9 @@ Entities:
     AnimatedModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\RunningCharacter\RunningCharacter.fbx
       material: D:\dev\Sprocket\Resources\Materials\RunningCharacter.yaml
-    MeshAnimationComponent:
-      name: Armature|ArmatureAction
-      time: 5
-      speed: 1
+      animation_name: Armature|ArmatureAction
+      animation_time: 5
+      animation_speed: 1
   - ID#: 12884901888
     NameComponent:
       name: Bridge Thin 3

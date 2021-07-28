@@ -199,16 +199,9 @@ void Scene3DRenderer::Draw(
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
-        if (registry.has<MeshAnimationComponent>(entity)) {
-            const auto& ac = registry.get<MeshAnimationComponent>(entity);
-            auto poses = mesh->get_pose(ac.name, ac.time);
-            poses.resize(MAX_BONES, glm::mat4(1.0));
-            d_animatedShader.load("u_bone_transforms", poses[0], MAX_BONES);
-        }
-        else {
-            d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
-        }
+        auto poses = mesh->get_pose(mc.animation_name, mc.animation_time);
+        poses.resize(MAX_BONES, glm::mat4(1.0));
+        d_animatedShader.load("u_bone_transforms", poses[0], MAX_BONES);
 
         spkt::draw(mesh);
         

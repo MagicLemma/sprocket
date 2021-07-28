@@ -75,6 +75,9 @@ struct AnimatedModelComponent
 {
     std::string mesh = "";
     std::string material = "";
+    std::string animation_name = "";
+    float animation_time = 0.0f;
+    float animation_speed = 1.0f;
 };
 
 struct RigidBody3DComponent
@@ -170,13 +173,6 @@ struct ParticleComponent
     float accumulator = 0.0f;
 };
 
-struct MeshAnimationComponent
-{
-    std::string name = "";
-    float time = 0.0f;
-    float speed = 1.0f;
-};
-
 struct CollisionEvent
 {
     spkt::entity entity_a = {};
@@ -247,7 +243,6 @@ using registry = apx::registry<
     SunComponent,
     AmbienceComponent,
     ParticleComponent,
-    MeshAnimationComponent,
     CollisionEvent,
     PhysicsSingleton,
     InputSingleton,

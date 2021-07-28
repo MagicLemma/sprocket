@@ -346,10 +346,6 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     lua_register(L, "_view_ParticleComponent_next", view_next<ParticleComponent>);
     luaL_dostring(L, view_source_code("ParticleComponent").c_str());
 
-    lua_register(L, "_view_MeshAnimationComponent_init", view_init<MeshAnimationComponent>);
-    lua_register(L, "_view_MeshAnimationComponent_next", view_next<MeshAnimationComponent>);
-    luaL_dostring(L, view_source_code("MeshAnimationComponent").c_str());
-
     lua_register(L, "_view_CollisionEvent_init", view_init<CollisionEvent>);
     lua_register(L, "_view_CollisionEvent_next", view_next<CollisionEvent>);
     luaL_dostring(L, view_source_code("CollisionEvent").c_str());
@@ -502,27 +498,36 @@ int _GetAnimatedModelComponent(lua_State* L) {
     const auto& c = e.get<AnimatedModelComponent>();
     Converter<std::string>::push(L, c.mesh);
     Converter<std::string>::push(L, c.material);
-    return 2;
+    Converter<std::string>::push(L, c.animation_name);
+    Converter<float>::push(L, c.animation_time);
+    Converter<float>::push(L, c.animation_speed);
+    return 5;
 }
 
 int _SetAnimatedModelComponent(lua_State* L) {
-    if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!check_arg_count(L, 5 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
     auto& c = e.get<AnimatedModelComponent>();
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
+    c.animation_name = Converter<std::string>::read(L, ++ptr);
+    c.animation_time = Converter<float>::read(L, ++ptr);
+    c.animation_speed = Converter<float>::read(L, ++ptr);
     return 0;
 }
 
 int _AddAnimatedModelComponent(lua_State* L) {
-    if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
+    if (!check_arg_count(L, 5 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
     assert(!e.has<AnimatedModelComponent>());
     AnimatedModelComponent c;
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
+    c.animation_name = Converter<std::string>::read(L, ++ptr);
+    c.animation_time = Converter<float>::read(L, ++ptr);
+    c.animation_speed = Converter<float>::read(L, ++ptr);
     add_command(L, [e, c]() mutable { e.add<AnimatedModelComponent>(c); });
     return 0;
 }
@@ -949,43 +954,6 @@ int _AddParticleComponent(lua_State* L) {
     return 0;
 }
 
-// C++ Functions for MeshAnimationComponent =====================================================
-
-int _GetMeshAnimationComponent(lua_State* L) {
-    if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<MeshAnimationComponent>());
-    const auto& c = e.get<MeshAnimationComponent>();
-    Converter<std::string>::push(L, c.name);
-    Converter<float>::push(L, c.time);
-    Converter<float>::push(L, c.speed);
-    return 3;
-}
-
-int _SetMeshAnimationComponent(lua_State* L) {
-    if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<MeshAnimationComponent>();
-    c.name = Converter<std::string>::read(L, ++ptr);
-    c.time = Converter<float>::read(L, ++ptr);
-    c.speed = Converter<float>::read(L, ++ptr);
-    return 0;
-}
-
-int _AddMeshAnimationComponent(lua_State* L) {
-    if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<MeshAnimationComponent>());
-    MeshAnimationComponent c;
-    c.name = Converter<std::string>::read(L, ++ptr);
-    c.time = Converter<float>::read(L, ++ptr);
-    c.speed = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<MeshAnimationComponent>(c); });
-    return 0;
-}
-
 // C++ Functions for CollisionEvent =====================================================
 
 int _GetCollisionEvent(lua_State* L) {
@@ -1180,9 +1148,12 @@ void load_entity_component_functions(lua::Script& script)
     // Lua functions for AnimatedModelComponent =====================================================
 
     luaL_dostring(L, R"lua(
-        AnimatedModelComponent = Class(function(self, mesh, material)
+        AnimatedModelComponent = Class(function(self, mesh, material, animation_name, animation_time, animation_speed)
             self.mesh = mesh
             self.material = material
+            self.animation_name = animation_name
+            self.animation_time = animation_time
+            self.animation_speed = animation_speed
         end)
     )lua");
 
@@ -1190,8 +1161,8 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function GetAnimatedModelComponent(entity)
-            mesh, material = _GetAnimatedModelComponent(entity)
-            return AnimatedModelComponent(mesh, material)
+            mesh, material, animation_name, animation_time, animation_speed = _GetAnimatedModelComponent(entity)
+            return AnimatedModelComponent(mesh, material, animation_name, animation_time, animation_speed)
         end
     )lua");
 
@@ -1199,7 +1170,7 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function SetAnimatedModelComponent(entity, c)
-            _SetAnimatedModelComponent(entity, c.mesh, c.material)
+            _SetAnimatedModelComponent(entity, c.mesh, c.material, c.animation_name, c.animation_time, c.animation_speed)
         end
     )lua");
 
@@ -1207,7 +1178,7 @@ void load_entity_component_functions(lua::Script& script)
 
     luaL_dostring(L, R"lua(
         function AddAnimatedModelComponent(entity, c)
-            _AddAnimatedModelComponent(entity, c.mesh, c.material)
+            _AddAnimatedModelComponent(entity, c.mesh, c.material, c.animation_name, c.animation_time, c.animation_speed)
         end
     )lua");
 
@@ -1647,45 +1618,6 @@ void load_entity_component_functions(lua::Script& script)
 
     lua_register(L, "HasParticleComponent", &has_impl<ParticleComponent>);
     lua_register(L, "RemoveParticleComponent", &remove_impl<ParticleComponent>);
-
-
-    // Lua functions for MeshAnimationComponent =====================================================
-
-    luaL_dostring(L, R"lua(
-        MeshAnimationComponent = Class(function(self, name, time, speed)
-            self.name = name
-            self.time = time
-            self.speed = speed
-        end)
-    )lua");
-
-    lua_register(L, "_GetMeshAnimationComponent", &_GetMeshAnimationComponent);
-
-    luaL_dostring(L, R"lua(
-        function GetMeshAnimationComponent(entity)
-            name, time, speed = _GetMeshAnimationComponent(entity)
-            return MeshAnimationComponent(name, time, speed)
-        end
-    )lua");
-
-    lua_register(L, "_SetMeshAnimationComponent", &_SetMeshAnimationComponent);
-
-    luaL_dostring(L, R"lua(
-        function SetMeshAnimationComponent(entity, c)
-            _SetMeshAnimationComponent(entity, c.name, c.time, c.speed)
-        end
-    )lua");
-
-    lua_register(L, "_AddMeshAnimationComponent", &_AddMeshAnimationComponent);
-
-    luaL_dostring(L, R"lua(
-        function AddMeshAnimationComponent(entity, c)
-            _AddMeshAnimationComponent(entity, c.name, c.time, c.speed)
-        end
-    )lua");
-
-    lua_register(L, "HasMeshAnimationComponent", &has_impl<MeshAnimationComponent>);
-    lua_register(L, "RemoveMeshAnimationComponent", &remove_impl<MeshAnimationComponent>);
 
 
     // Lua functions for CollisionEvent =====================================================

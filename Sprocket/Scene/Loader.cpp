@@ -83,6 +83,9 @@ void save_registry_to_file(const std::string& file, const spkt::registry& reg)
             out << YAML::Key << "AnimatedModelComponent" << YAML::BeginMap;
             out << YAML::Key << "mesh" << YAML::Value << c.mesh;
             out << YAML::Key << "material" << YAML::Value << c.material;
+            out << YAML::Key << "animation_name" << YAML::Value << c.animation_name;
+            out << YAML::Key << "animation_time" << YAML::Value << c.animation_time;
+            out << YAML::Key << "animation_speed" << YAML::Value << c.animation_speed;
             out << YAML::EndMap;
         }
         if (reg.has<RigidBody3DComponent>(entity)) {
@@ -179,14 +182,6 @@ void save_registry_to_file(const std::string& file, const spkt::registry& reg)
             out << YAML::Key << "life" << YAML::Value << c.life;
             out << YAML::EndMap;
         }
-        if (reg.has<MeshAnimationComponent>(entity)) {
-            const auto& c = reg.get<MeshAnimationComponent>(entity);
-            out << YAML::Key << "MeshAnimationComponent" << YAML::BeginMap;
-            out << YAML::Key << "name" << YAML::Value << c.name;
-            out << YAML::Key << "time" << YAML::Value << c.time;
-            out << YAML::Key << "speed" << YAML::Value << c.speed;
-            out << YAML::EndMap;
-        }
         if (reg.has<TileMapSingleton>(entity)) {
             const auto& c = reg.get<TileMapSingleton>(entity);
             out << YAML::Key << "TileMapSingleton" << YAML::BeginMap;
@@ -253,6 +248,9 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             AnimatedModelComponent c;
             c.mesh = spec["mesh"].as<std::string>();
             c.material = spec["material"].as<std::string>();
+            c.animation_name = spec["animation_name"].as<std::string>();
+            c.animation_time = spec["animation_time"].as<float>();
+            c.animation_speed = spec["animation_speed"].as<float>();
             reg.add<AnimatedModelComponent>(entity, c);
         }
         if (auto spec = yaml_entity["RigidBody3DComponent"]) {
@@ -338,13 +336,6 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.life = spec["life"].as<float>();
             reg.add<ParticleComponent>(entity, c);
         }
-        if (auto spec = yaml_entity["MeshAnimationComponent"]) {
-            MeshAnimationComponent c;
-            c.name = spec["name"].as<std::string>();
-            c.time = spec["time"].as<float>();
-            c.speed = spec["speed"].as<float>();
-            reg.add<MeshAnimationComponent>(entity, c);
-        }
         if (auto spec = yaml_entity["TileMapSingleton"]) {
             TileMapSingleton c;
             c.tiles = transform_entity(id_remapper, spec["tiles"].as<std::unordered_map<glm::ivec2, spkt::entity>>());
@@ -404,9 +395,6 @@ spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
     if (reg.has<ParticleComponent>(entity)) {
         reg.add<ParticleComponent>(new_entity, reg.get<ParticleComponent>(entity));
     }
-    if (reg.has<MeshAnimationComponent>(entity)) {
-        reg.add<MeshAnimationComponent>(new_entity, reg.get<MeshAnimationComponent>(entity));
-    }
     if (reg.has<TileMapSingleton>(entity)) {
         reg.add<TileMapSingleton>(new_entity, reg.get<TileMapSingleton>(entity));
     }
@@ -458,6 +446,9 @@ void copy_registry(const spkt::registry& source, spkt::registry& target)
             AnimatedModelComponent target_comp;
             target_comp.mesh = source_comp.mesh;
             target_comp.material = source_comp.material;
+            target_comp.animation_name = source_comp.animation_name;
+            target_comp.animation_time = source_comp.animation_time;
+            target_comp.animation_speed = source_comp.animation_speed;
             target.add<AnimatedModelComponent>(new_entity, target_comp);
         }
         if (source.has<RigidBody3DComponent>(old_entity)) {
@@ -553,14 +544,6 @@ void copy_registry(const spkt::registry& source, spkt::registry& target)
             target_comp.scale = source_comp.scale;
             target_comp.life = source_comp.life;
             target.add<ParticleComponent>(new_entity, target_comp);
-        }
-        if (source.has<MeshAnimationComponent>(old_entity)) {
-            const MeshAnimationComponent& source_comp = source.get<MeshAnimationComponent>(old_entity);
-            MeshAnimationComponent target_comp;
-            target_comp.name = source_comp.name;
-            target_comp.time = source_comp.time;
-            target_comp.speed = source_comp.speed;
-            target.add<MeshAnimationComponent>(new_entity, target_comp);
         }
         if (source.has<TileMapSingleton>(old_entity)) {
             const TileMapSingleton& source_comp = source.get<TileMapSingleton>(old_entity);
