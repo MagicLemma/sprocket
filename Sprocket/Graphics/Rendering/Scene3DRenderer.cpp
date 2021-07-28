@@ -157,7 +157,6 @@ void Scene3DRenderer::Draw(
     for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<StaticModelComponent>(entity);
-        if (mc.mesh.empty()) { continue; }
         commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
@@ -193,7 +192,6 @@ void Scene3DRenderer::Draw(
     for (auto entity : registry.view<AnimatedModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<AnimatedModelComponent>(entity);
-        if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->get_animated_mesh(mc.mesh);
 
         auto material = d_assetManager->GetMaterial(mc.material);
@@ -205,13 +203,8 @@ void Scene3DRenderer::Draw(
         if (registry.has<MeshAnimationComponent>(entity)) {
             const auto& ac = registry.get<MeshAnimationComponent>(entity);
             auto poses = mesh->get_pose(ac.name, ac.time);
-            
-            if (poses.size() > 0) {
-                int numBones = std::min(MAX_BONES, (int)poses.size());
-                d_animatedShader.load("u_bone_transforms", poses[0], numBones);
-            } else {
-                d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
-            }
+            poses.resize(MAX_BONES, glm::mat4(1.0));
+            d_animatedShader.load("u_bone_transforms", poses[0], MAX_BONES);
         }
         else {
             d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
