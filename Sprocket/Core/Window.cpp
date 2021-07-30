@@ -78,7 +78,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 		glViewport(0, 0, width, height);
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		auto event = spkt::make_event<WindowResize>(width, height);
+		auto event = spkt::make_event<window_resized_event>(width, height);
 		data->width = width;
 		data->height = height;
 		data->callback(event);
@@ -88,7 +88,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	{
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		auto event = spkt::make_event<WindowClosed>();
+		auto event = spkt::make_event<window_closed_event>();
 		data->running = false;
 		data->callback(event);
 	});
@@ -99,15 +99,15 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 		switch (action)
 		{
 			case GLFW_PRESS: {
-				auto event = spkt::make_event<KeyboardButtonPressed>(key, scancode, mods);
+				auto event = spkt::make_event<keyboard_pressed_event>(key, scancode, mods);
 				data->callback(event);
 			} break;
 			case GLFW_RELEASE: {
-				auto event = spkt::make_event<KeyboardButtonReleased>(key, scancode, mods);
+				auto event = spkt::make_event<keyboard_released_event>(key, scancode, mods);
 				data->callback(event);
 			} break;
 			case GLFW_REPEAT: {
-				auto event = spkt::make_event<KeyboardButtonHeld>(key, scancode, mods);
+				auto event = spkt::make_event<keyboard_held_event>(key, scancode, mods);
 				data->callback(event);
 			} break;
 		}
@@ -119,11 +119,11 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 		switch (action)
 		{
 		case GLFW_PRESS: {
-			auto event = spkt::make_event<MouseButtonPressed>(button, action, mods);
+			auto event = spkt::make_event<mouse_pressed_event>(button, action, mods);
 			data->callback(event);
 		} break;
 		case GLFW_RELEASE: {
-			auto event = spkt::make_event<MouseButtonReleased>(button, action, mods);
+			auto event = spkt::make_event<mouse_released_event>(button, action, mods);
 			data->callback(event);
 		} break;
 		}
@@ -132,26 +132,26 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double x_pos, double y_pos) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		auto event = spkt::make_event<MouseMoved>(x_pos, y_pos);
+		auto event = spkt::make_event<mouse_moved_event>(x_pos, y_pos);
 		data->callback(event);
 	});
 
 	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double x_offset, double y_offset) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		auto event = spkt::make_event<MouseScrolled>(x_offset, y_offset);
+		auto event = spkt::make_event<mouse_scrolled_event>(x_offset, y_offset);
 		data->callback(event);
 	});
 
 	glfwSetWindowFocusCallback(d_impl->window, [](GLFWwindow* window, int focused) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (focused) {
-			auto event = spkt::make_event<WindowGotFocus>();
+			auto event = spkt::make_event<window_focused_event>();
 			data->focused = true;
 			data->callback(event);
 		}
 		else {
-			auto event = spkt::make_event<WindowLostFocus>();
+			auto event = spkt::make_event<window_unfocused_event>();
 			data->focused = false;
 			data->callback(event);
 		}
@@ -160,11 +160,11 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glfwSetWindowMaximizeCallback(d_impl->window, [](GLFWwindow* window, int maximized) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (maximized) {
-			auto event = spkt::make_event<WindowMaximize>();
+			auto event = spkt::make_event<window_maximised_event>();
 			data->callback(event);
 		}
 		else {
-			auto event = spkt::make_event<WindowMinimize>();
+			auto event = spkt::make_event<window_minimised_event>();
 			data->callback(event);
 		}
 	});
@@ -172,7 +172,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, std::uint32_t key) {
 		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
-		auto event = spkt::make_event<KeyboardTyped>(key);
+		auto event = spkt::make_event<keyboard_typed_event>(key);
 		data->callback(event);
 	});
 

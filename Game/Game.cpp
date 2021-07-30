@@ -159,7 +159,7 @@ void Game::on_event(spkt::event& event)
     using namespace spkt;
 
     // Escape Menu event handling
-    if (auto data = event.get_if<KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<keyboard_pressed_event>()) {
         if (!event.is_consumed() && data->key == Keyboard::ESC) {
             d_paused = !d_paused;
             event.consume();
@@ -183,11 +183,11 @@ void Game::on_event(spkt::event& event)
     // Game World event handling
     d_hoveredEntityUI.on_event(event);
 
-    if (auto data = event.get_if<WindowResize>()) {
+    if (auto data = event.get_if<window_resized_event>()) {
         d_post_processor.set_screen_size(data->width, data->height);
     }
 
-    if (auto data = event.get_if<MouseButtonPressed>()) {
+    if (auto data = event.get_if<mouse_pressed_event>()) {
         auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;

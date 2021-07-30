@@ -88,7 +88,7 @@ void Camera::on_event(spkt::event& event)
 {
     d_input.on_event(event);
 
-    if (auto data = event.get_if<spkt::MouseScrolled>()) {
+    if (auto data = event.get_if<spkt::mouse_scrolled_event>()) {
         if (event.is_consumed()) { return; }
         d_absVert -= data->y_offset;
         d_absVert = std::clamp(d_absVert, d_absMin, d_absMax);

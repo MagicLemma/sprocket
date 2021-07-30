@@ -69,7 +69,7 @@ void Anvil::on_event(spkt::event& event)
 {
     using namespace spkt;
 
-    if (auto data = event.get_if<KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<keyboard_pressed_event>()) {
         if (data->key == Keyboard::ESC) {
             if (d_playingGame) {
                 d_playingGame = false;

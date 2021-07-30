@@ -48,7 +48,7 @@ Runtime::Runtime(spkt::Window* window)
 
 void Runtime::on_event(spkt::event& event)
 {
-    if (auto data = event.get_if<spkt::KeyboardTyped>()) {
+    if (auto data = event.get_if<spkt::keyboard_typed_event>()) {
         if (data->key == spkt::Keyboard::BACK_TICK) {
             d_consoleActive = !d_consoleActive;
             event.consume();
