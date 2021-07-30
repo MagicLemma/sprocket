@@ -7,10 +7,10 @@
 namespace spkt {
 
 render_context::render_context()
-    : d_cull_face(glIsEnabled(GL_CULL_FACE))
-    , d_depth_test(glIsEnabled(GL_DEPTH_TEST))
-    , d_blend(glIsEnabled(GL_BLEND))
+    : d_depth_test(glIsEnabled(GL_DEPTH_TEST))
     , d_scissor_test(glIsEnabled(GL_SCISSOR_TEST))
+    , d_cull_face(glIsEnabled(GL_CULL_FACE))
+    , d_blend(glIsEnabled(GL_BLEND))
     , d_blend_src_alpha(0)
     , d_blend_dst_alpha(0)
     , d_blend_equation_alpha(0)
@@ -18,6 +18,7 @@ render_context::render_context()
     , d_blend_dst_rgb(0)
     , d_blend_equation_rgb(0)
 {
+    glGetIntegerv(GL_CULL_FACE_MODE, &d_cull_face_mode);
     glGetIntegerv(GL_BLEND_SRC_ALPHA, &d_blend_src_alpha);
     glGetIntegerv(GL_BLEND_DST_ALPHA, &d_blend_dst_alpha);
     glGetIntegerv(GL_BLEND_EQUATION_ALPHA, &d_blend_equation_alpha);
@@ -36,6 +37,7 @@ render_context::~render_context()
     glBlendEquationSeparate(d_blend_equation_rgb, d_blend_equation_alpha);
     glBlendFuncSeparate(d_blend_src_rgb, d_blend_dst_rgb, d_blend_src_alpha, d_blend_dst_alpha);
     glPolygonMode(GL_FRONT_AND_BACK, d_polygon_mode[0]);
+    glCullFace(d_cull_face_mode);
 }
 
 void render_context::alpha_blending(bool enabled) const
@@ -57,6 +59,12 @@ void render_context::face_culling(bool enabled) const
     } else {
         glDisable(GL_CULL_FACE);
     }
+}
+
+void render_context::set_face_cull(int mode) const
+{
+    glEnable(GL_CULL_FACE);
+    glCullFace(mode);
 }
 
 void render_context::depth_testing(bool enabled) const

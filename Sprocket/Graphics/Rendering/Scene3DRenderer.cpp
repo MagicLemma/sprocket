@@ -175,11 +175,7 @@ void Scene3DRenderer::Draw(
         std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
         for (const auto& particle : *ps.particles) {
             if (particle.life > 0.0) {
-                instance_data.push_back({
-                    particle.position,
-                    {0.0, 0.0, 0.0, 1.0},
-                    particle.scale
-                });
+                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
             }
         }
         d_instanceBuffer.set_data(instance_data);

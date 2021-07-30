@@ -11,8 +11,8 @@ namespace {
 
 void SetTextureParameters(std::uint32_t id)
 {
-    glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTextureParameteri(id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(id, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTextureParameteri(id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTextureParameteri(id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 }
