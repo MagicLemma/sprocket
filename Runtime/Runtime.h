@@ -4,7 +4,7 @@
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Scene/ecs.h>
 
@@ -25,7 +25,7 @@ class Runtime
     spkt::SkyboxRenderer d_skyboxRenderer;
 
     // Scene
-    spkt::Scene d_scene;
+    spkt::scene d_scene;
     spkt::CubeMap d_skybox;
     
     spkt::entity d_runtimeCamera;

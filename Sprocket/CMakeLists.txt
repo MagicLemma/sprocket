@@ -40,7 +40,7 @@ add_library(Sprocket STATIC
             UI/ImGuiXtra.cpp
 
             Scene/camera.cpp
-            Scene/Scene.cpp
+            Scene/scene.cpp
             Scene/loader.cpp
 
             Scene/Systems/particle_system.cpp

@@ -5,7 +5,7 @@
 #include <Sprocket/Graphics/post_processor.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/ShadowMap.h>
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scene/Systems/GameGrid.h>
 #include <Sprocket/UI/DevUI.h>
 #include <Sprocket/UI/SimpleUI.h>
@@ -28,7 +28,7 @@ class Game
     
     Mode d_mode;
 
-    spkt::Scene d_scene;
+    spkt::scene d_scene;
 
     spkt::entity d_camera;
     spkt::entity d_worker;

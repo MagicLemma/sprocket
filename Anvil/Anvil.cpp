@@ -59,7 +59,7 @@ Anvil::Anvil(spkt::Window* window)
 {
     d_window->SetCursorVisibility(true);
 
-    d_scene = std::make_shared<spkt::Scene>(); 
+    d_scene = std::make_shared<spkt::scene>(); 
     spkt::add_singleton(d_scene->registry);   
     spkt::load_registry_from_file(d_sceneFile, d_scene->registry);
     d_activeScene = d_scene;
@@ -165,7 +165,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<spkt::Scene>();
+                    d_activeScene = d_scene = std::make_shared<spkt::scene>();
                     spkt::log::info("...done!");
                 }
             }
@@ -174,7 +174,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<spkt::Scene>();
+                    d_activeScene = d_scene = std::make_shared<spkt::scene>();
                     spkt::load_registry_from_file(file, d_scene->registry);
                     spkt::log::info("...done!");
                 }
@@ -197,7 +197,7 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<spkt::Scene>();
+                d_activeScene = std::make_shared<spkt::scene>();
 
                 spkt::add_singleton(d_activeScene->registry);
                 spkt::copy_registry(d_scene->registry, d_activeScene->registry);

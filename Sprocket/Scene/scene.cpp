@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "scene.h"
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Scene/ecs.h>
@@ -18,14 +18,14 @@ spkt::entity add_singleton(spkt::registry& registry)
     return singleton;
 }
 
-void Scene::on_update(double dt)
+void scene::on_update(double dt)
 {
     spkt::input_system_begin(registry, dt);
     std::ranges::for_each(systems, [&](const system& sys) { sys(registry, dt); });
     spkt::input_system_end(registry, dt);
 }
 
-void Scene::on_event(spkt::event& event)
+void scene::on_event(spkt::event& event)
 {
     spkt::input_system_on_event(registry, event);
 }

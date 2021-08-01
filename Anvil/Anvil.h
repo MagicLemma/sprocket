@@ -11,7 +11,7 @@
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/DevUI.h>
 
 #include <memory>
@@ -39,8 +39,8 @@ class Anvil
 
     // Scene
     std::string d_sceneFile = "Resources/Anvil.yaml";
-    std::shared_ptr<spkt::Scene> d_activeScene;
-    std::shared_ptr<spkt::Scene> d_scene;
+    std::shared_ptr<spkt::scene> d_activeScene;
+    std::shared_ptr<spkt::scene> d_scene;
     spkt::entity d_runtimeCamera;
 
     // Additional world setup
@@ -80,5 +80,5 @@ public:
     Camera& editor_camera() { return d_editor_camera; }
     spkt::Window* window() { return d_window; }
 
-    std::shared_ptr<spkt::Scene> active_scene() { return d_activeScene; }
+    std::shared_ptr<spkt::scene> active_scene() { return d_activeScene; }
 };

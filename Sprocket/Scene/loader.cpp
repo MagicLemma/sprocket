@@ -3,7 +3,7 @@
 #include <Sprocket/Utility/Log.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Utility/Yaml.h>
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>

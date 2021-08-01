@@ -20,7 +20,7 @@ Comp& get_singleton(spkt::registry& registry)
     return registry.get<Comp>(singleton);
 }
 
-struct Scene
+struct scene
 {
     using system = std::function<void(spkt::registry&, double)>;
 

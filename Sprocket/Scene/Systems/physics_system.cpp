@@ -1,6 +1,6 @@
 #include "physics_system.h"
 
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
