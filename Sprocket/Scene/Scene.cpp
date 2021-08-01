@@ -20,24 +20,19 @@ spkt::entity add_singleton(spkt::registry& registry)
 
 Scene::~Scene()
 {
-    d_registry.clear();
-}
-
-void Scene::add(const system_t& system)
-{
-    d_systems.push_back(system);
+    registry.clear();
 }
 
 void Scene::on_update(double dt)
 {
-    spkt::input_system_begin(d_registry, dt);
-    std::ranges::for_each(d_systems, [&](auto&& system) { system(d_registry, dt); });
-    spkt::input_system_end(d_registry, dt);
+    spkt::input_system_begin(registry, dt);
+    std::ranges::for_each(systems, [&](const system& sys) { sys(registry, dt); });
+    spkt::input_system_end(registry, dt);
 }
 
 void Scene::on_event(spkt::event& event)
 {
-    spkt::input_system_on_event(d_registry, event);
+    spkt::input_system_on_event(registry, event);
 }
 
 }
