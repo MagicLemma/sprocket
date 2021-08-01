@@ -1,4 +1,4 @@
-#include "Loader.h"
+#include "loader.h"
 
 #include <Sprocket/Utility/Log.h>
 #include <Sprocket/Scene/ecs.h>

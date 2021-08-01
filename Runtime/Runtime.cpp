@@ -2,7 +2,7 @@
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Scene/Loader.h>
+#include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>

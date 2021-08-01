@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "camera.h"
 
 #include <Sprocket/Graphics/Viewport.h>
 #include <Sprocket/Utility/Log.h>

@@ -2,7 +2,7 @@
 
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Graphics/open_gl.h>
-#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Scene/camera.h>
 #include <Sprocket/Utility/Maths.h>
 
 #include <glad/glad.h>

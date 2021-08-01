@@ -7,9 +7,9 @@
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Scene/camera.h>
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Loader.h>
+#include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/GameGrid.h>
 #include <Sprocket/UI/ImGuiXtra.h>

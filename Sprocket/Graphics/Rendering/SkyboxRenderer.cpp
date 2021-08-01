@@ -3,7 +3,7 @@
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/open_gl.h>
-#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Scene/camera.h>
 
 #include <glm/glm.hpp>
 
