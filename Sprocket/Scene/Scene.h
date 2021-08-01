@@ -27,8 +27,6 @@ struct Scene
     spkt::registry      registry;
     std::vector<system> systems;
 
-    ~Scene();
-
     void on_update(double dt);
     void on_event(spkt::event& event);
 };

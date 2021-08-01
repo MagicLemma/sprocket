@@ -18,11 +18,6 @@ spkt::entity add_singleton(spkt::registry& registry)
     return singleton;
 }
 
-Scene::~Scene()
-{
-    registry.clear();
-}
-
 void Scene::on_update(double dt)
 {
     spkt::input_system_begin(registry, dt);
