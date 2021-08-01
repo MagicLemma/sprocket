@@ -1,4 +1,4 @@
-#include "GameGrid.h"
+#include "game_grid.h"
 
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/ecs.h>

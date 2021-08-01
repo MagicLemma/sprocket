@@ -6,7 +6,7 @@
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/ShadowMap.h>
 #include <Sprocket/Scene/scene.h>
-#include <Sprocket/Scene/Systems/GameGrid.h>
+#include <Sprocket/Scene/Systems/game_grid.h>
 #include <Sprocket/UI/DevUI.h>
 #include <Sprocket/UI/SimpleUI.h>
 

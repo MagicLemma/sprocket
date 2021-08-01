@@ -11,7 +11,7 @@
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/GameGrid.h>
+#include <Sprocket/Scene/Systems/game_grid.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/Log.h>
