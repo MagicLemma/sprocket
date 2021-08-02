@@ -55,9 +55,9 @@ void script_system(spkt::registry& registry, double dt)
 
 void animation_system(spkt::registry& registry, double dt)
 {
-    for (auto id : registry.view<MeshAnimationComponent>()) {
-        auto& ac = registry.get<MeshAnimationComponent>(id);
-        ac.time += (float)dt * ac.speed;
+    for (auto entity : registry.view<AnimatedModelComponent>()) {
+        auto& ac = registry.get<AnimatedModelComponent>(entity);
+        ac.animation_time += (float)dt * ac.animation_speed;
     }
 }
 

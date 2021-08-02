@@ -143,6 +143,24 @@
                         "Subtype": "File",
                         "Filter": "*.yaml"
                     }
+                },
+                {
+                    "name": "animation_name",
+                    "display_name": "Animation name",
+                    "type": "std::string",
+                    "default": "\"\""
+                },
+                {
+                    "name": "animation_time",
+                    "display_name": "Animation Time",
+                    "type": "float",
+                    "default": "0.0f"
+                },
+                {
+                    "name": "animation_speed",
+                    "display_name": "Animation Speed",
+                    "type": "float",
+                    "default": "1.0f"
                 }
             ] 
         },
@@ -572,30 +590,6 @@
                         "SCRIPTABLE": false,
                         "SAVABLE": false
                     }
-                }
-            ]
-        },
-        {
-            "name": "MeshAnimationComponent",
-            "display_name": "Mesh Animation",
-            "attributes": [
-                {
-                    "name": "name",
-                    "display_name": "name",
-                    "type": "std::string",
-                    "default": "\"\""
-                },
-                {
-                    "name": "time",
-                    "display_name": "Time",
-                    "type": "float",
-                    "default": "0.0f"
-                },
-                {
-                    "name": "speed",
-                    "display_name": "Speed",
-                    "type": "float",
-                    "default": "1.0f"
                 }
             ]
         },

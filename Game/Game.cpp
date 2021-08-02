@@ -7,11 +7,11 @@
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Scene/camera.h>
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Loader.h>
+#include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/GameGrid.h>
+#include <Sprocket/Scene/Systems/game_grid.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/Log.h>
@@ -106,7 +106,7 @@ Game::Game(Window* window)
 
     d_cycle.SetAngle(3.14195f);
 
-    auto& registry = d_scene.registry();
+    auto& registry = d_scene.registry;
     auto sun_entity = registry.find<SunComponent>();
     auto& sun = registry.get<SunComponent>(sun_entity);
     sun.direction = d_cycle.GetSunDir();
@@ -124,17 +124,19 @@ Game::Game(Window* window)
 
 void Game::load_scene(std::string_view file)
 {
-    auto& registry = d_scene.registry();
+    auto& registry = d_scene.registry;
     
     spkt::add_singleton(registry);
     spkt::game_grid_system_init(registry);
     spkt::load_registry_from_file(std::string(file), registry);
     
-    d_scene.add(spkt::game_grid_system);
-    d_scene.add(spkt::script_system);
-    d_scene.add(spkt::camera_system);
-    d_scene.add(spkt::path_follower_system);
-    d_scene.add(spkt::clear_events_system);
+    d_scene.systems = {
+        spkt::game_grid_system,
+        spkt::script_system,
+        spkt::camera_system,
+        spkt::path_follower_system,
+        spkt::clear_events_system
+    };
 
     d_paused = false;
     d_sceneFile = file;
@@ -159,14 +161,14 @@ void Game::on_event(spkt::event& event)
     using namespace spkt;
 
     // Escape Menu event handling
-    if (auto data = event.get_if<KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<keyboard_pressed_event>()) {
         if (!event.is_consumed() && data->key == Keyboard::ESC) {
             d_paused = !d_paused;
             event.consume();
         }
     }
 
-    auto& registry = d_scene.registry();
+    auto& registry = d_scene.registry;
     auto tile_entity = registry.find<TileMapSingleton>();
     const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
 
@@ -183,11 +185,11 @@ void Game::on_event(spkt::event& event)
     // Game World event handling
     d_hoveredEntityUI.on_event(event);
 
-    if (auto data = event.get_if<WindowResize>()) {
+    if (auto data = event.get_if<window_resized_event>()) {
         d_post_processor.set_screen_size(data->width, data->height);
     }
 
-    if (auto data = event.get_if<MouseButtonPressed>()) {
+    if (auto data = event.get_if<mouse_pressed_event>()) {
         auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
@@ -239,7 +241,7 @@ void Game::on_event(spkt::event& event)
 void Game::on_update(double dt)
 {
     using namespace spkt;
-    auto& registry = d_scene.registry();
+    auto& registry = d_scene.registry;
 
     spkt::set_listener(registry, d_camera);
 
@@ -277,8 +279,8 @@ void Game::on_render()
 {
     using namespace spkt;
     
-    const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.registry());
-    auto& registry = d_scene.registry();
+    const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.registry);
+    auto& registry = d_scene.registry;
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
@@ -303,7 +305,6 @@ void Game::on_render()
     }
 
     if (!d_paused) {
-        auto& registry = d_scene.registry();
         auto tile_entity = registry.find<TileMapSingleton>();
         const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
 
@@ -446,7 +447,7 @@ void Game::on_render()
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Save", buttonRegion)) {
         spkt::log::info("Saving to {}", d_sceneFile);
-        spkt::save_registry_to_file(d_sceneFile, d_scene.registry());
+        spkt::save_registry_to_file(d_sceneFile, registry);
         spkt::log::info("Done!");
     }
     

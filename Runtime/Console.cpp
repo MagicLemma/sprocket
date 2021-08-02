@@ -35,7 +35,7 @@ void Console::on_update(double dt)
 
 void Console::on_event(spkt::event& event)
 {
-    auto data = event.get_if<spkt::KeyboardButtonPressed>();
+    auto data = event.get_if<spkt::keyboard_pressed_event>();
     if (data && data->key == spkt::Keyboard::ENTER) {
         d_consoleLines.push_front({d_commandLine, glm::vec4{1.0, 1.0, 1.0, 1.0}});
         HandleCommand(d_commandLine);

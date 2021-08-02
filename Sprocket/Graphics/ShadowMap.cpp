@@ -23,7 +23,10 @@ void ShadowMap::Draw(
 {
     spkt::render_context rc;
     rc.depth_testing(true);
-    rc.face_culling(true);
+
+    // Reduces "peter panning", also stops "flat" objects that dont have a back from
+    // casting shadows.
+    rc.set_face_cull(GL_FRONT);
 
     d_lightViewMatrix = glm::lookAt(centre - sunDirection, centre, {0.0, 1.0, 0.0});
 
@@ -32,18 +35,12 @@ void ShadowMap::Draw(
     d_shader.load("u_view_matrix", d_lightViewMatrix);
 
     d_shadowMap.Bind();
-    glEnable(GL_DEPTH_TEST);
     glClear(GL_DEPTH_BUFFER_BIT);
-
-    // Reduces "peter panning", also stops "flat" objects that dont have a back from
-    // casting shadows.
-    glCullFace(GL_FRONT);
 
     std::unordered_map<std::string, std::vector<model_instance>> commands;
     for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<StaticModelComponent>(entity);
-        if (mc.mesh.empty()) { continue; }
         commands[mc.mesh].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
@@ -55,7 +52,6 @@ void ShadowMap::Draw(
         spkt::draw(mesh, &d_instance_buffer);
     }
 
-    glCullFace(GL_BACK);
     d_shadowMap.Unbind();
     d_shader.unbind();
 }

@@ -1,8 +1,8 @@
-#include "GameGrid.h"
+#include "game_grid.h"
 
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Utility/MouseCodes.h>
 

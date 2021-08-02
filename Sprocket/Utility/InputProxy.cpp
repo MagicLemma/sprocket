@@ -14,18 +14,18 @@ InputProxy::InputProxy()
   
 void InputProxy::on_event(spkt::event& event)
 {
-    if (auto data = event.get_if<KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<keyboard_pressed_event>()) {
         if (event.is_consumed()) { return; }
         d_keyboard[data->key] = true;
     }
-    else if (auto data = event.get_if<KeyboardButtonReleased>()) {
+    else if (auto data = event.get_if<keyboard_released_event>()) {
         d_keyboard[data->key] = false;
     }
-    else if (auto data = event.get_if<MouseButtonPressed>()) {
+    else if (auto data = event.get_if<mouse_pressed_event>()) {
         if (event.is_consumed()) { return; }
         d_mouse[data->button] = true;
     }
-    else if (auto data = event.get_if<MouseButtonReleased>()) {
+    else if (auto data = event.get_if<mouse_released_event>()) {
         d_mouse[data->button] = false;
     }
 }

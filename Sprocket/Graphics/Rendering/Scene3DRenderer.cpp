@@ -4,7 +4,7 @@
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Scene/camera.h>
 #include <Sprocket/Utility/Hashing.h>
 #include <Sprocket/Utility/Maths.h>
 
@@ -157,7 +157,6 @@ void Scene3DRenderer::Draw(
     for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<StaticModelComponent>(entity);
-        if (mc.mesh.empty()) { continue; }
         commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
@@ -176,11 +175,7 @@ void Scene3DRenderer::Draw(
         std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
         for (const auto& particle : *ps.particles) {
             if (particle.life > 0.0) {
-                instance_data.push_back({
-                    particle.position,
-                    {0.0, 0.0, 0.0, 1.0},
-                    particle.scale
-                });
+                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
             }
         }
         d_instanceBuffer.set_data(instance_data);
@@ -193,7 +188,6 @@ void Scene3DRenderer::Draw(
     for (auto entity : registry.view<AnimatedModelComponent, Transform3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         const auto& mc = registry.get<AnimatedModelComponent>(entity);
-        if (mc.mesh.empty()) { continue; }
         auto mesh = d_assetManager->get_animated_mesh(mc.mesh);
 
         auto material = d_assetManager->GetMaterial(mc.material);
@@ -201,21 +195,9 @@ void Scene3DRenderer::Draw(
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        static const std::array<glm::mat4, MAX_BONES> clear = DefaultBoneTransforms();
-        if (registry.has<MeshAnimationComponent>(entity)) {
-            const auto& ac = registry.get<MeshAnimationComponent>(entity);
-            auto poses = mesh->get_pose(ac.name, ac.time);
-            
-            if (poses.size() > 0) {
-                int numBones = std::min(MAX_BONES, (int)poses.size());
-                d_animatedShader.load("u_bone_transforms", poses[0], numBones);
-            } else {
-                d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
-            }
-        }
-        else {
-            d_animatedShader.load("u_bone_transforms", clear[0], MAX_BONES);
-        }
+        auto poses = mesh->get_pose(mc.animation_name, mc.animation_time);
+        poses.resize(MAX_BONES, glm::mat4(1.0));
+        d_animatedShader.load("u_bone_transforms", poses[0], MAX_BONES);
 
         spkt::draw(mesh);
         

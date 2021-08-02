@@ -59,9 +59,9 @@ Anvil::Anvil(spkt::Window* window)
 {
     d_window->SetCursorVisibility(true);
 
-    d_scene = std::make_shared<spkt::Scene>(); 
-    spkt::add_singleton(d_scene->registry());   
-    spkt::load_registry_from_file(d_sceneFile, d_scene->registry());
+    d_scene = std::make_shared<spkt::scene>(); 
+    spkt::add_singleton(d_scene->registry);   
+    spkt::load_registry_from_file(d_sceneFile, d_scene->registry);
     d_activeScene = d_scene;
 }
 
@@ -69,7 +69,7 @@ void Anvil::on_event(spkt::event& event)
 {
     using namespace spkt;
 
-    if (auto data = event.get_if<KeyboardButtonPressed>()) {
+    if (auto data = event.get_if<keyboard_pressed_event>()) {
         if (data->key == Keyboard::ESC) {
             if (d_playingGame) {
                 d_playingGame = false;
@@ -103,7 +103,7 @@ void Anvil::on_event(spkt::event& event)
 
 void Anvil::on_update(double dt)
 {
-    auto& registry = d_activeScene->registry();
+    auto& registry = d_activeScene->registry;
 
     d_ui.on_update(dt);
 
@@ -120,19 +120,19 @@ void Anvil::on_update(double dt)
 
 glm::mat4 Anvil::get_proj_matrix() const
 {
-    auto& registry = d_activeScene->registry();
+    auto& registry = d_activeScene->registry;
     return d_playingGame ? spkt::make_proj(registry, d_runtimeCamera) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
-    auto& registry = d_activeScene->registry();
+    auto& registry = d_activeScene->registry;
     return d_playingGame ? spkt::make_view(registry, d_runtimeCamera) : d_editor_camera.View();
 }
 
 void Anvil::on_render()
 {
-    auto& registry = d_activeScene->registry();
+    auto& registry = d_activeScene->registry;
 
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
@@ -165,7 +165,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<spkt::Scene>();
+                    d_activeScene = d_scene = std::make_shared<spkt::scene>();
                     spkt::log::info("...done!");
                 }
             }
@@ -174,14 +174,14 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<spkt::Scene>();
-                    spkt::load_registry_from_file(file, d_scene->registry());
+                    d_activeScene = d_scene = std::make_shared<spkt::scene>();
+                    spkt::load_registry_from_file(file, d_scene->registry);
                     spkt::log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Save")) {
                 spkt::log::info("Saving {}...", d_sceneFile);
-                spkt::save_registry_to_file(d_sceneFile, d_scene->registry());
+                spkt::save_registry_to_file(d_sceneFile, d_scene->registry);
                 spkt::log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -189,7 +189,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Saving as {}...", file);
                     d_sceneFile = file;
-                    spkt::save_registry_to_file(file, d_scene->registry());
+                    spkt::save_registry_to_file(file, d_scene->registry);
                     spkt::log::info("...done!");
                 }
             }
@@ -197,21 +197,23 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<spkt::Scene>();
+                d_activeScene = std::make_shared<spkt::scene>();
 
-                spkt::add_singleton(d_activeScene->registry());
-                spkt::copy_registry(d_scene->registry(), d_activeScene->registry());
+                spkt::add_singleton(d_activeScene->registry);
+                spkt::copy_registry(d_scene->registry, d_activeScene->registry);
 
-                d_activeScene->add(spkt::physics_system);
-                d_activeScene->add(spkt::particle_system);
-                d_activeScene->add(spkt::camera_system);
-                d_activeScene->add(spkt::script_system);
-                d_activeScene->add(spkt::animation_system);
-                d_activeScene->add(spkt::delete_below_50_system);
-                d_activeScene->add(spkt::clear_events_system);
+                d_activeScene->systems = {
+                    spkt::physics_system,
+                    spkt::particle_system,
+                    spkt::camera_system,
+                    spkt::script_system,
+                    spkt::animation_system,
+                    spkt::delete_below_50_system,
+                    spkt::clear_events_system
+                };
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->registry().find<spkt::Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->registry.find<spkt::Camera3DComponent>();
                 d_window->SetCursorVisibility(false);
             }
             ImGui::EndMenu();

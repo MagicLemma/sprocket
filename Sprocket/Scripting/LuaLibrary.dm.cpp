@@ -1,7 +1,7 @@
 #include "LuaLibrary.h"
 
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/LuaConverter.h>
 #include <Sprocket/Scripting/LuaScript.h>
 #include <Sprocket/Utility/Log.h>

@@ -39,13 +39,13 @@ add_library(Sprocket STATIC
             UI/DevUI.cpp
             UI/ImGuiXtra.cpp
 
-            Scene/Camera.cpp
-            Scene/Scene.cpp
-            Scene/Loader.cpp
+            Scene/camera.cpp
+            Scene/scene.cpp
+            Scene/loader.cpp
 
             Scene/Systems/particle_system.cpp
             Scene/Systems/physics_system.cpp
-            Scene/Systems/GameGrid.cpp
+            Scene/Systems/game_grid.cpp
             Scene/Systems/basic_systems.cpp
             Scene/Systems/input_system.cpp
 

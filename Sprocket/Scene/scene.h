@@ -20,21 +20,13 @@ Comp& get_singleton(spkt::registry& registry)
     return registry.get<Comp>(singleton);
 }
 
-class Scene
+struct scene
 {
-public:
-    using system_t = std::function<void(spkt::registry&, double)>;
+    using system = std::function<void(spkt::registry&, double)>;
 
-private:
-    spkt::registry d_registry;
-    std::vector<system_t> d_systems;
+    spkt::registry      registry;
+    std::vector<system> systems;
 
-public:
-    ~Scene();
-
-    spkt::registry& registry() { return d_registry; }
-
-    void add(const system_t& system);
     void on_update(double dt);
     void on_event(spkt::event& event);
 };

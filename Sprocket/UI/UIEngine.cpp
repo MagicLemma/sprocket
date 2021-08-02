@@ -211,17 +211,17 @@ DrawCommand& UIEngine::GetDrawCommand()
 void UIEngine::on_event(spkt::event& event)
 {
     if (d_focused != 0 && !event.is_consumed()) {
-        if (auto data = event.get_if<KeyboardTyped>()) {
+        if (auto data = event.get_if<keyboard_typed_event>()) {
             d_keyPresses.push_back(data->key);
             event.consume();
         }
-        else if (auto data = event.get_if<KeyboardButtonPressed>()) {
+        else if (auto data = event.get_if<keyboard_pressed_event>()) {
             if (data->key == Keyboard::BACKSPACE) {
                 d_keyPresses.push_back(Keyboard::BACKSPACE);
                 event.consume();
             }
         }
-        else if (auto data = event.get_if<KeyboardButtonHeld>()) {
+        else if (auto data = event.get_if<keyboard_held_event>()) {
             if (data->key == Keyboard::BACKSPACE) {
                 d_keyPresses.push_back(Keyboard::BACKSPACE);
                 event.consume();
@@ -229,13 +229,13 @@ void UIEngine::on_event(spkt::event& event)
         }
     }
 
-    if (auto data = event.get_if<MouseButtonPressed>()) {
+    if (auto data = event.get_if<mouse_pressed_event>()) {
         if (data->button == Mouse::LEFT) {
             d_mouseClicked = true;
         }
         if (d_consumeMouseEvents) { event.consume(); }
     }
-    if (auto data = event.get_if<MouseButtonReleased>()) {
+    if (auto data = event.get_if<mouse_released_event>()) {
         if (data->button == Mouse::LEFT) {
             d_widgetTimes[d_clicked].unclickedTime = d_time;
             d_clicked = 0;

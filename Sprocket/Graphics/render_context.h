@@ -7,9 +7,11 @@ class render_context
 // A wrapper class that stores the current context and restores it upon
 // destruction.
 {
-    bool d_cull_face;
     bool d_depth_test;
     bool d_scissor_test;
+    
+    bool d_cull_face;
+    int d_cull_face_mode;
 
     bool d_blend;
     int  d_blend_src_alpha;
@@ -27,10 +29,15 @@ public:
     ~render_context();
 
     void alpha_blending(bool enabled) const;
+    
     void face_culling(bool enabled) const;
+    void set_face_cull(int mode) const;
+    
     void depth_testing(bool enabled) const;
+
     void scissor_testing(bool enabled) const;
     void set_scissor_window(const glm::vec4& region) const; // Also enables scissor testing
+    
     void polygon_mode(int mode) const;
 };
 
