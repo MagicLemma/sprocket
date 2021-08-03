@@ -24,8 +24,8 @@ ParticleSingleton& get_particle_runtime(spkt::registry& registry)
     return registry.get<ParticleSingleton>(entity);
 }
 
-glm::vec3 random_noise(float R)
 // Generates a random point in a sphere of radius R
+glm::vec3 random_noise(float R)
 {
     float r = Random<float>(0, R);
     float phi = Random<float>(0, 3.142f);
