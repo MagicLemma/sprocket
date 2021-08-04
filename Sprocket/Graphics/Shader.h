@@ -4,6 +4,7 @@
 #include <memory>
 #include <string_view>
 #include <string>
+#include <span>
 #include <vector>
 
 namespace spkt {
@@ -42,6 +43,9 @@ public:
     void load(const std::string& name, const glm::vec4& vector) const;
     void load(const std::string& name, const glm::quat& quat) const;
     void load(const std::string& name, const glm::mat4& matrix, int count = 1) const;
+
+    void load(const std::string& name, std::span<const float> values) const;
+    void load(const std::string& name, std::span<const glm::vec3> values) const;
 };
 
 using shader_ptr = std::unique_ptr<spkt::shader>;

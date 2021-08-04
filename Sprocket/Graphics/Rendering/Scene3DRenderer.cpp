@@ -32,8 +32,7 @@ void upload_uniforms(
     const glm::mat4& view
 )
 {
-    std::uint32_t MAX_NUM_LIGHTS = 5;
-      shader.bind();
+    shader.bind();
 
     shader.load("u_proj_matrix", proj);
     shader.load("u_view_matrix", view);
@@ -54,26 +53,43 @@ void upload_uniforms(
     }
     
     // Load point lights to shader
+    std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> positions = {};
+    std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> colours = {};
+    std::array<float, Scene3DRenderer::MAX_NUM_LIGHTS> brightnesses = {};
     std::size_t i = 0;
     for (auto entity : registry.view<LightComponent, Transform3DComponent>()) {
-        if (i < MAX_NUM_LIGHTS) {
-            auto position = registry.get<Transform3DComponent>(entity).position;
-            auto light = registry.get<LightComponent>(entity);
-            shader.load(array_name("u_light_pos", i), position);
-            shader.load(array_name("u_light_colour", i), light.colour);
-            shader.load(array_name("u_light_brightness", i), light.brightness);
-            ++i;
-        }
-        else {
-            break;
-        }
+        if (i == Scene3DRenderer::MAX_NUM_LIGHTS) { break; }
+
+        auto position = registry.get<Transform3DComponent>(entity).position;
+        auto light = registry.get<LightComponent>(entity);
+        positions[i] = position;
+        colours[i] = light.colour;
+        brightnesses[i] = light.brightness;
     }
-    while (i < MAX_NUM_LIGHTS) {
-        shader.load(array_name("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-        shader.load(array_name("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        shader.load(array_name("u_light_brightness", i), 0.0f);
-        ++i;
-    }
+    shader.load("u_light_pos", positions);
+    shader.load("u_light_colour", colours);
+    shader.load("u_light_brightness", brightnesses);
+
+    //std::size_t i = 0;
+    //for (auto entity : registry.view<LightComponent, Transform3DComponent>()) {
+    //    if (i < Scene3DRenderer::MAX_NUM_LIGHTS) {
+    //        auto position = registry.get<Transform3DComponent>(entity).position;
+    //        auto light = registry.get<LightComponent>(entity);
+    //        shader.load(array_name("u_light_pos", i), position);
+    //        shader.load(array_name("u_light_colour", i), light.colour);
+    //        shader.load(array_name("u_light_brightness", i), light.brightness);
+    //        ++i;
+    //    }
+    //    else {
+    //        break;
+    //    }
+    //}
+    //while (i < Scene3DRenderer::MAX_NUM_LIGHTS) {
+    //    shader.load(array_name("u_light_pos", i), {0.0f, 0.0f, 0.0f});
+    //    shader.load(array_name("u_light_colour", i), {0.0f, 0.0f, 0.0f});
+    //    shader.load(array_name("u_light_brightness", i), 0.0f);
+    //    ++i;
+    //}
 }
 
 void UploadMaterial(

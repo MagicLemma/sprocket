@@ -123,6 +123,16 @@ void shader::load(const std::string& name, const glm::mat4& matrix, int count) c
 	glUniformMatrix4fv(uniform_location(name), count, GL_FALSE, glm::value_ptr(matrix));
 }
 
+void shader::load(const std::string& name, std::span<const float> values) const
+{
+	glUniform1fv(uniform_location(name), values.size(), values.data());
+}
+
+void shader::load(const std::string& name, std::span<const glm::vec3> values) const
+{
+	glUniform3fv(uniform_location(name), values.size(), &(values.data()->x));
+}
+
 std::string array_name(std::string_view uniformName, std::size_t index)
 {
 	return std::format("{}[{}]", uniformName, index);
