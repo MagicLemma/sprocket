@@ -52,7 +52,7 @@ uniform float u_ambience_brightness;
 uniform sampler2D shadow_map;
 
 const float PI = 3.14159265359;
-const int MAX_NUM_LIGHTS = 5;
+const int MAX_NUM_LIGHTS = 50;
 
 vec3 fresnel_schlick(float cosTheta, vec3 F0)
 {

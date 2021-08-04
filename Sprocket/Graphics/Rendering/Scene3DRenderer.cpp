@@ -62,34 +62,15 @@ void upload_uniforms(
 
         auto position = registry.get<Transform3DComponent>(entity).position;
         auto light = registry.get<LightComponent>(entity);
+        
         positions[i] = position;
         colours[i] = light.colour;
         brightnesses[i] = light.brightness;
+        ++i;
     }
     shader.load("u_light_pos", positions);
     shader.load("u_light_colour", colours);
     shader.load("u_light_brightness", brightnesses);
-
-    //std::size_t i = 0;
-    //for (auto entity : registry.view<LightComponent, Transform3DComponent>()) {
-    //    if (i < Scene3DRenderer::MAX_NUM_LIGHTS) {
-    //        auto position = registry.get<Transform3DComponent>(entity).position;
-    //        auto light = registry.get<LightComponent>(entity);
-    //        shader.load(array_name("u_light_pos", i), position);
-    //        shader.load(array_name("u_light_colour", i), light.colour);
-    //        shader.load(array_name("u_light_brightness", i), light.brightness);
-    //        ++i;
-    //    }
-    //    else {
-    //        break;
-    //    }
-    //}
-    //while (i < Scene3DRenderer::MAX_NUM_LIGHTS) {
-    //    shader.load(array_name("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-    //    shader.load(array_name("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-    //    shader.load(array_name("u_light_brightness", i), 0.0f);
-    //    ++i;
-    //}
 }
 
 void UploadMaterial(
@@ -213,7 +194,7 @@ void Scene3DRenderer::Draw(
         
         auto poses = mesh->get_pose(mc.animation_name, mc.animation_time);
         poses.resize(MAX_BONES, glm::mat4(1.0));
-        d_animatedShader.load("u_bone_transforms", poses[0], MAX_BONES);
+        d_animatedShader.load("u_bone_transforms", poses);
 
         spkt::draw(mesh);
         

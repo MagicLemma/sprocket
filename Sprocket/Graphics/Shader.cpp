@@ -118,9 +118,9 @@ void shader::load(const std::string& name, const glm::quat& quat) const
 	glUniform4f(uniform_location(name), quat.x, quat.y, quat.z, quat.w);
 }
 
-void shader::load(const std::string& name, const glm::mat4& matrix, int count) const
+void shader::load(const std::string& name, const glm::mat4& matrix) const
 {
-	glUniformMatrix4fv(uniform_location(name), count, GL_FALSE, glm::value_ptr(matrix));
+	glUniformMatrix4fv(uniform_location(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void shader::load(const std::string& name, std::span<const float> values) const
@@ -130,7 +130,12 @@ void shader::load(const std::string& name, std::span<const float> values) const
 
 void shader::load(const std::string& name, std::span<const glm::vec3> values) const
 {
-	glUniform3fv(uniform_location(name), values.size(), &(values.data()->x));
+	glUniform3fv(uniform_location(name), values.size(), glm::value_ptr(values[0]));
+}
+
+void shader::load(const std::string& name, std::span<const glm::mat4> values) const
+{
+	glUniformMatrix4fv(uniform_location(name), std::ssize(values), GL_FALSE, glm::value_ptr(values[0]));
 }
 
 std::string array_name(std::string_view uniformName, std::size_t index)

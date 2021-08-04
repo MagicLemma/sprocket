@@ -42,10 +42,11 @@ public:
     void load(const std::string& name, const glm::vec3& vector) const;
     void load(const std::string& name, const glm::vec4& vector) const;
     void load(const std::string& name, const glm::quat& quat) const;
-    void load(const std::string& name, const glm::mat4& matrix, int count = 1) const;
+    void load(const std::string& name, const glm::mat4& matrix) const;
 
     void load(const std::string& name, std::span<const float> values) const;
     void load(const std::string& name, std::span<const glm::vec3> values) const;
+    void load(const std::string& name, std::span<const glm::mat4> values) const;
 };
 
 using shader_ptr = std::unique_ptr<spkt::shader>;
