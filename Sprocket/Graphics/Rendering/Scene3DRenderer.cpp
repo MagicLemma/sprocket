@@ -102,33 +102,23 @@ Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer()
 {
-    d_staticShader.bind();
     d_staticShader.load("u_albedo_map", ALBEDO_SLOT);
     d_staticShader.load("u_normal_map", NORMAL_SLOT);
     d_staticShader.load("u_metallic_map", METALLIC_SLOT);
     d_staticShader.load("u_roughness_map", ROUGHNESS_SLOT);
-    d_staticShader.unbind();
+    d_staticShader.load("shadow_map", SHADOW_MAP_SLOT);
 
-    d_animatedShader.bind();
     d_animatedShader.load("u_albedo_map", ALBEDO_SLOT);
     d_animatedShader.load("u_normal_map", NORMAL_SLOT);
     d_animatedShader.load("u_metallic_map", METALLIC_SLOT);
     d_animatedShader.load("u_roughness_map", ROUGHNESS_SLOT);
-    d_animatedShader.unbind();
+    d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
 }
 
 void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
-    d_staticShader.bind();
-    d_staticShader.load("shadow_map", SHADOW_MAP_SLOT);
     d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_staticShader.unbind();
-
-    d_animatedShader.bind();
-    d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
     d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_animatedShader.unbind();
- 
     shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
 }
 
@@ -199,7 +189,6 @@ void Scene3DRenderer::Draw(
         spkt::draw(mesh);
         
     }
-    d_animatedShader.unbind();
 }
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)

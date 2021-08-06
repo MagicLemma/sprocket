@@ -95,47 +95,47 @@ void shader::load(const std::string& name, int value) const
 
 void shader::load(const std::string& name, float value) const
 {
-	glUniform1f(uniform_location(name), value);
+	glProgramUniform1f(d_program_id, uniform_location(name), value);
 }
 
 void shader::load(const std::string& name, const glm::vec2& vector) const
 {
-	glUniform2f(uniform_location(name), vector.x, vector.y);
+	glProgramUniform2f(d_program_id, uniform_location(name), vector.x, vector.y);
 }
 
 void shader::load(const std::string& name, const glm::vec3& vector) const
 {
-	glUniform3f(uniform_location(name), vector.x, vector.y, vector.z);
+	glProgramUniform3f(d_program_id, uniform_location(name), vector.x, vector.y, vector.z);
 }
 
 void shader::load(const std::string& name, const glm::vec4& vector) const
 {
-	glUniform4f(uniform_location(name), vector.x, vector.y, vector.z, vector.w);
+	glProgramUniform4f(d_program_id, uniform_location(name), vector.x, vector.y, vector.z, vector.w);
 }
 
 void shader::load(const std::string& name, const glm::quat& quat) const
 {
-	glUniform4f(uniform_location(name), quat.x, quat.y, quat.z, quat.w);
+	glProgramUniform4f(d_program_id, uniform_location(name), quat.x, quat.y, quat.z, quat.w);
 }
 
 void shader::load(const std::string& name, const glm::mat4& matrix) const
 {
-	glUniformMatrix4fv(uniform_location(name), 1, GL_FALSE, glm::value_ptr(matrix));
+	glProgramUniformMatrix4fv(d_program_id, uniform_location(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 void shader::load(const std::string& name, std::span<const float> values) const
 {
-	glUniform1fv(uniform_location(name), values.size(), values.data());
+	glProgramUniform1fv(d_program_id, uniform_location(name), values.size(), values.data());
 }
 
 void shader::load(const std::string& name, std::span<const glm::vec3> values) const
 {
-	glUniform3fv(uniform_location(name), values.size(), glm::value_ptr(values[0]));
+	glProgramUniform3fv(d_program_id, uniform_location(name), values.size(), glm::value_ptr(values[0]));
 }
 
 void shader::load(const std::string& name, std::span<const glm::mat4> values) const
 {
-	glUniformMatrix4fv(uniform_location(name), std::ssize(values), GL_FALSE, glm::value_ptr(values[0]));
+	glProgramUniformMatrix4fv(d_program_id, uniform_location(name), std::ssize(values), GL_FALSE, glm::value_ptr(values[0]));
 }
 
 std::string array_name(std::string_view uniformName, std::size_t index)
