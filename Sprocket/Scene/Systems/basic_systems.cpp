@@ -94,7 +94,7 @@ void path_follower_system(spkt::registry& registry, double dt)
 
 void delete_below_50_system(spkt::registry& registry, double)
 {
-    registry.erase_if<Transform3DComponent>([&](spkt::entity entity) {
+    registry.destroy_if<Transform3DComponent>([&](spkt::entity entity) {
         const auto& t = registry.get<Transform3DComponent>(entity);
         return t.position.y < -50.0f;
     });
@@ -102,7 +102,7 @@ void delete_below_50_system(spkt::registry& registry, double)
 
 void clear_events_system(spkt::registry& registry, double dt)
 {
-    registry.erase_if<Event>([](spkt::entity) { return true; });
+    registry.destroy_if<Event>([](spkt::entity) { return true; });
 }
 
 }
