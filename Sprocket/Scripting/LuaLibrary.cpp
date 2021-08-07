@@ -12,7 +12,6 @@
 #include <glm/trigonometric.hpp>
 
 #include <format>
-#include <functional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -95,7 +94,7 @@ int view_next(lua_State* L) {
     auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
     using view_t = decltype(reg.view<Comps...>());
     using iter_t = decltype(std::declval<view_t>().begin());
-    
+
     auto& view = *static_cast<view_t*>(lua_touserdata(L, 1));
     auto& iter = *static_cast<iter_t*>(lua_touserdata(L, 2));
     if (iter != view.end()) {

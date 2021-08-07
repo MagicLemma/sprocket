@@ -37,9 +37,10 @@ uniform float u_metallic;
 uniform float u_roughness;
 
 // Lighting Information
-uniform vec3  u_light_pos[5];
-uniform vec3  u_light_colour[5];
-uniform float u_light_brightness[5];
+const int MAX_NUM_LIGHTS = 50;
+uniform vec3  u_light_pos[MAX_NUM_LIGHTS];
+uniform vec3  u_light_colour[MAX_NUM_LIGHTS];
+uniform float u_light_brightness[MAX_NUM_LIGHTS];
 
 uniform vec3  u_sun_direction;
 uniform vec3  u_sun_colour;
@@ -52,7 +53,6 @@ uniform float u_ambience_brightness;
 uniform sampler2D shadow_map;
 
 const float PI = 3.14159265359;
-const int MAX_NUM_LIGHTS = 50;
 
 vec3 fresnel_schlick(float cosTheta, vec3 F0)
 {

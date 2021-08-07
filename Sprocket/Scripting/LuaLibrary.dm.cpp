@@ -20,9 +20,6 @@ namespace spkt {
 namespace lua {
 namespace {
 
-template <typename... Ts>
-using view_iterator = typename spkt::registry::iterator<Ts...>;
-
 void do_file(lua_State* L, const char* file)
 {
     if (luaL_dofile(L, file)) {

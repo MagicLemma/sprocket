@@ -56,17 +56,19 @@ void upload_uniforms(
     std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> positions = {};
     std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> colours = {};
     std::array<float, Scene3DRenderer::MAX_NUM_LIGHTS> brightnesses = {};
-    std::size_t i = 0;
-    for (auto entity : registry.view<LightComponent, Transform3DComponent>()) {
-        if (i == Scene3DRenderer::MAX_NUM_LIGHTS) { break; }
 
+    auto entity_view = registry.view<LightComponent, Transform3DComponent>()
+        | std::views::take(Scene3DRenderer::MAX_NUM_LIGHTS);
+
+    std::size_t idx = 0; 
+    for (auto entity : entity_view) {
         auto position = registry.get<Transform3DComponent>(entity).position;
         auto light = registry.get<LightComponent>(entity);
         
-        positions[i] = position;
-        colours[i] = light.colour;
-        brightnesses[i] = light.brightness;
-        ++i;
+        positions[idx] = position;
+        colours[idx] = light.colour;
+        brightnesses[idx] = light.brightness;
+        ++idx;
     }
     shader.load("u_light_pos", positions);
     shader.load("u_light_colour", colours);
