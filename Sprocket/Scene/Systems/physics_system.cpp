@@ -9,41 +9,17 @@
 
 #include <cstddef>
 #include <memory>
-#include <unordered_map>
-#include <variant>
 
 namespace spkt {
 namespace {
 
-rp3d::Vector3 convert(const glm::vec3& v)
-{
-    return rp3d::Vector3(v.x, v.y, v.z);
-}
+rp3d::Vector3 convert(const glm::vec3& v)    { return {v.x, v.y, v.z}; }
+rp3d::Vector2 convert(const glm::vec2& v)    { return {v.x, v.y}; }
+rp3d::Quaternion convert(const glm::quat& q) { return {q.x, q.y, q.z, q.w}; }
 
-rp3d::Vector2 convert(const glm::vec2& v)
-{
-    return rp3d::Vector2(v.x, v.y);
-}
-
-glm::vec3 convert(const rp3d::Vector3& v)
-{
-    return glm::vec3(v.x, v.y, v.z);
-}
-
-glm::vec2 convert(const rp3d::Vector2& v)
-{
-    return glm::vec2(v.x, v.y);
-}
-
-glm::quat convert(const rp3d::Quaternion& q)
-{
-    return glm::quat(q.w, q.x, q.y, q.z);
-}
-
-rp3d::Quaternion convert(const glm::quat& q)
-{
-    return rp3d::Quaternion(q.x, q.y, q.z, q.w);
-}
+glm::vec3 convert(const rp3d::Vector3& v)    { return {v.x, v.y, v.z}; }
+glm::vec2 convert(const rp3d::Vector2& v)    { return {v.x, v.y}; }
+glm::quat convert(const rp3d::Quaternion& q) { return {q.w, q.x, q.y, q.z}; }
 
 rp3d::Transform convert(const glm::vec3& position, const glm::quat& orientation)
 {

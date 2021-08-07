@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -23,29 +24,18 @@ struct Bone
     std::vector<std::uint32_t> children;
 };
 
-struct KeyFramePos
+template <typename T>
+struct timed_attr
 {
-    float     time;
-    glm::vec3 position;
-};
-
-struct KeyFrameOri
-{
-    float     time;
-    glm::quat orientation;
-};
-
-struct KeyFrameScl
-{
-    float     time;
-    glm::vec3 scale;
+    float time;
+    T     attr;
 };
 
 struct BoneKeyFrames
 {
-    std::vector<KeyFramePos> keyPostitions;
-    std::vector<KeyFrameOri> keyOrientations;
-    std::vector<KeyFrameScl> keyScales;
+    std::vector<spkt::timed_attr<glm::vec3>> keyPostitions;
+    std::vector<spkt::timed_attr<glm::quat>> keyOrientations;
+    std::vector<spkt::timed_attr<glm::vec3>> keyScales;
 };
 
 struct Animation

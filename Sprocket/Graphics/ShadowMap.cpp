@@ -45,11 +45,8 @@ void ShadowMap::Draw(
     }
 
     for (const auto& [key, data] : commands) {
-        auto mesh = d_assetManager->get_static_mesh(key);
-        if (!mesh) { continue; }
-
         d_instance_buffer.set_data(data);
-        spkt::draw(mesh, &d_instance_buffer);
+        spkt::draw(d_assetManager->get_static_mesh(key), &d_instance_buffer);
     }
 
     d_shadowMap.Unbind();

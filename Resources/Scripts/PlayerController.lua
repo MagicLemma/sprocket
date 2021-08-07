@@ -81,7 +81,7 @@ function Fire(entity)
     local sc = SphereCollider3DComponent(vec3.new(0, 0, 0), 20, 0.1)
     AddSphereCollider3DComponent(newEntity, sc)
 
-    local lc = LightComponent(vec3.new(1, 1, 1), 20)
+    local lc = LightComponent(vec3.new(1, 1, 1), 200)
     AddLightComponent(newEntity, lc)
 
     local sc = ScriptComponent("Resources/Scripts/Grenade.lua", true)

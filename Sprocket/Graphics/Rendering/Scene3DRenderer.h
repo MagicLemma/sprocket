@@ -29,6 +29,9 @@ public:
     // Animation Data
     static constexpr int MAX_BONES = 50;
 
+    // Light Data
+    static constexpr int MAX_NUM_LIGHTS = 50;
+
 private:
     AssetManager*    d_assetManager;
 

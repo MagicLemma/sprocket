@@ -32,8 +32,7 @@ void upload_uniforms(
     const glm::mat4& view
 )
 {
-    std::uint32_t MAX_NUM_LIGHTS = 5;
-      shader.bind();
+    shader.bind();
 
     shader.load("u_proj_matrix", proj);
     shader.load("u_view_matrix", view);
@@ -54,26 +53,24 @@ void upload_uniforms(
     }
     
     // Load point lights to shader
+    std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> positions = {};
+    std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> colours = {};
+    std::array<float, Scene3DRenderer::MAX_NUM_LIGHTS> brightnesses = {};
     std::size_t i = 0;
     for (auto entity : registry.view<LightComponent, Transform3DComponent>()) {
-        if (i < MAX_NUM_LIGHTS) {
-            auto position = registry.get<Transform3DComponent>(entity).position;
-            auto light = registry.get<LightComponent>(entity);
-            shader.load(array_name("u_light_pos", i), position);
-            shader.load(array_name("u_light_colour", i), light.colour);
-            shader.load(array_name("u_light_brightness", i), light.brightness);
-            ++i;
-        }
-        else {
-            break;
-        }
-    }
-    while (i < MAX_NUM_LIGHTS) {
-        shader.load(array_name("u_light_pos", i), {0.0f, 0.0f, 0.0f});
-        shader.load(array_name("u_light_colour", i), {0.0f, 0.0f, 0.0f});
-        shader.load(array_name("u_light_brightness", i), 0.0f);
+        if (i == Scene3DRenderer::MAX_NUM_LIGHTS) { break; }
+
+        auto position = registry.get<Transform3DComponent>(entity).position;
+        auto light = registry.get<LightComponent>(entity);
+        
+        positions[i] = position;
+        colours[i] = light.colour;
+        brightnesses[i] = light.brightness;
         ++i;
     }
+    shader.load("u_light_pos", positions);
+    shader.load("u_light_colour", colours);
+    shader.load("u_light_brightness", brightnesses);
 }
 
 void UploadMaterial(
@@ -105,33 +102,23 @@ Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer()
 {
-    d_staticShader.bind();
     d_staticShader.load("u_albedo_map", ALBEDO_SLOT);
     d_staticShader.load("u_normal_map", NORMAL_SLOT);
     d_staticShader.load("u_metallic_map", METALLIC_SLOT);
     d_staticShader.load("u_roughness_map", ROUGHNESS_SLOT);
-    d_staticShader.unbind();
+    d_staticShader.load("shadow_map", SHADOW_MAP_SLOT);
 
-    d_animatedShader.bind();
     d_animatedShader.load("u_albedo_map", ALBEDO_SLOT);
     d_animatedShader.load("u_normal_map", NORMAL_SLOT);
     d_animatedShader.load("u_metallic_map", METALLIC_SLOT);
     d_animatedShader.load("u_roughness_map", ROUGHNESS_SLOT);
-    d_animatedShader.unbind();
+    d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
 }
 
 void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
-    d_staticShader.bind();
-    d_staticShader.load("shadow_map", SHADOW_MAP_SLOT);
     d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_staticShader.unbind();
-
-    d_animatedShader.bind();
-    d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
     d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_animatedShader.unbind();
- 
     shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
 }
 
@@ -197,12 +184,11 @@ void Scene3DRenderer::Draw(
         
         auto poses = mesh->get_pose(mc.animation_name, mc.animation_time);
         poses.resize(MAX_BONES, glm::mat4(1.0));
-        d_animatedShader.load("u_bone_transforms", poses[0], MAX_BONES);
+        d_animatedShader.load("u_bone_transforms", poses);
 
         spkt::draw(mesh);
         
     }
-    d_animatedShader.unbind();
 }
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
