@@ -1,51 +1,15 @@
 #pragma once
-#include <glm/glm.hpp>
-
-#include <type_traits>
+#include <numbers>
 
 namespace spkt {
 
-float RandomFloat(float min, float max);
-int RandomInt(int min, int max);
+int random_from_range(int min, int max);
+float random_from_range(float min, float max);
 
-template <typename T>
-T Random(T min, T max)
-{
-    if constexpr (std::is_same<T, int>::value) {
-        return RandomInt(min, max);
-    }
-
-    else if constexpr (std::is_same<T, float>::value) {
-        return RandomFloat(min, max);
-    }
-
-    else if constexpr (std::is_same<T, glm::vec2>::value) {
-        return {
-            RandomFloat(min.x, max.x),
-            RandomFloat(min.y, max.y)
-        };
-    }
-
-    else if constexpr (std::is_same<T, glm::vec3>::value) {
-        return {
-            RandomFloat(min.x, max.x),
-            RandomFloat(min.y, max.y),
-            RandomFloat(min.z, max.z)
-        };
-    }
-
-    else if constexpr (std::is_same<T, glm::vec4>::value) {
-        return {
-            RandomFloat(min.x, max.x),
-            RandomFloat(min.y, max.y),
-            RandomFloat(min.z, max.z),
-            RandomFloat(min.w, max.w)
-        };
-    }
-
-    else {
-        static_assert(sizeof(T) == -1);
-    }
-}
+inline float random_uniform() { return random_from_range(0.0f, 1.0f); }
+inline float random_half_angle() { return random_from_range(0.0f, std::numbers::pi_v<float>); }
+inline float random_angle() { return random_from_range(0.0f, 2.0f * std::numbers::pi_v<float>); }
+inline float random_half_angle_degrees() { return random_from_range(0.0f, 180.0f); }
+inline float random_angle_degrees() { return random_from_range(0.0f, 360.0f); }
 
 }

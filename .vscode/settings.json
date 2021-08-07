@@ -102,6 +102,7 @@
         "format": "cpp",
         "span": "cpp",
         "sstream": "cpp",
-        "source_location": "cpp"
+        "source_location": "cpp",
+        "numbers": "cpp"
     }
 }

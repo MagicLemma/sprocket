@@ -19,10 +19,10 @@ void add_rock_base(
 
     auto& tr = registry.emplace<spkt::Transform3DComponent>(entity);
     tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
-    tr.position.y -= spkt::Random(0.0f, 0.5f);
+    tr.position.y -= spkt::random_from_range(0.0f, 0.5f);
     tr.orientation = glm::rotate(
         glm::identity<glm::quat>(),
-        glm::half_pi<float>() * spkt::Random(0, 3),
+        glm::half_pi<float>() * spkt::random_from_range(0, 3),
         {0.0, 1.0, 0.0}
     );
     tr.scale = {1.1f, 1.1f, 1.1f};
@@ -49,10 +49,10 @@ void add_tree(spkt::registry& registry, glm::ivec2 position)
     tr.position = {position.x + 0.5f, 0.0f, position.y + 0.5f};
     tr.orientation = glm::rotate(
         glm::identity<glm::quat>(),
-        spkt::Random(0.0f, 360.0f),
+        spkt::random_angle_degrees(),
         {0, 1, 0}
     );
-    float r = spkt::Random(1.0f, 1.3f);
+    float r = spkt::random_from_range(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
     auto& mc = registry.emplace<spkt::StaticModelComponent>(entity);

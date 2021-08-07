@@ -1,20 +1,20 @@
 #include "Random.h"
 
 #include <random>
+#include <numbers>
 
 namespace spkt {
 
-float RandomFloat(float min, float max)
+int random_from_range(int min, int max)
 {
-    static std::mt19937 gen;
-    return std::uniform_real_distribution(min, max)(gen);
-}
-
-int RandomInt(int min, int max)
-{
-    static std::mt19937 gen;
+    static std::default_random_engine gen;
     return std::uniform_int_distribution(min, max)(gen);
 }
-    
+
+float random_from_range(float min, float max)
+{
+    static std::default_random_engine gen;
+    return std::uniform_real_distribution(min, max)(gen);
+}
     
 }
