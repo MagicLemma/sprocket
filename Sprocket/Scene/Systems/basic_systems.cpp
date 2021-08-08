@@ -24,7 +24,7 @@ void script_system(spkt::registry& registry, double dt)
 {
     std::vector<std::function<void()>> commands;
 
-    for (spkt::entity entity : registry.view<ScriptComponent>()) {
+    for (auto entity : registry.view<ScriptComponent>()) {
         auto& sc = registry.get<ScriptComponent>(entity);
         if (!sc.active) { continue; }
 
@@ -55,8 +55,7 @@ void script_system(spkt::registry& registry, double dt)
 
 void animation_system(spkt::registry& registry, double dt)
 {
-    for (auto entity : registry.view<AnimatedModelComponent>()) {
-        auto& ac = registry.get<AnimatedModelComponent>(entity);
+    for (auto [ac] : registry.view_get<AnimatedModelComponent>()) {
         ac.animation_time += (float)dt * ac.animation_speed;
     }
 }
@@ -66,18 +65,15 @@ void camera_system(spkt::registry& registry, double dt)
     const auto& input = get_singleton<InputSingleton>(registry);
     float aspect_ratio = input.window_width / input.window_height;
 
-    for (auto entity : registry.view<Camera3DComponent>()) {
-        auto& cam = registry.get<Camera3DComponent>(entity);
+    for (auto [cam] : registry.view_get<Camera3DComponent>()) {
         cam.projection = glm::perspective(cam.fov, aspect_ratio, 0.1f, 1000.0f);
     }
 }
 
 void path_follower_system(spkt::registry& registry, double dt)
 {
-    for (auto entity : registry.view<PathComponent>()) {
-        auto& transform = registry.get<Transform3DComponent>(entity);
-        auto& path = registry.get<PathComponent>(entity);
-        if (path.markers.empty()) { return; }
+    for (auto [path, transform] : registry.view_get<PathComponent, Transform3DComponent>()) {
+        if (path.markers.empty()) { continue; }
         
         glm::vec3 to_dest = path.markers.front() - transform.position;
         glm::vec3 direction = glm::normalize(to_dest);

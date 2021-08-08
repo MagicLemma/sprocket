@@ -38,9 +38,7 @@ void ShadowMap::Draw(
     glClear(GL_DEPTH_BUFFER_BIT);
 
     std::unordered_map<std::string, std::vector<model_instance>> commands;
-    for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
-        const auto& tc = registry.get<Transform3DComponent>(entity);
-        const auto& mc = registry.get<StaticModelComponent>(entity);
+    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
         commands[mc.mesh].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
