@@ -100,8 +100,7 @@ int view_next(lua_State* L) {
     auto& view = *static_cast<view_t*>(lua_touserdata(L, 1));
     auto& iter = *static_cast<iter_t*>(lua_touserdata(L, 2));
     if (iter != view.end()) {
-        auto& entity = *static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
-        entity = *iter;
+        Converter<spkt::entity>::push(L, *iter);
         ++iter;
     } else {
         delete &view;

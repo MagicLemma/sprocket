@@ -202,5 +202,22 @@ void load_vec2_functions(lua::Script& script)
     lua_setglobal(L, "vec2");
 }
 
+void load_entity_functions(lua::Script& script)
+{
+    lua_State* L = script.native_handle();
+
+    luaL_newmetatable(L, "entity_id");
+
+    lua_pushcfunction(L, [](lua_State* L) {
+        spkt::entity* self = (spkt::entity*)luaL_checkudata(L, 1, "entity_id");
+        spkt::entity* other = (spkt::entity*)luaL_checkudata(L, 2, "entity_id");
+        Converter<bool>::push(L, *self == *other);
+        return 1;
+    });
+    lua_setfield(L, -2, "__eq");
+
+    lua_setglobal(L, "entity_id");
+}
+
 }
 }

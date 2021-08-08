@@ -9,6 +9,7 @@ class Script;
 
 void load_vec3_functions(lua::Script& script);
 void load_vec2_functions(lua::Script& script);
+void load_entity_functions(lua::Script& script);
 
 }
 }

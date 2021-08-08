@@ -33,6 +33,7 @@ void script_system(spkt::registry& registry, double dt)
             lua::Script& script = *sc.script_runtime;
             lua::load_vec3_functions(script);
             lua::load_vec2_functions(script);
+            lua::load_entity_functions(script);
             lua::load_registry_functions(script, registry);
             lua::load_entity_transformation_functions(script);
             lua::load_entity_component_functions(script);
