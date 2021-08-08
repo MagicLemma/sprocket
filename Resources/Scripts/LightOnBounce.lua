@@ -11,6 +11,10 @@ function on_update(entity, dt)
             toggle_light(entity)
         end
     end
+
+    local x = vec3.new(1, 1, 1)
+    local y = vec3.new(1, 1, 1)
+    print(x == y)
 end
 
 function toggle_light(entity)

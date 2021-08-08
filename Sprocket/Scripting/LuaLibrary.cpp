@@ -181,14 +181,6 @@ void load_entity_transformation_functions(lua::Script& script)
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
     });
-
-    lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
-        if (!check_arg_count(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        auto entity1 = Converter<spkt::entity>::read(L, 1);
-        auto entity2 = Converter<spkt::entity>::read(L, 2);
-        Converter<bool>::push(L, entity1 == entity2);
-        return 1;
-    });
 }
 
 void load_registry_functions(lua::Script& script, spkt::registry& registry)

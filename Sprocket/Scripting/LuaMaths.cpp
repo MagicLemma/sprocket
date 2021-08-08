@@ -71,6 +71,14 @@ void load_vec3_functions(lua::Script& script)
     lua_setfield(L, -2, "__sub");
 
     lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
+        glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
+        Converter<bool>::push(L, *self == *other);
+        return 1;
+    });
+    lua_setfield(L, -2, "__eq");
+
+    lua_pushcfunction(L, [](lua_State* L) {
         if (lua_isnumber(L, 1)) {
             float scalar = (float)luaL_checknumber(L, 1);
             glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
@@ -154,6 +162,14 @@ void load_vec2_functions(lua::Script& script)
         return 1;
     });
     lua_setfield(L, -2, "__sub");
+
+    lua_pushcfunction(L, [](lua_State* L) {
+        glm::vec2* self = (glm::vec2*)luaL_checkudata(L, 1, "vec2");
+        glm::vec2* other = (glm::vec2*)luaL_checkudata(L, 2, "vec2");
+        Converter<bool>::push(L, *self == *other);
+        return 1;
+    });
+    lua_setfield(L, -2, "__eq");
 
     lua_pushcfunction(L, [](lua_State* L) {
         if (lua_isnumber(L, 1)) {
