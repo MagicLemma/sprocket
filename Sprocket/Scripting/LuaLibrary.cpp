@@ -65,7 +65,7 @@ template <typename T> int remove_impl(lua_State* L)
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
     auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
     auto entity = Converter<spkt::entity>::read(L, 1);
-    add_command(L, [reg, entity]() mutable { reg.remove<T>(entity); });
+    add_command(L, [&, entity]() { reg.remove<T>(entity); });
     return 0;
 }
 
@@ -210,7 +210,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
         auto entity = Converter<spkt::entity>::read(L, 1);
-        add_command(L, [reg, entity]() mutable { reg.destroy(entity); });
+        add_command(L, [&, entity]() { reg.destroy(entity); });
         return 0;
     });
 
@@ -387,7 +387,7 @@ int _AddNameComponent(lua_State* L) {
     assert(!reg.has<NameComponent>(e));
     NameComponent c;
     c.name = Converter<std::string>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<NameComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<NameComponent>(e, c); });
     return 0;
 }
 
@@ -426,7 +426,7 @@ int _AddTransform2DComponent(lua_State* L) {
     c.position = Converter<glm::vec2>::read(L, ++ptr);
     c.rotation = Converter<float>::read(L, ++ptr);
     c.scale = Converter<glm::vec2>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<Transform2DComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<Transform2DComponent>(e, c); });
     return 0;
 }
 
@@ -462,7 +462,7 @@ int _AddTransform3DComponent(lua_State* L) {
     Transform3DComponent c;
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.scale = Converter<glm::vec3>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<Transform3DComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<Transform3DComponent>(e, c); });
     return 0;
 }
 
@@ -498,7 +498,7 @@ int _AddStaticModelComponent(lua_State* L) {
     StaticModelComponent c;
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<StaticModelComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<StaticModelComponent>(e, c); });
     return 0;
 }
 
@@ -543,7 +543,7 @@ int _AddAnimatedModelComponent(lua_State* L) {
     c.animation_name = Converter<std::string>::read(L, ++ptr);
     c.animation_time = Converter<float>::read(L, ++ptr);
     c.animation_speed = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<AnimatedModelComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<AnimatedModelComponent>(e, c); });
     return 0;
 }
 
@@ -597,7 +597,7 @@ int _AddRigidBody3DComponent(lua_State* L) {
     c.rollingResistance = Converter<float>::read(L, ++ptr);
     c.force = Converter<glm::vec3>::read(L, ++ptr);
     c.onFloor = Converter<bool>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<RigidBody3DComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<RigidBody3DComponent>(e, c); });
     return 0;
 }
 
@@ -639,7 +639,7 @@ int _AddBoxCollider3DComponent(lua_State* L) {
     c.mass = Converter<float>::read(L, ++ptr);
     c.halfExtents = Converter<glm::vec3>::read(L, ++ptr);
     c.applyScale = Converter<bool>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<BoxCollider3DComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<BoxCollider3DComponent>(e, c); });
     return 0;
 }
 
@@ -678,7 +678,7 @@ int _AddSphereCollider3DComponent(lua_State* L) {
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<SphereCollider3DComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<SphereCollider3DComponent>(e, c); });
     return 0;
 }
 
@@ -720,7 +720,7 @@ int _AddCapsuleCollider3DComponent(lua_State* L) {
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
     c.height = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<CapsuleCollider3DComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<CapsuleCollider3DComponent>(e, c); });
     return 0;
 }
 
@@ -756,7 +756,7 @@ int _AddScriptComponent(lua_State* L) {
     ScriptComponent c;
     c.script = Converter<std::string>::read(L, ++ptr);
     c.active = Converter<bool>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<ScriptComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<ScriptComponent>(e, c); });
     return 0;
 }
 
@@ -792,7 +792,7 @@ int _AddCamera3DComponent(lua_State* L) {
     Camera3DComponent c;
     c.fov = Converter<float>::read(L, ++ptr);
     c.pitch = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<Camera3DComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<Camera3DComponent>(e, c); });
     return 0;
 }
 
@@ -825,7 +825,7 @@ int _AddPathComponent(lua_State* L) {
     assert(!reg.has<PathComponent>(e));
     PathComponent c;
     c.speed = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<PathComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<PathComponent>(e, c); });
     return 0;
 }
 
@@ -861,7 +861,7 @@ int _AddLightComponent(lua_State* L) {
     LightComponent c;
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<LightComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<LightComponent>(e, c); });
     return 0;
 }
 
@@ -903,7 +903,7 @@ int _AddSunComponent(lua_State* L) {
     c.brightness = Converter<float>::read(L, ++ptr);
     c.direction = Converter<glm::vec3>::read(L, ++ptr);
     c.shadows = Converter<bool>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<SunComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<SunComponent>(e, c); });
     return 0;
 }
 
@@ -939,7 +939,7 @@ int _AddAmbienceComponent(lua_State* L) {
     AmbienceComponent c;
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<AmbienceComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<AmbienceComponent>(e, c); });
     return 0;
 }
 
@@ -987,7 +987,7 @@ int _AddParticleComponent(lua_State* L) {
     c.acceleration = Converter<glm::vec3>::read(L, ++ptr);
     c.scale = Converter<glm::vec3>::read(L, ++ptr);
     c.life = Converter<float>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<ParticleComponent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<ParticleComponent>(e, c); });
     return 0;
 }
 
@@ -1023,7 +1023,7 @@ int _AddCollisionEvent(lua_State* L) {
     CollisionEvent c;
     c.entity_a = Converter<spkt::entity>::read(L, ++ptr);
     c.entity_b = Converter<spkt::entity>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<CollisionEvent>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<CollisionEvent>(e, c); });
     return 0;
 }
 

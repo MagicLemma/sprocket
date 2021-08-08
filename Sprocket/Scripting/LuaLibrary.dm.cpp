@@ -65,7 +65,7 @@ template <typename T> int remove_impl(lua_State* L)
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
     auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
     auto entity = Converter<spkt::entity>::read(L, 1);
-    add_command(L, [reg, entity]() mutable { reg.remove<T>(entity); });
+    add_command(L, [&, entity]() { reg.remove<T>(entity); });
     return 0;
 }
 
@@ -210,7 +210,7 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
         auto entity = Converter<spkt::entity>::read(L, 1);
-        add_command(L, [reg, entity]() mutable { reg.destroy(entity); });
+        add_command(L, [&, entity]() { reg.destroy(entity); });
         return 0;
     });
 
@@ -326,7 +326,7 @@ int _Add{{Comp::name}}(lua_State* L) {
     assert(!reg.has<{{Comp::name}}>(e));
     {{Comp::name}} c;
     c.{{Attr::name}} = Converter<{{Attr::type}}>::read(L, ++ptr);
-    add_command(L, [reg, e, c]() mutable { reg.add<{{Comp::name}}>(e, c); });
+    add_command(L, [&, e, c]() { reg.add<{{Comp::name}}>(e, c); });
     return 0;
 }
 
