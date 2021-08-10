@@ -20,9 +20,6 @@ namespace spkt {
 namespace lua {
 namespace {
 
-template <typename... Ts>
-using view_iterator = typename spkt::registry::iterator<Ts...>;
-
 void do_file(lua_State* L, const char* file)
 {
     if (luaL_dofile(L, file)) {
@@ -57,16 +54,18 @@ bool check_arg_count(lua_State* L, int argc)
 template <typename T> int has_impl(lua_State* L)
 {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    auto entity = Converter<spkt::handle>::read(L, 1);
-    Converter<bool>::push(L, entity.has<T>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto entity = Converter<spkt::entity>::read(L, 1);
+    Converter<bool>::push(L, reg.has<T>(entity));
     return 1;
 }
 
 template <typename T> int remove_impl(lua_State* L)
 {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    auto entity = Converter<spkt::handle>::read(L, 1);
-    add_command(L, [entity]() mutable { entity.remove<T>(); });
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto entity = Converter<spkt::entity>::read(L, 1);
+    add_command(L, [&, entity]() { reg.remove<T>(entity); });
     return 0;
 }
 
@@ -80,20 +79,29 @@ void add_command(lua_State* L, const std::function<void()>& command)
 template <typename... Comps>
 int view_init(lua_State* L) {
     if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
-    auto view = new view_iterator<Comps...>(get_pointer<spkt::registry>(L, "__registry__")->view<Comps...>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    using view_t = decltype(reg.view<Comps...>());
+    using iter_t = decltype(std::declval<view_t>().begin());
+
+    auto view = new view_t(reg.view<Comps...>());
+    auto iter = new iter_t(view->begin());
     lua_pushlightuserdata(L, static_cast<void*>(view));
-    return 1;
+    lua_pushlightuserdata(L, static_cast<void*>(iter));
+    return 2;
 }
 
 template <typename... Comps>
 int view_next(lua_State* L) {
-    if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-    auto& view = *static_cast<view_iterator<Comps...>*>(lua_touserdata(L, 1));
-    if (view.valid()) {
-        auto& entity = *static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
-        entity = spkt::handle(registry, *view);
-        ++view;
+    if (!check_arg_count(L, 2)) { return luaL_error(L, "Bad number of args"); }
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    using view_t = decltype(reg.view<Comps...>());
+    using iter_t = decltype(std::declval<view_t>().begin());
+
+    auto& view = *static_cast<view_t*>(lua_touserdata(L, 1));
+    auto& iter = *static_cast<iter_t*>(lua_touserdata(L, 2));
+    if (iter != view.end()) {
+        Converter<spkt::entity>::push(L, *iter);
+        ++iter;
     } else {
         delete &view;
         lua_pushnil(L);
@@ -105,8 +113,8 @@ std::string view_source_code(std::string_view name)
 {
     return std::format(R"lua(
         function view_{0}()
-            local view = _view_{0}_init()
-            return function() return _view_{0}_next(view) end
+            local view, iter = _view_{0}_init()
+            return function() return _view_{0}_next(view, iter) end
         end
     )lua", name);
 }
@@ -119,10 +127,11 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "SetLookAt", [](lua_State* L) {
         if (!check_arg_count(L, 3)) { return luaL_error(L, "Bad number of args"); }
-        spkt::handle entity = Converter<spkt::handle>::read(L, 1);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        auto entity = Converter<spkt::entity>::read(L, 1);
         glm::vec3 p = Converter<glm::vec3>::read(L, 2);
         glm::vec3 t = Converter<glm::vec3>::read(L, 3);
-        auto& tr = entity.get<Transform3DComponent>();
+        auto& tr = reg.get<Transform3DComponent>(entity);
         tr.position = p;
         tr.orientation = glm::conjugate(glm::quat_cast(glm::lookAt(tr.position, t, {0.0, 1.0, 0.0})));
         return 0;
@@ -130,8 +139,9 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "RotateY", [](lua_State* L) {
         if (!check_arg_count(L, 2)) { return luaL_error(L, "Bad number of args"); };
-        spkt::handle entity = *static_cast<spkt::handle*>(lua_touserdata(L, 1));
-        auto& tr = entity.get<Transform3DComponent>();
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        auto entity = Converter<spkt::entity>::read(L, 1);
+        auto& tr = reg.get<Transform3DComponent>(entity);
         float yaw = (float)lua_tonumber(L, 2);
         tr.orientation = glm::rotate(tr.orientation, yaw, {0, 1, 0});
         return 0;
@@ -139,13 +149,13 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "GetForwardsDir", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::handle entity = *static_cast<spkt::handle*>(lua_touserdata(L, 1));
-        auto& tr = entity.get<Transform3DComponent>();
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        auto entity = Converter<spkt::entity>::read(L, 1);
+        auto& tr = reg.get<Transform3DComponent>(entity);
         auto o = tr.orientation;
 
-        if (entity.has<Camera3DComponent>()) {
-            auto pitch = entity.get<Camera3DComponent>().pitch;
-            o = glm::rotate(o, pitch, {1, 0, 0});
+        if (auto* pc = reg.get_if<Camera3DComponent>(entity)) {
+            o = glm::rotate(o, pc->pitch, {1, 0, 0});
         }
 
         Converter<glm::vec3>::push(L, Maths::Forwards(o));
@@ -154,27 +164,21 @@ void load_entity_transformation_functions(lua::Script& script)
 
     lua_register(L, "GetRightDir", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::handle entity = Converter<spkt::handle>::read(L, 1);
-        auto& tr = entity.get<Transform3DComponent>();
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        auto entity = Converter<spkt::entity>::read(L, 1);
+        auto& tr = reg.get<Transform3DComponent>(entity);
         Converter<glm::vec3>::push(L, Maths::Right(tr.orientation));
         return 1;
     });
 
     lua_register(L, "MakeUpright", [](lua_State* L) {
         if (!check_arg_count(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        spkt::handle entity = Converter<spkt::handle>::read(L, 1);
-        auto& tr = entity.get<Transform3DComponent>();
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        auto entity = Converter<spkt::entity>::read(L, 1);
+        auto& tr = reg.get<Transform3DComponent>(entity);
         float yaw = Converter<float>::read(L, 2);
         tr.orientation = glm::quat(glm::vec3(0, yaw, 0));
         return 0;
-    });
-
-    lua_register(L, "AreEntitiesEqual", [](lua_State* L) {
-        if (!check_arg_count(L, 2)) { return luaL_error(L, "Bad number of args"); }
-        spkt::handle entity1 = Converter<spkt::handle>::read(L, 1);
-        spkt::handle entity2 = Converter<spkt::handle>::read(L, 2);
-        Converter<bool>::push(L, entity1 == entity2);
-        return 1;
     });
 }
 
@@ -188,88 +192,80 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
     // Add functions for creating and destroying entities.
     lua_register(L, "NewEntity", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto new_entity = spkt::handle(registry, registry.create());
-        Converter<spkt::handle>::push(L, new_entity);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        Converter<spkt::entity>::push(L, reg.create());
         return 1;
     });
 
     lua_register(L, "DeleteEntity", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::handle entity = *static_cast<spkt::handle*>(lua_touserdata(L, 1));
-        add_command(L, [entity]() mutable { entity.destroy(); });
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        auto entity = Converter<spkt::entity>::read(L, 1);
+        add_command(L, [&, entity]() { reg.destroy(entity); });
         return 0;
-    });
-
-    lua_register(L, "entity_from_id", [](lua_State* L) {
-        if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto id = Converter<spkt::entity>::read(L, 1);
-        Converter<spkt::handle>::push(L, {registry, id});
-        return 1;
     });
 
     lua_register(L, "entity_singleton", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        auto singleton = registry.find<Singleton>();
-        Converter<spkt::handle>::push(L, {registry, singleton});
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        auto singleton = reg.find<Singleton>();
+        Converter<spkt::entity>::push(L, singleton);
         return 1;
     });
 
     // Input access via the singleton component.
     lua_register(L, "IsKeyDown", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        const auto& input = get_singleton<InputSingleton>(registry);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(reg);
         Converter<bool>::push(L, input.keyboard[(int)lua_tointeger(L, 1)]);
         return 1;
     });
 
     lua_register(L, "IsMouseClicked", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        const auto& input = get_singleton<InputSingleton>(registry);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(reg);
         Converter<bool>::push(L, input.mouse_click[(int)lua_tointeger(L, 1)]);
         return 1;
     });
 
     lua_register(L, "IsMouseUnclicked", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        const auto& input = get_singleton<InputSingleton>(registry);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(reg);
         Converter<bool>::push(L, input.mouse_unclick[(int)lua_tointeger(L, 1)]);
         return 1;
     });
 
     lua_register(L, "IsMouseDown", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        const auto& input = get_singleton<InputSingleton>(registry);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(reg);
         Converter<bool>::push(L, input.mouse[(int)lua_tointeger(L, 1)]);
         return 1;
     });
 
     lua_register(L, "GetMousePos", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        const auto& input = get_singleton<InputSingleton>(registry);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(reg);
         Converter<glm::vec2>::push(L, input.mouse_pos);
         return 1;
     });
 
     lua_register(L, "GetMouseOffset", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        const auto& input = get_singleton<InputSingleton>(registry);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(reg);
         Converter<glm::vec2>::push(L, input.mouse_offset);
         return 1;
     });
 
     lua_register(L, "GetMouseScrolled", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
-        spkt::registry& registry = *get_pointer<spkt::registry>(L, "__registry__");
-        const auto& input = get_singleton<InputSingleton>(registry);
+        auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+        const auto& input = get_singleton<InputSingleton>(reg);
         Converter<glm::vec2>::push(L, input.mouse_scrolled);
         return 1;
     });
@@ -357,9 +353,9 @@ void load_registry_functions(lua::Script& script, spkt::registry& registry)
 
 int _GetNameComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<NameComponent>());
-    const auto& c = e.get<NameComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<NameComponent>(e);
     Converter<std::string>::push(L, c.name);
     return 1;
 }
@@ -367,8 +363,9 @@ int _GetNameComponent(lua_State* L) {
 int _SetNameComponent(lua_State* L) {
     if (!check_arg_count(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<NameComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<NameComponent>(e);
     c.name = Converter<std::string>::read(L, ++ptr);
     return 0;
 }
@@ -376,11 +373,12 @@ int _SetNameComponent(lua_State* L) {
 int _AddNameComponent(lua_State* L) {
     if (!check_arg_count(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<NameComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<NameComponent>(e));
     NameComponent c;
     c.name = Converter<std::string>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<NameComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<NameComponent>(e, c); });
     return 0;
 }
 
@@ -388,9 +386,9 @@ int _AddNameComponent(lua_State* L) {
 
 int _GetTransform2DComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<Transform2DComponent>());
-    const auto& c = e.get<Transform2DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<Transform2DComponent>(e);
     Converter<glm::vec2>::push(L, c.position);
     Converter<float>::push(L, c.rotation);
     Converter<glm::vec2>::push(L, c.scale);
@@ -400,8 +398,9 @@ int _GetTransform2DComponent(lua_State* L) {
 int _SetTransform2DComponent(lua_State* L) {
     if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<Transform2DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<Transform2DComponent>(e);
     c.position = Converter<glm::vec2>::read(L, ++ptr);
     c.rotation = Converter<float>::read(L, ++ptr);
     c.scale = Converter<glm::vec2>::read(L, ++ptr);
@@ -411,13 +410,14 @@ int _SetTransform2DComponent(lua_State* L) {
 int _AddTransform2DComponent(lua_State* L) {
     if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<Transform2DComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<Transform2DComponent>(e));
     Transform2DComponent c;
     c.position = Converter<glm::vec2>::read(L, ++ptr);
     c.rotation = Converter<float>::read(L, ++ptr);
     c.scale = Converter<glm::vec2>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<Transform2DComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<Transform2DComponent>(e, c); });
     return 0;
 }
 
@@ -425,9 +425,9 @@ int _AddTransform2DComponent(lua_State* L) {
 
 int _GetTransform3DComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<Transform3DComponent>());
-    const auto& c = e.get<Transform3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<Transform3DComponent>(e);
     Converter<glm::vec3>::push(L, c.position);
     Converter<glm::vec3>::push(L, c.scale);
     return 2;
@@ -436,8 +436,9 @@ int _GetTransform3DComponent(lua_State* L) {
 int _SetTransform3DComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<Transform3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<Transform3DComponent>(e);
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.scale = Converter<glm::vec3>::read(L, ++ptr);
     return 0;
@@ -446,12 +447,13 @@ int _SetTransform3DComponent(lua_State* L) {
 int _AddTransform3DComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<Transform3DComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<Transform3DComponent>(e));
     Transform3DComponent c;
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.scale = Converter<glm::vec3>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<Transform3DComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<Transform3DComponent>(e, c); });
     return 0;
 }
 
@@ -459,9 +461,9 @@ int _AddTransform3DComponent(lua_State* L) {
 
 int _GetStaticModelComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<StaticModelComponent>());
-    const auto& c = e.get<StaticModelComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<StaticModelComponent>(e);
     Converter<std::string>::push(L, c.mesh);
     Converter<std::string>::push(L, c.material);
     return 2;
@@ -470,8 +472,9 @@ int _GetStaticModelComponent(lua_State* L) {
 int _SetStaticModelComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<StaticModelComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<StaticModelComponent>(e);
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
     return 0;
@@ -480,12 +483,13 @@ int _SetStaticModelComponent(lua_State* L) {
 int _AddStaticModelComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<StaticModelComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<StaticModelComponent>(e));
     StaticModelComponent c;
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<StaticModelComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<StaticModelComponent>(e, c); });
     return 0;
 }
 
@@ -493,9 +497,9 @@ int _AddStaticModelComponent(lua_State* L) {
 
 int _GetAnimatedModelComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<AnimatedModelComponent>());
-    const auto& c = e.get<AnimatedModelComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<AnimatedModelComponent>(e);
     Converter<std::string>::push(L, c.mesh);
     Converter<std::string>::push(L, c.material);
     Converter<std::string>::push(L, c.animation_name);
@@ -507,8 +511,9 @@ int _GetAnimatedModelComponent(lua_State* L) {
 int _SetAnimatedModelComponent(lua_State* L) {
     if (!check_arg_count(L, 5 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<AnimatedModelComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<AnimatedModelComponent>(e);
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
     c.animation_name = Converter<std::string>::read(L, ++ptr);
@@ -520,15 +525,16 @@ int _SetAnimatedModelComponent(lua_State* L) {
 int _AddAnimatedModelComponent(lua_State* L) {
     if (!check_arg_count(L, 5 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<AnimatedModelComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<AnimatedModelComponent>(e));
     AnimatedModelComponent c;
     c.mesh = Converter<std::string>::read(L, ++ptr);
     c.material = Converter<std::string>::read(L, ++ptr);
     c.animation_name = Converter<std::string>::read(L, ++ptr);
     c.animation_time = Converter<float>::read(L, ++ptr);
     c.animation_speed = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<AnimatedModelComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<AnimatedModelComponent>(e, c); });
     return 0;
 }
 
@@ -536,9 +542,9 @@ int _AddAnimatedModelComponent(lua_State* L) {
 
 int _GetRigidBody3DComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<RigidBody3DComponent>());
-    const auto& c = e.get<RigidBody3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<RigidBody3DComponent>(e);
     Converter<glm::vec3>::push(L, c.velocity);
     Converter<bool>::push(L, c.gravity);
     Converter<bool>::push(L, c.frozen);
@@ -553,8 +559,9 @@ int _GetRigidBody3DComponent(lua_State* L) {
 int _SetRigidBody3DComponent(lua_State* L) {
     if (!check_arg_count(L, 8 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<RigidBody3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<RigidBody3DComponent>(e);
     c.velocity = Converter<glm::vec3>::read(L, ++ptr);
     c.gravity = Converter<bool>::read(L, ++ptr);
     c.frozen = Converter<bool>::read(L, ++ptr);
@@ -569,8 +576,9 @@ int _SetRigidBody3DComponent(lua_State* L) {
 int _AddRigidBody3DComponent(lua_State* L) {
     if (!check_arg_count(L, 8 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<RigidBody3DComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<RigidBody3DComponent>(e));
     RigidBody3DComponent c;
     c.velocity = Converter<glm::vec3>::read(L, ++ptr);
     c.gravity = Converter<bool>::read(L, ++ptr);
@@ -580,7 +588,7 @@ int _AddRigidBody3DComponent(lua_State* L) {
     c.rollingResistance = Converter<float>::read(L, ++ptr);
     c.force = Converter<glm::vec3>::read(L, ++ptr);
     c.onFloor = Converter<bool>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<RigidBody3DComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<RigidBody3DComponent>(e, c); });
     return 0;
 }
 
@@ -588,9 +596,9 @@ int _AddRigidBody3DComponent(lua_State* L) {
 
 int _GetBoxCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<BoxCollider3DComponent>());
-    const auto& c = e.get<BoxCollider3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<BoxCollider3DComponent>(e);
     Converter<glm::vec3>::push(L, c.position);
     Converter<float>::push(L, c.mass);
     Converter<glm::vec3>::push(L, c.halfExtents);
@@ -601,8 +609,9 @@ int _GetBoxCollider3DComponent(lua_State* L) {
 int _SetBoxCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 4 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<BoxCollider3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<BoxCollider3DComponent>(e);
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.halfExtents = Converter<glm::vec3>::read(L, ++ptr);
@@ -613,14 +622,15 @@ int _SetBoxCollider3DComponent(lua_State* L) {
 int _AddBoxCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 4 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<BoxCollider3DComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<BoxCollider3DComponent>(e));
     BoxCollider3DComponent c;
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.halfExtents = Converter<glm::vec3>::read(L, ++ptr);
     c.applyScale = Converter<bool>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<BoxCollider3DComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<BoxCollider3DComponent>(e, c); });
     return 0;
 }
 
@@ -628,9 +638,9 @@ int _AddBoxCollider3DComponent(lua_State* L) {
 
 int _GetSphereCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<SphereCollider3DComponent>());
-    const auto& c = e.get<SphereCollider3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<SphereCollider3DComponent>(e);
     Converter<glm::vec3>::push(L, c.position);
     Converter<float>::push(L, c.mass);
     Converter<float>::push(L, c.radius);
@@ -640,8 +650,9 @@ int _GetSphereCollider3DComponent(lua_State* L) {
 int _SetSphereCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<SphereCollider3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<SphereCollider3DComponent>(e);
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
@@ -651,13 +662,14 @@ int _SetSphereCollider3DComponent(lua_State* L) {
 int _AddSphereCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<SphereCollider3DComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<SphereCollider3DComponent>(e));
     SphereCollider3DComponent c;
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<SphereCollider3DComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<SphereCollider3DComponent>(e, c); });
     return 0;
 }
 
@@ -665,9 +677,9 @@ int _AddSphereCollider3DComponent(lua_State* L) {
 
 int _GetCapsuleCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<CapsuleCollider3DComponent>());
-    const auto& c = e.get<CapsuleCollider3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<CapsuleCollider3DComponent>(e);
     Converter<glm::vec3>::push(L, c.position);
     Converter<float>::push(L, c.mass);
     Converter<float>::push(L, c.radius);
@@ -678,8 +690,9 @@ int _GetCapsuleCollider3DComponent(lua_State* L) {
 int _SetCapsuleCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 4 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<CapsuleCollider3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<CapsuleCollider3DComponent>(e);
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
@@ -690,14 +703,15 @@ int _SetCapsuleCollider3DComponent(lua_State* L) {
 int _AddCapsuleCollider3DComponent(lua_State* L) {
     if (!check_arg_count(L, 4 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<CapsuleCollider3DComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<CapsuleCollider3DComponent>(e));
     CapsuleCollider3DComponent c;
     c.position = Converter<glm::vec3>::read(L, ++ptr);
     c.mass = Converter<float>::read(L, ++ptr);
     c.radius = Converter<float>::read(L, ++ptr);
     c.height = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<CapsuleCollider3DComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<CapsuleCollider3DComponent>(e, c); });
     return 0;
 }
 
@@ -705,9 +719,9 @@ int _AddCapsuleCollider3DComponent(lua_State* L) {
 
 int _GetScriptComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<ScriptComponent>());
-    const auto& c = e.get<ScriptComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<ScriptComponent>(e);
     Converter<std::string>::push(L, c.script);
     Converter<bool>::push(L, c.active);
     return 2;
@@ -716,8 +730,9 @@ int _GetScriptComponent(lua_State* L) {
 int _SetScriptComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<ScriptComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<ScriptComponent>(e);
     c.script = Converter<std::string>::read(L, ++ptr);
     c.active = Converter<bool>::read(L, ++ptr);
     return 0;
@@ -726,12 +741,13 @@ int _SetScriptComponent(lua_State* L) {
 int _AddScriptComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<ScriptComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<ScriptComponent>(e));
     ScriptComponent c;
     c.script = Converter<std::string>::read(L, ++ptr);
     c.active = Converter<bool>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<ScriptComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<ScriptComponent>(e, c); });
     return 0;
 }
 
@@ -739,9 +755,9 @@ int _AddScriptComponent(lua_State* L) {
 
 int _GetCamera3DComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<Camera3DComponent>());
-    const auto& c = e.get<Camera3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<Camera3DComponent>(e);
     Converter<float>::push(L, c.fov);
     Converter<float>::push(L, c.pitch);
     return 2;
@@ -750,8 +766,9 @@ int _GetCamera3DComponent(lua_State* L) {
 int _SetCamera3DComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<Camera3DComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<Camera3DComponent>(e);
     c.fov = Converter<float>::read(L, ++ptr);
     c.pitch = Converter<float>::read(L, ++ptr);
     return 0;
@@ -760,12 +777,13 @@ int _SetCamera3DComponent(lua_State* L) {
 int _AddCamera3DComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<Camera3DComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<Camera3DComponent>(e));
     Camera3DComponent c;
     c.fov = Converter<float>::read(L, ++ptr);
     c.pitch = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<Camera3DComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<Camera3DComponent>(e, c); });
     return 0;
 }
 
@@ -773,9 +791,9 @@ int _AddCamera3DComponent(lua_State* L) {
 
 int _GetPathComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<PathComponent>());
-    const auto& c = e.get<PathComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<PathComponent>(e);
     Converter<float>::push(L, c.speed);
     return 1;
 }
@@ -783,8 +801,9 @@ int _GetPathComponent(lua_State* L) {
 int _SetPathComponent(lua_State* L) {
     if (!check_arg_count(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<PathComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<PathComponent>(e);
     c.speed = Converter<float>::read(L, ++ptr);
     return 0;
 }
@@ -792,11 +811,12 @@ int _SetPathComponent(lua_State* L) {
 int _AddPathComponent(lua_State* L) {
     if (!check_arg_count(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<PathComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<PathComponent>(e));
     PathComponent c;
     c.speed = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<PathComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<PathComponent>(e, c); });
     return 0;
 }
 
@@ -804,9 +824,9 @@ int _AddPathComponent(lua_State* L) {
 
 int _GetLightComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<LightComponent>());
-    const auto& c = e.get<LightComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<LightComponent>(e);
     Converter<glm::vec3>::push(L, c.colour);
     Converter<float>::push(L, c.brightness);
     return 2;
@@ -815,8 +835,9 @@ int _GetLightComponent(lua_State* L) {
 int _SetLightComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<LightComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<LightComponent>(e);
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
     return 0;
@@ -825,12 +846,13 @@ int _SetLightComponent(lua_State* L) {
 int _AddLightComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<LightComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<LightComponent>(e));
     LightComponent c;
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<LightComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<LightComponent>(e, c); });
     return 0;
 }
 
@@ -838,9 +860,9 @@ int _AddLightComponent(lua_State* L) {
 
 int _GetSunComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<SunComponent>());
-    const auto& c = e.get<SunComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<SunComponent>(e);
     Converter<glm::vec3>::push(L, c.colour);
     Converter<float>::push(L, c.brightness);
     Converter<glm::vec3>::push(L, c.direction);
@@ -851,8 +873,9 @@ int _GetSunComponent(lua_State* L) {
 int _SetSunComponent(lua_State* L) {
     if (!check_arg_count(L, 4 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<SunComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<SunComponent>(e);
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
     c.direction = Converter<glm::vec3>::read(L, ++ptr);
@@ -863,14 +886,15 @@ int _SetSunComponent(lua_State* L) {
 int _AddSunComponent(lua_State* L) {
     if (!check_arg_count(L, 4 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<SunComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<SunComponent>(e));
     SunComponent c;
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
     c.direction = Converter<glm::vec3>::read(L, ++ptr);
     c.shadows = Converter<bool>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<SunComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<SunComponent>(e, c); });
     return 0;
 }
 
@@ -878,9 +902,9 @@ int _AddSunComponent(lua_State* L) {
 
 int _GetAmbienceComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<AmbienceComponent>());
-    const auto& c = e.get<AmbienceComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<AmbienceComponent>(e);
     Converter<glm::vec3>::push(L, c.colour);
     Converter<float>::push(L, c.brightness);
     return 2;
@@ -889,8 +913,9 @@ int _GetAmbienceComponent(lua_State* L) {
 int _SetAmbienceComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<AmbienceComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<AmbienceComponent>(e);
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
     return 0;
@@ -899,12 +924,13 @@ int _SetAmbienceComponent(lua_State* L) {
 int _AddAmbienceComponent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<AmbienceComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<AmbienceComponent>(e));
     AmbienceComponent c;
     c.colour = Converter<glm::vec3>::read(L, ++ptr);
     c.brightness = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<AmbienceComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<AmbienceComponent>(e, c); });
     return 0;
 }
 
@@ -912,9 +938,9 @@ int _AddAmbienceComponent(lua_State* L) {
 
 int _GetParticleComponent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<ParticleComponent>());
-    const auto& c = e.get<ParticleComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<ParticleComponent>(e);
     Converter<float>::push(L, c.interval);
     Converter<glm::vec3>::push(L, c.velocity);
     Converter<float>::push(L, c.velocityNoise);
@@ -927,8 +953,9 @@ int _GetParticleComponent(lua_State* L) {
 int _SetParticleComponent(lua_State* L) {
     if (!check_arg_count(L, 6 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<ParticleComponent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<ParticleComponent>(e);
     c.interval = Converter<float>::read(L, ++ptr);
     c.velocity = Converter<glm::vec3>::read(L, ++ptr);
     c.velocityNoise = Converter<float>::read(L, ++ptr);
@@ -941,8 +968,9 @@ int _SetParticleComponent(lua_State* L) {
 int _AddParticleComponent(lua_State* L) {
     if (!check_arg_count(L, 6 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<ParticleComponent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<ParticleComponent>(e));
     ParticleComponent c;
     c.interval = Converter<float>::read(L, ++ptr);
     c.velocity = Converter<glm::vec3>::read(L, ++ptr);
@@ -950,7 +978,7 @@ int _AddParticleComponent(lua_State* L) {
     c.acceleration = Converter<glm::vec3>::read(L, ++ptr);
     c.scale = Converter<glm::vec3>::read(L, ++ptr);
     c.life = Converter<float>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<ParticleComponent>(c); });
+    add_command(L, [&, e, c]() { reg.add<ParticleComponent>(e, c); });
     return 0;
 }
 
@@ -958,9 +986,9 @@ int _AddParticleComponent(lua_State* L) {
 
 int _GetCollisionEvent(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    spkt::handle e = Converter<spkt::handle>::read(L, 1);
-    assert(e.has<CollisionEvent>());
-    const auto& c = e.get<CollisionEvent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, 1);
+    const auto& c = reg.get<CollisionEvent>(e);
     Converter<spkt::entity>::push(L, c.entity_a);
     Converter<spkt::entity>::push(L, c.entity_b);
     return 2;
@@ -969,8 +997,9 @@ int _GetCollisionEvent(lua_State* L) {
 int _SetCollisionEvent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    auto& c = e.get<CollisionEvent>();
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    auto& c = reg.get<CollisionEvent>(e);
     c.entity_a = Converter<spkt::entity>::read(L, ++ptr);
     c.entity_b = Converter<spkt::entity>::read(L, ++ptr);
     return 0;
@@ -979,12 +1008,13 @@ int _SetCollisionEvent(lua_State* L) {
 int _AddCollisionEvent(lua_State* L) {
     if (!check_arg_count(L, 2 + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
-    spkt::handle e = Converter<spkt::handle>::read(L, ++ptr);
-    assert(!e.has<CollisionEvent>());
+    auto& reg = *get_pointer<spkt::registry>(L, "__registry__");
+    auto e = Converter<spkt::entity>::read(L, ++ptr);
+    assert(!reg.has<CollisionEvent>(e));
     CollisionEvent c;
     c.entity_a = Converter<spkt::entity>::read(L, ++ptr);
     c.entity_b = Converter<spkt::entity>::read(L, ++ptr);
-    add_command(L, [e, c]() mutable { e.add<CollisionEvent>(c); });
+    add_command(L, [&, e, c]() { reg.add<CollisionEvent>(e, c); });
     return 0;
 }
 

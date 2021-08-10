@@ -24,7 +24,7 @@ void script_system(spkt::registry& registry, double dt)
 {
     std::vector<std::function<void()>> commands;
 
-    for (spkt::entity entity : registry.view<ScriptComponent>()) {
+    for (auto entity : registry.view<ScriptComponent>()) {
         auto& sc = registry.get<ScriptComponent>(entity);
         if (!sc.active) { continue; }
 
@@ -33,18 +33,19 @@ void script_system(spkt::registry& registry, double dt)
             lua::Script& script = *sc.script_runtime;
             lua::load_vec3_functions(script);
             lua::load_vec2_functions(script);
+            lua::load_entity_functions(script);
             lua::load_registry_functions(script, registry);
             lua::load_entity_transformation_functions(script);
             lua::load_entity_component_functions(script);
             if (script.has_function(INIT_FUNCTION)) {
                 script.set_value("__command_list__", &commands);
-                script.call_function<void>(INIT_FUNCTION, spkt::handle{registry, entity});
+                script.call_function<void>(INIT_FUNCTION, entity);
             }
         }
         else {
             lua::Script& script = *sc.script_runtime;
             script.set_value("__command_list__", &commands);
-            script.call_function<void>(UPDATE_FUNCTION, spkt::handle{registry, entity}, dt);
+            script.call_function<void>(UPDATE_FUNCTION, entity, dt);
         }
     }
 
@@ -55,8 +56,7 @@ void script_system(spkt::registry& registry, double dt)
 
 void animation_system(spkt::registry& registry, double dt)
 {
-    for (auto entity : registry.view<AnimatedModelComponent>()) {
-        auto& ac = registry.get<AnimatedModelComponent>(entity);
+    for (auto [ac] : registry.view_get<AnimatedModelComponent>()) {
         ac.animation_time += (float)dt * ac.animation_speed;
     }
 }
@@ -66,18 +66,15 @@ void camera_system(spkt::registry& registry, double dt)
     const auto& input = get_singleton<InputSingleton>(registry);
     float aspect_ratio = input.window_width / input.window_height;
 
-    for (auto entity : registry.view<Camera3DComponent>()) {
-        auto& cam = registry.get<Camera3DComponent>(entity);
+    for (auto [cam] : registry.view_get<Camera3DComponent>()) {
         cam.projection = glm::perspective(cam.fov, aspect_ratio, 0.1f, 1000.0f);
     }
 }
 
 void path_follower_system(spkt::registry& registry, double dt)
 {
-    for (auto entity : registry.view<PathComponent>()) {
-        auto& transform = registry.get<Transform3DComponent>(entity);
-        auto& path = registry.get<PathComponent>(entity);
-        if (path.markers.empty()) { return; }
+    for (auto [path, transform] : registry.view_get<PathComponent, Transform3DComponent>()) {
+        if (path.markers.empty()) { continue; }
         
         glm::vec3 to_dest = path.markers.front() - transform.position;
         glm::vec3 direction = glm::normalize(to_dest);
@@ -94,7 +91,7 @@ void path_follower_system(spkt::registry& registry, double dt)
 
 void delete_below_50_system(spkt::registry& registry, double)
 {
-    registry.erase_if<Transform3DComponent>([&](spkt::entity entity) {
+    registry.destroy_if<Transform3DComponent>([&](spkt::entity entity) {
         const auto& t = registry.get<Transform3DComponent>(entity);
         return t.position.y < -50.0f;
     });
@@ -102,7 +99,7 @@ void delete_below_50_system(spkt::registry& registry, double)
 
 void clear_events_system(spkt::registry& registry, double dt)
 {
-    registry.erase_if<Event>([](spkt::entity) { return true; });
+    registry.destroy_if<Event>([](spkt::entity) { return true; });
 }
 
 }

@@ -96,28 +96,16 @@ void* Converter<void*>::read(lua_State* L, int index)
     return lua_touserdata(L, index);
 }
 
-void Converter<spkt::handle>::push(lua_State* L, const spkt::handle& value)
-{
-    spkt::handle* handle = static_cast<spkt::handle*>(lua_newuserdata(L, sizeof(spkt::handle)));
-    *handle = value;
-}
-
-spkt::handle Converter<spkt::handle>::read(lua_State* L, int index)
-{
-    assert(lua_isuserdata(L, index));
-    return *static_cast<spkt::handle*>(lua_touserdata(L, index));
-}
-
 void Converter<spkt::entity>::push(lua_State* L, const spkt::entity& value)
 {
-    spkt::entity* handle = static_cast<spkt::entity*>(lua_newuserdata(L, sizeof(spkt::entity)));
+    spkt::entity* handle = (spkt::entity*)lua_newuserdata(L, sizeof(spkt::entity));
     *handle = value;
+    luaL_setmetatable(L, "entity_id");
 }
 
 spkt::entity Converter<spkt::entity>::read(lua_State* L, int index)
 {
-    assert(lua_isuserdata(L, index));
-    return *static_cast<spkt::entity*>(lua_touserdata(L, index));
+    return *(spkt::entity*)luaL_checkudata(L, index, "entity_id");
 }
 
 void Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)

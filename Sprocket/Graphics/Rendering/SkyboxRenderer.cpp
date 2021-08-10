@@ -34,11 +34,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera)
 {
-    Draw(
-        skybox,
-        spkt::make_proj(registry, camera),
-        spkt::make_view(registry, camera)
-    );
+    Draw(skybox, spkt::make_proj(registry, camera), spkt::make_view(registry, camera));
 }
 
 }

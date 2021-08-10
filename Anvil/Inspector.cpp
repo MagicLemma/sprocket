@@ -96,7 +96,7 @@ void Inspector::Show(Anvil& editor)
 
     if (registry.has<spkt::StaticModelComponent>(entity)) {
         auto& c = registry.get<spkt::StaticModelComponent>(entity);
-        if (ImGui::CollapsingHeader("Model")) {
+        if (ImGui::CollapsingHeader("Static Model")) {
             ImGui::PushID(count++);
             spkt::ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
             spkt::ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
@@ -108,7 +108,7 @@ void Inspector::Show(Anvil& editor)
 
     if (registry.has<spkt::AnimatedModelComponent>(entity)) {
         auto& c = registry.get<spkt::AnimatedModelComponent>(entity);
-        if (ImGui::CollapsingHeader("Model")) {
+        if (ImGui::CollapsingHeader("Animated Model")) {
             ImGui::PushID(count++);
             spkt::ImGuiXtra::File("Mesh", editor.window(), &c.mesh, "*.obj");
             spkt::ImGuiXtra::File("Material", editor.window(), &c.material, "*.yaml");
@@ -403,11 +403,11 @@ void Inspector::Show(Anvil& editor)
             spkt::Transform3DComponent c;
             registry.add<spkt::Transform3DComponent>(entity, c);
         }
-        if (!registry.has<spkt::StaticModelComponent>(entity) && ImGui::Selectable("Model")) {
+        if (!registry.has<spkt::StaticModelComponent>(entity) && ImGui::Selectable("Static Model")) {
             spkt::StaticModelComponent c;
             registry.add<spkt::StaticModelComponent>(entity, c);
         }
-        if (!registry.has<spkt::AnimatedModelComponent>(entity) && ImGui::Selectable("Model")) {
+        if (!registry.has<spkt::AnimatedModelComponent>(entity) && ImGui::Selectable("Animated Model")) {
             spkt::AnimatedModelComponent c;
             registry.add<spkt::AnimatedModelComponent>(entity, c);
         }
@@ -485,6 +485,8 @@ void Inspector::Show(Anvil& editor)
         }
         ImGui::EndMenu();
     }
+    ImGui::Separator();
+
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
         spkt::entity copy = spkt::copy_entity(editor.active_scene()->registry, entity);

@@ -5,9 +5,9 @@ end
 function on_update(entity, dt)
     for event in view_CollisionEvent() do
         local collision = GetCollisionEvent(event)
-        local a = entity_from_id(collision.entity_a)
-        local b = entity_from_id(collision.entity_b)
-        if AreEntitiesEqual(entity, a) or AreEntitiesEqual(entity, b) then
+        local a = collision.entity_a
+        local b = collision.entity_b
+        if entity == a or entity == b then
             toggle_light(entity)
         end
     end

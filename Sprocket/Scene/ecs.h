@@ -252,6 +252,4 @@ using registry = apx::registry<
     ParticleSingleton
 >;
 
-using handle = typename registry::handle_type;
-
 }

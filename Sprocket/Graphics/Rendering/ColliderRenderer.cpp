@@ -29,26 +29,22 @@ void ColliderRenderer::Draw(
     d_shader.load("u_view_matrix", view);
     
     static auto s_cube = static_mesh::from_file("Resources/Models/Cube.obj");
-    for (auto entity : registry.view<BoxCollider3DComponent>()) {
-        const auto& c = registry.get<BoxCollider3DComponent>(entity);
-        auto tr = registry.get<Transform3DComponent>(entity);
-        glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-        transform *= Maths::Transform(c.position, c.orientation);
-        transform = glm::scale(transform, c.halfExtents);
-        if (c.applyScale) {
-            transform = glm::scale(transform, tr.scale);
+    for (auto [bc, tc] : registry.view_get<BoxCollider3DComponent, Transform3DComponent>()) {
+        glm::mat4 transform = Maths::Transform(tc.position, tc.orientation);
+        transform *= Maths::Transform(bc.position, bc.orientation);
+        transform = glm::scale(transform, bc.halfExtents);
+        if (bc.applyScale) {
+            transform = glm::scale(transform, tc.scale);
         }
         d_shader.load("u_model_matrix", transform);
         spkt::draw(s_cube.get());
     }
 
     static auto s_sphere = static_mesh::from_file("Resources/Models/LowPolySphere.obj");
-    for (auto entity : registry.view<SphereCollider3DComponent>()) {
-        const auto& c = registry.get<SphereCollider3DComponent>(entity);
-        auto tr = registry.get<Transform3DComponent>(entity);
+    for (auto [sc, tr] : registry.view_get<SphereCollider3DComponent, Transform3DComponent>()) {
         glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-        transform *= Maths::Transform(c.position, c.orientation);
-        transform = glm::scale(transform, {c.radius, c.radius, c.radius});
+        transform *= Maths::Transform(sc.position, sc.orientation);
+        transform = glm::scale(transform, {sc.radius, sc.radius, sc.radius});
         d_shader.load("u_model_matrix", transform);
         spkt::draw(s_sphere.get());
     }
@@ -56,35 +52,31 @@ void ColliderRenderer::Draw(
     static auto s_hemisphere = static_mesh::from_file("Resources/Models/Hemisphere.obj");
     static auto s_cylinder = static_mesh::from_file("Resources/Models/Cylinder.obj");
 
-    for (auto entity : registry.view<CapsuleCollider3DComponent>()) {
-        const auto& c = registry.get<CapsuleCollider3DComponent>(entity);
+    for (auto [cc, tc] : registry.view_get<CapsuleCollider3DComponent, Transform3DComponent>()) {
 
         {  // Top Hemisphere
-            auto tr = registry.get<Transform3DComponent>(entity);
-            glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-            transform *= Maths::Transform(c.position, c.orientation);
-            transform = glm::translate(transform, {0.0, c.height/2, 0.0});
-            transform = glm::scale(transform, {c.radius, c.radius, c.radius});
+            glm::mat4 transform = Maths::Transform(tc.position, tc.orientation);
+            transform *= Maths::Transform(cc.position, cc.orientation);
+            transform = glm::translate(transform, {0.0, cc.height/2, 0.0});
+            transform = glm::scale(transform, {cc.radius, cc.radius, cc.radius});
             d_shader.load("u_model_matrix", transform);
             spkt::draw(s_hemisphere.get());
         }
 
         {  // Middle Cylinder
-            auto tr = registry.get<Transform3DComponent>(entity);
-            glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-            transform *= Maths::Transform(c.position, c.orientation);
-            transform = glm::scale(transform, {c.radius, c.height, c.radius});
+            glm::mat4 transform = Maths::Transform(tc.position, tc.orientation);
+            transform *= Maths::Transform(cc.position, cc.orientation);
+            transform = glm::scale(transform, {cc.radius, cc.height, cc.radius});
             d_shader.load("u_model_matrix", transform);
             spkt::draw(s_cylinder.get());
         }
 
         {  // Bottom Hemisphere
-            auto tr = registry.get<Transform3DComponent>(entity);
-            glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-            transform *= Maths::Transform(c.position, c.orientation);
-            transform = glm::translate(transform, {0.0, -c.height/2, 0.0});
+            glm::mat4 transform = Maths::Transform(tc.position, tc.orientation);
+            transform *= Maths::Transform(cc.position, cc.orientation);
+            transform = glm::translate(transform, {0.0, -cc.height/2, 0.0});
             transform = glm::rotate(transform, glm::pi<float>(), {1, 0, 0});
-            transform = glm::scale(transform, {c.radius, c.radius, c.radius});
+            transform = glm::scale(transform, {cc.radius, cc.radius, cc.radius});
             d_shader.load("u_model_matrix", transform);
             spkt::draw(s_hemisphere.get());
         }

@@ -7,6 +7,7 @@
 #include <Sprocket/Scene/camera.h>
 #include <Sprocket/Utility/Hashing.h>
 #include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/views.h>
 
 #include <algorithm>
 #include <array>
@@ -19,8 +20,8 @@
 namespace spkt {
 namespace {
 
-std::array<glm::mat4, Scene3DRenderer::MAX_BONES> DefaultBoneTransforms() {
-    std::array<glm::mat4, Scene3DRenderer::MAX_BONES> arr;
+std::array<glm::mat4, MAX_BONES> DefaultBoneTransforms() {
+    std::array<glm::mat4, MAX_BONES> arr;
     std::ranges::fill(arr, glm::mat4(1.0));
     return arr;
 };
@@ -53,21 +54,20 @@ void upload_uniforms(
     }
     
     // Load point lights to shader
-    std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> positions = {};
-    std::array<glm::vec3, Scene3DRenderer::MAX_NUM_LIGHTS> colours = {};
-    std::array<float, Scene3DRenderer::MAX_NUM_LIGHTS> brightnesses = {};
-    std::size_t i = 0;
-    for (auto entity : registry.view<LightComponent, Transform3DComponent>()) {
-        if (i == Scene3DRenderer::MAX_NUM_LIGHTS) { break; }
+    std::array<glm::vec3, MAX_NUM_LIGHTS> positions = {};
+    std::array<glm::vec3, MAX_NUM_LIGHTS> colours = {};
+    std::array<float, MAX_NUM_LIGHTS> brightnesses = {};
 
-        auto position = registry.get<Transform3DComponent>(entity).position;
-        auto light = registry.get<LightComponent>(entity);
-        
-        positions[i] = position;
-        colours[i] = light.colour;
-        brightnesses[i] = light.brightness;
-        ++i;
+    for (auto [index, data] : registry.view_get<LightComponent, Transform3DComponent>()
+                            | std::views::take(MAX_NUM_LIGHTS)
+                            | spkt::views::enumerate())
+    {
+        auto [light, transform] = data;
+        positions[index] = transform.position;
+        colours[index] = light.colour;
+        brightnesses[index] = light.brightness;
     }
+
     shader.load("u_light_pos", positions);
     shader.load("u_light_colour", colours);
     shader.load("u_light_brightness", brightnesses);
@@ -79,10 +79,10 @@ void UploadMaterial(
     AssetManager* assetManager
 )
 {
-    assetManager->GetTexture(material->albedoMap)->Bind(Scene3DRenderer::ALBEDO_SLOT);
-    assetManager->GetTexture(material->normalMap)->Bind(Scene3DRenderer::NORMAL_SLOT);
-    assetManager->GetTexture(material->metallicMap)->Bind(Scene3DRenderer::METALLIC_SLOT);
-    assetManager->GetTexture(material->roughnessMap)->Bind(Scene3DRenderer::ROUGHNESS_SLOT);
+    assetManager->GetTexture(material->albedoMap)->Bind(ALBEDO_SLOT);
+    assetManager->GetTexture(material->normalMap)->Bind(NORMAL_SLOT);
+    assetManager->GetTexture(material->metallicMap)->Bind(METALLIC_SLOT);
+    assetManager->GetTexture(material->roughnessMap)->Bind(ROUGHNESS_SLOT);
 
     shader.load("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
     shader.load("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
@@ -141,9 +141,7 @@ void Scene3DRenderer::Draw(
     > commands;
 
     d_staticShader.bind();
-    for (auto entity : registry.view<StaticModelComponent, Transform3DComponent>()) {
-        const auto& tc = registry.get<Transform3DComponent>(entity);
-        const auto& mc = registry.get<StaticModelComponent>(entity);
+    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
         commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
     }
 
@@ -157,8 +155,7 @@ void Scene3DRenderer::Draw(
     }
 
     // If the scene has a ParticleSingleton, then render the particles that it contains.
-    for (auto entity : registry.view<ParticleSingleton>()) {
-        const auto& ps = registry.get<ParticleSingleton>(entity);
+    for (auto [ps] : registry.view_get<ParticleSingleton>()) {
         std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
         for (const auto& particle : *ps.particles) {
             if (particle.life > 0.0) {
@@ -172,11 +169,8 @@ void Scene3DRenderer::Draw(
     }
 
     d_animatedShader.bind();
-    for (auto entity : registry.view<AnimatedModelComponent, Transform3DComponent>()) {
-        const auto& tc = registry.get<Transform3DComponent>(entity);
-        const auto& mc = registry.get<AnimatedModelComponent>(entity);
+    for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
         auto mesh = d_assetManager->get_animated_mesh(mc.mesh);
-
         auto material = d_assetManager->GetMaterial(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
 

@@ -52,10 +52,7 @@ void particle_system(spkt::registry& registry, double dt)
 
     // Go through all particle emitter entities and check to see if they need to emit
     // any particles this frame. If they do, add them to the particle array.
-    for (auto entity : registry.view<ParticleComponent>()) {
-        auto& tc = registry.get<Transform3DComponent>(entity);
-        auto& pc = registry.get<ParticleComponent>(entity);
-
+    for (auto [pc, tc] : registry.view_get<ParticleComponent, Transform3DComponent>()) {
         pc.accumulator += (float)dt;
         while (pc.accumulator > pc.interval) {
             // Add a particle to the particle array

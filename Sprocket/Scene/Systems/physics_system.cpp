@@ -268,7 +268,7 @@ void physics_system(spkt::registry& registry, double dt)
     auto& runtime = *ps.physics_runtime;
 
     // Pre Update
-    for (spkt::entity entity : registry.view<RigidBody3DComponent>()) {
+    for (auto entity : registry.view<RigidBody3DComponent>()) {
         const auto& tc = registry.get<Transform3DComponent>(entity);
         auto& physics = registry.get<RigidBody3DComponent>(entity);
 
@@ -337,9 +337,7 @@ void physics_system(spkt::registry& registry, double dt)
     }
 
     // Post Update
-    for (auto entity : registry.view<RigidBody3DComponent>()) {
-        auto& tc = registry.get<Transform3DComponent>(entity);
-        auto& rc = registry.get<RigidBody3DComponent>(entity);
+    for (auto [rc, tc] : registry.view_get<RigidBody3DComponent, Transform3DComponent>()) {
         const rp3d::RigidBody* body = rc.runtime->body;
 
         tc.position = convert(body->getTransform().getPosition());
