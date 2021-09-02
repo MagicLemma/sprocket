@@ -1,4 +1,4 @@
-#include "FrameBuffer.h"
+#include "frame_buffer.h"
 
 #include <Sprocket/Graphics/Texture.h>
 #include <Sprocket/Utility/Log.h>

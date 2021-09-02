@@ -30,11 +30,11 @@ public:
 
     void bind();
     void unbind();
+    
+    void resize(int width, int height);
 
     const Texture& colour_texture() const { return *d_colour; }
     const Texture& depth_texture() const { return *d_depth; }
-
-    void resize(int width, int height);
     
     int width() const { return d_width; }
     int height() const { return d_height; }

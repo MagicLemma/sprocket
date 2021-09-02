@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Graphics/FrameBuffer.h>
+#include <Sprocket/Graphics/frame_buffer.h>
 #include <Sprocket/Graphics/mesh.h>
 #include <Sprocket/Graphics/shader.h>
 
