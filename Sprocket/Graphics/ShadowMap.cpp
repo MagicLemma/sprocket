@@ -56,7 +56,7 @@ glm::mat4 ShadowMap::GetLightProjViewMatrix() const
     return d_lightProjMatrix * d_lightViewMatrix;
 }
 
-Texture* ShadowMap::GetShadowMap() const
+const Texture& ShadowMap::GetShadowMap() const
 {
     return d_shadowMap.depth_texture();
 }

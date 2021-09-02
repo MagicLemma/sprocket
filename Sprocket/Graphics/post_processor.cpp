@@ -62,7 +62,7 @@ void post_processor::end_frame()
         effect->load("target_height", d_target->height());
 
         std::swap(d_target, d_source); // Previous render becomes the source
-        d_source->colour_texture()->Bind(0);
+        d_source->colour_texture().Bind(0);
         d_target->bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     }
@@ -72,7 +72,7 @@ void post_processor::end_frame()
     d_effects.back()->load("target_width", d_target->width());
     d_effects.back()->load("target_height", d_target->height());
     
-    d_target->colour_texture()->Bind(0);
+    d_target->colour_texture().Bind(0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }

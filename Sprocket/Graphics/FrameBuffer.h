@@ -31,8 +31,8 @@ public:
     void bind();
     void unbind();
 
-    Texture* colour_texture() const { return d_colour.get(); }
-    Texture* depth_texture() const { return d_depth.get(); }
+    const Texture& colour_texture() const { return *d_colour; }
+    const Texture& depth_texture() const { return *d_depth; }
 
     void resize(int width, int height);
     
