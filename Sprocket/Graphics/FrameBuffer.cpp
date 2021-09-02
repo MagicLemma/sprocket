@@ -9,22 +9,22 @@
 
 namespace spkt {
 
-FrameBuffer::FrameBuffer(int width, int height)
+frame_buffer::frame_buffer(int width, int height)
     : d_colour(std::make_unique<Texture>(width, height, Texture::Channels::RGBA))
     , d_depth(std::make_unique<Texture>(width, height, Texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
     , d_fbo(0)
 {
-    SetScreenSize(width, height);
+    resize(width, height);
 }
 
-FrameBuffer::~FrameBuffer()
+frame_buffer::~frame_buffer()
 {
     glDeleteFramebuffers(1, &d_fbo);
 }
 
-void FrameBuffer::Bind()
+void frame_buffer::bind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, d_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -33,23 +33,13 @@ void FrameBuffer::Bind()
     d_viewport.Set(0, 0, d_width, d_height);
 }
 
-void FrameBuffer::Unbind()
+void frame_buffer::unbind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     d_viewport.Restore();
 }
 
-void FrameBuffer::BindTexture() const
-{
-    glBindTexture(GL_TEXTURE_2D, d_colour->Id());
-}
-
-void FrameBuffer::UnbindTexture() const
-{
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void FrameBuffer::SetScreenSize(int width, int height)
+void frame_buffer::resize(int width, int height)
 {
     if (d_fbo) { // When called from constructor, nothing to delete, and no need to resize
         if (width == d_width && height == d_height) {

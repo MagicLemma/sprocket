@@ -30,7 +30,7 @@ class Anvil
     spkt::SkyboxRenderer d_skybox_renderer;
     spkt::ColliderRenderer d_collider_renderer;
 
-    spkt::FrameBuffer d_viewport;
+    spkt::frame_buffer d_viewport;
     glm::ivec2 d_viewport_size;
 
     spkt::DevUI d_ui;

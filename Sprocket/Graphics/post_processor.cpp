@@ -1,6 +1,7 @@
 #include "post_processor.h"
 
 #include <Sprocket/Graphics/mesh.h>
+#include <Sprocket/Graphics/Texture.h>
 
 #include <glad/glad.h>
 
@@ -32,8 +33,8 @@ static_mesh_data quad_mesh_data()
 
 post_processor::post_processor(int width, int height)
     : d_quad(std::make_unique<static_mesh>(quad_mesh_data()))
-    , d_target(std::make_unique<FrameBuffer>(width, height))
-    , d_source(std::make_unique<FrameBuffer>(width, height))
+    , d_target(std::make_unique<frame_buffer>(width, height))
+    , d_source(std::make_unique<frame_buffer>(width, height))
     , d_effects()
 {}
 
@@ -46,7 +47,7 @@ void post_processor::add_effect(
 
 void post_processor::start_frame()
 {
-    d_target->Bind();
+    d_target->bind();
 }
 
 void post_processor::end_frame()
@@ -57,29 +58,29 @@ void post_processor::end_frame()
     // Apply all effects except for the last.
     for (auto& effect : d_effects | ignore_last(1)) {
         effect->bind();
-        effect->load("target_width", d_target->Width());
-        effect->load("target_height", d_target->Height());
+        effect->load("target_width", d_target->width());
+        effect->load("target_height", d_target->height());
 
         std::swap(d_target, d_source); // Previous render becomes the source
-        d_source->BindTexture();
-        d_target->Bind();
+        d_source->colour_texture()->Bind(0);
+        d_target->bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     }
 
     // Finally, apply the last effect to render to the screen
     d_effects.back()->bind();
-    d_effects.back()->load("target_width", d_target->Width());
-    d_effects.back()->load("target_height", d_target->Height());
+    d_effects.back()->load("target_width", d_target->width());
+    d_effects.back()->load("target_height", d_target->height());
     
-    d_target->BindTexture();
+    d_target->colour_texture()->Bind(0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 void post_processor::set_screen_size(int width, int height)
 {
-    d_target->SetScreenSize(width, height);
-    d_source->SetScreenSize(width, height);
+    d_target->resize(width, height);
+    d_source->resize(width, height);
 }
     
 }

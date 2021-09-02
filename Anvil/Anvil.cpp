@@ -136,11 +136,11 @@ void Anvil::on_render()
 
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
-    if (d_viewport_size != d_viewport.Size() && d_viewport_size.x > 0 && d_viewport_size.y > 0) {
-        d_viewport.SetScreenSize(d_viewport_size.x, d_viewport_size.y);
+    if (d_viewport_size != d_viewport.size() && d_viewport_size.x > 0 && d_viewport_size.y > 0) {
+        d_viewport.resize(d_viewport_size.x, d_viewport_size.y);
     }
 
-    d_viewport.Bind();
+    d_viewport.bind();
 
     glm::mat4 proj = get_proj_matrix();
     glm::mat4 view = get_view_matrix();
@@ -151,7 +151,7 @@ void Anvil::on_render()
         d_collider_renderer.Draw(registry, proj, view);
     }
 
-    d_viewport.Unbind();
+    d_viewport.unbind();
 
 
     d_ui.StartFrame();
@@ -233,7 +233,7 @@ void Anvil::on_render()
 
         //auto viewportMouse = ImGuiXtra::GetMousePosWindowCoords();
 
-        spkt::ImGuiXtra::Image(d_viewport.GetTexture());
+        spkt::ImGuiXtra::Image(d_viewport.colour_texture());
 
         if (!is_game_running() && registry.valid(d_selected) && registry.has<spkt::Transform3DComponent>(d_selected)) {
             auto& c = registry.get<spkt::Transform3DComponent>(d_selected);

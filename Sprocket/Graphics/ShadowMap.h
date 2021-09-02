@@ -24,7 +24,7 @@ class ShadowMap
     glm::mat4 d_lightViewMatrix;
     glm::mat4 d_lightProjMatrix;
 
-    FrameBuffer d_shadowMap;
+    frame_buffer d_shadowMap;
 
     spkt::vertex_buffer<spkt::model_instance> d_instance_buffer;
 

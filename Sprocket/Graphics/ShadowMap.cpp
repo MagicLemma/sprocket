@@ -34,7 +34,7 @@ void ShadowMap::Draw(
     d_shader.load("u_proj_matrix", d_lightProjMatrix);
     d_shader.load("u_view_matrix", d_lightViewMatrix);
 
-    d_shadowMap.Bind();
+    d_shadowMap.bind();
     glClear(GL_DEPTH_BUFFER_BIT);
 
     std::unordered_map<std::string, std::vector<model_instance>> commands;
@@ -47,7 +47,7 @@ void ShadowMap::Draw(
         spkt::draw(d_assetManager->get_static_mesh(key), &d_instance_buffer);
     }
 
-    d_shadowMap.Unbind();
+    d_shadowMap.unbind();
     d_shader.unbind();
 }
 
@@ -58,7 +58,7 @@ glm::mat4 ShadowMap::GetLightProjViewMatrix() const
 
 Texture* ShadowMap::GetShadowMap() const
 {
-    return d_shadowMap.GetDepth();
+    return d_shadowMap.depth_texture();
 }
 
 }
