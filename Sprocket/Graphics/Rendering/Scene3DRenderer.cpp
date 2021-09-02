@@ -119,7 +119,7 @@ void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    shadowMap.GetShadowMap()->Bind(SHADOW_MAP_SLOT);
+    shadowMap.GetShadowMap().Bind(SHADOW_MAP_SLOT);
 }
 
 void Scene3DRenderer::Draw(

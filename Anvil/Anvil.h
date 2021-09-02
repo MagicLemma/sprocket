@@ -6,7 +6,7 @@
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/CubeMap.h>
-#include <Sprocket/Graphics/FrameBuffer.h>
+#include <Sprocket/Graphics/frame_buffer.h>
 #include <Sprocket/Graphics/Rendering/ColliderRenderer.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
@@ -30,7 +30,7 @@ class Anvil
     spkt::SkyboxRenderer d_skybox_renderer;
     spkt::ColliderRenderer d_collider_renderer;
 
-    spkt::FrameBuffer d_viewport;
+    spkt::frame_buffer d_viewport;
     glm::ivec2 d_viewport_size;
 
     spkt::DevUI d_ui;

@@ -233,7 +233,7 @@ void Anvil::on_render()
 
         //auto viewportMouse = ImGuiXtra::GetMousePosWindowCoords();
 
-        spkt::ImGuiXtra::Image(d_viewport.GetTexture());
+        spkt::ImGuiXtra::Image(d_viewport.GetColour());
 
         if (!is_game_running() && registry.valid(d_selected) && registry.has<spkt::Transform3DComponent>(d_selected)) {
             auto& c = registry.get<spkt::Transform3DComponent>(d_selected);
