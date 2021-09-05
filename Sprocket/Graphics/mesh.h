@@ -33,6 +33,10 @@ struct animated_mesh_data
 
 class static_mesh
 {
+public:
+    using data_type = static_mesh_data;
+
+private:
     spkt::vertex_buffer<spkt::static_vertex> d_vertices;
     spkt::index_buffer<std::uint32_t>        d_indices;
 
@@ -53,6 +57,10 @@ using static_mesh_ptr = std::unique_ptr<static_mesh>;
 
 class animated_mesh
 {
+public:
+    using data_type = animated_mesh_data;
+
+private:
     spkt::vertex_buffer<spkt::animated_vertex> d_vertices;
     spkt::index_buffer<std::uint32_t>          d_indices;
     spkt::Skeleton                             d_skeleton;

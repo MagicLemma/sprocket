@@ -25,6 +25,10 @@ enum class texture_channels
 
 class texture
 {
+public:
+    using data_type = texture_data;
+
+private:
     std::uint32_t d_id;
 
     int d_width;
