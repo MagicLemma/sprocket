@@ -134,8 +134,15 @@ std::unique_ptr<texture> SetFont(std::string_view font, float size)
     io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
     unsigned char* data;
     int width, height;
+    const int bpp = 4;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-    auto texture = std::make_unique<spkt::texture>(width, height, data);
+    std::span<unsigned char> span_data{data, (std::size_t)(width * height * 4)};
+    auto texture = std::make_unique<spkt::texture>(spkt::texture_data{
+        .width = width,
+        .height = height,
+        .bpp = bpp,
+        .bytes = {span_data.begin(), span_data.end()}
+    });
     io.Fonts->TexID = reinterpret_cast<void*>(texture->id());
     return texture;
 }

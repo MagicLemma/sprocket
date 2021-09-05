@@ -41,18 +41,6 @@ texture::texture(const texture_data& data)
     glTextureSubImage2D(d_id, 0, 0, 0, d_width, d_height, GL_RGBA, GL_UNSIGNED_BYTE, data.bytes.data());
 }
 
-texture::texture(int width, int height, const unsigned char* data)
-    : d_id(0)
-    , d_width(width)
-    , d_height(height)
-    , d_channels(spkt::texture_channels::RGBA)
-{
-    glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
-    SetTextureParameters(d_id);
-    glTextureStorage2D(d_id, 1, GL_RGBA8, width, height);
-    glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-}
-
 texture::texture(int width, int height, texture_channels channels)
     : d_width(width)
     , d_height(height)
