@@ -20,11 +20,13 @@ void SetTextureParameters(std::uint32_t id)
 
 }
 
-texture_data::texture_data(const std::string& file)
+texture_data texture_data::load(const std::string& file)
 {
-    unsigned char* d = stbi_load(file.c_str(), &width, &height, &bpp, 4);
-    std::span<unsigned char> span_data{d, (std::size_t)(width * height * 4)};
-    data = {span_data.begin(), span_data.end()};
+    texture_data td;
+    unsigned char* d = stbi_load(file.c_str(), &td.width, &td.height, &td.bpp, 4);
+    std::span<unsigned char> span_data{d, (std::size_t)(td.width * td.height * 4)};
+    td.data = {span_data.begin(), span_data.end()};
+    return td;
 }
 
 texture::texture(int width, int height, const unsigned char* data)
@@ -64,7 +66,7 @@ std::unique_ptr<texture> texture::from_data(const texture_data& data)
 
 std::unique_ptr<texture> texture::from_file(const std::string file)
 {
-    return texture::from_data(texture_data(file));
+    return texture::from_data(texture_data::load(file));
 }
 
 void texture::resize(int width, int height)

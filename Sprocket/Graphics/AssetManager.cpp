@@ -83,7 +83,7 @@ texture* AssetManager::GetTexture(std::string_view file)
         }
     } else {
         d_loadingTextures[filepath] = std::async(std::launch::async, [filepath]() {
-            return std::make_unique<texture_data>(filepath);
+            return std::make_unique<texture_data>(texture_data::load(filepath));
         });
     }
 

@@ -14,7 +14,7 @@ struct texture_data
     int bpp;
     std::vector<unsigned char> data;
 
-    texture_data(const std::string& file);
+    static texture_data load(const std::string& file);
 };
 
 enum class texture_channels
