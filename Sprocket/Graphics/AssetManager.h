@@ -51,10 +51,10 @@ public:
 public:
     AssetManager();
 
-    const static_mesh& get_static_mesh(std::string_view file);
-    const animated_mesh& get_animated_mesh(std::string_view file);
-    texture* GetTexture(std::string_view file);
-    Material* GetMaterial(std::string_view file);
+    const static_mesh&   get_static_mesh   (std::string_view file);
+    const animated_mesh& get_animated_mesh (std::string_view file);
+    const texture&       get_texture       (std::string_view file);
+    const Material&      get_material      (std::string_view file);
 
     auto static_meshes()   { return Iterator(&d_static_meshes); }
     auto animated_meshes() { return Iterator(&d_animated_meshes); }

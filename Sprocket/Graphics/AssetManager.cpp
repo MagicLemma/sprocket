@@ -64,13 +64,13 @@ const animated_mesh& AssetManager::get_animated_mesh(std::string_view file)
     return *d_default_animated_mesh;
 }
 
-texture* AssetManager::GetTexture(std::string_view file)
+const texture& AssetManager::get_texture(std::string_view file)
 {
-    if (file == "") { return d_defaultTexture.get(); }
+    if (file == "") { return *d_defaultTexture; }
     std::string filepath = std::filesystem::absolute(file).string();
 
     if (auto it = d_textures.find(filepath); it != d_textures.end()) {
-        return it->second.get();
+        return *it->second;
     }
 
     if (auto it = d_loadingTextures.find(filepath); it != d_loadingTextures.end()) {
@@ -79,7 +79,7 @@ texture* AssetManager::GetTexture(std::string_view file)
             spkt::texture* ret = tex.get();
             d_loadingTextures.erase(it);
             d_textures.emplace(filepath, std::move(tex));
-            return ret;
+            return *ret;
         }
     } else {
         d_loadingTextures[filepath] = std::async(std::launch::async, [filepath]() {
@@ -87,22 +87,22 @@ texture* AssetManager::GetTexture(std::string_view file)
         });
     }
 
-    return d_defaultTexture.get();
+    return *d_defaultTexture;
 }
 
-Material* AssetManager::GetMaterial(std::string_view file)
+const Material& AssetManager::get_material(std::string_view file)
 {
-    if (file == "") { return d_defaultMaterial.get(); }
+    if (file == "") { return *d_defaultMaterial; }
     std::string filepath = std::filesystem::absolute(file).string();
 
     if (auto it = d_materials.find(filepath); it != d_materials.end()) {
-        return it->second.get();
+        return *it->second;
     }
 
     auto material = Material::FromFile(filepath);
     Material* ret = material.get();
     d_materials.emplace(filepath, std::move(material));
-    return ret;
+    return *ret;
 }
 
 bool AssetManager::is_loading_static_meshes() const

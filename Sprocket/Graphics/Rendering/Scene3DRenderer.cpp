@@ -75,23 +75,23 @@ void upload_uniforms(
 
 void UploadMaterial(
     const shader& shader,
-    Material* material,
+    const Material& material,
     AssetManager* assetManager
 )
 {
-    assetManager->GetTexture(material->albedoMap)->bind(ALBEDO_SLOT);
-    assetManager->GetTexture(material->normalMap)->bind(NORMAL_SLOT);
-    assetManager->GetTexture(material->metallicMap)->bind(METALLIC_SLOT);
-    assetManager->GetTexture(material->roughnessMap)->bind(ROUGHNESS_SLOT);
+    assetManager->get_texture(material.albedoMap).bind(ALBEDO_SLOT);
+    assetManager->get_texture(material.normalMap).bind(NORMAL_SLOT);
+    assetManager->get_texture(material.metallicMap).bind(METALLIC_SLOT);
+    assetManager->get_texture(material.roughnessMap).bind(ROUGHNESS_SLOT);
 
-    shader.load("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
-    shader.load("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
-    shader.load("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
-    shader.load("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
+    shader.load("u_use_albedo_map", material.useAlbedoMap ? 1.0f : 0.0f);
+    shader.load("u_use_normal_map", material.useNormalMap ? 1.0f : 0.0f);
+    shader.load("u_use_metallic_map", material.useMetallicMap ? 1.0f : 0.0f);
+    shader.load("u_use_roughness_map", material.useRoughnessMap ? 1.0f : 0.0f);
 
-    shader.load("u_albedo", material->albedo);
-    shader.load("u_roughness", material->roughness);
-    shader.load("u_metallic", material->metallic);
+    shader.load("u_albedo", material.albedo);
+    shader.load("u_roughness", material.roughness);
+    shader.load("u_metallic", material.metallic);
 }
 
 }
@@ -147,7 +147,7 @@ void Scene3DRenderer::Draw(
 
     for (const auto& [key, data] : commands) {
         const auto& mesh = d_assetManager->get_static_mesh(key.first);
-        auto material = d_assetManager->GetMaterial(key.second);
+        const auto& material = d_assetManager->get_material(key.second);
 
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_instanceBuffer.set_data(data);
@@ -171,7 +171,7 @@ void Scene3DRenderer::Draw(
     d_animatedShader.bind();
     for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
         const auto& mesh = d_assetManager->get_animated_mesh(mc.mesh);
-        auto material = d_assetManager->GetMaterial(mc.material);
+        const auto& material = d_assetManager->get_material(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
