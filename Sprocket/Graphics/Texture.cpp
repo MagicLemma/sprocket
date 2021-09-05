@@ -19,12 +19,12 @@ void SetTextureParameters(std::uint32_t id)
 
 }
 
-TextureData::TextureData(const std::string& file)
+texture_data::texture_data(const std::string& file)
 {
     data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
 }
 
-TextureData::~TextureData()
+texture_data::~texture_data()
 {
     stbi_image_free(data);
 }
@@ -59,14 +59,14 @@ texture::~texture()
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
-std::unique_ptr<texture> texture::from_data(const TextureData& data)
+std::unique_ptr<texture> texture::from_data(const texture_data& data)
 {
     return std::make_unique<texture>(data.width, data.height, data.data);
 }
 
 std::unique_ptr<texture> texture::from_file(const std::string file)
 {
-    return texture::from_data(TextureData(file));
+    return texture::from_data(texture_data(file));
 }
 
 void texture::resize(int width, int height)

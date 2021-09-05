@@ -6,18 +6,18 @@
 
 namespace spkt {
 
-struct TextureData
+struct texture_data
 {
     int width;
     int height;
     int bpp;
     unsigned char* data;
 
-    TextureData(const TextureData&) = delete;
-    TextureData& operator=(const TextureData&) = delete;
+    texture_data(const texture_data&) = delete;
+    texture_data& operator=(const texture_data&) = delete;
 
-    TextureData(const std::string& file);
-    ~TextureData();
+    texture_data(const std::string& file);
+    ~texture_data();
 };
 
 class texture
@@ -42,7 +42,7 @@ public:
     texture();
     ~texture();
 
-    static std::unique_ptr<texture> from_data(const TextureData& data);
+    static std::unique_ptr<texture> from_data(const texture_data& data);
     static std::unique_ptr<texture> from_file(const std::string file);
 
     void bind(int slot) const;
