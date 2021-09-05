@@ -18,9 +18,9 @@ using material_ptr = std::unique_ptr<Material>;
 class AssetManager
 {
     // Background Loaders
-    std::unordered_map<std::string, std::future<std::unique_ptr<static_mesh_data>>> d_loading_static_meshes;
-    std::unordered_map<std::string, std::future<std::unique_ptr<animated_mesh_data>>> d_loading_animated_meshes;
-    std::unordered_map<std::string, std::future<std::unique_ptr<texture_data>>> d_loadingTextures;
+    std::unordered_map<std::string, std::future<static_mesh_data>> d_loading_static_meshes;
+    std::unordered_map<std::string, std::future<animated_mesh_data>> d_loading_animated_meshes;
+    std::unordered_map<std::string, std::future<texture_data>> d_loadingTextures;
 
     // Primitives
     std::unordered_map<std::string, const spkt::static_mesh_ptr> d_static_meshes;

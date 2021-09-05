@@ -23,7 +23,7 @@ const static_mesh& AssetManager::get_static_mesh(std::string_view file)
 
     if (auto it = d_loading_static_meshes.find(filepath); it != d_loading_static_meshes.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto mesh = std::make_unique<static_mesh>(*(it->second.get()));
+            auto mesh = std::make_unique<static_mesh>(it->second.get());
             auto* ret = mesh.get();
             d_loading_static_meshes.erase(it);
             d_static_meshes.emplace(filepath, std::move(mesh));
@@ -31,7 +31,7 @@ const static_mesh& AssetManager::get_static_mesh(std::string_view file)
         }
     } else {
         d_loading_static_meshes[filepath] = std::async(std::launch::async, [filepath]() {
-            return std::make_unique<static_mesh_data>(static_mesh_data::load(filepath));
+            return static_mesh_data::load(filepath);
         });
     }
 
@@ -49,7 +49,7 @@ const animated_mesh& AssetManager::get_animated_mesh(std::string_view file)
 
     if (auto it = d_loading_animated_meshes.find(filepath); it != d_loading_animated_meshes.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto mesh = std::make_unique<animated_mesh>(*(it->second.get()));
+            auto mesh = std::make_unique<animated_mesh>(it->second.get());
             auto* ret = mesh.get();
             d_loading_animated_meshes.erase(it);
             d_animated_meshes.emplace(filepath, std::move(mesh));
@@ -57,7 +57,7 @@ const animated_mesh& AssetManager::get_animated_mesh(std::string_view file)
         }
     } else {
         d_loading_animated_meshes[filepath] = std::async(std::launch::async, [filepath]() {
-            return std::make_unique<animated_mesh_data>(animated_mesh_data::load(filepath));
+            return animated_mesh_data::load(filepath);
         });
     }
 
@@ -75,7 +75,7 @@ const texture& AssetManager::get_texture(std::string_view file)
 
     if (auto it = d_loadingTextures.find(filepath); it != d_loadingTextures.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto tex = std::make_unique<texture>(*(it->second.get()));
+            auto tex = std::make_unique<texture>(it->second.get());
             spkt::texture* ret = tex.get();
             d_loadingTextures.erase(it);
             d_textures.emplace(filepath, std::move(tex));
@@ -83,7 +83,7 @@ const texture& AssetManager::get_texture(std::string_view file)
         }
     } else {
         d_loadingTextures[filepath] = std::async(std::launch::async, [filepath]() {
-            return std::make_unique<texture_data>(texture_data::load(filepath));
+            return texture_data::load(filepath);
         });
     }
 
