@@ -49,11 +49,10 @@ public:
     auto textures()        { return std::views::all(d_textures); }
     auto materials()       { return std::views::all(d_materials); }
 
-    bool IsLoadingMeshes() const;
     bool is_loading_static_meshes() const;
     bool is_loading_animated_meshes() const;
-    bool IsLoadingTextures() const;
-    bool IsLoadingAnything() const;
+    bool is_loading_textures() const;
+    bool is_loading_anything() const;
 };
 
 }

@@ -115,14 +115,14 @@ bool AssetManager::is_loading_animated_meshes() const
     return d_loading_animated_meshes.size() > 0;
 }
 
-bool AssetManager::IsLoadingTextures() const
+bool AssetManager::is_loading_textures() const
 {
     return d_loadingTextures.size() > 0;
 }
 
-bool AssetManager::IsLoadingAnything() const
+bool AssetManager::is_loading_anything() const
 {
-    return IsLoadingTextures()
+    return is_loading_textures()
         || is_loading_static_meshes()
         || is_loading_animated_meshes();
 }
