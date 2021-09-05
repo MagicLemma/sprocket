@@ -25,7 +25,7 @@ texture_data texture_data::load(const std::string& file)
     texture_data td;
     unsigned char* d = stbi_load(file.c_str(), &td.width, &td.height, &td.bpp, 4);
     std::span<unsigned char> span_data{d, (std::size_t)(td.width * td.height * 4)};
-    td.data = {span_data.begin(), span_data.end()};
+    td.bytes = {span_data.begin(), span_data.end()};
     return td;
 }
 
@@ -61,7 +61,7 @@ texture::~texture()
 
 std::unique_ptr<texture> texture::from_data(const texture_data& data)
 {
-    return std::make_unique<texture>(data.width, data.height, data.data.data());
+    return std::make_unique<texture>(data.width, data.height, data.bytes.data());
 }
 
 std::unique_ptr<texture> texture::from_file(const std::string file)
