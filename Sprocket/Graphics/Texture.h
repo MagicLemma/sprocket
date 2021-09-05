@@ -43,7 +43,6 @@ public:
     texture();
     ~texture();
 
-    static std::unique_ptr<texture> from_data(const texture_data& data);
     static std::unique_ptr<texture> from_file(const std::string file);
 
     void bind(int slot) const;

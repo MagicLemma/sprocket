@@ -73,14 +73,9 @@ texture::~texture()
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
-std::unique_ptr<texture> texture::from_data(const texture_data& data)
-{
-    return std::make_unique<texture>(data.width, data.height, data.bytes.data());
-}
-
 std::unique_ptr<texture> texture::from_file(const std::string file)
 {
-    return texture::from_data(texture_data::load(file));
+    return std::make_unique<texture>(texture_data::load(file));
 }
 
 void texture::resize(int width, int height)

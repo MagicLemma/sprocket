@@ -75,7 +75,7 @@ texture* AssetManager::GetTexture(std::string_view file)
 
     if (auto it = d_loadingTextures.find(filepath); it != d_loadingTextures.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto tex = texture::from_data(*(it->second.get()));
+            auto tex = std::make_unique<texture>(*(it->second.get()));
             spkt::texture* ret = tex.get();
             d_loadingTextures.erase(it);
             d_textures.emplace(filepath, std::move(tex));
