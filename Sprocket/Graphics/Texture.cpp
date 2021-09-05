@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 
 #include <memory>
+#include <span>
 
 namespace spkt {
 namespace {
@@ -19,57 +20,54 @@ void SetTextureParameters(std::uint32_t id)
 
 }
 
-TextureData::TextureData(const std::string& file)
+texture_data texture_data::load(const std::string& file)
 {
-    data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
+    texture_data td;
+    unsigned char* d = stbi_load(file.c_str(), &td.width, &td.height, nullptr, 4);
+    std::span<unsigned char> span_data{d, (std::size_t)(td.width * td.height * 4)};
+    td.bytes = {span_data.begin(), span_data.end()};
+    stbi_image_free(d);
+    return td;
 }
 
-TextureData::~TextureData()
-{
-    stbi_image_free(data);
-}
-
-Texture::Texture(int width, int height, const unsigned char* data)
-    : d_width(width)
-    , d_height(height)
+texture::texture(const texture_data& data)
+    : d_id(0)
+    , d_width(data.width)
+    , d_height(data.height)
+    , d_channels(spkt::texture_channels::RGBA)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
     SetTextureParameters(d_id);
-    glTextureStorage2D(d_id, 1, GL_RGBA8, width, height);
-    glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTextureStorage2D(d_id, 1, GL_RGBA8, d_width, d_height);
+    glTextureSubImage2D(d_id, 0, 0, 0, d_width, d_height, GL_RGBA, GL_UNSIGNED_BYTE, data.bytes.data());
 }
 
-Texture::Texture(int width, int height, Channels channels)
+texture::texture(int width, int height, texture_channels channels)
     : d_width(width)
     , d_height(height)
     , d_channels(channels)
 {
-    Resize(width, height);
+    resize(width, height);
 }
 
-Texture::Texture()
+texture::texture()
     : d_id(0)
     , d_width(0)
     , d_height(0)
 {
 }
 
-Texture::~Texture()
+texture::~texture()
 {
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
-std::unique_ptr<Texture> Texture::FromData(const TextureData& data)
+std::unique_ptr<texture> texture::from_file(const std::string file)
 {
-    return std::make_unique<Texture>(data.width, data.height, data.data);
+    return std::make_unique<texture>(texture_data::load(file));
 }
 
-std::unique_ptr<Texture> Texture::FromFile(const std::string file)
-{
-    return Texture::FromData(TextureData(file));
-}
-
-void Texture::Resize(int width, int height)
+void texture::resize(int width, int height)
 {
     if (d_id) {
         glDeleteTextures(1, &d_id);
@@ -80,15 +78,15 @@ void Texture::Resize(int width, int height)
 
     int ifmt, fmt;
     switch (d_channels) {
-        case Channels::RGBA: {
+        case texture_channels::RGBA: {
             ifmt = GL_RGBA;
             fmt = GL_RGBA;
         } break;
-        case Channels::RED: {
+        case texture_channels::RED: {
             ifmt = GL_RED;
             fmt = GL_RED;
         } break;
-        case Channels::DEPTH: {
+        case texture_channels::DEPTH: {
             ifmt = GL_DEPTH24_STENCIL8;
             fmt = GL_DEPTH_COMPONENT;
         } break;
@@ -102,39 +100,38 @@ void Texture::Resize(int width, int height)
     d_height = height;
 }
 
-void Texture::Bind(int slot) const
+void texture::bind(int slot) const
 {
     glBindTextureUnit(slot, d_id);
 }
 
-std::uint32_t Texture::Id() const
+std::uint32_t texture::id() const
 {
     return d_id;
 }
 
-bool Texture::operator==(const Texture& other) const
+bool texture::operator==(const texture& other) const
 {
     return d_id == other.d_id;
 }
 
-void Texture::SetSubTexture(
+void texture::set_subtexture(
     const glm::ivec4& region,
     const unsigned char* data)
 {
     auto c = GL_RGBA;
-    if (d_channels == Channels::RED) {
+    if (d_channels == texture_channels::RED) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         c = GL_RED;
     }
-    else if (d_channels == Channels::DEPTH) {
+    else if (d_channels == texture_channels::DEPTH) {
         c = GL_DEPTH_COMPONENT;
     }
 
     glTextureSubImage2D(
-        d_id, 0,
-        region.x, region.y, region.z, region.w,
-        c, GL_UNSIGNED_BYTE, data
+        d_id, 0, region.x, region.y, region.z, region.w, c, GL_UNSIGNED_BYTE, data
     );
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // Reset back to initial value
 }
 
 }

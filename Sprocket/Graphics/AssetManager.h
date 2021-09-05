@@ -11,7 +11,7 @@
 
 namespace spkt {
 
-using texture_ptr = std::unique_ptr<Texture>;
+using texture_ptr = std::unique_ptr<texture>;
 using material_ptr = std::unique_ptr<Material>;
 
 class AssetManager
@@ -19,7 +19,7 @@ class AssetManager
     // Background Loaders
     std::unordered_map<std::string, std::future<std::unique_ptr<static_mesh_data>>> d_loading_static_meshes;
     std::unordered_map<std::string, std::future<std::unique_ptr<animated_mesh_data>>> d_loading_animated_meshes;
-    std::unordered_map<std::string, std::future<std::unique_ptr<TextureData>>> d_loadingTextures;
+    std::unordered_map<std::string, std::future<std::unique_ptr<texture_data>>> d_loadingTextures;
 
     // Primitives
     std::unordered_map<std::string, const spkt::static_mesh_ptr> d_static_meshes;
@@ -53,7 +53,7 @@ public:
 
     static_mesh* get_static_mesh(std::string_view file);
     animated_mesh* get_animated_mesh(std::string_view file);
-    Texture* GetTexture(std::string_view file);
+    texture* GetTexture(std::string_view file);
     Material* GetMaterial(std::string_view file);
 
     auto static_meshes()   { return Iterator(&d_static_meshes); }

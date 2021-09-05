@@ -2,63 +2,60 @@
 #include <glm/glm.hpp>
 
 #include <memory>
+#include <vector>
 #include <string>
 
 namespace spkt {
 
-struct TextureData
+struct texture_data
 {
     int width;
     int height;
-    int bpp;
-    unsigned char* data;
+    std::vector<unsigned char> bytes;
 
-    TextureData(const TextureData&) = delete;
-    TextureData& operator=(const TextureData&) = delete;
-
-    TextureData(const std::string& file);
-    ~TextureData();
+    static texture_data load(const std::string& file);
 };
 
-class Texture
+enum class texture_channels
 {
-public:
-    enum class Channels { RGBA, RED, DEPTH };
+    RGBA,
+    RED,
+    DEPTH
+};
 
-private:
+class texture
+{
     std::uint32_t d_id;
 
     int d_width;
     int d_height;
 
-    Channels d_channels;
+    texture_channels d_channels;
 
-    Texture(const Texture&) = delete;
-    Texture& operator=(const Texture&) = delete;
+    texture(const texture&) = delete;
+    texture& operator=(const texture&) = delete;
 
 public:
-    Texture(int width, int height, const unsigned char* data);
-    Texture(int width, int height, Channels channels = Channels::RGBA);
-    Texture();
-    ~Texture();
+    texture(const texture_data& data);
+    texture(int width, int height, texture_channels channels);
+    texture();
+    ~texture();
 
-    static std::unique_ptr<Texture> FromData(const TextureData& data);
-    static std::unique_ptr<Texture> FromFile(const std::string file);
+    static std::unique_ptr<texture> from_file(const std::string file);
 
-    void Bind(int slot) const;
+    void bind(int slot) const;
 
-    std::uint32_t Id() const;
+    std::uint32_t id() const;
 
-    int Width() const { return d_width; }
-    int Height() const { return d_height; }
-    float AspectRatio() const { return (float)d_width / (float)d_height; }
+    int width() const { return d_width; }
+    int height() const { return d_height; }
+    float aspect_ratio() const { return (float)d_width / (float)d_height; }
 
-    int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
-    bool operator==(const Texture& other) const;
+    bool operator==(const texture& other) const;
 
     // Mutable Texture Functions
-    void SetSubTexture(const glm::ivec4& region, const unsigned char* data);
-    void Resize(int width, int height);
+    void set_subtexture(const glm::ivec4& region, const unsigned char* data);
+    void resize(int width, int height);
 
 };
 

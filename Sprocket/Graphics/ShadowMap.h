@@ -13,7 +13,7 @@
 
 namespace spkt {
 
-class Texture;
+class texture;
 
 class ShadowMap
 {
@@ -34,7 +34,7 @@ public:
     void Draw(spkt::registry& registry, const glm::vec3& sunDirection, const glm::vec3& centre);
 
     glm::mat4 GetLightProjViewMatrix() const;
-    const Texture&  GetShadowMap() const;
+    const texture&  GetShadowMap() const;
 };
 
 }

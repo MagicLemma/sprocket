@@ -7,7 +7,7 @@ namespace spkt {
 AssetManager::AssetManager()
     : d_default_static_mesh(std::make_unique<static_mesh>())
     , d_default_animated_mesh(std::make_unique<animated_mesh>())
-    , d_defaultTexture(std::make_unique<Texture>())
+    , d_defaultTexture(std::make_unique<texture>())
     , d_defaultMaterial(std::make_unique<Material>())
 {
 }
@@ -64,7 +64,7 @@ animated_mesh* AssetManager::get_animated_mesh(std::string_view file)
     return d_default_animated_mesh.get();
 }
 
-Texture* AssetManager::GetTexture(std::string_view file)
+texture* AssetManager::GetTexture(std::string_view file)
 {
     if (file == "") { return d_defaultTexture.get(); }
     std::string filepath = std::filesystem::absolute(file).string();
@@ -75,15 +75,15 @@ Texture* AssetManager::GetTexture(std::string_view file)
 
     if (auto it = d_loadingTextures.find(filepath); it != d_loadingTextures.end()) {
         if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-            auto texture = Texture::FromData(*(it->second.get()));
-            Texture* ret = texture.get();
+            auto tex = std::make_unique<texture>(*(it->second.get()));
+            spkt::texture* ret = tex.get();
             d_loadingTextures.erase(it);
-            d_textures.emplace(filepath, std::move(texture));
+            d_textures.emplace(filepath, std::move(tex));
             return ret;
         }
     } else {
         d_loadingTextures[filepath] = std::async(std::launch::async, [filepath]() {
-            return std::make_unique<TextureData>(filepath);
+            return std::make_unique<texture_data>(texture_data::load(filepath));
         });
     }
 

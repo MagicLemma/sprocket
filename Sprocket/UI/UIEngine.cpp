@@ -29,9 +29,13 @@ bool InRegion(const glm::vec2& pos, const glm::vec4& quad)
     return x < pos.x && pos.x < x + width &&  y < pos.y && pos.y < y + height;
 }
 
-std::vector<unsigned char> GetWhiteData()
+spkt::texture_data get_white_data()
 {
-    return {0xff, 0xff, 0xff, 0xff};
+    return {
+        .width = 1,
+        .height = 1,
+        .bytes = {0xff, 0xff, 0xff, 0xff}
+    };
 }
 
 }
@@ -130,7 +134,7 @@ UIEngine::UIEngine(Window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
-    , d_white(1, 1, GetWhiteData().data())
+    , d_white(get_white_data())
 {
 }
 
@@ -418,9 +422,9 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     }
 
     if (cmd.texture) {
-        cmd.texture->Bind(0);
+        cmd.texture->bind(0);
     } else {
-        d_white.Bind(0);
+        d_white.bind(0);
     }
 
     d_vertices.bind();

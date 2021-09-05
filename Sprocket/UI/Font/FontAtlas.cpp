@@ -10,7 +10,7 @@
 namespace spkt {
 
 FontAtlas::FontAtlas(int width, int height)
-    : d_texture(std::make_unique<Texture>(width, height, Texture::Channels::RED))
+    : d_texture(std::make_unique<texture>(width, height, texture_channels::RED))
 {
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture
@@ -23,9 +23,9 @@ void FontAtlas::SetRegion(
 {
     assert(region.x > 0);
     assert(region.y > 0);
-    assert(region.x + region.z < d_texture->Width());
-    assert(region.y + region.w < d_texture->Height());
-    d_texture->SetSubTexture(region, data);
+    assert(region.x + region.z < d_texture->width());
+    assert(region.y + region.w < d_texture->height());
+    d_texture->set_subtexture(region, data);
 }
 
 int FontAtlas::Fit(int index, int width, int height)
@@ -35,7 +35,7 @@ int FontAtlas::Fit(int index, int width, int height)
     int y = node.y;
     int width_left = width;
 
-    if (x + width >= d_texture->Width()) {
+    if (x + width >= d_texture->width()) {
         return -1;
     }
 
@@ -44,7 +44,7 @@ int FontAtlas::Fit(int index, int width, int height)
         node = d_nodes[i];
         
         y = std::max(y, node.y);
-        if (y + height >= d_texture->Height()) {
+        if (y + height >= d_texture->height()) {
             return -1;
         }
 

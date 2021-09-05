@@ -35,7 +35,7 @@ struct TextProperties
 
 struct DrawCommand
 {
-    const Texture*             texture = nullptr;
+    const texture*             texture = nullptr;
     std::vector<ui_vertex>  vertices;
     std::vector<std::uint32_t> indices;
 
@@ -135,7 +135,7 @@ class UIEngine
 {
     spkt::Window* d_window;
 
-    spkt::Texture d_white;
+    spkt::texture d_white;
 
     // Rendering code    
     spkt::shader d_shader;

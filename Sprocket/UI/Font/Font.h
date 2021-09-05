@@ -41,7 +41,7 @@ public:
 
     float TextWidth(std::string_view text, float size);
 
-    Texture* GetAtlas() const { return d_atlas.GetAtlas(); }
+    texture* GetAtlas() const { return d_atlas.GetAtlas(); }
 };
 
 }
