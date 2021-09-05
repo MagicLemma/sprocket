@@ -29,9 +29,23 @@ texture_data texture_data::load(const std::string& file)
     return td;
 }
 
+texture::texture(const texture_data& data)
+    : d_id(0)
+    , d_width(data.width)
+    , d_height(data.height)
+    , d_channels(spkt::texture_channels::RGBA)
+{
+    glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
+    SetTextureParameters(d_id);
+    glTextureStorage2D(d_id, 1, GL_RGBA8, d_width, d_height);
+    glTextureSubImage2D(d_id, 0, 0, 0, d_width, d_height, GL_RGBA, GL_UNSIGNED_BYTE, data.bytes.data());
+}
+
 texture::texture(int width, int height, const unsigned char* data)
-    : d_width(width)
+    : d_id(0)
+    , d_width(width)
     , d_height(height)
+    , d_channels(spkt::texture_channels::RGBA)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &d_id);
     SetTextureParameters(d_id);

@@ -37,7 +37,7 @@ class texture
     texture& operator=(const texture&) = delete;
 
 public:
-    //texture(const texture_data& data);
+    texture(const texture_data& data);
     texture(int width, int height, const unsigned char* data);
     texture(int width, int height, texture_channels channels = texture_channels::RGBA);
     texture();
