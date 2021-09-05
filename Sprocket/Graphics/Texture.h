@@ -53,7 +53,6 @@ public:
     int Height() const { return d_height; }
     float AspectRatio() const { return (float)d_width / (float)d_height; }
 
-    int GetChannels() const { return d_channels == Channels::RGBA ? 4 : 1; }
     bool operator==(const Texture& other) const;
 
     // Mutable Texture Functions
