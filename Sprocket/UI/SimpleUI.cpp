@@ -276,10 +276,10 @@ void SimpleUI::Dragger(std::string_view name,
 }
 
 void SimpleUI::Image(std::string_view name,
-                     const Texture* image,
+                     const texture* image,
                      const glm::vec2& position)
 {
-    glm::vec4 region{position.x, position.y, image->Width(), image->Height()};
+    glm::vec4 region{position.x, position.y, image->width(), image->height()};
     glm::vec4 copy = d_engine.ApplyOffset(region);
 
     DrawCommand cmd;

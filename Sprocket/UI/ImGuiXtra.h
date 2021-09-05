@@ -10,7 +10,7 @@
 namespace spkt {
 
 class Window;
-class Texture;
+class texture;
 
 namespace ImGuiXtra {
 
@@ -28,7 +28,7 @@ void TextModifiable(std::string& text);
 void Text(const std::string& text);
 
 // A wrapper for ImGui::Image that uses Sprocket types.
-void Image(const Texture& image,
+void Image(const texture& image,
            const glm::vec2& size,
            const glm::vec2& uv0 = {0, 1},
            const glm::vec2& uv1 = {1, 0},
@@ -38,10 +38,10 @@ void Image(const Texture& image,
 
 // A simplified version of the above where the texture maintains
 // aspect ratio. The size is the height in pixels.
-void Image(const Texture& image, float size);
+void Image(const texture& image, float size);
 
 // An even more simple version where the size is the native size of the image.
-void Image(const Texture& image);
+void Image(const texture& image);
 
 void GuizmoSettings(
     ImGuizmo::OPERATION& mode,

@@ -10,8 +10,8 @@
 namespace spkt {
 
 frame_buffer::frame_buffer(int width, int height)
-    : d_colour(std::make_unique<Texture>(width, height, Texture::Channels::RGBA))
-    , d_depth(std::make_unique<Texture>(width, height, Texture::Channels::DEPTH))
+    : d_colour(std::make_unique<texture>(width, height, texture::Channels::RGBA))
+    , d_depth(std::make_unique<texture>(width, height, texture::Channels::DEPTH))
     , d_width(width)
     , d_height(height)
     , d_fbo(0)
@@ -47,13 +47,13 @@ void frame_buffer::resize(int width, int height)
         }
 
         glDeleteFramebuffers(1, &d_fbo);
-        d_colour->Resize(width, height);
-        d_depth->Resize(width, height);
+        d_colour->resize(width, height);
+        d_depth->resize(width, height);
     }
 
     glCreateFramebuffers(1, &d_fbo);
-    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_colour->Id(), 0);
-    glNamedFramebufferTexture(d_fbo, GL_DEPTH_ATTACHMENT, d_depth->Id(), 0);
+    glNamedFramebufferTexture(d_fbo, GL_COLOR_ATTACHMENT0, d_colour->id(), 0);
+    glNamedFramebufferTexture(d_fbo, GL_DEPTH_ATTACHMENT, d_depth->id(), 0);
 
     // Validate the framebuffer.
     if (glCheckNamedFramebufferStatus(d_fbo, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {

@@ -7,14 +7,14 @@
 
 namespace spkt {
 
-class Texture;
+class texture;
 
 class frame_buffer
 {
     std::uint32_t d_fbo;
 
-    std::unique_ptr<Texture> d_colour;
-    std::unique_ptr<Texture> d_depth;
+    std::unique_ptr<texture> d_colour;
+    std::unique_ptr<texture> d_depth;
 
     int d_width;
     int d_height;
@@ -33,8 +33,8 @@ public:
     
     void resize(int width, int height);
 
-    const Texture& colour_texture() const { return *d_colour; }
-    const Texture& depth_texture() const { return *d_depth; }
+    const texture& colour_texture() const { return *d_colour; }
+    const texture& depth_texture() const { return *d_depth; }
     
     int width() const { return d_width; }
     int height() const { return d_height; }

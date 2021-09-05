@@ -128,15 +128,15 @@ void SetKeyMappings()
 
 // Loads the font atlas and assigns it to ImGui. Returns the pointer
 // for the caller to own.
-std::unique_ptr<Texture> SetFont(std::string_view font, float size)
+std::unique_ptr<texture> SetFont(std::string_view font, float size)
 {
     ImGuiIO& io = ImGui::GetIO();    
     io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
     unsigned char* data;
     int width, height;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-    auto texture = std::make_unique<Texture>(width, height, data);
-    io.Fonts->TexID = reinterpret_cast<void*>(texture->Id());
+    auto texture = std::make_unique<spkt::texture>(width, height, data);
+    io.Fonts->TexID = reinterpret_cast<void*>(texture->id());
     return texture;
 }
 
@@ -276,7 +276,7 @@ void DevUI::EndFrame()
     d_shader.load("Texture", 0);
     d_shader.load("ProjMtx", proj);
 
-    d_fontAtlas->Bind(0);
+    d_fontAtlas->bind(0);
 
     // Render command lists
     const int width = (int)drawData->DisplaySize.x;

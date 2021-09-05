@@ -11,7 +11,7 @@
 
 namespace spkt {
 
-using texture_ptr = std::unique_ptr<Texture>;
+using texture_ptr = std::unique_ptr<texture>;
 using material_ptr = std::unique_ptr<Material>;
 
 class AssetManager
@@ -53,7 +53,7 @@ public:
 
     static_mesh* get_static_mesh(std::string_view file);
     animated_mesh* get_animated_mesh(std::string_view file);
-    Texture* GetTexture(std::string_view file);
+    texture* GetTexture(std::string_view file);
     Material* GetMaterial(std::string_view file);
 
     auto static_meshes()   { return Iterator(&d_static_meshes); }

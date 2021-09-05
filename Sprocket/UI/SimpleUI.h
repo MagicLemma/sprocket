@@ -81,7 +81,7 @@ public:
                  float* value, float speed);
 
     void Image(std::string_view name,
-               const Texture* image,
+               const texture* image,
                const glm::vec2& position);
 
 };

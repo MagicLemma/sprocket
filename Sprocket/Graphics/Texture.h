@@ -20,7 +20,7 @@ struct TextureData
     ~TextureData();
 };
 
-class Texture
+class texture
 {
 public:
     enum class Channels { RGBA, RED, DEPTH };
@@ -33,31 +33,31 @@ private:
 
     Channels d_channels;
 
-    Texture(const Texture&) = delete;
-    Texture& operator=(const Texture&) = delete;
+    texture(const texture&) = delete;
+    texture& operator=(const texture&) = delete;
 
 public:
-    Texture(int width, int height, const unsigned char* data);
-    Texture(int width, int height, Channels channels = Channels::RGBA);
-    Texture();
-    ~Texture();
+    texture(int width, int height, const unsigned char* data);
+    texture(int width, int height, Channels channels = Channels::RGBA);
+    texture();
+    ~texture();
 
-    static std::unique_ptr<Texture> FromData(const TextureData& data);
-    static std::unique_ptr<Texture> FromFile(const std::string file);
+    static std::unique_ptr<texture> from_data(const TextureData& data);
+    static std::unique_ptr<texture> from_file(const std::string file);
 
-    void Bind(int slot) const;
+    void bind(int slot) const;
 
-    std::uint32_t Id() const;
+    std::uint32_t id() const;
 
-    int Width() const { return d_width; }
-    int Height() const { return d_height; }
-    float AspectRatio() const { return (float)d_width / (float)d_height; }
+    int width() const { return d_width; }
+    int height() const { return d_height; }
+    float aspect_ratio() const { return (float)d_width / (float)d_height; }
 
-    bool operator==(const Texture& other) const;
+    bool operator==(const texture& other) const;
 
     // Mutable Texture Functions
-    void SetSubTexture(const glm::ivec4& region, const unsigned char* data);
-    void Resize(int width, int height);
+    void set_subtexture(const glm::ivec4& region, const unsigned char* data);
+    void resize(int width, int height);
 
 };
 

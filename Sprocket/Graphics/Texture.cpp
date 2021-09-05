@@ -29,7 +29,7 @@ TextureData::~TextureData()
     stbi_image_free(data);
 }
 
-Texture::Texture(int width, int height, const unsigned char* data)
+texture::texture(int width, int height, const unsigned char* data)
     : d_width(width)
     , d_height(height)
 {
@@ -39,37 +39,37 @@ Texture::Texture(int width, int height, const unsigned char* data)
     glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
 
-Texture::Texture(int width, int height, Channels channels)
+texture::texture(int width, int height, Channels channels)
     : d_width(width)
     , d_height(height)
     , d_channels(channels)
 {
-    Resize(width, height);
+    resize(width, height);
 }
 
-Texture::Texture()
+texture::texture()
     : d_id(0)
     , d_width(0)
     , d_height(0)
 {
 }
 
-Texture::~Texture()
+texture::~texture()
 {
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
-std::unique_ptr<Texture> Texture::FromData(const TextureData& data)
+std::unique_ptr<texture> texture::from_data(const TextureData& data)
 {
-    return std::make_unique<Texture>(data.width, data.height, data.data);
+    return std::make_unique<texture>(data.width, data.height, data.data);
 }
 
-std::unique_ptr<Texture> Texture::FromFile(const std::string file)
+std::unique_ptr<texture> texture::from_file(const std::string file)
 {
-    return Texture::FromData(TextureData(file));
+    return texture::from_data(TextureData(file));
 }
 
-void Texture::Resize(int width, int height)
+void texture::resize(int width, int height)
 {
     if (d_id) {
         glDeleteTextures(1, &d_id);
@@ -102,22 +102,22 @@ void Texture::Resize(int width, int height)
     d_height = height;
 }
 
-void Texture::Bind(int slot) const
+void texture::bind(int slot) const
 {
     glBindTextureUnit(slot, d_id);
 }
 
-std::uint32_t Texture::Id() const
+std::uint32_t texture::id() const
 {
     return d_id;
 }
 
-bool Texture::operator==(const Texture& other) const
+bool texture::operator==(const texture& other) const
 {
     return d_id == other.d_id;
 }
 
-void Texture::SetSubTexture(
+void texture::set_subtexture(
     const glm::ivec4& region,
     const unsigned char* data)
 {
@@ -131,9 +131,7 @@ void Texture::SetSubTexture(
     }
 
     glTextureSubImage2D(
-        d_id, 0,
-        region.x, region.y, region.z, region.w,
-        c, GL_UNSIGNED_BYTE, data
+        d_id, 0, region.x, region.y, region.z, region.w, c, GL_UNSIGNED_BYTE, data
     );
 }
 

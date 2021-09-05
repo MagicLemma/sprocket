@@ -22,7 +22,7 @@ class DevUI
 // A class that wraps the setup and rendering of ImGui.
 {
     shader  d_shader;
-    std::unique_ptr<Texture> d_fontAtlas;
+    std::unique_ptr<texture> d_fontAtlas;
 
     spkt::imgui_vertex_buffer d_vtx_buffer;
     spkt::imgui_index_buffer  d_idx_buffer;

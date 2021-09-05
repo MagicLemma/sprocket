@@ -418,9 +418,9 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     }
 
     if (cmd.texture) {
-        cmd.texture->Bind(0);
+        cmd.texture->bind(0);
     } else {
-        d_white.Bind(0);
+        d_white.bind(0);
     }
 
     d_vertices.bind();

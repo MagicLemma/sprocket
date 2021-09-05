@@ -79,10 +79,10 @@ void UploadMaterial(
     AssetManager* assetManager
 )
 {
-    assetManager->GetTexture(material->albedoMap)->Bind(ALBEDO_SLOT);
-    assetManager->GetTexture(material->normalMap)->Bind(NORMAL_SLOT);
-    assetManager->GetTexture(material->metallicMap)->Bind(METALLIC_SLOT);
-    assetManager->GetTexture(material->roughnessMap)->Bind(ROUGHNESS_SLOT);
+    assetManager->GetTexture(material->albedoMap)->bind(ALBEDO_SLOT);
+    assetManager->GetTexture(material->normalMap)->bind(NORMAL_SLOT);
+    assetManager->GetTexture(material->metallicMap)->bind(METALLIC_SLOT);
+    assetManager->GetTexture(material->roughnessMap)->bind(ROUGHNESS_SLOT);
 
     shader.load("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
     shader.load("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
@@ -119,7 +119,7 @@ void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
 {
     d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
     d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    shadowMap.GetShadowMap().Bind(SHADOW_MAP_SLOT);
+    shadowMap.GetShadowMap().bind(SHADOW_MAP_SLOT);
 }
 
 void Scene3DRenderer::Draw(
