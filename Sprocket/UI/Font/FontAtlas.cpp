@@ -10,7 +10,7 @@
 namespace spkt {
 
 FontAtlas::FontAtlas(int width, int height)
-    : d_texture(std::make_unique<texture>(width, height, texture::Channels::RED))
+    : d_texture(std::make_unique<texture>(width, height, texture_channels::RED))
 {
     // We want a one pixel border around the whole atlas to avoid any
     // artefact when sampling texture

@@ -20,25 +20,29 @@ struct texture_data
     ~texture_data();
 };
 
+enum class texture_channels
+{
+    RGBA,
+    RED,
+    DEPTH
+};
+
 class texture
 {
-public:
-    enum class Channels { RGBA, RED, DEPTH };
-
-private:
     std::uint32_t d_id;
 
     int d_width;
     int d_height;
 
-    Channels d_channels;
+    texture_channels d_channels;
 
     texture(const texture&) = delete;
     texture& operator=(const texture&) = delete;
 
 public:
+    //texture(const texture_data& data, const texture_channels& channels);
     texture(int width, int height, const unsigned char* data);
-    texture(int width, int height, Channels channels = Channels::RGBA);
+    texture(int width, int height, texture_channels channels = texture_channels::RGBA);
     texture();
     ~texture();
 

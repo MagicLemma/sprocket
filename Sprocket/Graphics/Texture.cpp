@@ -39,7 +39,7 @@ texture::texture(int width, int height, const unsigned char* data)
     glTextureSubImage2D(d_id, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 }
 
-texture::texture(int width, int height, Channels channels)
+texture::texture(int width, int height, texture_channels channels)
     : d_width(width)
     , d_height(height)
     , d_channels(channels)
@@ -80,15 +80,15 @@ void texture::resize(int width, int height)
 
     int ifmt, fmt;
     switch (d_channels) {
-        case Channels::RGBA: {
+        case texture_channels::RGBA: {
             ifmt = GL_RGBA;
             fmt = GL_RGBA;
         } break;
-        case Channels::RED: {
+        case texture_channels::RED: {
             ifmt = GL_RED;
             fmt = GL_RED;
         } break;
-        case Channels::DEPTH: {
+        case texture_channels::DEPTH: {
             ifmt = GL_DEPTH24_STENCIL8;
             fmt = GL_DEPTH_COMPONENT;
         } break;
@@ -122,11 +122,11 @@ void texture::set_subtexture(
     const unsigned char* data)
 {
     auto c = GL_RGBA;
-    if (d_channels == Channels::RED) {
+    if (d_channels == texture_channels::RED) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         c = GL_RED;
     }
-    else if (d_channels == Channels::DEPTH) {
+    else if (d_channels == texture_channels::DEPTH) {
         c = GL_DEPTH_COMPONENT;
     }
 

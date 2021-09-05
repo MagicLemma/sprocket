@@ -10,8 +10,8 @@
 namespace spkt {
 
 frame_buffer::frame_buffer(int width, int height)
-    : d_colour(std::make_unique<texture>(width, height, texture::Channels::RGBA))
-    , d_depth(std::make_unique<texture>(width, height, texture::Channels::DEPTH))
+    : d_colour(std::make_unique<texture>(width, height, texture_channels::RGBA))
+    , d_depth(std::make_unique<texture>(width, height, texture_channels::DEPTH))
     , d_width(width)
     , d_height(height)
     , d_fbo(0)
