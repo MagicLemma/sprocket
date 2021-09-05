@@ -37,7 +37,7 @@ void ColliderRenderer::Draw(
             transform = glm::scale(transform, tc.scale);
         }
         d_shader.load("u_model_matrix", transform);
-        spkt::draw(s_cube.get());
+        spkt::draw(*s_cube);
     }
 
     static auto s_sphere = static_mesh::from_file("Resources/Models/LowPolySphere.obj");
@@ -46,7 +46,7 @@ void ColliderRenderer::Draw(
         transform *= Maths::Transform(sc.position, sc.orientation);
         transform = glm::scale(transform, {sc.radius, sc.radius, sc.radius});
         d_shader.load("u_model_matrix", transform);
-        spkt::draw(s_sphere.get());
+        spkt::draw(*s_sphere);
     }
 
     static auto s_hemisphere = static_mesh::from_file("Resources/Models/Hemisphere.obj");
@@ -60,7 +60,7 @@ void ColliderRenderer::Draw(
             transform = glm::translate(transform, {0.0, cc.height/2, 0.0});
             transform = glm::scale(transform, {cc.radius, cc.radius, cc.radius});
             d_shader.load("u_model_matrix", transform);
-            spkt::draw(s_hemisphere.get());
+            spkt::draw(*s_hemisphere);
         }
 
         {  // Middle Cylinder
@@ -68,7 +68,7 @@ void ColliderRenderer::Draw(
             transform *= Maths::Transform(cc.position, cc.orientation);
             transform = glm::scale(transform, {cc.radius, cc.height, cc.radius});
             d_shader.load("u_model_matrix", transform);
-            spkt::draw(s_cylinder.get());
+            spkt::draw(*s_cylinder);
         }
 
         {  // Bottom Hemisphere
@@ -78,7 +78,7 @@ void ColliderRenderer::Draw(
             transform = glm::rotate(transform, glm::pi<float>(), {1, 0, 0});
             transform = glm::scale(transform, {cc.radius, cc.radius, cc.radius});
             d_shader.load("u_model_matrix", transform);
-            spkt::draw(s_hemisphere.get());
+            spkt::draw(*s_hemisphere);
         }
     }
 

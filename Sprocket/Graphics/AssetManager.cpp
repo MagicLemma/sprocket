@@ -12,13 +12,13 @@ AssetManager::AssetManager()
 {
 }
 
-static_mesh* AssetManager::get_static_mesh(std::string_view file)
+const static_mesh& AssetManager::get_static_mesh(std::string_view file)
 {
-    if (file == "") { return d_default_static_mesh.get(); }
+    if (file == "") { return *d_default_static_mesh; }
     std::string filepath = std::filesystem::absolute(file).string();
 
     if (auto it = d_static_meshes.find(filepath); it != d_static_meshes.end()) {
-        return it->second.get();
+        return *it->second;
     }
 
     if (auto it = d_loading_static_meshes.find(filepath); it != d_loading_static_meshes.end()) {
@@ -27,7 +27,7 @@ static_mesh* AssetManager::get_static_mesh(std::string_view file)
             auto* ret = mesh.get();
             d_loading_static_meshes.erase(it);
             d_static_meshes.emplace(filepath, std::move(mesh));
-            return ret;
+            return *ret;
         }
     } else {
         d_loading_static_meshes[filepath] = std::async(std::launch::async, [filepath]() {
@@ -35,16 +35,16 @@ static_mesh* AssetManager::get_static_mesh(std::string_view file)
         });
     }
 
-    return d_default_static_mesh.get();
+    return *d_default_static_mesh;
 }
 
-animated_mesh* AssetManager::get_animated_mesh(std::string_view file)
+const animated_mesh& AssetManager::get_animated_mesh(std::string_view file)
 {
-    if (file == "") { return d_default_animated_mesh.get(); }
+    if (file == "") { return *d_default_animated_mesh; }
     std::string filepath = std::filesystem::absolute(file).string();
 
     if (auto it = d_animated_meshes.find(filepath); it != d_animated_meshes.end()) {
-        return it->second.get();
+        return *it->second;
     }
 
     if (auto it = d_loading_animated_meshes.find(filepath); it != d_loading_animated_meshes.end()) {
@@ -53,7 +53,7 @@ animated_mesh* AssetManager::get_animated_mesh(std::string_view file)
             auto* ret = mesh.get();
             d_loading_animated_meshes.erase(it);
             d_animated_meshes.emplace(filepath, std::move(mesh));
-            return ret;
+            return *ret;
         }
     } else {
         d_loading_animated_meshes[filepath] = std::async(std::launch::async, [filepath]() {
@@ -61,7 +61,7 @@ animated_mesh* AssetManager::get_animated_mesh(std::string_view file)
         });
     }
 
-    return d_default_animated_mesh.get();
+    return *d_default_animated_mesh;
 }
 
 texture* AssetManager::GetTexture(std::string_view file)

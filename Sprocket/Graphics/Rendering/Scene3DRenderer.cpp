@@ -146,7 +146,7 @@ void Scene3DRenderer::Draw(
     }
 
     for (const auto& [key, data] : commands) {
-        auto mesh = d_assetManager->get_static_mesh(key.first);
+        const auto& mesh = d_assetManager->get_static_mesh(key.first);
         auto material = d_assetManager->GetMaterial(key.second);
 
         UploadMaterial(d_staticShader, material, d_assetManager);
@@ -170,13 +170,13 @@ void Scene3DRenderer::Draw(
 
     d_animatedShader.bind();
     for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
-        auto mesh = d_assetManager->get_animated_mesh(mc.mesh);
+        const auto& mesh = d_assetManager->get_animated_mesh(mc.mesh);
         auto material = d_assetManager->GetMaterial(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        auto poses = mesh->get_pose(mc.animation_name, mc.animation_time);
+        auto poses = mesh.get_pose(mc.animation_name, mc.animation_time);
         poses.resize(MAX_BONES, glm::mat4(1.0));
         d_animatedShader.load("u_bone_transforms", poses);
 

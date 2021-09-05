@@ -51,8 +51,8 @@ public:
 public:
     AssetManager();
 
-    static_mesh* get_static_mesh(std::string_view file);
-    animated_mesh* get_animated_mesh(std::string_view file);
+    const static_mesh& get_static_mesh(std::string_view file);
+    const animated_mesh& get_animated_mesh(std::string_view file);
     texture* GetTexture(std::string_view file);
     Material* GetMaterial(std::string_view file);
 

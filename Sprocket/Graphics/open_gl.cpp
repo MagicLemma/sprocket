@@ -15,25 +15,25 @@ concept bindable = requires(T t)
 };
 
 template <bindable T>
-void draw_impl(T* mesh, spkt::vertex_buffer<model_instance>* instances)
+void draw_impl(const T& mesh, spkt::vertex_buffer<model_instance>* instances)
 {
-    mesh->bind();
+    mesh.bind();
     if (instances) {
         instances->bind();
-        glDrawElementsInstanced(GL_TRIANGLES, (int)mesh->vertex_count(), GL_UNSIGNED_INT, nullptr, instances->size());
+        glDrawElementsInstanced(GL_TRIANGLES, (int)mesh.vertex_count(), GL_UNSIGNED_INT, nullptr, instances->size());
     } else {
-        glDrawElements(GL_TRIANGLES, (int)mesh->vertex_count(), GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, (int)mesh.vertex_count(), GL_UNSIGNED_INT, nullptr);
     }
 }
 
 }
 
-void draw(spkt::static_mesh* mesh, spkt::vertex_buffer<model_instance>* instances)
+void draw(const spkt::static_mesh& mesh, spkt::vertex_buffer<model_instance>* instances)
 {
     draw_impl(mesh, instances);
 }
 
-void draw(spkt::animated_mesh* mesh, spkt::vertex_buffer<model_instance>* instances)
+void draw(const spkt::animated_mesh& mesh, spkt::vertex_buffer<model_instance>* instances)
 {
     draw_impl(mesh, instances);
 }
