@@ -286,7 +286,7 @@ void Anvil::on_render()
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_asset_manager.Materials()) {
+                for (auto& [file, material] : d_asset_manager.materials()) {
                     ImGui::PushID(hasher(material->file));
                     if (ImGui::CollapsingHeader(material->name.c_str())) {
                         ImGui::Text(file.c_str());

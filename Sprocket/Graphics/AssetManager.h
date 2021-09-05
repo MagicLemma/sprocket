@@ -3,11 +3,12 @@
 #include <Sprocket/Graphics/mesh.h>
 #include <Sprocket/Graphics/Texture.h>
 
-#include <unordered_map>
-#include <memory>
-#include <string>
-#include <string_view>
 #include <future>
+#include <memory>
+#include <ranges>
+#include <string_view>
+#include <string>
+#include <unordered_map>
 
 namespace spkt {
 
@@ -36,19 +37,6 @@ class AssetManager
     spkt::material_ptr d_defaultMaterial;
 
 public:
-    template <typename T>
-    class Iterator
-    {
-        T* d_map;
-    public:
-        Iterator(T* map) : d_map(map) {}
-        auto begin() { return d_map->begin(); }
-        auto end() { return d_map->end(); }
-        auto cbegin() { return d_map->cbegin(); }
-        auto cend() { return d_map->cend(); }
-    };
-
-public:
     AssetManager();
 
     const static_mesh&   get_static_mesh   (std::string_view file);
@@ -56,10 +44,10 @@ public:
     const texture&       get_texture       (std::string_view file);
     const Material&      get_material      (std::string_view file);
 
-    auto static_meshes()   { return Iterator(&d_static_meshes); }
-    auto animated_meshes() { return Iterator(&d_animated_meshes); }
-    auto Textures()        { return Iterator(&d_textures); }
-    auto Materials()       { return Iterator(&d_materials); }
+    auto static_meshes()   { return std::views::all(d_static_meshes); }
+    auto animated_meshes() { return std::views::all(d_animated_meshes); }
+    auto textures()        { return std::views::all(d_textures); }
+    auto materials()       { return std::views::all(d_materials); }
 
     bool IsLoadingMeshes() const;
     bool is_loading_static_meshes() const;
