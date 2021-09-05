@@ -23,9 +23,10 @@ void SetTextureParameters(std::uint32_t id)
 texture_data texture_data::load(const std::string& file)
 {
     texture_data td;
-    unsigned char* d = stbi_load(file.c_str(), &td.width, &td.height, &td.bpp, 4);
+    unsigned char* d = stbi_load(file.c_str(), &td.width, &td.height, nullptr, 4);
     std::span<unsigned char> span_data{d, (std::size_t)(td.width * td.height * 4)};
     td.bytes = {span_data.begin(), span_data.end()};
+    stbi_image_free(d);
     return td;
 }
 
@@ -130,6 +131,7 @@ void texture::set_subtexture(
     glTextureSubImage2D(
         d_id, 0, region.x, region.y, region.z, region.w, c, GL_UNSIGNED_BYTE, data
     );
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4); // Reset back to initial value
 }
 
 }

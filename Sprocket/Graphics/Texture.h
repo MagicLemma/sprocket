@@ -11,7 +11,6 @@ struct texture_data
 {
     int width;
     int height;
-    int bpp;
     std::vector<unsigned char> bytes;
 
     static texture_data load(const std::string& file);
@@ -38,7 +37,7 @@ class texture
 
 public:
     texture(const texture_data& data);
-    texture(int width, int height, texture_channels channels = texture_channels::RGBA);
+    texture(int width, int height, texture_channels channels);
     texture();
     ~texture();
 

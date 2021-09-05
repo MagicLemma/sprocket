@@ -134,13 +134,11 @@ std::unique_ptr<texture> SetFont(std::string_view font, float size)
     io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
     unsigned char* data;
     int width, height;
-    const int bpp = 4;
     io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
     std::span<unsigned char> span_data{data, (std::size_t)(width * height * 4)};
     auto texture = std::make_unique<spkt::texture>(spkt::texture_data{
         .width = width,
         .height = height,
-        .bpp = bpp,
         .bytes = {span_data.begin(), span_data.end()}
     });
     io.Fonts->TexID = reinterpret_cast<void*>(texture->id());
@@ -165,8 +163,7 @@ void bind_imgui_vbo(std::uint32_t vbo)
 }
 
 DevUI::DevUI(Window* window)
-    : d_shader("Resources/Shaders/DevGUI.vert",
-               "Resources/Shaders/DevGUI.frag")
+    : d_shader("Resources/Shaders/DevGUI.vert", "Resources/Shaders/DevGUI.frag")
     , d_fontAtlas(nullptr)
     , d_vtx_buffer()
     , d_idx_buffer()

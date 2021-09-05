@@ -34,7 +34,6 @@ spkt::texture_data get_white_data()
     return {
         .width = 1,
         .height = 1,
-        .bpp = 4,
         .bytes = {0xff, 0xff, 0xff, 0xff}
     };
 }
