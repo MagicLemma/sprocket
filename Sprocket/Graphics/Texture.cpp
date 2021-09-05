@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 
 #include <memory>
+#include <span>
 
 namespace spkt {
 namespace {
@@ -21,12 +22,9 @@ void SetTextureParameters(std::uint32_t id)
 
 texture_data::texture_data(const std::string& file)
 {
-    data = stbi_load(file.c_str(), &width, &height, &bpp, 4);
-}
-
-texture_data::~texture_data()
-{
-    stbi_image_free(data);
+    unsigned char* d = stbi_load(file.c_str(), &width, &height, &bpp, 4);
+    std::span<unsigned char> span_data{d, (std::size_t)(width * height * 4)};
+    data = {span_data.begin(), span_data.end()};
 }
 
 texture::texture(int width, int height, const unsigned char* data)
@@ -61,7 +59,7 @@ texture::~texture()
 
 std::unique_ptr<texture> texture::from_data(const texture_data& data)
 {
-    return std::make_unique<texture>(data.width, data.height, data.data);
+    return std::make_unique<texture>(data.width, data.height, data.data.data());
 }
 
 std::unique_ptr<texture> texture::from_file(const std::string file)

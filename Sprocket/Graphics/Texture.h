@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 
 #include <memory>
+#include <vector>
 #include <string>
 
 namespace spkt {
@@ -11,13 +12,9 @@ struct texture_data
     int width;
     int height;
     int bpp;
-    unsigned char* data;
-
-    texture_data(const texture_data&) = delete;
-    texture_data& operator=(const texture_data&) = delete;
+    std::vector<unsigned char> data;
 
     texture_data(const std::string& file);
-    ~texture_data();
 };
 
 enum class texture_channels
@@ -40,7 +37,6 @@ class texture
     texture& operator=(const texture&) = delete;
 
 public:
-    //texture(const texture_data& data, const texture_channels& channels);
     texture(int width, int height, const unsigned char* data);
     texture(int width, int height, texture_channels channels = texture_channels::RGBA);
     texture();
