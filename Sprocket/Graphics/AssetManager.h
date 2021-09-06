@@ -21,10 +21,9 @@ public:
     using data_type = typename T::data_type;
 
 private:
-    std::unordered_map<std::string, std::future<data_type>>   d_loading;
-    std::unordered_map<std::string, const std::unique_ptr<T>> d_assets;
-
-    asset_type d_default;
+    std::unordered_map<std::string, std::future<data_type>> d_loading;
+    std::unordered_map<std::string, asset_type>             d_assets;
+    asset_type                                              d_default;
 
 public:
     basic_asset_loader() = default;
@@ -36,23 +35,15 @@ public:
     {
         if (file == "") { return d_default; }
         std::string filepath = std::filesystem::absolute(file).string();
-
-        if (auto it = d_assets.find(filepath); it != d_assets.end()) {
-            return *it->second;
-        }
-
         if (auto it = d_loading.find(filepath); it != d_loading.end()) {
             if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-                auto mesh = std::make_unique<asset_type>(it->second.get());
-                auto* ret = mesh.get();
+                auto rc = d_assets.emplace(filepath, it->second.get());
                 d_loading.erase(it);
-                d_assets.emplace(filepath, std::move(mesh));
-                return *ret;
+                return rc.first->second;
             }
         } else {
-            d_loading[filepath] = std::async(std::launch::async, [filepath]() {
-                return data_type::load(filepath);
-            });
+            const auto loader = [filepath]() { return data_type::load(filepath); };
+            d_loading.emplace(filepath, std::async(std::launch::async, loader));
         }
 
         return d_default;
