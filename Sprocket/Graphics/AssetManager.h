@@ -35,6 +35,11 @@ public:
     {
         if (file == "") { return d_default; }
         std::string filepath = std::filesystem::absolute(file).string();
+
+        if (auto it = d_assets.find(filepath); it != d_assets.end()) {
+            return it->second;
+        }
+
         if (auto it = d_loading.find(filepath); it != d_loading.end()) {
             if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
                 auto rc = d_assets.emplace(filepath, it->second.get());
