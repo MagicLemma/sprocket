@@ -21,12 +21,7 @@ Material Material::load(std::string_view file)
 
     YAML::Node data = YAML::Load(sstream.str());
 
-    if (auto name = data["Name"]) {
-        material.name = name.as<std::string>();
-    }
-    else {
-        material.name = "Bad material";
-    }
+    material.name = data["Name"] ? data["Name"].as<std::string>() : "Bad material";
 
     if (auto albedoMap = data["AlbedoMap"]) {
         material.albedoMap = albedoMap.as<std::string>();

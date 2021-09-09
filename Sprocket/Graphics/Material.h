@@ -7,12 +7,6 @@ namespace spkt {
 
 struct Material
 {
-    using data_type = Material; // Used in the asset manager to load these
-    static Material load(std::string_view file);
-
-    Material() = default;
-    Material(const Material&) = default;
-
     std::string name;
 
     std::string albedoMap;
@@ -26,10 +20,12 @@ struct Material
     bool useRoughnessMap = false;
 
     glm::vec3 albedo = {1.0f, 1.0f, 1.0f};
-    float     metallic = 0.0f;  // AKA Reflectivity
-    float     roughness = 1.0f; // AKA Shine Damper
-    // If the normal map is not used, the "default" value used is
-    // the normal in the Model VBO.
+    float     metallic = 0.0f;
+    float     roughness = 1.0f;
+
+    // For the asset_manager
+    using data_type = Material;
+    static Material load(std::string_view file);
 };
 
 void save_material(const std::string& file, const Material& material);
