@@ -8,8 +8,11 @@ namespace spkt {
 
 struct Material
 {
-    static std::unique_ptr<Material> FromFile(const std::string& file);
-    void Save() const;
+    using data_type = Material; // Used in the asset manager to load these
+    static Material load(std::string_view file);
+
+    Material() = default;
+    Material(const Material&) = default;
 
     std::string name;
     std::string file;
@@ -29,6 +32,9 @@ struct Material
     float     roughness = 1.0f; // AKA Shine Damper
     // If the normal map is not used, the "default" value used is
     // the normal in the Model VBO.
+
+    static std::unique_ptr<Material> FromFile(const std::string& file);
+    void Save() const;
 };
 
 }

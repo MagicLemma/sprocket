@@ -9,11 +9,11 @@
 
 namespace spkt {
 
-std::unique_ptr<Material> Material::FromFile(const std::string& file)
+Material Material::load(std::string_view file)
 {
     std::string filepath = std::filesystem::absolute(file).string();
-    auto material = std::make_unique<Material>();
-    material->file = filepath;
+    Material material;
+    material.file = filepath;
 
     std::ifstream stream(filepath);
     std::stringstream sstream;
@@ -22,49 +22,54 @@ std::unique_ptr<Material> Material::FromFile(const std::string& file)
     YAML::Node data = YAML::Load(sstream.str());
 
     if (auto name = data["Name"]) {
-        material->name = name.as<std::string>();
+        material.name = name.as<std::string>();
     }
     else {
-        material->name = "Bad material";
+        material.name = "Bad material";
     }
 
     if (auto albedoMap = data["AlbedoMap"]) {
-        material->albedoMap = albedoMap.as<std::string>();
+        material.albedoMap = albedoMap.as<std::string>();
     }
     if (auto normalMap = data["NormalMap"]) {
-        material->normalMap = normalMap.as<std::string>();
+        material.normalMap = normalMap.as<std::string>();
     }
     if (auto metallicMap = data["MetallicMap"]) {
-        material->metallicMap = metallicMap.as<std::string>();
+        material.metallicMap = metallicMap.as<std::string>();
     }
     if (auto roughnessMap = data["RoughnessMap"]) {
-        material->roughnessMap = roughnessMap.as<std::string>();
+        material.roughnessMap = roughnessMap.as<std::string>();
     }
 
     if (auto useAlbedoMap = data["UseAlbedoMap"]) {
-        material->useAlbedoMap = useAlbedoMap.as<bool>();
+        material.useAlbedoMap = useAlbedoMap.as<bool>();
     }
     if (auto useNormalMap = data["UseNormalMap"]) {
-        material->useNormalMap = useNormalMap.as<bool>();
+        material.useNormalMap = useNormalMap.as<bool>();
     }
     if (auto useMetallicMap = data["UseMetallicMap"]) {
-        material->useMetallicMap = useMetallicMap.as<bool>();
+        material.useMetallicMap = useMetallicMap.as<bool>();
     }
     if (auto useRoughnessMap = data["UseRoughnessMap"]) {
-        material->useRoughnessMap = useRoughnessMap.as<bool>();
+        material.useRoughnessMap = useRoughnessMap.as<bool>();
     }
 
     if (auto albedo = data["Albedo"]) {
-        material->albedo = albedo.as<glm::vec3>();
+        material.albedo = albedo.as<glm::vec3>();
     }
     if (auto metallic = data["Metallic"]) {
-        material->metallic = metallic.as<float>();
+        material.metallic = metallic.as<float>();
     }
     if (auto roughness = data["Roughness"]) {
-        material->roughness = roughness.as<float>();
+        material.roughness = roughness.as<float>();
     }
 
     return material;
+}
+
+std::unique_ptr<Material> Material::FromFile(const std::string& file)
+{
+    return std::make_unique<Material>(Material::load(file));
 }
 
 void Material::Save() const
