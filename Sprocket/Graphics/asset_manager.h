@@ -5,6 +5,7 @@
 
 #include <filesystem>
 #include <future>
+#include <concepts>
 #include <memory>
 #include <ranges>
 #include <string_view>
@@ -15,6 +16,19 @@
 namespace spkt {
 
 template <typename T>
+concept loadable_asset = requires(const std::string& file)
+// Loadable assets are defined to either be default constructed or constructed
+// from a "data_type" type. "data_type" must also have a static function which
+// allows for loading one from a file. This function is executed in a separate
+// thread, then the loading of this data to the GPU must be done on the main 
+// thread (OpenGL complains otherwise), which is done in the asset constructors.
+{
+    requires std::is_default_constructible_v<T>;
+    requires std::constructible_from<T, typename T::data_type>;
+    { T::data_type::load(file) } -> std::convertible_to<typename T::data_type>;
+};
+
+template <loadable_asset T>
 class single_asset_manager
 {
 public:
