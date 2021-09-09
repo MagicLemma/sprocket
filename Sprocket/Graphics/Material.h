@@ -2,7 +2,6 @@
 #include <glm/glm.hpp>
 
 #include <string>
-#include <memory>
 
 namespace spkt {
 
@@ -15,7 +14,6 @@ struct Material
     Material(const Material&) = default;
 
     std::string name;
-    std::string file;
 
     std::string albedoMap;
     std::string normalMap;
@@ -32,9 +30,8 @@ struct Material
     float     roughness = 1.0f; // AKA Shine Damper
     // If the normal map is not used, the "default" value used is
     // the normal in the Model VBO.
-
-    static std::unique_ptr<Material> FromFile(const std::string& file);
-    void Save() const;
 };
+
+void save_material(const std::string& file, const Material& material);
 
 }

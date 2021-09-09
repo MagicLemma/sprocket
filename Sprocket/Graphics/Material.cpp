@@ -1,5 +1,6 @@
 #include "Material.h"
 
+#include <Sprocket/Utility/Log.h>
 #include <Sprocket/Utility/Yaml.h>
 
 #include <yaml-cpp/yaml.h>
@@ -13,7 +14,6 @@ Material Material::load(std::string_view file)
 {
     std::string filepath = std::filesystem::absolute(file).string();
     Material material;
-    material.file = filepath;
 
     std::ifstream stream(filepath);
     std::stringstream sstream;
@@ -67,36 +67,29 @@ Material Material::load(std::string_view file)
     return material;
 }
 
-std::unique_ptr<Material> Material::FromFile(const std::string& file)
+void save_material(const std::string& file, const Material& material)
 {
-    return std::make_unique<Material>(Material::load(file));
-}
+    if (!std::filesystem::exists(file)) {
+        log::error("Could not save material: file {} does not exist", file);
+        return;
+    }
 
-void Material::Save() const
-{
-    assert(std::filesystem::exists(file));
     YAML::Emitter out;
-    auto K = YAML::Key, V = YAML::Value;
-
-    out << YAML::BeginMap;
-
-    out << K << "Name" << V << name;
-
-    out << K << "AlbedoMap" << V << albedoMap
-        << K << "NormalMap" << V << normalMap
-        << K << "MetallicMap" << V << metallicMap
-        << K << "RoughnessMap" << V << roughnessMap;
-
-    out << K << "UseAlbedoMap" << V << useAlbedoMap
-        << K << "UseNormalMap" << V << useNormalMap
-        << K << "UseMetallicMap" << V << useMetallicMap
-        << K << "UseRoughnessMap" << V << useRoughnessMap;
-
-    out << K << "Albedo" << V << albedo
-        << K << "Metallic" << V << metallic
-        << K << "Roughness" << V << roughness;
-
-    out << YAML::EndMap;
+    out << YAML::BeginMap
+        << YAML::Key << "Name"            << YAML::Value << material.name
+        << YAML::Key << "AlbedoMap"       << YAML::Value << material.albedoMap
+        << YAML::Key << "NormalMap"       << YAML::Value << material.normalMap
+        << YAML::Key << "MetallicMap"     << YAML::Value << material.metallicMap
+        << YAML::Key << "RoughnessMap"    << YAML::Value << material.roughnessMap
+        << YAML::Key << "UseAlbedoMap"    << YAML::Value << material.useAlbedoMap
+        << YAML::Key << "UseNormalMap"    << YAML::Value << material.useNormalMap
+        << YAML::Key << "UseMetallicMap"  << YAML::Value << material.useMetallicMap
+        << YAML::Key << "UseRoughnessMap" << YAML::Value << material.useRoughnessMap
+        << YAML::Key << "Albedo"          << YAML::Value << material.albedo
+        << YAML::Key << "Metallic"        << YAML::Value << material.metallic
+        << YAML::Key << "Roughness"       << YAML::Value << material.roughness
+        << YAML::EndMap;
+    
     std::ofstream fout(file);
     fout << out.c_str();
 }
