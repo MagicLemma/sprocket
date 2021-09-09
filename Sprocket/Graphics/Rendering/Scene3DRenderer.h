@@ -1,4 +1,5 @@
 #pragma once
+#include <Sprocket/Graphics/AssetManager.h>
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/ShadowMap.h>
 #include <Sprocket/Graphics/buffer.h>
@@ -8,7 +9,6 @@
 
 namespace spkt {
 
-class AssetManager;
 class VertexArray;
 
 // PBR Texture Slots

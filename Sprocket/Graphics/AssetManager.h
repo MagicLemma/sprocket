@@ -92,31 +92,11 @@ public:
     bool is_loading_anything() const { return (manager<Ts>().is_loading() || ...); }
 };
 
-class AssetManager
-{
-    spkt::basic_asset_manager<static_mesh, animated_mesh, texture, Material> d_manager;
-
-public:
-    AssetManager() = default;
-
-    template <typename T>
-    bool is_loading() const { return d_manager.is_loading<T>(); }
-
-    template <typename T>
-    auto view() const { return d_manager.view<T>(); }
-
-    template <typename T>
-    decltype(auto) get(std::string_view file) { return d_manager.get<T>(file); }
-
-    template <typename T>
-    decltype(auto) get(std::string_view file) const { return d_manager.get<T>(file); }
-
-    bool is_loading_static_meshes()   const { return d_manager.is_loading<static_mesh>(); }
-    bool is_loading_animated_meshes() const { return d_manager.is_loading<animated_mesh>(); }
-    bool is_loading_textures()        const { return d_manager.is_loading<texture>(); }
-    bool is_loading_materials()       const { return d_manager.is_loading<Material>(); }
-
-    bool is_loading_anything()        const { return d_manager.is_loading_anything(); }
-};
+using AssetManager = spkt::basic_asset_manager<
+    static_mesh,
+    animated_mesh,
+    texture,
+    Material
+>;
 
 }
