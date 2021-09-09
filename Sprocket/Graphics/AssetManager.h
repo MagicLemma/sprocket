@@ -10,11 +10,12 @@
 #include <string_view>
 #include <string>
 #include <unordered_map>
+#include <tuple>
 
 namespace spkt {
 
 template <typename T>
-class basic_asset_loader
+class basic_single_asset_manager
 {
 public:
     using asset_type = T;
@@ -26,33 +27,10 @@ private:
     asset_type                                                      d_default;
 
 public:
-    basic_asset_loader() = default;
+    basic_single_asset_manager() = default;
 
     bool is_loading() const { return !d_loading.empty(); }
     auto view() const { return std::views::all(d_assets); }
-
-    const asset_type& get(std::string_view file) const
-    {
-        if (file == "") { return d_default; }
-        std::string filepath = std::filesystem::absolute(file).string();
-
-        if (auto it = d_assets.find(filepath); it != d_assets.end()) {
-            return it->second;
-        }
-
-        if (auto it = d_loading.find(filepath); it != d_loading.end()) {
-            if (it->second.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-                auto rc = d_assets.emplace(filepath, it->second.get());
-                d_loading.erase(it);
-                return rc.first->second;
-            }
-        } else {
-            const auto loader = [filepath]() { return data_type::load(filepath); };
-            d_loading.emplace(filepath, std::async(std::launch::async, loader));
-        }
-
-        return d_default;
-    }
 
     asset_type& get(std::string_view file)
     {
@@ -76,37 +54,72 @@ public:
 
         return d_default;
     }
+
+    const asset_type& get(std::string_view file) const { return get(file); }
+};
+
+template <typename... Ts>
+class basic_asset_manager
+{
+private:
+    std::tuple<spkt::basic_single_asset_manager<Ts>...> d_managers;
+
+    template <typename T>
+    spkt::basic_single_asset_manager<T>& manager()
+    {
+        return std::get<spkt::basic_single_asset_manager<T>>(d_managers);
+    }
+    
+    template <typename T>
+    const spkt::basic_single_asset_manager<T>& manager() const
+    {
+        return std::get<spkt::basic_single_asset_manager<T>>(d_managers);
+    }
+
+public:
+    template <typename T>
+    bool is_loading() const { return manager<T>().is_loading(); }
+
+    template <typename T>
+    auto view() const { return manager<T>().view(); }
+
+    template <typename T>
+    decltype(auto) get(std::string_view file) { return manager<T>().get(file); }
+
+    template <typename T>
+    decltype(auto) get(std::string_view file) const { return manager<T>().get(file); }
+
+    bool is_loading_anything() const { return (manager<Ts>().is_loading() || ...); }
 };
 
 class AssetManager
 {
-    spkt::basic_asset_loader<spkt::static_mesh>   d_static_meshes;
-    spkt::basic_asset_loader<spkt::animated_mesh> d_animated_meshes;
-    spkt::basic_asset_loader<spkt::texture>       d_textures;
-    spkt::basic_asset_loader<spkt::Material>      d_materials;
+    spkt::basic_asset_manager<static_mesh, animated_mesh, texture, Material> d_manager;
 
 public:
     AssetManager() = default;
 
-    const static_mesh&   get_static_mesh   (std::string_view file) const { return d_static_meshes.get(file); }
-    const animated_mesh& get_animated_mesh (std::string_view file) const { return d_animated_meshes.get(file); }
-    const texture&       get_texture       (std::string_view file) const { return d_textures.get(file); }
-    const Material&      get_material      (std::string_view file) const { return d_materials.get(file); }
+    const static_mesh&   get_static_mesh   (std::string_view file) const { return d_manager.get<static_mesh>(file); }
+    const animated_mesh& get_animated_mesh (std::string_view file) const { return d_manager.get<animated_mesh>(file); }
+    const texture&       get_texture       (std::string_view file) const { return d_manager.get<texture>(file); }
+    const Material&      get_material      (std::string_view file) const { return d_manager.get<Material>(file); }
 
-    static_mesh&   get_static_mesh   (std::string_view file) { return d_static_meshes.get(file); }
-    animated_mesh& get_animated_mesh (std::string_view file) { return d_animated_meshes.get(file); }
-    texture&       get_texture       (std::string_view file) { return d_textures.get(file); }
-    Material&      get_material      (std::string_view file) { return d_materials.get(file); }
+    static_mesh&   get_static_mesh   (std::string_view file) { return d_manager.get<static_mesh>(file); }
+    animated_mesh& get_animated_mesh (std::string_view file) { return d_manager.get<animated_mesh>(file); }
+    texture&       get_texture       (std::string_view file) { return d_manager.get<texture>(file); }
+    Material&      get_material      (std::string_view file) { return d_manager.get<Material>(file); }
 
-    auto static_meshes()   { return d_static_meshes.view(); }
-    auto animated_meshes() { return d_animated_meshes.view(); }
-    auto textures()        { return d_textures.view(); }
-    auto materials()       { return d_materials.view();; }
+    auto static_meshes()   { return d_manager.view<static_mesh>(); }
+    auto animated_meshes() { return d_manager.view<animated_mesh>(); }
+    auto textures()        { return d_manager.view<texture>(); }
+    auto materials()       { return d_manager.view<Material>(); }
 
-    bool is_loading_static_meshes()   const { return d_static_meshes.is_loading(); }
-    bool is_loading_animated_meshes() const { return d_animated_meshes.is_loading(); }
-    bool is_loading_textures()        const { return d_textures.is_loading(); }
-    bool is_loading_anything()        const { return d_materials.is_loading(); }
+    bool is_loading_static_meshes()   const { return d_manager.is_loading<static_mesh>(); }
+    bool is_loading_animated_meshes() const { return d_manager.is_loading<animated_mesh>(); }
+    bool is_loading_textures()        const { return d_manager.is_loading<texture>(); }
+    bool is_loading_materials()       const { return d_manager.is_loading<Material>(); }
+
+    bool is_loading_anything()        const { return d_manager.is_loading_anything(); }
 };
 
 }
