@@ -7,6 +7,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
+#include <Sprocket/Graphics/Material.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
@@ -286,7 +287,7 @@ void Anvil::on_render()
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_asset_manager.materials()) {
+                for (auto& [file, material] : d_asset_manager.view<spkt::Material>()) {
                     ImGui::PushID(hasher(material.file));
                     if (ImGui::CollapsingHeader(material.name.c_str())) {
                         ImGui::Text(file.c_str());

@@ -7,6 +7,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
+#include <Sprocket/Graphics/Material.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
@@ -136,11 +137,11 @@ void Anvil::on_render()
 
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
-    if (d_viewport_size != d_viewport.Size() && d_viewport_size.x > 0 && d_viewport_size.y > 0) {
-        d_viewport.SetScreenSize(d_viewport_size.x, d_viewport_size.y);
+    if (d_viewport_size != d_viewport.size() && d_viewport_size.x > 0 && d_viewport_size.y > 0) {
+        d_viewport.resize(d_viewport_size.x, d_viewport_size.y);
     }
 
-    d_viewport.Bind();
+    d_viewport.bind();
 
     glm::mat4 proj = get_proj_matrix();
     glm::mat4 view = get_view_matrix();
@@ -151,7 +152,7 @@ void Anvil::on_render()
         d_collider_renderer.Draw(registry, proj, view);
     }
 
-    d_viewport.Unbind();
+    d_viewport.unbind();
 
 
     d_ui.StartFrame();
@@ -233,7 +234,7 @@ void Anvil::on_render()
 
         //auto viewportMouse = ImGuiXtra::GetMousePosWindowCoords();
 
-        spkt::ImGuiXtra::Image(d_viewport.GetColour());
+        spkt::ImGuiXtra::Image(d_viewport.colour_texture());
 
         if (!is_game_running() && registry.valid(d_selected) && registry.has<spkt::Transform3DComponent>(d_selected)) {
             auto& c = registry.get<spkt::Transform3DComponent>(d_selected);
@@ -286,56 +287,56 @@ void Anvil::on_render()
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_asset_manager.Materials()) {
-                    ImGui::PushID(hasher(material->file));
-                    if (ImGui::CollapsingHeader(material->name.c_str())) {
+                for (auto& [file, material] : d_asset_manager.view<spkt::Material>()) {
+                    ImGui::PushID(hasher(material.file));
+                    if (ImGui::CollapsingHeader(material.name.c_str())) {
                         ImGui::Text(file.c_str());
                         ImGui::Separator();
 
                         ImGui::PushID(hasher("Albedo"));
                         ImGui::Text("Albedo");
-                        ImGui::Checkbox("Use Map", &material->useAlbedoMap);
-                        if (material->useAlbedoMap) {
-                            material_ui(material->albedoMap);
+                        ImGui::Checkbox("Use Map", &material.useAlbedoMap);
+                        if (material.useAlbedoMap) {
+                            material_ui(material.albedoMap);
                         } else {
-                            ImGui::ColorEdit3("##Albedo", &material->albedo.x);
+                            ImGui::ColorEdit3("##Albedo", &material.albedo.x);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
 
                         ImGui::PushID(hasher("Normal"));
                         ImGui::Text("Normal");
-                        ImGui::Checkbox("Use Map", &material->useNormalMap);
-                        if (material->useNormalMap) {
-                            material_ui(material->normalMap);
+                        ImGui::Checkbox("Use Map", &material.useNormalMap);
+                        if (material.useNormalMap) {
+                            material_ui(material.normalMap);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
 
                         ImGui::PushID(hasher("Metallic"));
                         ImGui::Text("Metallic");
-                        ImGui::Checkbox("Use Map", &material->useMetallicMap);
-                        if (material->useMetallicMap) {
-                            material_ui(material->metallicMap);
+                        ImGui::Checkbox("Use Map", &material.useMetallicMap);
+                        if (material.useMetallicMap) {
+                            material_ui(material.metallicMap);
                         } else {
-                            ImGui::DragFloat("##Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
+                            ImGui::DragFloat("##Metallic", &material.metallic, 0.01f, 0.0f, 1.0f);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
                         
                         ImGui::PushID(hasher("Roughness"));
                         ImGui::Text("Roughness");
-                        ImGui::Checkbox("Use Map", &material->useRoughnessMap);
-                        if (material->useRoughnessMap) {
-                            material_ui(material->roughnessMap);
+                        ImGui::Checkbox("Use Map", &material.useRoughnessMap);
+                        if (material.useRoughnessMap) {
+                            material_ui(material.roughnessMap);
                         } else {
-                            ImGui::DragFloat("##Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
+                            ImGui::DragFloat("##Roughness", &material.roughness, 0.01f, 0.0f, 1.0f);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
 
                         if (ImGui::Button("Save")) {
-                            material->Save();
+                            material.Save();
                         }
                     }
                     ImGui::PopID();

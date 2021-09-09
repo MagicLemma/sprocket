@@ -109,12 +109,7 @@ public:
     decltype(auto) get(std::string_view file) { return d_manager.get<T>(file); }
 
     template <typename T>
-    decltype(auto) get(std::string_view file) const { return d_manager.get<T>(file); } 
-
-    auto static_meshes()   { return d_manager.view<static_mesh>(); }
-    auto animated_meshes() { return d_manager.view<animated_mesh>(); }
-    auto textures()        { return d_manager.view<texture>(); }
-    auto materials()       { return d_manager.view<Material>(); }
+    decltype(auto) get(std::string_view file) const { return d_manager.get<T>(file); }
 
     bool is_loading_static_meshes()   const { return d_manager.is_loading<static_mesh>(); }
     bool is_loading_animated_meshes() const { return d_manager.is_loading<animated_mesh>(); }
