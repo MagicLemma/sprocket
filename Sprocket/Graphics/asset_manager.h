@@ -23,7 +23,7 @@ concept loadable_asset = requires(const std::string& file)
 // thread, then the loading of this data to the GPU must be done on the main 
 // thread (OpenGL complains otherwise), which is done in the asset constructors.
 {
-    requires std::is_default_constructible_v<T>;
+    requires std::default_initializable<T>;
     requires std::constructible_from<T, typename T::data_type>;
     { T::data_type::load(file) } -> std::convertible_to<typename T::data_type>;
 };
