@@ -1,6 +1,6 @@
 #include "SkyboxRenderer.h"
 
-#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Scene/camera.h>
@@ -11,7 +11,7 @@
 
 namespace spkt {
     
-SkyboxRenderer::SkyboxRenderer(AssetManager* assetManager)
+SkyboxRenderer::SkyboxRenderer(asset_manager* assetManager)
     : d_assetManager(assetManager)
     , d_shader("Resources/Shaders/Skybox.vert",
                "Resources/Shaders/Skybox.frag")

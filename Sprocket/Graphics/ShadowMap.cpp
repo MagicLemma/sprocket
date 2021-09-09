@@ -7,7 +7,7 @@
 
 namespace spkt {
 
-ShadowMap::ShadowMap(AssetManager* assetManager)
+ShadowMap::ShadowMap(asset_manager* assetManager)
     : d_assetManager(assetManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.

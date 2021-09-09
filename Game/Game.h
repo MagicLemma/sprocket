@@ -1,7 +1,7 @@
 #pragma once
 #include <Game/CircadianCycle.h>
 
-#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/post_processor.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/ShadowMap.h>
@@ -24,7 +24,7 @@ enum class Mode { PLAYER, EDITOR };
 class Game
 {
     spkt::Window* d_window;
-    spkt::AssetManager d_assetManager;
+    spkt::asset_manager d_assetManager;
     
     Mode d_mode;
 

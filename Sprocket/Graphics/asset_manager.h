@@ -15,7 +15,7 @@
 namespace spkt {
 
 template <typename T>
-class basic_single_asset_manager
+class single_asset_manager
 {
 public:
     using asset_type = T;
@@ -27,8 +27,6 @@ private:
     asset_type                                                      d_default;
 
 public:
-    basic_single_asset_manager() = default;
-
     bool is_loading() const { return !d_loading.empty(); }
     auto view() const { return std::views::all(d_assets); }
 
@@ -62,18 +60,18 @@ template <typename... Ts>
 class basic_asset_manager
 {
 private:
-    std::tuple<spkt::basic_single_asset_manager<Ts>...> d_managers;
+    std::tuple<spkt::single_asset_manager<Ts>...> d_managers;
 
     template <typename T>
-    spkt::basic_single_asset_manager<T>& manager()
+    spkt::single_asset_manager<T>& manager()
     {
-        return std::get<spkt::basic_single_asset_manager<T>>(d_managers);
+        return std::get<spkt::single_asset_manager<T>>(d_managers);
     }
     
     template <typename T>
-    const spkt::basic_single_asset_manager<T>& manager() const
+    const spkt::single_asset_manager<T>& manager() const
     {
-        return std::get<spkt::basic_single_asset_manager<T>>(d_managers);
+        return std::get<spkt::single_asset_manager<T>>(d_managers);
     }
 
 public:
@@ -92,7 +90,7 @@ public:
     bool is_loading_anything() const { return (manager<Ts>().is_loading() || ...); }
 };
 
-using AssetManager = spkt::basic_asset_manager<
+using asset_manager = spkt::basic_asset_manager<
     static_mesh,
     animated_mesh,
     texture,

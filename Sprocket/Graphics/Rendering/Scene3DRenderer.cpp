@@ -1,6 +1,6 @@
 #include "Scene3DRenderer.h"
 
-#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Graphics/render_context.h>
@@ -76,7 +76,7 @@ void upload_uniforms(
 void UploadMaterial(
     const shader& shader,
     const Material& material,
-    AssetManager* assetManager
+    asset_manager* assetManager
 )
 {
     assetManager->get<texture>(material.albedoMap).bind(ALBEDO_SLOT);
@@ -96,7 +96,7 @@ void UploadMaterial(
 
 }
 
-Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
+Scene3DRenderer::Scene3DRenderer(asset_manager* assetManager)
     : d_assetManager(assetManager)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")

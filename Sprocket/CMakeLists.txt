@@ -50,7 +50,6 @@ add_library(Sprocket STATIC
             Scene/Systems/input_system.cpp
 
             Graphics/Animation.cpp
-            Graphics/AssetManager.cpp
             Graphics/buffer_element_types.cpp
             Graphics/buffer.cpp
             Graphics/CubeMap.cpp
