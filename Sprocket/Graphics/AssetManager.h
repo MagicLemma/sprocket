@@ -99,15 +99,17 @@ class AssetManager
 public:
     AssetManager() = default;
 
-    const static_mesh&   get_static_mesh   (std::string_view file) const { return d_manager.get<static_mesh>(file); }
-    const animated_mesh& get_animated_mesh (std::string_view file) const { return d_manager.get<animated_mesh>(file); }
-    const texture&       get_texture       (std::string_view file) const { return d_manager.get<texture>(file); }
-    const Material&      get_material      (std::string_view file) const { return d_manager.get<Material>(file); }
+    template <typename T>
+    bool is_loading() const { return d_manager.is_loading<T>(); }
 
-    static_mesh&   get_static_mesh   (std::string_view file) { return d_manager.get<static_mesh>(file); }
-    animated_mesh& get_animated_mesh (std::string_view file) { return d_manager.get<animated_mesh>(file); }
-    texture&       get_texture       (std::string_view file) { return d_manager.get<texture>(file); }
-    Material&      get_material      (std::string_view file) { return d_manager.get<Material>(file); }
+    template <typename T>
+    auto view() const { return d_manager.view<T>(); }
+
+    template <typename T>
+    decltype(auto) get(std::string_view file) { return d_manager.get<T>(file); }
+
+    template <typename T>
+    decltype(auto) get(std::string_view file) const { return d_manager.get<T>(file); } 
 
     auto static_meshes()   { return d_manager.view<static_mesh>(); }
     auto animated_meshes() { return d_manager.view<animated_mesh>(); }

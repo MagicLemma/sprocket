@@ -79,10 +79,10 @@ void UploadMaterial(
     AssetManager* assetManager
 )
 {
-    assetManager->get_texture(material.albedoMap).bind(ALBEDO_SLOT);
-    assetManager->get_texture(material.normalMap).bind(NORMAL_SLOT);
-    assetManager->get_texture(material.metallicMap).bind(METALLIC_SLOT);
-    assetManager->get_texture(material.roughnessMap).bind(ROUGHNESS_SLOT);
+    assetManager->get<texture>(material.albedoMap).bind(ALBEDO_SLOT);
+    assetManager->get<texture>(material.normalMap).bind(NORMAL_SLOT);
+    assetManager->get<texture>(material.metallicMap).bind(METALLIC_SLOT);
+    assetManager->get<texture>(material.roughnessMap).bind(ROUGHNESS_SLOT);
 
     shader.load("u_use_albedo_map", material.useAlbedoMap ? 1.0f : 0.0f);
     shader.load("u_use_normal_map", material.useNormalMap ? 1.0f : 0.0f);
@@ -146,8 +146,8 @@ void Scene3DRenderer::Draw(
     }
 
     for (const auto& [key, data] : commands) {
-        const auto& mesh = d_assetManager->get_static_mesh(key.first);
-        const auto& material = d_assetManager->get_material(key.second);
+        const auto& mesh = d_assetManager->get<static_mesh>(key.first);
+        const auto& material = d_assetManager->get<Material>(key.second);
 
         UploadMaterial(d_staticShader, material, d_assetManager);
         d_instanceBuffer.set_data(data);
@@ -165,13 +165,13 @@ void Scene3DRenderer::Draw(
         d_instanceBuffer.set_data(instance_data);
 
         // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
-        spkt::draw(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"), &d_instanceBuffer);
+        spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Particle.obj"), &d_instanceBuffer);
     }
 
     d_animatedShader.bind();
     for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
-        const auto& mesh = d_assetManager->get_animated_mesh(mc.mesh);
-        const auto& material = d_assetManager->get_material(mc.material);
+        const auto& mesh = d_assetManager->get<animated_mesh>(mc.mesh);
+        const auto& material = d_assetManager->get<Material>(mc.material);
         UploadMaterial(d_animatedShader, material, d_assetManager);
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));

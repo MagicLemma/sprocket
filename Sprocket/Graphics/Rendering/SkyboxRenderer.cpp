@@ -29,7 +29,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     d_shader.load("viewMatrix", glm::mat4(glm::mat3(view)));
 
     skybox.Bind();
-    spkt::draw(d_assetManager->get_static_mesh("Resources/Models/Skybox.obj"));
+    spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Skybox.obj"));
 }
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera)
