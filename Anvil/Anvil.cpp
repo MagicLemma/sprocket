@@ -287,7 +287,7 @@ void Anvil::on_render()
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_asset_manager.view<spkt::Material>()) {
+                for (auto& [file, material] : d_asset_manager.view<spkt::material>()) {
                     ImGui::PushID(hasher(file));
                     if (ImGui::CollapsingHeader(material.name.c_str())) {
                         ImGui::Text(file.c_str());
@@ -336,7 +336,7 @@ void Anvil::on_render()
                         ImGui::Separator();
 
                         if (ImGui::Button("Save")) {
-                            spkt::Material::save(file, material);
+                            spkt::material::save(file, material);
                         }
                     }
                     ImGui::PopID();

@@ -5,7 +5,7 @@
 
 namespace spkt {
 
-struct Material
+struct material
 {
     std::string name;
 
@@ -23,8 +23,8 @@ struct Material
     float     metallic = 0.0f;
     float     roughness = 1.0f;
 
-    static Material load(const std::string& file);
-    static void     save(const std::string& file, const Material& material);
+    static material load(const std::string& file);
+    static void     save(const std::string& file, const material& material);
 };
 
 }

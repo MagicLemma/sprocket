@@ -10,10 +10,10 @@
 
 namespace spkt {
 
-Material Material::load(const std::string& file)
+material material::load(const std::string& file)
 {
     std::string filepath = std::filesystem::absolute(file).string();
-    Material material;
+    material material;
 
     std::ifstream stream(filepath);
     std::stringstream sstream;
@@ -62,7 +62,7 @@ Material Material::load(const std::string& file)
     return material;
 }
 
-void Material::save(const std::string& file, const Material& material)
+void material::save(const std::string& file, const material& material)
 {
     if (!std::filesystem::exists(file)) {
         log::error("Could not save material: file {} does not exist", file);

@@ -75,7 +75,7 @@ void upload_uniforms(
 
 void UploadMaterial(
     const shader& shader,
-    const Material& material,
+    const material& material,
     asset_manager* assetManager
 )
 {
@@ -147,9 +147,9 @@ void Scene3DRenderer::Draw(
 
     for (const auto& [key, data] : commands) {
         const auto& mesh = d_assetManager->get<static_mesh>(key.first);
-        const auto& material = d_assetManager->get<Material>(key.second);
+        const auto& mat = d_assetManager->get<material>(key.second);
 
-        UploadMaterial(d_staticShader, material, d_assetManager);
+        UploadMaterial(d_staticShader, mat, d_assetManager);
         d_instanceBuffer.set_data(data);
         spkt::draw(mesh, &d_instanceBuffer);
     }
@@ -171,8 +171,8 @@ void Scene3DRenderer::Draw(
     d_animatedShader.bind();
     for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
         const auto& mesh = d_assetManager->get<animated_mesh>(mc.mesh);
-        const auto& material = d_assetManager->get<Material>(mc.material);
-        UploadMaterial(d_animatedShader, material, d_assetManager);
+        const auto& mat = d_assetManager->get<material>(mc.material);
+        UploadMaterial(d_animatedShader, mat, d_assetManager);
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         

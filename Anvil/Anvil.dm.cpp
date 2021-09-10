@@ -7,7 +7,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
-#include <Sprocket/Graphics/Material.h>
+#include <Sprocket/Graphics/material.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
@@ -285,9 +285,9 @@ void Anvil::on_render()
                 return static_cast<int>(std::hash<std::string>{}(str));
             };
 
-            if (ImGui::BeginTabItem("Materials")) {
-                ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_asset_manager.view<spkt::Material>()) {
+            if (ImGui::BeginTabItem("materials")) {
+                ImGui::BeginChild("material List");
+                for (auto& [file, material] : d_asset_manager.view<spkt::material>()) {
                     ImGui::PushID(hasher(file));
                     if (ImGui::CollapsingHeader(material.name.c_str())) {
                         ImGui::Text(file.c_str());
@@ -336,7 +336,7 @@ void Anvil::on_render()
                         ImGui::Separator();
 
                         if (ImGui::Button("Save")) {
-                            spkt::Material::save(file, material);
+                            spkt::material::save(file, material);
                         }
                     }
                     ImGui::PopID();

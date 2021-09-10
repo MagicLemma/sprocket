@@ -1,7 +1,7 @@
 #pragma once
-#include <Sprocket/Graphics/Material.h>
+#include <Sprocket/Graphics/material.h>
 #include <Sprocket/Graphics/mesh.h>
-#include <Sprocket/Graphics/Texture.h>
+#include <Sprocket/Graphics/texture.h>
 
 #include <filesystem>
 #include <future>
@@ -102,7 +102,7 @@ using asset_manager = spkt::basic_asset_manager<
     static_mesh,
     animated_mesh,
     texture,
-    Material
+    material
 >;
 
 }
