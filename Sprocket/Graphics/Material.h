@@ -23,9 +23,8 @@ struct Material
     float     metallic = 0.0f;
     float     roughness = 1.0f;
 
-    static Material load(std::string_view file);
+    static Material load(const std::string& file);
+    static void     save(const std::string& file, const Material& material);
 };
-
-void save_material(const std::string& file, const Material& material);
 
 }

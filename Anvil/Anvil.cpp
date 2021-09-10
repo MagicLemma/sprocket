@@ -336,7 +336,7 @@ void Anvil::on_render()
                         ImGui::Separator();
 
                         if (ImGui::Button("Save")) {
-                            spkt::save_material(file, material);
+                            spkt::Material::save(file, material);
                         }
                     }
                     ImGui::PopID();
