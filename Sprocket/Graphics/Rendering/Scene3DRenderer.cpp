@@ -1,6 +1,6 @@
 #include "Scene3DRenderer.h"
 
-#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Graphics/render_context.h>
@@ -75,28 +75,28 @@ void upload_uniforms(
 
 void UploadMaterial(
     const shader& shader,
-    Material* material,
-    AssetManager* assetManager
+    const material& material,
+    asset_manager* assetManager
 )
 {
-    assetManager->GetTexture(material->albedoMap)->bind(ALBEDO_SLOT);
-    assetManager->GetTexture(material->normalMap)->bind(NORMAL_SLOT);
-    assetManager->GetTexture(material->metallicMap)->bind(METALLIC_SLOT);
-    assetManager->GetTexture(material->roughnessMap)->bind(ROUGHNESS_SLOT);
+    assetManager->get<texture>(material.albedoMap).bind(ALBEDO_SLOT);
+    assetManager->get<texture>(material.normalMap).bind(NORMAL_SLOT);
+    assetManager->get<texture>(material.metallicMap).bind(METALLIC_SLOT);
+    assetManager->get<texture>(material.roughnessMap).bind(ROUGHNESS_SLOT);
 
-    shader.load("u_use_albedo_map", material->useAlbedoMap ? 1.0f : 0.0f);
-    shader.load("u_use_normal_map", material->useNormalMap ? 1.0f : 0.0f);
-    shader.load("u_use_metallic_map", material->useMetallicMap ? 1.0f : 0.0f);
-    shader.load("u_use_roughness_map", material->useRoughnessMap ? 1.0f : 0.0f);
+    shader.load("u_use_albedo_map", material.useAlbedoMap ? 1.0f : 0.0f);
+    shader.load("u_use_normal_map", material.useNormalMap ? 1.0f : 0.0f);
+    shader.load("u_use_metallic_map", material.useMetallicMap ? 1.0f : 0.0f);
+    shader.load("u_use_roughness_map", material.useRoughnessMap ? 1.0f : 0.0f);
 
-    shader.load("u_albedo", material->albedo);
-    shader.load("u_roughness", material->roughness);
-    shader.load("u_metallic", material->metallic);
+    shader.load("u_albedo", material.albedo);
+    shader.load("u_roughness", material.roughness);
+    shader.load("u_metallic", material.metallic);
 }
 
 }
 
-Scene3DRenderer::Scene3DRenderer(AssetManager* assetManager)
+Scene3DRenderer::Scene3DRenderer(asset_manager* assetManager)
     : d_assetManager(assetManager)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
@@ -146,10 +146,10 @@ void Scene3DRenderer::Draw(
     }
 
     for (const auto& [key, data] : commands) {
-        auto mesh = d_assetManager->get_static_mesh(key.first);
-        auto material = d_assetManager->GetMaterial(key.second);
+        const auto& mesh = d_assetManager->get<static_mesh>(key.first);
+        const auto& mat = d_assetManager->get<material>(key.second);
 
-        UploadMaterial(d_staticShader, material, d_assetManager);
+        UploadMaterial(d_staticShader, mat, d_assetManager);
         d_instanceBuffer.set_data(data);
         spkt::draw(mesh, &d_instanceBuffer);
     }
@@ -165,18 +165,18 @@ void Scene3DRenderer::Draw(
         d_instanceBuffer.set_data(instance_data);
 
         // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
-        spkt::draw(d_assetManager->get_static_mesh("Resources/Models/Particle.obj"), &d_instanceBuffer);
+        spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Particle.obj"), &d_instanceBuffer);
     }
 
     d_animatedShader.bind();
     for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
-        auto mesh = d_assetManager->get_animated_mesh(mc.mesh);
-        auto material = d_assetManager->GetMaterial(mc.material);
-        UploadMaterial(d_animatedShader, material, d_assetManager);
+        const auto& mesh = d_assetManager->get<animated_mesh>(mc.mesh);
+        const auto& mat = d_assetManager->get<material>(mc.material);
+        UploadMaterial(d_animatedShader, mat, d_assetManager);
 
         d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
         
-        auto poses = mesh->get_pose(mc.animation_name, mc.animation_time);
+        auto poses = mesh.get_pose(mc.animation_name, mc.animation_time);
         poses.resize(MAX_BONES, glm::mat4(1.0));
         d_animatedShader.load("u_bone_transforms", poses);
 

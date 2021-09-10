@@ -1,4 +1,5 @@
 #pragma once
+#include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/ShadowMap.h>
 #include <Sprocket/Graphics/buffer.h>
@@ -8,7 +9,6 @@
 
 namespace spkt {
 
-class AssetManager;
 class VertexArray;
 
 // PBR Texture Slots
@@ -31,7 +31,7 @@ class Scene3DRenderer
 // Transform3DComponent and ModelComponent, and will ignore 2D components
 // such as Transform2DComponent and SpriteComponent.
 {
-    AssetManager*    d_assetManager;
+    asset_manager*    d_assetManager;
 
     shader d_staticShader;
     shader d_animatedShader;
@@ -42,7 +42,7 @@ class Scene3DRenderer
     Scene3DRenderer& operator=(const Scene3DRenderer&) = delete;
 
 public:
-    Scene3DRenderer(AssetManager* assetManager);
+    Scene3DRenderer(asset_manager* assetManager);
 
     void Draw(const spkt::registry& registry, spkt::entity camera);
     void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);

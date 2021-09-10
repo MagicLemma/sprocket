@@ -1,7 +1,7 @@
 #pragma once
 #include "Console.h"
 
-#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
 #include <Sprocket/Scene/scene.h>
@@ -18,7 +18,7 @@ namespace spkt {
 class Runtime
 {
     spkt::Window*      d_window;
-    spkt::AssetManager d_assetManager;
+    spkt::asset_manager d_assetManager;
 
     // Rendering
     spkt::Scene3DRenderer d_entityRenderer;

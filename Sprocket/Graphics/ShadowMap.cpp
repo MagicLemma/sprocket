@@ -7,7 +7,7 @@
 
 namespace spkt {
 
-ShadowMap::ShadowMap(AssetManager* assetManager)
+ShadowMap::ShadowMap(asset_manager* assetManager)
     : d_assetManager(assetManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
     , d_lightViewMatrix() // Will be populated after starting a scene.
@@ -44,7 +44,7 @@ void ShadowMap::Draw(
 
     for (const auto& [key, data] : commands) {
         d_instance_buffer.set_data(data);
-        spkt::draw(d_assetManager->get_static_mesh(key), &d_instance_buffer);
+        spkt::draw(d_assetManager->get<static_mesh>(key), &d_instance_buffer);
     }
 
     d_shadowMap.unbind();

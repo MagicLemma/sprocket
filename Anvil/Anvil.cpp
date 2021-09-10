@@ -7,6 +7,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
+#include <Sprocket/Graphics/material.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
@@ -286,56 +287,56 @@ void Anvil::on_render()
 
             if (ImGui::BeginTabItem("Materials")) {
                 ImGui::BeginChild("Material List");
-                for (auto& [file, material] : d_asset_manager.Materials()) {
-                    ImGui::PushID(hasher(material->file));
-                    if (ImGui::CollapsingHeader(material->name.c_str())) {
+                for (auto& [file, material] : d_asset_manager.view<spkt::material>()) {
+                    ImGui::PushID(hasher(file));
+                    if (ImGui::CollapsingHeader(material.name.c_str())) {
                         ImGui::Text(file.c_str());
                         ImGui::Separator();
 
                         ImGui::PushID(hasher("Albedo"));
                         ImGui::Text("Albedo");
-                        ImGui::Checkbox("Use Map", &material->useAlbedoMap);
-                        if (material->useAlbedoMap) {
-                            material_ui(material->albedoMap);
+                        ImGui::Checkbox("Use Map", &material.useAlbedoMap);
+                        if (material.useAlbedoMap) {
+                            material_ui(material.albedoMap);
                         } else {
-                            ImGui::ColorEdit3("##Albedo", &material->albedo.x);
+                            ImGui::ColorEdit3("##Albedo", &material.albedo.x);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
 
                         ImGui::PushID(hasher("Normal"));
                         ImGui::Text("Normal");
-                        ImGui::Checkbox("Use Map", &material->useNormalMap);
-                        if (material->useNormalMap) {
-                            material_ui(material->normalMap);
+                        ImGui::Checkbox("Use Map", &material.useNormalMap);
+                        if (material.useNormalMap) {
+                            material_ui(material.normalMap);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
 
                         ImGui::PushID(hasher("Metallic"));
                         ImGui::Text("Metallic");
-                        ImGui::Checkbox("Use Map", &material->useMetallicMap);
-                        if (material->useMetallicMap) {
-                            material_ui(material->metallicMap);
+                        ImGui::Checkbox("Use Map", &material.useMetallicMap);
+                        if (material.useMetallicMap) {
+                            material_ui(material.metallicMap);
                         } else {
-                            ImGui::DragFloat("##Metallic", &material->metallic, 0.01f, 0.0f, 1.0f);
+                            ImGui::DragFloat("##Metallic", &material.metallic, 0.01f, 0.0f, 1.0f);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
 
                         ImGui::PushID(hasher("Roughness"));
                         ImGui::Text("Roughness");
-                        ImGui::Checkbox("Use Map", &material->useRoughnessMap);
-                        if (material->useRoughnessMap) {
-                            material_ui(material->roughnessMap);
+                        ImGui::Checkbox("Use Map", &material.useRoughnessMap);
+                        if (material.useRoughnessMap) {
+                            material_ui(material.roughnessMap);
                         } else {
-                            ImGui::DragFloat("##Roughness", &material->roughness, 0.01f, 0.0f, 1.0f);
+                            ImGui::DragFloat("##Roughness", &material.roughness, 0.01f, 0.0f, 1.0f);
                         }
                         ImGui::PopID();
                         ImGui::Separator();
 
                         if (ImGui::Button("Save")) {
-                            material->Save();
+                            spkt::material::save(file, material);
                         }
                     }
                     ImGui::PopID();

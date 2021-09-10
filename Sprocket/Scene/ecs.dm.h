@@ -47,6 +47,4 @@ DATAMATIC_BEGIN
 DATAMATIC_END
 >;
 
-using handle = typename registry::handle_type;
-
 }

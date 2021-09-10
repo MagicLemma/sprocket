@@ -18,7 +18,7 @@ function toggle_light(entity)
     if FLIP then
         light.colour = vec3.new(0, 1, 0)
     else
-        light.colour = vec3.new(1, 0, 0)
+        light.colour = vec3.new(0, 0, 1)
     end
     FLIP = not FLIP
     SetLightComponent(entity, light)

@@ -4,7 +4,7 @@
 
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Graphics/AssetManager.h>
+#include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/frame_buffer.h>
 #include <Sprocket/Graphics/Rendering/ColliderRenderer.h>
@@ -21,7 +21,7 @@
 class Anvil
 {
     spkt::Window*      d_window;
-    spkt::AssetManager d_asset_manager;
+    spkt::asset_manager d_asset_manager;
     
     Camera d_editor_camera;
 

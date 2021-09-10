@@ -18,8 +18,6 @@ struct static_mesh_data
 {
     std::vector<static_vertex> vertices;
     std::vector<std::uint32_t> indices;
-
-    static static_mesh_data load(const std::string& file);
 };
 
 struct animated_mesh_data
@@ -27,8 +25,6 @@ struct animated_mesh_data
     std::vector<animated_vertex> vertices;
     std::vector<std::uint32_t>   indices;
     Skeleton skeleton;
-
-    static animated_mesh_data load(const std::string& file);
 };
 
 class static_mesh
@@ -41,11 +37,11 @@ class static_mesh
 
 public:
     static_mesh(const static_mesh_data& data = {});
+    static_mesh(const std::string& file) : static_mesh(load(file)) {}
 
-    static std::unique_ptr<static_mesh> from_file(const std::string& file);
+    static static_mesh_data load(const std::string& file);
 
     std::size_t vertex_count() const { return d_indices.size(); }
-
     void bind() const;
 };
 
@@ -62,11 +58,11 @@ class animated_mesh
 
 public:
     animated_mesh(const animated_mesh_data& data = {});
+    animated_mesh(const std::string& file) : animated_mesh(load(file)) {}
 
-    static std::unique_ptr<animated_mesh> from_file(const std::string& file);
+    static animated_mesh_data load(const std::string& file);
 
     std::size_t vertex_count() const { return d_indices.size(); }
-
     void bind() const;
 
     // Returns the transforms to be uploaded to the shader. The transform
