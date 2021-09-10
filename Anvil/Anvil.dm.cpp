@@ -285,8 +285,8 @@ void Anvil::on_render()
                 return static_cast<int>(std::hash<std::string>{}(str));
             };
 
-            if (ImGui::BeginTabItem("materials")) {
-                ImGui::BeginChild("material List");
+            if (ImGui::BeginTabItem("Materials")) {
+                ImGui::BeginChild("Material List");
                 for (auto& [file, material] : d_asset_manager.view<spkt::material>()) {
                     ImGui::PushID(hasher(file));
                     if (ImGui::CollapsingHeader(material.name.c_str())) {
