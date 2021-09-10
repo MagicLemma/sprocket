@@ -20,16 +20,6 @@ void SetTextureParameters(std::uint32_t id)
 
 }
 
-texture_data texture_data::load(const std::string& file)
-{
-    texture_data td;
-    unsigned char* d = stbi_load(file.c_str(), &td.width, &td.height, nullptr, 4);
-    std::span<unsigned char> span_data{d, (std::size_t)(td.width * td.height * 4)};
-    td.bytes = {span_data.begin(), span_data.end()};
-    stbi_image_free(d);
-    return td;
-}
-
 texture::texture(const texture_data& data)
     : d_id(0)
     , d_width(data.width)
@@ -62,9 +52,14 @@ texture::~texture()
     if (d_id > 0) { glDeleteTextures(1, &d_id); }
 }
 
-std::unique_ptr<texture> texture::from_file(const std::string file)
+texture_data texture::load(const std::string& file)
 {
-    return std::make_unique<texture>(texture_data::load(file));
+    texture_data td;
+    unsigned char* d = stbi_load(file.c_str(), &td.width, &td.height, nullptr, 4);
+    std::span<unsigned char> span_data{d, (std::size_t)(td.width * td.height * 4)};
+    td.bytes = {span_data.begin(), span_data.end()};
+    stbi_image_free(d);
+    return td;
 }
 
 void texture::resize(int width, int height)

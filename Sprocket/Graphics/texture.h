@@ -25,10 +25,6 @@ enum class texture_channels
 
 class texture
 {
-public:
-    using data_type = texture_data;
-
-private:
     std::uint32_t d_id;
 
     int d_width;
@@ -42,10 +38,11 @@ private:
 public:
     texture(const texture_data& data);
     texture(int width, int height, texture_channels channels);
+    texture(const std::string& file) : texture(load(file)) {}
     texture();
     ~texture();
 
-    static std::unique_ptr<texture> from_file(const std::string file);
+    static texture_data load(const std::string& file);
 
     void bind(int slot) const;
 

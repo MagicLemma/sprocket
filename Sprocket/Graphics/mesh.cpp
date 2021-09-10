@@ -217,7 +217,13 @@ void LoadSkeleton(
 
 }
 
-static_mesh_data static_mesh_data::load(const std::string& file)
+static_mesh::static_mesh(const static_mesh_data& data)
+    : d_vertices(data.vertices)
+    , d_indices(data.indices)
+{
+}
+
+static_mesh_data static_mesh::load(const std::string& file)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
@@ -250,7 +256,21 @@ static_mesh_data static_mesh_data::load(const std::string& file)
     return data;
 }
 
-animated_mesh_data animated_mesh_data::load(const std::string& file)
+void static_mesh::bind() const
+{
+    d_vertices.bind();
+    d_indices.bind();
+}
+
+
+animated_mesh::animated_mesh(const animated_mesh_data& data)
+    : d_vertices(data.vertices)
+    , d_indices(data.indices)
+    , d_skeleton(data.skeleton)
+{
+}
+
+animated_mesh_data animated_mesh::load(const std::string& file)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(file, GetAssimpFlags());
@@ -335,36 +355,6 @@ animated_mesh_data animated_mesh_data::load(const std::string& file)
     LoadSkeleton(data.skeleton, scene, nullptr, scene->mRootNode, glm::mat4(1.0));
 
     return data;
-}
-
-static_mesh::static_mesh(const static_mesh_data& data)
-    : d_vertices(data.vertices)
-    , d_indices(data.indices)
-{
-}
-
-std::unique_ptr<static_mesh> static_mesh::from_file(const std::string& file)
-{
-    return std::make_unique<static_mesh>(static_mesh_data::load(file));
-}
-
-void static_mesh::bind() const
-{
-    d_vertices.bind();
-    d_indices.bind();
-}
-
-
-animated_mesh::animated_mesh(const animated_mesh_data& data)
-    : d_vertices(data.vertices)
-    , d_indices(data.indices)
-    , d_skeleton(data.skeleton)
-{
-}
-
-std::unique_ptr<animated_mesh> animated_mesh::from_file(const std::string& file)
-{
-    return std::make_unique<animated_mesh>(animated_mesh_data::load(file));
 }
 
 void animated_mesh::bind() const

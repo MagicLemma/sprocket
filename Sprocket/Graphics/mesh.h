@@ -18,8 +18,6 @@ struct static_mesh_data
 {
     std::vector<static_vertex> vertices;
     std::vector<std::uint32_t> indices;
-
-    static static_mesh_data load(const std::string& file);
 };
 
 struct animated_mesh_data
@@ -27,16 +25,10 @@ struct animated_mesh_data
     std::vector<animated_vertex> vertices;
     std::vector<std::uint32_t>   indices;
     Skeleton skeleton;
-
-    static animated_mesh_data load(const std::string& file);
 };
 
 class static_mesh
 {
-public:
-    using data_type = static_mesh_data;
-
-private:
     spkt::vertex_buffer<spkt::static_vertex> d_vertices;
     spkt::index_buffer<std::uint32_t>        d_indices;
 
@@ -45,11 +37,11 @@ private:
 
 public:
     static_mesh(const static_mesh_data& data = {});
+    static_mesh(const std::string& file) : static_mesh(load(file)) {}
 
-    static std::unique_ptr<static_mesh> from_file(const std::string& file);
+    static static_mesh_data load(const std::string& file);
 
     std::size_t vertex_count() const { return d_indices.size(); }
-
     void bind() const;
 };
 
@@ -57,10 +49,6 @@ using static_mesh_ptr = std::unique_ptr<static_mesh>;
 
 class animated_mesh
 {
-public:
-    using data_type = animated_mesh_data;
-
-private:
     spkt::vertex_buffer<spkt::animated_vertex> d_vertices;
     spkt::index_buffer<std::uint32_t>          d_indices;
     spkt::Skeleton                             d_skeleton;
@@ -70,11 +58,11 @@ private:
 
 public:
     animated_mesh(const animated_mesh_data& data = {});
+    animated_mesh(const std::string& file) : animated_mesh(load(file)) {}
 
-    static std::unique_ptr<animated_mesh> from_file(const std::string& file);
+    static animated_mesh_data load(const std::string& file);
 
     std::size_t vertex_count() const { return d_indices.size(); }
-
     void bind() const;
 
     // Returns the transforms to be uploaded to the shader. The transform

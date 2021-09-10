@@ -16,24 +16,18 @@
 namespace spkt {
 
 template <typename T>
-concept loadable_asset = requires(const std::string& file)
-// Loadable assets are defined to either be default constructed or constructed
-// from a "data_type" type. "data_type" must also have a static function which
-// allows for loading one from a file. This function is executed in a separate
-// thread, then the loading of this data to the GPU must be done on the main 
-// thread (OpenGL complains otherwise), which is done in the asset constructors.
+concept loadable = requires(const std::string& file)
 {
     requires std::default_initializable<T>;
-    requires std::constructible_from<T, typename T::data_type>;
-    { T::data_type::load(file) } -> std::convertible_to<typename T::data_type>;
+    { T::load(file) } -> std::convertible_to<T>;
 };
 
-template <loadable_asset T>
+template <loadable T>
 class single_asset_manager
 {
 public:
     using asset_type = T;
-    using data_type = typename T::data_type;
+    using data_type = decltype(T::load(std::declval<std::string>()));
 
 private:
     mutable std::unordered_map<std::string, std::future<data_type>> d_loading;
@@ -60,7 +54,7 @@ public:
                 return rc.first->second;
             }
         } else {
-            const auto loader = [filepath]() { return data_type::load(filepath); };
+            const auto loader = [filepath]() { return T::load(filepath); };
             d_loading.emplace(filepath, std::async(std::launch::async, loader));
         }
 

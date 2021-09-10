@@ -23,8 +23,6 @@ struct Material
     float     metallic = 0.0f;
     float     roughness = 1.0f;
 
-    // For the asset_manager
-    using data_type = Material;
     static Material load(std::string_view file);
 };
 
