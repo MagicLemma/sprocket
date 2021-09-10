@@ -1,4 +1,4 @@
-#include "Material.h"
+#include "material.h"
 
 #include <Sprocket/Utility/Log.h>
 #include <Sprocket/Utility/Yaml.h>

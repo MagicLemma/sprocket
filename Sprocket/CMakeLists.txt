@@ -54,7 +54,7 @@ add_library(Sprocket STATIC
             Graphics/buffer.cpp
             Graphics/CubeMap.cpp
             Graphics/frame_buffer.cpp
-            Graphics/Material.cpp
+            Graphics/material.cpp
             Graphics/mesh.cpp
             Graphics/open_gl.cpp
             Graphics/post_processor.cpp

@@ -7,7 +7,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
-#include <Sprocket/Graphics/Material.h>
+#include <Sprocket/Graphics/material.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
