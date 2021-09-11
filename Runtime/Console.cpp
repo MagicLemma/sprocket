@@ -9,6 +9,7 @@
 
 #include <filesystem>
 #include <format>
+#include <ranges>
 
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
 const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
@@ -71,32 +72,85 @@ void Console::Draw()
     d_ui.EndFrame();
 }
 
-void Console::HandleCommand(std::string_view command)
+void Console::HandleCommand(const std::string_view command)
 {
     if (command == "clear") {
         d_consoleLines.clear();
+        return;
     }
-    else if (command == "exit") {
+    if (command == "exit") {
         d_window->Close();
+        return;
     }
-    else if (command.substr(0, 5) == "echo ") {
-        d_consoleLines.push_front({
+    if (command.substr(0, 5) == "echo ") {
+        log_line(
             std::format(" > {}", command.substr(5)),
             glm::vec4{0.7, 0.7, 0.7, 1.0}
-        });
+        );
+        return;
     }
-    else if (command.substr(0, 4) == "run ") {
+    if (command.substr(0, 4) == "run ") {
         if (command.size() > 4) {  // Script name is at least a single character
             auto name = command.substr(4);
             auto script_file = std::format("Resources/Scripts/{}", name);
             if (std::filesystem::exists(script_file)) {
                 spkt::lua::Script script(script_file);
             } else {
-                d_consoleLines.push_front({
+                log_line(
                     std::format(" > Could not find script '{}'", name),
                     glm::vec4{1.0, 0.0, 0.0, 1.0}
-                });
+                );
             }
         }
+        return;
+    }
+
+    const std::vector<std::string> tokens = std::invoke([&] {
+        std::vector<std::string> out;
+        std::stringstream in;
+        in << command;
+        std::string token;
+        while (std::getline(in, token, ' ')) {
+            out.push_back(token);
+        }
+        return out;
+    });
+
+    if (tokens.empty()) {
+        log_line("", {1.0, 1.0, 1.0, 1.0}); // Empty line
+        return;
+    }
+
+    const std::string& directive = tokens[0];
+    auto it = d_command_handlers.find(directive);
+    if (it != d_command_handlers.end()) {
+        it->second(*this, {std::next(tokens.begin()), tokens.end()});
+    } else {
+        log_line(
+            std::format("Unknown command: '{}'", directive),
+            {1.0, 0.0, 0.0, 1.0}
+        );
+    }
+}
+
+void Console::clear_history()
+{
+    d_consoleLines.clear();
+}
+
+void Console::log_line(const std::string& line, const glm::vec4& colour)
+{
+    d_consoleLines.push_front({line, colour});
+}
+
+void Console::register_command(const std::string& command, const command_handler& handler)
+{
+    d_command_handlers.emplace(command, handler);
+}
+
+void Console::deregister_command(const std::string& command)
+{
+    if (auto it = d_command_handlers.find(command); it != d_command_handlers.end()) {
+        d_command_handlers.erase(it);
     }
 }
