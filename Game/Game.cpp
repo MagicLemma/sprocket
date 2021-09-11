@@ -287,7 +287,7 @@ void Game::on_render()
     auto& tc = registry.get<Transform3DComponent>(d_camera);
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
     auto sun = registry.find<SunComponent>();
-    d_shadowMap.Draw(
+    d_shadowMap.draw(
         registry,
         registry.get<SunComponent>(sun).direction,
         target
@@ -390,7 +390,7 @@ void Game::on_render()
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
 
         ImGui::Begin("Shadow Map");
-        ImGuiXtra::Image(d_shadowMap.GetShadowMap(), 500.0f);
+        ImGuiXtra::Image(d_shadowMap.get_texture(), 500.0f);
         ImGui::End();
 
         ImGui::ShowDemoWindow();

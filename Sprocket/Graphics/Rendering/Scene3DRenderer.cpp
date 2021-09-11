@@ -115,11 +115,11 @@ Scene3DRenderer::Scene3DRenderer(asset_manager* assetManager)
     d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
 }
 
-void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
+void Scene3DRenderer::EnableShadows(const shadow_map& shadowMap)
 {
-    d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    shadowMap.GetShadowMap().bind(SHADOW_MAP_SLOT);
+    d_staticShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
+    d_animatedShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
+    shadowMap.get_texture().bind(SHADOW_MAP_SLOT);
 }
 
 void Scene3DRenderer::Draw(

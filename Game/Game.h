@@ -40,7 +40,7 @@ class Game
     // Additional world setup
     spkt::CircadianCycle d_cycle;
 
-    spkt::ShadowMap d_shadowMap;
+    spkt::shadow_map d_shadowMap;
 
     spkt::SimpleUI d_hoveredEntityUI;
     

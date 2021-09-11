@@ -47,7 +47,7 @@ public:
     void Draw(const spkt::registry& registry, spkt::entity camera);
     void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
-    void EnableShadows(const ShadowMap& shadowMap);
+    void EnableShadows(const shadow_map& shadowMap);
 
     shader& GetShader() { return d_staticShader; }
 };
