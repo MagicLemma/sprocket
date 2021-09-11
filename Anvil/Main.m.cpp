@@ -3,10 +3,6 @@
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Core/GameLoop.h>
 
-#include <ranges>
-#include <span>
-#include <fmt/format.h>
-
 int main()
 {
     spkt::Window window("Anvil");
