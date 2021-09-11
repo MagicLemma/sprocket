@@ -1,7 +1,7 @@
 #pragma once
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/shader.h>
-#include <Sprocket/Graphics/ShadowMap.h>
+#include <Sprocket/Graphics/shadow_map.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Scene/ecs.h>
 
@@ -41,13 +41,17 @@ class Scene3DRenderer
     Scene3DRenderer(const Scene3DRenderer&) = delete;
     Scene3DRenderer& operator=(const Scene3DRenderer&) = delete;
 
+    void draw_static_meshes(const spkt::registry& registry);
+    void draw_animated_meshes(const spkt::registry& regsitry);
+    void draw_particles(const spkt::registry& registry);
+
 public:
     Scene3DRenderer(asset_manager* assetManager);
 
     void Draw(const spkt::registry& registry, spkt::entity camera);
     void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
-    void EnableShadows(const ShadowMap& shadowMap);
+    void EnableShadows(const shadow_map& shadowMap);
 
     shader& GetShader() { return d_staticShader; }
 };

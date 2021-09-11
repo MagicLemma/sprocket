@@ -4,7 +4,7 @@
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/post_processor.h>
 #include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
-#include <Sprocket/Graphics/ShadowMap.h>
+#include <Sprocket/Graphics/shadow_map.h>
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scene/Systems/game_grid.h>
 #include <Sprocket/UI/DevUI.h>
@@ -40,7 +40,7 @@ class Game
     // Additional world setup
     spkt::CircadianCycle d_cycle;
 
-    spkt::ShadowMap d_shadowMap;
+    spkt::shadow_map d_shadowMap;
 
     spkt::SimpleUI d_hoveredEntityUI;
     

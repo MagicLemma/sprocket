@@ -115,11 +115,11 @@ Scene3DRenderer::Scene3DRenderer(asset_manager* assetManager)
     d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
 }
 
-void Scene3DRenderer::EnableShadows(const ShadowMap& shadowMap)
+void Scene3DRenderer::EnableShadows(const shadow_map& shadowMap)
 {
-    d_staticShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    d_animatedShader.load("u_light_proj_view", shadowMap.GetLightProjViewMatrix());
-    shadowMap.GetShadowMap().bind(SHADOW_MAP_SLOT);
+    d_staticShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
+    d_animatedShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
+    shadowMap.get_texture().bind(SHADOW_MAP_SLOT);
 }
 
 void Scene3DRenderer::Draw(
@@ -134,6 +134,20 @@ void Scene3DRenderer::Draw(
     upload_uniforms(d_staticShader, registry, proj, view);
     upload_uniforms(d_animatedShader, registry, proj, view);
 
+    draw_static_meshes(registry);
+    draw_particles(registry);
+    draw_animated_meshes(registry);
+}
+
+void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
+{
+    glm::mat4 proj = spkt::make_proj(registry, camera);
+    glm::mat4 view = spkt::make_view(registry, camera);
+    Draw(registry, proj, view);
+}
+
+void Scene3DRenderer::draw_static_meshes(const spkt::registry& registry)
+{
     std::unordered_map<
         std::pair<std::string, std::string>,
         std::vector<spkt::model_instance>,
@@ -153,21 +167,10 @@ void Scene3DRenderer::Draw(
         d_instanceBuffer.set_data(data);
         spkt::draw(mesh, &d_instanceBuffer);
     }
+}
 
-    // If the scene has a ParticleSingleton, then render the particles that it contains.
-    for (auto [ps] : registry.view_get<ParticleSingleton>()) {
-        std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
-        for (const auto& particle : *ps.particles) {
-            if (particle.life > 0.0) {
-                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
-            }
-        }
-        d_instanceBuffer.set_data(instance_data);
-
-        // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
-        spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Particle.obj"), &d_instanceBuffer);
-    }
-
+void Scene3DRenderer::draw_animated_meshes(const spkt::registry& registry)
+{
     d_animatedShader.bind();
     for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
         const auto& mesh = d_assetManager->get<animated_mesh>(mc.mesh);
@@ -181,15 +184,24 @@ void Scene3DRenderer::Draw(
         d_animatedShader.load("u_bone_transforms", poses);
 
         spkt::draw(mesh);
-        
     }
 }
 
-void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
+void Scene3DRenderer::draw_particles(const spkt::registry& registry)
 {
-    glm::mat4 proj = spkt::make_proj(registry, camera);
-    glm::mat4 view = spkt::make_view(registry, camera);
-    Draw(registry, proj, view);
+     // If the scene has a ParticleSingleton, then render the particles that it contains.
+    for (auto [ps] : registry.view_get<ParticleSingleton>()) {
+        std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
+        for (const auto& particle : *ps.particles) {
+            if (particle.life > 0.0) {
+                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
+            }
+        }
+        d_instanceBuffer.set_data(instance_data);
+
+        // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
+        spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Particle.obj"), &d_instanceBuffer);
+    }
 }
 
 }

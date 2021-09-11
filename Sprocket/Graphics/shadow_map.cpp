@@ -1,4 +1,4 @@
-#include "ShadowMap.h"
+#include "shadow_map.h"
 
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Scene/ecs.h>
@@ -7,16 +7,16 @@
 
 namespace spkt {
 
-ShadowMap::ShadowMap(asset_manager* assetManager)
-    : d_assetManager(assetManager)
+shadow_map::shadow_map(asset_manager* assetManager)
+    : d_asset_manager(assetManager)
     , d_shader("Resources/Shaders/ShadowMap.vert", "Resources/Shaders/ShadowMap.frag")
-    , d_lightViewMatrix() // Will be populated after starting a scene.
-    , d_lightProjMatrix(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -50.0f, 50.0f))
-    , d_shadowMap(8192, 8192)
+    , d_light_view() // Will be populated after starting a scene.
+    , d_light_proj(glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, -50.0f, 50.0f))
+    , d_shadow_map(8192, 8192)
 {
 }
 
-void ShadowMap::Draw(
+void shadow_map::draw(
     spkt::registry& registry,
     const glm::vec3& sunDirection,
     const glm::vec3& centre)
@@ -28,13 +28,13 @@ void ShadowMap::Draw(
     // casting shadows.
     rc.set_face_cull(GL_FRONT);
 
-    d_lightViewMatrix = glm::lookAt(centre - sunDirection, centre, {0.0, 1.0, 0.0});
+    d_light_view = glm::lookAt(centre - sunDirection, centre, {0.0, 1.0, 0.0});
 
     d_shader.bind();
-    d_shader.load("u_proj_matrix", d_lightProjMatrix);
-    d_shader.load("u_view_matrix", d_lightViewMatrix);
+    d_shader.load("u_proj_matrix", d_light_proj);
+    d_shader.load("u_view_matrix", d_light_view);
 
-    d_shadowMap.bind();
+    d_shadow_map.bind();
     glClear(GL_DEPTH_BUFFER_BIT);
 
     std::unordered_map<std::string, std::vector<model_instance>> commands;
@@ -44,21 +44,21 @@ void ShadowMap::Draw(
 
     for (const auto& [key, data] : commands) {
         d_instance_buffer.set_data(data);
-        spkt::draw(d_assetManager->get<static_mesh>(key), &d_instance_buffer);
+        spkt::draw(d_asset_manager->get<static_mesh>(key), &d_instance_buffer);
     }
 
-    d_shadowMap.unbind();
+    d_shadow_map.unbind();
     d_shader.unbind();
 }
 
-glm::mat4 ShadowMap::GetLightProjViewMatrix() const
+glm::mat4 shadow_map::get_light_proj_view() const
 {
-    return d_lightProjMatrix * d_lightViewMatrix;
+    return d_light_proj * d_light_view;
 }
 
-const texture& ShadowMap::GetShadowMap() const
+const texture& shadow_map::get_texture() const
 {
-    return d_shadowMap.depth_texture();
+    return d_shadow_map.depth_texture();
 }
 
 }
