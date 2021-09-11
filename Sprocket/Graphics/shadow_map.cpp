@@ -1,4 +1,4 @@
-#include "ShadowMap.h"
+#include "shadow_map.h"
 
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Scene/ecs.h>

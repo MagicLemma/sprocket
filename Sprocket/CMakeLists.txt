@@ -60,8 +60,8 @@ add_library(Sprocket STATIC
             Graphics/post_processor.cpp
             Graphics/render_context.cpp
             Graphics/shader.cpp
-            Graphics/ShadowMap.cpp
-            Graphics/Texture.cpp
+            Graphics/shadow_map.cpp
+            Graphics/texture.cpp
             Graphics/Viewport.cpp
 
             Graphics/Rendering/ColliderRenderer.cpp
