@@ -80,7 +80,7 @@ void ShaderInfoPanel(DevUI& ui, shader& shader)
 
 }
 
-Game::Game(Window* window) 
+Game::Game(spkt::window* window) 
     : d_window(window)
     , d_scene()
     , d_assetManager()

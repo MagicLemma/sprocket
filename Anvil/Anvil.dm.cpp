@@ -41,7 +41,7 @@ bool SubstringCI(std::string_view string, std::string_view substr) {
 
 }
 
-Anvil::Anvil(spkt::Window* window) 
+Anvil::Anvil(spkt::window* window) 
     : d_window(window)
     , d_asset_manager()
     , d_entity_renderer(&d_asset_manager)

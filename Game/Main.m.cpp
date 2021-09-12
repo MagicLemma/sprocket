@@ -7,7 +7,7 @@ using namespace spkt;
 
 int main()
 {
-    spkt::Window window("Game");
+    spkt::window window("Game");
     Game game(&window);
     spkt::RunOptions options;
     options.showFramerate = true;

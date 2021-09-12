@@ -20,7 +20,7 @@
 
 class Anvil
 {
-    spkt::Window*      d_window;
+    spkt::window*      d_window;
     spkt::asset_manager d_asset_manager;
     
     Camera d_editor_camera;
@@ -65,7 +65,7 @@ class Anvil
     glm::mat4 get_proj_matrix() const;
 
 public:
-    Anvil(spkt::Window* window);
+    Anvil(spkt::window* window);
 
     void on_event(spkt::event& event);
     void on_update(double dt);
@@ -78,7 +78,7 @@ public:
     bool is_game_running() const { return d_playingGame; }
 
     Camera& editor_camera() { return d_editor_camera; }
-    spkt::Window* window() { return d_window; }
+    spkt::window* window() { return d_window; }
 
     std::shared_ptr<spkt::scene> active_scene() { return d_activeScene; }
 };

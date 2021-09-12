@@ -9,7 +9,7 @@
 
 namespace spkt {
 
-class Window;
+class window;
 class event;
 
 struct SimpleUITheme
@@ -22,7 +22,7 @@ struct SimpleUITheme
 
 class SimpleUI
 {
-    Window* d_window;
+    window* d_window;
 
     SimpleUITheme d_theme;
 
@@ -30,7 +30,7 @@ class SimpleUI
     Font d_font;
 
 public:
-    SimpleUI(Window* window);
+    SimpleUI(window* window);
 
     const SimpleUITheme& GetTheme() const { return d_theme; }
     void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }

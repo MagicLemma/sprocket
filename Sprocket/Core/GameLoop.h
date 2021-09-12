@@ -25,7 +25,7 @@ concept runnable = requires(T t, event& event, double dt)
 };
 
 template <runnable App>
-int Run(App& app, Window& window, const RunOptions& options = {})
+int Run(App& app, window& window, const RunOptions& options = {})
 {
     std::string name = window.GetWindowName();
     timer watch;

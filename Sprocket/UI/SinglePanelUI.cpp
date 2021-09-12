@@ -40,7 +40,7 @@ template <typename T> T Interpolate(
 
 }
 
-SinglePanelUI::SinglePanelUI(Window* window)
+SinglePanelUI::SinglePanelUI(window* window)
     : d_window(window)
     , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")

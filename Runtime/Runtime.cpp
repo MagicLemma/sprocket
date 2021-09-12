@@ -16,7 +16,7 @@ const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
 const auto GARDEN      = spkt::from_hex(0x55E6C1);
 const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
-Runtime::Runtime(spkt::Window* window) 
+Runtime::Runtime(spkt::window* window) 
     : d_window(window)
     , d_scene({
         .registry = {},

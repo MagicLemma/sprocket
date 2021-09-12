@@ -5,7 +5,7 @@
 
 int main()
 {
-    spkt::Window window("Runtime");
+    spkt::window window("Runtime");
     Runtime runtime(&window);
     spkt::RunOptions options;
     options.showFramerate = true;

@@ -83,16 +83,16 @@ void SetBackendFlags()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
-void SetClipboardCallbacks(Window* window)
+void SetClipboardCallbacks(window* window)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
-        spkt::Window* w = static_cast<spkt::Window*>(user_data);
+        spkt::window* w = static_cast<spkt::window*>(user_data);
         w->SetClipboardData(text);
     };
 
     io.GetClipboardTextFn = [](void* user_data) {
-        spkt::Window* w = static_cast<spkt::Window*>(user_data);
+        spkt::window* w = static_cast<spkt::window*>(user_data);
         return w->GetClipboardData();
     };
 
@@ -162,7 +162,7 @@ void bind_imgui_vbo(std::uint32_t vbo)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-DevUI::DevUI(Window* window)
+DevUI::DevUI(window* window)
     : d_shader("Resources/Shaders/DevGUI.vert", "Resources/Shaders/DevGUI.frag")
     , d_fontAtlas(nullptr)
     , d_vtx_buffer()

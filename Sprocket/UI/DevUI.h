@@ -10,7 +10,7 @@
 
 namespace spkt {
 
-class Window;
+class window;
 class event;
 
 void bind_imgui_vbo(std::uint32_t vbo);
@@ -33,7 +33,7 @@ class DevUI
     DevUI& operator=(const DevUI&) = delete;
 
 public:
-    DevUI(Window* window);
+    DevUI(window* window);
 
     void on_event(event& event);
     void on_update(double dt);

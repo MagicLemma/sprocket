@@ -4,13 +4,13 @@
 #include <glm/glm.hpp>
 
 namespace spkt {
-    class Window;
+    class window;
     class event;
 }
 
 class Camera
 {
-    spkt::Window*    d_window;
+    spkt::window*    d_window;
     spkt::InputProxy d_input;
 
     glm::vec3 d_position;
@@ -27,7 +27,7 @@ class Camera
     float d_absMax;
 
 public:
-    Camera(spkt::Window* window, const glm::vec3& target);
+    Camera(spkt::window* window, const glm::vec3& target);
 
     void on_update(double dt);
     void on_event(spkt::event& event);

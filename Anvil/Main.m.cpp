@@ -5,7 +5,7 @@
 
 int main()
 {
-    spkt::Window window("Anvil");
+    spkt::window window("Anvil");
     Anvil editor(&window);
     spkt::RunOptions options;
     options.showFramerate = true;

@@ -28,7 +28,7 @@ static int InputTextCallback(ImGuiInputTextCallbackData* data)
 }
 
 void File(const std::string& name,
-          Window* window,
+          window* window,
           std::string* file,
           const char* filter)
 {

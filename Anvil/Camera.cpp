@@ -12,7 +12,7 @@
 
 #include <algorithm>
 
-Camera::Camera(spkt::Window* window, const glm::vec3& target)
+Camera::Camera(spkt::window* window, const glm::vec3& target)
     : d_window(window)
     , d_position()
     , d_target(target)

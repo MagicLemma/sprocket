@@ -46,7 +46,7 @@ template <typename T> T Interpolate(
 
 }
 
-SimpleUI::SimpleUI(Window* window)
+SimpleUI::SimpleUI(window* window)
     : d_window(window)
     , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")

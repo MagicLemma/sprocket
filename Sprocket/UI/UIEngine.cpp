@@ -130,7 +130,7 @@ void DrawCommand::AddText(std::string_view text,
     }
 }
 
-UIEngine::UIEngine(Window* window)
+UIEngine::UIEngine(spkt::window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")

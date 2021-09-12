@@ -16,7 +16,7 @@ struct WindowImpl
 	std::uint32_t vao;
 };
 
-Window::Window(const std::string& name, std::uint32_t width, std::uint32_t height)
+window::window(const std::string& name, std::uint32_t width, std::uint32_t height)
 	: d_impl(std::make_unique<WindowImpl>())
 	, d_data({name, width, height})
 	, d_clearColour({1.0, 1.0, 1.0})
@@ -180,7 +180,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glBindVertexArray(d_impl->vao);
 }
 
-Window::~Window()
+window::~window()
 {
 	glBindVertexArray(0);
 	glDeleteVertexArrays(1, &d_impl->vao);
@@ -189,7 +189,7 @@ Window::~Window()
 	glfwTerminate();
 }
 
-void Window::on_update()
+void window::on_update()
 {
 	glfwSwapBuffers(d_impl->window);
 	glfwPollEvents();
@@ -202,24 +202,24 @@ void Window::on_update()
 	d_mousePos = newMousePos;
 }
 
-void Window::Clear()
+void window::Clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClearColor(d_clearColour.r, d_clearColour.g, d_clearColour.b, 1.0);
 }
 
-void Window::SetClearColour(const glm::vec3& colour)
+void window::SetClearColour(const glm::vec3& colour)
 {
 	d_clearColour = colour;
 }
 
-void Window::SetCursorVisibility(bool visibility)
+void window::SetCursorVisibility(bool visibility)
 {
 	int show = visibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
 	glfwSetInputMode(d_impl->window, GLFW_CURSOR, show);
 }
 
-void Window::SetFullscreen()
+void window::SetFullscreen()
 {
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -234,54 +234,54 @@ void Window::SetFullscreen()
 	d_data.fullscreen = true;
 }
 
-void Window::SetWindowed(int width, int height)
+void window::SetWindowed(int width, int height)
 {
 	glfwSetWindowMonitor(d_impl->window, nullptr, 50, 50, width, height, 0);
 	d_data.fullscreen = false;
 }
 
-bool Window::IsFullscreen() const
+bool window::IsFullscreen() const
 {
 	return d_data.fullscreen;
 }
 
-glm::vec2 Window::GetMousePos() const
+glm::vec2 window::GetMousePos() const
 {
 	return d_mousePos;
 }
 
-glm::vec2 Window::GetMouseOffset() const
+glm::vec2 window::GetMouseOffset() const
 {
 	return d_mouseOffset;
 }
 
-void Window::SetWindowName(const std::string& name)
+void window::SetWindowName(const std::string& name)
 {
 	d_data.name = name;
 	glfwSetWindowTitle(d_impl->window, name.c_str());
 }
 
-std::string Window::GetWindowName() const
+std::string window::GetWindowName() const
 {
 	return d_data.name;
 }
 
-void Window::SetCallback(EventCallback cb)
+void window::SetCallback(EventCallback cb)
 {
 	d_data.callback = cb;
 }
 
-const char* Window::GetClipboardData() const
+const char* window::GetClipboardData() const
 {
 	return glfwGetClipboardString(d_impl->window);
 }
 
-void Window::SetClipboardData(const std::string& text) const
+void window::SetClipboardData(const std::string& text) const
 {
 	glfwSetClipboardString(d_impl->window, text.c_str());
 }
 
-void* Window::NativeWindow() const
+void* window::NativeWindow() const
 {
 	return d_impl->window;
 }

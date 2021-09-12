@@ -31,7 +31,7 @@ struct WindowData
 	EventCallback callback = [](spkt::event&) {};
 };
 
-class Window
+class window
 {
 	std::unique_ptr<WindowImpl> d_impl;
 	WindowData                  d_data;
@@ -43,13 +43,13 @@ class Window
 
 private:
 	// Deleted Constructors
-	Window(Window&&) = delete;
-	Window(const Window&) = delete;
-	Window& operator=(const Window&) = delete;
+	window(window&&) = delete;
+	window(const window&) = delete;
+	window& operator=(const window&) = delete;
 
 public:
-	Window(const std::string& name = "Window", std::uint32_t width = 1280, std::uint32_t height = 720);
-	~Window();
+	window(const std::string& name = "Window", std::uint32_t width = 1280, std::uint32_t height = 720);
+	~window();
 
 	void on_update();
 	void Clear();
