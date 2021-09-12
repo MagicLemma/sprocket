@@ -3,7 +3,7 @@
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/input_codes.h>
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>

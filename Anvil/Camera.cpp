@@ -3,7 +3,7 @@
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/Viewport.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/input_codes.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>

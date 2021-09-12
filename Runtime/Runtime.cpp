@@ -9,7 +9,7 @@
 #include <Sprocket/Scripting/LuaScript.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/input_codes.h>
 
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
 const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);

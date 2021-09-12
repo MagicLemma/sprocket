@@ -10,7 +10,7 @@
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Vendor/imgui/imgui.h>

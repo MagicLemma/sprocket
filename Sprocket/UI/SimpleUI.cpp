@@ -2,7 +2,7 @@
 
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Core/Events.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/input_codes.h>
 
 #include <fmt/core.h>
 

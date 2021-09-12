@@ -3,8 +3,8 @@
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
-#include <Sprocket/Utility/MouseCodes.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 
 #include <glad/glad.h>
