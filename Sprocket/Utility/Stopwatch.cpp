@@ -2,27 +2,27 @@
 
 namespace spkt {
 
-Stopwatch::Stopwatch()
+timer::timer()
     : d_clock()
-    , d_previousTime(d_clock.now())
-    , d_currentTime(d_previousTime)
-    , d_lastTimePrinted(d_previousTime)
-    , d_frameCount(0)
+    , d_prev_time(d_clock.now())
+    , d_curr_time(d_prev_time)
+    , d_last_time_printed(d_prev_time)
+    , d_frame_count(0)
 {}
 
-double Stopwatch::on_update()
+double timer::on_update()
 {
-    d_previousTime = d_currentTime;
-    d_currentTime = d_clock.now();
-    ++d_frameCount;
+    d_prev_time = d_curr_time;
+    d_curr_time = d_clock.now();
+    ++d_frame_count;
 
-    if (d_currentTime - d_lastTimePrinted >= std::chrono::seconds(1)) {
-        d_frameRate = d_frameCount;
-        d_frameCount = 0;
-        d_lastTimePrinted = d_currentTime;
+    if (d_curr_time - d_last_time_printed >= std::chrono::seconds(1)) {
+        d_frame_rate = d_frame_count;
+        d_frame_count = 0;
+        d_last_time_printed = d_curr_time;
     }
 
-    std::chrono::duration<double> dt = d_currentTime - d_previousTime;
+    std::chrono::duration<double> dt = d_curr_time - d_prev_time;
     return dt.count();
 }
 

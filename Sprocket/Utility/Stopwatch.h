@@ -4,22 +4,22 @@
 
 namespace spkt {
 
-class Stopwatch
+class timer
 {
-    using Clock = std::chrono::steady_clock;
+    using clock = std::chrono::steady_clock;
 
-    Clock d_clock;
-    Clock::time_point d_previousTime;
-    Clock::time_point d_currentTime;
-    Clock::time_point d_lastTimePrinted;
+    clock d_clock;
+    clock::time_point d_prev_time;
+    clock::time_point d_curr_time;
+    clock::time_point d_last_time_printed;
     
-    std::uint32_t d_frameCount;
-    std::uint32_t d_frameRate = 0;
+    std::uint32_t d_frame_count;
+    std::uint32_t d_frame_rate = 0;
 
 public:
-    Stopwatch();
+    timer();
     double on_update();
-    std::uint32_t Framerate() const { return d_frameRate; }
+    std::uint32_t frame_rate() const { return d_frame_rate; }
 };
 
 }

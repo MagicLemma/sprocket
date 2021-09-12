@@ -28,7 +28,7 @@ template <runnable App>
 int Run(App& app, Window& window, const RunOptions& options = {})
 {
     std::string name = window.GetWindowName();
-    Stopwatch watch;
+    timer watch;
 
     window.SetCallback([&app](event& event) {
         app.on_event(event);
@@ -42,7 +42,7 @@ int Run(App& app, Window& window, const RunOptions& options = {})
         app.on_render();
 
         if (options.showFramerate) {
-            window.SetWindowName(std::format("{} [FPS: {}]", name, watch.Framerate()));
+            window.SetWindowName(std::format("{} [FPS: {}]", name, watch.frame_rate()));
         }
 
         window.on_update();
