@@ -31,30 +31,35 @@ private:
 
     std::unordered_map<std::string, command_handler> d_command_handlers;
 
-    void HandleCommand(const std::string_view command);
+    void handle_command(const std::string_view command);
 
 public:
     Console(spkt::Window* window);
 
     void on_update(double dt);
     void on_event(spkt::event& event);
-    void Draw();
+    void draw();
+
+    void submit();
 
     void clear_history();
 
     void register_command(const std::string& command, const command_handler& handler);
     void deregister_command(const std::string& command);
 
-    void println(const std::string& line, const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
-
-    template <typename... Args> void log(std::string_view format, Args&&... args)
-    {
-        println(std::format(format, std::forward<Args>(args)...));
-    }
-
-    template <typename... Args> void error(std::string_view format, Args&&... args)
-    {
-        println(std::format(format, std::forward<Args>(args)...), {1.0, 0.0, 0.0, 1.0});
-    }
+    void print(const std::string& line, const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+    void log(std::string_view format, auto&&... args);
+    void error(std::string_view format, auto&&... args);
 };
 
+template <typename... Args>
+void Console::log(std::string_view format, Args&&... args)
+{
+    print(std::format(format, std::forward<Args>(args)...));
+}
+
+template <typename... Args>
+void Console::error(std::string_view format, Args&&... args)
+{
+    print(std::format(format, std::forward<Args>(args)...), {1.0, 0.0, 0.0, 1.0});
+}

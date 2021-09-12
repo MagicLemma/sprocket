@@ -112,6 +112,6 @@ void Runtime::on_render()
     d_entityRenderer.Draw(d_scene.registry, d_runtimeCamera);
 
     if (d_consoleActive) {
-        d_console.Draw();
+        d_console.draw();
     }
 }

@@ -38,16 +38,21 @@ void Console::on_event(spkt::event& event)
 {
     auto data = event.get_if<spkt::keyboard_pressed_event>();
     if (data && data->key == spkt::Keyboard::ENTER) {
-        d_consoleLines.push_front({d_commandLine, glm::vec4{1.0, 1.0, 1.0, 1.0}});
-        HandleCommand(d_commandLine);
-        d_commandLine = "";
+        submit();
         event.consume();
     } else {
         d_ui.on_event(event);
     }
 }
 
-void Console::Draw()
+void Console::submit()
+{
+    print(d_commandLine);
+    handle_command(d_commandLine);
+    d_commandLine.clear();
+}
+
+void Console::draw()
 {
     d_ui.StartFrame();
 
@@ -58,9 +63,6 @@ void Console::Draw()
 
     double boxHeight = 50.0;
     d_ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &d_commandLine);
-    if (d_consoleLines.size() > 100) {
-        d_consoleLines.resize(100);
-    }
     glm::vec2 region = {10, H - 10 - boxHeight - 50};
     float fontSize = 24.0f;
     for (const auto& command : d_consoleLines) {
@@ -72,7 +74,7 @@ void Console::Draw()
     d_ui.EndFrame();
 }
 
-void Console::HandleCommand(const std::string_view command)
+void Console::handle_command(const std::string_view command)
 {
     const std::vector<std::string> tokens = std::invoke([&] {
         std::vector<std::string> out;
@@ -103,9 +105,12 @@ void Console::clear_history()
     d_consoleLines.clear();
 }
 
-void Console::println(const std::string& line, const glm::vec4& colour)
+void Console::print(const std::string& line, const glm::vec4& colour)
 {
     d_consoleLines.push_front({line, colour});
+    while (d_consoleLines.size() > 100) {
+        d_consoleLines.pop_back();
+    }
 }
 
 void Console::register_command(const std::string& command, const command_handler& handler)
