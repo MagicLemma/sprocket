@@ -103,6 +103,7 @@
         "span": "cpp",
         "sstream": "cpp",
         "source_location": "cpp",
-        "numbers": "cpp"
+        "numbers": "cpp",
+        "resumable": "cpp"
     }
 }
