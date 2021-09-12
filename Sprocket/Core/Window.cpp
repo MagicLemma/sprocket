@@ -1,6 +1,6 @@
 #include "Window.h"
 
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Log.h>
 
 #include <glad/glad.h>

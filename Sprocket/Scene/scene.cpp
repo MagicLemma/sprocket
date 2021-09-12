@@ -1,6 +1,6 @@
 #include "scene.h"
 
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/Systems/input_system.h>
 

@@ -1,6 +1,6 @@
 #include "Runtime.h"
 
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>

@@ -5,7 +5,7 @@
 #include <Game/PathCalculator.h>
 
 #include <Sprocket/Audio/Listener.h>
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/camera.h>
 #include <Sprocket/Scene/ecs.h>

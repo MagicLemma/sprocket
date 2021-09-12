@@ -2,7 +2,7 @@
 #include <Anvil/Camera.h>
 #include <Anvil/Inspector.h>
 
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/CubeMap.h>

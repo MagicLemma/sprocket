@@ -1,6 +1,6 @@
 #include "SimpleUI.h"
 
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Core/input_codes.h>
