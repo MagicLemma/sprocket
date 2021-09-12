@@ -20,9 +20,7 @@ struct ConsoleLine
 class Console
 {
 public:
-    using command_handler = std::function<
-        void(Console&, std::span<const std::string>)
-    >;
+    using command_handler = std::function<void(Console&, std::span<const std::string>)>;
 
 private:
     spkt::Window*  d_window;
@@ -43,9 +41,20 @@ public:
     void Draw();
 
     void clear_history();
-    void log_line(const std::string& line, const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
 
     void register_command(const std::string& command, const command_handler& handler);
     void deregister_command(const std::string& command);
+
+    void println(const std::string& line, const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+
+    template <typename... Args> void log(std::string_view format, Args&&... args)
+    {
+        println(std::format(format, std::forward<Args>(args)...));
+    }
+
+    template <typename... Args> void error(std::string_view format, Args&&... args)
+    {
+        println(std::format(format, std::forward<Args>(args)...), {1.0, 0.0, 0.0, 1.0});
+    }
 };
 

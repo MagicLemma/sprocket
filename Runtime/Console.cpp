@@ -74,37 +74,6 @@ void Console::Draw()
 
 void Console::HandleCommand(const std::string_view command)
 {
-    if (command == "clear") {
-        d_consoleLines.clear();
-        return;
-    }
-    if (command == "exit") {
-        d_window->Close();
-        return;
-    }
-    if (command.substr(0, 5) == "echo ") {
-        log_line(
-            std::format(" > {}", command.substr(5)),
-            glm::vec4{0.7, 0.7, 0.7, 1.0}
-        );
-        return;
-    }
-    if (command.substr(0, 4) == "run ") {
-        if (command.size() > 4) {  // Script name is at least a single character
-            auto name = command.substr(4);
-            auto script_file = std::format("Resources/Scripts/{}", name);
-            if (std::filesystem::exists(script_file)) {
-                spkt::lua::Script script(script_file);
-            } else {
-                log_line(
-                    std::format(" > Could not find script '{}'", name),
-                    glm::vec4{1.0, 0.0, 0.0, 1.0}
-                );
-            }
-        }
-        return;
-    }
-
     const std::vector<std::string> tokens = std::invoke([&] {
         std::vector<std::string> out;
         std::stringstream in;
@@ -117,19 +86,15 @@ void Console::HandleCommand(const std::string_view command)
     });
 
     if (tokens.empty()) {
-        log_line("", {1.0, 1.0, 1.0, 1.0}); // Empty line
+        log("");
         return;
     }
 
     const std::string& directive = tokens[0];
-    auto it = d_command_handlers.find(directive);
-    if (it != d_command_handlers.end()) {
-        it->second(*this, {std::next(tokens.begin()), tokens.end()});
+    if (auto it = d_command_handlers.find(directive); it != d_command_handlers.end()) {
+        it->second(*this, tokens);
     } else {
-        log_line(
-            std::format("Unknown command: '{}'", directive),
-            {1.0, 0.0, 0.0, 1.0}
-        );
+        error("Unknown command: '{}'", directive);
     }
 }
 
@@ -138,7 +103,7 @@ void Console::clear_history()
     d_consoleLines.clear();
 }
 
-void Console::log_line(const std::string& line, const glm::vec4& colour)
+void Console::println(const std::string& line, const glm::vec4& colour)
 {
     d_consoleLines.push_front({line, colour});
 }

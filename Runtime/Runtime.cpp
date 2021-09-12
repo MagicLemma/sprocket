@@ -6,6 +6,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
+#include <Sprocket/Scripting/LuaScript.h>
 #include <Sprocket/Utility/Colour.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 
@@ -47,6 +48,34 @@ Runtime::Runtime(spkt::Window* window)
     spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
 
     d_runtimeCamera = d_scene.registry.find<spkt::Camera3DComponent>();
+
+    d_console.register_command("clear", [](Console& console, auto args) {
+        console.clear_history();
+    });
+    
+    d_console.register_command("exit", [&](Console& console, auto args) {
+        d_window->Close();
+    });
+
+    d_console.register_command("echo", [](Console& console, auto args) {
+        if (args.size() < 2) { return; }
+        std::string echo = args[1];
+        for (auto arg : args | std::views::drop(2)) echo += " " + arg;
+        console.log(" > {}", echo);
+    });
+
+    d_console.register_command("run", [](Console& console, auto args) {
+        if (args.size() != 2) {
+            console.error("Invalid args for {}", args[0]);
+            return;
+        }
+        const auto script_file = std::format("Resources/Scripts/{}", args[1]);
+        if (std::filesystem::exists(script_file)) {
+            spkt::lua::Script script(script_file);
+        } else {
+            console.error(" > Could not find script '{}'", args[1]);
+        }
+    });
 }
 
 void Runtime::on_event(spkt::event& event)
