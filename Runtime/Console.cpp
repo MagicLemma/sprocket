@@ -11,67 +11,11 @@
 #include <format>
 #include <ranges>
 
-const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
-const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
-const auto GARDEN      = spkt::from_hex(0x55E6C1);
-const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
-
-Console::Console(spkt::Window* window)
-    : d_window(window)
-    , d_ui(window)
-{
-    spkt::SimpleUITheme theme;
-    theme.backgroundColour = SPACE_DARK;
-    theme.backgroundColour.w = 0.8f;
-    theme.baseColour = CLEAR_BLUE;
-    theme.hoveredColour = LIGHT_BLUE;
-    theme.clickedColour = GARDEN;
-    d_ui.SetTheme(theme);
-}
-
-void Console::on_update(double dt)
-{
-    d_ui.on_update(dt);
-}
-
-void Console::on_event(spkt::event& event)
-{
-    auto data = event.get_if<spkt::keyboard_pressed_event>();
-    if (data && data->key == spkt::Keyboard::ENTER) {
-        submit();
-        event.consume();
-    } else {
-        d_ui.on_event(event);
-    }
-}
-
 void Console::submit()
 {
     print(d_commandLine);
     handle_command(d_commandLine);
     d_commandLine.clear();
-}
-
-void Console::draw()
-{
-    d_ui.StartFrame();
-
-    double W = 0.8 * d_window->Width() - 20;
-    double H = d_window->Height() - 20;
-    glm::vec4 mainRegion = {10, 10, W, H};
-    d_ui.StartPanel("Main", &mainRegion, spkt::PanelType::UNCLICKABLE);
-
-    double boxHeight = 50.0;
-    d_ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &d_commandLine);
-    glm::vec2 region = {10, H - 10 - boxHeight - 50};
-    float fontSize = 24.0f;
-    for (const auto& command : d_consoleLines) {
-        d_ui.Text(command.text, fontSize, region, command.colour);
-        region.y -= fontSize;
-    }
-
-    d_ui.EndPanel();
-    d_ui.EndFrame();
 }
 
 void Console::handle_command(const std::string_view command)
@@ -123,4 +67,24 @@ void Console::deregister_command(const std::string& command)
     if (auto it = d_command_handlers.find(command); it != d_command_handlers.end()) {
         d_command_handlers.erase(it);
     }
+}
+
+void draw_console(Console& console, spkt::SimpleUI& ui, int width, int height)
+{
+    double W = 0.8 * width - 20;
+    double H = height - 20;
+    glm::vec4 mainRegion = {10, 10, W, H};
+
+    ui.StartPanel("Main", &mainRegion, spkt::PanelType::UNCLICKABLE);
+
+    double boxHeight = 50.0;
+    ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &console.command_line());
+    glm::vec2 region = {10, H - 10 - boxHeight - 50};
+    float fontSize = 24.0f;
+    for (const auto& command : console.history()) {
+        ui.Text(command.text, fontSize, region, command.colour);
+        region.y -= fontSize;
+    }
+
+    ui.EndPanel();
 }

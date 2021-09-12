@@ -40,7 +40,8 @@ Runtime::Runtime(spkt::Window* window)
         "Resources/Textures/Skybox/Skybox_Z_Pos.png",
         "Resources/Textures/Skybox/Skybox_Z_Neg.png"
     })
-    , d_console(d_window)
+    , d_ui(d_window)
+    , d_console()
 {
     d_window->SetCursorVisibility(false);
 
@@ -48,6 +49,14 @@ Runtime::Runtime(spkt::Window* window)
     spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
 
     d_runtimeCamera = d_scene.registry.find<spkt::Camera3DComponent>();
+
+    spkt::SimpleUITheme theme;
+    theme.backgroundColour = SPACE_DARK;
+    theme.backgroundColour.w = 0.8f;
+    theme.baseColour = CLEAR_BLUE;
+    theme.hoveredColour = LIGHT_BLUE;
+    theme.clickedColour = GARDEN;
+    d_ui.SetTheme(theme);
 
     d_console.register_command("clear", [](Console& console, auto args) {
         console.clear_history();
@@ -88,7 +97,13 @@ void Runtime::on_event(spkt::event& event)
     }
 
     if (d_consoleActive) {
-        d_console.on_event(event);
+        auto data = event.get_if<spkt::keyboard_pressed_event>();
+        if (data && data->key == spkt::Keyboard::ENTER) {
+            d_console.submit();
+            event.consume();
+        } else {
+            d_ui.on_event(event);
+        }
         event.consume();
     }
 
@@ -97,11 +112,9 @@ void Runtime::on_event(spkt::event& event)
 
 void Runtime::on_update(double dt)
 {
-    if (d_consoleActive) {
-        d_window->SetCursorVisibility(true);
-        d_console.on_update(dt);
-    } else {
-        d_window->SetCursorVisibility(false);
+    d_ui.on_update(dt);
+    d_window->SetCursorVisibility(d_consoleActive);
+    if (!d_consoleActive) {
         d_scene.on_update(dt);
     }
 }
@@ -112,6 +125,8 @@ void Runtime::on_render()
     d_entityRenderer.Draw(d_scene.registry, d_runtimeCamera);
 
     if (d_consoleActive) {
-        d_console.draw();
+        d_ui.StartFrame();
+        draw_console(d_console, d_ui, d_window->Width(), d_window->Height());
+        d_ui.EndFrame();
     }
 }

@@ -31,8 +31,9 @@ class Runtime
     spkt::entity d_runtimeCamera;
 
     // Console
-    Console d_console;
-    bool d_consoleActive = false;
+    spkt::SimpleUI d_ui;
+    Console        d_console;
+    bool           d_consoleActive = false;
 
 public:
     Runtime(spkt::Window* window);
