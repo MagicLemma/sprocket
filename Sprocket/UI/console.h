@@ -1,3 +1,4 @@
+#pragma once
 #include <Sprocket/UI/SimpleUI.h>
 
 #include <glm/glm.hpp>
@@ -7,6 +8,8 @@
 #include <span>
 #include <string_view>
 #include <string>
+
+namespace spkt {
 
 struct console_line
 {
@@ -56,3 +59,5 @@ void draw_console(
     int width,
     int height
 );
+
+}

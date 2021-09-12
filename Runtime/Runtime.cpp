@@ -7,6 +7,7 @@
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 
@@ -58,22 +59,22 @@ Runtime::Runtime(spkt::Window* window)
     theme.clickedColour = GARDEN;
     d_ui.SetTheme(theme);
 
-    d_console.register_command("clear", [](console& console, auto args) {
+    d_console.register_command("clear", [](spkt::console& console, auto args) {
         console.clear_history();
     });
     
-    d_console.register_command("exit", [&](console& console, auto args) {
+    d_console.register_command("exit", [&](spkt::console& console, auto args) {
         d_window->Close();
     });
 
-    d_console.register_command("echo", [](console& console, auto args) {
+    d_console.register_command("echo", [](spkt::console& console, auto args) {
         if (args.size() < 2) { return; }
         std::string echo = args[1];
         for (auto arg : args | std::views::drop(2)) echo += " " + arg;
         console.log(" > {}", echo);
     });
 
-    d_console.register_command("run", [](console& console, auto args) {
+    d_console.register_command("run", [](spkt::console& console, auto args) {
         if (args.size() != 2) {
             console.error("Invalid args for {}", args[0]);
             return;

@@ -1,4 +1,4 @@
-#include "Console.h"
+#include "console.h"
 
 #include <Sprocket/UI/SimpleUI.h>
 
@@ -20,6 +20,8 @@ std::vector<std::string> tokenize(const std::string& command)
 }
 
 }
+
+namespace spkt {
 
 void console::submit(const std::string& command)
 {
@@ -87,4 +89,6 @@ void draw_console(
     }
 
     ui.EndPanel();
+}
+
 }

@@ -33,6 +33,7 @@ add_library(Sprocket STATIC
             UI/Font/FontAtlas.cpp
             UI/Font/Font.cpp
             
+            UI/console.cpp
             UI/UIEngine.cpp
             UI/SimpleUI.cpp
             UI/SinglePanelUI.cpp
