@@ -35,7 +35,7 @@ int run(App& app, window& window, const run_options& options = {})
     });
 
     while (window.Running()) {
-        window.Clear();
+        window.begin_frame();
 
         double dt = watch.on_update();
         app.on_update(dt);
@@ -45,7 +45,7 @@ int run(App& app, window& window, const run_options& options = {})
             window.SetWindowName(std::format("{} [FPS: {}]", name, watch.frame_rate()));
         }
 
-        window.on_update();
+        window.end_frame();
     }
 
     return 0;

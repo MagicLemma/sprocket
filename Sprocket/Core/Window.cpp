@@ -10,16 +10,16 @@
 
 namespace spkt {
 
-struct WindowImpl
+struct window_impl
 {
 	GLFWwindow* window;	
 	std::uint32_t vao;
 };
 
 window::window(const std::string& name, std::uint32_t width, std::uint32_t height)
-	: d_impl(std::make_unique<WindowImpl>())
+	: d_impl(std::make_unique<window_impl>())
 	, d_data({name, width, height})
-	, d_clearColour({1.0, 1.0, 1.0})
+	, d_clear_colour({1.0, 1.0, 1.0})
 {
 	if (GLFW_TRUE != glfwInit()) {
 		log::fatal("Failed to initialise GLFW");
@@ -76,7 +76,7 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
 	{
 		glViewport(0, 0, width, height);
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		auto event = spkt::make_event<window_resized_event>(width, height);
 		data->width = width;
@@ -86,7 +86,7 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 
 	glfwSetWindowCloseCallback(d_impl->window, [](GLFWwindow* window)
 	{
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		auto event = spkt::make_event<window_closed_event>();
 		data->running = false;
@@ -94,7 +94,7 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetKeyCallback(d_impl->window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		switch (action)
 		{
@@ -114,7 +114,7 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetMouseButtonCallback(d_impl->window, [](GLFWwindow* window, int button, int action, int mods) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		switch (action)
 		{
@@ -130,21 +130,21 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double x_pos, double y_pos) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		auto event = spkt::make_event<mouse_moved_event>(x_pos, y_pos);
 		data->callback(event);
 	});
 
 	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double x_offset, double y_offset) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		auto event = spkt::make_event<mouse_scrolled_event>(x_offset, y_offset);
 		data->callback(event);
 	});
 
 	glfwSetWindowFocusCallback(d_impl->window, [](GLFWwindow* window, int focused) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (focused) {
 			auto event = spkt::make_event<window_focused_event>();
 			data->focused = true;
@@ -158,7 +158,7 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetWindowMaximizeCallback(d_impl->window, [](GLFWwindow* window, int maximized) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (maximized) {
 			auto event = spkt::make_event<window_maximised_event>();
 			data->callback(event);
@@ -170,7 +170,7 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, std::uint32_t key) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		window_data* data = (window_data*)glfwGetWindowUserPointer(window);
 		if (!data->focused) return;
 		auto event = spkt::make_event<keyboard_typed_event>(key);
 		data->callback(event);
@@ -189,7 +189,7 @@ window::~window()
 	glfwTerminate();
 }
 
-void window::on_update()
+void window::end_frame()
 {
 	glfwSwapBuffers(d_impl->window);
 	glfwPollEvents();
@@ -198,19 +198,19 @@ void window::on_update()
 	glfwGetCursorPos(d_impl->window, &x, &y);
 	glm::vec2 newMousePos{x, y};
 
-	d_mouseOffset = newMousePos - d_mousePos;
-	d_mousePos = newMousePos;
+	d_mouse_offset = newMousePos - d_mouse_position;
+	d_mouse_position = newMousePos;
 }
 
-void window::Clear()
+void window::begin_frame()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(d_clearColour.r, d_clearColour.g, d_clearColour.b, 1.0);
+	glClearColor(d_clear_colour.r, d_clear_colour.g, d_clear_colour.b, 1.0);
 }
 
 void window::SetClearColour(const glm::vec3& colour)
 {
-	d_clearColour = colour;
+	d_clear_colour = colour;
 }
 
 void window::SetCursorVisibility(bool visibility)
@@ -247,12 +247,12 @@ bool window::IsFullscreen() const
 
 glm::vec2 window::GetMousePos() const
 {
-	return d_mousePos;
+	return d_mouse_position;
 }
 
 glm::vec2 window::GetMouseOffset() const
 {
-	return d_mouseOffset;
+	return d_mouse_offset;
 }
 
 void window::SetWindowName(const std::string& name)
@@ -266,7 +266,7 @@ std::string window::GetWindowName() const
 	return d_data.name;
 }
 
-void window::SetCallback(EventCallback cb)
+void window::SetCallback(event_handler cb)
 {
 	d_data.callback = cb;
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include <Sprocket/Core/events.h>
+
 #include <glm/glm.hpp>
 
 #include <cstddef>
@@ -12,34 +14,32 @@
 
 namespace spkt {
 
-class event;
+using event_handler = std::function<void(spkt::event&)>;
 
-using EventCallback = std::function<void(spkt::event&)>;
+struct window_impl;
 
-struct WindowImpl;
-
-struct WindowData
+struct window_data
 {
-	std::string name;
+	std::string   name;
 	std::uint32_t width;
 	std::uint32_t height;
 
 	bool fullscreen = false;
-	bool running = true;
-	bool focused = true;
+	bool running    = true;
+	bool focused    = true;
 
-	EventCallback callback = [](spkt::event&) {};
+	event_handler callback = [](spkt::event&) {};
 };
 
 class window
 {
-	std::unique_ptr<WindowImpl> d_impl;
-	WindowData                  d_data;
+	std::unique_ptr<window_impl> d_impl;
+	window_data                  d_data;
 
-	glm::vec3 d_clearColour;
+	glm::vec3 d_clear_colour;
 
-	glm::vec2 d_mousePos;
-	glm::vec2 d_mouseOffset;
+	glm::vec2 d_mouse_position;
+	glm::vec2 d_mouse_offset;
 
 private:
 	// Deleted Constructors
@@ -51,8 +51,8 @@ public:
 	window(const std::string& name = "Window", std::uint32_t width = 1280, std::uint32_t height = 720);
 	~window();
 
-	void on_update();
-	void Clear();
+	void begin_frame();
+	void end_frame();
 
 	void SetClearColour(const glm::vec3& colour);
 
@@ -64,7 +64,7 @@ public:
 	bool Focused() const { return d_data.focused; }
 
 	// Callback Utilities
-	void SetCallback(EventCallback cb);
+	void SetCallback(event_handler cb);
 		// Sets the callback to be given events. If a callback is already
 		// provided, it is overwritten.
 
