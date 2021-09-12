@@ -24,7 +24,7 @@ public:
 
 private:
     std::unordered_map<std::string, command_handler> d_handlers;
-    std::deque<console_line>                         d_history;
+    std::deque<console_line>                         d_lines;
 
 public:
     void register_command(const std::string& command, const command_handler& handler);
@@ -32,7 +32,7 @@ public:
 
     void submit(const std::string& command);
 
-    [[nodiscard]] const std::deque<console_line>& history() const { return d_history; }
+    [[nodiscard]] const std::deque<console_line>& history() const { return d_lines; }
     void clear_history();
 
     void print(const std::string& line, const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});

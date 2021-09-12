@@ -43,14 +43,14 @@ void console::submit(const std::string& command)
 
 void console::clear_history()
 {
-    d_history.clear();
+    d_lines.clear();
 }
 
 void console::print(const std::string& line, const glm::vec4& colour)
 {
-    d_history.push_front({line, colour});
-    while (d_history.size() > 100) {
-        d_history.pop_back();
+    d_lines.push_front({line, colour});
+    while (d_lines.size() > 100) {
+        d_lines.pop_back();
     }
 }
 
