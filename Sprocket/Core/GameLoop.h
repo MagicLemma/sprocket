@@ -2,7 +2,7 @@
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Utility/Log.h>
-#include <Sprocket/Utility/Stopwatch.h>
+#include <Sprocket/Core/timer.h>
 
 #include <exception>
 #include <format>

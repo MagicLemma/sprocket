@@ -25,6 +25,7 @@ find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
             Core/Window.cpp
+            Core/timer.cpp
 
             Audio/Listener.cpp
             Audio/Music.cpp
@@ -75,7 +76,6 @@ add_library(Sprocket STATIC
             Utility/InputProxy.cpp
             Utility/Random.cpp
             Utility/Maths.cpp
-            Utility/Stopwatch.cpp
             Utility/Yaml.cpp
 
             Scripting/LuaScript.cpp
