@@ -4,62 +4,55 @@
 
 #include <deque>
 #include <functional>
-#include <ranges>
+#include <span>
 #include <string_view>
+#include <string>
 
-namespace spkt {
-    class Window;
-    class event;
-}
-
-struct ConsoleLine
+struct console_line
 {
     std::string text;
     glm::vec4 colour;
 };
 
-class Console
+class console
 {
 public:
-    using command_handler = std::function<void(Console&, std::span<const std::string>)>;
+    using command_handler = std::function<void(console&, std::span<const std::string>)>;
 
 private:
-    std::string             d_commandLine;
-    std::deque<ConsoleLine> d_consoleLines;
-
-    std::unordered_map<std::string, command_handler> d_command_handlers;
-
-    void handle_command(const std::string_view command);
+    std::unordered_map<std::string, command_handler> d_handlers;
+    std::deque<console_line>                         d_history;
 
 public:
-
-    void submit();
-
-    void clear_history();
-
     void register_command(const std::string& command, const command_handler& handler);
     void deregister_command(const std::string& command);
+
+    void submit(const std::string& command);
+
+    [[nodiscard]] const std::deque<console_line>& history() const { return d_history; }
+    void clear_history();
 
     void print(const std::string& line, const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
     void log(std::string_view format, auto&&... args);
     void error(std::string_view format, auto&&... args);
-
-    const std::string& command_line() const { return d_commandLine; }
-    std::string& command_line() { return d_commandLine; }
-
-    const std::deque<ConsoleLine>& history() const { return d_consoleLines; }
 };
 
 template <typename... Args>
-void Console::log(std::string_view format, Args&&... args)
+void console::log(std::string_view format, Args&&... args)
 {
     print(std::format(format, std::forward<Args>(args)...));
 }
 
 template <typename... Args>
-void Console::error(std::string_view format, Args&&... args)
+void console::error(std::string_view format, Args&&... args)
 {
     print(std::format(format, std::forward<Args>(args)...), {1.0, 0.0, 0.0, 1.0});
 }
 
-void draw_console(Console& console, spkt::SimpleUI& ui, int width, int height);
+void draw_console(
+    const console& console,
+    std::string& command_line,
+    spkt::SimpleUI& ui,
+    int width,
+    int height
+);

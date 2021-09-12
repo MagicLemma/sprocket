@@ -1,75 +1,75 @@
 #include "Console.h"
 
-#include <Sprocket/Core/Events.h>
-#include <Sprocket/Core/Window.h>
-#include <Sprocket/Scripting/LuaScript.h>
 #include <Sprocket/UI/SimpleUI.h>
-#include <Sprocket/Utility/Colour.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
 
-#include <filesystem>
-#include <format>
-#include <ranges>
+#include <sstream>
+#include <vector>
 
-void Console::submit()
+namespace {
+
+std::vector<std::string> tokenize(const std::string& command)
 {
-    print(d_commandLine);
-    handle_command(d_commandLine);
-    d_commandLine.clear();
+    std::vector<std::string> out;
+    std::stringstream in;
+    in << command;
+    std::string token;
+    while (std::getline(in, token, ' ')) {
+        out.push_back(token);
+    }
+    return out;
 }
 
-void Console::handle_command(const std::string_view command)
-{
-    const std::vector<std::string> tokens = std::invoke([&] {
-        std::vector<std::string> out;
-        std::stringstream in;
-        in << command;
-        std::string token;
-        while (std::getline(in, token, ' ')) {
-            out.push_back(token);
-        }
-        return out;
-    });
+}
 
+void console::submit(const std::string& command)
+{
+    print(command);
+
+    const std::vector<std::string> tokens = tokenize(command);
     if (tokens.empty()) {
         log("");
         return;
     }
 
     const std::string& directive = tokens[0];
-    if (auto it = d_command_handlers.find(directive); it != d_command_handlers.end()) {
+    if (auto it = d_handlers.find(directive); it != d_handlers.end()) {
         it->second(*this, tokens);
     } else {
         error("Unknown command: '{}'", directive);
     }
 }
 
-void Console::clear_history()
+void console::clear_history()
 {
-    d_consoleLines.clear();
+    d_history.clear();
 }
 
-void Console::print(const std::string& line, const glm::vec4& colour)
+void console::print(const std::string& line, const glm::vec4& colour)
 {
-    d_consoleLines.push_front({line, colour});
-    while (d_consoleLines.size() > 100) {
-        d_consoleLines.pop_back();
+    d_history.push_front({line, colour});
+    while (d_history.size() > 100) {
+        d_history.pop_back();
     }
 }
 
-void Console::register_command(const std::string& command, const command_handler& handler)
+void console::register_command(const std::string& command, const command_handler& handler)
 {
-    d_command_handlers.emplace(command, handler);
+    d_handlers.emplace(command, handler);
 }
 
-void Console::deregister_command(const std::string& command)
+void console::deregister_command(const std::string& command)
 {
-    if (auto it = d_command_handlers.find(command); it != d_command_handlers.end()) {
-        d_command_handlers.erase(it);
+    if (auto it = d_handlers.find(command); it != d_handlers.end()) {
+        d_handlers.erase(it);
     }
 }
 
-void draw_console(Console& console, spkt::SimpleUI& ui, int width, int height)
+void draw_console(
+    const console& console,
+    std::string& command_line,
+    spkt::SimpleUI& ui,
+    int width,
+    int height)
 {
     double W = 0.8 * width - 20;
     double H = height - 20;
@@ -78,7 +78,7 @@ void draw_console(Console& console, spkt::SimpleUI& ui, int width, int height)
     ui.StartPanel("Main", &mainRegion, spkt::PanelType::UNCLICKABLE);
 
     double boxHeight = 50.0;
-    ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &console.command_line());
+    ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &command_line);
     glm::vec2 region = {10, H - 10 - boxHeight - 50};
     float fontSize = 24.0f;
     for (const auto& command : console.history()) {

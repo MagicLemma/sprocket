@@ -58,22 +58,22 @@ Runtime::Runtime(spkt::Window* window)
     theme.clickedColour = GARDEN;
     d_ui.SetTheme(theme);
 
-    d_console.register_command("clear", [](Console& console, auto args) {
+    d_console.register_command("clear", [](console& console, auto args) {
         console.clear_history();
     });
     
-    d_console.register_command("exit", [&](Console& console, auto args) {
+    d_console.register_command("exit", [&](console& console, auto args) {
         d_window->Close();
     });
 
-    d_console.register_command("echo", [](Console& console, auto args) {
+    d_console.register_command("echo", [](console& console, auto args) {
         if (args.size() < 2) { return; }
         std::string echo = args[1];
         for (auto arg : args | std::views::drop(2)) echo += " " + arg;
         console.log(" > {}", echo);
     });
 
-    d_console.register_command("run", [](Console& console, auto args) {
+    d_console.register_command("run", [](console& console, auto args) {
         if (args.size() != 2) {
             console.error("Invalid args for {}", args[0]);
             return;
@@ -99,7 +99,8 @@ void Runtime::on_event(spkt::event& event)
     if (d_consoleActive) {
         auto data = event.get_if<spkt::keyboard_pressed_event>();
         if (data && data->key == spkt::Keyboard::ENTER) {
-            d_console.submit();
+            d_console.submit(d_command_line);
+            d_command_line.clear();
             event.consume();
         } else {
             d_ui.on_event(event);
@@ -126,7 +127,7 @@ void Runtime::on_render()
 
     if (d_consoleActive) {
         d_ui.StartFrame();
-        draw_console(d_console, d_ui, d_window->Width(), d_window->Height());
+        draw_console(d_console, d_command_line, d_ui, d_window->Width(), d_window->Height());
         d_ui.EndFrame();
     }
 }

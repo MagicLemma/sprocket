@@ -32,7 +32,8 @@ class Runtime
 
     // Console
     spkt::SimpleUI d_ui;
-    Console        d_console;
+    console        d_console;
+    std::string    d_command_line;
     bool           d_consoleActive = false;
 
 public:
