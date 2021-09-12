@@ -4,7 +4,7 @@
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/LuaConverter.h>
 #include <Sprocket/Scripting/LuaScript.h>
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/Maths.h>
 
 #include <lua.hpp>

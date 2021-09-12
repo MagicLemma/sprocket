@@ -1,7 +1,7 @@
 #include "Window.h"
 
 #include <Sprocket/Core/Events.h>
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/Log.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

@@ -1,6 +1,6 @@
 #include "loader.h"
 
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Utility/Yaml.h>
 #include <Sprocket/Scene/scene.h>

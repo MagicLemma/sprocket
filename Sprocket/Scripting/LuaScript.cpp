@@ -1,6 +1,6 @@
 #include "LuaScript.h"
 
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 
 #include <lua.hpp>
 

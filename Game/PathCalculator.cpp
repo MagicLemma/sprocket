@@ -1,6 +1,6 @@
 #include "PathCalculator.h"
 
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 
 #include <glm/glm.hpp>
 

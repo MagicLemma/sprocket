@@ -1,7 +1,7 @@
 #pragma once
 #include <Sprocket/Core/Events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 #include <Sprocket/Core/timer.h>
 
 #include <exception>

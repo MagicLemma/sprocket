@@ -1,6 +1,6 @@
 #include "shader.h"
 
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>

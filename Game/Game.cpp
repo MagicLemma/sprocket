@@ -14,7 +14,7 @@
 #include <Sprocket/Scene/Systems/game_grid.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/MouseCodes.h>
 
 #include <cmath>

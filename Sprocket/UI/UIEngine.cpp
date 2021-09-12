@@ -5,7 +5,7 @@
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Utility/KeyboardCodes.h>
 #include <Sprocket/Utility/MouseCodes.h>
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/log.h>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
