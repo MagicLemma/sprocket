@@ -2,7 +2,7 @@
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 
 namespace spkt {
 

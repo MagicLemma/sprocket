@@ -1,6 +1,6 @@
 #include "SinglePanelUI.h"
 
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/window.h>
 
 #include <functional>
 #include <cassert>

@@ -1,7 +1,7 @@
 #include "post_processor.h"
 
 #include <Sprocket/Graphics/mesh.h>
-#include <Sprocket/Graphics/Texture.h>
+#include <Sprocket/Graphics/texture.h>
 
 #include <glad/glad.h>
 
