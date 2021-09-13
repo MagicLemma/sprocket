@@ -24,7 +24,7 @@ find_package(asio CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
-            Core/Window.cpp
+            Core/window.cpp
             Core/timer.cpp
             Core/log.cpp
 

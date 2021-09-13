@@ -40,9 +40,6 @@ class window
 	std::unique_ptr<window_impl> d_impl;
 	window_data                  d_data;
 
-private:
-	// Deleted Constructors
-	window(window&&) = delete;
 	window(const window&) = delete;
 	window& operator=(const window&) = delete;
 
