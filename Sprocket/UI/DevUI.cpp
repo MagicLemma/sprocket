@@ -88,12 +88,12 @@ void SetClipboardCallbacks(window* window)
     ImGuiIO& io = ImGui::GetIO();
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
         spkt::window* w = static_cast<spkt::window*>(user_data);
-        w->SetClipboardData(text);
+        w->set_clipboard_data(text);
     };
 
     io.GetClipboardTextFn = [](void* user_data) {
         spkt::window* w = static_cast<spkt::window*>(user_data);
-        return w->GetClipboardData();
+        return w->get_clipboard_data();
     };
 
     io.ClipboardUserData = window;
@@ -180,7 +180,7 @@ DevUI::DevUI(window* window)
     d_fontAtlas = SetFont("Resources/Fonts/Calibri.ttf", 15.0f);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize = ImVec2((float)window->Width(), (float)window->Height());
+    io.DisplaySize = ImVec2((float)window->width(), (float)window->height());
 
     // Reason: when the viewport isn't docked and we have a selected entity,
     // attempting to move the entity just moved the window.

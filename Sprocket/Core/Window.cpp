@@ -189,37 +189,40 @@ window::~window()
 	glfwTerminate();
 }
 
+void window::begin_frame()
+{
+	// Clear the screen
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClearColor(d_clear_colour.r, d_clear_colour.g, d_clear_colour.b, 1.0);
+	
+	// Handle all events
+	glfwPollEvents();
+
+	// Update the mouse position and offset
+	double x, y;
+	glfwGetCursorPos(d_impl->window, &x, &y);
+	glm::vec2 new_mouse_position{x, y};
+	d_mouse_offset = new_mouse_position - d_mouse_position;
+	d_mouse_position = new_mouse_position;
+}
+
 void window::end_frame()
 {
 	glfwSwapBuffers(d_impl->window);
-	glfwPollEvents();
-
-	double x, y;
-	glfwGetCursorPos(d_impl->window, &x, &y);
-	glm::vec2 newMousePos{x, y};
-
-	d_mouse_offset = newMousePos - d_mouse_position;
-	d_mouse_position = newMousePos;
 }
 
-void window::begin_frame()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(d_clear_colour.r, d_clear_colour.g, d_clear_colour.b, 1.0);
-}
-
-void window::SetClearColour(const glm::vec3& colour)
+void window::set_clear_colour(const glm::vec3& colour)
 {
 	d_clear_colour = colour;
 }
 
-void window::SetCursorVisibility(bool visibility)
+void window::set_cursor_visibility(bool visibility)
 {
 	int show = visibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
 	glfwSetInputMode(d_impl->window, GLFW_CURSOR, show);
 }
 
-void window::SetFullscreen()
+void window::set_fullscreen()
 {
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -234,54 +237,58 @@ void window::SetFullscreen()
 	d_data.fullscreen = true;
 }
 
-void window::SetWindowed(int width, int height)
+void window::set_windowed(int width, int height)
 {
 	glfwSetWindowMonitor(d_impl->window, nullptr, 50, 50, width, height, 0);
 	d_data.fullscreen = false;
 }
 
-bool window::IsFullscreen() const
+bool window::is_fullscreen() const
 {
 	return d_data.fullscreen;
 }
 
-glm::vec2 window::GetMousePos() const
+glm::vec2 window::get_mouse_position() const
 {
+	// If the mouse is disabled, lock the return value to the centre of the screen.
+	if (glfwGetInputMode(d_impl->window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+		return { (float)d_data.width/2.0f, (float)d_data.height/2.0f };
+	}
 	return d_mouse_position;
 }
 
-glm::vec2 window::GetMouseOffset() const
+glm::vec2 window::get_mouse_offset() const
 {
 	return d_mouse_offset;
 }
 
-void window::SetWindowName(const std::string& name)
+void window::set_name(const std::string& name)
 {
 	d_data.name = name;
 	glfwSetWindowTitle(d_impl->window, name.c_str());
 }
 
-std::string window::GetWindowName() const
+std::string window::name() const
 {
 	return d_data.name;
 }
 
-void window::SetCallback(event_handler cb)
+void window::set_event_handler(event_handler cb)
 {
 	d_data.callback = cb;
 }
 
-const char* window::GetClipboardData() const
+const char* window::get_clipboard_data() const
 {
 	return glfwGetClipboardString(d_impl->window);
 }
 
-void window::SetClipboardData(const std::string& text) const
+void window::set_clipboard_data(const std::string& text) const
 {
 	glfwSetClipboardString(d_impl->window, text.c_str());
 }
 
-void* window::NativeWindow() const
+void* window::native_handle() const
 {
 	return d_impl->window;
 }

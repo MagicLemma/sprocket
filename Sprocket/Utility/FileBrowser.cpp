@@ -12,7 +12,7 @@ namespace {
 
 void SetOFN(OPENFILENAMEA* ofn, window* window, const char* filter)
 {
-	GLFWwindow* w = static_cast<GLFWwindow*>(window->NativeWindow());
+	GLFWwindow* w = static_cast<GLFWwindow*>(window->native_handle());
 	ZeroMemory(ofn, sizeof(OPENFILENAME));
 	ofn->lStructSize = sizeof(OPENFILENAME);
 	ofn->hwndOwner = glfwGetWin32Window(w);

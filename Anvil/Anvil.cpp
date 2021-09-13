@@ -58,7 +58,7 @@ Anvil::Anvil(spkt::window* window)
     , d_viewport(1280, 720)
     , d_ui(d_window)
 {
-    d_window->SetCursorVisibility(true);
+    d_window->set_cursor_visibility(true);
 
     d_scene = std::make_shared<spkt::scene>();
     spkt::add_singleton(d_scene->registry);
@@ -75,21 +75,21 @@ void Anvil::on_event(spkt::event& event)
             if (d_playingGame) {
                 d_playingGame = false;
                 d_activeScene = d_scene;
-                d_window->SetCursorVisibility(true);
+                d_window->set_cursor_visibility(true);
             }
             else if (d_selected != spkt::null) {
                 d_selected = spkt::null;
             }
-            else if (d_window->IsFullscreen()) {
-                d_window->SetWindowed(1280, 720);
+            else if (d_window->is_fullscreen()) {
+                d_window->set_windowed(1280, 720);
             }
             event.consume();
         } else if (data->key == Keyboard::F11) {
-            if (d_window->IsFullscreen()) {
-                d_window->SetWindowed(1280, 720);
+            if (d_window->is_fullscreen()) {
+                d_window->set_windowed(1280, 720);
             }
             else {
-                d_window->SetFullscreen();
+                d_window->set_fullscreen();
             }
             event.consume();
         }
@@ -215,7 +215,7 @@ void Anvil::on_render()
 
                 d_playingGame = true;
                 d_runtimeCamera = d_activeScene->registry.find<spkt::Camera3DComponent>();
-                d_window->SetCursorVisibility(false);
+                d_window->set_cursor_visibility(false);
             }
             ImGui::EndMenu();
         }

@@ -86,7 +86,7 @@ Game::Game(spkt::window* window)
     , d_assetManager()
     , d_mode(Mode::PLAYER)
     , d_entityRenderer(&d_assetManager)
-    , d_post_processor(d_window->Width(), d_window->Height())
+    , d_post_processor(d_window->width(), d_window->height())
     , d_shadowMap(&d_assetManager)
     , d_hoveredEntityUI(d_window)
     , d_devUI(window)
@@ -194,9 +194,9 @@ void Game::on_event(spkt::event& event)
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
-                d_window->GetMousePos(),
-                (float)d_window->Width(),
-                (float)d_window->Height(),
+                d_window->get_mouse_position(),
+                (float)d_window->width(),
+                (float)d_window->height(),
                 spkt::make_view(registry, d_camera),
                 spkt::make_proj(registry, d_camera)
             );
@@ -255,7 +255,7 @@ void Game::on_update(double dt)
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
-    d_window->SetClearColour(skyColour);
+    d_window->set_clear_colour(skyColour);
     if (d_cycle.IsDay()) {
         sun.direction = d_cycle.GetSunDir();
         sun.colour = {1.0, 0.945, 0.789};
@@ -310,9 +310,9 @@ void Game::on_render()
 
         d_hoveredEntityUI.StartFrame();
 
-        auto mouse = d_window->GetMousePos();
-        float w = (float)d_window->Width();
-        float h = (float)d_window->Height();
+        auto mouse = d_window->get_mouse_position();
+        float w = (float)d_window->width();
+        float h = (float)d_window->height();
 
         if (game_grid.clicked_square.has_value()) {
             auto it = tiles.find(game_grid.clicked_square.value());
@@ -403,8 +403,8 @@ void Game::on_render()
         return;
     }
 
-    float w = (float)d_window->Width();
-    float h = (float)d_window->Height();
+    float w = (float)d_window->width();
+    float h = (float)d_window->height();
 
     d_escapeMenu.StartFrame();
     static bool showVolume = false;

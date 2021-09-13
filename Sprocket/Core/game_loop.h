@@ -27,14 +27,14 @@ concept runnable = requires(T t, event& event, double dt)
 template <runnable App>
 int run(App& app, window& window, const run_options& options = {})
 {
-    std::string name = window.GetWindowName();
+    std::string name = window.name();
     timer watch;
 
-    window.SetCallback([&app](event& event) {
+    window.set_event_handler([&app](event& event) {
         app.on_event(event);
     });
 
-    while (window.Running()) {
+    while (window.is_running()) {
         window.begin_frame();
 
         double dt = watch.on_update();
@@ -42,7 +42,7 @@ int run(App& app, window& window, const run_options& options = {})
         app.on_render();
 
         if (options.show_frame_rate) {
-            window.SetWindowName(std::format("{} [FPS: {}]", name, watch.frame_rate()));
+            window.set_name(std::format("{} [FPS: {}]", name, watch.frame_rate()));
         }
 
         window.end_frame();

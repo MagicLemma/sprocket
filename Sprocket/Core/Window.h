@@ -54,40 +54,36 @@ public:
 	void begin_frame();
 	void end_frame();
 
-	void SetClearColour(const glm::vec3& colour);
+	void set_clear_colour(const glm::vec3& colour);
 
-	// Getters
-	std::uint32_t Height() const { return d_data.height; }
-	std::uint32_t Width() const { return d_data.width; }
-	float AspectRatio() const { return (float)d_data.width / (float)d_data.height; }
-	bool Running() const { return d_data.running; }
-	bool Focused() const { return d_data.focused; }
+	std::uint32_t height() const { return d_data.height; }
+	std::uint32_t width() const { return d_data.width; }
+	float aspect_ratio() const { return (float)d_data.width / (float)d_data.height; }
 
-	// Callback Utilities
-	void SetCallback(event_handler cb);
-		// Sets the callback to be given events. If a callback is already
-		// provided, it is overwritten.
+	void set_event_handler(event_handler cb);
 
 	// Window Utilities
-	std::string GetWindowName() const;
-	void SetWindowName(const std::string& name);
-	void SetCursorVisibility(bool visibility);
-	void SetFullscreen();
-	void SetWindowed(int width, int height);
-	bool IsFullscreen() const;
+	std::string name() const;
+	void set_name(const std::string& name);
+	void set_cursor_visibility(bool visibility);
+	void set_fullscreen();
+	void set_windowed(int width, int height);
+	bool is_fullscreen() const;
+	bool is_running() const { return d_data.running; }
+	bool is_focused() const { return d_data.focused; }
 
 	// Mouse Utilities
-	glm::vec2 GetMousePos() const;
-	glm::vec2 GetMouseOffset() const;
+	glm::vec2 get_mouse_position() const;
+	glm::vec2 get_mouse_offset() const;
 
 	// Clipboard Utilities
-	const char* GetClipboardData() const;
-	void SetClipboardData(const std::string& text) const;
+	const char* get_clipboard_data() const;
+	void set_clipboard_data(const std::string& text) const;
 
 	// Low level Utilities
-	void* NativeWindow() const;
+	void* native_handle() const;
 
-	void Close() { d_data.running = false; }
+	void close() { d_data.running = false; }
 };
 
 }
