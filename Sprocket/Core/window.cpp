@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "window.h"
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/log.h>
