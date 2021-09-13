@@ -28,6 +28,9 @@ struct window_data
 	bool running    = true;
 	bool focused    = true;
 
+	glm::vec2 mouse_position;
+	glm::vec2 mouse_offset;
+
 	event_handler callback = [](spkt::event&) {};
 };
 
@@ -38,8 +41,6 @@ class window
 
 	glm::vec3 d_clear_colour;
 
-	glm::vec2 d_mouse_position;
-	glm::vec2 d_mouse_offset;
 
 private:
 	// Deleted Constructors
