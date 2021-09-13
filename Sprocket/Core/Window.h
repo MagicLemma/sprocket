@@ -23,6 +23,7 @@ struct window_data
 	std::string   name;
 	std::uint32_t width;
 	std::uint32_t height;
+	glm::vec3     clear_colour;
 
 	bool fullscreen = false;
 	bool running    = true;
@@ -39,9 +40,6 @@ class window
 	std::unique_ptr<window_impl> d_impl;
 	window_data                  d_data;
 
-	glm::vec3 d_clear_colour;
-
-
 private:
 	// Deleted Constructors
 	window(window&&) = delete;
@@ -49,42 +47,38 @@ private:
 	window& operator=(const window&) = delete;
 
 public:
-	window(const std::string& name = "Window", std::uint32_t width = 1280, std::uint32_t height = 720);
+	window(const std::string& name = "Sprocket", std::uint32_t width = 1280, std::uint32_t height = 720);
 	~window();
+
+	void close() { d_data.running = false; }
 
 	void begin_frame();
 	void end_frame();
 
+	void set_name(const std::string& name);
+	void set_event_handler(const event_handler& cb);
 	void set_clear_colour(const glm::vec3& colour);
+	void set_fullscreen();
+	void set_cursor_visibility(bool visibility);
+	void set_windowed(int width, int height);
 
+	std::string name() const { return d_data.name; }
 	std::uint32_t height() const { return d_data.height; }
 	std::uint32_t width() const { return d_data.width; }
 	float aspect_ratio() const { return (float)d_data.width / (float)d_data.height; }
 
-	void set_event_handler(event_handler cb);
-
-	// Window Utilities
-	std::string name() const;
-	void set_name(const std::string& name);
-	void set_cursor_visibility(bool visibility);
-	void set_fullscreen();
-	void set_windowed(int width, int height);
-	bool is_fullscreen() const;
+	bool is_fullscreen() const { return d_data.fullscreen; }
 	bool is_running() const { return d_data.running; }
 	bool is_focused() const { return d_data.focused; }
 
-	// Mouse Utilities
-	glm::vec2 get_mouse_position() const;
-	glm::vec2 get_mouse_offset() const;
+	glm::vec2 mouse_position() const;
+	glm::vec2 get_mouse_offset() const { return d_data.mouse_offset; }
 
-	// Clipboard Utilities
 	const char* get_clipboard_data() const;
 	void set_clipboard_data(const std::string& text) const;
 
-	// Low level Utilities
 	void* native_handle() const;
 
-	void close() { d_data.running = false; }
 };
 
 }

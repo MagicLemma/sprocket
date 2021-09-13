@@ -261,7 +261,7 @@ void UIEngine::StartFrame()
 void UIEngine::MouseClick()
 {
     bool foundClicked = false;
-    const glm::vec2 mouse = d_window->get_mouse_position();
+    const glm::vec2 mouse = d_window->mouse_position();
 
     std::size_t moveToFront = 0;
 
@@ -308,7 +308,7 @@ void UIEngine::MouseClick()
 void UIEngine::MouseHover()
 {
     bool foundHovered = false;
-    const glm::vec2 mouse = d_window->get_mouse_position();
+    const glm::vec2 mouse = d_window->mouse_position();
 
     for (auto panelHash : d_panelOrder | std::views::reverse) {
         auto it = d_panels.find(panelHash);

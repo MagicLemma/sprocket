@@ -18,8 +18,7 @@ struct window_impl
 
 window::window(const std::string& name, std::uint32_t width, std::uint32_t height)
 	: d_impl(std::make_unique<window_impl>())
-	, d_data({name, width, height})
-	, d_clear_colour({1.0, 1.0, 1.0})
+	, d_data({name, width, height, {1.0, 1.0, 1.0}})
 {
 	if (GLFW_TRUE != glfwInit()) {
 		log::fatal("Failed to initialise GLFW");
@@ -189,18 +188,17 @@ void window::begin_frame()
 {
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(d_clear_colour.r, d_clear_colour.g, d_clear_colour.b, 1.0);
+	glClearColor(d_data.clear_colour.r, d_data.clear_colour.g, d_data.clear_colour.b, 1.0);
 	
 	// Handle all events
-	d_data.mouse_offset = {0.0f, 0.0f};
 	glfwPollEvents();
 
 	// Update the mouse position and offset
-	//double x, y;
-	//glfwGetCursorPos(d_impl->window, &x, &y);
-	//glm::vec2 new_mouse_position{x, y};
-	//d_data.mouse_offset = new_mouse_position - d_data.mouse_position;
-	//d_data.mouse_position = new_mouse_position;
+	double x, y;
+	glfwGetCursorPos(d_impl->window, &x, &y);
+	glm::vec2 new_mouse_position{x, y};
+	d_data.mouse_offset = new_mouse_position - d_data.mouse_position;
+	d_data.mouse_position = new_mouse_position;
 }
 
 void window::end_frame()
@@ -210,7 +208,12 @@ void window::end_frame()
 
 void window::set_clear_colour(const glm::vec3& colour)
 {
-	d_clear_colour = colour;
+	d_data.clear_colour = colour;
+}
+
+void window::set_event_handler(const event_handler& handler)
+{
+	d_data.callback = handler;
 }
 
 void window::set_cursor_visibility(bool visibility)
@@ -240,12 +243,7 @@ void window::set_windowed(int width, int height)
 	d_data.fullscreen = false;
 }
 
-bool window::is_fullscreen() const
-{
-	return d_data.fullscreen;
-}
-
-glm::vec2 window::get_mouse_position() const
+glm::vec2 window::mouse_position() const
 {
 	// If the mouse is disabled, lock the return value to the centre of the screen.
 	if (glfwGetInputMode(d_impl->window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
@@ -254,25 +252,10 @@ glm::vec2 window::get_mouse_position() const
 	return d_data.mouse_position;
 }
 
-glm::vec2 window::get_mouse_offset() const
-{
-	return d_data.mouse_offset;
-}
-
 void window::set_name(const std::string& name)
 {
 	d_data.name = name;
 	glfwSetWindowTitle(d_impl->window, name.c_str());
-}
-
-std::string window::name() const
-{
-	return d_data.name;
-}
-
-void window::set_event_handler(event_handler cb)
-{
-	d_data.callback = cb;
 }
 
 const char* window::get_clipboard_data() const

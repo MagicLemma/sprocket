@@ -194,7 +194,7 @@ void Game::on_event(spkt::event& event)
         if (data->mods & KeyModifier::CTRL) {
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
-                d_window->get_mouse_position(),
+                d_window->mouse_position(),
                 (float)d_window->width(),
                 (float)d_window->height(),
                 spkt::make_view(registry, d_camera),
@@ -310,7 +310,7 @@ void Game::on_render()
 
         d_hoveredEntityUI.StartFrame();
 
-        auto mouse = d_window->get_mouse_position();
+        auto mouse = d_window->mouse_position();
         float w = (float)d_window->width();
         float h = (float)d_window->height();
 

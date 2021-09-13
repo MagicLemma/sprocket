@@ -121,7 +121,7 @@ void SinglePanelUI::Slider(std::string_view name,
     cmd.AddText(std::format("{}: {:.0f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        auto mouse = d_window->get_mouse_position();
+        auto mouse = d_window->mouse_position();
         mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
