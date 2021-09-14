@@ -1,7 +1,7 @@
 #pragma once
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/buffer.h>
-#include <Sprocket/Graphics/Texture.h>
+#include <Sprocket/Graphics/texture.h>
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -10,7 +10,7 @@
 
 namespace spkt {
 
-class Window;
+class window;
 class event;
 
 void bind_imgui_vbo(std::uint32_t vbo);
@@ -33,7 +33,7 @@ class DevUI
     DevUI& operator=(const DevUI&) = delete;
 
 public:
-    DevUI(Window* window);
+    DevUI(window* window);
 
     void on_event(event& event);
     void on_update(double dt);

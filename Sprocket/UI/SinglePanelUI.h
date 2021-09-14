@@ -8,7 +8,7 @@
 
 namespace spkt {
 
-class Window;
+class window;
 class event;
 
 struct SinglePanelUITheme
@@ -21,7 +21,7 @@ struct SinglePanelUITheme
 
 class SinglePanelUI
 {
-    Window* d_window;
+    window* d_window;
 
     SinglePanelUITheme d_theme;
 
@@ -29,7 +29,7 @@ class SinglePanelUI
     spkt::Font d_font;
 
 public:
-    SinglePanelUI(Window* window);
+    SinglePanelUI(window* window);
 
     const SinglePanelUITheme& GetTheme() const { return d_theme; }
     void SetTheme(const SinglePanelUITheme& theme) { d_theme = theme; }

@@ -1,11 +1,10 @@
 #include "SimpleUI.h"
 
-#include <Sprocket/Core/Events.h>
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/events.h>
+#include <Sprocket/Core/window.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
-#include <Sprocket/Utility/MouseCodes.h>
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Core/log.h>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -130,7 +129,7 @@ void DrawCommand::AddText(std::string_view text,
     }
 }
 
-UIEngine::UIEngine(Window* window)
+UIEngine::UIEngine(spkt::window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
@@ -261,7 +260,7 @@ void UIEngine::StartFrame()
 void UIEngine::MouseClick()
 {
     bool foundClicked = false;
-    const glm::vec2 mouse = d_window->GetMousePos();
+    const glm::vec2 mouse = d_window->mouse_position();
 
     std::size_t moveToFront = 0;
 
@@ -308,7 +307,7 @@ void UIEngine::MouseClick()
 void UIEngine::MouseHover()
 {
     bool foundHovered = false;
-    const glm::vec2 mouse = d_window->GetMousePos();
+    const glm::vec2 mouse = d_window->mouse_position();
 
     for (auto panelHash : d_panelOrder | std::views::reverse) {
         auto it = d_panels.find(panelHash);
@@ -356,8 +355,8 @@ void UIEngine::EndFrame()
     rc.face_culling(false);
     rc.depth_testing(false);
 
-    const float w = (float)d_window->Width();
-    const float h = (float)d_window->Height();
+    const float w = (float)d_window->width();
+    const float h = (float)d_window->height();
 
     // This transformation makes the top left of the screen (0, 0) and the bottom
     // right be (width, height). It flips the y-axis since OpenGL treats the bottom
@@ -395,8 +394,8 @@ void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType ty
         auto info = Register(name, {0, 0, region->z, region->w});
 
         if (info.sinceClicked > 0 && type == PanelType::DRAGGABLE) {
-            region->x += d_window->GetMouseOffset().x;
-            region->y += d_window->GetMouseOffset().y;
+            region->x += d_window->get_mouse_offset().x;
+            region->y += d_window->get_mouse_offset().y;
             d_currentPanel->region = *region;
         }
     }

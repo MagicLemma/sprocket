@@ -2,7 +2,7 @@
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/buffer_element_types.h>
-#include <Sprocket/Graphics/Texture.h>
+#include <Sprocket/Graphics/texture.h>
 
 #include <glm/glm.hpp>
 
@@ -15,7 +15,7 @@
 
 namespace spkt {
 
-class Window;
+class window;
 class Font;
 class event;
 
@@ -133,7 +133,7 @@ struct WidgetInfo
 
 class UIEngine
 {
-    spkt::Window* d_window;
+    spkt::window* d_window;
 
     spkt::texture d_white;
 
@@ -180,7 +180,7 @@ class UIEngine
     void ExecuteCommand(const DrawCommand& cmd);
 
 public:
-    UIEngine(spkt::Window* window);
+    UIEngine(spkt::window* window);
 
     // Registers a region that can respond to hovers and clicks. The (x, y)
     // position of the region is with respect to the position of the active panel.

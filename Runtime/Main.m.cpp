@@ -1,13 +1,13 @@
 #include <Runtime/Runtime.h>
 
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Core/GameLoop.h>
+#include <Sprocket/Core/game_loop.h>
 
 int main()
 {
-    spkt::Window window("Runtime");
+    spkt::window window("Runtime");
     Runtime runtime(&window);
-    spkt::RunOptions options;
-    options.showFramerate = true;
-    return spkt::Run(runtime, window, options);
+    spkt::run_options options;
+    options.show_frame_rate = true;
+    return spkt::run(runtime, window, options);
 }

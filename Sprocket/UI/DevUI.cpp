@@ -1,9 +1,9 @@
 #include "DevUI.h"
 
-#include <Sprocket/Core/Events.h>
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/events.h>
+#include <Sprocket/Core/window.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/input_codes.h>
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -83,17 +83,17 @@ void SetBackendFlags()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
-void SetClipboardCallbacks(Window* window)
+void SetClipboardCallbacks(window* window)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
-        spkt::Window* w = static_cast<spkt::Window*>(user_data);
-        w->SetClipboardData(text);
+        spkt::window* w = static_cast<spkt::window*>(user_data);
+        w->set_clipboard_data(text);
     };
 
     io.GetClipboardTextFn = [](void* user_data) {
-        spkt::Window* w = static_cast<spkt::Window*>(user_data);
-        return w->GetClipboardData();
+        spkt::window* w = static_cast<spkt::window*>(user_data);
+        return w->get_clipboard_data();
     };
 
     io.ClipboardUserData = window;
@@ -162,7 +162,7 @@ void bind_imgui_vbo(std::uint32_t vbo)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-DevUI::DevUI(Window* window)
+DevUI::DevUI(window* window)
     : d_shader("Resources/Shaders/DevGUI.vert", "Resources/Shaders/DevGUI.frag")
     , d_fontAtlas(nullptr)
     , d_vtx_buffer()
@@ -180,7 +180,7 @@ DevUI::DevUI(Window* window)
     d_fontAtlas = SetFont("Resources/Fonts/Calibri.ttf", 15.0f);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize = ImVec2((float)window->Width(), (float)window->Height());
+    io.DisplaySize = ImVec2((float)window->width(), (float)window->height());
 
     // Reason: when the viewport isn't docked and we have a selected entity,
     // attempting to move the entity just moved the window.

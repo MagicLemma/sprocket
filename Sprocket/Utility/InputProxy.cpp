@@ -1,6 +1,6 @@
 #include "InputProxy.h"
 
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 
 #include <cassert>
 

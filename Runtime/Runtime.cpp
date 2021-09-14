@@ -1,6 +1,6 @@
 #include "Runtime.h"
 
-#include <Sprocket/Core/Events.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
@@ -9,14 +9,14 @@
 #include <Sprocket/Scripting/LuaScript.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/input_codes.h>
 
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
 const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
 const auto GARDEN      = spkt::from_hex(0x55E6C1);
 const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
-Runtime::Runtime(spkt::Window* window) 
+Runtime::Runtime(spkt::window* window) 
     : d_window(window)
     , d_scene({
         .registry = {},
@@ -44,7 +44,7 @@ Runtime::Runtime(spkt::Window* window)
     , d_ui(d_window)
     , d_console()
 {
-    d_window->SetCursorVisibility(false);
+    d_window->set_cursor_visibility(false);
 
     spkt::add_singleton(d_scene.registry);
     spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
@@ -64,7 +64,7 @@ Runtime::Runtime(spkt::Window* window)
     });
     
     d_console.register_command("exit", [&](spkt::console& console, auto args) {
-        d_window->Close();
+        d_window->close();
     });
 
     d_console.register_command("echo", [](spkt::console& console, auto args) {
@@ -115,7 +115,7 @@ void Runtime::on_event(spkt::event& event)
 void Runtime::on_update(double dt)
 {
     d_ui.on_update(dt);
-    d_window->SetCursorVisibility(d_consoleActive);
+    d_window->set_cursor_visibility(d_consoleActive);
     if (!d_consoleActive) {
         d_scene.on_update(dt);
     }
@@ -128,7 +128,7 @@ void Runtime::on_render()
 
     if (d_consoleActive) {
         d_ui.StartFrame();
-        draw_console(d_console, d_command_line, d_ui, d_window->Width(), d_window->Height());
+        draw_console(d_console, d_command_line, d_ui, d_window->width(), d_window->height());
         d_ui.EndFrame();
     }
 }

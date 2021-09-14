@@ -1,6 +1,6 @@
 #include "SinglePanelUI.h"
 
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/window.h>
 
 #include <functional>
 #include <cassert>
@@ -40,7 +40,7 @@ template <typename T> T Interpolate(
 
 }
 
-SinglePanelUI::SinglePanelUI(Window* window)
+SinglePanelUI::SinglePanelUI(window* window)
     : d_window(window)
     , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")
@@ -60,7 +60,7 @@ void SinglePanelUI::on_update(double dt)
 void SinglePanelUI::StartFrame()
 {
     std::string name = "__SinglePanelUI_Name__";
-    glm::vec4 region = {0, 0, d_window->Width(), d_window->Height()};
+    glm::vec4 region = {0, 0, d_window->width(), d_window->height()};
 
     d_engine.StartFrame();
     d_engine.StartPanel(name, &region, PanelType::CLICKABLE);
@@ -121,7 +121,7 @@ void SinglePanelUI::Slider(std::string_view name,
     cmd.AddText(std::format("{}: {:.0f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        auto mouse = d_window->GetMousePos();
+        auto mouse = d_window->mouse_position();
         mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;

@@ -1,7 +1,7 @@
-#include "Window.h"
+#include "window.h"
 
-#include <Sprocket/Core/Events.h>
-#include <Sprocket/Utility/Log.h>
+#include <Sprocket/Core/events.h>
+#include <Sprocket/Core/log.h>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -10,16 +10,15 @@
 
 namespace spkt {
 
-struct WindowImpl
+struct window_impl
 {
 	GLFWwindow* window;	
 	std::uint32_t vao;
 };
 
-Window::Window(const std::string& name, std::uint32_t width, std::uint32_t height)
-	: d_impl(std::make_unique<WindowImpl>())
-	, d_data({name, width, height})
-	, d_clearColour({1.0, 1.0, 1.0})
+window::window(const std::string& name, std::uint32_t width, std::uint32_t height)
+	: d_impl(std::make_unique<window_impl>())
+	, d_data({name, width, height, {1.0, 1.0, 1.0}})
 {
 	if (GLFW_TRUE != glfwInit()) {
 		log::fatal("Failed to initialise GLFW");
@@ -48,16 +47,15 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 		std::exit(-3);
 	}
 
-	int versionMajor;
-	int versionMinor;
-	glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
-	glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
-	log::info("OpenGL version: {}.{}", versionMajor, versionMinor);
+	int version_major;
+	int version_minor;
+	glGetIntegerv(GL_MAJOR_VERSION, &version_major);
+	glGetIntegerv(GL_MINOR_VERSION, &version_minor);
+	log::info("OpenGL version: {}.{}", version_major, version_minor);
 
 	// Set OpenGL error callback
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback([](GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void*) {
-		
 		switch (severity) {
 			case GL_DEBUG_SEVERITY_NOTIFICATION: return;
 			case GL_DEBUG_SEVERITY_LOW: {
@@ -73,10 +71,9 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	}, nullptr);
 
 	// Set GLFW callbacks
-	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height)
-	{
+	glfwSetWindowSizeCallback(d_impl->window, [](GLFWwindow* window, int width, int height) {
 		glViewport(0, 0, width, height);
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
 		auto event = spkt::make_event<window_resized_event>(width, height);
 		data->width = width;
@@ -84,9 +81,8 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 		data->callback(event);
 	});
 
-	glfwSetWindowCloseCallback(d_impl->window, [](GLFWwindow* window)
-	{
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+	glfwSetWindowCloseCallback(d_impl->window, [](GLFWwindow* window) {
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
 		auto event = spkt::make_event<window_closed_event>();
 		data->running = false;
@@ -94,7 +90,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetKeyCallback(d_impl->window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
 		switch (action)
 		{
@@ -114,37 +110,36 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetMouseButtonCallback(d_impl->window, [](GLFWwindow* window, int button, int action, int mods) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
-		switch (action)
-		{
-		case GLFW_PRESS: {
-			auto event = spkt::make_event<mouse_pressed_event>(button, action, mods);
-			data->callback(event);
-		} break;
-		case GLFW_RELEASE: {
-			auto event = spkt::make_event<mouse_released_event>(button, action, mods);
-			data->callback(event);
-		} break;
+		switch (action) {
+			case GLFW_PRESS: {
+				auto event = spkt::make_event<mouse_pressed_event>(button, action, mods);
+				data->callback(event);
+			} break;
+			case GLFW_RELEASE: {
+				auto event = spkt::make_event<mouse_released_event>(button, action, mods);
+				data->callback(event);
+			} break;
 		}
 	});
 
 	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double x_pos, double y_pos) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
 		auto event = spkt::make_event<mouse_moved_event>(x_pos, y_pos);
 		data->callback(event);
 	});
 
 	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double x_offset, double y_offset) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
 		auto event = spkt::make_event<mouse_scrolled_event>(x_offset, y_offset);
 		data->callback(event);
 	});
 
 	glfwSetWindowFocusCallback(d_impl->window, [](GLFWwindow* window, int focused) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (focused) {
 			auto event = spkt::make_event<window_focused_event>();
 			data->focused = true;
@@ -158,7 +153,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetWindowMaximizeCallback(d_impl->window, [](GLFWwindow* window, int maximized) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (maximized) {
 			auto event = spkt::make_event<window_maximised_event>();
 			data->callback(event);
@@ -170,7 +165,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	});
 
 	glfwSetCharCallback(d_impl->window, [](GLFWwindow* window, std::uint32_t key) {
-		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
 		auto event = spkt::make_event<keyboard_typed_event>(key);
 		data->callback(event);
@@ -180,7 +175,7 @@ Window::Window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glBindVertexArray(d_impl->vao);
 }
 
-Window::~Window()
+window::~window()
 {
 	glBindVertexArray(0);
 	glDeleteVertexArrays(1, &d_impl->vao);
@@ -189,37 +184,45 @@ Window::~Window()
 	glfwTerminate();
 }
 
-void Window::on_update()
+void window::begin_frame()
 {
-	glfwSwapBuffers(d_impl->window);
+	// Clear the screen
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClearColor(d_data.clear_colour.r, d_data.clear_colour.g, d_data.clear_colour.b, 1.0);
+	
+	// Handle all events
 	glfwPollEvents();
 
+	// Update the mouse position and offset
 	double x, y;
 	glfwGetCursorPos(d_impl->window, &x, &y);
-	glm::vec2 newMousePos{x, y};
-
-	d_mouseOffset = newMousePos - d_mousePos;
-	d_mousePos = newMousePos;
+	glm::vec2 new_mouse_position{x, y};
+	d_data.mouse_offset = new_mouse_position - d_data.mouse_position;
+	d_data.mouse_position = new_mouse_position;
 }
 
-void Window::Clear()
+void window::end_frame()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(d_clearColour.r, d_clearColour.g, d_clearColour.b, 1.0);
+	glfwSwapBuffers(d_impl->window);
 }
 
-void Window::SetClearColour(const glm::vec3& colour)
+void window::set_clear_colour(const glm::vec3& colour)
 {
-	d_clearColour = colour;
+	d_data.clear_colour = colour;
 }
 
-void Window::SetCursorVisibility(bool visibility)
+void window::set_event_handler(const event_handler& handler)
 {
-	int show = visibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
+	d_data.callback = handler;
+}
+
+void window::set_cursor_visibility(bool visibility)
+{
+	const int show = visibility ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
 	glfwSetInputMode(d_impl->window, GLFW_CURSOR, show);
 }
 
-void Window::SetFullscreen()
+void window::set_fullscreen()
 {
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -234,54 +237,38 @@ void Window::SetFullscreen()
 	d_data.fullscreen = true;
 }
 
-void Window::SetWindowed(int width, int height)
+void window::set_windowed(int width, int height)
 {
 	glfwSetWindowMonitor(d_impl->window, nullptr, 50, 50, width, height, 0);
 	d_data.fullscreen = false;
 }
 
-bool Window::IsFullscreen() const
+glm::vec2 window::mouse_position() const
 {
-	return d_data.fullscreen;
+	// If the mouse is disabled, lock the return value to the centre of the screen.
+	if (glfwGetInputMode(d_impl->window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+		return { (float)d_data.width/2.0f, (float)d_data.height/2.0f };
+	}
+	return d_data.mouse_position;
 }
 
-glm::vec2 Window::GetMousePos() const
-{
-	return d_mousePos;
-}
-
-glm::vec2 Window::GetMouseOffset() const
-{
-	return d_mouseOffset;
-}
-
-void Window::SetWindowName(const std::string& name)
+void window::set_name(const std::string& name)
 {
 	d_data.name = name;
 	glfwSetWindowTitle(d_impl->window, name.c_str());
 }
 
-std::string Window::GetWindowName() const
-{
-	return d_data.name;
-}
-
-void Window::SetCallback(EventCallback cb)
-{
-	d_data.callback = cb;
-}
-
-const char* Window::GetClipboardData() const
+const char* window::get_clipboard_data() const
 {
 	return glfwGetClipboardString(d_impl->window);
 }
 
-void Window::SetClipboardData(const std::string& text) const
+void window::set_clipboard_data(const std::string& text) const
 {
 	glfwSetClipboardString(d_impl->window, text.c_str());
 }
 
-void* Window::NativeWindow() const
+void* window::native_handle() const
 {
 	return d_impl->window;
 }

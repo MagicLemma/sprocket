@@ -3,9 +3,9 @@
 
 namespace spkt {
 
-class Window;
+class window;
 
-std::string OpenFile(Window* window, const char* filter);
-std::string SaveFile(Window* window, const char* filter);
+std::string OpenFile(window* window, const char* filter);
+std::string SaveFile(window* window, const char* filter);
 
 }

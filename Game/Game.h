@@ -15,7 +15,7 @@
 #include <string_view>
 
 namespace spkt {
-    class Window;
+    class window;
     class event;
 }
 
@@ -23,7 +23,7 @@ enum class Mode { PLAYER, EDITOR };
 
 class Game
 {
-    spkt::Window* d_window;
+    spkt::window* d_window;
     spkt::asset_manager d_assetManager;
     
     Mode d_mode;
@@ -55,7 +55,7 @@ class Game
     spkt::SimpleUI d_escapeMenu;
 
 public:
-    Game(spkt::Window* window);
+    Game(spkt::window* window);
 
     void on_event(spkt::event& event);
     void on_update(double dt);

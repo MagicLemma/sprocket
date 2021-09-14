@@ -2,6 +2,12 @@
 
 namespace spkt {
 
+enum Mouse {
+    LEFT = 0,
+    RIGHT = 1,
+    MIDDLE = 2
+};
+
 enum Keyboard {
     W = 87,
     A = 65,

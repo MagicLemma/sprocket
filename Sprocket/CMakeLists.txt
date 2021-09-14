@@ -24,7 +24,9 @@ find_package(asio CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
-            Core/Window.cpp
+            Core/window.cpp
+            Core/timer.cpp
+            Core/log.cpp
 
             Audio/Listener.cpp
             Audio/Music.cpp
@@ -69,13 +71,11 @@ add_library(Sprocket STATIC
             Graphics/Rendering/Scene3DRenderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
             
-            Utility/Log.cpp
             Utility/Colour.cpp
             Utility/FileBrowser.cpp
             Utility/InputProxy.cpp
             Utility/Random.cpp
             Utility/Maths.cpp
-            Utility/Stopwatch.cpp
             Utility/Yaml.cpp
 
             Scripting/LuaScript.cpp

@@ -1,8 +1,8 @@
 #include "SimpleUI.h"
 
-#include <Sprocket/Core/Window.h>
-#include <Sprocket/Core/Events.h>
-#include <Sprocket/Utility/KeyboardCodes.h>
+#include <Sprocket/Core/window.h>
+#include <Sprocket/Core/events.h>
+#include <Sprocket/Core/input_codes.h>
 
 #include <fmt/core.h>
 
@@ -46,7 +46,7 @@ template <typename T> T Interpolate(
 
 }
 
-SimpleUI::SimpleUI(Window* window)
+SimpleUI::SimpleUI(window* window)
     : d_window(window)
     , d_engine(window)
     , d_font("Resources/Fonts/Coolvetica.ttf")
@@ -248,7 +248,7 @@ void SimpleUI::Slider(std::string_view name,
     cmd.AddText(std::format("{}: {:.0f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        auto mouse = d_window->GetMousePos();
+        auto mouse = d_window->mouse_position();
         mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
         *value = (1 - r) * min + r * max;
@@ -271,7 +271,7 @@ void SimpleUI::Dragger(std::string_view name,
     cmd.AddText(std::format("{}:{:.2f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        *value += d_window->GetMouseOffset().x * speed;
+        *value += d_window->get_mouse_offset().x * speed;
     }    
 }
 

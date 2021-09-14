@@ -1,6 +1,6 @@
 #include "ImGuiXtra.h"
 
-#include <Sprocket/Graphics/Texture.h>
+#include <Sprocket/Graphics/texture.h>
 #include <Sprocket/Utility/FileBrowser.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -28,7 +28,7 @@ static int InputTextCallback(ImGuiInputTextCallbackData* data)
 }
 
 void File(const std::string& name,
-          Window* window,
+          window* window,
           std::string* file,
           const char* filter)
 {

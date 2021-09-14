@@ -4,7 +4,7 @@
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Utility/Maths.h>
-#include <Sprocket/Utility/MouseCodes.h>
+#include <Sprocket/Core/input_codes.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

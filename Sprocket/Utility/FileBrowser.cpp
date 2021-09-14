@@ -1,6 +1,6 @@
 #include "FileBrowser.h"
 
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/window.h>
 
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -10,9 +10,9 @@
 namespace spkt {
 namespace {
 
-void SetOFN(OPENFILENAMEA* ofn, Window* window, const char* filter)
+void SetOFN(OPENFILENAMEA* ofn, window* window, const char* filter)
 {
-	GLFWwindow* w = static_cast<GLFWwindow*>(window->NativeWindow());
+	GLFWwindow* w = static_cast<GLFWwindow*>(window->native_handle());
 	ZeroMemory(ofn, sizeof(OPENFILENAME));
 	ofn->lStructSize = sizeof(OPENFILENAME);
 	ofn->hwndOwner = glfwGetWin32Window(w);
@@ -23,7 +23,7 @@ void SetOFN(OPENFILENAMEA* ofn, Window* window, const char* filter)
 
 }
 
-std::string OpenFile(Window* window, const char* filter)
+std::string OpenFile(window* window, const char* filter)
 {
     OPENFILENAMEA ofn;
 	SetOFN(&ofn, window, filter);
@@ -37,7 +37,7 @@ std::string OpenFile(Window* window, const char* filter)
     return std::string();
 }
 
-std::string SaveFile(Window* window, const char* filter)
+std::string SaveFile(window* window, const char* filter)
 {
     OPENFILENAMEA ofn;
 	SetOFN(&ofn, window, filter);

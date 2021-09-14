@@ -11,12 +11,12 @@
 #include <random>
 
 namespace spkt {
-    class Window;
+    class window;
 }
 
 class Runtime
 {
-    spkt::Window*      d_window;
+    spkt::window*      d_window;
     spkt::asset_manager d_assetManager;
 
     // Rendering
@@ -36,7 +36,7 @@ class Runtime
     bool           d_consoleActive = false;
 
 public:
-    Runtime(spkt::Window* window);
+    Runtime(spkt::window* window);
 
     void on_event(spkt::event& event);
     void on_update(double dt);

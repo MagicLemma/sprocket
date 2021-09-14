@@ -1,6 +1,6 @@
 #include "basic_systems.h"
 
-#include <Sprocket/Scene/Scene.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/LuaLibrary.h>
 #include <Sprocket/Scripting/LuaMaths.h>
 #include <Sprocket/Scripting/LuaScript.h>

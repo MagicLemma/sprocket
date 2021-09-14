@@ -4,7 +4,7 @@
 
 namespace spkt {
 
-class Window;
+class window;
 
 namespace Maths {
 

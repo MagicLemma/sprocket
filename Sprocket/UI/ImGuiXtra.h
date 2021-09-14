@@ -9,7 +9,7 @@
 
 namespace spkt {
 
-class Window;
+class window;
 class texture;
 
 namespace ImGuiXtra {
@@ -17,7 +17,7 @@ namespace ImGuiXtra {
 // Create a text box for displaying file paths and a button that
 // allows for browsing the file system to set the value of the string.
 void File(const std::string& name,
-          Window* window,
+          window* window,
           std::string* file,
           const char* filter);
 
