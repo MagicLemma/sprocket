@@ -41,21 +41,21 @@ void load_input_store(lua::script& script, input_store& input)
     lua_register(L, "IsKeyDown", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<bool>::push(L, input.is_keyboard_down((int)lua_tointeger(L, 1)));
+        converter<bool>::push(L, input.is_keyboard_down((int)lua_tointeger(L, 1)));
         return 1;
     });
 
     lua_register(L, "IsKeyClicked", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<bool>::push(L, input.is_keyboard_clicked((int)lua_tointeger(L, 1)));
+        converter<bool>::push(L, input.is_keyboard_clicked((int)lua_tointeger(L, 1)));
         return 1;
     });
 
     lua_register(L, "IsKeyUnclicked", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<bool>::push(L, input.is_keyboard_unclicked((int)lua_tointeger(L, 1)));
+        converter<bool>::push(L, input.is_keyboard_unclicked((int)lua_tointeger(L, 1)));
         return 1;
     });
 
@@ -63,21 +63,21 @@ void load_input_store(lua::script& script, input_store& input)
     lua_register(L, "IsMouseDown", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<bool>::push(L, input.is_mouse_down((int)lua_tointeger(L, 1)));
+        converter<bool>::push(L, input.is_mouse_down((int)lua_tointeger(L, 1)));
         return 1;
     });
 
     lua_register(L, "IsMouseClicked", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<bool>::push(L, input.is_mouse_clicked((int)lua_tointeger(L, 1)));
+        converter<bool>::push(L, input.is_mouse_clicked((int)lua_tointeger(L, 1)));
         return 1;
     });
 
     lua_register(L, "IsMouseUnclicked", [](lua_State* L) {
         if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<bool>::push(L, input.is_mouse_unclicked((int)lua_tointeger(L, 1)));
+        converter<bool>::push(L, input.is_mouse_unclicked((int)lua_tointeger(L, 1)));
         return 1;
     });
     
@@ -85,21 +85,21 @@ void load_input_store(lua::script& script, input_store& input)
     lua_register(L, "GetMousePos", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<glm::vec2>::push(L, input.mouse_position());
+        converter<glm::vec2>::push(L, input.mouse_position());
         return 1;
     });
 
     lua_register(L, "GetMouseOffset", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<glm::vec2>::push(L, input.mouse_offset());
+        converter<glm::vec2>::push(L, input.mouse_offset());
         return 1;
     });
 
     lua_register(L, "GetMouseScrolled", [](lua_State* L) {
         if (!check_arg_count(L, 0)) { return luaL_error(L, "Bad number of args"); }
         const auto& input = get_input(L);
-        Converter<glm::vec2>::push(L, input.mouse_scrolled());
+        converter<glm::vec2>::push(L, input.mouse_scrolled());
         return 1;
     });
 }
