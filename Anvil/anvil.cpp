@@ -9,6 +9,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
+#include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Core/input_codes.h>
@@ -352,32 +353,12 @@ void Anvil::on_render()
 
     if (ImGui::Begin("Options")) {
         ImGui::Checkbox("Show Colliders", &d_showColliders);
-        ImGui::Text("# Runtime: %i", registry.view<spkt::Runtime>().size());
-        ImGui::Text("# Singleton: %i", registry.view<spkt::Singleton>().size());
-        ImGui::Text("# Event: %i", registry.view<spkt::Event>().size());
-        ImGui::Text("# NameComponent: %i", registry.view<spkt::NameComponent>().size());
-        ImGui::Text("# Transform2DComponent: %i", registry.view<spkt::Transform2DComponent>().size());
-        ImGui::Text("# Transform3DComponent: %i", registry.view<spkt::Transform3DComponent>().size());
-        ImGui::Text("# StaticModelComponent: %i", registry.view<spkt::StaticModelComponent>().size());
-        ImGui::Text("# AnimatedModelComponent: %i", registry.view<spkt::AnimatedModelComponent>().size());
-        ImGui::Text("# RigidBody3DComponent: %i", registry.view<spkt::RigidBody3DComponent>().size());
-        ImGui::Text("# BoxCollider3DComponent: %i", registry.view<spkt::BoxCollider3DComponent>().size());
-        ImGui::Text("# SphereCollider3DComponent: %i", registry.view<spkt::SphereCollider3DComponent>().size());
-        ImGui::Text("# CapsuleCollider3DComponent: %i", registry.view<spkt::CapsuleCollider3DComponent>().size());
-        ImGui::Text("# ScriptComponent: %i", registry.view<spkt::ScriptComponent>().size());
-        ImGui::Text("# Camera3DComponent: %i", registry.view<spkt::Camera3DComponent>().size());
-        ImGui::Text("# PathComponent: %i", registry.view<spkt::PathComponent>().size());
-        ImGui::Text("# LightComponent: %i", registry.view<spkt::LightComponent>().size());
-        ImGui::Text("# SunComponent: %i", registry.view<spkt::SunComponent>().size());
-        ImGui::Text("# AmbienceComponent: %i", registry.view<spkt::AmbienceComponent>().size());
-        ImGui::Text("# ParticleComponent: %i", registry.view<spkt::ParticleComponent>().size());
-        ImGui::Text("# CollisionEvent: %i", registry.view<spkt::CollisionEvent>().size());
-        ImGui::Text("# PhysicsSingleton: %i", registry.view<spkt::PhysicsSingleton>().size());
-        ImGui::Text("# InputSingleton: %i", registry.view<spkt::InputSingleton>().size());
-        ImGui::Text("# GameGridSingleton: %i", registry.view<spkt::GameGridSingleton>().size());
-        ImGui::Text("# TileMapSingleton: %i", registry.view<spkt::TileMapSingleton>().size());
-        ImGui::Text("# CameraSingleton: %i", registry.view<spkt::CameraSingleton>().size());
-        ImGui::Text("# ParticleSingleton: %i", registry.view<spkt::ParticleSingleton>().size());
+
+        spkt::for_each_comp_type(registry, []<typename T>(spkt::registry& reg, spkt::reflection<T> ref) {
+            std::string text = std::format("# {}: {}", ref.component_name, reg.view<T>().size());
+            ImGui::Text(text.c_str());
+        });
+
         ImGui::End();
     }
 
