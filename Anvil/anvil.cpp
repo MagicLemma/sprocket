@@ -355,7 +355,7 @@ void Anvil::on_render()
         ImGui::Checkbox("Show Colliders", &d_showColliders);
 
         spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
-            std::string text = std::format("# {}: {}", refl.component_name, registry.view<T>().size());
+            std::string text = std::format("# {}: {}", refl.name, registry.view<T>().size());
             ImGui::Text(text.c_str());
         });
 

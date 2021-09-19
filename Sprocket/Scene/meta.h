@@ -18,7 +18,8 @@ struct reflection;
 template <>
 struct reflection<Runtime>
 {
-    static constexpr std::string_view component_name = "Runtime";
+    static constexpr const char* name         = "Runtime";
+    static constexpr const char* display_name = "Runtime";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -29,7 +30,8 @@ struct reflection<Runtime>
 template <>
 struct reflection<Singleton>
 {
-    static constexpr std::string_view component_name = "Singleton";
+    static constexpr const char* name         = "Singleton";
+    static constexpr const char* display_name = "Singleton";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -40,7 +42,8 @@ struct reflection<Singleton>
 template <>
 struct reflection<Event>
 {
-    static constexpr std::string_view component_name = "Event";
+    static constexpr const char* name         = "Event";
+    static constexpr const char* display_name = "Event";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -51,7 +54,8 @@ struct reflection<Event>
 template <>
 struct reflection<NameComponent>
 {
-    static constexpr std::string_view component_name = "NameComponent";
+    static constexpr const char* name         = "NameComponent";
+    static constexpr const char* display_name = "Name";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -63,7 +67,8 @@ struct reflection<NameComponent>
 template <>
 struct reflection<Transform2DComponent>
 {
-    static constexpr std::string_view component_name = "Transform2DComponent";
+    static constexpr const char* name         = "Transform2DComponent";
+    static constexpr const char* display_name = "Transform 2D";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -77,7 +82,8 @@ struct reflection<Transform2DComponent>
 template <>
 struct reflection<Transform3DComponent>
 {
-    static constexpr std::string_view component_name = "Transform3DComponent";
+    static constexpr const char* name         = "Transform3DComponent";
+    static constexpr const char* display_name = "Transform 3D";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -91,7 +97,8 @@ struct reflection<Transform3DComponent>
 template <>
 struct reflection<StaticModelComponent>
 {
-    static constexpr std::string_view component_name = "StaticModelComponent";
+    static constexpr const char* name         = "StaticModelComponent";
+    static constexpr const char* display_name = "Static Model";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -104,7 +111,8 @@ struct reflection<StaticModelComponent>
 template <>
 struct reflection<AnimatedModelComponent>
 {
-    static constexpr std::string_view component_name = "AnimatedModelComponent";
+    static constexpr const char* name         = "AnimatedModelComponent";
+    static constexpr const char* display_name = "Animated Model";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -120,7 +128,8 @@ struct reflection<AnimatedModelComponent>
 template <>
 struct reflection<RigidBody3DComponent>
 {
-    static constexpr std::string_view component_name = "RigidBody3DComponent";
+    static constexpr const char* name         = "RigidBody3DComponent";
+    static constexpr const char* display_name = "Rigid Body 3D";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -140,7 +149,8 @@ struct reflection<RigidBody3DComponent>
 template <>
 struct reflection<BoxCollider3DComponent>
 {
-    static constexpr std::string_view component_name = "BoxCollider3DComponent";
+    static constexpr const char* name         = "BoxCollider3DComponent";
+    static constexpr const char* display_name = "Box Collider 3D";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -157,7 +167,8 @@ struct reflection<BoxCollider3DComponent>
 template <>
 struct reflection<SphereCollider3DComponent>
 {
-    static constexpr std::string_view component_name = "SphereCollider3DComponent";
+    static constexpr const char* name         = "SphereCollider3DComponent";
+    static constexpr const char* display_name = "Sphere Collider 3D";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -173,7 +184,8 @@ struct reflection<SphereCollider3DComponent>
 template <>
 struct reflection<CapsuleCollider3DComponent>
 {
-    static constexpr std::string_view component_name = "CapsuleCollider3DComponent";
+    static constexpr const char* name         = "CapsuleCollider3DComponent";
+    static constexpr const char* display_name = "Capsule Collider 3D";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -190,7 +202,8 @@ struct reflection<CapsuleCollider3DComponent>
 template <>
 struct reflection<ScriptComponent>
 {
-    static constexpr std::string_view component_name = "ScriptComponent";
+    static constexpr const char* name         = "ScriptComponent";
+    static constexpr const char* display_name = "Script";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -204,7 +217,8 @@ struct reflection<ScriptComponent>
 template <>
 struct reflection<Camera3DComponent>
 {
-    static constexpr std::string_view component_name = "Camera3DComponent";
+    static constexpr const char* name         = "Camera3DComponent";
+    static constexpr const char* display_name = "Camera 3D";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -218,7 +232,8 @@ struct reflection<Camera3DComponent>
 template <>
 struct reflection<PathComponent>
 {
-    static constexpr std::string_view component_name = "PathComponent";
+    static constexpr const char* name         = "PathComponent";
+    static constexpr const char* display_name = "Path";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -231,7 +246,8 @@ struct reflection<PathComponent>
 template <>
 struct reflection<LightComponent>
 {
-    static constexpr std::string_view component_name = "LightComponent";
+    static constexpr const char* name         = "LightComponent";
+    static constexpr const char* display_name = "Light";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -244,7 +260,8 @@ struct reflection<LightComponent>
 template <>
 struct reflection<SunComponent>
 {
-    static constexpr std::string_view component_name = "SunComponent";
+    static constexpr const char* name         = "SunComponent";
+    static constexpr const char* display_name = "Sun";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -259,7 +276,8 @@ struct reflection<SunComponent>
 template <>
 struct reflection<AmbienceComponent>
 {
-    static constexpr std::string_view component_name = "AmbienceComponent";
+    static constexpr const char* name         = "AmbienceComponent";
+    static constexpr const char* display_name = "Ambience";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -272,7 +290,8 @@ struct reflection<AmbienceComponent>
 template <>
 struct reflection<ParticleComponent>
 {
-    static constexpr std::string_view component_name = "ParticleComponent";
+    static constexpr const char* name         = "ParticleComponent";
+    static constexpr const char* display_name = "Particle";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -290,7 +309,8 @@ struct reflection<ParticleComponent>
 template <>
 struct reflection<CollisionEvent>
 {
-    static constexpr std::string_view component_name = "CollisionEvent";
+    static constexpr const char* name         = "CollisionEvent";
+    static constexpr const char* display_name = "Collision Event";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -303,7 +323,8 @@ struct reflection<CollisionEvent>
 template <>
 struct reflection<PhysicsSingleton>
 {
-    static constexpr std::string_view component_name = "PhysicsSingleton";
+    static constexpr const char* name         = "PhysicsSingleton";
+    static constexpr const char* display_name = "Physics Singleton";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -315,7 +336,8 @@ struct reflection<PhysicsSingleton>
 template <>
 struct reflection<InputSingleton>
 {
-    static constexpr std::string_view component_name = "InputSingleton";
+    static constexpr const char* name         = "InputSingleton";
+    static constexpr const char* display_name = "Input Singleton";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -327,7 +349,8 @@ struct reflection<InputSingleton>
 template <>
 struct reflection<GameGridSingleton>
 {
-    static constexpr std::string_view component_name = "GameGridSingleton";
+    static constexpr const char* name         = "GameGridSingleton";
+    static constexpr const char* display_name = "Game Grid Singleton";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -342,7 +365,8 @@ struct reflection<GameGridSingleton>
 template <>
 struct reflection<TileMapSingleton>
 {
-    static constexpr std::string_view component_name = "TileMapSingleton";
+    static constexpr const char* name         = "TileMapSingleton";
+    static constexpr const char* display_name = "Tile Map Singleton";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -354,7 +378,8 @@ struct reflection<TileMapSingleton>
 template <>
 struct reflection<CameraSingleton>
 {
-    static constexpr std::string_view component_name = "CameraSingleton";
+    static constexpr const char* name         = "CameraSingleton";
+    static constexpr const char* display_name = "Camera Singleton";
 
     template <typename Func>
     void attributes(Func&& func)
@@ -366,7 +391,8 @@ struct reflection<CameraSingleton>
 template <>
 struct reflection<ParticleSingleton>
 {
-    static constexpr std::string_view component_name = "ParticleSingleton";
+    static constexpr const char* name         = "ParticleSingleton";
+    static constexpr const char* display_name = "Particle Singleton";
 
     template <typename Func>
     void attributes(Func&& func)

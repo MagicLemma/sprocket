@@ -46,22 +46,21 @@ void Inspector::Show(Anvil& editor)
     int count = 0;
 
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity);
-
-DATAMATIC_BEGIN
-    if (registry.has<spkt::{{Comp::name}}>(entity)) {
-        auto& c = registry.get<spkt::{{Comp::name}}>(entity);
-        if (ImGui::CollapsingHeader("{{Comp::display_name}}")) {
-            ImGui::PushID(count++);
-            inspector_display<spkt::{{Comp::name}}>::draw(editor, c);
-            if constexpr (std::is_same_v<spkt::{{Comp::name}}, spkt::Transform3DComponent>) {
-                spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
+    spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+        if (registry.has<T>(entity)) {
+            auto& c = registry.get<T>(entity);
+            if (ImGui::CollapsingHeader(refl.name)) {
+                ImGui::PushID(count++);
+                inspector_display<T>::draw(editor, c);
+                if constexpr (std::is_same_v<T, spkt::Transform3DComponent>) {
+                    spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
+                }
+                if (ImGui::Button("Delete")) { registry.remove<T>(entity); }
+                ImGui::PopID();
             }
-            if (ImGui::Button("Delete")) { registry.remove<spkt::{{Comp::name}}>(entity); }
-            ImGui::PopID();
         }
-    }
+    });
 
-DATAMATIC_END
     ImGui::Separator();
 
     if (ImGui::Button("Add Component")) {
@@ -70,8 +69,7 @@ DATAMATIC_END
 
     if (ImGui::BeginPopup("missing_components_list")) {
         spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
-            std::string comp_name{refl.component_name};
-            if (!registry.has<T>(entity) && ImGui::Selectable(comp_name.c_str())) {
+            if (!registry.has<T>(entity) && ImGui::Selectable(refl.name)) {
                 registry.add<T>(entity, {});
             }
         });

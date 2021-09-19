@@ -19,7 +19,8 @@ DATAMATIC_BEGIN
 template <>
 struct reflection<{{Comp::name}}>
 {
-    static constexpr std::string_view component_name = "{{Comp::name}}";
+    static constexpr const char* name         = "{{Comp::name}}";
+    static constexpr const char* display_name = "{{Comp::display_name}}";
 
     template <typename Func>
     void attributes(Func&& func)
