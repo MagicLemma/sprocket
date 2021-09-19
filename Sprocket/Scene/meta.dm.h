@@ -18,7 +18,7 @@ struct reflection<{{Comp::name}}>
 DATAMATIC_END
 
 template <typename Func>
-void for_each_comp_type(Func&& func)
+void for_each_reflect(Func&& func)
 {
 DATAMATIC_BEGIN
     func(reflection<{{Comp::name}}>{});

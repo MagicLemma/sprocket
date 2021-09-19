@@ -166,7 +166,7 @@ struct reflection<ParticleSingleton>
 
 
 template <typename Func>
-void for_each_comp_type(Func&& func)
+void for_each_reflect(Func&& func)
 {
     func(reflection<Runtime>{});
     func(reflection<Singleton>{});
