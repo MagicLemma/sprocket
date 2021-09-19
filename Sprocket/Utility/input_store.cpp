@@ -1,4 +1,4 @@
-#include "InputProxy.h"
+#include "input_store.h"
 
 #include <Sprocket/Core/events.h>
 

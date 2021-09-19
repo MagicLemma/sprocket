@@ -5,7 +5,7 @@
 #include <Sprocket/Scripting/LuaLibrary.h>
 #include <Sprocket/Scripting/LuaMaths.h>
 #include <Sprocket/Scripting/LuaScript.h>
-#include <Sprocket/Utility/InputProxy.h>
+#include <Sprocket/Utility/input_store.h>
 
 #include <glm/gtx/norm.hpp>
 

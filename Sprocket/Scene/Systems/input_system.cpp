@@ -3,7 +3,7 @@
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
-#include <Sprocket/Utility/InputProxy.h>
+#include <Sprocket/Utility/input_store.h>
 
 namespace spkt {
 

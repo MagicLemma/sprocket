@@ -5,7 +5,7 @@
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Core/input_codes.h>
-#include <Sprocket/Utility/InputProxy.h>
+#include <Sprocket/Utility/input_store.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

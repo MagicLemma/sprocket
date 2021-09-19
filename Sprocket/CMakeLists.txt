@@ -73,7 +73,7 @@ add_library(Sprocket STATIC
             
             Utility/Colour.cpp
             Utility/FileBrowser.cpp
-            Utility/InputProxy.cpp
+            Utility/input_store.cpp
             Utility/Random.cpp
             Utility/Maths.cpp
             Utility/Yaml.cpp

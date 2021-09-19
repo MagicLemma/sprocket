@@ -1,6 +1,6 @@
 #pragma once
 #include <Sprocket/Scripting/LuaScript.h>
-#include <Sprocket/Utility/InputProxy.h>
+#include <Sprocket/Utility/input_store.h>
 
 struct lua_State;
 
