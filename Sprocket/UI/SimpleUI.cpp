@@ -271,7 +271,7 @@ void SimpleUI::Dragger(std::string_view name,
     cmd.AddText(std::format("{}:{:.2f}", name, *value), info.quad, tp);
 
     if (info.sinceClicked > 0) {
-        *value += d_window->get_mouse_offset().x * speed;
+        *value += d_window->mouse_offset().x * speed;
     }    
 }
 

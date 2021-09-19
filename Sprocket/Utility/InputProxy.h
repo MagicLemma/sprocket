@@ -1,4 +1,6 @@
 #pragma once
+#include <Sprocket/Core/window.h>
+
 #include <array>
 
 #include <glm/glm.hpp>
@@ -25,21 +27,25 @@ public:
     bool is_keyboard_down(int key) const;
 };
 
-struct input_store
+class input_store
 {
-    static constexpr std::size_t NUM_KEYS = 512;
+public:
+    static constexpr std::size_t NUM_KEYBOARD_KEYS = 512;
     static constexpr std::size_t NUM_MOUSE_BUTTONS = 5;
 
-    std::array<bool, NUM_KEYS> keyboard = {};
+private:
+    const spkt::window* const d_window; // Used to get mouse position and offset
+
+    std::array<bool, NUM_KEYBOARD_KEYS> keyboard = {};
     std::array<bool, NUM_MOUSE_BUTTONS> mouse = {};
     std::array<bool, NUM_MOUSE_BUTTONS> mouse_click = {};
     std::array<bool, NUM_MOUSE_BUTTONS> mouse_unclick = {};
-    glm::vec2 mouse_pos = {0.0, 0.0};
-    glm::vec2 mouse_offset = {0.0, 0.0};
-    glm::vec2 mouse_scrolled = {0.0, 0.0};
-    float window_width = 1280.0f;
-    float window_height = 720.0f;
-    bool window_resized = false;
+
+public:
+    input_store(const spkt::window* window) : d_window(window) {}
+
+    glm::vec2 mouse_position() const { return d_window->mouse_position(); }
+    glm::vec2 mouse_offset() const { return d_window->mouse_offset(); }
 };
     
 }
