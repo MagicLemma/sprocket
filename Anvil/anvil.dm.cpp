@@ -81,12 +81,12 @@ void Anvil::on_event(spkt::event& event)
                 d_selected = spkt::null;
             }
             else if (d_window->is_fullscreen()) {
-                d_window->SetWindowed(1280, 720);
+                d_window->set_windowed(1280, 720);
             }
             event.consume();
         } else if (data->key == Keyboard::F11) {
             if (d_window->is_fullscreen()) {
-                d_window->SetWindowed(1280, 720);
+                d_window->set_windowed(1280, 720);
             }
             else {
                 d_window->set_fullscreen();

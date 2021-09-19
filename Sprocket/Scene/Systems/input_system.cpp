@@ -32,7 +32,6 @@ void input_system_on_event(spkt::registry& registry, spkt::event& event)
         input.mouse_scrolled.y += data->y_offset;
     }
     else if (auto data = event.get_if<window_resized_event>()) {
-        input.window_resized = true;
         input.window_width = (float)data->width;
         input.window_height = (float)data->height;
     }

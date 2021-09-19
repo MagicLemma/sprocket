@@ -196,7 +196,6 @@ struct InputSingleton
     glm::vec2 mouse_scrolled = {0.0, 0.0};
     float window_width = 1280.0f;
     float window_height = 720.0f;
-    bool window_resized = false;
 };
 
 struct GameGridSingleton

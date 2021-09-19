@@ -701,12 +701,6 @@
                     "display_name": "Window Height",
                     "type": "float",
                     "default": "720.0f"
-                },
-                {
-                    "name": "window_resized",
-                    "display_name": "Window Resized",
-                    "type": "bool",
-                    "default": "false"
                 }
             ]
         },
