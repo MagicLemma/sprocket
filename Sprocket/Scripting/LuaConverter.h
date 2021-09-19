@@ -82,12 +82,6 @@ template <typename T> struct Converter<T*>
     }
 };
 
-template <> struct Converter<spkt::entity>
-{
-    static void push(lua_State* L, const spkt::entity& value);
-    static spkt::entity read(lua_State* L, int index);
-};
-
 template <> struct Converter<glm::vec2>
 {
     static void push(lua_State* L, const glm::vec2& value);

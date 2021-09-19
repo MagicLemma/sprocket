@@ -96,18 +96,6 @@ void* Converter<void*>::read(lua_State* L, int index)
     return lua_touserdata(L, index);
 }
 
-void Converter<spkt::entity>::push(lua_State* L, const spkt::entity& value)
-{
-    spkt::entity* handle = (spkt::entity*)lua_newuserdata(L, sizeof(spkt::entity));
-    *handle = value;
-    luaL_setmetatable(L, "entity_id");
-}
-
-spkt::entity Converter<spkt::entity>::read(lua_State* L, int index)
-{
-    return *(spkt::entity*)luaL_checkudata(L, index, "entity_id");
-}
-
 void Converter<glm::vec2>::push(lua_State* L, const glm::vec2& value)
 {
     glm::vec2* vec = (glm::vec2*)lua_newuserdata(L, sizeof(glm::vec2));
