@@ -31,17 +31,13 @@ void script_system(spkt::registry& registry, double dt)
         if (!sc.active) { continue; }
 
         if (!sc.script_runtime) {
+            input_store& input = *get_singleton<InputSingleton>(registry).input_store;
+            
             sc.script_runtime = std::make_shared<lua::Script>(sc.script);
             lua::Script& script = *sc.script_runtime;
-            lua::load_vec3_functions(script);
-            lua::load_vec2_functions(script);
-            lua::load_entity_functions(script);
-            lua::load_registry_functions(script, registry);
-            lua::load_entity_transformation_functions(script);
-            lua::load_entity_component_functions(script);
-
-            // Install input functions that make use of the input_store in the registry.
-            input_store& input = *get_singleton<InputSingleton>(registry).input_store;
+            
+            lua::load_maths(script);
+            lua::load_registry(script, registry);
             lua::load_input_store(script, input);
 
             if (script.has_function(INIT_FUNCTION)) {
