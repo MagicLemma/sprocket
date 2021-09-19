@@ -1,10 +1,10 @@
 #include "basic_systems.h"
 
-#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scene/lua_ecs.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/lua_input.h>
 #include <Sprocket/Scripting/lua_maths.h>
-#include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Utility/input_store.h>
 
 #include <glm/gtx/norm.hpp>

@@ -1,6 +1,6 @@
 #include "lua_maths.h"
 
-#include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Scripting/LuaConverter.h>
 
 #include <lua.hpp>

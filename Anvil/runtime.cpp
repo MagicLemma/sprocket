@@ -6,7 +6,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
-#include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>
 #include <Sprocket/Core/input_codes.h>

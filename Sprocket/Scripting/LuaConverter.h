@@ -15,64 +15,67 @@ struct lua_State;
 namespace spkt {
 namespace lua {
 
-template <typename T> struct Converter
-{
-    // Pushes to the top of the Lua stack.
-    static void push(lua_State* L, const T& value) { static_assert(false); }
-    
-    // Reads the value at the given index in the Lua stack.
-    static T read(lua_State* L, int index) { static_assert(false); }
-};
+template <typename T>
+struct Converter;
 
-template <> struct Converter<int>
+template <>
+struct Converter<int>
 {
     static void push(lua_State* L, const int& value);
     static int read(lua_State* L, int index);
 };
 
-template <> struct Converter<std::uint32_t>
+template <>
+struct Converter<std::uint32_t>
 {
     static void push(lua_State* L, const std::uint32_t& value);
     static std::uint32_t read(lua_State* L, int index);
 };
 
-template <> struct Converter<bool>
+template <>
+struct Converter<bool>
 {
     static void push(lua_State* L, const bool& value);
     static bool read(lua_State* L, int index);
 };
 
-template <> struct Converter<float>
+template <>
+struct Converter<float>
 {
     static void push(lua_State* L, const float& value);
     static float read(lua_State* L, int index);
 };
 
-template <> struct Converter<double>
+template <>
+struct Converter<double>
 {
     static void push(lua_State* L, const double& value);
     static double read(lua_State* L, int index);
 };
 
-template <> struct Converter<const char*>
+template <>
+struct Converter<const char*>
 {
     static void push(lua_State* L, const char* value);
     static const char* read(lua_State* L, int index);
 };
 
-template <> struct Converter<std::string>
+template <>
+struct Converter<std::string>
 {
     static void push(lua_State* L, const std::string& value);
     static std::string read(lua_State* L, int index);
 };
 
-template <> struct Converter<void*>
+template <>
+struct Converter<void*>
 {
     static void push(lua_State* L, void* value);
     static void* read(lua_State* L, int index);
 };
 
-template <typename T> struct Converter<T*>
+template <typename T>
+struct Converter<T*>
 {
     static void push(lua_State* L, T* value) {
         return Converter<void*>::push(L, (void*)value);
@@ -82,19 +85,22 @@ template <typename T> struct Converter<T*>
     }
 };
 
-template <> struct Converter<glm::vec2>
+template <>
+struct Converter<glm::vec2>
 {
     static void push(lua_State* L, const glm::vec2& value);
     static glm::vec2 read(lua_State* L, int index);
 };
 
-template <> struct Converter<glm::vec3>
+template <>
+struct Converter<glm::vec3>
 {
     static void push(lua_State* L, const glm::vec3& value);
     static glm::vec3 read(lua_State* L, int index);
 };
 
-template <typename T, typename... Rest> struct Converter<std::vector<T, Rest...>>
+template <typename T, typename... Rest>
+struct Converter<std::vector<T, Rest...>>
 {
     using vector_t = std::vector<T, Rest...>;
     using value_type = typename vector_t::value_type;
@@ -122,7 +128,8 @@ template <typename T, typename... Rest> struct Converter<std::vector<T, Rest...>
     }
 };
 
-template <typename Left, typename Right> struct Converter<std::pair<Left, Right>>
+template <typename Left, typename Right>
+struct Converter<std::pair<Left, Right>>
 {
     using pair_t = std::pair<Left, Right>;
     

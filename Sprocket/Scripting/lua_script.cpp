@@ -1,4 +1,4 @@
-#include "LuaScript.h"
+#include "lua_script.h"
 
 #include <Sprocket/Core/log.h>
 

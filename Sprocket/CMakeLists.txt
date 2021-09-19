@@ -79,7 +79,7 @@ add_library(Sprocket STATIC
             Utility/Maths.cpp
             Utility/Yaml.cpp
 
-            Scripting/LuaScript.cpp
+            Scripting/lua_script.cpp
             Scripting/lua_maths.cpp
             Scripting/LuaConverter.cpp
             Scripting/lua_input.cpp)

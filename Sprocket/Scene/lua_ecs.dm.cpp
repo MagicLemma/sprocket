@@ -3,7 +3,7 @@
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/LuaConverter.h>
-#include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/Maths.h>
 
