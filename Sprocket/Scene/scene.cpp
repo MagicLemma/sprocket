@@ -24,7 +24,6 @@ spkt::entity add_singleton(spkt::registry& registry, const spkt::window* window)
 
 void scene::on_update(double dt)
 {
-    spkt::input_system_begin(registry, dt);
     std::ranges::for_each(systems, [&](const system& sys) { sys(registry, dt); });
     spkt::input_system_end(registry, dt);
 }
