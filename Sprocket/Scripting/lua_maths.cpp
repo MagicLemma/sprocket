@@ -1,7 +1,7 @@
 #include "lua_maths.h"
 
 #include <Sprocket/Scripting/lua_script.h>
-#include <Sprocket/Scripting/LuaConverter.h>
+#include <Sprocket/Scripting/lua_converter.h>
 
 #include <lua.hpp>
 #include <glm/glm.hpp>

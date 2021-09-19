@@ -407,7 +407,7 @@
                 {
                     "name": "script_runtime",
                     "display_name": "Script Runtime",
-                    "type": "std::shared_ptr<lua::Script>",
+                    "type": "std::shared_ptr<lua::script>",
                     "default": "nullptr",
                     "flags": {
                         "SCRIPTABLE": false,

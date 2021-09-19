@@ -2,7 +2,7 @@
 
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
-#include <Sprocket/Scripting/LuaConverter.h>
+#include <Sprocket/Scripting/lua_converter.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/Maths.h>
@@ -169,7 +169,7 @@ int _Add{{Comp::name}}(lua_State* L) {
 
 DATAMATIC_END
 
-void load_entity_transformation_functions(lua::Script& script)
+void load_entity_transformation_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -230,7 +230,7 @@ void load_entity_transformation_functions(lua::Script& script)
     });
 }
 
-void load_entity_component_functions(lua::Script& script)
+void load_entity_component_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -275,7 +275,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
 DATAMATIC_END
 }
 
-void load_entity_functions(lua::Script& script)
+void load_entity_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -294,7 +294,7 @@ void load_entity_functions(lua::Script& script)
 
 }
 
-void load_registry(lua::Script& script, spkt::registry& registry)
+void load_registry(lua::script& script, spkt::registry& registry)
 {
     using namespace spkt;
 

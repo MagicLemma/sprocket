@@ -1,6 +1,6 @@
 #pragma once
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scripting/LuaConverter.h>
+#include <Sprocket/Scripting/lua_converter.h>
 
 namespace spkt {
 namespace lua {

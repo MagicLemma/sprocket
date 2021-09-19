@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Scripting/LuaConverter.h>
+#include <Sprocket/Scripting/lua_converter.h>
 
 #include <lua.hpp>
 
