@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Utility/InputProxy.h>
+#include <Sprocket/Utility/input_store.h>
 
 #include <glm/glm.hpp>
 
@@ -10,8 +10,8 @@ namespace spkt {
 
 class Camera
 {
-    spkt::window*    d_window;
-    spkt::InputProxy d_input;
+    spkt::window*     d_window;
+    spkt::input_store d_input;
 
     glm::vec3 d_position;
     glm::vec3 d_target;

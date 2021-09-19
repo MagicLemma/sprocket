@@ -1,9 +1,11 @@
 #include "basic_systems.h"
 
 #include <Sprocket/Scene/scene.h>
+#include <Sprocket/Scripting/lua_events.h>
 #include <Sprocket/Scripting/LuaLibrary.h>
 #include <Sprocket/Scripting/LuaMaths.h>
 #include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Utility/input_store.h>
 
 #include <glm/gtx/norm.hpp>
 
@@ -37,6 +39,11 @@ void script_system(spkt::registry& registry, double dt)
             lua::load_registry_functions(script, registry);
             lua::load_entity_transformation_functions(script);
             lua::load_entity_component_functions(script);
+
+            // Install input functions that make use of the input_store in the registry.
+            input_store& input = *get_singleton<InputSingleton>(registry).input_store;
+            lua::load_input_store(script, input);
+
             if (script.has_function(INIT_FUNCTION)) {
                 script.set_value("__command_list__", &commands);
                 script.call_function<void>(INIT_FUNCTION, entity);
@@ -63,8 +70,8 @@ void animation_system(spkt::registry& registry, double dt)
 
 void camera_system(spkt::registry& registry, double dt)
 {
-    const auto& input = get_singleton<InputSingleton>(registry);
-    float aspect_ratio = input.window_width / input.window_height;
+    const auto& input = *get_singleton<InputSingleton>(registry).input_store;
+    float aspect_ratio = input.window_width() / input.window_height();
 
     for (auto [cam] : registry.view_get<Camera3DComponent>()) {
         cam.projection = glm::perspective(cam.fov, aspect_ratio, 0.1f, 1000.0f);

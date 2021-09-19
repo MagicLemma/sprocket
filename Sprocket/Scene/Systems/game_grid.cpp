@@ -5,6 +5,7 @@
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Utility/input_store.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -41,7 +42,7 @@ void game_grid_system_init(spkt::registry& registry)
 
 void game_grid_system(spkt::registry& registry, double)
 {
-    const auto& input = get_singleton<InputSingleton>(registry);
+    const auto& input = *get_singleton<InputSingleton>(registry).input_store;
     const auto& cam = get_singleton<CameraSingleton>(registry);
     auto& grid = get_singleton<GameGridSingleton>(registry);
 
@@ -56,9 +57,9 @@ void game_grid_system(spkt::registry& registry, double)
         return !registry.valid(entity);
     });
 
-    if (input.mouse_click[Mouse::LEFT]) {
+    if (input.is_mouse_clicked(Mouse::RIGHT)) {
         grid.clicked_square = grid.hovered_square;
-    } else if (input.mouse_click[Mouse::RIGHT]) {
+    } else if (input.is_mouse_unclicked(Mouse::RIGHT)) {
         grid.clicked_square = std::nullopt;
     }
 
@@ -66,9 +67,9 @@ void game_grid_system(spkt::registry& registry, double)
 
     glm::vec3 cameraPos = camTr.position;
     glm::vec3 direction = Maths::GetMouseRay(
-        input.mouse_pos,
-        input.window_width,
-        input.window_height,
+        input.mouse_position(),
+        input.window_width(),
+        input.window_height(),
         spkt::make_view(registry, cam.camera_entity),
         spkt::make_proj(registry, cam.camera_entity)
     );

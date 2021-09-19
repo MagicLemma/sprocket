@@ -31,6 +31,7 @@ struct window_data
 
 	glm::vec2 mouse_position;
 	glm::vec2 mouse_offset;
+	glm::vec2 mouse_scrolled;
 
 	event_handler callback = [](spkt::event&) {};
 };
@@ -69,7 +70,8 @@ public:
 	bool is_focused() const { return d_data.focused; }
 
 	glm::vec2 mouse_position() const;
-	glm::vec2 get_mouse_offset() const { return d_data.mouse_offset; }
+	glm::vec2 mouse_offset() const { return d_data.mouse_offset; }
+	glm::vec2 mouse_scrolled() const { return d_data.mouse_scrolled; }
 
 	const char* get_clipboard_data() const;
 	void set_clipboard_data(const std::string& text) const;

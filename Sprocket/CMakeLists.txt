@@ -73,7 +73,7 @@ add_library(Sprocket STATIC
             
             Utility/Colour.cpp
             Utility/FileBrowser.cpp
-            Utility/InputProxy.cpp
+            Utility/input_store.cpp
             Utility/Random.cpp
             Utility/Maths.cpp
             Utility/Yaml.cpp
@@ -81,7 +81,8 @@ add_library(Sprocket STATIC
             Scripting/LuaScript.cpp
             Scripting/LuaLibrary.cpp
             Scripting/LuaMaths.cpp
-            Scripting/LuaConverter.cpp)
+            Scripting/LuaConverter.cpp
+            Scripting/lua_events.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       SprocketVendor
