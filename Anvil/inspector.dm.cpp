@@ -12,6 +12,25 @@
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+namespace {
+
+template <typename T>
+struct inspector_display;
+
+DATAMATIC_BEGIN
+template <>
+struct inspector_display<spkt::{{Comp::name}}>
+{
+    static void draw(Anvil& editor, spkt::{{Comp::name}}& c)
+    {
+        {{Attr::inspector_display}};
+    }
+};
+
+DATAMATIC_END
+
+}
+
 void Inspector::Show(Anvil& editor)
 {
     spkt::registry& registry = editor.active_scene()->registry;
@@ -33,8 +52,10 @@ DATAMATIC_BEGIN
         auto& c = registry.get<spkt::{{Comp::name}}>(entity);
         if (ImGui::CollapsingHeader("{{Comp::display_name}}")) {
             ImGui::PushID(count++);
-            {{Attr::inspector_display}};
-            {{Comp::inspector_guizmo_settings}}
+            inspector_display<spkt::{{Comp::name}}>::draw(editor, c);
+            if constexpr (std::is_same_v<spkt::{{Comp::name}}, spkt::Transform3DComponent>) {
+                spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
+            }
             if (ImGui::Button("Delete")) { registry.remove<spkt::{{Comp::name}}>(entity); }
             ImGui::PopID();
         }

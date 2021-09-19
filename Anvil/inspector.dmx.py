@@ -3,11 +3,6 @@ Plugin for the Inspector
 """
 
 def main(reg):
-    @reg.compmethod
-    def inspector_guizmo_settings(ctx):
-        if ctx.comp["name"] == "Transform3DComponent":
-            return "spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);"
-        return ""
 
     @reg.attrmethod
     def inspector_display(ctx):
