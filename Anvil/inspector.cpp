@@ -2,11 +2,12 @@
 
 #include <Anvil/Anvil.h>
 
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Loader.h>
+#include <Sprocket/Scene/meta.h>
+#include <Sprocket/UI/DevUI.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/Maths.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/UI/DevUI.h>
-#include <Sprocket/Scene/Loader.h>
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -369,110 +370,12 @@ void Inspector::Show(Anvil& editor)
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-        if (!registry.has<spkt::Runtime>(entity) && ImGui::Selectable("Runtime")) {
-            spkt::Runtime c;
-            registry.add<spkt::Runtime>(entity, c);
-        }
-        if (!registry.has<spkt::Singleton>(entity) && ImGui::Selectable("Singleton")) {
-            spkt::Singleton c;
-            registry.add<spkt::Singleton>(entity, c);
-        }
-        if (!registry.has<spkt::Event>(entity) && ImGui::Selectable("Event")) {
-            spkt::Event c;
-            registry.add<spkt::Event>(entity, c);
-        }
-        if (!registry.has<spkt::NameComponent>(entity) && ImGui::Selectable("Name")) {
-            spkt::NameComponent c;
-            registry.add<spkt::NameComponent>(entity, c);
-        }
-        if (!registry.has<spkt::Transform2DComponent>(entity) && ImGui::Selectable("Transform 2D")) {
-            spkt::Transform2DComponent c;
-            registry.add<spkt::Transform2DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::Transform3DComponent>(entity) && ImGui::Selectable("Transform 3D")) {
-            spkt::Transform3DComponent c;
-            registry.add<spkt::Transform3DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::StaticModelComponent>(entity) && ImGui::Selectable("Static Model")) {
-            spkt::StaticModelComponent c;
-            registry.add<spkt::StaticModelComponent>(entity, c);
-        }
-        if (!registry.has<spkt::AnimatedModelComponent>(entity) && ImGui::Selectable("Animated Model")) {
-            spkt::AnimatedModelComponent c;
-            registry.add<spkt::AnimatedModelComponent>(entity, c);
-        }
-        if (!registry.has<spkt::RigidBody3DComponent>(entity) && ImGui::Selectable("Rigid Body 3D")) {
-            spkt::RigidBody3DComponent c;
-            registry.add<spkt::RigidBody3DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::BoxCollider3DComponent>(entity) && ImGui::Selectable("Box Collider 3D")) {
-            spkt::BoxCollider3DComponent c;
-            registry.add<spkt::BoxCollider3DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::SphereCollider3DComponent>(entity) && ImGui::Selectable("Sphere Collider 3D")) {
-            spkt::SphereCollider3DComponent c;
-            registry.add<spkt::SphereCollider3DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::CapsuleCollider3DComponent>(entity) && ImGui::Selectable("Capsule Collider 3D")) {
-            spkt::CapsuleCollider3DComponent c;
-            registry.add<spkt::CapsuleCollider3DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::ScriptComponent>(entity) && ImGui::Selectable("Script")) {
-            spkt::ScriptComponent c;
-            registry.add<spkt::ScriptComponent>(entity, c);
-        }
-        if (!registry.has<spkt::Camera3DComponent>(entity) && ImGui::Selectable("Camera 3D")) {
-            spkt::Camera3DComponent c;
-            registry.add<spkt::Camera3DComponent>(entity, c);
-        }
-        if (!registry.has<spkt::PathComponent>(entity) && ImGui::Selectable("Path")) {
-            spkt::PathComponent c;
-            registry.add<spkt::PathComponent>(entity, c);
-        }
-        if (!registry.has<spkt::LightComponent>(entity) && ImGui::Selectable("Light")) {
-            spkt::LightComponent c;
-            registry.add<spkt::LightComponent>(entity, c);
-        }
-        if (!registry.has<spkt::SunComponent>(entity) && ImGui::Selectable("Sun")) {
-            spkt::SunComponent c;
-            registry.add<spkt::SunComponent>(entity, c);
-        }
-        if (!registry.has<spkt::AmbienceComponent>(entity) && ImGui::Selectable("Ambience")) {
-            spkt::AmbienceComponent c;
-            registry.add<spkt::AmbienceComponent>(entity, c);
-        }
-        if (!registry.has<spkt::ParticleComponent>(entity) && ImGui::Selectable("Particle")) {
-            spkt::ParticleComponent c;
-            registry.add<spkt::ParticleComponent>(entity, c);
-        }
-        if (!registry.has<spkt::CollisionEvent>(entity) && ImGui::Selectable("Collision Event")) {
-            spkt::CollisionEvent c;
-            registry.add<spkt::CollisionEvent>(entity, c);
-        }
-        if (!registry.has<spkt::PhysicsSingleton>(entity) && ImGui::Selectable("Physics Singleton")) {
-            spkt::PhysicsSingleton c;
-            registry.add<spkt::PhysicsSingleton>(entity, c);
-        }
-        if (!registry.has<spkt::InputSingleton>(entity) && ImGui::Selectable("Input Singleton")) {
-            spkt::InputSingleton c;
-            registry.add<spkt::InputSingleton>(entity, c);
-        }
-        if (!registry.has<spkt::GameGridSingleton>(entity) && ImGui::Selectable("Game Grid Singleton")) {
-            spkt::GameGridSingleton c;
-            registry.add<spkt::GameGridSingleton>(entity, c);
-        }
-        if (!registry.has<spkt::TileMapSingleton>(entity) && ImGui::Selectable("Tile Map Singleton")) {
-            spkt::TileMapSingleton c;
-            registry.add<spkt::TileMapSingleton>(entity, c);
-        }
-        if (!registry.has<spkt::CameraSingleton>(entity) && ImGui::Selectable("Camera Singleton")) {
-            spkt::CameraSingleton c;
-            registry.add<spkt::CameraSingleton>(entity, c);
-        }
-        if (!registry.has<spkt::ParticleSingleton>(entity) && ImGui::Selectable("Particle Singleton")) {
-            spkt::ParticleSingleton c;
-            registry.add<spkt::ParticleSingleton>(entity, c);
-        }
+        spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+            std::string comp_name{refl.component_name};
+            if (!registry.has<T>(entity) && ImGui::Selectable(comp_name.c_str())) {
+                registry.add<T>(entity, {});
+            }
+        });
         ImGui::EndMenu();
     }
     ImGui::Separator();

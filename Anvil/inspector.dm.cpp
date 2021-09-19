@@ -2,11 +2,12 @@
 
 #include <Anvil/Anvil.h>
 
+#include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Scene/Loader.h>
+#include <Sprocket/Scene/meta.h>
+#include <Sprocket/UI/DevUI.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/Maths.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/UI/DevUI.h>
-#include <Sprocket/Scene/Loader.h>
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -47,12 +48,12 @@ DATAMATIC_END
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-DATAMATIC_BEGIN
-        if (!registry.has<spkt::{{Comp::name}}>(entity) && ImGui::Selectable("{{Comp::display_name}}")) {
-            spkt::{{Comp::name}} c;
-            registry.add<spkt::{{Comp::name}}>(entity, c);
-        }
-DATAMATIC_END
+        spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+            std::string comp_name{refl.component_name};
+            if (!registry.has<T>(entity) && ImGui::Selectable(comp_name.c_str())) {
+                registry.add<T>(entity, {});
+            }
+        });
         ImGui::EndMenu();
     }
     ImGui::Separator();
