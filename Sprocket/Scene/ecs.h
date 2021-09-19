@@ -21,6 +21,7 @@ const auto null = apx::null;
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
+class input_store;
 
 struct particle
 {
@@ -186,16 +187,7 @@ struct PhysicsSingleton
 
 struct InputSingleton
 {
-    std::array<bool, 512> keyboard = {};
-    std::array<bool, 5> mouse = {};
-    std::array<bool, 5> mouse_click = {};
-    std::array<bool, 5> mouse_unclick = {};
-    glm::vec2 mouse_pos = {0.0, 0.0};
-    glm::vec2 mouse_pos_last_frame = {0.0, 0.0};
-    glm::vec2 mouse_offset = {0.0, 0.0};
-    glm::vec2 mouse_scrolled = {0.0, 0.0};
-    float window_width = 1280.0f;
-    float window_height = 720.0f;
+    std::shared_ptr<spkt::input_store> input_store = nullptr;
 };
 
 struct GameGridSingleton

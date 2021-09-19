@@ -4,6 +4,7 @@
 #include <Sprocket/Scripting/LuaLibrary.h>
 #include <Sprocket/Scripting/LuaMaths.h>
 #include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Utility/InputProxy.h>
 
 #include <glm/gtx/norm.hpp>
 
@@ -63,8 +64,8 @@ void animation_system(spkt::registry& registry, double dt)
 
 void camera_system(spkt::registry& registry, double dt)
 {
-    const auto& input = get_singleton<InputSingleton>(registry);
-    float aspect_ratio = input.window_width / input.window_height;
+    const auto& input = *get_singleton<InputSingleton>(registry).input_store;
+    float aspect_ratio = input.window_width() / input.window_height();
 
     for (auto [cam] : registry.view_get<Camera3DComponent>()) {
         cam.projection = glm::perspective(cam.fov, aspect_ratio, 0.1f, 1000.0f);

@@ -126,7 +126,7 @@ void Game::load_scene(std::string_view file)
 {
     auto& registry = d_scene.registry;
     
-    spkt::add_singleton(registry);
+    spkt::add_singleton(registry, d_window);
     spkt::game_grid_system_init(registry);
     spkt::load_registry_from_file(std::string(file), registry);
     

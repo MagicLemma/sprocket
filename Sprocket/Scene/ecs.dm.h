@@ -21,6 +21,7 @@ const auto null = apx::null;
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
+class input_store;
 
 struct particle
 {

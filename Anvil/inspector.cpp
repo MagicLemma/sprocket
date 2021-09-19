@@ -308,15 +308,6 @@ void Inspector::Show(Anvil& editor)
         if (ImGui::CollapsingHeader("Input Singleton")) {
             ImGui::PushID(count++);
             ;
-            ;
-            ;
-            ;
-            ImGui::DragFloat2("Mouse Position", &c.mouse_pos.x, 0.1f);
-            ImGui::DragFloat2("Mouse Position Last Frame", &c.mouse_pos_last_frame.x, 0.1f);
-            ImGui::DragFloat2("Mouse Offset", &c.mouse_offset.x, 0.1f);
-            ImGui::DragFloat2("Mouse Scrolled", &c.mouse_scrolled.x, 0.1f);
-            ImGui::DragFloat("Window Width", &c.window_width, 0.01f);
-            ImGui::DragFloat("Window Height", &c.window_height, 0.01f);
             
             if (ImGui::Button("Delete")) { registry.remove<spkt::InputSingleton>(entity); }
             ImGui::PopID();

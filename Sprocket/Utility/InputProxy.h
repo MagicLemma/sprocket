@@ -66,6 +66,8 @@ public:
     bool is_keyboard_clicked(int key) const { return d_keyboard_click[key]; }
     bool is_keyboard_unclicked(int key) const { return d_keyboard_unclick[key]; }
 
+    float window_width() const { return (float)d_window->width(); }
+    float window_height() const { return (float)d_window->height(); }
 };
     
 }
