@@ -10,8 +10,8 @@ namespace spkt {
 
 class Camera
 {
-    spkt::window*    d_window;
-    spkt::InputProxy d_input;
+    spkt::window*     d_window;
+    spkt::input_store d_input;
 
     glm::vec3 d_position;
     glm::vec3 d_target;

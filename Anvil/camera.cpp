@@ -14,6 +14,7 @@
 
 Camera::Camera(spkt::window* window, const glm::vec3& target)
     : d_window(window)
+    , d_input(window)
     , d_position()
     , d_target(target)
     , d_yaw(0.0f)
