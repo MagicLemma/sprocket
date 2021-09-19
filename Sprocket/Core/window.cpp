@@ -127,6 +127,9 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glfwSetCursorPosCallback(d_impl->window, [](GLFWwindow* window, double x_pos, double y_pos) {
 		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
+		glm::vec2 new_pos{x_pos, y_pos};
+		data->mouse_offset += new_pos - data->mouse_position;
+		data->mouse_position = new_pos;
 		auto event = spkt::make_event<mouse_moved_event>(x_pos, y_pos);
 		data->callback(event);
 	});
@@ -134,6 +137,7 @@ window::window(const std::string& name, std::uint32_t width, std::uint32_t heigh
 	glfwSetScrollCallback(d_impl->window, [](GLFWwindow* window, double x_offset, double y_offset) {
 		auto data = static_cast<window_data*>(glfwGetWindowUserPointer(window));
 		if (!data->focused) return;
+		data->mouse_scrolled += glm::vec2{x_offset, y_offset};
 		auto event = spkt::make_event<mouse_scrolled_event>(x_offset, y_offset);
 		data->callback(event);
 	});
@@ -189,16 +193,12 @@ void window::begin_frame()
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClearColor(d_data.clear_colour.r, d_data.clear_colour.g, d_data.clear_colour.b, 1.0);
-	
-	// Handle all events
-	glfwPollEvents();
 
-	// Update the mouse position and offset
-	double x, y;
-	glfwGetCursorPos(d_impl->window, &x, &y);
-	glm::vec2 new_mouse_position{x, y};
-	d_data.mouse_offset = new_mouse_position - d_data.mouse_position;
-	d_data.mouse_position = new_mouse_position;
+	d_data.mouse_scrolled = {0.0, 0.0};
+	d_data.mouse_offset = {0.0, 0.0};
+	
+	// Handle all events, updating the mouse position, offset and scrolled.
+	glfwPollEvents();
 }
 
 void window::end_frame()
