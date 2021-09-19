@@ -1,4 +1,4 @@
-#include "lua_registry.h"
+#include "lua_ecs.h"
 
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
@@ -18,6 +18,19 @@
 
 namespace spkt {
 namespace lua {
+
+void Converter<spkt::entity>::push(lua_State* L, const spkt::entity& value)
+{
+    spkt::entity* handle = (spkt::entity*)lua_newuserdata(L, sizeof(spkt::entity));
+    *handle = value;
+    luaL_setmetatable(L, "entity_id");
+}
+
+spkt::entity Converter<spkt::entity>::read(lua_State* L, int index)
+{
+    return *(spkt::entity*)luaL_checkudata(L, index, "entity_id");
+}
+
 namespace {
 
 void do_file(lua_State* L, const char* file)

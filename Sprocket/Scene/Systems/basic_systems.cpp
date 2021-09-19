@@ -2,7 +2,7 @@
 
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/lua_events.h>
-#include <Sprocket/Scripting/lua_registry.h>
+#include <Sprocket/Scripting/lua_ecs.h>
 #include <Sprocket/Scripting/lua_maths.h>
 #include <Sprocket/Scripting/LuaScript.h>
 #include <Sprocket/Utility/input_store.h>

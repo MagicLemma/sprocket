@@ -1,4 +1,4 @@
-#include "lua_registry.h"
+#include "lua_ecs.h"
 
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
