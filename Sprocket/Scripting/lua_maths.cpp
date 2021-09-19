@@ -12,7 +12,7 @@ namespace spkt {
 namespace lua {
 namespace {
 
-void load_vec3_functions(lua::Script& script)
+void load_vec3_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -112,7 +112,7 @@ void load_vec3_functions(lua::Script& script)
     lua_setglobal(L, "vec3");
 }
 
-void load_vec2_functions(lua::Script& script)
+void load_vec2_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -206,7 +206,7 @@ void load_vec2_functions(lua::Script& script)
 
 }
 
-void load_maths(lua::Script& script)
+void load_maths(lua::script& script)
 {
     load_vec2_functions(script);
     load_vec3_functions(script);

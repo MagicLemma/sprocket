@@ -33,7 +33,7 @@ bool check_arg_count(lua_State* L, int argc)
 
 }
 
-void load_input_store(lua::Script& script, input_store& input)
+void load_input_store(lua::script& script, input_store& input)
 {
     lua_State* L = script.native_handle();
     script.set_value(INPUT_VAR_NAME, &input);

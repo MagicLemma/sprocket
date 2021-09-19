@@ -5,7 +5,7 @@
 namespace spkt {
 namespace lua {
 
-class Script;
+class script;
 
 template <>
 struct Converter<spkt::entity>
@@ -18,7 +18,7 @@ struct Converter<spkt::entity>
 // creating/deleting entities as well as iterating entities. Also provides functions
 // for access the singleton entity, which in turn gives access to the keyboard, mouse
 // and window via the InputSingleton.
-void load_registry(lua::Script& script, spkt::registry& registry);
+void load_registry(lua::script& script, spkt::registry& registry);
 
 }
 }

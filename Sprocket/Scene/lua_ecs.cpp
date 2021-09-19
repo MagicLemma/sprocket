@@ -803,7 +803,7 @@ int _AddCollisionEvent(lua_State* L) {
 }
 
 
-void load_entity_transformation_functions(lua::Script& script)
+void load_entity_transformation_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -864,7 +864,7 @@ void load_entity_transformation_functions(lua::Script& script)
     });
 }
 
-void load_entity_component_functions(lua::Script& script)
+void load_entity_component_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -1535,7 +1535,7 @@ void load_entity_component_functions(lua::Script& script)
 
 }
 
-void load_entity_functions(lua::Script& script)
+void load_entity_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -1554,7 +1554,7 @@ void load_entity_functions(lua::Script& script)
 
 }
 
-void load_registry(lua::Script& script, spkt::registry& registry)
+void load_registry(lua::script& script, spkt::registry& registry)
 {
     using namespace spkt;
 

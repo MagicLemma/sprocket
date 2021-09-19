@@ -3,9 +3,9 @@
 namespace spkt {
 namespace lua {
 
-class Script;
+class script;
 
-void load_maths(lua::Script& script);
+void load_maths(lua::script& script);
 
 }
 }

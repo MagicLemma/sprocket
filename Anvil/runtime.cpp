@@ -81,7 +81,7 @@ Runtime::Runtime(spkt::window* window)
         }
         const auto script_file = std::format("Resources/Scripts/{}", args[1]);
         if (std::filesystem::exists(script_file)) {
-            spkt::lua::Script script(script_file);
+            spkt::lua::script script(script_file);
         } else {
             console.error(" > Could not find script '{}'", args[1]);
         }

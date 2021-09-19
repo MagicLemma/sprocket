@@ -13,7 +13,7 @@
 #include <memory>
 
 namespace spkt {
-namespace lua { class Script; }
+namespace lua { class script; }
 
 using entity = apx::entity;
 const auto null = apx::null;

@@ -33,8 +33,8 @@ void script_system(spkt::registry& registry, double dt)
         if (!sc.script_runtime) {
             input_store& input = *get_singleton<InputSingleton>(registry).input_store;
             
-            sc.script_runtime = std::make_shared<lua::Script>(sc.script);
-            lua::Script& script = *sc.script_runtime;
+            sc.script_runtime = std::make_shared<lua::script>(sc.script);
+            lua::script& script = *sc.script_runtime;
 
             lua::load_maths(script);
             lua::load_registry(script, registry);
@@ -46,7 +46,7 @@ void script_system(spkt::registry& registry, double dt)
             }
         }
         else {
-            lua::Script& script = *sc.script_runtime;
+            lua::script& script = *sc.script_runtime;
             script.set_value("__command_list__", &commands);
             script.call_function<void>(UPDATE_FUNCTION, entity, dt);
         }

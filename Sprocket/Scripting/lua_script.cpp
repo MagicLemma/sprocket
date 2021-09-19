@@ -19,7 +19,7 @@ void do_file(lua_State* L, const char* file)
 
 }
 
-Script::Script(const std::string& file)
+script::script(const std::string& file)
     : d_L(luaL_newstate(), [](lua_State* L) { lua_close(L); })
 {
     lua_State* L = d_L.get();
@@ -28,7 +28,7 @@ Script::Script(const std::string& file)
     do_file(L, file.c_str());
 }
 
-Script::Script()
+script::script()
     : d_L(luaL_newstate(), [](lua_State* L) { lua_close(L); })
 {
     lua_State* L = d_L.get();
@@ -36,7 +36,7 @@ Script::Script()
     do_file(L, "Sprocket/Scripting/Sprocket_Base.lua");
 }
 
-void Script::print_errors(int rc) const
+void script::print_errors(int rc) const
 {
     if (rc == LUA_OK) { return; } // No error
     
@@ -56,7 +56,7 @@ void Script::print_errors(int rc) const
     }
 }
 
-bool Script::has_function(const std::string& function)
+bool script::has_function(const std::string& function)
 {
     lua_State* L = d_L.get();
     lua_getglobal(L, function.c_str());
@@ -65,7 +65,7 @@ bool Script::has_function(const std::string& function)
     return is_function;
 }
 
-void Script::print_globals()
+void script::print_globals()
 {
     lua_State* L = d_L.get();
 
