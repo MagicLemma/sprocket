@@ -1,6 +1,7 @@
 #include "basic_systems.h"
 
 #include <Sprocket/Scene/scene.h>
+#include <Sprocket/Scripting/lua_events.h>
 #include <Sprocket/Scripting/LuaLibrary.h>
 #include <Sprocket/Scripting/LuaMaths.h>
 #include <Sprocket/Scripting/LuaScript.h>
@@ -38,6 +39,11 @@ void script_system(spkt::registry& registry, double dt)
             lua::load_registry_functions(script, registry);
             lua::load_entity_transformation_functions(script);
             lua::load_entity_component_functions(script);
+
+            // Install input functions that make use of the input_store in the registry.
+            input_store& input = *get_singleton<InputSingleton>(registry).input_store;
+            lua::load_input_store(script, input);
+
             if (script.has_function(INIT_FUNCTION)) {
                 script.set_value("__command_list__", &commands);
                 script.call_function<void>(INIT_FUNCTION, entity);
