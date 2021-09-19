@@ -7,7 +7,8 @@ namespace lua {
 
 class Script;
 
-template <> struct Converter<spkt::entity>
+template <>
+struct Converter<spkt::entity>
 {
     static void push(lua_State* L, const spkt::entity& value);
     static spkt::entity read(lua_State* L, int index);
