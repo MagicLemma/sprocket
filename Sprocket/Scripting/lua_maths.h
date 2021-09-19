@@ -1,5 +1,4 @@
 #pragma once
-#include <Sprocket/Scripting/LuaScript.h>
 
 namespace spkt {
 namespace lua {

@@ -1,7 +1,7 @@
 #include "basic_systems.h"
 
 #include <Sprocket/Scene/scene.h>
-#include <Sprocket/Scripting/lua_events.h>
+#include <Sprocket/Scripting/lua_input.h>
 #include <Sprocket/Scripting/lua_ecs.h>
 #include <Sprocket/Scripting/lua_maths.h>
 #include <Sprocket/Scripting/LuaScript.h>
