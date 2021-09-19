@@ -2,8 +2,8 @@
 
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/lua_events.h>
-#include <Sprocket/Scripting/LuaLibrary.h>
-#include <Sprocket/Scripting/LuaMaths.h>
+#include <Sprocket/Scripting/lua_registry.h>
+#include <Sprocket/Scripting/lua_maths.h>
 #include <Sprocket/Scripting/LuaScript.h>
 #include <Sprocket/Utility/input_store.h>
 
@@ -35,7 +35,7 @@ void script_system(spkt::registry& registry, double dt)
             
             sc.script_runtime = std::make_shared<lua::Script>(sc.script);
             lua::Script& script = *sc.script_runtime;
-            
+
             lua::load_maths(script);
             lua::load_registry(script, registry);
             lua::load_input_store(script, input);

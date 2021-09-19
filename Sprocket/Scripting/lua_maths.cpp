@@ -1,4 +1,4 @@
-#include "LuaScript.h"
+#include "lua_maths.h"
 
 #include <Sprocket/Scripting/LuaConverter.h>
 
