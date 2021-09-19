@@ -6,7 +6,7 @@
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
-#include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>
 #include <Sprocket/Core/input_codes.h>
@@ -81,7 +81,7 @@ Runtime::Runtime(spkt::window* window)
         }
         const auto script_file = std::format("Resources/Scripts/{}", args[1]);
         if (std::filesystem::exists(script_file)) {
-            spkt::lua::Script script(script_file);
+            spkt::lua::script script(script_file);
         } else {
             console.error(" > Could not find script '{}'", args[1]);
         }

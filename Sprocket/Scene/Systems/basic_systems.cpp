@@ -1,10 +1,10 @@
 #include "basic_systems.h"
 
+#include <Sprocket/Scene/lua_ecs.h>
 #include <Sprocket/Scene/scene.h>
-#include <Sprocket/Scripting/lua_events.h>
-#include <Sprocket/Scripting/LuaLibrary.h>
-#include <Sprocket/Scripting/LuaMaths.h>
-#include <Sprocket/Scripting/LuaScript.h>
+#include <Sprocket/Scripting/lua_input.h>
+#include <Sprocket/Scripting/lua_maths.h>
+#include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Utility/input_store.h>
 
 #include <glm/gtx/norm.hpp>
@@ -31,17 +31,13 @@ void script_system(spkt::registry& registry, double dt)
         if (!sc.active) { continue; }
 
         if (!sc.script_runtime) {
-            sc.script_runtime = std::make_shared<lua::Script>(sc.script);
-            lua::Script& script = *sc.script_runtime;
-            lua::load_vec3_functions(script);
-            lua::load_vec2_functions(script);
-            lua::load_entity_functions(script);
-            lua::load_registry_functions(script, registry);
-            lua::load_entity_transformation_functions(script);
-            lua::load_entity_component_functions(script);
-
-            // Install input functions that make use of the input_store in the registry.
             input_store& input = *get_singleton<InputSingleton>(registry).input_store;
+            
+            sc.script_runtime = std::make_shared<lua::script>(sc.script);
+            lua::script& script = *sc.script_runtime;
+
+            lua::load_maths(script);
+            lua::load_registry(script, registry);
             lua::load_input_store(script, input);
 
             if (script.has_function(INIT_FUNCTION)) {
@@ -50,7 +46,7 @@ void script_system(spkt::registry& registry, double dt)
             }
         }
         else {
-            lua::Script& script = *sc.script_runtime;
+            lua::script& script = *sc.script_runtime;
             script.set_value("__command_list__", &commands);
             script.call_function<void>(UPDATE_FUNCTION, entity, dt);
         }

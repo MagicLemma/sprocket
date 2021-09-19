@@ -13,7 +13,7 @@
 #include <memory>
 
 namespace spkt {
-namespace lua { class Script; }
+namespace lua { class script; }
 
 using entity = apx::entity;
 const auto null = apx::null;
@@ -127,7 +127,7 @@ struct ScriptComponent
 {
     std::string script = "";
     bool active = true;
-    std::shared_ptr<lua::Script> script_runtime = nullptr;
+    std::shared_ptr<lua::script> script_runtime = nullptr;
 };
 
 struct Camera3DComponent

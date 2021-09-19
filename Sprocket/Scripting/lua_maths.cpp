@@ -1,6 +1,7 @@
-#include "LuaScript.h"
+#include "lua_maths.h"
 
-#include <Sprocket/Scripting/LuaConverter.h>
+#include <Sprocket/Scripting/lua_script.h>
+#include <Sprocket/Scripting/lua_converter.h>
 
 #include <lua.hpp>
 #include <glm/glm.hpp>
@@ -9,8 +10,9 @@
 
 namespace spkt {
 namespace lua {
+namespace {
 
-void load_vec3_functions(lua::Script& script)
+void load_vec3_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -57,7 +59,7 @@ void load_vec3_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
-        Converter<glm::vec3>::push(L, *self + *other);
+        converter<glm::vec3>::push(L, *self + *other);
         return 1;
     });
     lua_setfield(L, -2, "__add");
@@ -65,7 +67,7 @@ void load_vec3_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
-        Converter<glm::vec3>::push(L, *self - *other);
+        converter<glm::vec3>::push(L, *self - *other);
         return 1;
     });
     lua_setfield(L, -2, "__sub");
@@ -73,7 +75,7 @@ void load_vec3_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec3* self = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         glm::vec3* other = (glm::vec3*)luaL_checkudata(L, 2, "vec3");
-        Converter<bool>::push(L, *self == *other);
+        converter<bool>::push(L, *self == *other);
         return 1;
     });
     lua_setfield(L, -2, "__eq");
@@ -82,17 +84,17 @@ void load_vec3_functions(lua::Script& script)
         if (lua_isnumber(L, 1)) {
             float scalar = (float)luaL_checknumber(L, 1);
             glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
-            Converter<glm::vec3>::push(L, scalar * vec);
+            converter<glm::vec3>::push(L, scalar * vec);
         }
         else if (lua_isnumber(L, 2)) {
             glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
             float scalar = (float)luaL_checknumber(L, 2);
-            Converter<glm::vec3>::push(L, scalar * vec);
+            converter<glm::vec3>::push(L, scalar * vec);
         }
         else {
             glm::vec3 self = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
             glm::vec3 other = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
-            Converter<glm::vec3>::push(L, self * other);
+            converter<glm::vec3>::push(L, self * other);
         }
         return 1;
     });
@@ -102,7 +104,7 @@ void load_vec3_functions(lua::Script& script)
         float x = luaL_checknumber(L, 1);
         float y = luaL_checknumber(L, 2);
         float z = luaL_checknumber(L, 3);
-        Converter<glm::vec3>::push(L, {x, y, z});
+        converter<glm::vec3>::push(L, {x, y, z});
         return 1;
     });
     lua_setfield(L, -2, "new");
@@ -110,7 +112,7 @@ void load_vec3_functions(lua::Script& script)
     lua_setglobal(L, "vec3");
 }
 
-void load_vec2_functions(lua::Script& script)
+void load_vec2_functions(lua::script& script)
 {
     lua_State* L = script.native_handle();
 
@@ -150,7 +152,7 @@ void load_vec2_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec2* self = (glm::vec2*)luaL_checkudata(L, 1, "vec2");
         glm::vec2* other = (glm::vec2*)luaL_checkudata(L, 2, "vec2");
-        Converter<glm::vec2>::push(L, *self + *other);
+        converter<glm::vec2>::push(L, *self + *other);
         return 1;
     });
     lua_setfield(L, -2, "__add");
@@ -158,7 +160,7 @@ void load_vec2_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec2* self = (glm::vec2*)luaL_checkudata(L, 1, "vec2");
         glm::vec2* other = (glm::vec2*)luaL_checkudata(L, 2, "vec2");
-        Converter<glm::vec2>::push(L, *self - *other);
+        converter<glm::vec2>::push(L, *self - *other);
         return 1;
     });
     lua_setfield(L, -2, "__sub");
@@ -166,7 +168,7 @@ void load_vec2_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         glm::vec2* self = (glm::vec2*)luaL_checkudata(L, 1, "vec2");
         glm::vec2* other = (glm::vec2*)luaL_checkudata(L, 2, "vec2");
-        Converter<bool>::push(L, *self == *other);
+        converter<bool>::push(L, *self == *other);
         return 1;
     });
     lua_setfield(L, -2, "__eq");
@@ -175,17 +177,17 @@ void load_vec2_functions(lua::Script& script)
         if (lua_isnumber(L, 1)) {
             float scalar = (float)luaL_checknumber(L, 1);
             glm::vec2 vec = *(glm::vec2*)luaL_checkudata(L, 2, "vec2");
-            Converter<glm::vec2>::push(L, scalar * vec);
+            converter<glm::vec2>::push(L, scalar * vec);
         }
         else if (lua_isnumber(L, 2)) {
             glm::vec2 vec = *(glm::vec2*)luaL_checkudata(L, 1, "vec2");
             float scalar = (float)luaL_checknumber(L, 2);
-            Converter<glm::vec2>::push(L, scalar * vec);
+            converter<glm::vec2>::push(L, scalar * vec);
         }
         else {
             glm::vec2 self = *(glm::vec2*)luaL_checkudata(L, 1, "vec2");
             glm::vec2 other = *(glm::vec2*)luaL_checkudata(L, 2, "vec2");
-            Converter<glm::vec2>::push(L, self * other);
+            converter<glm::vec2>::push(L, self * other);
         }
         return 1;
     });
@@ -194,7 +196,7 @@ void load_vec2_functions(lua::Script& script)
     lua_pushcfunction(L, [](lua_State* L) {
         float x = luaL_checknumber(L, 1);
         float y = luaL_checknumber(L, 2);
-        Converter<glm::vec2>::push(L, {x, y});
+        converter<glm::vec2>::push(L, {x, y});
         return 1;
     });
     lua_setfield(L, -2, "new");
@@ -202,21 +204,12 @@ void load_vec2_functions(lua::Script& script)
     lua_setglobal(L, "vec2");
 }
 
-void load_entity_functions(lua::Script& script)
+}
+
+void load_maths(lua::script& script)
 {
-    lua_State* L = script.native_handle();
-
-    luaL_newmetatable(L, "entity_id");
-
-    lua_pushcfunction(L, [](lua_State* L) {
-        spkt::entity* self = (spkt::entity*)luaL_checkudata(L, 1, "entity_id");
-        spkt::entity* other = (spkt::entity*)luaL_checkudata(L, 2, "entity_id");
-        Converter<bool>::push(L, *self == *other);
-        return 1;
-    });
-    lua_setfield(L, -2, "__eq");
-
-    lua_setglobal(L, "entity_id");
+    load_vec2_functions(script);
+    load_vec3_functions(script);
 }
 
 }
