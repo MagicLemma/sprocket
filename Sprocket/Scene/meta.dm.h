@@ -10,6 +10,8 @@ template <typename T>
 struct attribute_reflection
 {
     const std::string_view name;
+    const bool             savable;
+    const bool             scriptable;
 };
 
 template <typename T>
@@ -21,11 +23,13 @@ struct reflection<{{Comp::name}}>
 {
     static constexpr const char* name         = "{{Comp::name}}";
     static constexpr const char* display_name = "{{Comp::display_name}}";
+    static constexpr bool        savable      = {{Comp::is_savable}};
+    static constexpr bool        scriptable   = {{Comp::is_scriptable}};
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<{{Attr::type}}>{"{{Attr::name}}"});
+        func(attribute_reflection<{{Attr::type}}>{.name="{{Attr::name}}", .savable={{Attr::is_savable}}, .scriptable={{Attr::is_scriptable}}});
     }
 };
 

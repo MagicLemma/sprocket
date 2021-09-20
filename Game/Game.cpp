@@ -446,8 +446,12 @@ void Game::on_render()
 
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Save", buttonRegion)) {
+        const auto entity_filter = [](const spkt::registry& reg, spkt::entity entity) {
+            return !reg.has<Runtime>(entity);
+        };
+
         spkt::log::info("Saving to {}", d_sceneFile);
-        spkt::save_registry_to_file(d_sceneFile, registry);
+        spkt::save_registry_to_file(d_sceneFile, registry, entity_filter);
         spkt::log::info("Done!");
     }
     

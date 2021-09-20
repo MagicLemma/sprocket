@@ -181,9 +181,14 @@ void Anvil::on_render()
                     spkt::log::info("...done!");
                 }
             }
+
+            const auto entity_filter = [](const spkt::registry& reg, spkt::entity entity) {
+                return !reg.has<spkt::Runtime>(entity);
+            };
+
             if (ImGui::MenuItem("Save")) {
                 spkt::log::info("Saving {}...", d_sceneFile);
-                spkt::save_registry_to_file(d_sceneFile, d_scene->registry);
+                spkt::save_registry_to_file(d_sceneFile, d_scene->registry, entity_filter);
                 spkt::log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -191,7 +196,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Saving as {}...", file);
                     d_sceneFile = file;
-                    spkt::save_registry_to_file(file, d_scene->registry);
+                    spkt::save_registry_to_file(file, d_scene->registry, entity_filter);
                     spkt::log::info("...done!");
                 }
             }

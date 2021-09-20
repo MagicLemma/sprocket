@@ -6,7 +6,9 @@
 #include <Sprocket/Scene/scene.h>
 
 #include <yaml-cpp/yaml.h>
+
 #include <fstream>
+#include <ranges>
 #include <memory>
 
 namespace spkt {
@@ -37,15 +39,17 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 }
 
-void save_registry_to_file(const std::string& file, const spkt::registry& reg)
+void save_registry_to_file(
+    const std::string& file,
+    const spkt::registry& reg,
+    const save_predicate& predicate)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : reg.all()) {
-
-        // Don't save runtime entities
-        if (reg.has<Runtime>(entity)) { continue; }
+    
+    const auto pred = [&](spkt::entity e) { return predicate(reg, e); };
+    for (auto entity : reg.all() | std::views::filter(pred)) {
 
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << entity;

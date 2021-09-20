@@ -10,6 +10,8 @@ template <typename T>
 struct attribute_reflection
 {
     const std::string_view name;
+    const bool             savable;
+    const bool             scriptable;
 };
 
 template <typename T>
@@ -20,6 +22,8 @@ struct reflection<Runtime>
 {
     static constexpr const char* name         = "Runtime";
     static constexpr const char* display_name = "Runtime";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
@@ -32,6 +36,8 @@ struct reflection<Singleton>
 {
     static constexpr const char* name         = "Singleton";
     static constexpr const char* display_name = "Singleton";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
@@ -44,6 +50,8 @@ struct reflection<Event>
 {
     static constexpr const char* name         = "Event";
     static constexpr const char* display_name = "Event";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
@@ -56,11 +64,13 @@ struct reflection<NameComponent>
 {
     static constexpr const char* name         = "NameComponent";
     static constexpr const char* display_name = "Name";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::string>{"name"});
+        func(attribute_reflection<std::string>{.name="name", .savable=true, .scriptable=true});
     }
 };
 
@@ -69,13 +79,15 @@ struct reflection<Transform2DComponent>
 {
     static constexpr const char* name         = "Transform2DComponent";
     static constexpr const char* display_name = "Transform 2D";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec2>{"position"});
-        func(attribute_reflection<float>{"rotation"});
-        func(attribute_reflection<glm::vec2>{"scale"});
+        func(attribute_reflection<glm::vec2>{.name="position", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="rotation", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::vec2>{.name="scale", .savable=true, .scriptable=true});
     }
 };
 
@@ -84,13 +96,15 @@ struct reflection<Transform3DComponent>
 {
     static constexpr const char* name         = "Transform3DComponent";
     static constexpr const char* display_name = "Transform 3D";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"position"});
-        func(attribute_reflection<glm::quat>{"orientation"});
-        func(attribute_reflection<glm::vec3>{"scale"});
+        func(attribute_reflection<glm::vec3>{.name="position", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::quat>{.name="orientation", .savable=true, .scriptable=false});
+        func(attribute_reflection<glm::vec3>{.name="scale", .savable=true, .scriptable=true});
     }
 };
 
@@ -99,12 +113,14 @@ struct reflection<StaticModelComponent>
 {
     static constexpr const char* name         = "StaticModelComponent";
     static constexpr const char* display_name = "Static Model";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::string>{"mesh"});
-        func(attribute_reflection<std::string>{"material"});
+        func(attribute_reflection<std::string>{.name="mesh", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::string>{.name="material", .savable=true, .scriptable=true});
     }
 };
 
@@ -113,15 +129,17 @@ struct reflection<AnimatedModelComponent>
 {
     static constexpr const char* name         = "AnimatedModelComponent";
     static constexpr const char* display_name = "Animated Model";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::string>{"mesh"});
-        func(attribute_reflection<std::string>{"material"});
-        func(attribute_reflection<std::string>{"animation_name"});
-        func(attribute_reflection<float>{"animation_time"});
-        func(attribute_reflection<float>{"animation_speed"});
+        func(attribute_reflection<std::string>{.name="mesh", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::string>{.name="material", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::string>{.name="animation_name", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="animation_time", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="animation_speed", .savable=true, .scriptable=true});
     }
 };
 
@@ -130,19 +148,21 @@ struct reflection<RigidBody3DComponent>
 {
     static constexpr const char* name         = "RigidBody3DComponent";
     static constexpr const char* display_name = "Rigid Body 3D";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"velocity"});
-        func(attribute_reflection<bool>{"gravity"});
-        func(attribute_reflection<bool>{"frozen"});
-        func(attribute_reflection<float>{"bounciness"});
-        func(attribute_reflection<float>{"frictionCoefficient"});
-        func(attribute_reflection<float>{"rollingResistance"});
-        func(attribute_reflection<glm::vec3>{"force"});
-        func(attribute_reflection<bool>{"onFloor"});
-        func(attribute_reflection<std::shared_ptr<rigid_body_runtime>>{"runtime"});
+        func(attribute_reflection<glm::vec3>{.name="velocity", .savable=true, .scriptable=true});
+        func(attribute_reflection<bool>{.name="gravity", .savable=true, .scriptable=true});
+        func(attribute_reflection<bool>{.name="frozen", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="bounciness", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="frictionCoefficient", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="rollingResistance", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::vec3>{.name="force", .savable=false, .scriptable=true});
+        func(attribute_reflection<bool>{.name="onFloor", .savable=false, .scriptable=true});
+        func(attribute_reflection<std::shared_ptr<rigid_body_runtime>>{.name="runtime", .savable=false, .scriptable=false});
     }
 };
 
@@ -151,16 +171,18 @@ struct reflection<BoxCollider3DComponent>
 {
     static constexpr const char* name         = "BoxCollider3DComponent";
     static constexpr const char* display_name = "Box Collider 3D";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"position"});
-        func(attribute_reflection<glm::quat>{"orientation"});
-        func(attribute_reflection<float>{"mass"});
-        func(attribute_reflection<glm::vec3>{"halfExtents"});
-        func(attribute_reflection<bool>{"applyScale"});
-        func(attribute_reflection<std::shared_ptr<collider_runtime>>{"runtime"});
+        func(attribute_reflection<glm::vec3>{.name="position", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::quat>{.name="orientation", .savable=true, .scriptable=false});
+        func(attribute_reflection<float>{.name="mass", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::vec3>{.name="halfExtents", .savable=true, .scriptable=true});
+        func(attribute_reflection<bool>{.name="applyScale", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::shared_ptr<collider_runtime>>{.name="runtime", .savable=false, .scriptable=false});
     }
 };
 
@@ -169,15 +191,17 @@ struct reflection<SphereCollider3DComponent>
 {
     static constexpr const char* name         = "SphereCollider3DComponent";
     static constexpr const char* display_name = "Sphere Collider 3D";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"position"});
-        func(attribute_reflection<glm::quat>{"orientation"});
-        func(attribute_reflection<float>{"mass"});
-        func(attribute_reflection<float>{"radius"});
-        func(attribute_reflection<std::shared_ptr<collider_runtime>>{"runtime"});
+        func(attribute_reflection<glm::vec3>{.name="position", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::quat>{.name="orientation", .savable=true, .scriptable=false});
+        func(attribute_reflection<float>{.name="mass", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="radius", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::shared_ptr<collider_runtime>>{.name="runtime", .savable=false, .scriptable=false});
     }
 };
 
@@ -186,16 +210,18 @@ struct reflection<CapsuleCollider3DComponent>
 {
     static constexpr const char* name         = "CapsuleCollider3DComponent";
     static constexpr const char* display_name = "Capsule Collider 3D";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"position"});
-        func(attribute_reflection<glm::quat>{"orientation"});
-        func(attribute_reflection<float>{"mass"});
-        func(attribute_reflection<float>{"radius"});
-        func(attribute_reflection<float>{"height"});
-        func(attribute_reflection<std::shared_ptr<collider_runtime>>{"runtime"});
+        func(attribute_reflection<glm::vec3>{.name="position", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::quat>{.name="orientation", .savable=true, .scriptable=false});
+        func(attribute_reflection<float>{.name="mass", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="radius", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="height", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::shared_ptr<collider_runtime>>{.name="runtime", .savable=false, .scriptable=false});
     }
 };
 
@@ -204,13 +230,15 @@ struct reflection<ScriptComponent>
 {
     static constexpr const char* name         = "ScriptComponent";
     static constexpr const char* display_name = "Script";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::string>{"script"});
-        func(attribute_reflection<bool>{"active"});
-        func(attribute_reflection<std::shared_ptr<lua::script>>{"script_runtime"});
+        func(attribute_reflection<std::string>{.name="script", .savable=true, .scriptable=true});
+        func(attribute_reflection<bool>{.name="active", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::shared_ptr<lua::script>>{.name="script_runtime", .savable=false, .scriptable=false});
     }
 };
 
@@ -219,13 +247,15 @@ struct reflection<Camera3DComponent>
 {
     static constexpr const char* name         = "Camera3DComponent";
     static constexpr const char* display_name = "Camera 3D";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::mat4>{"projection"});
-        func(attribute_reflection<float>{"fov"});
-        func(attribute_reflection<float>{"pitch"});
+        func(attribute_reflection<glm::mat4>{.name="projection", .savable=false, .scriptable=false});
+        func(attribute_reflection<float>{.name="fov", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="pitch", .savable=true, .scriptable=true});
     }
 };
 
@@ -234,12 +264,14 @@ struct reflection<PathComponent>
 {
     static constexpr const char* name         = "PathComponent";
     static constexpr const char* display_name = "Path";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::deque<glm::vec3>>{"markers"});
-        func(attribute_reflection<float>{"speed"});
+        func(attribute_reflection<std::deque<glm::vec3>>{.name="markers", .savable=false, .scriptable=false});
+        func(attribute_reflection<float>{.name="speed", .savable=true, .scriptable=true});
     }
 };
 
@@ -248,12 +280,14 @@ struct reflection<LightComponent>
 {
     static constexpr const char* name         = "LightComponent";
     static constexpr const char* display_name = "Light";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"colour"});
-        func(attribute_reflection<float>{"brightness"});
+        func(attribute_reflection<glm::vec3>{.name="colour", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="brightness", .savable=true, .scriptable=true});
     }
 };
 
@@ -262,14 +296,16 @@ struct reflection<SunComponent>
 {
     static constexpr const char* name         = "SunComponent";
     static constexpr const char* display_name = "Sun";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"colour"});
-        func(attribute_reflection<float>{"brightness"});
-        func(attribute_reflection<glm::vec3>{"direction"});
-        func(attribute_reflection<bool>{"shadows"});
+        func(attribute_reflection<glm::vec3>{.name="colour", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="brightness", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::vec3>{.name="direction", .savable=true, .scriptable=true});
+        func(attribute_reflection<bool>{.name="shadows", .savable=true, .scriptable=true});
     }
 };
 
@@ -278,12 +314,14 @@ struct reflection<AmbienceComponent>
 {
     static constexpr const char* name         = "AmbienceComponent";
     static constexpr const char* display_name = "Ambience";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<glm::vec3>{"colour"});
-        func(attribute_reflection<float>{"brightness"});
+        func(attribute_reflection<glm::vec3>{.name="colour", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="brightness", .savable=true, .scriptable=true});
     }
 };
 
@@ -292,17 +330,19 @@ struct reflection<ParticleComponent>
 {
     static constexpr const char* name         = "ParticleComponent";
     static constexpr const char* display_name = "Particle";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<float>{"interval"});
-        func(attribute_reflection<glm::vec3>{"velocity"});
-        func(attribute_reflection<float>{"velocityNoise"});
-        func(attribute_reflection<glm::vec3>{"acceleration"});
-        func(attribute_reflection<glm::vec3>{"scale"});
-        func(attribute_reflection<float>{"life"});
-        func(attribute_reflection<float>{"accumulator"});
+        func(attribute_reflection<float>{.name="interval", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::vec3>{.name="velocity", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="velocityNoise", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::vec3>{.name="acceleration", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::vec3>{.name="scale", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="life", .savable=true, .scriptable=true});
+        func(attribute_reflection<float>{.name="accumulator", .savable=false, .scriptable=false});
     }
 };
 
@@ -311,12 +351,14 @@ struct reflection<CollisionEvent>
 {
     static constexpr const char* name         = "CollisionEvent";
     static constexpr const char* display_name = "Collision Event";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = true;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<spkt::entity>{"entity_a"});
-        func(attribute_reflection<spkt::entity>{"entity_b"});
+        func(attribute_reflection<spkt::entity>{.name="entity_a", .savable=true, .scriptable=true});
+        func(attribute_reflection<spkt::entity>{.name="entity_b", .savable=true, .scriptable=true});
     }
 };
 
@@ -325,11 +367,13 @@ struct reflection<PhysicsSingleton>
 {
     static constexpr const char* name         = "PhysicsSingleton";
     static constexpr const char* display_name = "Physics Singleton";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::shared_ptr<physics_runtime>>{"physics_runtime"});
+        func(attribute_reflection<std::shared_ptr<physics_runtime>>{.name="physics_runtime", .savable=false, .scriptable=false});
     }
 };
 
@@ -338,11 +382,13 @@ struct reflection<InputSingleton>
 {
     static constexpr const char* name         = "InputSingleton";
     static constexpr const char* display_name = "Input Singleton";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::shared_ptr<spkt::input_store>>{"input_store"});
+        func(attribute_reflection<std::shared_ptr<spkt::input_store>>{.name="input_store", .savable=true, .scriptable=true});
     }
 };
 
@@ -351,14 +397,16 @@ struct reflection<GameGridSingleton>
 {
     static constexpr const char* name         = "GameGridSingleton";
     static constexpr const char* display_name = "Game Grid Singleton";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<spkt::entity>{"hovered_square_entity"});
-        func(attribute_reflection<spkt::entity>{"clicked_square_entity"});
-        func(attribute_reflection<glm::ivec2>{"hovered_square"});
-        func(attribute_reflection<std::optional<glm::ivec2>>{"clicked_square"});
+        func(attribute_reflection<spkt::entity>{.name="hovered_square_entity", .savable=true, .scriptable=true});
+        func(attribute_reflection<spkt::entity>{.name="clicked_square_entity", .savable=true, .scriptable=true});
+        func(attribute_reflection<glm::ivec2>{.name="hovered_square", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::optional<glm::ivec2>>{.name="clicked_square", .savable=true, .scriptable=true});
     }
 };
 
@@ -367,11 +415,13 @@ struct reflection<TileMapSingleton>
 {
     static constexpr const char* name         = "TileMapSingleton";
     static constexpr const char* display_name = "Tile Map Singleton";
+    static constexpr bool        savable      = true;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::unordered_map<glm::ivec2, spkt::entity>>{"tiles"});
+        func(attribute_reflection<std::unordered_map<glm::ivec2, spkt::entity>>{.name="tiles", .savable=true, .scriptable=true});
     }
 };
 
@@ -380,11 +430,13 @@ struct reflection<CameraSingleton>
 {
     static constexpr const char* name         = "CameraSingleton";
     static constexpr const char* display_name = "Camera Singleton";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<spkt::entity>{"camera_entity"});
+        func(attribute_reflection<spkt::entity>{.name="camera_entity", .savable=true, .scriptable=true});
     }
 };
 
@@ -393,12 +445,14 @@ struct reflection<ParticleSingleton>
 {
     static constexpr const char* name         = "ParticleSingleton";
     static constexpr const char* display_name = "Particle Singleton";
+    static constexpr bool        savable      = false;
+    static constexpr bool        scriptable   = false;
 
     template <typename Func>
     void attributes(Func&& func)
     {
-        func(attribute_reflection<std::shared_ptr<std::array<particle, NUM_PARTICLES>>>{"particles"});
-        func(attribute_reflection<std::size_t>{"next_slot"});
+        func(attribute_reflection<std::shared_ptr<std::array<particle, NUM_PARTICLES>>>{.name="particles", .savable=true, .scriptable=true});
+        func(attribute_reflection<std::size_t>{.name="next_slot", .savable=true, .scriptable=true});
     }
 };
 
