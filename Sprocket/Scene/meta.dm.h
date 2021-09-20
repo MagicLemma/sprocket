@@ -6,14 +6,14 @@
 
 namespace spkt {
 
-template <typename T>
+template <typename T, bool Savable, bool Scriptable>
 struct attribute_reflection
 {
     const std::string_view name;
-    const bool             is_savable;
-    const bool             is_scriptable;
-
     const T* const         value;
+
+    static constexpr bool  is_savable()    { return Savable; }
+    static constexpr bool  is_scriptable() { return Scriptable; }
 };
 
 template <typename T>
@@ -25,13 +25,14 @@ struct reflection<{{Comp::name}}>
 {
     static constexpr const char* name          = "{{Comp::name}}";
     static constexpr const char* display_name  = "{{Comp::display_name}}";
-    static constexpr bool        is_savable    = {{Comp::is_savable}};
-    static constexpr bool        is_scriptable = {{Comp::is_scriptable}};
+
+    static constexpr bool        is_savable()    { return {{Comp::is_savable}}; }
+    static constexpr bool        is_scriptable() { return {{Comp::is_scriptable}}; }
 
     template <typename Func>
-    void attributes(Func&& func, const {{Comp::name}}& component)
+    void attributes(const {{Comp::name}}& component, Func&& func)
     {
-        func(attribute_reflection<{{Attr::type}}>{.name="{{Attr::name}}", .is_savable={{Attr::is_savable}}, .is_scriptable={{Attr::is_scriptable}}, .value=&component.{{Attr::name}}});
+        func(attribute_reflection<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .value=&component.{{Attr::name}}});
     }
 };
 
