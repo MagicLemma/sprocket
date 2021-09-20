@@ -10,8 +10,10 @@ template <typename T>
 struct attribute_reflection
 {
     const std::string_view name;
-    const bool             savable;
-    const bool             scriptable;
+    const bool             is_savable;
+    const bool             is_scriptable;
+
+    const T* const         value;
 };
 
 template <typename T>
@@ -21,15 +23,15 @@ DATAMATIC_BEGIN
 template <>
 struct reflection<{{Comp::name}}>
 {
-    static constexpr const char* name         = "{{Comp::name}}";
-    static constexpr const char* display_name = "{{Comp::display_name}}";
-    static constexpr bool        savable      = {{Comp::is_savable}};
-    static constexpr bool        scriptable   = {{Comp::is_scriptable}};
+    static constexpr const char* name          = "{{Comp::name}}";
+    static constexpr const char* display_name  = "{{Comp::display_name}}";
+    static constexpr bool        is_savable    = {{Comp::is_savable}};
+    static constexpr bool        is_scriptable = {{Comp::is_scriptable}};
 
     template <typename Func>
-    void attributes(Func&& func)
+    void attributes(Func&& func, const {{Comp::name}}& component)
     {
-        func(attribute_reflection<{{Attr::type}}>{.name="{{Attr::name}}", .savable={{Attr::is_savable}}, .scriptable={{Attr::is_scriptable}}});
+        func(attribute_reflection<{{Attr::type}}>{.name="{{Attr::name}}", .is_savable={{Attr::is_savable}}, .is_scriptable={{Attr::is_scriptable}}, .value=&component.{{Attr::name}}});
     }
 };
 

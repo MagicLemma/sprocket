@@ -1,4 +1,5 @@
 #include "loader.h"
+#include "meta.h"
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Scene/ecs.h>
@@ -47,7 +48,7 @@ void save_registry_to_file(
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    
+
     const auto pred = [&](spkt::entity e) { return predicate(reg, e); };
     for (auto entity : reg.all() | std::views::filter(pred)) {
 
@@ -105,11 +106,11 @@ DATAMATIC_END
 spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
 {
     spkt::entity new_entity = reg.create();
-DATAMATIC_BEGIN SAVABLE=true
-    if (reg.has<{{Comp::name}}>(entity)) {
-        reg.add<{{Comp::name}}>(new_entity, reg.get<{{Comp::name}}>(entity));
-    }
-DATAMATIC_END
+    spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+        if (refl.is_savable && reg.has<T>(entity)) {
+            reg.add<T>(new_entity, reg.get<T>(entity));
+        }
+    });
     return new_entity;
 }
 

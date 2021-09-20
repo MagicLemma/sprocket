@@ -1,4 +1,5 @@
 #include "loader.h"
+#include "meta.h"
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Scene/ecs.h>
@@ -351,57 +352,11 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
 spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
 {
     spkt::entity new_entity = reg.create();
-    if (reg.has<NameComponent>(entity)) {
-        reg.add<NameComponent>(new_entity, reg.get<NameComponent>(entity));
-    }
-    if (reg.has<Transform2DComponent>(entity)) {
-        reg.add<Transform2DComponent>(new_entity, reg.get<Transform2DComponent>(entity));
-    }
-    if (reg.has<Transform3DComponent>(entity)) {
-        reg.add<Transform3DComponent>(new_entity, reg.get<Transform3DComponent>(entity));
-    }
-    if (reg.has<StaticModelComponent>(entity)) {
-        reg.add<StaticModelComponent>(new_entity, reg.get<StaticModelComponent>(entity));
-    }
-    if (reg.has<AnimatedModelComponent>(entity)) {
-        reg.add<AnimatedModelComponent>(new_entity, reg.get<AnimatedModelComponent>(entity));
-    }
-    if (reg.has<RigidBody3DComponent>(entity)) {
-        reg.add<RigidBody3DComponent>(new_entity, reg.get<RigidBody3DComponent>(entity));
-    }
-    if (reg.has<BoxCollider3DComponent>(entity)) {
-        reg.add<BoxCollider3DComponent>(new_entity, reg.get<BoxCollider3DComponent>(entity));
-    }
-    if (reg.has<SphereCollider3DComponent>(entity)) {
-        reg.add<SphereCollider3DComponent>(new_entity, reg.get<SphereCollider3DComponent>(entity));
-    }
-    if (reg.has<CapsuleCollider3DComponent>(entity)) {
-        reg.add<CapsuleCollider3DComponent>(new_entity, reg.get<CapsuleCollider3DComponent>(entity));
-    }
-    if (reg.has<ScriptComponent>(entity)) {
-        reg.add<ScriptComponent>(new_entity, reg.get<ScriptComponent>(entity));
-    }
-    if (reg.has<Camera3DComponent>(entity)) {
-        reg.add<Camera3DComponent>(new_entity, reg.get<Camera3DComponent>(entity));
-    }
-    if (reg.has<PathComponent>(entity)) {
-        reg.add<PathComponent>(new_entity, reg.get<PathComponent>(entity));
-    }
-    if (reg.has<LightComponent>(entity)) {
-        reg.add<LightComponent>(new_entity, reg.get<LightComponent>(entity));
-    }
-    if (reg.has<SunComponent>(entity)) {
-        reg.add<SunComponent>(new_entity, reg.get<SunComponent>(entity));
-    }
-    if (reg.has<AmbienceComponent>(entity)) {
-        reg.add<AmbienceComponent>(new_entity, reg.get<AmbienceComponent>(entity));
-    }
-    if (reg.has<ParticleComponent>(entity)) {
-        reg.add<ParticleComponent>(new_entity, reg.get<ParticleComponent>(entity));
-    }
-    if (reg.has<TileMapSingleton>(entity)) {
-        reg.add<TileMapSingleton>(new_entity, reg.get<TileMapSingleton>(entity));
-    }
+    spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+        if (refl.is_savable && reg.has<T>(entity)) {
+            reg.add<T>(new_entity, reg.get<T>(entity));
+        }
+    });
     return new_entity;
 }
 
