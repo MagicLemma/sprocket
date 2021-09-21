@@ -61,9 +61,7 @@ void console::register_command(const std::string& command, const command_handler
 
 void console::deregister_command(const std::string& command)
 {
-    if (auto it = d_handlers.find(command); it != d_handlers.end()) {
-        d_handlers.erase(it);
-    }
+    d_handlers.erase(command);
 }
 
 void draw_console(
