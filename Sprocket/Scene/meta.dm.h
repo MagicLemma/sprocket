@@ -10,6 +10,19 @@ template <typename T, bool Savable, bool Scriptable>
 struct attribute_reflection
 {
     const std::string_view                             name;
+    const std::string_view                             display_name;
+    T*                                                 value;
+    const std::unordered_map<std::string, std::string> metadata;
+
+    static constexpr bool  is_savable()    { return Savable; }
+    static constexpr bool  is_scriptable() { return Scriptable; }
+};
+
+template <typename T, bool Savable, bool Scriptable>
+struct const_attribute_reflection
+{
+    const std::string_view                             name;
+    const std::string_view                             display_name;
     const T* const                                     value;
     const std::unordered_map<std::string, std::string> metadata;
 
@@ -31,9 +44,15 @@ struct reflection<{{Comp::name}}>
     static constexpr bool        is_scriptable() { return {{Comp::is_scriptable}}; }
 
     template <typename Func>
+    void attributes({{Comp::name}}& component, Func&& func)
+    {
+        func(attribute_reflection<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .display_name="{{Attr::display_name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
+    }
+
+    template <typename Func>
     void attributes(const {{Comp::name}}& component, Func&& func)
     {
-        func(attribute_reflection<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
+        func(const_attribute_reflection<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .display_name="{{Attr::display_name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
     }
 };
 
