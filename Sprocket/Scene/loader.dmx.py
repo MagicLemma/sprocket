@@ -33,3 +33,10 @@ def main(reg):
         if ctx.attr is None:
             return "true" if ctx.comp["flags"].get("SCRIPTABLE") else "false"
         return "true" if ctx.attr["flags"].get("SCRIPTABLE") else "false"
+
+    @reg.attrmethod
+    def get_metadata(ctx):
+        if "metadata" in ctx.attr:
+            pairs = (f'{{ "{k}", "{v}" }}' for k, v in ctx.attr["metadata"].items())
+            return "{" + ", ".join(pairs) + "}"
+        return "{}"

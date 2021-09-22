@@ -61,7 +61,8 @@ void save_registry_to_file(
                     out << YAML::Key << refl.name << YAML::BeginMap;
                     refl.attributes(c, [&](auto&& attr_refl) {
                         if constexpr (attr_refl.is_savable()) {
-                            out << YAML::Key << std::string{attr_refl.name} << YAML::Value << *attr_refl.value;
+                            out << YAML::Key << std::string{attr_refl.name}
+                                << YAML::Value << *attr_refl.value;
                         }
                     });
                     out << YAML::EndMap;

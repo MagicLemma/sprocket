@@ -9,8 +9,9 @@ namespace spkt {
 template <typename T, bool Savable, bool Scriptable>
 struct attribute_reflection
 {
-    const std::string_view name;
-    const T* const         value;
+    const std::string_view                             name;
+    const T* const                                     value;
+    const std::unordered_map<std::string, std::string> metadata;
 
     static constexpr bool  is_savable()    { return Savable; }
     static constexpr bool  is_scriptable() { return Scriptable; }
@@ -32,7 +33,7 @@ struct reflection<{{Comp::name}}>
     template <typename Func>
     void attributes(const {{Comp::name}}& component, Func&& func)
     {
-        func(attribute_reflection<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .value=&component.{{Attr::name}}});
+        func(attribute_reflection<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
     }
 };
 
