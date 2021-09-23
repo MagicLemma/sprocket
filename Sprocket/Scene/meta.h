@@ -18,18 +18,6 @@ struct attribute_reflection
     static constexpr bool  is_scriptable() { return Scriptable; }
 };
 
-template <typename T, bool Savable, bool Scriptable>
-struct const_attribute_reflection
-{
-    const std::string_view                             name;
-    const std::string_view                             display_name;
-    const T* const                                     value;
-    const std::unordered_map<std::string, std::string> metadata;
-
-    static constexpr bool  is_savable()    { return Savable; }
-    static constexpr bool  is_scriptable() { return Scriptable; }
-};
-
 template <typename T>
 struct reflection;
 
@@ -43,12 +31,12 @@ struct reflection<Runtime>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(Runtime& component, Func&& func)
+    void for_each_attribute(Runtime& component, Func&& func)
     {
     }
 
     template <typename Func>
-    void attributes(const Runtime& component, Func&& func)
+    void for_each_attribute(const Runtime& component, Func&& func) const
     {
     }
 };
@@ -63,12 +51,12 @@ struct reflection<Singleton>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(Singleton& component, Func&& func)
+    void for_each_attribute(Singleton& component, Func&& func)
     {
     }
 
     template <typename Func>
-    void attributes(const Singleton& component, Func&& func)
+    void for_each_attribute(const Singleton& component, Func&& func) const
     {
     }
 };
@@ -83,12 +71,12 @@ struct reflection<Event>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(Event& component, Func&& func)
+    void for_each_attribute(Event& component, Func&& func)
     {
     }
 
     template <typename Func>
-    void attributes(const Event& component, Func&& func)
+    void for_each_attribute(const Event& component, Func&& func) const
     {
     }
 };
@@ -103,15 +91,15 @@ struct reflection<NameComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(NameComponent& component, Func&& func)
+    void for_each_attribute(NameComponent& component, Func&& func)
     {
         func(attribute_reflection<std::string, true, true>{.name="name", .display_name="Name", .value=&component.name, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const NameComponent& component, Func&& func)
+    void for_each_attribute(const NameComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::string, true, true>{.name="name", .display_name="Name", .value=&component.name, .metadata={} });
+        func(attribute_reflection<const std::string, true, true>{.name="name", .display_name="Name", .value=&component.name, .metadata={} });
     }
 };
 
@@ -125,7 +113,7 @@ struct reflection<Transform2DComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(Transform2DComponent& component, Func&& func)
+    void for_each_attribute(Transform2DComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec2, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
         func(attribute_reflection<float, true, true>{.name="rotation", .display_name="Rotation", .value=&component.rotation, .metadata={} });
@@ -133,11 +121,11 @@ struct reflection<Transform2DComponent>
     }
 
     template <typename Func>
-    void attributes(const Transform2DComponent& component, Func&& func)
+    void for_each_attribute(const Transform2DComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec2, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="rotation", .display_name="Rotation", .value=&component.rotation, .metadata={} });
-        func(const_attribute_reflection<glm::vec2, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
+        func(attribute_reflection<const glm::vec2, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="rotation", .display_name="Rotation", .value=&component.rotation, .metadata={} });
+        func(attribute_reflection<const glm::vec2, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
     }
 };
 
@@ -151,7 +139,7 @@ struct reflection<Transform3DComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(Transform3DComponent& component, Func&& func)
+    void for_each_attribute(Transform3DComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
         func(attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
@@ -159,11 +147,11 @@ struct reflection<Transform3DComponent>
     }
 
     template <typename Func>
-    void attributes(const Transform3DComponent& component, Func&& func)
+    void for_each_attribute(const Transform3DComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(const_attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
+        func(attribute_reflection<const glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
     }
 };
 
@@ -177,17 +165,17 @@ struct reflection<StaticModelComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(StaticModelComponent& component, Func&& func)
+    void for_each_attribute(StaticModelComponent& component, Func&& func)
     {
         func(attribute_reflection<std::string, true, true>{.name="mesh", .display_name="Mesh", .value=&component.mesh, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
         func(attribute_reflection<std::string, true, true>{.name="material", .display_name="Material", .value=&component.material, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
     }
 
     template <typename Func>
-    void attributes(const StaticModelComponent& component, Func&& func)
+    void for_each_attribute(const StaticModelComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::string, true, true>{.name="mesh", .display_name="Mesh", .value=&component.mesh, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
-        func(const_attribute_reflection<std::string, true, true>{.name="material", .display_name="Material", .value=&component.material, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
+        func(attribute_reflection<const std::string, true, true>{.name="mesh", .display_name="Mesh", .value=&component.mesh, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
+        func(attribute_reflection<const std::string, true, true>{.name="material", .display_name="Material", .value=&component.material, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
     }
 };
 
@@ -201,7 +189,7 @@ struct reflection<AnimatedModelComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(AnimatedModelComponent& component, Func&& func)
+    void for_each_attribute(AnimatedModelComponent& component, Func&& func)
     {
         func(attribute_reflection<std::string, true, true>{.name="mesh", .display_name="Mesh", .value=&component.mesh, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
         func(attribute_reflection<std::string, true, true>{.name="material", .display_name="Material", .value=&component.material, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
@@ -211,13 +199,13 @@ struct reflection<AnimatedModelComponent>
     }
 
     template <typename Func>
-    void attributes(const AnimatedModelComponent& component, Func&& func)
+    void for_each_attribute(const AnimatedModelComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::string, true, true>{.name="mesh", .display_name="Mesh", .value=&component.mesh, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
-        func(const_attribute_reflection<std::string, true, true>{.name="material", .display_name="Material", .value=&component.material, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
-        func(const_attribute_reflection<std::string, true, true>{.name="animation_name", .display_name="Animation name", .value=&component.animation_name, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="animation_time", .display_name="Animation Time", .value=&component.animation_time, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="animation_speed", .display_name="Animation Speed", .value=&component.animation_speed, .metadata={} });
+        func(attribute_reflection<const std::string, true, true>{.name="mesh", .display_name="Mesh", .value=&component.mesh, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
+        func(attribute_reflection<const std::string, true, true>{.name="material", .display_name="Material", .value=&component.material, .metadata={{ "subtype", "file" }, { "filter", "*.obj" }} });
+        func(attribute_reflection<const std::string, true, true>{.name="animation_name", .display_name="Animation name", .value=&component.animation_name, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="animation_time", .display_name="Animation Time", .value=&component.animation_time, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="animation_speed", .display_name="Animation Speed", .value=&component.animation_speed, .metadata={} });
     }
 };
 
@@ -231,7 +219,7 @@ struct reflection<RigidBody3DComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(RigidBody3DComponent& component, Func&& func)
+    void for_each_attribute(RigidBody3DComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
         func(attribute_reflection<bool, true, true>{.name="gravity", .display_name="Gravity", .value=&component.gravity, .metadata={} });
@@ -245,17 +233,17 @@ struct reflection<RigidBody3DComponent>
     }
 
     template <typename Func>
-    void attributes(const RigidBody3DComponent& component, Func&& func)
+    void for_each_attribute(const RigidBody3DComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
-        func(const_attribute_reflection<bool, true, true>{.name="gravity", .display_name="Gravity", .value=&component.gravity, .metadata={} });
-        func(const_attribute_reflection<bool, true, true>{.name="frozen", .display_name="Frozen", .value=&component.frozen, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="bounciness", .display_name="Bounciness", .value=&component.bounciness, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(const_attribute_reflection<float, true, true>{.name="frictionCoefficient", .display_name="Friction Coefficient", .value=&component.frictionCoefficient, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(const_attribute_reflection<float, true, true>{.name="rollingResistance", .display_name="Rolling Resistance", .value=&component.rollingResistance, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(const_attribute_reflection<glm::vec3, false, true>{.name="force", .display_name="Force", .value=&component.force, .metadata={} });
-        func(const_attribute_reflection<bool, false, true>{.name="onFloor", .display_name="OnFloor", .value=&component.onFloor, .metadata={} });
-        func(const_attribute_reflection<std::shared_ptr<rigid_body_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
+        func(attribute_reflection<const bool, true, true>{.name="gravity", .display_name="Gravity", .value=&component.gravity, .metadata={} });
+        func(attribute_reflection<const bool, true, true>{.name="frozen", .display_name="Frozen", .value=&component.frozen, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="bounciness", .display_name="Bounciness", .value=&component.bounciness, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
+        func(attribute_reflection<const float, true, true>{.name="frictionCoefficient", .display_name="Friction Coefficient", .value=&component.frictionCoefficient, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
+        func(attribute_reflection<const float, true, true>{.name="rollingResistance", .display_name="Rolling Resistance", .value=&component.rollingResistance, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
+        func(attribute_reflection<const glm::vec3, false, true>{.name="force", .display_name="Force", .value=&component.force, .metadata={} });
+        func(attribute_reflection<const bool, false, true>{.name="onFloor", .display_name="OnFloor", .value=&component.onFloor, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<rigid_body_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
     }
 };
 
@@ -269,7 +257,7 @@ struct reflection<BoxCollider3DComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(BoxCollider3DComponent& component, Func&& func)
+    void for_each_attribute(BoxCollider3DComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
         func(attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
@@ -280,14 +268,14 @@ struct reflection<BoxCollider3DComponent>
     }
 
     template <typename Func>
-    void attributes(const BoxCollider3DComponent& component, Func&& func)
+    void for_each_attribute(const BoxCollider3DComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(const_attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="halfExtents", .display_name="Half Extents", .value=&component.halfExtents, .metadata={} });
-        func(const_attribute_reflection<bool, true, true>{.name="applyScale", .display_name="Apply Scale", .value=&component.applyScale, .metadata={} });
-        func(const_attribute_reflection<std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
+        func(attribute_reflection<const glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="halfExtents", .display_name="Half Extents", .value=&component.halfExtents, .metadata={} });
+        func(attribute_reflection<const bool, true, true>{.name="applyScale", .display_name="Apply Scale", .value=&component.applyScale, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
     }
 };
 
@@ -301,7 +289,7 @@ struct reflection<SphereCollider3DComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(SphereCollider3DComponent& component, Func&& func)
+    void for_each_attribute(SphereCollider3DComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
         func(attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
@@ -311,13 +299,13 @@ struct reflection<SphereCollider3DComponent>
     }
 
     template <typename Func>
-    void attributes(const SphereCollider3DComponent& component, Func&& func)
+    void for_each_attribute(const SphereCollider3DComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(const_attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
-        func(const_attribute_reflection<std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
+        func(attribute_reflection<const glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
     }
 };
 
@@ -331,7 +319,7 @@ struct reflection<CapsuleCollider3DComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(CapsuleCollider3DComponent& component, Func&& func)
+    void for_each_attribute(CapsuleCollider3DComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
         func(attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
@@ -342,14 +330,14 @@ struct reflection<CapsuleCollider3DComponent>
     }
 
     template <typename Func>
-    void attributes(const CapsuleCollider3DComponent& component, Func&& func)
+    void for_each_attribute(const CapsuleCollider3DComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(const_attribute_reflection<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="height", .display_name="Height", .value=&component.height, .metadata={} });
-        func(const_attribute_reflection<std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
+        func(attribute_reflection<const glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="height", .display_name="Height", .value=&component.height, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
     }
 };
 
@@ -363,7 +351,7 @@ struct reflection<ScriptComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(ScriptComponent& component, Func&& func)
+    void for_each_attribute(ScriptComponent& component, Func&& func)
     {
         func(attribute_reflection<std::string, true, true>{.name="script", .display_name="Script", .value=&component.script, .metadata={{ "subtype", "file" }, { "filter", "*.lua" }} });
         func(attribute_reflection<bool, true, true>{.name="active", .display_name="Active", .value=&component.active, .metadata={} });
@@ -371,11 +359,11 @@ struct reflection<ScriptComponent>
     }
 
     template <typename Func>
-    void attributes(const ScriptComponent& component, Func&& func)
+    void for_each_attribute(const ScriptComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::string, true, true>{.name="script", .display_name="Script", .value=&component.script, .metadata={{ "subtype", "file" }, { "filter", "*.lua" }} });
-        func(const_attribute_reflection<bool, true, true>{.name="active", .display_name="Active", .value=&component.active, .metadata={} });
-        func(const_attribute_reflection<std::shared_ptr<lua::script>, false, false>{.name="script_runtime", .display_name="Script Runtime", .value=&component.script_runtime, .metadata={} });
+        func(attribute_reflection<const std::string, true, true>{.name="script", .display_name="Script", .value=&component.script, .metadata={{ "subtype", "file" }, { "filter", "*.lua" }} });
+        func(attribute_reflection<const bool, true, true>{.name="active", .display_name="Active", .value=&component.active, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<lua::script>, false, false>{.name="script_runtime", .display_name="Script Runtime", .value=&component.script_runtime, .metadata={} });
     }
 };
 
@@ -389,7 +377,7 @@ struct reflection<Camera3DComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(Camera3DComponent& component, Func&& func)
+    void for_each_attribute(Camera3DComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::mat4, false, false>{.name="projection", .display_name="Projection", .value=&component.projection, .metadata={} });
         func(attribute_reflection<float, true, true>{.name="fov", .display_name="FOV", .value=&component.fov, .metadata={} });
@@ -397,11 +385,11 @@ struct reflection<Camera3DComponent>
     }
 
     template <typename Func>
-    void attributes(const Camera3DComponent& component, Func&& func)
+    void for_each_attribute(const Camera3DComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::mat4, false, false>{.name="projection", .display_name="Projection", .value=&component.projection, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="fov", .display_name="FOV", .value=&component.fov, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="pitch", .display_name="Pitch", .value=&component.pitch, .metadata={} });
+        func(attribute_reflection<const glm::mat4, false, false>{.name="projection", .display_name="Projection", .value=&component.projection, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="fov", .display_name="FOV", .value=&component.fov, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="pitch", .display_name="Pitch", .value=&component.pitch, .metadata={} });
     }
 };
 
@@ -415,17 +403,17 @@ struct reflection<PathComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(PathComponent& component, Func&& func)
+    void for_each_attribute(PathComponent& component, Func&& func)
     {
         func(attribute_reflection<std::deque<glm::vec3>, false, false>{.name="markers", .display_name="Markers", .value=&component.markers, .metadata={} });
         func(attribute_reflection<float, true, true>{.name="speed", .display_name="Speed", .value=&component.speed, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const PathComponent& component, Func&& func)
+    void for_each_attribute(const PathComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::deque<glm::vec3>, false, false>{.name="markers", .display_name="Markers", .value=&component.markers, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="speed", .display_name="Speed", .value=&component.speed, .metadata={} });
+        func(attribute_reflection<const std::deque<glm::vec3>, false, false>{.name="markers", .display_name="Markers", .value=&component.markers, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="speed", .display_name="Speed", .value=&component.speed, .metadata={} });
     }
 };
 
@@ -439,17 +427,17 @@ struct reflection<LightComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(LightComponent& component, Func&& func)
+    void for_each_attribute(LightComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
         func(attribute_reflection<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const LightComponent& component, Func&& func)
+    void for_each_attribute(const LightComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
-        func(const_attribute_reflection<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
+        func(attribute_reflection<const float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 };
 
@@ -463,7 +451,7 @@ struct reflection<SunComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(SunComponent& component, Func&& func)
+    void for_each_attribute(SunComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
         func(attribute_reflection<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
@@ -472,12 +460,12 @@ struct reflection<SunComponent>
     }
 
     template <typename Func>
-    void attributes(const SunComponent& component, Func&& func)
+    void for_each_attribute(const SunComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
-        func(const_attribute_reflection<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="direction", .display_name="Direction", .value=&component.direction, .metadata={} });
-        func(const_attribute_reflection<bool, true, true>{.name="shadows", .display_name="Shadows", .value=&component.shadows, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
+        func(attribute_reflection<const float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="direction", .display_name="Direction", .value=&component.direction, .metadata={} });
+        func(attribute_reflection<const bool, true, true>{.name="shadows", .display_name="Shadows", .value=&component.shadows, .metadata={} });
     }
 };
 
@@ -491,17 +479,17 @@ struct reflection<AmbienceComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(AmbienceComponent& component, Func&& func)
+    void for_each_attribute(AmbienceComponent& component, Func&& func)
     {
         func(attribute_reflection<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
         func(attribute_reflection<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const AmbienceComponent& component, Func&& func)
+    void for_each_attribute(const AmbienceComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
-        func(const_attribute_reflection<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "subtype", "colour" }} });
+        func(attribute_reflection<const float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 };
 
@@ -515,7 +503,7 @@ struct reflection<ParticleComponent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(ParticleComponent& component, Func&& func)
+    void for_each_attribute(ParticleComponent& component, Func&& func)
     {
         func(attribute_reflection<float, true, true>{.name="interval", .display_name="Interval", .value=&component.interval, .metadata={} });
         func(attribute_reflection<glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
@@ -527,15 +515,15 @@ struct reflection<ParticleComponent>
     }
 
     template <typename Func>
-    void attributes(const ParticleComponent& component, Func&& func)
+    void for_each_attribute(const ParticleComponent& component, Func&& func) const
     {
-        func(const_attribute_reflection<float, true, true>{.name="interval", .display_name="Interval", .value=&component.interval, .metadata={} });
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="velocityNoise", .display_name="Velocity Noise", .value=&component.velocityNoise, .metadata={} });
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="acceleration", .display_name="Acceleration", .value=&component.acceleration, .metadata={} });
-        func(const_attribute_reflection<glm::vec3, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
-        func(const_attribute_reflection<float, true, true>{.name="life", .display_name="Life", .value=&component.life, .metadata={} });
-        func(const_attribute_reflection<float, false, false>{.name="accumulator", .display_name="Accumulator", .value=&component.accumulator, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="interval", .display_name="Interval", .value=&component.interval, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="velocityNoise", .display_name="Velocity Noise", .value=&component.velocityNoise, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="acceleration", .display_name="Acceleration", .value=&component.acceleration, .metadata={} });
+        func(attribute_reflection<const glm::vec3, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
+        func(attribute_reflection<const float, true, true>{.name="life", .display_name="Life", .value=&component.life, .metadata={} });
+        func(attribute_reflection<const float, false, false>{.name="accumulator", .display_name="Accumulator", .value=&component.accumulator, .metadata={} });
     }
 };
 
@@ -549,17 +537,17 @@ struct reflection<CollisionEvent>
     static constexpr bool        is_scriptable() { return true; }
 
     template <typename Func>
-    void attributes(CollisionEvent& component, Func&& func)
+    void for_each_attribute(CollisionEvent& component, Func&& func)
     {
         func(attribute_reflection<spkt::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
         func(attribute_reflection<spkt::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const CollisionEvent& component, Func&& func)
+    void for_each_attribute(const CollisionEvent& component, Func&& func) const
     {
-        func(const_attribute_reflection<spkt::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
-        func(const_attribute_reflection<spkt::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
+        func(attribute_reflection<const spkt::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
+        func(attribute_reflection<const spkt::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
     }
 };
 
@@ -573,15 +561,15 @@ struct reflection<PhysicsSingleton>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(PhysicsSingleton& component, Func&& func)
+    void for_each_attribute(PhysicsSingleton& component, Func&& func)
     {
         func(attribute_reflection<std::shared_ptr<physics_runtime>, false, false>{.name="physics_runtime", .display_name="Physics Runtime", .value=&component.physics_runtime, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const PhysicsSingleton& component, Func&& func)
+    void for_each_attribute(const PhysicsSingleton& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::shared_ptr<physics_runtime>, false, false>{.name="physics_runtime", .display_name="Physics Runtime", .value=&component.physics_runtime, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<physics_runtime>, false, false>{.name="physics_runtime", .display_name="Physics Runtime", .value=&component.physics_runtime, .metadata={} });
     }
 };
 
@@ -595,15 +583,15 @@ struct reflection<InputSingleton>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(InputSingleton& component, Func&& func)
+    void for_each_attribute(InputSingleton& component, Func&& func)
     {
         func(attribute_reflection<std::shared_ptr<spkt::input_store>, true, true>{.name="input_store", .display_name="Input Store", .value=&component.input_store, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const InputSingleton& component, Func&& func)
+    void for_each_attribute(const InputSingleton& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::shared_ptr<spkt::input_store>, true, true>{.name="input_store", .display_name="Input Store", .value=&component.input_store, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<spkt::input_store>, true, true>{.name="input_store", .display_name="Input Store", .value=&component.input_store, .metadata={} });
     }
 };
 
@@ -617,7 +605,7 @@ struct reflection<GameGridSingleton>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(GameGridSingleton& component, Func&& func)
+    void for_each_attribute(GameGridSingleton& component, Func&& func)
     {
         func(attribute_reflection<spkt::entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
         func(attribute_reflection<spkt::entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
@@ -626,12 +614,12 @@ struct reflection<GameGridSingleton>
     }
 
     template <typename Func>
-    void attributes(const GameGridSingleton& component, Func&& func)
+    void for_each_attribute(const GameGridSingleton& component, Func&& func) const
     {
-        func(const_attribute_reflection<spkt::entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
-        func(const_attribute_reflection<spkt::entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
-        func(const_attribute_reflection<glm::ivec2, true, true>{.name="hovered_square", .display_name="Hovered Square", .value=&component.hovered_square, .metadata={} });
-        func(const_attribute_reflection<std::optional<glm::ivec2>, true, true>{.name="clicked_square", .display_name="Clicked Square", .value=&component.clicked_square, .metadata={} });
+        func(attribute_reflection<const spkt::entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
+        func(attribute_reflection<const spkt::entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
+        func(attribute_reflection<const glm::ivec2, true, true>{.name="hovered_square", .display_name="Hovered Square", .value=&component.hovered_square, .metadata={} });
+        func(attribute_reflection<const std::optional<glm::ivec2>, true, true>{.name="clicked_square", .display_name="Clicked Square", .value=&component.clicked_square, .metadata={} });
     }
 };
 
@@ -645,15 +633,15 @@ struct reflection<TileMapSingleton>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(TileMapSingleton& component, Func&& func)
+    void for_each_attribute(TileMapSingleton& component, Func&& func)
     {
         func(attribute_reflection<std::unordered_map<glm::ivec2, spkt::entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const TileMapSingleton& component, Func&& func)
+    void for_each_attribute(const TileMapSingleton& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::unordered_map<glm::ivec2, spkt::entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
+        func(attribute_reflection<const std::unordered_map<glm::ivec2, spkt::entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
     }
 };
 
@@ -667,15 +655,15 @@ struct reflection<CameraSingleton>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(CameraSingleton& component, Func&& func)
+    void for_each_attribute(CameraSingleton& component, Func&& func)
     {
         func(attribute_reflection<spkt::entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const CameraSingleton& component, Func&& func)
+    void for_each_attribute(const CameraSingleton& component, Func&& func) const
     {
-        func(const_attribute_reflection<spkt::entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
+        func(attribute_reflection<const spkt::entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
     }
 };
 
@@ -689,23 +677,23 @@ struct reflection<ParticleSingleton>
     static constexpr bool        is_scriptable() { return false; }
 
     template <typename Func>
-    void attributes(ParticleSingleton& component, Func&& func)
+    void for_each_attribute(ParticleSingleton& component, Func&& func)
     {
         func(attribute_reflection<std::shared_ptr<std::array<particle, NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
         func(attribute_reflection<std::size_t, true, true>{.name="next_slot", .display_name="Next Slot", .value=&component.next_slot, .metadata={} });
     }
 
     template <typename Func>
-    void attributes(const ParticleSingleton& component, Func&& func)
+    void for_each_attribute(const ParticleSingleton& component, Func&& func) const
     {
-        func(const_attribute_reflection<std::shared_ptr<std::array<particle, NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
-        func(const_attribute_reflection<std::size_t, true, true>{.name="next_slot", .display_name="Next Slot", .value=&component.next_slot, .metadata={} });
+        func(attribute_reflection<const std::shared_ptr<std::array<particle, NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
+        func(attribute_reflection<const std::size_t, true, true>{.name="next_slot", .display_name="Next Slot", .value=&component.next_slot, .metadata={} });
     }
 };
 
 
 template <typename Func>
-void for_each_reflect(Func&& func)
+void for_each_component(Func&& func)
 {
     func(reflection<Runtime>{});
     func(reflection<Singleton>{});

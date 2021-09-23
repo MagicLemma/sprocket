@@ -25,15 +25,15 @@ void imgui_display_attribute(
 {
     if constexpr (std::is_same_v<T, std::string>) {
         if (auto it = metadata.find("file"); it != metadata.end()) {
-            spkt::ImGuiXtra::File(display_name, editor->window(), value, std::string{it->second}.c_str());
+            spkt::ImGuiXtra::File(display_name, editor->window(), value, it->second.c_str());
         } else {
             spkt::ImGuiXtra::TextModifiable(*value);
         }
     } else if constexpr (std::is_same_v<T, float>) {
-        if (auto it_lower = metadata.find("lower_limit"); it_lower != metadata.end()) {
-            auto it_upper = metadata.find("upper_limit");
-            assert(it_upper != metadata.end());
-            ImGui::SliderFloat(display_name.c_str(), value, std::stof(it_lower->second), std::stof(it_upper->second));    
+        if (metadata.contains("lower_limit") && metadata.contains("upper_limit")) {
+            float lower = std::stof(metadata.at("lower_limit"));
+            float upper = std::stof(metadata.at("upper_limit"));
+            ImGui::SliderFloat(display_name.c_str(), value, lower, upper);    
         } else {
             ImGui::DragFloat(display_name.c_str(), value, 0.01f);
         }
@@ -75,17 +75,14 @@ void Inspector::Show(Anvil& editor)
     int count = 0;
 
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity);
-    spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+    spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
         if (registry.has<T>(entity)) {
             auto& c = registry.get<T>(entity);
             if (ImGui::CollapsingHeader(refl.name)) {
                 ImGui::PushID(count++);
-                refl.attributes(c, [&](auto&& attr) {
+                refl.for_each_attribute(c, [&](auto&& attr) {
                     imgui_display_attribute(
-                        std::string{attr.display_name},
-                        attr.metadata,
-                        attr.value,
-                        &editor
+                        std::string{attr.display_name}, attr.metadata, attr.value, &editor
                     );
                 });
                 if constexpr (std::is_same_v<T, spkt::Transform3DComponent>) {
@@ -104,7 +101,7 @@ void Inspector::Show(Anvil& editor)
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-        spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+        spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
             if (!registry.has<T>(entity) && ImGui::Selectable(refl.name)) {
                 registry.add<T>(entity, {});
             }

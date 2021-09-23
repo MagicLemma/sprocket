@@ -54,12 +54,12 @@ void save_registry_to_file(
 
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << entity;
-        spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+        spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
             if constexpr (refl.is_savable()) {
                 if (reg.has<T>(entity)) {
                     const auto& c = reg.get<T>(entity);
                     out << YAML::Key << refl.name << YAML::BeginMap;
-                    refl.attributes(c, [&](auto&& attr_refl) {
+                    refl.for_each_attribute(c, [&](auto&& attr_refl) {
                         if constexpr (attr_refl.is_savable()) {
                             out << YAML::Key << std::string{attr_refl.name}
                                 << YAML::Value << *attr_refl.value;
@@ -113,7 +113,7 @@ DATAMATIC_END
 spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
 {
     spkt::entity new_entity = reg.create();
-    spkt::for_each_reflect([&]<typename T>(spkt::reflection<T> refl) {
+    spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
         if (refl.is_savable && reg.has<T>(entity)) {
             reg.add<T>(new_entity, reg.get<T>(entity));
         }
