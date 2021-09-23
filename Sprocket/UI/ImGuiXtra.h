@@ -19,7 +19,7 @@ namespace ImGuiXtra {
 void File(const std::string& name,
           window* window,
           std::string* file,
-          const char* filter);
+          const std::string& filter);
 
 // Creates a text box for modifying strings.
 void TextModifiable(std::string& text);

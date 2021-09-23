@@ -1,4 +1,5 @@
 #include "loader.h"
+#include "meta.h"
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Scene/ecs.h>
@@ -6,7 +7,9 @@
 #include <Sprocket/Scene/scene.h>
 
 #include <yaml-cpp/yaml.h>
+
 #include <fstream>
+#include <ranges>
 #include <memory>
 
 namespace spkt {
@@ -37,157 +40,35 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 }
 
-void save_registry_to_file(const std::string& file, const spkt::registry& reg)
+void save_registry_to_file(
+    const std::string& file,
+    const spkt::registry& reg,
+    const save_predicate& predicate)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : reg.all()) {
 
-        // Don't save runtime entities
-        if (reg.has<Runtime>(entity)) { continue; }
+    const auto pred = [&](spkt::entity e) { return predicate(reg, e); };
+    for (auto entity : reg.all() | std::views::filter(pred)) {
 
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << entity;
-        if (reg.has<NameComponent>(entity)) {
-            const auto& c = reg.get<NameComponent>(entity);
-            out << YAML::Key << "NameComponent" << YAML::BeginMap;
-            out << YAML::Key << "name" << YAML::Value << c.name;
-            out << YAML::EndMap;
-        }
-        if (reg.has<Transform2DComponent>(entity)) {
-            const auto& c = reg.get<Transform2DComponent>(entity);
-            out << YAML::Key << "Transform2DComponent" << YAML::BeginMap;
-            out << YAML::Key << "position" << YAML::Value << c.position;
-            out << YAML::Key << "rotation" << YAML::Value << c.rotation;
-            out << YAML::Key << "scale" << YAML::Value << c.scale;
-            out << YAML::EndMap;
-        }
-        if (reg.has<Transform3DComponent>(entity)) {
-            const auto& c = reg.get<Transform3DComponent>(entity);
-            out << YAML::Key << "Transform3DComponent" << YAML::BeginMap;
-            out << YAML::Key << "position" << YAML::Value << c.position;
-            out << YAML::Key << "orientation" << YAML::Value << c.orientation;
-            out << YAML::Key << "scale" << YAML::Value << c.scale;
-            out << YAML::EndMap;
-        }
-        if (reg.has<StaticModelComponent>(entity)) {
-            const auto& c = reg.get<StaticModelComponent>(entity);
-            out << YAML::Key << "StaticModelComponent" << YAML::BeginMap;
-            out << YAML::Key << "mesh" << YAML::Value << c.mesh;
-            out << YAML::Key << "material" << YAML::Value << c.material;
-            out << YAML::EndMap;
-        }
-        if (reg.has<AnimatedModelComponent>(entity)) {
-            const auto& c = reg.get<AnimatedModelComponent>(entity);
-            out << YAML::Key << "AnimatedModelComponent" << YAML::BeginMap;
-            out << YAML::Key << "mesh" << YAML::Value << c.mesh;
-            out << YAML::Key << "material" << YAML::Value << c.material;
-            out << YAML::Key << "animation_name" << YAML::Value << c.animation_name;
-            out << YAML::Key << "animation_time" << YAML::Value << c.animation_time;
-            out << YAML::Key << "animation_speed" << YAML::Value << c.animation_speed;
-            out << YAML::EndMap;
-        }
-        if (reg.has<RigidBody3DComponent>(entity)) {
-            const auto& c = reg.get<RigidBody3DComponent>(entity);
-            out << YAML::Key << "RigidBody3DComponent" << YAML::BeginMap;
-            out << YAML::Key << "velocity" << YAML::Value << c.velocity;
-            out << YAML::Key << "gravity" << YAML::Value << c.gravity;
-            out << YAML::Key << "frozen" << YAML::Value << c.frozen;
-            out << YAML::Key << "bounciness" << YAML::Value << c.bounciness;
-            out << YAML::Key << "frictionCoefficient" << YAML::Value << c.frictionCoefficient;
-            out << YAML::Key << "rollingResistance" << YAML::Value << c.rollingResistance;
-            out << YAML::EndMap;
-        }
-        if (reg.has<BoxCollider3DComponent>(entity)) {
-            const auto& c = reg.get<BoxCollider3DComponent>(entity);
-            out << YAML::Key << "BoxCollider3DComponent" << YAML::BeginMap;
-            out << YAML::Key << "position" << YAML::Value << c.position;
-            out << YAML::Key << "orientation" << YAML::Value << c.orientation;
-            out << YAML::Key << "mass" << YAML::Value << c.mass;
-            out << YAML::Key << "halfExtents" << YAML::Value << c.halfExtents;
-            out << YAML::Key << "applyScale" << YAML::Value << c.applyScale;
-            out << YAML::EndMap;
-        }
-        if (reg.has<SphereCollider3DComponent>(entity)) {
-            const auto& c = reg.get<SphereCollider3DComponent>(entity);
-            out << YAML::Key << "SphereCollider3DComponent" << YAML::BeginMap;
-            out << YAML::Key << "position" << YAML::Value << c.position;
-            out << YAML::Key << "orientation" << YAML::Value << c.orientation;
-            out << YAML::Key << "mass" << YAML::Value << c.mass;
-            out << YAML::Key << "radius" << YAML::Value << c.radius;
-            out << YAML::EndMap;
-        }
-        if (reg.has<CapsuleCollider3DComponent>(entity)) {
-            const auto& c = reg.get<CapsuleCollider3DComponent>(entity);
-            out << YAML::Key << "CapsuleCollider3DComponent" << YAML::BeginMap;
-            out << YAML::Key << "position" << YAML::Value << c.position;
-            out << YAML::Key << "orientation" << YAML::Value << c.orientation;
-            out << YAML::Key << "mass" << YAML::Value << c.mass;
-            out << YAML::Key << "radius" << YAML::Value << c.radius;
-            out << YAML::Key << "height" << YAML::Value << c.height;
-            out << YAML::EndMap;
-        }
-        if (reg.has<ScriptComponent>(entity)) {
-            const auto& c = reg.get<ScriptComponent>(entity);
-            out << YAML::Key << "ScriptComponent" << YAML::BeginMap;
-            out << YAML::Key << "script" << YAML::Value << c.script;
-            out << YAML::Key << "active" << YAML::Value << c.active;
-            out << YAML::EndMap;
-        }
-        if (reg.has<Camera3DComponent>(entity)) {
-            const auto& c = reg.get<Camera3DComponent>(entity);
-            out << YAML::Key << "Camera3DComponent" << YAML::BeginMap;
-            out << YAML::Key << "fov" << YAML::Value << c.fov;
-            out << YAML::Key << "pitch" << YAML::Value << c.pitch;
-            out << YAML::EndMap;
-        }
-        if (reg.has<PathComponent>(entity)) {
-            const auto& c = reg.get<PathComponent>(entity);
-            out << YAML::Key << "PathComponent" << YAML::BeginMap;
-            out << YAML::Key << "speed" << YAML::Value << c.speed;
-            out << YAML::EndMap;
-        }
-        if (reg.has<LightComponent>(entity)) {
-            const auto& c = reg.get<LightComponent>(entity);
-            out << YAML::Key << "LightComponent" << YAML::BeginMap;
-            out << YAML::Key << "colour" << YAML::Value << c.colour;
-            out << YAML::Key << "brightness" << YAML::Value << c.brightness;
-            out << YAML::EndMap;
-        }
-        if (reg.has<SunComponent>(entity)) {
-            const auto& c = reg.get<SunComponent>(entity);
-            out << YAML::Key << "SunComponent" << YAML::BeginMap;
-            out << YAML::Key << "colour" << YAML::Value << c.colour;
-            out << YAML::Key << "brightness" << YAML::Value << c.brightness;
-            out << YAML::Key << "direction" << YAML::Value << c.direction;
-            out << YAML::Key << "shadows" << YAML::Value << c.shadows;
-            out << YAML::EndMap;
-        }
-        if (reg.has<AmbienceComponent>(entity)) {
-            const auto& c = reg.get<AmbienceComponent>(entity);
-            out << YAML::Key << "AmbienceComponent" << YAML::BeginMap;
-            out << YAML::Key << "colour" << YAML::Value << c.colour;
-            out << YAML::Key << "brightness" << YAML::Value << c.brightness;
-            out << YAML::EndMap;
-        }
-        if (reg.has<ParticleComponent>(entity)) {
-            const auto& c = reg.get<ParticleComponent>(entity);
-            out << YAML::Key << "ParticleComponent" << YAML::BeginMap;
-            out << YAML::Key << "interval" << YAML::Value << c.interval;
-            out << YAML::Key << "velocity" << YAML::Value << c.velocity;
-            out << YAML::Key << "velocityNoise" << YAML::Value << c.velocityNoise;
-            out << YAML::Key << "acceleration" << YAML::Value << c.acceleration;
-            out << YAML::Key << "scale" << YAML::Value << c.scale;
-            out << YAML::Key << "life" << YAML::Value << c.life;
-            out << YAML::EndMap;
-        }
-        if (reg.has<TileMapSingleton>(entity)) {
-            const auto& c = reg.get<TileMapSingleton>(entity);
-            out << YAML::Key << "TileMapSingleton" << YAML::BeginMap;
-            out << YAML::Key << "tiles" << YAML::Value << c.tiles;
-            out << YAML::EndMap;
-        }
+        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+            if constexpr (refl.is_savable()) {
+                if (reg.has<T>(entity)) {
+                    const auto& c = reg.get<T>(entity);
+                    out << YAML::Key << refl.name << YAML::BeginMap;
+                    refl.for_each_attribute(c, [&](auto&& attr_refl) {
+                        if constexpr (attr_refl.is_savable()) {
+                            out << YAML::Key << std::string{attr_refl.name}
+                                << YAML::Value << *attr_refl.value;
+                        }
+                    });
+                    out << YAML::EndMap;
+                }
+            }
+        });
         out << YAML::EndMap;
     }
     out << YAML::EndSeq;
@@ -347,57 +228,11 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
 spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
 {
     spkt::entity new_entity = reg.create();
-    if (reg.has<NameComponent>(entity)) {
-        reg.add<NameComponent>(new_entity, reg.get<NameComponent>(entity));
-    }
-    if (reg.has<Transform2DComponent>(entity)) {
-        reg.add<Transform2DComponent>(new_entity, reg.get<Transform2DComponent>(entity));
-    }
-    if (reg.has<Transform3DComponent>(entity)) {
-        reg.add<Transform3DComponent>(new_entity, reg.get<Transform3DComponent>(entity));
-    }
-    if (reg.has<StaticModelComponent>(entity)) {
-        reg.add<StaticModelComponent>(new_entity, reg.get<StaticModelComponent>(entity));
-    }
-    if (reg.has<AnimatedModelComponent>(entity)) {
-        reg.add<AnimatedModelComponent>(new_entity, reg.get<AnimatedModelComponent>(entity));
-    }
-    if (reg.has<RigidBody3DComponent>(entity)) {
-        reg.add<RigidBody3DComponent>(new_entity, reg.get<RigidBody3DComponent>(entity));
-    }
-    if (reg.has<BoxCollider3DComponent>(entity)) {
-        reg.add<BoxCollider3DComponent>(new_entity, reg.get<BoxCollider3DComponent>(entity));
-    }
-    if (reg.has<SphereCollider3DComponent>(entity)) {
-        reg.add<SphereCollider3DComponent>(new_entity, reg.get<SphereCollider3DComponent>(entity));
-    }
-    if (reg.has<CapsuleCollider3DComponent>(entity)) {
-        reg.add<CapsuleCollider3DComponent>(new_entity, reg.get<CapsuleCollider3DComponent>(entity));
-    }
-    if (reg.has<ScriptComponent>(entity)) {
-        reg.add<ScriptComponent>(new_entity, reg.get<ScriptComponent>(entity));
-    }
-    if (reg.has<Camera3DComponent>(entity)) {
-        reg.add<Camera3DComponent>(new_entity, reg.get<Camera3DComponent>(entity));
-    }
-    if (reg.has<PathComponent>(entity)) {
-        reg.add<PathComponent>(new_entity, reg.get<PathComponent>(entity));
-    }
-    if (reg.has<LightComponent>(entity)) {
-        reg.add<LightComponent>(new_entity, reg.get<LightComponent>(entity));
-    }
-    if (reg.has<SunComponent>(entity)) {
-        reg.add<SunComponent>(new_entity, reg.get<SunComponent>(entity));
-    }
-    if (reg.has<AmbienceComponent>(entity)) {
-        reg.add<AmbienceComponent>(new_entity, reg.get<AmbienceComponent>(entity));
-    }
-    if (reg.has<ParticleComponent>(entity)) {
-        reg.add<ParticleComponent>(new_entity, reg.get<ParticleComponent>(entity));
-    }
-    if (reg.has<TileMapSingleton>(entity)) {
-        reg.add<TileMapSingleton>(new_entity, reg.get<TileMapSingleton>(entity));
-    }
+    spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+        if (refl.is_savable && reg.has<T>(entity)) {
+            reg.add<T>(new_entity, reg.get<T>(entity));
+        }
+    });
     return new_entity;
 }
 

@@ -1,11 +1,11 @@
 Entities:
-  - ID#: 0
+  - ID#: 4294967296
     NameComponent:
       name: Ambience
     AmbienceComponent:
       colour: [1, 1, 1]
       brightness: 0.03
-  - ID#: 4294967296
+  - ID#: 8589934592
     NameComponent:
       name: Sun
     SunComponent:
@@ -13,7 +13,7 @@ Entities:
       brightness: 1.6
       direction: [0, -0.9805147, -0.196446]
       shadows: false
-  - ID#: 8589934592
+  - ID#: 12884901888
     NameComponent:
       name: Running Character
     Transform3DComponent:
@@ -26,7 +26,7 @@ Entities:
       animation_name: Armature|ArmatureAction
       animation_time: 5
       animation_speed: 1
-  - ID#: 12884901888
+  - ID#: 17179869184
     NameComponent:
       name: Bridge Thin 3
     Transform3DComponent:
@@ -49,7 +49,7 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 17179869184
+  - ID#: 21474836480
     NameComponent:
       name: Bouncing Ball
     Transform3DComponent:
@@ -77,7 +77,7 @@ Entities:
     LightComponent:
       colour: [1, 1, 1]
       brightness: 100
-  - ID#: 21474836480
+  - ID#: 25769803776
     NameComponent:
       name: Player
     Transform3DComponent:
@@ -106,7 +106,7 @@ Entities:
     Camera3DComponent:
       fov: 70
       pitch: 0
-  - ID#: 25769803776
+  - ID#: 30064771072
     NameComponent:
       name: Bridge Thin 1
     Transform3DComponent:
@@ -129,7 +129,7 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 30064771072
+  - ID#: 34359738368
     NameComponent:
       name: Bridge Wide
     Transform3DComponent:
@@ -152,7 +152,7 @@ Entities:
       mass: 1000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 34359738368
+  - ID#: 38654705664
     NameComponent:
       name: Platform (Angled)
     Transform3DComponent:
@@ -175,7 +175,7 @@ Entities:
       mass: 1
       halfExtents: [6.224951, 0.293629, 16.39011]
       applyScale: true
-  - ID#: 38654705664
+  - ID#: 42949672960
     NameComponent:
       name: Platform (Blue)
     Transform3DComponent:
@@ -198,7 +198,7 @@ Entities:
       mass: 1
       halfExtents: [6.224951, 0.293629, 16.39011]
       applyScale: true
-  - ID#: 42949672960
+  - ID#: 47244640256
     NameComponent:
       name: Bouncing Ball Child
     Transform3DComponent:
@@ -208,7 +208,7 @@ Entities:
     StaticModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\Crate.obj
       material: ""
-  - ID#: 47244640256
+  - ID#: 51539607552
     NameComponent:
       name: Platform (Red)
     Transform3DComponent:
@@ -231,7 +231,7 @@ Entities:
       mass: 1
       halfExtents: [6.224951, 0.293629, 16.39011]
       applyScale: true
-  - ID#: 51539607552
+  - ID#: 55834574848
     NameComponent:
       name: Red Light
     Transform3DComponent:
@@ -241,7 +241,7 @@ Entities:
     LightComponent:
       colour: [1, 0, 0]
       brightness: 2
-  - ID#: 55834574848
+  - ID#: 60129542144
     NameComponent:
       name: Blue Light
     Transform3DComponent:
@@ -251,7 +251,7 @@ Entities:
     LightComponent:
       colour: [0, 0, 1]
       brightness: 2
-  - ID#: 60129542144
+  - ID#: 64424509440
     NameComponent:
       name: Green Light
     Transform3DComponent:
@@ -261,7 +261,7 @@ Entities:
     LightComponent:
       colour: [0.72, 0.6289493, 0.09920003]
       brightness: 43.9
-  - ID#: 64424509440
+  - ID#: 68719476736
     NameComponent:
       name: White Light
     Transform3DComponent:
@@ -271,7 +271,7 @@ Entities:
     LightComponent:
       colour: [0.904, 0.7333333, 1]
       brightness: 260.9
-  - ID#: 68719476736
+  - ID#: 73014444032
     NameComponent:
       name: Pit Wall 4
     Transform3DComponent:
@@ -294,7 +294,7 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 73014444032
+  - ID#: 77309411328
     NameComponent:
       name: Pit Wall 3
     Transform3DComponent:
@@ -317,7 +317,7 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 77309411328
+  - ID#: 81604378624
     NameComponent:
       name: Pit Wall 2
     Transform3DComponent:
@@ -340,7 +340,7 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 81604378624
+  - ID#: 85899345920
     NameComponent:
       name: Pit Wall 1
     Transform3DComponent:
@@ -363,7 +363,7 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 85899345920
+  - ID#: 90194313216
     NameComponent:
       name: Pit Floor
     Transform3DComponent:
@@ -386,7 +386,7 @@ Entities:
       mass: 10000
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 90194313216
+  - ID#: 94489280512
     NameComponent:
       name: Pit Crate
     Transform3DComponent:
@@ -409,7 +409,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 94489280512
+  - ID#: 98784247808
     NameComponent:
       name: Sphere (Particles)
     Transform3DComponent:
@@ -438,7 +438,7 @@ Entities:
       acceleration: [0, -9.81, 0]
       scale: [5, 5, 5]
       life: 60.5
-  - ID#: 98784247808
+  - ID#: 103079215104
     NameComponent:
       name: Sphere (No Particles)
     Transform3DComponent:
@@ -460,7 +460,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       mass: 20
       radius: 1
-  - ID#: 103079215104
+  - ID#: 107374182400
     NameComponent:
       name: Tree Small
     Transform3DComponent:
@@ -483,7 +483,7 @@ Entities:
       mass: 1
       halfExtents: [0.25, 0.8, 0.25]
       applyScale: true
-  - ID#: 107374182400
+  - ID#: 111669149696
     NameComponent:
       name: Tree Large
     Transform3DComponent:
@@ -493,7 +493,7 @@ Entities:
     StaticModelComponent:
       mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
-  - ID#: 111669149696
+  - ID#: 115964116992
     NameComponent:
       name: Pistol
     Transform3DComponent:
@@ -519,7 +519,7 @@ Entities:
     ScriptComponent:
       script: D:\dev\Sprocket\Resources\Scripts\Bob.lua
       active: true
-  - ID#: 115964116992
+  - ID#: 120259084288
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -542,7 +542,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 120259084288
+  - ID#: 124554051584
     NameComponent:
       name: Crate Upper
     Transform3DComponent:
@@ -565,7 +565,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 124554051584
+  - ID#: 128849018880
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -588,7 +588,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 128849018880
+  - ID#: 133143986176
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -611,7 +611,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 133143986176
+  - ID#: 137438953472
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -634,7 +634,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 137438953472
+  - ID#: 141733920768
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -657,7 +657,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 141733920768
+  - ID#: 146028888064
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -680,7 +680,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 146028888064
+  - ID#: 150323855360
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -703,7 +703,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 150323855360
+  - ID#: 154618822656
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -726,7 +726,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 154618822656
+  - ID#: 158913789952
     NameComponent:
       name: Crate Lower
     Transform3DComponent:
@@ -749,7 +749,7 @@ Entities:
       mass: 1
       halfExtents: [1, 1, 1]
       applyScale: true
-  - ID#: 158913789952
+  - ID#: 163208757248
     NameComponent:
       name: Crate Lower
     Transform3DComponent:

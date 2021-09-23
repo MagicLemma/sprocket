@@ -103,9 +103,8 @@
                     "display_name": "Mesh",
                     "type": "std::string",
                     "default": "\"\"",
-                    "custom": {
-                        "Subtype": "File",
-                        "Filter": "*.obj"
+                    "metadata": {
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -113,9 +112,8 @@
                     "display_name": "Material",
                     "type": "std::string",
                     "default": "\"\"",
-                    "custom": {
-                        "Subtype": "File",
-                        "Filter": "*.yaml"
+                    "metadata": {
+                        "file_filter": "*.obj"
                     }
                 }
             ] 
@@ -129,9 +127,8 @@
                     "display_name": "Mesh",
                     "type": "std::string",
                     "default": "\"\"",
-                    "custom": {
-                        "Subtype": "File",
-                        "Filter": "*.obj"
+                    "metadata": {
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -139,9 +136,8 @@
                     "display_name": "Material",
                     "type": "std::string",
                     "default": "\"\"",
-                    "custom": {
-                        "Subtype": "File",
-                        "Filter": "*.yaml"
+                    "metadata": {
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -191,8 +187,9 @@
                     "display_name": "Bounciness",
                     "type": "float",
                     "default": "0.5f",
-                    "custom": {
-                        "Limits": ["0.0f", "1.0f"]
+                    "metadata": {
+                        "lower_limit": "0.0",
+                        "upper_limit": "1.0"
                     }
                 },
                 {
@@ -200,8 +197,9 @@
                     "display_name": "Friction Coefficient",
                     "type": "float",
                     "default": "0.3f",
-                    "custom": {
-                        "Limits": ["0.0f", "1.0f"]
+                    "metadata": {
+                        "lower_limit": "0.0",
+                        "upper_limit": "1.0"
                     }
                 },
                 {
@@ -209,8 +207,9 @@
                     "display_name": "Rolling Resistance",
                     "type": "float",
                     "default": "0.0f",
-                    "custom": {
-                        "Limits": ["0.0f", "1.0f"]
+                    "metadata": {
+                        "lower_limit": "0.0",
+                        "upper_limit": "1.0"
                     }
                 },
                 {
@@ -393,9 +392,8 @@
                     "display_name": "Script",
                     "type": "std::string",
                     "default": "\"\"",
-                    "custom": {
-                        "Subtype": "File",
-                        "Filter": "*.lua"
+                    "metadata": {
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -475,8 +473,8 @@
                     "display_name": "Colour",
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
-                    "custom": {
-                        "Subtype": "Colour"
+                    "metadata": {
+                        "is_colour": ""
                     }
                 },
                 {
@@ -496,8 +494,8 @@
                     "display_name": "Colour",
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
-                    "custom": {
-                        "Subtype": "Colour"
+                    "metadata": {
+                        "is_colour": ""
                     }
                 },
                 {
@@ -529,8 +527,8 @@
                     "display_name": "Colour",
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
-                    "custom": {
-                        "Subtype": "Colour"
+                    "metadata": {
+                        "is_colour": ""
                     }
                 },
                 {

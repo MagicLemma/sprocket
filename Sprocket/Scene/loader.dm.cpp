@@ -1,4 +1,5 @@
 #include "loader.h"
+#include "meta.h"
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Scene/ecs.h>
@@ -6,7 +7,9 @@
 #include <Sprocket/Scene/scene.h>
 
 #include <yaml-cpp/yaml.h>
+
 #include <fstream>
+#include <ranges>
 #include <memory>
 
 namespace spkt {
@@ -37,26 +40,35 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 }
 
-void save_registry_to_file(const std::string& file, const spkt::registry& reg)
+void save_registry_to_file(
+    const std::string& file,
+    const spkt::registry& reg,
+    const save_predicate& predicate)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
-    for (auto entity : reg.all()) {
 
-        // Don't save runtime entities
-        if (reg.has<Runtime>(entity)) { continue; }
+    const auto pred = [&](spkt::entity e) { return predicate(reg, e); };
+    for (auto entity : reg.all() | std::views::filter(pred)) {
 
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << entity;
-DATAMATIC_BEGIN SAVABLE=true
-        if (reg.has<{{Comp::name}}>(entity)) {
-            const auto& c = reg.get<{{Comp::name}}>(entity);
-            out << YAML::Key << "{{Comp::name}}" << YAML::BeginMap;
-            out << YAML::Key << "{{Attr::name}}" << YAML::Value << c.{{Attr::name}};
-            out << YAML::EndMap;
-        }
-DATAMATIC_END
+        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+            if constexpr (refl.is_savable()) {
+                if (reg.has<T>(entity)) {
+                    const auto& c = reg.get<T>(entity);
+                    out << YAML::Key << refl.name << YAML::BeginMap;
+                    refl.for_each_attribute(c, [&](auto&& attr_refl) {
+                        if constexpr (attr_refl.is_savable()) {
+                            out << YAML::Key << std::string{attr_refl.name}
+                                << YAML::Value << *attr_refl.value;
+                        }
+                    });
+                    out << YAML::EndMap;
+                }
+            }
+        });
         out << YAML::EndMap;
     }
     out << YAML::EndSeq;
@@ -101,11 +113,11 @@ DATAMATIC_END
 spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
 {
     spkt::entity new_entity = reg.create();
-DATAMATIC_BEGIN SAVABLE=true
-    if (reg.has<{{Comp::name}}>(entity)) {
-        reg.add<{{Comp::name}}>(new_entity, reg.get<{{Comp::name}}>(entity));
-    }
-DATAMATIC_END
+    spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+        if (refl.is_savable && reg.has<T>(entity)) {
+            reg.add<T>(new_entity, reg.get<T>(entity));
+        }
+    });
     return new_entity;
 }
 

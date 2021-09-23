@@ -1,6 +1,4 @@
 #pragma once
-#include <Sprocket/Scene/ecs.h>
-
 #include <glm/glm.hpp>
 #include <lua.hpp>
 

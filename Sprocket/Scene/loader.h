@@ -2,10 +2,19 @@
 #include <Sprocket/Scene/ecs.h>
 
 #include <string>
+#include <functional>
 
 namespace spkt {
 
-void save_registry_to_file(const std::string& file, const spkt::registry& reg);
+using save_predicate = std::function<bool(const spkt::registry&, spkt::entity)>;
+
+// Saves all entities satisfying the given predicate to the given file.
+void save_registry_to_file(
+    const std::string& file,
+    const spkt::registry& reg,
+    const save_predicate& predicate
+);
+
 void load_registry_from_file(const std::string& file, spkt::registry& reg);
 
 // Creates a copy of the given Entity within the given Scene. The given
