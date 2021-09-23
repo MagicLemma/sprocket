@@ -104,8 +104,7 @@
                     "type": "std::string",
                     "default": "\"\"",
                     "metadata": {
-                        "subtype": "file",
-                        "filter": "*.obj"
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -114,8 +113,7 @@
                     "type": "std::string",
                     "default": "\"\"",
                     "metadata": {
-                        "subtype": "file",
-                        "filter": "*.obj"
+                        "file_filter": "*.obj"
                     }
                 }
             ] 
@@ -130,8 +128,7 @@
                     "type": "std::string",
                     "default": "\"\"",
                     "metadata": {
-                        "subtype": "file",
-                        "filter": "*.obj"
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -140,8 +137,7 @@
                     "type": "std::string",
                     "default": "\"\"",
                     "metadata": {
-                        "subtype": "file",
-                        "filter": "*.obj"
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -397,8 +393,7 @@
                     "type": "std::string",
                     "default": "\"\"",
                     "metadata": {
-                        "subtype": "file",
-                        "filter": "*.lua"
+                        "file_filter": "*.obj"
                     }
                 },
                 {
@@ -479,7 +474,7 @@
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
                     "metadata": {
-                        "subtype": "colour"
+                        "colour": ""
                     }
                 },
                 {
@@ -500,7 +495,7 @@
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
                     "metadata": {
-                        "subtype": "colour"
+                        "colour": ""
                     }
                 },
                 {
@@ -533,7 +528,7 @@
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
                     "metadata": {
-                        "subtype": "colour"
+                        "colour": ""
                     }
                 },
                 {

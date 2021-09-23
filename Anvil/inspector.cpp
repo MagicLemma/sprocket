@@ -24,8 +24,8 @@ void imgui_display_attribute(
     Anvil* editor)
 {
     if constexpr (std::is_same_v<T, std::string>) {
-        if (auto it = metadata.find("file"); it != metadata.end()) {
-            spkt::ImGuiXtra::File(display_name, editor->window(), value, it->second.c_str());
+        if (metadata.contains("file_filter")) {
+            spkt::ImGuiXtra::File(display_name, editor->window(), value, metadata.at("file_filter"));
         } else {
             spkt::ImGuiXtra::TextModifiable(*value);
         }
@@ -40,13 +40,13 @@ void imgui_display_attribute(
     } else if constexpr (std::is_same_v<T, glm::vec2>) {
         ImGui::DragFloat2(display_name.c_str(), &value->x, 0.01f);
     } else if constexpr (std::is_same_v<T, glm::vec3>) {
-        if (auto it = metadata.find("colour"); it != metadata.end()) {
+        if (metadata.contains("colour")) {
             ImGui::ColorEdit3(display_name.c_str(), &value->x);
         } else {
             ImGui::DragFloat3(display_name.c_str(), &value->x, 0.1f);
         }
     } else if constexpr (std::is_same_v<T, glm::vec4>) {
-        if (auto it = metadata.find("colour"); it != metadata.end()) {
+        if (metadata.contains("colour")) {
             ImGui::ColorEdit4(display_name.c_str(), &value->x);
         } else {
             ImGui::DragFloat4(display_name.c_str(), &value->x, 0.1f);
@@ -75,7 +75,7 @@ void Inspector::Show(Anvil& editor)
     int count = 0;
 
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity);
-    spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
+    spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
         if (registry.has<T>(entity)) {
             auto& c = registry.get<T>(entity);
             if (ImGui::CollapsingHeader(refl.name)) {
@@ -101,7 +101,7 @@ void Inspector::Show(Anvil& editor)
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-        spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
+        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
             if (!registry.has<T>(entity) && ImGui::Selectable(refl.name)) {
                 registry.add<T>(entity, {});
             }

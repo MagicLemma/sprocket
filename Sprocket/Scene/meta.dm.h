@@ -7,7 +7,7 @@
 namespace spkt {
 
 template <typename T, bool Savable, bool Scriptable>
-struct attribute_reflection
+struct reflattr
 {
     const std::string_view                             name;
     const std::string_view                             display_name;
@@ -19,11 +19,11 @@ struct attribute_reflection
 };
 
 template <typename T>
-struct reflection;
+struct reflcomp;
 
 DATAMATIC_BEGIN
 template <>
-struct reflection<{{Comp::name}}>
+struct reflcomp<{{Comp::name}}>
 {
     static constexpr const char* name          = "{{Comp::name}}";
     static constexpr const char* display_name  = "{{Comp::display_name}}";
@@ -34,13 +34,13 @@ struct reflection<{{Comp::name}}>
     template <typename Func>
     void for_each_attribute({{Comp::name}}& component, Func&& func)
     {
-        func(attribute_reflection<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .display_name="{{Attr::display_name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
+        func(reflattr<{{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .display_name="{{Attr::display_name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
     }
 
     template <typename Func>
     void for_each_attribute(const {{Comp::name}}& component, Func&& func) const
     {
-        func(attribute_reflection<const {{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .display_name="{{Attr::display_name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
+        func(reflattr<const {{Attr::type}}, {{Attr::is_savable}}, {{Attr::is_scriptable}}>{.name="{{Attr::name}}", .display_name="{{Attr::display_name}}", .value=&component.{{Attr::name}}, .metadata={{Attr::get_metadata}} });
     }
 };
 
@@ -50,7 +50,7 @@ template <typename Func>
 void for_each_component(Func&& func)
 {
 DATAMATIC_BEGIN
-    func(reflection<{{Comp::name}}>{});
+    func(reflcomp<{{Comp::name}}>{});
 DATAMATIC_END
 }
 

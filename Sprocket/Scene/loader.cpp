@@ -54,7 +54,7 @@ void save_registry_to_file(
 
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << entity;
-        spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
+        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
             if constexpr (refl.is_savable()) {
                 if (reg.has<T>(entity)) {
                     const auto& c = reg.get<T>(entity);
@@ -228,7 +228,7 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
 spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
 {
     spkt::entity new_entity = reg.create();
-    spkt::for_each_component([&]<typename T>(spkt::reflection<T> refl) {
+    spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
         if (refl.is_savable && reg.has<T>(entity)) {
             reg.add<T>(new_entity, reg.get<T>(entity));
         }

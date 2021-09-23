@@ -30,11 +30,11 @@ static int InputTextCallback(ImGuiInputTextCallbackData* data)
 void File(const std::string& name,
           window* window,
           std::string* file,
-          const char* filter)
+          const std::string& filter)
 {
     ImGui::PushID(std::hash<std::string>{}(name));
     if (ImGui::Button(name.c_str())) {
-        auto newFile = OpenFile(window, filter);
+        auto newFile = OpenFile(window, filter.c_str());
         if (!newFile.empty()) {
             *file = newFile;
         }
