@@ -474,7 +474,7 @@
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
                     "metadata": {
-                        "colour": ""
+                        "is_colour": ""
                     }
                 },
                 {
@@ -495,7 +495,7 @@
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
                     "metadata": {
-                        "colour": ""
+                        "is_colour": ""
                     }
                 },
                 {
@@ -528,7 +528,7 @@
                     "type": "glm::vec3",
                     "default": "{1.0f, 1.0f, 1.0f}",
                     "metadata": {
-                        "colour": ""
+                        "is_colour": ""
                     }
                 },
                 {

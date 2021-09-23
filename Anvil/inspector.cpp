@@ -40,13 +40,13 @@ void imgui_display_attribute(
     } else if constexpr (std::is_same_v<T, glm::vec2>) {
         ImGui::DragFloat2(display_name.c_str(), &value->x, 0.01f);
     } else if constexpr (std::is_same_v<T, glm::vec3>) {
-        if (metadata.contains("colour")) {
+        if (metadata.contains("is_colour")) {
             ImGui::ColorEdit3(display_name.c_str(), &value->x);
         } else {
             ImGui::DragFloat3(display_name.c_str(), &value->x, 0.1f);
         }
     } else if constexpr (std::is_same_v<T, glm::vec4>) {
-        if (metadata.contains("colour")) {
+        if (metadata.contains("is_colour")) {
             ImGui::ColorEdit4(display_name.c_str(), &value->x);
         } else {
             ImGui::DragFloat4(display_name.c_str(), &value->x, 0.1f);

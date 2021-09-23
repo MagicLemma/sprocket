@@ -429,14 +429,14 @@ struct reflcomp<LightComponent>
     template <typename Func>
     void for_each_attribute(LightComponent& component, Func&& func)
     {
-        func(reflattr<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "colour", "" }} });
+        func(reflattr<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "is_colour", "" }} });
         func(reflattr<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 
     template <typename Func>
     void for_each_attribute(const LightComponent& component, Func&& func) const
     {
-        func(reflattr<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "colour", "" }} });
+        func(reflattr<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "is_colour", "" }} });
         func(reflattr<const float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 };
@@ -453,7 +453,7 @@ struct reflcomp<SunComponent>
     template <typename Func>
     void for_each_attribute(SunComponent& component, Func&& func)
     {
-        func(reflattr<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "colour", "" }} });
+        func(reflattr<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "is_colour", "" }} });
         func(reflattr<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
         func(reflattr<glm::vec3, true, true>{.name="direction", .display_name="Direction", .value=&component.direction, .metadata={} });
         func(reflattr<bool, true, true>{.name="shadows", .display_name="Shadows", .value=&component.shadows, .metadata={} });
@@ -462,7 +462,7 @@ struct reflcomp<SunComponent>
     template <typename Func>
     void for_each_attribute(const SunComponent& component, Func&& func) const
     {
-        func(reflattr<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "colour", "" }} });
+        func(reflattr<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "is_colour", "" }} });
         func(reflattr<const float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
         func(reflattr<const glm::vec3, true, true>{.name="direction", .display_name="Direction", .value=&component.direction, .metadata={} });
         func(reflattr<const bool, true, true>{.name="shadows", .display_name="Shadows", .value=&component.shadows, .metadata={} });
@@ -481,14 +481,14 @@ struct reflcomp<AmbienceComponent>
     template <typename Func>
     void for_each_attribute(AmbienceComponent& component, Func&& func)
     {
-        func(reflattr<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "colour", "" }} });
+        func(reflattr<glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "is_colour", "" }} });
         func(reflattr<float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 
     template <typename Func>
     void for_each_attribute(const AmbienceComponent& component, Func&& func) const
     {
-        func(reflattr<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "colour", "" }} });
+        func(reflattr<const glm::vec3, true, true>{.name="colour", .display_name="Colour", .value=&component.colour, .metadata={{ "is_colour", "" }} });
         func(reflattr<const float, true, true>{.name="brightness", .display_name="Brightness", .value=&component.brightness, .metadata={} });
     }
 };
