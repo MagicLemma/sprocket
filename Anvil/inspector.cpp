@@ -17,47 +17,44 @@
 namespace {
 
 template <typename T>
-struct inspector_display;
-
-template <typename T, bool Savable, bool Scriptable>
 void imgui_display_attribute(
-    Anvil& editor,
-    spkt::attribute_reflection<T, Savable, Scriptable>& attr)
+    const std::string& display_name,
+    const std::unordered_map<std::string, std::string>& metadata,
+    T* value,
+    Anvil* editor)
 {
-    auto display_name = std::string{attr.display_name};
-
     if constexpr (std::is_same_v<T, std::string>) {
-        if (auto it = attr.metadata.find("file"); it != attr.metadata.end()) {
-            spkt::ImGuiXtra::File(display_name, editor.window(), attr.value, std::string{it->second}.c_str());
+        if (auto it = metadata.find("file"); it != metadata.end()) {
+            spkt::ImGuiXtra::File(display_name, editor->window(), value, std::string{it->second}.c_str());
         } else {
-            spkt::ImGuiXtra::TextModifiable(*attr.value);
+            spkt::ImGuiXtra::TextModifiable(*value);
         }
     } else if constexpr (std::is_same_v<T, float>) {
-        if (auto it_lower = attr.metadata.find("lower_limit"); it_lower != attr.metadata.end()) {
-            auto it_upper = attr.metadata.find("upper_limit");
-            assert(it_upper != attr.metadata.end());
-            ImGui::SliderFloat(display_name.c_str(), attr.value, std::stof(it_lower->second), std::stof(it_upper->second));    
+        if (auto it_lower = metadata.find("lower_limit"); it_lower != metadata.end()) {
+            auto it_upper = metadata.find("upper_limit");
+            assert(it_upper != metadata.end());
+            ImGui::SliderFloat(display_name.c_str(), value, std::stof(it_lower->second), std::stof(it_upper->second));    
         } else {
-            ImGui::DragFloat(display_name.c_str(), attr.value, 0.01f);
+            ImGui::DragFloat(display_name.c_str(), value, 0.01f);
         }
     } else if constexpr (std::is_same_v<T, glm::vec2>) {
-        ImGui::DragFloat2(display_name.c_str(), &attr.value->x, 0.01f);
+        ImGui::DragFloat2(display_name.c_str(), &value->x, 0.01f);
     } else if constexpr (std::is_same_v<T, glm::vec3>) {
-        if (auto it = attr.metadata.find("colour"); it != attr.metadata.end()) {
-            ImGui::ColorEdit3(display_name.c_str(), &attr.value->x);
+        if (auto it = metadata.find("colour"); it != metadata.end()) {
+            ImGui::ColorEdit3(display_name.c_str(), &value->x);
         } else {
-            ImGui::DragFloat3(display_name.c_str(), &attr.value->x, 0.1f);
+            ImGui::DragFloat3(display_name.c_str(), &value->x, 0.1f);
         }
     } else if constexpr (std::is_same_v<T, glm::vec4>) {
-        if (auto it = attr.metadata.find("colour"); it != attr.metadata.end()) {
-            ImGui::ColorEdit4(display_name.c_str(), &attr.value->x);
+        if (auto it = metadata.find("colour"); it != metadata.end()) {
+            ImGui::ColorEdit4(display_name.c_str(), &value->x);
         } else {
-            ImGui::DragFloat4(display_name.c_str(), &attr.value->x, 0.1f);
+            ImGui::DragFloat4(display_name.c_str(), &value->x, 0.1f);
         }
     } else if constexpr (std::is_same_v<T, glm::quat>) {
-        spkt::ImGuiXtra::Euler(display_name, attr.value);
+        spkt::ImGuiXtra::Euler(display_name, value);
     } else if constexpr (std::is_same_v<T, bool>) {
-        ImGui::Checkbox(display_name.c_str(), attr.value);
+        ImGui::Checkbox(display_name.c_str(), value);
     }
 }
 
@@ -84,7 +81,12 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::CollapsingHeader(refl.name)) {
                 ImGui::PushID(count++);
                 refl.attributes(c, [&](auto&& attr) {
-                    imgui_display_attribute(editor, attr);
+                    imgui_display_attribute(
+                        std::string{attr.display_name},
+                        attr.metadata,
+                        attr.value,
+                        &editor
+                    );
                 });
                 if constexpr (std::is_same_v<T, spkt::Transform3DComponent>) {
                     spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
