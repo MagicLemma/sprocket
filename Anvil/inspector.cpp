@@ -17,15 +17,16 @@
 namespace {
 
 template <typename T>
-void imgui_display_attribute(
-    const std::string& display_name,
+void display_attr(
+    std::string_view display_name,
     const std::unordered_map<std::string, std::string>& metadata,
     T* value,
     Anvil* editor)
 {
+    std::string name{display_name};
     if constexpr (std::is_same_v<T, std::string>) {
         if (metadata.contains("file_filter")) {
-            spkt::ImGuiXtra::File(display_name, editor->window(), value, metadata.at("file_filter"));
+            spkt::ImGuiXtra::File(name, editor->window(), value, metadata.at("file_filter"));
         } else {
             spkt::ImGuiXtra::TextModifiable(*value);
         }
@@ -33,28 +34,28 @@ void imgui_display_attribute(
         if (metadata.contains("lower_limit") && metadata.contains("upper_limit")) {
             float lower = std::stof(metadata.at("lower_limit"));
             float upper = std::stof(metadata.at("upper_limit"));
-            ImGui::SliderFloat(display_name.c_str(), value, lower, upper);    
+            ImGui::SliderFloat(name.c_str(), value, lower, upper);    
         } else {
-            ImGui::DragFloat(display_name.c_str(), value, 0.01f);
+            ImGui::DragFloat(name.c_str(), value, 0.01f);
         }
     } else if constexpr (std::is_same_v<T, glm::vec2>) {
-        ImGui::DragFloat2(display_name.c_str(), &value->x, 0.01f);
+        ImGui::DragFloat2(name.c_str(), &value->x, 0.01f);
     } else if constexpr (std::is_same_v<T, glm::vec3>) {
         if (metadata.contains("is_colour")) {
-            ImGui::ColorEdit3(display_name.c_str(), &value->x);
+            ImGui::ColorEdit3(name.c_str(), &value->x);
         } else {
-            ImGui::DragFloat3(display_name.c_str(), &value->x, 0.1f);
+            ImGui::DragFloat3(name.c_str(), &value->x, 0.1f);
         }
     } else if constexpr (std::is_same_v<T, glm::vec4>) {
         if (metadata.contains("is_colour")) {
-            ImGui::ColorEdit4(display_name.c_str(), &value->x);
+            ImGui::ColorEdit4(name.c_str(), &value->x);
         } else {
-            ImGui::DragFloat4(display_name.c_str(), &value->x, 0.1f);
+            ImGui::DragFloat4(name.c_str(), &value->x, 0.1f);
         }
     } else if constexpr (std::is_same_v<T, glm::quat>) {
-        spkt::ImGuiXtra::Euler(display_name, value);
+        spkt::ImGuiXtra::Euler(name, value);
     } else if constexpr (std::is_same_v<T, bool>) {
-        ImGui::Checkbox(display_name.c_str(), value);
+        ImGui::Checkbox(name.c_str(), value);
     }
 }
 
@@ -81,9 +82,7 @@ void Inspector::Show(Anvil& editor)
             if (ImGui::CollapsingHeader(refl.name)) {
                 ImGui::PushID(count++);
                 refl.for_each_attribute(c, [&](auto&& attr) {
-                    imgui_display_attribute(
-                        std::string{attr.display_name}, attr.metadata, attr.value, &editor
-                    );
+                    display_attr(attr.display_name, attr.metadata, attr.value, &editor);
                 });
                 if constexpr (std::is_same_v<T, spkt::Transform3DComponent>) {
                     spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
