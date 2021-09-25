@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include <Game/grid_helpers.h>
+#include <Game/game_grid.h>
 #include <Game/Palette.h>
 #include <Game/PathCalculator.h>
 
@@ -11,7 +12,6 @@
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/game_grid.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
