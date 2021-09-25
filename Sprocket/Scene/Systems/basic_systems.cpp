@@ -74,24 +74,6 @@ void camera_system(spkt::registry& registry, double dt)
     }
 }
 
-void path_follower_system(spkt::registry& registry, double dt)
-{
-    for (auto [path, transform] : registry.view_get<PathComponent, Transform3DComponent>()) {
-        if (path.markers.empty()) { continue; }
-        
-        glm::vec3 to_dest = path.markers.front() - transform.position;
-        glm::vec3 direction = glm::normalize(to_dest);
-        glm::vec3 advance = path.speed * (float)dt * direction;
-
-        if (glm::length2(advance) < glm::length2(to_dest)) {
-            transform.position += advance;
-        } else {
-            transform.position = path.markers.front();
-            path.markers.pop_front();
-        }
-    }
-}
-
 void clear_events_system(spkt::registry& registry, double dt)
 {
     registry.destroy_if<Event>([](spkt::entity) { return true; });

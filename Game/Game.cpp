@@ -23,6 +23,24 @@ using namespace spkt;
 
 namespace {
 
+void path_follower_system(spkt::registry& registry, double dt)
+{
+    for (auto [path, transform] : registry.view_get<spkt::PathComponent, spkt::Transform3DComponent>()) {
+        if (path.markers.empty()) { continue; }
+        
+        glm::vec3 to_dest = path.markers.front() - transform.position;
+        glm::vec3 direction = glm::normalize(to_dest);
+        glm::vec3 advance = path.speed * (float)dt * direction;
+
+        if (glm::length2(advance) < glm::length2(to_dest)) {
+            transform.position += advance;
+        } else {
+            transform.position = path.markers.front();
+            path.markers.pop_front();
+        }
+    }
+}
+
 void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
 {
     ImGui::Begin("Sun");
@@ -134,7 +152,7 @@ void Game::load_scene(std::string_view file)
         game_grid_system,
         spkt::script_system,
         spkt::camera_system,
-        spkt::path_follower_system,
+        path_follower_system,
         spkt::clear_events_system
     };
 
