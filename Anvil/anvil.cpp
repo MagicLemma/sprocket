@@ -1,6 +1,7 @@
 #include "Anvil.h"
 
 #include <Anvil/Inspector.h>
+#include <Anvil/systems.h>
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/material.h>
@@ -215,7 +216,7 @@ void Anvil::on_render()
                     spkt::camera_system,
                     spkt::script_system,
                     spkt::animation_system,
-                    spkt::delete_below_50_system,
+                    anvil::delete_below_50_system,
                     spkt::clear_events_system
                 };
 

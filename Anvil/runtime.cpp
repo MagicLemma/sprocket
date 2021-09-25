@@ -1,5 +1,7 @@
 #include "Runtime.h"
 
+#include <Anvil/systems.h>
+
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
@@ -26,7 +28,7 @@ Runtime::Runtime(spkt::window* window)
             spkt::script_system,
             spkt::camera_system,
             spkt::animation_system,
-            spkt::delete_below_50_system,
+            anvil::delete_below_50_system,
             spkt::clear_events_system
         }
     })
