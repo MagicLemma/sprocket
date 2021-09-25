@@ -26,7 +26,6 @@ Runtime::Runtime(spkt::window* window)
             spkt::physics_system,
             anvil::particle_system,
             spkt::script_system,
-            spkt::camera_system,
             anvil::animation_system,
             anvil::delete_below_50_system,
             spkt::clear_events_system

@@ -213,7 +213,6 @@ void Anvil::on_render()
                 d_activeScene->systems = {
                     spkt::physics_system,
                     anvil::particle_system,
-                    spkt::camera_system,
                     spkt::script_system,
                     anvil::animation_system,
                     anvil::delete_below_50_system,

@@ -57,16 +57,6 @@ void script_system(spkt::registry& registry, double dt)
     }
 }
 
-void camera_system(spkt::registry& registry, double dt)
-{
-    const auto& input = *get_singleton<InputSingleton>(registry).input_store;
-    float aspect_ratio = input.window_width() / input.window_height();
-
-    for (auto [cam] : registry.view_get<Camera3DComponent>()) {
-        cam.projection = glm::perspective(cam.fov, aspect_ratio, 0.1f, 1000.0f);
-    }
-}
-
 void clear_events_system(spkt::registry& registry, double dt)
 {
     registry.destroy_if<Event>([](spkt::entity) { return true; });

@@ -151,7 +151,6 @@ void Game::load_scene(std::string_view file)
     d_scene.systems = {
         game_grid_system,
         spkt::script_system,
-        spkt::camera_system,
         path_follower_system,
         spkt::clear_events_system
     };

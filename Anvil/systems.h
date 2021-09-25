@@ -1,5 +1,7 @@
 #pragma once
 #include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Core/events.h>
+#include <Sprocket/Core/log.h>
 
 namespace anvil {
 
