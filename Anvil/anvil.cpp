@@ -2,13 +2,13 @@
 
 #include <Anvil/Inspector.h>
 #include <Anvil/systems.h>
+#include <Anvil/particle_system.h>
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
@@ -212,7 +212,7 @@ void Anvil::on_render()
 
                 d_activeScene->systems = {
                     spkt::physics_system,
-                    spkt::particle_system,
+                    anvil::particle_system,
                     spkt::camera_system,
                     spkt::script_system,
                     anvil::animation_system,

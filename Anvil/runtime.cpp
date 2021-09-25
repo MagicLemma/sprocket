@@ -1,12 +1,12 @@
 #include "Runtime.h"
 
 #include <Anvil/systems.h>
+#include <Anvil/particle_system.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/particle_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
@@ -24,7 +24,7 @@ Runtime::Runtime(spkt::window* window)
         .registry = {},
         .systems = {
             spkt::physics_system,
-            spkt::particle_system,
+            anvil::particle_system,
             spkt::script_system,
             spkt::camera_system,
             anvil::animation_system,

@@ -10,14 +10,16 @@ add_executable(anvil
                anvil.m.cpp
                anvil.cpp
                camera.cpp
-               inspector.cpp)
+               inspector.cpp
+               particle_system.cpp)
 
 target_link_libraries(anvil PRIVATE Sprocket)
 target_include_directories(anvil PUBLIC . ..)
 
 add_executable(runtime
                runtime.m.cpp
-               runtime.cpp)
+               runtime.cpp
+               particle_system.cpp)
 
 target_link_libraries(runtime PRIVATE Sprocket)
 target_include_directories(runtime PUBLIC .. .)
