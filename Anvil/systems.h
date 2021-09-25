@@ -11,4 +11,11 @@ inline void delete_below_50_system(spkt::registry& registry, double)
     });
 }
 
+inline void animation_system(spkt::registry& registry, double dt)
+{
+    for (auto [ac] : registry.view_get<spkt::AnimatedModelComponent>()) {
+        ac.animation_time += (float)dt * ac.animation_speed;
+    }
+}
+
 }

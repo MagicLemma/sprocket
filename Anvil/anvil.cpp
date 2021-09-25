@@ -215,7 +215,7 @@ void Anvil::on_render()
                     spkt::particle_system,
                     spkt::camera_system,
                     spkt::script_system,
-                    spkt::animation_system,
+                    anvil::animation_system,
                     anvil::delete_below_50_system,
                     spkt::clear_events_system
                 };

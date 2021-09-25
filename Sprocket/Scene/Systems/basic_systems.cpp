@@ -57,13 +57,6 @@ void script_system(spkt::registry& registry, double dt)
     }
 }
 
-void animation_system(spkt::registry& registry, double dt)
-{
-    for (auto [ac] : registry.view_get<AnimatedModelComponent>()) {
-        ac.animation_time += (float)dt * ac.animation_speed;
-    }
-}
-
 void camera_system(spkt::registry& registry, double dt)
 {
     const auto& input = *get_singleton<InputSingleton>(registry).input_store;
