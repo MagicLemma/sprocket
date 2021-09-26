@@ -3,7 +3,6 @@
 #include <Sprocket/Core/window.h>
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Utility/input_store.h>
 
 #include <memory>
