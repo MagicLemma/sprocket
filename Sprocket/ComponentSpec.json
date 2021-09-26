@@ -419,16 +419,6 @@
             "display_name": "Camera 3D",
             "attributes": [
                 {
-                    "name": "projection",
-                    "display_name": "Projection",
-                    "type": "glm::mat4",
-                    "default": "{}",
-                    "flags": {
-                        "SCRIPTABLE": false,
-                        "SAVABLE": false
-                    }
-                },
-                {
                     "name": "fov",
                     "display_name": "FOV",
                     "type": "float",

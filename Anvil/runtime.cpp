@@ -7,6 +7,7 @@
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
+#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
@@ -28,7 +29,11 @@ Runtime::Runtime(spkt::window* window)
             spkt::script_system,
             anvil::animation_system,
             anvil::delete_below_50_system,
-            spkt::clear_events_system
+            spkt::clear_events_system,
+            spkt::input_system_end
+        },
+        .event_handlers = {
+            spkt::input_system_on_event
         }
     })
     , d_assetManager()

@@ -7,15 +7,16 @@
 
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/events.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Core/log.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
+#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/UI/ImGuiXtra.h>
-#include <Sprocket/Core/input_codes.h>
-#include <Sprocket/Core/log.h>
-#include <Sprocket/Core/input_codes.h>
 
 #include <cmath>
 
@@ -152,7 +153,12 @@ void Game::load_scene(std::string_view file)
         game_grid_system,
         spkt::script_system,
         path_follower_system,
-        spkt::clear_events_system
+        spkt::clear_events_system,
+        spkt::input_system_end
+    };
+
+    d_scene.event_handlers = {
+        spkt::input_system_on_event
     };
 
     d_paused = false;

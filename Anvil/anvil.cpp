@@ -9,6 +9,7 @@
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
+#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
@@ -216,7 +217,12 @@ void Anvil::on_render()
                     spkt::script_system,
                     anvil::animation_system,
                     anvil::delete_below_50_system,
-                    spkt::clear_events_system
+                    spkt::clear_events_system,
+                    spkt::input_system_end
+                };
+
+                d_activeScene->event_handlers = {
+                    spkt::input_system_on_event
                 };
 
                 d_playingGame = true;

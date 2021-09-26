@@ -24,9 +24,11 @@ Comp& get_singleton(spkt::registry& registry)
 struct scene
 {
     using system = std::function<void(spkt::registry&, double)>;
+    using event_handler = std::function<void(spkt::registry&, spkt::event&)>;
 
-    spkt::registry      registry;
-    std::vector<system> systems;
+    spkt::registry             registry;
+    std::vector<system>        systems;
+    std::vector<event_handler> event_handlers;
 
     void on_update(double dt);
     void on_event(spkt::event& event);
