@@ -1,16 +1,11 @@
 #pragma once
 #include <Sprocket/Core/window.h>
+#include <Sprocket/Core/events.h>
 #include <Sprocket/Scene/ecs.h>
 
 namespace spkt {
 
-class event;
-
-// This is a special system which is designed to get input information (keyboard,
-// mouse and window) into the ECS for systems to make use of. As such, it requires
-// a function that hooks into the event loop. Also, because of frame sensitive information
-// such as mouse offsets, this requires two "system" functions, a begin and end.
-
+// Initialises the input singleton.
 void input_system_init(spkt::registry& regsitry, spkt::window* window);
 
 // Processes events to build up the InputSingleton for the current frame.
