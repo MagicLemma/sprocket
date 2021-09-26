@@ -64,7 +64,7 @@ Anvil::Anvil(spkt::window* window)
     d_window->set_cursor_visibility(true);
 
     d_scene = std::make_shared<spkt::scene>();
-    spkt::add_singleton(d_scene->registry, d_window);
+    spkt::add_singleton(d_scene->registry);
     spkt::load_registry_from_file(d_sceneFile, d_scene->registry);
     d_activeScene = d_scene;
 }
@@ -208,7 +208,8 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<spkt::scene>();
 
-                spkt::add_singleton(d_activeScene->registry, d_window);
+                spkt::add_singleton(d_activeScene->registry);
+                spkt::input_system_init(d_activeScene->registry, d_window);
                 spkt::copy_registry(d_scene->registry, d_activeScene->registry);
 
                 d_activeScene->systems = {

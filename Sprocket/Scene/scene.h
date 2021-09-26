@@ -1,6 +1,5 @@
 #pragma once
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Core/window.h>
 
 #include <memory>
 #include <vector>
@@ -10,7 +9,7 @@ namespace spkt {
 
 class event;
 
-spkt::entity add_singleton(spkt::registry& registry, const spkt::window* window);
+spkt::entity add_singleton(spkt::registry& registry);
 
 template <typename Comp>
 Comp& get_singleton(spkt::registry& registry)
