@@ -1,10 +1,13 @@
 #include "Runtime.h"
 
+#include <Anvil/systems.h>
+#include <Anvil/particle_system.h>
+
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/particle_system.h>
+#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
@@ -22,12 +25,15 @@ Runtime::Runtime(spkt::window* window)
         .registry = {},
         .systems = {
             spkt::physics_system,
-            spkt::particle_system,
+            anvil::particle_system,
             spkt::script_system,
-            spkt::camera_system,
-            spkt::animation_system,
-            spkt::delete_below_50_system,
-            spkt::clear_events_system
+            anvil::animation_system,
+            anvil::delete_below_50_system,
+            spkt::clear_events_system,
+            spkt::input_system_end
+        },
+        .event_handlers = {
+            spkt::input_system_on_event
         }
     })
     , d_assetManager()
@@ -46,7 +52,8 @@ Runtime::Runtime(spkt::window* window)
 {
     d_window->set_cursor_visibility(false);
 
-    spkt::add_singleton(d_scene.registry, d_window);
+    spkt::add_singleton(d_scene.registry);
+    spkt::input_system_init(d_scene.registry, d_window);
     spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
 
     d_runtimeCamera = d_scene.registry.find<spkt::Camera3DComponent>();

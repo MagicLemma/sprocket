@@ -379,7 +379,6 @@ struct reflcomp<Camera3DComponent>
     template <typename Func>
     void for_each_attribute(Camera3DComponent& component, Func&& func)
     {
-        func(reflattr<glm::mat4, false, false>{.name="projection", .display_name="Projection", .value=&component.projection, .metadata={} });
         func(reflattr<float, true, true>{.name="fov", .display_name="FOV", .value=&component.fov, .metadata={} });
         func(reflattr<float, true, true>{.name="pitch", .display_name="Pitch", .value=&component.pitch, .metadata={} });
     }
@@ -387,7 +386,6 @@ struct reflcomp<Camera3DComponent>
     template <typename Func>
     void for_each_attribute(const Camera3DComponent& component, Func&& func) const
     {
-        func(reflattr<const glm::mat4, false, false>{.name="projection", .display_name="Projection", .value=&component.projection, .metadata={} });
         func(reflattr<const float, true, true>{.name="fov", .display_name="FOV", .value=&component.fov, .metadata={} });
         func(reflattr<const float, true, true>{.name="pitch", .display_name="Pitch", .value=&component.pitch, .metadata={} });
     }

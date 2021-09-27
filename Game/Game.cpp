@@ -1,27 +1,46 @@
 #include "Game.h"
 
 #include <Game/grid_helpers.h>
+#include <Game/game_grid.h>
 #include <Game/Palette.h>
 #include <Game/PathCalculator.h>
 
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/events.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Core/log.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/game_grid.h>
+#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/UI/ImGuiXtra.h>
-#include <Sprocket/Core/input_codes.h>
-#include <Sprocket/Core/log.h>
-#include <Sprocket/Core/input_codes.h>
 
 #include <cmath>
 
 using namespace spkt;
 
 namespace {
+
+void path_follower_system(spkt::registry& registry, double dt)
+{
+    for (auto [path, transform] : registry.view_get<spkt::PathComponent, spkt::Transform3DComponent>()) {
+        if (path.markers.empty()) { continue; }
+        
+        glm::vec3 to_dest = path.markers.front() - transform.position;
+        glm::vec3 direction = glm::normalize(to_dest);
+        glm::vec3 advance = path.speed * (float)dt * direction;
+
+        if (glm::length2(advance) < glm::length2(to_dest)) {
+            transform.position += advance;
+        } else {
+            transform.position = path.markers.front();
+            path.markers.pop_front();
+        }
+    }
+}
 
 void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
 {
@@ -126,16 +145,21 @@ void Game::load_scene(std::string_view file)
 {
     auto& registry = d_scene.registry;
     
-    spkt::add_singleton(registry, d_window);
-    spkt::game_grid_system_init(registry);
+    spkt::add_singleton(registry);
+    spkt::input_system_init(registry, d_window);
+    game_grid_system_init(registry);
     spkt::load_registry_from_file(std::string(file), registry);
     
     d_scene.systems = {
-        spkt::game_grid_system,
+        game_grid_system,
         spkt::script_system,
-        spkt::camera_system,
-        spkt::path_follower_system,
-        spkt::clear_events_system
+        path_follower_system,
+        spkt::clear_events_system,
+        spkt::input_system_end
+    };
+
+    d_scene.event_handlers = {
+        spkt::input_system_on_event
     };
 
     d_paused = false;

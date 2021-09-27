@@ -1,7 +1,7 @@
 #pragma once
 #include <Sprocket/Scene/ecs.h>
 
-namespace spkt {
+namespace anvil {
 
 void particle_system(spkt::registry& registry, double dt);
 

@@ -119,7 +119,7 @@ struct physics_runtime
 struct rigid_body_runtime
 {
     spkt::registry*     registry;
-    spkt::entity         entity;
+    spkt::entity        entity;
     rp3d::PhysicsWorld* world;
     rp3d::RigidBody*    body;
 

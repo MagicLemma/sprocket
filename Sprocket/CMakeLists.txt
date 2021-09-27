@@ -47,9 +47,7 @@ add_library(Sprocket STATIC
             Scene/loader.cpp
             Scene/lua_ecs.cpp
 
-            Scene/Systems/particle_system.cpp
             Scene/Systems/physics_system.cpp
-            Scene/Systems/game_grid.cpp
             Scene/Systems/basic_systems.cpp
             Scene/Systems/input_system.cpp
 

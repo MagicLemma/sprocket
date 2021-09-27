@@ -1,6 +1,5 @@
 #pragma once
 #include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Core/window.h>
 
 #include <memory>
 #include <vector>
@@ -10,7 +9,7 @@ namespace spkt {
 
 class event;
 
-spkt::entity add_singleton(spkt::registry& registry, const spkt::window* window);
+spkt::entity add_singleton(spkt::registry& registry);
 
 template <typename Comp>
 Comp& get_singleton(spkt::registry& registry)
@@ -23,10 +22,12 @@ Comp& get_singleton(spkt::registry& registry)
 
 struct scene
 {
-    using system = std::function<void(spkt::registry&, double)>;
+    using system        = std::function<void(spkt::registry&, double)>;
+    using event_handler = std::function<void(spkt::registry&, spkt::event&)>;
 
-    spkt::registry      registry;
-    std::vector<system> systems;
+    spkt::registry             registry;
+    std::vector<system>        systems;
+    std::vector<event_handler> event_handlers;
 
     void on_update(double dt);
     void on_event(spkt::event& event);

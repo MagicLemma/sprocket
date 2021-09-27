@@ -1,13 +1,15 @@
 #include "Anvil.h"
 
 #include <Anvil/Inspector.h>
+#include <Anvil/systems.h>
+#include <Anvil/particle_system.h>
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/particle_system.h>
+#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
@@ -62,7 +64,7 @@ Anvil::Anvil(spkt::window* window)
     d_window->set_cursor_visibility(true);
 
     d_scene = std::make_shared<spkt::scene>();
-    spkt::add_singleton(d_scene->registry, d_window);
+    spkt::add_singleton(d_scene->registry);
     spkt::load_registry_from_file(d_sceneFile, d_scene->registry);
     d_activeScene = d_scene;
 }
@@ -206,17 +208,22 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<spkt::scene>();
 
-                spkt::add_singleton(d_activeScene->registry, d_window);
+                spkt::add_singleton(d_activeScene->registry);
+                spkt::input_system_init(d_activeScene->registry, d_window);
                 spkt::copy_registry(d_scene->registry, d_activeScene->registry);
 
                 d_activeScene->systems = {
                     spkt::physics_system,
-                    spkt::particle_system,
-                    spkt::camera_system,
+                    anvil::particle_system,
                     spkt::script_system,
-                    spkt::animation_system,
-                    spkt::delete_below_50_system,
-                    spkt::clear_events_system
+                    anvil::animation_system,
+                    anvil::delete_below_50_system,
+                    spkt::clear_events_system,
+                    spkt::input_system_end
+                };
+
+                d_activeScene->event_handlers = {
+                    spkt::input_system_on_event
                 };
 
                 d_playingGame = true;
