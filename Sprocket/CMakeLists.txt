@@ -80,7 +80,9 @@ add_library(Sprocket STATIC
             Scripting/lua_script.cpp
             Scripting/lua_maths.cpp
             Scripting/lua_converter.cpp
-            Scripting/lua_input.cpp)
+            Scripting/lua_input.cpp
+            
+            Physics/physics_engine.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       SprocketVendor
