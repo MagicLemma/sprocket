@@ -1,11 +1,11 @@
 #include "game_grid.h"
 
-#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
-#include <Sprocket/Utility/Maths.h>
-#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Utility/input_store.h>
+#include <Sprocket/Utility/Maths.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

@@ -11,7 +11,7 @@
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Scene/camera.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>

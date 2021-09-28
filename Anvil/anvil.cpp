@@ -6,8 +6,8 @@
 #include <Anvil/physics_system.h>
 
 #include <Sprocket/Core/log.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
-#include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/input_system.h>

@@ -1,9 +1,8 @@
 #include "SkyboxRenderer.h"
 
-#include <Sprocket/Graphics/asset_manager.h>
-#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/open_gl.h>
-#include <Sprocket/Scene/camera.h>
+#include <Sprocket/Graphics/CubeMap.h>
 
 #include <glm/glm.hpp>
 
