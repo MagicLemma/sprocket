@@ -16,11 +16,18 @@ namespace {
 
 constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
 
+template <typename T>
+T& get_singleton(spkt::registry& reg)
+{
+    return reg.get<T>(reg.find<T>());
+}
+
 }
 
 void game_grid_system_init(spkt::registry& registry)
 {
-    auto singleton = registry.find<spkt::Singleton>();
+    auto singleton = registry.create();
+    registry.emplace<spkt::Runtime>(singleton);
     registry.emplace<spkt::CameraSingleton>(singleton);
     auto& grid = registry.emplace<spkt::GameGridSingleton>(singleton);
 

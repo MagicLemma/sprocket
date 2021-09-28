@@ -16,7 +16,7 @@ glm::mat4 make_view(const glm::vec3& pos, const glm::quat& ori, float pitch)
 
 glm::mat4 make_proj(float fov)
 {
-    return glm::perspective(fov, Viewport::CurrentAspectRatio(), 0.01f, 1000.0f);
+    return glm::perspective(glm::radians(fov), Viewport::CurrentAspectRatio(), 0.01f, 1000.0f);
 }
 
 }

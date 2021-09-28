@@ -716,6 +716,9 @@ Entities:
       position: [8, 10, 0]
       orientation: [0.6373177, -0.3063107, 0.6373177, 0.3063107]
       scale: [1, 1, 1]
+    Camera3DComponent:
+      fov: 70
+      pitch: 0
     ScriptComponent:
       script: Resources/Scripts/ThirdPersonCamera.lua
       active: true

@@ -24,6 +24,12 @@ using namespace spkt;
 
 namespace {
 
+template <typename T>
+T& get_singleton(spkt::registry& reg)
+{
+    return reg.get<T>(reg.find<T>());
+}
+
 void path_follower_system(spkt::registry& registry, double dt)
 {
     for (auto [path, transform] : registry.view_get<spkt::PathComponent, spkt::Transform3DComponent>()) {
@@ -145,7 +151,6 @@ void Game::load_scene(std::string_view file)
 {
     auto& registry = d_scene.registry;
     
-    spkt::add_singleton(registry);
     spkt::input_system_init(registry, d_window);
     game_grid_system_init(registry);
     spkt::load_registry_from_file(std::string(file), registry);
