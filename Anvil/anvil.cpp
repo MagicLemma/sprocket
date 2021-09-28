@@ -3,6 +3,7 @@
 #include <Anvil/Inspector.h>
 #include <Anvil/systems.h>
 #include <Anvil/particle_system.h>
+#include <Anvil/physics_system.h>
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/material.h>
@@ -10,7 +11,6 @@
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/input_system.h>
-#include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
@@ -213,7 +213,7 @@ void Anvil::on_render()
                 spkt::copy_registry(d_scene->registry, d_activeScene->registry);
 
                 d_activeScene->systems = {
-                    spkt::physics_system,
+                    physics_system,
                     anvil::particle_system,
                     spkt::script_system,
                     anvil::animation_system,

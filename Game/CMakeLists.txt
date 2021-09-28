@@ -18,4 +18,4 @@ add_executable(game
 
 target_link_libraries(game PRIVATE Sprocket)
 
-target_include_directories(game PUBLIC . ..)
+target_include_directories(game PUBLIC .)
