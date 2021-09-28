@@ -16,7 +16,7 @@ add_executable(anvil
                physics_system.cpp)
 
 target_link_libraries(anvil PRIVATE Sprocket reactphysics3d)
-target_include_directories(anvil PUBLIC . ..)
+target_include_directories(anvil PUBLIC .)
 
 add_executable(runtime
                runtime.m.cpp
@@ -25,4 +25,4 @@ add_executable(runtime
                physics_system.cpp)
 
 target_link_libraries(runtime PRIVATE Sprocket reactphysics3d)
-target_include_directories(runtime PUBLIC .. .)
+target_include_directories(runtime PUBLIC .)
