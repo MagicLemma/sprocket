@@ -2,9 +2,9 @@
 
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/buffer.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Scene/camera.h>
 #include <Sprocket/Utility/Hashing.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Utility/views.h>
@@ -141,8 +141,9 @@ void Scene3DRenderer::Draw(
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
 {
-    glm::mat4 proj = spkt::make_proj(registry, camera);
-    glm::mat4 view = spkt::make_view(registry, camera);
+    auto [tc, cc] = registry.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(camera);
+    glm::mat4 view = spkt::make_view(tc.position, tc.orientation, cc.pitch);
+    glm::mat4 proj = spkt::make_proj(cc.fov);
     Draw(registry, proj, view);
 }
 

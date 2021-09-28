@@ -1,11 +1,11 @@
 #include "game_grid.h"
 
-#include <Sprocket/Scene/Camera.h>
+#include <Sprocket/Core/input_codes.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
-#include <Sprocket/Utility/Maths.h>
-#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Utility/input_store.h>
+#include <Sprocket/Utility/Maths.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -62,15 +62,16 @@ void game_grid_system(spkt::registry& registry, double)
         grid.clicked_square = std::nullopt;
     }
 
-    auto& camTr = registry.get<spkt::Transform3DComponent>(cam.camera_entity);
+    const auto& reg = registry;
+    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(cam.camera_entity);
 
-    glm::vec3 cameraPos = camTr.position;
+    glm::vec3 cameraPos = tc.position;
     glm::vec3 direction = spkt::Maths::GetMouseRay(
         input.mouse_position(),
         input.window_width(),
         input.window_height(),
-        spkt::make_view(registry, cam.camera_entity),
-        spkt::make_proj(registry, cam.camera_entity)
+        spkt::make_view(tc.position, tc.orientation, cc.pitch),
+        spkt::make_proj(cc.fov)
     );
 
     float lambda = -cameraPos.y / direction.y;

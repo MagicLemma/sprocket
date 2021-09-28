@@ -6,8 +6,8 @@
 #include <Anvil/physics_system.h>
 
 #include <Sprocket/Core/log.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
-#include <Sprocket/Scene/Camera.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/input_system.h>
@@ -125,13 +125,15 @@ void Anvil::on_update(double dt)
 glm::mat4 Anvil::get_proj_matrix() const
 {
     auto& registry = d_activeScene->registry;
-    return d_playingGame ? spkt::make_proj(registry, d_runtimeCamera) : d_editor_camera.Proj();
+    const auto& cc = registry.get<spkt::Camera3DComponent>(d_runtimeCamera);
+    return d_playingGame ? spkt::make_proj(cc.fov) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
     auto& registry = d_activeScene->registry;
-    return d_playingGame ? spkt::make_view(registry, d_runtimeCamera) : d_editor_camera.View();
+    auto [tc, cc] = std::as_const(registry).get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
+    return d_playingGame ? spkt::make_view(tc.position, tc.orientation, cc.pitch) : d_editor_camera.View();
 }
 
 void Anvil::on_render()

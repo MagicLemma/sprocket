@@ -1,9 +1,8 @@
 #include "SkyboxRenderer.h"
 
-#include <Sprocket/Graphics/asset_manager.h>
-#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/open_gl.h>
-#include <Sprocket/Scene/camera.h>
+#include <Sprocket/Graphics/CubeMap.h>
 
 #include <glm/glm.hpp>
 
@@ -34,7 +33,10 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera)
 {
-    Draw(skybox, spkt::make_proj(registry, camera), spkt::make_view(registry, camera));
+    auto [tc, cc] = registry.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(camera);
+    glm::mat4 view = spkt::make_view(tc.position, tc.orientation, cc.pitch);
+    glm::mat4 proj = spkt::make_proj(cc.fov);
+    Draw(skybox, proj, view);
 }
 
 }
