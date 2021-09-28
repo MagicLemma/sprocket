@@ -216,13 +216,17 @@ void Game::on_event(spkt::event& event)
     if (auto data = event.get_if<mouse_pressed_event>()) {
         auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
+
+            const auto& reg = registry;
+            auto [tc, cc] = reg.get_all<Transform3DComponent, Camera3DComponent>(d_camera);
+
             glm::vec3 cameraPos = tr.position;
             glm::vec3 direction = Maths::GetMouseRay(
                 d_window->mouse_position(),
                 (float)d_window->width(),
                 (float)d_window->height(),
-                spkt::make_view(registry, d_camera),
-                spkt::make_proj(registry, d_camera)
+                spkt::make_view(tc.position, tc.orientation, cc.pitch),
+                spkt::make_proj(cc.fov)
             );
 
             float lambda = -cameraPos.y / direction.y;
@@ -407,8 +411,10 @@ void Game::on_render()
     if (d_mode == Mode::EDITOR) {
         d_devUI.StartFrame();
 
-        glm::mat4 view = spkt::make_view(registry, d_camera);
-        glm::mat4 proj = spkt::make_proj(registry, d_camera);
+        const auto& reg = registry;
+        auto [tc, cc] = reg.get_all<Transform3DComponent, Camera3DComponent>(d_camera);
+        glm::mat4 view = spkt::make_view(tc.position, tc.orientation, cc.pitch);
+        glm::mat4 proj = spkt::make_proj(cc.fov);
 
         SunInfoPanel(d_devUI, d_cycle);
         ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());

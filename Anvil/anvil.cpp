@@ -125,13 +125,15 @@ void Anvil::on_update(double dt)
 glm::mat4 Anvil::get_proj_matrix() const
 {
     auto& registry = d_activeScene->registry;
-    return d_playingGame ? spkt::make_proj(registry, d_runtimeCamera) : d_editor_camera.Proj();
+    const auto& cc = registry.get<spkt::Camera3DComponent>(d_runtimeCamera);
+    return d_playingGame ? spkt::make_proj(cc.fov) : d_editor_camera.Proj();
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
     auto& registry = d_activeScene->registry;
-    return d_playingGame ? spkt::make_view(registry, d_runtimeCamera) : d_editor_camera.View();
+    auto [tc, cc] = std::as_const(registry).get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
+    return d_playingGame ? spkt::make_view(tc.position, tc.orientation, cc.pitch) : d_editor_camera.View();
 }
 
 void Anvil::on_render()

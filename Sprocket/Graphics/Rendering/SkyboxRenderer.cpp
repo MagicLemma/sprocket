@@ -34,7 +34,10 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
 
 void SkyboxRenderer::Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera)
 {
-    Draw(skybox, spkt::make_proj(registry, camera), spkt::make_view(registry, camera));
+    auto [tc, cc] = registry.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(camera);
+    glm::mat4 view = spkt::make_view(tc.position, tc.orientation, cc.pitch);
+    glm::mat4 proj = spkt::make_proj(cc.fov);
+    Draw(skybox, proj, view);
 }
 
 }
