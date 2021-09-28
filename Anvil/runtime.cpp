@@ -24,7 +24,7 @@ Runtime::Runtime(spkt::window* window)
     , d_scene({
         .registry = {},
         .systems = {
-            spkt::physics_system,
+            physics_system,
             anvil::particle_system,
             spkt::script_system,
             anvil::animation_system,

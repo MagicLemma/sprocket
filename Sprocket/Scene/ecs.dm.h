@@ -12,15 +12,16 @@
 #include <utility>
 #include <memory>
 
+struct physics_runtime;
+struct rigid_body_runtime;
+struct collider_runtime;
+
 namespace spkt {
 namespace lua { class script; }
 
 using entity = apx::entity;
 const auto null = apx::null;
 
-struct physics_runtime;
-struct rigid_body_runtime;
-struct collider_runtime;
 class input_store;
 
 struct particle

@@ -213,7 +213,7 @@ void Anvil::on_render()
                 spkt::copy_registry(d_scene->registry, d_activeScene->registry);
 
                 d_activeScene->systems = {
-                    spkt::physics_system,
+                    physics_system,
                     anvil::particle_system,
                     spkt::script_system,
                     anvil::animation_system,
