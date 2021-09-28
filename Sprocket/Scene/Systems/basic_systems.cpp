@@ -31,7 +31,8 @@ void script_system(spkt::registry& registry, double dt)
         if (!sc.active) { continue; }
 
         if (!sc.script_runtime) {
-            input_store& input = *get_singleton<InputSingleton>(registry).input_store;
+            auto input_singleton = registry.find<InputSingleton>();
+            input_store& input = *registry.get<InputSingleton>(input_singleton).input_store;
             
             sc.script_runtime = std::make_shared<lua::script>(sc.script);
             lua::script& script = *sc.script_runtime;
