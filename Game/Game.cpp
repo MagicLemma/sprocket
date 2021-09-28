@@ -219,13 +219,11 @@ void Game::on_event(spkt::event& event)
     }
 
     if (auto data = event.get_if<mouse_pressed_event>()) {
-        auto& tr = registry.get<Transform3DComponent>(d_camera);
         if (data->mods & KeyModifier::CTRL) {
-
             const auto& reg = registry;
             auto [tc, cc] = reg.get_all<Transform3DComponent, Camera3DComponent>(d_camera);
 
-            glm::vec3 cameraPos = tr.position;
+            glm::vec3 cameraPos = tc.position;
             glm::vec3 direction = Maths::GetMouseRay(
                 d_window->mouse_position(),
                 (float)d_window->width(),

@@ -63,7 +63,7 @@ void game_grid_system(spkt::registry& registry, double)
         return !registry.valid(entity);
     });
 
-    if (input.is_mouse_clicked(spkt::Mouse::RIGHT)) {
+    if (input.is_mouse_clicked(spkt::Mouse::LEFT)) {
         grid.clicked_square = grid.hovered_square;
     } else if (input.is_mouse_unclicked(spkt::Mouse::RIGHT)) {
         grid.clicked_square = std::nullopt;

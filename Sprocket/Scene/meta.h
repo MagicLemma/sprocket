@@ -42,26 +42,6 @@ struct reflcomp<Runtime>
 };
 
 template <>
-struct reflcomp<Singleton>
-{
-    static constexpr const char* name          = "Singleton";
-    static constexpr const char* display_name  = "Singleton";
-
-    static constexpr bool        is_savable()    { return false; }
-    static constexpr bool        is_scriptable() { return false; }
-
-    template <typename Func>
-    void for_each_attribute(Singleton& component, Func&& func)
-    {
-    }
-
-    template <typename Func>
-    void for_each_attribute(const Singleton& component, Func&& func) const
-    {
-    }
-};
-
-template <>
 struct reflcomp<Event>
 {
     static constexpr const char* name          = "Event";
@@ -694,7 +674,6 @@ template <typename Func>
 void for_each_component(Func&& func)
 {
     func(reflcomp<Runtime>{});
-    func(reflcomp<Singleton>{});
     func(reflcomp<Event>{});
     func(reflcomp<NameComponent>{});
     func(reflcomp<Transform2DComponent>{});
