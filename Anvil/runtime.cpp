@@ -2,13 +2,13 @@
 
 #include <Anvil/systems.h>
 #include <Anvil/particle_system.h>
+#include <Anvil/physics_system.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/input_system.h>
-#include <Sprocket/Scene/Systems/physics_system.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>

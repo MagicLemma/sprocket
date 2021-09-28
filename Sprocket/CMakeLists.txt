@@ -47,7 +47,6 @@ add_library(Sprocket STATIC
             Scene/loader.cpp
             Scene/lua_ecs.cpp
 
-            Scene/Systems/physics_system.cpp
             Scene/Systems/basic_systems.cpp
             Scene/Systems/input_system.cpp
 
@@ -80,9 +79,7 @@ add_library(Sprocket STATIC
             Scripting/lua_script.cpp
             Scripting/lua_maths.cpp
             Scripting/lua_converter.cpp
-            Scripting/lua_input.cpp
-            
-            Physics/physics_engine.cpp)
+            Scripting/lua_input.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       SprocketVendor
