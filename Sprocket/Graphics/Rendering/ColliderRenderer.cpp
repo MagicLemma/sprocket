@@ -14,6 +14,20 @@ ColliderRenderer::ColliderRenderer()
 {
 }
 
+void ColliderRenderer::draw_box(const glm::mat4& transform, const glm::vec3& half_extents)
+{
+    static const static_mesh s_cube{"Resources/Models/Cube.obj"};
+    d_shader.load("u_model_matrix", glm::scale(transform, half_extents));
+    spkt::draw(s_cube);
+}
+
+void ColliderRenderer::draw_sphere(const glm::mat4& transform, const float radius)
+{
+    static const static_mesh s_sphere{"Resources/Models/LowPolySphere.obj"};
+    d_shader.load("u_model_matrix", glm::scale(transform, {radius, radius, radius}));
+    spkt::draw(s_sphere);
+}
+
 void ColliderRenderer::Draw(
     const spkt::registry& registry,
     const glm::mat4& proj,
@@ -28,28 +42,21 @@ void ColliderRenderer::Draw(
     d_shader.load("u_proj_matrix", proj);
     d_shader.load("u_view_matrix", view);
     
-    static const static_mesh s_cube{"Resources/Models/Cube.obj"};
-    static const static_mesh s_sphere{"Resources/Models/LowPolySphere.obj"};
+    
     static const static_mesh s_hemisphere{"Resources/Models/Hemisphere.obj"};
     static const static_mesh s_cylinder{"Resources/Models/Cylinder.obj"};
 
     for (auto [bc, tc] : registry.view_get<BoxCollider3DComponent, Transform3DComponent>()) {
-        glm::mat4 transform = Maths::Transform(tc.position, tc.orientation);
-        transform *= Maths::Transform(bc.position, bc.orientation);
-        transform = glm::scale(transform, bc.halfExtents);
-        if (bc.applyScale) {
-            transform = glm::scale(transform, tc.scale);
-        }
-        d_shader.load("u_model_matrix", transform);
-        spkt::draw(s_cube);
+        const glm::mat4 transform = Maths::Transform(tc.position, tc.orientation)
+                                  * Maths::Transform(bc.position, bc.orientation);
+        const glm::vec3 scale = bc.applyScale ? bc.halfExtents * tc.scale : bc.halfExtents;      
+        draw_box(transform, scale);
     }
 
-    for (auto [sc, tr] : registry.view_get<SphereCollider3DComponent, Transform3DComponent>()) {
-        glm::mat4 transform = Maths::Transform(tr.position, tr.orientation);
-        transform *= Maths::Transform(sc.position, sc.orientation);
-        transform = glm::scale(transform, {sc.radius, sc.radius, sc.radius});
-        d_shader.load("u_model_matrix", transform);
-        spkt::draw(s_sphere);
+    for (auto [sc, tc] : registry.view_get<SphereCollider3DComponent, Transform3DComponent>()) {
+        const glm::mat4 transform = Maths::Transform(tc.position, tc.orientation)
+                                  * Maths::Transform(sc.position, sc.orientation);
+        draw_sphere(transform, sc.radius);
     }
 
     for (auto [cc, tc] : registry.view_get<CapsuleCollider3DComponent, Transform3DComponent>()) {
