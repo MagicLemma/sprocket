@@ -46,8 +46,6 @@ add_library(Sprocket STATIC
             Scene/loader.cpp
             Scene/lua_ecs.cpp
             
-            Scene/Systems/input_system.cpp
-            
             Graphics/Animation.cpp
             Graphics/buffer_element_types.cpp
             Graphics/buffer.cpp

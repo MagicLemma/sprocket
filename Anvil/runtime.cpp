@@ -7,7 +7,6 @@
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scene/loader.h>
-#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>
@@ -29,10 +28,10 @@ Runtime::Runtime(spkt::window* window)
             anvil::animation_system,
             anvil::delete_below_50_system,
             anvil::clear_events_system,
-            spkt::input_system_end
+            anvil::input_system_end
         },
         .event_handlers = {
-            spkt::input_system_on_event
+            anvil::input_system_on_event
         }
     })
     , d_assetManager()
@@ -51,7 +50,7 @@ Runtime::Runtime(spkt::window* window)
 {
     d_window->set_cursor_visibility(false);
 
-    spkt::input_system_init(d_scene.registry, d_window);
+    anvil::input_system_init(d_scene.registry, d_window);
     spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
 
     d_runtimeCamera = d_scene.registry.find<spkt::Camera3DComponent>();

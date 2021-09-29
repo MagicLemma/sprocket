@@ -15,7 +15,6 @@
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
-#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 
 #include <cmath>
@@ -51,6 +50,27 @@ void path_follower_system(spkt::registry& registry, double dt)
             path.markers.pop_front();
         }
     }
+}
+
+void input_system_init(spkt::registry& registry, spkt::window* window)
+{
+    assert(window);
+    auto singleton = registry.create();
+    registry.emplace<spkt::Runtime>(singleton);
+    auto& is = registry.emplace<spkt::InputSingleton>(singleton);
+    is.input_store = std::make_shared<spkt::input_store>(window);
+}
+
+void input_system_on_event(spkt::registry& registry, spkt::event& event)
+{
+    auto singleton = registry.find<spkt::InputSingleton>();
+    registry.get<spkt::InputSingleton>(singleton).input_store->on_event(event);
+}
+
+void input_system_end(spkt::registry& registry, double dt)
+{
+    auto singleton = registry.find<spkt::InputSingleton>();
+    registry.get<spkt::InputSingleton>(singleton).input_store->end_frame();
 }
 
 void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
@@ -156,7 +176,7 @@ void Game::load_scene(std::string_view file)
 {
     auto& registry = d_scene.registry;
     
-    spkt::input_system_init(registry, d_window);
+    input_system_init(registry, d_window);
     game_grid_system_init(registry);
     spkt::load_registry_from_file(std::string(file), registry);
     
@@ -165,11 +185,11 @@ void Game::load_scene(std::string_view file)
         script_system,
         path_follower_system,
         clear_events_system,
-        spkt::input_system_end
+        input_system_end
     };
 
     d_scene.event_handlers = {
-        spkt::input_system_on_event
+        input_system_on_event
     };
 
     d_paused = false;

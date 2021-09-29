@@ -1,34 +1,15 @@
 #pragma once
-#include <Sprocket/Core/events.h>
-#include <Sprocket/Core/log.h>
-#include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/lua_ecs.h>
+#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Scripting/lua_input.h>
 #include <Sprocket/Scripting/lua_maths.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Utility/input_store.h>
 
-namespace anvil {
-
-inline void delete_below_50_system(spkt::registry& registry, double)
-{
-    registry.destroy_if<spkt::Transform3DComponent>([&](spkt::entity entity) {
-        const auto& t = registry.get<spkt::Transform3DComponent>(entity);
-        return t.position.y < -50.0f;
-    });
-}
-
-inline void animation_system(spkt::registry& registry, double dt)
-{
-    for (auto [ac] : registry.view_get<spkt::AnimatedModelComponent>()) {
-        ac.animation_time += (float)dt * ac.animation_speed;
-    }
-}
-
-inline void clear_events_system(spkt::registry& registry, double dt)
-{
-    registry.destroy_if<spkt::Event>([](spkt::entity) { return true; });
-}
+#include <functional>
+#include <memory>
+#include <utility>
+#include <vector>
 
 inline void script_system(spkt::registry& registry, double dt)
 {
@@ -67,27 +48,4 @@ inline void script_system(spkt::registry& registry, double dt)
     for (auto& command : commands) {
         command();
     }
-}
-
-inline void input_system_init(spkt::registry& registry, spkt::window* window)
-{
-    assert(window);
-    auto singleton = registry.create();
-    registry.emplace<spkt::Runtime>(singleton);
-    auto& is = registry.emplace<spkt::InputSingleton>(singleton);
-    is.input_store = std::make_shared<spkt::input_store>(window);
-}
-
-inline void input_system_on_event(spkt::registry& registry, spkt::event& event)
-{
-    auto singleton = registry.find<spkt::InputSingleton>();
-    registry.get<spkt::InputSingleton>(singleton).input_store->on_event(event);
-}
-
-inline void input_system_end(spkt::registry& registry, double dt)
-{
-    auto singleton = registry.find<spkt::InputSingleton>();
-    registry.get<spkt::InputSingleton>(singleton).input_store->end_frame();
-}
-
 }
