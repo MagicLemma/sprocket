@@ -20,4 +20,9 @@ inline void animation_system(spkt::registry& registry, double dt)
     }
 }
 
+inline void clear_events_system(spkt::registry& registry, double dt)
+{
+    registry.destroy_if<spkt::Event>([](spkt::entity) { return true; });
+}
+
 }

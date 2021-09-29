@@ -30,6 +30,11 @@ T& get_singleton(spkt::registry& reg)
     return reg.get<T>(reg.find<T>());
 }
 
+void clear_events_system(spkt::registry& registry, double dt)
+{
+    registry.destroy_if<spkt::Event>([](spkt::entity) { return true; });
+}
+
 void path_follower_system(spkt::registry& registry, double dt)
 {
     for (auto [path, transform] : registry.view_get<spkt::PathComponent, spkt::Transform3DComponent>()) {
@@ -159,7 +164,7 @@ void Game::load_scene(std::string_view file)
         game_grid_system,
         spkt::script_system,
         path_follower_system,
-        spkt::clear_events_system,
+        clear_events_system,
         spkt::input_system_end
     };
 

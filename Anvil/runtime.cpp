@@ -29,7 +29,7 @@ Runtime::Runtime(spkt::window* window)
             spkt::script_system,
             anvil::animation_system,
             anvil::delete_below_50_system,
-            spkt::clear_events_system,
+            anvil::clear_events_system,
             spkt::input_system_end
         },
         .event_handlers = {
