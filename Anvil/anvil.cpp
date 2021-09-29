@@ -9,8 +9,6 @@
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Scene/Loader.h>
-#include <Sprocket/Scene/Systems/basic_systems.h>
-#include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
@@ -219,21 +217,21 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<spkt::scene>();
 
-                spkt::input_system_init(d_activeScene->registry, d_window);
+                anvil::input_system_init(d_activeScene->registry, d_window);
                 spkt::copy_registry(d_scene->registry, d_activeScene->registry);
 
                 d_activeScene->systems = {
                     physics_system,
                     anvil::particle_system,
-                    spkt::script_system,
+                    anvil::script_system,
                     anvil::animation_system,
                     anvil::delete_below_50_system,
-                    spkt::clear_events_system,
-                    spkt::input_system_end
+                    anvil::clear_events_system,
+                    anvil::input_system_end
                 };
 
                 d_activeScene->event_handlers = {
-                    spkt::input_system_on_event
+                    anvil::input_system_on_event
                 };
 
                 d_playingGame = true;

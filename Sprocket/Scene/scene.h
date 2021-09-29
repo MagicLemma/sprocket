@@ -1,7 +1,6 @@
 #pragma once
 #include <Sprocket/Scene/ecs.h>
 
-#include <memory>
 #include <vector>
 #include <functional>
 
