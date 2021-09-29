@@ -7,7 +7,18 @@
 
     
         {
-            "name": "Game",
+            "name": "Game (RelWithDebInfo)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Game/RelWithDebInfo/Game.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false
+        },
+        {
+            "name": "Game (Debug)",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/Game/Debug/Game.exe",

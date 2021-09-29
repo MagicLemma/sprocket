@@ -25,6 +25,12 @@
 
 namespace {
 
+template <typename T>
+T& get_singleton(spkt::registry& reg)
+{
+    return reg.get<T>(reg.find<T>());
+}
+
 std::string entiy_name(spkt::registry& registry, spkt::entity entity)
 {
     if (registry.has<spkt::NameComponent>(entity)) {
@@ -64,7 +70,6 @@ Anvil::Anvil(spkt::window* window)
     d_window->set_cursor_visibility(true);
 
     d_scene = std::make_shared<spkt::scene>();
-    spkt::add_singleton(d_scene->registry);
     spkt::load_registry_from_file(d_sceneFile, d_scene->registry);
     d_activeScene = d_scene;
 }
@@ -124,16 +129,20 @@ void Anvil::on_update(double dt)
 
 glm::mat4 Anvil::get_proj_matrix() const
 {
-    auto& registry = d_activeScene->registry;
-    const auto& cc = registry.get<spkt::Camera3DComponent>(d_runtimeCamera);
-    return d_playingGame ? spkt::make_proj(cc.fov) : d_editor_camera.Proj();
+    if (!d_playingGame) { return d_editor_camera.Proj(); }
+
+    const auto& reg = d_activeScene->registry;
+    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
+    return spkt::make_proj(cc.fov);
 }
 
 glm::mat4 Anvil::get_view_matrix() const
 {
-    auto& registry = d_activeScene->registry;
-    auto [tc, cc] = std::as_const(registry).get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
-    return d_playingGame ? spkt::make_view(tc.position, tc.orientation, cc.pitch) : d_editor_camera.View();
+    if (!d_playingGame) { return d_editor_camera.View(); }
+
+    const auto& reg = d_activeScene->registry;
+    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
+    return spkt::make_view(tc.position, tc.orientation, cc.pitch);
 }
 
 void Anvil::on_render()
@@ -210,7 +219,6 @@ void Anvil::on_render()
             if (ImGui::MenuItem("Run")) {
                 d_activeScene = std::make_shared<spkt::scene>();
 
-                spkt::add_singleton(d_activeScene->registry);
                 spkt::input_system_init(d_activeScene->registry, d_window);
                 spkt::copy_registry(d_scene->registry, d_activeScene->registry);
 

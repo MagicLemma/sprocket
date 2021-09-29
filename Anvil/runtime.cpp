@@ -52,7 +52,6 @@ Runtime::Runtime(spkt::window* window)
 {
     d_window->set_cursor_visibility(false);
 
-    spkt::add_singleton(d_scene.registry);
     spkt::input_system_init(d_scene.registry, d_window);
     spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
 

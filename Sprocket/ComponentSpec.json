@@ -14,15 +14,6 @@
             "attributes": []
         },
         {
-            "name": "Singleton",
-            "display_name": "Singleton",
-            "flags": {
-                "SCRIPTABLE": false,
-                "SAVABLE": false
-            },
-            "attributes": []
-        },
-        {
             "name": "Event",
             "display_name": "Event",
             "flags": {

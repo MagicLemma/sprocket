@@ -9,15 +9,6 @@
 
 namespace spkt {
 
-spkt::entity add_singleton(spkt::registry& registry)
-{
-    auto singleton = registry.create();
-    registry.emplace<Runtime>(singleton);
-    registry.emplace<Singleton>(singleton);
-    registry.emplace<NameComponent>(singleton, "::RuntimeSingleton");
-    return singleton;
-}
-
 void scene::on_update(double dt)
 {
     std::ranges::for_each(systems, [&](const system& sys) {

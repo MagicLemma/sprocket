@@ -40,10 +40,6 @@ struct Runtime
 {
 };
 
-struct Singleton
-{
-};
-
 struct Event
 {
 };
@@ -216,7 +212,6 @@ struct ParticleSingleton
 
 using registry = apx::registry<
     Runtime,
-    Singleton,
     Event,
     NameComponent,
     Transform2DComponent,

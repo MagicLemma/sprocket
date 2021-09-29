@@ -16,11 +16,18 @@ namespace {
 
 constexpr const char* GRID_SQUARE = "Resources/Models/Square.obj";
 
+template <typename T>
+T& get_singleton(spkt::registry& reg)
+{
+    return reg.get<T>(reg.find<T>());
+}
+
 }
 
 void game_grid_system_init(spkt::registry& registry)
 {
-    auto singleton = registry.find<spkt::Singleton>();
+    auto singleton = registry.create();
+    registry.emplace<spkt::Runtime>(singleton);
     registry.emplace<spkt::CameraSingleton>(singleton);
     auto& grid = registry.emplace<spkt::GameGridSingleton>(singleton);
 
@@ -56,7 +63,7 @@ void game_grid_system(spkt::registry& registry, double)
         return !registry.valid(entity);
     });
 
-    if (input.is_mouse_clicked(spkt::Mouse::RIGHT)) {
+    if (input.is_mouse_clicked(spkt::Mouse::LEFT)) {
         grid.clicked_square = grid.hovered_square;
     } else if (input.is_mouse_unclicked(spkt::Mouse::RIGHT)) {
         grid.clicked_square = std::nullopt;
