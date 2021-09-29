@@ -9,7 +9,6 @@
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Scene/Loader.h>
-#include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
@@ -225,7 +224,7 @@ void Anvil::on_render()
                 d_activeScene->systems = {
                     physics_system,
                     anvil::particle_system,
-                    spkt::script_system,
+                    anvil::script_system,
                     anvil::animation_system,
                     anvil::delete_below_50_system,
                     anvil::clear_events_system,

@@ -2,6 +2,7 @@
 
 #include <Game/grid_helpers.h>
 #include <Game/game_grid.h>
+#include <Game/script_system.h>
 #include <Game/Palette.h>
 #include <Game/PathCalculator.h>
 
@@ -14,7 +15,6 @@
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
-#include <Sprocket/Scene/Systems/basic_systems.h>
 #include <Sprocket/Scene/Systems/input_system.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 
@@ -162,7 +162,7 @@ void Game::load_scene(std::string_view file)
     
     d_scene.systems = {
         game_grid_system,
-        spkt::script_system,
+        script_system,
         path_follower_system,
         clear_events_system,
         spkt::input_system_end
