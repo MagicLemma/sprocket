@@ -46,6 +46,35 @@ bool SubstringCI(std::string_view string, std::string_view substr) {
     return it != string.end();
 }
 
+void draw_colliders(
+    const spkt::collider_renderer& renderer,
+    const spkt::registry& registry,
+    const glm::mat4& proj,
+    const glm::mat4& view)
+{
+    using namespace spkt::Maths;
+    auto context = renderer.begin_frame(proj, view);
+
+    const auto& make_transform = [](const auto& a, const auto& b) {
+        return Transform(a.position, a.orientation) * Transform(b.position, b.orientation);
+    };
+
+    for (auto [bc, tc] : registry.view_get<spkt::BoxCollider3DComponent, spkt::Transform3DComponent>()) {
+        const glm::vec3 scale = bc.applyScale ? bc.halfExtents * tc.scale : bc.halfExtents;      
+        renderer.draw_box(make_transform(tc, bc), scale);
+    }
+
+    for (auto [sc, tc] : registry.view_get<spkt::SphereCollider3DComponent, spkt::Transform3DComponent>()) {
+        renderer.draw_sphere(make_transform(tc, sc), sc.radius);
+    }
+
+    for (auto [cc, tc] : registry.view_get<spkt::CapsuleCollider3DComponent, spkt::Transform3DComponent>()) {
+        renderer.draw_capsule(make_transform(tc, cc), cc.radius, cc.height);
+    }
+
+    renderer.end_frame();
+}
+
 }
 
 Anvil::Anvil(spkt::window* window)
@@ -163,26 +192,7 @@ void Anvil::on_render()
     d_skybox_renderer.Draw(d_skybox, proj, view);
 
     if (d_showColliders) {
-        auto context = d_collider_renderer.begin_frame(proj, view);
-
-        const auto& make_transform = [](const auto& a, const auto& b) {
-            return Transform(a.position, a.orientation) * Transform(b.position, b.orientation);
-        };
-
-        for (auto [bc, tc] : registry.view_get<spkt::BoxCollider3DComponent, spkt::Transform3DComponent>()) {
-            const glm::vec3 scale = bc.applyScale ? bc.halfExtents * tc.scale : bc.halfExtents;      
-            d_collider_renderer.draw_box(make_transform(tc, bc), scale);
-        }
-
-        for (auto [sc, tc] : registry.view_get<spkt::SphereCollider3DComponent, spkt::Transform3DComponent>()) {
-            d_collider_renderer.draw_sphere(make_transform(tc, sc), sc.radius);
-        }
-
-        for (auto [cc, tc] : registry.view_get<spkt::CapsuleCollider3DComponent, spkt::Transform3DComponent>()) {
-            d_collider_renderer.draw_capsule(make_transform(tc, cc), cc.radius, cc.height);
-        }
-
-        d_collider_renderer.end_frame();
+        draw_colliders(d_collider_renderer, registry, proj, view);
     }
 
     d_viewport.unbind();

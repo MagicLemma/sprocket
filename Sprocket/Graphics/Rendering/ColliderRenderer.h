@@ -16,12 +16,12 @@ class collider_renderer
 public:
     collider_renderer();
 
-    std::unique_ptr<spkt::render_context> begin_frame(const glm::mat4& proj, const glm::mat4& view);
-    void end_frame();
+    std::unique_ptr<spkt::render_context> begin_frame(const glm::mat4& proj, const glm::mat4& view) const;
+    void end_frame() const;
 
-    void draw_box(const glm::mat4& transform, const glm::vec3& half_extents);
-    void draw_sphere(const glm::mat4& transform, const float radius);
-    void draw_capsule(const glm::mat4& transform, const float radius, const float height);
+    void draw_box(const glm::mat4& transform, const glm::vec3& half_extents) const;
+    void draw_sphere(const glm::mat4& transform, const float radius) const;
+    void draw_capsule(const glm::mat4& transform, const float radius, const float height) const;
 };
 
 }
