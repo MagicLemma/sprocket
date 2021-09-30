@@ -5,14 +5,15 @@
 #include <Anvil/particle_system.h>
 #include <Anvil/physics_system.h>
 
+#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
-#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Vendor/imgui/imgui.h>
 
@@ -47,15 +48,18 @@ bool SubstringCI(std::string_view string, std::string_view substr) {
 }
 
 void draw_colliders(
-    const spkt::collider_renderer& renderer,
+    const spkt::geometry_renderer& renderer,
     const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
 {
-    using namespace spkt::Maths;
-    auto context = renderer.begin_frame(proj, view);
+    spkt::render_context rc;
+    rc.wireframe(true);
+
+    renderer.begin_frame(proj, view);
 
     const auto& make_transform = [](const auto& a, const auto& b) {
+        using namespace spkt::Maths;
         return Transform(a.position, a.orientation) * Transform(b.position, b.orientation);
     };
 
