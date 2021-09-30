@@ -28,7 +28,7 @@ class Anvil
     // Rendering
     spkt::Scene3DRenderer d_entity_renderer;
     spkt::SkyboxRenderer d_skybox_renderer;
-    spkt::ColliderRenderer d_collider_renderer;
+    spkt::collider_renderer d_collider_renderer;
 
     spkt::frame_buffer d_viewport;
     glm::ivec2 d_viewport_size;

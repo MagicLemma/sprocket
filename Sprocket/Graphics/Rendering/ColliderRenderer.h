@@ -1,6 +1,6 @@
 #pragma once
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Graphics/shader.h>
-#include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
 
@@ -8,22 +8,20 @@
 
 namespace spkt {
 
-class VertexArray;
-
-class ColliderRenderer
+// TODO: Make this an instanced renderer, no need to return a render context pointer then.
+class collider_renderer
 {
-    shader  d_shader;
+    spkt::shader d_shader;
 
 public:
-    ColliderRenderer();
+    collider_renderer();
 
-    void Draw(const spkt::registry& registry, spkt::entity camera);
-    void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
+    std::unique_ptr<spkt::render_context> begin_frame(const glm::mat4& proj, const glm::mat4& view);
+    void end_frame();
 
     void draw_box(const glm::mat4& transform, const glm::vec3& half_extents);
     void draw_sphere(const glm::mat4& transform, const float radius);
-
-    shader& GetShader() { return d_shader; }
+    void draw_capsule(const glm::mat4& transform, const float radius, const float height);
 };
 
 }

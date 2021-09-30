@@ -92,9 +92,13 @@ void render_context::set_scissor_window(const glm::vec4& region) const
     glScissor(region.x, height - region.y - region.w, region.z, region.w);
 }
 
-void render_context::polygon_mode(int mode) const
+void render_context::wireframe(bool enabled) const
 {
-    glPolygonMode(GL_FRONT_AND_BACK, mode);
+    if (enabled) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, d_polygon_mode[0]);
+    }
 }
 
 }

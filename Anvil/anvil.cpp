@@ -145,6 +145,7 @@ glm::mat4 Anvil::get_view_matrix() const
 
 void Anvil::on_render()
 {
+    using namespace spkt::Maths;
     auto& registry = d_activeScene->registry;
 
     // If the size of the viewport has changed since the previous frame, recreate
@@ -160,8 +161,28 @@ void Anvil::on_render()
 
     d_entity_renderer.Draw(registry, proj, view);
     d_skybox_renderer.Draw(d_skybox, proj, view);
+
     if (d_showColliders) {
-        d_collider_renderer.Draw(registry, proj, view);
+        auto context = d_collider_renderer.begin_frame(proj, view);
+
+        const auto& make_transform = [](const auto& a, const auto& b) {
+            return Transform(a.position, a.orientation) * Transform(b.position, b.orientation);
+        };
+
+        for (auto [bc, tc] : registry.view_get<spkt::BoxCollider3DComponent, spkt::Transform3DComponent>()) {
+            const glm::vec3 scale = bc.applyScale ? bc.halfExtents * tc.scale : bc.halfExtents;      
+            d_collider_renderer.draw_box(make_transform(tc, bc), scale);
+        }
+
+        for (auto [sc, tc] : registry.view_get<spkt::SphereCollider3DComponent, spkt::Transform3DComponent>()) {
+            d_collider_renderer.draw_sphere(make_transform(tc, sc), sc.radius);
+        }
+
+        for (auto [cc, tc] : registry.view_get<spkt::CapsuleCollider3DComponent, spkt::Transform3DComponent>()) {
+            d_collider_renderer.draw_capsule(make_transform(tc, cc), cc.radius, cc.height);
+        }
+
+        d_collider_renderer.end_frame();
     }
 
     d_viewport.unbind();
