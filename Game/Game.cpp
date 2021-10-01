@@ -1,9 +1,9 @@
 #include "Game.h"
 
-#include <Game/grid_helpers.h>
 #include <Game/game_grid.h>
-#include <Game/script_system.h>
+#include <Game/grid_helpers.h>
 #include <Game/Palette.h>
+#include <Game/script_system.h>
 #include <Game/PathCalculator.h>
 
 #include <Sprocket/Audio/Listener.h>
@@ -13,8 +13,9 @@
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/camera.h>
-#include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Graphics/render_context.h>
+#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/views.h>
@@ -422,7 +423,6 @@ void Game::on_render()
     auto view = get_view_matrix();
 
     d_entityRenderer.EnableShadows(d_shadowMap);
-    d_entityRenderer.Draw(registry, d_camera);
     draw_scene(d_entityRenderer, registry, proj, view);
 
     if (d_paused) {

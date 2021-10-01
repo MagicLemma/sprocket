@@ -3,7 +3,6 @@
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/shadow_map.h>
 #include <Sprocket/Graphics/buffer.h>
-#include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Utility/Hashing.h>
 
 #include <memory>
@@ -56,9 +55,6 @@ class Scene3DRenderer
 
 public:
     Scene3DRenderer(asset_manager* assetManager);
-
-    void Draw(const spkt::registry& registry, spkt::entity camera);
-    void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
 
     void begin_frame(const glm::mat4& proj, const glm::mat4& view);
     void end_frame();

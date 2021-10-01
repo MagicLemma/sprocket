@@ -26,35 +26,6 @@ std::array<glm::mat4, MAX_BONES> DefaultBoneTransforms() {
     return arr;
 };
 
-void upload_uniforms(
-    const shader& shader,
-    const spkt::registry& registry,
-    const glm::mat4& proj,
-    const glm::mat4& view
-)
-{
-    shader.bind();
-    
-    // Load point lights to shader
-    std::array<glm::vec3, MAX_NUM_LIGHTS> positions = {};
-    std::array<glm::vec3, MAX_NUM_LIGHTS> colours = {};
-    std::array<float, MAX_NUM_LIGHTS> brightnesses = {};
-
-    for (auto [index, data] : registry.view_get<LightComponent, Transform3DComponent>()
-                            | std::views::take(MAX_NUM_LIGHTS)
-                            | spkt::views::enumerate())
-    {
-        auto [light, transform] = data;
-        positions[index] = transform.position;
-        colours[index] = light.colour;
-        brightnesses[index] = light.brightness;
-    }
-
-    shader.load("u_light_pos", positions);
-    shader.load("u_light_colour", colours);
-    shader.load("u_light_brightness", brightnesses);
-}
-
 void upload_material(
     const shader& shader,
     const material& material,
@@ -102,76 +73,6 @@ void Scene3DRenderer::EnableShadows(const shadow_map& shadowMap)
     d_staticShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
     d_animatedShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
     shadowMap.get_texture().bind(SHADOW_MAP_SLOT);
-}
-
-void Scene3DRenderer::Draw(
-    const spkt::registry& registry,
-    const glm::mat4& proj,
-    const glm::mat4& view)
-{
-    begin_frame(proj, view);
-    spkt::render_context rc;
-    rc.face_culling(true);
-    rc.depth_testing(true);
-
-    if (auto a = registry.find<AmbienceComponent>(); registry.valid(a)) {
-        const auto& ambience = registry.get<AmbienceComponent>(a);
-        set_ambience(ambience.colour, ambience.brightness);
-    }
-
-    if (auto s = registry.find<SunComponent>(); registry.valid(s)) {
-        const auto& sun = registry.get<SunComponent>(s);
-        set_sunlight(sun.colour, sun.direction, sun.brightness);
-    }
-
-    std::array<glm::vec3, MAX_NUM_LIGHTS> positions = {};
-    std::array<glm::vec3, MAX_NUM_LIGHTS> colours = {};
-    std::array<float, MAX_NUM_LIGHTS> brightnesses = {};
-    for (auto [index, data] : registry.view_get<LightComponent, Transform3DComponent>()
-                            | std::views::take(MAX_NUM_LIGHTS)
-                            | spkt::views::enumerate())
-    {
-        auto [light, transform] = data;
-        positions[index] = transform.position;
-        colours[index] = light.colour;
-        brightnesses[index] = light.brightness;
-    }
-    set_lights(positions, colours, brightnesses);
-
-    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
-        draw_static_mesh(
-            tc.position, tc.orientation, tc.scale,
-            mc.mesh, mc.material
-        );
-    }
-
-    for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
-        draw_animated_mesh(
-            tc.position, tc.orientation, tc.scale,
-            mc.mesh, mc.material,
-            mc.animation_name, mc.animation_time
-        );
-    }
-
-    for (auto [ps] : registry.view_get<ParticleSingleton>()) {
-        std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
-        for (const auto& particle : *ps.particles) {
-            if (particle.life > 0.0) {
-                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
-            }
-        }
-        draw_particles(instance_data);
-    };
-
-    end_frame();
-}
-
-void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
-{
-    auto [tc, cc] = registry.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(camera);
-    glm::mat4 view = spkt::make_view(tc.position, tc.orientation, cc.pitch);
-    glm::mat4 proj = spkt::make_proj(cc.fov);
-    Draw(registry, proj, view);
 }
 
 void Scene3DRenderer::begin_frame(const glm::mat4& proj, const glm::mat4& view)
