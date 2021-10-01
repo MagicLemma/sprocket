@@ -141,7 +141,7 @@ void Anvil::on_render()
 
     d_viewport.bind();
 
-    const auto [proj, view] = std::invoke([&]() -> std::pair<glm::mat4, glm::mat4> {
+    const auto [proj, view] = std::invoke([&] {
         if (d_playingGame) {
             return anvil::get_proj_view_matrices(registry, d_runtimeCamera);
         }
