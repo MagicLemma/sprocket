@@ -419,8 +419,7 @@ void Game::on_render()
         d_post_processor.start_frame();
     }
 
-    auto proj = get_proj_matrix();
-    auto view = get_view_matrix();
+    auto [proj, view] = get_proj_view_matrices();
 
     d_entityRenderer.EnableShadows(d_shadowMap);
     draw_scene(d_entityRenderer, registry, proj, view);
@@ -629,16 +628,12 @@ void Game::on_render()
     d_escapeMenu.EndFrame();
 }
 
-glm::mat4 Game::get_proj_matrix() const
+std::pair<glm::mat4, glm::mat4> Game::get_proj_view_matrices() const
 {
     const auto& reg = d_scene.registry;
     auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_camera);
-    return spkt::make_proj(cc.fov);
-}
-
-glm::mat4 Game::get_view_matrix() const
-{
-    const auto& reg = d_scene.registry;
-    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_camera);
-    return spkt::make_view(tc.position, tc.orientation, cc.pitch);
+    return { 
+        spkt::make_proj(cc.fov),
+        spkt::make_view(tc.position, tc.orientation, cc.pitch)
+    };
 }

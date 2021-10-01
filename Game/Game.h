@@ -63,6 +63,5 @@ public:
 
     void load_scene(std::string_view file);
 
-    glm::mat4 get_proj_matrix() const;
-    glm::mat4 get_view_matrix() const;
+    std::pair<glm::mat4, glm::mat4> get_proj_view_matrices() const;
 };
