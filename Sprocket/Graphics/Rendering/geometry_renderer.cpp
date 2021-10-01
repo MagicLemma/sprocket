@@ -1,4 +1,4 @@
-#include "ColliderRenderer.h"
+#include "geometry_renderer.h"
 
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/open_gl.h>

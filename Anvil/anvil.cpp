@@ -196,7 +196,7 @@ void Anvil::on_render()
     d_skybox_renderer.Draw(d_skybox, proj, view);
 
     if (d_showColliders) {
-        draw_colliders(d_collider_renderer, registry, proj, view);
+        draw_colliders(d_geometry_renderer, registry, proj, view);
     }
 
     d_viewport.unbind();
