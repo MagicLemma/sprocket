@@ -64,19 +64,11 @@ void draw_scene(
         renderer.set_sunlight(sun.colour, sun.direction, sun.brightness);
     }
 
-    std::array<glm::vec3, spkt::MAX_NUM_LIGHTS> positions = {};
-    std::array<glm::vec3, spkt::MAX_NUM_LIGHTS> colours = {};
-    std::array<float, spkt::MAX_NUM_LIGHTS> brightnesses = {};
-    for (auto [index, data] : registry.view_get<spkt::LightComponent, spkt::Transform3DComponent>()
-                            | std::views::take(spkt::MAX_NUM_LIGHTS)
-                            | spkt::views::enumerate())
+    for (auto [light, transform] : registry.view_get<spkt::LightComponent, spkt::Transform3DComponent>()
+                                 | std::views::take(spkt::MAX_NUM_LIGHTS))
     {
-        auto [light, transform] = data;
-        positions[index] = transform.position;
-        colours[index] = light.colour;
-        brightnesses[index] = light.brightness;
+        renderer.add_light(transform.position, light.colour, light.brightness);
     }
-    renderer.set_lights(positions, colours, brightnesses);
 
     for (auto [mc, tc] : registry.view_get<spkt::StaticModelComponent, spkt::Transform3DComponent>()) {
         renderer.draw_static_mesh(

@@ -96,6 +96,13 @@ void Scene3DRenderer::end_frame()
 {
     assert(d_frame_data);
 
+    for_each_shader([&](spkt::shader& shader) {
+        shader.bind();
+        shader.load("u_light_pos", d_frame_data->light_positions);
+        shader.load("u_light_colour",  d_frame_data->light_colours);
+        shader.load("u_light_brightness",  d_frame_data->light_brightnesses);
+    });
+
     d_staticShader.bind();
     for (const auto& [key, data] : d_frame_data->static_mesh_draw_commands) {
         const auto& mesh = d_assetManager->get<static_mesh>(key.first);
@@ -130,20 +137,17 @@ void Scene3DRenderer::set_sunlight(
     });
 }
 
-void Scene3DRenderer::set_lights(
-    std::span<const glm::vec3> positions,
-    std::span<const glm::vec3> colours,
-    std::span<const float> brightnesses)
+void Scene3DRenderer::add_light(
+    const glm::vec3& position, const glm::vec3& colour, const float brightness)
 {
-    assert(positions.size() == colours.size());
-    assert(positions.size() == brightnesses.size());
-    assert(positions.size() <= MAX_NUM_LIGHTS);
-    for_each_shader([&](spkt::shader& shader) {
-        shader.bind();
-        shader.load("u_light_pos", positions);
-        shader.load("u_light_colour", colours);
-        shader.load("u_light_brightness", brightnesses);
-    });
+    assert(d_frame_data);
+    auto& index = d_frame_data->next_light_index;
+    if (index == spkt::MAX_NUM_LIGHTS) { return; }
+
+    d_frame_data->light_positions[index] = position;
+    d_frame_data->light_colours[index] = colour;
+    d_frame_data->light_brightnesses[index] = brightness;
+    ++index;
 }
 
 void Scene3DRenderer::draw_static_mesh(

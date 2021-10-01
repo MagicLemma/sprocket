@@ -35,6 +35,11 @@ struct frame_data
         std::vector<spkt::model_instance>,
         spkt::hash_pair
     > static_mesh_draw_commands;
+
+    std::array<glm::vec3, spkt::MAX_NUM_LIGHTS> light_positions;
+    std::array<glm::vec3, spkt::MAX_NUM_LIGHTS> light_colours;
+    std::array<float, spkt::MAX_NUM_LIGHTS>     light_brightnesses;
+    std::size_t next_light_index;
 };
 
 class Scene3DRenderer
@@ -69,12 +74,8 @@ public:
         const glm::vec3& direction,
         const float brightness
     );
-    
-    void set_lights(
-        std::span<const glm::vec3> positions,
-        std::span<const glm::vec3> colour,
-        std::span<const float> brightness
-    );
+
+    void add_light(const glm::vec3& position, const glm::vec3& colour, const float brightness);
 
     void draw_static_mesh(
         const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale,
