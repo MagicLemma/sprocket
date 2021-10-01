@@ -127,6 +127,7 @@ void Scene3DRenderer::Draw(
     const glm::mat4& proj,
     const glm::mat4& view)
 {
+    begin_frame(proj, view);
     spkt::render_context rc;
     rc.face_culling(true);
     rc.depth_testing(true);
@@ -134,9 +135,13 @@ void Scene3DRenderer::Draw(
     upload_uniforms(d_staticShader, registry, proj, view);
     upload_uniforms(d_animatedShader, registry, proj, view);
 
-    draw_static_meshes(registry);
+    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
+        draw_static_mesh(tc.position, tc.orientation, tc.scale, mc.mesh, mc.material);
+    }
+
     draw_particles(registry);
     draw_animated_meshes(registry);
+    end_frame();
 }
 
 void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
@@ -145,29 +150,6 @@ void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
     glm::mat4 view = spkt::make_view(tc.position, tc.orientation, cc.pitch);
     glm::mat4 proj = spkt::make_proj(cc.fov);
     Draw(registry, proj, view);
-}
-
-void Scene3DRenderer::draw_static_meshes(const spkt::registry& registry)
-{
-    std::unordered_map<
-        std::pair<std::string, std::string>,
-        std::vector<spkt::model_instance>,
-        spkt::hash_pair
-    > commands;
-
-    d_staticShader.bind();
-    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
-        commands[{ mc.mesh, mc.material }].push_back({ tc.position, tc.orientation, tc.scale });
-    }
-
-    for (const auto& [key, data] : commands) {
-        const auto& mesh = d_assetManager->get<static_mesh>(key.first);
-        const auto& mat = d_assetManager->get<material>(key.second);
-
-        UploadMaterial(d_staticShader, mat, d_assetManager);
-        d_instanceBuffer.set_data(data);
-        spkt::draw(mesh, &d_instanceBuffer);
-    }
 }
 
 void Scene3DRenderer::draw_animated_meshes(const spkt::registry& registry)
@@ -203,6 +185,39 @@ void Scene3DRenderer::draw_particles(const spkt::registry& registry)
         // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
         spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Particle.obj"), &d_instanceBuffer);
     }
+}
+
+void Scene3DRenderer::begin_frame(const glm::mat4& proj, const glm::mat4& view)
+{
+    assert(!d_frame_data);
+    d_frame_data = { .proj = proj, .view = view };
+}
+
+void Scene3DRenderer::end_frame()
+{
+    assert(d_frame_data);
+    d_staticShader.bind();
+    for (const auto& [key, data] : d_frame_data->static_mesh_draw_commands) {
+        const auto& mesh = d_assetManager->get<static_mesh>(key.first);
+        const auto& mat = d_assetManager->get<material>(key.second);
+
+        UploadMaterial(d_staticShader, mat, d_assetManager);
+        d_instanceBuffer.set_data(data);
+        spkt::draw(mesh, &d_instanceBuffer);
+    }
+
+    d_frame_data = std::nullopt;
+}
+
+void Scene3DRenderer::draw_static_mesh(
+    const glm::vec3& position,
+    const glm::quat& orientation,
+    const glm::vec3& scale,
+    const std::string& mesh,
+    const std::string& material)
+{
+    assert(d_frame_data);
+    d_frame_data->static_mesh_draw_commands[{mesh, material}].push_back({position, orientation, scale});
 }
 
 }

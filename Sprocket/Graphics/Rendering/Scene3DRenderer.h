@@ -4,8 +4,10 @@
 #include <Sprocket/Graphics/shadow_map.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Scene/ecs.h>
+#include <Sprocket/Utility/Hashing.h>
 
 #include <memory>
+#include <optional>
 
 namespace spkt {
 
@@ -26,6 +28,18 @@ static constexpr int MAX_BONES = 50;
 // Light Data
 static constexpr int MAX_NUM_LIGHTS = 50;
 
+struct frame_data
+{
+    glm::mat4 proj;
+    glm::mat4 view;
+
+    std::unordered_map<
+        std::pair<std::string, std::string>,
+        std::vector<spkt::model_instance>,
+        spkt::hash_pair
+    > static_mesh_draw_commands;
+};
+
 class Scene3DRenderer
 // Renders a scene as a 3D Scene. This makes use of components such as
 // Transform3DComponent and ModelComponent, and will ignore 2D components
@@ -38,10 +52,11 @@ class Scene3DRenderer
     
     spkt::vertex_buffer<spkt::model_instance> d_instanceBuffer;
 
+    std::optional<frame_data> d_frame_data;
+
     Scene3DRenderer(const Scene3DRenderer&) = delete;
     Scene3DRenderer& operator=(const Scene3DRenderer&) = delete;
 
-    void draw_static_meshes(const spkt::registry& registry);
     void draw_animated_meshes(const spkt::registry& regsitry);
     void draw_particles(const spkt::registry& registry);
 
@@ -50,6 +65,17 @@ public:
 
     void Draw(const spkt::registry& registry, spkt::entity camera);
     void Draw(const spkt::registry& registry, const glm::mat4& proj, const glm::mat4& view);
+
+    void begin_frame(const glm::mat4& proj, const glm::mat4& view);
+    void end_frame();
+
+    void draw_static_mesh(
+        const glm::vec3& position,
+        const glm::quat& orientation,
+        const glm::vec3& scale,
+        const std::string& mesh,
+        const std::string& material
+    );
 
     void EnableShadows(const shadow_map& shadowMap);
 
