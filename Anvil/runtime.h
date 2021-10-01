@@ -41,7 +41,4 @@ public:
     void on_event(spkt::event& event);
     void on_update(double dt);
     void on_render();
-
-    glm::mat4 get_proj_matrix() const;
-    glm::mat4 get_view_matrix() const;
 };

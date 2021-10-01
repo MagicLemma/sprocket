@@ -13,6 +13,7 @@ add_executable(anvil
                camera.cpp
                inspector.cpp
                rendering.cpp
+               scene_utils.cpp
                particle_system.cpp
                physics_system.cpp)
 
@@ -23,6 +24,7 @@ add_executable(runtime
                runtime.m.cpp
                runtime.cpp
                rendering.cpp
+               scene_utils.cpp
                particle_system.cpp
                physics_system.cpp)
 

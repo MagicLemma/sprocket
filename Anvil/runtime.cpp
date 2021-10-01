@@ -1,9 +1,10 @@
 #include "Runtime.h"
 
-#include <Anvil/systems.h>
 #include <Anvil/particle_system.h>
 #include <Anvil/physics_system.h>
 #include <Anvil/rendering.h>
+#include <Anvil/scene_utils.h>
+#include <Anvil/systems.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
@@ -129,9 +130,7 @@ void Runtime::on_update(double dt)
 
 void Runtime::on_render()
 {
-    auto proj = get_proj_matrix();
-    auto view = get_view_matrix();
-
+    auto [proj, view] = anvil::get_proj_view_matrices(d_scene.registry, d_runtimeCamera);
     d_skyboxRenderer.Draw(d_skybox, d_scene.registry, d_runtimeCamera);
     anvil::draw_scene(d_entityRenderer, d_scene.registry, proj, view);
 
@@ -140,18 +139,4 @@ void Runtime::on_render()
         draw_console(d_console, d_command_line, d_ui, d_window->width(), d_window->height());
         d_ui.EndFrame();
     }
-}
-
-glm::mat4 Runtime::get_proj_matrix() const
-{
-    const auto& reg = d_scene.registry;
-    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
-    return spkt::make_proj(cc.fov);
-}
-
-glm::mat4 Runtime::get_view_matrix() const
-{
-    const auto& reg = d_scene.registry;
-    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
-    return spkt::make_view(tc.position, tc.orientation, cc.pitch);
 }
