@@ -15,7 +15,7 @@ void draw_colliders(
 );
 
 void draw_scene(
-    spkt::Scene3DRenderer& renderer,
+    spkt::pbr_renderer& renderer,
     const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view

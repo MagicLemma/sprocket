@@ -20,7 +20,7 @@ class Runtime
     spkt::asset_manager d_assetManager;
 
     // Rendering
-    spkt::Scene3DRenderer d_entityRenderer;
+    spkt::pbr_renderer d_entityRenderer;
     spkt::SkyboxRenderer d_skyboxRenderer;
 
     // Scene

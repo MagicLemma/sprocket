@@ -49,7 +49,7 @@ void upload_material(
 
 }
 
-Scene3DRenderer::Scene3DRenderer(asset_manager* assetManager)
+pbr_renderer::pbr_renderer(asset_manager* assetManager)
     : d_assetManager(assetManager)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
@@ -68,20 +68,20 @@ Scene3DRenderer::Scene3DRenderer(asset_manager* assetManager)
     d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
 }
 
-void Scene3DRenderer::EnableShadows(const shadow_map& shadowMap)
+void pbr_renderer::EnableShadows(const shadow_map& shadowMap)
 {
     d_staticShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
     d_animatedShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
     shadowMap.get_texture().bind(SHADOW_MAP_SLOT);
 }
 
-void Scene3DRenderer::for_each_shader(const std::function<void(spkt::shader& shader)>& callback)
+void pbr_renderer::for_each_shader(const std::function<void(spkt::shader& shader)>& callback)
 {
     callback(d_staticShader);
     callback(d_animatedShader);
 }
 
-void Scene3DRenderer::begin_frame(const glm::mat4& proj, const glm::mat4& view)
+void pbr_renderer::begin_frame(const glm::mat4& proj, const glm::mat4& view)
 {
     assert(!d_frame_data);
     d_frame_data = frame_data{};
@@ -92,10 +92,9 @@ void Scene3DRenderer::begin_frame(const glm::mat4& proj, const glm::mat4& view)
     });
 }
 
-void Scene3DRenderer::end_frame()
+void pbr_renderer::end_frame()
 {
     assert(d_frame_data);
-
     for_each_shader([&](spkt::shader& shader) {
         shader.bind();
         shader.load("u_light_pos", d_frame_data->light_positions);
@@ -117,7 +116,7 @@ void Scene3DRenderer::end_frame()
     d_frame_data = std::nullopt;
 }
 
-void Scene3DRenderer::set_ambience(const glm::vec3& colour, const float brightness)
+void pbr_renderer::set_ambience(const glm::vec3& colour, const float brightness)
 {
     for_each_shader([&](spkt::shader& shader) {
         shader.bind();
@@ -126,7 +125,7 @@ void Scene3DRenderer::set_ambience(const glm::vec3& colour, const float brightne
     });
 }
 
-void Scene3DRenderer::set_sunlight(
+void pbr_renderer::set_sunlight(
     const glm::vec3& colour, const glm::vec3& direction, const float brightness)
 {
     for_each_shader([&](spkt::shader& shader) {
@@ -137,7 +136,7 @@ void Scene3DRenderer::set_sunlight(
     });
 }
 
-void Scene3DRenderer::add_light(
+void pbr_renderer::add_light(
     const glm::vec3& position, const glm::vec3& colour, const float brightness)
 {
     assert(d_frame_data);
@@ -150,7 +149,7 @@ void Scene3DRenderer::add_light(
     ++index;
 }
 
-void Scene3DRenderer::draw_static_mesh(
+void pbr_renderer::draw_static_mesh(
     const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale,
     const std::string& mesh, const std::string& material)
 {
@@ -158,7 +157,7 @@ void Scene3DRenderer::draw_static_mesh(
     d_frame_data->static_mesh_draw_commands[{mesh, material}].push_back({position, orientation, scale});
 }
 
-void Scene3DRenderer::draw_animated_mesh(
+void pbr_renderer::draw_animated_mesh(
     const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale,
     const std::string& mesh, const std::string& material,
     const std::string& animation_name, float animation_time)
@@ -179,7 +178,7 @@ void Scene3DRenderer::draw_animated_mesh(
     d_animatedShader.unbind();
 }
 
-void Scene3DRenderer::draw_particles(std::span<const spkt::model_instance> particles)
+void pbr_renderer::draw_particles(std::span<const spkt::model_instance> particles)
 {
     d_staticShader.bind();
     d_instanceBuffer.set_data(particles);

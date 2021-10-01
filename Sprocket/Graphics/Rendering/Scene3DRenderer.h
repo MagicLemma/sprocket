@@ -11,8 +11,6 @@
 
 namespace spkt {
 
-class VertexArray;
-
 // PBR Texture Slots
 static constexpr int ALBEDO_SLOT = 0;
 static constexpr int NORMAL_SLOT = 1;
@@ -42,15 +40,12 @@ struct frame_data
     std::size_t next_light_index;
 };
 
-class Scene3DRenderer
-// Renders a scene as a 3D Scene. This makes use of components such as
-// Transform3DComponent and ModelComponent, and will ignore 2D components
-// such as Transform2DComponent and SpriteComponent.
+class pbr_renderer
 {
-    asset_manager*    d_assetManager;
+    spkt::asset_manager* d_assetManager;
 
-    shader d_staticShader;
-    shader d_animatedShader;
+    spkt::shader d_staticShader;
+    spkt::shader d_animatedShader;
 
     void for_each_shader(const std::function<void(spkt::shader& shader)>& callback);
     
@@ -58,23 +53,17 @@ class Scene3DRenderer
 
     std::optional<frame_data> d_frame_data;
 
-    Scene3DRenderer(const Scene3DRenderer&) = delete;
-    Scene3DRenderer& operator=(const Scene3DRenderer&) = delete;
+    pbr_renderer(const pbr_renderer&) = delete;
+    pbr_renderer& operator=(const pbr_renderer&) = delete;
 
 public:
-    Scene3DRenderer(asset_manager* assetManager);
+    pbr_renderer(asset_manager* assetManager);
 
     void begin_frame(const glm::mat4& proj, const glm::mat4& view);
     void end_frame();
 
     void set_ambience(const glm::vec3& colour, const float brightness);
-    
-    void set_sunlight(
-        const glm::vec3& colour,
-        const glm::vec3& direction,
-        const float brightness
-    );
-
+    void set_sunlight(const glm::vec3& colour, const glm::vec3& direction, const float brightness);
     void add_light(const glm::vec3& position, const glm::vec3& colour, const float brightness);
 
     void draw_static_mesh(

@@ -26,7 +26,7 @@ class Anvil
     Camera d_editor_camera;
 
     // Rendering
-    spkt::Scene3DRenderer d_entity_renderer;
+    spkt::pbr_renderer d_entity_renderer;
     spkt::SkyboxRenderer d_skybox_renderer;
     spkt::geometry_renderer d_geometry_renderer;
 

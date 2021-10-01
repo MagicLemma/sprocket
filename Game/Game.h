@@ -34,7 +34,7 @@ class Game
     spkt::entity d_worker;
     
     // RENDERING
-    spkt::Scene3DRenderer d_entityRenderer;
+    spkt::pbr_renderer d_entityRenderer;
     spkt::post_processor d_post_processor;
 
     // Additional world setup

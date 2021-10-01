@@ -44,7 +44,7 @@ void draw_colliders(
 }
 
 void draw_scene(
-    spkt::Scene3DRenderer& renderer,
+    spkt::pbr_renderer& renderer,
     const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
@@ -80,8 +80,7 @@ void draw_scene(
     for (auto [mc, tc] : registry.view_get<spkt::AnimatedModelComponent, spkt::Transform3DComponent>()) {
         renderer.draw_animated_mesh(
             tc.position, tc.orientation, tc.scale,
-            mc.mesh, mc.material,
-            mc.animation_name, mc.animation_time
+            mc.mesh, mc.material, mc.animation_name, mc.animation_time
         );
     }
 

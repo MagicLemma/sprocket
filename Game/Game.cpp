@@ -132,15 +132,15 @@ void ShaderInfoPanel(DevUI& ui, shader& shader)
 }
 
 void draw_scene(
-    spkt::Scene3DRenderer& renderer,
+    spkt::pbr_renderer& renderer,
     const spkt::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
 {
-    renderer.begin_frame(proj, view);
     spkt::render_context rc;
     rc.face_culling(true);
     rc.depth_testing(true);
+    renderer.begin_frame(proj, view);
 
     if (auto a = registry.find<spkt::AmbienceComponent>(); registry.valid(a)) {
         const auto& ambience = registry.get<spkt::AmbienceComponent>(a);
