@@ -62,4 +62,7 @@ public:
     void on_render();
 
     void load_scene(std::string_view file);
+
+    glm::mat4 get_proj_matrix() const;
+    glm::mat4 get_view_matrix() const;
 };
