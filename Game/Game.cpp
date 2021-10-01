@@ -445,7 +445,7 @@ void Game::on_render()
         glm::mat4 proj = spkt::make_proj(cc.fov);
 
         SunInfoPanel(d_devUI, d_cycle);
-        ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
+        ShaderInfoPanel(d_devUI, d_entityRenderer.static_shader());
 
         ImGui::Begin("Shadow Map");
         ImGuiXtra::Image(d_shadowMap.get_texture(), 500.0f);

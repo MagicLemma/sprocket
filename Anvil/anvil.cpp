@@ -161,7 +161,7 @@ void Anvil::on_render()
     glm::mat4 proj = get_proj_matrix();
     glm::mat4 view = get_view_matrix();
 
-    d_entity_renderer.Draw(registry, proj, view);
+    anvil::draw_scene(d_entity_renderer, registry, proj, view);
     d_skybox_renderer.Draw(d_skybox, proj, view);
 
     if (d_showColliders) {

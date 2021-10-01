@@ -34,24 +34,6 @@ void upload_uniforms(
 )
 {
     shader.bind();
-
-    shader.load("u_proj_matrix", proj);
-    shader.load("u_view_matrix", view);
-
-    // Load sun to shader
-    if (auto s = registry.find<SunComponent>(); registry.valid(s)) {
-        const auto& sun = registry.get<SunComponent>(s);
-        shader.load("u_sun_direction", sun.direction);
-        shader.load("u_sun_colour", sun.colour);
-        shader.load("u_sun_brightness", sun.brightness);
-    }
-
-    // Load ambience to shader
-    if (auto a = registry.find<AmbienceComponent>(); registry.valid(a)) {
-        const auto& ambience = registry.get<AmbienceComponent>(a);
-        shader.load("u_ambience_colour", ambience.colour);
-        shader.load("u_ambience_brightness", ambience.brightness);
-    }
     
     // Load point lights to shader
     std::array<glm::vec3, MAX_NUM_LIGHTS> positions = {};
@@ -73,7 +55,7 @@ void upload_uniforms(
     shader.load("u_light_brightness", brightnesses);
 }
 
-void UploadMaterial(
+void upload_material(
     const shader& shader,
     const material& material,
     asset_manager* assetManager
@@ -132,15 +114,55 @@ void Scene3DRenderer::Draw(
     rc.face_culling(true);
     rc.depth_testing(true);
 
-    upload_uniforms(d_staticShader, registry, proj, view);
-    upload_uniforms(d_animatedShader, registry, proj, view);
-
-    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
-        draw_static_mesh(tc.position, tc.orientation, tc.scale, mc.mesh, mc.material);
+    if (auto a = registry.find<AmbienceComponent>(); registry.valid(a)) {
+        const auto& ambience = registry.get<AmbienceComponent>(a);
+        set_ambience(ambience.colour, ambience.brightness);
     }
 
-    draw_particles(registry);
-    draw_animated_meshes(registry);
+    if (auto s = registry.find<SunComponent>(); registry.valid(s)) {
+        const auto& sun = registry.get<SunComponent>(s);
+        set_sunlight(sun.colour, sun.direction, sun.brightness);
+    }
+
+    std::array<glm::vec3, MAX_NUM_LIGHTS> positions = {};
+    std::array<glm::vec3, MAX_NUM_LIGHTS> colours = {};
+    std::array<float, MAX_NUM_LIGHTS> brightnesses = {};
+    for (auto [index, data] : registry.view_get<LightComponent, Transform3DComponent>()
+                            | std::views::take(MAX_NUM_LIGHTS)
+                            | spkt::views::enumerate())
+    {
+        auto [light, transform] = data;
+        positions[index] = transform.position;
+        colours[index] = light.colour;
+        brightnesses[index] = light.brightness;
+    }
+    set_lights(positions, colours, brightnesses);
+
+    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
+        draw_static_mesh(
+            tc.position, tc.orientation, tc.scale,
+            mc.mesh, mc.material
+        );
+    }
+
+    for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
+        draw_animated_mesh(
+            tc.position, tc.orientation, tc.scale,
+            mc.mesh, mc.material,
+            mc.animation_name, mc.animation_time
+        );
+    }
+
+    for (auto [ps] : registry.view_get<ParticleSingleton>()) {
+        std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
+        for (const auto& particle : *ps.particles) {
+            if (particle.life > 0.0) {
+                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
+            }
+        }
+        draw_particles(instance_data);
+    };
+
     end_frame();
 }
 
@@ -152,72 +174,114 @@ void Scene3DRenderer::Draw(const spkt::registry& registry, spkt::entity camera)
     Draw(registry, proj, view);
 }
 
-void Scene3DRenderer::draw_animated_meshes(const spkt::registry& registry)
-{
-    d_animatedShader.bind();
-    for (auto [mc, tc] : registry.view_get<AnimatedModelComponent, Transform3DComponent>()) {
-        const auto& mesh = d_assetManager->get<animated_mesh>(mc.mesh);
-        const auto& mat = d_assetManager->get<material>(mc.material);
-        UploadMaterial(d_animatedShader, mat, d_assetManager);
-
-        d_animatedShader.load("u_model_matrix", Maths::Transform(tc.position, tc.orientation, tc.scale));
-        
-        auto poses = mesh.get_pose(mc.animation_name, mc.animation_time);
-        poses.resize(MAX_BONES, glm::mat4(1.0));
-        d_animatedShader.load("u_bone_transforms", poses);
-
-        spkt::draw(mesh);
-    }
-}
-
-void Scene3DRenderer::draw_particles(const spkt::registry& registry)
-{
-     // If the scene has a ParticleSingleton, then render the particles that it contains.
-    for (auto [ps] : registry.view_get<ParticleSingleton>()) {
-        std::vector<spkt::model_instance> instance_data(NUM_PARTICLES);
-        for (const auto& particle : *ps.particles) {
-            if (particle.life > 0.0) {
-                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
-            }
-        }
-        d_instanceBuffer.set_data(instance_data);
-
-        // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
-        spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Particle.obj"), &d_instanceBuffer);
-    }
-}
-
 void Scene3DRenderer::begin_frame(const glm::mat4& proj, const glm::mat4& view)
 {
     assert(!d_frame_data);
-    d_frame_data = { .proj = proj, .view = view };
+    d_frame_data = frame_data{};
+    d_staticShader.bind();
+    d_staticShader.load("u_proj_matrix", proj);
+    d_staticShader.load("u_view_matrix", view);
+    d_animatedShader.bind();
+    d_animatedShader.load("u_proj_matrix", proj);
+    d_animatedShader.load("u_view_matrix", view);
 }
 
 void Scene3DRenderer::end_frame()
 {
     assert(d_frame_data);
+
     d_staticShader.bind();
     for (const auto& [key, data] : d_frame_data->static_mesh_draw_commands) {
         const auto& mesh = d_assetManager->get<static_mesh>(key.first);
         const auto& mat = d_assetManager->get<material>(key.second);
 
-        UploadMaterial(d_staticShader, mat, d_assetManager);
+        upload_material(d_staticShader, mat, d_assetManager);
         d_instanceBuffer.set_data(data);
         spkt::draw(mesh, &d_instanceBuffer);
     }
+    d_staticShader.unbind();
 
     d_frame_data = std::nullopt;
 }
 
+void Scene3DRenderer::set_ambience(const glm::vec3& colour, const float brightness)
+{
+    d_staticShader.bind();
+    d_staticShader.load("u_ambience_colour", colour);
+    d_staticShader.load("u_ambience_brightness", brightness);
+    d_animatedShader.bind();
+    d_animatedShader.load("u_ambience_colour", colour);
+    d_animatedShader.load("u_ambience_brightness", brightness);
+}
+
+void Scene3DRenderer::set_sunlight(
+    const glm::vec3& colour, const glm::vec3& direction, const float brightness)
+{
+    d_staticShader.bind();
+    d_staticShader.load("u_sun_colour", colour);
+    d_staticShader.load("u_sun_direction", direction);
+    d_staticShader.load("u_sun_brightness", brightness);
+    d_animatedShader.bind();
+    d_animatedShader.load("u_sun_colour", colour);
+    d_animatedShader.load("u_sun_direction", direction);
+    d_animatedShader.load("u_sun_brightness", brightness);
+}
+
+void Scene3DRenderer::set_lights(
+    std::span<const glm::vec3> positions,
+    std::span<const glm::vec3> colours,
+    std::span<const float> brightnesses)
+{
+    assert(positions.size() == colours.size());
+    assert(positions.size() == brightnesses.size());
+    assert(positions.size() <= MAX_NUM_LIGHTS);
+    d_staticShader.bind();
+    d_staticShader.load("u_light_pos", positions);
+    d_staticShader.load("u_light_colour", colours);
+    d_staticShader.load("u_light_brightness", brightnesses);
+    d_animatedShader.bind();
+    d_animatedShader.load("u_light_pos", positions);
+    d_animatedShader.load("u_light_colour", colours);
+    d_animatedShader.load("u_light_brightness", brightnesses);
+}
+
 void Scene3DRenderer::draw_static_mesh(
-    const glm::vec3& position,
-    const glm::quat& orientation,
-    const glm::vec3& scale,
-    const std::string& mesh,
-    const std::string& material)
+    const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale,
+    const std::string& mesh, const std::string& material)
 {
     assert(d_frame_data);
     d_frame_data->static_mesh_draw_commands[{mesh, material}].push_back({position, orientation, scale});
+}
+
+void Scene3DRenderer::draw_animated_mesh(
+    const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale,
+    const std::string& mesh, const std::string& material,
+    const std::string& animation_name, float animation_time)
+{
+    assert(d_frame_data);
+    d_animatedShader.bind();
+    const auto& mesh_obj = d_assetManager->get<animated_mesh>(mesh);
+    const auto& mat = d_assetManager->get<spkt::material>(material);
+    upload_material(d_animatedShader, mat, d_assetManager);
+
+    d_animatedShader.load("u_model_matrix", Maths::Transform(position, orientation, scale));
+    
+    auto poses = mesh_obj.get_pose(animation_name, animation_time);
+    poses.resize(MAX_BONES, glm::mat4(1.0));
+    d_animatedShader.load("u_bone_transforms", poses);
+
+    spkt::draw(mesh_obj);
+    d_animatedShader.unbind();
+}
+
+void Scene3DRenderer::draw_particles(std::span<const spkt::model_instance> particles)
+{
+    d_staticShader.bind();
+    d_instanceBuffer.set_data(particles);
+
+    // TODO: Un-hardcode this mesh, do when cleaning up the rendering.
+    spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Particle.obj"), &d_instanceBuffer);
+    d_staticShader.unbind();
 }
 
 }
