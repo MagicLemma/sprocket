@@ -1,9 +1,10 @@
 #include "Anvil.h"
 
 #include <Anvil/Inspector.h>
-#include <Anvil/systems.h>
 #include <Anvil/particle_system.h>
 #include <Anvil/physics_system.h>
+#include <Anvil/rendering.h>
+#include <Anvil/systems.h>
 
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
@@ -45,38 +46,6 @@ bool SubstringCI(std::string_view string, std::string_view substr) {
         [] (char c1, char c2) { return std::toupper(c1) == std::toupper(c2); }
     );
     return it != string.end();
-}
-
-void draw_colliders(
-    const spkt::geometry_renderer& renderer,
-    const spkt::registry& registry,
-    const glm::mat4& proj,
-    const glm::mat4& view)
-{
-    spkt::render_context rc;
-    rc.wireframe(true);
-
-    renderer.begin_frame(proj, view);
-
-    const auto& make_transform = [](const auto& a, const auto& b) {
-        using namespace spkt::Maths;
-        return Transform(a.position, a.orientation) * Transform(b.position, b.orientation);
-    };
-
-    for (auto [bc, tc] : registry.view_get<spkt::BoxCollider3DComponent, spkt::Transform3DComponent>()) {
-        const glm::vec3 scale = bc.applyScale ? bc.halfExtents * tc.scale : bc.halfExtents;      
-        renderer.draw_box(make_transform(tc, bc), scale);
-    }
-
-    for (auto [sc, tc] : registry.view_get<spkt::SphereCollider3DComponent, spkt::Transform3DComponent>()) {
-        renderer.draw_sphere(make_transform(tc, sc), sc.radius);
-    }
-
-    for (auto [cc, tc] : registry.view_get<spkt::CapsuleCollider3DComponent, spkt::Transform3DComponent>()) {
-        renderer.draw_capsule(make_transform(tc, cc), cc.radius, cc.height);
-    }
-
-    renderer.end_frame();
 }
 
 }
@@ -196,7 +165,7 @@ void Anvil::on_render()
     d_skybox_renderer.Draw(d_skybox, proj, view);
 
     if (d_showColliders) {
-        draw_colliders(d_geometry_renderer, registry, proj, view);
+        anvil::draw_colliders(d_geometry_renderer, registry, proj, view);
     }
 
     d_viewport.unbind();
