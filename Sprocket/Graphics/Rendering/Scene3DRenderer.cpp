@@ -75,16 +75,21 @@ void Scene3DRenderer::EnableShadows(const shadow_map& shadowMap)
     shadowMap.get_texture().bind(SHADOW_MAP_SLOT);
 }
 
+void Scene3DRenderer::for_each_shader(const std::function<void(spkt::shader& shader)>& callback)
+{
+    callback(d_staticShader);
+    callback(d_animatedShader);
+}
+
 void Scene3DRenderer::begin_frame(const glm::mat4& proj, const glm::mat4& view)
 {
     assert(!d_frame_data);
     d_frame_data = frame_data{};
-    d_staticShader.bind();
-    d_staticShader.load("u_proj_matrix", proj);
-    d_staticShader.load("u_view_matrix", view);
-    d_animatedShader.bind();
-    d_animatedShader.load("u_proj_matrix", proj);
-    d_animatedShader.load("u_view_matrix", view);
+    for_each_shader([&](spkt::shader& shader) {
+        shader.bind();
+        shader.load("u_proj_matrix", proj);
+        shader.load("u_view_matrix", view);
+    });
 }
 
 void Scene3DRenderer::end_frame()
@@ -107,25 +112,22 @@ void Scene3DRenderer::end_frame()
 
 void Scene3DRenderer::set_ambience(const glm::vec3& colour, const float brightness)
 {
-    d_staticShader.bind();
-    d_staticShader.load("u_ambience_colour", colour);
-    d_staticShader.load("u_ambience_brightness", brightness);
-    d_animatedShader.bind();
-    d_animatedShader.load("u_ambience_colour", colour);
-    d_animatedShader.load("u_ambience_brightness", brightness);
+    for_each_shader([&](spkt::shader& shader) {
+        shader.bind();
+        shader.load("u_ambience_colour", colour);
+        shader.load("u_ambience_brightness", brightness);
+    });
 }
 
 void Scene3DRenderer::set_sunlight(
     const glm::vec3& colour, const glm::vec3& direction, const float brightness)
 {
-    d_staticShader.bind();
-    d_staticShader.load("u_sun_colour", colour);
-    d_staticShader.load("u_sun_direction", direction);
-    d_staticShader.load("u_sun_brightness", brightness);
-    d_animatedShader.bind();
-    d_animatedShader.load("u_sun_colour", colour);
-    d_animatedShader.load("u_sun_direction", direction);
-    d_animatedShader.load("u_sun_brightness", brightness);
+    for_each_shader([&](spkt::shader& shader) {
+        shader.bind();
+        shader.load("u_sun_colour", colour);
+        shader.load("u_sun_direction", direction);
+        shader.load("u_sun_brightness", brightness);
+    });
 }
 
 void Scene3DRenderer::set_lights(
@@ -136,14 +138,12 @@ void Scene3DRenderer::set_lights(
     assert(positions.size() == colours.size());
     assert(positions.size() == brightnesses.size());
     assert(positions.size() <= MAX_NUM_LIGHTS);
-    d_staticShader.bind();
-    d_staticShader.load("u_light_pos", positions);
-    d_staticShader.load("u_light_colour", colours);
-    d_staticShader.load("u_light_brightness", brightnesses);
-    d_animatedShader.bind();
-    d_animatedShader.load("u_light_pos", positions);
-    d_animatedShader.load("u_light_colour", colours);
-    d_animatedShader.load("u_light_brightness", brightnesses);
+    for_each_shader([&](spkt::shader& shader) {
+        shader.bind();
+        shader.load("u_light_pos", positions);
+        shader.load("u_light_colour", colours);
+        shader.load("u_light_brightness", brightnesses);
+    });
 }
 
 void Scene3DRenderer::draw_static_mesh(

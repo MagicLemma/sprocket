@@ -131,7 +131,7 @@ void Runtime::on_update(double dt)
 void Runtime::on_render()
 {
     auto [proj, view] = anvil::get_proj_view_matrices(d_scene.registry, d_runtimeCamera);
-    d_skyboxRenderer.Draw(d_skybox, d_scene.registry, d_runtimeCamera);
+    d_skyboxRenderer.Draw(d_skybox, proj, view);
     anvil::draw_scene(d_entityRenderer, d_scene.registry, proj, view);
 
     if (d_consoleActive) {

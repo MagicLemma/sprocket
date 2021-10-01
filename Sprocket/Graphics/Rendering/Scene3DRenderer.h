@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <optional>
+#include <functional>
 
 namespace spkt {
 
@@ -45,6 +46,8 @@ class Scene3DRenderer
 
     shader d_staticShader;
     shader d_animatedShader;
+
+    void for_each_shader(const std::function<void(spkt::shader& shader)>& callback);
     
     spkt::vertex_buffer<spkt::model_instance> d_instanceBuffer;
 
