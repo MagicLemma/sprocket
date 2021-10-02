@@ -1,4 +1,4 @@
-#include "Scene3DRenderer.h"
+#include "pbr_renderer.h"
 
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/buffer.h>
@@ -68,7 +68,7 @@ pbr_renderer::pbr_renderer(asset_manager* assetManager)
     d_animatedShader.load("shadow_map", SHADOW_MAP_SLOT);
 }
 
-void pbr_renderer::EnableShadows(const shadow_map& shadowMap)
+void pbr_renderer::enable_shadows(const shadow_map& shadowMap)
 {
     d_staticShader.load("u_light_proj_view", shadowMap.get_light_proj_view());
     d_animatedShader.load("u_light_proj_view", shadowMap.get_light_proj_view());

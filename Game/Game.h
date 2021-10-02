@@ -4,7 +4,7 @@
 
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/post_processor.h>
-#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/shadow_map.h>
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/DevUI.h>

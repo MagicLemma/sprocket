@@ -14,7 +14,7 @@
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/UI/ImGuiXtra.h>
@@ -413,7 +413,7 @@ void Game::on_render()
 
     auto [proj, view] = get_proj_view_matrices();
 
-    d_entityRenderer.EnableShadows(d_shadowMap);
+    d_entityRenderer.enable_shadows(d_shadowMap);
     draw_scene(d_entityRenderer, registry, proj, view);
 
     if (d_paused) {

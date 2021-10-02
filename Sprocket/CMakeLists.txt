@@ -63,7 +63,7 @@ add_library(Sprocket STATIC
             Graphics/Viewport.cpp
 
             Graphics/Rendering/geometry_renderer.cpp
-            Graphics/Rendering/Scene3DRenderer.cpp
+            Graphics/Rendering/pbr_renderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
             
             Utility/Colour.cpp

@@ -1,6 +1,6 @@
 #pragma once
 #include <Sprocket/Graphics/Rendering/geometry_renderer.h>
-#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>

@@ -81,7 +81,7 @@ public:
         std::span<const spkt::model_instance> particles
     );
 
-    void EnableShadows(const shadow_map& shadowMap);
+    void enable_shadows(const shadow_map& shadowMap);
 
     spkt::shader& static_shader() { return d_staticShader; }
     spkt::shader& animated_shader() { return d_animatedShader; }
