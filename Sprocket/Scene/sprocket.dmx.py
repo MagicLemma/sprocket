@@ -3,7 +3,6 @@ def wrap(cpp_type, expression):
         return f"transform_entity(id_remapper, {expression})"
     return expression
 
-
 def main(reg):
 
     @reg.attrmethod
@@ -40,3 +39,13 @@ def main(reg):
             pairs = (f'{{ "{k}", "{v}" }}' for k, v in ctx.attr["metadata"].items())
             return "{" + ", ".join(pairs) + "}"
         return "{}"
+
+    @reg.globalmethod
+    def include_list(ctx):
+        includes = ctx.spec.get("includes", [])
+        return "\n".join((f"#include {inc}" for inc in includes))
+
+    @reg.globalmethod
+    def forward_decl_list(ctx):
+        forward_decls = ctx.spec.get("forward_decls", [])
+        return "\n".join((f"{fd};" for fd in forward_decls))

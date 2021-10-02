@@ -1,4 +1,23 @@
 {
+    "includes": [
+        "<Sprocket/Scripting/lua_script.h>",
+        "<Sprocket/Utility/Hashing.h>",
+        "<Sprocket/Utility/input_store.h>",
+        "<glm/glm.hpp>",
+        "<glm/gtx/quaternion.hpp>",
+        "<array>",
+        "<cstddef>",
+        "<deque>",
+        "<memory>",
+        "<optional>",
+        "<string>",
+        "<unordered_map>"
+    ],
+    "forward_decls": [
+        "struct physics_runtime",
+        "struct rigid_body_runtime",
+        "struct collider_runtime"
+    ],
     "flag_defaults": {
         "SCRIPTABLE": true,
         "SAVABLE": true

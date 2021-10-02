@@ -1,28 +1,26 @@
 #pragma once
 #include <apecs.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>
-
+#include <Sprocket/Scripting/lua_script.h>
+#include <Sprocket/Utility/Hashing.h>
+#include <Sprocket/Utility/input_store.h>
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <array>
-#include <map>
+#include <cstddef>
+#include <deque>
+#include <memory>
 #include <optional>
-#include <queue>
 #include <string>
 #include <unordered_map>
-#include <utility>
-#include <memory>
 
 struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
 
 namespace spkt {
-namespace lua { class script; }
 
 using entity = apx::entity;
 const auto null = apx::null;
-
-class input_store;
 
 struct particle
 {
