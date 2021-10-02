@@ -1,10 +1,10 @@
 #pragma once
-#include <Sprocket/Scene/ecs.h>
+#include "ecs.h"
 
 #include <string_view>
 #include <string>
 
-namespace spkt {
+namespace {{Global::namespace}} {
 
 template <typename T, bool Savable, bool Scriptable>
 struct reflattr
