@@ -1,5 +1,6 @@
 {
     "includes": [
+        "<Sprocket/Graphics/particles.h>",
         "<Sprocket/Scripting/lua_script.h>",
         "<Sprocket/Utility/Hashing.h>",
         "<Sprocket/Utility/input_store.h>",

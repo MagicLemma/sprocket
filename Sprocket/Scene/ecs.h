@@ -1,5 +1,6 @@
 #pragma once
 #include <apecs.hpp>
+#include <Sprocket/Graphics/particles.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Utility/Hashing.h>
 #include <Sprocket/Utility/input_store.h>
@@ -21,17 +22,6 @@ namespace spkt {
 
 using entity = apx::entity;
 const auto null = apx::null;
-
-struct particle
-{
-    glm::vec3 position      = {0.0, 0.0, 0.0};
-    glm::vec3 velocity      = {0.0, 0.0, 0.0};
-    glm::vec3 acceleration  = {0.0, 0.0, 0.0};
-    glm::vec3 scale         = {1.0, 1.0, 1.0};
-    double life = -1.0;
-};
-
-static constexpr std::size_t NUM_PARTICLES = 10000;
 
 // Components
 struct Runtime
