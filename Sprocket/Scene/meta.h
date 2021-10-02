@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Scene/ecs.h>
+#include "ecs.h"
 
 #include <string_view>
 #include <string>

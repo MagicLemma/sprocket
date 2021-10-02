@@ -30,8 +30,8 @@ inline void script_system(spkt::registry& registry, double dt)
             spkt::lua::script& script = *sc.script_runtime;
 
             spkt::lua::load_maths(script);
-            spkt::lua::load_registry(script, registry);
             spkt::lua::load_input_store(script, input);
+            spkt::load_registry(script, registry);
 
             if (script.has_function(INIT_FUNCTION)) {
                 script.set_value("__command_list__", &commands);

@@ -1,8 +1,8 @@
 #include "loader.h"
 #include "meta.h"
+#include "ecs.h"
 
 #include <Sprocket/Core/log.h>
-#include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Utility/Yaml.h>
 #include <Sprocket/Scene/scene.h>
 
@@ -12,23 +12,23 @@
 #include <ranges>
 #include <memory>
 
-namespace spkt {
+namespace {{Global::namespace}} {
 namespace {
 
 // When loading entities from disk, their IDs may already be in use, so we assigned them
 // new IDs when they are loaded. Because some components may store entity handles, we have
 // to also map those to the new values. This current soluton is not that scalable, because
-// if we ever use another container templatised on spkt::entity, another branch has to be
+// if we ever use another container templatised on entity, another branch has to be
 // added here.
 
-using remapper_t = std::unordered_map<spkt::entity, spkt::entity>;
+using remapper_t = std::unordered_map<entity, entity>;
 
 template <typename T>
 T transform_entity(const remapper_t& remapper, T param) {
     using U = std::decay_t<T>;
-    if constexpr (std::is_same_v<U, spkt::entity>) {
+    if constexpr (std::is_same_v<U, entity>) {
         return remapper.at(param);
-    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, spkt::entity>>) {
+    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, entity>>) {
         for (auto& entry : param) {
             entry.second = remapper.at(entry.second);
         }
@@ -42,19 +42,19 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 void save_registry_to_file(
     const std::string& file,
-    const spkt::registry& reg,
+    const registry& reg,
     const save_predicate& predicate)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
 
-    const auto pred = [&](spkt::entity e) { return predicate(reg, e); };
+    const auto pred = [&](entity e) { return predicate(reg, e); };
     for (auto entity : reg.all() | std::views::filter(pred)) {
 
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << entity;
-        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+        for_each_component([&]<typename T>(reflcomp<T>&& refl) {
             if constexpr (refl.is_savable()) {
                 if (reg.has<T>(entity)) {
                     const auto& c = reg.get<T>(entity);
@@ -77,7 +77,7 @@ void save_registry_to_file(
     std::ofstream(file) << out.c_str();
 }
 
-void load_registry_from_file(const std::string& file, spkt::registry& reg)
+void load_registry_from_file(const std::string& file, registry& reg)
 {
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -90,48 +90,48 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
     }
 
     auto entities = data["Entities"];
-    std::unordered_map<spkt::entity, spkt::entity> id_remapper;
+    std::unordered_map<entity, entity> id_remapper;
     
     for (auto yaml_entity : entities) {
-        spkt::entity old_id = yaml_entity["ID#"].as<spkt::entity>();
-        spkt::entity new_id = reg.create();
+        entity old_id = yaml_entity["ID#"].as<entity>();
+        entity new_id = reg.create();
         id_remapper[old_id] = new_id;
     }
 
     for (auto yaml_entity : entities) {
-        spkt::entity entity = id_remapper[yaml_entity["ID#"].as<spkt::entity>()];
+        entity e = id_remapper[yaml_entity["ID#"].as<entity>()];
 DATAMATIC_BEGIN SAVABLE=true
         if (auto spec = yaml_entity["{{Comp::name}}"]) {
             {{Comp::name}} c;
             c.{{Attr::name}} = {{Attr::parse_value_from_spec}};
-            reg.add<{{Comp::name}}>(entity, c);
+            reg.add<{{Comp::name}}>(e, c);
         }
 DATAMATIC_END
     }
 }
 
-spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
+entity copy_entity(registry& reg, entity e)
 {
-    spkt::entity new_entity = reg.create();
-    spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
-        if (refl.is_savable && reg.has<T>(entity)) {
-            reg.add<T>(new_entity, reg.get<T>(entity));
+    entity new_entity = reg.create();
+    for_each_component([&]<typename T>(reflcomp<T>&& refl) {
+        if (refl.is_savable && reg.has<T>(e)) {
+            reg.add<T>(new_entity, reg.get<T>(e));
         }
     });
     return new_entity;
 }
 
-void copy_registry(const spkt::registry& source, spkt::registry& target)
+void copy_registry(const registry& source, registry& target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.
-    std::unordered_map<spkt::entity, spkt::entity> id_remapper;
+    std::unordered_map<entity, entity> id_remapper;
     for (auto id : source.all()) {
         id_remapper[id] = target.create();;
     }
 
     for (auto old_entity : source.all()) {
-        spkt::entity new_entity = id_remapper.at(old_entity);
+        entity new_entity = id_remapper.at(old_entity);
 DATAMATIC_BEGIN SAVABLE=true
         if (source.has<{{Comp::name}}>(old_entity)) {
             const {{Comp::name}}& source_comp = source.get<{{Comp::name}}>(old_entity);
