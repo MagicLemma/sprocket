@@ -1,12 +1,10 @@
 #pragma once
-#include <Sprocket/Scene/ecs.h>
-
 #include <glm/glm.hpp>
 #include <yaml-cpp/yaml.h>
 
-namespace YAML {
+#include <unordered_map>
 
-using namespace spkt;
+namespace YAML {
 
 template<>
 struct convert<glm::vec2>
@@ -41,13 +39,6 @@ struct convert<glm::mat4>
 {
     static Node encode(const glm::mat4& rhs);
     static bool decode(const Node& node, glm::mat4& rhs);
-};
-
-template<>
-struct convert<spkt::entity>
-{
-    static Node encode(const spkt::entity& rhs);
-    static bool decode(const Node& node, spkt::entity& rhs);
 };
 
 template <typename K, typename V, typename... Rest>

@@ -4,8 +4,6 @@
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Scripting/lua_converter.h>
 
-#include <yaml-cpp/yaml.h>
-
 namespace spkt::lua {
 
 template <>
@@ -24,7 +22,5 @@ namespace {{Global::namespace}} {
 // for access the singleton entity, which in turn gives access to the keyboard, mouse
 // and window via the InputSingleton.
 void load_registry(spkt::lua::script& script, registry& registry);
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::entity& i);
 
 }

@@ -1,10 +1,9 @@
 #include "Yaml.h"
 
-#include <Sprocket/Scene/ecs.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace YAML {
-
-using namespace spkt;
 
 Node convert<glm::vec2>::encode(const glm::vec2& rhs)
 {
@@ -130,22 +129,6 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
     rhs[3][1] = node[13].as<float>();
     rhs[3][2] = node[14].as<float>();
     rhs[3][3] = node[15].as<float>();
-    return true;
-}
-
-Node convert<spkt::entity>::encode(const spkt::entity& rhs)
-{
-    Node n;
-    n = static_cast<std::underlying_type_t<spkt::entity>>(rhs);
-    return n;
-}
-
-bool convert<spkt::entity>::decode(const Node& node, spkt::entity& rhs)
-{
-    if (!node.IsScalar())
-        return false;
-
-    rhs = static_cast<spkt::entity>(node.as<std::underlying_type_t<spkt::entity>>());
     return true;
 }
 
