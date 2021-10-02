@@ -1,9 +1,9 @@
 #include "Game.h"
 
-#include <Game/grid_helpers.h>
 #include <Game/game_grid.h>
-#include <Game/script_system.h>
+#include <Game/grid_helpers.h>
 #include <Game/Palette.h>
+#include <Game/script_system.h>
 #include <Game/PathCalculator.h>
 
 #include <Sprocket/Audio/Listener.h>
@@ -13,9 +13,12 @@
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/camera.h>
+#include <Sprocket/Graphics/render_context.h>
+#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/loader.h>
 #include <Sprocket/UI/ImGuiXtra.h>
+#include <Sprocket/Utility/views.h>
 
 #include <cmath>
 
@@ -126,6 +129,61 @@ void ShaderInfoPanel(DevUI& ui, shader& shader)
     }
 
     ImGui::End();
+}
+
+void draw_scene(
+    spkt::pbr_renderer& renderer,
+    const spkt::registry& registry,
+    const glm::mat4& proj,
+    const glm::mat4& view)
+{
+    spkt::render_context rc;
+    rc.face_culling(true);
+    rc.depth_testing(true);
+    renderer.begin_frame(proj, view);
+
+    if (auto a = registry.find<spkt::AmbienceComponent>(); registry.valid(a)) {
+        const auto& ambience = registry.get<spkt::AmbienceComponent>(a);
+        renderer.set_ambience(ambience.colour, ambience.brightness);
+    }
+
+    if (auto s = registry.find<spkt::SunComponent>(); registry.valid(s)) {
+        const auto& sun = registry.get<spkt::SunComponent>(s);
+        renderer.set_sunlight(sun.colour, sun.direction, sun.brightness);
+    }
+
+    for (auto [light, transform] : registry.view_get<spkt::LightComponent, spkt::Transform3DComponent>()
+                                 | std::views::take(spkt::MAX_NUM_LIGHTS))
+    {
+        renderer.add_light(transform.position, light.colour, light.brightness);
+    }
+
+    for (auto [mc, tc] : registry.view_get<spkt::StaticModelComponent, spkt::Transform3DComponent>()) {
+        renderer.draw_static_mesh(
+            tc.position, tc.orientation, tc.scale,
+            mc.mesh, mc.material
+        );
+    }
+
+    for (auto [mc, tc] : registry.view_get<spkt::AnimatedModelComponent, spkt::Transform3DComponent>()) {
+        renderer.draw_animated_mesh(
+            tc.position, tc.orientation, tc.scale,
+            mc.mesh, mc.material,
+            mc.animation_name, mc.animation_time
+        );
+    }
+
+    for (auto [ps] : registry.view_get<spkt::ParticleSingleton>()) {
+        std::vector<spkt::model_instance> instance_data(spkt::NUM_PARTICLES);
+        for (const auto& particle : *ps.particles) {
+            if (particle.life > 0.0) {
+                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
+            }
+        }
+        renderer.draw_particles(instance_data);
+    };
+
+    renderer.end_frame();
 }
 
 }
@@ -353,8 +411,10 @@ void Game::on_render()
         d_post_processor.start_frame();
     }
 
-    d_entityRenderer.EnableShadows(d_shadowMap);
-    d_entityRenderer.Draw(registry, d_camera);
+    auto [proj, view] = get_proj_view_matrices();
+
+    d_entityRenderer.enable_shadows(d_shadowMap);
+    draw_scene(d_entityRenderer, registry, proj, view);
 
     if (d_paused) {
         d_post_processor.end_frame();
@@ -445,7 +505,7 @@ void Game::on_render()
         glm::mat4 proj = spkt::make_proj(cc.fov);
 
         SunInfoPanel(d_devUI, d_cycle);
-        ShaderInfoPanel(d_devUI, d_entityRenderer.GetShader());
+        ShaderInfoPanel(d_devUI, d_entityRenderer.static_shader());
 
         ImGui::Begin("Shadow Map");
         ImGuiXtra::Image(d_shadowMap.get_texture(), 500.0f);
@@ -558,4 +618,14 @@ void Game::on_render()
 
     d_escapeMenu.EndPanel();
     d_escapeMenu.EndFrame();
+}
+
+std::pair<glm::mat4, glm::mat4> Game::get_proj_view_matrices() const
+{
+    const auto& reg = d_scene.registry;
+    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_camera);
+    return { 
+        spkt::make_proj(cc.fov),
+        spkt::make_view(tc.position, tc.orientation, cc.pitch)
+    };
 }

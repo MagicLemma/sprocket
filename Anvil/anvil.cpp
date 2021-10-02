@@ -1,18 +1,21 @@
 #include "Anvil.h"
 
 #include <Anvil/Inspector.h>
-#include <Anvil/systems.h>
 #include <Anvil/particle_system.h>
 #include <Anvil/physics_system.h>
+#include <Anvil/rendering.h>
+#include <Anvil/systems.h>
+#include <Anvil/scene_utils.h>
 
+#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
+#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Scene/Loader.h>
 #include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
-#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Vendor/imgui/imgui.h>
 
@@ -125,26 +128,9 @@ void Anvil::on_update(double dt)
     }
 }
 
-glm::mat4 Anvil::get_proj_matrix() const
-{
-    if (!d_playingGame) { return d_editor_camera.Proj(); }
-
-    const auto& reg = d_activeScene->registry;
-    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
-    return spkt::make_proj(cc.fov);
-}
-
-glm::mat4 Anvil::get_view_matrix() const
-{
-    if (!d_playingGame) { return d_editor_camera.View(); }
-
-    const auto& reg = d_activeScene->registry;
-    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_runtimeCamera);
-    return spkt::make_view(tc.position, tc.orientation, cc.pitch);
-}
-
 void Anvil::on_render()
 {
+    using namespace spkt::Maths;
     auto& registry = d_activeScene->registry;
 
     // If the size of the viewport has changed since the previous frame, recreate
@@ -155,13 +141,18 @@ void Anvil::on_render()
 
     d_viewport.bind();
 
-    glm::mat4 proj = get_proj_matrix();
-    glm::mat4 view = get_view_matrix();
+    const auto [proj, view] = std::invoke([&] {
+        if (d_playingGame) {
+            return anvil::get_proj_view_matrices(registry, d_runtimeCamera);
+        }
+        return std::make_pair(d_editor_camera.Proj(), d_editor_camera.View());
+    });
 
-    d_entity_renderer.Draw(registry, proj, view);
+    anvil::draw_scene(d_entity_renderer, registry, proj, view);
     d_skybox_renderer.Draw(d_skybox, proj, view);
+
     if (d_showColliders) {
-        d_collider_renderer.Draw(registry, proj, view);
+        anvil::draw_colliders(d_geometry_renderer, registry, proj, view);
     }
 
     d_viewport.unbind();

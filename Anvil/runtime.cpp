@@ -1,8 +1,10 @@
 #include "Runtime.h"
 
-#include <Anvil/systems.h>
 #include <Anvil/particle_system.h>
 #include <Anvil/physics_system.h>
+#include <Anvil/rendering.h>
+#include <Anvil/scene_utils.h>
+#include <Anvil/systems.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
@@ -10,6 +12,7 @@
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>
+#include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Core/input_codes.h>
 
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
@@ -127,8 +130,9 @@ void Runtime::on_update(double dt)
 
 void Runtime::on_render()
 {
-    d_skyboxRenderer.Draw(d_skybox, d_scene.registry, d_runtimeCamera);
-    d_entityRenderer.Draw(d_scene.registry, d_runtimeCamera);
+    auto [proj, view] = anvil::get_proj_view_matrices(d_scene.registry, d_runtimeCamera);
+    d_skyboxRenderer.Draw(d_skybox, proj, view);
+    anvil::draw_scene(d_entityRenderer, d_scene.registry, proj, view);
 
     if (d_consoleActive) {
         d_ui.StartFrame();

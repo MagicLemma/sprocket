@@ -12,6 +12,8 @@ add_executable(anvil
                anvil.cpp
                camera.cpp
                inspector.cpp
+               rendering.cpp
+               scene_utils.cpp
                particle_system.cpp
                physics_system.cpp)
 
@@ -21,6 +23,8 @@ target_include_directories(anvil PUBLIC .)
 add_executable(runtime
                runtime.m.cpp
                runtime.cpp
+               rendering.cpp
+               scene_utils.cpp
                particle_system.cpp
                physics_system.cpp)
 

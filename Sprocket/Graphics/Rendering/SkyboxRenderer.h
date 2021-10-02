@@ -1,7 +1,6 @@
 #pragma once
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/shader.h>
-#include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
 
@@ -21,7 +20,6 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(asset_manager* assetManager);
 
-    void Draw(const CubeMap& skybox, const spkt::registry& registry, spkt::entity camera);
     void Draw(const CubeMap& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 

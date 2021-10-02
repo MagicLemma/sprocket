@@ -4,7 +4,7 @@
 
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/post_processor.h>
-#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/shadow_map.h>
 #include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/DevUI.h>
@@ -34,7 +34,7 @@ class Game
     spkt::entity d_worker;
     
     // RENDERING
-    spkt::Scene3DRenderer d_entityRenderer;
+    spkt::pbr_renderer d_entityRenderer;
     spkt::post_processor d_post_processor;
 
     // Additional world setup
@@ -62,4 +62,6 @@ public:
     void on_render();
 
     void load_scene(std::string_view file);
+
+    std::pair<glm::mat4, glm::mat4> get_proj_view_matrices() const;
 };

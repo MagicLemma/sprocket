@@ -7,8 +7,8 @@
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/frame_buffer.h>
-#include <Sprocket/Graphics/Rendering/ColliderRenderer.h>
-#include <Sprocket/Graphics/Rendering/Scene3DRenderer.h>
+#include <Sprocket/Graphics/Rendering/geometry_renderer.h>
+#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
 #include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Scene/scene.h>
@@ -20,15 +20,15 @@
 
 class Anvil
 {
-    spkt::window*      d_window;
+    spkt::window*       d_window;
     spkt::asset_manager d_asset_manager;
     
     Camera d_editor_camera;
 
     // Rendering
-    spkt::Scene3DRenderer d_entity_renderer;
+    spkt::pbr_renderer d_entity_renderer;
     spkt::SkyboxRenderer d_skybox_renderer;
-    spkt::ColliderRenderer d_collider_renderer;
+    spkt::geometry_renderer d_geometry_renderer;
 
     spkt::frame_buffer d_viewport;
     glm::ivec2 d_viewport_size;
@@ -60,9 +60,6 @@ class Anvil
     Inspector d_inspector;
 
     void material_ui(std::string& texture);
-
-    glm::mat4 get_view_matrix() const;
-    glm::mat4 get_proj_matrix() const;
 
 public:
     Anvil(spkt::window* window);

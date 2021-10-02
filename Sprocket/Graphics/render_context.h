@@ -38,7 +38,7 @@ public:
     void scissor_testing(bool enabled) const;
     void set_scissor_window(const glm::vec4& region) const; // Also enables scissor testing
     
-    void polygon_mode(int mode) const;
+    void wireframe(bool enabled) const;
 };
 
 }
