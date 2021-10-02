@@ -1,21 +1,13 @@
 #include "Listener.h"
 
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Utility/Maths.h>
-
 #include <SFML/Audio.hpp>
 
 namespace spkt {
 
-void set_listener(const spkt::registry& registry, spkt::entity entity)
+void set_listener(const glm::vec3& postiion, const glm::vec3& direction)
 {
-    if (!registry.has<Transform3DComponent>(entity)) { return; }
-    auto tr = registry.get<Transform3DComponent>(entity);
-    auto pos = tr.position;
-    sf::Listener::setPosition(pos.x, pos.y, pos.z);
-
-    auto dir = Maths::Forwards(tr.orientation);
-    sf::Listener::setDirection(dir.x, dir.y, dir.z);
+    sf::Listener::setPosition(postiion.x, postiion.y, postiion.z);
+    sf::Listener::setDirection(direction.x, direction.y, direction.z);
 }
 
 float get_master_volume()

@@ -357,7 +357,8 @@ void Game::on_update(double dt)
     using namespace spkt;
     auto& registry = d_scene.registry;
 
-    spkt::set_listener(registry, d_camera);
+    const auto& transform = registry.get<Transform3DComponent>(d_camera);
+    spkt::set_listener(transform.position, Maths::Forwards(transform.orientation));
 
     d_hoveredEntityUI.on_update(dt);
     if (!d_paused) {
