@@ -1,4 +1,5 @@
 {
+    "namespace": "spkt",
     "includes": [
         "<Sprocket/Graphics/particles.h>",
         "<Sprocket/Scripting/lua_script.h>",

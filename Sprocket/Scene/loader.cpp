@@ -1,8 +1,8 @@
 #include "loader.h"
 #include "meta.h"
+#include "ecs.h"
 
 #include <Sprocket/Core/log.h>
-#include <Sprocket/Scene/ecs.h>
 #include <Sprocket/Utility/Yaml.h>
 #include <Sprocket/Scene/scene.h>
 
@@ -18,17 +18,17 @@ namespace {
 // When loading entities from disk, their IDs may already be in use, so we assigned them
 // new IDs when they are loaded. Because some components may store entity handles, we have
 // to also map those to the new values. This current soluton is not that scalable, because
-// if we ever use another container templatised on spkt::entity, another branch has to be
+// if we ever use another container templatised on entity, another branch has to be
 // added here.
 
-using remapper_t = std::unordered_map<spkt::entity, spkt::entity>;
+using remapper_t = std::unordered_map<entity, entity>;
 
 template <typename T>
 T transform_entity(const remapper_t& remapper, T param) {
     using U = std::decay_t<T>;
-    if constexpr (std::is_same_v<U, spkt::entity>) {
+    if constexpr (std::is_same_v<U, entity>) {
         return remapper.at(param);
-    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, spkt::entity>>) {
+    } else if constexpr (std::is_same_v<U, std::unordered_map<glm::ivec2, entity>>) {
         for (auto& entry : param) {
             entry.second = remapper.at(entry.second);
         }
@@ -42,19 +42,19 @@ T transform_entity(const remapper_t& remapper, T param) {
 
 void save_registry_to_file(
     const std::string& file,
-    const spkt::registry& reg,
+    const registry& reg,
     const save_predicate& predicate)
 {
     YAML::Emitter out;
     out << YAML::BeginMap;
     out << YAML::Key << "Entities" << YAML::BeginSeq;
 
-    const auto pred = [&](spkt::entity e) { return predicate(reg, e); };
+    const auto pred = [&](entity e) { return predicate(reg, e); };
     for (auto entity : reg.all() | std::views::filter(pred)) {
 
         out << YAML::BeginMap;
         out << YAML::Key << "ID#" << YAML::Value << entity;
-        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+        for_each_component([&]<typename T>(reflcomp<T>&& refl) {
             if constexpr (refl.is_savable()) {
                 if (reg.has<T>(entity)) {
                     const auto& c = reg.get<T>(entity);
@@ -77,7 +77,7 @@ void save_registry_to_file(
     std::ofstream(file) << out.c_str();
 }
 
-void load_registry_from_file(const std::string& file, spkt::registry& reg)
+void load_registry_from_file(const std::string& file, registry& reg)
 {
     std::ifstream stream(file);
     std::stringstream sstream;
@@ -90,40 +90,40 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
     }
 
     auto entities = data["Entities"];
-    std::unordered_map<spkt::entity, spkt::entity> id_remapper;
+    std::unordered_map<entity, entity> id_remapper;
 
     for (auto yaml_entity : entities) {
-        spkt::entity old_id = yaml_entity["ID#"].as<spkt::entity>();
-        spkt::entity new_id = reg.create();
+        entity old_id = yaml_entity["ID#"].as<entity>();
+        entity new_id = reg.create();
         id_remapper[old_id] = new_id;
     }
 
     for (auto yaml_entity : entities) {
-        spkt::entity entity = id_remapper[yaml_entity["ID#"].as<spkt::entity>()];
+        entity e = id_remapper[yaml_entity["ID#"].as<entity>()];
         if (auto spec = yaml_entity["NameComponent"]) {
             NameComponent c;
             c.name = spec["name"].as<std::string>();
-            reg.add<NameComponent>(entity, c);
+            reg.add<NameComponent>(e, c);
         }
         if (auto spec = yaml_entity["Transform2DComponent"]) {
             Transform2DComponent c;
             c.position = spec["position"].as<glm::vec2>();
             c.rotation = spec["rotation"].as<float>();
             c.scale = spec["scale"].as<glm::vec2>();
-            reg.add<Transform2DComponent>(entity, c);
+            reg.add<Transform2DComponent>(e, c);
         }
         if (auto spec = yaml_entity["Transform3DComponent"]) {
             Transform3DComponent c;
             c.position = spec["position"].as<glm::vec3>();
             c.orientation = spec["orientation"].as<glm::quat>();
             c.scale = spec["scale"].as<glm::vec3>();
-            reg.add<Transform3DComponent>(entity, c);
+            reg.add<Transform3DComponent>(e, c);
         }
         if (auto spec = yaml_entity["StaticModelComponent"]) {
             StaticModelComponent c;
             c.mesh = spec["mesh"].as<std::string>();
             c.material = spec["material"].as<std::string>();
-            reg.add<StaticModelComponent>(entity, c);
+            reg.add<StaticModelComponent>(e, c);
         }
         if (auto spec = yaml_entity["AnimatedModelComponent"]) {
             AnimatedModelComponent c;
@@ -132,7 +132,7 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.animation_name = spec["animation_name"].as<std::string>();
             c.animation_time = spec["animation_time"].as<float>();
             c.animation_speed = spec["animation_speed"].as<float>();
-            reg.add<AnimatedModelComponent>(entity, c);
+            reg.add<AnimatedModelComponent>(e, c);
         }
         if (auto spec = yaml_entity["RigidBody3DComponent"]) {
             RigidBody3DComponent c;
@@ -142,7 +142,7 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.bounciness = spec["bounciness"].as<float>();
             c.frictionCoefficient = spec["frictionCoefficient"].as<float>();
             c.rollingResistance = spec["rollingResistance"].as<float>();
-            reg.add<RigidBody3DComponent>(entity, c);
+            reg.add<RigidBody3DComponent>(e, c);
         }
         if (auto spec = yaml_entity["BoxCollider3DComponent"]) {
             BoxCollider3DComponent c;
@@ -151,7 +151,7 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.mass = spec["mass"].as<float>();
             c.halfExtents = spec["halfExtents"].as<glm::vec3>();
             c.applyScale = spec["applyScale"].as<bool>();
-            reg.add<BoxCollider3DComponent>(entity, c);
+            reg.add<BoxCollider3DComponent>(e, c);
         }
         if (auto spec = yaml_entity["SphereCollider3DComponent"]) {
             SphereCollider3DComponent c;
@@ -159,7 +159,7 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.orientation = spec["orientation"].as<glm::quat>();
             c.mass = spec["mass"].as<float>();
             c.radius = spec["radius"].as<float>();
-            reg.add<SphereCollider3DComponent>(entity, c);
+            reg.add<SphereCollider3DComponent>(e, c);
         }
         if (auto spec = yaml_entity["CapsuleCollider3DComponent"]) {
             CapsuleCollider3DComponent c;
@@ -168,30 +168,30 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.mass = spec["mass"].as<float>();
             c.radius = spec["radius"].as<float>();
             c.height = spec["height"].as<float>();
-            reg.add<CapsuleCollider3DComponent>(entity, c);
+            reg.add<CapsuleCollider3DComponent>(e, c);
         }
         if (auto spec = yaml_entity["ScriptComponent"]) {
             ScriptComponent c;
             c.script = spec["script"].as<std::string>();
             c.active = spec["active"].as<bool>();
-            reg.add<ScriptComponent>(entity, c);
+            reg.add<ScriptComponent>(e, c);
         }
         if (auto spec = yaml_entity["Camera3DComponent"]) {
             Camera3DComponent c;
             c.fov = spec["fov"].as<float>();
             c.pitch = spec["pitch"].as<float>();
-            reg.add<Camera3DComponent>(entity, c);
+            reg.add<Camera3DComponent>(e, c);
         }
         if (auto spec = yaml_entity["PathComponent"]) {
             PathComponent c;
             c.speed = spec["speed"].as<float>();
-            reg.add<PathComponent>(entity, c);
+            reg.add<PathComponent>(e, c);
         }
         if (auto spec = yaml_entity["LightComponent"]) {
             LightComponent c;
             c.colour = spec["colour"].as<glm::vec3>();
             c.brightness = spec["brightness"].as<float>();
-            reg.add<LightComponent>(entity, c);
+            reg.add<LightComponent>(e, c);
         }
         if (auto spec = yaml_entity["SunComponent"]) {
             SunComponent c;
@@ -199,13 +199,13 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.brightness = spec["brightness"].as<float>();
             c.direction = spec["direction"].as<glm::vec3>();
             c.shadows = spec["shadows"].as<bool>();
-            reg.add<SunComponent>(entity, c);
+            reg.add<SunComponent>(e, c);
         }
         if (auto spec = yaml_entity["AmbienceComponent"]) {
             AmbienceComponent c;
             c.colour = spec["colour"].as<glm::vec3>();
             c.brightness = spec["brightness"].as<float>();
-            reg.add<AmbienceComponent>(entity, c);
+            reg.add<AmbienceComponent>(e, c);
         }
         if (auto spec = yaml_entity["ParticleComponent"]) {
             ParticleComponent c;
@@ -215,38 +215,38 @@ void load_registry_from_file(const std::string& file, spkt::registry& reg)
             c.acceleration = spec["acceleration"].as<glm::vec3>();
             c.scale = spec["scale"].as<glm::vec3>();
             c.life = spec["life"].as<float>();
-            reg.add<ParticleComponent>(entity, c);
+            reg.add<ParticleComponent>(e, c);
         }
         if (auto spec = yaml_entity["TileMapSingleton"]) {
             TileMapSingleton c;
             c.tiles = transform_entity(id_remapper, spec["tiles"].as<std::unordered_map<glm::ivec2, spkt::entity>>());
-            reg.add<TileMapSingleton>(entity, c);
+            reg.add<TileMapSingleton>(e, c);
         }
     }
 }
 
-spkt::entity copy_entity(spkt::registry& reg, spkt::entity entity)
+entity copy_entity(registry& reg, entity e)
 {
-    spkt::entity new_entity = reg.create();
-    spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
-        if (refl.is_savable && reg.has<T>(entity)) {
-            reg.add<T>(new_entity, reg.get<T>(entity));
+    entity new_entity = reg.create();
+    for_each_component([&]<typename T>(reflcomp<T>&& refl) {
+        if (refl.is_savable && reg.has<T>(e)) {
+            reg.add<T>(new_entity, reg.get<T>(e));
         }
     });
     return new_entity;
 }
 
-void copy_registry(const spkt::registry& source, spkt::registry& target)
+void copy_registry(const registry& source, registry& target)
 {
     // First, set up new handles in the target scene and create a mapping between
     // new and old IDs.
-    std::unordered_map<spkt::entity, spkt::entity> id_remapper;
+    std::unordered_map<entity, entity> id_remapper;
     for (auto id : source.all()) {
         id_remapper[id] = target.create();;
     }
 
     for (auto old_entity : source.all()) {
-        spkt::entity new_entity = id_remapper.at(old_entity);
+        entity new_entity = id_remapper.at(old_entity);
         if (source.has<NameComponent>(old_entity)) {
             const NameComponent& source_comp = source.get<NameComponent>(old_entity);
             NameComponent target_comp;

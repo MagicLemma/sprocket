@@ -4,7 +4,7 @@
 
 {{Global::forward_decl_list}}
 
-namespace spkt {
+namespace {{Global::namespace}} {
 
 using entity = apx::entity;
 const auto null = apx::null;
