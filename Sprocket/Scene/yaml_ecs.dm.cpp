@@ -4,7 +4,7 @@
 
 namespace YAML {
 
-using namespace spkt;
+using namespace {{Global::namespace}};
 
 Node convert<entity>::encode(const entity& rhs)
 {
@@ -24,7 +24,7 @@ bool convert<entity>::decode(const Node& node, entity& rhs)
 
 }
 
-namespace spkt {
+namespace {{Global::namespace}} {
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const entity& i)
 {

@@ -16,6 +16,6 @@ struct convert<spkt::entity>
 
 namespace spkt {
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::entity& i);
+YAML::Emitter& operator<<(YAML::Emitter& out, const entity& i);
 
 }
