@@ -33,6 +33,13 @@ spkt::entity spkt::lua::converter<spkt::entity>::read(lua_State* L, int index)
 }
 
 namespace spkt {
+
+YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::entity& i)
+{
+    out << static_cast<std::underlying_type_t<spkt::entity>>(i);
+    return out;
+}
+
 namespace {
 
 void do_file(lua_State* L, const char* file)

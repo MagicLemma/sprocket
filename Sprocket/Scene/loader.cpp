@@ -1,6 +1,7 @@
 #include "loader.h"
 #include "meta.h"
 #include "ecs.h"
+#include "lua_ecs.h"
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/Yaml.h>

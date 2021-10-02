@@ -86,7 +86,6 @@ YAML::Emitter& operator<<(YAML::Emitter& out, const glm::ivec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);
-YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::entity& i);
 
 template <typename K, typename V, typename... Rest>
 YAML::Emitter& operator<<(YAML::Emitter& out, const std::unordered_map<K, V, Rest...>& m)
