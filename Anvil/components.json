@@ -1,5 +1,4 @@
 {
-    "project_name": "anvil",
     "namespace": "anvil",
     "includes": [
         "<Sprocket/Graphics/particles.h>",
