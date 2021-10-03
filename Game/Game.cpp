@@ -402,11 +402,12 @@ void Game::on_render()
     auto& tc = registry.get<Transform3DComponent>(d_camera);
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
     auto sun = registry.find<SunComponent>();
-    d_shadowMap.draw(
-        registry,
-        registry.get<SunComponent>(sun).direction,
-        target
-    );
+
+    d_shadowMap.begin_frame(target, registry.get<SunComponent>(sun).direction);
+    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
+        d_shadowMap.add_mesh(mc.mesh, tc.position, tc.orientation, tc.scale);
+    }
+    d_shadowMap.end_frame();
 
     if (d_paused) {
         d_post_processor.start_frame();

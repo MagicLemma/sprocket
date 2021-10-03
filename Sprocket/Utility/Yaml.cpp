@@ -1,10 +1,9 @@
 #include "Yaml.h"
 
-#include <Sprocket/Scene/ecs.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 namespace YAML {
-
-using namespace spkt;
 
 Node convert<glm::vec2>::encode(const glm::vec2& rhs)
 {
@@ -133,68 +132,42 @@ bool convert<glm::mat4>::decode(const Node& node, glm::mat4& rhs)
     return true;
 }
 
-Node convert<spkt::entity>::encode(const spkt::entity& rhs)
-{
-    Node n;
-    n = static_cast<std::underlying_type_t<spkt::entity>>(rhs);
-    return n;
-}
-
-bool convert<spkt::entity>::decode(const Node& node, spkt::entity& rhs)
-{
-    if (!node.IsScalar())
-        return false;
-
-    rhs = static_cast<spkt::entity>(node.as<std::underlying_type_t<spkt::entity>>());
-    return true;
-}
-
 }
 
 namespace spkt {
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+    out << YAML::Flow << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
     return out;
 }
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::ivec2& v)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+    out << YAML::Flow << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
     return out;
 }
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
+    out << YAML::Flow << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
     return out;
 }
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << q.w << q.x << q.y << q.z << YAML::EndSeq;
+    out << YAML::Flow << YAML::BeginSeq << q.w << q.x << q.y << q.z << YAML::EndSeq;
     return out;
 }
 
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m)
 {
-    out << YAML::Flow;
-    out << YAML::BeginSeq << m[0][0] << m[0][1] << m[0][2] << m[0][3]
-                          << m[1][0] << m[1][1] << m[1][2] << m[1][3]
-                          << m[2][0] << m[2][1] << m[2][2] << m[2][3]
-                          << m[3][0] << m[3][1] << m[3][2] << m[3][3]
-                          << YAML::EndSeq;
-    return out;
-}
-
-YAML::Emitter& operator<<(YAML::Emitter& out, const spkt::entity& i)
-{
-    out << static_cast<std::underlying_type_t<spkt::entity>>(i);
+    out << YAML::Flow << YAML::BeginSeq
+        << m[0][0] << m[0][1] << m[0][2] << m[0][3]
+        << m[1][0] << m[1][1] << m[1][2] << m[1][3]
+        << m[2][0] << m[2][1] << m[2][2] << m[2][3]
+        << m[3][0] << m[3][1] << m[3][2] << m[3][3]
+        << YAML::EndSeq;
     return out;
 }
 
