@@ -4,7 +4,7 @@
 #include <string>
 #include <functional>
 
-namespace spkt {
+namespace game {
 
 using save_predicate = std::function<bool(const registry&, entity)>;
 

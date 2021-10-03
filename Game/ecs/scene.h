@@ -6,7 +6,7 @@
 #include <vector>
 #include <functional>
 
-namespace spkt {
+namespace game {
 
 class event;
 

@@ -7,15 +7,15 @@
 namespace spkt::lua {
 
 template <>
-struct converter<spkt::entity>
+struct converter<game::entity>
 {
-    static void push(lua_State* L, const spkt::entity& value);
-    static spkt::entity read(lua_State* L, int index);
+    static void push(lua_State* L, const game::entity& value);
+    static game::entity read(lua_State* L, int index);
 };
 
 }
 
-namespace spkt {
+namespace game {
 
 // Loads the given scene into the given lua state, and provides functions for
 // creating/deleting entities as well as iterating entities. Also provides functions

@@ -4,7 +4,7 @@
 #include <string_view>
 #include <string>
 
-namespace spkt {
+namespace game {
 
 template <typename T, bool Savable, bool Scriptable>
 struct reflattr
@@ -335,7 +335,7 @@ struct reflcomp<ScriptComponent>
     {
         func(reflattr<std::string, true, true>{.name="script", .display_name="Script", .value=&component.script, .metadata={{ "file_filter", "*.obj" }} });
         func(reflattr<bool, true, true>{.name="active", .display_name="Active", .value=&component.active, .metadata={} });
-        func(reflattr<std::shared_ptr<lua::script>, false, false>{.name="script_runtime", .display_name="Script Runtime", .value=&component.script_runtime, .metadata={} });
+        func(reflattr<std::shared_ptr<spkt::lua::script>, false, false>{.name="script_runtime", .display_name="Script Runtime", .value=&component.script_runtime, .metadata={} });
     }
 
     template <typename Func>
@@ -343,7 +343,7 @@ struct reflcomp<ScriptComponent>
     {
         func(reflattr<const std::string, true, true>{.name="script", .display_name="Script", .value=&component.script, .metadata={{ "file_filter", "*.obj" }} });
         func(reflattr<const bool, true, true>{.name="active", .display_name="Active", .value=&component.active, .metadata={} });
-        func(reflattr<const std::shared_ptr<lua::script>, false, false>{.name="script_runtime", .display_name="Script Runtime", .value=&component.script_runtime, .metadata={} });
+        func(reflattr<const std::shared_ptr<spkt::lua::script>, false, false>{.name="script_runtime", .display_name="Script Runtime", .value=&component.script_runtime, .metadata={} });
     }
 };
 
@@ -517,15 +517,15 @@ struct reflcomp<CollisionEvent>
     template <typename Func>
     void for_each_attribute(CollisionEvent& component, Func&& func)
     {
-        func(reflattr<spkt::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
-        func(reflattr<spkt::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
+        func(reflattr<game::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
+        func(reflattr<game::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
     }
 
     template <typename Func>
     void for_each_attribute(const CollisionEvent& component, Func&& func) const
     {
-        func(reflattr<const spkt::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
-        func(reflattr<const spkt::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
+        func(reflattr<const game::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
+        func(reflattr<const game::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
     }
 };
 
@@ -585,8 +585,8 @@ struct reflcomp<GameGridSingleton>
     template <typename Func>
     void for_each_attribute(GameGridSingleton& component, Func&& func)
     {
-        func(reflattr<spkt::entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
-        func(reflattr<spkt::entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
+        func(reflattr<game::entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
+        func(reflattr<game::entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
         func(reflattr<glm::ivec2, true, true>{.name="hovered_square", .display_name="Hovered Square", .value=&component.hovered_square, .metadata={} });
         func(reflattr<std::optional<glm::ivec2>, true, true>{.name="clicked_square", .display_name="Clicked Square", .value=&component.clicked_square, .metadata={} });
     }
@@ -594,8 +594,8 @@ struct reflcomp<GameGridSingleton>
     template <typename Func>
     void for_each_attribute(const GameGridSingleton& component, Func&& func) const
     {
-        func(reflattr<const spkt::entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
-        func(reflattr<const spkt::entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
+        func(reflattr<const game::entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
+        func(reflattr<const game::entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
         func(reflattr<const glm::ivec2, true, true>{.name="hovered_square", .display_name="Hovered Square", .value=&component.hovered_square, .metadata={} });
         func(reflattr<const std::optional<glm::ivec2>, true, true>{.name="clicked_square", .display_name="Clicked Square", .value=&component.clicked_square, .metadata={} });
     }
@@ -613,13 +613,13 @@ struct reflcomp<TileMapSingleton>
     template <typename Func>
     void for_each_attribute(TileMapSingleton& component, Func&& func)
     {
-        func(reflattr<std::unordered_map<glm::ivec2, spkt::entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
+        func(reflattr<std::unordered_map<glm::ivec2, game::entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
     }
 
     template <typename Func>
     void for_each_attribute(const TileMapSingleton& component, Func&& func) const
     {
-        func(reflattr<const std::unordered_map<glm::ivec2, spkt::entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
+        func(reflattr<const std::unordered_map<glm::ivec2, game::entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
     }
 };
 
@@ -635,13 +635,13 @@ struct reflcomp<CameraSingleton>
     template <typename Func>
     void for_each_attribute(CameraSingleton& component, Func&& func)
     {
-        func(reflattr<spkt::entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
+        func(reflattr<game::entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
     }
 
     template <typename Func>
     void for_each_attribute(const CameraSingleton& component, Func&& func) const
     {
-        func(reflattr<const spkt::entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
+        func(reflattr<const game::entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
     }
 };
 
@@ -657,14 +657,14 @@ struct reflcomp<ParticleSingleton>
     template <typename Func>
     void for_each_attribute(ParticleSingleton& component, Func&& func)
     {
-        func(reflattr<std::shared_ptr<std::array<particle, NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
+        func(reflattr<std::shared_ptr<std::array<spkt::particle, spkt::NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
         func(reflattr<std::size_t, true, true>{.name="next_slot", .display_name="Next Slot", .value=&component.next_slot, .metadata={} });
     }
 
     template <typename Func>
     void for_each_attribute(const ParticleSingleton& component, Func&& func) const
     {
-        func(reflattr<const std::shared_ptr<std::array<particle, NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
+        func(reflattr<const std::shared_ptr<std::array<spkt::particle, spkt::NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
         func(reflattr<const std::size_t, true, true>{.name="next_slot", .display_name="Next Slot", .value=&component.next_slot, .metadata={} });
     }
 };

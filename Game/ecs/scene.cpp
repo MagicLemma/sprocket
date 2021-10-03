@@ -6,7 +6,7 @@
 #include <memory>
 #include <ranges>
 
-namespace spkt {
+namespace game {
 
 void scene::on_update(double dt)
 {
