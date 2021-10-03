@@ -7,4 +7,4 @@ struct collider_runtime;
 
 static constexpr float PHYSICS_TIME_STEP = 1.0f / 60.0f;
 
-void physics_system(spkt::registry& registry, double dt);
+void physics_system(anvil::registry& registry, double dt);

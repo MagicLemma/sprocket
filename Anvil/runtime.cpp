@@ -54,9 +54,9 @@ Runtime::Runtime(spkt::window* window)
     d_window->set_cursor_visibility(false);
 
     anvil::input_system_init(d_scene.registry, d_window);
-    spkt::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
+    anvil::load_registry_from_file("Resources/Anvil.yaml", d_scene.registry);
 
-    d_runtimeCamera = d_scene.registry.find<spkt::Camera3DComponent>();
+    d_runtimeCamera = d_scene.registry.find<anvil::Camera3DComponent>();
 
     spkt::SimpleUITheme theme;
     theme.backgroundColour = SPACE_DARK;

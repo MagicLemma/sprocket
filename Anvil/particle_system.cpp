@@ -11,17 +11,17 @@
 namespace anvil {
 namespace {
 
-spkt::ParticleSingleton& get_particle_runtime(spkt::registry& registry)
+anvil::ParticleSingleton& get_particle_runtime(anvil::registry& registry)
 {
-    auto entity = registry.find<spkt::ParticleSingleton>();
+    auto entity = registry.find<anvil::ParticleSingleton>();
     if (!registry.valid(entity)) [[unlikely]] {
         entity = registry.create();
-        registry.emplace<spkt::Runtime>(entity);
-        registry.emplace<spkt::NameComponent>(entity, "::ParticleRuntimeSingleton");
-        auto& ps = registry.emplace<spkt::ParticleSingleton>(entity);
+        registry.emplace<anvil::Runtime>(entity);
+        registry.emplace<anvil::NameComponent>(entity, "::ParticleRuntimeSingleton");
+        auto& ps = registry.emplace<anvil::ParticleSingleton>(entity);
         ps.particles = std::make_shared<std::array<spkt::particle, spkt::NUM_PARTICLES>>();
     }
-    return registry.get<spkt::ParticleSingleton>(entity);
+    return registry.get<anvil::ParticleSingleton>(entity);
 }
 
 // Generates a random point in a sphere of radius R
@@ -39,7 +39,7 @@ glm::vec3 random_noise(float R)
 
 }
 
-void particle_system(spkt::registry& registry, double dt)
+void particle_system(anvil::registry& registry, double dt)
 {
     auto& ps = get_particle_runtime(registry);
 
@@ -52,7 +52,7 @@ void particle_system(spkt::registry& registry, double dt)
 
     // Go through all particle emitter entities and check to see if they need to emit
     // any particles this frame. If they do, add them to the particle array.
-    for (auto [pc, tc] : registry.view_get<spkt::ParticleComponent, spkt::Transform3DComponent>()) {
+    for (auto [pc, tc] : registry.view_get<anvil::ParticleComponent, anvil::Transform3DComponent>()) {
         pc.accumulator += (float)dt;
         while (pc.accumulator > pc.interval) {
             // Add a particle to the particle array

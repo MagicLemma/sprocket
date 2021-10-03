@@ -8,8 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_library(anvil-ecs STATIC
             loader.cpp
             lua_ecs.cpp
-            scene.cpp
-            yaml_ecs.cpp)
+            scene.cpp)
 
 target_link_libraries(anvil-ecs PRIVATE Sprocket)
 target_include_directories(anvil-ecs PUBLIC .)

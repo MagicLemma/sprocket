@@ -30,12 +30,12 @@ rp3d::Transform convert(const glm::vec3& position, const glm::quat& orientation)
     return t;
 }
 
-rp3d::Transform convert(const spkt::Transform3DComponent& transform)
+rp3d::Transform convert(const anvil::Transform3DComponent& transform)
 {
     return convert(transform.position, transform.orientation);
 }
 
-void set_material(rp3d::Collider* collider, const spkt::RigidBody3DComponent& rc)
+void set_material(rp3d::Collider* collider, const anvil::RigidBody3DComponent& rc)
 {
     rp3d::Material& material = collider->getMaterial();
     material.setFrictionCoefficient(rc.frictionCoefficient);
@@ -45,14 +45,14 @@ void set_material(rp3d::Collider* collider, const spkt::RigidBody3DComponent& rc
 
 struct raycast_callback : public rp3d::RaycastCallback
 {
-    spkt::entity entity = spkt::null;
+    anvil::entity entity = anvil::null;
     float fraction = 10.0f;
 
     rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) override 
     {
         if (info.hitFraction < fraction) {  // This object is closer.
             fraction = info.hitFraction;
-            entity = *static_cast<spkt::entity*>(info.body->getUserData());
+            entity = *static_cast<anvil::entity*>(info.body->getUserData());
         }
         return -1.0f;
     }
@@ -60,7 +60,7 @@ struct raycast_callback : public rp3d::RaycastCallback
 
 class event_listener : public rp3d::EventListener
 {
-    using collision_vector = std::vector<std::pair<spkt::entity, spkt::entity>>;
+    using collision_vector = std::vector<std::pair<anvil::entity, anvil::entity>>;
 
     collision_vector d_collisions;
 
@@ -71,8 +71,8 @@ public:
             auto pair = data.getContactPair(p);
             auto type = pair.getEventType();
             if (type == rp3d::CollisionCallback::ContactPair::EventType::ContactStart) {
-                spkt::entity e1 = *static_cast<spkt::entity*>(pair.getBody1()->getUserData());
-                spkt::entity e2 = *static_cast<spkt::entity*>(pair.getBody2()->getUserData());
+                auto e1 = *static_cast<anvil::entity*>(pair.getBody1()->getUserData());
+                auto e2 = *static_cast<anvil::entity*>(pair.getBody2()->getUserData());
                 d_collisions.push_back({e1, e2});
             }
         }
@@ -85,7 +85,7 @@ public:
 
 struct physics_runtime
 {
-    spkt::registry* registry;
+    anvil::registry* registry;
 
     rp3d::PhysicsCommon pc;
     rp3d::PhysicsWorld* world;
@@ -94,7 +94,7 @@ struct physics_runtime
 
     float lastFrameLength = 0;
 
-    physics_runtime(spkt::registry& registry_)
+    physics_runtime(anvil::registry& registry_)
         : registry(&registry_)
     {
         rp3d::PhysicsWorld::WorldSettings settings;
@@ -107,8 +107,8 @@ struct physics_runtime
     ~physics_runtime()
     {
         // Clean up all rigid bodies before destroying the physics world.
-        for (auto entity : registry->view<spkt::RigidBody3DComponent>()) {
-            registry->get<spkt::RigidBody3DComponent>(entity).runtime.reset();
+        for (auto entity : registry->view<anvil::RigidBody3DComponent>()) {
+            registry->get<anvil::RigidBody3DComponent>(entity).runtime.reset();
         }
         pc.destroyPhysicsWorld(world);
     }
@@ -116,14 +116,14 @@ struct physics_runtime
 
 struct rigid_body_runtime
 {
-    spkt::registry*     registry;
-    spkt::entity        entity;
+    anvil::registry*     registry;
+    anvil::entity        entity;
     rp3d::PhysicsWorld* world;
     rp3d::RigidBody*    body;
 
     rigid_body_runtime(
-        spkt::registry* registry_,
-        spkt::entity entity_,
+        anvil::registry* registry_,
+        anvil::entity entity_,
         rp3d::PhysicsWorld* world_
     )
         : registry(registry_)
@@ -131,7 +131,7 @@ struct rigid_body_runtime
         , world(world_)
         , body(nullptr)
     {
-        auto& tc = registry->get<spkt::Transform3DComponent>(entity);
+        auto& tc = registry->get<anvil::Transform3DComponent>(entity);
         body = world->createRigidBody(convert(tc));
         body->setUserData(static_cast<void*>(&entity));
     }
@@ -141,13 +141,13 @@ struct rigid_body_runtime
         // Reset any collider runtimes for this entity before deleting the
         // rigid body. This will invoke the collider runtime destructors to
         // clean them up in the physics world.
-        if (auto c = registry->get_if<spkt::BoxCollider3DComponent>(entity)) {
+        if (auto c = registry->get_if<anvil::BoxCollider3DComponent>(entity)) {
             c->runtime.reset();
         }
-        if (auto c = registry->get_if<spkt::SphereCollider3DComponent>(entity)) {
+        if (auto c = registry->get_if<anvil::SphereCollider3DComponent>(entity)) {
             c->runtime.reset();
         }
-        if (auto c = registry->get_if<spkt::CapsuleCollider3DComponent>(entity)) {
+        if (auto c = registry->get_if<anvil::CapsuleCollider3DComponent>(entity)) {
             c->runtime.reset();
         }
         world->destroyRigidBody(body);
@@ -171,12 +171,12 @@ struct collider_runtime
 
 std::shared_ptr<collider_runtime> make_box_collider(
     rp3d::PhysicsCommon* pc,
-    spkt::registry& registry,
-    spkt::entity entity,
+    anvil::registry& registry,
+    anvil::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
-    auto& tc = registry.get<spkt::Transform3DComponent>(entity);
-    auto& bc = registry.get<spkt::BoxCollider3DComponent>(entity);
+    auto& tc = registry.get<anvil::Transform3DComponent>(entity);
+    auto& bc = registry.get<anvil::BoxCollider3DComponent>(entity);
 
     glm::vec3 dimensions = bc.halfExtents;
     if (bc.applyScale) { dimensions *= tc.scale; }
@@ -184,50 +184,50 @@ std::shared_ptr<collider_runtime> make_box_collider(
     rp3d::Transform transform = convert(bc.position, bc.orientation);
 
     rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
-    set_material(collider, registry.get<spkt::RigidBody3DComponent>(entity));
+    set_material(collider, registry.get<anvil::RigidBody3DComponent>(entity));
 
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
 
 std::shared_ptr<collider_runtime> make_sphere_collider(
     rp3d::PhysicsCommon* pc,
-    spkt::registry& registry,
-    spkt::entity entity,
+    anvil::registry& registry,
+    anvil::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
-    auto& tc = registry.get<spkt::Transform3DComponent>(entity);
-    auto& sc = registry.get<spkt::SphereCollider3DComponent>(entity);
+    auto& tc = registry.get<anvil::Transform3DComponent>(entity);
+    auto& sc = registry.get<anvil::SphereCollider3DComponent>(entity);
     
     rp3d::SphereShape* shape = pc->createSphereShape(sc.radius);
     rp3d::Transform transform = convert(sc.position, sc.orientation);
 
     rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
-    set_material(collider, registry.get<spkt::RigidBody3DComponent>(entity));
+    set_material(collider, registry.get<anvil::RigidBody3DComponent>(entity));
 
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
 
 std::shared_ptr<collider_runtime> make_capsule_collider(
     rp3d::PhysicsCommon* pc,
-    spkt::registry& registry,
-    spkt::entity entity,
+    anvil::registry& registry,
+    anvil::entity entity,
     rp3d::RigidBody* rigid_body
 ) {
-    auto& tc = registry.get<spkt::Transform3DComponent>(entity);
-    auto& cc = registry.get<spkt::CapsuleCollider3DComponent>(entity);
+    auto& tc = registry.get<anvil::Transform3DComponent>(entity);
+    auto& cc = registry.get<anvil::CapsuleCollider3DComponent>(entity);
     
     rp3d::CapsuleShape* shape = pc->createCapsuleShape(cc.radius, cc.height);
     rp3d::Transform transform = convert(cc.position, cc.orientation);
 
     rp3d::Collider* collider = rigid_body->addCollider(shape, transform);
-    set_material(collider, registry.get<spkt::RigidBody3DComponent>(entity));
+    set_material(collider, registry.get<anvil::RigidBody3DComponent>(entity));
 
     return std::make_shared<collider_runtime>(rigid_body, collider);
 }
 
 namespace {
 
-bool is_on_floor(spkt::registry& registry, rp3d::PhysicsWorld* const world, const rp3d::RigidBody* const body)
+bool is_on_floor(anvil::registry& registry, rp3d::PhysicsWorld* const world, const rp3d::RigidBody* const body)
 {
     // Get the point at the bottom of the rigid body.
     auto aabb = body->getAABB();
@@ -245,30 +245,30 @@ bool is_on_floor(spkt::registry& registry, rp3d::PhysicsWorld* const world, cons
     return registry.valid(cb.entity);
 }
 
-spkt::PhysicsSingleton& get_physics_runtime(spkt::registry& registry)
+anvil::PhysicsSingleton& get_physics_runtime(anvil::registry& registry)
 {
-    auto entity = registry.find<spkt::PhysicsSingleton>();
+    auto entity = registry.find<anvil::PhysicsSingleton>();
     if (!registry.valid(entity)) [[unlikely]] {
         entity = registry.create();
-        registry.emplace<spkt::Runtime>(entity);
-        registry.emplace<spkt::NameComponent>(entity, "::PhysicsRuntimeSingleton");
-        auto& ps = registry.emplace<spkt::PhysicsSingleton>(entity);
+        registry.emplace<anvil::Runtime>(entity);
+        registry.emplace<anvil::NameComponent>(entity, "::PhysicsRuntimeSingleton");
+        auto& ps = registry.emplace<anvil::PhysicsSingleton>(entity);
         ps.physics_runtime = std::make_shared<physics_runtime>(registry);
     }
-    return registry.get<spkt::PhysicsSingleton>(entity);
+    return registry.get<anvil::PhysicsSingleton>(entity);
 }
 
 }
 
-void physics_system(spkt::registry& registry, double dt)
+void physics_system(anvil::registry& registry, double dt)
 {
     auto& ps = get_physics_runtime(registry);
     auto& runtime = *ps.physics_runtime;
 
     // Pre Update
-    for (auto entity : registry.view<spkt::RigidBody3DComponent>()) {
-        const auto& tc = registry.get<spkt::Transform3DComponent>(entity);
-        auto& physics = registry.get<spkt::RigidBody3DComponent>(entity);
+    for (auto entity : registry.view<anvil::RigidBody3DComponent>()) {
+        const auto& tc = registry.get<anvil::Transform3DComponent>(entity);
+        auto& physics = registry.get<anvil::RigidBody3DComponent>(entity);
 
         if (!physics.runtime) [[unlikely]] {
             physics.runtime = std::make_shared<rigid_body_runtime>(
@@ -278,20 +278,20 @@ void physics_system(spkt::registry& registry, double dt)
 
         rp3d::RigidBody* body = physics.runtime->body;
 
-        if (registry.has<spkt::BoxCollider3DComponent>(entity)) {
-            auto& cc = registry.get<spkt::BoxCollider3DComponent>(entity);
+        if (registry.has<anvil::BoxCollider3DComponent>(entity)) {
+            auto& cc = registry.get<anvil::BoxCollider3DComponent>(entity);
             if (!cc.runtime) [[unlikely]] {
                 cc.runtime = make_box_collider(&runtime.pc, registry, entity, body);
             }
         }
-        if (registry.has<spkt::SphereCollider3DComponent>(entity)) {
-            auto& cc = registry.get<spkt::SphereCollider3DComponent>(entity);
+        if (registry.has<anvil::SphereCollider3DComponent>(entity)) {
+            auto& cc = registry.get<anvil::SphereCollider3DComponent>(entity);
             if (!cc.runtime) [[unlikely]] {
                 cc.runtime = make_sphere_collider(&runtime.pc, registry, entity, body);
             }
         }
-        if (registry.has<spkt::CapsuleCollider3DComponent>(entity)) {
-            auto& cc = registry.get<spkt::CapsuleCollider3DComponent>(entity);
+        if (registry.has<anvil::CapsuleCollider3DComponent>(entity)) {
+            auto& cc = registry.get<anvil::CapsuleCollider3DComponent>(entity);
             if (!cc.runtime) [[unlikely]] {
                 cc.runtime = make_capsule_collider(&runtime.pc, registry, entity, body);
             }
@@ -309,9 +309,9 @@ void physics_system(spkt::registry& registry, double dt)
 
             // TODO: Move to RigidBody3DComponent
             float mass = 0;
-            if (registry.has<spkt::BoxCollider3DComponent>(entity)) { mass += registry.get<spkt::BoxCollider3DComponent>(entity).mass; }
-            if (registry.has<spkt::SphereCollider3DComponent>(entity)) { mass += registry.get<spkt::SphereCollider3DComponent>(entity).mass; }
-            if (registry.has<spkt::CapsuleCollider3DComponent>(entity)) { mass += registry.get<spkt::CapsuleCollider3DComponent>(entity).mass; }
+            if (registry.has<anvil::BoxCollider3DComponent>(entity)) { mass += registry.get<anvil::BoxCollider3DComponent>(entity).mass; }
+            if (registry.has<anvil::SphereCollider3DComponent>(entity)) { mass += registry.get<anvil::SphereCollider3DComponent>(entity).mass; }
+            if (registry.has<anvil::CapsuleCollider3DComponent>(entity)) { mass += registry.get<anvil::CapsuleCollider3DComponent>(entity).mass; }
             body->setMass(mass);
         }
 
@@ -335,7 +335,7 @@ void physics_system(spkt::registry& registry, double dt)
     }
 
     // Post Update
-    for (auto [rc, tc] : registry.view_get<spkt::RigidBody3DComponent, spkt::Transform3DComponent>()) {
+    for (auto [rc, tc] : registry.view_get<anvil::RigidBody3DComponent, anvil::Transform3DComponent>()) {
         const rp3d::RigidBody* body = rc.runtime->body;
 
         tc.position = convert(body->getTransform().getPosition());
@@ -349,9 +349,9 @@ void physics_system(spkt::registry& registry, double dt)
     // Publish all collision events
     for (const auto& [a, b] : runtime.listener.collisions()) {
         auto event = registry.create();
-        registry.emplace<spkt::Runtime>(event);
-        registry.emplace<spkt::Event>(event);
-        registry.emplace<spkt::CollisionEvent>(event, a, b);
+        registry.emplace<anvil::Runtime>(event);
+        registry.emplace<anvil::Event>(event);
+        registry.emplace<anvil::CollisionEvent>(event, a, b);
     }
     runtime.listener.collisions().clear();
 }

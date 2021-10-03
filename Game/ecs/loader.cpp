@@ -1,7 +1,7 @@
 #include "loader.h"
 #include "meta.h"
 #include "ecs.h"
-#include "yaml_ecs.h"
+#include "lua_ecs.h"
 #include "scene.h"
 
 #include <Sprocket/Core/log.h>

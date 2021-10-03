@@ -10,14 +10,14 @@ namespace anvil {
 
 void draw_colliders(
     const spkt::geometry_renderer& renderer,
-    const spkt::registry& registry,
+    const anvil::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view
 );
 
 void draw_scene(
     spkt::pbr_renderer& renderer,
-    const spkt::registry& registry,
+    const anvil::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view
 );

@@ -8,8 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_library({{Global::project_name}}-ecs STATIC
             loader.cpp
             lua_ecs.cpp
-            scene.cpp
-            yaml_ecs.cpp)
+            scene.cpp)
 
 target_link_libraries({{Global::project_name}}-ecs PRIVATE Sprocket)
 target_include_directories({{Global::project_name}}-ecs PUBLIC .)

@@ -62,8 +62,8 @@ void display_attr(
 
 void Inspector::Show(Anvil& editor)
 {
-    spkt::registry& registry = editor.active_scene()->registry;
-    spkt::entity entity = editor.selected();
+    anvil::registry& registry = editor.active_scene()->registry;
+    anvil::entity entity = editor.selected();
 
     if (!registry.valid(entity)) {
         if (ImGui::Button("New Entity")) {
@@ -75,7 +75,7 @@ void Inspector::Show(Anvil& editor)
     int count = 0;
 
     ImGui::TextColored(ImVec4(0.5, 0.5, 0.5, 1.0), "ID: %llu", entity);
-    spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+    anvil::for_each_component([&]<typename T>(anvil::reflcomp<T>&& refl) {
         if (registry.has<T>(entity)) {
             auto& c = registry.get<T>(entity);
             if (ImGui::CollapsingHeader(refl.name)) {
@@ -83,7 +83,7 @@ void Inspector::Show(Anvil& editor)
                 refl.for_each_attribute(c, [&](auto&& attr) {
                     display_attr(attr.display_name, attr.metadata, attr.value, &editor);
                 });
-                if constexpr (std::is_same_v<T, spkt::Transform3DComponent>) {
+                if constexpr (std::is_same_v<T, anvil::Transform3DComponent>) {
                     spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
                 }
                 if (ImGui::Button("Delete")) { registry.remove<T>(entity); }
@@ -99,7 +99,7 @@ void Inspector::Show(Anvil& editor)
     }
 
     if (ImGui::BeginPopup("missing_components_list")) {
-        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+        anvil::for_each_component([&]<typename T>(anvil::reflcomp<T>&& refl) {
             if (!registry.has<T>(entity) && ImGui::Selectable(refl.name)) {
                 registry.add<T>(entity, {});
             }
@@ -110,7 +110,7 @@ void Inspector::Show(Anvil& editor)
 
     ImGui::Separator();
     if (ImGui::Button("Duplicate")) {
-        spkt::entity copy = spkt::copy_entity(editor.active_scene()->registry, entity);
+        anvil::entity copy = anvil::copy_entity(editor.active_scene()->registry, entity);
         editor.set_selected(copy);
     }
     if (ImGui::Button("Delete Entity")) {

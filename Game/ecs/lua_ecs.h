@@ -9,8 +9,8 @@ namespace spkt::lua {
 template <>
 struct converter<spkt::entity>
 {
-    static void push(lua_State* L, const entity& value);
-    static entity read(lua_State* L, int index);
+    static void push(lua_State* L, const spkt::entity& value);
+    static spkt::entity read(lua_State* L, int index);
 };
 
 }

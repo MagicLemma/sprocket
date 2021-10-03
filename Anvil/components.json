@@ -1,6 +1,6 @@
 {
     "project_name": "anvil",
-    "namespace": "spkt",
+    "namespace": "anvil",
     "includes": [
         "<Sprocket/Graphics/particles.h>",
         "<Sprocket/Scripting/lua_script.h>",
@@ -418,7 +418,7 @@
                 {
                     "name": "script_runtime",
                     "display_name": "Script Runtime",
-                    "type": "std::shared_ptr<lua::script>",
+                    "type": "std::shared_ptr<spkt::lua::script>",
                     "default": "nullptr",
                     "flags": {
                         "SCRIPTABLE": false,
@@ -604,13 +604,13 @@
                 {
                     "name": "entity_a",
                     "display_name": "Entity A",
-                    "type": "spkt::entity",
+                    "type": "entity",
                     "default": "{}"
                 },
                 {
                     "name": "entity_b",
                     "display_name": "Entity B",
-                    "type": "spkt::entity",
+                    "type": "entity",
                     "default": "{}"
                 }
             ]
@@ -662,14 +662,14 @@
                 {
                     "name": "hovered_square_entity",
                     "display_name": "Hovered Square Entity",
-                    "type": "spkt::entity",
-                    "default": "spkt::null"
+                    "type": "entity",
+                    "default": "anvil::null"
                 },
                 {
                     "name": "clicked_square_entity",
                     "display_name": "Clicked Square Entity",
-                    "type": "spkt::entity",
-                    "default": "spkt::null"
+                    "type": "entity",
+                    "default": "anvil::null"
                 },
                 {
                     "name": "hovered_square",
@@ -695,7 +695,7 @@
                 {
                     "name": "tiles",
                     "display_name": "Tiles",
-                    "type": "std::unordered_map<glm::ivec2, spkt::entity>",
+                    "type": "std::unordered_map<glm::ivec2, entity>",
                     "default": "{}"
                 }
             ]
@@ -711,8 +711,8 @@
                 {
                     "name": "camera_entity",
                     "display_name": "Camera Entity",
-                    "type": "spkt::entity",
-                    "default": "spkt::null"
+                    "type": "entity",
+                    "default": "anvil::null"
                 }
             ]
         },
@@ -727,14 +727,14 @@
                 {
                     "name": "particles",
                     "display_name": "Particles",
-                    "type": "std::shared_ptr<std::array<particle, NUM_PARTICLES>>",
+                    "type": "std::shared_ptr<std::array<spkt::particle, spkt::NUM_PARTICLES>>",
                     "default": "nullptr"
                 },
                 {
                     "name": "next_slot",
                     "display_name": "Next Slot",
                     "type": "std::size_t",
-                    "default": "NUM_PARTICLES - 1"
+                    "default": "spkt::NUM_PARTICLES - 1"
                 }
             ]
         }

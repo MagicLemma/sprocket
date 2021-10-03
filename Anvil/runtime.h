@@ -25,10 +25,10 @@ class Runtime
     spkt::SkyboxRenderer d_skyboxRenderer;
 
     // Scene
-    spkt::scene d_scene;
+    anvil::scene d_scene;
     spkt::CubeMap d_skybox;
     
-    spkt::entity d_runtimeCamera;
+    anvil::entity d_runtimeCamera;
 
     // Console
     spkt::SimpleUI d_ui;

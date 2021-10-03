@@ -18,7 +18,7 @@ struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
 
-namespace spkt {
+namespace anvil {
 
 using entity = apx::entity;
 const auto null = apx::null;
@@ -112,7 +112,7 @@ struct ScriptComponent
 {
     std::string script = "";
     bool active = true;
-    std::shared_ptr<lua::script> script_runtime = nullptr;
+    std::shared_ptr<spkt::lua::script> script_runtime = nullptr;
 };
 
 struct Camera3DComponent
@@ -160,8 +160,8 @@ struct ParticleComponent
 
 struct CollisionEvent
 {
-    spkt::entity entity_a = {};
-    spkt::entity entity_b = {};
+    entity entity_a = {};
+    entity entity_b = {};
 };
 
 struct PhysicsSingleton
@@ -176,26 +176,26 @@ struct InputSingleton
 
 struct GameGridSingleton
 {
-    spkt::entity hovered_square_entity = spkt::null;
-    spkt::entity clicked_square_entity = spkt::null;
+    entity hovered_square_entity = anvil::null;
+    entity clicked_square_entity = anvil::null;
     glm::ivec2 hovered_square = {0, 0};
     std::optional<glm::ivec2> clicked_square = std::nullopt;
 };
 
 struct TileMapSingleton
 {
-    std::unordered_map<glm::ivec2, spkt::entity> tiles = {};
+    std::unordered_map<glm::ivec2, entity> tiles = {};
 };
 
 struct CameraSingleton
 {
-    spkt::entity camera_entity = spkt::null;
+    entity camera_entity = anvil::null;
 };
 
 struct ParticleSingleton
 {
-    std::shared_ptr<std::array<particle, NUM_PARTICLES>> particles = nullptr;
-    std::size_t next_slot = NUM_PARTICLES - 1;
+    std::shared_ptr<std::array<spkt::particle, spkt::NUM_PARTICLES>> particles = nullptr;
+    std::size_t next_slot = spkt::NUM_PARTICLES - 1;
 };
 
 using registry = apx::registry<

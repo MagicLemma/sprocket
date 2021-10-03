@@ -3,6 +3,6 @@
 
 namespace anvil {
 
-void particle_system(spkt::registry& registry, double dt);
+void particle_system(anvil::registry& registry, double dt);
 
 }
