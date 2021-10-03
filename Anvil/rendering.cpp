@@ -54,20 +54,18 @@ void draw_scene(
     rc.face_culling(true);
     rc.depth_testing(true);
 
-    if (auto a = registry.find<anvil::AmbienceComponent>(); registry.valid(a)) {
-        const auto& ambience = registry.get<anvil::AmbienceComponent>(a);
-        renderer.set_ambience(ambience.colour, ambience.brightness);
+    for (auto [ac] : registry.view_get<anvil::AmbienceComponent>()) {
+        renderer.set_ambience(ac.colour, ac.brightness);
     }
 
-    if (auto s = registry.find<anvil::SunComponent>(); registry.valid(s)) {
-        const auto& sun = registry.get<anvil::SunComponent>(s);
-        renderer.set_sunlight(sun.colour, sun.direction, sun.brightness);
+    for (auto [sc] : registry.view_get<anvil::SunComponent>()) {
+        renderer.set_sunlight(sc.colour, sc.direction, sc.brightness);
     }
 
-    for (auto [light, transform] : registry.view_get<anvil::LightComponent, anvil::Transform3DComponent>()
+    for (auto [lc, tc] : registry.view_get<anvil::LightComponent, anvil::Transform3DComponent>()
                                  | std::views::take(spkt::MAX_NUM_LIGHTS))
     {
-        renderer.add_light(transform.position, light.colour, light.brightness);
+        renderer.add_light(tc.position, lc.colour, lc.brightness);
     }
 
     for (auto [mc, tc] : registry.view_get<anvil::StaticModelComponent, anvil::Transform3DComponent>()) {

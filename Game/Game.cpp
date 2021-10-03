@@ -151,10 +151,10 @@ void draw_scene(
         renderer.set_sunlight(sun.colour, sun.direction, sun.brightness);
     }
 
-    for (auto [light, transform] : registry.view_get<game::LightComponent, game::Transform3DComponent>()
+    for (auto [lc, tc] : registry.view_get<game::LightComponent, game::Transform3DComponent>()
                                  | std::views::take(spkt::MAX_NUM_LIGHTS))
     {
-        renderer.add_light(transform.position, light.colour, light.brightness);
+        renderer.add_light(tc.position, lc.colour, lc.brightness);
     }
 
     for (auto [mc, tc] : registry.view_get<game::StaticModelComponent, game::Transform3DComponent>()) {
