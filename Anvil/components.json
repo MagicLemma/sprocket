@@ -9,7 +9,6 @@
         "<glm/gtx/quaternion.hpp>",
         "<array>",
         "<cstddef>",
-        "<deque>",
         "<memory>",
         "<optional>",
         "<string>",
@@ -52,30 +51,6 @@
                     "display_name": "Name",
                     "type": "std::string",
                     "default": "\"Entity\""
-                }
-            ]
-        },
-        {
-            "name": "Transform2DComponent",
-            "display_name": "Transform 2D",
-            "attributes": [
-                {
-                    "name": "position",
-                    "display_name": "Position",
-                    "type": "glm::vec2",
-                    "default": "{0.0f, 0.0f}"
-                },
-                {
-                    "name": "rotation",
-                    "display_name": "Rotation",
-                    "type": "float",
-                    "default": "0.0f"
-                },
-                {
-                    "name": "scale",
-                    "display_name": "Scale",
-                    "type": "glm::vec2",
-                    "default": "{1.0f, 1.0f}"
                 }
             ]
         },
@@ -445,28 +420,6 @@
             ]
         },
         {
-            "name": "PathComponent",
-            "display_name": "Path",
-            "attributes": [
-                {
-                    "name": "markers",
-                    "display_name": "Markers",
-                    "type": "std::deque<glm::vec3>",
-                    "default": "{}",
-                    "flags": {
-                        "SCRIPTABLE": false,
-                        "SAVABLE": false
-                    }
-                },
-                {
-                    "name": "speed",
-                    "display_name": "Speed",
-                    "type": "float",
-                    "default": "0.0f"
-                }
-            ]
-        },
-        {
             "name": "LightComponent",
             "display_name": "Light",
             "attributes": [
@@ -647,71 +600,6 @@
                     "display_name": "Input Store",
                     "type": "std::shared_ptr<spkt::input_store>",
                     "default": "nullptr"
-                }
-            ]
-        },
-        {
-            "name": "GameGridSingleton",
-            "display_name": "Game Grid Singleton",
-            "flags": {
-                "SCRIPTABLE": false,
-                "SAVABLE": false
-            },
-            "attributes": [
-                {
-                    "name": "hovered_square_entity",
-                    "display_name": "Hovered Square Entity",
-                    "type": "entity",
-                    "default": "anvil::null"
-                },
-                {
-                    "name": "clicked_square_entity",
-                    "display_name": "Clicked Square Entity",
-                    "type": "entity",
-                    "default": "anvil::null"
-                },
-                {
-                    "name": "hovered_square",
-                    "display_name": "Hovered Square",
-                    "type": "glm::ivec2",
-                    "default": "{0, 0}"
-                },
-                {
-                    "name": "clicked_square",
-                    "display_name": "Clicked Square",
-                    "type": "std::optional<glm::ivec2>",
-                    "default": "std::nullopt"
-                }
-            ]
-        },
-        {
-            "name": "TileMapSingleton",
-            "display_name": "Tile Map Singleton",
-            "flags": {
-                "SCRIPTABLE": false
-            },
-            "attributes": [
-                {
-                    "name": "tiles",
-                    "display_name": "Tiles",
-                    "type": "std::unordered_map<glm::ivec2, entity>",
-                    "default": "{}"
-                }
-            ]
-        },
-        {
-            "name": "CameraSingleton",
-            "display_name": "Camera Singleton",
-            "flags": {
-                "SCRIPTABLE": false,
-                "SAVABLE": false
-            },
-            "attributes": [
-                {
-                    "name": "camera_entity",
-                    "display_name": "Camera Entity",
-                    "type": "entity",
-                    "default": "anvil::null"
                 }
             ]
         },

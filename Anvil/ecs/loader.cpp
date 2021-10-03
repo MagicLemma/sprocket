@@ -106,13 +106,6 @@ void load_registry_from_file(const std::string& file, registry& reg)
             c.name = spec["name"].as<std::string>();
             reg.add<NameComponent>(e, c);
         }
-        if (auto spec = yaml_entity["Transform2DComponent"]) {
-            Transform2DComponent c;
-            c.position = spec["position"].as<glm::vec2>();
-            c.rotation = spec["rotation"].as<float>();
-            c.scale = spec["scale"].as<glm::vec2>();
-            reg.add<Transform2DComponent>(e, c);
-        }
         if (auto spec = yaml_entity["Transform3DComponent"]) {
             Transform3DComponent c;
             c.position = spec["position"].as<glm::vec3>();
@@ -183,11 +176,6 @@ void load_registry_from_file(const std::string& file, registry& reg)
             c.pitch = spec["pitch"].as<float>();
             reg.add<Camera3DComponent>(e, c);
         }
-        if (auto spec = yaml_entity["PathComponent"]) {
-            PathComponent c;
-            c.speed = spec["speed"].as<float>();
-            reg.add<PathComponent>(e, c);
-        }
         if (auto spec = yaml_entity["LightComponent"]) {
             LightComponent c;
             c.colour = spec["colour"].as<glm::vec3>();
@@ -217,11 +205,6 @@ void load_registry_from_file(const std::string& file, registry& reg)
             c.scale = spec["scale"].as<glm::vec3>();
             c.life = spec["life"].as<float>();
             reg.add<ParticleComponent>(e, c);
-        }
-        if (auto spec = yaml_entity["TileMapSingleton"]) {
-            TileMapSingleton c;
-            c.tiles = spec["tiles"].as<std::unordered_map<glm::ivec2, entity>>();
-            reg.add<TileMapSingleton>(e, c);
         }
     }
 }
@@ -253,14 +236,6 @@ void copy_registry(const registry& source, registry& target)
             NameComponent target_comp;
             target_comp.name = source_comp.name;
             target.add<NameComponent>(new_entity, target_comp);
-        }
-        if (source.has<Transform2DComponent>(old_entity)) {
-            const Transform2DComponent& source_comp = source.get<Transform2DComponent>(old_entity);
-            Transform2DComponent target_comp;
-            target_comp.position = source_comp.position;
-            target_comp.rotation = source_comp.rotation;
-            target_comp.scale = source_comp.scale;
-            target.add<Transform2DComponent>(new_entity, target_comp);
         }
         if (source.has<Transform3DComponent>(old_entity)) {
             const Transform3DComponent& source_comp = source.get<Transform3DComponent>(old_entity);
@@ -341,12 +316,6 @@ void copy_registry(const registry& source, registry& target)
             target_comp.pitch = source_comp.pitch;
             target.add<Camera3DComponent>(new_entity, target_comp);
         }
-        if (source.has<PathComponent>(old_entity)) {
-            const PathComponent& source_comp = source.get<PathComponent>(old_entity);
-            PathComponent target_comp;
-            target_comp.speed = source_comp.speed;
-            target.add<PathComponent>(new_entity, target_comp);
-        }
         if (source.has<LightComponent>(old_entity)) {
             const LightComponent& source_comp = source.get<LightComponent>(old_entity);
             LightComponent target_comp;
@@ -380,12 +349,6 @@ void copy_registry(const registry& source, registry& target)
             target_comp.scale = source_comp.scale;
             target_comp.life = source_comp.life;
             target.add<ParticleComponent>(new_entity, target_comp);
-        }
-        if (source.has<TileMapSingleton>(old_entity)) {
-            const TileMapSingleton& source_comp = source.get<TileMapSingleton>(old_entity);
-            TileMapSingleton target_comp;
-            target_comp.tiles = source_comp.tiles;
-            target.add<TileMapSingleton>(new_entity, target_comp);
         }
     }
 }

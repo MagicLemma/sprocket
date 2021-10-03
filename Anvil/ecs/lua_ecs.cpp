@@ -168,45 +168,6 @@ int _AddNameComponent(lua_State* L) {
     return 0;
 }
 
-// C++ Functions for Transform2DComponent =====================================================
-
-int _GetTransform2DComponent(lua_State* L) {
-    if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    auto& reg = *get_pointer<anvil::registry>(L, "__registry__");
-    auto e = spkt::lua::converter<anvil::entity>::read(L, 1);
-    const auto& c = reg.get<Transform2DComponent>(e);
-    spkt::lua::converter<glm::vec2>::push(L, c.position);
-    spkt::lua::converter<float>::push(L, c.rotation);
-    spkt::lua::converter<glm::vec2>::push(L, c.scale);
-    return 3;
-}
-
-int _SetTransform2DComponent(lua_State* L) {
-    if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    auto& reg = *get_pointer<anvil::registry>(L, "__registry__");
-    auto e = spkt::lua::converter<anvil::entity>::read(L, ++ptr);
-    auto& c = reg.get<Transform2DComponent>(e);
-    c.position = spkt::lua::converter<glm::vec2>::read(L, ++ptr);
-    c.rotation = spkt::lua::converter<float>::read(L, ++ptr);
-    c.scale = spkt::lua::converter<glm::vec2>::read(L, ++ptr);
-    return 0;
-}
-
-int _AddTransform2DComponent(lua_State* L) {
-    if (!check_arg_count(L, 3 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    auto& reg = *get_pointer<anvil::registry>(L, "__registry__");
-    auto e = spkt::lua::converter<anvil::entity>::read(L, ++ptr);
-    assert(!reg.has<Transform2DComponent>(e));
-    Transform2DComponent c;
-    c.position = spkt::lua::converter<glm::vec2>::read(L, ++ptr);
-    c.rotation = spkt::lua::converter<float>::read(L, ++ptr);
-    c.scale = spkt::lua::converter<glm::vec2>::read(L, ++ptr);
-    add_command(L, [&, e, c]() { reg.add<Transform2DComponent>(e, c); });
-    return 0;
-}
-
 // C++ Functions for Transform3DComponent =====================================================
 
 int _GetTransform3DComponent(lua_State* L) {
@@ -573,39 +534,6 @@ int _AddCamera3DComponent(lua_State* L) {
     return 0;
 }
 
-// C++ Functions for PathComponent =====================================================
-
-int _GetPathComponent(lua_State* L) {
-    if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
-    auto& reg = *get_pointer<anvil::registry>(L, "__registry__");
-    auto e = spkt::lua::converter<anvil::entity>::read(L, 1);
-    const auto& c = reg.get<PathComponent>(e);
-    spkt::lua::converter<float>::push(L, c.speed);
-    return 1;
-}
-
-int _SetPathComponent(lua_State* L) {
-    if (!check_arg_count(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    auto& reg = *get_pointer<anvil::registry>(L, "__registry__");
-    auto e = spkt::lua::converter<anvil::entity>::read(L, ++ptr);
-    auto& c = reg.get<PathComponent>(e);
-    c.speed = spkt::lua::converter<float>::read(L, ++ptr);
-    return 0;
-}
-
-int _AddPathComponent(lua_State* L) {
-    if (!check_arg_count(L, 1 + 1)) { return luaL_error(L, "Bad number of args"); }
-    int ptr = 0;
-    auto& reg = *get_pointer<anvil::registry>(L, "__registry__");
-    auto e = spkt::lua::converter<anvil::entity>::read(L, ++ptr);
-    assert(!reg.has<PathComponent>(e));
-    PathComponent c;
-    c.speed = spkt::lua::converter<float>::read(L, ++ptr);
-    add_command(L, [&, e, c]() { reg.add<PathComponent>(e, c); });
-    return 0;
-}
-
 // C++ Functions for LightComponent =====================================================
 
 int _GetLightComponent(lua_State* L) {
@@ -905,45 +833,6 @@ void load_entity_component_functions(spkt::lua::script& script)
 
     lua_register(L, "HasNameComponent", &has_impl<NameComponent>);
     lua_register(L, "RemoveNameComponent", &remove_impl<NameComponent>);
-
-
-    // Lua functions for Transform2DComponent =====================================================
-
-    luaL_dostring(L, R"lua(
-        Transform2DComponent = Class(function(self, position, rotation, scale)
-            self.position = position
-            self.rotation = rotation
-            self.scale = scale
-        end)
-    )lua");
-
-    lua_register(L, "_GetTransform2DComponent", &_GetTransform2DComponent);
-
-    luaL_dostring(L, R"lua(
-        function GetTransform2DComponent(entity)
-            position, rotation, scale = _GetTransform2DComponent(entity)
-            return Transform2DComponent(position, rotation, scale)
-        end
-    )lua");
-
-    lua_register(L, "_SetTransform2DComponent", &_SetTransform2DComponent);
-
-    luaL_dostring(L, R"lua(
-        function SetTransform2DComponent(entity, c)
-            _SetTransform2DComponent(entity, c.position, c.rotation, c.scale)
-        end
-    )lua");
-
-    lua_register(L, "_AddTransform2DComponent", &_AddTransform2DComponent);
-
-    luaL_dostring(L, R"lua(
-        function AddTransform2DComponent(entity, c)
-            _AddTransform2DComponent(entity, c.position, c.rotation, c.scale)
-        end
-    )lua");
-
-    lua_register(L, "HasTransform2DComponent", &has_impl<Transform2DComponent>);
-    lua_register(L, "RemoveTransform2DComponent", &remove_impl<Transform2DComponent>);
 
 
     // Lua functions for Transform3DComponent =====================================================
@@ -1302,43 +1191,6 @@ void load_entity_component_functions(spkt::lua::script& script)
     lua_register(L, "RemoveCamera3DComponent", &remove_impl<Camera3DComponent>);
 
 
-    // Lua functions for PathComponent =====================================================
-
-    luaL_dostring(L, R"lua(
-        PathComponent = Class(function(self, speed)
-            self.speed = speed
-        end)
-    )lua");
-
-    lua_register(L, "_GetPathComponent", &_GetPathComponent);
-
-    luaL_dostring(L, R"lua(
-        function GetPathComponent(entity)
-            speed = _GetPathComponent(entity)
-            return PathComponent(speed)
-        end
-    )lua");
-
-    lua_register(L, "_SetPathComponent", &_SetPathComponent);
-
-    luaL_dostring(L, R"lua(
-        function SetPathComponent(entity, c)
-            _SetPathComponent(entity, c.speed)
-        end
-    )lua");
-
-    lua_register(L, "_AddPathComponent", &_AddPathComponent);
-
-    luaL_dostring(L, R"lua(
-        function AddPathComponent(entity, c)
-            _AddPathComponent(entity, c.speed)
-        end
-    )lua");
-
-    lua_register(L, "HasPathComponent", &has_impl<PathComponent>);
-    lua_register(L, "RemovePathComponent", &remove_impl<PathComponent>);
-
-
     // Lua functions for LightComponent =====================================================
 
     luaL_dostring(L, R"lua(
@@ -1595,10 +1447,6 @@ void load_registry(spkt::lua::script& script, anvil::registry& registry)
     lua_register(L, "_view_NameComponent_next", view_next<NameComponent>);
     luaL_dostring(L, view_source_code("NameComponent").c_str());
 
-    lua_register(L, "_view_Transform2DComponent_init", view_init<Transform2DComponent>);
-    lua_register(L, "_view_Transform2DComponent_next", view_next<Transform2DComponent>);
-    luaL_dostring(L, view_source_code("Transform2DComponent").c_str());
-
     lua_register(L, "_view_Transform3DComponent_init", view_init<Transform3DComponent>);
     lua_register(L, "_view_Transform3DComponent_next", view_next<Transform3DComponent>);
     luaL_dostring(L, view_source_code("Transform3DComponent").c_str());
@@ -1634,10 +1482,6 @@ void load_registry(spkt::lua::script& script, anvil::registry& registry)
     lua_register(L, "_view_Camera3DComponent_init", view_init<Camera3DComponent>);
     lua_register(L, "_view_Camera3DComponent_next", view_next<Camera3DComponent>);
     luaL_dostring(L, view_source_code("Camera3DComponent").c_str());
-
-    lua_register(L, "_view_PathComponent_init", view_init<PathComponent>);
-    lua_register(L, "_view_PathComponent_next", view_next<PathComponent>);
-    luaL_dostring(L, view_source_code("PathComponent").c_str());
 
     lua_register(L, "_view_LightComponent_init", view_init<LightComponent>);
     lua_register(L, "_view_LightComponent_next", view_next<LightComponent>);

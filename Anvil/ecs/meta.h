@@ -84,32 +84,6 @@ struct reflcomp<NameComponent>
 };
 
 template <>
-struct reflcomp<Transform2DComponent>
-{
-    static constexpr const char* name          = "Transform2DComponent";
-    static constexpr const char* display_name  = "Transform 2D";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(Transform2DComponent& component, Func&& func)
-    {
-        func(reflattr<glm::vec2, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<float, true, true>{.name="rotation", .display_name="Rotation", .value=&component.rotation, .metadata={} });
-        func(reflattr<glm::vec2, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const Transform2DComponent& component, Func&& func) const
-    {
-        func(reflattr<const glm::vec2, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<const float, true, true>{.name="rotation", .display_name="Rotation", .value=&component.rotation, .metadata={} });
-        func(reflattr<const glm::vec2, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
-    }
-};
-
-template <>
 struct reflcomp<Transform3DComponent>
 {
     static constexpr const char* name          = "Transform3DComponent";
@@ -372,30 +346,6 @@ struct reflcomp<Camera3DComponent>
 };
 
 template <>
-struct reflcomp<PathComponent>
-{
-    static constexpr const char* name          = "PathComponent";
-    static constexpr const char* display_name  = "Path";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(PathComponent& component, Func&& func)
-    {
-        func(reflattr<std::deque<glm::vec3>, false, false>{.name="markers", .display_name="Markers", .value=&component.markers, .metadata={} });
-        func(reflattr<float, true, true>{.name="speed", .display_name="Speed", .value=&component.speed, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const PathComponent& component, Func&& func) const
-    {
-        func(reflattr<const std::deque<glm::vec3>, false, false>{.name="markers", .display_name="Markers", .value=&component.markers, .metadata={} });
-        func(reflattr<const float, true, true>{.name="speed", .display_name="Speed", .value=&component.speed, .metadata={} });
-    }
-};
-
-template <>
 struct reflcomp<LightComponent>
 {
     static constexpr const char* name          = "LightComponent";
@@ -574,78 +524,6 @@ struct reflcomp<InputSingleton>
 };
 
 template <>
-struct reflcomp<GameGridSingleton>
-{
-    static constexpr const char* name          = "GameGridSingleton";
-    static constexpr const char* display_name  = "Game Grid Singleton";
-
-    static constexpr bool        is_savable()    { return false; }
-    static constexpr bool        is_scriptable() { return false; }
-
-    template <typename Func>
-    void for_each_attribute(GameGridSingleton& component, Func&& func)
-    {
-        func(reflattr<entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
-        func(reflattr<entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
-        func(reflattr<glm::ivec2, true, true>{.name="hovered_square", .display_name="Hovered Square", .value=&component.hovered_square, .metadata={} });
-        func(reflattr<std::optional<glm::ivec2>, true, true>{.name="clicked_square", .display_name="Clicked Square", .value=&component.clicked_square, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const GameGridSingleton& component, Func&& func) const
-    {
-        func(reflattr<const entity, true, true>{.name="hovered_square_entity", .display_name="Hovered Square Entity", .value=&component.hovered_square_entity, .metadata={} });
-        func(reflattr<const entity, true, true>{.name="clicked_square_entity", .display_name="Clicked Square Entity", .value=&component.clicked_square_entity, .metadata={} });
-        func(reflattr<const glm::ivec2, true, true>{.name="hovered_square", .display_name="Hovered Square", .value=&component.hovered_square, .metadata={} });
-        func(reflattr<const std::optional<glm::ivec2>, true, true>{.name="clicked_square", .display_name="Clicked Square", .value=&component.clicked_square, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<TileMapSingleton>
-{
-    static constexpr const char* name          = "TileMapSingleton";
-    static constexpr const char* display_name  = "Tile Map Singleton";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return false; }
-
-    template <typename Func>
-    void for_each_attribute(TileMapSingleton& component, Func&& func)
-    {
-        func(reflattr<std::unordered_map<glm::ivec2, entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const TileMapSingleton& component, Func&& func) const
-    {
-        func(reflattr<const std::unordered_map<glm::ivec2, entity>, true, true>{.name="tiles", .display_name="Tiles", .value=&component.tiles, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<CameraSingleton>
-{
-    static constexpr const char* name          = "CameraSingleton";
-    static constexpr const char* display_name  = "Camera Singleton";
-
-    static constexpr bool        is_savable()    { return false; }
-    static constexpr bool        is_scriptable() { return false; }
-
-    template <typename Func>
-    void for_each_attribute(CameraSingleton& component, Func&& func)
-    {
-        func(reflattr<entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const CameraSingleton& component, Func&& func) const
-    {
-        func(reflattr<const entity, true, true>{.name="camera_entity", .display_name="Camera Entity", .value=&component.camera_entity, .metadata={} });
-    }
-};
-
-template <>
 struct reflcomp<ParticleSingleton>
 {
     static constexpr const char* name          = "ParticleSingleton";
@@ -676,7 +554,6 @@ void for_each_component(Func&& func)
     func(reflcomp<Runtime>{});
     func(reflcomp<Event>{});
     func(reflcomp<NameComponent>{});
-    func(reflcomp<Transform2DComponent>{});
     func(reflcomp<Transform3DComponent>{});
     func(reflcomp<StaticModelComponent>{});
     func(reflcomp<AnimatedModelComponent>{});
@@ -686,7 +563,6 @@ void for_each_component(Func&& func)
     func(reflcomp<CapsuleCollider3DComponent>{});
     func(reflcomp<ScriptComponent>{});
     func(reflcomp<Camera3DComponent>{});
-    func(reflcomp<PathComponent>{});
     func(reflcomp<LightComponent>{});
     func(reflcomp<SunComponent>{});
     func(reflcomp<AmbienceComponent>{});
@@ -694,9 +570,6 @@ void for_each_component(Func&& func)
     func(reflcomp<CollisionEvent>{});
     func(reflcomp<PhysicsSingleton>{});
     func(reflcomp<InputSingleton>{});
-    func(reflcomp<GameGridSingleton>{});
-    func(reflcomp<TileMapSingleton>{});
-    func(reflcomp<CameraSingleton>{});
     func(reflcomp<ParticleSingleton>{});
 }
 
