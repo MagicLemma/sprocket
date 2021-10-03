@@ -29,10 +29,10 @@ class Game
     
     Mode d_mode;
 
-    spkt::scene d_scene;
+    game::scene d_scene;
 
-    spkt::entity d_camera;
-    spkt::entity d_worker;
+    game::entity d_camera;
+    game::entity d_worker;
     
     // RENDERING
     spkt::pbr_renderer d_entityRenderer;

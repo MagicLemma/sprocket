@@ -26,19 +26,19 @@ using namespace spkt;
 namespace {
 
 template <typename T>
-T& get_singleton(spkt::registry& reg)
+T& get_singleton(game::registry& reg)
 {
     return reg.get<T>(reg.find<T>());
 }
 
-void clear_events_system(spkt::registry& registry, double dt)
+void clear_events_system(game::registry& registry, double dt)
 {
-    registry.destroy_if<spkt::Event>([](spkt::entity) { return true; });
+    registry.destroy_if<game::Event>([](game::entity) { return true; });
 }
 
-void path_follower_system(spkt::registry& registry, double dt)
+void path_follower_system(game::registry& registry, double dt)
 {
-    for (auto [path, transform] : registry.view_get<spkt::PathComponent, spkt::Transform3DComponent>()) {
+    for (auto [path, transform] : registry.view_get<game::PathComponent, game::Transform3DComponent>()) {
         if (path.markers.empty()) { continue; }
         
         glm::vec3 to_dest = path.markers.front() - transform.position;
@@ -54,25 +54,25 @@ void path_follower_system(spkt::registry& registry, double dt)
     }
 }
 
-void input_system_init(spkt::registry& registry, spkt::window* window)
+void input_system_init(game::registry& registry, spkt::window* window)
 {
     assert(window);
     auto singleton = registry.create();
-    registry.emplace<spkt::Runtime>(singleton);
-    auto& is = registry.emplace<spkt::InputSingleton>(singleton);
+    registry.emplace<game::Runtime>(singleton);
+    auto& is = registry.emplace<game::InputSingleton>(singleton);
     is.input_store = std::make_shared<spkt::input_store>(window);
 }
 
-void input_system_on_event(spkt::registry& registry, spkt::event& event)
+void input_system_on_event(game::registry& registry, spkt::event& event)
 {
-    auto singleton = registry.find<spkt::InputSingleton>();
-    registry.get<spkt::InputSingleton>(singleton).input_store->on_event(event);
+    auto singleton = registry.find<game::InputSingleton>();
+    registry.get<game::InputSingleton>(singleton).input_store->on_event(event);
 }
 
-void input_system_end(spkt::registry& registry, double dt)
+void input_system_end(game::registry& registry, double dt)
 {
-    auto singleton = registry.find<spkt::InputSingleton>();
-    registry.get<spkt::InputSingleton>(singleton).input_store->end_frame();
+    auto singleton = registry.find<game::InputSingleton>();
+    registry.get<game::InputSingleton>(singleton).input_store->end_frame();
 }
 
 void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
@@ -132,7 +132,7 @@ void ShaderInfoPanel(DevUI& ui, shader& shader)
 
 void draw_scene(
     spkt::pbr_renderer& renderer,
-    const spkt::registry& registry,
+    const game::registry& registry,
     const glm::mat4& proj,
     const glm::mat4& view)
 {
@@ -141,30 +141,30 @@ void draw_scene(
     rc.depth_testing(true);
     renderer.begin_frame(proj, view);
 
-    if (auto a = registry.find<spkt::AmbienceComponent>(); registry.valid(a)) {
-        const auto& ambience = registry.get<spkt::AmbienceComponent>(a);
+    if (auto a = registry.find<game::AmbienceComponent>(); registry.valid(a)) {
+        const auto& ambience = registry.get<game::AmbienceComponent>(a);
         renderer.set_ambience(ambience.colour, ambience.brightness);
     }
 
-    if (auto s = registry.find<spkt::SunComponent>(); registry.valid(s)) {
-        const auto& sun = registry.get<spkt::SunComponent>(s);
+    if (auto s = registry.find<game::SunComponent>(); registry.valid(s)) {
+        const auto& sun = registry.get<game::SunComponent>(s);
         renderer.set_sunlight(sun.colour, sun.direction, sun.brightness);
     }
 
-    for (auto [light, transform] : registry.view_get<spkt::LightComponent, spkt::Transform3DComponent>()
+    for (auto [light, transform] : registry.view_get<game::LightComponent, game::Transform3DComponent>()
                                  | std::views::take(spkt::MAX_NUM_LIGHTS))
     {
         renderer.add_light(transform.position, light.colour, light.brightness);
     }
 
-    for (auto [mc, tc] : registry.view_get<spkt::StaticModelComponent, spkt::Transform3DComponent>()) {
+    for (auto [mc, tc] : registry.view_get<game::StaticModelComponent, game::Transform3DComponent>()) {
         renderer.draw_static_mesh(
             tc.position, tc.orientation, tc.scale,
             mc.mesh, mc.material
         );
     }
 
-    for (auto [mc, tc] : registry.view_get<spkt::AnimatedModelComponent, spkt::Transform3DComponent>()) {
+    for (auto [mc, tc] : registry.view_get<game::AnimatedModelComponent, game::Transform3DComponent>()) {
         renderer.draw_animated_mesh(
             tc.position, tc.orientation, tc.scale,
             mc.mesh, mc.material,
@@ -172,7 +172,7 @@ void draw_scene(
         );
     }
 
-    for (auto [ps] : registry.view_get<spkt::ParticleSingleton>()) {
+    for (auto [ps] : registry.view_get<game::ParticleSingleton>()) {
         std::vector<spkt::model_instance> instance_data(spkt::NUM_PARTICLES);
         for (const auto& particle : *ps.particles) {
             if (particle.life > 0.0) {
@@ -214,8 +214,8 @@ Game::Game(spkt::window* window)
     d_cycle.SetAngle(3.14195f);
 
     auto& registry = d_scene.registry;
-    auto sun_entity = registry.find<SunComponent>();
-    auto& sun = registry.get<SunComponent>(sun_entity);
+    auto sun_entity = registry.find<game::SunComponent>();
+    auto& sun = registry.get<game::SunComponent>(sun_entity);
     sun.direction = d_cycle.GetSunDir();
 
     d_post_processor.add_effect(
@@ -235,7 +235,7 @@ void Game::load_scene(std::string_view file)
     
     input_system_init(registry, d_window);
     game_grid_system_init(registry);
-    spkt::load_registry_from_file(std::string(file), registry);
+    game::load_registry_from_file(std::string(file), registry);
     
     d_scene.systems = {
         game_grid_system,
@@ -252,15 +252,15 @@ void Game::load_scene(std::string_view file)
     d_paused = false;
     d_sceneFile = file;
 
-    d_worker = registry.find<spkt::NameComponent>([&](spkt::entity entity) {
-        return registry.get<spkt::NameComponent>(entity).name == "Worker";
+    d_worker = registry.find<game::NameComponent>([&](game::entity entity) {
+        return registry.get<game::NameComponent>(entity).name == "Worker";
     });
 
-    d_camera = registry.find<spkt::NameComponent>([&](spkt::entity entity) {
-        return registry.get<spkt::NameComponent>(entity).name == "Camera";
+    d_camera = registry.find<game::NameComponent>([&](game::entity entity) {
+        return registry.get<game::NameComponent>(entity).name == "Camera";
     });
 
-    auto& cam = get_singleton<spkt::CameraSingleton>(registry);
+    auto& cam = get_singleton<game::CameraSingleton>(registry);
     cam.camera_entity = d_camera;
 
     assert(registry.valid(d_worker));
@@ -280,8 +280,8 @@ void Game::on_event(spkt::event& event)
     }
 
     auto& registry = d_scene.registry;
-    auto tile_entity = registry.find<TileMapSingleton>();
-    const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
+    auto tile_entity = registry.find<game::TileMapSingleton>();
+    const auto& tiles = registry.get<game::TileMapSingleton>(tile_entity).tiles;
 
     if (d_paused) {
         d_escapeMenu.on_event(event);
@@ -303,7 +303,7 @@ void Game::on_event(spkt::event& event)
     if (auto data = event.get_if<mouse_pressed_event>()) {
         if (data->mods & KeyModifier::CTRL) {
             const auto& reg = registry;
-            auto [tc, cc] = reg.get_all<Transform3DComponent, Camera3DComponent>(d_camera);
+            auto [tc, cc] = reg.get_all<game::Transform3DComponent, game::Camera3DComponent>(d_camera);
 
             glm::vec3 cameraPos = tc.position;
             glm::vec3 direction = Maths::GetMouseRay(
@@ -318,19 +318,19 @@ void Game::on_event(spkt::event& event)
             glm::vec3 mousePos = cameraPos + lambda * direction;
             mousePos.y = 0.5f;
             
-            auto& path = registry.get<PathComponent>(d_worker);
+            auto& path = registry.get<game::PathComponent>(d_worker);
 
             if (data->button == Mouse::LEFT) {
                 path.markers.clear();
-                auto pos = registry.get<Transform3DComponent>(d_worker).position;
+                auto pos = registry.get<game::Transform3DComponent>(d_worker).position;
                 if (glm::distance(pos, mousePos) > 1.0f) {
-                    const auto& grid = get_singleton<GameGridSingleton>(registry);
+                    const auto& grid = get_singleton<game::GameGridSingleton>(registry);
                     path.markers = make_astar_path(
                         pos,
                         mousePos,
                         [&](const glm::ivec2& pos) {
                             auto it = tiles.find(pos);
-                            spkt::entity entity = it != tiles.end() ? it->second : spkt::null;
+                            game::entity entity = it != tiles.end() ? it->second : game::null;
                             return registry.valid(entity);
                         }
                     );
@@ -356,7 +356,7 @@ void Game::on_update(double dt)
     using namespace spkt;
     auto& registry = d_scene.registry;
 
-    const auto& transform = registry.get<Transform3DComponent>(d_camera);
+    const auto& transform = registry.get<game::Transform3DComponent>(d_camera);
     spkt::set_listener(transform.position, Maths::Forwards(transform.orientation));
 
     d_hoveredEntityUI.on_update(dt);
@@ -364,8 +364,8 @@ void Game::on_update(double dt)
         d_cycle.on_update(dt);
     }
     
-    auto sun_entity = registry.find<SunComponent>();
-    auto& sun = registry.get<SunComponent>(sun_entity);
+    auto sun_entity = registry.find<game::SunComponent>();
+    auto& sun = registry.get<game::SunComponent>(sun_entity);
     float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
@@ -393,17 +393,17 @@ void Game::on_render()
 {
     using namespace spkt;
     
-    const auto& game_grid = get_singleton<GameGridSingleton>(d_scene.registry);
+    const auto& game_grid = get_singleton<game::GameGridSingleton>(d_scene.registry);
     auto& registry = d_scene.registry;
 
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
-    auto& tc = registry.get<Transform3DComponent>(d_camera);
+    auto& tc = registry.get<game::Transform3DComponent>(d_camera);
     glm::vec3 target = tc.position + lambda * Maths::Forwards(tc.orientation);
-    auto sun = registry.find<SunComponent>();
+    auto sun = registry.find<game::SunComponent>();
 
-    d_shadowMap.begin_frame(target, registry.get<SunComponent>(sun).direction);
-    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
+    d_shadowMap.begin_frame(target, registry.get<game::SunComponent>(sun).direction);
+    for (auto [mc, tc] : registry.view_get<game::StaticModelComponent, game::Transform3DComponent>()) {
         d_shadowMap.add_mesh(mc.mesh, tc.position, tc.orientation, tc.scale);
     }
     d_shadowMap.end_frame();
@@ -422,8 +422,8 @@ void Game::on_render()
     }
 
     if (!d_paused) {
-        auto tile_entity = registry.find<TileMapSingleton>();
-        const auto& tiles = registry.get<TileMapSingleton>(tile_entity).tiles;
+        auto tile_entity = registry.find<game::TileMapSingleton>();
+        const auto& tiles = registry.get<game::TileMapSingleton>(tile_entity).tiles;
 
         d_hoveredEntityUI.StartFrame();
 
@@ -433,7 +433,7 @@ void Game::on_render()
 
         if (game_grid.clicked_square.has_value()) {
             auto it = tiles.find(game_grid.clicked_square.value());
-            spkt::entity e = (it != tiles.end()) ? it->second : spkt::null;
+            game::entity e = (it != tiles.end()) ? it->second : game::null;
 
             float width = 0.15f * w;
             float height = 0.6f * h;
@@ -477,7 +477,7 @@ void Game::on_render()
         }
 
         auto it = tiles.find(game_grid.hovered_square);
-        spkt::entity e = (it != tiles.end()) ? it->second : spkt::null;
+        game::entity e = (it != tiles.end()) ? it->second : game::null;
         if (registry.valid(e)) {
             float width = 200;
             float height = 50;
@@ -487,8 +487,8 @@ void Game::on_render()
             glm::vec4 region{x, y, width, height};
             d_hoveredEntityUI.StartPanel("Hovered", &region, PanelType::UNCLICKABLE);
             std::string name = "Unnamed";
-            if (registry.has<NameComponent>(e)) {
-                name = registry.get<NameComponent>(e).name;
+            if (registry.has<game::NameComponent>(e)) {
+                name = registry.get<game::NameComponent>(e).name;
             }
             d_hoveredEntityUI.Text(name, 36.0f, {0, 0, width, height});
             d_hoveredEntityUI.EndPanel();
@@ -501,7 +501,7 @@ void Game::on_render()
         d_devUI.StartFrame();
 
         const auto& reg = registry;
-        auto [tc, cc] = reg.get_all<Transform3DComponent, Camera3DComponent>(d_camera);
+        auto [tc, cc] = reg.get_all<game::Transform3DComponent, game::Camera3DComponent>(d_camera);
         glm::mat4 view = spkt::make_view(tc.position, tc.orientation, cc.pitch);
         glm::mat4 proj = spkt::make_proj(cc.fov);
 
@@ -565,12 +565,12 @@ void Game::on_render()
 
     buttonRegion.y += 60;
     if (d_escapeMenu.Button("Save", buttonRegion)) {
-        const auto entity_filter = [](const spkt::registry& reg, spkt::entity entity) {
-            return !reg.has<Runtime>(entity);
+        const auto entity_filter = [](const game::registry& reg, game::entity entity) {
+            return !reg.has<game::Runtime>(entity);
         };
 
         spkt::log::info("Saving to {}", d_sceneFile);
-        spkt::save_registry_to_file(d_sceneFile, registry, entity_filter);
+        game::save_registry_to_file(d_sceneFile, registry, entity_filter);
         spkt::log::info("Done!");
     }
     
@@ -624,7 +624,7 @@ void Game::on_render()
 std::pair<glm::mat4, glm::mat4> Game::get_proj_view_matrices() const
 {
     const auto& reg = d_scene.registry;
-    auto [tc, cc] = reg.get_all<spkt::Transform3DComponent, spkt::Camera3DComponent>(d_camera);
+    auto [tc, cc] = reg.get_all<game::Transform3DComponent, game::Camera3DComponent>(d_camera);
     return { 
         spkt::make_proj(cc.fov),
         spkt::make_view(tc.position, tc.orientation, cc.pitch)
