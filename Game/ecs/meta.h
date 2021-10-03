@@ -84,32 +84,6 @@ struct reflcomp<NameComponent>
 };
 
 template <>
-struct reflcomp<Transform2DComponent>
-{
-    static constexpr const char* name          = "Transform2DComponent";
-    static constexpr const char* display_name  = "Transform 2D";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(Transform2DComponent& component, Func&& func)
-    {
-        func(reflattr<glm::vec2, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<float, true, true>{.name="rotation", .display_name="Rotation", .value=&component.rotation, .metadata={} });
-        func(reflattr<glm::vec2, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const Transform2DComponent& component, Func&& func) const
-    {
-        func(reflattr<const glm::vec2, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<const float, true, true>{.name="rotation", .display_name="Rotation", .value=&component.rotation, .metadata={} });
-        func(reflattr<const glm::vec2, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
-    }
-};
-
-template <>
 struct reflcomp<Transform3DComponent>
 {
     static constexpr const char* name          = "Transform3DComponent";
@@ -186,138 +160,6 @@ struct reflcomp<AnimatedModelComponent>
         func(reflattr<const std::string, true, true>{.name="animation_name", .display_name="Animation name", .value=&component.animation_name, .metadata={} });
         func(reflattr<const float, true, true>{.name="animation_time", .display_name="Animation Time", .value=&component.animation_time, .metadata={} });
         func(reflattr<const float, true, true>{.name="animation_speed", .display_name="Animation Speed", .value=&component.animation_speed, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<RigidBody3DComponent>
-{
-    static constexpr const char* name          = "RigidBody3DComponent";
-    static constexpr const char* display_name  = "Rigid Body 3D";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(RigidBody3DComponent& component, Func&& func)
-    {
-        func(reflattr<glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
-        func(reflattr<bool, true, true>{.name="gravity", .display_name="Gravity", .value=&component.gravity, .metadata={} });
-        func(reflattr<bool, true, true>{.name="frozen", .display_name="Frozen", .value=&component.frozen, .metadata={} });
-        func(reflattr<float, true, true>{.name="bounciness", .display_name="Bounciness", .value=&component.bounciness, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(reflattr<float, true, true>{.name="frictionCoefficient", .display_name="Friction Coefficient", .value=&component.frictionCoefficient, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(reflattr<float, true, true>{.name="rollingResistance", .display_name="Rolling Resistance", .value=&component.rollingResistance, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(reflattr<glm::vec3, false, true>{.name="force", .display_name="Force", .value=&component.force, .metadata={} });
-        func(reflattr<bool, false, true>{.name="onFloor", .display_name="OnFloor", .value=&component.onFloor, .metadata={} });
-        func(reflattr<std::shared_ptr<rigid_body_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const RigidBody3DComponent& component, Func&& func) const
-    {
-        func(reflattr<const glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
-        func(reflattr<const bool, true, true>{.name="gravity", .display_name="Gravity", .value=&component.gravity, .metadata={} });
-        func(reflattr<const bool, true, true>{.name="frozen", .display_name="Frozen", .value=&component.frozen, .metadata={} });
-        func(reflattr<const float, true, true>{.name="bounciness", .display_name="Bounciness", .value=&component.bounciness, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(reflattr<const float, true, true>{.name="frictionCoefficient", .display_name="Friction Coefficient", .value=&component.frictionCoefficient, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(reflattr<const float, true, true>{.name="rollingResistance", .display_name="Rolling Resistance", .value=&component.rollingResistance, .metadata={{ "lower_limit", "0.0" }, { "upper_limit", "1.0" }} });
-        func(reflattr<const glm::vec3, false, true>{.name="force", .display_name="Force", .value=&component.force, .metadata={} });
-        func(reflattr<const bool, false, true>{.name="onFloor", .display_name="OnFloor", .value=&component.onFloor, .metadata={} });
-        func(reflattr<const std::shared_ptr<rigid_body_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<BoxCollider3DComponent>
-{
-    static constexpr const char* name          = "BoxCollider3DComponent";
-    static constexpr const char* display_name  = "Box Collider 3D";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(BoxCollider3DComponent& component, Func&& func)
-    {
-        func(reflattr<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(reflattr<float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(reflattr<glm::vec3, true, true>{.name="halfExtents", .display_name="Half Extents", .value=&component.halfExtents, .metadata={} });
-        func(reflattr<bool, true, true>{.name="applyScale", .display_name="Apply Scale", .value=&component.applyScale, .metadata={} });
-        func(reflattr<std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const BoxCollider3DComponent& component, Func&& func) const
-    {
-        func(reflattr<const glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<const glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(reflattr<const float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(reflattr<const glm::vec3, true, true>{.name="halfExtents", .display_name="Half Extents", .value=&component.halfExtents, .metadata={} });
-        func(reflattr<const bool, true, true>{.name="applyScale", .display_name="Apply Scale", .value=&component.applyScale, .metadata={} });
-        func(reflattr<const std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<SphereCollider3DComponent>
-{
-    static constexpr const char* name          = "SphereCollider3DComponent";
-    static constexpr const char* display_name  = "Sphere Collider 3D";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(SphereCollider3DComponent& component, Func&& func)
-    {
-        func(reflattr<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(reflattr<float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(reflattr<float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
-        func(reflattr<std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const SphereCollider3DComponent& component, Func&& func) const
-    {
-        func(reflattr<const glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<const glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(reflattr<const float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(reflattr<const float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
-        func(reflattr<const std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<CapsuleCollider3DComponent>
-{
-    static constexpr const char* name          = "CapsuleCollider3DComponent";
-    static constexpr const char* display_name  = "Capsule Collider 3D";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(CapsuleCollider3DComponent& component, Func&& func)
-    {
-        func(reflattr<glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(reflattr<float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(reflattr<float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
-        func(reflattr<float, true, true>{.name="height", .display_name="Height", .value=&component.height, .metadata={} });
-        func(reflattr<std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const CapsuleCollider3DComponent& component, Func&& func) const
-    {
-        func(reflattr<const glm::vec3, true, true>{.name="position", .display_name="Position", .value=&component.position, .metadata={} });
-        func(reflattr<const glm::quat, true, false>{.name="orientation", .display_name="Orientation", .value=&component.orientation, .metadata={} });
-        func(reflattr<const float, true, true>{.name="mass", .display_name="Mass", .value=&component.mass, .metadata={} });
-        func(reflattr<const float, true, true>{.name="radius", .display_name="Radius", .value=&component.radius, .metadata={} });
-        func(reflattr<const float, true, true>{.name="height", .display_name="Height", .value=&component.height, .metadata={} });
-        func(reflattr<const std::shared_ptr<collider_runtime>, false, false>{.name="runtime", .display_name="Runtime", .value=&component.runtime, .metadata={} });
     }
 };
 
@@ -472,86 +314,6 @@ struct reflcomp<AmbienceComponent>
 };
 
 template <>
-struct reflcomp<ParticleComponent>
-{
-    static constexpr const char* name          = "ParticleComponent";
-    static constexpr const char* display_name  = "Particle";
-
-    static constexpr bool        is_savable()    { return true; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(ParticleComponent& component, Func&& func)
-    {
-        func(reflattr<float, true, true>{.name="interval", .display_name="Interval", .value=&component.interval, .metadata={} });
-        func(reflattr<glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
-        func(reflattr<float, true, true>{.name="velocityNoise", .display_name="Velocity Noise", .value=&component.velocityNoise, .metadata={} });
-        func(reflattr<glm::vec3, true, true>{.name="acceleration", .display_name="Acceleration", .value=&component.acceleration, .metadata={} });
-        func(reflattr<glm::vec3, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
-        func(reflattr<float, true, true>{.name="life", .display_name="Life", .value=&component.life, .metadata={} });
-        func(reflattr<float, false, false>{.name="accumulator", .display_name="Accumulator", .value=&component.accumulator, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const ParticleComponent& component, Func&& func) const
-    {
-        func(reflattr<const float, true, true>{.name="interval", .display_name="Interval", .value=&component.interval, .metadata={} });
-        func(reflattr<const glm::vec3, true, true>{.name="velocity", .display_name="Velocity", .value=&component.velocity, .metadata={} });
-        func(reflattr<const float, true, true>{.name="velocityNoise", .display_name="Velocity Noise", .value=&component.velocityNoise, .metadata={} });
-        func(reflattr<const glm::vec3, true, true>{.name="acceleration", .display_name="Acceleration", .value=&component.acceleration, .metadata={} });
-        func(reflattr<const glm::vec3, true, true>{.name="scale", .display_name="Scale", .value=&component.scale, .metadata={} });
-        func(reflattr<const float, true, true>{.name="life", .display_name="Life", .value=&component.life, .metadata={} });
-        func(reflattr<const float, false, false>{.name="accumulator", .display_name="Accumulator", .value=&component.accumulator, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<CollisionEvent>
-{
-    static constexpr const char* name          = "CollisionEvent";
-    static constexpr const char* display_name  = "Collision Event";
-
-    static constexpr bool        is_savable()    { return false; }
-    static constexpr bool        is_scriptable() { return true; }
-
-    template <typename Func>
-    void for_each_attribute(CollisionEvent& component, Func&& func)
-    {
-        func(reflattr<game::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
-        func(reflattr<game::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const CollisionEvent& component, Func&& func) const
-    {
-        func(reflattr<const game::entity, true, true>{.name="entity_a", .display_name="Entity A", .value=&component.entity_a, .metadata={} });
-        func(reflattr<const game::entity, true, true>{.name="entity_b", .display_name="Entity B", .value=&component.entity_b, .metadata={} });
-    }
-};
-
-template <>
-struct reflcomp<PhysicsSingleton>
-{
-    static constexpr const char* name          = "PhysicsSingleton";
-    static constexpr const char* display_name  = "Physics Singleton";
-
-    static constexpr bool        is_savable()    { return false; }
-    static constexpr bool        is_scriptable() { return false; }
-
-    template <typename Func>
-    void for_each_attribute(PhysicsSingleton& component, Func&& func)
-    {
-        func(reflattr<std::shared_ptr<physics_runtime>, false, false>{.name="physics_runtime", .display_name="Physics Runtime", .value=&component.physics_runtime, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const PhysicsSingleton& component, Func&& func) const
-    {
-        func(reflattr<const std::shared_ptr<physics_runtime>, false, false>{.name="physics_runtime", .display_name="Physics Runtime", .value=&component.physics_runtime, .metadata={} });
-    }
-};
-
-template <>
 struct reflcomp<InputSingleton>
 {
     static constexpr const char* name          = "InputSingleton";
@@ -645,30 +407,6 @@ struct reflcomp<CameraSingleton>
     }
 };
 
-template <>
-struct reflcomp<ParticleSingleton>
-{
-    static constexpr const char* name          = "ParticleSingleton";
-    static constexpr const char* display_name  = "Particle Singleton";
-
-    static constexpr bool        is_savable()    { return false; }
-    static constexpr bool        is_scriptable() { return false; }
-
-    template <typename Func>
-    void for_each_attribute(ParticleSingleton& component, Func&& func)
-    {
-        func(reflattr<std::shared_ptr<std::array<spkt::particle, spkt::NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
-        func(reflattr<std::size_t, true, true>{.name="next_slot", .display_name="Next Slot", .value=&component.next_slot, .metadata={} });
-    }
-
-    template <typename Func>
-    void for_each_attribute(const ParticleSingleton& component, Func&& func) const
-    {
-        func(reflattr<const std::shared_ptr<std::array<spkt::particle, spkt::NUM_PARTICLES>>, true, true>{.name="particles", .display_name="Particles", .value=&component.particles, .metadata={} });
-        func(reflattr<const std::size_t, true, true>{.name="next_slot", .display_name="Next Slot", .value=&component.next_slot, .metadata={} });
-    }
-};
-
 
 template <typename Func>
 void for_each_component(Func&& func)
@@ -676,28 +414,19 @@ void for_each_component(Func&& func)
     func(reflcomp<Runtime>{});
     func(reflcomp<Event>{});
     func(reflcomp<NameComponent>{});
-    func(reflcomp<Transform2DComponent>{});
     func(reflcomp<Transform3DComponent>{});
     func(reflcomp<StaticModelComponent>{});
     func(reflcomp<AnimatedModelComponent>{});
-    func(reflcomp<RigidBody3DComponent>{});
-    func(reflcomp<BoxCollider3DComponent>{});
-    func(reflcomp<SphereCollider3DComponent>{});
-    func(reflcomp<CapsuleCollider3DComponent>{});
     func(reflcomp<ScriptComponent>{});
     func(reflcomp<Camera3DComponent>{});
     func(reflcomp<PathComponent>{});
     func(reflcomp<LightComponent>{});
     func(reflcomp<SunComponent>{});
     func(reflcomp<AmbienceComponent>{});
-    func(reflcomp<ParticleComponent>{});
-    func(reflcomp<CollisionEvent>{});
-    func(reflcomp<PhysicsSingleton>{});
     func(reflcomp<InputSingleton>{});
     func(reflcomp<GameGridSingleton>{});
     func(reflcomp<TileMapSingleton>{});
     func(reflcomp<CameraSingleton>{});
-    func(reflcomp<ParticleSingleton>{});
 }
 
 }

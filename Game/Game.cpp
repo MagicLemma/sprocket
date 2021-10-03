@@ -172,16 +172,6 @@ void draw_scene(
         );
     }
 
-    for (auto [ps] : registry.view_get<game::ParticleSingleton>()) {
-        std::vector<spkt::model_instance> instance_data(spkt::NUM_PARTICLES);
-        for (const auto& particle : *ps.particles) {
-            if (particle.life > 0.0) {
-                instance_data.push_back({particle.position, {0.0, 0.0, 0.0, 1.0}, particle.scale});
-            }
-        }
-        renderer.draw_particles(instance_data);
-    };
-
     renderer.end_frame();
 }
 
