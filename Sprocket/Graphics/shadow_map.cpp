@@ -1,7 +1,6 @@
 #include "shadow_map.h"
 
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Scene/ecs.h>
 
 #include <glad/glad.h>
 
@@ -16,20 +15,6 @@ shadow_map::shadow_map(asset_manager* assetManager)
 {
     d_shader.bind();
     d_shader.load("u_proj_matrix", d_light_proj);
-}
-
-void shadow_map::draw(
-    spkt::registry& registry,
-    const glm::vec3& sunDirection,
-    const glm::vec3& centre)
-{
-    begin_frame(centre, sunDirection);
-
-    for (auto [mc, tc] : registry.view_get<StaticModelComponent, Transform3DComponent>()) {
-        add_mesh(mc.mesh, tc.position, tc.orientation, tc.scale);
-    }
-
-    end_frame();
 }
 
 glm::mat4 shadow_map::get_light_proj_view() const

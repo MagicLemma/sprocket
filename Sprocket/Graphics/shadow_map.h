@@ -5,7 +5,6 @@
 #include <Sprocket/Graphics/open_gl.h>
 #include <Sprocket/Graphics/shader.h>
 #include <Sprocket/Graphics/texture.h>
-#include <Sprocket/Scene/ecs.h>
 
 #include <glm/glm.hpp>
 
@@ -34,8 +33,6 @@ class shadow_map
 
 public:
     shadow_map(spkt::asset_manager* assetManager);
-
-    void draw(spkt::registry& registry, const glm::vec3& sun_dir, const glm::vec3& centre);
 
     void begin_frame(const glm::vec3& position, const glm::vec3& sun_dir);
     void end_frame();
