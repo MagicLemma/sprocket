@@ -1,10 +1,11 @@
 #pragma once
+#include <Anvil/ecs/ecs.h>
+#include <Anvil/ecs/scene.h>
+
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/console.h>
 
 #include <memory>
@@ -24,10 +25,10 @@ class Runtime
     spkt::SkyboxRenderer d_skyboxRenderer;
 
     // Scene
-    spkt::scene d_scene;
+    anvil::scene d_scene;
     spkt::CubeMap d_skybox;
     
-    spkt::entity d_runtimeCamera;
+    anvil::entity d_runtimeCamera;
 
     // Console
     spkt::SimpleUI d_ui;

@@ -41,11 +41,6 @@ add_library(Sprocket STATIC
             UI/SinglePanelUI.cpp
             UI/DevUI.cpp
             UI/ImGuiXtra.cpp
-
-            Scene/scene.cpp
-            Scene/loader.cpp
-            Scene/lua_ecs.cpp
-            Scene/yaml_ecs.cpp
             
             Graphics/Animation.cpp
             Graphics/buffer_element_types.cpp

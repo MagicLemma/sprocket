@@ -1,8 +1,8 @@
 #pragma once
-#include <Sprocket/Scene/ecs.h>
+#include <Anvil/ecs/ecs.h>
 
 namespace anvil {
 
-void particle_system(spkt::registry& registry, double dt);
+void particle_system(anvil::registry& registry, double dt);
 
 }

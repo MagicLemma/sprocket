@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
+add_subdirectory(ecs)
+
 project(game)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -16,6 +18,6 @@ add_executable(game
                grid_helpers.cpp
                game_grid.cpp)
 
-target_link_libraries(game PRIVATE Sprocket)
+target_link_libraries(game PRIVATE Sprocket game-ecs)
 
 target_include_directories(game PUBLIC .)

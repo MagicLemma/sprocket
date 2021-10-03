@@ -1,11 +1,11 @@
 #include "loader.h"
 #include "meta.h"
 #include "ecs.h"
-#include "yaml_ecs.h"
+#include "lua_ecs.h"
+#include "scene.h"
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/Yaml.h>
-#include <Sprocket/Scene/scene.h>
 
 #include <yaml-cpp/yaml.h>
 
@@ -13,7 +13,7 @@
 #include <ranges>
 #include <memory>
 
-namespace spkt {
+namespace game {
 namespace {
 
 // When loading entities from disk, their IDs may already be in use, so we assigned them
@@ -106,13 +106,6 @@ void load_registry_from_file(const std::string& file, registry& reg)
             c.name = spec["name"].as<std::string>();
             reg.add<NameComponent>(e, c);
         }
-        if (auto spec = yaml_entity["Transform2DComponent"]) {
-            Transform2DComponent c;
-            c.position = spec["position"].as<glm::vec2>();
-            c.rotation = spec["rotation"].as<float>();
-            c.scale = spec["scale"].as<glm::vec2>();
-            reg.add<Transform2DComponent>(e, c);
-        }
         if (auto spec = yaml_entity["Transform3DComponent"]) {
             Transform3DComponent c;
             c.position = spec["position"].as<glm::vec3>();
@@ -134,42 +127,6 @@ void load_registry_from_file(const std::string& file, registry& reg)
             c.animation_time = spec["animation_time"].as<float>();
             c.animation_speed = spec["animation_speed"].as<float>();
             reg.add<AnimatedModelComponent>(e, c);
-        }
-        if (auto spec = yaml_entity["RigidBody3DComponent"]) {
-            RigidBody3DComponent c;
-            c.velocity = spec["velocity"].as<glm::vec3>();
-            c.gravity = spec["gravity"].as<bool>();
-            c.frozen = spec["frozen"].as<bool>();
-            c.bounciness = spec["bounciness"].as<float>();
-            c.frictionCoefficient = spec["frictionCoefficient"].as<float>();
-            c.rollingResistance = spec["rollingResistance"].as<float>();
-            reg.add<RigidBody3DComponent>(e, c);
-        }
-        if (auto spec = yaml_entity["BoxCollider3DComponent"]) {
-            BoxCollider3DComponent c;
-            c.position = spec["position"].as<glm::vec3>();
-            c.orientation = spec["orientation"].as<glm::quat>();
-            c.mass = spec["mass"].as<float>();
-            c.halfExtents = spec["halfExtents"].as<glm::vec3>();
-            c.applyScale = spec["applyScale"].as<bool>();
-            reg.add<BoxCollider3DComponent>(e, c);
-        }
-        if (auto spec = yaml_entity["SphereCollider3DComponent"]) {
-            SphereCollider3DComponent c;
-            c.position = spec["position"].as<glm::vec3>();
-            c.orientation = spec["orientation"].as<glm::quat>();
-            c.mass = spec["mass"].as<float>();
-            c.radius = spec["radius"].as<float>();
-            reg.add<SphereCollider3DComponent>(e, c);
-        }
-        if (auto spec = yaml_entity["CapsuleCollider3DComponent"]) {
-            CapsuleCollider3DComponent c;
-            c.position = spec["position"].as<glm::vec3>();
-            c.orientation = spec["orientation"].as<glm::quat>();
-            c.mass = spec["mass"].as<float>();
-            c.radius = spec["radius"].as<float>();
-            c.height = spec["height"].as<float>();
-            reg.add<CapsuleCollider3DComponent>(e, c);
         }
         if (auto spec = yaml_entity["ScriptComponent"]) {
             ScriptComponent c;
@@ -208,19 +165,9 @@ void load_registry_from_file(const std::string& file, registry& reg)
             c.brightness = spec["brightness"].as<float>();
             reg.add<AmbienceComponent>(e, c);
         }
-        if (auto spec = yaml_entity["ParticleComponent"]) {
-            ParticleComponent c;
-            c.interval = spec["interval"].as<float>();
-            c.velocity = spec["velocity"].as<glm::vec3>();
-            c.velocityNoise = spec["velocityNoise"].as<float>();
-            c.acceleration = spec["acceleration"].as<glm::vec3>();
-            c.scale = spec["scale"].as<glm::vec3>();
-            c.life = spec["life"].as<float>();
-            reg.add<ParticleComponent>(e, c);
-        }
         if (auto spec = yaml_entity["TileMapSingleton"]) {
             TileMapSingleton c;
-            c.tiles = transform_entity(id_remapper, spec["tiles"].as<std::unordered_map<glm::ivec2, spkt::entity>>());
+            c.tiles = spec["tiles"].as<std::unordered_map<glm::ivec2, game::entity>>();
             reg.add<TileMapSingleton>(e, c);
         }
     }
@@ -254,14 +201,6 @@ void copy_registry(const registry& source, registry& target)
             target_comp.name = source_comp.name;
             target.add<NameComponent>(new_entity, target_comp);
         }
-        if (source.has<Transform2DComponent>(old_entity)) {
-            const Transform2DComponent& source_comp = source.get<Transform2DComponent>(old_entity);
-            Transform2DComponent target_comp;
-            target_comp.position = source_comp.position;
-            target_comp.rotation = source_comp.rotation;
-            target_comp.scale = source_comp.scale;
-            target.add<Transform2DComponent>(new_entity, target_comp);
-        }
         if (source.has<Transform3DComponent>(old_entity)) {
             const Transform3DComponent& source_comp = source.get<Transform3DComponent>(old_entity);
             Transform3DComponent target_comp;
@@ -286,46 +225,6 @@ void copy_registry(const registry& source, registry& target)
             target_comp.animation_time = source_comp.animation_time;
             target_comp.animation_speed = source_comp.animation_speed;
             target.add<AnimatedModelComponent>(new_entity, target_comp);
-        }
-        if (source.has<RigidBody3DComponent>(old_entity)) {
-            const RigidBody3DComponent& source_comp = source.get<RigidBody3DComponent>(old_entity);
-            RigidBody3DComponent target_comp;
-            target_comp.velocity = source_comp.velocity;
-            target_comp.gravity = source_comp.gravity;
-            target_comp.frozen = source_comp.frozen;
-            target_comp.bounciness = source_comp.bounciness;
-            target_comp.frictionCoefficient = source_comp.frictionCoefficient;
-            target_comp.rollingResistance = source_comp.rollingResistance;
-            target.add<RigidBody3DComponent>(new_entity, target_comp);
-        }
-        if (source.has<BoxCollider3DComponent>(old_entity)) {
-            const BoxCollider3DComponent& source_comp = source.get<BoxCollider3DComponent>(old_entity);
-            BoxCollider3DComponent target_comp;
-            target_comp.position = source_comp.position;
-            target_comp.orientation = source_comp.orientation;
-            target_comp.mass = source_comp.mass;
-            target_comp.halfExtents = source_comp.halfExtents;
-            target_comp.applyScale = source_comp.applyScale;
-            target.add<BoxCollider3DComponent>(new_entity, target_comp);
-        }
-        if (source.has<SphereCollider3DComponent>(old_entity)) {
-            const SphereCollider3DComponent& source_comp = source.get<SphereCollider3DComponent>(old_entity);
-            SphereCollider3DComponent target_comp;
-            target_comp.position = source_comp.position;
-            target_comp.orientation = source_comp.orientation;
-            target_comp.mass = source_comp.mass;
-            target_comp.radius = source_comp.radius;
-            target.add<SphereCollider3DComponent>(new_entity, target_comp);
-        }
-        if (source.has<CapsuleCollider3DComponent>(old_entity)) {
-            const CapsuleCollider3DComponent& source_comp = source.get<CapsuleCollider3DComponent>(old_entity);
-            CapsuleCollider3DComponent target_comp;
-            target_comp.position = source_comp.position;
-            target_comp.orientation = source_comp.orientation;
-            target_comp.mass = source_comp.mass;
-            target_comp.radius = source_comp.radius;
-            target_comp.height = source_comp.height;
-            target.add<CapsuleCollider3DComponent>(new_entity, target_comp);
         }
         if (source.has<ScriptComponent>(old_entity)) {
             const ScriptComponent& source_comp = source.get<ScriptComponent>(old_entity);
@@ -370,21 +269,10 @@ void copy_registry(const registry& source, registry& target)
             target_comp.brightness = source_comp.brightness;
             target.add<AmbienceComponent>(new_entity, target_comp);
         }
-        if (source.has<ParticleComponent>(old_entity)) {
-            const ParticleComponent& source_comp = source.get<ParticleComponent>(old_entity);
-            ParticleComponent target_comp;
-            target_comp.interval = source_comp.interval;
-            target_comp.velocity = source_comp.velocity;
-            target_comp.velocityNoise = source_comp.velocityNoise;
-            target_comp.acceleration = source_comp.acceleration;
-            target_comp.scale = source_comp.scale;
-            target_comp.life = source_comp.life;
-            target.add<ParticleComponent>(new_entity, target_comp);
-        }
         if (source.has<TileMapSingleton>(old_entity)) {
             const TileMapSingleton& source_comp = source.get<TileMapSingleton>(old_entity);
             TileMapSingleton target_comp;
-            target_comp.tiles = transform_entity(id_remapper, source_comp.tiles);
+            target_comp.tiles = source_comp.tiles;
             target.add<TileMapSingleton>(new_entity, target_comp);
         }
     }

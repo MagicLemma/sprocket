@@ -9,15 +9,15 @@
 namespace {
 
 void add_rock_base(
-    spkt::registry& registry,
+    game::registry& registry,
     glm::ivec2 pos,
     const std::string& material,
     const std::string& name)
 {
     auto entity = registry.create();
-    registry.emplace<spkt::NameComponent>(entity, name);
+    registry.emplace<game::NameComponent>(entity, name);
 
-    auto& tr = registry.emplace<spkt::Transform3DComponent>(entity);
+    auto& tr = registry.emplace<game::Transform3DComponent>(entity);
     tr.position = {pos.x + 0.5f, 0.0f, pos.y + 0.5f};
     tr.position.y -= spkt::random_from_range(0.0f, 0.5f);
     tr.orientation = glm::rotate(
@@ -27,25 +27,25 @@ void add_rock_base(
     );
     tr.scale = {1.1f, 1.1f, 1.1f};
 
-    auto& mc = registry.emplace<spkt::StaticModelComponent>(entity);
+    auto& mc = registry.emplace<game::StaticModelComponent>(entity);
     mc.mesh = "Resources/Models/Rock.obj";
     mc.material = material;
 
     // Add the new entity to the grid.
-    auto tile_map = registry.find<spkt::TileMapSingleton>();
+    auto tile_map = registry.find<game::TileMapSingleton>();
     assert(registry.valid(tile_map));
-    auto& tms = registry.get<spkt::TileMapSingleton>(tile_map);
+    auto& tms = registry.get<game::TileMapSingleton>(tile_map);
     tms.tiles[pos] = entity;
 }
 
 }
 
-void add_tree(spkt::registry& registry, glm::ivec2 position)
+void add_tree(game::registry& registry, glm::ivec2 position)
 {
     auto entity = registry.create();
-    registry.emplace<spkt::NameComponent>(entity, "Tree");
+    registry.emplace<game::NameComponent>(entity, "Tree");
 
-    auto& tr = registry.emplace<spkt::Transform3DComponent>(entity);
+    auto& tr = registry.emplace<game::Transform3DComponent>(entity);
     tr.position = {position.x + 0.5f, 0.0f, position.y + 0.5f};
     tr.orientation = glm::rotate(
         glm::identity<glm::quat>(),
@@ -55,33 +55,33 @@ void add_tree(spkt::registry& registry, glm::ivec2 position)
     float r = spkt::random_from_range(1.0f, 1.3f);
     tr.scale = {r, r, r};
 
-    auto& mc = registry.emplace<spkt::StaticModelComponent>(entity);
+    auto& mc = registry.emplace<game::StaticModelComponent>(entity);
     mc.mesh = "Resources/Models/BetterTree.obj";
     mc.material = "Resources/Materials/tree.yaml";
 
     // Add the new entity to the grid.
-    auto tile_map = registry.find<spkt::TileMapSingleton>();
+    auto tile_map = registry.find<game::TileMapSingleton>();
     assert(registry.valid(tile_map));
-    auto& tms = registry.get<spkt::TileMapSingleton>(tile_map);
+    auto& tms = registry.get<game::TileMapSingleton>(tile_map);
     tms.tiles[position] = entity;
 }
 
-void add_rock(spkt::registry& registry, glm::ivec2 position)
+void add_rock(game::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/rock.yaml", "Rock");
 }
 
-void add_iron(spkt::registry& registry, glm::ivec2 position)
+void add_iron(game::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/iron.yaml", "Iron");
 }
 
-void add_tin(spkt::registry& registry, glm::ivec2 position)
+void add_tin(game::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/tin.yaml", "Tin");
 }
 
-void add_mithril(spkt::registry& registry, glm::ivec2 position)
+void add_mithril(game::registry& registry, glm::ivec2 position)
 {
     add_rock_base(registry, position, "Resources/Materials/mithril.yaml", "Mithril");
 }

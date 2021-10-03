@@ -6,14 +6,14 @@
 #include <Anvil/rendering.h>
 #include <Anvil/systems.h>
 #include <Anvil/scene_utils.h>
+#include <Anvil/ecs/loader.h>
+#include <Anvil/ecs/meta.h>
 
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Scene/Loader.h>
-#include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/Maths.h>
@@ -27,15 +27,15 @@
 namespace {
 
 template <typename T>
-T& get_singleton(spkt::registry& reg)
+T& get_singleton(anvil::registry& reg)
 {
     return reg.get<T>(reg.find<T>());
 }
 
-std::string entiy_name(spkt::registry& registry, spkt::entity entity)
+std::string entiy_name(anvil::registry& registry, anvil::entity entity)
 {
-    if (registry.has<spkt::NameComponent>(entity)) {
-        return registry.get<spkt::NameComponent>(entity).name;
+    if (registry.has<anvil::NameComponent>(entity)) {
+        return registry.get<anvil::NameComponent>(entity).name;
     }
     return "Entity";
 }
@@ -70,8 +70,8 @@ Anvil::Anvil(spkt::window* window)
 {
     d_window->set_cursor_visibility(true);
 
-    d_scene = std::make_shared<spkt::scene>();
-    spkt::load_registry_from_file(d_sceneFile, d_scene->registry);
+    d_scene = std::make_shared<anvil::scene>();
+    anvil::load_registry_from_file(d_sceneFile, d_scene->registry);
     d_activeScene = d_scene;
 }
 
@@ -86,8 +86,8 @@ void Anvil::on_event(spkt::event& event)
                 d_activeScene = d_scene;
                 d_window->set_cursor_visibility(true);
             }
-            else if (d_selected != spkt::null) {
-                d_selected = spkt::null;
+            else if (d_selected != anvil::null) {
+                d_selected = anvil::null;
             }
             else if (d_window->is_fullscreen()) {
                 d_window->set_windowed(1280, 720);
@@ -169,7 +169,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<spkt::scene>();
+                    d_activeScene = d_scene = std::make_shared<anvil::scene>();
                     spkt::log::info("...done!");
                 }
             }
@@ -178,19 +178,19 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<spkt::scene>();
-                    spkt::load_registry_from_file(file, d_scene->registry);
+                    d_activeScene = d_scene = std::make_shared<anvil::scene>();
+                    anvil::load_registry_from_file(file, d_scene->registry);
                     spkt::log::info("...done!");
                 }
             }
 
-            const auto entity_filter = [](const spkt::registry& reg, spkt::entity entity) {
-                return !reg.has<spkt::Runtime>(entity);
+            const auto entity_filter = [](const anvil::registry& reg, anvil::entity entity) {
+                return !reg.has<anvil::Runtime>(entity);
             };
 
             if (ImGui::MenuItem("Save")) {
                 spkt::log::info("Saving {}...", d_sceneFile);
-                spkt::save_registry_to_file(d_sceneFile, d_scene->registry, entity_filter);
+                anvil::save_registry_to_file(d_sceneFile, d_scene->registry, entity_filter);
                 spkt::log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
@@ -198,7 +198,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Saving as {}...", file);
                     d_sceneFile = file;
-                    spkt::save_registry_to_file(file, d_scene->registry, entity_filter);
+                    anvil::save_registry_to_file(file, d_scene->registry, entity_filter);
                     spkt::log::info("...done!");
                 }
             }
@@ -206,10 +206,10 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<spkt::scene>();
+                d_activeScene = std::make_shared<anvil::scene>();
 
                 anvil::input_system_init(d_activeScene->registry, d_window);
-                spkt::copy_registry(d_scene->registry, d_activeScene->registry);
+                anvil::copy_registry(d_scene->registry, d_activeScene->registry);
 
                 d_activeScene->systems = {
                     physics_system,
@@ -226,7 +226,7 @@ void Anvil::on_render()
                 };
 
                 d_playingGame = true;
-                d_runtimeCamera = d_activeScene->registry.find<spkt::Camera3DComponent>();
+                d_runtimeCamera = d_activeScene->registry.find<anvil::Camera3DComponent>();
                 d_window->set_cursor_visibility(false);
             }
             ImGui::EndMenu();
@@ -248,8 +248,8 @@ void Anvil::on_render()
 
         spkt::ImGuiXtra::Image(d_viewport.colour_texture());
 
-        if (!is_game_running() && registry.valid(d_selected) && registry.has<spkt::Transform3DComponent>(d_selected)) {
-            auto& c = registry.get<spkt::Transform3DComponent>(d_selected);
+        if (!is_game_running() && registry.valid(d_selected) && registry.has<anvil::Transform3DComponent>(d_selected)) {
+            auto& c = registry.get<anvil::Transform3DComponent>(d_selected);
             auto tr = spkt::Maths::Transform(c.position, c.orientation, c.scale);
             spkt::ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
             spkt::Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
@@ -365,7 +365,7 @@ void Anvil::on_render()
     if (ImGui::Begin("Options")) {
         ImGui::Checkbox("Show Colliders", &d_showColliders);
 
-        spkt::for_each_component([&]<typename T>(spkt::reflcomp<T>&& refl) {
+        anvil::for_each_component([&]<typename T>(anvil::reflcomp<T>&& refl) {
             std::string text = std::format("# {}: {}", refl.name, registry.view<T>().size());
             ImGui::Text(text.c_str());
         });

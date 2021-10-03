@@ -18,7 +18,7 @@ struct physics_runtime;
 struct rigid_body_runtime;
 struct collider_runtime;
 
-namespace spkt {
+namespace anvil {
 
 using entity = apx::entity;
 const auto null = apx::null;
@@ -35,13 +35,6 @@ struct Event
 struct NameComponent
 {
     std::string name = "Entity";
-};
-
-struct Transform2DComponent
-{
-    glm::vec2 position = {0.0f, 0.0f};
-    float rotation = 0.0f;
-    glm::vec2 scale = {1.0f, 1.0f};
 };
 
 struct Transform3DComponent
@@ -112,19 +105,13 @@ struct ScriptComponent
 {
     std::string script = "";
     bool active = true;
-    std::shared_ptr<lua::script> script_runtime = nullptr;
+    std::shared_ptr<spkt::lua::script> script_runtime = nullptr;
 };
 
 struct Camera3DComponent
 {
     float fov = 70.0f;
     float pitch = 0.0f;
-};
-
-struct PathComponent
-{
-    std::deque<glm::vec3> markers = {};
-    float speed = 0.0f;
 };
 
 struct LightComponent
@@ -160,8 +147,8 @@ struct ParticleComponent
 
 struct CollisionEvent
 {
-    spkt::entity entity_a = {};
-    spkt::entity entity_b = {};
+    entity entity_a = {};
+    entity entity_b = {};
 };
 
 struct PhysicsSingleton
@@ -174,35 +161,16 @@ struct InputSingleton
     std::shared_ptr<spkt::input_store> input_store = nullptr;
 };
 
-struct GameGridSingleton
-{
-    spkt::entity hovered_square_entity = spkt::null;
-    spkt::entity clicked_square_entity = spkt::null;
-    glm::ivec2 hovered_square = {0, 0};
-    std::optional<glm::ivec2> clicked_square = std::nullopt;
-};
-
-struct TileMapSingleton
-{
-    std::unordered_map<glm::ivec2, spkt::entity> tiles = {};
-};
-
-struct CameraSingleton
-{
-    spkt::entity camera_entity = spkt::null;
-};
-
 struct ParticleSingleton
 {
-    std::shared_ptr<std::array<particle, NUM_PARTICLES>> particles = nullptr;
-    std::size_t next_slot = NUM_PARTICLES - 1;
+    std::shared_ptr<std::array<spkt::particle, spkt::NUM_PARTICLES>> particles = nullptr;
+    std::size_t next_slot = spkt::NUM_PARTICLES - 1;
 };
 
 using registry = apx::registry<
     Runtime,
     Event,
     NameComponent,
-    Transform2DComponent,
     Transform3DComponent,
     StaticModelComponent,
     AnimatedModelComponent,
@@ -212,7 +180,6 @@ using registry = apx::registry<
     CapsuleCollider3DComponent,
     ScriptComponent,
     Camera3DComponent,
-    PathComponent,
     LightComponent,
     SunComponent,
     AmbienceComponent,
@@ -220,9 +187,6 @@ using registry = apx::registry<
     CollisionEvent,
     PhysicsSingleton,
     InputSingleton,
-    GameGridSingleton,
-    TileMapSingleton,
-    CameraSingleton,
     ParticleSingleton
 >;
 

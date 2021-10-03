@@ -1,6 +1,8 @@
 #pragma once
 #include <Anvil/Camera.h>
 #include <Anvil/Inspector.h>
+#include <Anvil/ecs/ecs.h>
+#include <Anvil/ecs/scene.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
@@ -10,8 +12,6 @@
 #include <Sprocket/Graphics/Rendering/geometry_renderer.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/DevUI.h>
 
 #include <memory>
@@ -39,9 +39,9 @@ class Anvil
 
     // Scene
     std::string d_sceneFile = "Resources/Anvil.yaml";
-    std::shared_ptr<spkt::scene> d_activeScene;
-    std::shared_ptr<spkt::scene> d_scene;
-    spkt::entity d_runtimeCamera;
+    std::shared_ptr<anvil::scene> d_activeScene;
+    std::shared_ptr<anvil::scene> d_scene;
+    anvil::entity d_runtimeCamera;
 
     // Additional world setup
     spkt::CubeMap d_skybox;
@@ -54,7 +54,7 @@ class Anvil
     bool d_playingGame = false;
     bool d_showColliders = false;
 
-    spkt::entity d_selected = spkt::null;
+    anvil::entity d_selected = anvil::null;
 
     // Panels
     Inspector d_inspector;
@@ -68,14 +68,14 @@ public:
     void on_update(double dt);
     void on_render();
 
-    spkt::entity selected() { return d_selected; }
-    void set_selected(spkt::entity e) { d_selected = e; }
-    void clear_selected() { d_selected = spkt::null; }
+    anvil::entity selected() { return d_selected; }
+    void set_selected(anvil::entity e) { d_selected = e; }
+    void clear_selected() { d_selected = anvil::null; }
 
     bool is_game_running() const { return d_playingGame; }
 
     Camera& editor_camera() { return d_editor_camera; }
     spkt::window* window() { return d_window; }
 
-    std::shared_ptr<spkt::scene> active_scene() { return d_activeScene; }
+    std::shared_ptr<anvil::scene> active_scene() { return d_activeScene; }
 };

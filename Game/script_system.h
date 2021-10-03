@@ -1,6 +1,7 @@
 #pragma once
-#include <Sprocket/Scene/lua_ecs.h>
-#include <Sprocket/Scene/scene.h>
+#include <Game/ecs/lua_ecs.h>
+#include <Game/ecs/scene.h>
+
 #include <Sprocket/Scripting/lua_input.h>
 #include <Sprocket/Scripting/lua_maths.h>
 #include <Sprocket/Scripting/lua_script.h>
@@ -11,27 +12,27 @@
 #include <utility>
 #include <vector>
 
-inline void script_system(spkt::registry& registry, double dt)
+inline void script_system(game::registry& registry, double dt)
 {
     static constexpr const char* INIT_FUNCTION = "init";
     static constexpr const char* UPDATE_FUNCTION = "on_update";
     
     std::vector<std::function<void()>> commands;
 
-    for (auto entity : registry.view<spkt::ScriptComponent>()) {
-        auto& sc = registry.get<spkt::ScriptComponent>(entity);
+    for (auto entity : registry.view<game::ScriptComponent>()) {
+        auto& sc = registry.get<game::ScriptComponent>(entity);
         if (!sc.active) { continue; }
 
         if (!sc.script_runtime) {
-            auto input_singleton = registry.find<spkt::InputSingleton>();
-            auto& input = *registry.get<spkt::InputSingleton>(input_singleton).input_store;
+            auto input_singleton = registry.find<game::InputSingleton>();
+            auto& input = *registry.get<game::InputSingleton>(input_singleton).input_store;
             
             sc.script_runtime = std::make_shared<spkt::lua::script>(sc.script);
             spkt::lua::script& script = *sc.script_runtime;
 
             spkt::lua::load_maths(script);
             spkt::lua::load_input_store(script, input);
-            spkt::load_registry(script, registry);
+            game::load_registry(script, registry);
 
             if (script.has_function(INIT_FUNCTION)) {
                 script.set_value("__command_list__", &commands);

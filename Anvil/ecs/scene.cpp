@@ -6,7 +6,7 @@
 #include <memory>
 #include <ranges>
 
-namespace spkt {
+namespace anvil {
 
 void scene::on_update(double dt)
 {

@@ -1,4 +1,5 @@
 #pragma once
+#include <apecs.hpp>
 #include <glm/glm.hpp>
 #include <yaml-cpp/yaml.h>
 
@@ -41,6 +42,14 @@ struct convert<glm::mat4>
     static bool decode(const Node& node, glm::mat4& rhs);
 };
 
+template<>
+struct convert<apx::entity>
+{
+    static Node encode(const apx::entity& rhs);
+    static bool decode(const Node& node, apx::entity& rhs);
+};
+
+
 template <typename K, typename V, typename... Rest>
 struct convert<std::unordered_map<K, V, Rest...>>
 {
@@ -68,15 +77,12 @@ struct convert<std::unordered_map<K, V, Rest...>>
     }
 };
 
-}
-
-namespace spkt {
-
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::ivec2& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::quat& q);
 YAML::Emitter& operator<<(YAML::Emitter& out, const glm::mat4& m);
+YAML::Emitter& operator<<(YAML::Emitter& out, const apx::entity& e);
 
 template <typename K, typename V, typename... Rest>
 YAML::Emitter& operator<<(YAML::Emitter& out, const std::unordered_map<K, V, Rest...>& m)

@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Scene/ecs.h>
+#include <Anvil/ecs/ecs.h>
 
 #include <glm/glm.hpp>
 
@@ -8,7 +8,7 @@
 namespace anvil {
 
 std::pair<glm::mat4, glm::mat4> get_proj_view_matrices(
-    const spkt::registry& registry, spkt::entity camera
+    const anvil::registry& registry, anvil::entity camera
 );
 
 }
