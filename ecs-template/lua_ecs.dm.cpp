@@ -1,19 +1,20 @@
-#include "loader.h"
-#include "meta.h"
+#include "lua_ecs.h"
 #include "ecs.h"
-#include "yaml_ecs.h"
 #include "scene.h"
 
-#include <Sprocket/Core/log.h>
-#include <Sprocket/Utility/Yaml.h>
 #include <Sprocket/Scripting/lua_converter.h>
+#include <Sprocket/Scripting/lua_script.h>
+#include <Sprocket/Core/log.h>
+#include <Sprocket/Utility/Maths.h>
 
-#include <yaml-cpp/yaml.h>
+#include <lua.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
-#include <fstream>
 #include <format>
-#include <ranges>
-#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace spkt::lua {
 
