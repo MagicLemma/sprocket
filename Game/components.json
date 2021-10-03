@@ -1,0 +1,742 @@
+{
+    "project_name": "game",
+    "namespace": "spkt",
+    "includes": [
+        "<Sprocket/Graphics/particles.h>",
+        "<Sprocket/Scripting/lua_script.h>",
+        "<Sprocket/Utility/Hashing.h>",
+        "<Sprocket/Utility/input_store.h>",
+        "<glm/glm.hpp>",
+        "<glm/gtx/quaternion.hpp>",
+        "<array>",
+        "<cstddef>",
+        "<deque>",
+        "<memory>",
+        "<optional>",
+        "<string>",
+        "<unordered_map>"
+    ],
+    "forward_decls": [
+        "struct physics_runtime",
+        "struct rigid_body_runtime",
+        "struct collider_runtime"
+    ],
+    "flag_defaults": {
+        "SCRIPTABLE": true,
+        "SAVABLE": true
+    },
+    "components": [
+        {
+            "name": "Runtime",
+            "display_name": "Runtime",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": []
+        },
+        {
+            "name": "Event",
+            "display_name": "Event",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": []
+        },
+        {
+            "name": "NameComponent",
+            "display_name": "Name",
+            "attributes": [
+                {
+                    "name": "name",
+                    "display_name": "Name",
+                    "type": "std::string",
+                    "default": "\"Entity\""
+                }
+            ]
+        },
+        {
+            "name": "Transform2DComponent",
+            "display_name": "Transform 2D",
+            "attributes": [
+                {
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec2",
+                    "default": "{0.0f, 0.0f}"
+                },
+                {
+                    "name": "rotation",
+                    "display_name": "Rotation",
+                    "type": "float",
+                    "default": "0.0f"
+                },
+                {
+                    "name": "scale",
+                    "display_name": "Scale",
+                    "type": "glm::vec2",
+                    "default": "{1.0f, 1.0f}"
+                }
+            ]
+        },
+        {
+            "name": "Transform3DComponent",
+            "display_name": "Transform 3D",
+            "attributes": [
+                {
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}"
+                },
+                {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": "glm::identity<glm::quat>()",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
+                },
+                {
+                    "name": "scale",
+                    "display_name": "Scale",
+                    "type": "glm::vec3",
+                    "default": "{1.0f, 1.0f, 1.0f}"
+                }
+            ]
+        },
+        {
+            "name": "StaticModelComponent",
+            "display_name": "Static Model",
+            "attributes": [
+                {
+                    "name": "mesh",
+                    "display_name": "Mesh",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "metadata": {
+                        "file_filter": "*.obj"
+                    }
+                },
+                {
+                    "name": "material",
+                    "display_name": "Material",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "metadata": {
+                        "file_filter": "*.obj"
+                    }
+                }
+            ] 
+        },
+        {
+            "name": "AnimatedModelComponent",
+            "display_name": "Animated Model",
+            "attributes": [
+                {
+                    "name": "mesh",
+                    "display_name": "Mesh",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "metadata": {
+                        "file_filter": "*.obj"
+                    }
+                },
+                {
+                    "name": "material",
+                    "display_name": "Material",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "metadata": {
+                        "file_filter": "*.obj"
+                    }
+                },
+                {
+                    "name": "animation_name",
+                    "display_name": "Animation name",
+                    "type": "std::string",
+                    "default": "\"\""
+                },
+                {
+                    "name": "animation_time",
+                    "display_name": "Animation Time",
+                    "type": "float",
+                    "default": "0.0f"
+                },
+                {
+                    "name": "animation_speed",
+                    "display_name": "Animation Speed",
+                    "type": "float",
+                    "default": "1.0f"
+                }
+            ] 
+        },
+        {
+            "name": "RigidBody3DComponent",
+            "display_name": "Rigid Body 3D",
+            "attributes": [
+                {
+                    "name": "velocity",
+                    "display_name": "Velocity",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}"
+                },
+                {
+                    "name": "gravity",
+                    "display_name": "Gravity",
+                    "type": "bool",
+                    "default": "true"
+                },
+                {
+                    "name": "frozen",
+                    "display_name": "Frozen",
+                    "type": "bool",
+                    "default": "false"
+                },
+                {
+                    "name": "bounciness",
+                    "display_name": "Bounciness",
+                    "type": "float",
+                    "default": "0.5f",
+                    "metadata": {
+                        "lower_limit": "0.0",
+                        "upper_limit": "1.0"
+                    }
+                },
+                {
+                    "name": "frictionCoefficient",
+                    "display_name": "Friction Coefficient",
+                    "type": "float",
+                    "default": "0.3f",
+                    "metadata": {
+                        "lower_limit": "0.0",
+                        "upper_limit": "1.0"
+                    }
+                },
+                {
+                    "name": "rollingResistance",
+                    "display_name": "Rolling Resistance",
+                    "type": "float",
+                    "default": "0.0f",
+                    "metadata": {
+                        "lower_limit": "0.0",
+                        "upper_limit": "1.0"
+                    }
+                },
+                {
+                    "name": "force",
+                    "display_name": "Force",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}",
+                    "flags": {
+                        "SAVABLE": false
+                    }
+                },
+                {
+                    "name": "onFloor",
+                    "display_name": "OnFloor",
+                    "type": "bool",
+                    "default": "false",
+                    "flags": {
+                        "SAVABLE": false
+                    }
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<rigid_body_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "BoxCollider3DComponent",
+            "display_name": "Box Collider 3D",
+            "attributes": [
+                {
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}"
+                },
+                {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": "glm::identity<glm::quat>()",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
+                },
+                {
+                    "name": "mass",
+                    "display_name": "Mass",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "halfExtents",
+                    "display_name": "Half Extents",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}"
+                },
+                {
+                    "name": "applyScale",
+                    "display_name": "Apply Scale",
+                    "type": "bool",
+                    "default": "true"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "SphereCollider3DComponent",
+            "display_name": "Sphere Collider 3D",
+            "attributes": [
+                {
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}"
+                },
+                {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": "glm::identity<glm::quat>()",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
+                },
+                {
+                    "name": "mass",
+                    "display_name": "Mass",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "radius",
+                    "display_name": "Radius",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "CapsuleCollider3DComponent",
+            "display_name": "Capsule Collider 3D",
+            "attributes": [
+                {
+                    "name": "position",
+                    "display_name": "Position",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}"
+                },
+                {
+                    "name": "orientation",
+                    "display_name": "Orientation",
+                    "type": "glm::quat",
+                    "default": "glm::identity<glm::quat>()",
+                    "flags": {
+                        "SCRIPTABLE": false
+                    }
+                },
+                {
+                    "name": "mass",
+                    "display_name": "Mass",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "radius",
+                    "display_name": "Radius",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "height",
+                    "display_name": "Height",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "runtime",
+                    "display_name": "Runtime",
+                    "type": "std::shared_ptr<collider_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SAVABLE": false,
+                        "SCRIPTABLE": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ScriptComponent",
+            "display_name": "Script",
+            "attributes": [
+                {
+                    "name": "script",
+                    "display_name": "Script",
+                    "type": "std::string",
+                    "default": "\"\"",
+                    "metadata": {
+                        "file_filter": "*.obj"
+                    }
+                },
+                {
+                    "name": "active",
+                    "display_name": "Active",
+                    "type": "bool",
+                    "default": "true"
+                },
+                {
+                    "name": "script_runtime",
+                    "display_name": "Script Runtime",
+                    "type": "std::shared_ptr<lua::script>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Camera3DComponent",
+            "display_name": "Camera 3D",
+            "attributes": [
+                {
+                    "name": "fov",
+                    "display_name": "FOV",
+                    "type": "float",
+                    "default": "70.0f"
+                },
+                {
+                    "name": "pitch",
+                    "display_name": "Pitch",
+                    "type": "float",
+                    "default": "0.0f"
+                }
+            ]
+        },
+        {
+            "name": "PathComponent",
+            "display_name": "Path",
+            "attributes": [
+                {
+                    "name": "markers",
+                    "display_name": "Markers",
+                    "type": "std::deque<glm::vec3>",
+                    "default": "{}",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
+                },
+                {
+                    "name": "speed",
+                    "display_name": "Speed",
+                    "type": "float",
+                    "default": "0.0f"
+                }
+            ]
+        },
+        {
+            "name": "LightComponent",
+            "display_name": "Light",
+            "attributes": [
+                {
+                    "name": "colour",
+                    "display_name": "Colour",
+                    "type": "glm::vec3",
+                    "default": "{1.0f, 1.0f, 1.0f}",
+                    "metadata": {
+                        "is_colour": ""
+                    }
+                },
+                {
+                    "name": "brightness",
+                    "display_name": "Brightness",
+                    "type": "float",
+                    "default": "1.0f"
+                }
+            ]
+        },
+        {
+            "name": "SunComponent",
+            "display_name": "Sun",
+            "attributes": [
+                {
+                    "name": "colour",
+                    "display_name": "Colour",
+                    "type": "glm::vec3",
+                    "default": "{1.0f, 1.0f, 1.0f}",
+                    "metadata": {
+                        "is_colour": ""
+                    }
+                },
+                {
+                    "name": "brightness",
+                    "display_name": "Brightness",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "direction",
+                    "display_name": "Direction",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, -1.0f, 0.0f}"
+                },
+                {
+                    "name": "shadows",
+                    "display_name": "Shadows",
+                    "type": "bool",
+                    "default": "false"
+                }
+            ]
+        },
+        {
+            "name": "AmbienceComponent",
+            "display_name": "Ambience",
+            "attributes": [
+                {
+                    "name": "colour",
+                    "display_name": "Colour",
+                    "type": "glm::vec3",
+                    "default": "{1.0f, 1.0f, 1.0f}",
+                    "metadata": {
+                        "is_colour": ""
+                    }
+                },
+                {
+                    "name": "brightness",
+                    "display_name": "Brightness",
+                    "type": "float",
+                    "default": "1.0f"
+                }
+            ]
+        },
+        {
+            "name": "ParticleComponent",
+            "display_name": "Particle",
+            "attributes": [
+                {
+                    "name": "interval",
+                    "display_name": "Interval",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "velocity",
+                    "display_name": "Velocity",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, 0.0f, 0.0f}"
+                },
+                {
+                    "name": "velocityNoise",
+                    "display_name": "Velocity Noise",
+                    "type": "float",
+                    "default": "0.0f"
+                },
+                {
+                    "name": "acceleration",
+                    "display_name": "Acceleration",
+                    "type": "glm::vec3",
+                    "default": "{0.0f, -9.81f, 0.0f}"
+                },
+                {
+                    "name": "scale",
+                    "display_name": "Scale",
+                    "type": "glm::vec3",
+                    "default": "{1.0f, 1.0f, 1.0f}"
+                },
+                {
+                    "name": "life",
+                    "display_name": "Life",
+                    "type": "float",
+                    "default": "1.0f"
+                },
+                {
+                    "name": "accumulator",
+                    "display_name": "Accumulator",
+                    "type": "float",
+                    "default": "0.0f",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "CollisionEvent",
+            "display_name": "Collision Event",
+            "flags": {
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "entity_a",
+                    "display_name": "Entity A",
+                    "type": "spkt::entity",
+                    "default": "{}"
+                },
+                {
+                    "name": "entity_b",
+                    "display_name": "Entity B",
+                    "type": "spkt::entity",
+                    "default": "{}"
+                }
+            ]
+        },
+        {
+            "name": "PhysicsSingleton",
+            "display_name": "Physics Singleton",
+            "flags": {
+                "SAVABLE": false,
+                "SCRIPTABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "physics_runtime",
+                    "display_name": "Physics Runtime",
+                    "type": "std::shared_ptr<physics_runtime>",
+                    "default": "nullptr",
+                    "flags": {
+                        "SCRIPTABLE": false,
+                        "SAVABLE": false
+                    }
+                }
+            ]
+        },
+        {
+            "name": "InputSingleton",
+            "display_name": "Input Singleton",
+            "flags": {
+                "SAVABLE": false,
+                "SCRIPTABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "input_store",
+                    "display_name": "Input Store",
+                    "type": "std::shared_ptr<spkt::input_store>",
+                    "default": "nullptr"
+                }
+            ]
+        },
+        {
+            "name": "GameGridSingleton",
+            "display_name": "Game Grid Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "hovered_square_entity",
+                    "display_name": "Hovered Square Entity",
+                    "type": "spkt::entity",
+                    "default": "spkt::null"
+                },
+                {
+                    "name": "clicked_square_entity",
+                    "display_name": "Clicked Square Entity",
+                    "type": "spkt::entity",
+                    "default": "spkt::null"
+                },
+                {
+                    "name": "hovered_square",
+                    "display_name": "Hovered Square",
+                    "type": "glm::ivec2",
+                    "default": "{0, 0}"
+                },
+                {
+                    "name": "clicked_square",
+                    "display_name": "Clicked Square",
+                    "type": "std::optional<glm::ivec2>",
+                    "default": "std::nullopt"
+                }
+            ]
+        },
+        {
+            "name": "TileMapSingleton",
+            "display_name": "Tile Map Singleton",
+            "flags": {
+                "SCRIPTABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "tiles",
+                    "display_name": "Tiles",
+                    "type": "std::unordered_map<glm::ivec2, spkt::entity>",
+                    "default": "{}"
+                }
+            ]
+        },
+        {
+            "name": "CameraSingleton",
+            "display_name": "Camera Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "camera_entity",
+                    "display_name": "Camera Entity",
+                    "type": "spkt::entity",
+                    "default": "spkt::null"
+                }
+            ]
+        },
+        {
+            "name": "ParticleSingleton",
+            "display_name": "Particle Singleton",
+            "flags": {
+                "SCRIPTABLE": false,
+                "SAVABLE": false
+            },
+            "attributes": [
+                {
+                    "name": "particles",
+                    "display_name": "Particles",
+                    "type": "std::shared_ptr<std::array<particle, NUM_PARTICLES>>",
+                    "default": "nullptr"
+                },
+                {
+                    "name": "next_slot",
+                    "display_name": "Next Slot",
+                    "type": "std::size_t",
+                    "default": "NUM_PARTICLES - 1"
+                }
+            ]
+        }
+    ]
+}
