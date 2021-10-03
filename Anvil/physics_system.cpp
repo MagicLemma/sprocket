@@ -1,7 +1,6 @@
 #include "physics_system.h"
-
-#include <Sprocket/Scene/scene.h>
-#include <Sprocket/Scene/ecs.h>
+#include <Anvil/ecs/scene.h>
+#include <Anvil/ecs/ecs.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

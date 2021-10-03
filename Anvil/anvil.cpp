@@ -6,14 +6,14 @@
 #include <Anvil/rendering.h>
 #include <Anvil/systems.h>
 #include <Anvil/scene_utils.h>
+#include <Anvil/ecs/loader.h>
+#include <Anvil/ecs/meta.h>
 
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Scene/Loader.h>
-#include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/FileBrowser.h>
 #include <Sprocket/Utility/Maths.h>

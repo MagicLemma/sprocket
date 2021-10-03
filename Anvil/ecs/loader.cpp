@@ -2,10 +2,10 @@
 #include "meta.h"
 #include "ecs.h"
 #include "yaml_ecs.h"
+#include "scene.h"
 
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Utility/Yaml.h>
-#include <Sprocket/Scene/scene.h>
 
 #include <yaml-cpp/yaml.h>
 

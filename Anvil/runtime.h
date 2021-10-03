@@ -1,10 +1,11 @@
 #pragma once
+#include <Anvil/ecs/ecs.h>
+#include <Anvil/ecs/scene.h>
+
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/console.h>
 
 #include <memory>

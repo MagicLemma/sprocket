@@ -5,10 +5,10 @@
 #include <Anvil/rendering.h>
 #include <Anvil/scene_utils.h>
 #include <Anvil/systems.h>
+#include <Anvil/ecs/loader.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
-#include <Sprocket/Scene/loader.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
 #include <Sprocket/Utility/Colour.h>

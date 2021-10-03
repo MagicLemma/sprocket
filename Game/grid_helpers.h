@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Scene/ecs.h>
+#include <Game/ecs/ecs.h>
 
 #include <glm/glm.hpp>
 

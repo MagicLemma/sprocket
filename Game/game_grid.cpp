@@ -1,9 +1,10 @@
 #include "game_grid.h"
 
+#include <Game/ecs/ecs.h>
+#include <Game/ecs/scene.h>
+
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Graphics/camera.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/scene.h>
 #include <Sprocket/Utility/input_store.h>
 #include <Sprocket/Utility/Maths.h>
 

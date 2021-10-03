@@ -5,18 +5,17 @@
 #include <Game/Palette.h>
 #include <Game/script_system.h>
 #include <Game/PathCalculator.h>
+#include <Game/ecs/ecs.h>
+#include <Game/ecs/loader.h>
 
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/events.h>
-#include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/loader.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/views.h>
 

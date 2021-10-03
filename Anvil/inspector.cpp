@@ -1,10 +1,9 @@
 #include "Inspector.h"
-
 #include <Anvil/Anvil.h>
+#include <Anvil/ecs/ecs.h>
+#include <Anvil/ecs/loader.h>
+#include <Anvil/ecs/meta.h>
 
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/Loader.h>
-#include <Sprocket/Scene/meta.h>
 #include <Sprocket/UI/DevUI.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/Maths.h>

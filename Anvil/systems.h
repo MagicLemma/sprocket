@@ -1,8 +1,9 @@
 #pragma once
+#include <Anvil/ecs/ecs.h>
+#include <Anvil/ecs/lua_ecs.h>
+
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/log.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/lua_ecs.h>
 #include <Sprocket/Scripting/lua_input.h>
 #include <Sprocket/Scripting/lua_maths.h>
 #include <Sprocket/Scripting/lua_script.h>

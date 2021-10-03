@@ -1,6 +1,8 @@
 #pragma once
 #include <Anvil/Camera.h>
 #include <Anvil/Inspector.h>
+#include <Anvil/ecs/ecs.h>
+#include <Anvil/ecs/scene.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
@@ -10,8 +12,6 @@
 #include <Sprocket/Graphics/Rendering/geometry_renderer.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
-#include <Sprocket/Scene/ecs.h>
-#include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/DevUI.h>
 
 #include <memory>

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 add_subdirectory(reactphysics3d)
+add_subdirectory(ecs)
 
 project(anvil)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
@@ -17,7 +18,7 @@ add_executable(anvil
                particle_system.cpp
                physics_system.cpp)
 
-target_link_libraries(anvil PRIVATE Sprocket reactphysics3d)
+target_link_libraries(anvil PRIVATE Sprocket reactphysics3d anvil-ecs)
 target_include_directories(anvil PUBLIC .)
 
 add_executable(runtime
@@ -28,5 +29,5 @@ add_executable(runtime
                particle_system.cpp
                physics_system.cpp)
 
-target_link_libraries(runtime PRIVATE Sprocket reactphysics3d)
+target_link_libraries(runtime PRIVATE Sprocket reactphysics3d anvil-ecs)
 target_include_directories(runtime PUBLIC .)

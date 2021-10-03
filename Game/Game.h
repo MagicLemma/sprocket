@@ -2,11 +2,12 @@
 #include <Game/CircadianCycle.h>
 #include <Game/game_grid.h>
 
+#include <Game/ecs/scene.h>
+
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/post_processor.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/shadow_map.h>
-#include <Sprocket/Scene/scene.h>
 #include <Sprocket/UI/DevUI.h>
 #include <Sprocket/UI/SimpleUI.h>
 
