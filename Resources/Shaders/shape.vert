@@ -13,7 +13,7 @@ out float o_line_thickness;
 
 void main()
 {
-    gl_Position = position;
+    gl_Position = vec4(position, 0.0, 1.0);
 
     o_line_begin = line_begin;
     o_line_end = line_end;
