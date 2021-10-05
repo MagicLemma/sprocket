@@ -151,5 +151,10 @@ void Runtime::on_render()
         {0.0, 0.0, 1.0, 1.0},
         5.0f
     );
+    shapes.draw_circle(
+        d_window->mouse_position(),
+        {0.0, 1.0, 0.0, 1.0},
+        25.0f
+    );
     shapes.end_frame();
 }

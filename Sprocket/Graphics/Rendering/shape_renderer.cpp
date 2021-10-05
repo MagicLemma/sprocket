@@ -97,5 +97,13 @@ void shape_renderer::draw_line(
 {
     d_lines.emplace_back(begin, end, begin_colour, end_colour, thickness);
 }
+
+void shape_renderer::draw_circle(
+    const glm::vec2& centre,
+    const glm::vec4& colour,
+    const float radius)
+{
+    draw_line(centre, centre, colour, colour, radius);
+}
     
 }
