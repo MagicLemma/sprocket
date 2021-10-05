@@ -3,7 +3,8 @@ layout (location = 0) out vec4 out_colour;
 
 in vec2  o_line_begin;
 in vec2  o_line_end;
-in vec4  o_line_colour;
+in vec4  o_line_begin_colour;
+in vec4  o_line_end_colour;
 in float o_line_thickness;
 
 uniform float u_width;
@@ -28,11 +29,11 @@ void main()
 
     if (distance_from_line < o_line_thickness) {
         if (ratio_along > 0 && ratio_along < 1) {
-            out_colour = o_line_colour;
+            out_colour = mix(o_line_begin_colour, o_line_end_colour, ratio_along);
         } else if (ratio_along <= 0 && distance(o_line_begin, pixel) < o_line_thickness) {
-            out_colour = o_line_colour;
+            out_colour = o_line_begin_colour;
         } else if (ratio_along >= 1 && distance(o_line_end, pixel) < o_line_thickness) {
-            out_colour = o_line_colour;
+            out_colour = o_line_end_colour;
         } else {
             out_colour = vec4(0.0);
         }

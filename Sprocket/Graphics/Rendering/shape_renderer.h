@@ -19,7 +19,8 @@ struct line_instance
 {
     glm::vec2 begin;
     glm::vec2 end;
-    glm::vec4 colour;
+    glm::vec4 begin_colour;
+    glm::vec4 end_colour;
     float     thickness;
 
     static void set_buffer_attributes(std::uint32_t vbo);
@@ -47,7 +48,8 @@ public:
     void draw_line(
         const glm::vec2& begin,
         const glm::vec2& end,
-        const glm::vec4& colour,
+        const glm::vec4& begin_colour,
+        const glm::vec4& end_colour,
         const float thickness
     );
 };

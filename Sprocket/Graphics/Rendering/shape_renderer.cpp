@@ -37,14 +37,15 @@ void quad_vertex::set_buffer_attributes(std::uint32_t vbo)
 void line_instance::set_buffer_attributes(std::uint32_t vbo)
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    for (int i = 1; i != 5; ++i) {
+    for (int i = 1; i != 6; ++i) {
         glEnableVertexAttribArray(i);
         glVertexAttribDivisor(i, 1);
     }
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(line_instance), (void*)offsetof(line_instance, begin));
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(line_instance), (void*)offsetof(line_instance, end));
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(line_instance), (void*)offsetof(line_instance, colour));
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, sizeof(line_instance), (void*)offsetof(line_instance, thickness));
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(line_instance), (void*)offsetof(line_instance, begin_colour));
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(line_instance), (void*)offsetof(line_instance, end_colour));
+    glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(line_instance), (void*)offsetof(line_instance, thickness));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -90,10 +91,11 @@ void shape_renderer::end_frame()
 void shape_renderer::draw_line(
     const glm::vec2& begin,
     const glm::vec2& end,
-    const glm::vec4& colour,
+    const glm::vec4& begin_colour,
+    const glm::vec4& end_colour,
     const float thickness)
 {
-    d_lines.emplace_back(begin, end, colour, thickness);
+    d_lines.emplace_back(begin, end, begin_colour, end_colour, thickness);
 }
     
 }
