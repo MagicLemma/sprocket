@@ -18,17 +18,22 @@ void main()
 {   
     vec2 pixel = vec2(gl_FragCoord.x, u_height - gl_FragCoord.y);
 
-    vec2 line = o_line_end - o_line_begin;
-    vec2 to_pixel = pixel - o_line_begin;
-    float sin_angle = abs(cross2d(line, to_pixel)) / (length(line) * length(to_pixel));
+    vec2 A = o_line_end - o_line_begin;
+    vec2 B = pixel - o_line_begin;
 
-    float distance_from_line = length(to_pixel) * sin_angle;
+    float distance_from_line = abs(cross2d(A, B)) / length(A);
 
-    if (distance(pixel, o_line_begin) < 10) {
-        out_colour = vec4(0.0, 0.0, 1.0, 1.0);
-    } else if (distance(pixel, o_line_end) < 10) {
-        out_colour = vec4(1.0, 0.0, 0.0, 1.0);
-    } else if (distance_from_line < 5) {
-        out_colour = vec4(0.0, 1.0, 0.0, 1.0);
+    float ratio_along = dot(A, B) / (length(A) * length(A));
+
+    if (distance_from_line < o_line_thickness) {
+        if (ratio_along > 0 && ratio_along < 1) {
+            out_colour = o_line_colour;
+        } else if (ratio_along <= 0 && distance(o_line_begin, pixel) < o_line_thickness) {
+            out_colour = o_line_colour;
+        } else if (ratio_along >= 1 && distance(o_line_end, pixel) < o_line_thickness) {
+            out_colour = o_line_colour;
+        } else {
+            out_colour = vec4(0.0);
+        }
     }
 }

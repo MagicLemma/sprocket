@@ -144,6 +144,6 @@ void Runtime::on_render()
 
     static spkt::shape_renderer shapes;
     shapes.begin_frame((float)d_window->width(), (float)d_window->height());
-    shapes.draw_line({100.0, 100.0}, d_window->mouse_position(), {1.0, 0.0, 0.0, 1.0}, 1.0f);
+    shapes.draw_line({100.0, 100.0}, d_window->mouse_position(), {1.0, 0.0, 0.0, 1.0}, 5.0f);
     shapes.end_frame();
 }
