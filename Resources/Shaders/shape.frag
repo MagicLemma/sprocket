@@ -20,10 +20,11 @@ void main()
 
     vec2 A = o_line_end - o_line_begin;
     vec2 B = pixel - o_line_begin;
+    float lengthA = length(A);
 
-    float distance_from_line = abs(cross2d(A, B)) / length(A);
+    float distance_from_line = abs(cross2d(A, B)) / lengthA;
 
-    float ratio_along = dot(A, B) / (length(A) * length(A));
+    float ratio_along = dot(A, B) / (lengthA * lengthA);
 
     if (distance_from_line < o_line_thickness) {
         if (ratio_along > 0 && ratio_along < 1) {
