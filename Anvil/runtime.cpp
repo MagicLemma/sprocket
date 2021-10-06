@@ -15,8 +15,6 @@
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Core/input_codes.h>
 
-#include <Sprocket/Graphics/Rendering/shape_renderer.h>
-
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
 const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
 const auto GARDEN      = spkt::from_hex(0x55E6C1);
@@ -141,20 +139,4 @@ void Runtime::on_render()
         draw_console(d_console, d_command_line, d_ui, d_window->width(), d_window->height());
         d_ui.EndFrame();
     }
-
-    static spkt::shape_renderer shapes;
-    shapes.begin_frame((float)d_window->width(), (float)d_window->height());
-    shapes.draw_line(
-        {100.0, 100.0},
-        d_window->mouse_position(),
-        {1.0, 0.0, 0.0, 1.0},
-        {0.0, 0.0, 1.0, 1.0},
-        5.0f
-    );
-    shapes.draw_circle(
-        d_window->mouse_position(),
-        {0.0, 1.0, 0.0, 1.0},
-        25.0f
-    );
-    shapes.end_frame();
 }
