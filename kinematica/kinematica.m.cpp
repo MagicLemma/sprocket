@@ -14,8 +14,6 @@ struct point
     glm::vec2 prev_position;
     bool      fixed;
 
-    //glm::vec2 velocity = {0.0, 0.0};
-
     point(const glm::vec2& p, bool f = false) : position(p), prev_position(p), fixed(f) {}
 };
 
@@ -26,6 +24,25 @@ struct stick
     float  length;
 };
 
+std::pair<std::vector<std::shared_ptr<point>>, std::vector<stick>>
+make_rope(const std::vector<glm::vec2>& points)
+{
+    std::vector<std::shared_ptr<point>> ret_points;
+    std::vector<stick>                  ret_sticks;
+
+    point* prev = nullptr;
+    for (const auto pos : points) {
+        auto p = std::make_shared<point>(pos);
+        ret_points.push_back(p);
+        if (prev != nullptr) {
+            ret_sticks.push_back({prev, p.get(), glm::length(pos - prev->position)});
+        }
+        prev = p.get();
+    }
+    ret_points.back()->fixed = true;
+    return {ret_points, ret_sticks};
+}
+
 class app
 {
     spkt::window* d_window;
@@ -35,22 +52,24 @@ class app
     std::vector<stick>                  d_sticks;
 
     bool d_running = false;
+    bool d_zig_zag = true;
 
 public:
     app(spkt::window* window)
         : d_window{window}
-        , d_points{
-            std::make_shared<point>(glm::vec2{100.0, 100.0}),
-            std::make_shared<point>(glm::vec2{200.0, 100.0}),
-            std::make_shared<point>(glm::vec2{300.0, 100.0}),
-            std::make_shared<point>(glm::vec2{400.0, 100.0}, true)
-        },
-        d_sticks{
-            {d_points[0].get(), d_points[1].get(), 100.0f},
-            {d_points[1].get(), d_points[2].get(), 100.0f},
-            {d_points[2].get(), d_points[3].get(), 100.0f}
-        }
-    {}
+    {
+        d_window->set_clear_colour({0.1, 0.1, 0.1});
+        std::tie(d_points, d_sticks) = make_rope({
+                {100.0, 200.0},
+                {150.0, 200.0},
+                {250.0, 200.0},
+                {350.0, 200.0},
+                {350.0, 300.0},
+                {400.0, 300.0},
+                {600.0, 150.0}
+            });
+            d_points.front()->fixed = true;
+    }
 
     void on_update(double dt)
     {
@@ -59,7 +78,7 @@ public:
                 if (!point->fixed) {
                     auto current = point->position;
                     point->position += point->position - point->prev_position;
-                    point->position += 50.0f * 9.81f * (float)dt * (float)dt * glm::vec2(0.0, 1.0);
+                    point->position += 25.0f * 9.81f * (float)dt * (float)dt * glm::vec2(0.0, 1.0);
                     point->prev_position = current;
                 }
             }
@@ -84,6 +103,39 @@ public:
         if (auto data = ev.get_if<spkt::keyboard_pressed_event>()) {
             if (data->key == spkt::Keyboard::ENTER) {
                 d_running = !d_running;
+            } else if (data->key == spkt::Keyboard::ESC) {
+                d_running = false;
+                d_zig_zag = !d_zig_zag;
+                if (d_zig_zag) {
+                    std::tie(d_points, d_sticks) = make_rope({
+                        {100.0, 200.0},
+                        {150.0, 200.0},
+                        {250.0, 200.0},
+                        {350.0, 200.0},
+                        {350.0, 300.0},
+                        {400.0, 300.0},
+                        {600.0, 150.0}
+                    });
+                    d_points.front()->fixed = true;
+                } else {
+                    std::tie(d_points, d_sticks) = make_rope({
+                        {100.0, 100.0},
+                        {100.0, 125.0},
+                        {100.0, 150.0},
+                        {100.0, 175.0},
+                        {100.0, 200.0},
+                        {100.0, 225.0},
+                        {125.0, 225.0},
+                        {150.0, 225.0},
+                        {175.0, 225.0},
+                        {200.0, 225.0},
+                        {200.0, 200.0},
+                        {200.0, 175.0},
+                        {200.0, 150.0},
+                        {200.0, 125.0},
+                        {200.0, 100.0}
+                    });
+                }
             }
         }
     }
@@ -95,14 +147,17 @@ public:
             d_renderer.draw_line(
                 stick.a->position,
                 stick.b->position,
-                {0.0, 0.0, 1.0, 1.0},
-                {0.0, 0.0, 1.0, 1.0},
+                {0.0, 0.0, 0.0, 1.0},
+                {0.0, 0.0, 0.0, 1.0},
                 2.0f
             );
         }
         for (const auto& point : d_points) {
-            glm::vec4 colour{point->fixed ? 0.0 : 1.0, 0.0, 0.0, 1.0};
-            d_renderer.draw_circle(point->position, colour, 10.0f);
+            if (point->fixed) {
+                d_renderer.draw_circle(point->position, {1.0, 1.0, 1.0, 1.0}, 4.0f);
+            } else {
+                d_renderer.draw_circle(point->position, {1.0, 0.0, 0.0, 1.0}, 2.0f);
+            }
         }
         d_renderer.end_frame();
     }
