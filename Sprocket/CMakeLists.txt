@@ -59,6 +59,7 @@ add_library(Sprocket STATIC
             Graphics/Viewport.cpp
 
             Graphics/Rendering/geometry_renderer.cpp
+            Graphics/Rendering/shape_renderer.cpp
             Graphics/Rendering/pbr_renderer.cpp
             Graphics/Rendering/SkyboxRenderer.cpp
             
