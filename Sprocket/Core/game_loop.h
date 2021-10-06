@@ -4,6 +4,7 @@
 #include <Sprocket/Core/log.h>
 #include <Sprocket/Core/timer.h>
 
+#include <concepts>
 #include <exception>
 #include <format>
 #include <type_traits>
@@ -49,6 +50,16 @@ int run(App& app, window& window, const run_options& options = {})
     }
 
     return 0;
+}
+
+// If the application type only needs a window* to be constructed, the entire run loop
+// can be further encapsulated for the user.
+template <runnable App> requires std::constructible_from<App, spkt::window*>
+int run_app(const std::string& name)
+{
+    spkt::window window{name};
+    App app{&window};
+    return spkt::run(app, window);
 }
 
 }
