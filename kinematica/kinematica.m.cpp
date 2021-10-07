@@ -77,21 +77,25 @@ public:
             for (auto& point : d_points) {
                 if (!point->fixed) {
                     auto current = point->position;
-                    point->position += point->position - point->prev_position;
-                    point->position += 25.0f * 9.81f * (float)dt * (float)dt * glm::vec2(0.0, 1.0);
+                    point->position += 0.9995f * (point->position - point->prev_position);
+                    point->position += 45.0f * 9.81f * (float)dt * (float)dt * glm::vec2(0.0, 1.0);
                     point->prev_position = current;
                 }
             }
 
-            for (std::size_t i = 0; i != 10; ++i) {
+            for (std::size_t i = 0; i != 5; ++i) {
                 for (auto& stick : d_sticks) {
                     auto stick_centre = (stick.a->position + stick.b->position) / 2.0f;
                     auto stick_dir = glm::normalize(stick.a->position - stick.b->position);
-                    if (!stick.a->fixed) {
-                        stick.a->position = stick_centre + stick_dir * stick.length / 2.0f;
-                    }
-                    if (!stick.b->fixed) {
-                        stick.b->position = stick_centre - stick_dir * stick.length / 2.0f;
+                    auto stick_length = glm::length(stick.a->position - stick.b->position);
+
+                    if (stick_length > stick.length) {
+                        if (!stick.a->fixed) {
+                            stick.a->position = stick_centre + stick_dir * stick.length / 2.0f;
+                        }
+                        if (!stick.b->fixed) {
+                            stick.b->position = stick_centre - stick_dir * stick.length / 2.0f;
+                        }
                     }
                 }
             }
@@ -135,6 +139,7 @@ public:
                         {200.0, 125.0},
                         {200.0, 100.0}
                     });
+                    d_points.front()->fixed = true;
                 }
             }
         }
