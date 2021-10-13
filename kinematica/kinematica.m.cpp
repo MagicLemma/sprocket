@@ -93,8 +93,8 @@ public:
             for (auto& point : d_points) {
                 if (!point->fixed) {
                     auto current = point->position;
-                    point->position += 0.9995f * (point->position - point->prev_position);
-                    point->position += 45.0f * 9.81f * (float)dt * (float)dt * glm::vec2(0.0, 1.0);
+                    point->position += point->position - point->prev_position;
+                    point->position += 60.0f * 9.81f * (float)dt * (float)dt * glm::vec2(0.0, 1.0);
                     point->prev_position = current;
                 }
             }
