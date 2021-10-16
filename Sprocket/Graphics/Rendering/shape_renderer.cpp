@@ -49,19 +49,41 @@ void line_instance::set_buffer_attributes(std::uint32_t vbo)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void circle_instance::set_buffer_attributes(std::uint32_t vbo)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    for (int i = 1; i != 6; ++i) {
+        glEnableVertexAttribArray(i);
+        glVertexAttribDivisor(i, 1);
+    }
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(circle_instance), (void*)offsetof(circle_instance, centre));
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(circle_instance), (void*)offsetof(circle_instance, inner_radius));
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(circle_instance), (void*)offsetof(circle_instance, outer_radius));
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(circle_instance), (void*)offsetof(circle_instance, begin_colour));
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(circle_instance), (void*)offsetof(circle_instance, end_colour));
+    glVertexAttribPointer(6, 1, GL_FLOAT, GL_FALSE, sizeof(circle_instance), (void*)offsetof(circle_instance, angle));
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 shape_renderer::shape_renderer()
-    : d_shader("Resources/Shaders/shape.vert", "Resources/Shaders/shape.frag")
-    , d_quad_vertices(get_quad_vertices())
+    : d_quad_vertices(get_quad_vertices())
     , d_quad_indices(get_quad_indices())
+    , d_line_shader("Resources/Shaders/line.vert", "Resources/Shaders/line.frag")
+    , d_circle_shader("Resources/Shaders/circle.vert", "Resources/Shaders/circle.vert")
 {
 }
 
 void shape_renderer::begin_frame(const float width, const float height)
 {
-    d_shader.bind();
-    d_shader.load("u_width", width);
-    d_shader.load("u_height", height);
+    d_line_shader.bind();
+    d_line_shader.load("u_width", width);
+    d_line_shader.load("u_height", height);
     d_lines.clear();
+
+    d_line_shader.bind();
+    d_line_shader.load("u_width", width);
+    d_line_shader.load("u_height", height);
+    d_circles.clear();
 }
 
 void shape_renderer::end_frame()
@@ -72,7 +94,7 @@ void shape_renderer::end_frame()
 
     d_line_instances.set_data(d_lines);
 
-    d_shader.bind();
+    d_line_shader.bind();
     d_quad_vertices.bind();
     d_quad_indices.bind();
     d_line_instances.bind();
@@ -85,7 +107,7 @@ void shape_renderer::end_frame()
         (int)d_line_instances.size()
     );
 
-    d_shader.unbind();
+    d_line_shader.unbind();
 }
 
 void shape_renderer::draw_line(
