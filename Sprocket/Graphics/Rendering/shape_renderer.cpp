@@ -130,6 +130,17 @@ void shape_renderer::draw_line(
     d_lines.emplace_back(begin, end, begin_colour, end_colour, thickness);
 }
 
+void shape_renderer::draw_circle_shape(
+    const glm::vec2& centre,
+    const float      inner_radius,
+    const float      outer_radius,
+    const glm::vec4& begin_colour,
+    const glm::vec4& end_colour,
+    const float      angle)
+{
+    d_circles.emplace_back(centre, inner_radius, outer_radius, begin_colour, end_colour, angle);
+}
+
 void shape_renderer::draw_circle(
     const glm::vec2& centre,
     const glm::vec4& colour,
