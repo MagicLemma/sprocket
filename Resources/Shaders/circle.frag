@@ -14,8 +14,9 @@ uniform float u_height;
 void main()
 {   
     vec2 pixel = vec2(gl_FragCoord.x, u_height - gl_FragCoord.y);
+    float from_centre = distance(pixel, o_circle_centre);
     
-    if (distance(pixel, o_circle_centre) < o_circle_outer_radius) {
+    if (o_circle_inner_radius < from_centre && from_centre < o_circle_outer_radius) {
         out_colour = o_circle_begin_colour;
         return;
     }

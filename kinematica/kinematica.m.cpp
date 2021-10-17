@@ -186,6 +186,14 @@ public:
                 d_renderer.draw_circle(point->position, {1.0, 0.0, 0.0, 1.0}, 2.0f);
             }
         }
+
+        d_renderer.draw_annulus(
+            {800.0f, 350.0f},
+            {1.0f, 1.0f, 1.0f, 1.0f},
+            100.0f,
+            300.0f
+        );
+
         d_renderer.end_frame();
     }
 };

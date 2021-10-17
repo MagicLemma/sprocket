@@ -135,7 +135,16 @@ void shape_renderer::draw_circle(
     const glm::vec4& colour,
     const float radius)
 {
-    d_circles.emplace_back(centre, radius, radius, colour, colour, 0.0f);
+    d_circles.emplace_back(centre, 0.0f, radius, colour, colour, 0.0f);
+}
+
+void shape_renderer::draw_annulus(
+    const glm::vec2& centre,
+    const glm::vec4& colour,
+    const float inner_radius,
+    const float outer_radius)
+{
+    d_circles.emplace_back(centre, inner_radius, outer_radius, colour, colour, 0.0f);
 }
     
 }

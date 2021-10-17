@@ -73,6 +73,13 @@ public:
         const glm::vec4& colour,
         const float radius
     );
+
+    void draw_annulus(
+        const glm::vec2& centre,
+        const glm::vec4& colour,
+        const float inner_radius,
+        const float outer_radius
+    );
 };
 
 }
