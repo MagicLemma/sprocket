@@ -1,4 +1,4 @@
-#include <Game/game.h>
+#include <game/game.h>
 
 #include <Sprocket/Core/window.h>
 #include <Sprocket/Core/game_loop.h>

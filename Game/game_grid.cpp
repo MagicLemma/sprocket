@@ -1,7 +1,7 @@
 #include "game_grid.h"
 
-#include <Game/ecs/ecs.h>
-#include <Game/ecs/scene.h>
+#include <game/ecs/ecs.h>
+#include <game/ecs/scene.h>
 
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Graphics/camera.h>

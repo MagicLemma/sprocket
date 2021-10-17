@@ -1,8 +1,8 @@
 #pragma once
-#include <Game/day_night_cycle.h>
-#include <Game/game_grid.h>
+#include <game/day_night_cycle.h>
+#include <game/game_grid.h>
 
-#include <Game/ecs/scene.h>
+#include <game/ecs/scene.h>
 
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/post_processor.h>

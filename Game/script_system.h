@@ -1,6 +1,6 @@
 #pragma once
-#include <Game/ecs/lua_ecs.h>
-#include <Game/ecs/scene.h>
+#include <game/ecs/lua_ecs.h>
+#include <game/ecs/scene.h>
 
 #include <Sprocket/Scripting/lua_input.h>
 #include <Sprocket/Scripting/lua_maths.h>

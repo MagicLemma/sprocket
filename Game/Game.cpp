@@ -1,12 +1,12 @@
 #include "game.h"
 
-#include <Game/game_grid.h>
-#include <Game/grid_helpers.h>
-#include <Game/palette.h>
-#include <Game/script_system.h>
-#include <Game/path_calculator.h>
-#include <Game/ecs/ecs.h>
-#include <Game/ecs/loader.h>
+#include <game/game_grid.h>
+#include <game/grid_helpers.h>
+#include <game/palette.h>
+#include <game/script_system.h>
+#include <game/path_calculator.h>
+#include <game/ecs/ecs.h>
+#include <game/ecs/loader.h>
 
 #include <Sprocket/Audio/Listener.h>
 #include <Sprocket/Core/events.h>
