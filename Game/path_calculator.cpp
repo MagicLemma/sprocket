@@ -1,4 +1,4 @@
-#include "PathCalculator.h"
+#include "path_calculator.h"
 
 #include <Sprocket/Core/log.h>
 

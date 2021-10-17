@@ -2,9 +2,9 @@
 
 #include <Game/game_grid.h>
 #include <Game/grid_helpers.h>
-#include <Game/Palette.h>
+#include <Game/palette.h>
 #include <Game/script_system.h>
-#include <Game/PathCalculator.h>
+#include <Game/path_calculator.h>
 #include <Game/ecs/ecs.h>
 #include <Game/ecs/loader.h>
 
@@ -75,28 +75,28 @@ void input_system_end(game::registry& registry, double dt)
     registry.get<game::InputSingleton>(singleton).input_store->end_frame();
 }
 
-void SunInfoPanel(DevUI& ui, CircadianCycle& cycle)
+void SunInfoPanel(DevUI& ui, day_night_cycle& cycle)
 {
     ImGui::Begin("Sun");
 
-    if (ImGui::Button("Start")) { cycle.Start(); }
+    if (ImGui::Button("Start")) { cycle.start(); }
     ImGui::SameLine();
-    if (ImGui::Button("Stop")) { cycle.Stop(); }
+    if (ImGui::Button("Stop")) { cycle.stop(); }
     ImGui::Separator();
 
-    if (cycle.IsRunning()) { // If running, be able to change the speed.
-        float speed = cycle.GetSpeed();
+    if (cycle.is_running()) { // If running, be able to change the speed.
+        float speed = cycle.get_speed();
         ImGui::SliderFloat("Speed", &speed, 1.0f, 1000.0f, "%.3f");
-        cycle.SetSpeed(speed);
+        cycle.set_speed(speed);
     }
     else { // If not running, be able to set manually
-        float angle = cycle.GetAngle();
+        float angle = cycle.get_angle();
         ImGui::DragFloat("Angle", &angle, 0.01f);
-        cycle.SetAngle(angle);
+        cycle.set_angle(angle);
     }
     
     ImGui::Separator();
-    ImGuiXtra::Text(cycle.ToString12Hour());
+    ImGuiXtra::Text(cycle.to_string());
     ImGui::End();
 }
 
@@ -181,7 +181,7 @@ Game::Game(spkt::window* window)
     : d_window(window)
     , d_scene()
     , d_assetManager()
-    , d_mode(Mode::PLAYER)
+    , d_mode(mode::PLAYER)
     , d_entityRenderer(&d_assetManager)
     , d_post_processor(d_window->width(), d_window->height())
     , d_shadowMap(&d_assetManager)
@@ -201,12 +201,12 @@ Game::Game(spkt::window* window)
     d_hoveredEntityUI.SetTheme(theme);
     d_escapeMenu.SetTheme(theme);    
 
-    d_cycle.SetAngle(3.14195f);
+    d_cycle.set_angle(3.14195f);
 
     auto& registry = d_scene.registry;
     auto sun_entity = registry.find<game::SunComponent>();
     auto& sun = registry.get<game::SunComponent>(sun_entity);
-    sun.direction = d_cycle.GetSunDir();
+    sun.direction = d_cycle.sun_direction();
 
     d_post_processor.add_effect(
         "Resources/Shaders/GaussH.vert", "Resources/Shaders/Gauss.frag"
@@ -279,7 +279,7 @@ void Game::on_event(spkt::event& event)
     }
 
     // Editor UI event handling
-    if (d_mode == Mode::EDITOR) {
+    if (d_mode == mode::EDITOR) {
         d_devUI.on_event(event);
     }
 
@@ -356,19 +356,19 @@ void Game::on_update(double dt)
     
     auto sun_entity = registry.find<game::SunComponent>();
     auto& sun = registry.get<game::SunComponent>(sun_entity);
-    float factor = (-d_cycle.GetSunDir().y + 1.0f) / 2.0f;
+    float factor = (-d_cycle.sun_direction().y + 1.0f) / 2.0f;
     float facSq = factor * factor;
     auto skyColour = (1.0f - facSq) * NAVY_NIGHT + facSq * LIGHT_BLUE;
     d_window->set_clear_colour(skyColour);
-    if (d_cycle.IsDay()) {
-        sun.direction = d_cycle.GetSunDir();
+    if (d_cycle.is_day()) {
+        sun.direction = d_cycle.sun_direction();
         sun.colour = {1.0, 0.945, 0.789};
     }
     else {
-        sun.direction = -d_cycle.GetSunDir();
+        sun.direction = -d_cycle.sun_direction();
         sun.colour = {0.5, 0.57, 0.98};
     }
-    sun.brightness = 2.0f * std::abs(glm::cos(d_cycle.GetAngle()));
+    sun.brightness = 2.0f * std::abs(glm::cos(d_cycle.get_angle()));
     sun.direction = glm::normalize(sun.direction);
 
     if (!d_paused) {
@@ -487,7 +487,7 @@ void Game::on_render()
         d_hoveredEntityUI.EndFrame();
     }
 
-    if (d_mode == Mode::EDITOR) {
+    if (d_mode == mode::EDITOR) {
         d_devUI.StartFrame();
 
         const auto& reg = registry;
@@ -527,11 +527,11 @@ void Game::on_render()
 
     if (d_escapeMenu.Button("Toggle Dev UI", buttonRegion)) {
         switch (d_mode) {
-            case Mode::PLAYER: {
-                d_mode = Mode::EDITOR;
+            case mode::PLAYER: {
+                d_mode = mode::EDITOR;
             } break;
-            case Mode::EDITOR: {
-                d_mode = Mode::PLAYER;
+            case mode::EDITOR: {
+                d_mode = mode::PLAYER;
             } break;
         }
     }
@@ -541,9 +541,9 @@ void Game::on_render()
     d_escapeMenu.Slider("Slider", buttonRegion, &value1, 0, 100);
 
     buttonRegion.y += 60;
-    float angle = d_cycle.GetAngle();
+    float angle = d_cycle.get_angle();
     d_escapeMenu.Dragger("Time of Day", buttonRegion, &angle, 0.001f);
-    d_cycle.SetAngle(angle);
+    d_cycle.set_angle(angle);
 
     buttonRegion.y += 60;
     d_escapeMenu.Checkbox("Volume Panel", buttonRegion, &showVolume);

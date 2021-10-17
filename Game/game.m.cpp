@@ -1,6 +1,6 @@
 #include <Game/Game.h>
 
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/window.h>
 #include <Sprocket/Core/game_loop.h>
 
 using namespace spkt;

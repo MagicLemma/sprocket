@@ -1,5 +1,5 @@
 #pragma once
-#include <Game/CircadianCycle.h>
+#include <Game/day_night_cycle.h>
 #include <Game/game_grid.h>
 
 #include <Game/ecs/scene.h>
@@ -20,14 +20,14 @@ namespace spkt {
     class event;
 }
 
-enum class Mode { PLAYER, EDITOR };
+enum class mode { PLAYER, EDITOR };
 
 class Game
 {
     spkt::window* d_window;
     spkt::asset_manager d_assetManager;
     
-    Mode d_mode;
+    mode d_mode;
 
     game::scene d_scene;
 
@@ -39,7 +39,7 @@ class Game
     spkt::post_processor d_post_processor;
 
     // Additional world setup
-    spkt::CircadianCycle d_cycle;
+    day_night_cycle d_cycle;
 
     spkt::shadow_map d_shadowMap;
 
