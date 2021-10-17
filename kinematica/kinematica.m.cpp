@@ -36,25 +36,6 @@ point* closest_point(const glm::vec2& pos, const std::vector<std::shared_ptr<poi
     return nullptr;
 }
 
-std::pair<std::vector<std::shared_ptr<point>>, std::vector<stick>>
-make_rope(const std::vector<glm::vec2>& points)
-{
-    std::vector<std::shared_ptr<point>> ret_points;
-    std::vector<stick>                  ret_sticks;
-
-    point* prev = nullptr;
-    for (const auto pos : points) {
-        auto p = std::make_shared<point>(pos);
-        ret_points.push_back(p);
-        if (prev != nullptr) {
-            ret_sticks.push_back({prev, p.get(), glm::length(pos - prev->position)});
-        }
-        prev = p.get();
-    }
-    ret_points.back()->fixed = true;
-    return {ret_points, ret_sticks};
-}
-
 class app
 {
     spkt::window* d_window;
@@ -69,22 +50,14 @@ class app
     // on release or a line should be drawn.
     std::optional<glm::vec2> d_mouse_down;
 
+    float d_angle = 0;
+
 public:
     app(spkt::window* window)
         : d_window{window}
         , d_mouse_down{std::nullopt}
     {
         d_window->set_clear_colour({0.1, 0.1, 0.1});
-        std::tie(d_points, d_sticks) = make_rope({
-            {100.0, 200.0},
-            {150.0, 200.0},
-            {250.0, 200.0},
-            {350.0, 200.0},
-            {350.0, 300.0},
-            {400.0, 300.0},
-            {600.0, 150.0}
-        });
-        d_points.front()->fixed = true;
     }
 
     void on_update(double dt)
@@ -113,6 +86,8 @@ public:
                 }
             }
         }
+
+        d_angle += 6.283f * dt;
     }
 
     void on_event(spkt::event& ev)
@@ -122,15 +97,8 @@ public:
                 d_running = !d_running;
             } else if (data->key == spkt::Keyboard::ESC) {
                 d_running = false;
-                std::tie(d_points, d_sticks) = make_rope({
-                    {100.0, 200.0},
-                    {150.0, 200.0},
-                    {250.0, 200.0},
-                    {350.0, 200.0},
-                    {350.0, 300.0},
-                    {400.0, 300.0},
-                    {600.0, 150.0}
-                });
+                d_points = {};
+                d_sticks = {};
                 d_points.front()->fixed = true;
             }
         } else if (auto data = ev.get_if<spkt::mouse_pressed_event>()) {
@@ -186,6 +154,16 @@ public:
                 d_renderer.draw_circle(point->position, {1.0, 0.0, 0.0, 1.0}, 2.0f);
             }
         }
+
+        d_renderer.draw_circle_shape(
+            {800.0f, 350.0f},
+            100.0f,
+            300.0f,
+            {0.0f, 1.0f, 0.0f, 1.0f},
+            {0.0f, 0.0f, 0.0f, 1.0f},
+            -d_angle
+        );
+
         d_renderer.end_frame();
     }
 };
