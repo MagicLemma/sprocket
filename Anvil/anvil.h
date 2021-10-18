@@ -59,7 +59,7 @@ class app
     anvil::entity d_selected = anvil::null;
 
     // Panels
-    Inspector d_inspector;
+    inspector d_inspector;
 
     void material_ui(std::string& texture);
 

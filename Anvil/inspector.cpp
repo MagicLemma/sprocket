@@ -60,7 +60,7 @@ void display_attr(
 
 }
 
-void Inspector::Show(anvil::app& editor)
+void inspector::show(anvil::app& editor)
 {
     anvil::registry& registry = editor.active_scene()->registry;
     anvil::entity entity = editor.selected();

@@ -8,7 +8,7 @@ namespace anvil {
     class app;
 }
 
-class Inspector
+class inspector
 {
     ImGuizmo::MODE d_mode = ImGuizmo::MODE::WORLD;
     ImGuizmo::OPERATION d_operation = ImGuizmo::OPERATION::TRANSLATE;
@@ -17,9 +17,9 @@ class Inspector
     glm::vec3 d_snap = {0.0f, 0.0f, 0.0f};
 
 public:
-    void Show(anvil::app& editor);
+    void show(anvil::app& editor);
 
-    ImGuizmo::MODE Mode() const { return d_mode; }
-    ImGuizmo::OPERATION Operation() const { return d_operation; }
-    const float* Snap() const { return d_useSnap ? &d_snap.x : nullptr; }
+    ImGuizmo::MODE mode() const { return d_mode; }
+    ImGuizmo::OPERATION operation() const { return d_operation; }
+    const float* snap() const { return d_useSnap ? &d_snap.x : nullptr; }
 };

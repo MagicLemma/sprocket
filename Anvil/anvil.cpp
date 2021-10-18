@@ -253,7 +253,7 @@ void app::on_render()
         if (!is_game_running() && registry.valid(d_selected) && registry.has<anvil::Transform3DComponent>(d_selected)) {
             auto& c = registry.get<anvil::Transform3DComponent>(d_selected);
             auto tr = spkt::Maths::Transform(c.position, c.orientation, c.scale);
-            spkt::ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
+            spkt::ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.operation(), d_inspector.mode());
             spkt::Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
         }
         ImGui::End();
@@ -263,7 +263,7 @@ void app::on_render()
     // INSPECTOR
     static bool showInspector = true;
     if (ImGui::Begin("Inspector", &showInspector)) {
-        d_inspector.Show(*this);
+        d_inspector.show(*this);
         ImGui::End();
     }
 
