@@ -4,7 +4,9 @@
 
 #include <glm/glm.hpp>
 
-class Anvil;
+namespace anvil {
+    class app;
+}
 
 class Inspector
 {
@@ -15,7 +17,7 @@ class Inspector
     glm::vec3 d_snap = {0.0f, 0.0f, 0.0f};
 
 public:
-    void Show(Anvil& editor);
+    void Show(anvil::app& editor);
 
     ImGuizmo::MODE Mode() const { return d_mode; }
     ImGuizmo::OPERATION Operation() const { return d_operation; }

@@ -18,7 +18,9 @@
 #include <random>
 #include <memory>
 
-class Anvil
+namespace anvil {
+
+class app
 {
     spkt::window*       d_window;
     spkt::asset_manager d_asset_manager;
@@ -39,20 +41,20 @@ class Anvil
 
     // Scene
     std::string d_sceneFile = "Resources/Anvil.yaml";
-    std::shared_ptr<anvil::scene> d_activeScene;
+    std::shared_ptr<anvil::scene> d_active_scene;
     std::shared_ptr<anvil::scene> d_scene;
-    anvil::entity d_runtimeCamera;
+    anvil::entity d_runtime_camera;
 
     // Additional world setup
     spkt::CubeMap d_skybox;
-    float  d_sunAngle = 45.0f;
+    float  d_sun_angle = 45.0f;
     
     // LAYER DATA
     bool d_paused = false;
-    bool d_mouseRequired = false;
+    bool d_mouse_required = false;
 
-    bool d_playingGame = false;
-    bool d_showColliders = false;
+    bool d_playing_game = false;
+    bool d_show_colliders = false;
 
     anvil::entity d_selected = anvil::null;
 
@@ -62,7 +64,7 @@ class Anvil
     void material_ui(std::string& texture);
 
 public:
-    Anvil(spkt::window* window);
+    app(spkt::window* window);
 
     void on_event(spkt::event& event);
     void on_update(double dt);
@@ -72,10 +74,12 @@ public:
     void set_selected(anvil::entity e) { d_selected = e; }
     void clear_selected() { d_selected = anvil::null; }
 
-    bool is_game_running() const { return d_playingGame; }
+    bool is_game_running() const { return d_playing_game; }
 
     Camera& editor_camera() { return d_editor_camera; }
     spkt::window* window() { return d_window; }
 
-    std::shared_ptr<anvil::scene> active_scene() { return d_activeScene; }
+    std::shared_ptr<anvil::scene> active_scene() { return d_active_scene; }
 };
+
+}

@@ -20,7 +20,7 @@ void display_attr(
     std::string_view display_name,
     const std::unordered_map<std::string, std::string>& metadata,
     T* value,
-    Anvil* editor)
+    anvil::app* editor)
 {
     std::string name{display_name};
     if constexpr (std::is_same_v<T, std::string>) {
@@ -60,7 +60,7 @@ void display_attr(
 
 }
 
-void Inspector::Show(Anvil& editor)
+void Inspector::Show(anvil::app& editor)
 {
     anvil::registry& registry = editor.active_scene()->registry;
     anvil::entity entity = editor.selected();

@@ -51,7 +51,9 @@ bool SubstringCI(std::string_view string, std::string_view substr) {
 
 }
 
-Anvil::Anvil(spkt::window* window)
+namespace anvil {
+
+app::app(spkt::window* window)
     : d_window(window)
     , d_asset_manager()
     , d_entity_renderer(&d_asset_manager)
@@ -72,18 +74,18 @@ Anvil::Anvil(spkt::window* window)
 
     d_scene = std::make_shared<anvil::scene>();
     anvil::load_registry_from_file(d_sceneFile, d_scene->registry);
-    d_activeScene = d_scene;
+    d_active_scene = d_scene;
 }
 
-void Anvil::on_event(spkt::event& event)
+void app::on_event(spkt::event& event)
 {
     using namespace spkt;
 
     if (auto data = event.get_if<keyboard_pressed_event>()) {
         if (data->key == Keyboard::ESC) {
-            if (d_playingGame) {
-                d_playingGame = false;
-                d_activeScene = d_scene;
+            if (d_playing_game) {
+                d_playing_game = false;
+                d_active_scene = d_scene;
                 d_window->set_cursor_visibility(true);
             }
             else if (d_selected != anvil::null) {
@@ -105,15 +107,15 @@ void Anvil::on_event(spkt::event& event)
     }
 
     d_ui.on_event(event);
-    d_activeScene->on_event(event);
-    if (!d_playingGame) {
+    d_active_scene->on_event(event);
+    if (!d_playing_game) {
         d_editor_camera.on_event(event);
     }
 }
 
-void Anvil::on_update(double dt)
+void app::on_update(double dt)
 {
-    auto& registry = d_activeScene->registry;
+    auto& registry = d_active_scene->registry;
 
     d_ui.on_update(dt);
 
@@ -121,17 +123,17 @@ void Anvil::on_update(double dt)
         return;
     }
 
-    d_activeScene->on_update(dt);
+    d_active_scene->on_update(dt);
 
-    if (d_is_viewport_focused && !d_playingGame) {
+    if (d_is_viewport_focused && !d_playing_game) {
         d_editor_camera.on_update(dt);
     }
 }
 
-void Anvil::on_render()
+void app::on_render()
 {
     using namespace spkt::Maths;
-    auto& registry = d_activeScene->registry;
+    auto& registry = d_active_scene->registry;
 
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
@@ -142,8 +144,8 @@ void Anvil::on_render()
     d_viewport.bind();
 
     const auto [proj, view] = std::invoke([&] {
-        if (d_playingGame) {
-            return anvil::get_proj_view_matrices(registry, d_runtimeCamera);
+        if (d_playing_game) {
+            return anvil::get_proj_view_matrices(registry, d_runtime_camera);
         }
         return std::make_pair(d_editor_camera.Proj(), d_editor_camera.View());
     });
@@ -151,7 +153,7 @@ void Anvil::on_render()
     anvil::draw_scene(d_entity_renderer, registry, proj, view);
     d_skybox_renderer.Draw(d_skybox, proj, view);
 
-    if (d_showColliders) {
+    if (d_show_colliders) {
         anvil::draw_colliders(d_geometry_renderer, registry, proj, view);
     }
 
@@ -169,7 +171,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Creating {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<anvil::scene>();
+                    d_active_scene = d_scene = std::make_shared<anvil::scene>();
                     spkt::log::info("...done!");
                 }
             }
@@ -178,7 +180,7 @@ void Anvil::on_render()
                 if (!file.empty()) {
                     spkt::log::info("Loading {}...", d_sceneFile);
                     d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<anvil::scene>();
+                    d_active_scene = d_scene = std::make_shared<anvil::scene>();
                     anvil::load_registry_from_file(file, d_scene->registry);
                     spkt::log::info("...done!");
                 }
@@ -206,12 +208,12 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<anvil::scene>();
+                d_active_scene = std::make_shared<anvil::scene>();
 
-                anvil::input_system_init(d_activeScene->registry, d_window);
-                anvil::copy_registry(d_scene->registry, d_activeScene->registry);
+                anvil::input_system_init(d_active_scene->registry, d_window);
+                anvil::copy_registry(d_scene->registry, d_active_scene->registry);
 
-                d_activeScene->systems = {
+                d_active_scene->systems = {
                     physics_system,
                     anvil::particle_system,
                     anvil::script_system,
@@ -221,12 +223,12 @@ void Anvil::on_render()
                     anvil::input_system_end
                 };
 
-                d_activeScene->event_handlers = {
+                d_active_scene->event_handlers = {
                     anvil::input_system_on_event
                 };
 
-                d_playingGame = true;
-                d_runtimeCamera = d_activeScene->registry.find<anvil::Camera3DComponent>();
+                d_playing_game = true;
+                d_runtime_camera = d_active_scene->registry.find<anvil::Camera3DComponent>();
                 d_window->set_cursor_visibility(false);
             }
             ImGui::EndMenu();
@@ -363,7 +365,7 @@ void Anvil::on_render()
     }
 
     if (ImGui::Begin("Options")) {
-        ImGui::Checkbox("Show Colliders", &d_showColliders);
+        ImGui::Checkbox("Show Colliders", &d_show_colliders);
 
         anvil::for_each_component([&]<typename T>(anvil::reflcomp<T>&& refl) {
             std::string text = std::format("# {}: {}", refl.name, registry.view<T>().size());
@@ -376,11 +378,13 @@ void Anvil::on_render()
     d_ui.EndFrame();
 }
 
-void Anvil::material_ui(std::string& texture)
+void app::material_ui(std::string& texture)
 {
     if (ImGui::Button("X")) {
         texture = "";
     }
     ImGui::SameLine();
     spkt::ImGuiXtra::File("File", d_window, &texture, "*.png");
+}
+
 }

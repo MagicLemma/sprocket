@@ -4,5 +4,5 @@
 
 int main()
 {
-    return spkt::run_app_framerate<Anvil>("Anvil");
+    return spkt::run_app_framerate<anvil::app>("Anvil");
 }
