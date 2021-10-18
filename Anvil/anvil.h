@@ -25,7 +25,7 @@ class app
     spkt::window*       d_window;
     spkt::asset_manager d_asset_manager;
     
-    Camera d_editor_camera;
+    camera d_editor_camera;
 
     // Rendering
     spkt::pbr_renderer d_entity_renderer;
@@ -76,7 +76,7 @@ public:
 
     bool is_game_running() const { return d_playing_game; }
 
-    Camera& editor_camera() { return d_editor_camera; }
+    camera& editor_camera() { return d_editor_camera; }
     spkt::window* window() { return d_window; }
 
     std::shared_ptr<anvil::scene> active_scene() { return d_active_scene; }

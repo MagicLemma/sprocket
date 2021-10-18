@@ -40,7 +40,8 @@ std::string entiy_name(anvil::registry& registry, anvil::entity entity)
     return "Entity";
 }
 
-bool SubstringCI(std::string_view string, std::string_view substr) {
+bool substring_case_insensitive(std::string_view string, std::string_view substr)
+{
     auto it = std::search(
         string.begin(), string.end(),
         substr.begin(), substr.end(),
@@ -115,8 +116,6 @@ void app::on_event(spkt::event& event)
 
 void app::on_update(double dt)
 {
-    auto& registry = d_active_scene->registry;
-
     d_ui.on_update(dt);
 
     if (d_paused) {
@@ -124,7 +123,6 @@ void app::on_update(double dt)
     }
 
     d_active_scene->on_update(dt);
-
     if (d_is_viewport_focused && !d_playing_game) {
         d_editor_camera.on_update(dt);
     }
@@ -159,11 +157,9 @@ void app::on_render()
 
     d_viewport.unbind();
 
-
     d_ui.StartFrame();
 
     ImGui::DockSpaceOverViewport();
-
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
@@ -261,6 +257,7 @@ void app::on_render()
     ImGui::PopStyleVar();
 
     // INSPECTOR
+    // TODO: Move the static variables from here to the class def
     static bool showInspector = true;
     if (ImGui::Begin("Inspector", &showInspector)) {
         d_inspector.show(*this);
@@ -282,7 +279,7 @@ void app::on_render()
                 ImGui::BeginChild("Entity List");
                 int i = 0;
                 for (auto entity : registry.all()) {
-                    if (SubstringCI(entiy_name(registry, entity), search)) {
+                    if (substring_case_insensitive(entiy_name(registry, entity), search)) {
                         ImGui::PushID(i);
                         if (ImGui::Selectable(entiy_name(registry, entity).c_str())) {
                             d_selected = entity;

@@ -8,7 +8,7 @@ namespace spkt {
     class event;
 }
 
-class Camera
+class camera
 {
     spkt::window*     d_window;
     spkt::input_store d_input;
@@ -27,7 +27,7 @@ class Camera
     float d_absMax;
 
 public:
-    Camera(spkt::window* window, const glm::vec3& target);
+    camera(spkt::window* window, const glm::vec3& target);
 
     void on_update(double dt);
     void on_event(spkt::event& event);

@@ -12,7 +12,7 @@
 
 #include <algorithm>
 
-Camera::Camera(spkt::window* window, const glm::vec3& target)
+camera::camera(spkt::window* window, const glm::vec3& target)
     : d_window(window)
     , d_input(window)
     , d_position()
@@ -27,7 +27,7 @@ Camera::Camera(spkt::window* window, const glm::vec3& target)
 {
 }
 
-void Camera::on_update(double dt)
+void camera::on_update(double dt)
 {
     using namespace spkt;
 
@@ -85,7 +85,7 @@ void Camera::on_update(double dt)
     }
 }
 
-void Camera::on_event(spkt::event& event)
+void camera::on_event(spkt::event& event)
 {
     d_input.on_event(event);
 
@@ -97,13 +97,13 @@ void Camera::on_event(spkt::event& event)
     }
 }
 
-glm::mat4 Camera::Proj() const
+glm::mat4 camera::Proj() const
 {
     float aspectRatio = spkt::Viewport::CurrentAspectRatio();
     return glm::perspective(70.0f, aspectRatio, 0.1f, 1000.0f);
 }
 
-glm::mat4 Camera::View() const
+glm::mat4 camera::View() const
 {
     return glm::lookAt(d_position, d_target, {0.0, 1.0, 0.0});
 }
