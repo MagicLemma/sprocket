@@ -4,10 +4,12 @@
 #include <glm/glm.hpp>
 
 namespace spkt {
-    class window;
-    class event;
+class window;
+class event;
 }
 
+namespace anvil {
+    
 class camera
 {
     spkt::window*     d_window;
@@ -35,3 +37,5 @@ public:
     glm::mat4 Proj() const;
     glm::mat4 View() const;
 };
+
+}

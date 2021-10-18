@@ -12,6 +12,8 @@
 
 #include <algorithm>
 
+namespace anvil {
+
 camera::camera(spkt::window* window, const glm::vec3& target)
     : d_window(window)
     , d_input(window)
@@ -106,4 +108,6 @@ glm::mat4 camera::Proj() const
 glm::mat4 camera::View() const
 {
     return glm::lookAt(d_position, d_target, {0.0, 1.0, 0.0});
+}
+
 }
