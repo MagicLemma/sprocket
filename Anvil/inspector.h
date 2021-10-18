@@ -5,15 +5,15 @@
 #include <glm/glm.hpp>
 
 namespace anvil {
-    class app;
-}
+
+class app;
 
 class inspector
 {
-    ImGuizmo::MODE d_mode = ImGuizmo::MODE::WORLD;
+    ImGuizmo::MODE      d_mode      = ImGuizmo::MODE::WORLD;
     ImGuizmo::OPERATION d_operation = ImGuizmo::OPERATION::TRANSLATE;
     
-    bool      d_useSnap = false;
+    bool      d_use_snap = false;
     glm::vec3 d_snap = {0.0f, 0.0f, 0.0f};
 
 public:
@@ -21,5 +21,7 @@ public:
 
     ImGuizmo::MODE mode() const { return d_mode; }
     ImGuizmo::OPERATION operation() const { return d_operation; }
-    const float* snap() const { return d_useSnap ? &d_snap.x : nullptr; }
+    const float* snap() const { return d_use_snap ? &d_snap.x : nullptr; }
 };
+
+}
