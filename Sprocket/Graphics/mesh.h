@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Graphics/Animation.h>
+#include <Sprocket/Graphics/animation.h>
 #include <Sprocket/Graphics/buffer.h>
 #include <Sprocket/Graphics/buffer_element_types.h>
 
@@ -24,7 +24,7 @@ struct animated_mesh_data
 {
     std::vector<animated_vertex> vertices;
     std::vector<std::uint32_t>   indices;
-    Skeleton skeleton;
+    skeleton                     skeleton;
 };
 
 class static_mesh
@@ -51,7 +51,7 @@ class animated_mesh
 {
     spkt::vertex_buffer<spkt::animated_vertex> d_vertices;
     spkt::index_buffer<std::uint32_t>          d_indices;
-    spkt::Skeleton                             d_skeleton;
+    spkt::skeleton                             d_skeleton;
 
     animated_mesh(const animated_mesh&) = delete;
     animated_mesh& operator=(const animated_mesh&) = delete;

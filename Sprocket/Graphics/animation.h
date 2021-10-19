@@ -11,7 +11,7 @@
 
 namespace spkt {
 
-struct Bone
+struct bone
 {
     std::string name;
     std::uint32_t index;
@@ -31,14 +31,14 @@ struct timed_attr
     T     attr;
 };
 
-struct BoneKeyFrames
+struct bone_key_frames
 {
-    std::vector<spkt::timed_attr<glm::vec3>> keyPostitions;
-    std::vector<spkt::timed_attr<glm::quat>> keyOrientations;
-    std::vector<spkt::timed_attr<glm::vec3>> keyScales;
+    std::vector<spkt::timed_attr<glm::vec3>> positions;
+    std::vector<spkt::timed_attr<glm::quat>> orientations;
+    std::vector<spkt::timed_attr<glm::vec3>> scales;
 };
 
-struct Animation
+struct animation
 {
     std::string name;
 
@@ -47,16 +47,16 @@ struct Animation
 
     // A vector of keyFrames for each bone. This vector will be the same
     // length as the bone vector and the indices will line up.
-    std::vector<BoneKeyFrames> keyFrames;
+    std::vector<bone_key_frames> key_frames;
 };
 
-struct Skeleton
+struct skeleton
 {
-    std::vector<Bone> bones;
-    std::unordered_map<std::string, std::uint32_t> boneMap;
-    std::unordered_map<std::string, Animation> animations;
+    std::vector<bone> bones;
+    std::unordered_map<std::string, std::uint32_t> bone_map;
+    std::unordered_map<std::string, animation> animations;
 
-    std::vector<glm::mat4> GetPose(const std::string& name, float time) const;
+    std::vector<glm::mat4> get_pose(const std::string& name, float time) const;
 };
 
 }

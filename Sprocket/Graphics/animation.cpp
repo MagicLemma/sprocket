@@ -1,4 +1,4 @@
-#include "Animation.h"
+#include "animation.h"
 
 #include <Sprocket/Utility/Maths.h>
 
@@ -34,24 +34,24 @@ glm::quat slerp_from_keyframe(const std::vector<timed_attr<glm::quat>>& values, 
     return glm::slerp(before.attr, after.attr, get_ratio(before.time, after.time, time));
 }
 
-glm::mat4 transform_from_keyframes(const BoneKeyFrames& kfData, float time)
+glm::mat4 transform_from_keyframes(const bone_key_frames& kfData, float time)
 {
-    glm::vec3 position = mix_from_keyframe(kfData.keyPostitions, time);
-    glm::quat orientation = slerp_from_keyframe(kfData.keyOrientations, time);
-    glm::vec3 scale = mix_from_keyframe(kfData.keyScales, time);
+    glm::vec3 position = mix_from_keyframe(kfData.positions, time);
+    glm::quat orientation = slerp_from_keyframe(kfData.orientations, time);
+    glm::vec3 scale = mix_from_keyframe(kfData.scales, time);
     return Maths::Transform(position, orientation, scale);
 }
 
 void get_pose_recursive(
     std::vector<glm::mat4>& pose,
-    const Skeleton& skeleton,
-    const Animation& animation,
+    const skeleton& skeleton,
+    const animation& animation,
     float time,
     std::uint32_t boneIndex,
     const glm::mat4& parentTransform)
 {
-    const Bone& bone = skeleton.bones[boneIndex];
-    const auto& kfData = animation.keyFrames[boneIndex];
+    const bone& bone = skeleton.bones[boneIndex];
+    const auto& kfData = animation.key_frames[boneIndex];
 
     glm::mat4 transform = parentTransform * transform_from_keyframes(kfData, time);
     pose[boneIndex] = transform * bone.offset;
@@ -63,7 +63,7 @@ void get_pose_recursive(
 
 }
 
-std::vector<glm::mat4> Skeleton::GetPose(const std::string& animation, float time) const
+std::vector<glm::mat4> skeleton::get_pose(const std::string& animation, float time) const
 {
     std::vector<glm::mat4> pose;
     pose.resize(bones.size(), glm::mat4(1.0));

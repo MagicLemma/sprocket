@@ -2,6 +2,7 @@
 #include <Anvil/ecs/ecs.h>
 #include <Anvil/ecs/scene.h>
 
+#include <Sprocket/Core/window.h>
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/CubeMap.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
@@ -10,10 +11,6 @@
 
 #include <memory>
 #include <random>
-
-namespace spkt {
-    class window;
-}
 
 namespace anvil {
 

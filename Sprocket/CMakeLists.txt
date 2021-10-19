@@ -42,7 +42,7 @@ add_library(Sprocket STATIC
             UI/DevUI.cpp
             UI/ImGuiXtra.cpp
             
-            Graphics/Animation.cpp
+            Graphics/animation.cpp
             Graphics/buffer_element_types.cpp
             Graphics/buffer.cpp
             Graphics/camera.cpp
