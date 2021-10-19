@@ -8,7 +8,7 @@
 #include <game/ecs/ecs.h>
 #include <game/ecs/loader.h>
 
-#include <Sprocket/Audio/Listener.h>
+#include <Sprocket/Core/sound.h>
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>

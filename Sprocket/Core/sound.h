@@ -5,23 +5,27 @@
 #include <memory>
 
 namespace spkt {
-namespace Audio {
 
 struct MusicImpl;
 struct SoundImpl;
 struct SourceImpl;
 
-class Music
+void set_listener(const glm::vec3& postiion, const glm::vec3& direction);
+
+float get_master_volume();
+void set_master_volume(float volume);
+
+class music
 {
     std::unique_ptr<MusicImpl> d_impl;
 
 public:
-    Music();
-    bool Load(const std::string& filename);
-    
-    void Play() const;
-    void Pause() const;
-    void Stop() const;
+    music();
+
+    bool load(const std::string& filename);
+    void play() const;
+    void pause() const;
+    void stop() const;
 };
 
 class Sound
@@ -30,6 +34,7 @@ class Sound
 
 public:
     Sound();
+
     bool Load(const std::string& filename);
     friend class Source;
 };
@@ -42,10 +47,6 @@ class Source
 public:
     Source();
 
-    Source(Source&&) = delete;
-    Source& operator=(const Source&) = delete;
-        // Non-copyable
-
     void SetSound(const Sound& sound);
 
     void SetPosition(float x, float y, float z);
@@ -56,5 +57,4 @@ public:
     void Stop() const;
 };
 
-}
 }

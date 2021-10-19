@@ -27,10 +27,7 @@ add_library(Sprocket STATIC
             Core/window.cpp
             Core/timer.cpp
             Core/log.cpp
-
-            Audio/listener.cpp
-            Audio/music.cpp
-            Audio/sound.cpp
+            Core/sound.cpp
 
             UI/Font/FontAtlas.cpp
             UI/Font/Font.cpp
