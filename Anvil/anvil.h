@@ -7,7 +7,7 @@
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Graphics/asset_manager.h>
-#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Graphics/cube_map.h>
 #include <Sprocket/Graphics/frame_buffer.h>
 #include <Sprocket/Graphics/Rendering/geometry_renderer.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
@@ -46,7 +46,7 @@ class app
     anvil::entity d_runtime_camera;
 
     // Additional world setup
-    spkt::CubeMap d_skybox;
+    spkt::cube_map d_skybox;
     float  d_sun_angle = 45.0f;
     
     // LAYER DATA

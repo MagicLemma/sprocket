@@ -1,4 +1,4 @@
-#include "CubeMap.h"
+#include "cube_map.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>
@@ -9,13 +9,13 @@
 
 namespace spkt {
     
-CubeMap::CubeMap(const std::array<std::string, 6>& faceFiles)
+cube_map::cube_map(const std::array<std::string, 6>& faceFiles)
 {
     glGenTextures(1, &d_id);
     glBindTexture(GL_TEXTURE_CUBE_MAP, d_id);
 
     for (std::uint32_t i = 0; i != faceFiles.size(); ++i) {
-        int bpp;
+        int bpp = 0;
         unsigned char* data = stbi_load(faceFiles[i].c_str(),
             &d_width, &d_height, &bpp, 0);
 
@@ -35,18 +35,18 @@ CubeMap::CubeMap(const std::array<std::string, 6>& faceFiles)
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-CubeMap::~CubeMap()
+cube_map::~cube_map()
 {
     glDeleteTextures(1, &d_id);
 }
 
-void CubeMap::Bind() const
+void cube_map::bind() const
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, d_id);
 }
 
-void CubeMap::Unbind() const
+void cube_map::unbind() const
 {
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }

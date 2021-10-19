@@ -8,7 +8,7 @@
 
 namespace spkt {
 
-class CubeMap;
+class cube_map;
 class VertexArray;
 
 class SkyboxRenderer
@@ -20,7 +20,7 @@ class SkyboxRenderer
 public:
     SkyboxRenderer(asset_manager* assetManager);
 
-    void Draw(const CubeMap& skybox, const glm::mat4& proj, const glm::mat4& view);
+    void Draw(const cube_map& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 
 }

@@ -2,7 +2,7 @@
 
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/open_gl.h>
-#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Graphics/cube_map.h>
 
 #include <glm/glm.hpp>
 
@@ -17,9 +17,7 @@ SkyboxRenderer::SkyboxRenderer(asset_manager* assetManager)
 {
 }
 
-void SkyboxRenderer::Draw(const CubeMap& skybox,
-                          const glm::mat4& proj,
-                          const glm::mat4& view)
+void SkyboxRenderer::Draw(const cube_map& skybox, const glm::mat4& proj, const glm::mat4& view)
 {
     d_shader.bind();
     d_shader.load("projectionMatrix", proj);
@@ -27,7 +25,7 @@ void SkyboxRenderer::Draw(const CubeMap& skybox,
     // Remove the translation so the camera never escapes the skybox.
     d_shader.load("viewMatrix", glm::mat4(glm::mat3(view)));
 
-    skybox.Bind();
+    skybox.bind();
     spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Skybox.obj"));
 }
 

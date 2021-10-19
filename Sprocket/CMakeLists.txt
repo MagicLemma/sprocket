@@ -46,7 +46,7 @@ add_library(Sprocket STATIC
             Graphics/buffer_element_types.cpp
             Graphics/buffer.cpp
             Graphics/camera.cpp
-            Graphics/CubeMap.cpp
+            Graphics/cube_map.cpp
             Graphics/frame_buffer.cpp
             Graphics/material.cpp
             Graphics/mesh.cpp

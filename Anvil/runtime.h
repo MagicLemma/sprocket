@@ -4,7 +4,7 @@
 
 #include <Sprocket/Core/window.h>
 #include <Sprocket/Graphics/asset_manager.h>
-#include <Sprocket/Graphics/CubeMap.h>
+#include <Sprocket/Graphics/cube_map.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
 #include <Sprocket/UI/console.h>
@@ -25,7 +25,7 @@ class runtime
 
     // Scene
     anvil::scene   d_scene;
-    spkt::CubeMap d_skybox;
+    spkt::cube_map d_skybox;
     
     anvil::entity d_runtime_camera;
 
