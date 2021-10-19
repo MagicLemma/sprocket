@@ -20,7 +20,7 @@
 namespace spkt {
 namespace {
 
-std::array<glm::mat4, MAX_BONES> DefaultBoneTransforms() {
+std::array<glm::mat4, MAX_BONES> default_bone_transform() {
     std::array<glm::mat4, MAX_BONES> arr;
     std::ranges::fill(arr, glm::mat4(1.0));
     return arr;
@@ -49,8 +49,8 @@ void upload_material(
 
 }
 
-pbr_renderer::pbr_renderer(asset_manager* assetManager)
-    : d_assetManager(assetManager)
+pbr_renderer::pbr_renderer(asset_manager* asset_manager)
+    : d_assetManager(asset_manager)
     , d_staticShader("Resources/Shaders/Entity_PBR_Static.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_animatedShader("Resources/Shaders/Entity_PBR_Animated.vert", "Resources/Shaders/Entity_PBR.frag")
     , d_instanceBuffer()

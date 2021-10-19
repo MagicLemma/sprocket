@@ -9,18 +9,16 @@
 namespace spkt {
 
 class cube_map;
-class VertexArray;
 
-class SkyboxRenderer
+class skybox_renderer
 {
-    asset_manager* d_assetManager;
-
-    shader d_shader;
+    asset_manager* d_asset_manager;
+    shader         d_shader;
 
 public:
-    SkyboxRenderer(asset_manager* assetManager);
+    skybox_renderer(asset_manager* asset_manager);
 
-    void Draw(const cube_map& skybox, const glm::mat4& proj, const glm::mat4& view);
+    void draw(const cube_map& skybox, const glm::mat4& proj, const glm::mat4& view);
 };
 
 }

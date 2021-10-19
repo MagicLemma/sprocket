@@ -10,14 +10,14 @@
 
 namespace spkt {
     
-SkyboxRenderer::SkyboxRenderer(asset_manager* assetManager)
-    : d_assetManager(assetManager)
+skybox_renderer::skybox_renderer(asset_manager* asset_manager)
+    : d_asset_manager(asset_manager)
     , d_shader("Resources/Shaders/Skybox.vert",
                "Resources/Shaders/Skybox.frag")
 {
 }
 
-void SkyboxRenderer::Draw(const cube_map& skybox, const glm::mat4& proj, const glm::mat4& view)
+void skybox_renderer::draw(const cube_map& skybox, const glm::mat4& proj, const glm::mat4& view)
 {
     d_shader.bind();
     d_shader.load("projectionMatrix", proj);
@@ -26,7 +26,7 @@ void SkyboxRenderer::Draw(const cube_map& skybox, const glm::mat4& proj, const g
     d_shader.load("viewMatrix", glm::mat4(glm::mat3(view)));
 
     skybox.bind();
-    spkt::draw(d_assetManager->get<static_mesh>("Resources/Models/Skybox.obj"));
+    spkt::draw(d_asset_manager->get<static_mesh>("Resources/Models/Skybox.obj"));
 }
 
 }

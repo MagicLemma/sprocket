@@ -21,7 +21,7 @@ class runtime
 
     // Rendering
     spkt::pbr_renderer   d_scene_renderer;
-    spkt::SkyboxRenderer d_skybox_renderer;
+    spkt::skybox_renderer d_skybox_renderer;
 
     // Scene
     anvil::scene   d_scene;

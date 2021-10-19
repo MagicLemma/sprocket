@@ -149,7 +149,7 @@ void app::on_render()
     });
 
     anvil::draw_scene(d_entity_renderer, registry, proj, view);
-    d_skybox_renderer.Draw(d_skybox, proj, view);
+    d_skybox_renderer.draw(d_skybox, proj, view);
 
     if (d_show_colliders) {
         anvil::draw_colliders(d_geometry_renderer, registry, proj, view);

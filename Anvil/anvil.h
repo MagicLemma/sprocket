@@ -29,7 +29,7 @@ class app
 
     // Rendering
     spkt::pbr_renderer d_entity_renderer;
-    spkt::SkyboxRenderer d_skybox_renderer;
+    spkt::skybox_renderer d_skybox_renderer;
     spkt::geometry_renderer d_geometry_renderer;
 
     spkt::frame_buffer d_viewport;
