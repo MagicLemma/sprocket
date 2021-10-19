@@ -15,6 +15,8 @@ namespace spkt {
     class window;
 }
 
+namespace anvil {
+
 class runtime
 {
     spkt::window*       d_window;
@@ -43,3 +45,5 @@ public:
     void on_update(double dt);
     void on_render();
 };
+
+}

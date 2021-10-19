@@ -20,6 +20,8 @@ const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);
 const auto GARDEN      = spkt::from_hex(0x55E6C1);
 const auto SPACE_DARK  = spkt::from_hex(0x2C3A47);
 
+namespace anvil {
+
 runtime::runtime(spkt::window* window) 
     : d_window(window)
     , d_scene({
@@ -139,4 +141,6 @@ void runtime::on_render()
         draw_console(d_console, d_command_line, d_ui, d_window->width(), d_window->height());
         d_ui.EndFrame();
     }
+}
+
 }
