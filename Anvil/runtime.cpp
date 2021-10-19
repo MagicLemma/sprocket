@@ -41,7 +41,7 @@ runtime::runtime(spkt::window* window)
     })
     , d_asset_manager()
     , d_scene_renderer(&d_asset_manager)
-    , d_skybox_renderer(&d_asset_manager)
+    , d_skybox_renderer()
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
         "Resources/Textures/Skybox/Skybox_X_Neg.png",

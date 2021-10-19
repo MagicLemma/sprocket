@@ -1,4 +1,4 @@
-#include "SkyboxRenderer.h"
+#include "skybox_renderer.h"
 
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Graphics/open_gl.h>
@@ -10,8 +10,8 @@
 
 namespace spkt {
     
-skybox_renderer::skybox_renderer(asset_manager* asset_manager)
-    : d_asset_manager(asset_manager)
+skybox_renderer::skybox_renderer()
+    : d_mesh("Resources/Models/Skybox.obj")
     , d_shader("Resources/Shaders/Skybox.vert",
                "Resources/Shaders/Skybox.frag")
 {
@@ -26,7 +26,7 @@ void skybox_renderer::draw(const cube_map& skybox, const glm::mat4& proj, const 
     d_shader.load("viewMatrix", glm::mat4(glm::mat3(view)));
 
     skybox.bind();
-    spkt::draw(d_asset_manager->get<static_mesh>("Resources/Models/Skybox.obj"));
+    spkt::draw(d_mesh);
 }
 
 }

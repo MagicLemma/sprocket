@@ -58,7 +58,7 @@ app::app(spkt::window* window)
     : d_window(window)
     , d_asset_manager()
     , d_entity_renderer(&d_asset_manager)
-    , d_skybox_renderer(&d_asset_manager)
+    , d_skybox_renderer()
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
         "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -152,7 +152,7 @@ void app::on_render()
     d_skybox_renderer.draw(d_skybox, proj, view);
 
     if (d_show_colliders) {
-        anvil::draw_colliders(d_geometry_renderer, registry, proj, view);
+        anvil::draw_colliders(d_collider_renderer, registry, proj, view);
     }
 
     d_viewport.unbind();

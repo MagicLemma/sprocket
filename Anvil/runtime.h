@@ -6,7 +6,7 @@
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/cube_map.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
-#include <Sprocket/Graphics/Rendering/SkyboxRenderer.h>
+#include <Sprocket/Graphics/Rendering/skybox_renderer.h>
 #include <Sprocket/UI/console.h>
 
 #include <memory>
@@ -20,7 +20,7 @@ class runtime
     spkt::asset_manager d_asset_manager;
 
     // Rendering
-    spkt::pbr_renderer   d_scene_renderer;
+    spkt::pbr_renderer    d_scene_renderer;
     spkt::skybox_renderer d_skybox_renderer;
 
     // Scene
