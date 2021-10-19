@@ -1,4 +1,4 @@
-#include "Sound.h"
+#include "sound.h"
 
 #include <glm/glm.hpp>
 #include <SFML/Audio.hpp>
