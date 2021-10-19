@@ -145,7 +145,7 @@ void app::on_render()
         if (d_playing_game) {
             return anvil::get_proj_view_matrices(registry, d_runtime_camera);
         }
-        return std::make_pair(d_editor_camera.Proj(), d_editor_camera.View());
+        return std::make_pair(d_editor_camera.proj(), d_editor_camera.view());
     });
 
     anvil::draw_scene(d_entity_renderer, registry, proj, view);

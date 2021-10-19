@@ -4,5 +4,5 @@
 
 int main()
 {
-    return spkt::run_app_framerate<Runtime>("Runtime");
+    return spkt::run_app_framerate<runtime>("Runtime");
 }

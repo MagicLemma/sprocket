@@ -15,29 +15,29 @@ namespace spkt {
     class window;
 }
 
-class Runtime
+class runtime
 {
-    spkt::window*      d_window;
-    spkt::asset_manager d_assetManager;
+    spkt::window*       d_window;
+    spkt::asset_manager d_asset_manager;
 
     // Rendering
-    spkt::pbr_renderer d_entityRenderer;
-    spkt::SkyboxRenderer d_skyboxRenderer;
+    spkt::pbr_renderer   d_scene_renderer;
+    spkt::SkyboxRenderer d_skybox_renderer;
 
     // Scene
-    anvil::scene d_scene;
+    anvil::scene   d_scene;
     spkt::CubeMap d_skybox;
     
-    anvil::entity d_runtimeCamera;
+    anvil::entity d_runtime_camera;
 
     // Console
     spkt::SimpleUI d_ui;
     spkt::console  d_console;
     std::string    d_command_line;
-    bool           d_consoleActive = false;
+    bool           d_console_active = false;
 
 public:
-    Runtime(spkt::window* window);
+    runtime(spkt::window* window);
 
     void on_event(spkt::event& event);
     void on_update(double dt);

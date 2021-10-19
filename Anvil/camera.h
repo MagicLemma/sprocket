@@ -21,12 +21,12 @@ class camera
     float d_yaw;
     float d_distance;
 
-    float d_moveSpeed;
-    float d_rotateSpeed;
+    float d_move_speed;
+    float d_rotate_speed;
 
-    float d_absVert;
-    float d_absMin;
-    float d_absMax;
+    float d_abs_vert;
+    float d_abs_min;
+    float d_abs_max;
 
 public:
     camera(spkt::window* window, const glm::vec3& target);
@@ -34,8 +34,8 @@ public:
     void on_update(double dt);
     void on_event(spkt::event& event);
 
-    glm::mat4 Proj() const;
-    glm::mat4 View() const;
+    glm::mat4 proj() const;
+    glm::mat4 view() const;
 };
 
 }
