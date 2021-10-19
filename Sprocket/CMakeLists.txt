@@ -56,7 +56,7 @@ add_library(Sprocket STATIC
             Graphics/shader.cpp
             Graphics/shadow_map.cpp
             Graphics/texture.cpp
-            Graphics/Viewport.cpp
+            Graphics/viewport.cpp
 
             Graphics/Rendering/geometry_renderer.cpp
             Graphics/Rendering/shape_renderer.cpp
