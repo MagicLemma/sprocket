@@ -101,7 +101,7 @@ void camera::on_event(spkt::event& event)
 
 glm::mat4 camera::proj() const
 {
-    const float aspect_ratio = spkt::Viewport::CurrentAspectRatio();
+    const float aspect_ratio = spkt::viewport::current_aspect_ratio();
     return glm::perspective(70.0f, aspect_ratio, 0.1f, 1000.0f);
 }
 

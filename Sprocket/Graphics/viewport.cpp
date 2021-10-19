@@ -4,27 +4,27 @@
 
 namespace spkt {
 
-Viewport::Viewport(int x, int y, int width, int height)
+viewport::viewport(int x, int y, int width, int height)
 {
-    Set(x, y, width, height);
+    set(x, y, width, height);
 }
 
-Viewport::Viewport()
+viewport::viewport()
 {
 }
 
-Viewport::~Viewport()
+viewport::~viewport()
 {
-    Restore();
+    restore();
 }
 
-void Viewport::Set(int x, int y, int width, int height)
+void viewport::set(int x, int y, int width, int height)
 {
-    d_original = Current();
+    d_original = current_viewport();
     glViewport(x, y, width, height);
 }
 
-void Viewport::Restore()
+void viewport::restore()
 {
     if (d_original.has_value()) {
         const auto& original = d_original.value();
@@ -33,16 +33,16 @@ void Viewport::Restore()
     }
 }
 
-glm::ivec4 Viewport::Current()
+glm::ivec4 viewport::current_viewport()
 {
     glm::ivec4 original;
     glGetIntegerv(GL_VIEWPORT, &original.x);
     return original;
 }
 
-float Viewport::CurrentAspectRatio()
+float viewport::current_aspect_ratio()
 {
-    glm::ivec4 view = Current();
+    glm::ivec4 view = current_viewport();
     return (float)view.z/(float)view.w; // width / height
 }
 

@@ -30,13 +30,13 @@ void frame_buffer::bind()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    d_viewport.Set(0, 0, d_width, d_height);
+    d_viewport.set(0, 0, d_width, d_height);
 }
 
 void frame_buffer::unbind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    d_viewport.Restore();
+    d_viewport.restore();
 }
 
 void frame_buffer::resize(int width, int height)

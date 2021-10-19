@@ -88,7 +88,7 @@ void render_context::scissor_testing(bool enabled) const
 void render_context::set_scissor_window(const glm::vec4& region) const
 {
     glEnable(GL_SCISSOR_TEST);
-    float height = spkt::Viewport::Current().a;
+    float height = spkt::viewport::current_viewport().a;
     glScissor(region.x, height - region.y - region.w, region.z, region.w);
 }
 

@@ -12,24 +12,24 @@ namespace spkt {
 // of the framebuffer. This class acts as an RAII wrapper for setting the viewport to a
 // different size. It can also be used to set and restore the original viewport by calling
 // functions manually.
-class Viewport
+class viewport
 {
     std::optional<glm::ivec4> d_original;
 
 public:
-    Viewport(int x, int y, int width, int height); // (x, y) lower left, width, height
-    Viewport(); // Does not set the viewport
+    viewport(int x, int y, int width, int height); // (x, y) lower left, width, height
+    viewport(); // Does not set the viewport
 
-    ~Viewport();
+    ~viewport();
 
-    void Set(int x, int y, int width, int height);
-    void Restore();
+    void set(int x, int y, int width, int height);
+    void restore();
 
     // Returns the current dimensions of the viewport
-    static glm::ivec4 Current();
+    static glm::ivec4 current_viewport();
 
     // Returns the current aspect ratio of the viewport
-    static float CurrentAspectRatio();
+    static float current_aspect_ratio();
 };
 
 }

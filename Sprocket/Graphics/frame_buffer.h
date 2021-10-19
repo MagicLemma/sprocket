@@ -19,7 +19,7 @@ class frame_buffer
     int d_width;
     int d_height;
 
-    Viewport d_viewport;
+    viewport d_viewport;
 
     frame_buffer(const frame_buffer&) = delete;
     frame_buffer& operator=(const frame_buffer&) = delete;
