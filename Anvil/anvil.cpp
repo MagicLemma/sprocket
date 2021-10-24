@@ -249,7 +249,7 @@ void app::on_render()
             auto& c = registry.get<anvil::Transform3DComponent>(d_selected);
             auto tr = spkt::make_transform(c.position, c.orientation, c.scale);
             spkt::ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.operation(), d_inspector.mode());
-            spkt::Decompose(tr, &c.position, &c.orientation, &c.scale);
+            std::tie(c.position, c.orientation, c.scale) = spkt::decompose(tr).as_tuple();
         }
         ImGui::End();
     }

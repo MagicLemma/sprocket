@@ -33,11 +33,13 @@ glm::vec3 Up(const glm::quat& q)
     return glm::normalize(q) * glm::vec3(0, 1, 0);
 }
 
-void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale)
+decomposed_transform decompose(const glm::mat4 matrix)
 {
+    decomposed_transform dt;
     glm::vec3 skew;
     glm::vec4 perspective;
-    glm::decompose(matrix, *scale, *orientation, *position, skew, perspective);
+    glm::decompose(matrix, dt.scale, dt.orientation, dt.position, skew, perspective);
+    return dt;
 }
 
 glm::vec3 GetTranslation(const glm::mat4& m)
@@ -55,9 +57,7 @@ float Modulo(float val, float high)
 
 glm::mat4 NoScale(const glm::mat4& matrix)
 {
-    glm::vec3 pos, scale;
-    glm::quat ori;
-    Decompose(matrix, &pos, &ori, &scale);
+    auto [pos, ori, scale] = decompose(matrix);
     return make_transform(pos, ori);
 }
 
