@@ -17,7 +17,7 @@ namespace spkt {
 namespace {
 
 template <typename T> T Interpolate(
-    const WidgetInfo& info,
+    const widget_info& info,
     const T& base,
     const T& hovered,
     const T& clicked)
@@ -25,19 +25,19 @@ template <typename T> T Interpolate(
     T ret = base;
     double interval = 0.1;
     
-    if (info.sinceHovered) {
-        float r = std::min(info.sinceHovered, interval) / (float)interval;
+    if (info.since_hovered) {
+        float r = std::min(info.since_hovered, interval) / (float)interval;
         ret = (1 - r) * ret + r * hovered;
     } else {
-        float r = std::min(info.sinceUnhovered, interval) / (float)interval;
+        float r = std::min(info.since_unhovered, interval) / (float)interval;
         ret = (1 - r) * hovered + r * ret;
     }
 
-    if (info.sinceClicked) {
-        float r = std::min(info.sinceClicked, interval) / (float)interval;
+    if (info.since_clicked) {
+        float r = std::min(info.since_clicked, interval) / (float)interval;
         ret = (1 - r) * ret + r * clicked;
     } else {
-        float r = std::min(info.sinceUnlicked, interval) / (float)interval;
+        float r = std::min(info.since_unlicked, interval) / (float)interval;
         ret = (1 - r) * clicked + r * ret;
     }
 
@@ -65,34 +65,34 @@ void SimpleUI::on_update(double dt)
 
 void SimpleUI::StartFrame()
 {
-    d_engine.StartFrame();
+    d_engine.start_frame();
 }
 
 void SimpleUI::EndFrame()
 {
-    d_engine.EndFrame();
+    d_engine.end_frame();
 }
 
-void SimpleUI::StartPanel(std::string_view name, glm::vec4* region, PanelType type)
+void SimpleUI::StartPanel(std::string_view name, glm::vec4* region, panel_type type)
 {
-    d_engine.StartPanel(name, region, type);
+    d_engine.start_panel(name, region, type);
 
-    auto& cmd = d_engine.GetDrawCommand();
+    auto& cmd = d_engine.get_draw_command();
     cmd.font = &d_font;
-    cmd.AddQuad(d_theme.backgroundColour * 0.7f, *region);
+    cmd.add_quad(d_theme.backgroundColour * 0.7f, *region);
 }
 
 void SimpleUI::EndPanel()
 {
-    d_engine.EndPanel();
+    d_engine.end_panel();
 }
 
 void SimpleUI::Quad(const glm::vec4& colour, const glm::vec4& quad)
 {
-    auto region = d_engine.ApplyOffset(quad);
+    auto region = d_engine.apply_offset(quad);
 
-    auto& cmd = d_engine.GetDrawCommand();
-    cmd.AddQuad(colour, region);
+    auto& cmd = d_engine.get_draw_command();
+    cmd.add_quad(colour, region);
 }
 
 void SimpleUI::Text(
@@ -101,14 +101,14 @@ void SimpleUI::Text(
     const glm::vec4& quad,
     const glm::vec4& colour)
 {
-    auto region = d_engine.ApplyOffset(quad);
+    auto region = d_engine.apply_offset(quad);
 
-    TextProperties tp;
+    text_properties tp;
     tp.colour = colour;
     tp.size = size;
 
-    auto& cmd = d_engine.GetDrawCommand();
-    cmd.AddText(text, region, tp);
+    auto& cmd = d_engine.get_draw_command();
+    cmd.add_text(text, region, tp);
 }
 
 void SimpleUI::Text(
@@ -117,15 +117,15 @@ void SimpleUI::Text(
     const glm::vec2& position,
     const glm::vec4& colour)
 {
-    auto region = d_engine.ApplyOffset({position.x, position.y, 0, 0});
+    auto region = d_engine.apply_offset({position.x, position.y, 0, 0});
 
-    TextProperties tp;
-    tp.alignment = Alignment::LEFT;
+    text_properties tp;
+    tp.alignment = alignment::LEFT;
     tp.colour = colour;
     tp.size = size;
 
-    auto& cmd = d_engine.GetDrawCommand();
-    cmd.AddText(text, region, tp);
+    auto& cmd = d_engine.get_draw_command();
+    cmd.add_text(text, region, tp);
 }
 
 void SimpleUI::TextModifiable(
@@ -134,13 +134,13 @@ void SimpleUI::TextModifiable(
     std::string* text,
     const glm::vec4& colour)
 {
-    auto info = d_engine.Register(name, region);
+    auto info = d_engine.register_region(name, region);
 
-    DrawCommand cmd;
+    draw_command cmd;
     cmd.region = info.quad;
     cmd.font = &d_font;
 
-    for (int key : info.keyPresses) {
+    for (int key : info.key_presses) {
         if (key == Keyboard::BACKSPACE) {
             if (text->size() > 0) {
                 text->pop_back();
@@ -150,27 +150,27 @@ void SimpleUI::TextModifiable(
         }
     }
 
-    auto boxColour = info.sinceFocused > 0 ? d_theme.hoveredColour : d_theme.baseColour;
-    cmd.AddQuad(boxColour, info.quad);
+    auto boxColour = info.since_focused > 0 ? d_theme.hoveredColour : d_theme.baseColour;
+    cmd.add_quad(boxColour, info.quad);
 
     std::string printText = *text;
-    if (info.sinceFocused > 0 && modulo(info.sinceFocused, 1.0) < 0.5) {
+    if (info.since_focused > 0 && modulo(info.since_focused, 1.0) < 0.5) {
         printText.push_back('|');
     }
 
-    TextProperties tp;
-    tp.alignment = Alignment::LEFT;
+    text_properties tp;
+    tp.alignment = alignment::LEFT;
     tp.colour = colour;
     tp.size = 36.0f;
 
-    cmd.AddText(printText, info.quad, tp);
+    cmd.add_text(printText, info.quad, tp);
 
-    d_engine.SubmitDrawCommand(cmd);
+    d_engine.submit_draw_command(cmd);
 }
 
 bool SimpleUI::Button(std::string_view name, const glm::vec4& region)
 {
-    auto info = d_engine.Register(name, region);
+    auto info = d_engine.register_region(name, region);
 
     glm::vec4 hoveredRegion = info.quad;
     hoveredRegion.x -= 10.0f;
@@ -183,26 +183,26 @@ bool SimpleUI::Button(std::string_view name, const glm::vec4& region)
     glm::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     glm::vec4 shape = Interpolate(info, info.quad, hoveredRegion, clickedRegion);
 
-    TextProperties tp;
+    text_properties tp;
     tp.size = 36.0f;
 
-    auto& cmd = d_engine.GetDrawCommand();
-    cmd.AddQuad(colour, shape);
-    cmd.AddText(name, info.quad, tp);
+    auto& cmd = d_engine.get_draw_command();
+    cmd.add_quad(colour, shape);
+    cmd.add_text(name, info.quad, tp);
 
-    return info.onClick;
+    return info.on_click;
 }
 
 bool SimpleUI::Checkbox(std::string_view name,
                         const glm::vec4& region,
                         bool* value)
 {
-    auto info = d_engine.Register(name, region);
+    auto info = d_engine.register_region(name, region);
 
     auto unselected = Interpolate(info, d_theme.backgroundColour, d_theme.backgroundColour*1.1f, d_theme.clickedColour);
     auto selected = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);;
 
-    float r = std::min(info.sinceClicked, 0.1) / 0.1f;
+    float r = std::min(info.since_clicked, 0.1) / 0.1f;
 
     glm::vec4 colour;
     if (*value) {
@@ -211,16 +211,16 @@ bool SimpleUI::Checkbox(std::string_view name,
         colour = r * selected + (1 - r) * unselected;
     }
 
-    if (info.onClick) {
+    if (info.on_click) {
         *value = !(*value);
     }
 
-    TextProperties tp;
+    text_properties tp;
     tp.size = 36.0f;
 
-    auto& cmd = d_engine.GetDrawCommand();
-    cmd.AddQuad(colour, info.quad);
-    cmd.AddText(name, info.quad, tp);
+    auto& cmd = d_engine.get_draw_command();
+    cmd.add_quad(colour, info.quad);
+    cmd.add_text(name, info.quad, tp);
 
     return *value; 
 }
@@ -229,7 +229,7 @@ void SimpleUI::Slider(std::string_view name,
                       const glm::vec4& region,
                       float* value, float min, float max)
 {
-    auto info = d_engine.Register(name, region);
+    auto info = d_engine.register_region(name, region);
 
     float x = info.quad.x;
     float y = info.quad.y;
@@ -239,15 +239,15 @@ void SimpleUI::Slider(std::string_view name,
     glm::vec4 rightColour = d_theme.backgroundColour;
     float ratio = (*value - min) / (max - min);
 
-    TextProperties tp;
+    text_properties tp;
     tp.size = 36.0f;
 
-    auto& cmd = d_engine.GetDrawCommand();
-    cmd.AddQuad(leftColour, {x, y, ratio * width, height});
-    cmd.AddQuad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
-    cmd.AddText(std::format("{}: {:.0f}", name, *value), info.quad, tp);
+    auto& cmd = d_engine.get_draw_command();
+    cmd.add_quad(leftColour, {x, y, ratio * width, height});
+    cmd.add_quad(rightColour, {x + ratio * width, y, (1 - ratio) * width, height});
+    cmd.add_text(std::format("{}: {:.0f}", name, *value), info.quad, tp);
 
-    if (info.sinceClicked > 0) {
+    if (info.since_clicked > 0) {
         auto mouse = d_window->mouse_position();
         mouse.x = std::clamp(mouse.x, x, x + width);
         float r = (mouse.x - x) / width;
@@ -259,18 +259,18 @@ void SimpleUI::Dragger(std::string_view name,
                        const glm::vec4& region,
                        float* value, float speed)
 {
-    auto info = d_engine.Register(name, region);
+    auto info = d_engine.register_region(name, region);
 
     glm::vec4 colour = Interpolate(info, d_theme.baseColour, d_theme.hoveredColour, d_theme.clickedColour);
     
-    TextProperties tp;
+    text_properties tp;
     tp.size = 36.0f;
 
-    auto& cmd = d_engine.GetDrawCommand();
-    cmd.AddQuad(colour, info.quad);
-    cmd.AddText(std::format("{}:{:.2f}", name, *value), info.quad, tp);
+    auto& cmd = d_engine.get_draw_command();
+    cmd.add_quad(colour, info.quad);
+    cmd.add_text(std::format("{}:{:.2f}", name, *value), info.quad, tp);
 
-    if (info.sinceClicked > 0) {
+    if (info.since_clicked > 0) {
         *value += d_window->mouse_offset().x * speed;
     }    
 }
@@ -280,9 +280,9 @@ void SimpleUI::Image(std::string_view name,
                      const glm::vec2& position)
 {
     glm::vec4 region{position.x, position.y, image->width(), image->height()};
-    glm::vec4 copy = d_engine.ApplyOffset(region);
+    glm::vec4 copy = d_engine.apply_offset(region);
 
-    DrawCommand cmd;
+    draw_command cmd;
     cmd.vertices = {
         {{copy.x,          copy.y         }, {1.0, 1.0, 1.0, 1.0}, {0.0, 0.0}},
         {{copy.x + copy.z, copy.y         }, {1.0, 1.0, 1.0, 1.0}, {1.0, 0.0}},
@@ -291,7 +291,7 @@ void SimpleUI::Image(std::string_view name,
     };
     cmd.indices = {0, 1, 2, 2, 1, 3};
     cmd.texture = image;
-    d_engine.SubmitDrawCommand(cmd);
+    d_engine.submit_draw_command(cmd);
 }
 
 }

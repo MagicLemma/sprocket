@@ -75,7 +75,7 @@ void draw_console(
     double H = height - 20;
     glm::vec4 mainRegion = {10, 10, W, H};
 
-    ui.StartPanel("Main", &mainRegion, spkt::PanelType::UNCLICKABLE);
+    ui.StartPanel("Main", &mainRegion, spkt::panel_type::UNCLICKABLE);
 
     double boxHeight = 50.0;
     ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &command_line);

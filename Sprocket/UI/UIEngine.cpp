@@ -19,7 +19,7 @@
 namespace spkt {
 namespace {
 
-bool InRegion(const glm::vec2& pos, const glm::vec4& quad)
+bool is_in_region(const glm::vec2& pos, const glm::vec4& quad)
 {
     float x = quad.x;
     float y = quad.y;
@@ -39,7 +39,7 @@ spkt::texture_data get_white_data()
 
 }
 
-void DrawCommand::AddQuad(const glm::vec4& colour, const glm::vec4& quad)
+void draw_command::add_quad(const glm::vec4& colour, const glm::vec4& quad)
 {
     float x = quad.x;
     float y = quad.y;
@@ -60,9 +60,9 @@ void DrawCommand::AddQuad(const glm::vec4& colour, const glm::vec4& quad)
     indices.push_back(index + 3);
 }
 
-void DrawCommand::AddText(std::string_view text,
+void draw_command::add_text(std::string_view text,
                           const glm::vec4& quad,
-                          const TextProperties& properties)
+                          const text_properties& properties)
 {
     if (font == nullptr) {
         log::error("Tried to add text to a draw command with no font!");
@@ -73,16 +73,16 @@ void DrawCommand::AddText(std::string_view text,
         return;
     }
 
-    Alignment alignment = properties.alignment;
+    alignment alignment = properties.alignment;
     float size = properties.size;
     glm::vec4 colour = properties.colour;
 
     glm::vec2 pen{quad.x, quad.y};
 
-    if (alignment == Alignment::LEFT) {
+    if (alignment == alignment::LEFT) {
         pen.x += 5.0f;
         pen.y += size;
-    } else if (alignment == Alignment::RIGHT) {
+    } else if (alignment == alignment::RIGHT) {
         pen.x += quad.z - 5.0f;
         pen.y += size;
     } else {
@@ -114,22 +114,22 @@ void DrawCommand::AddText(std::string_view text,
 
         pen += glyph.advance;
 
-        std::uint32_t index = textVertices.size();
-        textVertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
-        textVertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
-        textVertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
-        textVertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
+        std::uint32_t index = text_vertices.size();
+        text_vertices.push_back({{xPos,         yPos},          colour, {x,     y    }});
+        text_vertices.push_back({{xPos + width, yPos},          colour, {x + w, y    }});
+        text_vertices.push_back({{xPos,         yPos + height}, colour, {x,     y + h}});
+        text_vertices.push_back({{xPos + width, yPos + height}, colour, {x + w, y + h}});
 
-        textIndices.push_back(index + 0);
-        textIndices.push_back(index + 1);
-        textIndices.push_back(index + 2);
-        textIndices.push_back(index + 2);
-        textIndices.push_back(index + 1);
-        textIndices.push_back(index + 3);
+        text_indices.push_back(index + 0);
+        text_indices.push_back(index + 1);
+        text_indices.push_back(index + 2);
+        text_indices.push_back(index + 2);
+        text_indices.push_back(index + 1);
+        text_indices.push_back(index + 3);
     }
 }
 
-UIEngine::UIEngine(spkt::window* window)
+ui_engine::ui_engine(spkt::window* window)
     : d_window(window)
     , d_shader("Resources/Shaders/SimpleUI.vert",
                "Resources/Shaders/SimpleUI.frag")
@@ -137,96 +137,96 @@ UIEngine::UIEngine(spkt::window* window)
 {
 }
 
-glm::vec4 UIEngine::ApplyOffset(const glm::vec4& region)
+glm::vec4 ui_engine::apply_offset(const glm::vec4& region)
 {
-    if (d_currentPanel) {
+    if (d_current_panel) {
         glm::vec4 quad = region;
-        quad.x += d_currentPanel->region.x;
-        quad.y += d_currentPanel->region.y;
+        quad.x += d_current_panel->region.x;
+        quad.y += d_current_panel->region.y;
         return quad;
     }
     return region;
 }
 
-WidgetInfo UIEngine::Register(std::string_view name, const glm::vec4& region)
+widget_info ui_engine::register_region(std::string_view name, const glm::vec4& region)
 {
-    assert(d_currentPanel);
+    assert(d_current_panel);
     
-    WidgetInfo info;
-    info.quad = ApplyOffset(region);
+    widget_info info;
+    info.quad = apply_offset(region);
     
-    std::string prefixedName = std::format("{}##{}", d_currentPanel->name, name);
+    std::string prefixedName = std::format("{}##{}", d_current_panel->name, name);
     std::size_t hash = std::hash<std::string>{}(prefixedName);
-    d_currentPanel->widgetRegions.push_back({hash, info.quad});
+    d_current_panel->widget_regions.push_back({hash, info.quad});
 
     if (hash == d_clicked) {
-        info.sinceClicked = d_time - d_widgetTimes[hash].clickedTime;
-        info.sinceUnlicked = 0.0;
+        info.since_clicked = d_time - d_widget_times[hash].clicked_time;
+        info.since_unlicked = 0.0;
     }
     else {
-        info.sinceClicked = 0.0;
-        info.sinceUnlicked = d_time - d_widgetTimes[hash].unclickedTime;
+        info.since_clicked = 0.0;
+        info.since_unlicked = d_time - d_widget_times[hash].unclicked_time;
     }
 
     if (hash == d_hovered) {
-        info.sinceHovered = d_time - d_widgetTimes[hash].hoveredTime;
-        info.sinceUnhovered = 0.0;
+        info.since_hovered = d_time - d_widget_times[hash].hovered_time;
+        info.since_unhovered = 0.0;
     }
     else {
-        info.sinceHovered = 0.0;
-        info.sinceUnhovered = d_time - d_widgetTimes[hash].unhoveredTime;
+        info.since_hovered = 0.0;
+        info.since_unhovered = d_time - d_widget_times[hash].unhoveredTime;
     }
 
     if (hash == d_focused) {
-        info.sinceFocused = d_time - d_widgetTimes[hash].focusedTime;
-        info.sinceUnfocused = 0.0;
-        info.keyPresses = d_keyPresses;
+        info.since_focused = d_time - d_widget_times[hash].focused_time;
+        info.since_unfocused = 0.0;
+        info.key_presses = d_key_presses;
     }
     else {
-        info.sinceFocused = 0.0;
-        info.sinceUnfocused = d_time - d_widgetTimes[hash].unfocusedTime;
+        info.since_focused = 0.0;
+        info.since_unfocused = d_time - d_widget_times[hash].unfocused_time;
     }
 
-    if (d_onClick == hash) { // Consume the onCLick
-        d_onClick = 0;
-        info.onClick = true;
+    if (d_on_click == hash) { // Consume the onCLick
+        d_on_click = 0;
+        info.on_click = true;
     }
 
-    if (d_onHover == hash) { // Consume the onHover
-        d_onHover = 0;
-        info.onHover = true;
+    if (d_on_hover == hash) { // Consume the onHover
+        d_on_hover = 0;
+        info.on_hover = true;
     }
 
-    if (d_onFocus == hash) { // Consume the onFocus
-        d_onFocus = 0;
-        info.onFocus = true;
+    if (d_on_focus == hash) { // Consume the onFocus
+        d_on_focus = 0;
+        info.on_focus = true;
     }
 
     return info;
 }
 
-DrawCommand& UIEngine::GetDrawCommand()
+draw_command& ui_engine::get_draw_command()
 {
-    assert(d_currentPanel);
-    return d_currentPanel->mainCommand;
+    assert(d_current_panel);
+    return d_current_panel->main_command;
 }
 
-void UIEngine::on_event(spkt::event& event)
+void ui_engine::on_event(spkt::event& event)
 {
     if (d_focused != 0 && !event.is_consumed()) {
         if (auto data = event.get_if<keyboard_typed_event>()) {
-            d_keyPresses.push_back(data->key);
+            d_key_presses.push_back(data->key);
             event.consume();
         }
         else if (auto data = event.get_if<keyboard_pressed_event>()) {
             if (data->key == Keyboard::BACKSPACE) {
-                d_keyPresses.push_back(Keyboard::BACKSPACE);
+                d_key_presses.push_back(Keyboard::BACKSPACE);
                 event.consume();
             }
         }
         else if (auto data = event.get_if<keyboard_held_event>()) {
             if (data->key == Keyboard::BACKSPACE) {
-                d_keyPresses.push_back(Keyboard::BACKSPACE);
+                d_key_presses.push_back(Keyboard::BACKSPACE);
                 event.consume();
             }
         }
@@ -234,58 +234,58 @@ void UIEngine::on_event(spkt::event& event)
 
     if (auto data = event.get_if<mouse_pressed_event>()) {
         if (data->button == Mouse::LEFT) {
-            d_mouseClicked = true;
+            d_mouse_clicked = true;
         }
-        if (d_consumeMouseEvents) { event.consume(); }
+        if (d_consume_mouse_events) { event.consume(); }
     }
     if (auto data = event.get_if<mouse_released_event>()) {
         if (data->button == Mouse::LEFT) {
-            d_widgetTimes[d_clicked].unclickedTime = d_time;
+            d_widget_times[d_clicked].unclicked_time = d_time;
             d_clicked = 0;
         }
     }
 }
 
-void UIEngine::on_update(double dt)
+void ui_engine::on_update(double dt)
 {
     d_time += dt;
 }
 
-void UIEngine::StartFrame()
+void ui_engine::start_frame()
 {
     d_panels.clear();
-    d_currentPanel = nullptr;
+    d_current_panel = nullptr;
 }
 
-void UIEngine::MouseClick()
+void ui_engine::mouse_click()
 {
     bool foundClicked = false;
     const glm::vec2 mouse = d_window->mouse_position();
 
     std::size_t moveToFront = 0;
 
-    for (auto panelHash : d_panelOrder | std::views::reverse) {
+    for (auto panelHash : d_panel_order | std::views::reverse) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (const auto& [hash, region] : panel.widgetRegions | std::views::reverse) {
-            auto clicked = InRegion(mouse, region);
+        for (const auto& [hash, region] : panel.widget_regions | std::views::reverse) {
+            auto clicked = is_in_region(mouse, region);
 
             if (!foundClicked && ((d_clicked == hash) || clicked)) {
                 foundClicked = true;
                 moveToFront = panelHash;
                 if (d_clicked != hash) {
-                    d_widgetTimes[d_clicked].unclickedTime = d_time;
-                    d_widgetTimes[hash].clickedTime = d_time;
+                    d_widget_times[d_clicked].unclicked_time = d_time;
+                    d_widget_times[hash].clicked_time = d_time;
                     d_clicked = hash;
-                    d_onClick = hash;
+                    d_on_click = hash;
 
                     // The newly clicked widget is now the focus
-                    d_widgetTimes[d_focused].unfocusedTime = d_time;
-                    d_widgetTimes[hash].focusedTime = d_time;
+                    d_widget_times[d_focused].unfocused_time = d_time;
+                    d_widget_times[hash].focused_time = d_time;
                     d_focused = hash;
-                    d_onFocus = hash;
+                    d_on_focus = hash;
                 }
             }
         }
@@ -293,37 +293,37 @@ void UIEngine::MouseClick()
 
     // Clicked on something other than the UI, so lose focus
     if (!foundClicked && d_focused > 0) {
-        d_widgetTimes[d_focused].unfocusedTime = d_time;
+        d_widget_times[d_focused].unfocused_time = d_time;
         d_focused = 0;
     }
 
     if (moveToFront > 0) {
-        auto toMove = std::ranges::find(d_panelOrder, moveToFront);
-        d_panelOrder.erase(toMove);
-        d_panelOrder.push_back(moveToFront);
+        auto toMove = std::ranges::find(d_panel_order, moveToFront);
+        d_panel_order.erase(toMove);
+        d_panel_order.push_back(moveToFront);
     }
 }
 
-void UIEngine::MouseHover()
+void ui_engine::mouse_hover()
 {
     bool foundHovered = false;
     const glm::vec2 mouse = d_window->mouse_position();
 
-    for (auto panelHash : d_panelOrder | std::views::reverse) {
+    for (auto panelHash : d_panel_order | std::views::reverse) {
         auto it = d_panels.find(panelHash);
         if (it == d_panels.end()) { continue; }
         const auto& panel = it->second;
 
-        for (const auto& [hash, region] : panel.widgetRegions | std::views::reverse) {
-            auto hovered = InRegion(mouse, region);
+        for (const auto& [hash, region] : panel.widget_regions | std::views::reverse) {
+            auto hovered = is_in_region(mouse, region);
             
             if (!foundHovered && hovered) {
                 foundHovered = true;
                 if (d_hovered != hash) {
-                    d_widgetTimes[d_hovered].unhoveredTime = d_time;
-                    d_widgetTimes[hash].hoveredTime = d_time;
+                    d_widget_times[d_hovered].unhoveredTime = d_time;
+                    d_widget_times[hash].hovered_time = d_time;
                     d_hovered = hash;
-                    d_onHover = hash;
+                    d_on_hover = hash;
                 }
             }
         }
@@ -331,24 +331,24 @@ void UIEngine::MouseHover()
 
     // Hovered over something other than the UI, so lose hover
     if (!foundHovered && d_hovered > 0) {
-        d_widgetTimes[d_hovered].unhoveredTime = d_time;
+        d_widget_times[d_hovered].unhoveredTime = d_time;
         d_hovered = 0;
     }
 
-    d_consumeMouseEvents = foundHovered;
+    d_consume_mouse_events = foundHovered;
 }
 
-void UIEngine::EndFrame()
+void ui_engine::end_frame()
 {
-    assert(!d_currentPanel);
+    assert(!d_current_panel);
 
-    if (d_mouseClicked) {
-        MouseClick();
+    if (d_mouse_clicked) {
+        mouse_click();
     }
-    d_mouseClicked = false;
-    MouseHover();
+    d_mouse_clicked = false;
+    mouse_hover();
 
-    d_keyPresses.clear();
+    d_key_presses.clear();
 
     spkt::render_context rc;
     rc.alpha_blending(true);
@@ -365,55 +365,55 @@ void UIEngine::EndFrame()
     d_shader.bind();
     d_shader.load("u_proj_matrix", proj);
 
-    for (const auto& panelHash : d_panelOrder) {
+    for (const auto& panelHash : d_panel_order) {
         const auto& panel = d_panels[panelHash];
 
-        ExecuteCommand(panel.mainCommand);
-        for (const auto& cmd : panel.extraCommands) {
-            ExecuteCommand(cmd);
+        execute_command(panel.main_command);
+        for (const auto& cmd : panel.extra_commands) {
+            execute_command(cmd);
         }
     }
 }
 
-void UIEngine::StartPanel(std::string_view name, glm::vec4* region, PanelType type)
+void ui_engine::start_panel(std::string_view name, glm::vec4* region, panel_type type)
 {
-    assert(!d_currentPanel);
+    assert(!d_current_panel);
     const std::size_t hash = std::hash<std::string_view>{}(name);
 
-    if (std::ranges::find(d_panelOrder, hash) == d_panelOrder.end()) {
-        d_panelOrder.push_back(hash);
+    if (std::ranges::find(d_panel_order, hash) == d_panel_order.end()) {
+        d_panel_order.push_back(hash);
     }
     
     auto& panel = d_panels[hash];
     panel.name = name;
     panel.hash = hash;
     panel.region = *region;
-    d_currentPanel = &panel;
+    d_current_panel = &panel;
 
-    if (type == PanelType::CLICKABLE || type == PanelType::DRAGGABLE) {
-        auto info = Register(name, {0, 0, region->z, region->w});
+    if (type == panel_type::CLICKABLE || type == panel_type::DRAGGABLE) {
+        auto info = register_region(name, {0, 0, region->z, region->w});
 
-        if (info.sinceClicked > 0 && type == PanelType::DRAGGABLE) {
+        if (info.since_clicked > 0 && type == panel_type::DRAGGABLE) {
             region->x += d_window->mouse_offset().x;
             region->y += d_window->mouse_offset().y;
-            d_currentPanel->region = *region;
+            d_current_panel->region = *region;
         }
     }
 }
 
-void UIEngine::EndPanel()
+void ui_engine::end_panel()
 {
-    assert(d_currentPanel);
-    d_currentPanel = nullptr;
+    assert(d_current_panel);
+    d_current_panel = nullptr;
 }
 
-void UIEngine::SubmitDrawCommand(const DrawCommand& cmd)
+void ui_engine::submit_draw_command(const draw_command& cmd)
 {
-    assert(d_currentPanel);
-    d_currentPanel->extraCommands.emplace_back(cmd);
+    assert(d_current_panel);
+    d_current_panel->extra_commands.emplace_back(cmd);
 }
 
-void UIEngine::ExecuteCommand(const DrawCommand& cmd)
+void ui_engine::execute_command(const draw_command& cmd)
 {
     spkt::render_context rc;
     if (cmd.region.has_value()) {
@@ -436,8 +436,8 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     if (cmd.font) {
         cmd.font->bind(0);
         d_shader.load("texture_channels", 1);
-        d_vertices.set_data(cmd.textVertices);
-        d_indices.set_data(cmd.textIndices);
+        d_vertices.set_data(cmd.text_vertices);
+        d_indices.set_data(cmd.text_indices);
         glDrawElements(GL_TRIANGLES, (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
     }
 }

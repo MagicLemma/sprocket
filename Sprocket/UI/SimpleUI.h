@@ -26,7 +26,7 @@ class SimpleUI
 
     SimpleUITheme d_theme;
 
-    UIEngine d_engine;
+    ui_engine d_engine;
     font d_font;
 
 public:
@@ -43,7 +43,7 @@ public:
     void StartFrame();
     void EndFrame();
 
-    void StartPanel(std::string_view name, glm::vec4* region, PanelType type);
+    void StartPanel(std::string_view name, glm::vec4* region, panel_type type);
     void EndPanel();
 
     void Quad(const glm::vec4& colour,

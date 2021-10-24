@@ -431,7 +431,7 @@ void app::on_render()
             float y = ((1.0f - 0.6f) / 2) * h;
 
             glm::vec4 region{x, y, width, height};
-            d_hovered_entity_ui.StartPanel("Selected", &region, PanelType::UNCLICKABLE);
+            d_hovered_entity_ui.StartPanel("Selected", &region, panel_type::UNCLICKABLE);
                 
             auto pos = game_grid.clicked_square.value();
             if (d_hovered_entity_ui.Button("+Tree", {0, 0, width, 50})) {
@@ -475,7 +475,7 @@ void app::on_render()
             float y = std::min(mouse.y - 5, h - height - 10);
 
             glm::vec4 region{x, y, width, height};
-            d_hovered_entity_ui.StartPanel("Hovered", &region, PanelType::UNCLICKABLE);
+            d_hovered_entity_ui.StartPanel("Hovered", &region, panel_type::UNCLICKABLE);
             std::string name = "Unnamed";
             if (registry.has<game::NameComponent>(e)) {
                 name = registry.get<game::NameComponent>(e).name;
@@ -519,7 +519,7 @@ void app::on_render()
     static bool showVolume = false;
 
     glm::vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
-    d_escape_menu.StartPanel("Main", &mainRegion, PanelType::CLICKABLE);
+    d_escape_menu.StartPanel("Main", &mainRegion, panel_type::CLICKABLE);
 
     d_escape_menu.Text("Menu", 48.0f, {0.0f, 0.0f, w * 0.3f, 100});
 
@@ -568,7 +568,7 @@ void app::on_render()
     
     static glm::vec4 shape{w/2 - 200, 100, 400, 500};
     if (showVolume) {
-        d_escape_menu.StartPanel("VolumePanel", &shape, PanelType::DRAGGABLE);
+        d_escape_menu.StartPanel("VolumePanel", &shape, panel_type::DRAGGABLE);
         d_escape_menu.Text("Volume", 48.0f, {0, 0, 400, 100});
 
         float volume = spkt::get_master_volume();
@@ -579,7 +579,7 @@ void app::on_render()
     }
 
     static glm::vec4 shape2{w/2 + 300, 100, 400, 500};
-    d_escape_menu.StartPanel("Button Panel", &shape2, PanelType::DRAGGABLE);
+    d_escape_menu.StartPanel("Button Panel", &shape2, panel_type::DRAGGABLE);
     d_escape_menu.Text("Buttons", 36.0f, {0, 0, 400, 100});
     glm::vec4 buttonQuad{10, 100, 400 - 20, 50};
     if (d_escape_menu.Button("Button 1", buttonQuad)) {
