@@ -1,4 +1,6 @@
 #pragma once
+// This module follows the formatting style of ImGui.
+ 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <imgui.h>
