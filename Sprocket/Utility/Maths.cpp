@@ -42,12 +42,12 @@ decomposed_transform decompose(const glm::mat4 matrix)
     return dt;
 }
 
-glm::vec3 GetTranslation(const glm::mat4& m)
+glm::vec3 get_translation(const glm::mat4& m)
 {
     return m[3];
 }
 
-float Modulo(float val, float high)
+float modulo(float val, float high)
 {
     float ret = val;
     while (ret > high) { ret -= high; }
@@ -55,7 +55,7 @@ float Modulo(float val, float high)
     return ret;
 }
 
-glm::mat4 NoScale(const glm::mat4& matrix)
+glm::mat4 no_scale(const glm::mat4& matrix)
 {
     auto [pos, ori, scale] = decompose(matrix);
     return make_transform(pos, ori);
@@ -85,7 +85,7 @@ glm::vec3 get_mouse_ray(
     return glm::normalize(glm::inverse(view) * ray);
 }
 
-glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)
+glm::vec3 apply_transform(const glm::mat4& matrix, const glm::vec3& v)
 {
     glm::vec4 v2 = matrix * glm::vec4{v.x, v.y, v.z, 1.0f};
     return {v2.x, v2.y, v2.z};

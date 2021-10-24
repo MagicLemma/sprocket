@@ -152,7 +152,7 @@ void load_animations(skeleton& skeleton, bone* bone, const aiScene* scene, const
             auto& x = key_frames->mPositionKeys[i];
             key_frame_data.positions.push_back({
                 (float)x.mTime / ticks_per_second,
-                ApplyTransform(transform, Convert(x.mValue))
+                apply_transform(transform, Convert(x.mValue))
             });
         }
 
@@ -199,7 +199,7 @@ void load_skeleton(
         last_bone_node = current_node;
 
         spkt::bone* bone = get_bone(skeleton, last_bone_node);
-        load_animations(skeleton, bone, scene, NoScale(parent_transform));
+        load_animations(skeleton, bone, scene, no_scale(parent_transform));
     }
 
     spkt::bone* current_bone = get_bone(skeleton, last_bone_node);

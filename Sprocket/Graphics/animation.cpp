@@ -69,7 +69,7 @@ std::vector<glm::mat4> skeleton::get_pose(const std::string& animation, float ti
     pose.resize(bones.size(), glm::mat4(1.0));
 
     if (auto it = animations.find(animation); it != animations.end()) {
-        float t = Modulo(time, it->second.duration);
+        float t = modulo(time, it->second.duration);
         get_pose_recursive(pose, *this, it->second, t, 0, glm::mat4(1.0));
     }
     return pose;

@@ -31,10 +31,10 @@ struct decomposed_transform
 
 decomposed_transform decompose(const glm::mat4 matrix);
 
-glm::vec3 GetTranslation(const glm::mat4& m);
-float Modulo(float val, float high);
-glm::mat4 NoScale(const glm::mat4& matrix);
-glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v);
+glm::vec3 get_translation(const glm::mat4& m);
+float modulo(float val, float high);
+glm::mat4 no_scale(const glm::mat4& matrix);
+glm::vec3 apply_transform(const glm::mat4& matrix, const glm::vec3& v);
 
 glm::vec3 get_mouse_ray(
     const glm::vec2& mouse_pos,
