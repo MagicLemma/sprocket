@@ -28,13 +28,7 @@ void TextModifiable(std::string& text);
 void Text(const std::string& text);
 
 // A wrapper for ImGui::Image that uses Sprocket types.
-void Image(const texture& image,
-           const glm::vec2& size,
-           const glm::vec2& uv0 = {0, 1},
-           const glm::vec2& uv1 = {1, 0},
-           const glm::vec4& tintCol = {1, 1, 1, 1},
-           const glm::vec4& borderCol = {0, 0, 0, 0}
-);
+void Image(const texture& image, const glm::vec2& size);
 
 // A simplified version of the above where the texture maintains
 // aspect ratio. The size is the height in pixels.
@@ -44,9 +38,9 @@ void Image(const texture& image, float size);
 void Image(const texture& image);
 
 void GuizmoSettings(
-    ImGuizmo::OPERATION& mode,
-    ImGuizmo::MODE& coords,
-    bool& useSnap,
+    ImGuizmo::OPERATION& operation,
+    ImGuizmo::MODE& mode,
+    bool& use_snap,
     glm::vec3& snap
 );
 
@@ -54,8 +48,8 @@ void Guizmo(
     glm::mat4* matrix,
     const glm::mat4& view,
     const glm::mat4& projection,
-    ImGuizmo::OPERATION mode,
-    ImGuizmo::MODE coords
+    ImGuizmo::OPERATION operation,
+    ImGuizmo::MODE mode
 );
 
 // Returns the coords of the mouse with respect to the top left of the current
@@ -66,7 +60,7 @@ glm::vec2 GetMousePosWindowCoords();
 void Euler(const std::string& name, glm::quat* q);
 
 // Displays a window for a large amount of text that can be rewritten.
-bool MultilineTextModifiable(const std::string_view label, std::string* text);
+bool MultilineTextModifiable(const std::string& label, std::string* text);
 
 }
 }

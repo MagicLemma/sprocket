@@ -10,7 +10,7 @@
 namespace spkt {
 namespace {
 
-void SetOFN(OPENFILENAMEA* ofn, window* window, const char* filter)
+void set_ofn(OPENFILENAMEA* ofn, window* window, const char* filter)
 {
 	GLFWwindow* w = static_cast<GLFWwindow*>(window->native_handle());
 	ZeroMemory(ofn, sizeof(OPENFILENAME));
@@ -26,7 +26,7 @@ void SetOFN(OPENFILENAMEA* ofn, window* window, const char* filter)
 std::optional<std::string> open_file(window* window, const char* filter)
 {
     OPENFILENAMEA ofn;
-	SetOFN(&ofn, window, filter);
+	set_ofn(&ofn, window, filter);
 	CHAR szFile[260] = {0};
 	ofn.lpstrFile = szFile;
 	ofn.nMaxFile = sizeof(szFile);
@@ -40,7 +40,7 @@ std::optional<std::string> open_file(window* window, const char* filter)
 std::optional<std::string> save_file(window* window, const char* filter)
 {
     OPENFILENAMEA ofn;
-	SetOFN(&ofn, window, filter);
+	set_ofn(&ofn, window, filter);
 	CHAR szFile[260] = {0};
 	ofn.lpstrFile = szFile;
 	ofn.nMaxFile = sizeof(szFile);

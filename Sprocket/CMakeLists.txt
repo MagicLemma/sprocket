@@ -29,13 +29,12 @@ add_library(Sprocket STATIC
             Core/log.cpp
             Core/sound.cpp
 
-            UI/Font/FontAtlas.cpp
-            UI/Font/Font.cpp
+            UI/Font/font_atlas.cpp
+            UI/Font/font.cpp
             
             UI/console.cpp
             UI/UIEngine.cpp
             UI/SimpleUI.cpp
-            UI/SinglePanelUI.cpp
             UI/DevUI.cpp
             UI/ImGuiXtra.cpp
             

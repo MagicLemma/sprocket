@@ -1,4 +1,4 @@
-#include "FontAtlas.h"
+#include "font_atlas.h"
 
 #include <glm/glm.hpp>
 
@@ -9,7 +9,7 @@
 
 namespace spkt {
 
-FontAtlas::FontAtlas(int width, int height)
+font_atlas::font_atlas(int width, int height)
     : d_texture(std::make_unique<texture>(width, height, texture_channels::RED))
 {
     // We want a one pixel border around the whole atlas to avoid any
@@ -17,7 +17,7 @@ FontAtlas::FontAtlas(int width, int height)
     d_nodes.push_back({1, 1, width - 2});
 }
 
-void FontAtlas::SetRegion(
+void font_atlas::set_region(
     const glm::ivec4& region,
     const unsigned char* data)
 {
@@ -28,7 +28,7 @@ void FontAtlas::SetRegion(
     d_texture->set_subtexture(region, data);
 }
 
-int FontAtlas::Fit(int index, int width, int height)
+int font_atlas::fit(int index, int width, int height)
 {
     auto node = d_nodes[index];
     int x = node.x;
@@ -54,7 +54,7 @@ int FontAtlas::Fit(int index, int width, int height)
     return y;
 }
 
-glm::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
+glm::ivec4 font_atlas::get_region(std::size_t width, std::size_t height)
 {
     // Add padding
     int padding = 1;
@@ -70,7 +70,7 @@ glm::ivec4 FontAtlas::GetRegion(std::size_t width, std::size_t height)
 
     for (std::size_t i = 0; i < d_nodes.size(); ++i)
     {
-        int y = Fit(i, width, height);
+        int y = fit(i, width, height);
         if (y >= 0) {
             auto node = d_nodes[i];
             if ((y + height < best_height) ||

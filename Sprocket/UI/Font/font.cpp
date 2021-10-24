@@ -1,4 +1,4 @@
-#include "Font.h"
+#include "font.h"
 
 #include <Sprocket/Core/log.h>
 
@@ -16,7 +16,7 @@ static constexpr int DPI = 72;
 
 namespace {
 
-uint32_t ToUTF32(const char* c)
+uint32_t to_utf32(const char* c)
 {
     uint32_t result = -1;
 
@@ -47,11 +47,7 @@ uint32_t ToUTF32(const char* c)
     return result;
 }
 
-bool LoadFace(
-    const std::string& filename,
-    float size,
-    FT_Library *library,
-    FT_Face *face)
+bool load_face(const std::string& filename, float size, FT_Library *library, FT_Face *face)
 {
     FT_Error error;
     FT_Matrix matrix = {
@@ -92,9 +88,9 @@ bool LoadFace(
     return true;
 }
 
-void GenerateKerning(
-    const GlyphMap& glyphs,
-    KerningMap& kernings,
+void generate_kerning(
+    const glyph_map& glyphs,
+    kerning_map& kernings,
     FT_Library* library,
     FT_Face* face)
 {
@@ -121,24 +117,24 @@ void GenerateKerning(
 
 }
 
-Font::Font(const std::string& filename)
+font::font(const std::string& filename)
     : d_atlas(1024, 1024)
     , d_filename(filename)
 {
 }
 
-Glyph Font::GetGlyph(char c, float size)
+Glyph font::get_glyph(char c, float size)
 {
-    auto& font = d_fontData[size];
+    auto& font = d_font_data[size];
 
-    uint32_t ucodepoint = ToUTF32(&c);
+    uint32_t ucodepoint = to_utf32(&c);
     auto it = font.glyphs.find(ucodepoint);
     if (it != font.glyphs.end()) {
         return it->second;
     }
 
     // If we could not find it, attempt to load it
-    LoadGlyph(c, size);
+    load_glyph(c, size);
     it = font.glyphs.find(ucodepoint);
     if (it != font.glyphs.end()) {
         return it->second;
@@ -147,13 +143,13 @@ Glyph Font::GetGlyph(char c, float size)
     return Glyph(); // Empty glyph
 }
 
-bool Font::LoadGlyph(char c, float size)
+bool font::load_glyph(char c, float size)
 {
-    uint32_t codepoint = ToUTF32(&c);
+    uint32_t codepoint = to_utf32(&c);
     
     FT_Library library;
     FT_Face face;
-    if (!LoadFace(d_filename, size, &library, &face)) {
+    if (!load_face(d_filename, size, &library, &face)) {
         return false;
     }
 
@@ -167,7 +163,7 @@ bool Font::LoadGlyph(char c, float size)
 
     FT_GlyphSlot slot = face->glyph;
     FT_Bitmap bitmap  = slot->bitmap;
-    auto region = d_atlas.GetRegion(bitmap.width, bitmap.rows);
+    auto region = d_atlas.get_region(bitmap.width, bitmap.rows);
     if (region.x < 0) {
         spkt::log::error("Texture atlas is full!");
         FT_Done_Face(face);
@@ -175,34 +171,34 @@ bool Font::LoadGlyph(char c, float size)
         return false;
     }
 
-    d_atlas.SetRegion(region, bitmap.buffer);
+    d_atlas.set_region(region, bitmap.buffer);
 
-    auto& font = d_fontData[size];
+    auto& font = d_font_data[size];
     Glyph& glyph = font.glyphs[codepoint];
 
     glyph.codepoint = codepoint;
     glyph.width     = slot->bitmap.width;
     glyph.height    = slot->bitmap.rows;
     glyph.offset    = {slot->bitmap_left, slot->bitmap_top};
-    glyph.texture.x = region.x / (float)d_atlas.Width();
-    glyph.texture.y = region.y / (float)d_atlas.Height();
-    glyph.texture.z = glyph.width / (float)d_atlas.Width();
-    glyph.texture.w = glyph.height / (float)d_atlas.Height();
+    glyph.texture.x = region.x / (float)d_atlas.width();
+    glyph.texture.y = region.y / (float)d_atlas.height();
+    glyph.texture.z = glyph.width / (float)d_atlas.width();
+    glyph.texture.w = glyph.height / (float)d_atlas.height();
     glyph.advance = glm::vec2{slot->advance.x, slot->advance.y} / HRESf;
 
-    GenerateKerning(font.glyphs, font.kernings, &library, &face);
+    generate_kerning(font.glyphs, font.kernings, &library, &face);
 
     FT_Done_Face(face);
     FT_Done_FreeType(library);
     return true;
 }
 
-float Font::GetKerning(char left, char right, float size)
+float font::get_kerning(char left, char right, float size)
 {
-    auto& font = d_fontData[size];
+    auto& font = d_font_data[size];
 
-    uint32_t l = ToUTF32(&left);
-    uint32_t r = ToUTF32(&right);
+    uint32_t l = to_utf32(&left);
+    uint32_t r = to_utf32(&right);
 
     auto it = font.kernings.find(std::make_pair(l, r));
     if (it != font.kernings.end()) {
@@ -212,23 +208,23 @@ float Font::GetKerning(char left, char right, float size)
     return 0.0f;
 }
 
-float Font::TextWidth(std::string_view text, float size)
+float font::text_width(std::string_view text, float size)
 {
     float width = 0;
     for (int i = 0; i != text.size(); ++i) {
-        auto glyph = GetGlyph(text[i], size);
+        auto glyph = get_glyph(text[i], size);
 
         if (i > 0) {
-            width += GetKerning(text[i-1], text[i], size);
+            width += get_kerning(text[i-1], text[i], size);
         }
 
         width += glyph.advance.x;
     }
 
-    Glyph first = GetGlyph(text.front(), size);
+    Glyph first = get_glyph(text.front(), size);
     width -= first.offset.x;
 
-    Glyph last = GetGlyph(text.back(), size);
+    Glyph last = get_glyph(text.back(), size);
     width += last.width;
     width += last.offset.x;
     width -= last.advance.x;

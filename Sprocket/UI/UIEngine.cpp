@@ -86,8 +86,8 @@ void DrawCommand::AddText(std::string_view text,
         pen.x += quad.z - 5.0f;
         pen.y += size;
     } else {
-        float textWidth = font->TextWidth(text, size);
-        Glyph first = font->GetGlyph(text.front(), size);
+        float textWidth = font->text_width(text, size);
+        Glyph first = font->get_glyph(text.front(), size);
         pen.y += (quad.w - first.height) / 2.0f;
         pen.x += (quad.z - textWidth) / 2.0f;
         pen.x -= first.offset.x;
@@ -95,10 +95,10 @@ void DrawCommand::AddText(std::string_view text,
     }
 
     for (std::size_t i = 0; i != text.size(); ++i) {
-        auto glyph = font->GetGlyph(text[i], size);
+        auto glyph = font->get_glyph(text[i], size);
 
         if (i > 0) {
-            pen.x += font->GetKerning(text[i-1], text[i], size);
+            pen.x += font->get_kerning(text[i-1], text[i], size);
         }
 
         float xPos = pen.x + glyph.offset.x;
@@ -434,7 +434,7 @@ void UIEngine::ExecuteCommand(const DrawCommand& cmd)
     glDrawElements(GL_TRIANGLES, (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
 
     if (cmd.font) {
-        cmd.font->Bind(0);
+        cmd.font->bind(0);
         d_shader.load("texture_channels", 1);
         d_vertices.set_data(cmd.textVertices);
         d_indices.set_data(cmd.textIndices);

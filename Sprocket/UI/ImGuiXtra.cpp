@@ -57,20 +57,15 @@ void Text(const std::string& text)
     ImGui::Text(text.c_str());
 }
 
-void Image(const texture& image,
-           const glm::vec2& size,
-           const glm::vec2& uv0,
-           const glm::vec2& uv1,
-           const glm::vec4& tintCol,
-           const glm::vec4& borderCol)
+void Image(const texture& image, const glm::vec2& size)
 {
     ImGui::Image(
         (ImTextureID)(intptr_t)image.id(),
         {size.x, size.y},
-        {uv0.x, uv0.y},
-        {uv1.x, uv1.y},
-        {tintCol.r, tintCol.g, tintCol.b, tintCol.a},
-        {borderCol.r, borderCol.g, borderCol.b, borderCol.a}
+        {0, 1},
+        {1, 0},
+        {1, 1, 1, 1},
+        {0, 0, 0, 0}
     );
 }
 
@@ -85,33 +80,33 @@ void Image(const texture& image)
 }
 
 void GuizmoSettings(
-    ImGuizmo::OPERATION& mode,
-    ImGuizmo::MODE& coords,
-    bool& useSnap,
+    ImGuizmo::OPERATION& operation,
+    ImGuizmo::MODE& mode,
+    bool& use_snap,
     glm::vec3& snap)
 {
-    if (ImGui::RadioButton("Translate", mode == ImGuizmo::OPERATION::TRANSLATE)) {
-        mode = ImGuizmo::OPERATION::TRANSLATE;
+    if (ImGui::RadioButton("Translate", operation == ImGuizmo::OPERATION::TRANSLATE)) {
+        operation = ImGuizmo::OPERATION::TRANSLATE;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Rotate", mode == ImGuizmo::OPERATION::ROTATE)) {
-        mode = ImGuizmo::OPERATION::ROTATE;
+    if (ImGui::RadioButton("Rotate", operation == ImGuizmo::OPERATION::ROTATE)) {
+        operation = ImGuizmo::OPERATION::ROTATE;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Scale", mode == ImGuizmo::OPERATION::SCALE)) {
-        mode = ImGuizmo::OPERATION::SCALE;
+    if (ImGui::RadioButton("Scale", operation == ImGuizmo::OPERATION::SCALE)) {
+        operation = ImGuizmo::OPERATION::SCALE;
     }
 
-    if (ImGui::RadioButton("World", coords == ImGuizmo::MODE::WORLD)) {
-        coords = ImGuizmo::MODE::WORLD;
+    if (ImGui::RadioButton("World", mode == ImGuizmo::MODE::WORLD)) {
+        mode = ImGuizmo::MODE::WORLD;
     }
     ImGui::SameLine();
-    if (ImGui::RadioButton("Local", coords == ImGuizmo::MODE::LOCAL)) {
-        coords = ImGuizmo::MODE::LOCAL;
+    if (ImGui::RadioButton("Local", mode == ImGuizmo::MODE::LOCAL)) {
+        mode = ImGuizmo::MODE::LOCAL;
     }
-    ImGui::Checkbox("", &useSnap);
+    ImGui::Checkbox("", &use_snap);
     ImGui::SameLine();
-    if (mode == ImGuizmo::OPERATION::TRANSLATE) {
+    if (operation == ImGuizmo::OPERATION::TRANSLATE) {
         ImGui::InputFloat3("Snap", &snap.x);
     }
     else {
@@ -158,10 +153,10 @@ void Euler(const std::string& name, glm::quat* q)
     }
 }
 
-bool MultilineTextModifiable(const std::string_view label, std::string* text)
+bool MultilineTextModifiable(const std::string& label, std::string* text)
 {
     return ImGui::InputTextMultiline(
-        label.data(),
+        label.c_str(),
         (char*)text->c_str(),
         text->capacity() + 1,
         ImVec2(500, 500),

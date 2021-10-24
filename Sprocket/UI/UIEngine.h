@@ -16,7 +16,7 @@
 namespace spkt {
 
 class window;
-class Font;
+class font;
 class event;
 
 enum class Alignment
@@ -39,7 +39,7 @@ struct DrawCommand
     std::vector<ui_vertex>  vertices;
     std::vector<std::uint32_t> indices;
 
-    Font*                      font = nullptr;
+    font*                      font = nullptr;
     std::vector<ui_vertex>  textVertices;
     std::vector<std::uint32_t> textIndices;
 
@@ -47,8 +47,7 @@ struct DrawCommand
     std::optional<glm::vec4> region = {};
 
     // Helper for added a quad to the vertex and index buffer.
-    void AddQuad(const glm::vec4& colour,
-                 const glm::vec4& quad);
+    void AddQuad(const glm::vec4& colour, const glm::vec4& quad);
 
     // Helper for adding a string of test to the text vertex and index buffers. Uses the
     // font stored in the draw command.
