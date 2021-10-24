@@ -2,7 +2,7 @@
 
 #include <sprocket/Core/events.h>
 #include <sprocket/Core/window.h>
-#include <sprocket/Graphics/viewport.h>
+#include <sprocket/graphics/viewport.h>
 #include <sprocket/Core/input_codes.h>
 
 #include <glm/glm.hpp>

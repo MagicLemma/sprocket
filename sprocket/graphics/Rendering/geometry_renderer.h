@@ -1,5 +1,5 @@
 #pragma once
-#include <sprocket/Graphics/shader.h>
+#include <sprocket/graphics/shader.h>
 
 #include <glm/glm.hpp>
 

@@ -1,6 +1,6 @@
 #include "render_context.h"
 
-#include <sprocket/Graphics/Viewport.h>
+#include <sprocket/graphics/Viewport.h>
 
 #include <glad/glad.h>
 

@@ -1,10 +1,10 @@
 #pragma once
-#include <sprocket/Graphics/asset_manager.h>
-#include <sprocket/Graphics/buffer.h>
-#include <sprocket/Graphics/frame_buffer.h>
-#include <sprocket/Graphics/open_gl.h>
-#include <sprocket/Graphics/shader.h>
-#include <sprocket/Graphics/texture.h>
+#include <sprocket/graphics/asset_manager.h>
+#include <sprocket/graphics/buffer.h>
+#include <sprocket/graphics/frame_buffer.h>
+#include <sprocket/graphics/open_gl.h>
+#include <sprocket/graphics/shader.h>
+#include <sprocket/graphics/texture.h>
 
 #include <glm/glm.hpp>
 

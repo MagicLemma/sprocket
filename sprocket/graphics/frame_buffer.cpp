@@ -1,6 +1,6 @@
 #include "frame_buffer.h"
 
-#include <sprocket/Graphics/Texture.h>
+#include <sprocket/graphics/Texture.h>
 #include <sprocket/Core/log.h>
 
 #include <glad/glad.h>

@@ -1,7 +1,7 @@
 #pragma once
-#include <sprocket/Graphics/material.h>
-#include <sprocket/Graphics/mesh.h>
-#include <sprocket/Graphics/texture.h>
+#include <sprocket/graphics/material.h>
+#include <sprocket/graphics/mesh.h>
+#include <sprocket/graphics/texture.h>
 
 #include <filesystem>
 #include <future>

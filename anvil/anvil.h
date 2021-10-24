@@ -6,12 +6,12 @@
 
 #include <sprocket/Core/events.h>
 #include <sprocket/Core/window.h>
-#include <sprocket/Graphics/asset_manager.h>
-#include <sprocket/Graphics/cube_map.h>
-#include <sprocket/Graphics/frame_buffer.h>
-#include <sprocket/Graphics/Rendering/geometry_renderer.h>
-#include <sprocket/Graphics/Rendering/pbr_renderer.h>
-#include <sprocket/Graphics/Rendering/skybox_renderer.h>
+#include <sprocket/graphics/asset_manager.h>
+#include <sprocket/graphics/cube_map.h>
+#include <sprocket/graphics/frame_buffer.h>
+#include <sprocket/graphics/Rendering/geometry_renderer.h>
+#include <sprocket/graphics/Rendering/pbr_renderer.h>
+#include <sprocket/graphics/Rendering/skybox_renderer.h>
 #include <sprocket/UI/imgui_ui.h>
 
 #include <memory>

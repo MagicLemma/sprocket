@@ -4,7 +4,7 @@
 #include <game/ecs/scene.h>
 
 #include <sprocket/Core/input_codes.h>
-#include <sprocket/Graphics/camera.h>
+#include <sprocket/graphics/camera.h>
 #include <sprocket/Utility/input_store.h>
 #include <sprocket/Utility/maths.h>
 

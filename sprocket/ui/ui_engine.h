@@ -1,8 +1,8 @@
 #pragma once
-#include <sprocket/Graphics/shader.h>
-#include <sprocket/Graphics/buffer.h>
-#include <sprocket/Graphics/buffer_element_types.h>
-#include <sprocket/Graphics/texture.h>
+#include <sprocket/graphics/shader.h>
+#include <sprocket/graphics/buffer.h>
+#include <sprocket/graphics/buffer_element_types.h>
+#include <sprocket/graphics/texture.h>
 
 #include <glm/glm.hpp>
 

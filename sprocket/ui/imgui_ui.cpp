@@ -2,7 +2,7 @@
 
 #include <sprocket/Core/events.h>
 #include <sprocket/Core/window.h>
-#include <sprocket/Graphics/render_context.h>
+#include <sprocket/graphics/render_context.h>
 #include <sprocket/Core/input_codes.h>
 
 #include <glad/glad.h>

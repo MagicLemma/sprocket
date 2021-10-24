@@ -2,8 +2,8 @@
 // Wrappers for OpenGL functions. Intended to be low level and used by other classes in the
 // Sprocket/Graphics module rather than being used directly. These functions mostly lack a
 // proper home and may be moved when appropriate.
-#include <sprocket/Graphics/mesh.h>
-#include <sprocket/Graphics/buffer.h>
+#include <sprocket/graphics/mesh.h>
+#include <sprocket/graphics/buffer.h>
 
 namespace spkt {
 

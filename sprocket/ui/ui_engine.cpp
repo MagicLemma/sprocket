@@ -4,7 +4,7 @@
 #include <sprocket/Core/input_codes.h>
 #include <sprocket/Core/log.h>
 #include <sprocket/Core/window.h>
-#include <sprocket/Graphics/render_context.h>
+#include <sprocket/graphics/render_context.h>
 #include <sprocket/UI/Font/font.h>
 #include <sprocket/UI/Font/glyph.h>
 

@@ -4,10 +4,10 @@
 
 #include <game/ecs/scene.h>
 
-#include <sprocket/Graphics/asset_manager.h>
-#include <sprocket/Graphics/post_processor.h>
-#include <sprocket/Graphics/Rendering/pbr_renderer.h>
-#include <sprocket/Graphics/shadow_map.h>
+#include <sprocket/graphics/asset_manager.h>
+#include <sprocket/graphics/post_processor.h>
+#include <sprocket/graphics/Rendering/pbr_renderer.h>
+#include <sprocket/graphics/shadow_map.h>
 #include <sprocket/UI/imgui_ui.h>
 #include <sprocket/UI/simple_ui.h>
 

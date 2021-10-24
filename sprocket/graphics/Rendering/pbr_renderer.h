@@ -1,8 +1,8 @@
 #pragma once
-#include <sprocket/Graphics/asset_manager.h>
-#include <sprocket/Graphics/shader.h>
-#include <sprocket/Graphics/shadow_map.h>
-#include <sprocket/Graphics/buffer.h>
+#include <sprocket/graphics/asset_manager.h>
+#include <sprocket/graphics/shader.h>
+#include <sprocket/graphics/shadow_map.h>
+#include <sprocket/graphics/buffer.h>
 #include <sprocket/Utility/Hashing.h>
 
 #include <memory>

@@ -10,9 +10,9 @@
 
 #include <sprocket/Core/input_codes.h>
 #include <sprocket/Core/log.h>
-#include <sprocket/Graphics/camera.h>
-#include <sprocket/Graphics/material.h>
-#include <sprocket/Graphics/render_context.h>
+#include <sprocket/graphics/camera.h>
+#include <sprocket/graphics/material.h>
+#include <sprocket/graphics/render_context.h>
 #include <sprocket/UI/ImGuiXtra.h>
 #include <sprocket/Utility/file_browser.h>
 #include <sprocket/Utility/maths.h>

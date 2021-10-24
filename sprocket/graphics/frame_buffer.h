@@ -1,5 +1,5 @@
 #pragma once
-#include <sprocket/Graphics/Viewport.h>
+#include <sprocket/graphics/Viewport.h>
 
 #include <cstddef>
 #include <memory>

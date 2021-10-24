@@ -1,7 +1,7 @@
 #include "scene_utils.h"
 #include <anvil/ecs/ecs.h>
 
-#include <sprocket/Graphics/camera.h>
+#include <sprocket/graphics/camera.h>
 
 #include <glm/glm.hpp>
 

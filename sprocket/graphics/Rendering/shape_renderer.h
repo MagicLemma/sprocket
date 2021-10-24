@@ -1,6 +1,6 @@
 #pragma once
-#include <sprocket/Graphics/shader.h>
-#include <sprocket/Graphics/buffer.h>
+#include <sprocket/graphics/shader.h>
+#include <sprocket/graphics/buffer.h>
 
 #include <glm/glm.hpp>
 

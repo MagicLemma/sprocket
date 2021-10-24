@@ -1,6 +1,6 @@
 #pragma once
 #include <apecs.hpp>
-#include <sprocket/Graphics/particles.h>
+#include <sprocket/graphics/particles.h>
 #include <sprocket/Scripting/lua_script.h>
 #include <sprocket/Utility/Hashing.h>
 #include <sprocket/Utility/input_store.h>

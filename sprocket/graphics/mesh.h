@@ -1,7 +1,7 @@
 #pragma once
-#include <sprocket/Graphics/animation.h>
-#include <sprocket/Graphics/buffer.h>
-#include <sprocket/Graphics/buffer_element_types.h>
+#include <sprocket/graphics/animation.h>
+#include <sprocket/graphics/buffer.h>
+#include <sprocket/graphics/buffer_element_types.h>
 
 #include <glm/glm.hpp>
 

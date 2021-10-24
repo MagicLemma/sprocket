@@ -1,10 +1,10 @@
 #include "pbr_renderer.h"
 
-#include <sprocket/Graphics/asset_manager.h>
-#include <sprocket/Graphics/buffer.h>
-#include <sprocket/Graphics/camera.h>
-#include <sprocket/Graphics/open_gl.h>
-#include <sprocket/Graphics/render_context.h>
+#include <sprocket/graphics/asset_manager.h>
+#include <sprocket/graphics/buffer.h>
+#include <sprocket/graphics/camera.h>
+#include <sprocket/graphics/open_gl.h>
+#include <sprocket/graphics/render_context.h>
 #include <sprocket/Utility/Hashing.h>
 #include <sprocket/Utility/Maths.h>
 #include <sprocket/Utility/views.h>

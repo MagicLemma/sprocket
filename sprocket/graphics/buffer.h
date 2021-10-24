@@ -1,5 +1,5 @@
 #pragma once
-#include <sprocket/Graphics/buffer_element_types.h>
+#include <sprocket/graphics/buffer_element_types.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

@@ -1,7 +1,7 @@
 {
     "namespace": "game",
     "includes": [
-        "<sprocket/Graphics/particles.h>",
+        "<sprocket/graphics/particles.h>",
         "<sprocket/Scripting/lua_script.h>",
         "<sprocket/Utility/Hashing.h>",
         "<sprocket/Utility/input_store.h>",

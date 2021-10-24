@@ -1,7 +1,7 @@
 #pragma once
-#include <sprocket/Graphics/shader.h>
-#include <sprocket/Graphics/buffer.h>
-#include <sprocket/Graphics/texture.h>
+#include <sprocket/graphics/shader.h>
+#include <sprocket/graphics/buffer.h>
+#include <sprocket/graphics/texture.h>
 
 #include <imgui.h>
 #include <ImGuizmo.h>

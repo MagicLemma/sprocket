@@ -1,6 +1,6 @@
 #include "ImGuiXtra.h"
 
-#include <sprocket/Graphics/texture.h>
+#include <sprocket/graphics/texture.h>
 #include <sprocket/Utility/file_browser.h>
 
 #include <glm/gtc/type_ptr.hpp>

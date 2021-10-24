@@ -13,9 +13,9 @@
 #include <sprocket/Core/input_codes.h>
 #include <sprocket/Core/log.h>
 #include <sprocket/Core/Window.h>
-#include <sprocket/Graphics/camera.h>
-#include <sprocket/Graphics/render_context.h>
-#include <sprocket/Graphics/Rendering/pbr_renderer.h>
+#include <sprocket/graphics/camera.h>
+#include <sprocket/graphics/render_context.h>
+#include <sprocket/graphics/Rendering/pbr_renderer.h>
 #include <sprocket/UI/ImGuiXtra.h>
 #include <sprocket/Utility/views.h>
 

@@ -11,7 +11,7 @@
 #include <sprocket/Scripting/lua_script.h>
 #include <sprocket/UI/console.h>
 #include <sprocket/Utility/colour.h>
-#include <sprocket/Graphics/camera.h>
+#include <sprocket/graphics/camera.h>
 #include <sprocket/Core/input_codes.h>
 
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
