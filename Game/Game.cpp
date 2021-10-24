@@ -347,7 +347,7 @@ void app::on_update(double dt)
     auto& registry = d_scene.registry;
 
     const auto& transform = registry.get<game::Transform3DComponent>(d_camera);
-    spkt::set_listener(transform.position, spkt::Forwards(transform.orientation));
+    spkt::set_listener(transform.position, spkt::forwards(transform.orientation));
 
     d_hovered_entity_ui.on_update(dt);
     if (!d_paused) {
@@ -389,7 +389,7 @@ void app::on_render()
     // Create the Shadow Map
     float lambda = 5.0f; // TODO: Calculate the floor intersection point
     auto& tc = registry.get<game::Transform3DComponent>(d_camera);
-    glm::vec3 target = tc.position + lambda * spkt::Forwards(tc.orientation);
+    glm::vec3 target = tc.position + lambda * spkt::forwards(tc.orientation);
     auto sun = registry.find<game::SunComponent>();
 
     d_shadow_map.begin_frame(target, registry.get<game::SunComponent>(sun).direction);

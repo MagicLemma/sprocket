@@ -13,9 +13,9 @@ glm::mat4 make_transform(
     const glm::vec3& scale = {1.0f, 1.0f, 1.0f}
 );
 
-glm::vec3 Forwards(const glm::quat& q);
-glm::vec3 Right(const glm::quat& q);
-glm::vec3 Up(const glm::quat& q);
+glm::vec3 forwards(const glm::quat& q);
+glm::vec3 right(const glm::quat& q);
+glm::vec3 up(const glm::quat& q);
 
 struct decomposed_transform
 {

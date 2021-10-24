@@ -18,17 +18,17 @@ glm::mat4 make_transform(const glm::vec3& position, const glm::quat& orientation
     return glm::scale(m, scale);
 }
 
-glm::vec3 Forwards(const glm::quat& q)
+glm::vec3 forwards(const glm::quat& q)
 {
     return glm::normalize(q) * glm::vec3(0, 0, -1);
 }
 
-glm::vec3 Right(const glm::quat& q)
+glm::vec3 right(const glm::quat& q)
 {
     return glm::normalize(q) * glm::vec3(1, 0, 0);
 }
 
-glm::vec3 Up(const glm::quat& q)
+glm::vec3 up(const glm::quat& q)
 {
     return glm::normalize(q) * glm::vec3(0, 1, 0);
 }
