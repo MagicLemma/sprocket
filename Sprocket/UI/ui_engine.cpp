@@ -1,10 +1,12 @@
-#include "SimpleUI.h"
+#include "ui_engine.h"
 
 #include <Sprocket/Core/events.h>
-#include <Sprocket/Core/window.h>
-#include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
+#include <Sprocket/Core/window.h>
+#include <Sprocket/Graphics/render_context.h>
+#include <Sprocket/UI/Font/font.h>
+#include <Sprocket/UI/Font/glyph.h>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -61,10 +63,10 @@ void draw_command::add_quad(const glm::vec4& colour, const glm::vec4& quad)
 }
 
 void draw_command::add_text(std::string_view text,
-                          const glm::vec4& quad,
-                          const text_properties& properties)
+                            const glm::vec4& quad,
+                            const text_properties& properties)
 {
-    if (font == nullptr) {
+    if (text_font == nullptr) {
         log::error("Tried to add text to a draw command with no font!");
         return;
     }
@@ -73,7 +75,7 @@ void draw_command::add_text(std::string_view text,
         return;
     }
 
-    alignment alignment = properties.alignment;
+    spkt::alignment alignment = properties.alignment;
     float size = properties.size;
     glm::vec4 colour = properties.colour;
 
@@ -86,8 +88,8 @@ void draw_command::add_text(std::string_view text,
         pen.x += quad.z - 5.0f;
         pen.y += size;
     } else {
-        float textWidth = font->text_width(text, size);
-        Glyph first = font->get_glyph(text.front(), size);
+        float textWidth = text_font->text_width(text, size);
+        spkt::glyph first = text_font->get_glyph(text.front(), size);
         pen.y += (quad.w - first.height) / 2.0f;
         pen.x += (quad.z - textWidth) / 2.0f;
         pen.x -= first.offset.x;
@@ -95,10 +97,10 @@ void draw_command::add_text(std::string_view text,
     }
 
     for (std::size_t i = 0; i != text.size(); ++i) {
-        auto glyph = font->get_glyph(text[i], size);
+        auto glyph = text_font->get_glyph(text[i], size);
 
         if (i > 0) {
-            pen.x += font->get_kerning(text[i-1], text[i], size);
+            pen.x += text_font->get_kerning(text[i-1], text[i], size);
         }
 
         float xPos = pen.x + glyph.offset.x;
@@ -433,8 +435,8 @@ void ui_engine::execute_command(const draw_command& cmd)
     d_indices.set_data(cmd.indices);
     glDrawElements(GL_TRIANGLES, (int)d_indices.size(), GL_UNSIGNED_INT, nullptr);
 
-    if (cmd.font) {
-        cmd.font->bind(0);
+    if (cmd.text_font) {
+        cmd.text_font->bind(0);
         d_shader.load("texture_channels", 1);
         d_vertices.set_data(cmd.text_vertices);
         d_indices.set_data(cmd.text_indices);

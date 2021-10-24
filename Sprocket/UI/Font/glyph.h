@@ -5,7 +5,7 @@
 
 namespace spkt {
 
-struct Glyph
+struct glyph
 {
     std::uint32_t codepoint = -1;
 

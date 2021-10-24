@@ -78,7 +78,7 @@ void SimpleUI::StartPanel(std::string_view name, glm::vec4* region, panel_type t
     d_engine.start_panel(name, region, type);
 
     auto& cmd = d_engine.get_draw_command();
-    cmd.font = &d_font;
+    cmd.text_font = &d_font;
     cmd.add_quad(d_theme.backgroundColour * 0.7f, *region);
 }
 
@@ -138,7 +138,7 @@ void SimpleUI::TextModifiable(
 
     draw_command cmd;
     cmd.region = info.quad;
-    cmd.font = &d_font;
+    cmd.text_font = &d_font;
 
     for (int key : info.key_presses) {
         if (key == Keyboard::BACKSPACE) {

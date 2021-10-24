@@ -33,7 +33,7 @@ add_library(Sprocket STATIC
             UI/Font/font.cpp
             
             UI/console.cpp
-            UI/UIEngine.cpp
+            UI/ui_engine.cpp
             UI/SimpleUI.cpp
             UI/DevUI.cpp
             UI/ImGuiXtra.cpp

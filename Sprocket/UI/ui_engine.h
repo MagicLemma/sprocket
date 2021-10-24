@@ -35,13 +35,13 @@ struct text_properties
 
 struct draw_command
 {
-    const texture*             texture = nullptr;
+    const spkt::texture*       texture = nullptr;
     std::vector<ui_vertex>     vertices;
     std::vector<std::uint32_t> indices;
 
-    font*                      font = nullptr;
-    std::vector<ui_vertex>     text_vertices;
-    std::vector<std::uint32_t> text_indices;
+    spkt::font*                  text_font = nullptr;
+    std::vector<spkt::ui_vertex> text_vertices;
+    std::vector<std::uint32_t>   text_indices;
 
     // If specified, we scissor test this region so nothing outside the region is rendered.
     std::optional<glm::vec4> region = {};

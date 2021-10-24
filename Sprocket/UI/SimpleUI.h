@@ -1,6 +1,6 @@
 #pragma once
 #include <Sprocket/UI/Font/font.h>
-#include <Sprocket/UI/UIEngine.h>
+#include <Sprocket/UI/ui_engine.h>
 
 #include <glm/glm.hpp>
 
@@ -24,10 +24,10 @@ class SimpleUI
 {
     window* d_window;
 
-    SimpleUITheme d_theme;
+    spkt::SimpleUITheme d_theme;
 
-    ui_engine d_engine;
-    font d_font;
+    spkt::ui_engine d_engine;
+    spkt::font      d_font;
 
 public:
     SimpleUI(window* window);
@@ -35,7 +35,7 @@ public:
     const SimpleUITheme& GetTheme() const { return d_theme; }
     void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
 
-    font* GetFont() { return &d_font; }
+    spkt::font* GetFont() { return &d_font; }
     
     void on_event(event& event);
     void on_update(double dt);

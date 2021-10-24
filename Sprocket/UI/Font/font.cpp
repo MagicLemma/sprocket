@@ -123,7 +123,7 @@ font::font(const std::string& filename)
 {
 }
 
-Glyph font::get_glyph(char c, float size)
+glyph font::get_glyph(char c, float size)
 {
     auto& font = d_font_data[size];
 
@@ -140,7 +140,7 @@ Glyph font::get_glyph(char c, float size)
         return it->second;
     }
 
-    return Glyph(); // Empty glyph
+    return glyph(); // Empty glyph
 }
 
 bool font::load_glyph(char c, float size)
@@ -174,7 +174,7 @@ bool font::load_glyph(char c, float size)
     d_atlas.set_region(region, bitmap.buffer);
 
     auto& font = d_font_data[size];
-    Glyph& glyph = font.glyphs[codepoint];
+    glyph& glyph = font.glyphs[codepoint];
 
     glyph.codepoint = codepoint;
     glyph.width     = slot->bitmap.width;
@@ -221,10 +221,10 @@ float font::text_width(std::string_view text, float size)
         width += glyph.advance.x;
     }
 
-    Glyph first = get_glyph(text.front(), size);
+    glyph first = get_glyph(text.front(), size);
     width -= first.offset.x;
 
-    Glyph last = get_glyph(text.back(), size);
+    glyph last = get_glyph(text.back(), size);
     width += last.width;
     width += last.offset.x;
     width -= last.advance.x;
