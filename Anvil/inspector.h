@@ -4,20 +4,24 @@
 
 #include <glm/glm.hpp>
 
-class Anvil;
+namespace anvil {
 
-class Inspector
+class app;
+
+class inspector
 {
-    ImGuizmo::MODE d_mode = ImGuizmo::MODE::WORLD;
+    ImGuizmo::MODE      d_mode      = ImGuizmo::MODE::WORLD;
     ImGuizmo::OPERATION d_operation = ImGuizmo::OPERATION::TRANSLATE;
     
-    bool      d_useSnap = false;
+    bool      d_use_snap = false;
     glm::vec3 d_snap = {0.0f, 0.0f, 0.0f};
 
 public:
-    void Show(Anvil& editor);
+    void show(anvil::app& editor);
 
-    ImGuizmo::MODE Mode() const { return d_mode; }
-    ImGuizmo::OPERATION Operation() const { return d_operation; }
-    const float* Snap() const { return d_useSnap ? &d_snap.x : nullptr; }
+    ImGuizmo::MODE mode() const { return d_mode; }
+    ImGuizmo::OPERATION operation() const { return d_operation; }
+    const float* snap() const { return d_use_snap ? &d_snap.x : nullptr; }
 };
+
+}

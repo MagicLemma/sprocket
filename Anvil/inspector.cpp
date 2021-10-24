@@ -1,18 +1,19 @@
-#include "Inspector.h"
-#include <Anvil/Anvil.h>
-#include <Anvil/ecs/ecs.h>
-#include <Anvil/ecs/loader.h>
-#include <Anvil/ecs/meta.h>
+#include "inspector.h"
+#include <anvil/anvil.h>
+#include <anvil/ecs/ecs.h>
+#include <anvil/ecs/loader.h>
+#include <anvil/ecs/meta.h>
 
-#include <Sprocket/UI/DevUI.h>
+#include <Sprocket/UI/imgui_ui.h>
 #include <Sprocket/UI/ImGuiXtra.h>
-#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/maths.h>
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <type_traits>
 
+namespace anvil {
 namespace {
 
 template <typename T>
@@ -20,7 +21,7 @@ void display_attr(
     std::string_view display_name,
     const std::unordered_map<std::string, std::string>& metadata,
     T* value,
-    Anvil* editor)
+    anvil::app* editor)
 {
     std::string name{display_name};
     if constexpr (std::is_same_v<T, std::string>) {
@@ -60,7 +61,7 @@ void display_attr(
 
 }
 
-void Inspector::Show(Anvil& editor)
+void inspector::show(anvil::app& editor)
 {
     anvil::registry& registry = editor.active_scene()->registry;
     anvil::entity entity = editor.selected();
@@ -84,7 +85,7 @@ void Inspector::Show(Anvil& editor)
                     display_attr(attr.display_name, attr.metadata, attr.value, &editor);
                 });
                 if constexpr (std::is_same_v<T, anvil::Transform3DComponent>) {
-                    spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_useSnap, d_snap);
+                    spkt::ImGuiXtra::GuizmoSettings(d_operation, d_mode, d_use_snap, d_snap);
                 }
                 if (ImGui::Button("Delete")) { registry.remove<T>(entity); }
                 ImGui::PopID();
@@ -117,4 +118,6 @@ void Inspector::Show(Anvil& editor)
         registry.destroy(entity);
         editor.clear_selected();
     }
+}
+
 }

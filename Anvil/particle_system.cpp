@@ -1,7 +1,7 @@
 #include "particle_system.h"
-#include <Anvil/ecs/ecs.h>
+#include <anvil/ecs/ecs.h>
 
-#include <Sprocket/Utility/Random.h>
+#include <Sprocket/Utility/random.h>
 
 #include <glm/glm.hpp>
 
@@ -27,9 +27,9 @@ anvil::ParticleSingleton& get_particle_runtime(anvil::registry& registry)
 // Generates a random point in a sphere of radius R
 glm::vec3 random_noise(float R)
 {
-    float r = R * spkt::random_uniform();
-    float phi = spkt::random_half_angle();
-    float theta = spkt::random_angle();
+    const float r = R * spkt::random_uniform();
+    const float phi = spkt::random_half_angle();
+    const float theta = spkt::random_angle();
     return {
         r * glm::sin(theta) * glm::cos(phi),
         r * glm::sin(theta) * glm::sin(phi),

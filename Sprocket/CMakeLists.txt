@@ -27,26 +27,22 @@ add_library(Sprocket STATIC
             Core/window.cpp
             Core/timer.cpp
             Core/log.cpp
+            Core/sound.cpp
 
-            Audio/Listener.cpp
-            Audio/Music.cpp
-            Audio/Sound.cpp
-
-            UI/Font/FontAtlas.cpp
-            UI/Font/Font.cpp
+            UI/Font/font_atlas.cpp
+            UI/Font/font.cpp
             
             UI/console.cpp
-            UI/UIEngine.cpp
-            UI/SimpleUI.cpp
-            UI/SinglePanelUI.cpp
-            UI/DevUI.cpp
+            UI/imgui_ui.cpp
             UI/ImGuiXtra.cpp
+            UI/simple_ui.cpp
+            UI/ui_engine.cpp
             
-            Graphics/Animation.cpp
+            Graphics/animation.cpp
             Graphics/buffer_element_types.cpp
             Graphics/buffer.cpp
             Graphics/camera.cpp
-            Graphics/CubeMap.cpp
+            Graphics/cube_map.cpp
             Graphics/frame_buffer.cpp
             Graphics/material.cpp
             Graphics/mesh.cpp
@@ -56,19 +52,19 @@ add_library(Sprocket STATIC
             Graphics/shader.cpp
             Graphics/shadow_map.cpp
             Graphics/texture.cpp
-            Graphics/Viewport.cpp
+            Graphics/viewport.cpp
 
             Graphics/Rendering/geometry_renderer.cpp
             Graphics/Rendering/shape_renderer.cpp
             Graphics/Rendering/pbr_renderer.cpp
-            Graphics/Rendering/SkyboxRenderer.cpp
+            Graphics/Rendering/skybox_renderer.cpp
             
-            Utility/Colour.cpp
-            Utility/FileBrowser.cpp
+            Utility/colour.cpp
+            Utility/file_browser.cpp
             Utility/input_store.cpp
-            Utility/Random.cpp
-            Utility/Maths.cpp
-            Utility/Yaml.cpp
+            Utility/random.cpp
+            Utility/maths.cpp
+            Utility/yaml.cpp
 
             Scripting/lua_script.cpp
             Scripting/lua_maths.cpp

@@ -1,5 +1,5 @@
 #pragma once
-#include <Game/ecs/ecs.h>
+#include <game/ecs/ecs.h>
 
 #include <glm/glm.hpp>
 

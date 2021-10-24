@@ -8,7 +8,6 @@
 #include <glm/gtx/quaternion.hpp>
 #include <array>
 #include <cstddef>
-#include <deque>
 #include <memory>
 #include <optional>
 #include <string>

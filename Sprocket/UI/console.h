@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/UI/SimpleUI.h>
+#include <Sprocket/UI/simple_ui.h>
 
 #include <glm/glm.hpp>
 
@@ -55,7 +55,7 @@ void console::error(std::string_view format, Args&&... args)
 void draw_console(
     const console& console,
     std::string& command_line,
-    spkt::SimpleUI& ui,
+    spkt::simple_ui& ui,
     int width,
     int height
 );

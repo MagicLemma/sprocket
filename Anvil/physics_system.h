@@ -1,5 +1,5 @@
 #pragma once
-#include <Anvil/ecs/ecs.h>
+#include <anvil/ecs/ecs.h>
 
 struct physics_runtime;
 struct rigid_body_runtime;

@@ -1,13 +1,12 @@
-#include "Anvil.h"
-
-#include <Anvil/Inspector.h>
-#include <Anvil/particle_system.h>
-#include <Anvil/physics_system.h>
-#include <Anvil/rendering.h>
-#include <Anvil/systems.h>
-#include <Anvil/scene_utils.h>
-#include <Anvil/ecs/loader.h>
-#include <Anvil/ecs/meta.h>
+#include "anvil.h"
+#include <anvil/inspector.h>
+#include <anvil/particle_system.h>
+#include <anvil/physics_system.h>
+#include <anvil/rendering.h>
+#include <anvil/systems.h>
+#include <anvil/scene_utils.h>
+#include <anvil/ecs/loader.h>
+#include <anvil/ecs/meta.h>
 
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
@@ -15,8 +14,8 @@
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/UI/ImGuiXtra.h>
-#include <Sprocket/Utility/FileBrowser.h>
-#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/file_browser.h>
+#include <Sprocket/Utility/maths.h>
 #include <Sprocket/Vendor/imgui/imgui.h>
 
 #include <glm/glm.hpp>
@@ -40,7 +39,8 @@ std::string entiy_name(anvil::registry& registry, anvil::entity entity)
     return "Entity";
 }
 
-bool SubstringCI(std::string_view string, std::string_view substr) {
+bool substring_case_insensitive(std::string_view string, std::string_view substr)
+{
     auto it = std::search(
         string.begin(), string.end(),
         substr.begin(), substr.end(),
@@ -51,11 +51,13 @@ bool SubstringCI(std::string_view string, std::string_view substr) {
 
 }
 
-Anvil::Anvil(spkt::window* window)
+namespace anvil {
+
+app::app(spkt::window* window)
     : d_window(window)
     , d_asset_manager()
     , d_entity_renderer(&d_asset_manager)
-    , d_skybox_renderer(&d_asset_manager)
+    , d_skybox_renderer()
     , d_skybox({
         "Resources/Textures/Skybox/Skybox_X_Pos.png",
         "Resources/Textures/Skybox/Skybox_X_Neg.png",
@@ -72,18 +74,18 @@ Anvil::Anvil(spkt::window* window)
 
     d_scene = std::make_shared<anvil::scene>();
     anvil::load_registry_from_file(d_sceneFile, d_scene->registry);
-    d_activeScene = d_scene;
+    d_active_scene = d_scene;
 }
 
-void Anvil::on_event(spkt::event& event)
+void app::on_event(spkt::event& event)
 {
     using namespace spkt;
 
     if (auto data = event.get_if<keyboard_pressed_event>()) {
         if (data->key == Keyboard::ESC) {
-            if (d_playingGame) {
-                d_playingGame = false;
-                d_activeScene = d_scene;
+            if (d_playing_game) {
+                d_playing_game = false;
+                d_active_scene = d_scene;
                 d_window->set_cursor_visibility(true);
             }
             else if (d_selected != anvil::null) {
@@ -105,33 +107,29 @@ void Anvil::on_event(spkt::event& event)
     }
 
     d_ui.on_event(event);
-    d_activeScene->on_event(event);
-    if (!d_playingGame) {
+    d_active_scene->on_event(event);
+    if (!d_playing_game) {
         d_editor_camera.on_event(event);
     }
 }
 
-void Anvil::on_update(double dt)
+void app::on_update(double dt)
 {
-    auto& registry = d_activeScene->registry;
-
     d_ui.on_update(dt);
 
     if (d_paused) {
         return;
     }
 
-    d_activeScene->on_update(dt);
-
-    if (d_is_viewport_focused && !d_playingGame) {
+    d_active_scene->on_update(dt);
+    if (d_is_viewport_focused && !d_playing_game) {
         d_editor_camera.on_update(dt);
     }
 }
 
-void Anvil::on_render()
+void app::on_render()
 {
-    using namespace spkt::Maths;
-    auto& registry = d_activeScene->registry;
+    auto& registry = d_active_scene->registry;
 
     // If the size of the viewport has changed since the previous frame, recreate
     // the framebuffer.
@@ -142,44 +140,42 @@ void Anvil::on_render()
     d_viewport.bind();
 
     const auto [proj, view] = std::invoke([&] {
-        if (d_playingGame) {
-            return anvil::get_proj_view_matrices(registry, d_runtimeCamera);
+        if (d_playing_game) {
+            return anvil::get_proj_view_matrices(registry, d_runtime_camera);
         }
-        return std::make_pair(d_editor_camera.Proj(), d_editor_camera.View());
+        return std::make_pair(d_editor_camera.proj(), d_editor_camera.view());
     });
 
     anvil::draw_scene(d_entity_renderer, registry, proj, view);
-    d_skybox_renderer.Draw(d_skybox, proj, view);
+    d_skybox_renderer.draw(d_skybox, proj, view);
 
-    if (d_showColliders) {
-        anvil::draw_colliders(d_geometry_renderer, registry, proj, view);
+    if (d_show_colliders) {
+        anvil::draw_colliders(d_collider_renderer, registry, proj, view);
     }
 
     d_viewport.unbind();
 
-
-    d_ui.StartFrame();
+    d_ui.start_frame();
 
     ImGui::DockSpaceOverViewport();
-
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
-                std::string file = spkt::SaveFile(d_window, "*.yaml");
-                if (!file.empty()) {
+                auto file = spkt::save_file(d_window, "*.yaml");
+                if (file.has_value()) {
                     spkt::log::info("Creating {}...", d_sceneFile);
-                    d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<anvil::scene>();
+                    d_sceneFile = *file;
+                    d_active_scene = d_scene = std::make_shared<anvil::scene>();
                     spkt::log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Open")) {
-                std::string file = spkt::OpenFile(d_window, "*.yaml");
-                if (!file.empty()) {
+                auto file = spkt::open_file(d_window, "*.yaml");
+                if (file.has_value()) {
                     spkt::log::info("Loading {}...", d_sceneFile);
-                    d_sceneFile = file;
-                    d_activeScene = d_scene = std::make_shared<anvil::scene>();
-                    anvil::load_registry_from_file(file, d_scene->registry);
+                    d_sceneFile = *file;
+                    d_active_scene = d_scene = std::make_shared<anvil::scene>();
+                    anvil::load_registry_from_file(*file, d_scene->registry);
                     spkt::log::info("...done!");
                 }
             }
@@ -194,11 +190,11 @@ void Anvil::on_render()
                 spkt::log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
-                std::string file = spkt::SaveFile(d_window, "*.yaml");
-                if (!file.empty()) {
-                    spkt::log::info("Saving as {}...", file);
-                    d_sceneFile = file;
-                    anvil::save_registry_to_file(file, d_scene->registry, entity_filter);
+                auto file = spkt::save_file(d_window, "*.yaml");
+                if (file.has_value()) {
+                    spkt::log::info("Saving as {}...", *file);
+                    d_sceneFile = *file;
+                    anvil::save_registry_to_file(*file, d_scene->registry, entity_filter);
                     spkt::log::info("...done!");
                 }
             }
@@ -206,12 +202,12 @@ void Anvil::on_render()
         }
         if (ImGui::BeginMenu("Scene")) {
             if (ImGui::MenuItem("Run")) {
-                d_activeScene = std::make_shared<anvil::scene>();
+                d_active_scene = std::make_shared<anvil::scene>();
 
-                anvil::input_system_init(d_activeScene->registry, d_window);
-                anvil::copy_registry(d_scene->registry, d_activeScene->registry);
+                anvil::input_system_init(d_active_scene->registry, d_window);
+                anvil::copy_registry(d_scene->registry, d_active_scene->registry);
 
-                d_activeScene->systems = {
+                d_active_scene->systems = {
                     physics_system,
                     anvil::particle_system,
                     anvil::script_system,
@@ -221,12 +217,12 @@ void Anvil::on_render()
                     anvil::input_system_end
                 };
 
-                d_activeScene->event_handlers = {
+                d_active_scene->event_handlers = {
                     anvil::input_system_on_event
                 };
 
-                d_playingGame = true;
-                d_runtimeCamera = d_activeScene->registry.find<anvil::Camera3DComponent>();
+                d_playing_game = true;
+                d_runtime_camera = d_active_scene->registry.find<anvil::Camera3DComponent>();
                 d_window->set_cursor_visibility(false);
             }
             ImGui::EndMenu();
@@ -239,7 +235,7 @@ void Anvil::on_render()
     if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
         d_is_viewport_hovered = ImGui::IsWindowHovered();
         d_is_viewport_focused = ImGui::IsWindowFocused();
-        d_ui.BlockEvents(!d_is_viewport_focused || !d_is_viewport_hovered);
+        d_ui.block_events(!d_is_viewport_focused || !d_is_viewport_hovered);
 
         ImVec2 size = ImGui::GetContentRegionAvail();
         d_viewport_size = glm::ivec2{size.x, size.y};
@@ -250,18 +246,19 @@ void Anvil::on_render()
 
         if (!is_game_running() && registry.valid(d_selected) && registry.has<anvil::Transform3DComponent>(d_selected)) {
             auto& c = registry.get<anvil::Transform3DComponent>(d_selected);
-            auto tr = spkt::Maths::Transform(c.position, c.orientation, c.scale);
-            spkt::ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.Operation(), d_inspector.Mode());
-            spkt::Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
+            auto tr = spkt::make_transform(c.position, c.orientation, c.scale);
+            spkt::ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.operation(), d_inspector.mode());
+            std::tie(c.position, c.orientation, c.scale) = spkt::decompose(tr).as_tuple();
         }
         ImGui::End();
     }
     ImGui::PopStyleVar();
 
     // INSPECTOR
+    // TODO: Move the static variables from here to the class def
     static bool showInspector = true;
     if (ImGui::Begin("Inspector", &showInspector)) {
-        d_inspector.Show(*this);
+        d_inspector.show(*this);
         ImGui::End();
     }
 
@@ -280,7 +277,7 @@ void Anvil::on_render()
                 ImGui::BeginChild("Entity List");
                 int i = 0;
                 for (auto entity : registry.all()) {
-                    if (SubstringCI(entiy_name(registry, entity), search)) {
+                    if (substring_case_insensitive(entiy_name(registry, entity), search)) {
                         ImGui::PushID(i);
                         if (ImGui::Selectable(entiy_name(registry, entity).c_str())) {
                             d_selected = entity;
@@ -363,7 +360,7 @@ void Anvil::on_render()
     }
 
     if (ImGui::Begin("Options")) {
-        ImGui::Checkbox("Show Colliders", &d_showColliders);
+        ImGui::Checkbox("Show Colliders", &d_show_colliders);
 
         anvil::for_each_component([&]<typename T>(anvil::reflcomp<T>&& refl) {
             std::string text = std::format("# {}: {}", refl.name, registry.view<T>().size());
@@ -373,14 +370,16 @@ void Anvil::on_render()
         ImGui::End();
     }
 
-    d_ui.EndFrame();
+    d_ui.end_frame();
 }
 
-void Anvil::material_ui(std::string& texture)
+void app::material_ui(std::string& texture)
 {
     if (ImGui::Button("X")) {
         texture = "";
     }
     ImGui::SameLine();
     spkt::ImGuiXtra::File("File", d_window, &texture, "*.png");
+}
+
 }

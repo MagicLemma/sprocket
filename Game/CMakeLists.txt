@@ -10,10 +10,10 @@ set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
 
 add_executable(game
                game.m.cpp
-               Game.cpp
+               game.cpp
         
-               CircadianCycle.cpp
-               PathCalculator.cpp
+               day_night_cycle.cpp
+               path_calculator.cpp
                
                grid_helpers.cpp
                game_grid.cpp)

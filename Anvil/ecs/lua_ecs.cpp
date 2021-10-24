@@ -5,7 +5,7 @@
 #include <Sprocket/Scripting/lua_converter.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/Core/log.h>
-#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/maths.h>
 
 #include <lua.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -770,7 +770,7 @@ void load_entity_transformation_functions(spkt::lua::script& script)
             o = glm::rotate(o, pc->pitch, {1, 0, 0});
         }
 
-        spkt::lua::converter<glm::vec3>::push(L, spkt::Maths::Forwards(o));
+        spkt::lua::converter<glm::vec3>::push(L, spkt::forwards(o));
         return 1;
     });
 
@@ -779,7 +779,7 @@ void load_entity_transformation_functions(spkt::lua::script& script)
         auto& reg = *get_pointer<anvil::registry>(L, "__registry__");
         auto e = spkt::lua::converter<anvil::entity>::read(L, 1);
         auto& tr = reg.get<Transform3DComponent>(e);
-        spkt::lua::converter<glm::vec3>::push(L, spkt::Maths::Right(tr.orientation));
+        spkt::lua::converter<glm::vec3>::push(L, spkt::right(tr.orientation));
         return 1;
     });
 

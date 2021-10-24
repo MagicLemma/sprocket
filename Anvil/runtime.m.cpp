@@ -1,13 +1,8 @@
-#include <Anvil/Runtime.h>
+#include <anvil/Runtime.h>
 
-#include <Sprocket/Core/Window.h>
-#include <Sprocket/Core/game_loop.h>
+#include <Sprocket/core.h>
 
 int main()
 {
-    spkt::window window("Runtime");
-    Runtime runtime(&window);
-    spkt::run_options options;
-    options.show_frame_rate = true;
-    return spkt::run(runtime, window, options);
+    return spkt::run_app_framerate<anvil::runtime>("Runtime");
 }

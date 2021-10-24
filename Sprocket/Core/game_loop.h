@@ -62,4 +62,14 @@ int run_app(const std::string& name)
     return spkt::run(app, window);
 }
 
+template <runnable App> requires std::constructible_from<App, spkt::window*>
+int run_app_framerate(const std::string& name)
+{
+    spkt::window window{name};
+    App app{&window};
+    spkt::run_options options;
+    options.show_frame_rate = true;
+    return spkt::run(app, window, options);
+}
+
 }

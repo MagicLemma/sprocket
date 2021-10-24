@@ -1,12 +1,12 @@
 #include "game_grid.h"
 
-#include <Game/ecs/ecs.h>
-#include <Game/ecs/scene.h>
+#include <game/ecs/ecs.h>
+#include <game/ecs/scene.h>
 
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Utility/input_store.h>
-#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/maths.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -74,7 +74,7 @@ void game_grid_system(game::registry& registry, double)
     auto [tc, cc] = reg.get_all<game::Transform3DComponent, game::Camera3DComponent>(cam.camera_entity);
 
     glm::vec3 cameraPos = tc.position;
-    glm::vec3 direction = spkt::Maths::GetMouseRay(
+    glm::vec3 direction = spkt::get_mouse_ray(
         input.mouse_position(),
         input.window_width(),
         input.window_height(),

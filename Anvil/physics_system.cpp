@@ -1,6 +1,6 @@
 #include "physics_system.h"
-#include <Anvil/ecs/scene.h>
-#include <Anvil/ecs/ecs.h>
+#include <anvil/ecs/scene.h>
+#include <anvil/ecs/ecs.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

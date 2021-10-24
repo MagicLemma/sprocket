@@ -1,5 +1,5 @@
 #pragma once
-#include <Sprocket/Utility/Colour.h>
+#include <Sprocket/Utility/colour.h>
 
 // Indian Palette (flatuicolors.com)
 const auto ORCHID      = spkt::from_hex(0xFEA47F);

@@ -57,7 +57,7 @@ class pbr_renderer
     pbr_renderer& operator=(const pbr_renderer&) = delete;
 
 public:
-    pbr_renderer(asset_manager* assetManager);
+    pbr_renderer(asset_manager* asset_manager);
 
     void begin_frame(const glm::mat4& proj, const glm::mat4& view);
     void end_frame();
