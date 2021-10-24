@@ -4,12 +4,12 @@
 
 #include <game/ecs/scene.h>
 
-#include <Sprocket/Graphics/asset_manager.h>
-#include <Sprocket/Graphics/post_processor.h>
-#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
-#include <Sprocket/Graphics/shadow_map.h>
-#include <Sprocket/UI/imgui_ui.h>
-#include <Sprocket/UI/simple_ui.h>
+#include <sprocket/Graphics/asset_manager.h>
+#include <sprocket/Graphics/post_processor.h>
+#include <sprocket/Graphics/Rendering/pbr_renderer.h>
+#include <sprocket/Graphics/shadow_map.h>
+#include <sprocket/UI/imgui_ui.h>
+#include <sprocket/UI/simple_ui.h>
 
 #include <memory>
 #include <random>

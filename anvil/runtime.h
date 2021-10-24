@@ -2,12 +2,12 @@
 #include <anvil/ecs/ecs.h>
 #include <anvil/ecs/scene.h>
 
-#include <Sprocket/Core/window.h>
-#include <Sprocket/Graphics/asset_manager.h>
-#include <Sprocket/Graphics/cube_map.h>
-#include <Sprocket/Graphics/Rendering/pbr_renderer.h>
-#include <Sprocket/Graphics/Rendering/skybox_renderer.h>
-#include <Sprocket/UI/console.h>
+#include <sprocket/Core/window.h>
+#include <sprocket/Graphics/asset_manager.h>
+#include <sprocket/Graphics/cube_map.h>
+#include <sprocket/Graphics/Rendering/pbr_renderer.h>
+#include <sprocket/Graphics/Rendering/skybox_renderer.h>
+#include <sprocket/UI/console.h>
 
 #include <memory>
 #include <random>

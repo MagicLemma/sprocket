@@ -1,9 +1,9 @@
 #pragma once
 #include <apecs.hpp>
-#include <Sprocket/Graphics/particles.h>
-#include <Sprocket/Scripting/lua_script.h>
-#include <Sprocket/Utility/Hashing.h>
-#include <Sprocket/Utility/input_store.h>
+#include <sprocket/Graphics/particles.h>
+#include <sprocket/Scripting/lua_script.h>
+#include <sprocket/Utility/Hashing.h>
+#include <sprocket/Utility/input_store.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <array>

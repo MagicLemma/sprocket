@@ -4,9 +4,9 @@
 #include <anvil/ecs/loader.h>
 #include <anvil/ecs/meta.h>
 
-#include <Sprocket/UI/imgui_ui.h>
-#include <Sprocket/UI/ImGuiXtra.h>
-#include <Sprocket/Utility/maths.h>
+#include <sprocket/UI/imgui_ui.h>
+#include <sprocket/UI/ImGuiXtra.h>
+#include <sprocket/Utility/maths.h>
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>

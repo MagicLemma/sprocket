@@ -1,6 +1,6 @@
 #include <anvil/anvil.h>
 
-#include <Sprocket/core.h>
+#include <sprocket/core.h>
 
 int main()
 {

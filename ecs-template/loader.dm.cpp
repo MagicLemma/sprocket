@@ -4,8 +4,8 @@
 #include "lua_ecs.h"
 #include "scene.h"
 
-#include <Sprocket/Core/log.h>
-#include <Sprocket/Utility/yaml.h>
+#include <sprocket/Core/log.h>
+#include <sprocket/Utility/yaml.h>
 
 #include <yaml-cpp/yaml.h>
 

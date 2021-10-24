@@ -6,13 +6,13 @@
 #include <anvil/systems.h>
 #include <anvil/ecs/loader.h>
 
-#include <Sprocket/Core/events.h>
-#include <Sprocket/Core/Window.h>
-#include <Sprocket/Scripting/lua_script.h>
-#include <Sprocket/UI/console.h>
-#include <Sprocket/Utility/colour.h>
-#include <Sprocket/Graphics/camera.h>
-#include <Sprocket/Core/input_codes.h>
+#include <sprocket/Core/events.h>
+#include <sprocket/Core/Window.h>
+#include <sprocket/Scripting/lua_script.h>
+#include <sprocket/UI/console.h>
+#include <sprocket/Utility/colour.h>
+#include <sprocket/Graphics/camera.h>
+#include <sprocket/Core/input_codes.h>
 
 const auto LIGHT_BLUE  = spkt::from_hex(0x25CCF7);
 const auto CLEAR_BLUE  = spkt::from_hex(0x1B9CFC);

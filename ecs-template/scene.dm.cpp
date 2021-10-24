@@ -1,7 +1,7 @@
 #include "scene.h"
 #include "ecs.h"
 
-#include <Sprocket/Core/events.h>
+#include <sprocket/Core/events.h>
 
 #include <memory>
 #include <ranges>

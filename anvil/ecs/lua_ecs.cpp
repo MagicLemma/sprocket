@@ -2,10 +2,10 @@
 #include "ecs.h"
 #include "scene.h"
 
-#include <Sprocket/Scripting/lua_converter.h>
-#include <Sprocket/Scripting/lua_script.h>
-#include <Sprocket/Core/log.h>
-#include <Sprocket/Utility/maths.h>
+#include <sprocket/Scripting/lua_converter.h>
+#include <sprocket/Scripting/lua_script.h>
+#include <sprocket/Core/log.h>
+#include <sprocket/Utility/maths.h>
 
 #include <lua.hpp>
 #include <glm/gtc/matrix_transform.hpp>

@@ -1,7 +1,7 @@
 #pragma once
 #include "ecs.h"
 
-#include <Sprocket/Core/events.h>
+#include <sprocket/Core/events.h>
 
 #include <vector>
 #include <functional>
