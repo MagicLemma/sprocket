@@ -63,9 +63,9 @@ add_library(Sprocket STATIC
             Utility/colour.cpp
             Utility/file_browser.cpp
             Utility/input_store.cpp
-            Utility/Random.cpp
-            Utility/Maths.cpp
-            Utility/Yaml.cpp
+            Utility/random.cpp
+            Utility/maths.cpp
+            Utility/yaml.cpp
 
             Scripting/lua_script.cpp
             Scripting/lua_maths.cpp

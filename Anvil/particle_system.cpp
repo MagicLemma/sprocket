@@ -1,7 +1,7 @@
 #include "particle_system.h"
 #include <Anvil/ecs/ecs.h>
 
-#include <Sprocket/Utility/Random.h>
+#include <Sprocket/Utility/random.h>
 
 #include <glm/glm.hpp>
 
