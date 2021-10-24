@@ -1,4 +1,4 @@
-#include "SimpleUI.h"
+#include "simple_ui.h"
 
 #include <Sprocket/Core/window.h>
 #include <Sprocket/Core/events.h>

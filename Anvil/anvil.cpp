@@ -156,7 +156,7 @@ void app::on_render()
 
     d_viewport.unbind();
 
-    d_ui.StartFrame();
+    d_ui.start_frame();
 
     ImGui::DockSpaceOverViewport();
     if (ImGui::BeginMainMenuBar()) {
@@ -236,7 +236,7 @@ void app::on_render()
     if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse)) {
         d_is_viewport_hovered = ImGui::IsWindowHovered();
         d_is_viewport_focused = ImGui::IsWindowFocused();
-        d_ui.BlockEvents(!d_is_viewport_focused || !d_is_viewport_hovered);
+        d_ui.block_events(!d_is_viewport_focused || !d_is_viewport_hovered);
 
         ImVec2 size = ImGui::GetContentRegionAvail();
         d_viewport_size = glm::ivec2{size.x, size.y};
@@ -371,7 +371,7 @@ void app::on_render()
         ImGui::End();
     }
 
-    d_ui.EndFrame();
+    d_ui.end_frame();
 }
 
 void app::material_ui(std::string& texture)

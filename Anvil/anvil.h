@@ -12,7 +12,7 @@
 #include <Sprocket/Graphics/Rendering/geometry_renderer.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/Rendering/skybox_renderer.h>
-#include <Sprocket/UI/DevUI.h>
+#include <Sprocket/UI/imgui_ui.h>
 
 #include <memory>
 #include <random>
@@ -35,7 +35,7 @@ class app
     spkt::frame_buffer d_viewport;
     glm::ivec2 d_viewport_size;
 
-    spkt::DevUI d_ui;
+    spkt::imgui_ui d_ui;
     bool d_is_viewport_hovered = false;
     bool d_is_viewport_focused = false;
 

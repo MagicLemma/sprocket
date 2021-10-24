@@ -75,7 +75,7 @@ void input_system_end(game::registry& registry, double dt)
     registry.get<game::InputSingleton>(singleton).input_store->end_frame();
 }
 
-void SunInfoPanel(DevUI& ui, day_night_cycle& cycle)
+void SunInfoPanel(imgui_ui& ui, day_night_cycle& cycle)
 {
     ImGui::Begin("Sun");
 
@@ -100,7 +100,7 @@ void SunInfoPanel(DevUI& ui, day_night_cycle& cycle)
     ImGui::End();
 }
 
-void ShaderInfoPanel(DevUI& ui, shader& shader)
+void ShaderInfoPanel(imgui_ui& ui, shader& shader)
 {
     static std::string compileStatus;
 
@@ -488,7 +488,7 @@ void app::on_render()
     }
 
     if (d_mode == mode::EDITOR) {
-        d_dev_ui.StartFrame();
+        d_dev_ui.start_frame();
 
         const auto& reg = registry;
         auto [tc, cc] = reg.get_all<game::Transform3DComponent, game::Camera3DComponent>(d_camera);
@@ -504,7 +504,7 @@ void app::on_render()
 
         ImGui::ShowDemoWindow();
 
-        d_dev_ui.EndFrame();
+        d_dev_ui.end_frame();
     }
 
     // Rest of the rendering is the escape menu, which should only get rendered when paused.

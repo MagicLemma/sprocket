@@ -33,10 +33,10 @@ add_library(Sprocket STATIC
             UI/Font/font.cpp
             
             UI/console.cpp
-            UI/ui_engine.cpp
-            UI/SimpleUI.cpp
-            UI/DevUI.cpp
+            UI/imgui_ui.cpp
             UI/ImGuiXtra.cpp
+            UI/simple_ui.cpp
+            UI/ui_engine.cpp
             
             Graphics/animation.cpp
             Graphics/buffer_element_types.cpp

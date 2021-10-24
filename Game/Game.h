@@ -8,8 +8,8 @@
 #include <Sprocket/Graphics/post_processor.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/shadow_map.h>
-#include <Sprocket/UI/DevUI.h>
-#include <Sprocket/UI/SimpleUI.h>
+#include <Sprocket/UI/imgui_ui.h>
+#include <Sprocket/UI/simple_ui.h>
 
 #include <memory>
 #include <random>
@@ -35,7 +35,7 @@ class app
     game::entity d_worker;
     
     // RENDERING
-    spkt::pbr_renderer d_scene_renderer;
+    spkt::pbr_renderer   d_scene_renderer;
     spkt::post_processor d_post_processor;
 
     // Additional world setup
@@ -50,7 +50,7 @@ class app
     std::string d_scene_file = "";
 
     // Editor UI
-    spkt::DevUI d_dev_ui;
+    spkt::imgui_ui d_dev_ui;
 
     // Escape Menu
     spkt::simple_ui d_escape_menu;

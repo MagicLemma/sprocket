@@ -1,4 +1,4 @@
-#include "DevUI.h"
+#include "imgui_ui.h"
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/window.h>
@@ -16,7 +16,7 @@
 namespace spkt {
 namespace {
 
-void SetDarkTheme()
+void set_dark_theme()
 {
     // Colour scheme by github.com/Raikiri
     auto& style = ImGui::GetStyle();
@@ -75,7 +75,7 @@ void SetDarkTheme()
     colours[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
-void SetBackendFlags()
+void set_backend_flags()
 {
     ImGuiIO& io = ImGui::GetIO();
     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -83,7 +83,7 @@ void SetBackendFlags()
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
-void SetClipboardCallbacks(window* window)
+void set_clipboard_callbacks(window* window)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.SetClipboardTextFn = [](void* user_data, const char* text) {
@@ -99,7 +99,7 @@ void SetClipboardCallbacks(window* window)
     io.ClipboardUserData = window;
 }
 
-void SetKeyMappings()
+void set_key_mappings()
 {
     ImGuiIO& io = ImGui::GetIO();
     io.KeyMap[ImGuiKey_Tab] =         Keyboard::TAB;
@@ -128,7 +128,7 @@ void SetKeyMappings()
 
 // Loads the font atlas and assigns it to ImGui. Returns the pointer
 // for the caller to own.
-std::unique_ptr<texture> SetFont(std::string_view font, float size)
+std::unique_ptr<texture> set_font(std::string_view font, float size)
 {
     ImGuiIO& io = ImGui::GetIO();    
     io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/Fonts/Calibri.ttf", 15.0f);
@@ -162,22 +162,22 @@ void bind_imgui_vbo(std::uint32_t vbo)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-DevUI::DevUI(window* window)
+imgui_ui::imgui_ui(window* window)
     : d_shader("Resources/Shaders/DevGUI.vert", "Resources/Shaders/DevGUI.frag")
-    , d_fontAtlas(nullptr)
+    , d_font_atlas(nullptr)
     , d_vtx_buffer()
     , d_idx_buffer()
-    , d_blockEvents(true)
+    , d_block_events(true)
 {
     ImGui::CreateContext();
     IMGUI_CHECKVERSION();
 
-    SetBackendFlags();
-    SetClipboardCallbacks(window);
-    SetKeyMappings();
-    SetDarkTheme();
+    set_backend_flags();
+    set_clipboard_callbacks(window);
+    set_key_mappings();
+    set_dark_theme();
 
-    d_fontAtlas = SetFont("Resources/Fonts/Calibri.ttf", 15.0f);
+    d_font_atlas = set_font("Resources/Fonts/Calibri.ttf", 15.0f);
 
     ImGuiIO& io = ImGui::GetIO();
     io.DisplaySize = ImVec2((float)window->width(), (float)window->height());
@@ -187,14 +187,14 @@ DevUI::DevUI(window* window)
     io.ConfigWindowsMoveFromTitleBarOnly = true;
 }
 
-void DevUI::on_event(event& event)
+void imgui_ui::on_event(event& event)
 {
     ImGuiIO& io = ImGui::GetIO();
     
     if (auto data = event.get_if<mouse_pressed_event>()) {    
         if (event.is_consumed()) { return; }
         io.MouseDown[data->button] = true;
-        if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
+        if (d_block_events && io.WantCaptureMouse) { event.consume(); }
     }
     
     else if (auto data = event.get_if<mouse_released_event>()) {
@@ -204,13 +204,13 @@ void DevUI::on_event(event& event)
     else if (auto data = event.get_if<mouse_moved_event>()) {
         io.MousePos = ImVec2(data->x_pos, data->y_pos);
         if (ImGui::IsAnyItemHovered()) { event.consume(); }
-        if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
+        if (d_block_events && io.WantCaptureMouse) { event.consume(); }
     }
 
     else if (auto data = event.get_if<mouse_scrolled_event>()) {
         io.MouseWheel += data->y_offset;
         io.MouseWheelH += data->x_offset;
-        if (d_blockEvents && io.WantCaptureMouse) { event.consume(); }
+        if (d_block_events && io.WantCaptureMouse) { event.consume(); }
     }
 
     else if (auto data = event.get_if<window_resized_event>()) {
@@ -225,7 +225,7 @@ void DevUI::on_event(event& event)
         io.KeyShift = data->mods & KeyModifier::SHIFT;
         io.KeyAlt   = data->mods & KeyModifier::ALT;
         io.KeySuper = data->mods & KeyModifier::SUPER;
-        if (d_blockEvents && io.WantCaptureKeyboard) { event.consume(); }
+        if (d_block_events && io.WantCaptureKeyboard) { event.consume(); }
     }
 
     else if (auto data = event.get_if<keyboard_released_event>()) {
@@ -241,7 +241,7 @@ void DevUI::on_event(event& event)
         if (data->key > 0 && data->key < 0x10000) {
             io.AddInputCharacter((unsigned short)data->key);
         }
-        if (d_blockEvents && io.WantCaptureKeyboard) { event.consume(); }
+        if (d_block_events && io.WantCaptureKeyboard) { event.consume(); }
     }
 
     else if (auto data = event.get_if<window_resized_event>()) {
@@ -250,19 +250,19 @@ void DevUI::on_event(event& event)
     }
 }
 
-void DevUI::on_update(double dt)
+void imgui_ui::on_update(double dt)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = (float)dt;
 }
 
-void DevUI::StartFrame()
+void imgui_ui::start_frame()
 {
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 }
 
-void DevUI::EndFrame()
+void imgui_ui::end_frame()
 {
     ImGui::Render();
 
@@ -280,7 +280,7 @@ void DevUI::EndFrame()
     d_shader.load("Texture", 0);
     d_shader.load("ProjMtx", proj);
 
-    d_fontAtlas->bind(0);
+    d_font_atlas->bind(0);
 
     // Render command lists
     const int width = (int)drawData->DisplaySize.x;
