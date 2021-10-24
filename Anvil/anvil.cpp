@@ -16,7 +16,7 @@
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/UI/ImGuiXtra.h>
 #include <Sprocket/Utility/file_browser.h>
-#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/maths.h>
 #include <Sprocket/Vendor/imgui/imgui.h>
 
 #include <glm/glm.hpp>

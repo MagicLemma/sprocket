@@ -23,7 +23,7 @@ struct decomposed_transform
     glm::quat orientation;
     glm::vec3 scale;
 
-    std::tuple<glm::vec3, glm::quat, glm::vec3> as_tuple() const
+    std::tuple<const glm::vec3&, const glm::quat&, const glm::vec3&> as_tuple() const
     {
         return {position, orientation, scale};
     }

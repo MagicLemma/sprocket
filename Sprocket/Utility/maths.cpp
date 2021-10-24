@@ -1,10 +1,12 @@
-#include "Maths.h"
+#include "maths.h"
 
 #include <glm/gtx/norm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/trigonometric.hpp>
+
+#include <cmath>
 
 namespace spkt {
 
@@ -49,10 +51,8 @@ glm::vec3 get_translation(const glm::mat4& m)
 
 float modulo(float val, float high)
 {
-    float ret = val;
-    while (ret > high) { ret -= high; }
-    while (ret < 0) { ret += high; }
-    return ret;
+    while (val < 0) val += high;
+    return std::fmod(val, high);
 }
 
 glm::mat4 no_scale(const glm::mat4& matrix)

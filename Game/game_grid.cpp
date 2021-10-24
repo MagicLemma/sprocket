@@ -6,7 +6,7 @@
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Utility/input_store.h>
-#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/maths.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

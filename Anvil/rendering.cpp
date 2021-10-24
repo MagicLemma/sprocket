@@ -4,7 +4,7 @@
 #include <Sprocket/Graphics/Rendering/geometry_renderer.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>
 #include <Sprocket/Graphics/render_context.h>
-#include <Sprocket/Utility/Maths.h>
+#include <Sprocket/Utility/maths.h>
 #include <Sprocket/Utility/views.h>
 
 #include <glm/glm.hpp>
