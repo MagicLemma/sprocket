@@ -13,7 +13,7 @@
 #include <sprocket/graphics/camera.h>
 #include <sprocket/graphics/material.h>
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/UI/ImGuiXtra.h>
+#include <sprocket/ui/ImGuiXtra.h>
 #include <sprocket/Utility/file_browser.h>
 #include <sprocket/Utility/maths.h>
 #include <sprocket/Vendor/imgui/imgui.h>

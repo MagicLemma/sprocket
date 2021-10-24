@@ -12,7 +12,7 @@
 #include <sprocket/graphics/Rendering/geometry_renderer.h>
 #include <sprocket/graphics/Rendering/pbr_renderer.h>
 #include <sprocket/graphics/Rendering/skybox_renderer.h>
-#include <sprocket/UI/imgui_ui.h>
+#include <sprocket/ui/imgui_ui.h>
 
 #include <memory>
 #include <random>

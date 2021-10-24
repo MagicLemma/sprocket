@@ -9,7 +9,7 @@
 #include <sprocket/Core/events.h>
 #include <sprocket/Core/Window.h>
 #include <sprocket/Scripting/lua_script.h>
-#include <sprocket/UI/console.h>
+#include <sprocket/ui/console.h>
 #include <sprocket/Utility/colour.h>
 #include <sprocket/graphics/camera.h>
 #include <sprocket/Core/input_codes.h>

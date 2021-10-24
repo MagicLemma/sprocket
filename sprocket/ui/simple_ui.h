@@ -1,6 +1,6 @@
 #pragma once
-#include <sprocket/UI/Font/font.h>
-#include <sprocket/UI/ui_engine.h>
+#include <sprocket/ui/Font/font.h>
+#include <sprocket/ui/ui_engine.h>
 
 #include <glm/glm.hpp>
 

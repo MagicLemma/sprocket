@@ -1,5 +1,5 @@
 #pragma once
-#include <sprocket/UI/simple_ui.h>
+#include <sprocket/ui/simple_ui.h>
 
 #include <glm/glm.hpp>
 

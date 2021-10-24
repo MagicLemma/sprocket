@@ -5,8 +5,8 @@
 #include <sprocket/Core/log.h>
 #include <sprocket/Core/window.h>
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/UI/Font/font.h>
-#include <sprocket/UI/Font/glyph.h>
+#include <sprocket/ui/Font/font.h>
+#include <sprocket/ui/Font/glyph.h>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>

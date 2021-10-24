@@ -7,7 +7,7 @@
 #include <sprocket/graphics/cube_map.h>
 #include <sprocket/graphics/Rendering/pbr_renderer.h>
 #include <sprocket/graphics/Rendering/skybox_renderer.h>
-#include <sprocket/UI/console.h>
+#include <sprocket/ui/console.h>
 
 #include <memory>
 #include <random>

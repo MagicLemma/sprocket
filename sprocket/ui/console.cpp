@@ -1,6 +1,6 @@
 #include "console.h"
 
-#include <sprocket/UI/simple_ui.h>
+#include <sprocket/ui/simple_ui.h>
 
 #include <sstream>
 #include <vector>

@@ -8,8 +8,8 @@
 #include <sprocket/graphics/post_processor.h>
 #include <sprocket/graphics/Rendering/pbr_renderer.h>
 #include <sprocket/graphics/shadow_map.h>
-#include <sprocket/UI/imgui_ui.h>
-#include <sprocket/UI/simple_ui.h>
+#include <sprocket/ui/imgui_ui.h>
+#include <sprocket/ui/simple_ui.h>
 
 #include <memory>
 #include <random>

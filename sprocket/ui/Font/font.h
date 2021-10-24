@@ -1,6 +1,6 @@
 #pragma once
-#include <sprocket/UI/Font/font_atlas.h>
-#include <sprocket/UI/Font/glyph.h>
+#include <sprocket/ui/Font/font_atlas.h>
+#include <sprocket/ui/Font/glyph.h>
 #include <sprocket/Utility/hashing.h>
 
 #include <cstddef>

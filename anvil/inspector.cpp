@@ -4,8 +4,8 @@
 #include <anvil/ecs/loader.h>
 #include <anvil/ecs/meta.h>
 
-#include <sprocket/UI/imgui_ui.h>
-#include <sprocket/UI/ImGuiXtra.h>
+#include <sprocket/ui/imgui_ui.h>
+#include <sprocket/ui/ImGuiXtra.h>
 #include <sprocket/Utility/maths.h>
 
 #include <imgui.h>

@@ -16,7 +16,7 @@
 #include <sprocket/graphics/camera.h>
 #include <sprocket/graphics/render_context.h>
 #include <sprocket/graphics/Rendering/pbr_renderer.h>
-#include <sprocket/UI/ImGuiXtra.h>
+#include <sprocket/ui/ImGuiXtra.h>
 #include <sprocket/Utility/views.h>
 
 #include <cmath>
