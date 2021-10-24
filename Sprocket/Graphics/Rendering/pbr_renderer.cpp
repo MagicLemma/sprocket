@@ -168,7 +168,7 @@ void pbr_renderer::draw_animated_mesh(
     const auto& mat = d_assetManager->get<spkt::material>(material);
     upload_material(d_animatedShader, mat, d_assetManager);
 
-    d_animatedShader.load("u_model_matrix", Maths::Transform(position, orientation, scale));
+    d_animatedShader.load("u_model_matrix", make_transform(position, orientation, scale));
     
     auto poses = mesh_obj.get_pose(animation_name, animation_time);
     poses.resize(MAX_BONES, glm::mat4(1.0));

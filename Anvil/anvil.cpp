@@ -15,7 +15,7 @@
 #include <Sprocket/Graphics/material.h>
 #include <Sprocket/Graphics/render_context.h>
 #include <Sprocket/UI/ImGuiXtra.h>
-#include <Sprocket/Utility/FileBrowser.h>
+#include <Sprocket/Utility/file_browser.h>
 #include <Sprocket/Utility/Maths.h>
 #include <Sprocket/Vendor/imgui/imgui.h>
 
@@ -130,7 +130,6 @@ void app::on_update(double dt)
 
 void app::on_render()
 {
-    using namespace spkt::Maths;
     auto& registry = d_active_scene->registry;
 
     // If the size of the viewport has changed since the previous frame, recreate
@@ -163,21 +162,21 @@ void app::on_render()
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("New")) {
-                std::string file = spkt::SaveFile(d_window, "*.yaml");
-                if (!file.empty()) {
+                auto file = spkt::save_file(d_window, "*.yaml");
+                if (file.has_value()) {
                     spkt::log::info("Creating {}...", d_sceneFile);
-                    d_sceneFile = file;
+                    d_sceneFile = *file;
                     d_active_scene = d_scene = std::make_shared<anvil::scene>();
                     spkt::log::info("...done!");
                 }
             }
             if (ImGui::MenuItem("Open")) {
-                std::string file = spkt::OpenFile(d_window, "*.yaml");
-                if (!file.empty()) {
+                auto file = spkt::open_file(d_window, "*.yaml");
+                if (file.has_value()) {
                     spkt::log::info("Loading {}...", d_sceneFile);
-                    d_sceneFile = file;
+                    d_sceneFile = *file;
                     d_active_scene = d_scene = std::make_shared<anvil::scene>();
-                    anvil::load_registry_from_file(file, d_scene->registry);
+                    anvil::load_registry_from_file(*file, d_scene->registry);
                     spkt::log::info("...done!");
                 }
             }
@@ -192,11 +191,11 @@ void app::on_render()
                 spkt::log::info("...done!");
             }
             if (ImGui::MenuItem("Save As")) {
-                std::string file = spkt::SaveFile(d_window, "*.yaml");
-                if (!file.empty()) {
-                    spkt::log::info("Saving as {}...", file);
-                    d_sceneFile = file;
-                    anvil::save_registry_to_file(file, d_scene->registry, entity_filter);
+                auto file = spkt::save_file(d_window, "*.yaml");
+                if (file.has_value()) {
+                    spkt::log::info("Saving as {}...", *file);
+                    d_sceneFile = *file;
+                    anvil::save_registry_to_file(*file, d_scene->registry, entity_filter);
                     spkt::log::info("...done!");
                 }
             }
@@ -248,9 +247,9 @@ void app::on_render()
 
         if (!is_game_running() && registry.valid(d_selected) && registry.has<anvil::Transform3DComponent>(d_selected)) {
             auto& c = registry.get<anvil::Transform3DComponent>(d_selected);
-            auto tr = spkt::Maths::Transform(c.position, c.orientation, c.scale);
+            auto tr = spkt::make_transform(c.position, c.orientation, c.scale);
             spkt::ImGuiXtra::Guizmo(&tr, view, proj, d_inspector.operation(), d_inspector.mode());
-            spkt::Maths::Decompose(tr, &c.position, &c.orientation, &c.scale);
+            spkt::Decompose(tr, &c.position, &c.orientation, &c.scale);
         }
         ImGui::End();
     }

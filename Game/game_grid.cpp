@@ -74,7 +74,7 @@ void game_grid_system(game::registry& registry, double)
     auto [tc, cc] = reg.get_all<game::Transform3DComponent, game::Camera3DComponent>(cam.camera_entity);
 
     glm::vec3 cameraPos = tc.position;
-    glm::vec3 direction = spkt::Maths::GetMouseRay(
+    glm::vec3 direction = spkt::get_mouse_ray(
         input.mouse_position(),
         input.window_width(),
         input.window_height(),

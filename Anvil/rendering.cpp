@@ -22,22 +22,22 @@ void draw_colliders(
 
     renderer.begin_frame(proj, view);
 
-    const auto& make_transform = [](const auto& a, const auto& b) {
-        using namespace spkt::Maths;
-        return Transform(a.position, a.orientation) * Transform(b.position, b.orientation);
+    const auto& transform = [](const auto& a, const auto& b) {
+        return spkt::make_transform(a.position, a.orientation)
+             * spkt::make_transform(b.position, b.orientation);
     };
 
     for (auto [bc, tc] : registry.view_get<anvil::BoxCollider3DComponent, anvil::Transform3DComponent>()) {
         const glm::vec3 scale = bc.applyScale ? bc.halfExtents * tc.scale : bc.halfExtents;      
-        renderer.draw_box(make_transform(tc, bc), scale);
+        renderer.draw_box(transform(tc, bc), scale);
     }
 
     for (auto [sc, tc] : registry.view_get<anvil::SphereCollider3DComponent, anvil::Transform3DComponent>()) {
-        renderer.draw_sphere(make_transform(tc, sc), sc.radius);
+        renderer.draw_sphere(transform(tc, sc), sc.radius);
     }
 
     for (auto [cc, tc] : registry.view_get<anvil::CapsuleCollider3DComponent, anvil::Transform3DComponent>()) {
-        renderer.draw_capsule(make_transform(tc, cc), cc.radius, cc.height);
+        renderer.draw_capsule(transform(tc, cc), cc.radius, cc.height);
     }
 
     renderer.end_frame();

@@ -542,7 +542,7 @@ void load_entity_transformation_functions(spkt::lua::script& script)
             o = glm::rotate(o, pc->pitch, {1, 0, 0});
         }
 
-        spkt::lua::converter<glm::vec3>::push(L, spkt::Maths::Forwards(o));
+        spkt::lua::converter<glm::vec3>::push(L, spkt::Forwards(o));
         return 1;
     });
 
@@ -551,7 +551,7 @@ void load_entity_transformation_functions(spkt::lua::script& script)
         auto& reg = *get_pointer<game::registry>(L, "__registry__");
         auto e = spkt::lua::converter<game::entity>::read(L, 1);
         auto& tr = reg.get<Transform3DComponent>(e);
-        spkt::lua::converter<glm::vec3>::push(L, spkt::Maths::Right(tr.orientation));
+        spkt::lua::converter<glm::vec3>::push(L, spkt::Right(tr.orientation));
         return 1;
     });
 

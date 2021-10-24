@@ -9,7 +9,7 @@ namespace spkt {
 
 glm::mat4 make_view(const glm::vec3& pos, const glm::quat& ori, float pitch)
 {
-    return glm::inverse(Maths::Transform(
+    return glm::inverse(make_transform(
         pos, ori * glm::rotate(glm::identity<glm::quat>(), pitch, {1, 0, 0})
     ));
 }

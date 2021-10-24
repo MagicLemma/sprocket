@@ -39,7 +39,7 @@ glm::mat4 transform_from_keyframes(const bone_key_frames& kfData, float time)
     glm::vec3 position = mix_from_keyframe(kfData.positions, time);
     glm::quat orientation = slerp_from_keyframe(kfData.orientations, time);
     glm::vec3 scale = mix_from_keyframe(kfData.scales, time);
-    return Maths::Transform(position, orientation, scale);
+    return make_transform(position, orientation, scale);
 }
 
 void get_pose_recursive(
@@ -69,7 +69,7 @@ std::vector<glm::mat4> skeleton::get_pose(const std::string& animation, float ti
     pose.resize(bones.size(), glm::mat4(1.0));
 
     if (auto it = animations.find(animation); it != animations.end()) {
-        float t = Maths::Modulo(time, it->second.duration);
+        float t = Modulo(time, it->second.duration);
         get_pose_recursive(pose, *this, it->second, t, 0, glm::mat4(1.0));
     }
     return pose;

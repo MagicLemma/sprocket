@@ -1,7 +1,7 @@
 #include "ImGuiXtra.h"
 
 #include <Sprocket/Graphics/texture.h>
-#include <Sprocket/Utility/FileBrowser.h>
+#include <Sprocket/Utility/file_browser.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>
@@ -34,9 +34,9 @@ void File(const std::string& name,
 {
     ImGui::PushID(std::hash<std::string>{}(name));
     if (ImGui::Button(name.c_str())) {
-        auto newFile = OpenFile(window, filter.c_str());
-        if (!newFile.empty()) {
-            *file = newFile;
+        auto newFile = open_file(window, filter.c_str());
+        if (newFile.has_value()) {
+            *file = newFile.value();
         }
     }
     ImGui::SameLine();

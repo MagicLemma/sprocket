@@ -5,6 +5,17 @@
 
 namespace spkt {
 
+struct music::impl
+{
+    sf::Music music;
+};
+
+struct sound::impl
+{
+    sf::SoundBuffer buffer;
+    sf::Sound       sound;
+};
+
 void set_listener(const glm::vec3& postiion, const glm::vec3& direction)
 {
     sf::Listener::setPosition(postiion.x, postiion.y, postiion.z);
@@ -21,14 +32,15 @@ void set_master_volume(float volume)
     sf::Listener::setGlobalVolume(volume);
 }
 
-struct MusicImpl
-{
-    sf::Music music;
-};
-
 music::music()
-    : d_impl(std::make_unique<MusicImpl>())
+    : d_impl(std::make_unique<music::impl>())
 {
+}
+
+music::music(const std::string& filename)
+    : music()
+{
+    load(filename);
 }
 
 bool music::load(const std::string& filename)
@@ -51,58 +63,33 @@ void music::stop() const
     d_impl->music.stop();
 }
 
-struct SoundImpl
-{
-    sf::SoundBuffer buffer;
-};
-
-Sound::Sound()
-    : d_impl(std::make_unique<SoundImpl>())
+sound::sound()
+    : d_impl(std::make_unique<sound::impl>())
 {
 }
 
-bool Sound::Load(const std::string& filename)
+sound::sound(const std::string& filename)
+    : sound()
 {
-    return d_impl->buffer.loadFromFile(filename);
+    load(filename);
 }
 
-struct SourceImpl
+bool sound::load(const std::string& filename)
 {
-    sf::Sound sound;
-}; 
-
-Source::Source()
-    : d_impl(std::make_unique<SourceImpl>())
-{
+    bool success = d_impl->buffer.loadFromFile(filename);
+    if (success) {
+        d_impl->sound.setBuffer(d_impl->buffer);
+    }
+    return success;
 }
 
-
-void Source::SetSound(const Sound& sound)
+void sound::play_at(const glm::vec3& position)
 {
-    d_impl->sound.setBuffer(sound.d_impl->buffer);
-}
-
-void Source::SetPosition(float x, float y, float z)
-{
-    d_impl->sound.setPosition({x, y, z});
-}
-
-void Source::SetPosition(const glm::vec3& position)
-{
-    SetPosition(position.x, position.y, position.z);
-}
-
-void Source::Play() const
-{
+    d_impl->sound.setPosition({position.x, position.y, position.z});
     d_impl->sound.play();
 }
 
-void Source::Pause() const
-{
-    d_impl->sound.pause();
-}
-
-void Source::Stop() const
+void sound::stop()
 {
     d_impl->sound.stop();
 }

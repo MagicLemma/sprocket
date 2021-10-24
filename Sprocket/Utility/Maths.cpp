@@ -7,10 +7,8 @@
 #include <glm/trigonometric.hpp>
 
 namespace spkt {
-namespace Maths {
 
-// Matrix Constructors
-glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale)
+glm::mat4 make_transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale)
 {
     glm::mat4 m = glm::mat4_cast(orientation);
     m[3][0] = position.x;
@@ -35,7 +33,6 @@ glm::vec3 Up(const glm::quat& q)
     return glm::normalize(q) * glm::vec3(0, 1, 0);
 }
 
-// Conversions
 void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientation, glm::vec3* scale)
 {
     glm::vec3 skew;
@@ -43,13 +40,11 @@ void Decompose(const glm::mat4& matrix, glm::vec3* position, glm::quat* orientat
     glm::decompose(matrix, *scale, *orientation, *position, skew, perspective);
 }
 
-// Vector Maths
 glm::vec3 GetTranslation(const glm::mat4& m)
 {
     return m[3];
 }
 
-// General Helpers
 float Modulo(float val, float high)
 {
     float ret = val;
@@ -62,14 +57,24 @@ glm::mat4 NoScale(const glm::mat4& matrix)
 {
     glm::vec3 pos, scale;
     glm::quat ori;
-    Maths::Decompose(matrix, &pos, &ori, &scale);
-    return Maths::Transform(pos, ori);
+    Decompose(matrix, &pos, &ori, &scale);
+    return make_transform(pos, ori);
 }
 
-glm::vec3 GetMouseRay(const glm::vec2& mousePos, float w, float h, const glm::mat4& view, const glm::mat4& proj)
+glm::vec3 get_mouse_ray(
+    const glm::vec2& mouse_position,
+    float window_width,
+    float window_height,
+    const glm::mat4& view,
+    const glm::mat4& proj)
 {
     // Homogeneous Clip Space
-    glm::vec4 ray = {(2.0f * mousePos.x) / w - 1, -((2.0f * mousePos.y) / h - 1), -1.0f, 1.0f};
+    glm::vec4 ray = {
+        (2.0f * mouse_position.x) / window_width - 1,
+        -((2.0f * mouse_position.y) / window_height - 1),
+        -1.0f,
+        1.0f
+    };
 
     // Eye Space
     ray = glm::inverse(proj) * ray;
@@ -86,5 +91,4 @@ glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v)
     return {v2.x, v2.y, v2.z};
 }
 
-}
 }

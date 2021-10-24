@@ -60,8 +60,8 @@ add_library(Sprocket STATIC
             Graphics/Rendering/pbr_renderer.cpp
             Graphics/Rendering/skybox_renderer.cpp
             
-            Utility/Colour.cpp
-            Utility/FileBrowser.cpp
+            Utility/colour.cpp
+            Utility/file_browser.cpp
             Utility/input_store.cpp
             Utility/Random.cpp
             Utility/Maths.cpp

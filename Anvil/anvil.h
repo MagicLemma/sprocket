@@ -5,7 +5,7 @@
 #include <Anvil/ecs/scene.h>
 
 #include <Sprocket/Core/events.h>
-#include <Sprocket/Core/Window.h>
+#include <Sprocket/Core/window.h>
 #include <Sprocket/Graphics/asset_manager.h>
 #include <Sprocket/Graphics/cube_map.h>
 #include <Sprocket/Graphics/frame_buffer.h>

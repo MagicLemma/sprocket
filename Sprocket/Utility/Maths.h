@@ -4,12 +4,12 @@
 
 namespace spkt {
 
-class window;
-
-namespace Maths {
-
 // Constructs a transformation matrix with the given parameters.
-glm::mat4 Transform(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale = {1.0f, 1.0f, 1.0f});
+glm::mat4 make_transform(
+    const glm::vec3& position,
+    const glm::quat& orientation,
+    const glm::vec3& scale = {1.0f, 1.0f, 1.0f}
+);
 
 glm::vec3 Forwards(const glm::quat& q);
 glm::vec3 Right(const glm::quat& q);
@@ -21,8 +21,12 @@ float Modulo(float val, float high);
 glm::mat4 NoScale(const glm::mat4& matrix);
 glm::vec3 ApplyTransform(const glm::mat4& matrix, const glm::vec3& v);
 
-glm::vec3 GetMouseRay(const glm::vec2& mousePos, float w, float h, const glm::mat4& view, const glm::mat4& proj);
-
-}
+glm::vec3 get_mouse_ray(
+    const glm::vec2& mouse_pos,
+    float window_width,
+    float window_height,
+    const glm::mat4& view,
+    const glm::mat4& proj
+);
 
 }

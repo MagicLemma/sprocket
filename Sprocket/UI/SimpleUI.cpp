@@ -154,7 +154,7 @@ void SimpleUI::TextModifiable(
     cmd.AddQuad(boxColour, info.quad);
 
     std::string printText = *text;
-    if (info.sinceFocused > 0 && Maths::Modulo(info.sinceFocused, 1.0) < 0.5) {
+    if (info.sinceFocused > 0 && Modulo(info.sinceFocused, 1.0) < 0.5) {
         printText.push_back('|');
     }
 

@@ -11,7 +11,7 @@
 #include <Sprocket/Core/Window.h>
 #include <Sprocket/Scripting/lua_script.h>
 #include <Sprocket/UI/console.h>
-#include <Sprocket/Utility/Colour.h>
+#include <Sprocket/Utility/colour.h>
 #include <Sprocket/Graphics/camera.h>
 #include <Sprocket/Core/input_codes.h>
 
