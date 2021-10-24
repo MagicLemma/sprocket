@@ -12,77 +12,92 @@ namespace spkt {
 class window;
 class event;
 
-struct SimpleUITheme
+struct simple_ui_theme
 {
-    glm::vec4 backgroundColour;
-    glm::vec4 baseColour;
-    glm::vec4 hoveredColour;
-    glm::vec4 clickedColour;
+    glm::vec4 background_colour;
+    glm::vec4 base_colour;
+    glm::vec4 hovered_colour;
+    glm::vec4 clicked_colour;
 };
 
-class SimpleUI
+class simple_ui
 {
-    window* d_window;
+    spkt::window* d_window;
 
-    spkt::SimpleUITheme d_theme;
+    spkt::simple_ui_theme d_theme;
 
     spkt::ui_engine d_engine;
     spkt::font      d_font;
 
 public:
-    SimpleUI(window* window);
+    simple_ui(spkt::window* window);
 
-    const SimpleUITheme& GetTheme() const { return d_theme; }
-    void SetTheme(const SimpleUITheme& theme) { d_theme = theme; }
+    const spkt::simple_ui_theme& get_theme() const { return d_theme; }
+    void set_theme(const spkt::simple_ui_theme& theme) { d_theme = theme; }
 
-    spkt::font* GetFont() { return &d_font; }
+    spkt::font* get_font() { return &d_font; }
     
-    void on_event(event& event);
+    void on_event(spkt::event& event);
     void on_update(double dt);
 
-    void StartFrame();
-    void EndFrame();
+    void start_frame();
+    void end_frame();
 
-    void StartPanel(std::string_view name, glm::vec4* region, panel_type type);
-    void EndPanel();
+    void start_panel(std::string_view name, glm::vec4* region, panel_type type);
+    void end_panel();
 
-    void Quad(const glm::vec4& colour,
-              const glm::vec4& region);
+    void quad(const glm::vec4& colour, const glm::vec4& region);
 
     // TODO: Simplify the text API, it's a bit messy currently
-    void Text(std::string_view text,
-              float size,
-              const glm::vec4& region,
-              const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+    void text(
+        std::string_view text,
+        float size,
+        const glm::vec4& region,
+        const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0}
+    );
 
-    void Text(std::string_view text,
-              float size,
-              const glm::vec2& position,
-              const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+    void text(
+        std::string_view text,
+        float size,
+        const glm::vec2& position,
+        const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0}
+    );
 
-    void TextModifiable(std::string_view name,
-                        const glm::vec4& region,
-                        std::string* text,
-                        const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0});
+    void text_modifiable(
+        std::string_view name,
+        const glm::vec4& region,
+        std::string* text,
+        const glm::vec4& colour = {1.0, 1.0, 1.0, 1.0}
+    );
 
-    bool Button(std::string_view name,
-                const glm::vec4& region);
+    bool button(
+        std::string_view name,
+        const glm::vec4& region
+    );
 
-    bool Checkbox(std::string_view name,
-                  const glm::vec4& region,
-                  bool* value);
+    bool checkbox(
+        std::string_view name,
+        const glm::vec4& region,
+        bool* value
+    );
 
-    void Slider(std::string_view name,
-                const glm::vec4& region,
-                float* value, float min, float max);
+    void slider(
+        std::string_view name,
+        const glm::vec4& region,
+        float* value, float min, float max
+    );
 
-    void Dragger(std::string_view name,
-                 const glm::vec4& region,
-                 float* value, float speed);
+    void dragger(
+        std::string_view name,
+        const glm::vec4& region,
+        float* value, float speed
+    );
 
-    void Image(std::string_view name,
-               const texture* image,
-               const glm::vec2& position);
+    void image(
+        std::string_view name,
+        const texture* image,
+        const glm::vec2& position
+    );
 
 };
 

@@ -67,7 +67,7 @@ void console::deregister_command(const std::string& command)
 void draw_console(
     const console& console,
     std::string& command_line,
-    spkt::SimpleUI& ui,
+    spkt::simple_ui& ui,
     int width,
     int height)
 {
@@ -75,18 +75,18 @@ void draw_console(
     double H = height - 20;
     glm::vec4 mainRegion = {10, 10, W, H};
 
-    ui.StartPanel("Main", &mainRegion, spkt::panel_type::UNCLICKABLE);
+    ui.start_panel("Main", &mainRegion, spkt::panel_type::UNCLICKABLE);
 
     double boxHeight = 50.0;
-    ui.TextModifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &command_line);
+    ui.text_modifiable("Text", {10, H - 10 - boxHeight, W - 20, boxHeight}, &command_line);
     glm::vec2 region = {10, H - 10 - boxHeight - 50};
     float fontSize = 24.0f;
     for (const auto& command : console.history()) {
-        ui.Text(command.text, fontSize, region, command.colour);
+        ui.text(command.text, fontSize, region, command.colour);
         region.y -= fontSize;
     }
 
-    ui.EndPanel();
+    ui.end_panel();
 }
 
 }

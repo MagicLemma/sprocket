@@ -43,7 +43,7 @@ class app
 
     spkt::shadow_map d_shadow_map;
 
-    spkt::SimpleUI d_hovered_entity_ui;
+    spkt::simple_ui d_hovered_entity_ui;
     
     // LAYER DATA
     bool d_paused = false;
@@ -53,7 +53,7 @@ class app
     spkt::DevUI d_dev_ui;
 
     // Escape Menu
-    spkt::SimpleUI d_escape_menu;
+    spkt::simple_ui d_escape_menu;
 
 public:
     app(spkt::window* window);

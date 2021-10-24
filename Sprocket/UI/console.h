@@ -55,7 +55,7 @@ void console::error(std::string_view format, Args&&... args)
 void draw_console(
     const console& console,
     std::string& command_line,
-    spkt::SimpleUI& ui,
+    spkt::simple_ui& ui,
     int width,
     int height
 );

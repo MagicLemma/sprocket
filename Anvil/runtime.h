@@ -30,7 +30,7 @@ class runtime
     anvil::entity d_runtime_camera;
 
     // Console
-    spkt::SimpleUI d_ui;
+    spkt::simple_ui d_ui;
     spkt::console  d_console;
     std::string    d_command_line;
     bool           d_console_active = false;

@@ -193,13 +193,13 @@ app::app(spkt::window* window)
 
     load_scene("Resources/Scene.yaml");
 
-    SimpleUITheme theme;
-    theme.backgroundColour = SPACE_DARK;
-    theme.baseColour = CLEAR_BLUE;
-    theme.hoveredColour = LIGHT_BLUE;
-    theme.clickedColour = GARDEN;
-    d_hovered_entity_ui.SetTheme(theme);
-    d_escape_menu.SetTheme(theme);    
+    simple_ui_theme theme;
+    theme.background_colour = SPACE_DARK;
+    theme.base_colour = CLEAR_BLUE;
+    theme.hovered_colour = LIGHT_BLUE;
+    theme.clicked_colour = GARDEN;
+    d_hovered_entity_ui.set_theme(theme);
+    d_escape_menu.set_theme(theme);    
 
     d_cycle.set_angle(3.14195f);
 
@@ -415,7 +415,7 @@ void app::on_render()
         auto tile_entity = registry.find<game::TileMapSingleton>();
         const auto& tiles = registry.get<game::TileMapSingleton>(tile_entity).tiles;
 
-        d_hovered_entity_ui.StartFrame();
+        d_hovered_entity_ui.start_frame();
 
         auto mouse = d_window->mouse_position();
         float w = (float)d_window->width();
@@ -431,39 +431,39 @@ void app::on_render()
             float y = ((1.0f - 0.6f) / 2) * h;
 
             glm::vec4 region{x, y, width, height};
-            d_hovered_entity_ui.StartPanel("Selected", &region, panel_type::UNCLICKABLE);
+            d_hovered_entity_ui.start_panel("Selected", &region, panel_type::UNCLICKABLE);
                 
             auto pos = game_grid.clicked_square.value();
-            if (d_hovered_entity_ui.Button("+Tree", {0, 0, width, 50})) {
+            if (d_hovered_entity_ui.button("+Tree", {0, 0, width, 50})) {
                 if (registry.valid(e)) { registry.destroy(e); }
                 add_tree(registry, pos);
             }
 
-            if (d_hovered_entity_ui.Button("+Rock", {0, 60, width, 50})) {
+            if (d_hovered_entity_ui.button("+Rock", {0, 60, width, 50})) {
                 if (registry.valid(e)) { registry.destroy(e); }
                 add_rock(registry, pos);
             }
 
-            if (d_hovered_entity_ui.Button("+Iron", {0, 120, width, 50})) {
+            if (d_hovered_entity_ui.button("+Iron", {0, 120, width, 50})) {
                 if (registry.valid(e)) { registry.destroy(e); }
                 add_iron(registry, pos);
             }
 
-            if (d_hovered_entity_ui.Button("+Tin", {0, 180, width, 50})) {
+            if (d_hovered_entity_ui.button("+Tin", {0, 180, width, 50})) {
                 if (registry.valid(e)) { registry.destroy(e); }
                 add_tin(registry, pos);
             }
 
-            if (d_hovered_entity_ui.Button("+Mithril", {0, 240, width, 50})) {
+            if (d_hovered_entity_ui.button("+Mithril", {0, 240, width, 50})) {
                 if (registry.valid(e)) { registry.destroy(e); }
                 add_mithril(registry, pos);
             }
 
-            if (d_hovered_entity_ui.Button("Clear", {0, 300, width, 50})) {
+            if (d_hovered_entity_ui.button("Clear", {0, 300, width, 50})) {
                 if (registry.valid(e)) { registry.destroy(e); }
             }
 
-            d_hovered_entity_ui.EndPanel();
+            d_hovered_entity_ui.end_panel();
         }
 
         auto it = tiles.find(game_grid.hovered_square);
@@ -475,16 +475,16 @@ void app::on_render()
             float y = std::min(mouse.y - 5, h - height - 10);
 
             glm::vec4 region{x, y, width, height};
-            d_hovered_entity_ui.StartPanel("Hovered", &region, panel_type::UNCLICKABLE);
+            d_hovered_entity_ui.start_panel("Hovered", &region, panel_type::UNCLICKABLE);
             std::string name = "Unnamed";
             if (registry.has<game::NameComponent>(e)) {
                 name = registry.get<game::NameComponent>(e).name;
             }
-            d_hovered_entity_ui.Text(name, 36.0f, {0, 0, width, height});
-            d_hovered_entity_ui.EndPanel();
+            d_hovered_entity_ui.text(name, 36.0f, {0, 0, width, height});
+            d_hovered_entity_ui.end_panel();
         }
 
-        d_hovered_entity_ui.EndFrame();
+        d_hovered_entity_ui.end_frame();
     }
 
     if (d_mode == mode::EDITOR) {
@@ -515,17 +515,17 @@ void app::on_render()
     float w = (float)d_window->width();
     float h = (float)d_window->height();
 
-    d_escape_menu.StartFrame();
+    d_escape_menu.start_frame();
     static bool showVolume = false;
 
     glm::vec4 mainRegion{0.0f, 0.0f, w * 0.3f, h};
-    d_escape_menu.StartPanel("Main", &mainRegion, panel_type::CLICKABLE);
+    d_escape_menu.start_panel("Main", &mainRegion, panel_type::CLICKABLE);
 
-    d_escape_menu.Text("Menu", 48.0f, {0.0f, 0.0f, w * 0.3f, 100});
+    d_escape_menu.text("Menu", 48.0f, {0.0f, 0.0f, w * 0.3f, 100});
 
     glm::vec4 button_region = {w * 0.025f, 100, w * 0.25f, 50};
 
-    if (d_escape_menu.Button("Toggle Dev UI", button_region)) {
+    if (d_escape_menu.button("Toggle Dev UI", button_region)) {
         switch (d_mode) {
             case mode::PLAYER: {
                 d_mode = mode::EDITOR;
@@ -538,23 +538,23 @@ void app::on_render()
 
     button_region.y += 2 * 60;
     static float value1 = 27.0f;
-    d_escape_menu.Slider("Slider", button_region, &value1, 0, 100);
+    d_escape_menu.slider("Slider", button_region, &value1, 0, 100);
 
     button_region.y += 60;
     float angle = d_cycle.get_angle();
-    d_escape_menu.Dragger("Time of Day", button_region, &angle, 0.001f);
+    d_escape_menu.dragger("Time of Day", button_region, &angle, 0.001f);
     d_cycle.set_angle(angle);
 
     button_region.y += 60;
-    d_escape_menu.Checkbox("Volume Panel", button_region, &showVolume);
+    d_escape_menu.checkbox("Volume Panel", button_region, &showVolume);
 
     button_region.y += 60;
-    if (d_escape_menu.Button("Reload", button_region)) {
+    if (d_escape_menu.button("Reload", button_region)) {
         load_scene(d_scene_file);
     }
 
     button_region.y += 60;
-    if (d_escape_menu.Button("Save", button_region)) {
+    if (d_escape_menu.button("Save", button_region)) {
         const auto entity_filter = [](const game::registry& reg, game::entity entity) {
             return !reg.has<game::Runtime>(entity);
         };
@@ -564,51 +564,51 @@ void app::on_render()
         spkt::log::info("Done!");
     }
     
-    d_escape_menu.EndPanel();
+    d_escape_menu.end_panel();
     
     static glm::vec4 shape{w/2 - 200, 100, 400, 500};
     if (showVolume) {
-        d_escape_menu.StartPanel("VolumePanel", &shape, panel_type::DRAGGABLE);
-        d_escape_menu.Text("Volume", 48.0f, {0, 0, 400, 100});
+        d_escape_menu.start_panel("VolumePanel", &shape, panel_type::DRAGGABLE);
+        d_escape_menu.text("Volume", 48.0f, {0, 0, 400, 100});
 
         float volume = spkt::get_master_volume();
-        d_escape_menu.Slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
+        d_escape_menu.slider("Master Volume", {10, 100, 400 - 20, 50}, &volume, 0.0, 100.0);
         spkt::set_master_volume(volume);
         
-        d_escape_menu.EndPanel();
+        d_escape_menu.end_panel();
     }
 
     static glm::vec4 shape2{w/2 + 300, 100, 400, 500};
-    d_escape_menu.StartPanel("Button Panel", &shape2, panel_type::DRAGGABLE);
-    d_escape_menu.Text("Buttons", 36.0f, {0, 0, 400, 100});
+    d_escape_menu.start_panel("Button Panel", &shape2, panel_type::DRAGGABLE);
+    d_escape_menu.text("Buttons", 36.0f, {0, 0, 400, 100});
     glm::vec4 buttonQuad{10, 100, 400 - 20, 50};
-    if (d_escape_menu.Button("Button 1", buttonQuad)) {
+    if (d_escape_menu.button("Button 1", buttonQuad)) {
         spkt::log::warn("Warn");
         spkt::log::info("Info");
         spkt::log::error("Error");
         spkt::log::fatal("Fatal");
     }
     buttonQuad.y += 60;
-    d_escape_menu.Button("Button 2", buttonQuad);
+    d_escape_menu.button("Button 2", buttonQuad);
     buttonQuad.y += 60;
-    d_escape_menu.Button("Button 3", buttonQuad);
+    d_escape_menu.button("Button 3", buttonQuad);
     buttonQuad.y += 60;
-    d_escape_menu.Button("Button 4", buttonQuad);
+    d_escape_menu.button("Button 4", buttonQuad);
     buttonQuad.y += 60;
-    d_escape_menu.Button("Button 5", buttonQuad);
+    d_escape_menu.button("Button 5", buttonQuad);
     buttonQuad.y += 60;
     buttonQuad.z = buttonQuad.w;
 
     static bool valA = false;
-    d_escape_menu.Checkbox("A", buttonQuad, &valA);
+    d_escape_menu.checkbox("A", buttonQuad, &valA);
     buttonQuad.x += buttonQuad.z + 10.0f;
 
     static bool valB = true;
-    d_escape_menu.Checkbox("B", buttonQuad, &valB);
+    d_escape_menu.checkbox("B", buttonQuad, &valB);
     buttonQuad.x += buttonQuad.z + 10.0f;
 
-    d_escape_menu.EndPanel();
-    d_escape_menu.EndFrame();
+    d_escape_menu.end_panel();
+    d_escape_menu.end_frame();
 }
 
 std::pair<glm::mat4, glm::mat4> app::get_proj_view_matrices() const

@@ -60,13 +60,13 @@ runtime::runtime(spkt::window* window)
 
     d_runtime_camera = d_scene.registry.find<anvil::Camera3DComponent>();
 
-    spkt::SimpleUITheme theme;
-    theme.backgroundColour = SPACE_DARK;
-    theme.backgroundColour.w = 0.8f;
-    theme.baseColour = CLEAR_BLUE;
-    theme.hoveredColour = LIGHT_BLUE;
-    theme.clickedColour = GARDEN;
-    d_ui.SetTheme(theme);
+    spkt::simple_ui_theme theme;
+    theme.background_colour = SPACE_DARK;
+    theme.background_colour.w = 0.8f;
+    theme.base_colour = CLEAR_BLUE;
+    theme.hovered_colour = LIGHT_BLUE;
+    theme.clicked_colour = GARDEN;
+    d_ui.set_theme(theme);
 
     d_console.register_command("clear", [](spkt::console& console, auto args) {
         console.clear_history();
@@ -137,9 +137,9 @@ void runtime::on_render()
     anvil::draw_scene(d_scene_renderer, d_scene.registry, proj, view);
 
     if (d_console_active) {
-        d_ui.StartFrame();
+        d_ui.start_frame();
         draw_console(d_console, d_command_line, d_ui, d_window->width(), d_window->height());
-        d_ui.EndFrame();
+        d_ui.end_frame();
     }
 }
 
