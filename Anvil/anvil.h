@@ -1,8 +1,8 @@
 #pragma once
-#include <Anvil/Camera.h>
-#include <Anvil/Inspector.h>
-#include <Anvil/ecs/ecs.h>
-#include <Anvil/ecs/scene.h>
+#include <anvil/camera.h>
+#include <anvil/inspector.h>
+#include <anvil/ecs/ecs.h>
+#include <anvil/ecs/scene.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/window.h>
@@ -16,7 +16,6 @@
 
 #include <memory>
 #include <random>
-#include <memory>
 
 namespace anvil {
 

@@ -1,6 +1,6 @@
 #pragma once
-#include <Anvil/ecs/ecs.h>
-#include <Anvil/ecs/lua_ecs.h>
+#include <anvil/ecs/ecs.h>
+#include <anvil/ecs/lua_ecs.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/log.h>

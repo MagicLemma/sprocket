@@ -1,6 +1,6 @@
 #pragma once
-#include <Anvil/ecs/ecs.h>
-#include <Anvil/ecs/scene.h>
+#include <anvil/ecs/ecs.h>
+#include <anvil/ecs/scene.h>
 
 #include <Sprocket/Core/window.h>
 #include <Sprocket/Graphics/asset_manager.h>

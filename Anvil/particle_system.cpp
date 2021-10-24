@@ -1,5 +1,5 @@
 #include "particle_system.h"
-#include <Anvil/ecs/ecs.h>
+#include <anvil/ecs/ecs.h>
 
 #include <Sprocket/Utility/random.h>
 

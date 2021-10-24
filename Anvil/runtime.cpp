@@ -1,11 +1,10 @@
 #include "Runtime.h"
-
-#include <Anvil/particle_system.h>
-#include <Anvil/physics_system.h>
-#include <Anvil/rendering.h>
-#include <Anvil/scene_utils.h>
-#include <Anvil/systems.h>
-#include <Anvil/ecs/loader.h>
+#include <anvil/particle_system.h>
+#include <anvil/physics_system.h>
+#include <anvil/rendering.h>
+#include <anvil/scene_utils.h>
+#include <anvil/systems.h>
+#include <anvil/ecs/loader.h>
 
 #include <Sprocket/Core/events.h>
 #include <Sprocket/Core/Window.h>

@@ -1,5 +1,5 @@
 #pragma once
-#include <Anvil/ecs/ecs.h>
+#include <anvil/ecs/ecs.h>
 
 #include <Sprocket/Graphics/Rendering/geometry_renderer.h>
 #include <Sprocket/Graphics/Rendering/pbr_renderer.h>

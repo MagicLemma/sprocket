@@ -1,8 +1,8 @@
-#include "Inspector.h"
-#include <Anvil/Anvil.h>
-#include <Anvil/ecs/ecs.h>
-#include <Anvil/ecs/loader.h>
-#include <Anvil/ecs/meta.h>
+#include "inspector.h"
+#include <anvil/anvil.h>
+#include <anvil/ecs/ecs.h>
+#include <anvil/ecs/loader.h>
+#include <anvil/ecs/meta.h>
 
 #include <Sprocket/UI/imgui_ui.h>
 #include <Sprocket/UI/ImGuiXtra.h>

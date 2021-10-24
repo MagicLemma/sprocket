@@ -1,13 +1,12 @@
-#include "Anvil.h"
-
-#include <Anvil/Inspector.h>
-#include <Anvil/particle_system.h>
-#include <Anvil/physics_system.h>
-#include <Anvil/rendering.h>
-#include <Anvil/systems.h>
-#include <Anvil/scene_utils.h>
-#include <Anvil/ecs/loader.h>
-#include <Anvil/ecs/meta.h>
+#include "anvil.h"
+#include <anvil/inspector.h>
+#include <anvil/particle_system.h>
+#include <anvil/physics_system.h>
+#include <anvil/rendering.h>
+#include <anvil/systems.h>
+#include <anvil/scene_utils.h>
+#include <anvil/ecs/loader.h>
+#include <anvil/ecs/meta.h>
 
 #include <Sprocket/Core/input_codes.h>
 #include <Sprocket/Core/log.h>
