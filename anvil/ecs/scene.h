@@ -6,7 +6,7 @@
 #include <vector>
 #include <functional>
 
-namespace {{Global::namespace}} {
+namespace anvil {
 
 class event;
 

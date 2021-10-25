@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.13)
 
-project({{Global::namespace}}-ecs)
+project(anvil-ecs)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
 set(CMAKE_CXX_STANDARD 20)
 
-add_library({{Global::namespace}}-ecs STATIC
+add_library(anvil-ecs STATIC
             loader.cpp
             lua_ecs.cpp
             scene.cpp)
 
-target_link_libraries({{Global::namespace}}-ecs PRIVATE sprocket)
-target_include_directories({{Global::namespace}}-ecs PUBLIC .)
+target_link_libraries(anvil-ecs PRIVATE sprocket)
+target_include_directories(anvil-ecs PUBLIC .)

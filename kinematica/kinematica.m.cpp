@@ -1,5 +1,5 @@
-#include <Sprocket/core.h>
-#include <Sprocket/Graphics/Rendering/shape_renderer.h>
+#include <sprocket/core.h>
+#include <sprocket/graphics/renderers/shape_renderer.h>
 
 #include <glm/glm.hpp>
 

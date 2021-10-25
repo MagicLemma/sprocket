@@ -6,7 +6,7 @@
 #include <memory>
 #include <ranges>
 
-namespace {{Global::namespace}} {
+namespace game {
 
 void scene::on_update(double dt)
 {
