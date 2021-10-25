@@ -18,7 +18,7 @@ add_executable(anvil
                particle_system.cpp
                physics_system.cpp)
 
-target_link_libraries(anvil PRIVATE Sprocket reactphysics3d anvil-ecs)
+target_link_libraries(anvil PRIVATE sprocket reactphysics3d anvil-ecs)
 target_include_directories(anvil PUBLIC .)
 
 add_executable(runtime
@@ -29,5 +29,5 @@ add_executable(runtime
                particle_system.cpp
                physics_system.cpp)
 
-target_link_libraries(runtime PRIVATE Sprocket reactphysics3d anvil-ecs)
+target_link_libraries(runtime PRIVATE sprocket reactphysics3d anvil-ecs)
 target_include_directories(runtime PUBLIC .)

@@ -10,5 +10,5 @@ add_library(anvil-ecs STATIC
             lua_ecs.cpp
             scene.cpp)
 
-target_link_libraries(anvil-ecs PRIVATE Sprocket)
+target_link_libraries(anvil-ecs PRIVATE sprocket)
 target_include_directories(anvil-ecs PUBLIC .)

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(Sprocket)
+project(sprocket)
 
-add_subdirectory(Vendor)
+add_subdirectory(vendor)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
@@ -23,7 +23,7 @@ find_package(asio CONFIG REQUIRED)
 
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
-add_library(Sprocket STATIC
+add_library(sprocket STATIC
             core/window.cpp
             core/timer.cpp
             core/log.cpp
@@ -71,8 +71,8 @@ add_library(Sprocket STATIC
             scripting/lua_converter.cpp
             scripting/lua_input.cpp)
 
-target_link_libraries(Sprocket PUBLIC
-                      SprocketVendor
+target_link_libraries(sprocket PUBLIC
+                      imgui
                       glfw
                       glad::glad
                       glm
@@ -84,11 +84,11 @@ target_link_libraries(Sprocket PUBLIC
                       yaml-cpp
                       ${LUA_LIBRARIES})
 
-target_link_libraries(Sprocket PRIVATE asio asio::asio)
+target_link_libraries(sprocket PRIVATE asio asio::asio)
 
-target_include_directories(Sprocket PUBLIC
+target_include_directories(sprocket PUBLIC
                            ..
-                           ./Vendor/apecs
+                           ./vendor/apecs
                            ${STB_INCLUDE_DIR}
                            ${LUA_INCLUDE_DIR}
                            ${SFML_INCLUDE_DIR})

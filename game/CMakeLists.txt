@@ -18,6 +18,6 @@ add_executable(game
                grid_helpers.cpp
                game_grid.cpp)
 
-target_link_libraries(game PRIVATE Sprocket game-ecs)
+target_link_libraries(game PRIVATE sprocket game-ecs)
 
 target_include_directories(game PUBLIC .)

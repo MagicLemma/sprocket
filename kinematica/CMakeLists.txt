@@ -8,5 +8,5 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(kinematica
                kinematica.m.cpp)
 
-target_link_libraries(kinematica PRIVATE Sprocket)
+target_link_libraries(kinematica PRIVATE sprocket)
 target_include_directories(kinematica PUBLIC .)

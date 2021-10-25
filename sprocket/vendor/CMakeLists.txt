@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(SprocketVendor)
+project(imgui)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
 
-add_library(SprocketVendor STATIC
+add_library(imgui STATIC
 
             imgui/imgui.cpp
             imgui/imgui_demo.cpp
@@ -16,6 +16,6 @@ add_library(SprocketVendor STATIC
 
             ImGuizmo/ImGuizmo.cpp)
 
-target_include_directories(SprocketVendor PUBLIC
+target_include_directories(imgui PUBLIC
                            ./imgui
                            ./ImGuizmo)

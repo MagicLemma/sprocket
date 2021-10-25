@@ -10,5 +10,5 @@ add_library(game-ecs STATIC
             lua_ecs.cpp
             scene.cpp)
 
-target_link_libraries(game-ecs PRIVATE Sprocket)
+target_link_libraries(game-ecs PRIVATE sprocket)
 target_include_directories(game-ecs PUBLIC .)
