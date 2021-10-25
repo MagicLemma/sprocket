@@ -5,9 +5,9 @@
 #include <sprocket/graphics/camera.h>
 #include <sprocket/graphics/open_gl.h>
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/Utility/Hashing.h>
-#include <sprocket/Utility/Maths.h>
-#include <sprocket/Utility/views.h>
+#include <sprocket/utility/hashing.h>
+#include <sprocket/utility/maths.h>
+#include <sprocket/utility/views.h>
 
 #include <algorithm>
 #include <array>

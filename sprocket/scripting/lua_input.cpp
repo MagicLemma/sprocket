@@ -1,9 +1,9 @@
 #include "lua_input.h"
 
-#include <sprocket/Core/log.h>
-#include <sprocket/Utility/input_store.h>
-#include <sprocket/Scripting/lua_script.h>
-#include <sprocket/Scripting/lua_converter.h>
+#include <sprocket/core/log.h>
+#include <sprocket/utility/input_store.h>
+#include <sprocket/scripting/lua_script.h>
+#include <sprocket/scripting/lua_converter.h>
 
 #include <lua.h>
 

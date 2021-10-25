@@ -1,7 +1,7 @@
 #include "ImGuiXtra.h"
 
 #include <sprocket/graphics/texture.h>
-#include <sprocket/Utility/file_browser.h>
+#include <sprocket/utility/file_browser.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui.h>

@@ -1,6 +1,6 @@
 #include "input_store.h"
 
-#include <sprocket/Core/events.h>
+#include <sprocket/core/events.h>
 
 #include <cassert>
 

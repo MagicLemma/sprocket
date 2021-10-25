@@ -1,6 +1,6 @@
 #include "animation.h"
 
-#include <sprocket/Utility/Maths.h>
+#include <sprocket/utility/maths.h>
 
 namespace spkt {
 namespace {

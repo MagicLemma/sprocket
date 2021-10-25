@@ -1,7 +1,7 @@
 #include "material.h"
 
-#include <sprocket/Core/log.h>
-#include <sprocket/Utility/yaml.h>
+#include <sprocket/core/log.h>
+#include <sprocket/utility/yaml.h>
 
 #include <yaml-cpp/yaml.h>
 

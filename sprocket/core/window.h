@@ -1,5 +1,5 @@
 #pragma once
-#include <sprocket/Core/events.h>
+#include <sprocket/core/events.h>
 
 #include <glm/glm.hpp>
 

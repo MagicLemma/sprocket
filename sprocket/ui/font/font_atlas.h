@@ -1,6 +1,6 @@
 #pragma once
 #include <sprocket/graphics/texture.h>
-#include <sprocket/Utility/maths.h>
+#include <sprocket/utility/maths.h>
 
 #include <glm/glm.hpp>
 

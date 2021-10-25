@@ -3,7 +3,7 @@
 #include <sprocket/graphics/shader.h>
 #include <sprocket/graphics/shadow_map.h>
 #include <sprocket/graphics/buffer.h>
-#include <sprocket/Utility/Hashing.h>
+#include <sprocket/utility/hashing.h>
 
 #include <memory>
 #include <optional>

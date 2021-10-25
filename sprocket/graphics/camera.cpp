@@ -1,7 +1,7 @@
 #include "camera.h"
 
-#include <sprocket/graphics/Viewport.h>
-#include <sprocket/Utility/Maths.h>
+#include <sprocket/graphics/viewport.h>
+#include <sprocket/utility/maths.h>
 
 #include <glm/glm.hpp>
 

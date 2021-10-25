@@ -1,6 +1,6 @@
 #pragma once
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/window.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/window.h>
 
 #include <array>
 

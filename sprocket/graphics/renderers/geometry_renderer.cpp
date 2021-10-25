@@ -3,7 +3,7 @@
 #include <sprocket/graphics/camera.h>
 #include <sprocket/graphics/open_gl.h>
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/Utility/Maths.h>
+#include <sprocket/utility/maths.h>
 
 #include <glad/glad.h>
 

@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-#include <sprocket/Utility/Maths.h>
+#include <sprocket/utility/maths.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>

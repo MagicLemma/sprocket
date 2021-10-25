@@ -2,10 +2,10 @@
 #include <game/ecs/lua_ecs.h>
 #include <game/ecs/scene.h>
 
-#include <sprocket/Scripting/lua_input.h>
-#include <sprocket/Scripting/lua_maths.h>
-#include <sprocket/Scripting/lua_script.h>
-#include <sprocket/Utility/input_store.h>
+#include <sprocket/scripting/lua_input.h>
+#include <sprocket/scripting/lua_maths.h>
+#include <sprocket/scripting/lua_script.h>
+#include <sprocket/utility/input_store.h>
 
 #include <functional>
 #include <memory>

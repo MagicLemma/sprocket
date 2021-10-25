@@ -1,6 +1,6 @@
 #include "font.h"
 
-#include <sprocket/Core/log.h>
+#include <sprocket/core/log.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

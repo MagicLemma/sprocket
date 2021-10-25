@@ -1,7 +1,7 @@
 #include "shape_renderer.h"
 
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/Core/log.h>
+#include <sprocket/core/log.h>
 
 #include <glad/glad.h>
 

@@ -1,9 +1,9 @@
 #include "imgui_ui.h"
 
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/window.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/input_codes.h>
+#include <sprocket/core/window.h>
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/Core/input_codes.h>
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>

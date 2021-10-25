@@ -1,6 +1,6 @@
 #include "path_calculator.h"
 
-#include <sprocket/Core/log.h>
+#include <sprocket/core/log.h>
 
 #include <glm/glm.hpp>
 

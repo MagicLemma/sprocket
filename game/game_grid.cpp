@@ -3,10 +3,10 @@
 #include <game/ecs/ecs.h>
 #include <game/ecs/scene.h>
 
-#include <sprocket/Core/input_codes.h>
+#include <sprocket/core/input_codes.h>
 #include <sprocket/graphics/camera.h>
-#include <sprocket/Utility/input_store.h>
-#include <sprocket/Utility/maths.h>
+#include <sprocket/utility/input_store.h>
+#include <sprocket/utility/maths.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>

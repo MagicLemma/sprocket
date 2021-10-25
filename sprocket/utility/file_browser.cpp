@@ -1,6 +1,6 @@
 #include "file_browser.h"
 
-#include <sprocket/Core/window.h>
+#include <sprocket/core/window.h>
 
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32

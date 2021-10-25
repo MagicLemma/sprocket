@@ -1,8 +1,8 @@
 #pragma once
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/window.h>
-#include <sprocket/Core/log.h>
-#include <sprocket/Core/timer.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/window.h>
+#include <sprocket/core/log.h>
+#include <sprocket/core/timer.h>
 
 #include <concepts>
 #include <exception>

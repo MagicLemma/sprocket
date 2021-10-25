@@ -1,6 +1,6 @@
 #include "grid_helpers.h"
 
-#include <sprocket/Utility/random.h>
+#include <sprocket/utility/random.h>
 
 #include <glm/glm.hpp>
 
