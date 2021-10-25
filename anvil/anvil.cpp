@@ -8,15 +8,15 @@
 #include <anvil/ecs/loader.h>
 #include <anvil/ecs/meta.h>
 
-#include <sprocket/Core/input_codes.h>
-#include <sprocket/Core/log.h>
+#include <sprocket/core/input_codes.h>
+#include <sprocket/core/log.h>
 #include <sprocket/graphics/camera.h>
 #include <sprocket/graphics/material.h>
 #include <sprocket/graphics/render_context.h>
 #include <sprocket/ui/ImGuiXtra.h>
-#include <sprocket/Utility/file_browser.h>
-#include <sprocket/Utility/maths.h>
-#include <sprocket/Vendor/imgui/imgui.h>
+#include <sprocket/utility/file_browser.h>
+#include <sprocket/utility/maths.h>
+#include <sprocket/vendor/imgui/imgui.h>
 
 #include <glm/glm.hpp>
 

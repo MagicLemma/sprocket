@@ -2,12 +2,12 @@
 #include <anvil/ecs/ecs.h>
 #include <anvil/ecs/lua_ecs.h>
 
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/log.h>
-#include <sprocket/Scripting/lua_input.h>
-#include <sprocket/Scripting/lua_maths.h>
-#include <sprocket/Scripting/lua_script.h>
-#include <sprocket/Utility/input_store.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/log.h>
+#include <sprocket/scripting/lua_input.h>
+#include <sprocket/scripting/lua_maths.h>
+#include <sprocket/scripting/lua_script.h>
+#include <sprocket/utility/input_store.h>
 
 namespace anvil {
 

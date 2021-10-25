@@ -4,8 +4,8 @@
 #include <sprocket/graphics/renderers/geometry_renderer.h>
 #include <sprocket/graphics/renderers/pbr_renderer.h>
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/Utility/maths.h>
-#include <sprocket/Utility/views.h>
+#include <sprocket/utility/maths.h>
+#include <sprocket/utility/views.h>
 
 #include <glm/glm.hpp>
 

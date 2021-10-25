@@ -6,7 +6,7 @@
 
 #include <sprocket/ui/imgui_ui.h>
 #include <sprocket/ui/ImGuiXtra.h>
-#include <sprocket/Utility/maths.h>
+#include <sprocket/utility/maths.h>
 
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>

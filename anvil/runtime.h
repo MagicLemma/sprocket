@@ -2,7 +2,7 @@
 #include <anvil/ecs/ecs.h>
 #include <anvil/ecs/scene.h>
 
-#include <sprocket/Core/window.h>
+#include <sprocket/core/window.h>
 #include <sprocket/graphics/asset_manager.h>
 #include <sprocket/graphics/cube_map.h>
 #include <sprocket/graphics/renderers/pbr_renderer.h>

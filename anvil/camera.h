@@ -1,5 +1,5 @@
 #pragma once
-#include <sprocket/Utility/input_store.h>
+#include <sprocket/utility/input_store.h>
 
 #include <glm/glm.hpp>
 

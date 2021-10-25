@@ -1,9 +1,9 @@
 #include "Camera.h"
 
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/window.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/input_codes.h>
+#include <sprocket/core/window.h>
 #include <sprocket/graphics/viewport.h>
-#include <sprocket/Core/input_codes.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>

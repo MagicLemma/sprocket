@@ -1,8 +1,8 @@
 #pragma once
 #include "ecs.h"
 
-#include <sprocket/Scripting/lua_script.h>
-#include <sprocket/Scripting/lua_converter.h>
+#include <sprocket/scripting/lua_script.h>
+#include <sprocket/scripting/lua_converter.h>
 
 namespace spkt::lua {
 

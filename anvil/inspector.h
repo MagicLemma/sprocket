@@ -1,6 +1,6 @@
 #pragma once
 #include <imgui.h> // Must be included before ImGuizmo
-#include <sprocket/Vendor/ImGuizmo/ImGuizmo.h>
+#include <sprocket/vendor/ImGuizmo/ImGuizmo.h>
 
 #include <glm/glm.hpp>
 
