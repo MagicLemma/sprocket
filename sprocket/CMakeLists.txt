@@ -24,52 +24,52 @@ find_package(asio CONFIG REQUIRED)
 find_path(STB_INCLUDE_DIR NAMES stb_image.h)
 
 add_library(Sprocket STATIC
-            Core/window.cpp
-            Core/timer.cpp
-            Core/log.cpp
-            Core/sound.cpp
+            core/window.cpp
+            core/timer.cpp
+            core/log.cpp
+            core/sound.cpp
 
-            UI/Font/font_atlas.cpp
-            UI/Font/font.cpp
+            ui/font/font_atlas.cpp
+            ui/font/font.cpp
             
-            UI/console.cpp
-            UI/imgui_ui.cpp
-            UI/ImGuiXtra.cpp
-            UI/simple_ui.cpp
-            UI/ui_engine.cpp
+            ui/console.cpp
+            ui/imgui_ui.cpp
+            ui/ImGuiXtra.cpp
+            ui/simple_ui.cpp
+            ui/ui_engine.cpp
             
-            Graphics/animation.cpp
-            Graphics/buffer_element_types.cpp
-            Graphics/buffer.cpp
-            Graphics/camera.cpp
-            Graphics/cube_map.cpp
-            Graphics/frame_buffer.cpp
-            Graphics/material.cpp
-            Graphics/mesh.cpp
-            Graphics/open_gl.cpp
-            Graphics/post_processor.cpp
-            Graphics/render_context.cpp
-            Graphics/shader.cpp
-            Graphics/shadow_map.cpp
-            Graphics/texture.cpp
-            Graphics/viewport.cpp
+            graphics/animation.cpp
+            graphics/buffer_element_types.cpp
+            graphics/buffer.cpp
+            graphics/camera.cpp
+            graphics/cube_map.cpp
+            graphics/frame_buffer.cpp
+            graphics/material.cpp
+            graphics/mesh.cpp
+            graphics/open_gl.cpp
+            graphics/post_processor.cpp
+            graphics/render_context.cpp
+            graphics/shader.cpp
+            graphics/shadow_map.cpp
+            graphics/texture.cpp
+            graphics/viewport.cpp
 
-            Graphics/Rendering/geometry_renderer.cpp
-            Graphics/Rendering/shape_renderer.cpp
-            Graphics/Rendering/pbr_renderer.cpp
-            Graphics/Rendering/skybox_renderer.cpp
+            graphics/renderers/geometry_renderer.cpp
+            graphics/renderers/shape_renderer.cpp
+            graphics/renderers/pbr_renderer.cpp
+            graphics/renderers/skybox_renderer.cpp
             
-            Utility/colour.cpp
-            Utility/file_browser.cpp
-            Utility/input_store.cpp
-            Utility/random.cpp
-            Utility/maths.cpp
-            Utility/yaml.cpp
+            utility/colour.cpp
+            utility/file_browser.cpp
+            utility/input_store.cpp
+            utility/random.cpp
+            utility/maths.cpp
+            utility/yaml.cpp
 
-            Scripting/lua_script.cpp
-            Scripting/lua_maths.cpp
-            Scripting/lua_converter.cpp
-            Scripting/lua_input.cpp)
+            scripting/lua_script.cpp
+            scripting/lua_maths.cpp
+            scripting/lua_converter.cpp
+            scripting/lua_input.cpp)
 
 target_link_libraries(Sprocket PUBLIC
                       SprocketVendor

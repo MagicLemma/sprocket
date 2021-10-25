@@ -1,9 +1,9 @@
 #include "ui_engine.h"
 
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/input_codes.h>
-#include <sprocket/Core/log.h>
-#include <sprocket/Core/window.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/input_codes.h>
+#include <sprocket/core/log.h>
+#include <sprocket/core/window.h>
 #include <sprocket/graphics/render_context.h>
 #include <sprocket/ui/Font/font.h>
 #include <sprocket/ui/Font/glyph.h>

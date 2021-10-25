@@ -5,8 +5,8 @@
 #include <sprocket/Core/window.h>
 #include <sprocket/graphics/asset_manager.h>
 #include <sprocket/graphics/cube_map.h>
-#include <sprocket/graphics/Rendering/pbr_renderer.h>
-#include <sprocket/graphics/Rendering/skybox_renderer.h>
+#include <sprocket/graphics/renderers/pbr_renderer.h>
+#include <sprocket/graphics/renderers/skybox_renderer.h>
 #include <sprocket/ui/console.h>
 
 #include <memory>

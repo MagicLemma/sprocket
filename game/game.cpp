@@ -8,16 +8,16 @@
 #include <game/ecs/ecs.h>
 #include <game/ecs/loader.h>
 
-#include <sprocket/Core/sound.h>
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/input_codes.h>
-#include <sprocket/Core/log.h>
-#include <sprocket/Core/Window.h>
+#include <sprocket/core/sound.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/input_codes.h>
+#include <sprocket/core/log.h>
+#include <sprocket/core/Window.h>
 #include <sprocket/graphics/camera.h>
 #include <sprocket/graphics/render_context.h>
-#include <sprocket/graphics/Rendering/pbr_renderer.h>
+#include <sprocket/graphics/renderers/pbr_renderer.h>
 #include <sprocket/ui/ImGuiXtra.h>
-#include <sprocket/Utility/views.h>
+#include <sprocket/utility/views.h>
 
 #include <cmath>
 

@@ -4,14 +4,14 @@
 #include <anvil/ecs/ecs.h>
 #include <anvil/ecs/scene.h>
 
-#include <sprocket/Core/events.h>
-#include <sprocket/Core/window.h>
+#include <sprocket/core/events.h>
+#include <sprocket/core/window.h>
 #include <sprocket/graphics/asset_manager.h>
 #include <sprocket/graphics/cube_map.h>
 #include <sprocket/graphics/frame_buffer.h>
-#include <sprocket/graphics/Rendering/geometry_renderer.h>
-#include <sprocket/graphics/Rendering/pbr_renderer.h>
-#include <sprocket/graphics/Rendering/skybox_renderer.h>
+#include <sprocket/graphics/renderers/geometry_renderer.h>
+#include <sprocket/graphics/renderers/pbr_renderer.h>
+#include <sprocket/graphics/renderers/skybox_renderer.h>
 #include <sprocket/ui/imgui_ui.h>
 
 #include <memory>

@@ -1,8 +1,8 @@
 #include "rendering.h"
 #include <anvil/ecs/ecs.h>
 
-#include <sprocket/graphics/Rendering/geometry_renderer.h>
-#include <sprocket/graphics/Rendering/pbr_renderer.h>
+#include <sprocket/graphics/renderers/geometry_renderer.h>
+#include <sprocket/graphics/renderers/pbr_renderer.h>
 #include <sprocket/graphics/render_context.h>
 #include <sprocket/Utility/maths.h>
 #include <sprocket/Utility/views.h>

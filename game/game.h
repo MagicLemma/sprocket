@@ -6,7 +6,7 @@
 
 #include <sprocket/graphics/asset_manager.h>
 #include <sprocket/graphics/post_processor.h>
-#include <sprocket/graphics/Rendering/pbr_renderer.h>
+#include <sprocket/graphics/renderers/pbr_renderer.h>
 #include <sprocket/graphics/shadow_map.h>
 #include <sprocket/ui/imgui_ui.h>
 #include <sprocket/ui/simple_ui.h>
