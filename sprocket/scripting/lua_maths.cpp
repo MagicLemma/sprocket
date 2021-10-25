@@ -41,15 +41,15 @@ void load_vec3_functions(lua::script& script)
         glm::vec3* vec = (glm::vec3*)luaL_checkudata(L, 1, "vec3");
         std::string_view k = luaL_checkstring(L, 2);
         if (k == "x") {
-            vec->x = luaL_checknumber(L, 3);
+            vec->x = static_cast<float>(luaL_checknumber(L, 3));
             return 0;
         }
         else if (k == "y") {
-            vec->y = luaL_checknumber(L, 3);
+            vec->y = static_cast<float>(luaL_checknumber(L, 3));
             return 0;
         }
         else if (k == "z") {
-            vec->z = luaL_checknumber(L, 3);
+            vec->z = static_cast<float>(luaL_checknumber(L, 3));
             return 0;
         }
         return luaL_argerror(L, 2, lua_pushfstring(L, "Invalid option '%s'", k));
@@ -82,18 +82,18 @@ void load_vec3_functions(lua::script& script)
 
     lua_pushcfunction(L, [](lua_State* L) {
         if (lua_isnumber(L, 1)) {
-            float scalar = (float)luaL_checknumber(L, 1);
-            glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
+            float scalar = static_cast<float>(luaL_checknumber(L, 1));
+            glm::vec3 vec = *static_cast<glm::vec3*>(luaL_checkudata(L, 2, "vec3"));
             converter<glm::vec3>::push(L, scalar * vec);
         }
         else if (lua_isnumber(L, 2)) {
-            glm::vec3 vec = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
-            float scalar = (float)luaL_checknumber(L, 2);
+            glm::vec3 vec = *static_cast<glm::vec3*>(luaL_checkudata(L, 1, "vec3"));
+            float scalar = static_cast<float>(luaL_checknumber(L, 2));
             converter<glm::vec3>::push(L, scalar * vec);
         }
         else {
-            glm::vec3 self = *(glm::vec3*)luaL_checkudata(L, 1, "vec3");
-            glm::vec3 other = *(glm::vec3*)luaL_checkudata(L, 2, "vec3");
+            glm::vec3 self = *static_cast<glm::vec3*>(luaL_checkudata(L, 1, "vec3"));
+            glm::vec3 other = *static_cast<glm::vec3*>(luaL_checkudata(L, 2, "vec3"));
             converter<glm::vec3>::push(L, self * other);
         }
         return 1;
@@ -101,9 +101,9 @@ void load_vec3_functions(lua::script& script)
     lua_setfield(L, -2, "__mul");
 
     lua_pushcfunction(L, [](lua_State* L) {
-        float x = luaL_checknumber(L, 1);
-        float y = luaL_checknumber(L, 2);
-        float z = luaL_checknumber(L, 3);
+        float x = static_cast<float>(luaL_checknumber(L, 1));
+        float y = static_cast<float>(luaL_checknumber(L, 2));
+        float z = static_cast<float>(luaL_checknumber(L, 3));
         converter<glm::vec3>::push(L, {x, y, z});
         return 1;
     });
@@ -138,11 +138,11 @@ void load_vec2_functions(lua::script& script)
         glm::vec2* vec = (glm::vec2*)luaL_checkudata(L, 1, "vec2");
         std::string_view k = luaL_checkstring(L, 2);
         if (k == "x") {
-            vec->x = luaL_checknumber(L, 3);
+            vec->x = static_cast<float>(luaL_checknumber(L, 3));
             return 0;
         }
         else if (k == "y") {
-            vec->y = luaL_checknumber(L, 3);
+            vec->y = static_cast<float>(luaL_checknumber(L, 3));
             return 0;
         }
         return luaL_argerror(L, 2, lua_pushfstring(L, "Invalid option '%s'", k));
@@ -175,18 +175,18 @@ void load_vec2_functions(lua::script& script)
 
     lua_pushcfunction(L, [](lua_State* L) {
         if (lua_isnumber(L, 1)) {
-            float scalar = (float)luaL_checknumber(L, 1);
-            glm::vec2 vec = *(glm::vec2*)luaL_checkudata(L, 2, "vec2");
+            float scalar = static_cast<float>(luaL_checknumber(L, 1));
+            glm::vec2 vec = *static_cast<glm::vec2*>(luaL_checkudata(L, 2, "vec2"));
             converter<glm::vec2>::push(L, scalar * vec);
         }
         else if (lua_isnumber(L, 2)) {
-            glm::vec2 vec = *(glm::vec2*)luaL_checkudata(L, 1, "vec2");
-            float scalar = (float)luaL_checknumber(L, 2);
+            glm::vec2 vec = *static_cast<glm::vec2*>(luaL_checkudata(L, 1, "vec2"));
+            float scalar = static_cast<float>(luaL_checknumber(L, 2));
             converter<glm::vec2>::push(L, scalar * vec);
         }
         else {
-            glm::vec2 self = *(glm::vec2*)luaL_checkudata(L, 1, "vec2");
-            glm::vec2 other = *(glm::vec2*)luaL_checkudata(L, 2, "vec2");
+            glm::vec2 self = *static_cast<glm::vec2*>(luaL_checkudata(L, 1, "vec2"));
+            glm::vec2 other = *static_cast<glm::vec2*>(luaL_checkudata(L, 2, "vec2"));
             converter<glm::vec2>::push(L, self * other);
         }
         return 1;
@@ -194,8 +194,8 @@ void load_vec2_functions(lua::script& script)
     lua_setfield(L, -2, "__mul");
 
     lua_pushcfunction(L, [](lua_State* L) {
-        float x = luaL_checknumber(L, 1);
-        float y = luaL_checknumber(L, 2);
+        float x = static_cast<float>(luaL_checknumber(L, 1));
+        float y = static_cast<float>(luaL_checknumber(L, 2));
         converter<glm::vec2>::push(L, {x, y});
         return 1;
     });
