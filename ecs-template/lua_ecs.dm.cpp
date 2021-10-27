@@ -138,7 +138,7 @@ std::string view_source_code(std::string_view name)
 DATAMATIC_BEGIN SCRIPTABLE=true
 // C++ Functions for {{Comp::name}} =====================================================
 
-int _Get{{Comp::name}}(lua_State* L) {
+int _get_{{Comp::name}}(lua_State* L) {
     if (!check_arg_count(L, 1)) { return luaL_error(L, "Bad number of args"); }
     auto& reg = *get_pointer<{{Global::namespace}}::registry>(L, "__registry__");
     auto e = spkt::lua::converter<{{Global::namespace}}::entity>::read(L, 1);
@@ -147,7 +147,7 @@ int _Get{{Comp::name}}(lua_State* L) {
     return {{Comp::attr_count}};
 }
 
-int _Set{{Comp::name}}(lua_State* L) {
+int _set_{{Comp::name}}(lua_State* L) {
     if (!check_arg_count(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     auto& reg = *get_pointer<{{Global::namespace}}::registry>(L, "__registry__");
@@ -157,7 +157,7 @@ int _Set{{Comp::name}}(lua_State* L) {
     return 0;
 }
 
-int _Add{{Comp::name}}(lua_State* L) {
+int _add_{{Comp::name}}(lua_State* L) {
     if (!check_arg_count(L, {{Comp::attr_count}} + 1)) { return luaL_error(L, "Bad number of args"); }
     int ptr = 0;
     auto& reg = *get_pointer<{{Global::namespace}}::registry>(L, "__registry__");
@@ -245,7 +245,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
         end)
     )lua");
 
-    lua_register(L, "_Get{{Comp::name}}", &_Get{{Comp::name}});
+    lua_register(L, "_Get{{Comp::name}}", &_get_{{Comp::name}});
 
     luaL_dostring(L, R"lua(
         function Get{{Comp::name}}(entity)
@@ -254,7 +254,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
         end
     )lua");
 
-    lua_register(L, "_Set{{Comp::name}}", &_Set{{Comp::name}});
+    lua_register(L, "_Set{{Comp::name}}", &_set_{{Comp::name}});
 
     luaL_dostring(L, R"lua(
         function Set{{Comp::name}}(entity, c)
@@ -262,7 +262,7 @@ DATAMATIC_BEGIN SCRIPTABLE=true
         end
     )lua");
 
-    lua_register(L, "_Add{{Comp::name}}", &_Add{{Comp::name}});
+    lua_register(L, "_Add{{Comp::name}}", &_add_{{Comp::name}});
 
     luaL_dostring(L, R"lua(
         function Add{{Comp::name}}(entity, c)
