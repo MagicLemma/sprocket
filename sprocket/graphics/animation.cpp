@@ -34,11 +34,11 @@ glm::quat slerp_from_keyframe(const std::vector<timed_attr<glm::quat>>& values, 
     return glm::slerp(before.attr, after.attr, get_ratio(before.time, after.time, time));
 }
 
-glm::mat4 transform_from_keyframes(const bone_key_frames& kfData, float time)
+glm::mat4 transform_from_keyframes(const bone_key_frames& keyframe_data, float time)
 {
-    glm::vec3 position = mix_from_keyframe(kfData.positions, time);
-    glm::quat orientation = slerp_from_keyframe(kfData.orientations, time);
-    glm::vec3 scale = mix_from_keyframe(kfData.scales, time);
+    glm::vec3 position = mix_from_keyframe(keyframe_data.positions, time);
+    glm::quat orientation = slerp_from_keyframe(keyframe_data.orientations, time);
+    glm::vec3 scale = mix_from_keyframe(keyframe_data.scales, time);
     return make_transform(position, orientation, scale);
 }
 
@@ -47,14 +47,14 @@ void get_pose_recursive(
     const skeleton& skeleton,
     const animation& animation,
     float time,
-    std::uint32_t boneIndex,
-    const glm::mat4& parentTransform)
+    std::uint32_t bone_index,
+    const glm::mat4& parent_transform)
 {
-    const bone& bone = skeleton.bones[boneIndex];
-    const auto& kfData = animation.key_frames[boneIndex];
+    const bone& bone = skeleton.bones[bone_index];
+    const auto& kfData = animation.key_frames[bone_index];
 
-    glm::mat4 transform = parentTransform * transform_from_keyframes(kfData, time);
-    pose[boneIndex] = transform * bone.offset;
+    glm::mat4 transform = parent_transform * transform_from_keyframes(kfData, time);
+    pose[bone_index] = transform * bone.offset;
 
     for (const auto& child : bone.children) {
         get_pose_recursive(pose, skeleton, animation, time, child, transform);
