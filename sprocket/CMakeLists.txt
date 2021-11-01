@@ -71,24 +71,32 @@ add_library(sprocket STATIC
             scripting/lua_converter.cpp
             scripting/lua_input.cpp)
 
-target_link_libraries(sprocket PUBLIC
-                      imgui
-                      glfw
-                      glad::glad
-                      glm
-                      fmt::fmt
-                      freetype
-                      assimp::assimp
-                      sfml-system
-                      sfml-audio
-                      yaml-cpp
-                      ${LUA_LIBRARIES})
+target_link_libraries(
+    sprocket PUBLIC
+    imgui
+    glm
+)
 
-target_link_libraries(sprocket PRIVATE asio asio::asio)
+target_link_libraries(
+    sprocket PRIVATE
+    asio
+    asio::asio
+    assimp::assimp
+    fmt::fmt
+    freetype  
+    glad::glad
+    glfw
+    sfml-audio
+    sfml-system
+    yaml-cpp
+    ${LUA_LIBRARIES}
+)
 
-target_include_directories(sprocket PUBLIC
-                           ..
-                           ./vendor/apecs
-                           ${STB_INCLUDE_DIR}
-                           ${LUA_INCLUDE_DIR}
-                           ${SFML_INCLUDE_DIR})
+target_include_directories(
+    sprocket PUBLIC
+    ..
+    ./vendor/apecs
+    ${STB_INCLUDE_DIR}
+    ${LUA_INCLUDE_DIR}
+    ${SFML_INCLUDE_DIR}
+)

@@ -2,9 +2,9 @@
     "namespace": "game",
     "includes": [
         "<sprocket/graphics/particles.h>",
-        "<sprocket/Scripting/lua_script.h>",
-        "<sprocket/Utility/Hashing.h>",
-        "<sprocket/Utility/input_store.h>",
+        "<sprocket/scripting/lua_script.h>",
+        "<sprocket/utility/hashing.h>",
+        "<sprocket/utility/input_store.h>",
         "<glm/glm.hpp>",
         "<glm/gtx/quaternion.hpp>",
         "<array>",
