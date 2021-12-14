@@ -1,0 +1,6 @@
+[submodule "sprocket/vendor/apecs"]
+	path = sprocket/vendor/apecs
+	url = git@github.com:MagicLemma/apecs.git
+[submodule "sprocket/vendor/imgui"]
+	path = sprocket/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
