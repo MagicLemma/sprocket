@@ -1,8 +1,8 @@
 Name: Moss 002
-AlbedoMap: D:\dev\Sprocket\Resources\Materials\Moss002\Moss002_2K_Color.png
-NormalMap: D:\dev\Sprocket\Resources\Materials\Moss002\Moss002_2K_Normal.png
+AlbedoMap: Resources\Materials\Moss002\Moss002_2K_Color.png
+NormalMap: Resources\Materials\Moss002\Moss002_2K_Normal.png
 MetallicMap: ""
-RoughnessMap: D:\dev\Sprocket\Resources\Materials\Moss002\Moss002_2K_Roughness.png
+RoughnessMap: Resources\Materials\Moss002\Moss002_2K_Roughness.png
 UseAlbedoMap: true
 UseNormalMap: true
 UseMetallicMap: false

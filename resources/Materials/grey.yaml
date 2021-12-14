@@ -1,8 +1,8 @@
 Name: Cerberus
-AlbedoMap: D:\dev\Sprocket\Resources\Materials\Gun\Albedo.png
-NormalMap: D:\dev\Sprocket\Resources\Materials\Gun\Normal.png
-MetallicMap: D:\dev\Sprocket\Resources\Materials\Gun\Metallic.png
-RoughnessMap: D:\dev\Sprocket\Resources\Materials\Gun\Roughness.png
+AlbedoMap: Resources\Materials\Gun\Albedo.png
+NormalMap: Resources\Materials\Gun\Normal.png
+MetallicMap: Resources\Materials\Gun\Metallic.png
+RoughnessMap: Resources\Materials\Gun\Roughness.png
 UseAlbedoMap: true
 UseNormalMap: true
 UseMetallicMap: true
