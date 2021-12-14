@@ -1,0 +1,9 @@
+[submodule "sprocket/vendor/apecs"]
+	path = sprocket/vendor/apecs
+	url = git@github.com:MagicLemma/apecs.git
+[submodule "sprocket/vendor/imgui"]
+	path = sprocket/vendor/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "anvil/reactphysics3d"]
+	path = anvil/reactphysics3d
+	url = https://github.com/DanielChappuis/reactphysics3d.git
