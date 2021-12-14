@@ -95,29 +95,20 @@ void shape_renderer::end_frame()
     d_quad_vertices.bind();
     d_quad_indices.bind();
 
-    d_line_instances.set_data(d_lines);
-    d_line_shader.bind();
-    d_line_instances.bind();
-    glDrawElementsInstanced(
-        GL_TRIANGLES,
-        (int)d_quad_indices.size(),
-        GL_UNSIGNED_INT,
-        nullptr,
-        (int)d_line_instances.size()
-    );
-    d_line_shader.unbind();
-    
-    d_circle_instances.set_data(d_circles);
-    d_circle_shader.bind();
-    d_circle_instances.bind();
-    glDrawElementsInstanced(
-        GL_TRIANGLES,
-        (int)d_quad_indices.size(),
-        GL_UNSIGNED_INT,
-        nullptr,
-        (int)d_circle_instances.size()
-    );
-    d_circle_shader.unbind();
+    const auto draw = [&](auto& instances, auto& shader, auto& data)
+    {
+        instances.set_data(data);
+        shader.bind();
+        instances.bind();
+        glDrawElementsInstanced(
+            GL_TRIANGLES, (int)d_quad_indices.size(),
+            GL_UNSIGNED_INT, nullptr, (int)instances.size()
+        );
+        shader.unbind();
+    };
+
+    draw(d_line_instances, d_line_shader, d_lines);
+    draw(d_circle_instances, d_circle_shader, d_circles);
 }
 
 void shape_renderer::draw_line(

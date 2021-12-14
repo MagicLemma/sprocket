@@ -2,7 +2,7 @@
 
 #include <sprocket/core.h>
 
-int main()
+auto main() -> int
 {
     return spkt::run_app_framerate<anvil::app>("Anvil");
 }

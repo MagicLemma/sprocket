@@ -20,9 +20,9 @@ struct run_options
 template <typename T>
 concept runnable = requires(T t, event& event, double dt)
 {
-    { t.on_event(event) } -> std::same_as<void>;
-    { t.on_update(dt) } -> std::same_as<void>;
-    { t.on_render() } -> std::same_as<void>;
+    { t.on_event(event) };
+    { t.on_update(dt) };
+    { t.on_render() };
 };
 
 template <runnable App>

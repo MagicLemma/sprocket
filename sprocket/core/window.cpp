@@ -192,7 +192,8 @@ void window::begin_frame()
 {
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(d_data.clear_colour.r, d_data.clear_colour.g, d_data.clear_colour.b, 1.0);
+	const auto& clear = d_data.clear_colour;
+	glClearColor(clear.r, clear.g, clear.b, 1.0);
 
 	d_data.mouse_scrolled = {0.0, 0.0};
 	d_data.mouse_offset = {0.0, 0.0};
