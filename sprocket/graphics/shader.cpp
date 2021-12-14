@@ -21,9 +21,8 @@ std::string parse_shader_source(std::string_view filepath)
 	if (!stream) {
 		log::fatal("Shader file '{}' does not exist!", filepath);
 	}
-	std::string shader((std::istreambuf_iterator<char>(stream)),
-		                std::istreambuf_iterator<char>());
-	return shader;
+	using iter = std::istreambuf_iterator<char>;
+	return {iter{stream}, iter{}};
 }
 
 std::uint32_t compile_shader_source(std::uint32_t type, const std::string& source)
