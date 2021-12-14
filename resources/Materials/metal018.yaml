@@ -1,8 +1,8 @@
 Name: Metal 018
-AlbedoMap: D:\dev\Sprocket\Resources\Materials\Metal018\Metal018_2K_Color.png
-NormalMap: D:\dev\Sprocket\Resources\Materials\Metal018\Metal018_2K_Normal.png
-MetallicMap: D:\dev\Sprocket\Resources\Materials\Metal018\Metal018_2K_Metalness.png
-RoughnessMap: D:\dev\Sprocket\Resources\Materials\Metal018\Metal018_2K_Roughness.png
+AlbedoMap: Resources\Materials\Metal018\Metal018_2K_Color.png
+NormalMap: Resources\Materials\Metal018\Metal018_2K_Normal.png
+MetallicMap: Resources\Materials\Metal018\Metal018_2K_Metalness.png
+RoughnessMap: Resources\Materials\Metal018\Metal018_2K_Roughness.png
 UseAlbedoMap: true
 UseNormalMap: true
 UseMetallicMap: true

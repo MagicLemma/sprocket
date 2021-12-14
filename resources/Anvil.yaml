@@ -21,8 +21,8 @@ Entities:
       orientation: [1, 1.159412e-09, 0, 0]
       scale: [0.2210628, 0.2210639, 0.2210466]
     AnimatedModelComponent:
-      mesh: D:\dev\Sprocket\Resources\Models\RunningCharacter\RunningCharacter.fbx
-      material: D:\dev\Sprocket\Resources\Materials\RunningCharacter.yaml
+      mesh: Resources\Models\RunningCharacter\RunningCharacter.fbx
+      material: Resources\Materials\RunningCharacter.yaml
       animation_name: Armature|ArmatureAction
       animation_time: 5
       animation_speed: 1
@@ -57,7 +57,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [0.32, 0.32, 0.32]
     StaticModelComponent:
-      mesh: D:\dev\Sprocket\Resources\Models\Sphere.obj
+      mesh: Resources\Models\Sphere.obj
       material: ""
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -72,7 +72,7 @@ Entities:
       mass: 1
       radius: 0.38
     ScriptComponent:
-      script: D:\dev\Sprocket\Resources\Scripts\LightOnBounce.lua
+      script: Resources\Scripts\LightOnBounce.lua
       active: true
     LightComponent:
       colour: [1, 1, 1]
@@ -161,7 +161,7 @@ Entities:
       scale: [0.9999771, 0.9998871, 1]
     StaticModelComponent:
       mesh: Resources/Models/Platform.obj
-      material: D:\dev\Sprocket\Resources\Materials\mithril.yaml
+      material: Resources\Materials\mithril.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -184,7 +184,7 @@ Entities:
       scale: [1, 1, 1]
     StaticModelComponent:
       mesh: Resources/Models/Platform.obj
-      material: D:\dev\Sprocket\Resources\Materials\mithril.yaml
+      material: Resources\Materials\mithril.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -206,7 +206,7 @@ Entities:
       orientation: [1, 0, 0, 0]
       scale: [1, 1, 1]
     StaticModelComponent:
-      mesh: D:\dev\Sprocket\Resources\Models\Crate.obj
+      mesh: Resources\Models\Crate.obj
       material: ""
   - ID#: 51539607552
     NameComponent:
@@ -217,7 +217,7 @@ Entities:
       scale: [1, 0.9999998, 0.9999998]
     StaticModelComponent:
       mesh: Resources/Models/Platform.obj
-      material: D:\dev\Sprocket\Resources\Materials\rock.yaml
+      material: Resources\Materials\rock.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -447,7 +447,7 @@ Entities:
       scale: [1, 1, 1]
     StaticModelComponent:
       mesh: Resources/Models/Sphere.obj
-      material: D:\dev\Sprocket\Resources\Materials\metal018.yaml
+      material: Resources\Materials\metal018.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -468,7 +468,7 @@ Entities:
       orientation: [0.9726272, 0, 0.2323713, 0]
       scale: [3.049998, 3.05, 3.049998]
     StaticModelComponent:
-      mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
+      mesh: Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
@@ -491,7 +491,7 @@ Entities:
       orientation: [0.9677961, 0, 0.2517355, 0]
       scale: [4.208998, 4.209, 4.208998]
     StaticModelComponent:
-      mesh: D:\dev\Sprocket\Resources\Models\BetterTree.obj
+      mesh: Resources\Models\BetterTree.obj
       material: Resources/Materials/tree.yaml
   - ID#: 115964116992
     NameComponent:
@@ -501,8 +501,8 @@ Entities:
       orientation: [0.6755896, -0.7372779, 0, 0]
       scale: [0.02989681, 0.02989674, 0.02989682]
     StaticModelComponent:
-      mesh: D:\dev\Sprocket\Resources\Models\Cerberus_LP.FBX
-      material: D:\dev\Sprocket\Resources\Materials\grey.yaml
+      mesh: Resources\Models\Cerberus_LP.FBX
+      material: Resources\Materials\grey.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
@@ -517,7 +517,7 @@ Entities:
       halfExtents: [14.6, 73.1, 22.6]
       applyScale: true
     ScriptComponent:
-      script: D:\dev\Sprocket\Resources\Scripts\Bob.lua
+      script: Resources\Scripts\Bob.lua
       active: true
   - ID#: 120259084288
     NameComponent:
@@ -551,7 +551,7 @@ Entities:
       scale: [1.107289, 1.107288, 1.107289]
     StaticModelComponent:
       mesh: Resources/Models/Cube.obj
-      material: D:\dev\Sprocket\Resources\Materials\space.yaml
+      material: Resources\Materials\space.yaml
     RigidBody3DComponent:
       velocity: [0, 0, 0]
       gravity: true
